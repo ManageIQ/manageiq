@@ -37,4 +37,12 @@ module MiqRequestWorkflow::DialogFieldValidation
       error
     end
   end
+
+  def validate_blacklist(_field, _values, dlg, fld, value)
+    blacklist = fld[:blacklist]
+    return _("%{name} is required") % {:name => required_description(dlg, fld)} if value.blank?
+    if blacklist && blacklist.include?(value)
+      _("%{name} may not contain blacklisted value") % {:name => required_description(dlg, fld)}
+    end
+  end
 end

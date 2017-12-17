@@ -19,16 +19,16 @@ module Metric::CiMixin::Rollup
         times = Metric::Helper.hours_from_range(start_time, end_time)
 
         log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] for times: #{times.inspect}"
-        _log.info "#{log_header}..."
+        _log.info("#{log_header}...")
         times.each { |t| parent.perf_rollup_queue(t, new_interval) }
-        _log.info "#{log_header}...Complete"
+        _log.info("#{log_header}...Complete")
       when 'daily' then
         times_by_tp = Metric::Helper.days_from_range_by_time_profile(start_time, end_time)
         times_by_tp.each do |tp, times|
           log_header = "Queueing [#{new_interval}] rollup to #{parent.class.name} id: [#{parent.id}] in time profile: [#{tp.description}] for times: #{times.inspect}"
-          _log.info "#{log_header}..."
+          _log.info("#{log_header}...")
           times.each { |t| parent.perf_rollup_queue(t, new_interval, tp) }
-          _log.info "#{log_header}...Complete"
+          _log.info("#{log_header}...Complete")
         end
       end
     end
@@ -65,7 +65,7 @@ module Metric::CiMixin::Rollup
       :deliver_on  => deliver_on,
       :priority    => Metric::Capture.const_get("#{interval_name.upcase}_PRIORITY")
     ) do |msg|
-      _log.debug "Skipping queueing [#{interval_name}] rollup of #{self.class.name} name: [#{name}], id: [#{id}] for time: [#{time}], since it is already queued" unless msg.nil?
+      _log.debug("Skipping queueing [#{interval_name}] rollup of #{self.class.name} name: [#{name}], id: [#{id}] for time: [#{time}], since it is already queued") unless msg.nil?
     end
   end
 
@@ -74,12 +74,12 @@ module Metric::CiMixin::Rollup
       raise ArgumentError, _("time_profile must be passed if interval name is 'daily'")
     end
     time_profile = TimeProfile.extract_objects(time_profile)
-    klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
+    _klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     log_header = "[#{interval_name}] Rollup for #{self.class.name} name: [#{name}], id: [#{id}] for time: [#{time}]"
     _log.info("#{log_header}...")
 
-    dummy, t = Benchmark.realtime_block(:total_time) do
+    _dummy, t = Benchmark.realtime_block(:total_time) do
       new_perf = {
         :timestamp             => time,
         :capture_interval_name => (interval_name == 'historical' ? 'hourly' : interval_name)

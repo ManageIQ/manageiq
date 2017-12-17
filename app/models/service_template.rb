@@ -17,7 +17,7 @@ class ServiceTemplate < ApplicationRecord
     "generic_orchestration"      => _("Orchestration"),
     "generic_ansible_playbook"   => _("Ansible Playbook"),
     "generic_ansible_tower"      => _("AnsibleTower"),
-    "generic_container_template" => _("Container Template"),
+    "generic_container_template" => _("OpenShift Template"),
     "google"                     => _("Google"),
     "microsoft"                  => _("SCVMM"),
     "openstack"                  => _("OpenStack"),
@@ -40,7 +40,6 @@ class ServiceTemplate < ApplicationRecord
   include_concern 'Filter'
 
   belongs_to :tenant
-  belongs_to :blueprint
   # # These relationships are used to specify children spawned from a parent service
   # has_many   :child_services, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
   # belongs_to :parent_service, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
@@ -64,6 +63,20 @@ class ServiceTemplate < ApplicationRecord
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
   virtual_has_one :config_info, :class_name => "Hash"
+
+  scope :with_service_template_catalog_id,          ->(cat_id) { where(:service_template_catalog_id => cat_id) }
+  scope :without_service_template_catalog_id,       ->         { where(:service_template_catalog_id => nil) }
+  scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
+  scope :displayed,                                 ->         { where(:display => true) }
+
+  def self.catalog_item_types
+    ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
+    ci_types.add('generic_orchestration') if Rbac.filtered(OrchestrationTemplate).exists?
+    ci_types.add('generic')
+    CATALOG_ITEM_TYPES.each.with_object({}) do |(key, description), hash|
+      hash[key] = { :description => description, :display => ci_types.include?(key) }
+    end
+  end
 
   def self.create_catalog_item(options, auth_user)
     transaction do
@@ -105,11 +118,6 @@ class ServiceTemplate < ApplicationRecord
       save!
     end
     reload
-  end
-
-  def readonly?
-    return true if super
-    blueprint.try(:published?)
   end
 
   def children
@@ -169,13 +177,9 @@ class ServiceTemplate < ApplicationRecord
 
     nh['initiator'] = service_task.options[:initiator] if service_task.options[:initiator]
 
-    # Determine service name
-    # target_name = self.get_option(:target_name)
-    # nh['name'] = target_name unless target_name.blank?
     svc = Service.create(nh)
     svc.service_template = self
 
-    # self.options[:service_guid] = svc.guid
     service_resources.each do |sr|
       nh = sr.attributes.dup
       %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
@@ -284,10 +288,10 @@ class ServiceTemplate < ApplicationRecord
     return if user.nil?
     service.evm_owner = user
     if user.current_group
-      $log.info "Setting Service Owning User to Name=#{user.name}, ID=#{user.id}, Group to Name=#{user.current_group.name}, ID=#{user.current_group.id}"
+      $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}, Group to Name=#{user.current_group.name}, ID=#{user.current_group.id}")
       service.miq_group = user.current_group
     else
-      $log.info "Setting Service Owning User to Name=#{user.name}, ID=#{user.id}"
+      $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}")
     end
     service.save
   end
@@ -391,6 +395,11 @@ class ServiceTemplate < ApplicationRecord
       wf.request_options = request_options
       dialog_options.each { |key, value| wf.set_value(key, value) }
     end
+  end
+
+  def add_resource(rsc, options = {})
+    super
+    set_service_type
   end
 
   private

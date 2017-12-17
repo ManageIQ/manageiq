@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../../config/environment', __dir__)
+
 Host.all.each do |host|
   puts "Host: #{host.name} (id: #{host.id})"
 
@@ -12,5 +15,5 @@ Host.all.each do |host|
     end
   end unless host.hardware.nil?
 
-  puts; puts
+  puts("\n")
 end

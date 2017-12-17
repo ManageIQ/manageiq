@@ -23,13 +23,13 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshHelperMethods
     yield
   rescue Excon::Errors::Forbidden => err
     # It can happen user doesn't have rights to read some tenant, in that case log warning but continue refresh
-    _log.warn "Forbidden response code returned in provider: #{@os_handle.address}. Message=#{err.message}"
-    _log.warn err.backtrace.join("\n")
+    _log.warn("Forbidden response code returned in provider: #{@os_handle.address}. Message=#{err.message}")
+    _log.log_backtrace(err, :warn)
     nil
   rescue Excon::Errors::NotFound => err
     # It can happen that some data do not exist anymore,, in that case log warning but continue refresh
-    _log.warn "Not Found response code returned in provider: #{@os_handle.address}. Message=#{err.message}"
-    _log.warn err.backtrace.join("\n")
+    _log.warn("Not Found response code returned in provider: #{@os_handle.address}. Message=#{err.message}")
+    _log.log_backtrace(err, :warn)
     nil
   end
 

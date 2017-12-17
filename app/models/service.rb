@@ -23,9 +23,12 @@ class Service < ApplicationRecord
   has_ancestry :orphan_strategy => :destroy
 
   belongs_to :tenant
-  belongs_to :service_template               # Template this service was cloned from
+  belongs_to :service_template # Template this service was cloned from
 
   has_many :dialogs, -> { distinct }, :through => :service_template
+  has_many :metrics, :as => :resource
+  has_many :metric_rollups, :as => :resource
+  has_many :vim_performance_states, :as => :resource
 
   has_one :miq_request_task, :dependent => :nullify, :as => :destination
   has_one :miq_request, :through => :miq_request_task
@@ -38,6 +41,7 @@ class Service < ApplicationRecord
   virtual_has_many   :all_vms
   virtual_has_many   :power_states, :uses => :all_vms
   virtual_has_many   :orchestration_stacks
+  virtual_has_many   :generic_objects
   virtual_total      :v_total_vms, :vms
 
   virtual_has_one    :custom_actions
@@ -48,6 +52,7 @@ class Service < ApplicationRecord
   virtual_has_one    :configuration_script
 
   before_validation :set_tenant_from_group
+  before_create     :apply_dialog_settings
 
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
@@ -60,15 +65,17 @@ class Service < ApplicationRecord
   include ProcessTasksMixin
   include TenancyMixin
   include SupportsFeatureMixin
+  include Metric::CiMixin
 
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
+  include_concern 'ResourceLinking'
 
   virtual_column :has_parent,                               :type => :boolean
   virtual_column :power_state,                              :type => :string
   virtual_column :power_status,                             :type => :string
 
-  validates_presence_of :name
+  validates :name, :presence => true
 
   default_value_for :display, false
   default_value_for :retired, false
@@ -77,15 +84,11 @@ class Service < ApplicationRecord
   validates :display, :inclusion => { :in => [true, false] }
   validates :retired, :inclusion => { :in => [true, false] }
 
+  scope :displayed, ->              { where(:display => true) }
+  scope :retired,   ->(bool = true) { where(:retired => bool) }
+
   supports :reconfigure do
     unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
-  end
-
-  def add_resource(rsc, options = {})
-    if rsc.kind_of?(Vm) && !rsc.service.nil?
-      raise MiqException::Error, _("Vm <%{name}> is already connected to a service.") % {:name => rsc.name}
-    end
-    super
   end
 
   alias parent_service parent
@@ -200,7 +203,11 @@ class Service < ApplicationRecord
   end
 
   def orchestration_stacks
-    service_resources.where(:resource_type => 'OrchestrationStack').collect(&:resource)
+    service_resources.where(:resource_type => 'OrchestrationStack').includes(:resource).collect(&:resource)
+  end
+
+  def generic_objects
+    service_resources.where(:resource_type => 'GenericObject').includes(:resource).collect(&:resource)
   end
 
   def group_resource_actions(action_name)
@@ -235,11 +242,8 @@ class Service < ApplicationRecord
     update_attributes(:options => options)
   end
 
-  def update_progress(hash = {})
-    hash.keys.each do |attribute|
-      options[attribute] = hash[attribute]
-      update_attributes(:options => options)
-    end
+  private def update_progress(hash)
+    update_attributes(:options => options.merge(hash))
   end
 
   def process_group_action(action, group_idx, direction)
@@ -247,17 +251,17 @@ class Service < ApplicationRecord
       begin
         rsc = svc_rsc.resource
         rsc_action = service_action(action, svc_rsc)
-        rsc_name =  "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
+        rsc_name = "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
         if rsc_action.nil?
-          _log.info "Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
+          _log.info("Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
         elsif rsc.respond_to?(rsc_action)
-          _log.info "Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
+          _log.info("Processing action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>")
           rsc.send(rsc_action)
         else
-          _log.info "Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>"
+          _log.info("Skipping action <#{rsc_action}> for Service:<#{name}:#{id}>, RSC:<#{rsc.class.name}:#{rsc.id}> in Group Idx:<#{group_idx}>")
         end
       rescue => err
-        _log.error "Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>"
+        _log.error("Error while processing Service:<#{name}> Group Idx:<#{group_idx}>  Resource<#{rsc_name}>.  Message:<#{err}>")
       end
     end
 
@@ -363,30 +367,80 @@ class Service < ApplicationRecord
   end
 
   def generate_chargeback_report(options = {})
-    _log.info "Generation of chargeback report for service #{name} started..."
+    _log.info("Generation of chargeback report for service #{name} started...")
     MiqReportResult.where(:name => chargeback_report_name).destroy_all
     report = MiqReport.new(chargeback_yaml)
     options[:report_sync] = true
     report.queue_generate_table(options)
-    _log.info "Report #{chargeback_report_name} generated"
+    _log.info("Report #{chargeback_report_name} generated")
   end
 
   def chargeback_yaml
-    yaml = YAML.load_file(File.join(Rails.root, "product/chargeback/chargeback_vm_monthly.yaml"))
+    yaml = YAML.load_file(Rails.root.join('product', 'chargeback', 'chargeback_vm_monthly.yaml'))
     yaml["db_options"][:options][:service_id] = id
     yaml["title"] = chargeback_report_name
     yaml
   end
 
   def queue_chargeback_report_generation(options = {})
-    MiqQueue.put(
-      :role        => "reporting",
+    MiqQueue.submit_job(
+      :service     => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "generate_chargeback_report",
-      :priority    => MiqQueue::NORMAL_PRIORITY,
       :args        => options
     )
-    _log.info "Added to queue: generate_chargeback_report for service #{name}"
+    _log.info("Added to queue: generate_chargeback_report for service #{name}")
+  end
+
+  #
+  # Metric methods
+  #
+
+  PERF_ROLLUP_CHILDREN = :vms
+
+  def perf_rollup_parents(interval_name = nil)
+    [].compact unless interval_name == 'realtime'
+  end
+
+  def add_resource(rsc, options = {})
+    super.tap do |service_resource|
+      break if service_resource.nil?
+
+      # Create ancestry link between services
+      resource = service_resource.resource
+      resource.update_attributes(:parent => self) if resource.kind_of?(Service)
+    end
+  end
+
+  def enforce_single_service_parent?
+    true
+  end
+
+  def add_to_service(parent_service)
+    parent_service.add_resource!(self)
+  end
+
+  def remove_from_service(parent_service)
+    update(:parent => nil)
+    parent_service.remove_resource(self)
+  end
+
+  private
+
+  def apply_dialog_settings
+    dialog_options = options[:dialog] || {}
+
+    %w(dialog_service_name dialog_service_description).each do |field_name|
+      send(field_name, dialog_options[field_name]) if dialog_options.key?(field_name)
+    end
+  end
+
+  def dialog_service_name(value)
+    self.name = value if value.present?
+  end
+
+  def dialog_service_description(value)
+    self.description = value if value.present?
   end
 end

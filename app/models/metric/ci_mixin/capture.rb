@@ -105,7 +105,7 @@ module Metric::CiMixin::Capture
           qi
         else
           interval = qi[:method_name].sub("perf_capture_", "")
-          _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{interval} is still running"
+          _log.debug("Skipping capture of #{log_target} - Performance capture for interval #{interval} is still running")
           # NOTE: do not update the message queue
           nil
         end
@@ -131,19 +131,19 @@ module Metric::CiMixin::Capture
     end
     raise ArgumentError, _("end_time cannot be specified if start_time is nil") if start_time.nil? && !end_time.nil?
 
+    start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time)
+    start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time)
+
+    perf_process(interval_name, start_range, end_range, counters_data) if start_range
+  end
+
+  def fix_capture_start_end_time(interval_name, start_time, end_time)
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
-
-    log_header = "[#{interval_name}]"
-    log_time = ''
-    log_time << ", start_time: [#{start_time}]" unless start_time.nil?
-    log_time << ", end_time: [#{end_time}]" unless end_time.nil?
 
     # Determine the start_time for capturing if not provided
     if interval_name == 'historical'
       start_time = Metric::Capture.historical_start_time if start_time.nil?
-
-      interval_name_for_capture = 'hourly'
     else
       start_time = last_perf_capture_on if start_time.nil?
       if start_time.nil? && interval_name == 'hourly'
@@ -151,15 +151,20 @@ module Metric::CiMixin::Capture
         #   historical data, so we shorten the query
         start_time = 4.hours.ago.utc
       end
-
-      interval_name_for_capture = interval_name
     end
+    [start_time, end_time]
+  end
 
-    # Determine the expected start time, so we can detect gaps or missing data
+  # Determine the expected start time, so we can detect gaps or missing data
+  # @param interval_name [String]
+  # @param start_time [Date] start date passed to pref_capture
+  # @return [String, nil] Expected start date for the gap.
+  #     nil if none
+  def calculate_gap(interval_name, start_time)
     expected_start_range = start_time
     # If we've changed power state within the last hour, the returned data
     #   may not include all the data we'd expect
-    expected_start_range = nil if self.respond_to?(:state_changed_on) && state_changed_on && state_changed_on > Time.now.utc - 1.hour
+    return if try(:state_changed_on) && state_changed_on > 1.hour.ago
 
     unless expected_start_range.nil?
       # Shift the expected time for first item, since you may not get back an
@@ -168,15 +173,23 @@ module Metric::CiMixin::Capture
       when 'realtime' then expected_start_range += (1.minute / Metric::Capture::REALTIME_METRICS_PER_MINUTE)
       when 'hourly'   then expected_start_range += 1.hour
       end
-      expected_start_range = expected_start_range.iso8601
+      expected_start_range.iso8601
     end
+  end
 
-    _log.info "#{log_header} Capture for #{log_target}#{log_time}..."
+  def just_perf_capture(interval_name, start_time = nil, end_time = nil)
+    log_header = "[#{interval_name}]"
+    log_time = ''
+    log_time << ", start_time: [#{start_time}]" unless start_time.nil?
+    log_time << ", end_time: [#{end_time}]" unless end_time.nil?
 
-    start_range = end_range = counters = counter_values = nil
+    _log.info("#{log_header} Capture for #{log_target}#{log_time}...")
+
+    start_range = end_range = counters = counter_values = counters_data = nil
     _, t = Benchmark.realtime_block(:total_time) do
       Benchmark.realtime_block(:capture_state) { perf_capture_state }
 
+      interval_name_for_capture = interval_name == 'historical' ? 'hourly' : interval_name
       counters_by_mor, counter_values_by_mor_and_ts = perf_collect_metrics(interval_name_for_capture, start_time, end_time)
 
       counters       = counters_by_mor[ems_ref] || {}
@@ -187,15 +200,16 @@ module Metric::CiMixin::Capture
       end_range   = ts.last
     end
 
-    _log.info "#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}"
+    _log.info("#{log_header} Capture for #{log_target}#{log_time}...Complete - Timings: #{t.inspect}")
 
     if start_range.nil?
-      _log.info "#{log_header} Skipping processing for #{log_target}#{log_time} as no metrics were captured."
+      _log.info("#{log_header} Skipping processing for #{log_target}#{log_time} as no metrics were captured.")
       # Set the last capture on to end_time to prevent forever queueing up the same collection range
       update_attributes(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
     else
+      expected_start_range = calculate_gap(interval_name, start_time)
       if expected_start_range && start_range > expected_start_range
-        _log.warn "#{log_header} For #{log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
+        _log.warn("#{log_header} For #{log_target}#{log_time}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}].")
 
         # Raise ems_performance_gap_detected alert event to enable notification.
         MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
@@ -205,8 +219,17 @@ module Metric::CiMixin::Capture
                                              :start_range          => start_range
                                             )
       end
-      perf_process(interval_name, start_range, end_range, counters, counter_values)
+
+      # Convert to format allowing to send multiple resources at once
+      counters_data = {
+        [self.class.base_class.name, self.id] => {
+          :counters       => counters,
+          :counter_values => counter_values
+        }
+      }
     end
+
+    [start_range, end_range, counters_data]
   end
 
   def perf_capture_callback(task_ids, _status, _message, _result)
@@ -225,9 +248,9 @@ module Metric::CiMixin::Capture
           pclass, _, pid = task.context_data[:parent].rpartition(":")
           parent = pclass.constantize.find(pid)
           msg = "Queueing [#{task.context_data[:interval]}] rollup to #{parent.class.name} id: [#{parent.id}] for time range: [#{task.context_data[:start]} - #{task.context_data[:end]}]"
-          _log.info "#{msg}..."
+          _log.info("#{msg}...")
           parent.perf_rollup_range_queue(task.context_data[:start], task.context_data[:end], task.context_data[:interval])
-          _log.info "#{msg}...Complete"
+          _log.info("#{msg}...Complete")
         else
           task.state, task.status, task.message = [MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, task.message = "Performance collection active, #{task.context_data[:complete].length} out of #{task.context_data[:targets].length} collections completed"]
         end
@@ -243,7 +266,7 @@ module Metric::CiMixin::Capture
 
   def perf_capture_realtime_now
     # For UI to enable refresh of realtime charts on demand
-    _log.info "Realtime capture requested for #{log_target}"
+    _log.info("Realtime capture requested for #{log_target}")
 
     perf_capture_queue('realtime', :priority => MiqQueue::HIGH_PRIORITY)
   end

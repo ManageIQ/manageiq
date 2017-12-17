@@ -83,7 +83,6 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def get_message
-    @worker.update_spid!
     if dequeue_method_via_drb? && @worker_monitor_drb
       get_message_via_drb
     else
@@ -92,11 +91,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
   end
 
   def message_delivery_suspended?
-    if self.class.require_vim_broker?
-      return true unless MiqVimBrokerWorker.available?
-    end
-
-    false
+    self.class.delay_queue_delivery_for_vim_broker? && !MiqVimBrokerWorker.available?
   end
 
   def deliver_queue_message(msg)
@@ -105,12 +100,14 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     begin
       $_miq_worker_current_msg = msg
       Thread.current[:tracking_label] = msg.tracking_label || msg.task_id
+      heartbeat_message_timeout(msg)
       status, message, result = msg.deliver
 
       if status == MiqQueue::STATUS_TIMEOUT
         begin
           _log.info("#{log_prefix} Reconnecting to DB after timeout error during queue deliver")
           ActiveRecord::Base.connection.reconnect!
+          @worker.update_spid!
         rescue => err
           do_exit("Exiting worker due to timeout error that could not be recovered from...error: #{err.class.name}: #{err.message}", 1)
         end
@@ -153,6 +150,16 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       msg = get_message
       break if msg.nil?
       deliver_message(msg)
+    end
+  end
+
+  private
+
+  # Only for file based heartbeating
+  def heartbeat_message_timeout(message)
+    if ENV["WORKER_HEARTBEAT_METHOD"] == "file" && message.msg_timeout
+      timeout = worker_settings[:poll] + message.msg_timeout
+      heartbeat_to_file(timeout)
     end
   end
 end

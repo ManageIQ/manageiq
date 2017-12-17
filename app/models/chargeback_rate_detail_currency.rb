@@ -1,7 +1,6 @@
 class ChargebackRateDetailCurrency < ApplicationRecord
   belongs_to :chargeback_rate_detail
 
-  # YAML.load_file(File.join(Rails.root, "db/fixtures/chargeback_rate_detail_currencies.yml"))
   validates :code,        :presence => true, :length => {:maximum => 100}
   validates :name,        :presence => true, :length => {:maximum => 100}
   validates :full_name,   :presence => true, :length => {:maximum => 100}
@@ -26,7 +25,7 @@ class ChargebackRateDetailCurrency < ApplicationRecord
       fixture.each do |cbr|
         rec = ChargebackRateDetailCurrency.find_by(:name => cbr[:name])
         if rec.nil?
-          _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]!!!!")
+          _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")
           rec = ChargebackRateDetailCurrency.create(cbr)
         elsif fixture_mtime_currency > rec.created_at
           _log.info("Updating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")

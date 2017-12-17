@@ -1,6 +1,8 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 LOG_DIR = "./"
 logfile = File.join(LOG_DIR, "ldap_ping.log")
-# File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
 $log.level = VMDBLogger.const_get("INFO")
 
@@ -36,7 +38,7 @@ end
 
 ldap_addresses = []
 ldap_hosts.to_miq_a.each do |host|
-  canonical, aliases, type, *addresses = TCPSocket.gethostbyname(host)
+  _canonical, _aliases, _type, *addresses = TCPSocket.gethostbyname(host)
   log(:info, "Resolved host <#{host}> has these IP Address: #{addresses.inspect}")
   ldap_addresses += addresses
 end

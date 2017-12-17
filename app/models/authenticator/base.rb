@@ -58,7 +58,7 @@ module Authenticator
           else
             # If role_mode == database we will only use the external system for authentication. Also, the user must exist in our database
             # otherwise we will fail authentication
-            user_or_taskid = lookup_by_identity(username)
+            user_or_taskid = lookup_by_identity(username, request)
             user_or_taskid ||= autocreate_user(username)
 
             unless user_or_taskid
@@ -77,7 +77,7 @@ module Authenticator
         end
 
       rescue MiqException::MiqEVMLoginError => err
-        _log.warn err.message
+        _log.warn(err.message)
         raise
       rescue Exception => err
         _log.log_backtrace(err)
@@ -89,7 +89,7 @@ module Authenticator
         if task.nil? || MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
           raise MiqException::MiqEVMLoginError, fail_message
         end
-        user_or_taskid = User.find_by_userid(task.userid)
+        user_or_taskid = case_insensitive_find_by_userid(task.userid)
       end
 
       if user_or_taskid.kind_of?(User)
@@ -118,9 +118,8 @@ module Authenticator
           end
 
           matching_groups = match_groups(groups_for(identity))
-          userid = userid_for(identity, username)
-          user   = User.find_or_initialize_by(:userid => userid)
-          update_user_attributes(user, username, identity)
+          userid, user = find_or_initialize_user(identity, username)
+          update_user_attributes(user, userid, identity)
           user.miq_groups = matching_groups
 
           if matching_groups.empty?
@@ -148,25 +147,32 @@ module Authenticator
       end
     end
 
+    def find_or_initialize_user(identity, username)
+      userid = userid_for(identity, username)
+      user   = case_insensitive_find_by_userid(userid)
+      user ||= User.new(:userid => userid)
+      [userid, user]
+    end
+
     def authenticate_with_http_basic(username, password, request = nil, options = {})
       options[:require_user] ||= false
       user, username = find_by_principalname(username)
       result = nil
       begin
-        result = user.nil? ? nil : authenticate(username, password, request, options)
+        result = user && authenticate(username, password, request, options)
       rescue MiqException::MiqEVMLoginError
       end
       AuditEvent.failure(:userid => username, :message => "Authentication failed for user #{username}") if result.nil?
       [!!result, username]
     end
 
-    def lookup_by_identity(username)
-      User.find_by_userid(username)
+    def lookup_by_identity(username, *_args)
+      case_insensitive_find_by_userid(username)
     end
 
     # FIXME: LDAP
     def find_by_principalname(username)
-      unless (user = User.find_by_userid(username))
+      unless (user = case_insensitive_find_by_userid(username))
         if username.include?('\\')
           parts = username.split('\\')
           username = "#{parts.last}@#{parts.first}"
@@ -174,7 +180,7 @@ module Authenticator
           suffix = config[:user_suffix]
           username = "#{username}@#{suffix}"
         end
-        user = User.find_by_userid(username)
+        user = case_insensitive_find_by_userid(username)
       end
       [user, username]
     end
@@ -191,6 +197,11 @@ module Authenticator
 
     def failure_reason(_username, _request)
       nil
+    end
+
+    def case_insensitive_find_by_userid(username)
+      user =  User.find_by_userid(username)
+      user || User.in_my_region.where('lower(userid) = ?', username.downcase).order(:lastlogon).last
     end
 
     def userid_for(_identity, username)
@@ -213,8 +224,7 @@ module Authenticator
       task = MiqTask.create(:name => "#{self.class.proper_name} User Authorization of '#{username}'", :userid => username)
       if authorize_queue?
         encrypt_ldap_password(config) if MiqLdap.using_ldap?
-        MiqQueue.put(
-          :queue_name   => "generic",
+        MiqQueue.submit_job(
           :class_name   => self.class.to_s,
           :method_name  => "authorize",
           :args         => [config, task.id, username, *args],
@@ -271,7 +281,7 @@ module Authenticator
     end
 
     def normalize_username(username)
-      username
+      username.downcase
     end
   end
 end

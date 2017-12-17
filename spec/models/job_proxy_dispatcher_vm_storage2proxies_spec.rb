@@ -51,17 +51,10 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
           context "'smartproxy' server and roles deactivated" do
             before(:each) do
-              # Overwrite so that we set our own assigned roles instead of from config file
-              allow_any_instance_of(MiqServer).to receive(:set_assigned_roles).and_return(nil)
-              allow_any_instance_of(MiqServer).to receive(:sync_workers).and_return(nil)
-              allow_any_instance_of(MiqServer).to receive(:sync_log_level).and_return(nil)
-              allow_any_instance_of(MiqServer).to receive(:wait_for_started_workers).and_return(nil)
-
-              server_roles = [FactoryGirl.create(:server_role, :name => "smartproxy", :max_concurrent => 0)]
+              FactoryGirl.create(:server_role, :name => "smartproxy", :max_concurrent => 0)
 
               @server1.deactivate_all_roles
-              @server1.role    = 'smartproxy'
-              allow_any_instance_of(Host).to receive_messages(:missing_credentials? => false)
+              @server1.role = 'smartproxy'
             end
 
             it "will have no roles active" do

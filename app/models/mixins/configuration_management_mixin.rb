@@ -11,17 +11,26 @@ module ConfigurationManagementMixin
 
   def add_settings_for_resource(settings)
     Vmdb::Settings.save!(self, settings)
-    # Reload the settings immediately for this worker. This is typically a UI
-    # worker making the change, who will need to see the changes right away.
-    Vmdb::Settings.reload!
+    immediately_reload_settings
+  end
 
-    # Reload the settings for all workers on the servers whether local or remote.
-    reload_all_server_settings
+  def remove_settings_path_for_resource(*keys)
+    Vmdb::Settings.destroy!(self, keys)
+    immediately_reload_settings
   end
 
   def reload_all_server_settings
     servers_for_settings_reload.each do |server|
       server.enqueue_for_server("reload_settings") if server.started?
     end
+  end
+
+  private def immediately_reload_settings
+    # Reload the settings immediately for this worker. This is typically a UI
+    # worker making the change, who will need to see the changes right away.
+    Vmdb::Settings.reload!
+
+    # Reload the settings for all workers on the servers whether local or remote.
+    reload_all_server_settings
   end
 end

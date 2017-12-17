@@ -117,15 +117,6 @@ describe "VM Retirement Management" do
     expect(@vm.retirement_due?).to be_falsey
   end
 
-  # it "#retirement_warn" do
-  #   expect(@vm.retirement_warn).to be_nil
-  #   @vm.update_attributes(:retirement_last_warn => Time.zone.today)
-  #   @vm.retirement_warn = 60
-
-  #   expect(@vm.retirement_warn).to eq(60)
-  #   expect(@vm.retirement_last_warn).to be_nil
-  # end
-
   it "#retirement_due?" do
     vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
     expect(vm.retirement_due?).to be_falsey

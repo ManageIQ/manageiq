@@ -16,6 +16,7 @@ class MiqRequestTask < ApplicationRecord
   default_value_for :phase_context, {}
   default_value_for :options,       {}
   default_value_for :state,         'pending'
+  default_value_for :status,        'Ok'
 
   delegate :request_class, :task_description, :to => :class
 
@@ -37,7 +38,7 @@ class MiqRequestTask < ApplicationRecord
 
   def update_and_notify_parent(upd_attr)
     upd_attr[:message] = upd_attr[:message][0, 255] if upd_attr.key?(:message)
-    update_attributes! upd_attr
+    update_attributes!(upd_attr)
 
     # If this request has a miq_request_task parent use that, otherwise the parent is the miq_request
     parent = miq_request_task || miq_request
@@ -140,12 +141,12 @@ class MiqRequestTask < ApplicationRecord
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
-        :class_name  => 'MiqAeEngine',
-        :method_name => 'deliver',
-        :args        => [args],
-        :role        => 'automate',
-        :zone        => options.fetch(:miq_zone, zone),
-        :task_id     => my_task_id,
+        :class_name     => 'MiqAeEngine',
+        :method_name    => 'deliver',
+        :args           => [args],
+        :role           => 'automate',
+        :zone           => options.fetch(:miq_zone, zone),
+        :tracking_label => my_task_id,
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
@@ -166,14 +167,14 @@ class MiqRequestTask < ApplicationRecord
     zone = source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
 
     queue_options.reverse_merge!(
-      :class_name   => self.class.name,
-      :instance_id  => id,
-      :method_name  => "execute",
-      :zone         => options.fetch(:miq_zone, zone),
-      :role         => miq_request.my_role,
-      :task_id      => my_task_id,
-      :deliver_on   => deliver_on,
-      :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => "execute",
+      :zone           => options.fetch(:miq_zone, zone),
+      :role           => miq_request.my_role,
+      :tracking_label => my_task_id,
+      :deliver_on     => deliver_on,
+      :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
     MiqQueue.put(queue_options)
 

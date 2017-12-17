@@ -7,6 +7,7 @@ class Chargeback < ActsAsArModel
     :chargeback_rates     => :string,
     :entity               => :binary,
     :tag_name             => :string,
+    :label_name           => :string,
     :fixed_compute_metric => :integer,
   )
 
@@ -26,7 +27,11 @@ class Chargeback < ActsAsArModel
       data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
       # we are getting hash with metrics and costs for metrics defined for chargeback
-      data[key].calculate_costs(consumption, rates_to_apply)
+      if Settings[:new_chargeback]
+        data[key].new_chargeback_calculate_costs(consumption, rates_to_apply)
+      else
+        data[key].calculate_costs(consumption, rates_to_apply)
+      end
     end
     _log.info("Calculating chargeback costs...Complete")
 
@@ -39,6 +44,8 @@ class Chargeback < ActsAsArModel
       classification = @options.classification_for(consumption)
       classification_id = classification.present? ? classification.id : 'none'
       "#{classification_id}_#{ts_key}"
+    elsif @options[:groupby_label].present?
+      "#{groupby_label_value(consumption, @options[:groupby_label])}_#{ts_key}"
     else
       default_key(consumption, ts_key)
     end
@@ -48,12 +55,19 @@ class Chargeback < ActsAsArModel
     "#{consumption.resource_id}_#{ts_key}"
   end
 
+  def self.groupby_label_value(consumption, groupby_label)
+    nil
+  end
+
   def initialize(options, consumption)
     @options = options
     super()
     if @options[:groupby_tag].present?
       classification = @options.classification_for(consumption)
       self.tag_name = classification.present? ? classification.description : _('<Empty>')
+    elsif @options[:groupby_label].present?
+      label_value = self.class.groupby_label_value(consumption, options[:groupby_label])
+      self.label_name = label_value.present? ? label_value : _('<Empty>')
     else
       init_extra_fields(consumption)
     end
@@ -63,12 +77,64 @@ class Chargeback < ActsAsArModel
     self.entity ||= consumption.resource
   end
 
-  def calculate_costs(consumption, rates)
+  def showback_category
+    case self
+    when ChargebackVm
+      'Vm'
+    when ChargebackContainerProject
+      'Container'
+    when ChargebackContainerImage
+      'ContainerImage'
+    end
+  end
+
+  def new_chargeback_calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate|
+      plan = ManageIQ::Showback::PricePlan.find_or_create_by(:description => rate.description,
+                                                             :name        => rate.description,
+                                                             :resource    => MiqEnterprise.first)
+
+      data = {}
       rate.rate_details_relevant_to(relevant_fields).each do |r|
-        r.charge(relevant_fields, consumption).each do |field, value|
+        r.populate_showback_rate(plan, r, showback_category)
+        measure = r.chargeable_field.showback_measure
+        dimension, _, _ = r.chargeable_field.showback_dimension
+        value = r.chargeable_field.measure(consumption, @options)
+        data[measure] ||= {}
+        data[measure][dimension] = [value, r.showback_unit(ChargeableField::UNITS[r.chargeable_field.metric])]
+      end
+
+      results = plan.calculate_list_of_costs_input(resource_type:  showback_category,
+                                                   data:           data,
+                                                   start_time:     consumption.instance_variable_get("@start_time"),
+                                                   end_time:       consumption.instance_variable_get("@end_time"),
+                                                   cycle_duration: @options.duration_of_report_step)
+
+      results.each do |cost_value, sb_rate|
+        r = ChargebackRateDetail.find(sb_rate.concept)
+        metric = r.chargeable_field.metric
+        metric_index = ChargeableField::VIRTUAL_COL_USES.invert[metric] || metric
+        metric_value = data[r.chargeable_field.group][metric_index]
+        metric_field = [r.chargeable_field.group, r.chargeable_field.source, "metric"].join("_")
+        cost_field = [r.chargeable_field.group, r.chargeable_field.source, "cost"].join("_")
+        _, total_metric_field, total_field = r.chargeable_field.cost_keys
+        self[total_field] = (self[total_field].to_f || 0) + cost_value.to_f
+        self[total_metric_field] = (self[total_metric_field].to_f || 0) + cost_value.to_f
+        self[cost_field] = cost_value.to_f
+        self[metric_field] = metric_value.first.to_f
+      end
+    end
+  end
+
+  def calculate_costs(consumption, rates)
+    self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
+    self.class.try(:refresh_dynamic_metric_columns)
+
+    rates.each do |rate|
+      rate.rate_details_relevant_to(relevant_fields).each do |r|
+        r.charge(relevant_fields, consumption, @options).each do |field, value|
           next unless self.class.attribute_names.include?(field)
           self[field] = (self[field] || 0) + value
         end
@@ -77,7 +143,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.report_cb_model(model)
-    model.gsub(/^Chargeback/, "")
+    model.gsub(/^(Chargeback|Metering)/, "")
   end
 
   def self.db_is_chargeback?(db)
@@ -88,17 +154,28 @@ class Chargeback < ActsAsArModel
     "tag_name"
   end
 
-  def self.set_chargeback_report_options(rpt, group_by, header_for_tag, tz)
+  def self.report_label_field
+    "label_name"
+  end
+
+  def self.set_chargeback_report_options(rpt, group_by, header_for_tag, groupby_label, tz)
     rpt.cols = %w(start_date display_range)
 
     static_cols       = group_by == "project" ? report_static_cols - ["image_name"] : report_static_cols
     static_cols       = group_by == "tag" ? [report_tag_field] : static_cols
+    static_cols       = group_by == "label" ? [report_label_field] : static_cols
     rpt.cols         += static_cols
     rpt.col_order     = static_cols + ["display_range"]
     rpt.sortby        = static_cols + ["start_date"]
 
     rpt.col_order.each do |c|
-      header_column = (c == report_tag_field && header_for_tag) ? header_for_tag : c
+      header_column = if (c == report_tag_field && header_for_tag)
+                        header_for_tag
+                      elsif (c == report_label_field && groupby_label)
+                        groupby_label
+                      else
+                        c
+                      end
       rpt.headers.push(Dictionary.gettext(header_column, :type => :column, :notfound => :titleize))
       rpt.col_formats.push(nil) # No formatting needed on the static cols
     end
@@ -129,6 +206,14 @@ class Chargeback < ActsAsArModel
 
     define_method(custom_attribute.to_sym) do
       entity.send(custom_attribute)
+    end
+  end
+
+  def self.default_column_for_format(col)
+    if col.start_with?('storage_allocated')
+      col.ends_with?('cost') ? 'storage_allocated_cost' : 'storage_allocated_metric'
+    else
+      col
     end
   end
 

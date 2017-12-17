@@ -1,0 +1,13 @@
+---
+ignore: |
+  /locale/**
+  /spec/tools/openstack_data/**
+  /vendor/**
+
+extends: relaxed
+
+rules:
+  indentation:
+    indent-sequences: false
+  line-length:
+    max: 1000

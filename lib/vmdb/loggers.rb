@@ -26,15 +26,15 @@ module Vmdb
       apply_config_value(config, $kube_log,          :level_kube)
       apply_config_value(config, $mw_log,            :level_mw)
       apply_config_value(config, $datawarehouse_log, :level_datawarehouse)
+      apply_config_value(config, $cn_monitoring_log, :level_cn_monitoring)
       apply_config_value(config, $scvmm_log,         :level_scvmm)
       apply_config_value(config, $api_log,           :level_api)
       apply_config_value(config, $fog_log,           :level_fog)
       apply_config_value(config, $azure_log,         :level_azure)
       apply_config_value(config, $lenovo_log,        :level_lenovo)
       apply_config_value(config, $websocket_log,     :level_websocket)
+      apply_config_value(config, $vcloud_log,        :level_vcloud)
     end
-
-    private
 
     def self.create_loggers
       path_dir = ManageIQ.root.join("log")
@@ -52,14 +52,17 @@ module Vmdb
       $kube_log          = create_multicast_logger(path_dir.join("kubernetes.log"))
       $mw_log            = create_multicast_logger(path_dir.join("middleware.log"))
       $datawarehouse_log = create_multicast_logger(path_dir.join("datawarehouse.log"))
+      $cn_monitoring_log = create_multicast_logger(path_dir.join("container_monitoring.log"))
       $scvmm_log         = create_multicast_logger(path_dir.join("scvmm.log"))
       $azure_log         = create_multicast_logger(path_dir.join("azure.log"))
       $api_log           = create_multicast_logger(path_dir.join("api.log"))
       $websocket_log     = create_multicast_logger(path_dir.join("websocket.log"))
       $miq_ae_logger     = create_multicast_logger(path_dir.join("automation.log"))
+      $vcloud_log        = create_multicast_logger(path_dir.join("vcloud.log"))
 
       configure_external_loggers
     end
+    private_class_method :create_loggers
 
     def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
       MulticastLogger.new(logger_class.new(log_file_path)).tap do |l|
@@ -71,6 +74,9 @@ module Vmdb
     def self.configure_external_loggers
       require 'awesome_spawn'
       AwesomeSpawn.logger = $log
+
+      require 'log_decorator'
+      LogDecorator.logger = $log
     end
     private_class_method :configure_external_loggers
 
@@ -84,6 +90,7 @@ module Vmdb
         logger.level = new_level
       end
     end
+    private_class_method :apply_config_value
   end
 end
 

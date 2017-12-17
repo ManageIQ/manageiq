@@ -1,4 +1,3 @@
-require 'miq_apache'
 class NoFreePortError < StandardError; end
 
 module MiqWebServerWorkerMixin
@@ -24,9 +23,6 @@ module MiqWebServerWorkerMixin
     end
 
     def preload_for_worker_role
-      # Make these constants globally available
-      ::UiConstants
-
       configure_secret_token
     end
 
@@ -125,7 +121,7 @@ module MiqWebServerWorkerMixin
       :server      => self.class.rails_server
     }
 
-    params[:Port] = port.kind_of?(Numeric) ? port : 3000
+    params[:Port] = port.kind_of?(Numeric) ? port : ENV["PORT"] || 3000
     params[:pid]  = self.class.pid_file(params[:Port]).to_s
 
     params
@@ -137,8 +133,6 @@ module MiqWebServerWorkerMixin
 
   def start
     delete_pid_file
-    ENV['PORT'] = port.to_s
-    ENV['MIQ_GUID'] = guid
     super
   end
 

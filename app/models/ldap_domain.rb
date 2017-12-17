@@ -29,7 +29,6 @@ class LdapDomain < ApplicationRecord
       options[:domain_prefix]  = domain_prefix
       options[:bind_timeout]   = bind_timeout
       options[:search_timeout] = search_timeout
-      # options[:] = (self.follow_referrals)
 
       @ldap = MiqLdap.new(options)
       begin

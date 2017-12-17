@@ -52,18 +52,20 @@ class MiqReport < ApplicationRecord
 
   GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
+  IMPORT_CLASS_NAMES = %w(MiqReport).freeze
 
-  def self.filter_with_report_results_by(miq_group_ids)
-    miq_group_condition = {:miq_report_results => {:miq_group_id => miq_group_ids}}
-
-    if miq_group_ids.nil?
-      miq_group_relation = where.not(miq_group_condition)
+  scope :for_user, lambda { |user|
+    if user.admin_user?
+      all
     else
-      miq_group_relation = where(miq_group_condition)
+      where(
+        arel_table[:rpt_type].eq('Custom').and(arel_table[:miq_group_id].eq(user.current_group_id))
+        .or(
+          arel_table[:rpt_type].eq('Default')
+        )
+      )
     end
-
-    miq_group_relation.joins(:miq_report_results).distinct
-  end
+  }
 
   # Scope on reports that have report results.
   #
@@ -75,8 +77,7 @@ class MiqReport < ApplicationRecord
     miq_group_ids = options[:miq_groups].collect(&:id) unless options[:miq_groups].nil?
 
     miq_group_ids ||= options[:miq_group_ids]
-
-    q = filter_with_report_results_by(miq_group_ids)
+    q = joins(:miq_report_results).merge(MiqReportResult.for_groups(miq_group_ids)).distinct
 
     if options[:select]
       cols = options[:select].to_miq_a
@@ -138,7 +139,7 @@ class MiqReport < ApplicationRecord
   def list_schedules
     exp = MiqExpression.new("=" => {"field" => "MiqReport-id",
                                     "value" => id})
-    MiqSchedule.filter_matches_with exp
+    MiqSchedule.filter_matches_with(exp)
   end
 
   def add_schedule(data)
@@ -151,7 +152,7 @@ class MiqReport < ApplicationRecord
     params['towhat'] = "MiqReport"
     params['prod_default'] = "system"
 
-    MiqSchedule.create! params
+    MiqSchedule.create!(params)
   end
 
   def db_class

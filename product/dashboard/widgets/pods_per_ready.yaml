@@ -10,13 +10,13 @@ options:
 visibility:
   :roles:
   - _ALL_
-user_id: 
+user_id:
 resource_name: Pods per Ready Status
 resource_type: MiqReport
 miq_schedule_options:
   :run_at:
-    :interval: 
+    :interval:
       :value: "1"
       :unit: daily
-enabled: true        
+enabled: true
 read_only: true

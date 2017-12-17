@@ -36,6 +36,9 @@ module MiqReport::Formatting
         options[:format] = :cores
       end
     end
+
+    col = Chargeback.default_column_for_format(col.to_s) if Chargeback.db_is_chargeback?(db)
+
     format = options.delete(:format)
     return "" if value.nil?
     return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
@@ -69,7 +72,7 @@ module MiqReport::Formatting
     # Chargeback Reports: Add the selected currency in the assigned rate to options
     if Chargeback.db_is_chargeback?(db)
       @rates_cache ||= Chargeback::RatesCache.new
-      options[:unit] = @rates_cache.currency_for_report
+      options[:unit] = @rates_cache.currency_for_report if @rates_cache.currency_for_report
     end
 
     format.merge!(options) if format # Merge additional options that were passed in as overrides
@@ -172,7 +175,7 @@ module MiqReport::Formatting
     return val unless val.kind_of?(Time) || stime.kind_of?(Date)
 
     col = options[:column]
-    col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
+    _col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
 
     val = val.in_time_zone(get_time_zone("UTC"))
     if val.respond_to?("beginning_of_#{sfx}")

@@ -1,12 +1,13 @@
-require 'miq-syntax-checker'
+require 'manageiq/automation_engine/syntax_checker'
 
 class MiqAeMethod < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
-  default_value_for :embedded_methods, []
+  default_value_for :embedded_methods, :value => [], :allows_nil => false
+  serialize :options, Hash
 
   belongs_to :ae_class, :class_name => "MiqAeClass", :foreign_key => :class_id
-  has_many   :inputs,   -> { order :priority }, :class_name => "MiqAeField", :foreign_key => :method_id,
+  has_many   :inputs,   -> { order(:priority) }, :class_name => "MiqAeField", :foreign_key => :method_id,
                         :dependent => :destroy, :autosave => true
 
   validates_presence_of   :name, :scope
@@ -16,7 +17,7 @@ class MiqAeMethod < ApplicationRecord
 
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
-  AVAILABLE_LOCATIONS  = ["builtin", "inline", "uri"]
+  AVAILABLE_LOCATIONS = %w(builtin inline uri expression playbook).freeze
   validates_inclusion_of  :location,  :in => AVAILABLE_LOCATIONS
   AVAILABLE_SCOPES     = ["class", "instance"]
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
@@ -33,9 +34,13 @@ class MiqAeMethod < ApplicationRecord
     AVAILABLE_SCOPES
   end
 
+  def self.available_expression_objects
+    MiqExpression.base_tables
+  end
+
   # Validate the syntax of the passed in inline ruby code
   def self.validate_syntax(code_text)
-    result = MiqSyntaxChecker.check(code_text)
+    result = ManageIQ::AutomationEngine::SyntaxChecker.check(code_text)
     return nil if result.valid?
     [[result.error_line, result.error_text]] # Array of arrays for future multi-line support
   end

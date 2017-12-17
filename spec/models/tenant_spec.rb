@@ -227,6 +227,15 @@ describe Tenant do
     end
   end
 
+  context "validate multi region" do
+    let(:other_region_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+
+    it "allows same name as tenant in a different region" do
+      described_class.create(:name => "GT", :description => "GT Tenant in other region", :id => other_region_id)
+      expect(described_class.new(:name => "GT", :description => "GT Tenant in this region").valid?).to be_truthy
+    end
+  end
+
   context "#ensure_can_be_destroyed" do
     let(:tenant)       { FactoryGirl.create(:tenant) }
     let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant) }
@@ -280,7 +289,9 @@ describe Tenant do
     let(:user2) { FactoryGirl.create(:user) }
 
     it "has users" do
-      admin; user1; user2
+      admin
+      user1
+      user2
       expect(tenant1.users).to include(admin)
       expect(tenant1.users).to include(user1)
       expect(tenant1.users).not_to include(user2)
@@ -618,6 +629,7 @@ describe Tenant do
     let(:parent_tenant) { FactoryGirl.create(:tenant, :parent => default_tenant) }
     let(:child_tenant1) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
     let(:child_tenant2) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
+    let(:child_tenant3) { FactoryGirl.create(:tenant, :parent => parent_tenant) }
 
     before do
       parent_tenant.set_quotas(
@@ -702,6 +714,22 @@ describe Tenant do
       expect(combined[:cpu_allocated][:used]).to              eql 2
       expect(combined[:storage_allocated][:used]).to          eql 2
       expect(combined[:templates_allocated][:used]).to        eql 2
+    end
+
+    it "combined quotas get used value when no quotas are defined for tenant" do
+      combined = child_tenant3.combined_quotas
+
+      expect(combined[:vms_allocated][:used]).to              eql 2
+      expect(combined[:mem_allocated][:used]).to              eql 2
+      expect(combined[:cpu_allocated][:used]).to              eql 2
+      expect(combined[:storage_allocated][:used]).to          eql 2
+      expect(combined[:templates_allocated][:used]).to        eql 2
+
+      expect(combined[:vms_allocated][:value]).to             eql 0.0
+      expect(combined[:mem_allocated][:value]).to             eql 0.0
+      expect(combined[:cpu_allocated][:value]).to             eql 0.0
+      expect(combined[:storage_allocated][:value]).to         eql 0.0
+      expect(combined[:templates_allocated][:value]).to       eql 0.0
     end
   end
 

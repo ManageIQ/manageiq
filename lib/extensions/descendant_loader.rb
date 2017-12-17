@@ -71,7 +71,12 @@ class DescendantLoader
       require 'ripper_ruby_parser'
 
       content = File.read(filename)
-      parsed = RipperRubyParser::Parser.new.parse(content)
+      begin
+        parsed = RipperRubyParser::Parser.new.parse(content, filename)
+      rescue => e
+        $stderr.puts "\nError parsing classes in #{filename}:\n#{e.class.name}: #{e}\n\n"
+        raise
+      end
 
       classes = collect_classes(parsed)
 
@@ -93,10 +98,6 @@ class DescendantLoader
 
         [search_combos, define_combos, flatten_name(name), flatten_name(sklass)]
       end.compact
-
-    rescue RipperRubyParser::SyntaxError
-      puts "\nSyntax error in #{filename}\n\n"
-      raise
     end
 
     def collect_classes(node, parents = [])
@@ -148,7 +149,7 @@ class DescendantLoader
       end
       combos.each do |combo|
         if (i = combo.rindex { |s| s =~ /^::/ })
-          combo.slice! 0, i
+          combo.slice!(0, i)
           combo[0] = combo[0].sub(/^::/, '')
         end
       end
@@ -211,7 +212,7 @@ class DescendantLoader
             possible_superklasses = scoped_name(sklass, search_scopes)
 
             possible_superklasses.each do |possible_superklass|
-              children[possible_superklass].concat possible_names
+              children[possible_superklass].concat(possible_names)
             end
           end
         end
@@ -232,7 +233,7 @@ class DescendantLoader
     names_to_load = class_inheritance_relationships[parent.to_s].dup
     while (name = names_to_load.shift)
       if (_klass = name.safe_constantize) # this triggers the load
-        names_to_load.concat class_inheritance_relationships[name]
+        names_to_load.concat(class_inheritance_relationships[name])
       end
     end
   end

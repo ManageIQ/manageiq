@@ -81,6 +81,27 @@ describe User do
     end
   end
 
+  describe ".missing_user_features" do
+    it "user with group and role returns nil" do
+      user = FactoryGirl.create(:user_admin)
+      expect(User.missing_user_features(user)).to be_nil
+    end
+
+    it "no user returns 'User'" do
+      expect(User.missing_user_features(nil)).to eq "User"
+    end
+
+    it "missing group returns 'Group'" do
+      user = FactoryGirl.create(:user)
+      expect(User.missing_user_features(user)).to eq "Group"
+    end
+
+    it "missing role returns 'Role'" do
+      user = FactoryGirl.create(:user_with_group)
+      expect(User.missing_user_features(user)).to eq "Role"
+    end
+  end
+
   describe "role methods" do
     let(:user) do
       FactoryGirl.create(:user,
@@ -491,6 +512,25 @@ describe User do
         User.with_user(nil, "oleg") do
           expect(User.current_userid).to eq("oleg")
           expect(User.current_user).not_to be
+        end
+        expect(User.current_userid).to eq(user1.userid)
+        expect(User.current_user).to eq(user1)
+      end
+    end
+  end
+
+  describe "#with_user_group" do
+    let(:user1) { FactoryGirl.create(:user_with_group) }
+    let(:user2) { FactoryGirl.create(:user_with_group) }
+
+    it "sets the user and group" do
+      User.with_user_group(user1, user2.current_group_id) do
+        expect(User.current_userid).to eq(user1.userid)
+        expect(User.current_user).to eq(user1)
+        expect(User.current_user.current_group).to eq(user2.current_group)
+        User.with_user_group(user2, user1.current_group) do
+          expect(User.current_userid).to eq(user2.userid)
+          expect(User.current_user).to eq(user2)
         end
         expect(User.current_userid).to eq(user1.userid)
         expect(User.current_user).to eq(user1)

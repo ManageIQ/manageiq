@@ -53,8 +53,8 @@ describe Authenticator::Ldap do
   end
 
   before(:each) do
-    wibble = FactoryGirl.create(:miq_group, :description => 'wibble')
-    wobble = FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
+    FactoryGirl.create(:miq_group, :description => 'wibble')
+    FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
   end
 
   let(:user_data) do
@@ -133,39 +133,32 @@ describe Authenticator::Ldap do
       expect(subject.lookup_by_identity('alice')).to eq(alice)
     end
 
-    it "normalizes usernames" do
-      expect(subject.lookup_by_identity('aXlice')).to eq(alice)
-    end
-
     context "using internal authorization" do
       it "refuses users that exist in LDAP" do
-        expect(-> { subject.lookup_by_identity('bob') }).to raise_error(/credentials are not configured/)
+        expect(subject.lookup_by_identity('bob')).to eq(nil)
       end
 
       it "refuses users that don't exist in LDAP" do
-        expect(subject).to receive(:userprincipal_for)
-        expect(-> { subject.lookup_by_identity('carol') }).to raise_error(/credentials are not configured/)
+        expect(subject.lookup_by_identity('carol')).to eq(nil)
       end
     end
 
-    context "using external authorization" do
-      let(:config) { super().merge(:ldap_role => true) }
+    context "not getting groups from LDAP" do
+      let(:config) { super().merge(:ldap_role => false) }
 
-      it "creates new users from LDAP" do
-        expect(subject.lookup_by_identity('bob')).to be_a(User)
-        expect(subject.lookup_by_identity('bob').name).to eq('Bob Builderson')
+      context "with a default group" do
+        let(:config) { super().merge(:default_group_for_users => 'wibble') }
+
+        it "creates new users from LDAP" do
+          expect(subject.lookup_by_identity('bob')).to eq(nil)
+          expect(subject.autocreate_user('bob').name).to eq('Bob Builderson')
+        end
       end
 
-      it "normalizes new users' names" do
-        expect(subject.lookup_by_identity('bXob')).to be_a(User)
-        expect(subject.lookup_by_identity('bXob').userid).to eq('bob')
-        expect(subject.lookup_by_identity('bXob').name).to eq('Bob Builderson')
-      end
-
-      context "with no matching groups" do
-        let(:bob_data) { super().merge(:groups => %w(bubble trouble)) }
+      context "with no default group" do
+        let(:config) { super().merge(:default_group_for_users => '') }
         it "refuses LDAP users" do
-          expect(-> { subject.lookup_by_identity('bob') }).to raise_error(/unable to match.*membership/)
+          expect(subject.autocreate_user('bob')).to eq(nil)
         end
       end
 
@@ -178,8 +171,7 @@ describe Authenticator::Ldap do
       end
 
       it "refuses users that don't exist in LDAP" do
-        expect(subject).to receive(:userprincipal_for)
-        expect(-> { subject.lookup_by_identity('carol') }).to raise_error(/no data for user/)
+        expect(subject.lookup_by_identity('carol')).to eq(nil)
       end
     end
   end
@@ -191,10 +183,6 @@ describe Authenticator::Ldap do
 
     let(:username) { 'alice' }
     let(:password) { 'secret' }
-
-    before do
-      allow(subject).to receive(:find_or_create_by_ldap)
-    end
 
     context "when using LDAP" do
       let(:config) { super().merge(:ldap_role => true) }
@@ -376,11 +364,6 @@ describe Authenticator::Ldap do
 
           it "succeeds" do
             expect(authenticate).to be_a(User)
-          end
-
-          it "looks in ldap" do
-            expect(subject).to receive(:find_or_create_by_ldap)
-            authenticate
           end
 
           it "records two successful audit entries" do

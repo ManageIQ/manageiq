@@ -43,6 +43,110 @@ describe ServiceTemplate do
       }
       expect(service_template.custom_actions).to match(expected)
     end
+
+    it "does not show hidden buttons" do
+      service_template = FactoryGirl.create(:service_template, :name => "foo")
+      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
+      false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
+      FactoryGirl.create(:custom_button,
+                         :name                  => "visible button",
+                         :applies_to_class      => "Service",
+                         :visibility_expression => true_expression)
+      FactoryGirl.create(:custom_button,
+                         :name                  => "hidden button",
+                         :applies_to_class      => "Service",
+                         :visibility_expression => false_expression)
+      FactoryGirl.create(:custom_button_set).tap do |group|
+        group.add_member(FactoryGirl.create(:custom_button,
+                                            :name                  => "visible button in group",
+                                            :applies_to_class      => "Service",
+                                            :visibility_expression => true_expression))
+        group.add_member(FactoryGirl.create(:custom_button,
+                                            :name                  => "hidden button in group",
+                                            :applies_to_class      => "Service",
+                                            :visibility_expression => false_expression))
+      end
+
+      expected = {
+        :buttons       => [
+          a_hash_including("name" => "visible button")
+        ],
+        :button_groups => [
+          a_hash_including(
+            :buttons => [
+              a_hash_including("name" => "visible button in group")
+            ]
+          )
+        ]
+      }
+      expect(service_template.custom_actions).to match(expected)
+    end
+
+    it "serializes the enablement" do
+      service_template = FactoryGirl.create(:service_template, :name => "foo")
+      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
+      false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
+      FactoryGirl.create(:custom_button,
+                         :name                  => "enabled button",
+                         :applies_to_class      => "Service",
+                         :enablement_expression => true_expression)
+      FactoryGirl.create(:custom_button,
+                         :name                  => "disabled button",
+                         :applies_to_class      => "Service",
+                         :enablement_expression => false_expression)
+      FactoryGirl.create(:custom_button_set).tap do |group|
+        group.add_member(FactoryGirl.create(:custom_button,
+                                            :name                  => "enabled button in group",
+                                            :applies_to_class      => "Service",
+                                            :enablement_expression => true_expression))
+        group.add_member(FactoryGirl.create(:custom_button,
+                                            :name                  => "disabled button in group",
+                                            :applies_to_class      => "Service",
+                                            :enablement_expression => false_expression))
+      end
+
+      expected = {
+        :buttons       => a_collection_containing_exactly(
+          a_hash_including("name" => "enabled button", "enabled" => true),
+          a_hash_including("name" => "disabled button", "enabled" => false)
+        ),
+        :button_groups => [
+          a_hash_including(
+            :buttons => a_collection_containing_exactly(
+              a_hash_including("name" => "enabled button in group", "enabled" => true),
+              a_hash_including("name" => "disabled button in group", "enabled" => false)
+            )
+          )
+        ]
+      }
+      expect(service_template.custom_actions).to match(expected)
+    end
+  end
+
+  describe "#custom_action_buttons" do
+    it "does not show hidden buttons" do
+      service_template = FactoryGirl.create(:service_template, :name => "foo")
+      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
+      false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
+      visible_button = FactoryGirl.create(:custom_button,
+                                          :applies_to_class      => "Service",
+                                          :visibility_expression => true_expression)
+      _hidden_button = FactoryGirl.create(:custom_button,
+                                          :applies_to_class      => "Service",
+                                          :visibility_expression => false_expression)
+      visible_button_in_group = FactoryGirl.create(:custom_button,
+                                                   :applies_to_class      => "Service",
+                                                   :visibility_expression => true_expression)
+      hidden_button_in_group = FactoryGirl.create(:custom_button,
+                                                  :applies_to_class      => "Service",
+                                                  :visibility_expression => false_expression)
+      FactoryGirl.create(:custom_button_set).tap do |group|
+        group.add_member(visible_button_in_group)
+        group.add_member(hidden_button_in_group)
+      end
+
+      expect(service_template.custom_action_buttons).to contain_exactly(visible_button, visible_button_in_group)
+    end
   end
 
   context "#type_display" do
@@ -224,10 +328,6 @@ describe ServiceTemplate do
       expect { add_and_save_service(@svc_c, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
       expect { add_and_save_service(@svc_d, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
       expect { add_and_save_service(@svc_c, @svc_b) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
-
-      # Print tree-view of services
-      # puts "\n#{svc_a.name}"
-      # print_svc(svc_a, "  ")
     end
 
     it "should not allow deeply nested service templates to be connected in a circular reference" do
@@ -674,6 +774,27 @@ describe ServiceTemplate do
       expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
       expect(workflow).to receive(:request_options=).with(:initiator => 'control')
       expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
+    end
+  end
+
+  context "catalog_item_types" do
+    it "only returns generic with no providers" do
+      expect(ServiceTemplate.catalog_item_types).to match(
+        hash_including('amazon'  => {:description => 'Amazon',  :display => false},
+                       'generic' => {:description => 'Generic', :display => true })
+      )
+    end
+
+    it "returns orchestration template and generic" do
+      FactoryGirl.create(:orchestration_template)
+      expect(ServiceTemplate.catalog_item_types).to match(
+        hash_including('amazon'                => { :description => 'Amazon',
+                                                    :display     => false },
+                       'generic'               => { :description => 'Generic',
+                                                    :display     => true },
+                       'generic_orchestration' => { :description => 'Orchestration',
+                                                    :display     => true})
+      )
     end
   end
 end

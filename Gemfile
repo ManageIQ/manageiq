@@ -1,4 +1,4 @@
-raise "Ruby versions less than 2.2.2 are unsupported!" if RUBY_VERSION < "2.2.2"
+raise "Ruby versions less than 2.3.1 are unsupported!" if RUBY_VERSION < "2.3.1"
 
 source 'https://rubygems.org'
 
@@ -17,80 +17,56 @@ def manageiq_plugin(plugin_name)
   end
 end
 
-manageiq_plugin "manageiq-automation_engine"
-manageiq_plugin "manageiq-content"
-manageiq_plugin "manageiq-providers-amazon"
-manageiq_plugin "manageiq-providers-ansible_tower"
-manageiq_plugin "manageiq-providers-azure"
-manageiq_plugin "manageiq-providers-foreman"
-manageiq_plugin "manageiq-providers-google"
-manageiq_plugin "manageiq-providers-hawkular"
-manageiq_plugin "manageiq-providers-kubernetes"
-manageiq_plugin "manageiq-providers-lenovo"
-manageiq_plugin "manageiq-providers-nuage"
-manageiq_plugin "manageiq-providers-openshift"
-manageiq_plugin "manageiq-providers-openstack"
-manageiq_plugin "manageiq-providers-ovirt"
-manageiq_plugin "manageiq-providers-scvmm"
-manageiq_plugin "manageiq-providers-vmware"
+manageiq_plugin "manageiq-providers-ansible_tower" # can't move this down yet, because we can't autoload ManageIQ::Providers::AnsibleTower::Shared
 manageiq_plugin "manageiq-schema"
-manageiq_plugin "manageiq-ui-classic"
 
 # Unmodified gems
 gem "activerecord-id_regions",        "~>0.2.0"
-gem "activerecord-session_store",     "~>1.0.0"
-gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
+gem "activerecord-session_store",     "~>1.1"
+gem "acts_as_tree",                   "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.2.1",       :require => false
-gem "ansible_tower_client",           "~>0.12.2",      :require => false
+gem "bcrypt",                         "~> 3.1.10",     :require => false
 gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.3.0",       :require => false
 gem "dalli",                          "~>2.7.4",       :require => false
-gem "default_value_for",              "~>3.0.2"
+gem "default_value_for",              "~>3.0.3"
+gem "docker-api",                     "~>1.33.6",      :require => false
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
 gem "hamlit",                         "~>2.7.0"
-gem "htauth",                         "2.0.0",         :require => false
+gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
-gem "jbuilder",                       "~>2.5.0" # For the REST API
+gem "kubeclient",                     "~>2.4.0",       :require => false # For scaling pods at runtime
+gem "linux_admin",                    "~>1.2.0",       :require => false
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
-gem "manageiq-network_discovery",     "~>0.1.1",       :require => false
-gem "manageiq-smartstate",            "~>0.1.1",       :require => false
-gem "mime-types",                     "~>2.6.1",       :path => "mime-types-redirector"
-gem "more_core_extensions",           "~>3.2"
+gem "manageiq-messaging",                              :require => false, :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
+gem "manageiq-network_discovery",     "~>0.1.2",       :require => false
+gem "memoist",                        "~>0.15.0",      :require => false
+gem "mime-types",                     "~>2.6.1",       :path => File.expand_path("mime-types-redirector", __dir__)
+gem "more_core_extensions",           "~>3.3"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.14.0",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
-gem "net-ssh",                        "=3.2.0",        :require => false
-gem "open4",                          "~>1.3.0",       :require => false
 gem "openscap",                       "~>0.4.3",       :require => false
-gem "ovirt-engine-sdk",               "~>4.1.4",       :require => false # Required by the oVirt provider
-gem "ovirt_metrics",                  "~>1.4.1",       :require => false
-gem "pg-pglogical",                   "~>1.1.0",       :require => false
-gem "puma",                           "~>3.3.0"
+gem "pg",                             "~>0.18.2",      :require => false
+gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.2"
 gem "rails-i18n",                     "~>5.x"
-gem "responders",                     "~>2.0"
+gem "rake",                           ">=11.0",        :require => false
 gem "rest-client",                    "~>2.0.0",       :require => false
-gem "ripper_ruby_parser",                              :require => false
-gem "ruby-dbus" # For external auth
+gem "ripper_ruby_parser",             "~>1.1.2",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
 gem "rubyzip",                        "~>1.2.1",       :require => false
-gem "rufus-scheduler",                "~>3.1.3",       :require => false
 gem "rugged",                         "~>0.25.0",      :require => false
-gem "secure_headers",                 "~>3.0.0"
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
-gem "sshkey",                         "~>1.8.0",       :require => false
-gem "thin",                           "~>1.7.0",       :require => false
-gem "vmware_web_service",             "~>0.1.1",       :require => false
-gem "websocket-driver",               "~>0.6.3"
+gem "trollop",                        "~>2.0",         :require => false
 
 # Modified gems (forked on Github)
-gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
@@ -99,10 +75,134 @@ gem "ruport",                         "=1.7.0",                       :git => "h
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 
+# Make sure to tag your new bundler group with the manageiq_default group in addition to your specific bundler group name.
+# This default is used to automatically require all of our gems in processes that don't specify which bundler groups they want.
+#
+### providers
+group :amazon, :manageiq_default do
+  manageiq_plugin "manageiq-providers-amazon"
+  gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
+end
+
+group :ansible, :manageiq_default do
+  gem "ansible_tower_client",           "~>0.12.2",      :require => false
+end
+
+group :azure, :manageiq_default do
+  manageiq_plugin "manageiq-providers-azure"
+end
+
+group :foreman, :manageiq_default do
+  manageiq_plugin "manageiq-providers-foreman"
+  gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
+end
+
+group :google, :manageiq_default do
+  manageiq_plugin "manageiq-providers-google"
+end
+
+group :hawkular, :manageiq_default do
+  manageiq_plugin "manageiq-providers-hawkular"
+end
+
+group :kubernetes, :openshift, :manageiq_default do
+  manageiq_plugin "manageiq-providers-kubernetes"
+end
+
+group :kubevirt, :manageiq_default do
+  manageiq_plugin "manageiq-providers-kubevirt"
+end
+
+group :lenovo, :manageiq_default do
+  manageiq_plugin "manageiq-providers-lenovo"
+end
+
+group :nuage, :manageiq_default do
+  manageiq_plugin "manageiq-providers-nuage"
+end
+
+group :qpid_proton, :optional => true do
+  gem "qpid_proton",                    "~>0.18.1",      :require => false
+end
+
+group :openshift, :manageiq_default do
+  manageiq_plugin "manageiq-providers-openshift"
+  gem "htauth",                         "2.0.0",         :require => false # used by container deployment
+end
+
+group :openstack, :manageiq_default do
+  manageiq_plugin "manageiq-providers-openstack"
+end
+
+group :ovirt, :manageiq_default do
+  manageiq_plugin "manageiq-providers-ovirt"
+  gem "ovirt_metrics",                  "~>2.0.0",       :require => false
+end
+
+group :scvmm, :manageiq_default do
+  manageiq_plugin "manageiq-providers-scvmm"
+end
+
+group :vmware, :manageiq_default do
+  manageiq_plugin "manageiq-providers-vmware"
+  gem "vmware_web_service",             "~>0.2.0"
+end
+
+### shared dependencies
+group :google, :openshift, :manageiq_default do
+  gem "sshkey",                         "~>1.8.0",       :require => false
+end
+
+group :automate, :cockpit, :manageiq_default do
+  gem "open4",                          "~>1.3.0",       :require => false
+end
+
+### end of provider bundler groups
+
+group :automate, :seed, :manageiq_default do
+  manageiq_plugin "manageiq-automation_engine"
+end
+
+group :replication, :manageiq_default do
+  gem "pg-pglogical",                   "~>2.1.1",       :require => false
+end
+
+group :rest_api, :manageiq_default do
+  manageiq_plugin "manageiq-api"
+end
+
+group :scheduler, :manageiq_default do
+  gem "rufus-scheduler", :git => "https://github.com/chrisarcand/rufus-scheduler.git", :branch => "3-1-with-ruby-2-4-support", :require => false
+end
+
+group :seed, :manageiq_default do
+  manageiq_plugin "manageiq-content"
+end
+
+group :smartstate, :manageiq_default do
+  gem "manageiq-smartstate",            "~>0.2",       :require => false
+end
+
+group :consumption, :manageiq_default do
+  manageiq_plugin "manageiq-consumption"
+  gem 'hashdiff'
+end
+
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
+  manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
-  gem "font-fabulous",                                                :git => "https://github.com/ManageIQ/font-fabulous.git", :branch => "master" # FIXME: this is just a temporary solution and it'll go to the ui-classic later
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
+end
+
+group :web_server, :manageiq_default do
+  gem "puma",                           "~>3.7.0"
+  gem "responders",                     "~>2.0"
+  gem "ruby-dbus" # For external auth
+  gem "secure_headers",                 "~>3.0.0"
+end
+
+group :web_socket, :manageiq_default do
+  gem "websocket-driver",               "~>0.6.3"
 end
 
 ### Start of gems excluded from the appliances.
@@ -111,9 +211,11 @@ end
 #
 unless ENV["APPLIANCE"]
   group :development do
+    gem "foreman"
     gem "haml_lint",        "~>0.20.0", :require => false
-    gem "rubocop",          "~>0.47.0", :require => false
+    gem "rubocop",          "~>0.49.0", :require => false
     gem "scss_lint",        "~>0.48.0", :require => false
+    gem "yard"
   end
 
   group :test do
@@ -121,7 +223,6 @@ unless ENV["APPLIANCE"]
     gem "capybara",         "~>2.5.0",  :require => false
     gem "coveralls",                    :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
-    gem "rails-controller-testing",     :require => false
     gem "sqlite3",                      :require => false
     gem "timecop",          "~>0.7.3",  :require => false
     gem "vcr",              "~>3.0.2",  :require => false
@@ -154,16 +255,6 @@ def override_gem(name, *args)
   end
 end
 
-# Load developer specific Gemfile
-#   Developers can create a file called Gemfile.dev.rb containing any gems for
-#   their local development.  This can be any gem under evaluation that other
-#   developers may not need or may not easily install, such as rails-dev-boost,
-#   any git based gem, and compiled gems like rbtrace or memprof.
-dev_gemfile = File.expand_path("Gemfile.dev.rb", __dir__)
-if File.exist?(dev_gemfile)
-  Bundler::UI::Shell.new.warn "** Gemfile.dev.rb deprecated, please move it to bundler.d/"
-  eval_gemfile(dev_gemfile)
-end
-
 # Load other additional Gemfiles
+#   Developers can create a file ending in .rb under bundler.d/ to specify additional development dependencies
 Dir.glob(File.join(__dir__, 'bundler.d/*.rb')).each { |f| eval_gemfile(File.expand_path(f, __dir__)) }

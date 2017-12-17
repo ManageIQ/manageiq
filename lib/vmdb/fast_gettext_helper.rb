@@ -18,9 +18,7 @@ module Vmdb
     end
 
     def self.find_available_locales_via_directories
-      Dir.entries(locale_path)
-        .select { |entry| (File.directory? File.join(locale_path, entry)) && entry != '.' && entry != '..' }
-        .sort
+      Dir.entries(locale_path).select { |entry| File.directory?(File.join(locale_path, entry)) && entry != '.' && entry != '..' }.sort
     end
 
     def self.supported_locales

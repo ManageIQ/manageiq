@@ -31,6 +31,27 @@ class MiqQueue < ApplicationRecord
   PRIORITY_WHICH  = [:max, :high, :normal, :low, :min]
   PRIORITY_DIR    = [:higher, :lower]
 
+  def self.artemis_client(client_ref)
+    @artemis_client ||= {}
+    @artemis_client[client_ref] ||= begin
+      require "manageiq-messaging"
+      ManageIQ::Messaging.logger = _log
+      queue_settings = Settings.prototype.artemis
+      connect_opts = {
+        :host       => ENV["ARTEMIS_QUEUE_HOSTNAME"] || queue_settings.queue_hostname,
+        :port       => (ENV["ARTEMIS_QUEUE_PORT"] || queue_settings.queue_port).to_i,
+        :username   => ENV["ARTEMIS_QUEUE_USERNAME"] || queue_settings.queue_username,
+        :password   => ENV["ARTEMIS_QUEUE_PASSWORD"] || queue_settings.queue_password,
+        :client_ref => client_ref,
+      }
+
+      # caching the client works, even if the connection becomes unavailable
+      # internally the client will track the state of the connection and re-open it,
+      # once it's available again - at least thats true for a stomp connection
+      ManageIQ::Messaging::Client.open(connect_opts)
+    end
+  end
+
   def self.columns_for_requeue
     @requeue_columns ||= MiqQueue.column_names.map(&:to_sym) - [:id]
   end
@@ -108,9 +129,9 @@ class MiqQueue < ApplicationRecord
     options[:priority]    ||= create_with_options[:priority] || NORMAL_PRIORITY
     options[:queue_name]  ||= create_with_options[:queue_name] || "generic"
     options[:msg_timeout] ||= create_with_options[:msg_timeout] || TIMEOUT
-    options[:task_id]      = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
+    options[:task_id]       = $_miq_worker_current_msg.try(:task_id) unless options.key?(:task_id)
     options[:tracking_label] = Thread.current[:tracking_label] || options[:task_id] unless options.key?(:tracking_label)
-    options[:role]         = options[:role].to_s unless options[:role].nil?
+    options[:role]          = options[:role].to_s unless options[:role].nil?
 
     options[:args] = [options[:args]] if options[:args] && !options[:args].kind_of?(Array)
 
@@ -124,6 +145,70 @@ class MiqQueue < ApplicationRecord
     msg
   end
 
+  # Trigger a background job
+  #
+  # target_worker:
+  #
+  # @options options [String] :class
+  # @options options [String] :instance
+  # @options options [String] :method
+  # @options options [String] :args
+  # @options options [String] :target_id (deprecated)
+  # @options options [String] :data (deprecated)
+  #
+  # execution parameters:
+  #
+  # @options options [String] :expires_on
+  # @options options [String] :ttl
+  # @options options [String] :task_id (deprecated)
+  #
+  # routing:
+  #
+  # @options options [String] :service name of the service. Similar to previous role or queue name derives
+  #                                    queue_name, role, and zone.
+  # @options options [ExtManagementSystem|Nil|Array<Class,id>] :affinity resource for affinity. Typically an ems
+  # @options options [String] :miq_zone this overrides the auto derived zone.
+  #
+  def self.submit_job(options)
+    service = options.delete(:service) || "generic"
+    resource = options.delete(:affinity)
+    case service
+    when "automate"
+      # options[:queue_name] = "generic"
+      options[:role] = service
+    when "ems_inventory"
+      options[:queue_name] = MiqEmsRefreshWorker.queue_name_for_ems(resource)
+      options[:role]       = service
+      options[:zone]       = resource.my_zone
+    when "ems_operations", "smartstate"
+      # ems_operations, refresh is class method
+      # some smartstate just want MiqServer.my_zone and pass in no resource
+      # options[:queue_name] = "generic"
+      options[:role] = service
+      options[:zone] = resource.try(:my_zone) || MiqServer.my_zone
+    when "event"
+      options[:queue_name] = "ems"
+      options[:role] = service
+    when "generic"
+      raise ArgumentError, "generic job should have no resource" if resource
+      # TODO: can we transition to zone = nil
+    when "notifier"
+      options[:role] = service
+      options[:zone] = nil # any zone
+    when "reporting"
+      options[:queue_name] = "generic"
+      options[:role] = service
+    when "smartproxy"
+      options[:queue_name] = "smartproxy"
+      options[:role] = "smartproxy"
+    end
+    put(options)
+  end
+
+  def self.where_queue_name(is_array)
+    is_array ? "AND queue_name in (?)" : "AND queue_name = ?"
+  end
+
   MIQ_QUEUE_GET = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)
@@ -134,7 +219,6 @@ class MiqQueue < ApplicationRecord
         AND (zone IS NULL OR zone = ?)
         AND task_id IS NOT NULL
     ))
-    AND queue_name = ?
     AND (role IS NULL OR role IN (?))
     AND (server_guid IS NULL OR server_guid = ?)
     AND (deliver_on IS NULL OR deliver_on <= ?)
@@ -142,15 +226,16 @@ class MiqQueue < ApplicationRecord
   EOL
 
   def self.get(options = {})
+    sql_for_get = MIQ_QUEUE_GET + where_queue_name(options[:queue_name].kind_of?(Array))
     cond = [
-      MIQ_QUEUE_GET,
+      sql_for_get,
       options[:zone] || MiqServer.my_server.zone.name,
       options[:zone] || MiqServer.my_server.zone.name,
-      options[:queue_name] || "generic",
       options[:role] || MiqServer.my_server.active_role_names,
       MiqServer.my_guid,
       Time.now.utc,
       options[:priority] || MIN_PRIORITY,
+      options[:queue_name] || "generic",
     ]
 
     prefetch_max_per_worker = Settings.server.prefetch_max_per_worker
@@ -186,27 +271,44 @@ class MiqQueue < ApplicationRecord
     _log.info("#{MiqQueue.format_full_log_msg(self)}, Requeued")
   end
 
+  # TODO (juliancheal) This is a hack. Brakeman was giving us an SQL injection
+  # warning when we concatonated the queue_name string onto the query.
+  # Creating two seperate queries like this, resolves the Brakeman issue, but
+  # isn't idea. This will need to be rewritten using Arel queires at some point.
+
   MIQ_QUEUE_PEEK = <<-EOL
     state = 'ready'
     AND (zone IS NULL OR zone = ?)
-    AND queue_name = ?
     AND (role IS NULL OR role IN (?))
     AND (server_guid IS NULL OR server_guid = ?)
     AND (deliver_on IS NULL OR deliver_on <= ?)
     AND (priority <= ?)
+    AND queue_name = ?
+  EOL
+
+  MIQ_QUEUE_PEEK_ARRAY = <<-EOL
+    state = 'ready'
+    AND (zone IS NULL OR zone = ?)
+    AND (role IS NULL OR role IN (?))
+    AND (server_guid IS NULL OR server_guid = ?)
+    AND (deliver_on IS NULL OR deliver_on <= ?)
+    AND (priority <= ?)
+    AND queue_name in (?)
   EOL
 
   def self.peek(options = {})
     conditions, select, limit = options.values_at(:conditions, :select, :limit)
 
+    sql_for_peek = conditions[:queue_name].kind_of?(Array) ? MIQ_QUEUE_PEEK_ARRAY : MIQ_QUEUE_PEEK
+
     cond = [
-      MIQ_QUEUE_PEEK,
+      sql_for_peek,
       conditions[:zone] || MiqServer.my_server.zone.name,
-      conditions[:queue_name] || "generic",
       conditions[:role] || MiqServer.my_server.active_role_names,
       MiqServer.my_guid,
       Time.now.utc,
       conditions[:priority] || MIN_PRIORITY,
+      conditions[:queue_name] || "generic",
     ]
 
     result = MiqQueue.where(cond).order(:priority, :id).limit(limit || 1)
@@ -220,31 +322,28 @@ class MiqQueue < ApplicationRecord
   #   used to put a new item on the queue.
   #
   def self.put_or_update(find_options)
-    find_options  = default_get_options(find_options)
-    conds = find_options.dup
+    find_options = default_get_options(find_options)
 
     # Since args are a serializable field, remove them and manually dump them
-    #   for proper comparison.  NOTE: hashes may not compare correctly due to
-    #   it's unordered nature.
-    where_scope = if conds.key?(:args)
-                    args = YAML.dump conds.delete(:args)
-                    MiqQueue.where(conds).where(['args = ?', args])
-                  else
-                    MiqQueue.where(conds)
-                  end
+    #   for proper comparison.
+    where_scope =
+      if find_options.key?(:args)
+        MiqQueue.where(find_options.except(:args)).where(['args = ?', find_options[:args].try(:to_yaml)])
+      else
+        MiqQueue.where(find_options)
+      end
 
     msg = nil
     loop do
       msg = where_scope.order("priority, id").first
 
       save_options = block_given? ? yield(msg, find_options) : nil
-      save_options = save_options.dup unless save_options.nil?
 
       # Add a new queue item based on the returned save options, or the find
       #   options if no save options were given.
       if msg.nil?
         put_options = save_options || find_options
-        put_options.delete(:state)
+        put_options = put_options.except(:state) if put_options.key?(:state)
         msg = MiqQueue.put(put_options)
         break
       end
@@ -254,11 +353,11 @@ class MiqQueue < ApplicationRecord
         unless save_options.nil?
           if save_options.key?(:msg_timeout) && (msg.msg_timeout > save_options[:msg_timeout])
             _log.warn("#{MiqQueue.format_short_log_msg(msg)} ignoring request to decrease timeout from <#{msg.msg_timeout}> to <#{save_options[:msg_timeout]}>")
-            save_options.delete(:msg_timeout)
+            save_options = save_options.except(:msg_timeout)
           end
 
           msg.update_attributes!(save_options)
-          _log.info("#{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.inspect}")
+          _log.info("#{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.except(:data, :msg_data).inspect}")
           _log.info("#{MiqQueue.format_full_log_msg(msg)}, Requeued")
         end
         break
@@ -308,27 +407,22 @@ class MiqQueue < ApplicationRecord
             obj = obj.find(instance_id)
           end
         rescue ActiveRecord::RecordNotFound => err
-          _log.warn  "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
           return STATUS_WARN, nil, nil
         rescue => err
-          _log.error "#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}"
+          _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
           return STATUS_ERROR, err.message, nil
         end
       end
 
       data = self.data
       args.push(data) if data
+      args.unshift(target_id) if obj.kind_of?(Class) && target_id
 
       begin
         status = STATUS_OK
         message = "Message delivered successfully"
-        Timeout.timeout(msg_timeout) do
-          if obj.kind_of?(Class) && !target_id.nil?
-            result = obj.send(method_name, target_id, *args)
-          else
-            result = obj.send(method_name, *args)
-          end
-        end
+        result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args) }
       rescue MiqException::MiqQueueRetryLater => err
         unget(err.options)
         message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
@@ -348,6 +442,12 @@ class MiqQueue < ApplicationRecord
     end
 
     return status, message, result
+  end
+
+  def dispatch_method(obj, args)
+    Timeout.timeout(msg_timeout) do
+      obj.send(method_name, *args)
+    end
   end
 
   DELIVER_IN_ERROR_MSG = 'Deliver in error'.freeze
@@ -395,10 +495,10 @@ class MiqQueue < ApplicationRecord
         end
       rescue => err
         _log.error("#{MiqQueue.format_short_log_msg(self)}: #{err}")
-        _log.error("backtrace: #{err.backtrace.join("\n")}")
+        _log.log_backtrace(err)
       end
     else
-      _log.warn "#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping"
+      _log.warn("#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping")
     end
   end
 
@@ -421,23 +521,6 @@ class MiqQueue < ApplicationRecord
 
   def unfinished?
     !finished?
-  end
-
-  def self.atStartup
-    _log.info("Cleaning up queue messages...")
-    MiqQueue.where(:state => STATE_DEQUEUE).each do |message|
-      if message.handler.nil?
-        _log.warn("Cleaning message in dequeue state without worker: #{format_full_log_msg(message)}")
-      else
-        handler_server = message.handler            if message.handler.kind_of?(MiqServer)
-        handler_server = message.handler.miq_server if message.handler.kind_of?(MiqWorker)
-        next unless handler_server == MiqServer.my_server
-
-        _log.warn("Cleaning message: #{format_full_log_msg(message)}")
-      end
-      message.update_attributes(:state => STATE_ERROR) rescue nil
-    end
-    _log.info("Cleaning up queue messages... Complete")
   end
 
   def self.format_full_log_msg(msg)

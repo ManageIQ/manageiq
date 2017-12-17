@@ -6,10 +6,11 @@ class ServerRole < ApplicationRecord
   validates_uniqueness_of   :name
 
   def self.seed
+    server_roles = all.index_by(&:name)
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
       action = csv_row.to_hash
 
-      rec = find_by(:name => action['name'])
+      rec = server_roles[action['name']]
       if rec.nil?
         _log.info("Creating Server Role [#{action['name']}]")
         create(action)

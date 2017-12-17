@@ -1,12 +1,17 @@
 class MiqAlert < ApplicationRecord
   include UuidMixin
 
-  serialize :expression
+  SEVERITIES = [nil, "info", "warning", "error"]
+
+  serialize :miq_expression
+  serialize :hash_expression
   serialize :options
 
   validates_presence_of     :description, :guid
   validates_uniqueness_of   :description, :guid
   validate :validate_automate_expressions
+  validate :validate_single_expression
+  validates :severity, :inclusion => { :in => SEVERITIES }
 
   has_many :miq_alert_statuses, :dependent => :destroy
   before_save :set_responds_to_events
@@ -28,6 +33,10 @@ class MiqAlert < ApplicationRecord
     BASE_TABLES
   end
 
+  def self.display_name
+    "Alert"
+  end
+
   acts_as_miq_set_member
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :ext_management_system, :my_enterprise]
@@ -47,11 +56,27 @@ class MiqAlert < ApplicationRecord
     Dictionary.gettext(db, :type => :model)
   end
 
-  def evaluation_description
-    return "Expression (Custom)" if     expression.kind_of?(MiqExpression)
-    return "None"                unless expression && expression.kind_of?(Hash) && expression.key?(:eval_method)
+  def expression=(exp)
+    if exp.kind_of?(MiqExpression)
+      self.miq_expression = exp
+    elsif exp.kind_of?(Hash)
+      self.hash_expression = exp
+    end
+  end
 
-    exp = self.class.expression_by_name(expression[:eval_method])
+  def expression
+    miq_expression || hash_expression
+  end
+
+  def miq_expression=(exp)
+    super(exp.nil? || exp.kind_of?(MiqExpression) ? exp : MiqExpression.new(exp))
+  end
+
+  def evaluation_description
+    return "Expression (Custom)" if     miq_expression
+    return "None"                unless hash_expression && hash_expression.key?(:eval_method)
+
+    exp = self.class.expression_by_name(hash_expression[:eval_method])
     exp ? exp[:description] : "Unknown"
   end
 
@@ -76,8 +101,8 @@ class MiqAlert < ApplicationRecord
   def validate_automate_expressions
     # if always_evaluate = true, delay_next_evaluation must be 0
     valid = true
-    automate_expression = if expression.kind_of?(Hash) && self.class.expression_by_name(expression[:eval_method])
-                            self.class.expression_by_name(expression[:eval_method])
+    automate_expression = if hash_expression && self.class.expression_by_name(hash_expression[:eval_method])
+                            self.class.expression_by_name(hash_expression[:eval_method])
                           else
                             {}
                           end
@@ -87,6 +112,12 @@ class MiqAlert < ApplicationRecord
       errors.add(:notifications, "Datawarehouse alerts must have a 0 notification frequency")
     end
     valid
+  end
+
+  def validate_single_expression
+    if miq_expression && hash_expression
+      errors.add("Alert", "must not have both miq_expression and hash_expression set")
+    end
   end
 
   def self.assigned_to_target(target, event = nil)
@@ -113,13 +144,18 @@ class MiqAlert < ApplicationRecord
     !assigned_to_target(target, "#{target.class.base_model.name.underscore}_perf_complete").empty?
   end
 
-  def self.evaluate_alerts(target, event, inputs = {})
+  def self.normalize_target(target)
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
       target = klass.find_by(:id => id)
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
+    target
+  end
+
+  def self.evaluate_alerts(target, event, inputs = {})
+    target = normalize_target(target)
 
     log_header = "[#{event}]"
     log_target = "Target: #{target.class.name} Name: [#{target.name}], Id: [#{target.id}]"
@@ -194,12 +230,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate(target, inputs = {})
-    if target.kind_of?(Array)
-      klass, id = target
-      klass = Object.const_get(klass)
-      target = klass.find_by(:id => id)
-      raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
-    end
+    target = self.class.normalize_target(target)
 
     return if self.postpone_evaluation?(target)
 
@@ -215,17 +246,20 @@ class MiqAlert < ApplicationRecord
   end
 
   def add_status_post_evaluate(target, result, event)
-    status_description, severity, url, ems_ref, resolved = event.try(:parse_event_metadata)
+    status_description, event_severity, url, resolved = event.try(:parse_event_metadata)
+    ems_ref = event.try(:ems_ref)
     status = miq_alert_statuses.find_or_initialize_by(:resource => target, :event_ems_ref => ems_ref)
     status.result = result
     status.ems_id = target.try(:ems_id)
+    status.ems_id ||= target.id if target.is_a?(ExtManagementSystem)
     status.description = status_description || description
-    status.severity = severity unless severity.blank?
+    status.severity = severity
+    status.severity = event_severity unless event_severity.blank?
     status.url = url unless url.blank?
     status.event_ems_ref = ems_ref unless ems_ref.blank?
     status.resolved = resolved
     status.evaluated_on = Time.now.utc
-    status.save
+    status.save!
     miq_alert_statuses << status
   end
 
@@ -251,7 +285,7 @@ class MiqAlert < ApplicationRecord
     _log.error("Aborting action invocation [#{err.message}]")
     raise
   rescue MiqException::PolicyPreventAction => err
-    _log.info "[#{err}]"
+    _log.info("[#{err}]")
     raise
   end
 
@@ -325,16 +359,16 @@ class MiqAlert < ApplicationRecord
   end
 
   def eval_expression(target, inputs = {})
-    return Condition.evaluate(self, target, inputs) if expression.kind_of?(MiqExpression)
-    return true if expression.kind_of?(Hash) && expression[:eval_method] == "nothing"
+    return Condition.evaluate(self, target, inputs) if miq_expression
+    return true if hash_expression && hash_expression[:eval_method] == "nothing"
 
-    raise "unable to evaluate expression: [#{expression.inspect}], unknown format" unless expression.kind_of?(Hash)
+    raise "unable to evaluate expression: [#{miq_expression.inspect}], unknown format" unless hash_expression
 
-    case expression[:mode]
+    case hash_expression[:mode]
     when "internal" then return evaluate_internal(target, inputs)
     when "automate" then return evaluate_in_automate(target, inputs)
     when "script"   then return evaluate_script
-    else                 raise "unable to evaluate expression: [#{expression.inspect}], unknown mode"
+    else                 raise "unable to evaluate expression: [#{hash_expression.inspect}], unknown mode"
     end
   end
 
@@ -350,7 +384,10 @@ class MiqAlert < ApplicationRecord
 
   def self.operating_range_perf_model_details(dbs)
     dbs.inject({}) do |h, db|
-      h[db] = Metric::LongTermAverages::AVG_COLS.inject({}) { |hh, c| hh[c.to_s] = Dictionary.gettext("#{db}Performance.#{c}"); hh }
+      h[db] = Metric::LongTermAverages::AVG_COLS.inject({}) do |hh, c|
+        hh[c.to_s] = Dictionary.gettext("#{db}Performance.#{c}")
+        hh
+      end
       h
     end
   end
@@ -374,12 +411,12 @@ class MiqAlert < ApplicationRecord
   def self.automate_expressions
     @automate_expressions ||= [
       {:name => "nothing", :description => _(" Nothing"), :db => BASE_TABLES, :options => []},
-      {:name => "ems_alarm", :description => _("VMware Alarm"), :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => 'AlarmStatusChangedEvent_#{expression[:options][:ems_id]}_#{expression[:options][:ems_alarm_mor]}',
+      {:name => "ems_alarm", :description => _("VMware Alarm"), :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => 'AlarmStatusChangedEvent_#{hash_expression[:options][:ems_id]}_#{hash_expression[:options][:ems_alarm_mor]}',
         :options => [
           {:name => :ems_id, :description => _("Management System")},
           {:name => :ems_alarm_mor, :description => _("Alarm")}
         ]},
-      {:name => "event_threshold", :description => _("Event Threshold"), :db => ["Vm"], :responds_to_events => '#{expression[:options][:event_types]}',
+      {:name => "event_threshold", :description => _("Event Threshold"), :db => ["Vm"], :responds_to_events => '#{hash_expression[:options][:event_types]}',
         :options => [
           {:name => :event_types, :description => _("Event to Check"), :values => ["CloneVM_Task", "CloneVM_Task_Complete", "DrsVmPoweredOnEvent", "MarkAsTemplate_Complete", "MigrateVM_Task", "PowerOnVM_Task_Complete", "ReconfigVM_Task_Complete", "ResetVM_Task_Complete", "ShutdownGuest_Complete", "SuspendVM_Task_Complete", "UnregisterVM_Complete", "VmPoweredOffEvent", "RelocateVM_Task_Complete"]},
           {:name => :time_threshold, :description => _("How Far Back to Check"), :required => true},
@@ -457,7 +494,122 @@ class MiqAlert < ApplicationRecord
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
         ]},
-      {:name => "dwh_generic", :description => _("All Datawarehouse alerts"), :db => ["ContainerNode"], :responds_to_events => "datawarehouse_alert",
+      {:name => "mw_ds_available_count", :description => _("DataSource - Connections Available"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of available Datasource connections"), :numeric => true}
+        ]},
+      {:name => "mw_ds_in_use_count", :description => _("DataSource - Connections In Use"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Datasource connections in use"), :numeric => true}
+        ]},
+      {:name => "mw_ds_timed_out", :description => _("DataSource - Connections Time Out"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Time Out Datasource connections"), :numeric => true}
+        ]},
+      {:name => "mw_ds_average_get_time", :description => _("DataSource - Connection Get Time"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Average Get Time in Datasource connection (ms)"), :numeric => true}
+        ]},
+      {:name => "mw_ds_average_creation_time", :description => _("DataSource - Connection Creation Time"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Average Creation Time in Datasource connection (ms)"), :numeric => true}
+        ]},
+      {:name => "mw_ds_max_wait_time", :description => _("DataSource - Connection Wait Time"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Max Wait Time in Datasource connection (ms)"), :numeric => true}
+        ]},
+      {:name => "mw_ms_topic_delivering_count", :description => _("Messaging - Delivering Message Count"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Delivering Message Count"), :numeric => true}
+        ]},
+      {:name => "mw_ms_topic_durable_message_count", :description => _("Messaging - Durable Message Count"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Durable Message Count"), :numeric => true}
+        ]},
+      {:name => "mw_ms_topic_non_durable_message_count", :description => _("Messaging - Non-durable Message Count"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Non-durable Message Count"), :numeric => true}
+        ]},
+      {:name => "mw_ms_topic_message_count", :description => _("Messaging - Messages Count"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Messages Count"), :numeric => true}
+        ]},
+      {:name => "mw_ms_topic_message_added", :description => _("Messaging - Messages Added"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Messages Added"), :numeric => true}
+        ]},
+      {:name => "mw_ms_topic_durable_subscription_count", :description => _("Messaging - Durable Subscribers"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Durable Subscribers"), :numeric => true}
+        ]},
+      {:name => "mw_ms_topic_non_durable_subscription_count", :description => _("Messaging - Non-durable Subscribers"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Non-durable Subscribers"), :numeric => true}
+        ]},
+      {:name => "mw_ms_topic_subscription_count", :description => _("Messaging - Subscriptions"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Subscriptions"), :numeric => true}
+        ]},
+      {:name => "mw_tx_committed", :description => _("EAP Transactions - Committed"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Comitted Transactions"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_tx_timeout", :description => _("EAP Transactions - Timed Out"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Timed Out Transactions"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_tx_heuristics", :description => _("EAP Transactions - Heuristic"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Heuristics"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_tx_application_rollbacks", :description => _("EAP Transactions - Application Rollbacks"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Application Rollbacks"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_tx_resource_rollbacks", :description => _("EAP Transactions - Resource Rollbacks"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Resource Rollbacks"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_tx_aborted", :description => _("EAP Transactions - Aborted"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of Aborted Transactions"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_aggregated_active_web_sessions", :description => _("Web sessions - Active"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of active Web sessions"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_aggregated_expired_web_sessions", :description => _("Web sessions - Expired"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of expired Web sessions"), :numeric => true, :required => true}
+        ]},
+      {:name => "mw_aggregated_rejected_web_sessions", :description => _("Web sessions - Rejected"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_alert",
+        :options => [
+          {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<="]},
+          {:name => :value_mw_threshold, :description => _("Number of rejected Web sessions"), :numeric => true, :required => true}
+        ]},
+      {:name => "dwh_generic", :description => _("External Prometheus Alerts"), :db => ["ContainerNode", "ExtManagementSystem"], :responds_to_events => "datawarehouse_alert",
         :options => [], :always_evaluate => true}
     ]
   end
@@ -532,14 +684,14 @@ class MiqAlert < ApplicationRecord
   end
 
   def responds_to_events_from_expression
-    return nil if expression.nil? || expression.kind_of?(MiqExpression) || expression[:eval_method] == "nothing"
+    return nil if miq_expression || hash_expression.nil? || hash_expression[:eval_method] == "nothing"
 
-    options = self.class.expression_by_name(expression[:eval_method])
-    options.nil? ? nil : substitute(options[:responds_to_events])
+    options = self.class.expression_by_name(hash_expression[:eval_method])
+    options && substitute(options[:responds_to_events])
   end
 
   def substitute(str)
-    eval "result = \"#{str}\""
+    eval("result = \"#{str}\"")
   end
 
   def evaluate_in_automate(target, inputs = {})
@@ -548,13 +700,13 @@ class MiqAlert < ApplicationRecord
     [:vm, :host, :ext_management_system].each { |k| inputs[k] = target.send(target_key) if target.respond_to?(target_key) }
 
     aevent = inputs
-    aevent[:eval_method]  = expression[:eval_method]
+    aevent[:eval_method]  = hash_expression[:eval_method]
     aevent[:alert_class]  = self.class.name.downcase
     aevent[:alert_id]     = id
     aevent[:target_class] = target.class.base_model.name.downcase
     aevent[:target_id]    = target.id
 
-    expression[:options].each { |k, v| aevent[k] = v } if expression[:options]
+    hash_expression[:options].each { |k, v| aevent[k] = v } if hash_expression[:options]
 
     begin
       result = MiqAeEvent.eval_alert_expression(target, aevent)
@@ -566,14 +718,14 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate_internal(target, _inputs = {})
-    if target.class.name == 'MiddlewareServer'
+    if target.kind_of?(::MiddlewareServer)
       method = "evaluate_middleware"
       options = _inputs[:ems_event]
     else
-      method = "evaluate_method_#{expression[:eval_method]}"
-      options = expression[:options] || {}
+      method = "evaluate_method_#{hash_expression[:eval_method]}"
+      options = hash_expression[:options] || {}
     end
-    raise "Evaluation method '#{expression[:eval_method]}' does not exist" unless self.respond_to?(method)
+    raise "Evaluation method '#{hash_expression[:eval_method]}' does not exist" unless self.respond_to?(method)
 
     send(method, target, options)
   end
@@ -734,28 +886,28 @@ class MiqAlert < ApplicationRecord
       end
     end
 
-    return if expression.kind_of?(MiqExpression)
-    return if expression.kind_of?(Hash) && expression[:eval_method] == "nothing"
+    return if miq_expression
+    return if hash_expression && hash_expression[:eval_method] == "nothing"
 
-    if expression[:options].blank?
+    if hash_expression[:options].blank?
       errors.add("expression", "has no parameters")
       return
     end
 
-    exp_type = self.class.expression_options(expression[:eval_method])
+    exp_type = self.class.expression_options(hash_expression[:eval_method])
     unless exp_type
-      errors.add("name", "#{expression[:options][:eval_method]} is invalid")
+      errors.add("name", "#{hash_expression[:options][:eval_method]} is invalid")
       return
     end
 
     exp_type.each do |fld|
       next if fld[:required] != true
-      if expression[:options][fld[:name]].blank?
+      if hash_expression[:options][fld[:name]].blank?
         errors.add("field", "'#{fld[:description]}' is required")
         next
       end
 
-      if fld[:numeric] == true && !is_numeric?(expression[:options][fld[:name]])
+      if fld[:numeric] == true && !is_numeric?(hash_expression[:options][fld[:name]])
         errors.add("field", "'#{fld[:description]}' must be a numeric")
       end
     end
@@ -786,7 +938,9 @@ class MiqAlert < ApplicationRecord
           alert = create(alert_hash)
           _log.info("Added sample Alert: #{alert.description}")
           if action
-            alert.options = {:notifications => {action.action_type.to_sym => action.options}}
+            alert.options ||= {}
+            alert.options[:notifications] ||= {}
+            alert.options[:notifications][action.action_type.to_sym] = action.options
             alert.save
           end
         end
@@ -827,11 +981,11 @@ class MiqAlert < ApplicationRecord
 
     msg = "#{msg_pfx}, Status: #{status[:status]}"
     msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    unless options[:preview] == true
+    if options[:preview] == true
+      MiqPolicy.logger.info("[PREVIEW] #{msg}")
+    else
       MiqPolicy.logger.info(msg)
       a.save!
-    else
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
     end
 
     return a, status

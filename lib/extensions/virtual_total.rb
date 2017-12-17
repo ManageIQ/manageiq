@@ -93,17 +93,34 @@ module VirtualTotal
     def virtual_aggregate_arel(reflection, method_name, column)
       return unless reflection && reflection.macro == :has_many && !reflection.options[:through]
       lambda do |t|
+        query = if reflection.scope
+                  reflection.klass.instance_exec(nil, &reflection.scope)
+                else
+                  reflection.klass.all
+                end
+
+        # ordering will probably screw up aggregations, so clear this out from
+        # any calls
+        #
+        # only clear this out if this isn't a `:size` call as well, since doing
+        # a COUNT(*) will allow any ORDER BY to still work properly.  This is
+        # to avoid any possible edge cases by clearing out the order clause.
+        query.order_values = [] if method_name != :size
+
         foreign_table = reflection.klass.arel_table
         # need db access for the keys, so delaying all this lookup until call time
-        local_key = reflection.active_record_primary_key
+        local_key   = reflection.active_record_primary_key
         foreign_key = reflection.foreign_key
+        query       = query.where(t[local_key].eq(foreign_table[foreign_key]))
+
         arel_column = if method_name == :size
                         Arel.star.count
                       else
                         reflection.klass.arel_attribute(column).send(method_name)
                       end
-        t.grouping(foreign_table.project(arel_column)
-                                .where(t[local_key].eq(foreign_table[foreign_key])))
+        query       = query.select(arel_column)
+
+        t.grouping(Arel::Nodes::SqlLiteral.new(query.to_sql))
       end
     end
   end

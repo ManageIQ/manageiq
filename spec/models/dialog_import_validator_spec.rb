@@ -1,5 +1,6 @@
 describe DialogImportValidator do
-  let(:dialog_import_validator) { described_class.new }
+  let(:dialog_field_association_validator) { instance_double("DialogFieldAssociationValidator") }
+  let(:dialog_import_validator) { described_class.new(dialog_field_association_validator) }
 
   describe "#determine_validity" do
     let(:import_file_upload) do
@@ -23,6 +24,40 @@ describe DialogImportValidator do
         expect do
           dialog_import_validator.determine_validity(import_file_upload)
         end.to raise_error(DialogImportValidator::ImportNonYamlError)
+      end
+    end
+
+    context "when associations are blank" do
+      let(:uploaded_content) do
+        [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1"}]}]}]}].to_yaml
+      end
+
+      it "does not raise an error" do
+        expect { dialog_import_validator.determine_validity(import_file_upload) }.to_not raise_error
+      end
+    end
+
+    context "when associations are not blank" do
+      context "when associations are not circular" do
+        let(:uploaded_content) do
+          [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1", "dialog_field_responders" => "foo"}]}]}]}].to_yaml
+        end
+
+        it "does not raise an error" do
+          allow(dialog_field_association_validator).to receive(:circular_references).and_return(false)
+          expect { dialog_import_validator.determine_validity(import_file_upload) }.to_not raise_error
+        end
+      end
+    end
+
+    context "when associations are circular" do
+      let(:uploaded_content) do
+        [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1", "dialog_field_responders" => "foo"}]}]}]}].to_yaml
+      end
+
+      it "does raise an error" do
+        allow(dialog_field_association_validator).to receive(:circular_references).and_return(%w(df1 df2))
+        expect { dialog_import_validator.determine_validity(import_file_upload) }.to raise_error(DialogImportValidator::DialogFieldAssociationCircularReferenceError)
       end
     end
 

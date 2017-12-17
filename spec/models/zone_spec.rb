@@ -70,7 +70,8 @@ describe Zone do
     let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
 
     it "returns clustered hosts" do
-      host ; host_with_cluster
+      host
+      host_with_cluster
 
       expect(zone.clustered_hosts).to eq([host_with_cluster])
     end
@@ -84,7 +85,8 @@ describe Zone do
     let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
 
     it "returns clustered hosts" do
-      host ; host_with_cluster
+      host
+      host_with_cluster
 
       expect(zone.non_clustered_hosts).to eq([host])
     end
@@ -139,86 +141,8 @@ describe Zone do
     end
   end
 
-  context "#ntp_settings" do
-    let(:zone) { described_class.new }
-
-    it "no settings returns default NTP settings" do
-      expect(zone.ntp_settings).to eq(:server => ["0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org"])
-    end
-
-    it "with :ntp key returns what was set" do
-      zone.settings[:ntp] = {:server => ["tock.example.com"]}
-
-      expect(zone.ntp_settings).to eq(:server => ["tock.example.com"])
-    end
-  end
-
-  context "#after_save callback" do
-    before do
-      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
-
-      @zone.update_attributes(:settings => {:ntp => {:server => ["tick.example.com"]}})
-      MiqQueue.where(:class_name => "MiqServer", :method_name => "ntp_reload").destroy_all
-    end
-
-    it "settings changed queues ntp reload" do
-      expect_any_instance_of(described_class).to receive(:queue_ntp_reload_if_changed).once.and_call_original
-
-      @zone.update_attributes(:settings => {:ntp => {:server => ["tock.example.com"]}})
-
-      expect(MiqQueue.where(:class_name => "MiqServer", :method_name => "ntp_reload").count).to eq(1)
-    end
-
-    it "settings not changed does not queue ntp reload" do
-      expect_any_instance_of(described_class).to receive(:queue_ntp_reload_if_changed).once.and_call_original
-
-      @zone.update_attributes(:settings => {:ntp => {:server => ["tick.example.com"]}})
-
-      expect(MiqQueue.where(:class_name => "MiqServer", :method_name => "ntp_reload").count).to eq(0)
-    end
-  end
-
   it "#settings should always be a hash" do
     expect(described_class.new.settings).to be_kind_of(Hash)
-  end
-
-  context "ConfigurationManagementMixin" do
-    let(:zone) { FactoryGirl.create(:zone) }
-
-    describe "#settings_for_resource" do
-      it "returns the resource's settings" do
-        settings = {:some_thing => [1, 2, 3]}
-        stub_settings(settings)
-        expect(zone.settings_for_resource.to_hash).to eq(settings)
-      end
-    end
-
-    describe "#add_settings_for_resource" do
-      it "sets the specified settings" do
-        settings = {:some_test_setting => {:setting => 1}}
-        expect(zone).to receive(:reload_all_server_settings)
-
-        zone.add_settings_for_resource(settings)
-
-        expect(Vmdb::Settings.for_resource(zone).some_test_setting.setting).to eq(1)
-      end
-    end
-
-    describe "#reload_all_server_settings" do
-      it "queues #reload_settings for the started servers" do
-        some_other_zone = FactoryGirl.create(:zone)
-        started_server = FactoryGirl.create(:miq_server, :status => "started", :zone => zone)
-        FactoryGirl.create(:miq_server, :status => "started", :zone => some_other_zone)
-        FactoryGirl.create(:miq_server, :status => "stopped", :zone => zone)
-
-        zone.reload_all_server_settings
-
-        expect(MiqQueue.count).to eq(1)
-        message = MiqQueue.first
-        expect(message.instance_id).to eq(started_server.id)
-        expect(message.method_name).to eq("reload_settings")
-      end
-    end
   end
 
   context "ConfigurationManagementMixin" do
@@ -243,6 +167,28 @@ describe Zone do
         server.activate_roles('cockpit_ws')
         expect(@zone.remote_cockpit_ws_miq_server).to eq(server)
       end
+    end
+  end
+
+  context "#ntp_reload_queue" do
+    it "queues a ntp reload for all active servers in the zone" do
+      expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
+      expect(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
+      zone     = FactoryGirl.create(:zone)
+      server_1 = FactoryGirl.create(:miq_server, :zone => zone)
+      FactoryGirl.create(:miq_server, :zone => zone, :status => "stopped")
+
+      zone.ntp_reload_queue
+
+      expect(MiqQueue.count).to eq(1)
+      expect(
+        MiqQueue.where(
+          :class_name  => "MiqServer",
+          :instance_id => server_1.id,
+          :method_name => "ntp_reload",
+          :server_guid => server_1.guid,
+        ).count
+      ).to eq(1)
     end
   end
 end

@@ -1,17 +1,6 @@
 describe MiqServer do
   include_examples ".seed called multiple times"
 
-  it ".invoke_at_startups" do
-    MiqRegion.seed
-    described_class::RUN_AT_STARTUP.each do |klass|
-      next unless klass.respond_to?(:atStartup)
-      expect(klass.constantize).to receive(:atStartup)
-    end
-
-    expect(Vmdb.logger).to receive(:log_backtrace).never
-    described_class.invoke_at_startups
-  end
-
   context ".my_guid" do
     let(:guid_file) { Rails.root.join("GUID") }
 
@@ -185,33 +174,17 @@ describe MiqServer do
           @miq_server.ntp_reload
         end
 
-        it "syncs with server settings with zone and server configured" do
-          @zone.update_attribute(:settings, :ntp => zone_ntp)
-          stub_settings(:ntp => server_ntp)
-
+        it "syncs the settings" do
           expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
           expect(chrony).to receive(:clear_servers)
-          expect(chrony).to receive(:add_servers).with(*server_ntp[:server])
+          expect(chrony).to receive(:add_servers).with("0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org")
           @miq_server.ntp_reload
         end
 
-        it "syncs with zone settings if server not configured" do
-          @zone.update_attribute(:settings, :ntp => zone_ntp)
-          stub_settings({})
+        it "only changes the config file if there are changes" do
+          expect(@miq_server).to receive(:apply_ntp_server_settings).once
 
-          expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
-          expect(chrony).to receive(:clear_servers)
-          expect(chrony).to receive(:add_servers).with(*zone_ntp[:server])
           @miq_server.ntp_reload
-        end
-
-        it "syncs with default zone settings if server and zone not configured" do
-          @zone.update_attribute(:settings, {})
-          stub_settings({})
-
-          expect(LinuxAdmin::Chrony).to receive(:new).and_return(chrony)
-          expect(chrony).to receive(:clear_servers)
-          expect(chrony).to receive(:add_servers).with(*Zone::DEFAULT_NTP_SERVERS[:server])
           @miq_server.ntp_reload
         end
       end
@@ -376,6 +349,31 @@ describe MiqServer do
 
         it "should have activated Event role" do
           expect(@miq_server.active_role_names.include?("event")).to be_truthy
+        end
+      end
+    end
+
+    context "after_destroy callback" do
+      let(:remote_server) { EvmSpecHelper.remote_miq_server }
+
+      describe "#destroy_linked_events_queue" do
+        it "queue request to destroy events linked to this server" do
+          remote_server.destroy_linked_events_queue
+          expect(MiqQueue.find_by(:class_name => 'MiqServer').method_name).to eq 'destroy_linked_events'
+        end
+      end
+
+      describe ".destroy_linked_events" do
+        it "destroys all events associated with destroyed server" do
+          FactoryGirl.create(:miq_event, :event_type => "Local TestEvent", :target => @miq_server)
+          FactoryGirl.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+          FactoryGirl.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+
+          expect(MiqEvent.count).to eq 3
+
+          allow(remote_server).to receive(:is_deleteable?).and_return(true)
+          described_class.destroy_linked_events(remote_server.id)
+          expect(MiqEvent.count).to eq 1
         end
       end
     end

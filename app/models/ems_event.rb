@@ -59,14 +59,22 @@ class EmsEvent < EventStream
   end
 
   def self.add_queue(meth, ems_id, event)
-    MiqQueue.put(
-      :target_id   => ems_id,
-      :class_name  => "EmsEvent",
-      :method_name => meth,
-      :args        => [event],
-      :queue_name  => "ems",
-      :role        => "event"
-    )
+    if Settings.prototype.queue_type == 'artemis'
+      MiqQueue.artemis_client('event_handler').publish_topic(
+        :service => "events",
+        :sender  => ems_id,
+        :event   => event[:event_type],
+        :payload => event
+      )
+    else
+      MiqQueue.submit_job(
+        :service     => "event",
+        :target_id   => ems_id,
+        :class_name  => "EmsEvent",
+        :method_name => meth,
+        :args        => [event],
+      )
+    end
   end
 
   def self.add(ems_id, event_hash)
@@ -131,9 +139,8 @@ class EmsEvent < EventStream
 
   def self.process_container_entities_in_event!(event, _options = {})
     [ContainerNode, ContainerGroup, ContainerReplicator].each do |entity|
-      process_object_in_event!(entity, event, :ems_ref_key => :ems_ref)
+      process_object_in_event!(entity, event)
     end
-    event.except!(:ems_ref)
   end
 
   def self.process_middleware_entities_in_event!(event, _options = {})
@@ -151,7 +158,7 @@ class EmsEvent < EventStream
     process_object_in_event!(AvailabilityZone, event, options)
     if event[:availability_zone_id].nil? && event[:vm_or_template_id]
       vm = VmOrTemplate.find(event[:vm_or_template_id])
-      if vm.respond_to? :availability_zone
+      if vm.respond_to?(:availability_zone)
         availability_zone = vm.availability_zone
         unless availability_zone.nil?
           event[:availability_zone_id]     = availability_zone.id
@@ -179,7 +186,6 @@ class EmsEvent < EventStream
       event_type == "datawarehouse_alert" ? message : nil,
       data[:severity],
       data[:url],
-      data[:ems_ref],
       data[:resolved],
     ]
   end
@@ -216,7 +222,7 @@ class EmsEvent < EventStream
     target_type = "src_vm_or_template"  if target_type == "src_vm"
     target_type = "dest_vm_or_template" if target_type == "dest_vm"
     target_type = "middleware_server"   if event.event_type == "hawkular_alert"
-    target_type = "container_node"      if event.event_type == "datawarehouse_alert"
+    target_type = "target"              if event.event_type == "datawarehouse_alert"
 
     event.send(target_type)
   end
@@ -235,10 +241,11 @@ class EmsEvent < EventStream
     event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
-      :event_type => event[:event_type],
-      :timestamp  => event[:timestamp],
-      :chain_id   => event[:chain_id],
-      :ems_id     => event[:ems_id]
+      :event_type  => event[:event_type],
+      :timestamp   => event[:timestamp],
+      :chain_id    => event[:chain_id],
+      :ems_id      => event[:ems_id],
+      :ems_ref     => event[:ems_ref],
     )
     new_event.handle_event if new_event
     new_event

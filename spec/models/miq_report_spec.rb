@@ -161,7 +161,8 @@ describe MiqReport do
         expected_results = [
           {"name"                                                                                  => "test_container_images",
            "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}docker_labels" => "any_value",
-           "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}labels"        => "other_value"}
+           "virtual_custom_attribute_CATTR#{CustomAttributeMixin::SECTION_SEPARATOR}labels"        => "other_value",
+           "CATTR"                                                                                 => nil}
         ]
 
         expect(report_result).to match_array(expected_results)

@@ -82,25 +82,27 @@ module MiqServer::ServerSmartProxy
         if target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm) ||
            target.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
           timeout_adj = 4
+        elsif target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) ||
+              target.kind_of?(ManageIQ::Providers::Azure::CloudManager::Template)
+          timeout_adj = 4
         elsif target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
               target.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Template)
           timeout_adj = 8
         end
       end
-      $log.debug "#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}"
+      $log.debug("#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}")
       # Queue call to scan_metadata or sync_metadata.
-      MiqQueue.put(
+      MiqQueue.submit_job(
+        :service     => "smartproxy",
         :class_name  => self.class.name,
         :instance_id => id,
         :method_name => ost.method_name,
         :args        => ost,
-        :server_guid => guid,
-        :role        => "smartproxy",
-        :queue_name  => "smartproxy",
+        :server_guid => guid, # this should be derived in service. fix this
         :msg_timeout => worker_setting[:queue_timeout] * timeout_adj
       )
     else
-      _log.error "Unsupported method [#{ost.method_name}]"
+      _log.error("Unsupported method [#{ost.method_name}]")
     end
   end
 
@@ -109,7 +111,7 @@ module MiqServer::ServerSmartProxy
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
     job    = Job.find_by(:guid => ost.taskid)
-    _log.debug "#{target.name} (#{target.class.name})"
+    _log.debug("#{target.name} (#{target.class.name})")
     begin
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
       ost.scanData = ost.args[1].kind_of?(Hash) ? ost.args[1] : {}
@@ -122,8 +124,8 @@ module MiqServer::ServerSmartProxy
 
       target.perform_metadata_scan(ost)
     rescue Exception => err
-      _log.error err.to_s
-      _log.debug err.backtrace.join("\n")
+      _log.error(err.to_s)
+      _log.log_backtrace(err, :debug)
       job.signal(:abort_retry, err.to_s, "error", true)
       return
     end
@@ -134,12 +136,12 @@ module MiqServer::ServerSmartProxy
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
     job    = Job.find_by(:guid => ost.taskid)
-    _log.debug "#{log_prefix}: #{target.name} (#{target.class.name})"
+    _log.debug("#{log_prefix}: #{target.name} (#{target.class.name})")
     begin
       target.perform_metadata_sync(ost)
     rescue Exception => err
-      _log.error err.to_s
-      _log.debug err.backtrace.join("\n")
+      _log.error(err.to_s)
+      _log.log_backtrace(err, :debug)
       job.signal(:abort_retry, err.to_s, "error", true)
       return
     end
@@ -152,7 +154,7 @@ module MiqServer::ServerSmartProxy
     errArray = errArray[0, 2] if $log.level > 1
 
     # Print the stack trace to debug logging level
-    errArray.each { |e| $log.error "Error Trace: [#{e}]" }
+    errArray.each { |e| $log.error("Error Trace: [#{e}]") }
   end
 
   def forceVmScan
@@ -168,7 +170,7 @@ module MiqServer::ServerSmartProxy
         require 'VMwareWebService/VixDiskLib/VixDiskLib'
         caps[:vixDisk] = true
       end
-    rescue Exception => err
+    rescue Exception
       # It is ok if we hit an error, it just means the library is not available to load.
     end
 

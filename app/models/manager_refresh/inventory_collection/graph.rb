@@ -48,14 +48,24 @@ module ManagerRefresh
         # depth 10. We should throw a warning maybe asking for simplifying the interconnections in the models.
         assert_graph!(edges)
 
+        self.nodes = sort_nodes(nodes)
+
         self
       end
 
       private
 
+      def sort_nodes(nodes)
+        # Separate to root nodes and child nodes, where child nodes are determined by having parent_inventory_collections
+        root_nodes, child_nodes = nodes.partition { |node| node.parent_inventory_collections.blank? }
+        # And order it that root nodes comes first, that way the disconnect of the child nodes should be always done as
+        # a part of the root nodes, as intended.
+        root_nodes + child_nodes
+      end
+
       def assert_inventory_collections(inventory_collections)
         inventory_collections.each do |inventory_collection|
-          unless inventory_collection.kind_of? ::ManagerRefresh::InventoryCollection
+          unless inventory_collection.kind_of?(::ManagerRefresh::InventoryCollection)
             raise "A ManagerRefresh::SaveInventory needs a InventoryCollection object, it got: #{inventory_collection.inspect}"
           end
         end

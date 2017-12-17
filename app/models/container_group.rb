@@ -6,15 +6,15 @@ class ContainerGroup < ApplicationRecord
   include NewWithTypeStiMixin
   include TenantIdentityMixin
   include ArchivedMixin
+  include CustomActionsMixin
+  include CockpitSupportMixin
   include_concern 'Purging'
 
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :restart_policy, :dns_policy
 
-  has_many :containers,
-           :through => :container_definitions
-  has_many :container_definitions, :dependent => :destroy
-  has_many :container_images, -> { distinct }, :through => :container_definitions
+  has_many :containers, :dependent => :destroy
+  has_many :container_images, -> { distinct }, :through => :containers
   belongs_to  :ext_management_system, :foreign_key => "ems_id"
   has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
   has_many :node_selector_parts, -> { where(:section => "node_selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
@@ -26,6 +26,8 @@ class ContainerGroup < ApplicationRecord
   belongs_to :old_container_project, :foreign_key => "old_container_project_id", :class_name => 'ContainerProject'
   belongs_to :container_build_pod
   has_many :container_volumes, :as => :parent, :dependent => :destroy
+  has_many :persistent_volume_claim, :through => :container_volumes
+  has_many :persistent_volumes, -> { where(:type=>'PersistentVolume') }, :through => :persistent_volume_claim, :source => :container_volumes
 
   # Metrics destroy is handled by purger
   has_many :metrics, :as => :resource
@@ -81,18 +83,15 @@ class ContainerGroup < ApplicationRecord
   end
 
   def disconnect_inv
-    return if ems_id.nil?
-    _log.info "Disconnecting Pod [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
-    "id [#{ext_management_system.id}] "
-    self.container_definitions.each(&:disconnect_inv)
-    self.old_ems_id = ems_id
-    self.ext_management_system = nil
-    self.container_node_id = nil
+    return if archived?
+    _log.info("Disconnecting Pod [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
+    self.containers.each(&:disconnect_inv)
     self.container_services = []
     self.container_replicator_id = nil
     self.container_build_pod_id = nil
+    # Keeping old_container_project_id for backwards compatibility, we will need a migration that is putting it back to
+    # container_project_id
     self.old_container_project_id = self.container_project_id
-    self.container_project_id = nil
     self.deleted_on = Time.now.utc
     save
   end

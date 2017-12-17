@@ -1,4 +1,3 @@
-require 'miq_apache'
 require 'linux_admin'
 
 module MiqServer::EnvironmentManagement
@@ -67,8 +66,8 @@ module MiqServer::EnvironmentManagement
       ActiveRecord::Base.connection.reconnect!
 
       # Log the Versions
-      _log.info "Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]"                   if ActiveRecord::Base.connection.respond_to?(:database_version)
-      _log.info "Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]" if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
+      _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]")                   if ActiveRecord::Base.connection.respond_to?(:database_version)
+      _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], detailed version: [#{ActiveRecord::Base.connection.detailed_database_version}]") if ActiveRecord::Base.connection.respond_to?(:detailed_database_version)
     end
 
     def start_memcached
@@ -87,10 +86,14 @@ module MiqServer::EnvironmentManagement
   # Apache
   #
   def start_apache
+    return unless MiqEnvironment::Command.is_appliance?
+
     MiqApache::Control.start
   end
 
   def stop_apache
+    return unless MiqEnvironment::Command.is_appliance?
+
     MiqApache::Control.stop
   end
 

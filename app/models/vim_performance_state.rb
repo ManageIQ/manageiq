@@ -172,8 +172,17 @@ class VimPerformanceState < ApplicationRecord
   def capture_assoc_ids
     result = {}
     ASSOCIATIONS.each do |assoc|
-      method = assoc
-      method = (resource.kind_of?(EmsCluster) ? :all_vms_and_templates : :vms_and_templates) if assoc == :vms
+      method = if assoc == :vms
+                 if resource.kind_of?(EmsCluster)
+                   :all_vms_and_templates
+                 elsif resource.kind_of?(Service)
+                   :vms
+                 else
+                   :vms_and_templates
+                 end
+               else
+                 assoc
+               end
       next unless resource.respond_to?(method)
       assoc_recs = resource.send(method)
       has_state = assoc_recs[0] && assoc_recs[0].respond_to?(:state)

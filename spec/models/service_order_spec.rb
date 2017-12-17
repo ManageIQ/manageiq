@@ -98,6 +98,13 @@ describe ServiceOrder do
     expect { ServiceOrder.remove_from_cart(request, user) }.to raise_error(RuntimeError, error_message)
   end
 
+  it "only allows one cart per user, tenant" do
+    service_order
+    expect do
+      ServiceOrder.create!(:state => ServiceOrder::STATE_CART, :user => user, :tenant => tenant)
+    end.to raise_error(ActiveRecord::RecordInvalid, /State has already been taken/)
+  end
+
   context '#deep_copy' do
     before do
       service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)

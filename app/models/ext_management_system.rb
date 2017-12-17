@@ -1,4 +1,6 @@
 class ExtManagementSystem < ApplicationRecord
+  include CustomActionsMixin
+
   def self.types
     leaf_subclasses.collect(&:ems_type)
   end
@@ -26,6 +28,8 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   belongs_to :provider
+  has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
+
   include CustomAttributeMixin
   belongs_to :tenant
   has_many :container_deployments, :foreign_key => :deployed_on_ems_id, :inverse_of => :deployed_on_ems
@@ -38,25 +42,27 @@ class ExtManagementSystem < ApplicationRecord
            :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
+  has_many :operating_systems, :through => :vms_and_templates
   has_many :hardwares,         :through => :vms_and_templates
   has_many :networks,          :through => :hardwares
   has_many :disks,             :through => :hardwares
 
   has_many :storages,       -> { distinct },          :through => :hosts
-  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
+  has_many :ems_events,     -> { order("timestamp") }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
                                                       :inverse_of => :ext_management_system
-  has_many :generated_events, -> { order "timestamp" }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id",
+  has_many :generated_events, -> { order("timestamp") }, :class_name => "EmsEvent", :foreign_key => "generating_ems_id",
                                                           :inverse_of => :generating_ems
-  has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
+  has_many :policy_events,  -> { order("timestamp") }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
 
   has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
-  has_many :miq_alert_statuses, :foreign_key => "ems_id"
+  has_many :miq_alert_statuses, :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :storage_profiles,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :physical_servers,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :customization_scripts, :foreign_key => "manager_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
@@ -71,6 +77,10 @@ class ExtManagementSystem < ApplicationRecord
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :if => :hostname_required?
+
+  scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
+
+  serialize :options
 
   def hostname_uniqueness_valid?
     return unless hostname_required?
@@ -91,7 +101,7 @@ class ExtManagementSystem < ApplicationRecord
   include ComplianceMixin
   include CustomAttributeMixin
 
-  after_destroy { |record| $log.info "MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]" }
+  after_destroy { |record| $log.info("MIQ(ExtManagementSystem.after_destroy) Removed EMS [#{record.name}] id [#{record.id}]") }
 
   acts_as_miq_taggable
 
@@ -143,6 +153,8 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_never,         :type => :integer
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
+  virtual_column :supports_block_storage,  :type => :boolean
+  virtual_column :supports_cloud_object_store_container_create, :type => :boolean
 
   virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
   virtual_aggregate :total_memory, :hosts, :sum, :ram_size
@@ -190,7 +202,7 @@ class ExtManagementSystem < ApplicationRecord
         :zone_id   => MiqServer.my_server.zone.id
       )
 
-      _log.info "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
+      _log.info("Provider #{ems.name} created")
       AuditEvent.success(
         :event        => "ems_created",
         :target_id    => ems.id,
@@ -203,6 +215,10 @@ class ExtManagementSystem < ApplicationRecord
                                                :translate => false),
           :provider_name => ems.name})
     end
+  end
+
+  def self.raw_connect?(*params)
+    !!raw_connect(*params)
   end
 
   def self.model_name_from_emstype(emstype)
@@ -400,10 +416,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def refresh_ems(opts = {})
     if missing_credentials?
-      raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("no Provider credentials defined")
     end
     unless authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self, nil, opts)
   end
@@ -412,26 +428,28 @@ class ExtManagementSystem < ApplicationRecord
     @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
   end
 
+  def self.ems_physical_infra_discovery_types
+    @ems_physical_infra_discovery_types ||= %w(lenovo_ph_infra)
+  end
+
   def disable!
-    _log.info "Disabling EMS [#{name}] id [#{id}]."
+    _log.info("Disabling EMS [#{name}] id [#{id}].")
     update!(:enabled => false)
   end
 
   def enable!
-    _log.info "Enabling EMS [#{name}] id [#{id}]."
+    _log.info("Enabling EMS [#{name}] id [#{id}].")
     update!(:enabled => true)
   end
 
+  # override destroy_queue from AsyncDeleteMixin
   def self.destroy_queue(ids)
-    ids = Array.wrap(ids)
-    _log.info("Queuing destroy of #{name} with the following ids: #{ids.inspect}")
-    ids.each do |id|
-      schedule_destroy_queue(id)
-    end
+    find(Array.wrap(ids)).each(&:destroy_queue)
   end
 
-  # override destroy_queue from AsyncDeleteMixin
   def destroy_queue
+    _log.info("Queuing destroy of #{self.class.name} with id: #{id}")
+    child_managers.each(&:destroy_queue)
     self.class.schedule_destroy_queue(id)
   end
 
@@ -542,6 +560,14 @@ class ExtManagementSystem < ApplicationRecord
 
   def total_vms_suspended; vm_count_by_state("suspended"); end
 
+  def supports_block_storage
+    supports_block_storage?
+  end
+
+  def supports_cloud_object_store_container_create
+    supports_cloud_object_store_container_create?
+  end
+
   def get_reserve(field)
     (hosts + ems_clusters).inject(0) { |v, obj| v + (obj.send(field) || 0) }
   end
@@ -556,7 +582,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def vm_log_user_event(_vm, user_event)
     $log.info(user_event)
-    $log.warn "User event logging is not available on [#{self.class.name}] Name:[#{name}]"
+    $log.warn("User event logging is not available on [#{self.class.name}] Name:[#{name}]")
   end
 
   #
@@ -601,7 +627,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def stop_event_monitor
     return if event_monitor_class.nil?
-    _log.info "EMS [#{name}] id [#{id}]: Stopping event monitor."
+    _log.info("EMS [#{name}] id [#{id}]: Stopping event monitor.")
     event_monitor_class.stop_worker_for_ems(self)
   end
 

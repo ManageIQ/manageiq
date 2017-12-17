@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 # Rails.logger.level = 0
 
 start_ts, end_ts, id_spec = ARGV

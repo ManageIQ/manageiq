@@ -21,7 +21,11 @@ class MiqSchedule < ApplicationRecord
     where("updated_at > ?", time)
   }
 
-  scope :filter_matches_with, -> (exp) { where(:filter => exp) }
+  scope :filter_matches_with,      ->(exp)    { where(:filter => exp) }
+  scope :with_prod_default_not_in, ->(prod)   { where.not(:prod_default => prod).or(where(:prod_default => nil)) }
+  scope :without_adhoc,            ->         { where(:adhoc => nil) }
+  scope :with_towhat,              ->(towhat) { where(:towhat => towhat) }
+  scope :with_userid,              ->(userid) { where(:userid => userid) }
 
   serialize :sched_action
   serialize :filter
@@ -73,7 +77,7 @@ class MiqSchedule < ApplicationRecord
       return
     end
 
-    msg = MiqQueue.put(
+    msg = MiqQueue.submit_job(
       :class_name  => name,
       :instance_id => sched.id,
       :method_name => "invoke_actions",
@@ -141,7 +145,7 @@ class MiqSchedule < ApplicationRecord
     else
       time = (last_run_on && (last_run_on > run_at[:start_time])) ? nil : run_at[:start_time]
     end
-    time.nil? ? nil : time.utc
+    time.try(:utc)
   end
 
   def run_at_to_human(timezone)
@@ -184,7 +188,6 @@ class MiqSchedule < ApplicationRecord
     sched_action[:options] ||= {}
     obj.scan_queue(userid, sched_action[:options])
     _log.info("Action [#{name}] has been run for target: [#{obj.name}]")
-    # puts("[#{Time.now}] MIQ(Schedule.action_vm_scan) Action [#{self.name}] has been run for target: [#{obj.name}]")
   end
 
   def action_scan(obj, _at)
@@ -407,7 +410,7 @@ class MiqSchedule < ApplicationRecord
     interval_value = run_at[:interval][:value].to_i
     meth = rails_interval
 
-    meth.nil? ? nil : interval_value.send(meth)
+    meth && interval_value.send(meth)
   end
 
   def self.preload_schedules
@@ -417,10 +420,10 @@ class MiqSchedule < ApplicationRecord
 
     slist.each do |sched|
       rec = find_by(:name => sched[:attributes][:name])
-      unless rec
-        create(sched[:attributes])
-      else
+      if rec
         rec.update_attributes(sched[:attributes])
+      else
+        create(sched[:attributes])
       end
     end
     _log.info("Preloading sample schedules... Done")

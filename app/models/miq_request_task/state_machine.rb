@@ -14,7 +14,7 @@ module MiqRequestTask::StateMachine
     return signal(:finish) if ![:finish, :provision_error].include?(phase.to_sym) && prematurely_finished?
 
     self.phase = phase.to_s
-    $log.info "Starting Phase <#{self.phase}>"
+    $log.info("Starting Phase <#{self.phase}>")
     save
 
     begin
@@ -50,13 +50,13 @@ module MiqRequestTask::StateMachine
   def signal_queue(phase)
     method_name, args = phase == :abort ? [:signal_abort, []] : [:signal, [phase]]
     MiqQueue.put(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => method_name,
-      :args        => args,
-      :zone        => my_zone,
-      :role        => my_role,
-      :task_id     => my_task_id,
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => method_name,
+      :args           => args,
+      :zone           => my_zone,
+      :role           => my_role,
+      :tracking_label => my_task_id,
     )
   end
 
@@ -71,13 +71,13 @@ module MiqRequestTask::StateMachine
   def requeue_phase
     save # Save current phase_context
     MiqQueue.put(
-      :class_name   => self.class.name,
-      :instance_id  => id,
-      :method_name  => phase,
-      :deliver_on   => 10.seconds.from_now.utc,
-      :zone         => my_zone,
-      :role         => my_role,
-      :task_id      => my_task_id,
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => phase,
+      :deliver_on     => 10.seconds.from_now.utc,
+      :zone           => my_zone,
+      :role           => my_role,
+      :tracking_label => my_task_id,
       :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
   end

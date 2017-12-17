@@ -6,6 +6,22 @@ class DialogField < ApplicationRecord
   belongs_to :dialog_group
   has_one :resource_action, :as => :resource, :dependent => :destroy
 
+  has_many :dialog_field_associations,
+           :foreign_key => :trigger_id,
+           :class_name  => :DialogFieldAssociation,
+           :dependent   => :destroy
+  has_many :reverse_dialog_field_associations,
+           :foreign_key => :respond_id,
+           :class_name  => :DialogFieldAssociation,
+           :dependent   => :destroy
+
+  has_many :dialog_field_responders,
+           :source  => :respond,
+           :through => :dialog_field_associations
+  has_many :dialog_field_triggers,
+           :source  => :trigger,
+           :through => :reverse_dialog_field_associations
+
   alias_attribute :order, :position
 
   validates_presence_of   :name
@@ -109,6 +125,12 @@ class DialogField < ApplicationRecord
     DialogFieldSerializer.serialize(self)
   end
 
+  def update_dialog_field_responders(id_list)
+    dialog_field_responders.destroy_all
+
+    self.dialog_field_responders = available_dialog_field_responders(id_list) unless id_list.blank?
+  end
+
   def deep_copy
     dup.tap do |new_field|
       new_field.resource_action = resource_action.dup
@@ -116,6 +138,10 @@ class DialogField < ApplicationRecord
   end
 
   private
+
+  def available_dialog_field_responders(id_list)
+    DialogField.find(id_list)
+  end
 
   def default_resource_action
     build_resource_action if resource_action.nil?

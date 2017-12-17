@@ -1,4 +1,4 @@
---- 
+---
 title: "Tenant Quotas"
 order: Ascending
 menu_name: "Tenant Quotas"
@@ -35,7 +35,7 @@ col_order:
 - tenant_quotas.available
 template_type: report
 group: y
-sortby: 
+sortby:
 - name
 headers:
 - Tenant Name
@@ -44,4 +44,3 @@ headers:
 - In Use
 - Allocated
 - Available
-

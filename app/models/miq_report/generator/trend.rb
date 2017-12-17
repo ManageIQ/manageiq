@@ -45,7 +45,7 @@ module MiqReport::Generator::Trend
     klass = db.kind_of?(Class) ? db : Object.const_get(db)
     self.title = klass.report_title(db_options)
     self.cols, self.headers = klass.report_cols(db_options)
-    options[:only] ||= (cols + build_cols_from_include(include) + ['id']).uniq
+    options[:only] ||= cols_for_report
 
     # Build and filter trend data from performance data
     build_apply_time_profile(results)
@@ -67,7 +67,7 @@ module MiqReport::Generator::Trend
     begin
       val = MiqStats.solve_for_y(rec.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i, @trend_data[col][:slope], @trend_data[col][:yint])
       return val > 0 ? val : 0
-    rescue ZeroDivisionError => err
+    rescue ZeroDivisionError
       return nil
     end
   end
@@ -79,12 +79,13 @@ module MiqReport::Generator::Trend
     @trend_data = {}
     recs.sort! { |a, b| a.send(CHART_X_AXIS_COLUMN) <=> b.send(CHART_X_AXIS_COLUMN) } if recs.first.respond_to?(CHART_X_AXIS_COLUMN)
 
-    cols.each do|c|
+    cols.each do |c|
       next unless self.class.is_trend_column?(c)
       @trend_data[c] = {}
 
       y_array, x_array = recs.inject([]) do |arr, r|
-        arr[0] ||= []; arr[1] ||= []
+        arr[0] ||= []
+        arr[1] ||= []
         next(arr) unless  r.respond_to?(CHART_X_AXIS_COLUMN) && r.respond_to?(c[6..-1])
         if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
           _log.debug("Timestamp: [#{r.timestamp}] is outside of time profile: [#{time_profile.description}]")

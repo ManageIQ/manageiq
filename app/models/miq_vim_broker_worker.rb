@@ -1,13 +1,17 @@
 class MiqVimBrokerWorker < MiqWorker
   require_nested :Runner
 
-  self.required_roles         = %w(
-    ems_inventory
-    ems_metrics_collector
-    ems_operations
-    smartproxy
-    smartstate
-  )
+  self.required_roles         = lambda {
+    %w(
+      ems_metrics_collector
+      ems_operations
+      smartproxy
+      smartstate
+    ).tap do |roles|
+      roles << 'ems_inventory' unless Settings.prototype.ems_vmware.update_driven_refresh
+    end
+  }
+
   self.check_for_minimal_role = false
   self.workers                = lambda {
     return 0 unless ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?
@@ -54,7 +58,7 @@ class MiqVimBrokerWorker < MiqWorker
   def self.drb_port
     uri = drb_uri
     return nil if uri.nil?
-    scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(uri)
+    _scheme, _userinfo, _host, port, _registry, _path, _opaque, _query, _fragment = URI.split(uri)
     _log.debug("Active VimBroker DRb Port is #{port}")
     port.to_i
   end
@@ -68,7 +72,7 @@ class MiqVimBrokerWorker < MiqWorker
 
   def self.queue_reconnect_ems(ems)
     deliver_on = Time.now.utc + (worker_settings[:reconnect_retry_interval] || 5.minutes)
-    _log.info "Queueing reconnect for EMS name: [#{ems.name}], id: [#{ems.id}] at [#{deliver_on}]"
+    _log.info("Queueing reconnect for EMS name: [#{ems.name}], id: [#{ems.id}] at [#{deliver_on}]")
     MiqQueue.put(
       :class_name  => name,
       :method_name => "reconnect_ems",

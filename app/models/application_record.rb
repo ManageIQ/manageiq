@@ -15,6 +15,8 @@ class ApplicationRecord < ActiveRecord::Base
   extend ArTableLock
 
   # FIXME: UI code - decorator support
-  extend MiqDecorator::Klass
-  include MiqDecorator::Instance
+  if defined?(ManageIQ::UI::Classic::Engine)
+    extend MiqDecorator::Klass
+    include MiqDecorator::Instance
+  end
 end

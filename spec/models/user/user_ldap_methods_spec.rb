@@ -14,6 +14,7 @@ describe Authenticator::Ldap do
 
   context ".lookup_by_identity" do
     let(:current_user) { @auth.lookup_by_identity(@username) }
+    let(:autocreate_current_user) { @auth.autocreate_user(@username) }
 
     before do
       @username    = "upnuser"
@@ -30,15 +31,16 @@ describe Authenticator::Ldap do
 
     it "user exists" do
       user = FactoryGirl.create(:user_admin, :userid => @fqusername)
-      allow(@auth).to receive(:userprincipal_for).and_return(user)
+      allow(@auth).to receive(:lookup_by_identity).and_return(user)
       expect(current_user).to eq(user)
     end
 
     it "user does not exist" do
       group = create_super_admin_group
+      @auth_config[:authentication][:default_group_for_users] = group.name
       setup_to_create_user(group)
 
-      expect(current_user).to be_present
+      expect(autocreate_current_user).to be_present
       expect(User.all.size).to eq(1)
     end
   end
@@ -84,7 +86,6 @@ describe Authenticator::Ldap do
 
         context "with default group for users enabled" do
           it "group exists" do
-            allow(@auth).to receive(:find_or_create_by_ldap)
             group = create_super_admin_group
             setup_to_create_user(group)
             @auth_config[:authentication][:default_group_for_users] = group.description

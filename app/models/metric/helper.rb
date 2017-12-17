@@ -110,7 +110,7 @@ module Metric::Helper
          when 'hourly'
            # Alter the start time to be 2 intervals prior the start time requested
            #   due to VIM data integrity issues for most recent historical data
-           start_time.nil? ? nil : (Time.parse(start_time.to_s).utc - (2 * interval.to_i)).utc.iso8601
+           start_time && (Time.parse(start_time.to_s).utc - (2 * interval.to_i)).utc.iso8601
          else
            start_time.kind_of?(Time) ? start_time.iso8601 : start_time
          end
@@ -121,9 +121,9 @@ module Metric::Helper
 
   def self.remove_duplicate_timestamps(recs)
     if recs.respond_to?(:klass) # active record relation
-      return recs unless recs.klass.kind_of?(Metric) || recs.klass.kind_of?(MetricRollup)
+      return recs unless recs.klass <= Metric || recs.klass <= MetricRollup
     elsif recs.empty? || !recs.all? { |r| r.kind_of?(Metric) || r.kind_of?(MetricRollup) }
-      return recs 
+      return recs
     end
 
     recs = recs.sort_by { |r| r.resource_type + r.resource_id.to_s + r.timestamp.iso8601 }
@@ -159,8 +159,8 @@ module Metric::Helper
   # interval_name of hourly (and others)
   #   Just your typical x.seconds.ago
   #
-  # @param start_offset [Fixnum]
-  # @param end_offset [Fixnum|nil]
+  # @param start_offset [Integer]
+  # @param end_offset [Integer|nil]
   # @return [Range<Datetime,Datetime>] timestamp range for offsets
   def self.time_range_from_offset(interval_name, start_offset, end_offset, tz = nil)
     if interval_name == "daily"

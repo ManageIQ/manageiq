@@ -9,7 +9,7 @@ module Metric::Capture
   HISTORICAL_PRIORITY = MiqQueue::LOW_PRIORITY
 
   def self.capture_cols
-    Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float && c[0, 7] != "derived" }.compact
+    @capture_cols ||= Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float && c[0, 7] != "derived" }.compact
   end
 
   def self.historical_days
@@ -18,6 +18,11 @@ module Metric::Capture
 
   def self.historical_start_time
     historical_days.days.ago.utc.beginning_of_day
+  end
+
+  def self.targets_archived_from
+    archived_for_setting = Settings.performance.targets.archived_for
+    archived_for_setting.to_i_with_method.seconds.ago.utc
   end
 
   def self.concurrent_requests(interval_name)
@@ -39,32 +44,31 @@ module Metric::Capture
   end
 
   def self.perf_capture_timer(zone = nil)
-    _log.info "Queueing performance capture..."
+    _log.info("Queueing performance capture...")
 
     zone ||= MiqServer.my_server.zone
     perf_capture_health_check(zone)
     targets = Metric::Targets.capture_targets(zone)
 
     targets_by_rollup_parent = calc_targets_by_rollup_parent(targets)
-    tasks_by_rollup_parent   = calc_tasks_by_rollup_parent(targets_by_rollup_parent)
-    target_options = calc_target_options(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
+    target_options = calc_target_options(zone, targets_by_rollup_parent)
     targets = filter_perf_capture_now(targets, target_options)
     queue_captures(targets, target_options)
 
     # Purge tasks older than 4 hours
     MiqTask.delete_older(4.hours.ago.utc, "name LIKE 'Performance rollup for %'")
 
-    _log.info "Queueing performance capture...Complete"
+    _log.info("Queueing performance capture...Complete")
   end
 
   def self.perf_capture_gap(start_time, end_time, zone_id = nil)
-    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]..."
+    _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...")
 
     zone = Zone.find(zone_id) if zone_id
     targets = Metric::Targets.capture_targets(zone, :exclude_storages => true)
     targets.each { |target| target.perf_capture_queue('historical', :start_time => start_time, :end_time => end_time, :zone => zone) }
 
-    _log.info "Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete"
+    _log.info("Queueing performance capture for range: [#{start_time} - #{end_time}]...Complete")
   end
 
   def self.perf_capture_gap_queue(start_time, end_time, zone = nil)
@@ -128,32 +132,40 @@ module Metric::Capture
   end
   private_class_method :perf_capture_health_check
 
-  def self.calc_targets_by_rollup_parent(targets)
-    # Collect realtime targets and group them by their rollup parent, e.g. {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
-    targets_by_rollup_parent = targets.inject({}) do |h, target|
-      next(h) unless target.kind_of?(Host) && perf_capture_now?(target)
-
-      interval_name = perf_target_to_interval_name(target)
-      next unless interval_name == "realtime"
-
-      target.perf_rollup_parents(interval_name).to_a.compact.each do |parent|
-        pkey = "#{parent.class}:#{parent.id}"
-        h[pkey] ||= []
-        h[pkey] << "#{target.class}:#{target.id}"
-      end
-
-      h
+  # Collect realtime targets and group them by their rollup parent
+  #
+  # 1. Only calculate rollups for Hosts
+  # 2. Some Hosts have an EmsCluster as a parent, others have none.
+  # 3. Only Hosts with a parent are rolled up.
+  # @param [Array<Host|VmOrTemplate|Storage>] @targets The nodes to rollup
+  # @option options :force Force capture if this node is a host
+  # @returns Hash<String,Array<Host>>
+  #   e.g.: {"EmsCluster:4"=>[Host:4], "EmsCluster:5"=>[Host:1, Host:2]}
+  def self.calc_targets_by_rollup_parent(targets, options = {})
+    realtime_targets = targets.select do |target|
+      target.kind_of?(Host) &&
+        perf_target_to_interval_name(target) == "realtime" &&
+        (options[:force] || perf_capture_now?(target))
     end
-    targets_by_rollup_parent
+    realtime_targets.each_with_object({}) do |target, h|
+      target.perf_rollup_parents("realtime").to_a.compact.each do |parent|
+        pkey = "#{parent.class}:#{parent.id}"
+        (h[pkey] ||= []) << target
+      end
+    end
   end
-  private_class_method :calc_targets_by_rollup_parent
 
-  def self.calc_tasks_by_rollup_parent(targets_by_rollup_parent)
+  # Determine queue options for each target
+  # Is only generating options for Vmware Hosts, which have a task for rollups.
+  # The rest just set the zone
+  def self.calc_target_options(zone, targets_by_rollup_parent)
     task_end_time           = Time.now.utc.iso8601
     default_task_start_time = 1.hour.ago.utc.iso8601
 
+    target_options = Hash.new { |h, k| h[k] = {:zone => zone} }
     # Create a new task for each rollup parent
-    tasks_by_rollup_parent = targets_by_rollup_parent.keys.inject({}) do |h, pkey|
+    # mark each target with the rollup parent
+    targets_by_rollup_parent.each_with_object(target_options) do |(pkey, targets), h|
       name = "Performance rollup for #{pkey}"
       prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
@@ -168,37 +180,19 @@ module Metric::Capture
           :start    => task_start_time,
           :end      => task_end_time,
           :parent   => pkey,
-          :targets  => targets_by_rollup_parent[pkey],
+          :targets  => targets.map { |target| "#{target.class}:#{target.id}" },
           :complete => [],
           :interval => "realtime"
         }
       )
-      _log.info "Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
-      h[pkey] = task
-      h
-    end
-
-    tasks_by_rollup_parent
-  end
-  private_class_method :calc_tasks_by_rollup_parent
-
-  def self.calc_target_options(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
-    targets.each_with_object({}) do |target, all_options|
-      interval_name = perf_target_to_interval_name(target)
-
-      options = {:zone => zone}
-      target.perf_rollup_parents(interval_name).to_a.compact.each do |parent|
-        if tasks_by_rollup_parent.key?("#{parent.class}:#{parent.id}")
-          pkey = "#{parent.class}:#{parent.id}"
-          tkey = "#{target.class}:#{target.id}"
-          if targets_by_rollup_parent[pkey].include?(tkey)
-            # FIXME: check that this is still correct
-            options[:task_id] = tasks_by_rollup_parent[pkey].id
-            options[:force]   = true # Force collection since we've already verified that capture should be done now
-          end
-        end
+      _log.info("Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]")
+      targets.each do |target|
+        h[target] = {
+          :task_id => task.id,
+          :force   => true, # Force collection since we've already verified that capture should be done now
+          :zone    => zone,
+        }
       end
-      all_options[target] = options
     end
   end
   private_class_method :calc_target_options

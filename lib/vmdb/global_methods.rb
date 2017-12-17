@@ -1,7 +1,7 @@
 module Vmdb
   module GlobalMethods
     def is_numeric?(n)
-      Float n
+      Float(n)
     rescue
       false
     else
@@ -10,7 +10,7 @@ module Vmdb
 
     # Check to see if a field contains a valid integer
     def is_integer?(n)
-      Integer n
+      Integer(n)
     rescue
       false
     else
@@ -47,14 +47,14 @@ module Vmdb
         when "export_filename"                      # for export/log filename
           new_time = new_time.strftime("%Y%m%d_%H%M%S")
         when "tl"
-          new_time = I18n.l new_time
+          new_time = I18n.l(new_time)
         when "raw"                                  # return without formatting
         when "compare_hdr"                          # for drift/compare headers
           new_time = I18n.l(new_time, :format => :long) + new_time.strftime(" %Z")
         when "widget_footer"                        # for widget footers
           new_time = I18n.l(new_time, :format => :long)
         else                                        # for summary screens
-          new_time = I18n.l new_time
+          new_time = I18n.l(new_time)
         end
       else    # if time is nil
         new_time = ""

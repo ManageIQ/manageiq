@@ -7,12 +7,15 @@ class MiqWorker < ApplicationRecord
 
   belongs_to :miq_server
   has_many   :messages,           :as => :handler, :class_name => 'MiqQueue'
-  has_many   :active_messages,    -> { where ["state = ?", "dequeue"] }, :as => :handler, :class_name => 'MiqQueue'
-  has_many   :ready_messages,     -> { where ["state = ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue'
-  has_many   :processed_messages, -> { where ["state != ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
+  has_many   :active_messages,    -> { where(["state = ?", "dequeue"]) }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :ready_messages,     -> { where(["state = ?", "ready"]) }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :processed_messages, -> { where(["state != ?", "ready"]) }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
 
   virtual_column :friendly_name, :type => :string
   virtual_column :uri_or_queue_name, :type => :string
+
+  scope :with_miq_server_id, ->(server_id) { where(:miq_server_id => server_id) }
+  scope :with_status,        ->(status)    { where(:status => status) }
 
   STATUS_CREATING = 'creating'.freeze
   STATUS_STARTING = 'starting'.freeze
@@ -29,13 +32,9 @@ class MiqWorker < ApplicationRecord
   STATUSES_STOPPED  = [STATUS_STOPPED, STATUS_KILLED, STATUS_ABORTED]
   STATUSES_CURRENT_OR_STARTING = STATUSES_CURRENT + STATUSES_STARTING
   STATUSES_ALIVE    = STATUSES_CURRENT_OR_STARTING + [STATUS_STOPPING]
-  PROCESS_INFO_FIELDS = %i(priority memory_usage percent_memory percent_cpu memory_size cpu_time proportional_set_size)
+  PROCESS_INFO_FIELDS = %i(priority memory_usage percent_memory percent_cpu memory_size cpu_time proportional_set_size unique_set_size)
 
   PROCESS_TITLE_PREFIX = "MIQ:".freeze
-  def self.atStartup
-    # Delete and Kill all workers that were running previously
-    clean_all_workers
-  end
 
   def self.atShutdown
     stop_all_workers
@@ -61,16 +60,18 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.has_minimal_env_option?
-    return false if MiqServer.minimal_env_options.empty? || required_roles.blank?
+    roles = if required_roles.kind_of?(Proc)
+              required_roles.call
+            else
+              required_roles
+            end
 
-    case required_roles
-    when String
-      MiqServer.minimal_env_options.include?(required_roles)
-    when Array
-      required_roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
-    else
-      raise _("Unexpected type: <self.required_roles.class.name>")
-    end
+    return false if MiqServer.minimal_env_options.empty? || roles.blank?
+
+    roles = Array(roles) if roles.kind_of?(String)
+    raise _("Unexpected type: <self.required_roles.class.name>") unless roles.kind_of?(Array)
+
+    roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
   end
 
   class_attribute :check_for_minimal_role, :default_queue_name, :required_roles, :maximum_workers_count, :include_stopping_workers_on_synchronize
@@ -121,16 +122,18 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.has_required_role?
-    return true if required_roles.blank?
+    roles = if required_roles.kind_of?(Proc)
+              required_roles.call
+            else
+              required_roles
+            end
 
-    case required_roles
-    when String
-      MiqServer.my_server.has_active_role?(required_roles)
-    when Array
-      required_roles.any? { |role| MiqServer.my_server.has_active_role?(role) }
-    else
-      raise _("Unexpected type: <self.required_roles.class.name>")
-    end
+    return true if roles.blank?
+
+    roles = Array(roles) if roles.kind_of?(String)
+    raise _("Unexpected type: <self.required_roles.class.name>") unless roles.kind_of?(Array)
+
+    roles.any? { |role| MiqServer.my_server.has_active_role?(role) }
   end
 
   def self.enough_resource_to_start_worker?
@@ -220,7 +223,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def heartbeat_file
-    @heartbeat_file ||= ENV["WORKER_HEARTBEAT_FILE"] || Rails.root.join("tmp", "#{guid}.hb")
+    @heartbeat_file ||= Workers::MiqDefaults.heartbeat_file(guid)
   end
 
   def self.worker_settings(options = {})
@@ -238,13 +241,6 @@ class MiqWorker < ApplicationRecord
 
   def self.restart_workers(server_id = nil)
     find_current(server_id).each(&:restart)
-  end
-
-  def self.clean_workers
-    server_scope.each do |w|
-      Process.kill(9, w.pid) if w.pid && w.is_alive? rescue nil
-      w.destroy
-    end
   end
 
   def self.status_update
@@ -283,10 +279,6 @@ class MiqWorker < ApplicationRecord
 
   def self.restart_all_workers(server_id = nil)
     MiqWorker.restart_workers(server_id)
-  end
-
-  def self.clean_all_workers
-    MiqWorker.clean_workers
   end
 
   def self.status_update_all
@@ -332,9 +324,21 @@ class MiqWorker < ApplicationRecord
     owner_to_pool[Process.ppid].values.compact.each do |pool|
       pool.connections.each do |conn|
         socket = conn.raw_connection.socket
-        _log.info "Closing socket: #{socket}"
+        _log.info("Closing socket: #{socket}")
         IO.for_fd(socket).close
       end
+    end
+  end
+
+  # Overriding queue_name as now some queue names can be
+  # arrays of names for some workers not just a singular name.
+  # We use JSON.parse as the array of names is stored as a string.
+  # This converts it back to a Ruby Array safely.
+  def queue_name
+    begin
+      JSON.parse(self[:queue_name]).sort
+    rescue JSON::ParserError, TypeError
+      self[:queue_name]
     end
   end
 
@@ -358,9 +362,18 @@ class MiqWorker < ApplicationRecord
     pid
   end
 
-  def self.build_command_line(guid)
-    command_line = "#{Gem.ruby} #{runner_script} --heartbeat --guid=#{guid} #{name}"
-    ENV['APPLIANCE'] ? "nice #{nice_increment} #{command_line}" : command_line
+  def self.build_command_line(guid, ems_id = nil)
+    raise ArgumentError, "No guid provided" unless guid
+
+    require 'awesome_spawn'
+    cmd = "#{Gem.ruby} #{runner_script}"
+    cmd = "nice #{nice_increment} #{cmd}" if ENV["APPLIANCE"]
+
+    options = {:guid => guid, :heartbeat => nil}
+    if ems_id
+      options[:ems_id] = ems_id.kind_of?(Array) ? ems_id.join(",") : ems_id
+    end
+    "#{AwesomeSpawn::CommandLineBuilder.new.build(cmd, options)} #{name}"
   end
 
   def self.runner_script
@@ -369,8 +382,12 @@ class MiqWorker < ApplicationRecord
     script
   end
 
+  def command_line
+    self.class.build_command_line(*worker_options.values_at(:guid, :ems_id))
+  end
+
   def start_runner_via_spawn
-    pid = Kernel.spawn(self.class.build_command_line(guid), :out => "/dev/null", :err => [Rails.root.join("log", "evm.log"), "a"])
+    pid = Kernel.spawn(command_line, [:out, :err] => [Rails.root.join("log", "evm.log"), "a"])
     Process.detach(pid)
     pid
   end
@@ -405,7 +422,6 @@ class MiqWorker < ApplicationRecord
       end
     end
 
-    # ActiveRecord::Base.connection.kill(self.sql_spid)
     destroy
   end
 
@@ -437,8 +453,8 @@ class MiqWorker < ApplicationRecord
     # Note, a 'stopping' worker heartbeats in DRb but NOT to
     # the database, so we can see how long it's been
     # 'stopping' by checking the last_heartbeat.
-    stopping_timeout = self.class.worker_settings[:stopping_timeout] || 10.minutes
-    status == MiqWorker::STATUS_STOPPING && last_heartbeat < stopping_timeout.seconds.ago
+    stopping_timeout = self.class.worker_settings[:stopping_timeout] || Workers::MiqDefaults.stopping_timeout
+    status == MiqWorker::STATUS_STOPPING && (last_heartbeat + current_timeout.to_i) < stopping_timeout.seconds.ago
   end
 
   def validate_active_messages
@@ -480,12 +496,12 @@ class MiqWorker < ApplicationRecord
   end
 
   def log_status(level = :info)
-    _log.send(level, "[#{friendly_name}] Worker ID [#{id}], PID [#{pid}], GUID [#{guid}], Last Heartbeat [#{last_heartbeat}], Process Info: Memory Usage [#{memory_usage}], Memory Size [#{memory_size}], Proportional Set Size: [#{proportional_set_size}], Memory % [#{percent_memory}], CPU Time [#{cpu_time}], CPU % [#{percent_cpu}], Priority [#{os_priority}]")
+    _log.send(level, "[#{friendly_name}] Worker ID [#{id}], PID [#{pid}], GUID [#{guid}], Last Heartbeat [#{last_heartbeat}], Process Info: Memory Usage [#{memory_usage}], Memory Size [#{memory_size}], Proportional Set Size: [#{proportional_set_size}], Unique Set Size: [#{unique_set_size}], Memory % [#{percent_memory}], CPU Time [#{cpu_time}], CPU % [#{percent_cpu}], Priority [#{os_priority}]")
   end
 
   def current_timeout
     msg = active_messages.first
-    msg.nil? ? nil : msg.msg_timeout
+    msg.try(:msg_timeout)
   end
 
   def uri_or_queue_name
@@ -510,7 +526,7 @@ class MiqWorker < ApplicationRecord
 
   def database_application_name
     zone = MiqServer.my_server.zone
-    "MIQ #{Process.pid} #{minimal_class_name}[#{compressed_id}], s[#{miq_server.compressed_id}], #{zone.name}[#{zone.compressed_id}]".truncate(64)
+    "MIQ|#{Process.pid}|#{miq_server.compressed_id}|#{compressed_id}|#{zone.compressed_id}|#{minimal_class_name}|#{zone.name}".truncate(64)
   end
 
   def format_full_log_msg

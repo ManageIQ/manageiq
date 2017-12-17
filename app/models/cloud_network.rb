@@ -2,6 +2,7 @@ class CloudNetwork < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -12,9 +13,9 @@ class CloudNetwork < ApplicationRecord
   has_many :cloud_subnets, :dependent => :destroy
   has_many :network_routers, -> { distinct }, :through => :cloud_subnets
   has_many :public_networks, -> { distinct }, :through => :cloud_subnets
-  has_many :network_ports, :through => :cloud_subnets
+  has_many :network_ports, -> { distinct }, :through => :cloud_subnets
   has_many :floating_ips,  :dependent => :destroy
-  has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
+  has_many :vms, -> { distinct }, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 
   has_many :public_network_vms, -> { distinct }, :through => :public_network_routers, :source => :vms
   has_many :public_network_routers, :foreign_key => :cloud_network_id, :class_name => NetworkRouter
@@ -42,7 +43,7 @@ class CloudNetwork < ApplicationRecord
     end
   end
 
-  virtual_total :total_vms, :vms, :uses => :vms
+  virtual_total :total_vms, :vms
 
   def self.class_by_ems(ext_management_system, _external = false)
     # TODO: A factory on ExtManagementSystem to return class for each provider

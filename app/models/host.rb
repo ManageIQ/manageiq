@@ -11,11 +11,13 @@ class Host < ApplicationRecord
   include NewWithTypeStiMixin
   include TenantIdentityMixin
   include DeprecationMixin
+  include CustomActionsMixin
 
   VENDOR_TYPES = {
     # DB            Displayed
     "microsoft"       => "Microsoft",
     "redhat"          => "RedHat",
+    "kubevirt"        => "KubeVirt",
     "vmware"          => "VMware",
     "openstack_infra" => "OpenStack Infrastructure",
     "unknown"         => "Unknown",
@@ -33,7 +35,6 @@ class Host < ApplicationRecord
   }.freeze
 
   validates_presence_of     :name
-  validates_uniqueness_of   :name
   validates_inclusion_of    :user_assigned_os, :in => ["linux_generic", "windows_generic", nil]
   validates_inclusion_of    :vmm_vendor, :in => VENDOR_TYPES.keys
 
@@ -44,11 +45,13 @@ class Host < ApplicationRecord
   has_many                  :vms_and_templates, :dependent => :nullify
   has_many                  :vms, :inverse_of => :host
   has_many                  :miq_templates, :inverse_of => :host
-  has_many                  :host_storages
+  has_many                  :host_storages, :dependent => :destroy
   has_many                  :storages, :through => :host_storages
   has_many                  :host_switches, :dependent => :destroy
   has_many                  :switches, :through => :host_switches
   has_many                  :lans,     :through => :switches
+  has_many                  :subnets,  :through => :lans
+  has_many                  :networks, :through => :hardware
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
   has_many                  :host_services, :class_name => "SystemService", :foreign_key => "host_id", :inverse_of => :host
@@ -180,10 +183,6 @@ class Host < ApplicationRecord
     end
   end
 
-  def self.include_descendant_classes_in_expressions?
-    true
-  end
-
   def self.non_clustered
     where(:ems_cluster_id => nil)
   end
@@ -218,7 +217,7 @@ class Host < ApplicationRecord
 
   def raise_cluster_event(ems_cluster, event)
     # accept ids or objects
-    ems_cluster = EmsCluster.find(ems_cluster) unless ems_cluster.kind_of? EmsCluster
+    ems_cluster = EmsCluster.find(ems_cluster) unless ems_cluster.kind_of?(EmsCluster)
     inputs = {:ems_cluster => ems_cluster, :host => self}
     begin
       MiqEvent.raise_evm_event(self, event, inputs)
@@ -298,7 +297,7 @@ class Host < ApplicationRecord
 
   def validate_esx_host_connected_to_vc
     # Check the basic require to interact with a VM.
-    return {:available => false, :message => "The Host is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"} unless has_active_ems?
+    return {:available => false, :message => "The Host is not connected to an active Provider"} unless has_active_ems?
     return {:available => false, :message => "The Host is not VMware ESX"} unless is_vmware_esx?
     nil
   end
@@ -346,15 +345,15 @@ class Host < ApplicationRecord
   end
 
   def ipmi_power_on
-    run_ipmi_command :power_on
+    run_ipmi_command(:power_on)
   end
 
   def ipmi_power_off
-    run_ipmi_command :power_off
+    run_ipmi_command(:power_off)
   end
 
   def ipmi_power_reset
-    run_ipmi_command :power_reset
+    run_ipmi_command(:power_reset)
   end
 
   def reset
@@ -528,18 +527,13 @@ class Host < ApplicationRecord
     return "unknown" unless hardware && !hardware.cpu_type.nil?
     cpu = hardware.cpu_type.to_s.downcase
     return cpu if cpu.include?('x86')
-    return "x86" if cpu.starts_with? "intel"
+    return "x86" if cpu.starts_with?("intel")
     "unknown"
   end
 
   def platform_arch
     ret = [os_image_name.split("_")[0], arch == "unknown" ? "x86" : arch]
     ret.include?("unknown") ? nil : ret
-  end
-
-  def acts_as_ems?
-    product = vmm_product.to_s.downcase
-    ['hyperv', 'hyper-v'].any? { |p| product.include?(p) }
   end
 
   def refreshable_status
@@ -586,13 +580,13 @@ class Host < ApplicationRecord
 
   def refresh_ems
     unless ext_management_system
-      raise _("No %{table} defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("No Providers defined")
     end
     unless ext_management_system.has_credentials?
-      raise _("No %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("No Provider credentials defined")
     end
     unless ext_management_system.authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self)
   end
@@ -638,7 +632,7 @@ class Host < ApplicationRecord
   def connect_ems(e)
     return if ext_management_system == e
 
-    _log.debug "Connecting Host [#{name}] id [#{id}] to EMS [#{e.name}] id [#{e.id}]"
+    _log.debug("Connecting Host [#{name}] id [#{id}] to EMS [#{e.name}] id [#{e.id}]")
     self.ext_management_system = e
     save
   end
@@ -646,7 +640,7 @@ class Host < ApplicationRecord
   def disconnect_ems(e = nil)
     if e.nil? || ext_management_system == e
       log_text = " from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]" unless ext_management_system.nil?
-      _log.info "Disconnecting Host [#{name}] id [#{id}]#{log_text}"
+      _log.info("Disconnecting Host [#{name}] id [#{id}]#{log_text}")
 
       self.ext_management_system = nil
       self.ems_cluster = nil
@@ -657,14 +651,14 @@ class Host < ApplicationRecord
 
   def connect_storage(s)
     unless storages.include?(s)
-      _log.debug "Connecting Host [#{name}] id [#{id}] to Storage [#{s.name}] id [#{s.id}]"
+      _log.debug("Connecting Host [#{name}] id [#{id}] to Storage [#{s.name}] id [#{s.id}]")
       storages << s
       save
     end
   end
 
   def disconnect_storage(s)
-    _log.info "Disconnecting Host [#{name}] id [#{id}] from Storage [#{s.name}] id [#{s.id}]"
+    _log.info("Disconnecting Host [#{name}] id [#{id}] from Storage [#{s.name}] id [#{s.id}]")
     storages.delete(s)
     save
   end
@@ -717,14 +711,14 @@ class Host < ApplicationRecord
   alias_method :owning_datacenter, :parent_datacenter
 
   def self.save_metadata(id, dataArray)
-    _log.info "for host [#{id}]"
+    _log.info("for host [#{id}]")
     host = Host.find_by(:id => id)
     data, data_type = dataArray
     data.replace(MIQEncode.decode(data)) if data_type.include?('b64,zlib')
     doc = data_type.include?('yaml') ? YAML.load(data) : MiqXml.load(data)
     host.add_elements(doc)
     host.save!
-    _log.info "for host [#{id}] host saved"
+    _log.info("for host [#{id}] host saved")
   rescue => err
     _log.log_backtrace(err)
     return false
@@ -778,11 +772,11 @@ class Host < ApplicationRecord
 
     begin
       # connect_ssh logs address and user name(s) being used to make connection
-      _log.info "Verifying Host SSH credentials for [#{name}]"
+      _log.info("Verifying Host SSH credentials for [#{name}]")
       connect_ssh(options) { |ssu| ssu.exec("uname -a") }
-    rescue Net::SSH::AuthenticationFailed
+    rescue MiqException::MiqInvalidCredentialsError
       raise MiqException::MiqInvalidCredentialsError, _("Login failed due to a bad username or password.")
-    rescue Net::SSH::HostKeyMismatch
+    rescue MiqException::MiqSshUtilHostKeyMismatch
       raise # Re-raise the error so the UI can prompt the user to allow the keys to be reset.
     rescue Exception => err
       _log.warn(err.inspect)
@@ -815,7 +809,7 @@ class Host < ApplicationRecord
     raise _("Starting address is malformed") if (starting =~ pattern).nil?
     raise _("Ending address is malformed") if (ending =~ pattern).nil?
 
-    starting.split(".").each_index do|i|
+    starting.split(".").each_index do |i|
       if starting.split(".")[i].to_i > 255 || ending.split(".")[i].to_i > 255
         raise _("IP address octets must be 0 to 255")
       end
@@ -828,11 +822,11 @@ class Host < ApplicationRecord
     host_start = starting.split(".").last.to_i
     host_end = ending.split(".").last.to_i
 
-    host_start.upto(host_end) do|h|
+    host_start.upto(host_end) do |h|
       ipaddr = network_id + "." + h.to_s
 
       unless Host.find_by(:ipaddress => ipaddr).nil? # skip discover for existing hosts
-        _log.info "ipaddress '#{ipaddr}' exists, skipping discovery"
+        _log.info("ipaddress '#{ipaddr}' exists, skipping discovery")
         next
       end
 
@@ -909,14 +903,14 @@ class Host < ApplicationRecord
       if has_credentials?(:ws)
         begin
           with_provider_connection(:ip => ipaddr) do |vim|
-            _log.info "VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}"
+            _log.info("VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}")
             self.vmm_product     = vim.about['name'].dup.split(' ').last
             self.vmm_version     = vim.about['version']
             self.vmm_buildnumber = vim.about['build']
             self.name            = "#{vim.about['name']} (#{ipaddr})"
           end
         rescue => err
-          _log.warn "Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{authentication_userid(:ws)}] because #{err.message}"
+          _log.warn("Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{authentication_userid(:ws)}] because #{err.message}")
         end
       end
       self.type = %w(esx esxi).include?(vmm_product.to_s.downcase) ? "ManageIQ::Providers::Vmware::InfraManager::HostEsx" : "ManageIQ::Providers::Vmware::InfraManager::Host"
@@ -946,10 +940,10 @@ class Host < ApplicationRecord
   def rediscover(ipaddr, discover_types = [:esx])
     require 'manageiq-network_discovery'
     ost = OpenStruct.new(:usePing => true, :discover_types => discover_types, :ipaddr => ipaddr)
-    _log.info "Rediscovering Host: #{ipaddr} with types: #{discover_types.inspect}"
+    _log.info("Rediscovering Host: #{ipaddr} with types: #{discover_types.inspect}")
     begin
       ManageIQ::NetworkDiscovery.scanHost(ost)
-      _log.info "Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}"
+      _log.info("Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}")
 
       unless ost.hypervisor.empty?
         detect_discovered_hypervisor(ost, ipaddr)
@@ -966,12 +960,14 @@ class Host < ApplicationRecord
   def self.discoverHost(options)
     require 'manageiq-network_discovery'
     ost = OpenStruct.new(Marshal.load(options))
-    _log.info "Discovering Host: #{ost_inspect(ost)}"
+    _log.info("Discovering Host: #{ost_inspect(ost)}")
     begin
       ManageIQ::NetworkDiscovery.scanHost(ost)
 
-      unless ost.hypervisor.empty?
-        _log.info "Discovered: #{ost_inspect(ost)}"
+      if ost.hypervisor.empty?
+        _log.info("NOT Discovered: #{ost_inspect(ost)}")
+      else
+        _log.info("Discovered: #{ost_inspect(ost)}")
 
         if [:virtualcenter, :scvmm, :rhevm].any? { |ems_type| ost.hypervisor.include?(ems_type) }
           ExtManagementSystem.create_discovered_ems(ost)
@@ -991,7 +987,20 @@ class Host < ApplicationRecord
           # It may have been added by someone else while we were discovering
           host.save!
 
-          unless ost.hypervisor.include?(:ipmi)
+          if ost.hypervisor.include?(:ipmi)
+            # IPMI - Check if credentials were passed and try to scan host
+            cred = (ost.credentials || {})[:ipmi]
+            unless cred.nil? || cred[:userid].blank?
+              ipmi = MiqIPMI.new(host.ipmi_address, cred[:userid], cred[:password])
+              if ipmi.connected?
+                _log.warn("IPMI connected to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>")
+                host.update_authentication(:ipmi => cred)
+                host.scan
+              else
+                _log.warn("IPMI did not connect to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>")
+              end
+            end
+          else
             # Try to convert IP address to hostname and update host data
             netHostName = Host.get_hostname(ost.ipaddr)
             host.name = netHostName if netHostName
@@ -1000,26 +1009,11 @@ class Host < ApplicationRecord
             EmsRefresh.save_hardware_inventory(host, {:cpu_type => "intel"})
 
             host.save!
-          else
-            # IPMI - Check if credentials were passed and try to scan host
-            cred = (ost.credentials || {})[:ipmi]
-            unless cred.nil? || cred[:userid].blank?
-              ipmi = MiqIPMI.new(host.ipmi_address, cred[:userid], cred[:password])
-              if ipmi.connected?
-                _log.warn "IPMI connected to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
-                host.update_authentication(:ipmi => cred)
-                host.scan
-              else
-                _log.warn "IPMI did not connect to Host:<#{host.ipmi_address}> with User:<#{cred[:userid]}>"
-              end
-            end
           end
 
-          _log.info "#{host.name} created"
+          _log.info("#{host.name} created")
           AuditEvent.success(:event => "host_created", :target_id => host.id, :target_class => "Host", :message => "#{host.name} created")
         end
-      else
-        _log.info "NOT Discovered: #{ost_inspect(ost)}"
       end
     rescue => err
       _log.log_backtrace(err)
@@ -1028,15 +1022,15 @@ class Host < ApplicationRecord
   end
 
   def self.get_hostname(ipAddress)
-    _log.info "Resolving hostname: [#{ipAddress}]"
+    _log.info("Resolving hostname: [#{ipAddress}]")
     begin
       ret = Socket.gethostbyname(ipAddress)
       name = ret.first
     rescue => err
-      _log.error "ERROR:  #{err}"
+      _log.error("ERROR:  #{err}")
       return nil
     end
-    _log.info "Resolved hostname: [#{name}] to [#{ipAddress}]"
+    _log.info("Resolved hostname: [#{name}] to [#{ipAddress}]")
     name
   end
 
@@ -1065,15 +1059,15 @@ class Host < ApplicationRecord
     logged_options = options.dup
     logged_options[:key_data] = "[FILTERED]" if logged_options[:key_data]
 
-    _log.info "Initiating SSH connection to Host:[#{name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]"
+    _log.info("Initiating SSH connection to Host:[#{name}] using [#{hostname}] for user:[#{users}].  Options:[#{logged_options.inspect}]")
     begin
       MiqSshUtil.shell_with_su(hostname, rl_user, rl_password, su_user, su_password, options) do |ssu, _shell|
-        _log.info "SSH connection established to [#{hostname}]"
+        _log.info("SSH connection established to [#{hostname}]")
         yield(ssu)
       end
-      _log.info "SSH connection completed to [#{hostname}]"
+      _log.info("SSH connection completed to [#{hostname}]")
     rescue Exception => err
-      _log.error "SSH connection failed for [#{hostname}] with [#{err.class}: #{err}]"
+      _log.error("SSH connection failed for [#{hostname}] with [#{err.class}: #{err}]")
       raise err
     end
   end
@@ -1362,7 +1356,7 @@ class Host < ApplicationRecord
       # Skip SSH for ESXi hosts
       unless is_vmware_esxi?
         if hostname.blank?
-          _log.warn "No hostname defined for #{log_target}"
+          _log.warn("No hostname defined for #{log_target}")
           task.update_status("Finished", "Warn", "Scanning incomplete due to missing hostname")  if task
           return
         end
@@ -1370,7 +1364,7 @@ class Host < ApplicationRecord
         update_ssh_auth_status! if respond_to?(:update_ssh_auth_status!)
 
         if missing_credentials?
-          _log.warn "No credentials defined for #{log_target}"
+          _log.warn("No credentials defined for #{log_target}")
           task.update_status("Finished", "Warn", "Scanning incomplete due to Credential Issue")  if task
           return
         end
@@ -1416,7 +1410,7 @@ class Host < ApplicationRecord
 
             save
           end
-        rescue Net::SSH::HostKeyMismatch
+        rescue MiqException::MiqSshUtilHostKeyMismatch
           # Keep from dumping stack trace for this error which is sufficiently logged in the connect_ssh method
         rescue => err
           _log.log_backtrace(err)
@@ -1682,7 +1676,7 @@ class Host < ApplicationRecord
         time_range[0],
         time_range[1]
       ]
-    ).order "timestamp"
+    ).order("timestamp")
 
     if capture_interval.to_sym == :realtime && metric.to_s.starts_with?("v_pct_cpu_")
       vm_vals_by_ts = get_pct_cpu_metric_from_child_vm_performances(metric, capture_interval, time_range)

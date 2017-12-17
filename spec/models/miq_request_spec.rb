@@ -12,10 +12,12 @@ describe MiqRequest do
         :MiqHostProvisionRequest             => {:host_pxe_install      => "Host Provision"},
         :MiqProvisionConfiguredSystemRequest => {:provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
         :VmReconfigureRequest                => {:vm_reconfigure        => "VM Reconfigure"},
+        :VmCloudReconfigureRequest           => {:vm_cloud_reconfigure  => "VM Cloud Reconfigure"},
         :VmMigrateRequest                    => {:vm_migrate            => "VM Migrate"},
         :AutomationRequest                   => {:automation            => "Automation"},
         :ServiceTemplateProvisionRequest     => {:clone_to_service      => "Service Provision"},
         :ServiceReconfigureRequest           => {:service_reconfigure   => "Service Reconfigure"},
+        :PhysicalServerProvisionRequest      => {:provision_physical_server => "Physical Server Provision"}
       }
 
       expect(described_class::REQUEST_TYPES).to eq(expected_request_types)
@@ -81,24 +83,10 @@ describe MiqRequest do
       expect(msg.msg_timeout).to eq(1.hour)
     end
 
-    context "#call_automate_event_sync" do
-      it "successful" do
-        allow(MiqAeEvent).to receive(:raise_evm_event).and_return("foo")
-
-        expect(request.call_automate_event_sync(event_name)).to eq("foo")
-      end
-
-      it "re-raises exceptions" do
-        allow(MiqAeEvent).to receive(:raise_evm_event).and_raise(MiqAeException::AbortInstantiation.new("bogus automate error"))
-
-        expect { request.call_automate_event_sync(event_name) }.to raise_error(MiqAeException::Error, "bogus automate error")
-      end
-    end
-
     context "#call_automate_event" do
       it "successful" do
-        expect(MiqAeEvent).to receive(:raise_evm_event)
-        request.call_automate_event(event_name)
+        expect(MiqAeEvent).to receive(:raise_evm_event).and_return("foo")
+        expect(request.call_automate_event(event_name)).to eq("foo")
       end
 
       it "re-raises exceptions" do
@@ -282,6 +270,12 @@ describe MiqRequest do
 
   context '#post_create_request_tasks' do
     context 'VM provisioning' do
+      before do
+        ae_workspace = double("ae_workspace")
+        allow(ae_workspace).to receive(:root).and_return("test_vm")
+        allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace)
+      end
+
       let(:description) { 'my original information' }
       let(:template)    { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
       let(:request)     { FactoryGirl.build(:miq_provision_request, :requester => fred, :description => description, :src_vm_id => template.id).tap(&:valid?) }
@@ -291,6 +285,13 @@ describe MiqRequest do
         request.create_request_task(template.id)
         request.post_create_request_tasks
         expect(request.description).to_not eq(description)
+      end
+
+      it 'with 1 task having a Denied status reset to ok for the resulting request_task' do
+        request.options[:src_vm_id] = template.id
+        request.status = 'Denied'
+        new_request = request.create_request_task(template.id)
+        expect(new_request.status).to eq 'Ok'
       end
 
       it 'with 0 tasks' do
@@ -303,6 +304,14 @@ describe MiqRequest do
         allow(request).to receive(:requested_task_idx).and_return([1, 2])
         request.post_create_request_tasks
         expect(request.description).to eq(description)
+      end
+
+      it '#clean_up_keys_for_request_task' do
+        # The db stores 'state' as 'request_state' Pulling out that value to allow the raw arrays to match
+        removable_keys = MiqRequest::REQUEST_UNIQUE_KEYS - ['state']
+        expect(request.attributes.keys & removable_keys).to match_array removable_keys
+        cleaned_attribs = request.send(:clean_up_keys_for_request_task)
+        expect(cleaned_attribs).to_not match_array(removable_keys)
       end
     end
 
@@ -354,6 +363,9 @@ describe MiqRequest do
 
     before do
       allow(MiqRegion).to receive(:my_region).and_return(FactoryGirl.create(:miq_region))
+      ae_workspace = double("ae_workspace")
+      allow(ae_workspace).to receive(:root).and_return("test_vm")
+      allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace)
 
       @options = {
         :src_vm_id     => template.id,
@@ -395,6 +407,65 @@ describe MiqRequest do
 
     it "without a request_type" do
       expect { described_class.class_from_request_data({}) }.to raise_error("Invalid request_type")
+    end
+  end
+
+  context "#get_user" do
+    let(:root_tenant) { Tenant.seed }
+    let(:tenant1)     { FactoryGirl.create(:tenant, :parent => root_tenant) }
+    let(:group1)      { FactoryGirl.create(:miq_group, :description => 'Group 1', :tenant => root_tenant) }
+    let(:group2)      { FactoryGirl.create(:miq_group, :description => 'Group 2', :tenant => tenant1) }
+    let(:user)        { FactoryGirl.create(:user, :miq_groups => [group1, group2], :current_group => group1) }
+
+    it "takes the requester group" do
+      request = FactoryGirl.create(:miq_provision_request, :requester => user, :options => {:requester_group => group2.description})
+      expect(user.current_group).to eq(group1)
+      expect(request.get_user.current_group).to eq(group2)
+    end
+
+    it "stays with user's current group" do
+      request = FactoryGirl.create(:miq_provision_request, :requester => user)
+      expect(user.current_group).to eq(group1)
+      expect(request.get_user.current_group).to eq(group1)
+    end
+  end
+
+  context "#update_request" do
+    before do
+      allow(MiqServer).to receive(:my_zone).and_return("New York")
+    end
+
+    let(:request) do
+      FactoryGirl.create(:miq_provision_request,
+                         :requester => fred,
+                         :options   => {:a => "1"})
+    end
+
+    it "user_message" do
+      msg = "Yabba Dabba Doo"
+      expect(request).not_to receive(:after_update_options)
+      request.update_request({:user_message => msg}, fred)
+
+      request.reload
+      expect(request.options[:user_message]).to eq(msg)
+      expect(request.message).to eq(msg)
+    end
+
+    it "truncates long messages" do
+      msg = "Yabba Dabba Doo" * 30
+      expect(request).not_to receive(:after_update_options)
+      request.update_request({:user_message => msg}, fred)
+
+      request.reload
+      expect(request.options[:user_message].length).to eq(255)
+      expect(request.message.length).to eq(255)
+    end
+
+    it "non user_message should call after_update_options" do
+      expect(request).to receive(:after_update_options)
+      request.update_request({:abc => 1}, fred)
+
+      expect(request.options[:abc]).to eq(1)
     end
   end
 end

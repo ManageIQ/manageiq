@@ -596,7 +596,7 @@ describe ManagerRefresh::SaveInventory do
             :model_class => Hardware,
             :parent      => @ems,
             :association => :hardwares,
-            :manager_ref => [:vm_or_template]
+            :manager_ref => [:virtualization_type]
           )
         end
 
@@ -615,8 +615,8 @@ describe ManagerRefresh::SaveInventory do
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
-          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
-          expect(vm1.hardware).to eq(nil)
+          hardware1 = Hardware.find_by!(:virtualization_type => "virtualization_type_1")
+          expect(hardware1.vm_or_template).to eq(nil)
         end
 
         it "has a relation using find and loading data in a right order" do
@@ -634,8 +634,9 @@ describe ManagerRefresh::SaveInventory do
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
-          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
-          expect(vm1.hardware.virtualization_type).to eq("virtualization_type_1")
+          vm1 = Vm.find_by!(:ems_ref => "vm_ems_ref_1")
+          hardware1 = Hardware.find_by!(:virtualization_type => "virtualization_type_1")
+          expect(hardware1.vm_or_template).to eq(vm1)
         end
 
         it "has a relation using lazy_find and loading data in a wrong order" do
@@ -653,8 +654,49 @@ describe ManagerRefresh::SaveInventory do
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
-          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
-          expect(vm1.hardware.virtualization_type).to eq("virtualization_type_1")
+          vm1 = Vm.find_by!(:ems_ref => "vm_ems_ref_1")
+          hardware1 = Hardware.find_by!(:virtualization_type => "virtualization_type_1")
+          expect(hardware1.vm_or_template).to eq(vm1)
+        end
+      end
+
+      context "assert_referential_integrity" do
+        before :each do
+          # Initialize the InventoryCollections
+          @data             = {}
+          @data[:vms]       = ::ManagerRefresh::InventoryCollection.new(
+            :model_class => ManageIQ::Providers::CloudManager::Vm,
+            :parent      => @ems,
+            :association => :vms
+          )
+          @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
+            :model_class => Hardware,
+            :parent      => @ems,
+            :association => :hardwares,
+            :manager_ref => [:vm_or_template, :virtualization_type]
+          )
+
+          @vm_data_1       = vm_data(1)
+          @hardware_data_1 = hardware_data(1).merge(:vm_or_template => nil)
+
+          add_data_to_inventory_collection(@data[:vms], @vm_data_1)
+          add_data_to_inventory_collection(@data[:hardwares], @hardware_data_1)
+        end
+
+        it "raises in test if field used in manager_ref nil" do
+          expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values) }.to raise_error(/referential integrity/i)
+        end
+
+        it "raises in developement if field used in manager_ref nil" do
+          allow(Rails).to receive(:env).and_return("developement".inquiry)
+          expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values) }.to raise_error(/referential integrity/i)
+        end
+
+        it "skips the record in production if manager_ref field is nil" do
+          allow(Rails).to receive(:env).and_return("production".inquiry)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
+          expect(Vm.count).to eq(1)
+          expect(Hardware.count).to eq(0)
         end
       end
     end
@@ -778,6 +820,7 @@ describe ManagerRefresh::SaveInventory do
       :flavor           => @data[:flavors].lazy_find(flavor_data(1)[:name]),
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(1)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(1)[:name]),
+                            @data[:key_pairs].lazy_find(key_pair_data(1)[:name]),
                             @data[:key_pairs].lazy_find(key_pair_data(12)[:name])],
       :location         => @data[:networks].lazy_find("#{vm_data(1)[:ems_ref]}__public",
                                                       :key     => :hostname,

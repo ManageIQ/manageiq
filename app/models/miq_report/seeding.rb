@@ -47,7 +47,7 @@ module MiqReport::Seeding
       yml = YAML.load_file(filename)
       rpt = {}
       column_names.each { |c| rpt[c.to_sym] = yml[c] }
-      rpt.delete :id
+      rpt.delete(:id)
       rpt[:name] = yml["menu_name"].strip
       rpt[:rpt_group] = File.basename(File.dirname(filename)).split("_").last
       rpt[:rpt_type] = "Default"
@@ -62,8 +62,8 @@ module MiqReport::Seeding
       rec = find_by_filename(rpt[:filename])
 
       if rec
-        if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < rpt[:file_mtime])
-          _log.info("#{typ.titleize}: [#{rec.name}] file has been updated on disk, synchronizing with model")
+        if rec.filename
+          _log.info("#{typ.titleize}: [#{rec.name}] file exists, synchronizing with model")
           rec.update_attributes(rpt)
           rec.save
         end

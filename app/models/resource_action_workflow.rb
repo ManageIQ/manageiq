@@ -2,6 +2,8 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   attr_accessor :dialog
   attr_accessor :request_options
 
+  attr_reader :target
+
   def self.base_model
     ResourceActionWorkflow
   end
@@ -19,8 +21,8 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   def dialogs
     msg = "[DEPRECATION] ResourceActionWorkflow#dialogs should not be used.  Please use ResourceActionWorkflow#dialog instead.  At #{caller[0]}"
-    $log.warn msg
-    Kernel.warn msg
+    $log.warn(msg)
+    Kernel.warn(msg)
     dialog
   end
 

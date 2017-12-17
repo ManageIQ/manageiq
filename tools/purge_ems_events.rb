@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 KEEP_EVENTS  = 6.months
 PURGE_WINDOW = 1000
 
@@ -8,7 +11,7 @@ $log.level = Logger::INFO
 begin
   EmsEvent.purge(KEEP_EVENTS.ago.utc, PURGE_WINDOW)
 rescue => err
-  $log.error("#{err} #{err.backtrace.join("\n")}")
+  $log.log_backtrace(err)
 end
 
 $log.close

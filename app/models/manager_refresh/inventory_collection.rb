@@ -1,65 +1,98 @@
 module ManagerRefresh
+  # For more usage examples please follow spec examples in
+  # * spec/models/manager_refresh/save_inventory/single_inventory_collection_spec.rb
+  # * spec/models/manager_refresh/save_inventory/acyclic_graph_of_inventory_collections_spec.rb
+  # * spec/models/manager_refresh/save_inventory/graph_of_inventory_collections_spec.rb
+  # * spec/models/manager_refresh/save_inventory/graph_of_inventory_collections_targeted_refresh_spec.rb
+  # * spec/models/manager_refresh/save_inventory/strategies_and_references_spec.rb
+  #
+  # @example storing Vm model data into the DB
+  #
+  #   @ems = ManageIQ::Providers::BaseManager.first
+  #   puts @ems.vms.collect(&:ems_ref) # => []
+  #
+  #   # Init InventoryCollection
+  #   vms_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
+  #     :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
+  #   )
+  #
+  #   # Fill InventoryCollection with data
+  #   # Starting with no vms, lets add vm1 and vm2
+  #   vms_inventory_collection.build(:ems_ref => "vm1", :name => "vm1")
+  #   vms_inventory_collection.build(:ems_ref => "vm2", :name => "vm2")
+  #
+  #   # Save InventoryCollection to the db
+  #   ManagerRefresh::SaveInventory.save_inventory(@ems, [vms_inventory_collection])
+  #
+  #   # The result in the DB is that vm1 and vm2 were created
+  #   puts @ems.vms.collect(&:ems_ref) # => ["vm1", "vm2"]
+  #
+  # @example In another refresh, vm1 does not exist anymore and vm3 was added
+  #   # Init InventoryCollection
+  #   vms_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
+  #     :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
+  #   )
+  #
+  #   # Fill InventoryCollection with data
+  #   vms_inventory_collection.build(:ems_ref => "vm2", :name => "vm2")
+  #   vms_inventory_collection.build(:ems_ref => "vm3", :name => "vm3")
+  #
+  #   # Save InventoryCollection to the db
+  #   ManagerRefresh::SaveInventory.save_inventory(@ems, [vms_inventory_collection])
+  #
+  #   # The result in the DB is that vm1 was deleted, vm2 was updated and vm3 was created
+  #   puts @ems.vms.collect(&:ems_ref) # => ["vm2", "vm3"]
+  #
   class InventoryCollection
-    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized, :all_manager_uuids,
-                  :dependees
+    # @return [Boolean] true if this collection is already saved into the DB. E.g. InventoryCollections with
+    #   DB only strategy are marked as saved. This causes InventoryCollection not being a dependency for any other
+    #   InventoryCollection, since it is already persisted into the DB.
+    attr_accessor :saved
+
+    # @return [Array<InventoryObject>] objects of the InventoryCollection in an Array
+    attr_accessor :data
+
+    # @return [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their :manager_ref.
+    attr_accessor :data_index
+
+    # @return [Set] A set of InventoryObjects manager_uuids, which tells us which InventoryObjects were
+    #         referenced by other InventoryObjects using a lazy_find.
+    attr_accessor :references
+
+    # @return [Set] A set of InventoryObject attributes names, which tells us InventoryObject attributes
+    #         were referenced by other InventoryObject objects using a lazy_find with :key.
+    attr_accessor :attribute_references
+
+    # @return [Boolean] A true value marks that we collected all the data of the InventoryCollection,
+    #         meaning we also collected all the references.
+    attr_accessor :data_collection_finalized
+
+    # If present, InventoryCollection switches into delete_complement mode, where it will
+    # delete every record from the DB, that is not present in this list. This is used for the batch processing,
+    # where we don't know which InventoryObject should be deleted, but we know all manager_uuids of all
+    # InventoryObject objects that exists in the provider.
+    #
+    # @return [Array, nil] nil or a list of all :manager_uuids that are present in the Provider's InventoryCollection.
+    attr_accessor :all_manager_uuids
+
+    # @return [Set] A set of InventoryCollection objects that depends on this InventoryCollection object.
+    attr_accessor :dependees
+
+    # @return [Array<Symbol>] names of InventoryCollection objects or InventoryCollection objects.
+    #         If symbols are used, those will be transformed to InventoryCollection objects by the Scanner.
+    attr_accessor :parent_inventory_collections
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
-                :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
+                :internal_attributes, :delete_method, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
                 :custom_db_finder, :check_changed, :arel, :builder_params, :loaded_references, :db_data_index,
-                :inventory_object_attributes, :name, :saver_strategy, :parent_inventory_collections, :manager_uuids,
-                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil
+                :inventory_object_attributes, :name, :saver_strategy, :manager_uuids,
+                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
+                :secondary_refs, :secondary_indexes, :created_records, :updated_records, :deleted_records,
+                :custom_reconnect_block, :batch_extra_attributes
 
     delegate :each, :size, :to => :to_a
 
-    # Usage:
-    ####################################################################################################################
-    # Example 1, storing Vm model data into the DB:
-    ####################################################################################################################
-    #   ################################################################################################################
-    #   # Example 1.1 Starting with no vms, lets add vm1 and vm2
-    #   @ems = ManageIQ::Providers::BaseManager.first
-    #   puts @ems.vms.collect(&:ems_ref) # => []
-    #   # Init InventoryCollection
-    #   vms_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
-    #     :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
-    #   )
-    #
-    #   # Fill InventoryCollection with data
-    #   vms_inventory_collection.build(:ems_ref => "vm1", :name => "vm1")
-    #   vms_inventory_collection.build(:ems_ref => "vm2", :name => "vm2")
-    #
-    #   # Save InventoryCollection to the db
-    #   ManagerRefresh::SaveInventory.save_inventory(@ems, [vms_inventory_collection])
-    #
-    #   # The result in the DB is that vm1 and vm2 were created
-    #   puts @ems.vms.collect(&:ems_ref) # => ["vm1", "vm2"]
-    #
-    #   ################################################################################################################
-    #   # Example 1.2 In another refresh, vm1 does not exist anymore and vm3 was added
-    #   # Init InventoryCollection
-    #   vms_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
-    #     :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
-    #   )
-    #   # Fill InventoryCollection with data
-    #   vms_inventory_collection.build(:ems_ref => "vm2", :name => "vm2")
-    #   vms_inventory_collection.build(:ems_ref => "vm3", :name => "vm3")
-    #
-    #   # Save InventoryCollection to the db
-    #   ManagerRefresh::SaveInventory.save_inventory(@ems, [vms_inventory_collection])
-    #
-    #   # The result in the DB is that vm1 was deleted, vm2 was updated and vm3 was created
-    #   puts @ems.vms.collect(&:ems_ref) # => ["vm2", "vm3"]
-    #
-    ####################################################################################################################
-    #
-    # For more usage examples please follow spec examples in:
-    # spec/models/manager_refresh/save_inventory/single_inventory_collection_spec.rb
-    # spec/models/manager_refresh/save_inventory/acyclic_graph_of_inventory_collections_spec.rb
-    # spec/models/manager_refresh/save_inventory/graph_of_inventory_collections_spec.rb
-    # spec/models/manager_refresh/save_inventory/graph_of_inventory_collections_targeted_refresh_spec.rb
-    # spec/models/manager_refresh/save_inventory/strategies_and_references_spec.rb
-    #
     # @param model_class [Class] A class of an ApplicationRecord model, that we want to persist into the DB or load from
     #        the DB.
     # @param manager_ref [Array] Array of Symbols, that are keys of the InventoryObject's data, inserted into this
@@ -85,29 +118,28 @@ module ManagerRefresh
     #         - :local_db_find_missing_references => InventoryObject objects of the InventoryCollection will be saved to
     #                                                the DB. Then if we reference an object that is not present, it will
     #                                                load them from the db using :local_db_find_references strategy.
-    # @param saved [Boolean] Says whether this collection is already saved into the DB , e.g. InventoryCollections with
-    #        DB only strategy are marked as saved. This causes InventoryCollection not being a dependency for any other
-    #        InventoryCollection, since it is already persisted into the DB.
     # @param custom_save_block [Proc] A custom lambda/proc for persisting in the DB, for cases where it's not enough
     #        to just save every InventoryObject inside by the defined rules and default saving algorithm.
     #
     #        Example1 - saving SomeModel in my own ineffective way :-) :
-    #          custom_save = lambda do |_ems, inventory_collection|
-    #            inventory_collection.each |inventory_object| do
-    #              hash = inventory_object.attributes # Loads possible dependencies into saveable hash
-    #              obj = SomeModel.find_by(:attr => hash[:attr]) # Note: doing find_by for many models produces N+1
-    #                                                            # queries, avoid this, this is just a simple example :-)
-    #              obj.update_attributes(hash) if obj
-    #              obj ||= SomeModel.create(hash)
-    #              inventory_object.id = obj.id # If this InventoryObject is referenced elsewhere, we need to store its
-    #                                             primary key back to the InventoryObject
-    #           end
+    #
+    #            custom_save = lambda do |_ems, inventory_collection|
+    #              inventory_collection.each |inventory_object| do
+    #                hash = inventory_object.attributes # Loads possible dependencies into saveable hash
+    #                obj = SomeModel.find_by(:attr => hash[:attr]) # Note: doing find_by for many models produces N+1
+    #                                                              # queries, avoid this, this is just a simple example :-)
+    #                obj.update_attributes(hash) if obj
+    #                obj ||= SomeModel.create(hash)
+    #                inventory_object.id = obj.id # If this InventoryObject is referenced elsewhere, we need to store its
+    #                                               primary key back to the InventoryObject
+    #             end
     #
     #        Example2 - saving parent OrchestrationStack in a more effective way, than the default saving algorithm can
-    #          achieve. Ancestry gem requires an ActiveRecord object for association and is not defined as a proper
-    #          ActiveRecord association. That leads in N+1 queries in the default saving algorithm, so we can do better
-    #          with custom saving for now. The InventoryCollection is defined as a custom dependencies processor,
-    #          without its own :model_class and InventoryObjects inside:
+    #        achieve. Ancestry gem requires an ActiveRecord object for association and is not defined as a proper
+    #        ActiveRecord association. That leads in N+1 queries in the default saving algorithm, so we can do better
+    #        with custom saving for now. The InventoryCollection is defined as a custom dependencies processor,
+    #        without its own :model_class and InventoryObjects inside:
+    #
     #            ManagerRefresh::InventoryCollection.new({
     #              :association       => :orchestration_stack_ancestry,
     #              :custom_save_block => orchestration_stack_ancestry_save_block,
@@ -117,7 +149,8 @@ module ManagerRefresh
     #              }
     #            })
     #
-    #          And the labmda is defined as:
+    #        And the lambda is defined as:
+    #
     #            orchestration_stack_ancestry_save_block = lambda do |_ems, inventory_collection|
     #              stacks_inventory_collection = inventory_collection.dependency_attributes[:orchestration_stacks].try(:first)
     #
@@ -141,12 +174,38 @@ module ManagerRefresh
     #                stack.update_attribute(:parent, parent)
     #              end
     #            end
+    # @param custom_reconnect_block [Proc] A custom lambda for reconnect logic of previously disconnected records
+    #
+    #        Example - Reconnect disconnected Vms
+    #            ManagerRefresh::InventoryCollection.new({
+    #              :association            => :orchestration_stack_ancestry,
+    #              :custom_reconnect_block => vms_custom_reconnect_block,
+    #            })
+    #
+    #        And the lambda is defined as:
+    #
+    #            vms_custom_reconnect_block = lambda do |inventory_collection, inventory_objects_index, attributes_index|
+    #              inventory_objects_index.each_slice(1000) do |batch|
+    #                Vm.where(:ems_ref => batch.map(&:second).map(&:manager_uuid)).each do |record|
+    #                  index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
+    #
+    #                  # We need to delete the record from the inventory_objects_index and attributes_index, otherwise it
+    #                  # would be sent for create.
+    #                  inventory_object = inventory_objects_index.delete(index)
+    #                  hash             = attributes_index.delete(index)
+    #
+    #                  record.assign_attributes(hash.except(:id, :type))
+    #                  if !inventory_collection.check_changed? || record.changed?
+    #                    record.save!
+    #                    inventory_collection.store_updated_records(record)
+    #                  end
+    #
+    #                  inventory_object.id = record.id
+    #                end
+    #              end
     # @param delete_method [Symbol] A delete method that will be used for deleting of the InventoryObject, if the
     #        object is marked for deletion. A default is :destroy, the instance method must be defined on the
     #        :model_class.
-    # @param data_index [Hash] InventoryObject objects of the InventoryCollection indexed in a Hash by their
-    #        :manager_ref.
-    # @param data [Array] InventoryObject objects of the InventoryCollection in an Array
     # @param dependency_attributes [Hash] Manually defined dependencies of this InventoryCollection. We can use this
     #        by manually place the InventoryCollection into the graph, to make sure the saving is invoked after the
     #        dependencies were saved. The dependencies itself are InventoryCollection objects. For a common use-cases
@@ -165,11 +224,10 @@ module ManagerRefresh
     #        attribute that is needed for saving of the object.
     #        Note: attributes_blacklist is also used for internal resolving of the cycles in the graph.
     #
-    #        Example:
-    #          In the Example2 of the <param custom_save_block>, we have a custom saving code, that saves a :parent
-    #          attribute of the OrchestrationStack. That means we don't want that attribute saved as a part of
-    #          InventoryCollection for OrchestrationStack, so we would set :attributes_blacklist => [:parent]. Then the
-    #          :parent will be ignored while saving.
+    #        In the Example2 of the <param custom_save_block>, we have a custom saving code, that saves a :parent
+    #        attribute of the OrchestrationStack. That means we don't want that attribute saved as a part of
+    #        InventoryCollection for OrchestrationStack, so we would set :attributes_blacklist => [:parent]. Then the
+    #        :parent will be ignored while saving.
     # @param attributes_whitelist [Array] Same usage as the :attributes_blacklist, but defining full set of attributes
     #        that should be saved. Attributes that are part of :manager_ref and needed validations are automatically
     #        added.
@@ -186,30 +244,31 @@ module ManagerRefresh
     #        :manager_uuid, if it comes from the DB. In that case, we need to provide a way of getting the :manager_uuid
     #        from the DB.
     #
-    #        Example:
-    #          Given the InventoryCollection.new({
+    #        Example: Given
+    #                    InventoryCollection.new({
     #                      :model_class         => ::Hardware,
     #                      :manager_ref         => [:vm_or_template],
     #                      :association         => :hardwares,
     #                      :custom_manager_uuid => custom_manager_uuid
     #                    })
     #
-    #          The :manager_ref => [:vm_or_template] points to another InventoryObject and we need to get a
-    #          :manager_uuid of that object. But if InventoryCollection was loaded from the DB, we can access the
-    #          :manager_uuid only by loading it from the DB as:
+    #        The :manager_ref => [:vm_or_template] points to another InventoryObject and we need to get a
+    #        :manager_uuid of that object. But if InventoryCollection was loaded from the DB, we can access the
+    #        :manager_uuid only by loading it from the DB as:
     #             custom_manager_uuid = lambda do |hardware|
     #               [hardware.vm_or_template.ems_ref]
     #             end
     #
-    #          Note: make sure to combine this with :custom_db_finder, to avoid N+1 queries being done, which we can
-    #          achieve by .includes(:vm_or_template). See Example in <param :custom_db_finder>.
+    #        Note: make sure to combine this with :custom_db_finder, to avoid N+1 queries being done, which we can
+    #        achieve by .includes(:vm_or_template). See Example in <param :custom_db_finder>.
     # @param custom_db_finder [Proc] A custom way of getting the InventoryCollection out of the DB in a case of any DB
     #        based strategy. This should be used in a case of complex query needed for e.g. targeted refresh or as an
     #        optimization for :custom_manager_uuid.
     #
     #        Example, we solve N+1 issue from Example <param :custom_manager_uuid> as well as a selection used for
     #        targeted refresh getting Hardware object from the DB instead of the API:
-    #          Having InventoryCollection.new({
+    #        Having
+    #                 InventoryCollection.new({
     #                   :model_class         => ::Hardware,
     #                   :manager_ref         => [:vm_or_template],
     #                   :association         => :hardwares,
@@ -217,85 +276,82 @@ module ManagerRefresh
     #                   :custom_db_finder    => custom_db_finder
     #                 })
     #
-    #          We need a custom_db_finder:
-    #            custom_db_finder = lambda do |inventory_collection, selection, _projection|
-    #              relation = inventory_collection.parent.send(inventory_collection.association)
-    #                                             .includes(:vm_or_template)
-    #                                             .references(:vm_or_template)
-    #              relation = relation.where(:vms => {:ems_ref => selection[:vm_or_template]}) unless selection.blank?
-    #              relation
-    #            end
+    #        We need a custom_db_finder:
+    #          custom_db_finder = lambda do |inventory_collection, selection, _projection|
+    #            relation = inventory_collection.parent.send(inventory_collection.association)
+    #                                           .includes(:vm_or_template)
+    #                                           .references(:vm_or_template)
+    #            relation = relation.where(:vms => {:ems_ref => selection[:vm_or_template]}) unless selection.blank?
+    #            relation
+    #          end
     #
-    #          Which solved 2 things for us:
-    #            First:
-    #              hardware.vm_or_template.ems_ref in a :custom_manager_uuid doesn't do N+1 queries anymore. To handle
-    #              just this problem, it would be enough to return
-    #              inventory_collection.parent.send(inventory_collection.association).includes?(:vm_or_template)
-    #            Second:
-    #              We can use :local_db_find_references strategy on this inventory collection, which could not be used
-    #              by default, since the selection needs a complex join, to be able to filter by the :vm_or_template
-    #              ems_ref.
-    #              We could still use a :local_db_cache_all strategy though, which doesn't do any selection and loads
-    #              all :hardwares from the DB.
+    #        Which solved 2 things for us:
+    #        - hardware.vm_or_template.ems_ref in a :custom_manager_uuid doesn't do N+1 queries anymore. To handle
+    #          just this problem, it would be enough to return
+    #          inventory_collection.parent.send(inventory_collection.association).includes?(:vm_or_template)
+    #        - We can use :local_db_find_references strategy on this inventory collection, which could not be used
+    #          by default, since the selection needs a complex join, to be able to filter by the :vm_or_template
+    #          ems_ref.
+    #          We could still use a :local_db_cache_all strategy though, which doesn't do any selection and loads
+    #          all :hardwares from the DB.
     # @param arel [ActiveRecord::Associations::CollectionProxy|Arel::SelectManager] Instead of :parent and :association
     #        we can provide Arel directly to say what records should be compared to check if InventoryObject will be
     #        doing create/update/delete.
     #
     #        Example:
-    #          for a targeted refresh, we want to delete/update/create only a list of vms specified with a list of
-    #          ems_refs:
+    #        for a targeted refresh, we want to delete/update/create only a list of vms specified with a list of
+    #        ems_refs:
     #            :arel => manager.vms.where(:ems_ref => manager_refs)
-    #          Then we want to do the same for the hardwares of only those vms:
+    #        Then we want to do the same for the hardwares of only those vms:
     #             :arel => manager.hardwares.joins(:vm_or_template).where(
     #               'vms' => {:ems_ref => manager_refs}
     #             )
-    #          And etc. for the other Vm related records.
+    #        And etc. for the other Vm related records.
     # @param builder_params [Hash] A hash of an attributes that will be added to every inventory object created by
     #        inventory_collection.build(hash)
     #
-    #        Example:
-    #          Given the inventory_collection = InventoryCollection.new({
-    #                      :model_class    => ::Vm,
-    #                      :arel           => @ems.vms,
-    #                      :builder_params => {:ems_id => 10}
-    #                    })
-    #          And building the inventory_object like:
+    #        Example: Given
+    #          inventory_collection = InventoryCollection.new({
+    #            :model_class    => ::Vm,
+    #            :arel           => @ems.vms,
+    #            :builder_params => {:ems_id => 10}
+    #          })
+    #        And building the inventory_object like:
     #            inventory_object = inventory_collection.build(:ems_ref => "vm_1", :name => "vm1")
-    #          The inventory_object.data will look like:
+    #        The inventory_object.data will look like:
     #            {:ems_ref => "vm_1", :name => "vm1", :ems_id => 10}
     # @param inventory_object_attributes [Array] Array of attribute names that will be exposed as readers/writers on the
     #        InventoryObject objects inside.
     #
-    #        Example:
-    #          Given the inventory_collection = InventoryCollection.new({
+    #        Example: Given
+    #                   inventory_collection = InventoryCollection.new({
     #                      :model_class                 => ::Vm,
     #                      :arel                        => @ems.vms,
     #                      :inventory_object_attributes => [:name, :label]
     #                    })
-    #           And building the inventory_object like:
-    #             inventory_object = inventory_collection.build(:ems_ref => "vm1", :name => "vm1")
-    #           We can use inventory_object_attributes as setters and getters:
-    #             inventory_object.name = "Name"
-    #             inventory_object.label = inventory_object.name
-    #           Which would be equivalent to less nicer way:
-    #             inventory_object[:name] = "Name"
-    #             inventory_object[:label] = inventory_object[:name]
-    #           So by using inventory_object_attributes, we will be guarding the allowed attributes and will have an
-    #           explicit list of allowed attributes, that can be used also for documentation purposes.
-    # @param unique_index_columns [Array] Array of symbols identifying columns of a DB unique index, we will be using.
-    #        If there is only 1 unique index, this will be auto-discovered, otherwise we need to specify the correct
-    #        one.
+    #        And building the inventory_object like:
+    #          inventory_object = inventory_collection.build(:ems_ref => "vm1", :name => "vm1")
+    #        We can use inventory_object_attributes as setters and getters:
+    #          inventory_object.name = "Name"
+    #          inventory_object.label = inventory_object.name
+    #        Which would be equivalent to less nicer way:
+    #          inventory_object[:name] = "Name"
+    #          inventory_object[:label] = inventory_object[:name]
+    #        So by using inventory_object_attributes, we will be guarding the allowed attributes and will have an
+    #        explicit list of allowed attributes, that can be used also for documentation purposes.
     # @param name [Symbol] A unique name of the InventoryCollection under a Persister. If not provided, the :association
     #        attribute is used. If :association is nil as well, the :name will be inferred from the :model_class.
     # @param saver_strategy [Symbol] A strategy that will be used for InventoryCollection persisting into the DB.
     #        Allowed saver strategies are:
-    #          - :default => Using Rails saving methods, this way is not safe to run in multiple workers concurrently,
-    #            since it will lead to non consistent data.
-    #          - :concurrent_safe => This method is designed for concurrent saving. It uses atomic upsert to avoid
-    #            data duplication and it uses timestamp based atomic checks to avoid new data being overwritten by the
-    #            the old data.
-    #          - :concurrent_safe_batch => Same as :concurrent_safe, but the upsert/update queries are executed as
-    #            batched SQL queries, instead of sending 1 query per record.
+    #        - :default => Using Rails saving methods, this way is not safe to run in multiple workers concurrently,
+    #          since it will lead to non consistent data.
+    #        - :batch => Using batch SQL queries, this way is not safe to run in multiple workers
+    #          concurrently, since it will lead to non consistent data.
+    #        - :concurrent_safe => This method is designed for concurrent saving. It uses atomic upsert to avoid
+    #          data duplication and it uses timestamp based atomic checks to avoid new data being overwritten by the
+    #          the old data.
+    #        - :concurrent_safe_batch => Same as :concurrent_safe, but the upsert/update queries are executed as
+    #          batched SQL queries, instead of sending 1 query per record.
     # @param parent_inventory_collections [Array] Array of symbols having a name of the
     #        ManagerRefresh::InventoryCollection objects, that serve as parents to this InventoryCollection. Then this
     #        InventoryCollection completeness will be encapsulated by the parent_inventory_collections :manager_uuids
@@ -335,35 +391,44 @@ module ManagerRefresh
     #        Then it can happen we want to allow certain foreign keys to be nil, while being sure the referential
     #        integrity is not broken. Of course the DB Foreign Key can't be created in this case, so we should try to
     #        avoid this usecase by a proper modeling.
-    def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
-                   custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
+    # @param use_ar_object [Boolean] True or False. Whether we need to initialize AR object as part of the saving
+    #        it's needed if the model have special setters, serialize of columns, etc. This setting is relevant only
+    #        for the batch saver strategy.
+    # @param batch_extra_attributes [Array] Array of symbols marking which extra attributes we want to store into the
+    #        db. These extra attributes might be a product of :use_ar_object assignment and we need to specify them
+    #        manually, if we want to use a batch saving strategy and we have models that populate attributes as a side
+    #        effect.
+    def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil,
+                   custom_save_block: nil, delete_method: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
-                   inventory_object_attributes: nil, unique_index_columns: nil, name: nil, saver_strategy: nil,
+                   inventory_object_attributes: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
-                   targeted: nil, manager_ref_allowed_nil: nil)
-      @model_class           = model_class
-      @manager_ref           = manager_ref || [:ems_ref]
-      @custom_manager_uuid   = custom_manager_uuid
-      @custom_db_finder      = custom_db_finder
-      @association           = association || []
-      @parent                = parent || nil
-      @arel                  = arel
-      @dependency_attributes = dependency_attributes || {}
-      @data                  = data || []
-      @data_index            = data_index || {}
-      @saved                 = saved || false
-      @strategy              = process_strategy(strategy)
-      @delete_method         = delete_method || :destroy
-      @custom_save_block     = custom_save_block
-      @check_changed         = check_changed.nil? ? true : check_changed
-      @internal_attributes   = [:__feedback_edge_set_parent]
-      @complete              = complete.nil? ? true : complete
-      @update_only           = update_only.nil? ? false : update_only
-      @builder_params        = builder_params
-      @unique_index_columns  = unique_index_columns
-      @name                  = name || association || model_class.to_s.demodulize.tableize
-      @saver_strategy        = process_saver_strategy(saver_strategy)
+                   targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil,
+                   custom_reconnect_block: nil, batch_extra_attributes: [])
+      @model_class            = model_class
+      @manager_ref            = manager_ref || [:ems_ref]
+      @secondary_refs         = secondary_refs
+      @custom_manager_uuid    = custom_manager_uuid
+      @custom_db_finder       = custom_db_finder
+      @association            = association || []
+      @parent                 = parent || nil
+      @arel                   = arel
+      @dependency_attributes  = dependency_attributes || {}
+      @secondary_indexes      = secondary_refs.map { |n, _k| [n, {}] }.to_h
+      @strategy               = process_strategy(strategy)
+      @delete_method          = delete_method || :destroy
+      @custom_save_block      = custom_save_block
+      @custom_reconnect_block = custom_reconnect_block
+      @check_changed          = check_changed.nil? ? true : check_changed
+      @internal_attributes    = [:__feedback_edge_set_parent, :__parent_inventory_collections]
+      @complete               = complete.nil? ? true : complete
+      @update_only            = update_only.nil? ? false : update_only
+      @builder_params         = builder_params
+      @name                   = name || association || model_class.to_s.demodulize.tableize
+      @saver_strategy         = process_saver_strategy(saver_strategy)
+      @use_ar_object          = use_ar_object || false
+      @batch_extra_attributes = batch_extra_attributes
 
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
 
@@ -377,6 +442,9 @@ module ManagerRefresh
 
       @inventory_object_attributes = inventory_object_attributes
 
+      @data                             = []
+      @data_index                       = {}
+      @saved                          ||= false
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
       @transitive_dependency_attributes = Set.new
@@ -387,10 +455,26 @@ module ManagerRefresh
       @db_data_index                    = nil
       @data_collection_finalized        = false
 
+      @created_records = []
+      @updated_records = []
+      @deleted_records = []
+
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
 
       validate_inventory_collection!
+    end
+
+    def store_created_records(records)
+      @created_records.concat(records_identities(records))
+    end
+
+    def store_updated_records(records)
+      @updated_records.concat(records_identities(records))
+    end
+
+    def store_deleted_records(records)
+      @deleted_records.concat(records_identities(records))
     end
 
     def to_a
@@ -448,11 +532,11 @@ module ManagerRefresh
       return :default unless saver_strategy
 
       case saver_strategy
-      when :default, :concurrent_safe, :concurrent_safe_batch
+      when :default, :batch, :concurrent_safe, :concurrent_safe_batch
         saver_strategy
       else
         raise "Unknown InventoryCollection saver strategy: :#{saver_strategy}, allowed strategies are "\
-              ":default,  :concurrent_safe and :concurrent_safe_batch"
+              ":default, :batch, :concurrent_safe and :concurrent_safe_batch"
       end
     end
 
@@ -475,6 +559,10 @@ module ManagerRefresh
 
     def check_changed?
       check_changed
+    end
+
+    def use_ar_object?
+      use_ar_object
     end
 
     def complete?
@@ -505,6 +593,14 @@ module ManagerRefresh
       data_collection_finalized
     end
 
+    def inventory_object?(value)
+      value.kind_of?(::ManagerRefresh::InventoryObject)
+    end
+
+    def inventory_object_lazy?(value)
+      value.kind_of?(::ManagerRefresh::InventoryObjectLazy)
+    end
+
     def noop?
       # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
       if targeted?
@@ -526,66 +622,33 @@ module ManagerRefresh
       end
     end
 
-    def supports_sti?
-      @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
-      @supports_sti_cache
-    end
-
-    def supports_timestamps_on_variant?
-      if @supports_timestamps_on_variant.nil?
-        @supports_timestamps_on_variant = (model_class.column_names.include?("created_on") &&
-          model_class.column_names.include?("updated_on") &&
-          ActiveRecord::Base.record_timestamps)
-      end
-      @supports_timestamps_on_variant
-    end
-
-    def supports_timestamps_at_variant?
-      if @supports_timestamps_at_variant.nil?
-        @supports_timestamps_at_variant = (model_class.column_names.include?("created_at") &&
-          model_class.column_names.include?("updated_at") &&
-          ActiveRecord::Base.record_timestamps)
-      end
-      @supports_timestamps_at_variant
-    end
-
-    def supports_last_sync_on?
-      @supports_last_sync_on = model_class.column_names.include?("last_sync_on") if @supports_last_sync_on.nil?
-      @supports_last_sync_on
-    end
-
     def targeted?
       targeted
-    end
-
-    def unique_index_columns
-      return @unique_index_columns if @unique_index_columns
-
-      unique_indexes = model_class.connection.indexes(model_class.table_name).select(&:unique)
-      if unique_indexes.count > 1
-        raise "Cannot infer unique index automatically, since the table #{model_class.table_name}"\
-              " of the #{self} contains more than 1 unique index: '#{unique_indexes.collect(&:name)}'. Please define"\
-              " the unique index columns explicitly as: :unique_index => [:column1, :column2, etc.]"
-      end
-
-      if unique_indexes.blank?
-        raise "#{self} and its table #{model_class.table_name} must have a unique index defined, in order to use "\
-              "saver_strategy :concurrent_safe or :concurrent_safe_batch."
-      end
-      @unique_index_columns = unique_indexes.first.columns.map(&:to_sym)
     end
 
     def <<(inventory_object)
       unless data_index[inventory_object.manager_uuid]
         data_index[inventory_object.manager_uuid] = inventory_object
+        secondary_refs.each do |name, keys|
+          secondary_indexes[name][inventory_object.id_with_keys(keys)] = inventory_object
+        end
         data << inventory_object
       end
       self
     end
     alias push <<
 
-    def object_index(object)
-      index_array = manager_ref.map do |attribute|
+    def named_ref(ref)
+      ref == :manager_ref ? manager_ref : secondary_refs[ref]
+    end
+
+    def named_index(ref)
+      ref == :manager_ref ? data_index : secondary_indexes[ref]
+    end
+
+    # TODO: use object_index_with_keys instead of adding ref?
+    def object_index(object, ref: :manager_ref)
+      index_array = named_ref(ref).map do |attribute|
         if object.respond_to?(:[])
           object[attribute].to_s
         else
@@ -608,6 +671,8 @@ module ManagerRefresh
     end
 
     def manager_ref_to_cols
+      # TODO(lsmola) this should contain the polymorphic _type, otherwise the IC with polymorphic unique key will get
+      # conflicts
       # Convert attributes from unique key to actual db cols
       manager_ref.map do |ref|
         association_to_foreign_key_mapping[ref] || ref
@@ -630,27 +695,37 @@ module ManagerRefresh
       data_index[object_index(manager_uuid_hash)] || build(manager_uuid_hash)
     end
 
-    def find(manager_uuid)
+    def find(manager_uuid, ref: :manager_ref)
       return if manager_uuid.nil?
+      # TODO `ref` handling is partial
       case strategy
       when :local_db_find_references, :local_db_cache_all
         find_in_db(manager_uuid)
       when :local_db_find_missing_references
-        data_index[manager_uuid] || find_in_db(manager_uuid)
+        named_index(ref)[manager_uuid] || find_in_db(manager_uuid)
       else
-        manager_uuid.kind_of?(Hash) ? find_by(manager_uuid) : data_index[manager_uuid]
+        # TODO: find(hash) code path apparently exists for lazy_find(hash) ?  Consider deprecating.
+        # Better have lazy_find_by that computes string uuid ahead of time.
+        manager_uuid.kind_of?(Hash) ? find_by(manager_uuid, :ref => ref) : named_index(ref)[manager_uuid]
       end
     end
 
-    def find_by(manager_uuid_hash)
-      if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
-        raise "Allowed find_by keys are #{manager_ref}"
+    def find_by(manager_uuid_hash, ref: :manager_ref)
+      keys = named_ref(ref)
+      if !manager_uuid_hash.keys.all? { |x| keys.include?(x) } || manager_uuid_hash.keys.size != keys.size
+        raise "Allowed find_by ref=#{ref} keys are #{keys}"
       end
-      find(object_index(manager_uuid_hash))
+      manager_uuid = object_index(manager_uuid_hash, :ref => ref)
+      find(manager_uuid, :ref => ref)
     end
 
-    def lazy_find(manager_uuid, key: nil, default: nil)
-      ::ManagerRefresh::InventoryObjectLazy.new(self, manager_uuid, :key => key, :default => default)
+    def lazy_find_by(manager_uuid_hash, ref: :manager_ref, key: nil, default: nil)
+      # TODO raise for missing keys like `find_by`
+      lazy_find(object_index(manager_uuid_hash, :ref => ref), :ref => ref, :key => key, :default => default)
+    end
+
+    def lazy_find(manager_uuid, ref: :manager_ref, key: nil, default: nil)
+      ::ManagerRefresh::InventoryObjectLazy.new(self, manager_uuid, :ref => ref, :key => key, :default => default)
     end
 
     def inventory_object_class
@@ -700,7 +775,7 @@ module ManagerRefresh
 
     def fixed_attributes
       if model_class
-        presence_validators = model_class.validators.detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }
+        presence_validators = model_class.validators.detect { |x| x.kind_of?(ActiveRecord::Validations::PresenceValidator) }
       end
       # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
       # that have presence validation
@@ -745,25 +820,30 @@ module ManagerRefresh
       self.attributes_whitelist += attributes + (fixed_attributes + internal_attributes)
     end
 
+    # @return [InventoryCollection] a shallow copy of InventoryCollection, the copy will share @data of the original
+    # collection, otherwise we would be copying a lot of records in memory.
     def clone
-      # A shallow copy of InventoryCollection, the copy will share @data of the original collection, otherwise we would
-      # be copying a lot of records in memory.
-      self.class.new(:model_class           => model_class,
-                     :manager_ref           => manager_ref,
-                     :association           => association,
-                     :parent                => parent,
-                     :arel                  => arel,
-                     :strategy              => strategy,
-                     :custom_save_block     => custom_save_block,
-                     :data                  => data,
-                     :data_index            => data_index,
-                     # Dependency attributes need to be a hard copy, since those will differ for each
-                     # InventoryCollection
-                     :dependency_attributes => dependency_attributes.clone)
+      cloned = self.class.new(:model_class           => model_class,
+                              :manager_ref           => manager_ref,
+                              :association           => association,
+                              :parent                => parent,
+                              :arel                  => arel,
+                              :strategy              => strategy,
+                              :saver_strategy        => saver_strategy,
+                              :custom_save_block     => custom_save_block,
+                              # We want cloned IC to be update only, since this is used for cycle resolution
+                              :update_only           => true,
+                              # Dependency attributes need to be a hard copy, since those will differ for each
+                              # InventoryCollection
+                              :dependency_attributes => dependency_attributes.clone)
+
+      cloned.data_index = data_index
+      cloned.data       = data
+      cloned
     end
 
     def belongs_to_associations
-      model_class.reflect_on_all_associations.select { |x| x.kind_of? ActiveRecord::Reflection::BelongsToReflection }
+      model_class.reflect_on_all_associations.select { |x| x.kind_of?(ActiveRecord::Reflection::BelongsToReflection) }
     end
 
     def association_to_foreign_key_mapping
@@ -845,35 +925,34 @@ module ManagerRefresh
       to_s
     end
 
-    def scan!(indexed_inventory_collections)
-      data.each do |inventory_object|
-        scan_inventory_object!(inventory_object)
-
-        if targeted? && inventory_object.inventory_collection.parent_inventory_collections.blank?
-          # We want to track what manager_uuids we should query from a db, for the targeted refresh
-          manager_uuids << inventory_object.manager_uuid
-        end
-      end
-
-      if targeted? && parent_inventory_collections.present?
-        self.parent_inventory_collections = parent_inventory_collections.map do |inventory_collection_index|
-          inventory_collection = indexed_inventory_collections[inventory_collection_index]
-          raise "Cannot find inventory collection #{inventory_collection_index} from #{self}" unless inventory_collection
-          inventory_collection
-        end
-      end
-    end
-
     def batch_size
       1000
+    end
+
+    def batch_size_pure_sql
+      10_000
+    end
+
+    def build_multi_selection_condition(hashes, keys = nil)
+      keys       ||= manager_ref
+      table_name = model_class.table_name
+      cond_data  = hashes.map do |hash|
+        "(#{keys.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"
+      end.join(",")
+      column_names = keys.map { |key| "#{table_name}.#{ActiveRecord::Base.connection.quote_column_name(key)}" }.join(",")
+
+      "(#{column_names}) IN (#{cond_data})"
     end
 
     def db_collection_for_comparison
       if targeted?
         if targeted_arel.respond_to?(:call)
           targeted_arel.call(self)
+        elsif manager_ref.count > 1
+          # TODO(lsmola) optimize with ApplicationRecordIterator
+          hashes = extract_references(manager_uuids + skeletal_manager_uuids)
+          full_collection_for_comparison.where(build_multi_selection_condition(hashes))
         else
-          raise "Can't build :targeted_arel for #{self}, please provide it as an argument." if manager_ref.count > 1
           ManagerRefresh::ApplicationRecordIterator.new(
             :inventory_collection => self,
             :manager_uuids_set    => (manager_uuids + skeletal_manager_uuids).to_a.flatten.compact
@@ -885,10 +964,12 @@ module ManagerRefresh
     end
 
     def db_collection_for_comparison_for(manager_uuids_set)
+      # TODO(lsmola) this should have the build_multi_selection_condition, like in the method above
       full_collection_for_comparison.where(manager_ref.first => manager_uuids_set)
     end
 
     def db_collection_for_comparison_for_complement_of(manager_uuids_set)
+      # TODO(lsmola) this should have the build_multi_selection_condition, like in the method above
       full_collection_for_comparison.where.not(manager_ref.first => manager_uuids_set)
     end
 
@@ -899,7 +980,22 @@ module ManagerRefresh
 
     private
 
-    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index, :parent_inventory_collections
+    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index
+
+    # Returns array of records identities
+    def records_identities(records)
+      records = [records] unless records.respond_to?(:map)
+      records.map { |record| record_identity(record) }
+    end
+
+    # Returns a hash with a simple record identity
+    def record_identity(record)
+      identity = record.try(:[], :id) || record.try(:[], "id") || record.try(:id)
+      raise "Cannot obtain identity of the #{record}" if identity.blank?
+      {
+        :id => identity
+      }
+    end
 
     # Finds manager_uuid in the DB. Using a configured strategy we cache obtained data in the db_data_index, so the
     # same find will not hit database twice. Also if we use lazy_links and this is called when
@@ -913,7 +1009,7 @@ module ManagerRefresh
       else
         return db_data_index[manager_uuid] if db_data_index && db_data_index[manager_uuid]
         # We haven't found the reference, lets add it to the list of references and load it
-        references << manager_uuid unless references.include?(manager_uuid) # O(1) since references is Set
+        references << manager_uuid if manager_uuid
       end
 
       # Put our existing data keys into loaded references
@@ -933,6 +1029,8 @@ module ManagerRefresh
 
       # Initialize db_data_index in nil
       self.db_data_index ||= {}
+
+      return if new_references.blank? # Return if all references are already loaded
 
       # TODO(lsmola) selected need to contain also :keys used in other InventoryCollections pointing to this one, once
       # we get list of all keys for each InventoryCollection ,we can uncomnent
@@ -968,7 +1066,7 @@ module ManagerRefresh
                          elsif !arel.nil?
                            arel
                          end
-                   rel = rel.where(selection) if rel && selection
+                   rel = rel.where(build_multi_selection_condition(selection)) if rel && selection
                    rel = rel.select(projection) if rel && projection
                    rel
                  end
@@ -980,22 +1078,17 @@ module ManagerRefresh
     #
     # @param new_references [Array] array of manager_uuids of the InventoryObjects
     def extract_references(new_references = [])
-      # We collect what manager_uuids of this IC were referenced and we load only those
-      # TODO(lsmola) maybe in can be obj[x] = Set.new, since rails will do a query "col1 IN [a,b,b] AND col2 IN [e,f,e]"
-      # which is equivalent to "col1 IN [a,b] AND col2 IN [e,f]". The best would be to forcing rails to query
-      # "(col1, col2) IN [(a,e), (b,f), (b,e)]" which would load exactly what we need. Postgree supports this, but rails
-      # doesn't seem to. So for now, we can load a bit more from the DB than we need, in case of manager_ref.count > 1
-      hash_uuids_by_ref = manager_ref.each_with_object({}) { |x, obj| obj[x] = [] }
+      hash_uuids_by_ref = []
 
-      # TODO(lsmola) hm, if we call find in the parser code, not all references will be here, so this will really work
-      # only for lazy_find. So if we want to call find, I suppose we can cache all, possibly we could optimize this to
-      # set references upfront?
-      new_references.each do |reference|
-        refs = reference.split(stringify_joiner)
+      new_references.each do |manager_uuid|
+        next if manager_uuid.nil?
+        uuids = manager_uuid.split(stringify_joiner)
 
-        refs.each_with_index do |ref, index|
-          hash_uuids_by_ref[manager_ref[index]] << ref
+        reference = {}
+        manager_ref.each_with_index do |ref, index|
+          reference[ref] = uuids[index]
         end
+        hash_uuids_by_ref << reference
       end
       hash_uuids_by_ref
     end
@@ -1024,61 +1117,6 @@ module ManagerRefresh
 
       db_data_index[index]    = new_inventory_object(attributes)
       db_data_index[index].id = record.id
-    end
-
-    def scan_inventory_object!(inventory_object)
-      inventory_object.data.each do |key, value|
-        if value.kind_of?(Array)
-          value.each { |val| scan_inventory_object_attribute!(key, val) }
-        else
-          scan_inventory_object_attribute!(key, value)
-        end
-      end
-    end
-
-    def scan_inventory_object_attribute!(key, value)
-      return if !inventory_object_lazy?(value) && !inventory_object?(value)
-
-      # Storing attributes and their dependencies
-      (dependency_attributes[key] ||= Set.new) << value.inventory_collection if value.dependency?
-
-      # For concurent safe strategies, we want to pre-build the relations using the lazy_link data, so we can fill up
-      # the foreign key in first pass.
-      if [:concurrent_safe, :concurrent_safe_batch].include?(saver_strategy)
-        if value.inventory_collection.manager_ref.size == 1 && inventory_object_lazy?(value) &&
-           !value.ems_ref.blank? && value.key.nil? && value.dependency?
-          # Instead of loading the reference from the DB, we'll add the dummy InventoryObject (having only ems_ref and
-          # info from the builder_params) to the correct InventoryCollection. Which will either be found in the DB or
-          # created as a small dummy object. The refresh of the object will then fill the rest of the data, while not
-          # touching the reference.
-
-          # TODO(lsmola) solve the :key, since that requires data from the actual reference. At best our DB should be
-          # designed the way, we don't duplicate the data, but rather get them with a join. (3NF!)
-
-          value.inventory_collection.find_or_build(value.ems_ref)
-          value.inventory_collection.skeletal_manager_uuids << value.ems_ref
-        end
-      end
-
-      # Storing a reference in the target inventory_collection, then each IC knows about all the references and can
-      # e.g. load all the referenced uuids from a DB
-      value.inventory_collection.references << value.to_s
-
-      if inventory_object_lazy?(value)
-        # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
-        transitive_dependency_attributes << key if value.transitive_dependency?
-
-        # If we access an attribute of the value, using a :key, we want to keep a track of that
-        value.inventory_collection.attribute_references << value.key if value.key
-      end
-    end
-
-    def inventory_object?(value)
-      value.kind_of?(::ManagerRefresh::InventoryObject)
-    end
-
-    def inventory_object_lazy?(value)
-      value.kind_of?(::ManagerRefresh::InventoryObjectLazy)
     end
 
     def validate_inventory_collection!

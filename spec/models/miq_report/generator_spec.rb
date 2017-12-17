@@ -59,8 +59,6 @@ describe MiqReport::Generator do
         used_mem_up = [400, 500, 600, 700]
         create_rollup(@host1, @time_profile_all, used_mem_up)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
-        report_min = @miq_report_profile_all.table.data[0].data['min_trend_value']
-        report_max = @miq_report_profile_all.table.data[0].data['max_trend_value']
         expect(@miq_report_profile_all.table.data[0].data).to include("min_trend_value" => used_mem_up.min,
                                                                       "max_trend_value" => used_mem_up.max)
       end
@@ -75,6 +73,37 @@ describe MiqReport::Generator do
                                                   :derived_memory_used      => used_mem[i],
                                                   :derived_memory_available => 1400)
       end
+    end
+  end
+
+  describe "#cols_for_report" do
+    it "uses cols" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor version name))
+      expect(rpt.cols_for_report).to eq(%w(vendor version name))
+    end
+
+    it "uses include" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :include => {"host" => { "columns" => %w(name hostname guid)}})
+      expect(rpt.cols_for_report).to eq(%w(host.name host.hostname host.guid))
+    end
+
+    it "uses extra_cols" do
+      rpt = MiqReport.new(:db => "VmOrTemplate")
+      expect(rpt.cols_for_report(%w(vendor))).to eq(%w(vendor))
+    end
+
+    it "derives include" do
+      rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor), :col_order =>%w(host.name vendor))
+      expect(rpt.cols_for_report).to match_array(%w(vendor host.name))
+    end
+
+    it "works with col, col_order and include together" do
+      rpt = MiqReport.new(:db        => "VmOrTemplate",
+                          :cols      => %w(vendor),
+                          :col_order => %w(host.name host.hostname vendor),
+                          :include   => {"host" => { "columns" => %w(name hostname)}}
+                         )
+      expect(rpt.cols_for_report).to match_array(%w(vendor host.name host.hostname))
     end
   end
 end

@@ -8,7 +8,7 @@ class Session < ApplicationRecord
   end
 
   def self.check_session_timeout
-    $log.debug "Checking session data"
+    $log.debug("Checking session data")
     purge(::Settings.session.timeout)
   end
 

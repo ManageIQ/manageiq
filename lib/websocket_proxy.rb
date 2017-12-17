@@ -1,10 +1,11 @@
 class WebsocketProxy
   attr_reader :env, :url, :error
 
-  def initialize(env, console)
+  def initialize(env, console, logger)
     @env = env
     @id = SecureRandom.uuid
     @console = console
+    @logger = logger
 
     secure = Rack::Request.new(env).ssl?
     scheme = secure ? 'wss:' : 'ws:'
@@ -16,16 +17,23 @@ class WebsocketProxy
       @ws = env['rack.hijack'].call
       # Set up the socket client for the proxy
       @sock = TCPSocket.open(@console.host_name, @console.port)
-      init_ssl if @console.ssl
-    rescue
+      adapter = case @console.protocol
+                when 'vnc'
+                  WebsocketSocket
+                when 'spice'
+                  @console.ssl ? WebsocketSSLSocket : WebsocketSocket
+                when 'webmks'
+                  WebsocketWebmks
+                end
+      @right = adapter.new(@sock, @console)
+    rescue => ex
+      @logger.error(ex)
       @error = true
     end
 
     @driver.on(:open) { @console.update(:opened => true) }
 
-    @driver.on(:message) do |msg|
-      @ssl ? @ssl.syswrite(msg.data.pack('C*')) : @sock.write(msg.data.pack('C*'))
-    end
+    @driver.on(:message) { |msg| @right.issue(msg.data.pack('C*')) }
 
     @driver.on(:close) { cleanup }
   end
@@ -42,8 +50,9 @@ class WebsocketProxy
       data = @ws.recv_nonblock(64.kilobytes)
       @driver.parse(data)
     else
-      data = @ssl ? @ssl.sysread(64.kilobytes) : @sock.recv_nonblock(64.kilobytes)
-      @driver.binary(data)
+      @right.fetch(64.kilobytes) do |data|
+        @driver.binary(data)
+      end
     end
   end
 
@@ -66,18 +75,5 @@ class WebsocketProxy
 
   def vm_id
     @console ? @console.vm_id : 'unknown'
-  end
-
-  private
-
-  def init_ssl
-    context = OpenSSL::SSL::SSLContext.new
-    context.cert = OpenSSL::X509::Certificate.new(File.open('certs/server.cer'))
-    context.key = OpenSSL::PKey::RSA.new(File.open('certs/server.cer.key'))
-    context.ssl_version = :SSLv23
-    context.verify_depth = OpenSSL::SSL::VERIFY_NONE
-    @ssl = OpenSSL::SSL::SSLSocket.new(@sock, context)
-    @ssl.sync_close = true
-    @ssl.connect
   end
 end

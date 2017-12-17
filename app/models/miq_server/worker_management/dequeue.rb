@@ -50,6 +50,7 @@ module MiqServer::WorkerManagement::Dequeue
     update_worker_last_heartbeat(pid)
     @workers_lock.synchronize(:SH) do
       w = @workers[pid]
+
       msg = get_queue_message_for_worker(w)
       msg ? [msg[:id], msg[:lock_version]] : nil
     end unless @workers_lock.nil?
@@ -61,7 +62,7 @@ module MiqServer::WorkerManagement::Dequeue
 
   def prefetch_below_threshold?(queue_name, wcount)
     @queue_messages_lock.synchronize(:SH) do
-      return false if @queue_messages[queue_name].nil?
+      return false unless @queue_messages.key_path?(queue_name, :messages)
       return (@queue_messages[queue_name][:messages].length <= (::Settings.server.prefetch_min_per_worker_dequeue * wcount))
     end
   end

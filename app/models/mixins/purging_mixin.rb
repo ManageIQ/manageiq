@@ -52,7 +52,7 @@ module PurgingMixin
     end
 
     def purge_queue(mode, value)
-      MiqQueue.put(
+      MiqQueue.submit_job(
         :class_name  => name,
         :method_name => "purge_by_#{mode}",
         :args        => [value]
@@ -90,6 +90,12 @@ module PurgingMixin
       total = purge_in_batches(purge_ids_for_remaining(remaining), window || purge_window_size, &block)
       _log.info("Purging #{table_name.humanize} older than last #{remaining} results...Complete - Deleted #{total} records")
       total
+    end
+
+    def purge_by_scope(older_than = nil, window = nil, &block)
+      _log.info("Purging #{table_name.humanize}...")
+      total = purge_in_batches(purge_scope(older_than), window || purge_window_size, &block)
+      _log.info("Purging #{table_name.humanize}...Complete - Deleted #{total} records")
     end
 
     private

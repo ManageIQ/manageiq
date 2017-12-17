@@ -48,10 +48,16 @@ module Spec
 
         container_providers = []
         options[:container_providers].each_with_index do |images_count, i|
-          ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :name => "test_container_provider_#{i}")
-          container_providers << ems_kubernetes
+          ems_openshift = FactoryGirl.create(:ems_openshift, :name => "test_container_provider_#{i}")
+          container_providers << ems_openshift
+          container_image_classes = ContainerImage.descendants.append(ContainerImage)
           images_count.times do |idx|
-            FactoryGirl.create(:container_image, :name => "test_container_images_#{idx}", :ems_id => ems_kubernetes.id)
+            container_image_classes.each do |cic|
+              FactoryGirl.create(:container_image,
+                                 :name   => "test_container_images_#{idx}",
+                                 :ems_id => ems_openshift.id,
+                                 :type   => cic.name)
+            end
           end
         end
         return hosts, proxies, storages, vms, repo_vms, container_providers

@@ -1,11 +1,11 @@
---- 
-where_clause: 
-generate_cols: 
-dims: 
-reserved: 
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
 title: "Top Storage Consumers"
-conditions: !ruby/object:MiqExpression 
-  context_type: 
+conditions: !ruby/object:MiqExpression
+  context_type:
   exp:
     ">":
       field: Vm-used_disk_storage
@@ -13,54 +13,54 @@ conditions: !ruby/object:MiqExpression
 col_options: {}
 
 order: Descending
-graph: 
-generate_rows: 
+graph:
+generate_rows:
 menu_name: "Top Storage Consumers"
 rpt_group: Custom
-priority: 
-col_order: 
+priority:
+col_order:
 - name
 - ems_cluster.name
 - host.name
 - used_disk_storage
 - provisioned_storage
-timeline: 
-file_mtime: 
-tz: 
-categories: 
-time_profile_id: 
+timeline:
+file_mtime:
+tz:
+categories:
+time_profile_id:
 rpt_type: Custom
-filename: 
+filename:
 db_options: {}
 
-col_formats: 
-- 
-- 
-- 
-- 
-- 
-include: 
-  host: 
-    columns: 
+col_formats:
+-
+-
+-
+-
+-
+include:
+  host:
+    columns:
     - name
-  ems_cluster: 
-    columns: 
+  ems_cluster:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - used_disk_storage
 - provisioned_storage
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - used_disk_storage
 rpt_options: {}
 
-headers: 
+headers:
 - Name
 - Cluster Name
 - Host Name
 - " Total Used Disk Space"
 - Total Provisioned Space
-display_filter: 
+display_filter:

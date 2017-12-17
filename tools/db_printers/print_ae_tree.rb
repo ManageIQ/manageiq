@@ -1,5 +1,7 @@
-# Rails.logger.level = $log.level = 0
+#!/usr/bin/env ruby
+require File.expand_path('../../config/environment', __dir__)
 
+# Rails.logger.level = $log.level = 0
 def print_ae_tree(nodes, indent = "")
   nodes.sort_by { |n| n.name.downcase }.each do |node|
     title = node.class.name.demodulize[5..-1]

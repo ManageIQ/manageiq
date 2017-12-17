@@ -26,4 +26,16 @@ RSpec.describe MiqExpression::CountField do
       expect(described_class.parse(count_field)).to be_nil
     end
   end
+
+  describe "#to_s" do
+    it "renders count fields in string form" do
+      count_field = described_class.new(Vm, ["disks"])
+      expect(count_field.to_s).to eq("Vm.disks")
+    end
+
+    it "can handle multiple associations" do
+      count_field = described_class.new(Vm, %w(hardware disks))
+      expect(count_field.to_s).to eq("Vm.hardware.disks")
+    end
+  end
 end

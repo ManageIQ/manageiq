@@ -17,7 +17,7 @@ class MiqEvent < EventStream
   SUPPORTED_POLICY_AND_ALERT_CLASSES = [Host, VmOrTemplate, Storage, EmsCluster, ResourcePool,
                                         MiqServer, ExtManagementSystem,
                                         ContainerReplicator, ContainerGroup, ContainerNode, ContainerImage,
-                                        MiddlewareServer].freeze
+                                        MiddlewareServer, PhysicalServer].freeze
 
   def self.raise_evm_event(target, raw_event, inputs = {}, options = {})
     # Target may have been deleted if it's a worker
@@ -79,7 +79,15 @@ class MiqEvent < EventStream
   end
 
   def self.build_evm_event(event, target)
-    MiqEvent.create(:event_type => event, :target => target, :source => 'POLICY', :timestamp => Time.now.utc)
+    options = {
+      :event_type => event,
+      :target     => target,
+      :source     => 'POLICY',
+      :timestamp  => Time.now.utc
+    }
+    user = User.current_user
+    options.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+    MiqEvent.create(options)
   end
 
   def update_with_policy_result(result = {})

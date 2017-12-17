@@ -22,6 +22,9 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
       attributes = {
         :model_class    => ::NetworkPort,
         :association    => :network_ports,
+        :use_ar_object  => true,
+        # TODO(lsmola) can't do batch strategy for network_ports because of security_groups relation
+        :saver_strategy => :default,
         :builder_params => {
           :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
@@ -171,6 +174,7 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
         :model_class                  => ::LoadBalancerListener,
         :association                  => :load_balancer_listeners,
         :parent_inventory_collections => [:load_balancers],
+        :use_ar_object                => true,
         :builder_params               => {
           :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
         }
@@ -236,6 +240,18 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
           :load_balancer_health_checks => {:ems_ref => manager_uuids}
         )
       end
+
+      attributes.merge!(extra_attributes)
+    end
+
+    def network_groups(extra_attributes = {})
+      attributes = {
+        :model_class    => ::NetworkGroup,
+        :association    => :network_groups,
+        :builder_params => {
+          :ems_id => ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id },
+        }
+      }
 
       attributes.merge!(extra_attributes)
     end

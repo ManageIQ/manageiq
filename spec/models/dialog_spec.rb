@@ -34,37 +34,11 @@ describe Dialog do
     end
   end
 
-  describe "#readonly?" do
-    it "is not readonly if it no blueprint associated" do
-      dialog = FactoryGirl.create(:dialog, :label => 'dialog')
-      expect(dialog.readonly?).to be_falsey
-    end
-
-    it "is not readonly if the blueprint is not readonly" do
-      blueprint = FactoryGirl.create(:blueprint)
-      dialog = FactoryGirl.create(:dialog, :label => 'dialog', :blueprint => blueprint)
-      expect(dialog.readonly?).to be_falsey
-    end
-
-    it "cannot create a dialog to be associated with a published blueprint" do
-      blueprint = FactoryGirl.create(:blueprint, :status => 'published')
-      expect { FactoryGirl.create(:dialog, :label => 'dialog', :blueprint => blueprint) }.to raise_error(ActiveRecord::ReadOnlyRecord)
-    end
-
-    it "is readonly if the blueprint is readonly" do
-      blueprint = FactoryGirl.create(:blueprint)
-      dialog = FactoryGirl.create(:dialog, :label => 'dialog', :blueprint => blueprint)
-      blueprint.update_attributes(:status => 'published')
-      expect(dialog.readonly?).to be_truthy
-      expect { dialog.save! }.to raise_error(ActiveRecord::ReadOnlyRecord)
-    end
-  end
-
   context "validate label uniqueness" do
     it "with same label" do
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
-        .to raise_error(ActiveRecord::RecordInvalid, /Label is not unique within region/)
+        .to raise_error(ActiveRecord::RecordInvalid, /Name is not unique within region/)
     end
 
     it "with different labels" do
@@ -288,9 +262,12 @@ describe Dialog do
           'label'         => 'updated_label',
           'dialog_groups' => [
             { 'id'            => dialog_group.first.id,
+              'dialog_tab_id' => dialog_tab.first.id,
               'dialog_fields' =>
                                  [{
-                                   'id' => dialog_field.first.id}] },
+                                   'id'              => dialog_field.first.id,
+                                   'dialog_group_id' => dialog_group.first.id
+                                 }] },
             {
               'label'         => 'group 2',
               'dialog_fields' => [{
@@ -388,6 +365,27 @@ describe Dialog do
       expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Dialog #{dialog.label} must have at least one Tab")
     end
 
+    context "unique field names" do
+      before do
+        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
+        dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group')
+        dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field1')
+      end
+
+      it "fails with two identical field names on different groups" do
+        dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group2')
+        dialog.dialog_tabs.first.dialog_groups.last.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 3', :name => 'field1')
+        expect { dialog.save! }
+          .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
+      end
+
+      it "fails with two identical field names on same group" do
+        dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 3', :name => 'field1')
+        expect { dialog.save! }
+          .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
+      end
+    end
+
     it "validates with tab" do
       dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
       expect_any_instance_of(DialogTab).to receive(:valid?)
@@ -397,9 +395,9 @@ describe Dialog do
   end
 
   describe "#deep_copy" do
-    let(:dialog_service) { OrchestrationTemplateDialogService.new }
-    let(:template_hot)   { FactoryGirl.create(:orchestration_template_hot_with_content) }
-    let(:dialog) { dialog_service.create_dialog('test', template_hot) }
+    let(:dialog_service) { Dialog::OrchestrationTemplateServiceDialog.new }
+    let(:template)       { FactoryGirl.create(:orchestration_template).tap { |t| allow(t).to receive(:parameter_groups).and_return([]) } }
+    let(:dialog)         { dialog_service.create_dialog('test', template) }
 
     it "clones the dialog and all containing components" do
       dialog_new = dialog.deep_copy(:name => 'test_cloned')

@@ -26,17 +26,18 @@ module Vmdb::Loggers
       }.freeze
 
       def call(severity, time, progname, msg)
-        # From https://github.com/ViaQ/elasticsearch-templates/releases Downloads asciidoc
+        # From https://github.com/ViaQ/elasticsearch-templates/releases -> Downloads -> *.asciidoc
+        # NOTE: These values are in a specific order for easier human readbility via STDOUT
         {
           :@timestamp => format_datetime(time),
           :hostname   => hostname,
-          :level      => translate_error(severity),
-          :message    => prefix_task_id(msg2str(msg)),
           :pid        => $PROCESS_ID,
           :tid        => thread_id,
           :service    => progname,
+          :level      => translate_error(severity),
+          :message    => prefix_task_id(msg2str(msg)),
           # :tags => "tags string",
-        }.to_json << "\n"
+        }.delete_nils.to_json << "\n"
       end
 
       private

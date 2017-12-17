@@ -5,6 +5,8 @@ class ContainerImage < ApplicationRecord
   include TenantIdentityMixin
   include CustomAttributeMixin
   include ArchivedMixin
+  include NewWithTypeStiMixin
+  include CustomActionsMixin
   include_concern 'Purging'
 
   DOCKER_IMAGE_PREFIX = "docker://"
@@ -24,12 +26,14 @@ class ContainerImage < ApplicationRecord
   has_many :openscap_rule_results, :through => :openscap_result
   has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
   has_many :docker_labels, -> { where(:section => "docker_labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
+  has_one :last_scan_result, :class_name => ScanResult, :as => :resource, :dependent => :destroy, :autosave => true
 
   serialize :exposed_ports, Hash
   serialize :environment_variables, Hash
 
   acts_as_miq_taggable
   virtual_column :display_registry, :type => :string
+  virtual_total :total_containers, :containers
 
   after_create :raise_creation_event
 
@@ -74,6 +78,12 @@ class ContainerImage < ApplicationRecord
     scan_via_miq_vm(miq_cnt_group, ost)
   end
 
+  def self.raise_creation_events(container_image_ids)
+    where(:id => container_image_ids).find_each do |record|
+      MiqEvent.raise_evm_event(record, 'containerimage_created', {})
+    end
+  end
+
   def raise_creation_event
     MiqEvent.raise_evm_event(self, 'containerimage_created', {})
   end
@@ -83,33 +93,21 @@ class ContainerImage < ApplicationRecord
     !plist.blank?
   end
 
-  def annotate_deny_execution(causing_policy)
-    # TODO: support sti and replace check with inplementing only for OpenShift providers
-    unless ext_management_system.kind_of?(ManageIQ::Providers::Openshift::ContainerManagerMixin)
-      _log.error("#{__method__} only applicable for OpenShift Providers")
-      return
-    end
-    ext_management_system.annotate(
-      "image",
-      digest,
-      "security.manageiq.org/failed-policy" => causing_policy,
-      "images.openshift.io/deny-execution"  => "true"
-    )
-  end
-
   def openscap_failed_rules_summary
     openscap_rule_results.where(:result => "fail").group(:severity).count.symbolize_keys
   end
 
   def disconnect_inv
-    return if ems_id.nil?
-    _log.info "Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
-    "id [#{ext_management_system.id}] "
+    return if archived?
+    _log.info("Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
     self.container_image_registry = nil
-    self.old_ems_id = ems_id
-    self.ext_management_system = nil
     self.deleted_on = Time.now.utc
     save
+  end
+
+  def self.disconnect_inv(ids)
+    _log.info "Disconnecting Images [#{ids}]"
+    where(:id => ids).update_all(:container_image_registry_id => nil, :deleted_on => Time.now.utc)
   end
 
   alias_method :perform_metadata_sync, :sync_stashed_metadata

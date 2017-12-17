@@ -18,36 +18,24 @@ module EvmDba
     return false unless config['adapter'] == 'postgresql'
     return %w( 127.0.0.1 localhost ).include?(config['host']) || config['host'].blank?
   end
-
-  def self.start
-    require File.expand_path(File.join(Rails.root, 'lib/evm_database_ops'))
-    Dir.chdir(Rails.root)
-    EvmDatabaseOps.start
-  end
-
-  def self.stop
-    require File.expand_path(File.join(Rails.root, 'lib/evm_database_ops'))
-    Dir.chdir(Rails.root)
-    EvmDatabaseOps.stop
-  end
 end
 
 namespace :evm do
   namespace :db do
     desc 'Start the local ManageIQ EVM Database (VMDB)'
     task :start do
-      EvmDba.start
+      LinuxAdmin::Service.new(PostgresAdmin.service_name).start
     end
 
     desc 'Stop the local ManageIQ EVM Database (VMDB)'
     task :stop do
-      EvmDba.stop
+      LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
     end
 
     # Start the EVM Database silently - not to be a visible rake task
     task :silent_start do
       begin
-        EvmDba.start
+        LinuxAdmin::Service.new(PostgresAdmin.service_name).start
       rescue AwesomeSpawn::CommandResultError
         # ignore issues (ala silent)
       end
@@ -56,7 +44,7 @@ namespace :evm do
     # Stop the EVM Database silently - not to be a visible rake task
     task :silent_stop do
       begin
-        EvmDba.stop
+        LinuxAdmin::Service.new(PostgresAdmin.service_name).stop
       rescue AwesomeSpawn::CommandResultError
         # ignore issues (ala silent)
       end

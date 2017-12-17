@@ -22,4 +22,4 @@
         :rt_time_threshold: 180
     responds_to_events: vm_perf_complete
     enabled: true
-    read_only: 
+    read_only:

@@ -18,6 +18,10 @@ class MiqExpression::CountField < MiqExpression::Target
     super(model, associations, nil)
   end
 
+  def to_s
+    [model, *associations].join(".")
+  end
+
   private
 
   def tag_values

@@ -46,6 +46,7 @@ describe MiqProvision do
         end
 
         it "should populate description, target_name and target_hostname" do
+          allow(@vm_prov).to receive(:get_next_vm_name).and_return("test_vm")
           @vm_prov.after_request_task_create
           expect(@vm_prov.description).not_to be_nil
           expect(@vm_prov.get_option(:vm_target_name)).not_to be_nil
@@ -54,9 +55,14 @@ describe MiqProvision do
 
         it "should create a valid target_name and hostname" do
           MiqRegion.seed
+          ae_workspace = double("ae_workspace")
+          expect(ae_workspace).to receive(:root).and_return(@target_vm_name)
+          expect(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace).exactly(3).times
+
           @vm_prov.after_request_task_create
           expect(@vm_prov.get_option(:vm_target_name)).to eq(@target_vm_name)
 
+          expect(ae_workspace).to receive(:root).and_return("#{@target_vm_name}$n{3}").twice
           @vm_prov.options[:number_of_vms] = 2
           @vm_prov.after_request_task_create
           name_001 = "#{@target_vm_name}001"
@@ -80,6 +86,10 @@ describe MiqProvision do
           end
 
           it "should advance to next range but based on the existing sequence number for the new range" do
+            ae_workspace = double("ae_workspace")
+            expect(ae_workspace).to receive(:root).and_return("#{@target_vm_name}$n{3}").twice
+            expect(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace).twice
+
             @vm_prov.options[:number_of_vms] = 2
             @vm_prov.after_request_task_create
             expect(@vm_prov.get_option(:vm_target_name)).to eq("#{@target_vm_name}999")  # 3 digits
@@ -94,8 +104,9 @@ describe MiqProvision do
           # Hostname lengths by platform:
           #   Linux   : 63
           #   Windows : 15
-          #                                      1         2         3         4         5         6
-          @vm_prov.options[:vm_name] = '123456789012345678901234567890123456789012345678901234567890123456789'
+          #                        1         2         3         4         5         6
+          long_vm_name = '123456789012345678901234567890123456789012345678901234567890123456789'
+          expect(@vm_prov).to receive(:get_next_vm_name).and_return(long_vm_name).twice
           @vm_prov.after_request_task_create
           expect(@vm_prov.get_option(:vm_target_hostname).length).to eq(15)
 
@@ -110,7 +121,7 @@ describe MiqProvision do
           @vm_prov.options[:ip_addr] = '127.0.0.100'
           @vm_prov.set_static_ip_address(1)
           expect(@vm_prov.get_option(:ip_addr)).to eq('127.0.0.100')
-          x = @vm_prov.set_static_ip_address(2)
+          @vm_prov.set_static_ip_address(2)
           expect(@vm_prov.get_option(:ip_addr)).to eq('127.0.0.101')
         end
 
@@ -153,6 +164,46 @@ describe MiqProvision do
       }.and_yield(workflow).and_return(workflow)
 
       prov.eligible_resources(:hosts)
+    end
+  end
+
+  describe "#placement_auto" do
+    let(:miq_provision) { FactoryGirl.build(:miq_provision, :options => {:placement_auto => placement_option}) }
+
+    context "when option[:placement_auto] is true" do
+      let(:placement_option) { [true, 1] }
+
+      it "without force_placement_auto" do
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+
+      it "with force_placement_auto set to false" do
+        miq_provision.options[:force_placement_auto] = false
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+
+      it "with force_placement_auto set to true" do
+        miq_provision.options[:force_placement_auto] = true
+        expect(miq_provision.placement_auto).to eq(true)
+      end
+    end
+
+    context "when option[:placement_auto] is false" do
+      let(:placement_option) { [false, 0] }
+
+      it "without force_placement_auto" do
+        expect(miq_provision.placement_auto).to eq(false)
+      end
+
+      it "with force_placement_auto set to false" do
+        miq_provision.options[:force_placement_auto] = false
+        expect(miq_provision.placement_auto).to eq(false)
+      end
+
+      it "with force_placement_auto set to true" do
+        miq_provision.options[:force_placement_auto] = true
+        expect(miq_provision.placement_auto).to eq(true)
+      end
     end
   end
 end

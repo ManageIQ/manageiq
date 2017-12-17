@@ -1,4 +1,172 @@
 describe MiqExpression do
+  describe '#reporting_available_fields' do
+    let(:vm) { FactoryGirl.create(:vm) }
+    let!(:custom_attribute) { FactoryGirl.create(:custom_attribute, :name => 'my_attribute_1', :resource => vm) }
+    let(:extra_fields) do
+      %w(start_date
+         end_date
+         interval_name
+         display_range
+         entity
+         tag_name
+         label_name
+         id
+         vm_id
+         vm_name)
+    end
+
+    it 'lists custom attributes in ChargebackVm' do
+      skip('removing of virtual custom attributes is needed to do first in other specs')
+      
+      displayed_columms = described_class.reporting_available_fields('ChargebackVm').map(&:second)
+      expected_columns = (ChargebackVm.attribute_names - extra_fields).map { |x| "ChargebackVm-#{x}" }
+
+      CustomAttribute.all.each do |custom_attribute|
+        expected_columns.push("#{vm.class}-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}#{custom_attribute.name}")
+      end
+      expect(displayed_columms).to match_array(expected_columns)
+    end
+  end
+
+  describe "#valid?" do
+    it "returns true for a valid flat expression" do
+      expression = described_class.new("=" => {"field" => "Vm-name", "value" => "foo"})
+      expect(expression).to be_valid
+    end
+
+    it "returns false for an invalid flat expression" do
+      expression = described_class.new("=" => {"field" => "Vm-destroy", "value" => true})
+      expect(expression).not_to be_valid
+    end
+
+    it "returns true if all the subexressions in an 'AND' expression are valid" do
+      expression = described_class.new(
+        "AND" => [
+          {"=" => {"field" => "Vm-name", "value" => "foo"}},
+          {"=" => {"field" => "Vm-description", "value" => "bar"}}
+        ]
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if one of the subexressions in an 'AND' expression is invalid" do
+      expression = described_class.new(
+        "AND" => [
+          {"=" => {"field" => "Vm-destroy", "value" => true}},
+          {"=" => {"field" => "Vm-description", "value" => "bar"}}
+        ]
+      )
+      expect(expression).not_to be_valid
+    end
+
+    it "returns true if all the subexressions in an 'OR' expression are valid" do
+      expression = described_class.new(
+        "OR" => [
+          {"=" => {"field" => "Vm-name", "value" => "foo"}},
+          {"=" => {"field" => "Vm-description", "value" => "bar"}}
+        ]
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if one of the subexressions in an 'OR' expression is invalid" do
+      expression = described_class.new(
+        "OR" => [
+          {"=" => {"field" => "Vm-destroy", "value" => true}},
+          {"=" => {"field" => "Vm-description", "value" => "bar"}}
+        ]
+      )
+      expect(expression).not_to be_valid
+    end
+
+    it "returns true if the subexression in a 'NOT' expression is valid" do
+      expression1 = described_class.new("NOT" => {"=" => {"field" => "Vm-name", "value" => "foo"}})
+      expression2 = described_class.new("!" => {"=" => {"field" => "Vm-name", "value" => "foo"}})
+      expect([expression1, expression2]).to all(be_valid)
+    end
+
+    it "returns false if the subexression in a 'NOT' expression is invalid" do
+      expression1 = described_class.new("NOT" => {"=" => {"field" => "Vm-destroy", "value" => true}})
+      expression2 = described_class.new("!" => {"=" => {"field" => "Vm-destroy", "value" => true}})
+      expect(expression1).not_to be_valid
+      expect(expression2).not_to be_valid
+    end
+
+    it "returns true if the subexpressions in a 'FIND'/'checkall' expression are all valid" do
+      expression = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-name", "value" => "/etc/passwd"}},
+          "checkall" => {"=" => {"field" => "Host.filesystems-permissions", "value" => "0644"}}
+        }
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if a subexpression in a 'FIND'/'checkall' expression is invalid" do
+      expression1 = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-destroy", "value" => true}},
+          "checkall" => {"=" => {"field" => "Host.filesystems-permissions", "value" => "0644"}}
+        }
+      )
+      expression2 = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-name", "value" => "/etc/passwd"}},
+          "checkall" => {"=" => {"field" => "Host.filesystems-destroy", "value" => true}}
+        }
+      )
+      expect(expression1).not_to be_valid
+      expect(expression2).not_to be_valid
+    end
+
+    it "returns true if the subexpressions in a 'FIND'/'checkany' expression are all valid" do
+      expression = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-name", "value" => "/etc/passwd"}},
+          "checkany" => {"=" => {"field" => "Host.filesystems-permissions", "value" => "0644"}}
+        }
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if a subexpression in a 'FIND'/'checkany' expression is invalid" do
+      expression1 = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-destroy", "value" => true}},
+          "checkany" => {"=" => {"field" => "Host.filesystems-permissions", "value" => "0644"}}
+        }
+      )
+      expression2 = described_class.new(
+        "FIND" => {
+          "search"   => {"=" => {"field" => "Host.filesystems-name", "value" => "/etc/passwd"}},
+          "checkany" => {"=" => {"field" => "Host.filesystems-destroy", "value" => true}}
+        }
+      )
+      expect(expression1).not_to be_valid
+      expect(expression2).not_to be_valid
+    end
+
+    it "returns true if the subexpressions in a 'FIND'/'checkcount' expression are all valid" do
+      expression = described_class.new(
+        "FIND" => {
+          "search"     => {"IS NOT EMPTY" => {"field" => "Vm.snapshots-name"}},
+          "checkcount" => {">" => {"field" => "<count>", "value" => 0}}
+        }
+      )
+      expect(expression).to be_valid
+    end
+
+    it "returns false if a subexpression in a 'FIND'/'checkcount' expression is invalid" do
+      expression = described_class.new(
+        "FIND" => {
+          "search"     => {"=" => {"field" => "Vm.snapshots-destroy"}},
+          "checkcount" => {">" => {"field" => "<count>", "value" => 0}}
+        }
+      )
+      expect(expression).not_to be_valid
+    end
+  end
+
   describe "#to_sql" do
     it "generates the SQL for an EQUAL expression" do
       sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
@@ -20,6 +188,11 @@ describe MiqExpression do
     it "generates the SQL for a = expression with expression as a value" do
       sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Vm-name"}).to_sql
       expect(sql).to eq("\"vms\".\"name\" = \"vms\".\"name\"")
+    end
+
+    it "will handle values that look like they contain MiqExpression-encoded constants but cannot be loaded" do
+      sql, * = described_class.new("=" => {"field" => "Vm-name", "value" => "VM-name"}).to_sql
+      expect(sql).to eq(%q("vms"."name" = 'VM-name'))
     end
 
     it "generates the SQL for a < expression" do
@@ -660,6 +833,14 @@ describe MiqExpression do
         )
         result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
         expect(result).to eq([host2])
+      end
+
+      it "cannot execute non-attribute methods on target objects" do
+        vm = FactoryGirl.create(:vm_vmware)
+
+        expect do
+          described_class.new("=" => {"field" => "Vm-destroy", "value" => true}).lenient_evaluate(vm)
+        end.not_to change(Vm, :count)
       end
     end
   end
@@ -1792,29 +1973,29 @@ describe MiqExpression do
     end
   end
 
-  describe ".is_numeric?" do
+  describe ".numeric?" do
     it "should return true if digits separated by comma and false if another separator used" do
-      expect(MiqExpression.is_numeric?('10000.55')).to be_truthy
-      expect(MiqExpression.is_numeric?('10,000.55')).to be_truthy
-      expect(MiqExpression.is_numeric?('10 000.55')).to be_falsey
+      expect(MiqExpression.numeric?('10000.55')).to be_truthy
+      expect(MiqExpression.numeric?('10,000.55')).to be_truthy
+      expect(MiqExpression.numeric?('10 000.55')).to be_falsey
     end
 
     it "should return true if there is method attached to number" do
-      expect(MiqExpression.is_numeric?('2,555.hello')).to eq(false)
-      expect(MiqExpression.is_numeric?('2,555.kilobytes')).to eq(true)
-      expect(MiqExpression.is_numeric?('2,555.55.megabytes')).to eq(true)
+      expect(MiqExpression.numeric?('2,555.hello')).to eq(false)
+      expect(MiqExpression.numeric?('2,555.kilobytes')).to eq(true)
+      expect(MiqExpression.numeric?('2,555.55.megabytes')).to eq(true)
     end
   end
 
-  describe ".is_integer?" do
+  describe ".integer?" do
     it "should return true if digits separated by comma and false if another separator used" do
-      expect(MiqExpression.is_integer?('2,555')).to eq(true)
-      expect(MiqExpression.is_integer?('2 555')).to eq(false)
+      expect(MiqExpression.integer?('2,555')).to eq(true)
+      expect(MiqExpression.integer?('2 555')).to eq(false)
     end
 
     it "should return true if there is method attached to number" do
-      expect(MiqExpression.is_integer?('2,555.kilobytes')).to eq(true)
-      expect(MiqExpression.is_integer?('2,555.hello')).to eq(false)
+      expect(MiqExpression.integer?('2,555.kilobytes')).to eq(true)
+      expect(MiqExpression.integer?('2,555.hello')).to eq(false)
     end
   end
 
@@ -1935,23 +2116,6 @@ describe MiqExpression do
       ]
 
       expect(MiqExpression._custom_details_for("ContainerImage", {})).to match_array(expected_result)
-    end
-  end
-
-  context ".build_relats" do
-    it "includes reflections from descendant classes of Vm" do
-      relats = MiqExpression.get_relats(Vm)
-      expect(relats[:reflections][:cloud_tenant]).not_to be_blank
-    end
-
-    it "includes reflections from descendant classes of Host" do
-      relats = MiqExpression.get_relats(Host)
-      expect(relats[:reflections][:cloud_networks]).not_to be_blank
-    end
-
-    it "excludes reflections from descendant classes of VmOrTemplate " do
-      relats = MiqExpression.get_relats(VmOrTemplate)
-      expect(relats[:reflections][:cloud_tenant]).to be_blank
     end
   end
 
@@ -2363,6 +2527,13 @@ describe MiqExpression do
         expect(result.map(&:first)[0]).to eq(" CPU Total Cost")
       end
     end
+
+    context "with :include_id_columns" do
+      it "Vm" do
+        result = described_class.model_details("Vm", :include_id_columns => true)
+        expect(result.map(&:second)).to include("Vm-id", "Vm-host_id", "Vm.host-id")
+      end
+    end
   end
 
   context ".build_relats" do
@@ -2393,8 +2564,8 @@ describe MiqExpression do
     end
   end
 
-  context ".determine_relat_path" do
-    subject { described_class.determine_relat_path(@ref) }
+  describe ".determine_relat_path (private)" do
+    subject { described_class.send(:determine_relat_path, @ref) }
 
     it "when association name is same as class name" do
       @ref = Vm.reflect_on_association(:miq_group)
@@ -3003,6 +3174,125 @@ describe MiqExpression do
         an_object_having_attributes(:model => EmsClusterPerformance, :column => "cpu_usagemhz_rate_average"),
         an_object_having_attributes(:model => Vm, :namespace => "/managed/favorite_color")
       )
+    end
+  end
+
+  describe "#set_tagged_target" do
+    it "will substitute a new class into the expression" do
+      expression = described_class.new("CONTAINS" => {"tag" => "managed-environment", "value" => "prod"})
+
+      expression.set_tagged_target(Vm)
+
+      expect(expression.exp).to eq("CONTAINS" => {"tag" => "Vm.managed-environment", "value" => "prod"})
+    end
+
+    it "will substitute a new class and associations into the expression" do
+      expression = described_class.new("CONTAINS" => {"tag" => "managed-environment", "value" => "prod"})
+
+      expression.set_tagged_target(Vm, ["host"])
+
+      expect(expression.exp).to eq("CONTAINS" => {"tag" => "Vm.host.managed-environment", "value" => "prod"})
+    end
+
+    it "can handle OR expressions" do
+      expression = described_class.new(
+        "OR" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-location", "value" => "ny"}}
+        ]
+      )
+
+      expression.set_tagged_target(Vm)
+
+      expected = {
+        "OR" => [
+          {"CONTAINS" => {"tag" => "Vm.managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "Vm.managed-location", "value" => "ny"}}
+        ]
+      }
+      expect(expression.exp).to eq(expected)
+    end
+
+    it "can handle AND expressions" do
+      expression = described_class.new(
+        "AND" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-location", "value" => "ny"}}
+        ]
+      )
+
+      expression.set_tagged_target(Vm)
+
+      expected = {
+        "AND" => [
+          {"CONTAINS" => {"tag" => "Vm.managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "Vm.managed-location", "value" => "ny"}}
+        ]
+      }
+      expect(expression.exp).to eq(expected)
+    end
+
+    it "can handle NOT expressions" do
+      expression = described_class.new("NOT" => {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}})
+
+      expression.set_tagged_target(Vm)
+
+      expected = {"NOT" => {"CONTAINS" => {"tag" => "Vm.managed-environment", "value" => "prod"}}}
+      expect(expression.exp).to eq(expected)
+    end
+
+    it "will not change the target of fields" do
+      expression = described_class.new("=" => {"field" => "Vm-vendor", "value" => "redhat"})
+
+      expression.set_tagged_target(Host)
+
+      expect(expression.exp).to eq("=" => {"field" => "Vm-vendor", "value" => "redhat"})
+    end
+
+    it "will not change the target of counts" do
+      expression = described_class.new("=" => {"count" => "Vm.disks", "value" => "1"})
+
+      expression.set_tagged_target(Host)
+
+      expect(expression.exp).to eq("=" => {"count" => "Vm.disks", "value" => "1"})
+    end
+  end
+
+  describe ".tag_details" do
+    before do
+      described_class.instance_variable_set(:@classifications, nil)
+    end
+
+    it "returns the tags when no path is given" do
+      Tenant.seed
+      FactoryGirl.create(
+        :classification,
+        :name        => "env",
+        :description => "Environment",
+        :children    => [FactoryGirl.create(:classification)]
+      )
+      actual = described_class.tag_details(nil, {})
+      expect(actual).to eq([["My Company Tags : Environment", "managed-env"]])
+    end
+  end
+
+  describe "miq_adv_search_lists" do
+    it ":exp_available_counts" do
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_counts)
+
+      expect(result.map(&:first)).to include(" VM and Instance.Users")
+    end
+
+    it ":exp_available_finds" do
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_finds)
+
+      expect(result.map(&:first)).to include("VM and Instance.Provisioned VMs : Href Slug")
+      expect(result.map(&:first)).not_to include("VM and Instance : Id")
+    end
+
+    it ":exp_available_fields with include_id_columns" do
+      result = described_class.miq_adv_search_lists(Vm, :exp_available_fields, :include_id_columns => true)
+      expect(result.map(&:first)).to include("VM and Instance : Id")
     end
   end
 end

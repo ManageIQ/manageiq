@@ -1,7 +1,4 @@
 ---
-:api:
-  :token_ttl: 10.minutes
-  :authentication_timeout: 30.seconds
 :authentication:
   :basedn:
   :bind_dn:
@@ -18,6 +15,8 @@
   :user_type: userprincipalname
   :amazon_key:
   :amazon_secret:
+:binary_blob:
+  :purge_window_size: 100
 :broker_notify_properties:
   :exclude:
     :HostSystem:
@@ -97,16 +96,21 @@
   :history:
     :keep_drift_states: 6.months
     :purge_window_size: 10000
+:embedded_ansible:
+  :docker:
+    :task_image_name: ansible/awx_task
+    :task_image_tag: latest
+    :web_image_name: ansible/awx_web
+    :web_image_tag: latest
+    :rabbitmq_image_name: rabbitmq
+    :rabbitmq_image_tag: 3
+    :memcached_image_name: memcached
+    :memcached_image_tag: alpine
 :ems:
-  :ems_redhat:
-    :use_ovirt_engine_sdk: false
-    :resolve_ip_addresses: true
-    :inventory:
-      :read_timeout: 1.hour
-      :open_timeout: 1.minute
-    :service:
-      :read_timeout: 1.hour
-      :open_timeout: 1.minute
+# provider specific settings are nested here, but they are in the provider repos
+# e.g.:
+#  :ems_<provider_name>:
+#    :use_feature: false
 :event_streams:
   :history:
     :keep_events: 6.months
@@ -805,6 +809,13 @@
     - MoveIntoResourcePool
     :VmSuspendedEvent:
     - SuspendVM_Task
+:help_menu:
+  :documentation:
+    :type: default
+  :product:
+    :type: new_window
+  :about:
+    :type: modal
 :host_delete:
   :queue_timeout: 20.minutes
 :host_introspect:
@@ -825,11 +836,19 @@
     :password:
     :port:
     :user:
+    :scheme:
   :gce:
     :host:
     :password:
     :port:
     :user:
+    :scheme:
+  :embedded_ansible:
+    :host:
+    :password:
+    :port:
+    :user:
+    :scheme:
 :ldap_synchronization:
   :ldap_synchronization_schedule: "0 2 * * *"
 :log:
@@ -857,13 +876,18 @@
   :level_rails: info
   :level_lenovo: info
   :level_mw: info
-  :level_kube: info
+  :level_cn_monitoring: info
   :level_api: info
   :level_fog: info
-  :level_rhevm: info
   :level_scvmm: info
   :level_vim: warn
   :level_websocket: info
+  :level_vcloud: info
+:ntp:
+  :server:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
 :performance:
   :capture_threshold:
     :default: 10.minutes
@@ -892,6 +916,8 @@
   :host_overhead:
     :memory: 2.01.percent
     :cpu: 0.15.percent
+  :targets:
+    :archived_for: 8.hours
   :vim_cache_ttl: 1.hour
 :policy_events:
   :history:
@@ -905,19 +931,16 @@
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
 :prototype:
-  :monitoring: false
+  :queue_type: miq_queue
+  :artemis:
+    :queue_hostname: localhost
+    :queue_port: 61616
+    :queue_username: admin
+    :queue_password: smartvm
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
 :reporting:
-  :format_by_class:
-    :Fixnum:
-      :function:
-        :name: number_with_delimiter
-    :Float:
-      :function:
-        :name: number_with_delimiter
-  :format_by_column: {}
   :history:
     :keep_reports: 6.months
     :purge_window_size: 100
@@ -1032,8 +1055,8 @@
   :provide_protocol: https
   :security: none
   :timeout: 120
-  :use_vim_broker: true
   :authentication_timeout: 30.seconds
+  :url:
 :workers:
   :worker_base:
     :defaults:
@@ -1054,6 +1077,13 @@
       :starting_timeout: 20.minutes
       :poll: 10.seconds
       :memory_threshold: 0.megabytes
+    :agent_coordinator_worker:
+      :heartbeat_timeout: 30.minutes
+      :poll: 30.seconds
+    :ems_inventory_collector_worker:
+      :disabled: true
+      :nice_delta: 1
+      :poll: 5.seconds
     :ems_refresh_core_worker:
       :poll: 1.seconds
       :nice_delta: 1
@@ -1071,12 +1101,10 @@
         :poll: 20.seconds
       :event_catcher_embedded_ansible:
         :poll: 20.seconds
-      :event_catcher_redhat:
-        :poll: 15.seconds
       :event_catcher_google:
         :poll: 15.seconds
       :event_catcher_lenovo:
-        :poll: 4.minutes
+        :poll: 15.seconds
       :event_catcher_cinder:
         :poll: 10.seconds
       :event_catcher_swift:
@@ -1095,7 +1123,6 @@
           :nice_delta: 3
           :poll_method: :escalate
         :ems_metrics_collector_worker_google: {}
-        :ems_metrics_collector_worker_redhat: {}
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 600.megabytes
@@ -1118,7 +1145,6 @@
         :ems_refresh_worker_lenovo_physical_infra: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_nuage_network: {}
-        :ems_refresh_worker_redhat: {}
         :ems_refresh_worker_cinder: {}
         :ems_refresh_worker_swift: {}
       :event_handler:
@@ -1136,11 +1162,12 @@
         :nice_delta: 7
       :smart_proxy_worker:
         :count: 2
-        :memory_threshold: 600.megabytes
+        :memory_threshold: 2.gigabytes
         :queue_timeout: 20.minutes
-        :restart_interval: 2.hours
+        :restart_interval: 6.hours
     :schedule_worker:
       :container_entities_purge_interval: 1.day
+      :binary_blob_purge_interval: 1.hour
       :authentication_check_interval: 1.hour
       :chargeback_generation_interval: 1.day
       :chargeback_generation_time_utc: 01:00:00
@@ -1195,8 +1222,10 @@
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
     :websocket_worker:
-       :connection_pool_size: 14
-       :memory_threshold: 1.gigabytes
-       :nice_delta: 1
+      :connection_pool_size: 14
+      :memory_threshold: 1.gigabytes
+      :nice_delta: 1
     :cockpit_ws_worker:
-        :count: 1
+      :count: 1
+:hawkular_tenant_labels:
+  :_hawkular_admin: Hawkular Admin

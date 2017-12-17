@@ -20,10 +20,10 @@ class Snapshot < ApplicationRecord
     all_nh = xml_to_hashes(xmlNode, parentObj.id)
     return if all_nh.nil?
 
-    unless parentObj.ems_id.nil?
-      add_snapshot_size_for_ems(parentObj, all_nh)
-    else
+    if parentObj.ems_id.nil?
       EmsRefresh.save_snapshots_inventory(parentObj, all_nh)
+    else
+      add_snapshot_size_for_ems(parentObj, all_nh)
     end
   end
 
@@ -75,11 +75,11 @@ class Snapshot < ApplicationRecord
   end
 
   def self.remove_unused_evm_snapshots(delay)
-    _log.debug "Called"
+    _log.debug("Called")
     find_all_evm_snapshots.each do |sn|
       job_guid, timestamp = parse_evm_snapshot_description(sn.description)
       unless Job.guid_active?(job_guid, timestamp, delay)
-        _log.info "Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]"
+        _log.info("Removing #{sn.description.inspect} under Vm [#{sn.vm_or_template.name}]")
         sn.vm_or_template.remove_evm_snapshot_queue(sn.id)
       end
     end

@@ -4,6 +4,7 @@ class Classification < ApplicationRecord
   belongs_to :tag
 
   virtual_column :name, :type => :string
+  virtual_column :ns, :type => :string
 
   before_save    :save_tag
   before_destroy :delete_tags_and_entries
@@ -27,9 +28,14 @@ class Classification < ApplicationRecord
   validates :syntax, :inclusion => {:in      => %w( string integer boolean ),
                                     :message => "should be one of 'string', 'integer' or 'boolean'"}
 
-  scope :visible,    -> { where :show => true }
-  scope :read_only,  -> { where :read_only => true }
-  scope :writeable,  -> { where :read_only => false }
+  scope :visible,    -> { where(:show => true) }
+  scope :read_only,  -> { where(:read_only => true) }
+  scope :writeable,  -> { where(:read_only => false) }
+
+  scope :is_category, -> { where(:parent_id => 0) }
+  scope :is_entry,    -> { where.not(:parent_id => 0) }
+
+  scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => { :read_only => false}) }
 
   DEFAULT_NAMESPACE = "/managed"
 
@@ -55,7 +61,7 @@ class Classification < ApplicationRecord
   end
 
   def self.parent_ids(parent_ids)
-    where :parent_id => parent_ids
+    where(:parent_id => parent_ids)
   end
 
   def self.tags_arel
@@ -76,7 +82,6 @@ class Classification < ApplicationRecord
   def ns
     @ns ||= DEFAULT_NAMESPACE if self.new_record?
 
-    # @ns = tag2ns(self.tag.name) unless self.tag.nil?
     return @ns if tag.nil?
 
     return @ns unless @ns.nil?
@@ -224,7 +229,7 @@ class Classification < ApplicationRecord
     cat = find_by_name(name, obj.region_id)
     return nil unless cat
 
-    find_assigned_entries(obj).each do|e|
+    find_assigned_entries(obj).each do |e|
       return e if e.parent_id == cat.id
     end
     nil
@@ -241,7 +246,7 @@ class Classification < ApplicationRecord
   def self.tag_name_to_objects(tag_name)
     ns, cat, entry = tag_name_split(tag_name)
     cat_obj = find_by_name(cat)
-    entry_obj = cat_obj.nil? ? nil : cat_obj.find_entry_by_name(entry)
+    entry_obj = cat_obj && cat_obj.find_entry_by_name(entry)
     return ns, cat_obj, entry_obj
   end
 
@@ -259,7 +264,7 @@ class Classification < ApplicationRecord
     raise _("entries can only be added to classifications") unless category?
     # Inherit from parent classification
     options.merge!(:read_only => read_only, :syntax => syntax, :single_value => single_value, :ns => ns)
-    children.create(options)
+    children.create!(options)
   end
 
   def entries
@@ -343,14 +348,6 @@ class Classification < ApplicationRecord
     unless tag.nil?
       ta = tag.split("/")
       ta[0..(ta.length - 2)].join("/")
-
-      # tnew = []
-      # tag.split("/").each {|level|
-      #   p "level=#{level}"
-      #   tnew.push(level) unless level == self.name
-      #   p "level=#{level}, #{tnew.inspect}, #{(level == self.name)}"
-      # }
-      # tnew.join("/")
     end
   end
 
@@ -375,7 +372,7 @@ class Classification < ApplicationRecord
 
   def self.export_to_array
     categories.inject([]) do |a, c|
-      a.concat c.export_to_array
+      a.concat(c.export_to_array)
     end
   end
 
@@ -451,11 +448,14 @@ class Classification < ApplicationRecord
 
   def self.seed
     YAML.load_file(FIXTURE_FILE).each do |c|
-      cat = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
-      next if cat
+      category = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
+      next if category
 
-      _log.info("Creating #{c[:name]}")
-      add_entries_from_hash(create(c.except(:entries)), c[:entries])
+      category = new(c.except(:entries))
+      next unless category.valid? # HACK: Skip seeding if categories aren't valid/unique
+      _log.info("Creating category #{c[:name]}")
+      category.save!
+      add_entries_from_hash(category, c[:entries])
     end
 
     # Fix categories that have a nill parent_id
@@ -471,7 +471,7 @@ class Classification < ApplicationRecord
   def self.add_entries_from_hash(cat, entries)
     entries.each do |entry|
       ent = cat.find_entry_by_name(entry[:name])
-      ent ? ent.update_attributes(entry) : cat.add_entry(entry)
+      ent ? ent.update_attributes!(entry) : cat.add_entry(entry)
     end
   end
 
@@ -529,7 +529,14 @@ class Classification < ApplicationRecord
   end
 
   def delete_all_entries
-    entries.each(&:delete_tag_and_taggings)
+    entries.each do |e|
+      e.delete_assignments
+      e.delete_tag_and_taggings
+    end
+  end
+
+  def delete_assignments
+    AssignmentMixin.all_assignments(tag.name).destroy_all
   end
 
   def delete_tag_and_taggings
@@ -540,7 +547,12 @@ class Classification < ApplicationRecord
   end
 
   def delete_tags_and_entries
-    delete_all_entries    if category?
+    if category?
+      delete_all_entries
+    else # entry
+      delete_assignments
+    end
+
     delete_tag_and_taggings
   end
 end

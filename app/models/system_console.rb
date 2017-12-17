@@ -90,7 +90,7 @@ class SystemConsole < ApplicationRecord
   end
 
   def self.launch_proxy_if_not_local(console_args, originating_server, host_address, host_port)
-    _log.info "Originating server: #{originating_server}, local server: #{MiqServer.my_server.id}"
+    _log.info("Originating server: #{originating_server}, local server: #{MiqServer.my_server.id}")
 
     if ::Settings.server.console_proxy_disabled || SystemConsole.is_local?(originating_server)
       console_args.update(
@@ -102,8 +102,8 @@ class SystemConsole < ApplicationRecord
       proxy_address, proxy_port, proxy_pid = SystemConsole.launch_proxy(host_address, host_port)
       return nil if proxy_address.nil?
 
-      _log.info "Proxy server started: #{proxy_address}:#{proxy_port} <--> #{host_address}:#{host_port}"
-      _log.info "Proxy process PID: #{proxy_pid}"
+      _log.info("Proxy server started: #{proxy_address}:#{proxy_port} <--> #{host_address}:#{host_port}")
+      _log.info("Proxy process PID: #{proxy_pid}")
 
       console_args.update(
         :host_name    => proxy_address,

@@ -1,7 +1,7 @@
 describe EmsRefresh do
   context ".queue_refresh" do
     before(:each) do
-      guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
     end
 
@@ -23,11 +23,6 @@ describe EmsRefresh do
 
     it "with Host" do
       target = FactoryGirl.create(:host_vmware, :ext_management_system => @ems)
-      queue_refresh_and_assert_queue_item(target, [target])
-    end
-
-    it "with Host acting as an Ems" do
-      target = FactoryGirl.create(:host_microsoft)
       queue_refresh_and_assert_queue_item(target, [target])
     end
 
@@ -94,6 +89,16 @@ describe EmsRefresh do
         expect(task_ids.length).to eq(2)
       end
     end
+
+    describe ".create_refresh_task" do
+      it "create refresh task and trancates task name to 255 symbols" do
+        vm = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => @ems)
+        targets = Array.new(500) { vm }
+        task_name = described_class.send(:create_refresh_task, @ems, targets).name
+        expect(task_name.include?(@ems.name)).to eq true
+        expect(task_name.length).to eq 255
+      end
+    end
   end
 
   def queue_refresh_and_assert_queue_item(target, expected_targets)
@@ -104,7 +109,7 @@ describe EmsRefresh do
   def assert_queue_item(expected_targets)
     q_all = MiqQueue.all
     expect(q_all.length).to eq(1)
-    expect(q_all[0].args).to eq([expected_targets.collect { |t| [t.class.name, t.id] }])
+    expect(q_all[0].data).to eq(expected_targets.collect { |t| [t.class.name, t.id] })
     expect(q_all[0].class_name).to eq(described_class.name)
     expect(q_all[0].method_name).to eq('refresh')
     expect(q_all[0].role).to eq("ems_inventory")
@@ -179,7 +184,10 @@ describe EmsRefresh do
   end
 
   context '.refresh_new_target' do
-    let(:ems) { FactoryGirl.create(:ems_vmware) }
+    let(:ems) do
+      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
+      FactoryGirl.create(:ems_vmware, :zone => zone)
+    end
 
     context 'targeting a new vm' do
       let(:vm_hash) do

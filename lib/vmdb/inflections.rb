@@ -34,7 +34,7 @@ module Vmdb
         inflect.plural(/quota$/, "quotas")
         inflect.irregular("container_quota", "container_quotas")
 
-        inflect.acronym 'ManageIQ'
+        inflect.acronym('ManageIQ')
       end
     end
   end

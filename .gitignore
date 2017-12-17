@@ -24,7 +24,6 @@ ca/root
 certs/v2_key
 config/secrets.yml*
 coverage/
-Gemfile.dev.rb
 Gemfile.lock*
 GUID
 openstack_environments.yml
@@ -34,6 +33,7 @@ REGION
 SyntaxCheck
 xfer_*.xml
 Thumbs.db
+Procfile
 
 # bin/
 bin/*
@@ -72,6 +72,7 @@ public/upload
 public/pictures/
 public/ui/
 /public/packs
+/public/webmks
 
 # tmp/
 tmp/*
@@ -85,3 +86,7 @@ node_modules/
 
 # ignore included plugins in bundler.d
 bundler.d/*
+
+# yardoc
+/doc/
+.yardoc

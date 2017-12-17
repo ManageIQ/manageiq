@@ -1,6 +1,4 @@
 class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
-  self.wait_for_worker_monitor = false
-
   def prepare
     ObjectSpace.garbage_collect
     # Overriding prepare so we can set started when we're ready
@@ -10,33 +8,31 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def do_before_work_loop
+    raise_role_notification(:role_activate_start)
     setup_ansible
     update_embedded_ansible_provider
+    raise_role_notification(:role_activate_success)
   rescue => err
     _log.log_backtrace(err)
     do_exit(err.message, 1)
   end
 
   def heartbeat
-    super if EmbeddedAnsible.alive?
+    super if embedded_ansible.alive?
   end
 
   def do_work
-    EmbeddedAnsible.start if !EmbeddedAnsible.alive? && !EmbeddedAnsible.running?
+    embedded_ansible.start if !embedded_ansible.alive? && !embedded_ansible.running?
   end
 
   def before_exit(*_)
-    EmbeddedAnsible.disable
+    embedded_ansible.disable
   end
 
   def setup_ansible
-    raise_role_notification(:role_activate_start)
-
-    _log.info("calling EmbeddedAnsible.start")
-    EmbeddedAnsible.start
-    _log.info("calling EmbeddedAnsible.start finished")
-
-    raise_role_notification(:role_activate_success)
+    _log.info("Starting embedded ansible service ...")
+    embedded_ansible.start
+    _log.info("Finished starting embedded ansible service.")
   end
 
   def update_embedded_ansible_provider
@@ -50,7 +46,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
     provider.save!
 
-    api_connection = EmbeddedAnsible.api_connection
+    api_connection = embedded_ansible.api_connection
     worker.remove_demo_data(api_connection)
     worker.ensure_initial_objects(provider, api_connection)
 
@@ -70,17 +66,18 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   private
 
   def provider_url
-    server = MiqServer.my_server(true)
+    URI::Generic.build(provider_uri_hash).to_s
+  end
 
+  def provider_uri_hash
     if MiqEnvironment::Command.is_container?
-      host = ENV["ANSIBLE_SERVICE_NAME"]
-      path = "/api/v1"
+      {:scheme => "https", :host => ENV["ANSIBLE_SERVICE_HOST"], :path => "/api/v1"}
+    elsif Rails.env.development?
+      {:scheme => "http", :host => "localhost", :path => "/api/v1", :port => 54321}
     else
-      host = server.hostname || server.ipaddress
-      path = "/ansibleapi/v1"
+      server = MiqServer.my_server(true)
+      {:scheme => "https", :host => server.hostname || server.ipaddress, :path => "/ansibleapi/v1"}
     end
-
-    URI::HTTPS.build(:host => host, :path => path).to_s
   end
 
   def raise_role_notification(notification_type)
@@ -89,5 +86,9 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
       :server_name => MiqServer.my_server.name
     }
     Notification.create(:type => notification_type, :options => notification_options)
+  end
+
+  def embedded_ansible
+    @embedded_ansible ||= EmbeddedAnsible.new
   end
 end

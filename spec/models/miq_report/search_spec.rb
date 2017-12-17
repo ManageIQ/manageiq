@@ -135,7 +135,7 @@ describe MiqReport do
 
       expect(report).to_not receive(:get_cached_page)
 
-      results, attrs = report.paged_view_search(options)
+      results, _attrs = report.paged_view_search(options)
       expect(results.length).to eq(20)
     end
   end

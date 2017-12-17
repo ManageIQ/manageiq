@@ -11,10 +11,15 @@ module MiqReport::ImportExport
       )
     end
 
-    def resolve_view_path(file_name)
+    def resolve_view_path(file_name, file_name_no_suffix = nil)
       view_paths.each do |path|
         full_path = File.join(path, file_name)
         return full_path if File.exist?(full_path)
+
+        if file_name_no_suffix
+          full_path_no_suffix = File.join(path, file_name_no_suffix)
+          return full_path_no_suffix if File.exist?(full_path_no_suffix)
+        end
       end
       nil
     end
@@ -27,8 +32,8 @@ module MiqReport::ImportExport
         raise _("Incorrect format, only policy records can be imported.")
       end
 
-      # Ensure that all columns serialized as hashes in the report have keys that are symbols
-      self.column_names.each { |k| report[k].deep_symbolize_keys! if report[k].kind_of?(Hash) }
+      report[:db_options] ||= report["db_options"]
+      report[:db_options].deep_symbolize_keys! if report[:db_options]
 
       user = options[:user] || User.find_by_userid(options[:userid])
       report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)
@@ -103,7 +108,7 @@ module MiqReport::ImportExport
 
       suffix = suffix ? "-#{suffix}" : ''
 
-      viewfile = resolve_view_path("#{db}#{suffix}.yaml")
+      viewfile = resolve_view_path("#{db}#{suffix}.yaml", "#{db}.yaml")
       viewfilebyrole = resolve_view_path("#{db}#{suffix}-#{role}.yaml")
 
       viewfilerestricted || viewfilebyrole || viewfile

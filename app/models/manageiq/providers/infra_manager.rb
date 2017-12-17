@@ -7,6 +7,18 @@ module ManageIQ::Providers
 
     include AvailabilityMixin
 
+    has_many :host_hardwares,             :through => :hosts, :source => :hardware
+    has_many :host_operating_systems,     :through => :hosts, :source => :operating_system
+    has_many :host_storages,              :through => :hosts
+    has_many :host_switches,              :through => :hosts
+    has_many :host_networks,              :through => :hosts, :source => :networks
+    has_many :snapshots,                  :through => :vms_and_templates
+    has_many :switches, -> { distinct },  :through => :hosts
+    has_many :lans, -> { distinct },      :through => :hosts
+    has_many :subnets, -> { distinct },   :through => :lans
+    has_many :networks,                   :through => :hardwares
+    has_many :guest_devices,              :through => :hardwares
+
     class << model_name
       define_method(:route_key) { "ems_infras" }
       define_method(:singular_route_key) { "ems_infra" }
@@ -36,10 +48,6 @@ module ManageIQ::Providers
 
     def validate_authentication_status
       {:available => true, :message => nil}
-    end
-
-    def validate_import_vm
-      false
     end
 
     def clusterless_hosts

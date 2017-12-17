@@ -216,8 +216,8 @@
   :startup: true
 - :name: containers
   :description: Compute / Containers / Containers
-  :url: /container/explorer
-  :rbac_feature_name: containers
+  :url: /container/show_list
+  :rbac_feature_name: container
   :startup: true
 - :name: container_nodes
   :description: Compute / Containers / Container Nodes
@@ -456,22 +456,17 @@
   :startup: true
 - :name: utilization
   :description: Optimize / Utilization
-  :url: /miq_capacity/utilization
-  :rbac_feature_name: utilization
-  :startup: true
-- :name: utilization
-  :description: Optimize / Utilization
-  :url: /miq_capacity
+  :url: /utilization
   :rbac_feature_name: utilization
   :startup: true
 - :name: planning
   :description: Optimize / Planning
-  :url: /miq_capacity/planning
+  :url: /planning
   :rbac_feature_name: planning
   :startup: true
 - :name: bottlenecks
   :description: Optimize / Bottlenecks
-  :url: /miq_capacity/bottlenecks
+  :url: /bottlenecks
   :rbac_feature_name: bottlenecks
   :startup: true
 - :name: monitor_alerts_overview
@@ -488,4 +483,9 @@
   :description: Monitor / Alerts / Most Recent Alerts
   :url: /alerts_most_recent
   :rbac_feature_name: monitor_alerts_most_recent
+  :startup: true
+- :name: miq_proxy_tasks
+  :description: Settings / Tasks
+  :url: /miq_task/index?jobs_tab=tasks
+  :rbac_feature_name: tasks
   :startup: true

@@ -112,16 +112,6 @@ class EvmDatabaseOps
     conn.client_connections.count { |c| c["database"] == database }
   end
 
-  def self.stop
-    _log.info("Stopping internal database")
-    PostgresAdmin.stop(DEFAULT_OPTS.merge(:graceful => true))
-  end
-
-  def self.start
-    _log.info("Starting internal database")
-    PostgresAdmin.start(DEFAULT_OPTS)
-  end
-
   def self.upload(connect_opts, local_file, destination_file)
     MiqGenericMountSession.in_depot_session(connect_opts) { |session| session.upload(local_file, destination_file) }
     destination_file

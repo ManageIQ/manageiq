@@ -1,4 +1,3 @@
-
 module AlertMixin
   def event_log_threshold?(options)
     unless respond_to?(:event_logs)

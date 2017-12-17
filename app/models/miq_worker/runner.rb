@@ -1,6 +1,5 @@
 require 'miq-process'
 require 'thread'
-require 'fileutils'
 
 class MiqWorker::Runner
   class TemporaryFailure < RuntimeError
@@ -44,11 +43,10 @@ class MiqWorker::Runner
 
   def initialize(cfg = {})
     @cfg = cfg
-    @cfg[:guid] ||= ENV['MIQ_GUID']
-
     $log ||= Rails.logger
 
     @server = MiqServer.my_server(true)
+    @sigterm_received = false
 
     worker_initialization
     after_initialize
@@ -60,7 +58,6 @@ class MiqWorker::Runner
     starting_worker_record
     set_process_title
     # Sync the config and roles early since heartbeats and logging require the configuration
-    sync_active_roles
     sync_config
 
     set_connection_pool_size
@@ -84,22 +81,6 @@ class MiqWorker::Runner
   # Worker Monitor Methods
   ###############################
 
-  def self.wait_for_worker_monitor?
-    @wait_for_worker_monitor = true if @wait_for_worker_monitor.nil?
-    @wait_for_worker_monitor
-  end
-
-  class << self
-    attr_writer :wait_for_worker_monitor
-  end
-
-  def my_monitor_started?
-    return @monitor_started unless @monitor_started.nil?
-    return false if     server.nil?
-    return false unless server.reload.started?
-    @monitor_started = true
-  end
-
   def worker_monitor_drb
     @worker_monitor_drb ||= begin
       raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
@@ -122,13 +103,23 @@ class MiqWorker::Runner
   # VimBrokerWorker Methods
   ###############################
 
-  def self.require_vim_broker?
-    @require_vim_broker = false if @require_vim_broker.nil?
-    @require_vim_broker
+  def self.delay_startup_for_vim_broker?
+    !!@delay_startup_for_vim_broker
   end
 
   class << self
-    attr_writer :require_vim_broker
+    attr_writer :delay_startup_for_vim_broker
+  end
+
+  def self.delay_queue_delivery_for_vim_broker?
+    !!@delay_queue_delivery_for_vim_broker
+  end
+
+  class << self
+    attr_writer :delay_queue_delivery_for_vim_broker
+
+    alias require_vim_broker? delay_queue_delivery_for_vim_broker?
+    alias require_vim_broker= delay_queue_delivery_for_vim_broker=
   end
 
   def start
@@ -153,7 +144,7 @@ class MiqWorker::Runner
     set_database_application_name
     ObjectSpace.garbage_collect
     started_worker_record
-    do_wait_for_worker_monitor if self.class.wait_for_worker_monitor?
+    do_delay_startup_for_vim_broker if self.class.delay_startup_for_vim_broker? && MiqVimBrokerWorker.workers > 0
     do_before_work_loop
     self
   end
@@ -177,7 +168,6 @@ class MiqWorker::Runner
 
   def starting_worker_record
     find_worker_record
-    @worker.pid            = Process.pid
     @worker.status         = "starting"
     @worker.started_on     = Time.now.utc
     @worker.last_heartbeat = Time.now.utc
@@ -191,7 +181,7 @@ class MiqWorker::Runner
     @worker.last_heartbeat = Time.now.utc
     @worker.update_spid
     @worker.save
-    $log.info("#{self.class.name} started. ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{MiqServer.my_zone}], Role [#{MiqServer.my_role}]")
+    $log.info("#{self.class.name} started. ID [#{@worker.id}], PID [#{@worker.pid}], GUID [#{@worker.guid}], Zone [#{MiqServer.my_zone}], Role [#{MiqServer.my_role}]")
   end
 
   def reload_worker_record
@@ -275,13 +265,6 @@ class MiqWorker::Runner
     # just consume the restarted message
   end
 
-  def message_sync_active_roles(*args)
-    _log.info("#{log_prefix} Synchronizing active roles...")
-    opts = args.extract_options!
-    sync_active_roles(opts[:roles])
-    _log.info("#{log_prefix} Synchronizing active roles complete...")
-  end
-
   def message_sync_config(*_args)
     _log.info("#{log_prefix} Synchronizing configuration...")
     sync_config
@@ -289,16 +272,23 @@ class MiqWorker::Runner
   end
 
   def sync_config
+    # Sync roles
+    @active_roles = MiqServer.my_active_roles(true)
+    after_sync_active_roles
+
+    # Sync settings
     Vmdb::Settings.reload!
     @my_zone ||= MiqServer.my_zone
     sync_log_level
     sync_worker_settings
     sync_blacklisted_events
+    after_sync_config
+
     _log.info("ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
     $log.log_hashes(@worker_settings)
     $log.info("---")
     $log.log_hashes(@cfg)
-    after_sync_config
+
     @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
   end
 
@@ -313,11 +303,6 @@ class MiqWorker::Runner
     poll_method
   end
 
-  def sync_active_roles(role_names = nil)
-    @active_roles = role_names || MiqServer.my_active_roles(true)
-    after_sync_active_roles
-  end
-
   #
   # Work methods
   #
@@ -326,14 +311,14 @@ class MiqWorker::Runner
     raise NotImplementedError, _("must be implemented in a subclass")
   end
 
-  def do_wait_for_worker_monitor
-    _log.info("#{log_prefix} Checking that worker monitor has started before doing work")
+  def do_delay_startup_for_vim_broker
+    _log.info("#{log_prefix} Checking that VIM Broker has started before doing work")
     loop do
-      break if self.my_monitor_started?
+      break if MiqVimBrokerWorker.available?
       heartbeat
       sleep 3
     end
-    _log.info("#{log_prefix} Starting work since worker monitor has started")
+    _log.info("#{log_prefix} Starting work since VIM Broker has started")
   end
 
   def do_work_loop
@@ -355,6 +340,10 @@ class MiqWorker::Runner
         @backoff = nil
       end
 
+      # Should be caught by the rescue in `#start` and will run do_exit from
+      # there.
+      raise Interrupt if @sigterm_received
+
       do_gc
       self.class.log_ruby_object_usage(worker_settings[:top_ruby_object_classes_to_log].to_i)
       send(poll_method)
@@ -362,7 +351,12 @@ class MiqWorker::Runner
   end
 
   def heartbeat
+    now = Time.now.utc
+    # Heartbeats can be expensive, so do them only when needed
+    return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
+
     ENV["WORKER_HEARTBEAT_METHOD"] == "file" ? heartbeat_to_file : heartbeat_to_drb
+    @last_hb = now
     do_heartbeat_work
   rescue SystemExit, SignalException
     raise
@@ -375,18 +369,40 @@ class MiqWorker::Runner
     # without the oversight of MiqServer::WorkerManagement
     return if skip_heartbeat?
 
-    now = Time.now.utc
-    # Heartbeats can be expensive, so do them only when needed
-    return if @last_hb.kind_of?(Time) && (@last_hb + worker_settings[:heartbeat_freq]) >= now
     messages = worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
-    @last_hb = now
     messages.each { |msg, *args| process_message(msg, *args) }
   rescue DRb::DRbError => err
     do_exit("Error heartbeating to MiqServer because #{err.class.name}: #{err.message}", 1)
   end
 
-  def heartbeat_to_file
-    FileUtils.touch(@worker.heartbeat_file)
+  def heartbeat_to_file(timeout = nil)
+    timeout ||= worker_settings[:heartbeat_timeout] || Workers::MiqDefaults.heartbeat_timeout
+    File.write(@worker.heartbeat_file, (Time.now.utc + timeout).to_s)
+
+    get_messages.each { |msg, *args| process_message(msg, *args) }
+  end
+
+  def get_messages
+    messages = []
+    @my_last_config_change ||= Time.now.utc
+
+    last_config_change = server_last_change(:last_config_change)
+    if last_config_change && last_config_change > @my_last_config_change
+      _log.info("#{log_prefix} Configuration has changed, New TS: #{last_config_change}, Old TS: #{@my_last_config_change}")
+      messages << ["sync_config"]
+
+      @my_last_config_change = last_config_change
+    end
+
+    messages
+  end
+
+  def key_store
+    @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
+  end
+
+  def server_last_change(key)
+    key_store.get(key)
   end
 
   def do_gc
@@ -471,6 +487,15 @@ class MiqWorker::Runner
       _log.info("Ruby Object Usage: #{types.sort_by { |_k, v| -v }.take(top).inspect}")
       @last_ruby_object_usage = t
     end
+  end
+
+  # Traps both SIGTERM and SIGINT here, and does the same thing, but in a
+  # container based deployment, SIGTERM is probably the one that will be
+  # received from the container management system (aka OpenShift).  The SIGINT
+  # trap is mostly a developer convenience.
+  def setup_sigterm_trap
+    Kernel.trap("TERM") { @sigterm_received = true }
+    Kernel.trap("INT")  { @sigterm_received = true }
   end
 
   protected

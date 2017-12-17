@@ -1,5 +1,8 @@
 RSpec::Matchers.define :have_attributes do |attrs|
   match do |obj|
+    regexp = /(.*_spec\.rb:\d+)/
+    called_from = caller.detect { |line| line =~ regexp }
+
     if obj.nil?
       @err_msg = "Unexpected call to have_attributes on NilClass"
     else
@@ -9,6 +12,7 @@ RSpec::Matchers.define :have_attributes do |attrs|
           if obj.respond_to?(attr)
             obj.send(attr)
           elsif obj.respond_to?(:[]) && !obj.kind_of?(ActiveRecord::Base)
+            @array_access_used = true
             obj[attr]
           else
             RuntimeError.new("Unknown attribute '#{attr}'")
@@ -16,6 +20,8 @@ RSpec::Matchers.define :have_attributes do |attrs|
 
         matcher = if actual.respond_to?(:acts_like_time?) && expected.respond_to?(:acts_like_time?)
                     be_same_time_as(expected)
+                  elsif expected.kind_of?(RSpec::Matchers::BuiltIn::Match)
+                    match(expected.expected)
                   else
                     eq(expected)
                   end
@@ -26,6 +32,15 @@ RSpec::Matchers.define :have_attributes do |attrs|
           @err_msg << "testing attribute: \"#{attr}\"\n#{matcher.failure_message}\n\n"
         end
       end
+    end
+
+
+    if @array_access_used
+      puts <<-MESSAGE
+\nWARNING: Use of `have_attributes` with array access (:[]) is deprecated and will be removed shortly.
+If you're matching attributes in hashes, use appropriate hash matchers instead (`include`, `eq`).
+#{"Called from " + called_from if called_from}
+      MESSAGE
     end
     @err_msg.nil?
   end

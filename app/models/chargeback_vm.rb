@@ -33,6 +33,26 @@ class ChargebackVm < Chargeback
     :total_cost               => :float,
   )
 
+  # example:
+  #  dynamic_columns_for(:group => [:total])
+  #  returns:
+  # { 'storage_allocated_volume_type1_metric' => {:group => [:total]},
+  #   'storage_allocated_volume_type1_cost'   => {:group => [:total]},
+  # }
+  def self.dynamic_columns_for(column_type)
+    volume_types = CloudVolume.volume_types
+    volume_types.push(nil) if volume_types.present?
+    volume_types.each_with_object({}) do |volume_type, result|
+      [:metric, :cost].collect do |type|
+        result["storage_allocated_#{volume_type || 'unclassified'}_#{type}"] = column_type
+      end
+    end
+  end
+
+  def self.refresh_dynamic_metric_columns
+    set_columns_hash(dynamic_columns_for(:float))
+  end
+
   def self.build_results_for_report_ChargebackVm(options)
     # Options: a hash transformable to Chargeback::ReportOptions
 
@@ -68,6 +88,10 @@ class ChargebackVm < Chargeback
     %w(vm_name)
   end
 
+  def self.sub_metric_columns
+    dynamic_columns_for(:grouping => [:total])
+  end
+
   def self.report_col_options
     {
       "cpu_allocated_cost"       => {:grouping => [:total]},
@@ -88,6 +112,8 @@ class ChargebackVm < Chargeback
       "memory_cost"              => {:grouping => [:total]},
       "memory_used_cost"         => {:grouping => [:total]},
       "memory_used_metric"       => {:grouping => [:total]},
+      "metering_used_cost"       => {:grouping => [:total]},
+      "metering_used_metric"     => {:grouping => [:total]},
       "net_io_used_cost"         => {:grouping => [:total]},
       "net_io_used_metric"       => {:grouping => [:total]},
       "storage_allocated_cost"   => {:grouping => [:total]},
@@ -96,12 +122,12 @@ class ChargebackVm < Chargeback
       "storage_used_cost"        => {:grouping => [:total]},
       "storage_used_metric"      => {:grouping => [:total]},
       "total_cost"               => {:grouping => [:total]}
-    }
+    }.merge(sub_metric_columns)
   end
 
   def self.vm_owner(consumption)
     @vm_owners ||= vms.each_with_object({}) { |vm, res| res[vm.id] = vm.evm_owner_name }
-    @vm_owners[consumption.resource_id] ||= consumption.resource.evm_owner_name
+    @vm_owners[consumption.resource_id] ||= consumption.resource.try(:evm_owner_name)
   end
 
   def self.vms
@@ -127,7 +153,7 @@ class ChargebackVm < Chargeback
             _log.error("Unable to find tenant '#{@options[:tenant_id]}'. Calculating chargeback costs aborted.")
             raise MiqException::Error, "Unable to find tenant '#{@options[:tenant_id]}'"
           end
-          tenant.vms
+          Vm.where(:id => tenant.subtree.map { |t| t.vms.ids }.flatten)
         elsif @options[:service_id]
           service = Service.find(@options[:service_id])
           if service.nil?
@@ -146,7 +172,7 @@ class ChargebackVm < Chargeback
   def init_extra_fields(consumption)
     self.vm_id         = consumption.resource_id
     self.vm_name       = consumption.resource_name
-    self.vm_uid        = consumption.resource.ems_ref
+    self.vm_uid        = consumption.resource.try(:ems_ref)
     self.vm_guid       = consumption.resource.try(:guid)
     self.owner_name    = self.class.vm_owner(consumption)
     self.provider_name = consumption.parent_ems.try(:name)

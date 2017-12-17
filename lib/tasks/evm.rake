@@ -3,6 +3,22 @@ require 'evm_application'
 require 'evm_rake_helper'
 
 namespace :evm do
+  namespace :foreman do
+    task :start => [:environment, 'db:seed'] do
+      server = MiqServer.my_server
+
+      # Assign and activate the default roles
+      server.ensure_default_roles
+      server.activate_roles(server.server_role_names)
+
+      # Mark the server as started
+      server.update_attributes(:status => "started")
+
+      # start the workers using foreman
+      exec("foreman start --port=3000")
+    end
+  end
+
   desc "Start the ManageIQ EVM Application"
   task :start => :environment do
     EvmApplication.start

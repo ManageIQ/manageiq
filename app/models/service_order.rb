@@ -11,7 +11,7 @@ class ServiceOrder < ApplicationRecord
   has_many :miq_requests, :dependent => :nullify
 
   validates :state, :inclusion => {:in => [STATE_WISH, STATE_CART, STATE_ORDERED]}
-  validates :state, :presence => true
+  validates :state, :uniqueness => { :scope => [:user_id, :tenant_id] }, :if => :cart?
   validates :name, :presence => true, :on => :update
 
   before_create :assign_user
@@ -37,6 +37,10 @@ class ServiceOrder < ApplicationRecord
 
   def ordered?
     state == STATE_ORDERED
+  end
+
+  def cart?
+    state == STATE_CART
   end
 
   def checkout
@@ -103,7 +107,7 @@ class ServiceOrder < ApplicationRecord
         request.class.send(:create, request.attributes.except(*REQUEST_ATTRIBUTES))
       end
       new_attributes.each do |attr, value|
-        new_service_order.send("#{attr}=", value) if self.class.attribute_names.include? attr.to_s
+        new_service_order.send("#{attr}=", value) if self.class.attribute_names.include?(attr.to_s)
       end
       new_service_order.save!
     end

@@ -116,21 +116,49 @@ describe VMDB::Util do
     assert_zip_entry_from_path("GUID", "/var/www/miq/vmdb/GUID")
   end
 
-  it ".add_zip_entry(private)" do
+  context ".add_zip_entry(private)" do
     require 'zip/filesystem'
-    file  = "/var/log/messages.log"
-    entry = "ROOT/var/log/messages.log"
-    mtime = Time.parse("2013-09-24 09:00:45 -0400")
-    expect(File).to receive(:mtime).with(file).and_return(mtime)
-    expect(described_class).to receive(:zip_entry_from_path).with(file).and_return(entry)
+    let(:origin_file) { Tempfile.new 'origin' }
+    let(:symlink_level_1) { create_temp_symlink 'symlink_level_1', origin_file.path }
+    let(:symlink_level_2) { create_temp_symlink 'symlink_level_2', symlink_level_1 }
+    let(:mtime) { origin_file.mtime }
+    let(:ztime) { Zip::DOSTime.at(mtime.to_i) }
+    let(:zip) { double }
+    let(:zip_file) { double }
 
-    zip       = double
-    ztime     = Zip::DOSTime.at(mtime.to_i)
-    zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
-    expect(zip).to receive(:add).with(zip_entry, file)
-    zip_file = double
+    it "entry is a normal file" do
+      file  = "/var/log/messages.log"
+      entry = "ROOT/var/log/messages.log"
+      log_mtime = Time.zone.parse("2013-09-24 09:00:45 -0400")
+      expect(File).to receive(:mtime).with(file).and_return(log_mtime)
+      expect(described_class).to receive(:zip_entry_from_path).with(file).and_return(entry)
 
-    expect(described_class.send(:add_zip_entry, zip, file, zip_file)).to eq([entry, mtime])
+      log_ztime = Zip::DOSTime.at(log_mtime.to_i)
+      zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, log_ztime)
+      expect(zip).to receive(:add).with(zip_entry, file)
+
+      expect(File).to receive(:size).and_return(1) # a stub size for _log.info
+      expect(described_class.send(:add_zip_entry, zip, file, zip_file)).to eq([entry, log_mtime])
+    end
+
+    it "entry is a symlink to origin file, origin file is added with symlink's name" do
+      entry = 'ROOT' + symlink_level_1
+      zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
+      expect(zip).to receive(:add).with(zip_entry, File.realpath(origin_file.path))
+      expect(described_class.send(:add_zip_entry, zip, symlink_level_1, zip_file)).to eq([entry, mtime])
+    end
+
+    it "entry is a symlink to symlink to origin file, origin file is added with symlink's name" do
+      entry = 'ROOT' + symlink_level_2
+      zip_entry = Zip::Entry.new(zip, entry, nil, nil, nil, nil, nil, nil, ztime)
+      expect(zip).to receive(:add).with(zip_entry, File.realpath(origin_file.path))
+      expect(described_class.send(:add_zip_entry, zip, symlink_level_2, zip_file)).to eq([entry, mtime])
+    end
+
+    after do
+      origin_file.close
+      origin_file.unlink
+    end
   end
 
   it ".get_evm_log_for_date" do
@@ -138,5 +166,16 @@ describe VMDB::Util do
     allow(Dir).to receive_messages(:glob => log_files)
 
     expect(described_class.get_evm_log_for_date("log/*.log")).to eq("log/evm.log")
+  end
+
+  private
+
+  def create_temp_symlink(name, origin)
+    symlink_file = Tempfile.new name
+    symlink_file.close
+    symlink_name = symlink_file.path
+    symlink_file.unlink
+    FileUtils.ln_s origin, symlink_name
+    symlink_name
   end
 end

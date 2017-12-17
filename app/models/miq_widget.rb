@@ -7,6 +7,7 @@ class MiqWidget < ApplicationRecord
   default_value_for :read_only, false
 
   DEFAULT_ROW_COUNT = 5
+  IMPORT_CLASS_NAMES = %w(MiqWidget).freeze
 
   belongs_to :resource, :polymorphic => true
   belongs_to :miq_schedule
@@ -24,6 +25,8 @@ class MiqWidget < ApplicationRecord
 
   serialize :visibility
   serialize :options
+
+  scope :with_content_type, ->(type) { where(:content_type => type) }
 
   include_concern 'ImportExport'
   include UuidMixin
@@ -76,7 +79,7 @@ class MiqWidget < ApplicationRecord
       :context_data => context_data
     )
 
-    _log.info "Created MiqTask ID: [#{miq_task.id}], Name: [#{miq_task.name}] for: [#{num_targets}] groups"
+    _log.info("Created MiqTask ID: [#{miq_task.id}], Name: [#{miq_task.name}] for: [#{num_targets}] groups")
 
     self.miq_task_id = miq_task.id
     self.save!
@@ -114,7 +117,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def generate_content_complete_callback(status, _message, _result)
-    _log.info "Widget ID: [#{id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]"
+    _log.info("Widget ID: [#{id}], MiqTask ID: [#{miq_task_id}], Status: [#{status}]")
 
     miq_task.lock(:exclusive) do |locked_miq_task|
       if MiqTask.status_error?(status)
@@ -263,7 +266,7 @@ class MiqWidget < ApplicationRecord
 
     timezone = user.get_timezone
     if timezone.nil?
-      _log.warn "#{log_prefix} No timezone provided for #{userid}! UTC will be used."
+      _log.warn("#{log_prefix} No timezone provided for #{userid}! UTC will be used.")
       timezone = "UTC"
     end
 
@@ -382,7 +385,7 @@ class MiqWidget < ApplicationRecord
 
   def grouped_subscribers
     grouped_users   = grouped_users_by_id
-    groups_by_id    = MiqGroup.where(:id => grouped_users.keys).index_by(&:id)
+    groups_by_id    = MiqGroup.in_my_region.where(:id => grouped_users.keys).index_by(&:id)
     users_by_userid = User.in_my_region.where(:userid => grouped_users.values.flatten.uniq).index_by(&:userid)
     grouped_users.each_with_object({}) do |(k, v), h|
       user_objs = users_by_userid.values_at(*v).reject(&:blank?)
@@ -441,7 +444,7 @@ class MiqWidget < ApplicationRecord
     case group
     when String
       group = MiqGroup.in_my_region.find_by(:description => group)
-    when Fixnum
+    when Integer
       group = MiqGroup.in_my_region.find_by(:id => group)
     end
 
@@ -459,7 +462,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def self.sync_from_hash(attrs)
-    attrs.delete "id"
+    attrs.delete("id")
     filename = attrs.delete("filename")
     rname = attrs.delete("resource_name")
     if rname && attrs["resource_type"]
@@ -472,7 +475,7 @@ class MiqWidget < ApplicationRecord
 
     widget = find_by(:description => attrs["description"])
     if widget
-      if filename && widget.updated_at.utc < File.mtime(filename).utc
+      if filename
         $log.info("Widget: [#{widget.description}] file has been updated on disk, synchronizing with model")
         ["enabled", "visibility"].each { |a| attrs.delete(a) } # Don't updates these because they may have been modofoed by the end user.
         widget.updated_at = Time.now.utc
@@ -532,8 +535,8 @@ class MiqWidget < ApplicationRecord
     self.miq_schedule = sched
     self.save!
 
-    _log.info  "Created schedule for Widget: [#{title}]"
-    _log.debug "Widget: [#{title}] created schedule: [#{sched.inspect}]"
+    _log.info("Created schedule for Widget: [#{title}]")
+    _log.debug("Widget: [#{title}] created schedule: [#{sched.inspect}]")
 
     sched
   end

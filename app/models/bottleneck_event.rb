@@ -72,7 +72,7 @@ class BottleneckEvent < ApplicationRecord
   end
 
   def substitute(str)
-    eval "result = \"#{str}\""
+    eval("result = \"#{str}\"")
   end
 
   # Future event calculation methods

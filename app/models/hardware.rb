@@ -8,7 +8,7 @@ class Hardware < ApplicationRecord
   has_many    :networks, :dependent => :destroy
   has_many    :firmwares, :as => :resource, :dependent => :destroy
 
-  has_many    :disks, -> { order :location }, :dependent => :destroy
+  has_many    :disks, -> { order(:location) }, :dependent => :destroy
   has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
   has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
   has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
@@ -17,9 +17,10 @@ class Hardware < ApplicationRecord
   has_many    :volumes, :dependent => :destroy
 
   has_many    :guest_devices, :dependent => :destroy
-  has_many    :storage_adapters, -> { where "device_type = 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :nics, -> { where "device_type = 'ethernet'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :ports, -> { where "device_type != 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :storage_adapters, -> { where("device_type = 'storage'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :nics, -> { where("device_type = 'ethernet'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :ports, -> { where("device_type != 'storage'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :physical_ports, -> { where("device_type = 'physical_port'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
@@ -27,7 +28,6 @@ class Hardware < ApplicationRecord
 
   virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
   virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
-  virtual_attribute :ram_size_in_bytes, :integer, :arel => ->(t) { t.grouping(t[:memory_mb] * 1.megabyte) }
 
   def ipaddresses
     @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
@@ -44,6 +44,11 @@ class Hardware < ApplicationRecord
   def ram_size_in_bytes
     memory_mb.to_i * 1.megabyte
   end
+  # resulting sql: "(CAST("hardwares"."memory_mb" AS bigint) * 1048576)"
+  virtual_attribute :ram_size_in_bytes, :integer, :arel => (lambda do |t|
+    t.grouping(Arel::Nodes::Multiplication.new(Arel::Nodes::NamedFunction.new("CAST", [t[:memory_mb].as("bigint")]),
+                                               1.megabyte))
+  end)
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
     "filename" => "filename", "startconnected" => "start_connected", "autodetect" => "auto_detect", "mode" => "mode",
@@ -75,7 +80,7 @@ class Hardware < ApplicationRecord
       begin
         parent.hardware.send("m_#{e.name}", parent, e, deletes) if parent.hardware.respond_to?("m_#{e.name}")
       rescue => err
-        _log.warn err.to_s
+        _log.warn(err.to_s)
       end
     end
 

@@ -84,7 +84,7 @@ describe MiqProductFeature do
       MiqProductFeature.seed_features(feature_path)
       expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect(changed.reload.name).to eq("One")
-      expect(unchanged.reload.updated_at).to be_same_time_as unchanged_orig_updated_at
+      expect(unchanged.reload.updated_at).to be_within(0.1).of unchanged_orig_updated_at
     end
 
     it "additional yaml feature" do

@@ -4,23 +4,19 @@ class Dialog < ApplicationRecord
   # The following gets around a glob symbolic link issue
   YAML_FILES_PATTERN = "{,*/**/}*.{yaml,yml}".freeze
 
-  has_many :dialog_tabs, -> { order :position }, :dependent => :destroy
+  has_many :dialog_tabs, -> { order(:position) }, :dependent => :destroy
   validate :validate_children
 
   include DialogMixin
   has_many :resource_actions
   virtual_has_one :content, :class_name => "Hash"
 
-  before_destroy          :reject_if_has_resource_actions
-  validates :label, :unique_within_region => true
+  before_destroy :reject_if_has_resource_actions
+  validates      :name, :unique_within_region => true
 
   alias_attribute  :name, :label
 
   attr_accessor :target_resource
-
-  belongs_to :blueprint
-
-  delegate :readonly?, :to => :blueprint, :allow_nil => true
 
   def self.seed
     dialog_import_service = DialogImportService.new
@@ -65,6 +61,11 @@ class Dialog < ApplicationRecord
       errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
     end
 
+    duplicate_field_names = dialog_fields.collect(&:name).duplicates
+    if duplicate_field_names.present?
+      errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicate_field_names.join(', ')})
+    end
+
     dialog_tabs.each do |dt|
       next if dt.valid?
       dt.errors.full_messages.each do |err_msg|
@@ -89,8 +90,8 @@ class Dialog < ApplicationRecord
 
   def init_fields_with_values(values)
     dialog_field_hash.each do |key, field|
-      values[key] = field.value
       field.dialog = self
+      values[key] = field.value
     end
     dialog_field_hash.each { |key, field| values[key] = field.initialize_with_values(values) }
     dialog_field_hash.each { |_key, field| field.update_values(values) }
@@ -123,19 +124,21 @@ class Dialog < ApplicationRecord
   # Creates a new item without an ID,
   # Removes any items not passed in the content.
   def update_tabs(tabs)
-    updated_tabs = []
-    tabs.each do |dialog_tab|
-      if dialog_tab.key?('id')
-        DialogTab.find(dialog_tab['id']).tap do |tab|
-          tab.update_attributes(dialog_tab.except('dialog_groups'))
-          tab.update_dialog_groups(dialog_tab['dialog_groups'])
-          updated_tabs << tab
+    transaction do
+      updated_tabs = []
+      tabs.each do |dialog_tab|
+        if dialog_tab.key?('id')
+          DialogTab.find(dialog_tab['id']).tap do |tab|
+            tab.update_attributes(dialog_tab.except('id', 'href', 'dialog_id', 'dialog_groups'))
+            tab.update_dialog_groups(dialog_tab['dialog_groups'])
+            updated_tabs << tab
+          end
+        else
+          updated_tabs << DialogImportService.new.build_dialog_tabs('dialog_tabs' => [dialog_tab]).first
         end
-      else
-        updated_tabs << DialogImportService.new.build_dialog_tabs('dialog_tabs' => [dialog_tab]).first
       end
+      self.dialog_tabs = updated_tabs
     end
-    self.dialog_tabs = updated_tabs
   end
 
   def deep_copy(new_attributes = {})

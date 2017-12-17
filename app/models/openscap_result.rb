@@ -1,5 +1,6 @@
 class OpenscapResult < ApplicationRecord
   belongs_to :container_image
+  belongs_to :resource,              :polymorphic => true
   has_one    :binary_blob,           :dependent => :destroy, :autosave => true, :as => :resource, :required => true
   has_many   :openscap_rule_results, :dependent => :destroy, :autosave => true
 

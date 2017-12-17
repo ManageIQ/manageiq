@@ -2,9 +2,10 @@ class LoadBalancer < ApplicationRecord
   include NewWithTypeStiMixin
   include AsyncDeleteMixin
   include ProcessTasksMixin
-  include_concern 'RetirementManagement'
+  include RetirementMixin
   include TenantIdentityMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 

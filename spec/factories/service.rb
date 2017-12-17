@@ -11,4 +11,7 @@ FactoryGirl.define do
 
   factory :service_ansible_playbook, :class => :ServiceAnsiblePlaybook, :parent => :service do
   end
+
+  factory :service_container_template, :class => :ServiceContainerTemplate, :parent => :service do
+  end
 end

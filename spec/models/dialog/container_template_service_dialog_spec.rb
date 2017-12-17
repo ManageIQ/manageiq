@@ -3,12 +3,9 @@ describe Dialog::ContainerTemplateServiceDialog do
     let(:container_template) { FactoryGirl.create(:container_template) }
     let(:params) { [] }
     before do
-      3.times do |n|
-        params << FactoryGirl.create(:container_template_parameter,
-                                     :name     => "name_#{n + 1}",
-                                     :value    => "value_#{n + 1}",
-                                     :required => true)
-      end
+      params << FactoryGirl.create(:container_template_parameter, :name => "name_1", :value => "value_1", :required => true)
+      params << FactoryGirl.create(:container_template_parameter, :name => "name_2", :value => "value_2")
+      params << FactoryGirl.create(:container_template_parameter, :name => "name_3", :value => "value_3", :required => true, :generate => "expression")
     end
 
     it "creates a dialog for a container template with parameters" do
@@ -61,8 +58,8 @@ describe Dialog::ContainerTemplateServiceDialog do
     fields = group.dialog_fields
     expect(fields.size).to eq(3)
 
-    assert_field(fields[0], DialogFieldTextBox, :name => "param_#{params[0].name}", :default_value => params[0].value, :data_type => 'string')
-    assert_field(fields[1], DialogFieldTextBox, :name => "param_#{params[1].name}", :default_value => params[1].value, :data_type => 'string')
-    assert_field(fields[2], DialogFieldTextBox, :name => "param_#{params[2].name}", :default_value => params[2].value, :data_type => 'string')
+    assert_field(fields[0], DialogFieldTextBox, :name => "param_#{params[0].name}", :default_value => params[0].value, :data_type => 'string', :required => true)
+    assert_field(fields[1], DialogFieldTextBox, :name => "param_#{params[1].name}", :default_value => params[1].value, :data_type => 'string', :required => nil)
+    assert_field(fields[2], DialogFieldTextBox, :name => "param_#{params[2].name}", :default_value => params[2].value, :data_type => 'string', :required => false)
   end
 end

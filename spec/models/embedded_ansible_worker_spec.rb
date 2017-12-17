@@ -134,5 +134,66 @@ describe EmbeddedAnsibleWorker do
         subject.ensure_host(provider, api_connection)
       end
     end
+
+    describe "#start_monitor_thread" do
+      let(:pool) { double("ConnectionPool") }
+
+      before do
+        allow(Thread).to receive(:new).and_return({})
+        allow(described_class::Runner).to receive(:start_worker)
+      end
+
+      it "sets worker class and id in thread object" do
+        thread = subject.start_monitor_thread
+        expect(thread[:worker_class]).to eq subject.class.name
+        expect(thread[:worker_id]).to    eq subject.id
+      end
+
+      it "adds a connection to the pool if there is only one" do
+        allow(ActiveRecord::Base).to receive(:connection_pool).and_return(pool)
+
+        expect(pool).to receive(:instance_variable_get).with(:@size).and_return(1)
+        expect(pool).to receive(:instance_variable_set).with(:@size, 2)
+        subject.start_monitor_thread
+      end
+    end
+
+    describe "#find_worker_thread_object" do
+      it "returns the the thread matching the class and id of the worker" do
+        worker1 = {:worker_id => subject.id + 1, :worker_class => "SomeOtherWorker"}
+        worker2 = {:worker_id => subject.id,     :worker_class => subject.class.name}
+        allow(Thread).to receive(:list).and_return([worker1, worker2])
+        expect(subject.find_worker_thread_object).to eq(worker2)
+      end
+
+      it "returns nil if nothing matches" do
+        worker1 = {:worker_id => subject.id + 1, :worker_class => subject.class.name}
+        worker2 = {:worker_id => subject.id + 2, :worker_class => subject.class.name}
+        allow(Thread).to receive(:list).and_return([worker1, worker2])
+        expect(subject.find_worker_thread_object).to be_nil
+      end
+    end
+
+    describe "#kill" do
+      it "exits the monitoring thread and destroys the worker row" do
+        thread_double = double
+        expect(thread_double).to receive(:exit)
+        allow(subject).to receive(:find_worker_thread_object).and_return(thread_double)
+        subject.kill
+        expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "destroys the worker row but refuses to kill the main thread" do
+        allow(subject).to receive(:find_worker_thread_object).and_return(Thread.main)
+        subject.kill
+        expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "destroys the worker row if the monitor thread is not found" do
+        allow(subject).to receive(:find_worker_thread_object).and_return(nil)
+        subject.kill
+        expect { subject.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
   end
 end

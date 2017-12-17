@@ -194,9 +194,14 @@ describe Hardware do
     end
 
     it "works in sql" do
-      hardware = FactoryGirl.create(:hardware, :memory_mb => 5)
+      FactoryGirl.create(:hardware, :memory_mb => 5)
 
       expect(virtual_column_sql_value(Hardware, "ram_size_in_bytes")).to eq(5.megabytes)
+    end
+
+    it "does not raise error if return value bigger than PostgreSQL's integer type" do
+      FactoryGirl.create(:hardware, :memory_mb => 131_015)
+      expect { virtual_column_sql_value(Hardware, "ram_size_in_bytes") }.to_not raise_error
     end
   end
 

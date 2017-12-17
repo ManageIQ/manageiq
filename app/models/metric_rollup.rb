@@ -8,6 +8,8 @@ class MetricRollup < ApplicationRecord
                                 net_usage_rate_average derived_vm_used_disk_storage
                                 derived_vm_allocated_disk_storage).freeze
 
+  CAPTURE_INTERVAL_NAMES = %w(hourly daily).freeze
+
   #
   # min_max column getters
   #
@@ -51,6 +53,16 @@ class MetricRollup < ApplicationRecord
     metrics = metrics.where(:resource_id => resource_ids) if resource_ids
     metrics = metrics.order(:resource_id, :timestamp => :desc)
     metrics.select('DISTINCT ON (metric_rollups.resource_id) metric_rollups.*')
+  end
+
+  def self.rollups_in_range(resource_type, resource_ids, capture_interval_name, start_date, end_date = nil)
+    capture_interval_name ||= 'hourly'
+    end_date = end_date.nil? ? Time.zone.today : end_date
+    metrics = where(:resource_type         => resource_type,
+                    :capture_interval_name => capture_interval_name,
+                    :timestamp             => start_date.beginning_of_day...end_date.end_of_day)
+    metrics = metrics.where(:resource_id => resource_ids) if resource_ids
+    metrics.order(:resource_id, :timestamp => :desc)
   end
 
   def chargeback_fields_present?

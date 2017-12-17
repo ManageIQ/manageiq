@@ -1,21 +1,32 @@
 describe MiqProvisionRequest do
-  it ".request_task_class_from" do
-    ems = FactoryGirl.create(:ems_vmware)
-    vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Vmware::InfraManager::Provision
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => "pxe"})).to eq ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe
+  context "#request_task_class_from" do
+    it "retrieves the provision class when the vm has EMS" do
+      ems = FactoryGirl.create(:ems_vmware)
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Vmware::InfraManager::Provision
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id, :provision_type => "pxe"})).to eq ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe
 
-    ems = FactoryGirl.create(:ems_redhat)
-    vm = FactoryGirl.create(:vm_redhat, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Redhat::InfraManager::Provision
+      ems = FactoryGirl.create(:ems_redhat)
+      vm = FactoryGirl.create(:vm_redhat, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Redhat::InfraManager::Provision
 
-    ems = FactoryGirl.create(:ems_openstack)
-    vm = FactoryGirl.create(:vm_openstack, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Openstack::CloudManager::Provision
+      ems = FactoryGirl.create(:ems_openstack)
+      vm = FactoryGirl.create(:vm_openstack, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Openstack::CloudManager::Provision
 
-    ems = FactoryGirl.create(:ems_amazon)
-    vm = FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
-    expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Amazon::CloudManager::Provision
+      ems = FactoryGirl.create(:ems_amazon)
+      vm = FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
+      expect(described_class.request_task_class_from('options' => {:src_vm_id => vm.id})).to eq ManageIQ::Providers::Amazon::CloudManager::Provision
+    end
+
+    it "fails to retrieve the provision class when the vm has no EMS" do
+      vm = FactoryGirl.create(:vm_redhat)
+      expect { described_class.request_task_class_from('options' => {:src_vm_id => vm.id}) }.to raise_error(MiqException::MiqProvisionError)
+    end
+
+    it "fails to retrieve the provision class when the vm does not exist" do
+      expect { described_class.request_task_class_from('options' => {:src_vm_id => -1 }) }.to raise_error(MiqException::MiqProvisionError)
+    end
   end
 
   context "A new provision request," do
@@ -117,7 +128,7 @@ describe MiqProvisionRequest do
         end
 
         it "should return stats from quota methods" do
-          prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => ['1024', '1024'], :number_of_cpus => [2, '2']}
+          prov_options = {:number_of_vms => [2, '2'], :owner_email => 'tester@miq.com', :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
           @pr2 = FactoryGirl.create(:miq_provision_request, :requester => user, :src_vm_id => vm_template.id, :options => prov_options)
 
           stats = @pr.check_quota(:requests_by_owner)
@@ -125,9 +136,164 @@ describe MiqProvisionRequest do
 
           expect(stats[:class_name]).to eq("MiqProvisionRequest")
           expect(stats[:count]).to eq(2)
-          expect(stats[:memory]).to eq(2048)
+          expect(stats[:memory]).to eq(2.gigabytes)
           expect(stats[:cpu]).to eq(4)
           expect(stats.fetch_path(:active, :class_name)).to eq("MiqProvision")
+        end
+
+        context "for cloud and infra providers," do
+          def create_task(user, request)
+            FactoryGirl.create(:miq_request_task, :miq_request => request, :miq_request_id => request.id, :type => 'MiqProvision', :description => "task", :tenant => user.current_tenant)
+          end
+
+          def create_request(user, vm_template, prov_options)
+            FactoryGirl.create(:miq_provision_request, :requester   => user,
+                                                       :description => "request",
+                                                       :tenant      => user.current_tenant,
+                                                       :source      => vm_template,
+                                                       :src_vm_id   => vm_template.id,
+                                                       :options     => prov_options.merge(:owner_email => user.email, :requester_group => user.miq_groups.first.description))
+          end
+
+          def request_queue_entry(request)
+            FactoryGirl.create(:miq_queue,
+                               :state       => MiqQueue::STATE_DEQUEUE,
+                               :instance_id => request.id,
+                               :class_name  => 'MiqProvisionRequest',
+                               :method_name => 'create_request_tasks')
+          end
+
+          def task_queue_entry(task)
+            FactoryGirl.create(:miq_queue,
+                               :state          => MiqQueue::STATE_DEQUEUE,
+                               :args           => [{:object_type => "Provision", :object_id => task.id}],
+                               :tracking_label => 'miq_provision_task',
+                               :class_name     => 'MiqAeEngine',
+                               :method_name    => 'deliver')
+          end
+
+          def create_test_task(user, template)
+            request = create_request(user, template, {})
+            create_task(user, request)
+            request
+          end
+
+          def queue(requests)
+            requests.each do |request|
+              request.miq_request_tasks.empty? ? request_queue_entry(request) : task_queue_entry(request.miq_request_tasks.first)
+            end
+          end
+
+          let(:vmware_tasks) do
+            ems = FactoryGirl.create(:ems_vmware)
+            vmware_tenant = FactoryGirl.create(:tenant)
+            group = FactoryGirl.create(:miq_group, :tenant => vmware_tenant)
+            @vmware_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+            @vmware_user2 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+            hardware = FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512)
+            @vmware_template = FactoryGirl.create(:template_vmware,
+                                                  :ext_management_system => ems,
+                                                  :hardware              => hardware)
+            prov_options = {:number_of_vms => [2, '2'], :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
+            requests = []
+            2.times { requests << create_request(@vmware_user1, @vmware_template, prov_options) }
+            create_task(@vmware_user1, requests.first)
+
+            2.times { requests << create_request(@vmware_user2, @vmware_template, prov_options) }
+            create_task(@vmware_user2, requests.last)
+            requests
+          end
+
+          let(:google_tasks) do
+            ems = FactoryGirl.create(:ems_google_with_authentication,
+                                     :availability_zones => [FactoryGirl.create(:availability_zone_google)])
+            google_tenant = FactoryGirl.create(:tenant)
+            group = FactoryGirl.create(:miq_group, :tenant => google_tenant)
+            @google_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+            @google_user2 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+            @google_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
+            flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id,
+                                        :cpus => 4, :cpu_cores => 1, :memory => 1024)
+            prov_options = {:number_of_vms => 1, :src_vm_id => vm_template.id, :boot_disk_size => ["10.GB", "10 GB"],
+                            :placement_auto => [true, 1], :instance_type => [flavor.id, flavor.name]}
+            requests = []
+            2.times { requests << create_request(@google_user1, @google_template, prov_options) }
+            create_task(@google_user1, requests.first)
+
+            2.times { requests << create_request(@google_user2, @google_template, prov_options) }
+            create_task(@google_user2, requests.last)
+            requests
+          end
+
+          shared_examples_for "check_quota" do
+            it "check" do
+              load_queue
+              stats = request.check_quota(quota_method)
+              expect(stats).to include(counts_hash)
+            end
+          end
+
+          context "active_provisions," do
+            let(:load_queue) { queue(vmware_tasks | google_tasks) }
+            let(:request) { create_test_task(@vmware_user1, @vmware_template) }
+            let(:quota_method) { :active_provisions }
+            let(:counts_hash) do
+              {:count => 12, :memory => 8_589_938_688, :cpu => 32, :storage => 44.gigabytes}
+            end
+            it_behaves_like "check_quota"
+          end
+
+          context "infra," do
+            let(:load_queue) { queue(vmware_tasks | google_tasks) }
+            let(:request) { create_test_task(@vmware_user1, @vmware_template) }
+            let(:counts_hash) do
+              {:count => 8, :memory => 8.gigabytes, :cpu => 16, :storage => 4.gigabytes}
+            end
+
+            context "active_provisions_by_tenant," do
+              let(:quota_method) { :active_provisions_by_tenant }
+              it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_group," do
+              let(:quota_method) { :active_provisions_by_group }
+              it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_owner," do
+              let(:quota_method) { :active_provisions_by_owner }
+              let(:counts_hash) do
+                {:count => 4, :memory => 4.gigabytes, :cpu => 8, :storage => 2.gigabytes}
+              end
+              it_behaves_like "check_quota"
+            end
+          end
+
+          context "cloud," do
+            let(:load_queue) { queue(vmware_tasks | google_tasks) }
+            let(:request) { create_test_task(@google_user1, @google_template) }
+            let(:counts_hash) do
+              {:count => 4, :memory => 4096, :cpu => 16, :storage => 40.gigabytes}
+            end
+
+            context "active_provisions_by_tenant," do
+              let(:quota_method) { :active_provisions_by_tenant }
+              it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_group," do
+              let(:quota_method) { :active_provisions_by_group }
+              it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_owner," do
+              let(:quota_method) { :active_provisions_by_owner }
+              let(:counts_hash) do
+                {:count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes}
+              end
+              it_behaves_like "check_quota"
+            end
+          end
         end
       end
 

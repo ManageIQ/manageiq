@@ -81,7 +81,7 @@ module RelationshipMixin
     self.relationship_type = rel unless rel.nil?
 
     begin
-      return yield self
+      yield(self)
     ensure
       if rel_changed
         relationship_types.pop
@@ -504,7 +504,7 @@ module RelationshipMixin
     options = args.extract_options!
     root_id = relationship.try(:root_id)
     return {relationship_for_isolated_root => {}} if root_id.nil?
-    rels = Relationship.subtree_of(root_id).arrange
+    Relationship.subtree_of(root_id).arrange
     Relationship.filter_by_resource_type(Relationship.subtree_of(root_id), options).arrange
   end
 

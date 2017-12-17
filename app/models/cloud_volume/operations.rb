@@ -1,6 +1,6 @@
 module CloudVolume::Operations
   def self.included(base)
-    base.send :include, InstanceMethods
+    base.send(:include, InstanceMethods)
     base.extend ClassMethods
   end
 
@@ -86,8 +86,7 @@ module CloudVolume::Operations
     def validate_volume(ext_management_system)
       if ext_management_system.nil?
         return {:available => false,
-                :message   => _("The Volume is not connected to an active %{table}") %
-                  {:table => ui_lookup(:table => "ext_management_systems")}}
+                :message   => _("The Volume is not connected to an active Provider")}
       end
       {:available => true, :message => nil}
     end

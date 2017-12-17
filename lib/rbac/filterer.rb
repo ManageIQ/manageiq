@@ -12,8 +12,8 @@ module Rbac
       CloudTenant
       CloudVolume
       ConfigurationProfile
-      ConfiguredSystem
       ConfigurationScriptBase
+      ConfiguredSystem
       Container
       ContainerBuild
       ContainerGroup
@@ -32,6 +32,7 @@ module Rbac
       Flavor
       FloatingIp
       Host
+      HostAggregate
       LoadBalancer
       MiddlewareDatasource
       MiddlewareDeployment
@@ -41,8 +42,8 @@ module Rbac
       MiddlewareServerGroup
       NetworkPort
       NetworkRouter
-      OrchestrationTemplate
       OrchestrationStack
+      OrchestrationTemplate
       ResourcePool
       SecurityGroup
       Service
@@ -53,15 +54,25 @@ module Rbac
 
     TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User)
 
+    NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
+      CloudNetwork
+      CloudSubnet
+      FloatingIp
+      LoadBalancer
+      NetworkPort
+      NetworkRouter
+      SecurityGroup
+    ).freeze
+
     BELONGSTO_FILTER_CLASSES = %w(
-      VmOrTemplate
-      Host
-      ExtManagementSystem
-      EmsFolder
       EmsCluster
+      EmsFolder
+      ExtManagementSystem
+      Host
       ResourcePool
       Storage
-    )
+      VmOrTemplate
+    ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
     # key: MiqUserRole#name - user's role
     # value:
@@ -77,14 +88,13 @@ module Rbac
     #   if it is an array [klass_id, descendant_id]
     #     klass.where(klass_id => descendant.select(descendant_id))
     MATCH_VIA_DESCENDANT_RELATIONSHIPS = {
-      "VmOrTemplate::ExtManagementSystem"      => [:id, :ems_id],
-      "VmOrTemplate::Host"                     => [:id, :host_id],
+      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
+      "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
       "VmOrTemplate::EmsCluster"               => [:id, :ems_cluster_id],
       "VmOrTemplate::EmsFolder"                => :parent_blue_folders,
+      "VmOrTemplate::ExtManagementSystem"      => [:id, :ems_id],
+      "VmOrTemplate::Host"                     => [:id, :host_id],
       "VmOrTemplate::ResourcePool"             => :resource_pool,
-      "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
-      "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
-      "ExtManagementSystem::CloudNetwork"      => [:ems_id, :id]
     }
 
     # These classes should accept any of the relationship_mixin methods including:
@@ -105,9 +115,9 @@ module Rbac
       'MiqRequestTask'         => nil, # tenant only
       'MiqTemplate'            => :ancestor_ids,
       'Provider'               => :ancestor_ids,
-      'ServiceTemplateCatalog' => :ancestor_ids,
-      'ServiceTemplate'        => :ancestor_ids,
       'Service'                => :descendant_ids,
+      'ServiceTemplate'        => :ancestor_ids,
+      'ServiceTemplateCatalog' => :ancestor_ids,
       'Tenant'                 => :descendant_ids,
       'User'                   => :descendant_ids,
       'Vm'                     => :descendant_ids
@@ -137,8 +147,10 @@ module Rbac
     #   - Array<Numeric> list if ids. :class is required. results are returned as ids
     #   - Array<Object> list of objects. results are returned as objects
     # @option options :named_scope   [Symbol|Array<String,Integer>] support for using named scope in search
-    #     Example without args: :named_scope => :in_my_region
-    #     Example with args:    :named_scope => [in_region, 1]
+    #     Example one scope without args:     :named_scope => :in_my_region
+    #     Example one scope with args:        :named_scope => [[:in_region, 1]]
+    #     Example more scopes without args:   :named_scope => [:in_my_region, :active]
+    #     Example more scopes some with args: :named_scope => [[:in_region, 1], :active, [:with_manager, "X"]]
     # @option options :conditions    [Hash|String|Array<String>]
     # @option options :where_clause  []
     # @option options :sub_filter
@@ -171,10 +183,6 @@ module Rbac
       # => list of objects
       # results are returned in the same format as the targets. for empty targets, the default result format is a list of ids.
       targets           = options[:targets]
-
-      # Support for using named_scopes in search. Supports scopes with or without args:
-      # Example without args: :named_scope => :in_my_region
-      # Example with args:    :named_scope => [in_region, 1]
       scope             = options[:named_scope]
 
       klass             = to_class(options[:class])
@@ -208,6 +216,7 @@ module Rbac
           target_ids  = targets.collect(&:id)
           klass       = targets.first.class
           klass       = base_class if !klass.respond_to?(:find) && (base_class = rbac_base_class(klass))
+          klass       = safe_base_class(klass) if is_sti?(klass) # always scope to base class if model is STI
         end
         scope = apply_scope(klass, scope)
         scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
@@ -267,6 +276,10 @@ module Rbac
       attrs[:auth_count] = auth_count unless options[:skip_counts]
 
       return targets, attrs
+    end
+
+    def is_sti?(klass)
+      klass.respond_to?(:finder_needs_type_condition?) ? klass.finder_needs_type_condition? : false
     end
 
     def include_references(scope, klass, include_for_find, exp_includes)
@@ -350,9 +363,11 @@ module Rbac
 
     def calc_filtered_ids(scope, user_filters, user, miq_group, scope_tenant_filter)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
+      expression = miq_group.try(:entitlement).try(:filter_expression)
+      expression.set_tagged_target(klass) if expression
       u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
       b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
-      m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, user_filters['managed']))
+      m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, expression || user_filters['managed']))
       d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
                                                          :user => user, :miq_group => miq_group))
 
@@ -416,6 +431,7 @@ module Rbac
     end
 
     def get_managed_filter_object_ids(scope, filter)
+      return scope.where(filter.to_sql.first) if filter.kind_of?(MiqExpression)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
@@ -537,7 +553,7 @@ module Rbac
     def lookup_method_for_descendant_class(klass, descendant_klass)
       key = "#{descendant_klass.base_class}::#{klass.base_class}"
       MATCH_VIA_DESCENDANT_RELATIONSHIPS[key].tap do |method_name|
-        _log.warn "could not find method name for #{key}" if method_name.nil?
+        _log.warn("could not find method name for #{key}") if method_name.nil?
       end
     end
 
@@ -545,8 +561,7 @@ module Rbac
       klass.kind_of?(String) || klass.kind_of?(Symbol) ? klass.to_s.constantize : klass
     end
 
-    def apply_scope(klass, scope)
-      klass = klass.all
+    def send_scope(klass, scope)
       scope_name = Array.wrap(scope).first
       if scope_name.nil?
         klass
@@ -556,6 +571,15 @@ module Rbac
                                                                                            :class_name => class_name}
       else
         klass.send(*scope)
+      end
+    end
+
+    def apply_scope(klass, scope)
+      klass = klass.all
+      if scope.kind_of?(Array)
+        scope.inject(klass) { |k, s| send_scope(k, s) }
+      else
+        send_scope(klass, scope)
       end
     end
 
@@ -574,7 +598,8 @@ module Rbac
         # typically, this is the only one we want:
         vcmeta = vcmeta_list.last
 
-        if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate
+        if ([ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate) ||
+           (vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)        && NETWORK_MODELS_FOR_BELONGSTO_FILTER.any? { |association_class| klass <= association_class.safe_constantize })
           vcmeta.send(association_name).to_a
         else
           vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)

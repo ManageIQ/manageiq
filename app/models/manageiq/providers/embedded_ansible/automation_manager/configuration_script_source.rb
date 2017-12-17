@@ -2,4 +2,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ConfigurationScriptSource
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
+
+  FRIENDLY_NAME = "Ansible Automation Inside Project".freeze
 end

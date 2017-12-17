@@ -91,7 +91,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def perf_rollup_parents(interval_name = nil)
-    [availability_zone, host_aggregates].compact.flatten unless interval_name == 'realtime'
+    [availability_zone, host_aggregates, service].compact.flatten unless interval_name == 'realtime'
   end
 
   #
@@ -105,22 +105,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   # Show certain non-generic charts
   def cpu_percent_available?
     true
-  end
-
-  def resize_queue(userid, new_flavor)
-    task_opts = {
-      :action => "resizing Instance for user #{userid}",
-      :userid => userid
-    }
-    queue_opts = {
-      :class_name  => self.class.name,
-      :method_name => 'resize',
-      :instance_id => id,
-      :role        => 'ems_operations',
-      :zone        => my_zone,
-      :args        => [new_flavor.id]
-    }
-    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def resize(new_flavor_id)
@@ -189,6 +173,54 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   def disassociate_floating_ip(ip_address)
     raw_disassociate_floating_ip(ip_address)
+  end
+
+  def raw_add_security_group(_security_group)
+    raise NotImplementedError, _("raw_add_security_group must be implemented in a subclass")
+  end
+
+  def add_security_group_queue(userid, security_group)
+    task_opts = {
+      :action => "associating Security Group with Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'add_security_group',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [security_group]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def add_security_group(security_group)
+    raw_add_security_group(security_group)
+  end
+
+  def raw_remove_security_group(_security_group)
+    raise NotImplementedError, _("raw_remove_security_group must be implemented in a subclass")
+  end
+
+  def remove_security_group_queue(userid, security_group)
+    task_opts = {
+      :action => "associating Security Group with Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'remove_security_group',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [security_group]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def remove_security_group(security_group)
+    raw_remove_security_group(security_group)
   end
 
   def service

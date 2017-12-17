@@ -43,6 +43,8 @@ namespace :locale do
   desc "Extract strings from various yaml files and store them in a ruby file for gettext:find"
   task :extract_yaml_strings => :environment do
     def update_output(string, file, output)
+      file.gsub!(pwd + '/', "")
+      file.gsub!(ManageIQ::UI::Classic::Engine.root.to_s + '/', "")
       return if string.nil? || string.empty?
       if output.key?(string)
         output[string].append(file)
@@ -144,7 +146,7 @@ namespace :locale do
 
   desc "Update ManageIQ gettext catalogs"
   task "update" => ["run_store_model_attributes", "store_dictionary_strings", "extract_yaml_strings", "gettext:find"] do
-    Dir["locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
+    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
       File.unlink(file)
     end
   end

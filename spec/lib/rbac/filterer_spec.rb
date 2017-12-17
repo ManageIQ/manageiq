@@ -1,4 +1,54 @@
 describe Rbac::Filterer do
+  describe "using expressions as managed filters" do
+    it "supports OR conditions across categories" do
+      filter = MiqExpression.new(
+        "OR" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-location", "value" => "ny"}}
+        ]
+      )
+      group = create_group_with_expression(filter)
+      user = FactoryGirl.create(:user, :miq_groups => [group])
+      vm1, vm2, _vm3 = FactoryGirl.create_list(:vm_vmware, 3)
+      vm1.tag_with("/managed/environment/prod", :ns => "*")
+      vm2.tag_with("/managed/location/ny", :ns => "*")
+
+      actual, = Rbac::Filterer.search(:targets => Vm, :user => user)
+
+      expected = [vm1, vm2]
+      expect(actual).to match(expected)
+    end
+
+    it "supports AND conditions within categories" do
+      filter = MiqExpression.new(
+        "AND" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "test"}}
+        ]
+      )
+      group = create_group_with_expression(filter)
+      user = FactoryGirl.create(:user, :miq_groups => [group])
+      vm1, vm2, vm3 = FactoryGirl.create_list(:vm_vmware, 3)
+      vm1.tag_with("/managed/environment/prod /managed/environment/test", :ns => "*")
+      vm2.tag_with("/managed/environment/prod", :ns => "*")
+      vm3.tag_with("/managed/environment/test", :ns => "*")
+
+      actual, = Rbac::Filterer.search(:targets => Vm, :user => user)
+
+      expected = [vm1]
+      expect(actual).to match(expected)
+    end
+
+    def create_group_with_expression(expression)
+      role = FactoryGirl.create(:miq_user_role)
+      group = FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role)
+      group.entitlement = Entitlement.new
+      group.entitlement.filter_expression = expression
+      group.save!
+      group
+    end
+  end
+
   describe '.combine_filtered_ids' do
     # Algorithm (from Rbac::Filterer.combine_filtered_ids):
     # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
@@ -75,11 +125,10 @@ describe Rbac::Filterer do
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
-    context 'searching for instances of AuthKeyPair with tags' do
-      let(:role)                       { FactoryGirl.create(:miq_user_role) }
-      let(:tagged_group)               { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
-      let(:user)                       { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
-      let!(:auth_key_pair_cloud) { FactoryGirl.create_list(:auth_key_pair_cloud, 2).first }
+    context 'with tags' do
+      let(:role)         { FactoryGirl.create(:miq_user_role) }
+      let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+      let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
 
       before do
         tagged_group.entitlement = Entitlement.new
@@ -88,11 +137,26 @@ describe Rbac::Filterer do
         tagged_group.save!
       end
 
-      it 'lists only tagged AuthKeyPairs' do
-        auth_key_pair_cloud.tag_with('/managed/environment/prod', :ns => '*')
+      context 'searching for instances of AuthKeyPair' do
+        let!(:auth_key_pair_cloud) { FactoryGirl.create_list(:auth_key_pair_cloud, 2).first }
 
-        results = described_class.search(:class => ManageIQ::Providers::CloudManager::AuthKeyPair, :user => user).first
-        expect(results).to match_array [auth_key_pair_cloud]
+        it 'lists only tagged AuthKeyPairs' do
+          auth_key_pair_cloud.tag_with('/managed/environment/prod', :ns => '*')
+
+          results = described_class.search(:class => ManageIQ::Providers::CloudManager::AuthKeyPair, :user => user).first
+          expect(results).to match_array [auth_key_pair_cloud]
+        end
+      end
+
+      context 'searching for instances of HostAggregate' do
+        let!(:host_aggregate) { FactoryGirl.create_list(:host_aggregate, 2).first }
+
+        it 'lists only tagged HostAggregates' do
+          host_aggregate.tag_with('/managed/environment/prod', :ns => '*')
+
+          results = described_class.search(:class => HostAggregate, :user => user).first
+          expect(results).to match_array [host_aggregate]
+        end
       end
     end
 
@@ -147,13 +211,42 @@ describe Rbac::Filterer do
     end
 
     context 'when class does not participate in RBAC' do
+      before do
+        @vm = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host1, :ext_management_system => @ems)
+        ["2010-04-14T20:52:30Z", "2010-04-14T21:51:10Z"].each do |t|
+          @vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => t)
+        end
+      end
       let(:miq_ae_domain) { FactoryGirl.create(:miq_ae_domain) }
 
-      it 'returns same class as input' do
+      it 'returns the same class as input for MiqAeDomain' do
         User.with_user(admin_user) do
           results = described_class.search(:targets => [miq_ae_domain]).first
           expect(results.first).to be_an_instance_of(MiqAeDomain)
           expect(results).to match_array [miq_ae_domain]
+        end
+      end
+
+      it 'returns the same class as input for parent class that is not STI' do
+        User.with_user(admin_user) do
+          targets = @vm.metric_rollups
+
+          results = described_class.search(:targets => targets, :user => admin_user)
+          objects = results.first
+          expect(objects.length).to eq(2)
+          expect(objects).to match_array(targets)
+        end
+      end
+
+      it 'returns the same class as input for subclass that is not STI' do
+        User.with_user(admin_user) do
+          vm_perf = VmPerformance.find(@vm.metric_rollups.last.id)
+          targets = [vm_perf]
+
+          results = described_class.search(:targets => targets, :user => admin_user)
+          objects = results.first
+          expect(objects.length).to eq(1)
+          expect(objects).to match_array(targets)
         end
       end
     end
@@ -766,6 +859,18 @@ describe Rbac::Filterer do
             expect(objects).to eq(targets)
           end
 
+          it "returns the correct class for different classes of targets" do
+            @ems3 = FactoryGirl.create(:ems_vmware, :name => 'ems3')
+            @ems4 = FactoryGirl.create(:ems_microsoft, :name => 'ems4')
+
+            targets = [@ems2, @ems4, @ems3, @ems]
+
+            results = described_class.search(:targets => targets, :user => user)
+            objects = results.first
+            expect(objects.length).to eq(4)
+            expect(objects).to match_array(targets)
+          end
+
           it "finds both EMSes without belongsto filters" do
             results = described_class.search(:class => "ExtManagementSystem", :user => user)
             objects = results.first
@@ -1133,6 +1238,114 @@ describe Rbac::Filterer do
       end
     end
 
+    context "with cloud network and network manager" do
+      let!(:network_manager)   { FactoryGirl.create(:ems_openstack).network_manager }
+      let!(:network_manager_1) { FactoryGirl.create(:ems_openstack).network_manager }
+
+      context "with belongs_to_filter" do
+        before do
+          group.entitlement = Entitlement.new
+          group.entitlement.set_managed_filters([])
+          group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|#{network_manager.name}"])
+          group.save!
+        end
+
+        (described_class::NETWORK_MODELS_FOR_BELONGSTO_FILTER + [ManageIQ::Providers::NetworkManager]).each do |network_model|
+          describe ".search" do
+            let!(:network_object) do
+              return network_manager if network_model == ManageIQ::Providers::NetworkManager
+              FactoryGirl.create(network_model.underscore, :ext_management_system => network_manager)
+            end
+
+            let!(:network_object_with_different_network_manager) do
+              return network_manager_1 if network_model == ManageIQ::Providers::NetworkManager
+              FactoryGirl.create(network_model.underscore,  :ext_management_system => network_manager_1)
+            end
+
+            context "when records match belogns to filter" do
+              it "lists records of #{network_model} manager according to belongsto filter" do
+                User.with_user(user) do
+                  results = described_class.search(:class => network_model).first
+                  expect(results).to match_array([network_object])
+                  expect(results.first.ext_management_system).to eq(network_manager)
+                end
+              end
+            end
+
+            context "when records don't match belogns to filter" do
+              before do
+                group.entitlement = Entitlement.new
+                group.entitlement.set_managed_filters([])
+                group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|XXXX"])
+                group.save!
+              end
+
+              it "lists no records of #{network_model}" do
+                User.with_user(user) do
+                  results = described_class.search(:class => network_model).first
+                  expect(results).to be_empty
+                end
+              end
+            end
+          end
+        end
+      end
+
+      context "network manager with/without tagging" do
+        let!(:cloud_network)     { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager) }
+        let!(:cloud_network_1)   { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager_1) }
+
+        context "network manager is tagged" do
+          before do
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+            group.entitlement.set_belongsto_filters([])
+            group.save!
+
+            network_manager.tag_with("/managed/environment/prod", :ns => "*")
+          end
+
+          it "doesn't list cloud networks" do
+            User.with_user(user) do
+              results = described_class.search(:class => CloudNetwork).first
+              expect(results).to be_empty
+            end
+          end
+
+          it "lists only tagged network manager" do
+            User.with_user(user) do
+              results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+              expect(results).to match_array([network_manager])
+            end
+          end
+        end
+
+        context "network manager not is tagged" do
+          before do
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([])
+            group.entitlement.set_belongsto_filters([])
+            group.save!
+          end
+
+          it "lists all cloud networks" do
+            User.with_user(user) do
+              results = described_class.search(:class => CloudNetwork).first
+              expect(results).to match_array(CloudNetwork.all)
+              expect(results.first.ext_management_system).to eq(network_manager)
+            end
+          end
+
+          it "lists all network managers" do
+            User.with_user(user) do
+              results = described_class.search(:class => ManageIQ::Providers::NetworkManager).first
+              expect(results).to match_array(ManageIQ::Providers::NetworkManager.all)
+            end
+          end
+        end
+      end
+    end
+
     context 'with network models' do
       NETWORK_MODELS = %w(
         CloudNetwork
@@ -1180,6 +1393,8 @@ describe Rbac::Filterer do
     end
 
     context "with tagged VMs" do
+      let(:ems) { FactoryGirl.create(:ext_management_system) }
+
       before(:each) do
         [
           FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local"),
@@ -1194,11 +1409,13 @@ describe Rbac::Filterer do
           vm.host = host
           vm.evm_owner_id = user.id  if i.even?
           vm.miq_group_id = group.id if i.odd?
+          vm.ext_management_system = ems if i.even?
           vm.save
           vm.tag_with(@tags.values.join(" "), :ns => "*") if i > 0
         end
 
-        Vm.scope :group_scope, ->(group_num) { Vm.where("name LIKE ?", "Test Group #{group_num}%") }
+        Vm.scope :group_scope,    ->(group_num) { Vm.where("name LIKE ?", "Test Group #{group_num}%") }
+        Vm.scope :is_on,          ->            { Vm.where(:power_state => "on") }
       end
 
       context ".search" do
@@ -1223,7 +1440,7 @@ describe Rbac::Filterer do
 
           it "works when passing a named_scope" do
             User.with_user(user) do
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 1]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 1]]).first
               expect(results.length).to eq(1)
             end
           end
@@ -1252,10 +1469,10 @@ describe Rbac::Filterer do
 
           it "works when passing a named_scope" do
             User.with_user(user) do
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 1]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 1]]).first
               expect(results.length).to eq(1)
 
-              results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 2]).first
+              results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 2]]).first
               expect(results.length).to eq(0)
             end
           end
@@ -1278,7 +1495,22 @@ describe Rbac::Filterer do
         end
 
         it "works when passing a named_scope" do
-          results = described_class.search(:class => "Vm", :named_scope => [:group_scope, 4]).first
+          results = described_class.search(:class => "Vm", :named_scope => :is_on).first
+          expect(results.length).to eq(4)
+        end
+
+        it "works when passing a named_scope with parameterized scope" do
+          results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 4]]).first
+          expect(results.length).to eq(1)
+        end
+
+        it "works when passing a named_scope with multiple scopes" do
+          results = described_class.search(:class => "Vm", :named_scope => [:is_on, :active]).first
+          expect(results.length).to eq(2)
+        end
+
+        it "works when passing a named_scope with multiple mixed scopes" do
+          results = described_class.search(:class => "Vm", :named_scope => [[:group_scope, 3], :active]).first
           expect(results.length).to eq(1)
         end
 
@@ -1518,7 +1750,6 @@ describe Rbac::Filterer do
     expect(described_class.new.send(:apply_rbac_through_association?, Vm)).not_to be
   end
 
-  # find_targets_with_direct_rbac(klass, scope, rbac_filters, find_options, user_or_group)
   describe "find_targets_with_direct_rbac" do
     let(:host_match) { FactoryGirl.create(:host, :hostname => 'good') }
     let(:host_other) { FactoryGirl.create(:host, :hostname => 'bad') }

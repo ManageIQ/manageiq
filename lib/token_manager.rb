@@ -37,7 +37,10 @@ class TokenManager
   def token_get_info(token, what = nil)
     return {} unless token_valid?(token)
 
-    what.nil? ? token_store.read(token) : token_store.read(token)[what]
+    token_data = token_store.read(token)
+    return nil if token_data.nil?
+
+    what.nil? ? token_data : token_data[what]
   end
 
   def token_valid?(token)

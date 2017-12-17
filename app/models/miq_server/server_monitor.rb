@@ -16,20 +16,20 @@ module MiqServer::ServerMonitor
   end
 
   def make_master_server(last_master)
-    _log.info "Master server has #{last_master.nil? ? "not been set" : "died, #{last_master.name}"}.  Attempting takeover as new master server, #{name}."
+    _log.info("Master server has #{last_master.nil? ? "not been set" : "died, #{last_master.name}"}.  Attempting takeover as new master server, #{name}.")
     parent = MiqRegion.my_region(true)
     parent.lock do
       # See if an ACTIVE server has already taken over
       active_servers = parent.active_miq_servers
 
-      _log.debug "Double checking that nothing has changed"
+      _log.debug("Double checking that nothing has changed")
       master = active_servers.detect(&:is_master?)
       if (last_master.nil? && !master.nil?) || (!last_master.nil? && !master.nil? && last_master.id != master.id)
-        _log.info "Aborting master server takeover as another server, #{master.name}, has taken control first."
+        _log.info("Aborting master server takeover as another server, #{master.name}, has taken control first.")
         return nil
       end
 
-      _log.debug "Setting this server, #{name}, as master server"
+      _log.debug("Setting this server, #{name}, as master server")
 
       # Set is_master on self, reset every other server in the region, including
       # inactive ones.
@@ -38,7 +38,7 @@ module MiqServer::ServerMonitor
         s.save!
       end
     end
-    _log.info "This server #{name} is now set as the master server, last_master: #{last_master.try(:name)}"
+    _log.info("This server #{name} is now set as the master server, last_master: #{last_master.try(:name)}")
     self
   end
 
@@ -128,7 +128,7 @@ module MiqServer::ServerMonitor
         end
 
         # Raise miq_server_is_master event
-        master_msg = master.nil? ? nil : " from #{master.format_short_log_msg}"
+        master_msg = master && " from #{master.format_short_log_msg}"
         msg = "#{format_short_log_msg} has taken over master#{master_msg}"
         MiqEvent.raise_evm_event_queue_in_region(self, "evm_server_is_master", :event_details => msg)
 

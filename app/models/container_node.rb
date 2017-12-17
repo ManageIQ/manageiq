@@ -5,12 +5,16 @@ class ContainerNode < ApplicationRecord
   include NewWithTypeStiMixin
   include TenantIdentityMixin
   include SupportsFeatureMixin
+  include ArchivedMixin
+  include CockpitMixin
+  include CustomActionsMixin
+  include_concern 'Purging'
 
   EXTERNAL_LOGGING_PATH = "/#/discover?_g=()&_a=(columns:!(hostname,level,kubernetes.pod_name,message),filters:!((meta:(disabled:!f,index:'%{index}',key:hostname,negate:!f),%{query})),index:'%{index}',interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(time,desc))".freeze
 
   # :name, :uid, :creation_timestamp, :resource_version
   belongs_to :ext_management_system, :foreign_key => "ems_id"
-  has_many   :container_groups
+  has_many   :container_groups, -> { active }
   has_many   :container_conditions, :class_name => ContainerCondition, :as => :container_entity, :dependent => :destroy
   has_many   :containers, :through => :container_groups
   has_many   :container_images, -> { distinct }, :through => :container_groups
@@ -32,9 +36,6 @@ class ContainerNode < ApplicationRecord
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :system_distribution, :type => :string
   virtual_column :kernel_version, :type => :string
-
-  # Needed for metrics
-  delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")
@@ -82,13 +83,7 @@ class ContainerNode < ApplicationRecord
   def cockpit_url
     URI::HTTP.build(:host => kubernetes_hostname, :port => 9090)
     address = kubernetes_hostname || name
-    miq_server = ext_management_system.nil? ? nil : ext_management_system.zone.remote_cockpit_ws_miq_server
-    if miq_server
-
-    end
-    MiqCockpit::WS.url(miq_server,
-                       MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
-                       address)
+    MiqCockpit::WS.url(cockpit_server, cockpit_worker, address)
   end
 
   def evaluate_alert(_alert_id, _event)
@@ -114,5 +109,13 @@ class ContainerNode < ApplicationRecord
     query = "bool:(filter:(or:!(#{node_hostnames_query})))"
     index = ".operations.*"
     EXTERNAL_LOGGING_PATH % {:index => index, :query => query}
+  end
+
+  def disconnect_inv
+    return if archived?
+    _log.info("Disconnecting Node [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
+    "id [#{ext_management_system.id}] ")
+    self.deleted_on = Time.now.utc
+    save
   end
 end

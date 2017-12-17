@@ -1,3 +1,3 @@
 class ContainerEnvVar < ApplicationRecord
-  belongs_to :container_definition
+  belongs_to :container
 end

@@ -32,7 +32,7 @@ cols:
 include:
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - timestamp
 - event_type
 - miq_event_description
@@ -47,7 +47,7 @@ headers:
 - Miq Event Description
 - Miq Policy Description
 - Result
-- Tagret
+- Target
 
 # Condition(s) string for the SQL query
 conditions:
@@ -81,7 +81,7 @@ dims:
 
 timeline:
   :field: PolicyEvent-timestamp
-  :bands: 
+  :bands:
   - :text: true
     :gap: 0.0
     :unit: Day
@@ -92,5 +92,5 @@ timeline:
     :unit: Week
     :width: 10
     :height: 0.6
-    :pixels: 200	
+    :pixels: 200
   :position: Last

@@ -21,6 +21,44 @@ describe CustomButtonSet do
     end
   end
 
+  describe '.filter_with_visibility_expression' do
+    let(:vm_1)              { FactoryGirl.create(:vm_vmware, :name => 'vm_1') }
+    let(:custom_button_1)   { FactoryGirl.create(:custom_button, :applies_to => vm_1) }
+    let(:miq_expression)    { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => "vm_1"}) }
+    let(:custom_button_2)   { FactoryGirl.create(:custom_button, :applies_to => vm_1, :visibility_expression => miq_expression) }
+    let(:set_data)          { {:applies_to_class => "Vm", :button_order => [custom_button_1.id, custom_button_2.id]} }
+    let(:custom_button_set) { FactoryGirl.create(:custom_button_set, :name => "set_1", :set_data => set_data) }
+
+    before do
+      [custom_button_1, custom_button_2].each { |x| custom_button_set.add_member(x) }
+    end
+
+    context 'when all CustomButtons#visibility_expression=nil' do
+      let(:miq_expression) { nil }
+
+      it 'returns same array CustomButtonSet as input' do
+        expect(described_class.filter_with_visibility_expression([custom_button_set], vm_1)).to eq([custom_button_set])
+      end
+    end
+
+    context 'when any visibility_expression is evaluated to false and any to true' do
+      let(:miq_expression_false) { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => "vm_2"}) }
+      let(:custom_button_1)      { FactoryGirl.create(:custom_button, :applies_to => vm_1, :visibility_expression => miq_expression_false) }
+
+      it 'returns filtered array of CustomButtonSet and CustomButtons' do
+        set = described_class.filter_with_visibility_expression([custom_button_set], vm_1).first
+        expect(set.set_data[:button_order]).to eq([custom_button_2.id])
+      end
+
+      context 'all CustomButtons#visibility_expression are evaluated to false' do
+        let(:miq_expression)    { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => 'vm_2'}) }
+        it 'returns empty array of CustomButtonSet' do
+          expect(described_class.filter_with_visibility_expression([custom_button_set], vm_1)).to be_empty
+        end
+      end
+    end
+  end
+
   it "#deep_copy" do
     service_template1 = FactoryGirl.create(:service_template)
     service_template2 = FactoryGirl.create(:service_template)

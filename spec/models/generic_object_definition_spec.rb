@@ -34,12 +34,17 @@ describe GenericObjectDefinition do
     expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it 'raises an error if any property association is not a reportable model' do
+    testdef = described_class.new(:name => 'test', :properties => {:associations => {'folders' => :ems_folder}})
+    expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   it 'property name is unique among attributes, associations and methods' do
     testdef = described_class.new(
       :name       => 'test',
       :properties => {
         :attributes   => {:vms => "float", 'server' => 'localhost'},
-        :associations => {'vms' => :strang_model, 'hosts' => :host},
+        :associations => {'vms' => :vm, 'hosts' => :host},
         :methods      => [:hosts, :some_method]
       }
     )
@@ -67,6 +72,11 @@ describe GenericObjectDefinition do
     )
 
     expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'accepts GenericObject as an association' do
+    testdef = described_class.create(:name => 'test', :properties => {:associations => {'balancers' => :generic_object}})
+    expect(testdef.properties[:associations]).to include('balancers' => 'GenericObject')
   end
 
   describe '#destroy' do
@@ -194,8 +204,17 @@ describe GenericObjectDefinition do
     end
 
     it 'updates the association with different class' do
-      definition.add_property_association(:vms, 'vm_or_template')
-      expect(definition.properties[:associations]).to include('vms' => 'VmOrTemplate')
+      definition.add_property_association(:vms, 'zone')
+      expect(definition.properties[:associations]).to include('vms' => 'Zone')
+    end
+
+    it 'accepts GenericObject as the association' do
+      definition.add_property_association(:balancers, 'generic_object')
+      expect(definition.properties[:associations]).to include('balancers' => 'GenericObject')
+    end
+
+    it 'raises an error if the association is not a reportable model' do
+      expect { definition.add_property_association(:folders, 'ems_folder') }.to raise_error(RuntimeError, "invalid model for association: [EmsFolder]")
     end
   end
 
@@ -257,8 +276,7 @@ describe GenericObjectDefinition do
 
     it 'raises an error with undefined attributes' do
       @options = {:max_number => 10, :attr1 => true, :attr2 => 1}
-      expect { subject }.to raise_error(RuntimeError,
-                                        "[attr1, attr2]: not searchable for Generic Object of #{definition.name}")
+      expect { subject }.to raise_error(RuntimeError, "[attr1, attr2]: not searchable for Generic Object of #{definition.name}")
     end
 
     it 'finds by associations' do
@@ -272,6 +290,49 @@ describe GenericObjectDefinition do
       @options = {:vms => [vm[0].id, vm[1].id]}
       expect(subject.size).to eq(1)
       expect(subject.first).to eq(@g1)
+    end
+  end
+
+  describe "#custom_actions" do
+    it "returns the custom actions in a hash grouped by buttons and button groups" do
+      FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "GenericObject")
+      generic_group = FactoryGirl.create(:custom_button, :name => "generic_group", :applies_to_class => "GenericObject")
+      generic_group_set = FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
+      generic_group_set.add_member(generic_group)
+
+      FactoryGirl.create(
+        :custom_button,
+        :name             => "assigned_no_group",
+        :applies_to_class => "GenericObjectDefinition",
+        :applies_to_id    => definition.id
+      )
+      assigned_group = FactoryGirl.create(
+        :custom_button,
+        :name             => "assigned_group",
+        :applies_to_class => "GenericObjectDefinition",
+        :applies_to_id    => definition.id
+      )
+      assigned_group_set = FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
+      assigned_group_set.add_member(assigned_group)
+      definition.update(:custom_button_sets => [assigned_group_set])
+
+      expected = {
+        :buttons       => a_collection_containing_exactly(
+          a_hash_including("name" => "generic_no_group"),
+          a_hash_including("name" => "assigned_no_group")
+        ),
+        :button_groups => a_collection_containing_exactly(
+          a_hash_including(
+            "name"   => "assigned_group_set",
+            :buttons => [a_hash_including("name" => "assigned_group")]
+          ),
+          a_hash_including(
+            "name"   => "generic_group_set",
+            :buttons => [a_hash_including("name" => "generic_group")]
+          )
+        )
+      }
+      expect(definition.custom_actions).to match(expected)
     end
   end
 

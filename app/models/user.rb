@@ -5,6 +5,7 @@ class User < ApplicationRecord
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
   include TimezoneMixin
+  include CustomActionsMixin
 
   has_many   :miq_approvals, :as => :approver
   has_many   :miq_approval_stamps,  :class_name => "MiqApproval", :foreign_key => :stamper_id
@@ -248,6 +249,18 @@ class User < ApplicationRecord
     Thread.current[:userid] = saved_userid
   end
 
+  def self.with_user_group(user, group, &block)
+    return yield if user.nil?
+    user = User.find(user) unless user.kind_of?(User)
+    if group && group.kind_of?(MiqGroup)
+      user.current_group = group
+    elsif group != user.current_group_id
+      group = MiqGroup.find_by(:id => group)
+      user.current_group = group if group
+    end
+    User.with_user(user, &block)
+  end
+
   def self.current_user=(user)
     Thread.current[:userid] = user.try(:userid)
     Thread.current[:user] = user
@@ -264,6 +277,16 @@ class User < ApplicationRecord
 
   def self.with_current_user_groups
     current_user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => current_user.miq_group_ids})
+  end
+
+  def self.missing_user_features(db_user)
+    if !db_user
+      "User"
+    elsif !db_user.current_group
+      "Group"
+    elsif !db_user.current_group.miq_user_role
+      "Role"
+    end
   end
 
   def self.seed

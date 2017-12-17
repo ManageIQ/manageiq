@@ -20,6 +20,8 @@ class AutomationTask < MiqRequestTask
     args[:class_name]       = options[:class_name]
     args[:instance_name]    = options[:instance_name]
     args[:user_id]          = options[:user_id]
+    args[:miq_group_id]     = options[:miq_group_id] || User.find(options[:user_id]).current_group.id
+    args[:tenant_id]        = options[:tenant_id] || User.find(options[:user_id]).current_tenant.id
     args[:automate_message] = options[:message]
 
     MiqAeEngine.deliver(args)

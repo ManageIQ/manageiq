@@ -5,7 +5,7 @@ class MiqAlertStatus < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   belongs_to :ext_management_system
   belongs_to :assignee, :class_name => 'User'
-  has_many :miq_alert_status_actions, -> { order "created_at" }, :dependent => :destroy
+  has_many :miq_alert_status_actions, -> { order("created_at") }, :dependent => :destroy
   virtual_column :assignee, :type => :string
   virtual_column :hidden, :type => :boolean
 

@@ -50,8 +50,13 @@ module MiqServer::RoleManagement
     save
   end
 
-  def set_assigned_roles
+  def sync_assigned_roles
     self.role = ::Settings.server.role
+  end
+
+  def ensure_default_roles
+    MiqServer.my_server.add_settings_for_resource(:server => {:role => ENV["MIQ_SERVER_DEFAULT_ROLES"]}) if role.blank? && ENV["MIQ_SERVER_DEFAULT_ROLES"].present?
+    sync_assigned_roles
   end
 
   def deactivate_all_roles
@@ -93,7 +98,7 @@ module MiqServer::RoleManagement
   def is_master_for_role?(server_role)
     server_role = ServerRole.to_role(server_role)
     assigned    = assigned_server_roles.find_by(:server_role_id => server_role.id)
-    returned false if assigned.nil?
+    return false if assigned.nil?
     assigned.priority == 1
   end
 

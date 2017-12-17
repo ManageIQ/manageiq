@@ -1,4 +1,6 @@
 class MiqTemplate < VmOrTemplate
+  include CustomActionsMixin
+
   default_scope { where(:template => true) }
 
   include_concern 'Operations'
@@ -27,6 +29,11 @@ class MiqTemplate < VmOrTemplate
 
   def self.eligible_for_provisioning
     where(arel_table[:ems_id].not_eq(nil))
+  end
+
+  def self.without_volume_templates
+    where.not(:type => ["ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate",
+                        "ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate"])
   end
 
   def active?; false; end

@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name = "mime-types"
   s.version = "2.6.1"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to?(:required_rubygems_version=)
   s.require_paths = ["lib"]
   s.authors = ["Nick LaMuro"]
   s.date = "2017-03-27"

@@ -51,7 +51,7 @@ class MiqLdap
 
     # Make sure we do NOT log the clear-text password
     log_options = Vmdb::Settings.mask_passwords!(options.deep_clone)
-    $log.info "options: #{log_options.inspect}"
+    $log.info("options: #{log_options.inspect}")
 
     @ldap = Net::LDAP.new(options)
   end
@@ -67,10 +67,10 @@ class MiqLdap
         addresses = host.to_miq_a # Host is already an IP Address, no need to resolve
       else
         begin
-          canonical, aliases, type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
+          _canonical, _aliases, _type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
           $log.info("MiqLdap.connection: Resolved host [#{host}] has these IP Address: #{addresses.inspect}") if $log
         rescue => err
-          $log.debug "Warning: '#{err.message}', resolving host: [host]"
+          $log.debug("Warning: '#{err.message}', resolving host: [host]")
           next
         end
       end
@@ -82,7 +82,7 @@ class MiqLdap
           selected_host = address
           break
         rescue => err
-          $log.debug "Warning: '#{err.message}', connecting to IP Address [#{address}]"
+          $log.debug("Warning: '#{err.message}', connecting to IP Address [#{address}]")
         end
       end
 
@@ -187,7 +187,7 @@ class MiqLdap
     objs.each do |o|
       if o.attribute_names.include?(:search_referrals)
         o.search_referrals.each do |ref|
-          scheme, userinfo, host, port, registry, dn, opaque, query, fragment = URI.split(ref)
+          scheme, _userinfo, host, port, _registry, dn, _opaque, _query, _fragment = URI.split(ref)
           port ||= self.class.default_ldap_port(scheme)
           dn = normalize(dn.split("/").last)
           next if seen[:objects].include?(dn)
@@ -284,7 +284,7 @@ class MiqLdap
       return username if username =~ /^.+@.+$/ # already qualified with user@domain
 
       return "#{username}@#{@user_suffix}"
-    when"mail"
+    when "mail"
       username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || username =~ /^.+@.+$/
       dbuser = User.find_by_email(username.downcase)
       dbuser = User.find_by_userid(username.downcase) unless dbuser
@@ -367,21 +367,21 @@ class MiqLdap
   def get_memberships(obj, max_depth = 0, attr = :memberof, followed = [], current_depth = 0)
     current_depth += 1
 
-    _log.debug "Enter get_memberships: #{obj.inspect}"
-    _log.debug "Enter get_memberships: #{obj.dn}, max_depth: #{max_depth}, current_depth: #{current_depth}, attr: #{attr}"
+    _log.debug("Enter get_memberships: #{obj.inspect}")
+    _log.debug("Enter get_memberships: #{obj.dn}, max_depth: #{max_depth}, current_depth: #{current_depth}, attr: #{attr}")
     result = []
     # puts "obj #{obj.inspect}"
     groups = MiqLdap.get_attr(obj, attr).to_miq_a
-    _log.debug "Groups: #{groups.inspect}"
+    _log.debug("Groups: #{groups.inspect}")
     return result unless groups
 
-    groups.each do|group|
+    groups.each do |group|
       # puts "group #{group}"
       gobj = get(group, [:cn, attr])
       dn   = nil
       cn   = nil
       if gobj.nil?
-        _log.debug "Group: DN: #{group} returned a nil object, CN will be extracted from DN, memberships will not be followed"
+        _log.debug("Group: DN: #{group} returned a nil object, CN will be extracted from DN, memberships will not be followed")
         normalize(group) =~ /^cn[ ]*=[ ]*([^,]+),/
         cn = $1
       else
@@ -391,9 +391,9 @@ class MiqLdap
 
       if cn.nil?
         suffix = gobj.nil? ? "unable to extract CN from DN" : "has no CN"
-        _log.debug "Group: #{group} #{suffix}, skipping"
+        _log.debug("Group: #{group} #{suffix}, skipping")
       else
-        _log.debug "Group: DN: #{group}, extracted CN: #{cn}"
+        _log.debug("Group: DN: #{group}, extracted CN: #{cn}")
         result.push(cn.strip)
       end
 
@@ -402,7 +402,7 @@ class MiqLdap
         result.concat(get_memberships(gobj, max_depth, attr, followed, current_depth)) unless max_depth > 0 && current_depth >= max_depth
       end
     end
-    _log.debug "Exit get_memberships: #{obj.dn}, result: #{result.uniq.inspect}"
+    _log.debug("Exit get_memberships: #{obj.dn}, result: #{result.uniq.inspect}")
     result.uniq
   end
 

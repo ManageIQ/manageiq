@@ -49,6 +49,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   def postprocess(action)
     inventory_raw_id = options.fetch_path(job_option_key(action), :inventory)
     delete_inventory(action, inventory_raw_id) if inventory_raw_id
+    log_stdout(action)
   end
 
   def on_error(action)
@@ -66,6 +67,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
       'api_token' => Api::UserTokenService.new.generate_token(evm_owner.userid, 'api'),
       'service'   => href_slug,
       'user'      => evm_owner.href_slug,
+      'group'     => miq_group.href_slug,
       'action'    => action
     }.merge(request_options_extra_vars)
   end
@@ -161,5 +163,16 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     opts.tap do
       opts[:extra_vars].transform_values! { |val| val.kind_of?(String) ? MiqPassword.try_decrypt(val) : val }
     end
+  end
+
+  def log_stdout(action)
+    log_option = options.fetch_path(:config_info, action.downcase.to_sym, :log_output) || 'on_error'
+    return unless %(on_error always).include?(log_option)
+    job = job(action)
+    return if log_option == 'on_error' && job.raw_status.succeeded?
+    _log.info("Stdout from ansible job #{job.name}: #{job.raw_stdout('txt_download')}")
+  rescue => err
+    _log.error("Failed to get stdout from ansible job #{job.name}")
+    _log.log_backtrace(err)
   end
 end

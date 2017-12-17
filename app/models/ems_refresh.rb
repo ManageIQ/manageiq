@@ -25,8 +25,8 @@ module EmsRefresh
   mattr_accessor :debug_failures
 
   # Development helper method for setting up the selector specs for VC
-  def self.init_console(use_vim_broker = false)
-    ManageIQ::Providers::Vmware::InfraManager::Refresher.init_console(use_vim_broker)
+  def self.init_console
+    ManageIQ::Providers::Vmware::InfraManager::Refresher.init_console
   end
 
   cache_with_timeout(:queue_timeout) { MiqEmsRefreshWorker.worker_settings[:queue_timeout] || 60.minutes }
@@ -47,8 +47,6 @@ module EmsRefresh
             t.ext_management_system
           elsif t.respond_to?(:manager) && t.manager
             t.manager
-          elsif t.kind_of?(Host) && t.acts_as_ems?
-            t
           end
 
       h[e] << t unless e.nil?
@@ -80,12 +78,16 @@ module EmsRefresh
     EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = get_target_objects(target, id)
+    targets = get_target_objects(target, id).uniq
+
+    # Store manager records to avoid n+1 queries
+    manager_by_manager_id = {}
 
     # Split the targets into refresher groups
     groups = targets.group_by do |t|
       ems = case
             when t.respond_to?(:ext_management_system) then t.ext_management_system
+            when t.respond_to?(:manager_id)            then manager_by_manager_id[t.manager_id] ||= t.manager
             when t.respond_to?(:manager)               then t.manager
             else                                            t
             end
@@ -100,18 +102,18 @@ module EmsRefresh
 
   def self.refresh_new_target(ems_id, target_hash, target_class, target_find)
     ems = ExtManagementSystem.find(ems_id)
-    target_class = target_class.constantize if target_class.kind_of? String
+    target_class = target_class.constantize if target_class.kind_of?(String)
 
     save_ems_inventory_no_disconnect(ems, target_hash)
 
     target = target_class.find_by(target_find)
     if target.nil?
-      _log.warn "Unknown target for event data: #{target_hash}."
+      _log.warn("Unknown target for event data: #{target_hash}.")
       return
     end
 
     ems.refresher.refresh(get_target_objects(target))
-
+    target.post_create_actions_queue if target.respond_to?(:post_create_actions_queue)
     target
   end
 
@@ -127,8 +129,8 @@ module EmsRefresh
       target_class = target_class.to_s.constantize unless target_class.kind_of?(Class)
 
       if ManagerRefresh::Inventory.persister_class_for(target_class).blank? &&
-         [VmOrTemplate, Host, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
-        _log.warn "Unknown target type: [#{target_class}]."
+         [VmOrTemplate, Host, PhysicalServer, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
+        _log.warn("Unknown target type: [#{target_class}].")
         next
       end
 
@@ -149,7 +151,7 @@ module EmsRefresh
 
       if recs.length != ids.length
         missing = ids - recs.collect(&:id)
-        _log.warn "Unable to find a record for [#{target_class}] ids: #{missing.inspect}."
+        _log.warn("Unable to find a record for [#{target_class}] ids: #{missing.inspect}.")
       end
 
       target_objects.concat(recs)
@@ -171,7 +173,8 @@ module EmsRefresh
 
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(queue_options) do |msg, item|
-      targets = msg.nil? ? targets : (msg.args[0] | targets)
+      targets = msg.nil? ? targets : msg.data.concat(targets)
+      targets.uniq! if targets.size > 1_000
 
       # If we are merging with an existing queue item we don't need a new
       # task, just use the original one
@@ -191,7 +194,7 @@ module EmsRefresh
         }
       end
       item.merge(
-        :args        => [targets],
+        :data        => targets,
         :task_id     => task_id,
         :msg_timeout => queue_timeout
       )
@@ -202,7 +205,7 @@ module EmsRefresh
 
   def self.create_refresh_task(ems, targets)
     task_options = {
-      :action => "EmsRefresh(#{ems.name}) [#{targets}]",
+      :action => "EmsRefresh(#{ems.name}) [#{targets}]".truncate(255),
       :userid => "system"
     }
 
@@ -225,9 +228,9 @@ module EmsRefresh
 
     inv.each do |k, v|
       if depth == 1
-        $log.debug "#{log_header} #{k.inspect}=>#{v.inspect}"
+        $log.debug("#{log_header} #{k.inspect}=>#{v.inspect}")
       else
-        $log.debug "#{log_header} #{k.inspect}=>"
+        $log.debug("#{log_header} #{k.inspect}=>")
         log_inv_debug_trace(v, "#{log_header}  ", depth - 1)
       end
     end

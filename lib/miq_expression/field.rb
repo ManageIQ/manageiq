@@ -12,6 +12,7 @@ class MiqExpression::Field < MiqExpression::Target
 
   def self.parse(field)
     parsed_params = parse_params(field) || return
+    return unless parsed_params[:model_name]
     new(parsed_params[:model_name], parsed_params[:associations], parsed_params[:column] ||
         parsed_params[:virtual_custom_column])
   end
@@ -20,9 +21,22 @@ class MiqExpression::Field < MiqExpression::Target
     return false unless field.kind_of?(String)
     match = REGEX.match(field)
     return false unless match
-    model = match[:model_name].safe_constantize
+    model =
+      begin
+        match[:model_name].safe_constantize
+      rescue LoadError
+        nil
+      end
     return false unless model
     !!(model < ApplicationRecord)
+  end
+
+  def to_s
+    "#{[model, *associations].join(".")}-#{column}"
+  end
+
+  def valid?
+    target.column_names.include?(column) || virtual_attribute? || custom_attribute_column?
   end
 
   def attribute_supported_by_sql?

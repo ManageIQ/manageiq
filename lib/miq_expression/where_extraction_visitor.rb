@@ -1,7 +1,7 @@
 class MiqExpression
   class WhereExtractionVisitor < Arel::Visitors::PostgreSQL
     def visit_Arel_Nodes_SelectStatement(o, collector)
-      collector = o.cores.inject(collector) do |c, x|
+      o.cores.inject(collector) do |c, x|
         visit_Arel_Nodes_SelectCore(x, c)
       end
     end

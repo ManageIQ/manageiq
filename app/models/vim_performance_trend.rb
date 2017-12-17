@@ -38,7 +38,7 @@ class VimPerformanceTrend < ActsAsArModel
     #   :target_pcts    => [70, 80, 90, 100],
     # }
 
-    limit_col = options[:limit_col] ? options[:limit_col] : "limit"
+    options[:limit_col] ? options[:limit_col] : "limit"
 
     # group data by resource name
     grouped_objs = perfs.inject({}) do |h, o|
@@ -70,7 +70,6 @@ class VimPerformanceTrend < ActsAsArModel
       options[:target_pcts].each do |pct|
         col_name = "limit_pct_value_#{options[:target_pcts].index(pct) + 1}"
         pct_of_limit = (limit * pct * 0.01)
-        # row[col_name] = self.calc_value_at_target(pct_of_limit, trend_data[name]) || "Unknown"
         row[col_name] = calc_value_at_target(pct_of_limit, trend_data[name])
         if row[col_name].nil?
           row[col_name] = "Unknown"
@@ -133,7 +132,6 @@ class VimPerformanceTrend < ActsAsArModel
     else
       begin
         result = MiqStats.solve_for_x(limit, trend_data[:slope], trend_data[:yint])
-        # return Time.at(result).utc.strftime("%m/%d/%Y")
         return Time.at(result).utc
       rescue RangeError
         return nil
@@ -247,7 +245,7 @@ class VimPerformanceTrend < ActsAsArModel
       col_headers << Dictionary.gettext([options[:trend_db], options[:limit_col]].join("."), :type => "column", :notfound => :titleize)
     end
 
-    limit_pct_cols = options[:target_pcts].each do |c|
+    options[:target_pcts].each do |c|
       col_order << "limit_pct_value_#{options[:target_pcts].index(c) + 1}"
       col_headers << "#{c}%"
     end

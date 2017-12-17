@@ -29,7 +29,7 @@ module CinderManagerMixin
       begin
         cinder_manager.save
         cinder_manager.reload
-        _log.debug "cinder_manager.id = #{cinder_manager.id}"
+        _log.debug("cinder_manager.id = #{cinder_manager.id}")
 
         CloudVolume.where(:ems_id => id).update(:ems_id => cinder_manager.id)
         CloudVolumeBackup.where(:ems_id => id).update(:ems_id => cinder_manager.id)

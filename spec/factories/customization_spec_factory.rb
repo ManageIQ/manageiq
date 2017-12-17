@@ -3,6 +3,6 @@ FactoryGirl.define do
     sequence(:name) { |n| "customization_spec_#{seq_padded_for_sorting(n)}" }
     typ { "Windows" }
     sequence(:description) { |n| "Customization spec #{seq_padded_for_sorting(n)}" }
-    spec { {options => {}} }
+    spec { { :options => {} } }
   end
 end

@@ -38,12 +38,12 @@ class ServiceReconfigureTask < MiqRequestTask
       }
 
       MiqQueue.put(
-        :class_name  => 'MiqAeEngine',
-        :method_name => 'deliver',
-        :args        => [args],
-        :role        => 'automate',
-        :zone        => zone,
-        :task_id     => "#{self.class.name.underscore}_#{id}"
+        :class_name     => 'MiqAeEngine',
+        :method_name    => 'deliver',
+        :args           => [args],
+        :role           => 'automate',
+        :zone           => zone,
+        :tracking_label => "#{self.class.name.underscore}_#{id}"
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else

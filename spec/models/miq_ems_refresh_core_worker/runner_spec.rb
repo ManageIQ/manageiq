@@ -1,11 +1,10 @@
 describe MiqEmsRefreshCoreWorker::Runner do
   before(:each) do
-    guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
+    _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone)
 
     # General stubbing for testing any worker (methods called during initialize)
     @worker_record = FactoryGirl.create(:miq_ems_refresh_core_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
-    allow_any_instance_of(described_class).to receive(:sync_active_roles)
     allow_any_instance_of(described_class).to receive(:sync_config)
     allow_any_instance_of(described_class).to receive(:set_connection_pool_size)
     allow_any_instance_of(described_class).to receive(:heartbeat_using_drb?).and_return(false)
@@ -194,7 +193,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
       end.not_to raise_error
       expect(obj.template).to eq(expected_template)
       expect(obj.state).to eq(expected_state)
-      expect(obj.state_changed_on).to be_same_time_as expected_time
+      expect(obj.state_changed_on).to be_within(0.00001).of expected_time
     end
 
     def should_not_have_changed(obj, props)
@@ -205,7 +204,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
       expect { obj.reload }.not_to raise_error
       expect(obj.template).to eq(expected_template)
       expect(obj.state).to eq(expected_state)
-      expect(obj.state_changed_on).to be_same_time_as expected_time
+      expect(obj.state_changed_on).to be_within(0.00001).of expected_time
     end
   end
 end

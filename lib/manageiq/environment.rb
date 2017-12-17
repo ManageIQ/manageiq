@@ -5,21 +5,25 @@ module ManageIQ
   module Environment
     APP_ROOT = Pathname.new(__dir__).join("../..")
 
-    def self.manageiq_plugin_setup
-      # determine plugin root dir. Assume we are called from a 'bin/setup' script in the plugin root
-      plugin_root = Pathname.new(caller_locations.last.absolute_path).dirname.parent
+    def self.manageiq_plugin_setup(plugin_root = nil)
+      # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
+      plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
 
-      install_bundler
-      bundle_install(plugin_root)
+      manageiq_plugin_update(plugin_root)
+    end
+
+    def self.manageiq_plugin_update(plugin_root = nil)
+      # determine plugin root dir. Assume we are called from a 'bin/' script in the plugin root
+      plugin_root ||= Pathname.new(caller_locations.last.absolute_path).dirname.parent
+
+      install_bundler(plugin_root)
+      bundle_update(plugin_root)
 
       ensure_config_files
 
-      if ENV["CI"]
-        write_region_file
-        create_database_user
-      end
+      create_database_user if ENV["CI"]
 
-      setup_test_environment
+      setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
     end
 
     def self.ensure_config_files
@@ -39,27 +43,29 @@ module ManageIQ
 
     def self.while_updating_bower
       # Run bower in a thread and continue to do the non-js stuff
-      puts "Updating bower assets in parallel..."
-      bower_thread = Thread.new { update_bower }
+      puts "\n== Updating bower assets in parallel =="
+      bower_thread = Thread.new do
+        update_ui
+        puts "\n== Updating bower assets complete =="
+      end
       bower_thread.abort_on_exception = true
 
       yield
 
       bower_thread.join
-      puts "Updating bower assets complete."
     end
 
-    def self.install_bundler
+    def self.install_bundler(root = APP_ROOT)
       system!("echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc") if ENV['CI']
       system!("gem install bundler -v '#{bundler_version}' --conservative")
+      system!("bundle config path #{root.join('vendor/bundle').expand_path}", :chdir => root) if ENV["CI"]
     end
 
-    def self.bundle_install(root = APP_ROOT)
-      system('bundle check', :chdir => root) || system('bundle install', :chdir => root)
-    end
-
-    def self.bundle_update
-      system!('bundle update')
+    def self.bundle_update(root = APP_ROOT)
+      system!("bundle update --jobs=3", :chdir => root)
+      return unless ENV["CI"]
+      lockfile_contents = File.read(root.join("Gemfile.lock"))
+      puts "===== Begin Gemfile.lock =====\n\n#{lockfile_contents}\n\n===== End Gemfile.lock ====="
     end
 
     def self.create_database
@@ -77,9 +83,9 @@ module ManageIQ
       run_rake_task("db:seed")
     end
 
-    def self.setup_test_environment
+    def self.setup_test_environment(task_prefix: '', root: APP_ROOT)
       puts "\n== Resetting tests =="
-      run_rake_task("test:vmdb:setup")
+      run_rake_task("#{task_prefix}test:vmdb:setup", :root => root)
     end
 
     def self.reset_automate_domain
@@ -97,24 +103,25 @@ module ManageIQ
       run_rake_task("log:clear tmp:clear")
     end
 
+    # In development, when switching branches to old versions prior to the
+    # ui-classic split, it's possible that bower_components end up cached in
+    # manageiq proper as well as manageiq-ui-classic, which causes duplicate
+    # sets of dependencies, with different versions, that bower can't handle.
+    #
+    # Once we no longer support versions of manageiq prior to the ui-classic
+    # split, this can be removed.
     def self.clear_obsolete
-      return unless Dir.exist? APP_ROOT.join('vendor', 'assets', 'bower_components')
+      return unless APP_ROOT.join("vendor/assets/bower_components").exist?
       puts "\n== Removing obsolete bower install =="
-      Dir.chdir APP_ROOT do
-        system("rm -rf vendor/assets/bower_components/")
-      end
-    end
-
-    def self.write_region_file(region_number = 1)
-      File.write(APP_ROOT.join("REGION"), region_number.to_s)
+      FileUtils.rm_rf(APP_ROOT.join("vendor/assets/bower_components"))
     end
 
     def self.create_database_user
       system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
     end
 
-    def self.update_bower
-      system!("bundle exec rake update:bower")
+    def self.update_ui
+      system!("bundle exec rake update:ui")
     end
 
     def self.bundler_version
@@ -122,12 +129,14 @@ module ManageIQ
       File.read(gemfile).match(/gem\s+['"]bundler['"],\s+['"](.+?)['"]/)[1]
     end
 
-    def self.run_rake_task(task)
-      system!("#{APP_ROOT.join("bin/rails")} #{task}")
+    def self.run_rake_task(task, root: APP_ROOT)
+      system!("bin/rails #{task}", :chdir => root)
     end
 
     def self.system!(*args)
-      system(*args, :chdir => APP_ROOT) || abort("\n== Command #{args} failed ==")
+      options = args.last.kind_of?(Hash) ? args.pop : {}
+      options[:chdir] ||= APP_ROOT
+      system(*args, options) || abort("\n== Command #{args} failed in #{options[:chdir]} ==")
     end
   end
 end

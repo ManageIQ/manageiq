@@ -56,10 +56,10 @@ class Provider < ApplicationRecord
 
   def refresh_ems(opts = {})
     if missing_credentials?
-      raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "provider")}
+      raise _("no Provider credentials defined")
     end
     unless authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "provider")}
+      raise _("Provider failed last authentication check")
     end
     managers.flat_map { |manager| EmsRefresh.queue_refresh(manager, nil, opts) }
   end

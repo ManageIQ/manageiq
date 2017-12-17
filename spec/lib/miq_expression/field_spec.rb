@@ -77,6 +77,18 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe "#to_s" do
+    it "renders fields in string form" do
+      field = described_class.new("Vm", [], "name")
+      expect(field.to_s).to eq("Vm-name")
+    end
+
+    it "can handle associations" do
+      field = described_class.new("Vm", ["host"], "name")
+      expect(field.to_s).to eq("Vm.host-name")
+    end
+  end
+
   describe '#report_column' do
     it 'returns the correct format for a field' do
       field = MiqExpression::Field.parse('Vm.miq_provision.miq_request-requester_name')
@@ -95,6 +107,28 @@ RSpec.describe MiqExpression::Field do
     it "will raise a parse error when given a field with unsupported syntax" do
       field = "Vm,host+name"
       expect { described_class.parse!(field) }.to raise_error(MiqExpression::Field::ParseError)
+    end
+  end
+
+  describe "#valid?" do
+    it "returns true when the column belongs to the set of column names" do
+      field = described_class.new(Vm, [], "name")
+      expect(field).to be_valid
+    end
+
+    it "returns true when the column belongs to the set of virtual attributes" do
+      field = described_class.new(Vm, [], "platform")
+      expect(field).to be_valid
+    end
+
+    it "returns true when the column is a custom attribute" do
+      field = described_class.new(Vm, [], "VmOrTemplate-virtual_custom_attribute_foo")
+      expect(field).to be_valid
+    end
+
+    it "returns false for non-attribute public methods" do
+      field = described_class.new(Vm, [], "destroy")
+      expect(field).not_to be_valid
     end
   end
 

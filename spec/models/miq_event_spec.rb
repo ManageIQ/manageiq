@@ -28,6 +28,14 @@ describe MiqEvent do
         end
         MiqEvent.raise_evm_job_event(obj, {:type => "scan", :suffix => "complete"}, {})
       end
+
+      it "physical_server" do
+        obj = FactoryGirl.create(:physical_server)
+        expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
+          target == obj && raw_event == "physical_server_shutdown"
+        end
+        MiqEvent.raise_evm_job_event(obj, {:type => "shutdown"}, {})
+      end
     end
 
     it "will recognize known events" do
@@ -93,6 +101,20 @@ describe MiqEvent do
       it "will not raise undefined event for classes that support policy" do
         expect(MiqAeEvent).not_to receive(:raise_evm_event)
         MiqEvent.raise_evm_event(@miq_server, "evm_server_start")
+      end
+
+      it "will create miq_event object with username" do
+        user = FactoryGirl.create(:user_with_group, :userid => "test")
+        vm = FactoryGirl.create(:vm_vmware)
+        event = 'request_vm_start'
+        FactoryGirl.create(:miq_event_definition, :name => event)
+
+        User.with_user(user) do
+          event_obj = MiqEvent.raise_evm_event(vm, event)
+          expect(event_obj.user_id).to eq(user.id)
+          expect(event_obj.group_id).to eq(user.current_group.id)
+          expect(event_obj.tenant_id).to eq(user.current_tenant.id)
+        end
       end
     end
 

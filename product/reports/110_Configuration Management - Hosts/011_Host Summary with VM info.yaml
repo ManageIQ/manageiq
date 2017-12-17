@@ -1,17 +1,17 @@
---- 
-where_clause: 
-dims: 
+---
+where_clause:
+dims:
 created_on: 2009-10-07 15:09:08.113000 Z
-reserved: 
+reserved:
 title: "Host Summary with VM info"
-conditions: 
+conditions:
 updated_on: 2009-10-07 15:09:08.113000 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Host Summary with VM info"
 rpt_group: Custom
 priority: 40
-col_order: 
+col_order:
 - host.name
 - name
 - power_state
@@ -19,30 +19,30 @@ col_order:
 - hardware.memory_mb
 timeline:
 id: 110
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
+filename:
 db_options: {}
 
-include: 
-  hardware: 
-    columns: 
+include:
+  hardware:
+    columns:
     - cpu_total_cores
     - memory_mb
   host:
     columns:
     - name
 db: Vm
-cols: 
+cols:
 - name
 - power_state
 template_type: report
 group: c
-sortby: 
+sortby:
 - host.name
 - name
-headers: 
+headers:
 - Host Name
 - Name
 - Power State

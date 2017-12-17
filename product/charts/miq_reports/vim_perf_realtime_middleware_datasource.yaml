@@ -53,7 +53,7 @@ headers:
 - Wait Time (max)
 
 # Condition expression for search filtering
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order: ascending
@@ -75,18 +75,18 @@ group: n
 #   StackedColumn
 #   StackedThreedColumn
 
-graph: 
+graph:
   :type: Line
   :columns:
-    - mw_ds_available_count
-    - mw_ds_in_use_count
-    - mw_ds_timed_out
-    - mw_ds_average_get_time
-    - mw_ds_average_creation_time
-    - mw_ds_max_wait_time
+  - mw_ds_available_count
+  - mw_ds_in_use_count
+  - mw_ds_timed_out
+  - mw_ds_average_get_time
+  - mw_ds_average_creation_time
+  - mw_ds_max_wait_time
 
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
-dims: 
+dims:
 
 template_type: report

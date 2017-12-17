@@ -1,25 +1,25 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-14 03:09:07.518263 Z
 title: "Registered VMs with Free Space < 35%"
-conditions: !ruby/object:MiqExpression 
-  exp: 
-    and: 
-    - <=: 
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - <=:
         field: Vm-v_pct_free_disk_space
         value: 35
-    - IS NOT EMPTY: 
+    - IS NOT EMPTY:
         field: Vm-v_pct_free_disk_space
         value: ""
-    - IS NOT EMPTY: 
+    - IS NOT EMPTY:
         field: Vm.host-name
 updated_on: 2008-08-14 03:09:07.518263 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Registered VMs with Free Space <35%"
 rpt_group: Custom
 priority: 284
-col_order: 
+col_order:
 - host.name
 - v_datastore_path
 - name
@@ -28,32 +28,32 @@ col_order:
 - hardware.disk_free_space
 - v_pct_free_disk_space
 - v_pct_used_disk_space
-timeline: 
+timeline:
 id: 128
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  hardware: 
-    columns: 
+filename:
+include:
+  hardware:
+    columns:
     - disk_capacity
     - disk_free_space
-  host: 
-    columns: 
+  host:
+    columns:
     - name
 db: Vm
-cols: 
+cols:
 - v_datastore_path
 - name
 - updated_on
 - v_pct_free_disk_space
 - v_pct_used_disk_space
 template_type: report
-group: 
-sortby: 
+group:
+sortby:
 - v_pct_free_disk_space
-headers: 
+headers:
 - Host Name
 - Datastore Path
 - VM Name

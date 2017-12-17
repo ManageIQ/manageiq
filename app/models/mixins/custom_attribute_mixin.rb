@@ -27,7 +27,7 @@ module CustomAttributeMixin
     end
 
     def self.custom_keys
-      custom_attr_scope = CustomAttribute.where(:resource_type => base_class).where.not(:name => nil).distinct.pluck(:name, :section)
+      custom_attr_scope = CustomAttribute.where(:resource_type => base_class.name).where.not(:name => nil).distinct.pluck(:name, :section)
       custom_attr_scope.map do |x|
         "#{x[0]}#{x[1] ? SECTION_SEPARATOR + x[1] : ''}"
       end
@@ -59,6 +59,11 @@ module CustomAttributeMixin
   def self.to_human(column)
     col_name, section = column.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, '').split(SECTION_SEPARATOR)
     _("%{section}: %{custom_key}") % { :custom_key => col_name, :section => section.try(:titleize) || DEFAULT_SECTION_NAME}
+  end
+
+  def self.column_name(custom_key)
+    return if custom_key.nil?
+    CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX + custom_key
   end
 
   def self.select_virtual_custom_attributes(cols)

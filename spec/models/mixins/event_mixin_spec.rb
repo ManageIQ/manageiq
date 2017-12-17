@@ -21,18 +21,18 @@ describe EventMixin do
     end
 
     it "#first_event" do
-      expect(test_class.new.first_event).to be_same_time_as @ts_1
+      expect(test_class.new.first_event).to be_within(0.1).of @ts_1
     end
 
     it "#last_event" do
-      expect(test_class.new.last_event).to  be_same_time_as @ts_3
+      expect(test_class.new.last_event).to  be_within(0.1).of @ts_3
     end
 
     it "#first_and_last_event" do
       events = test_class.new.first_and_last_event
       expect(events.length).to eq(2)
-      expect(events[0]).to     be_same_time_as @ts_1
-      expect(events[1]).to     be_same_time_as @ts_3
+      expect(events[0]).to     be_within(0.1).of @ts_1
+      expect(events[1]).to     be_within(0.1).of @ts_3
     end
 
     it "#has_events?" do

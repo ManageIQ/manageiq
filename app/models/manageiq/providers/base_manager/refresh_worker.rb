@@ -9,10 +9,9 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
     @friendly_name ||= begin
       ems = ext_management_system
       if ems.nil?
-        queue_name.titleize
+        queue_name.kind_of?(Array) ? queue_name.collect(&:titleize).join(", ") : queue_name.titleize
       else
-        _("Refresh Worker for %{table}: %{name}") % {:table => ui_lookup(:table => "ext_management_systems"),
-                                                     :name  => ems.name}
+        _("Refresh Worker for Provider: %{name}") % {:name => ems.name}
       end
     end
   end

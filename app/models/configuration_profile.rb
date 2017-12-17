@@ -41,6 +41,8 @@ class ConfigurationProfile < ApplicationRecord
   virtual_column  :customization_script_ptable_name,   :type => :string
   virtual_column  :operating_system_flavor_name,       :type => :string
 
+  scope :with_manager, ->(manager_id) { where(:manager_id => manager_id) }
+
   def configuration_architecture
     tag_hash[ConfigurationArchitecture]
   end

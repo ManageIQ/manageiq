@@ -48,8 +48,8 @@ Vmdb::Application.configure do
 
   # Any exception that gets past our ApplicationController's rescue_from
   # should just be raised intact
-  config.middleware.delete ::ActionDispatch::ShowExceptions
-  config.middleware.delete ::ActionDispatch::DebugExceptions
+  config.middleware.delete(::ActionDispatch::ShowExceptions)
+  config.middleware.delete(::ActionDispatch::DebugExceptions)
 
   # Customize any additional options below...
 

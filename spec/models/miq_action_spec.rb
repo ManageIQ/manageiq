@@ -170,7 +170,7 @@ describe MiqAction do
 
         expect(VmOrTemplate).to receive(:retire) do |vms, options|
           expect(vms).to eq([@vm])
-          expect(options[:date]).to be_same_time_as date
+          expect(options[:date]).to be_within(0.1).of(date)
         end
         @action.action_vm_retire(@action, @vm, input)
       end
@@ -215,6 +215,17 @@ describe MiqAction do
     it "avoids an event loop" do
       expect(container_image_registry).to receive(:scan).exactly(0).times
       action.action_container_image_analyze(action, container_image_registry, :event => event_loop)
+    end
+  end
+
+  context "#action_container_image_annotate_scan_results" do
+    let(:container_image) { FactoryGirl.create(:container_image) }
+    let(:event) { FactoryGirl.create(:miq_event_definition, :name => "whatever") }
+    let(:action) { FactoryGirl.create(:miq_action, :name => "container_image_annotate_deny_execution") }
+
+    it "will not annotate if the method is unavailable" do
+      expect(MiqQueue).to receive(:put).exactly(0).times
+      action.action_container_image_annotate_scan_results(action, container_image, :event => event)
     end
   end
 
@@ -371,13 +382,17 @@ describe MiqAction do
   end
 
   context 'validate action email should have correct type' do
-    it 'should generate a MiqAction invoking action_email' do
-      action = MiqAction.new
-      inputs = {
-        :policy      => nil,
-        :synchronous => false
-      }
-      q_options = {
+    before do
+      MiqRegion.seed
+      ServerRole.seed
+    end
+
+    let(:miq_server) { EvmSpecHelper.local_miq_server }
+    let(:action) { MiqAction.new }
+    let(:inputs) { { :policy => nil, :synchronous => false } }
+
+    let(:q_options) do
+      {
         :class_name  => "MiqAction",
         :method_name => "queue_email",
         :instance_id => nil,
@@ -386,8 +401,25 @@ describe MiqAction do
         :priority    => 20,
         :zone        => nil
       }
-      expect(MiqQueue).to receive(:put).with(q_options).once
-      action.action_email(action, nil, inputs)
+    end
+
+    context 'when notifier role is off' do
+      it 'is not generating a MiqAction invoking action_email' do
+        expect(MiqQueue).not_to receive(:put).with(q_options)
+        action.action_email(action, nil, inputs)
+      end
+    end
+
+    context 'when notifier role is on' do
+      before do
+        miq_server.server_roles << ServerRole.where(:name => 'notifier')
+        miq_server.save!
+      end
+
+      it 'should generate a MiqAction invoking action_email' do
+        expect(MiqQueue).to receive(:put).with(q_options).once
+        action.action_email(action, nil, inputs)
+      end
     end
   end
 

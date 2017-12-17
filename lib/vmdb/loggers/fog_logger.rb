@@ -8,7 +8,7 @@ module Vmdb::Loggers
         case name
         when "excon.request" then  [:debug, message_for_excon_request(params)]
         when "excon.response" then [:debug, message_for_excon_response(params)]
-        when "excon.error" then    [:error, message_for_excon_error(params)]
+        when "excon.error" then    [:debug, message_for_excon_error(params)]
         else                   [:debug, message_for_other(params)]
         end
 

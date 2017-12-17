@@ -42,7 +42,11 @@ module EmsRefresh::SaveInventoryCloud
     _log.info("#{log_header} Saving EMS Inventory...")
     if debug_trace
       require 'yaml'
-      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
+    end
+
+    if hashes[:tag_mapper]
+      ManagerRefresh::SaveInventory.save_inventory(ems, [hashes[:tag_mapper].tags_to_resolve_collection])
     end
 
     child_keys = [

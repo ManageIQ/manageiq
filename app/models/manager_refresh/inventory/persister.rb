@@ -21,6 +21,11 @@ class ManagerRefresh::Inventory::Persister
     initialize_inventory_collections
   end
 
+  # Persists InventoryCollection objects into the DB
+  def persist!
+    ManagerRefresh::SaveInventory.save_inventory(manager, inventory_collections)
+  end
+
   def self.supported_collections
     @supported_collections ||= Concurrent::Array.new
   end
@@ -56,7 +61,7 @@ class ManagerRefresh::Inventory::Persister
 
         if collection_options[:builder_params]
           collection_options[:builder_params] = collection_options[:builder_params].transform_values do |value|
-            if value.respond_to? :call
+            if value.respond_to?(:call)
               value.call(self)
             else
               value
@@ -105,6 +110,11 @@ class ManagerRefresh::Inventory::Persister
     # can be implemented in a subclass
   end
 
+  def shared_options
+    # can be implemented in a subclass
+    {}
+  end
+
   # Adds 1 ManagerRefresh::InventoryCollection under a target.collections using :association key as index
   #
   # @param options [Hash] Hash used for ManagerRefresh::InventoryCollection initialize
@@ -113,7 +123,7 @@ class ManagerRefresh::Inventory::Persister
 
     if options[:builder_params]
       options[:builder_params] = options[:builder_params].transform_values do |value|
-        if value.respond_to? :call
+        if value.respond_to?(:call)
           value.call(self)
         else
           value
@@ -131,7 +141,7 @@ class ManagerRefresh::Inventory::Persister
   # @param options [Hash] Hash used for ManagerRefresh::InventoryCollection initialize
   def add_inventory_collections(default, inventory_collections, options = {})
     inventory_collections.each do |inventory_collection|
-      add_inventory_collection(default.send(inventory_collection, options))
+      add_inventory_collection(shared_options.merge(default.send(inventory_collection, options)))
     end
   end
 

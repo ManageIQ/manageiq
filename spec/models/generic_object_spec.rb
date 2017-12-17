@@ -5,6 +5,7 @@ describe GenericObject do
   let(:data_read)      { 345.67 }
   let(:s_time)         { Time.now.utc }
   let(:vm1)            { FactoryGirl.create(:vm_vmware) }
+  let(:user)           { FactoryGirl.create(:user_with_group) }
 
   let(:definition) do
     FactoryGirl.create(
@@ -65,7 +66,7 @@ describe GenericObject do
         expect(go.data_read).to                 eq(data_read)
         expect(go.max_number).to                eq(max_number)
         expect(go.server).to                    eq(server_name)
-        expect(go.s_time).to                    be_same_time_as(s_time).with_precision(2)
+        expect(go.s_time).to                    be_within(0.001).of s_time
       end
 
       it "can be set as an attribute" do
@@ -88,7 +89,7 @@ describe GenericObject do
         }
         go.save!
 
-        expect(go.property_attributes['s_time']).to be_same_time_as(s_time - 2.days).with_precision(2)
+        expect(go.property_attributes['s_time']).to be_within(0.001).of (s_time - 2.days)
         expect(go.property_attributes).to include(
           "flag"       => false,
           "data_read"  => data_read + 100.50,
@@ -159,11 +160,19 @@ describe GenericObject do
       go_assoc.save!
       expect(go_assoc.vms.count).to eq(1)
     end
+
+    it 'method returns all associations' do
+      host = FactoryGirl.create(:host)
+      go_assoc.hosts = [host]
+
+      result = go_assoc.property_associations
+      expect(result["vms"]).to match_array([vm1, vm2])
+      expect(result["hosts"]).to match_array([host])
+    end
   end
 
   describe 'property methods' do
     let(:ws)   { double("MiqAeWorkspaceRuntime", :root => {"method_result" => "some_return_value"}) }
-    let(:user) { FactoryGirl.create(:user_with_group) }
 
     before { go.ae_user_identity(user) }
 
@@ -219,6 +228,129 @@ describe GenericObject do
     it 'returns value from automate' do
       allow(MiqAeEngine).to receive(:deliver).and_return(ws)
       expect(go.my_host).to eq("some_return_value")
+    end
+  end
+
+  describe 'property methods without user set' do
+    it 'will set the current user' do
+      workspace = double("MiqAeWorkspaceRuntime", :root => {"method_result" => "result"})
+
+      options = {
+        :user_id      => user.id,
+        :miq_group_id => user.current_group.id,
+        :tenant_id    => user.current_tenant.id
+      }
+      expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(workspace)
+      User.with_user_group(user, user.current_group) { go.my_host }
+    end
+  end
+
+  describe '#delete_property' do
+    it 'an attriute' do
+      max = go.max_number
+      expect(go.delete_property("max_number")).to eq(max)
+      expect(go.max_number).to be_nil
+    end
+
+    it 'an association' do
+      vm2 = FactoryGirl.create(:vm_vmware)
+      go.vms = [vm1, vm2]
+      expect(go.delete_property("vms")).to match_array([vm1, vm2])
+      expect(go.vms).to be_empty
+    end
+
+    it 'a method' do
+      expect { go.delete_property("my_host") }.to raise_error(RuntimeError)
+    end
+
+    it 'an invalid property name' do
+      expect { go.delete_property("some_attribute_not_defined") }.to raise_error(RuntimeError)
+    end
+  end
+
+  describe '#add_to_property_association' do
+    let(:new_vm) { FactoryGirl.create(:vm_vmware) }
+    subject { go.add_to_property_association("vms", vm1) }
+
+    it 'adds objects into association' do
+      subject
+      expect(go.vms.count).to eq(1)
+
+      go.add_to_property_association(:vms, [new_vm])
+      expect(go.vms.count).to eq(2)
+    end
+
+    it 'does not add duplicate object' do
+      subject
+      expect(go.vms.count).to eq(1)
+
+      subject
+      expect(go.vms.count).to eq(1)
+    end
+
+    it 'does not add object from differnt class' do
+      go.add_to_property_association("vms", FactoryGirl.create(:host))
+      expect(go.vms.count).to eq(0)
+    end
+
+    it 'does not accept object id' do
+      go.add_to_property_association(:vms, new_vm.id)
+      expect(go.vms.count).to eq(0)
+    end
+  end
+
+  describe '#delete_from_property_association' do
+    before { go.add_to_property_association("vms", [vm1]) }
+    let(:new_vm) { FactoryGirl.create(:vm_vmware) }
+
+    it 'deletes objects from association' do
+      result = go.delete_from_property_association(:vms, [vm1])
+      expect(go.vms.count).to eq(0)
+      expect(result).to match_array([vm1])
+    end
+
+    it 'does not delete object that is not in association' do
+      expect(go.vms.count).to eq(1)
+      result = go.delete_from_property_association(:vms, [new_vm])
+      expect(go.vms).to match_array([vm1])
+      expect(result).to be_nil
+    end
+
+    it 'does not delete object from differnt class' do
+      result = go.delete_from_property_association(:vms, [FactoryGirl.create(:host)])
+      expect(go.vms).to match_array([vm1])
+      expect(result).to be_nil
+    end
+
+    it 'does not accept object id' do
+      expect(go.delete_from_property_association(:vms, vm1.id)).to be_nil
+    end
+  end
+
+  describe '#add_to_service' do
+    let(:service) { FactoryGirl.create(:service) }
+
+    it 'associates the generic object to the service' do
+      go.add_to_service(service)
+      expect(service.reload.generic_objects).to include(go)
+    end
+
+    it 'can associate to multiple services' do
+      go.add_to_service(FactoryGirl.create(:service))
+      go.add_to_service(service)
+      expect(service.reload.generic_objects).to include(go)
+    end
+  end
+
+  describe '#remove_from_service' do
+    let(:service) { FactoryGirl.create(:service) }
+
+    it 'removes the generic object from the service' do
+      go.add_to_service(service)
+      expect(service.generic_objects).to include(go)
+
+      go.remove_from_service(service)
+      expect(service.generic_objects).to be_blank
     end
   end
 end

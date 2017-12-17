@@ -3,7 +3,6 @@ describe MiqQueueWorkerBase::Runner do
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:worker) { FactoryGirl.create(:miq_generic_worker, :miq_server => server, :pid => 123) }
     let(:runner) do
-      allow_any_instance_of(MiqQueueWorkerBase::Runner).to receive(:sync_active_roles)
       allow_any_instance_of(MiqQueueWorkerBase::Runner).to receive(:sync_config)
       allow_any_instance_of(MiqQueueWorkerBase::Runner).to receive(:set_connection_pool_size)
       described_class.new(:guid => worker.guid)

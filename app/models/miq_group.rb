@@ -36,11 +36,25 @@ class MiqGroup < ApplicationRecord
   include ActiveVmAggregationMixin
   include TimezoneMixin
   include TenancyMixin
+  include CustomActionsMixin
 
   alias_method :current_tenant, :tenant
 
   def name
     description
+  end
+
+  def settings
+    current = super
+    return if current.nil?
+
+    self.settings = current.with_indifferent_access
+    super
+  end
+
+  def settings=(new_settings)
+    indifferent_settings = new_settings.try(:with_indifferent_access)
+    super(indifferent_settings)
   end
 
   def self.with_allowed_roles_for(user_or_group)
@@ -60,15 +74,19 @@ class MiqGroup < ApplicationRecord
     ldap_to_filters = filter_map_file.exist? ? YAML.load_file(filter_map_file) : {}
     root_tenant = Tenant.root_tenant
 
+    groups = where(:group_type => SYSTEM_GROUP, :tenant_id => Tenant.root_tenant)
+               .includes(:entitlement).index_by(&:description)
+    roles  = MiqUserRole.where("name like 'EvmRole-%'").index_by(&:name)
+
     role_map.each_with_index do |(group_name, role_name), index|
-      group = find_by(:description => group_name) || new(:description => group_name)
-      user_role = MiqUserRole.find_by(:name => "EvmRole-#{role_name}")
+      group = groups[group_name] || new(:description => group_name)
+      user_role = roles["EvmRole-#{role_name}"]
       if user_role.nil?
         raise StandardError,
               _("Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'") %
                 {:role_name => role_name, :group_name => group_name}
       end
-      group.miq_user_role       = user_role
+      group.miq_user_role       = user_role if group.entitlement.try(:miq_user_role_id) != user_role.id
       group.sequence            = index + 1
       group.entitlement.filters = ldap_to_filters[group_name]
       group.group_type          = SYSTEM_GROUP
@@ -114,13 +132,21 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.get_httpd_groups_by_user(user)
+    if MiqEnvironment::Command.is_container?
+      get_httpd_groups_by_user_via_dbus_api_service(user)
+    else
+      get_httpd_groups_by_user_via_dbus(user)
+    end
+  end
+
+  def self.get_httpd_groups_by_user_via_dbus(user)
     require "dbus"
 
     username = user.kind_of?(self) ? user.userid : user
 
     sysbus = DBus.system_bus
     ifp_service   = sysbus["org.freedesktop.sssd.infopipe"]
-    ifp_object    = ifp_service.object "/org/freedesktop/sssd/infopipe"
+    ifp_object    = ifp_service.object("/org/freedesktop/sssd/infopipe")
     ifp_object.introspect
     ifp_interface = ifp_object["org.freedesktop.sssd.infopipe"]
     begin
@@ -129,6 +155,13 @@ class MiqGroup < ApplicationRecord
       raise _("Unable to get groups for user %{user_name} - %{error}") % {:user_name => username, :error => err}
     end
     strip_group_domains(user_groups.first)
+  end
+
+  def self.get_httpd_groups_by_user_via_dbus_api_service(user)
+    require_dependency "httpd_dbus_api"
+
+    groups = HttpdDBusApi.new.user_groups(user)
+    strip_group_domains(groups)
   end
 
   def get_filters(type = nil)
@@ -148,7 +181,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def miq_user_role_name
-    miq_user_role.nil? ? nil : miq_user_role.name
+    miq_user_role.try(:name)
   end
 
   def system_group?

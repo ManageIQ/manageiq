@@ -1,4 +1,3 @@
-
 module ManageIQ::Providers
   class StorageManager::CinderManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
     require_nested "CrossLinkers"
@@ -59,8 +58,8 @@ module ManageIQ::Providers
     end
 
     def parse_backup(backup)
-      _log.debug "backup['size'] = #{backup['size']}"
-      _log.debug "backup['size'].to_i.gigabytes = #{backup['size'].to_i.gigabytes}"
+      _log.debug("backup['size'] = #{backup['size']}")
+      _log.debug("backup['size'].to_i.gigabytes = #{backup['size'].to_i.gigabytes}")
       uid = backup['id']
       new_result = {
         :ems_ref               => uid,
@@ -106,15 +105,13 @@ module ManageIQ::Providers
     end
 
     def parse_volume(volume)
-      log_header = "MIQ(#{self.class.name}.#{__method__})"
-
       uid = volume.id
       new_result = {
         :ems_ref       => uid,
         # TODO: has its own CloudVolume?
         # TODO: These classes should not be OpenStack specific, but rather Cinder-specific.
         :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
-        :name          => volume_name(volume),
+        :name          => volume_name(volume).blank? ? volume.id : volume_name(volume),
         :status        => volume.status,
         :bootable      => volume.attributes['bootable'],
         :creation_time => volume.created_at,

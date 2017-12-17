@@ -133,7 +133,7 @@ describe GenericMailer do
   it "call blob_to_attachment and attachment_to_blob" do
     @args[:attachment] = [{:content_type => "application/txt", :filename => "generic_mailer_test.txt", :body => "maryhadalittlelamb" * 10}]
     expect(BinaryBlob.count).to eq(0)
-    atob_attachment = GenericMailer.attachment_to_blob(@args[:attachment])
+    GenericMailer.attachment_to_blob(@args[:attachment])
     expect(BinaryBlob.count).to eq(1)
     btoa_attachment = GenericMailer.blob_to_attachment(@args[:attachment])
     expect(btoa_attachment[0][:filename]).to eq("generic_mailer_test.txt")
@@ -146,7 +146,7 @@ describe GenericMailer do
                           {:content_type => "application/txt", :filename => nil, :body => "itsfleecewaswhiteassnow" * 10}]
     expect(@args[:attachment][0][:filename]).to be_nil
     expect(BinaryBlob.count).to eq(0)
-    atob_attachment = GenericMailer.attachment_to_blob(@args[:attachment])
+    GenericMailer.attachment_to_blob(@args[:attachment])
     expect(BinaryBlob.count).to eq(2)
     btoa_attachment = GenericMailer.blob_to_attachment(@args[:attachment])
     expect(btoa_attachment[0][:filename]).to eq("evm_attachment_1")
@@ -159,7 +159,7 @@ describe GenericMailer do
     @args[:attachment] = [{:content_type => "application/txt", :filename => "maryhadalittlelamb.txt", :body => "maryhadalittlelamb" * 10},
                           {:content_type => "application/txt", :filename => "itsfleecewaswhiteassnow.txt", :body => "itsfleecewaswhiteassnow" * 10}]
     expect(BinaryBlob.count).to eq(0)
-    atob_attachment = GenericMailer.attachment_to_blob(@args[:attachment])
+    GenericMailer.attachment_to_blob(@args[:attachment])
     expect(BinaryBlob.count).to eq(2)
     btoa_attachment = GenericMailer.blob_to_attachment(@args[:attachment])
     expect(btoa_attachment[0][:filename]).to eq("maryhadalittlelamb.txt")
@@ -213,7 +213,7 @@ describe GenericMailer do
 
   describe "#test_mail" do
     it "should be called directly" do
-      mail = GenericMailer.test_email(@args[:to], settings = {})
+      mail = GenericMailer.test_email(@args[:to], {})
       expect(mail.subject).to start_with I18n.t("product.name")
     end
 

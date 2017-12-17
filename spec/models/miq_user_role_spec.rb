@@ -1,6 +1,6 @@
 describe MiqUserRole do
   before do
-    @expected_user_role_count = 17
+    @expected_user_role_count = 18
   end
 
   context ".seed" do
@@ -24,7 +24,7 @@ describe MiqUserRole do
 
       expect(MiqUserRole.count).to eq(@expected_user_role_count + 1)
       expect(changed.reload.read_only).to    be_truthy
-      expect(unchanged.reload.updated_at).to be_same_time_as unchanged_orig_updated_at
+      expect(unchanged.reload.updated_at).to be_within(0.1).of(unchanged_orig_updated_at)
     end
 
     it "fills up EvmRole-consumption_administrator role with 3 product features" do

@@ -1,4 +1,19 @@
 describe MiqGroup do
+  describe "#settings" do
+    subject { FactoryGirl.create(:miq_group) }
+
+    it "returns a HashWithIndifferentAccess" do
+      subject.settings = {:a => 1}
+      expect(subject.settings["a"]).to eq(1)
+    end
+
+    it "returns the same object" do
+      subject.settings = {}
+      subject.settings[:a] = 1
+      expect(subject.settings[:a]).to eq(1)
+    end
+  end
+
   context "as a Super Administrator" do
     subject { FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator") }
 
@@ -80,7 +95,7 @@ describe MiqGroup do
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(memberships)
 
-      expect(MiqGroup.get_httpd_groups_by_user('user')).to eq(memberships.first)
+      expect(MiqGroup.get_httpd_groups_by_user_via_dbus('user')).to eq(memberships.first)
     end
 
     it "should remove FQDN from the groups by user name with external authentication" do
@@ -89,7 +104,7 @@ describe MiqGroup do
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(ifp_memberships)
 
-      expect(MiqGroup.get_httpd_groups_by_user('user')).to eq(memberships.first)
+      expect(MiqGroup.get_httpd_groups_by_user_via_dbus('user')).to eq(memberships.first)
     end
   end
 
@@ -299,7 +314,7 @@ describe MiqGroup do
     let(:group) { FactoryGirl.create(:miq_group) }
     it "uses dashboard_order if present" do
       ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
-      ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
       group.update_attributes(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
 
@@ -311,6 +326,15 @@ describe MiqGroup do
       ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
       expect(group.ordered_widget_sets).to eq([ws1, ws3, ws2])
+    end
+
+    it "works when settings use strings" do
+      ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
+      _ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
+      ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
+      group.update_attributes(:settings => {"dashboard_order" => [ws3.id.to_s, ws1.id.to_s]})
+
+      expect(group.ordered_widget_sets).to eq([ws3, ws1])
     end
   end
 

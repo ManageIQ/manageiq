@@ -19,10 +19,37 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
-  def measure(consumption)
+  def showback_measure
+    group
+  end
+
+  def showback_dimension
+    metric_index = VIRTUAL_COL_USES.invert[metric] || metric
+    {'cpu_usagemhz_rate_average'         => ['cpu_usagemhz_rate_average', '', 'duration'],
+     "v_derived_cpu_total_cores_used"    => ['v_derived_cpu_total_cores_used', 'THz', 'duration'],
+     "derived_vm_numvcpus"               => ['derived_vm_numvcpus', '', 'duration'],
+     "derived_memory_used"               => ['derived_memory_used', 'Gi', 'duration'],
+     "derived_memory_available"          => ['derived_memory_available', 'B', 'duration'],
+     "metering_used_hours"               => ['metering_used_hours', '', 'quantity'],
+     "net_usage_rate_average"            => ['net_usage_rate_average', '', 'duration'],
+     "disk_usage_rate_average"           => ['disk_usage_rate_average', '', 'duration'],
+     "fixed_compute_1"                   => ['fixed_compute_1', '', 'occurrence'],
+     "fixed_compute_2"                   => ['fixed_compute_2', '', 'occurrence'],
+     "derived_vm_allocated_disk_storage" => ['derived_vm_allocated_disk_storage', 'Gi', 'duration'],
+     "derived_vm_used_disk_storage"      => ['derived_vm_used_disk_storage', 'Gi', 'duration'],
+     "fixed_storage_1"                   => ['fixed_storage_1', '', 'occurrence'],
+     "fixed_storage_2"                   => ['fixed_storage_2', '', 'occurrence']}[metric_index]
+  end
+
+  def measure_metering(consumption, options, sub_metric = nil)
+    used? ? consumption.sum(metric) : measure(consumption, options, sub_metric)
+  end
+
+  def measure(consumption, options, sub_metric = nil)
+    return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?
-    return 0 if consumption.none?(metric)
-    return consumption.max(metric) if allocated?
+    return 0 if options.method_for_allocated_metrics != :current_value && consumption.none?(metric)
+    return consumption.send(options.method_for_allocated_metrics, metric, sub_metric) if allocated?
     return consumption.avg(metric) if used?
   end
 
@@ -35,14 +62,19 @@ class ChargeableField < ApplicationRecord
     UNITS[metric] ? detail_measure.adjust(target_unit, UNITS[metric]) : 1
   end
 
-  def metric_key
-    "#{rate_name}_metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
+  def metric_key(sub_metric = nil)
+    "#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
-  def cost_keys
-    ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
-     "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
-     'total_cost']
+  def cost_keys(sub_metric = nil)
+    keys = ["#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}cost", # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
+            'total_cost']
+
+    sub_metric ? keys : keys + ["#{group}_cost"] # cost associated with metric's group (e.g. Storage Total Cost)
+  end
+
+  def metering?
+    group == 'metering' && source == 'used'
   end
 
   private

@@ -17,7 +17,7 @@ module VMDB
       def activate
         raise "configuration invalid, see errors for details" unless Validator.new(@config).valid?
 
-        @config.each_key do|k|
+        @config.each_key do |k|
           if respond_to?(k.to_s, true)
             _log.debug("Activating #{k}")
             ost = OpenStruct.new(@config[k].stringify_keys)
@@ -33,8 +33,8 @@ module VMDB
       end
 
       def session(data)
-        Session.timeout data.timeout
-        Session.interval data.interval
+        Session.timeout(data.timeout)
+        Session.interval(data.interval)
       end
 
       def server(data)

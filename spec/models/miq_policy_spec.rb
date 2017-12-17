@@ -6,11 +6,11 @@ describe MiqPolicy do
     # calling conditions.
 
     before(:each) do
-      @ps = FactoryGirl.create(:miq_policy_set)
+      @ps = FactoryGirl.create(:miq_policy_set, :name => "ps")
       @p  = FactoryGirl.create(:miq_policy)
       @ps.add_member(@p)
 
-      @ps2 = FactoryGirl.create(:miq_policy_set)
+      @ps2 = FactoryGirl.create(:miq_policy_set, :name => "ps2")
       @p2  = FactoryGirl.create(:miq_policy)
     end
 
@@ -159,8 +159,8 @@ describe MiqPolicy do
 
     let(:profiles) do
       [
-        FactoryGirl.create(:miq_policy_set).tap { |pf| pf.add_member(policies[0]) },
-        FactoryGirl.create(:miq_policy_set).tap { |pf| pf.add_member(policies[1]) },
+        FactoryGirl.create(:miq_policy_set, :name => "ps3").tap { |pf| pf.add_member(policies[0]) },
+        FactoryGirl.create(:miq_policy_set, :name => "ps4").tap { |pf| pf.add_member(policies[1]) },
       ]
     end
 

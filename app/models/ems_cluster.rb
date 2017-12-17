@@ -4,6 +4,7 @@ class EmsCluster < ApplicationRecord
   include_concern 'CapacityPlanning'
   include EventMixin
   include TenantIdentityMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -17,7 +18,7 @@ class EmsCluster < ApplicationRecord
   has_many    :metric_rollups,         :as => :resource  # Destroy will be handled by purger
   has_many    :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_many    :policy_events, -> { order "timestamp" }
+  has_many    :policy_events, -> { order("timestamp") }
   has_many    :miq_events,         :as => :target,   :dependent => :destroy
   has_many    :miq_alert_statuses, :as => :resource, :dependent => :destroy
 
@@ -207,13 +208,18 @@ class EmsCluster < ApplicationRecord
   end
 
   def scan
-    zone = ext_management_system ? ext_management_system.my_zone : nil
-    MiqQueue.put(:class_name => self.class.to_s, :method_name => "save_drift_state", :instance_id => id, :zone => zone, :role => "smartstate")
+    MiqQueue.submit_job(
+      :service     => "smartstate",
+      :affinity    => ext_management_system,
+      :class_name  => self.class.to_s,
+      :method_name => "save_drift_state",
+      :instance_id => id,
+    )
   end
 
   def get_reserve(field)
     rp = default_resource_pool
-    rp.nil? ? nil : rp.send(field)
+    rp && rp.send(field)
   end
 
   def cpu_reserve
@@ -253,10 +259,10 @@ class EmsCluster < ApplicationRecord
 
     cl_hash.each do |_k, v|
       hosts = hosts_by_id.values_at(*v[:ho_ids]).compact
-      unless hosts.empty?
-        v[:ho_enabled], v[:ho_disabled] = hosts.partition(&:perf_capture_enabled?)
-      else
+      if hosts.empty?
         v[:ho_enabled] = v[:ho_disabled] = []
+      else
+        v[:ho_enabled], v[:ho_disabled] = hosts.partition(&:perf_capture_enabled?)
       end
     end
 
@@ -286,7 +292,7 @@ class EmsCluster < ApplicationRecord
 
     with_provider_object do |vim_cluster|
       begin
-        _log.info "Invoking addHost with options: address => #{network_address}, #{userid}"
+        _log.info("Invoking addHost with options: address => #{network_address}, #{userid}")
         host_mor = vim_cluster.addHost(network_address, userid, password)
       rescue VimFault => verr
         fault = verr.vimFaultInfo.fault
@@ -294,7 +300,7 @@ class EmsCluster < ApplicationRecord
         raise unless fault.xsiType == "SSLVerifyFault"
 
         ssl_thumbprint = fault.thumbprint
-        _log.info "Invoking addHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
+        _log.info("Invoking addHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}")
         host_mor = vim_cluster.addHost(network_address, userid, password, :sslThumbprint => ssl_thumbprint)
       end
 

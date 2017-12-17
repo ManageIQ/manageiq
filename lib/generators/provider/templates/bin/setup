@@ -9,4 +9,4 @@ unless gem_root.join("spec/manageiq").exist?
 end
 
 require gem_root.join("spec/manageiq/lib/manageiq/environment").to_s
-ManageIQ::Environment.manageiq_plugin_setup
+ManageIQ::Environment.manageiq_plugin_setup(gem_root)

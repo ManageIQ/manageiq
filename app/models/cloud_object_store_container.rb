@@ -10,6 +10,7 @@ class CloudObjectStoreContainer < ApplicationRecord
   include NewWithTypeStiMixin
   include ProcessTasksMixin
   include SupportsFeatureMixin
+  include CustomActionsMixin
 
   include_concern 'Operations'
 

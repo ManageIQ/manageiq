@@ -81,11 +81,12 @@ class EvmApplication
        s.drb_uri,
        s.started_on && s.started_on.iso8601,
        s.last_heartbeat && s.last_heartbeat.iso8601,
+       (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
        s.is_master,
        s.active_role_names.join(':'),
       ]
     end
-    header = ["Zone", "Server", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "Master?", "Active Roles"]
+    header = ["Zone", "Server", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "MB Usage", "Master?", "Active Roles"]
     puts data.unshift(header).tableize
   end
 
@@ -95,7 +96,7 @@ class EvmApplication
       s.miq_workers.order(:type).each do |w|
         data <<
           [w.type,
-           w.status,
+           w.status.sub("stopping", "stop pending"),
            w.id,
            w.pid,
            w.sql_spid,
@@ -103,7 +104,7 @@ class EvmApplication
            w.queue_name || w.uri,
            w.started_on && w.started_on.iso8601,
            w.last_heartbeat && w.last_heartbeat.iso8601,
-           (mem = (w.proportional_set_size || w.memory_usage)).nil? ? "" : mem / 1.megabyte]
+           (mem = (w.unique_set_size || w.memory_usage)).nil? ? "" : mem / 1.megabyte]
       end
     end
 

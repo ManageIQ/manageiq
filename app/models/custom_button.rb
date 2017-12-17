@@ -2,7 +2,8 @@ class CustomButton < ApplicationRecord
   has_one :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
   serialize :options
-  serialize :applies_to_exp
+  serialize :visibility_expression
+  serialize :enablement_expression
   serialize :visibility
 
   validates :applies_to_class, :presence => true
@@ -12,14 +13,39 @@ class CustomButton < ApplicationRecord
   include UuidMixin
   acts_as_miq_set_member
 
+  TYPES = { "default"          => "Default",
+            "ansible_playbook" => "Ansible Playbook"}.freeze
+
+  PLAYBOOK_METHOD = "Order_Ansible_Playbook".freeze
+
   BUTTON_CLASSES = [
+    AvailabilityZone,
+    CloudNetwork,
+    CloudObjectStoreContainer,
+    CloudSubnet,
     CloudTenant,
+    CloudVolume,
+    ContainerGroup,
+    ContainerImage,
+    ContainerNode,
+    ContainerProject,
+    ContainerTemplate,
+    ContainerVolume,
     EmsCluster,
     ExtManagementSystem,
+    GenericObject,
     Host,
+    LoadBalancer,
+    MiqGroup,
     MiqTemplate,
+    NetworkRouter,
+    OrchestrationStack,
+    SecurityGroup,
     Service,
     Storage,
+    Switch,
+    Tenant,
+    User,
     Vm,
   ].freeze
 
@@ -132,6 +158,19 @@ class CustomButton < ApplicationRecord
   def get_resource_action
     resource_action || build_resource_action
   end
+
+  def evaluate_enablement_expression_for(object)
+    return true unless enablement_expression
+    return false if enablement_expression && !object # list
+    enablement_expression.lenient_evaluate(object)
+  end
+
+  def evaluate_visibility_expression_for(object)
+    return true unless visibility_expression
+    return false if visibility_expression && !object # object == nil, method is called for list of objects
+    visibility_expression.lenient_evaluate(object)
+  end
+
   # End - Helper methods to support moving automate columns to resource_actions table
 
   def self.parse_uri(uri)
@@ -143,13 +182,9 @@ class CustomButton < ApplicationRecord
     BUTTON_CLASSES.collect(&:name)
   end
 
-  def self.available_for_user(user, group)
-    user = get_user(user)
-    role = user.miq_user_role_name
-    # Return all automation uri's that has his role or is allowed for all roles.
-    all.to_a.select do |uri|
-      uri.parent && uri.parent.name == group && uri.visibility.key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?("_ALL_"))
-    end
+  def visible_for_current_user?
+    return false unless visibility.key?(:roles)
+    visibility[:roles].include?(User.current_user.miq_user_role_name) || visibility[:roles].include?("_ALL_")
   end
 
   def self.get_user(user)

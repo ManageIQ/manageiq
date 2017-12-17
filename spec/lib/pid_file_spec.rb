@@ -40,8 +40,8 @@ describe PidFile do
       @pid_file.remove
     end
 
-    it "deletes when file does exist" do
-      allow(File).to receive(:file?).with(@fname).and_return(true)
+    it "deletes when file exist and is our process" do
+      allow(@pid_file).to receive(:pid).and_return(Process.pid)
       expect(FileUtils).to receive(:rm).with(@fname).once
       @pid_file.remove
     end

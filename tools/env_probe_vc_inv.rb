@@ -31,11 +31,11 @@ def log(level, msg)
 end
 
 def vim_vc_connect
-  log :info, "Connecting to EMS: [#{VC_IP}], as [#{VC_USER}]..."
+  log(:info, "Connecting to EMS: [#{VC_IP}], as [#{VC_USER}]...")
   @vc_data = {}
   @vi = nil
   @vi = MiqVim.new(VC_IP, VC_USER, VC_PASS)
-  log :info, "Connecting to EMS: [#{VC_IP}], as [#{VC_USER}]... Complete"
+  log(:info, "Connecting to EMS: [#{VC_IP}], as [#{VC_USER}]... Complete")
 end
 
 def vim_vc_inv_hash
@@ -46,40 +46,40 @@ end
 
 # verify we are in the vmdb directory
 unless File.exist?('app')
-  log :error, "Please run this script using 'script/runner perf_environment.rb' from vmdb directory"
+  log(:error, "Please run this script using 'script/runner perf_environment.rb' from vmdb directory")
   exit 1
 end
 
-log :info, "Running EMS Inventory tests..."
+log(:info, "Running EMS Inventory tests...")
 
-log :info, "EMS Host: #{VC_IP}"
-log :info, "EMS User: #{VC_USER}"
+log(:info, "EMS Host: #{VC_IP}")
+log(:info, "EMS User: #{VC_USER}")
 
-log :info, "Process stats: #{MiqProcess.processInfo.inspect}"
+log(:info, "Process stats: #{MiqProcess.processInfo.inspect}")
 
 begin
   t0 = Time.now
   vc_data = {}
-  con = vim_vc_connect
-  inv = vim_vc_inv_hash
-  log :info, "Requesting inventory accessors..."
+  vim_vc_connect
+  vim_vc_inv_hash
+  log(:info, "Requesting inventory accessors...")
   VC_ACCESSORS.each do |acc, type|
     inv_hash = @vi.send(acc)
     vc_data[type] = inv_hash
   end
 rescue => err
-  log :error, err
+  log(:error, err)
   exit 1
 end
 
-log :info, "Running EMS Inventory tests... Complete, Elapsed time: [#{Time.now.to_i - t0.to_i} seconds]"
-log :info, "EMS Inventory summary: " + vc_data.collect { |k, v| k.to_s << "=>" << v.length.to_s }.inspect
-log :info, "Process stats: #{MiqProcess.processInfo.inspect}"
+log(:info, "Running EMS Inventory tests... Complete, Elapsed time: [#{Time.now.to_i - t0.to_i} seconds]")
+log(:info, "EMS Inventory summary: " + vc_data.collect { |k, v| k.to_s << "=>" << v.length.to_s }.inspect)
+log(:info, "Process stats: #{MiqProcess.processInfo.inspect}")
 
-log :info, "Writing inventory to #{inv_yml}..."
+log(:info, "Writing inventory to #{inv_yml}...")
 $yml_fd.write(YAML.dump(vc_data))
 $yml_fd.close
 
-log :info, "Done"
+log(:info, "Done")
 
 exit 0

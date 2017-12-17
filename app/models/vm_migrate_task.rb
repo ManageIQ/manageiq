@@ -61,7 +61,7 @@ class VmMigrateTask < MiqRequestTask
                   :migrate
                 end
 
-    _log.warn "Calling VM #{vc_method} for #{vm.id}:#{vm.name}"
+    _log.warn("Calling VM #{vc_method} for #{vm.id}:#{vm.name}")
     if vc_method == :migrate
       vm.migrate(host, respool)
     else

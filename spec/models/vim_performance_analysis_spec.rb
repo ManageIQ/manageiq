@@ -48,7 +48,6 @@ RSpec.describe VimPerformanceAnalysis do
 
       # currently, only vms have data, but only host data is returned
       results = VimPerformanceAnalysis.find_child_perf_for_time_period(ems, "daily", options)
-      # expect(results).not_to be_empty
       VimPerformanceAnalysis.group_perf_by_timestamp(ems, results, cols)
 
       # for now, we're just content that it did not blow up
@@ -73,13 +72,6 @@ RSpec.describe VimPerformanceAnalysis do
       end
     end
   end
-
-  # describe ".child_tags_over_time_period" do
-  #   it "returns only tagged nodes" do
-  #     good_vm = FactoryGirl.create(:vm_vmware, :tags => [tag_good])
-  #     bad_vm  = FactoryGirl.create(:vm_vmware, :tags => [tag_bad])
-  #   end
-  # end
 
   describe ".get_daily_perf" do
     it "should not raise an error" do

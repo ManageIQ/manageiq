@@ -34,7 +34,8 @@ module Metric::Processing
     EmsCluster,
     ExtManagementSystem,
     MiqRegion,
-    MiqEnterprise
+    MiqEnterprise,
+    Service
   ]
 
   def self.process_derived_columns(obj, attrs, ts = nil)
@@ -53,7 +54,8 @@ module Metric::Processing
     have_mem_metrics = attrs[:mem_usage_absolute_average] || attrs[:derived_memory_used]
 
     DERIVED_COLS.each do |col|
-      dummy, group, typ, mode = col.to_s.split("_")
+      _dummy, group, typ, mode = col.to_s.split("_")
+      next if group == "vm" && obj.kind_of?(Service) && typ != "count"
       case typ
       when "available"
         # Do not derive "available" values if there haven't been any usage

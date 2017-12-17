@@ -2,8 +2,6 @@
 #
 
 class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::StorageManager
-  require_nested :EventCatcher
-  require_nested :EventParser
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
@@ -54,6 +52,10 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
     @description ||= "Cinder ".freeze
   end
 
+  def name
+    "#{parent_manager.try(:name)} Cinder Manager"
+  end
+
   def supports_api_version?
     true
   end
@@ -64,9 +66,5 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
 
   def supports_provider_id?
     true
-  end
-
-  def self.event_monitor_class
-    ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
   end
 end

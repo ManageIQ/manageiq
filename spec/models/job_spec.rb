@@ -145,10 +145,10 @@ describe Job do
       end
 
       it "should be able to find Job from Evm Snapshot" do
-        job_guid, ts = Snapshot.parse_evm_snapshot_description(@snapshot.description)
+        job_guid, _ts = Snapshot.parse_evm_snapshot_description(@snapshot.description)
         expect(Job.find_by(:guid => job_guid)).to eq(@job)
 
-        job_guid, ts = Snapshot.parse_evm_snapshot_description(@snapshot2.description)
+        job_guid, _ts = Snapshot.parse_evm_snapshot_description(@snapshot2.description)
         expect(Job.find_by(:guid => job_guid)).to eq(@job2)
       end
 
@@ -270,6 +270,11 @@ describe Job do
         it "returns the correct adjusment" do
           expect(@job.timeout_adjustment).to eq(1)
           expect(@image_scan_job.timeout_adjustment).to eq(1)
+        end
+
+        it "returns the correct adjusment 1 if target class was not defined" do
+          job_without_target = Job.create_job("VmScan", :target_class => nil)
+          expect(job_without_target.timeout_adjustment).to eq(1)
         end
       end
     end

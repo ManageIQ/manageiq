@@ -13,9 +13,10 @@ class Filesystem < ApplicationRecord
   virtual_column :contents,           :type => :string,  :uses => {:binary_blob => :binary_blob_parts}
   virtual_column :contents_available, :type => :boolean, :uses => :binary_blob
 
-  def self.host_service_group_condition(host_service_group_id)
-    arel_table[:host_service_group_id].eq(host_service_group_id)
-  end
+  scope :host_service_group_filesystems, ->(host_service_group_id) { where(:host_service_group_id => host_service_group_id) }
+
+  UTF_16BE_BOM = [254, 255].freeze
+  UTF_16LE_BOM = [255, 254].freeze
 
   def self.add_elements(miq_set, scan_item, parent, xmlNode)
     options = {}
@@ -81,7 +82,7 @@ class Filesystem < ApplicationRecord
   end
 
   def image_name
-    ext = base_name.nil? ? nil : File.extname(base_name)
+    ext = base_name && File.extname(base_name)
     unless ext.nil?
       ext.sub!(".", "")
       ext.downcase!
@@ -91,7 +92,7 @@ class Filesystem < ApplicationRecord
   end
 
   def contents
-    binary_blob.nil? ? nil : binary_blob.binary
+    binary_blob.try(:binary)
   end
 
   def contents=(val)
@@ -142,7 +143,7 @@ class Filesystem < ApplicationRecord
     [:other_exec,  00001],
   ].each do |m, o|
     define_method("permission_#{m}?") do
-      return permissions.nil? ? nil : permissions.to_i(8) & o != 0
+      return permissions && permissions.to_i(8) & o != 0
     end
   end
 

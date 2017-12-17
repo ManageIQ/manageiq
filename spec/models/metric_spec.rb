@@ -2,7 +2,7 @@ describe Metric do
   before(:each) do
     MiqRegion.seed
 
-    guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
   end
 
   context "as vmware" do
@@ -42,16 +42,6 @@ describe Metric do
         it "should find enabled targets excluding storages" do
           targets = Metric::Targets.capture_targets(nil, :exclude_storages => true)
           assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Vm ManageIQ::Providers::Vmware::InfraManager::Host)
-        end
-
-        it "should find enabled targets excluding vms" do
-          targets = Metric::Targets.capture_targets(nil, :exclude_vms => true)
-          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host Storage)
-        end
-
-        it "should find enabled targets excluding vms and storages" do
-          targets = Metric::Targets.capture_targets(nil, :exclude_storages => true, :exclude_vms => true)
-          assert_infra_targets_enabled targets, %w(ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host ManageIQ::Providers::Vmware::InfraManager::Host)
         end
       end
 
@@ -290,6 +280,22 @@ describe Metric do
         it "with alerts assigned" do
           allow(MiqAlert).to receive(:target_needs_realtime_capture?).and_return(true)
           assert_perf_capture_now @vm, :with_alerts
+        end
+      end
+
+      context "services" do
+        let(:service) { FactoryGirl.create(:service) }
+
+        before do
+          service.add_resource(@vm)
+          service.save
+          MiqQueue.delete_all
+        end
+
+        it "queues service rollups" do
+          @vm.perf_rollup_to_parents("hourly", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
+
+          expect(MiqQueue.all.pluck(:class_name).uniq).to eq(%w(Service))
         end
       end
     end
@@ -1008,11 +1014,6 @@ describe Metric do
         it "should find enabled targets" do
           targets = Metric::Targets.capture_targets
           assert_cloud_targets_enabled targets, %w(ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm ManageIQ::Providers::Openstack::CloudManager::Vm)
-        end
-
-        it "should find no enabled targets excluding vms" do
-          targets = Metric::Targets.capture_targets(nil, :exclude_vms => true)
-          assert_cloud_targets_enabled targets, %w()
         end
       end
 

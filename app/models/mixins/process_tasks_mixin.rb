@@ -11,13 +11,20 @@ module ProcessTasksMixin
         task_audit_event(:success, options, :message => msg)
       else
         assert_known_task(options)
-        options[:userid] ||= "system"
+        options[:userid] ||= User.current_user.try(:userid) || "system"
         invoke_tasks_queue(options)
       end
     end
 
     def invoke_tasks_queue(options)
-      MiqQueue.put(:class_name => name, :method_name => "invoke_tasks", :args => [options])
+      q_hash = {
+        :class_name  => name,
+        :method_name => "invoke_tasks",
+        :args        => [options]
+      }
+      user = User.current_user
+      q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+      MiqQueue.submit_job(q_hash)
     end
 
     # Performs tasks received from the UI via the queue
@@ -70,12 +77,16 @@ module ProcessTasksMixin
 
           $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
           $log.log_backtrace(err)
-          MiqQueue.put(
+
+          q_hash = {
             :class_name  => name,
             :method_name => 'invoke_tasks_remote',
             :args        => [remote_options],
             :deliver_on  => Time.now.utc + 1.minute
-          )
+          }
+          user = User.current_user
+          q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+          MiqQueue.submit_job(q_hash)
           next
         end
 
@@ -134,13 +145,16 @@ module ProcessTasksMixin
         :args        => ["Finished"]
       } if task
 
-      MiqQueue.put(
+      q_hash = {
         :class_name   => name,
         :instance_id  => instance.id,
         :method_name  => options[:task],
         :args         => args,
         :miq_callback => cb
-      )
+      }
+      user = User.current_user
+      q_hash.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+      MiqQueue.submit_job(q_hash)
     end
 
     private

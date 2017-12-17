@@ -38,7 +38,8 @@ class VimPerformanceTagValue < ApplicationRecord
     "ContainerGroup"      => [],
     "ContainerProject"    => [],
     "ContainerService"    => [],
-    "ContainerReplicator" => []
+    "ContainerReplicator" => [],
+    "Service"             => [:vms]
   }
 
   def self.build_from_performance_record(parent_perf, options = {:save => true})
@@ -87,15 +88,15 @@ class VimPerformanceTagValue < ApplicationRecord
             value = perf.send(c)
             c = [c.to_s, tag].join(TAG_SEP).to_sym
 
-            unless c.to_s.starts_with?("assoc_ids")
+            if c.to_s.starts_with?("assoc_ids")
+              assoc = perf.resource.class.table_name.to_sym
+              result[c] ||= {assoc => {:on => []}}
+              result[c][assoc][:on].push(perf.resource_id)
+            else
               result[c] ||= 0
               counts[c] ||= 0
               value *= 1.0 unless value.nil?
               Metric::Aggregation::Aggregate.average(c, nil, result, counts, value)
-            else
-              assoc = perf.resource.class.table_name.to_sym
-              result[c] ||= {assoc => {:on => []}}
-              result[c][assoc][:on].push(perf.resource_id)
             end
           end
         end

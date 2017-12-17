@@ -1,8 +1,6 @@
 require 'thread'
 
 class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
-  self.wait_for_worker_monitor = false
-
   OPTIONS_PARSER_SETTINGS = MiqWorker::Runner::OPTIONS_PARSER_SETTINGS + [
     [:ems_id, 'EMS Instance ID', String],
   ]

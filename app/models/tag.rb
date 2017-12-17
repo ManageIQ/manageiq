@@ -8,6 +8,13 @@ class Tag < ApplicationRecord
 
   before_destroy :remove_from_managed_filters
 
+  # Note those scopes exclude Tags that don't have a Classification.
+  scope :visible,   -> { joins(:classification).merge(Classification.visible) }
+  scope :read_only, -> { joins(:classification).merge(Classification.read_only) }
+  scope :writable,  -> { joins(:classification).merge(Classification.writable) }
+  scope :is_category, -> { joins(:classification).merge(Classification.is_category) }
+  scope :is_entry,    -> { joins(:classification).merge(Classification.is_entry) }
+
   def self.list(object, options = {})
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"
@@ -24,7 +31,7 @@ class Tag < ApplicationRecord
       end
 
       begin
-        predicate.inject(object) { |target, method| target.public_send method }
+        predicate.inject(object) { |target, method| target.public_send(method) }
       rescue NoMethodError
         ""
       end
@@ -52,20 +59,26 @@ class Tag < ApplicationRecord
   end
 
   def self.parse(list)
-    unless list.kind_of? Array
+    if list.kind_of?(Array)
+      tag_names = list.collect { |tag| tag.try(:to_s) }
+      return tag_names.compact
+    else
       tag_names = []
 
       # don't mangle the caller's copy
       list = list.dup
 
       # first, pull out the quoted tags
-      list.gsub!(/\"(.*?)\"\s*/) { tag_names << $1; "" }
+      list.gsub!(/\"(.*?)\"\s*/) do
+        tag_names << $1
+        ""
+      end
 
       # then, replace all commas with a space
       list.tr!(',', " ")
 
       # then, get whatever's left
-      tag_names.concat list.split(/\s/)
+      tag_names.concat(list.split(/\s/))
 
       # strip whitespace from the names
       tag_names = tag_names.map(&:strip)
@@ -74,9 +87,6 @@ class Tag < ApplicationRecord
       tag_names = tag_names.delete_if(&:empty?)
 
       return tag_names.uniq
-    else
-      tag_names = list.collect { |tag| tag.nil? ? nil : tag.to_s }
-      return tag_names.compact
     end
   end
 
@@ -147,6 +157,14 @@ class Tag < ApplicationRecord
           "display_name" => "#{category.description}: #{classification.description}"
         }
       end
+  end
+
+  # @return [ActiveRecord::Relation] Scope for tags controlled by ContainerLabelTagMapping.
+  def self.controlled_by_mapping
+    queries = ContainerLabelTagMapping::TAG_PREFIXES.collect do |prefix|
+      where("name LIKE ?", "#{sanitize_sql_like(prefix)}%")
+    end
+    queries.inject(:or).read_only.is_entry
   end
 
   private

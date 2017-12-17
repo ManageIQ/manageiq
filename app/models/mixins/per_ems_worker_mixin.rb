@@ -32,7 +32,7 @@ module PerEmsWorkerMixin
       desired = self.has_required_role? ? desired_queue_names.sort : []
       result  = {:adds => [], :deletes => []}
 
-      if current != desired
+      unless compare_queues(current, desired)
         _log.info("Workers are being synchronized: Current: #{current.inspect}, Desired: #{desired.inspect}")
 
         dups = current.uniq.find_all { |u| current.find_all { |c| c == u }.length > 1 }
@@ -70,7 +70,7 @@ module PerEmsWorkerMixin
 
     def stop_worker_for_ems(ems_or_queue_name)
       wpid = nil
-      find_by_queue_name(queue_name_for_ems(ems_or_queue_name)).each do |w|
+      find_by_queue_name(queue_name_for_ems(ems_or_queue_name).to_s).each do |w|
         next unless w.status == MiqWorker::STATUS_STARTED
         wpid = w.pid
         w.stop
@@ -92,23 +92,29 @@ module PerEmsWorkerMixin
     end
 
     def queue_name_for_ems(ems)
-      # Host objects do not have dedicated refresh workers so request a generic worker which will
-      # be used to make a web-service call to a SmartProxy to initiate inventory collection.
-      return "generic" if ems.kind_of?(Host) && ems.acts_as_ems?
-
       return ems unless ems.kind_of?(ExtManagementSystem)
       ems.queue_name
     end
 
-    def ems_id_from_queue_name(queue_name)
+    def parse_ems_id(queue_name)
       return nil if queue_name.blank?
       name, id = queue_name.split("_")
       return nil unless name == "ems"
       id.to_i
     end
 
+    def ems_id_from_queue_name(queue_name)
+      queue_name.kind_of?(Array) ? queue_name.collect { |q| parse_ems_id(q) }.flatten : parse_ems_id(queue_name)
+    end
+
     def ems_from_queue_name(queue_name)
       ExtManagementSystem.find_by(:id => ems_id_from_queue_name(queue_name))
+    end
+
+    private
+
+    def compare_queues(current, desired)
+      current.flatten.sort == desired.flatten.sort
     end
   end
 

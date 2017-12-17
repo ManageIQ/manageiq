@@ -25,7 +25,15 @@ class ChargebackRate < ApplicationRecord
 
   delegate :symbol, :to => :currency, :prefix => true, :allow_nil => true
 
+  scope :with_rate_type, ->(rate_type) { where(:rate_type => rate_type) }
+
   VALID_CB_RATE_TYPES = ["Compute", "Storage"]
+  DATASTORE_MAPPING   = {'CloudVolume' => 'Storage'}.freeze
+
+  def self.tag_class(klass)
+    klass = ChargebackRate::DATASTORE_MAPPING[klass] || klass
+    super(klass)
+  end
 
   def rate_details_relevant_to(report_cols)
     # we can memoize, as we get the same report_cols thrrough the life of the object

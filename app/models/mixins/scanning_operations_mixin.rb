@@ -7,18 +7,18 @@ module ScanningOperationsMixin
   def save_metadata_op(xmlFile, type, jobid = nil)
     begin
       Timeout.timeout(WS_TIMEOUT) do # TODO: do we need this timeout?
-        _log.info "target [#{guid}],  job [#{jobid}] enter"
-        _log.info "target [#{guid}] found target object id [#{id}], job [#{jobid}]"
-        MiqQueue.put(
+        _log.info("target [#{guid}],  job [#{jobid}] enter")
+        _log.info("target [#{guid}] found target object id [#{id}], job [#{jobid}]")
+        MiqQueue.submit_job(
+          :service     => "smartstate",
+          :affinity    => ext_management_system,
           :target_id   => id,
           :class_name  => self.class.base_class.name,
           :method_name => "save_metadata",
           :data        => Marshal.dump([xmlFile, type]),
           :task_id     => jobid,
-          :zone        => my_zone,
-          :role        => "smartstate"
         )
-        _log.info "target [#{guid}] data put on queue, job [#{jobid}]"
+        _log.info("target [#{guid}] data put on queue, job [#{jobid}]")
       end
     rescue Exception => err
       _log.log_backtrace(err)
@@ -29,14 +29,14 @@ module ScanningOperationsMixin
   end
 
   def task_update_op(task_id, state, status, message)
-    _log.info "task_id: [#{task_id}] starting"
+    _log.info("task_id: [#{task_id}] starting")
     begin
       Timeout.timeout(WS_TIMEOUT) do
         task = MiqTask.find_by(:id => task_id)
         if !task.nil?
           task.update_status(state, status, message)
         else
-          _log.warn "task_id: [#{task_id}] not found"
+          _log.warn("task_id: [#{task_id}] not found")
         end
         return true
       end

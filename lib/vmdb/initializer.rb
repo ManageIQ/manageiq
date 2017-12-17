@@ -1,10 +1,7 @@
 module Vmdb
   module Initializer
     def self.init
-      _log.info "- Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['MIQ_GUID']: #{ENV['MIQ_GUID']}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}"
-
-      # When these classes are deserialized in ActiveRecord (e.g. EmsEvent, MiqQueue), they need to be preloaded
-      require 'VMwareWebService/VimTypes'
+      _log.info("- Program Name: #{$PROGRAM_NAME}, PID: #{Process.pid}, ENV['EVMSERVER']: #{ENV['EVMSERVER']}")
 
       # UiWorker called in Development Mode
       #   * command line(rails server)

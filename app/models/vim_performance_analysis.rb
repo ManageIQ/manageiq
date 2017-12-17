@@ -198,15 +198,15 @@ module VimPerformanceAnalysis
           chash = nh[cluster.id][:count][type]
           hhash = v[:count][type]
 
-          unless type == :storage
-            chash[:total] += hhash[:total] unless hhash[:total].nil?
-          else
+          if type == :storage
             # build up array of storage details unique by storage Id
             chash[:details] ||= []
             hhash[:details].each do |h|
               id, = h.to_a.flatten
               chash[:details] << h unless chash[:details].find { |i| i.keys.first == id }
             end
+          else
+            chash[:total] += hhash[:total] unless hhash[:total].nil?
           end
         end
       end
@@ -215,9 +215,9 @@ module VimPerformanceAnalysis
       nh.each do |_cid, v|
         chash = v[:count][:storage]
         # Calculate storage total based on merged counts.
-        chash[:total] = chash[:details].inject(0) do|t, h|
-          k, val = h.to_a.flatten
-          t += val
+        chash[:total] = chash[:details].inject(0) do |t, h|
+          _k, val = h.to_a.flatten
+          t + val
         end if v[:count].key?(:storage)
         #
         chash = v[:count]
@@ -491,7 +491,7 @@ module VimPerformanceAnalysis
         c, e = t.split("/")
         cat = classifications.fetch_path(c, :category)
         cat_desc = cat.nil? ? c.titleize : cat.description
-        ent = cat.nil? ? nil : classifications.fetch_path(c, :entry, e)
+        ent = cat && classifications.fetch_path(c, :entry, e)
         ent_desc = ent.nil? ? e.titleize : ent.description
         h[tag] = "#{ui_lookup(:model => p.resource_type)}: #{cat_desc}: #{ent_desc}"
       end
@@ -535,11 +535,11 @@ module VimPerformanceAnalysis
         mm[k] = val unless val.nil?
         mm
       end
-      h.reject! { |k, _v| perf_klass.virtual_attribute? k }
+      h.reject! { |k, _v| perf_klass.virtual_attribute?(k) }
     end
 
     result.inject([]) do |recs, k|
-      ts, v = k
+      _ts, v = k
       cols.each do |c|
         next unless v[c].kind_of?(Float)
         Metric::Aggregation::Process.column(c, nil, v, counts[k], true, :average)
@@ -554,7 +554,8 @@ module VimPerformanceAnalysis
     recs = recs.sort_by { |r| r.send(x_attr) } if recs.first.respond_to?(x_attr)
 
     y_array, x_array = recs.inject([]) do |arr, r|
-      arr[0] ||= []; arr[1] ||= []
+      arr[0] ||= []
+      arr[1] ||= []
       next(arr) unless  r.respond_to?(x_attr) && r.respond_to?(y_attr)
       if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
         _log.debug("Class: [#{r.class}], [#{r.resource_type} - #{r.resource_id}], Timestamp: [#{r.timestamp}] is outside of time profile")

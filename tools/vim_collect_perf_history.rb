@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 require 'trollop'
 ARGV.shift if ARGV.first == "--" # Handle when called through script/runner
 opts = Trollop.options do

@@ -50,7 +50,7 @@ class Condition < ApplicationRecord
       end
 
       result = expression["include"] != "any"
-      expression["tag"].split.each do|tag|
+      expression["tag"].split.each do |tag|
         if rec.is_tagged_with?(tag, :ns => expression["ns"])
           result = true if expression["include"] == "any"
           result = false if expression["include"] == "none"
@@ -159,7 +159,7 @@ class Condition < ApplicationRecord
 
     return false if l.empty?
 
-    list = l.collect do|obj|
+    list = l.collect do |obj|
       value = MiqExpression.quote(obj.send(attr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = search.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
@@ -196,7 +196,7 @@ class Condition < ApplicationRecord
     checkattr = tag.split("/").last.strip
 
     result = true
-    list.each do|obj|
+    list.each do |obj|
       opts, ref, object = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
@@ -217,7 +217,7 @@ class Condition < ApplicationRecord
     ohash = {}
     unless opts.blank?
       val = nil
-      opts.split(",").each do|o|
+      opts.split(",").each do |o|
         attr, val = o.split("=")
         ohash[attr.strip.downcase.to_sym] = val.strip.downcase
       end
@@ -277,11 +277,11 @@ class Condition < ApplicationRecord
 
     msg = "#{msg_pfx}, Status: #{status[:status]}"
     msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
-    unless options[:preview] == true
+    if options[:preview] == true
+      MiqPolicy.logger.info("[PREVIEW] #{msg}")
+    else
       MiqPolicy.logger.info(msg)
       c.save!
-    else
-      MiqPolicy.logger.info("[PREVIEW] #{msg}")
     end
 
     return c, status

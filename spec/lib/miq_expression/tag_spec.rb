@@ -21,6 +21,13 @@ RSpec.describe MiqExpression::Tag do
                                                             :namespace    => "/managed/service_level")
     end
 
+    it "with model-parent::model.managed-in_tag" do
+      tag = "ManageIQ::Providers::CloudManager.managed-service_level"
+      expect(described_class.parse(tag)).to have_attributes(:model        => ManageIQ::Providers::CloudManager,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/service_level")
+    end
+
     it "with model.associations.associations.managed-in_tag" do
       tag = "Vm.service.user.managed-service_level"
       expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
@@ -47,9 +54,11 @@ RSpec.describe MiqExpression::Tag do
       expect(described_class.parse(tag)).to be_nil
     end
 
-    it "returns nil with invalid case managed-tag" do
+    it "supports managed-tag (no model)" do
       tag = "managed-service_level"
-      expect(described_class.parse(tag)).to be_nil
+      expect(described_class.parse(tag)).to have_attributes(:model        => nil,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/service_level")
     end
 
     it "returns nil with invalid case managed" do
@@ -60,6 +69,28 @@ RSpec.describe MiqExpression::Tag do
     it "returns nil with invalid case model.managed" do
       tag = "Vm.managed"
       expect(described_class.parse(tag)).to be_nil
+    end
+
+    it "returns nil with invalid case parent-model::model::somethingmanaged-se" do
+      tag = "ManageIQ::Providers::CloudManagermanaged-se'"
+      expect(described_class.parse(tag)).to be_nil
+    end
+  end
+
+  describe "#to_s" do
+    it "renders tags in string form" do
+      tag = described_class.new("Vm", [], "environment")
+      expect(tag.to_s).to eq("Vm.managed-environment")
+    end
+
+    it "can handle model-less tags" do
+      tag = described_class.new(nil, [], "environment")
+      expect(tag.to_s).to eq("managed-environment")
+    end
+
+    it "can handle associations" do
+      tag = described_class.new("Vm", ["host"], "environment")
+      expect(tag.to_s).to eq("Vm.host.managed-environment")
     end
   end
 

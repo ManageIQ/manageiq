@@ -6,7 +6,7 @@ class MiqReportResult < ApplicationRecord
   belongs_to :miq_task
   has_one    :binary_blob, :as => :resource, :dependent => :destroy
   has_many   :miq_report_result_details, :dependent => :delete_all
-  has_many   :html_details, -> { where "data_type = 'html'" }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
+  has_many   :html_details, -> { where("data_type = 'html'") }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
 
   serialize :report
 
@@ -14,6 +14,18 @@ class MiqReportResult < ApplicationRecord
   virtual_attribute :status, :string
   virtual_column :status_message,        :type => :string, :uses => :miq_task
   virtual_has_one :result_set,           :class_name => "Hash"
+
+  scope :for_groups, lambda { |group_ids|
+    condition = {:miq_group_id => group_ids}
+    if group_ids.nil?
+      where.not(condition)
+    else
+      where(condition)
+    end
+  }
+  scope :for_user, lambda { |user|
+    for_groups(user.admin_user? ? nil : user.miq_group_ids)
+  }
 
   before_save do
     user_info = userid.to_s.split("|")
@@ -87,7 +99,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def report=(val)
-    write_attribute(:report, val.nil? ? nil : val.to_hash)
+    write_attribute(:report, val.try(:to_hash))
   end
 
   def build_html_rows_for_legacy
@@ -101,12 +113,6 @@ class MiqReportResult < ApplicationRecord
     self.report = report
 
     save
-  end
-
-  def self.atStartup
-    _log.info("Purging adhoc report results...")
-    purge_for_user
-    _log.info("Purging adhoc report results... complete")
   end
 
   #########################################################################################################
@@ -128,6 +134,10 @@ class MiqReportResult < ApplicationRecord
     return parts[0] if (parts.last == 'adhoc')
     return parts[1] if (parts.last == 'schedule')
     raise _("Cannot parse userid %{user_id}") % {:user_id => userid.inspect}
+  end
+
+  def self.purge_for_all_users
+    purge_for_user(:userid => "%")
   end
 
   def self.purge_for_user(options = {})
@@ -187,9 +197,8 @@ class MiqReportResult < ApplicationRecord
 
     sync = ::Settings.product.report_sync
 
-    MiqQueue.put(
-      :queue_name  => "generic",
-      :role        => "reporting",
+    MiqQueue.submit_job(
+      :service     => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "_async_generate_result",
@@ -298,12 +307,11 @@ class MiqReportResult < ApplicationRecord
   def self.delete_by_userid(userids)
     userids = userids.to_miq_a
     _log.info("Queuing deletion of report results for the following user ids: #{userids.inspect}")
-    MiqQueue.put(
+    MiqQueue.submit_job(
       :class_name  => name,
       :method_name => "destroy_all",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [["userid IN (?)", userids]],
-      :zone        => MiqServer.my_zone
     )
   end
 

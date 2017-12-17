@@ -51,12 +51,11 @@ class GenericMailer < ActionMailer::Base
     return unless MiqRegion.my_region.role_assigned?('notifier')
     _log.info("starting: method: #{method} args: #{options} ")
     options[:attachment] &&= attachment_to_blob(options[:attachment])
-    MiqQueue.put(
+    MiqQueue.submit_job(
+      :service     => "notifier",
       :class_name  => name,
       :method_name => 'deliver',
-      :role        => 'notifier',
       :args        => [method, options],
-      :zone        => nil
     )
   end
 

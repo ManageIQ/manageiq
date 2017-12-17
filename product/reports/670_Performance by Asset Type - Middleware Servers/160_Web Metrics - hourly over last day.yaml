@@ -1,0 +1,68 @@
+---
+where_clause:
+dims:
+reserved:
+title: "EAP Web Metrics - hourly over the last day"
+conditions:
+order: Descending
+graph:
+menu_name: "EAP Web Metrics - hourly over the last day"
+rpt_group: Custom
+priority:
+col_order:
+- id
+- name
+- start_time
+- mw_aggregated_active_web_sessions_max
+- mw_aggregated_active_web_sessions_min
+- mw_aggregated_active_web_sessions_avg
+- mw_aggregated_expired_web_sessions_max
+- mw_aggregated_expired_web_sessions_min
+- mw_aggregated_expired_web_sessions_avg
+- mw_aggregated_rejected_web_sessions_max
+- mw_aggregated_rejected_web_sessions_min
+- mw_aggregated_rejected_web_sessions_avg
+timeline:
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+db_options:
+  :rpt_type: middleware
+  :options:
+    :interval: hourly
+    :start_offset: 86400
+    :end_offset: 0
+include: {}
+
+db: MiddlewareServerPerformance
+cols:
+- id
+- name
+- start_time
+- mw_aggregated_active_web_sessions_max
+- mw_aggregated_active_web_sessions_min
+- mw_aggregated_active_web_sessions_avg
+- mw_aggregated_expired_web_sessions_max
+- mw_aggregated_expired_web_sessions_min
+- mw_aggregated_expired_web_sessions_avg
+- mw_aggregated_rejected_web_sessions_max
+- mw_aggregated_rejected_web_sessions_min
+- mw_aggregated_rejected_web_sessions_avg
+template_type: report
+group: n
+sortby:
+- id
+headers:
+- Id
+- Name
+- Start
+- Active Web Sessions - max
+- Active Web Sessions - min
+- Active Web Sessions - avg
+- Expired Web Sessions - max
+- Expired Web Sessions - min
+- Expired Web Sessions - avg
+- Rejected Web Sessions - max
+- Rejected Web Sessions - min
+- Rejected Web Sessions - avg

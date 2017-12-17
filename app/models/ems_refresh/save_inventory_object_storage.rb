@@ -19,7 +19,7 @@ module EmsRefresh::SaveInventoryObjectStorage
     _log.info("#{log_header} Saving EMS Object Storage Inventory...")
     if debug_trace
       require 'yaml'
-      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
     child_keys = [

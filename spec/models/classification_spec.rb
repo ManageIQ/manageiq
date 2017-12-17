@@ -61,14 +61,56 @@ describe Classification do
       FactoryGirl.create(:classification_tag,      :name => "multi_entry_2", :parent => parent)
     end
 
-    it "#destroy" do
-      cat = Classification.find_by_name("test_category")
-      expect(cat).to_not be_nil
-      entries = cat.entries
-      expect(entries.length).to eq(2)
+    context "#destroy" do
+      it "a category deletes all entries" do
+        cat = Classification.find_by_name("test_category")
+        expect(cat).to_not be_nil
+        entries = cat.entries
+        expect(entries.length).to eq(2)
 
-      cat.destroy
-      entries.each { |e| expect(Classification.find_by(:id => e.id)).to be_nil }
+        cat.destroy
+        entries.each { |e| expect(Classification.find_by(:id => e.id)).to be_nil }
+      end
+
+      it "a category deletes assignments referenced by its entries" do
+        cat = Classification.find_by_name("test_category")
+        assignment_tag = "/chargeback_rate/assigned_to/vm/tag/managed/test_category/test_entry"
+
+        Tag.create!(:name => assignment_tag)
+        expect(Tag.exists?(:name => assignment_tag)).to be true
+
+        cat.destroy
+
+        expect(Tag.exists?(:name => assignment_tag)).to be false
+      end
+
+      it "a category does not delete assignments that are close but do not match its tag" do
+        cat = Classification.find_by_name("test_category")
+        assignment_tag = "/chargeback_rate/assigned_to/vm/tag/managed/test_category/test_entry"
+        another_tag1 = Tag.create(:name => "/policy_set/assigned_to/vm/tag/managed/test_category/test_entry1")
+        another_tag2 = Tag.create(:name => "/chargeback_rate/assigned_to/vm/tag/managed/test_category1/test_entry")
+
+        Tag.create!(:name => assignment_tag)
+
+        cat.destroy
+
+        expect(Tag.exists?(:name => assignment_tag)).to be false
+        expect(Tag.exists?(:name => another_tag1.name)).to be true
+        expect(Tag.exists?(:name => another_tag2.name)).to be true
+      end
+
+      it "an entry deletes assignments where its tag is referenced" do
+        cat = Classification.find_by_name("test_category")
+        ent = cat.entries.find { |e| e.name == "test_entry" }
+        assignment_tag = "/chargeback_rate/assigned_to/vm/tag/managed/test_category/test_entry"
+
+        Tag.create!(:name => assignment_tag)
+        expect(Tag.exists?(:name => assignment_tag)).to be true
+
+        ent.destroy
+
+        expect(Tag.exists?(:name => assignment_tag)).to be false
+      end
     end
 
     it "should test setup data" do
@@ -397,6 +439,18 @@ describe Classification do
 
         Classification.seed
         expect(Classification.count).to eq(1)
+      end
+
+      it "does not re-seed user-modified default categories" do
+        # If categories' names are edited they auto-save a different associated tag
+        # This tests that if seeding category and it's invalid (due to uniqueness constraints)
+        # then seeding still doesn't fail.
+        cat = Classification.find_by!(:description => "Cost Center", :parent_id => 0)
+        allow(YAML).to receive(:load_file).and_call_original
+        cat.update_attributes!(:name => "new_name")
+        expect {
+          2.times.each { Classification.seed }
+        }.to_not raise_error
       end
     end
 

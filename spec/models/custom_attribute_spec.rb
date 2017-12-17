@@ -11,7 +11,7 @@ describe CustomAttribute do
     expect(time_custom_attribute.value_type).to eq(:datetime)
   end
 
-  it "returns the value type of Fixnum custom attributes" do
+  it "returns the value type of Integer custom attributes" do
     # TODO: Ruby 2.4 unifies fixnum and bignum into integer, we shouldn't be
     # returnings ruby types like this.
     expected = RUBY_VERSION >= "2.4.0" ? :integer : :fixnum

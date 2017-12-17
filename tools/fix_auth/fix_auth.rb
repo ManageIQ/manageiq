@@ -2,7 +2,7 @@ require 'util/miq-password'
 
 module FixAuth
   class FixAuth
-    # :host, :username, :password, :databases
+    # :host, :username, :password, :database
     # :verbose, :dry_run, :hardcode
     attr_accessor :options
 
@@ -29,8 +29,8 @@ module FixAuth
       options.slice(:verbose, :dry_run, :hardcode, :invalid)
     end
 
-    def databases
-      options[:databases]
+    def database
+      options[:database]
     end
 
     def models
@@ -52,21 +52,15 @@ module FixAuth
 
     def fix_database_passwords
       begin
+        # in specs, this is already setup
         ActiveRecord::Base.connection_config
       rescue ActiveRecord::ConnectionNotEstablished
-        # not configured, lets try again
+        # From the command line, we want to connect to a database
         ActiveRecord::Base.logger = Logger.new("#{options[:root]}/log/fix_auth.log")
-        please_establish_connection = true
+        ActiveRecord::Base.establish_connection(db_attributes(database))
       end
-      databases.each do |database|
-        begin
-          ActiveRecord::Base.establish_connection(db_attributes(database)) if please_establish_connection
-          models.each do |model|
-            model.run(run_options)
-          end
-        ensure
-          ActiveRecord::Base.clear_active_connections! if please_establish_connection
-        end
+      models.each do |model|
+        model.run(run_options)
       end
     end
 

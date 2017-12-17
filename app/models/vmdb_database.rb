@@ -2,7 +2,7 @@ class VmdbDatabase < ApplicationRecord
   has_many :vmdb_tables,           :dependent => :destroy
   has_many :evm_tables,            :class_name => 'VmdbTableEvm'
   has_many :vmdb_database_metrics, :dependent => :destroy
-  has_one  :latest_hourly_metric,  -> { where(:capture_interval_name => 'hourly').order "timestamp DESC" }, :class_name => 'VmdbDatabaseMetric'
+  has_one  :latest_hourly_metric,  -> { where(:capture_interval_name => 'hourly').order("timestamp DESC") }, :class_name => 'VmdbDatabaseMetric'
 
   virtual_has_many :vmdb_database_settings
   virtual_has_many :vmdb_database_connections
@@ -30,7 +30,7 @@ class VmdbDatabase < ApplicationRecord
   end
 
   def size
-    ActiveRecord::Base.connection.database_size name
+    ActiveRecord::Base.connection.database_size(name)
   end
 
   def top_tables_by(sorted_by, limit = nil)

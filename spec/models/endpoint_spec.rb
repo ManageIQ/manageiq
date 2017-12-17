@@ -1,5 +1,5 @@
 describe Endpoint do
-  let(:endpoint) { described_class.new }
+  let(:endpoint) { FactoryGirl.build(:endpoint) }
 
   describe "#verify_ssl" do
     context "when non set" do

@@ -49,7 +49,7 @@ module EmsRefresh::SaveInventoryInfra
     _log.info("#{log_header} Saving EMS Inventory...")
     if debug_trace
       require 'yaml'
-      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
     child_keys = [
@@ -77,14 +77,13 @@ module EmsRefresh::SaveInventoryInfra
     _log.info("#{log_header} Saving EMS Inventory...Complete")
 
     new_relats = hashes_relats(hashes)
-    link_ems_inventory(ems, target, prev_relats, new_relats)
+    link_ems_inventory(ems, target, prev_relats, new_relats, disconnect)
     remove_obsolete_switches
 
     ems
   end
 
   def save_storages_inventory(ems, hashes, target = nil, _disconnect = true)
-    target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
     # Query for all of the storages ahead of time
@@ -173,15 +172,7 @@ module EmsRefresh::SaveInventoryInfra
           found.update_attributes(h)
         end
 
-        # Handle duplicate names coming in because of duplicate hostnames.
-        begin
-          found.save!
-        rescue ActiveRecord::RecordInvalid
-          raise if found.errors[:name].blank?
-          old_name = Host.where("name LIKE ?", "#{found.name.sub(/ - \d+$/, "")}%").order("LENGTH(name) DESC").order("name DESC").first.name
-          found.name = old_name =~ / - \d+$/ ? old_name.succ : "#{old_name} - 2"
-          retry
-        end
+        found.save!
 
         disconnects.delete(found)
 
@@ -347,7 +338,23 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_lans_inventory(switch, hashes)
-    save_inventory_multi(switch.lans, hashes, :use_association, [:uid_ems])
+    extra_keys = [:parent]
+    child_keys = [:subnets]
+
+    save_inventory_multi(switch.lans, hashes, :use_association, [:uid_ems], child_keys, extra_keys)
+    switch.save! # Needed to get ids back for lan new records
+
+    store_ids_for_new_records(switch.lans, hashes, :uid_ems)
+
+    child_lans = hashes.select { |h| !h[:id].nil? && !h.fetch_path(:parent, :id).nil? }
+    child_lans.each do |h|
+      parent_id = h.fetch_path(:parent, :id)
+      Lan.where(:id => h[:id]).update_all(:parent_id => parent_id)
+    end
+  end
+
+  def save_subnets_inventory(lan, hashes)
+    save_inventory_multi(lan.subnets, hashes, :use_association, [:ems_ref])
   end
 
   def save_storage_files_inventory(storage, hashes)
@@ -357,18 +364,18 @@ module EmsRefresh::SaveInventoryInfra
   def find_host(h, ems_id)
     found = nil
     if h[:ems_ref]
-      _log.debug "EMS ID: #{ems_id} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems_id}]"
+      _log.debug("EMS ID: #{ems_id} Host database lookup - ems_ref: [#{h[:ems_ref]}] ems_id: [#{ems_id}]")
       found = Host.find_by(:ems_ref => h[:ems_ref], :ems_id => ems_id)
     end
 
     if found.nil?
       if h[:hostname].nil? && h[:ipaddress].nil?
-        _log.debug "EMS ID: #{ems_id} Host database lookup - name [#{h[:name]}]"
+        _log.debug("EMS ID: #{ems_id} Host database lookup - name [#{h[:name]}]")
         found = Host.where(:ems_id => ems_id).detect { |e| e.name.downcase == h[:name].downcase }
       elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
         # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
         # allow a deleted EMS to be re-added an pick up old orphaned hosts
-        _log.debug "EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]"
+        _log.debug("EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
         found = look_up_host(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref])
       end
     end

@@ -10,7 +10,7 @@ describe MiqQueue do
       deliver_on = Time.now.utc + 1.minute
       allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
-      status, message, result = msg.deliver
+      status, _message, _result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
       expect(msg.state).to eq(MiqQueue::STATE_READY)
@@ -20,7 +20,7 @@ describe MiqQueue do
       allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new)
       msg.state   = MiqQueue::STATE_DEQUEUE
       msg.handler = @miq_server
-      status, message, result = msg.deliver
+      status, _message, _result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
       expect(msg.state).to eq(MiqQueue::STATE_READY)
@@ -30,70 +30,43 @@ describe MiqQueue do
     it "sets last_exception on raised Exception" do
       allow(MiqServer).to receive(:foobar).and_raise(StandardError)
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
-      status, message, result = msg.deliver
+      status, _message, _result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_ERROR)
       expect(msg.last_exception).to be_kind_of(Exception)
     end
   end
 
-  context "With messages left in dequeue at startup," do
-    before do
-      _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+  describe "user_context" do
+    it "sets the User.current_user" do
+      user = FactoryGirl.create(:user_with_group, :name => 'Freddy Kreuger')
+      msg = FactoryGirl.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
+                                           :handler     => @miq_server,
+                                           :class_name  => 'Storage',
+                                           :method_name => 'foobar',
+                                           :user_id     => user.id,
+                                           :args        => [1, 2, 3],
+                                           :group_id    => user.current_group.id,
+                                           :tenant_id   => user.current_tenant.id)
+      expect(Storage).to receive(:foobar) do
+        expect(User.current_user.name).to eq(user.name)
+        expect(User.current_user.current_group.id).to eq(user.current_user.current_group.id)
+        expect(User.current_user.current_tenant.id).to eq(user.current_user.current_tenant.id)
+        expect(args).to eq([1, 2, 3])
+      end
 
-      @other_miq_server = FactoryGirl.create(:miq_server, :zone => @miq_server.zone)
-
-      @worker       = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
-      @other_worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @other_miq_server.id)
+      msg.deliver
     end
+  end
 
-    context "where worker has a message in dequeue" do
-      before do
-        @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @worker)
-      end
+  describe "#check_for_timeout" do
+    it "will destroy a dequeued message when it times out" do
+      handler = FactoryGirl.create(:miq_ems_refresh_worker)
+      msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => handler, :msg_timeout => 1.minute)
 
-      it "will destroy the message when it times out" do
-        @msg.update_attributes(:msg_timeout => 1.minutes)
-        begin
-          Timecop.travel 10.minute
-          expect($log).to receive(:warn)
-          expect(@msg).to receive(:destroy)
-          @msg.check_for_timeout
-        ensure
-          Timecop.return
-        end
-      end
-
-      it "should cleanup message on startup" do
-        MiqQueue.atStartup
-
-        @msg.reload
-        expect(@msg.state).to eq(MiqQueue::STATE_ERROR)
-      end
-    end
-
-    context "where worker on other server has a message in dequeue" do
-      before do
-        @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @other_worker)
-      end
-
-      it "should not cleanup message on startup" do
-        MiqQueue.atStartup
-
-        @msg.reload
-        expect(@msg.state).to eq(MiqQueue::STATE_DEQUEUE)
-      end
-    end
-
-    context "message in dequeue without a worker" do
-      before do
-        @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE)
-      end
-
-      it "should cleanup message on startup" do
-        MiqQueue.atStartup
-
-        @msg.reload
-        expect(@msg.state).to eq(MiqQueue::STATE_ERROR)
+      Timecop.travel(10.minutes) do
+        expect($log).to receive(:warn)
+        expect(msg).to receive(:destroy)
+        msg.check_for_timeout
       end
     end
   end
@@ -624,13 +597,13 @@ describe MiqQueue do
     end
 
     it "should use args param to find messages on the queue" do
-      msg1 = MiqQueue.put(
+      MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :args        => [1, 2],
         :task_id     => 'first_task'
       )
-      msg2 = MiqQueue.put(
+      MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :args        => [3, 4],

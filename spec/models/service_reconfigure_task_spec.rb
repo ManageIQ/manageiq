@@ -83,12 +83,12 @@ describe ServiceReconfigureTask do
         }
         expect(user.current_tenant).to be_truthy
         expect(MiqQueue).to receive(:put).with(
-          :class_name  => 'MiqAeEngine',
-          :method_name => 'deliver',
-          :args        => [automate_args],
-          :role        => 'automate',
-          :zone        => nil,
-          :task_id     => "service_reconfigure_task_#{task.id}")
+          :class_name     => 'MiqAeEngine',
+          :method_name    => 'deliver',
+          :args           => [automate_args],
+          :role           => 'automate',
+          :zone           => nil,
+          :tracking_label => "service_reconfigure_task_#{task.id}")
         task.deliver_to_automate
       end
 

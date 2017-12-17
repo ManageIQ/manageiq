@@ -19,10 +19,10 @@ module Vmdb
         location = caller_locations(1, 1)
         if blk
           logger.send(level) do
-            "#{prefix location} #{blk.call}"
+            "#{prefix(location)} #{blk.call}"
           end
         else
-          logger.send(level, "#{prefix location} #{msg}")
+          logger.send(level, "#{prefix(location)} #{msg}")
         end
       end
     end
@@ -57,5 +57,5 @@ module Vmdb
     end
   end
 
-  ::Module.send :include, ClassLogging
+  ::Module.send(:include, ClassLogging)
 end

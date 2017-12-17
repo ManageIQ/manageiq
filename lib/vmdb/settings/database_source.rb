@@ -36,7 +36,9 @@ module Vmdb
       end
 
       def resource
-        @resource_instance == :my_server ? my_server : @resource_instance.reload
+        return my_server if @resource_instance == :my_server
+        @resource_instance.reload if @resource_instance.persisted?
+        @resource_instance
       end
 
       def load
@@ -47,8 +49,7 @@ module Vmdb
           end
         end
       rescue => err
-        _log.error("#{err.class}: #{err}")
-        _log.error(err.backtrace.join("\n"))
+        _log.log_backtrace(err)
         raise
       end
 

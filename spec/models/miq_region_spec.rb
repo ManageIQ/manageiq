@@ -42,14 +42,6 @@ describe MiqRegion do
     end
   end
 
-  it ".log_not_under_management" do
-    MiqRegion.seed
-    FactoryGirl.create(:host_vmware)
-    FactoryGirl.create(:vm_vmware)
-    expect($log).to receive(:info).with(/VMs: \[1\], Hosts: \[1\]/)
-    described_class.log_not_under_management("")
-  end
-
   context ".seed" do
     before do
       @region_number = 99
@@ -168,42 +160,6 @@ describe MiqRegion do
     end
   end
 
-  context "ConfigurationManagementMixin" do
-    describe "#settings_for_resource" do
-      it "returns the resource's settings" do
-        settings = {:some_thing => [1, 2, 3]}
-        stub_settings(settings)
-        expect(region.settings_for_resource.to_hash).to eq(settings)
-      end
-    end
-
-    describe "#add_settings_for_resource" do
-      it "sets the specified settings" do
-        settings = {:some_test_setting => {:setting => 1}}
-        expect(region).to receive(:reload_all_server_settings)
-
-        region.add_settings_for_resource(settings)
-
-        expect(Vmdb::Settings.for_resource(region).some_test_setting.setting).to eq(1)
-      end
-    end
-
-    describe "#reload_all_server_settings" do
-      it "queues #reload_settings for the started servers" do
-        started_server = FactoryGirl.create(:miq_server, :status => "started")
-        FactoryGirl.create(:miq_server, :status => "started", :id => external_region_id)
-        FactoryGirl.create(:miq_server, :status => "stopped")
-
-        region.reload_all_server_settings
-
-        expect(MiqQueue.count).to eq(1)
-        message = MiqQueue.first
-        expect(message.instance_id).to eq(started_server.id)
-        expect(message.method_name).to eq("reload_settings")
-      end
-    end
-  end
-
   describe "#vms" do
     it "brings them back" do
       FactoryGirl.create(:vm_vmware, :id => external_region_id)
@@ -231,6 +187,26 @@ describe MiqRegion do
       t = FactoryGirl.create(:template_vmware)
 
       expect(region.vms_and_templates).to match_array [vm, t]
+    end
+  end
+
+  describe "#remote_ws_url" do
+    let(:ip) { "1.1.1.94" }
+    let(:hostname) { "www.manageiq.org" }
+    let(:url) { "https://www.manageiq.org" }
+    let!(:web_server) do
+      FactoryGirl.create(:miq_server, :has_active_webservices => true,
+                                      :hostname               => hostname,
+                                      :ipaddress              => ip)
+    end
+
+    it "fetches the url from server" do
+      expect(region.remote_ws_url).to eq("https://#{ip}")
+    end
+
+    it "fetches the url from the setting" do
+      Vmdb::Settings.save!(web_server, :webservices => {:url => url})
+      expect(region.remote_ws_url).to eq(url)
     end
   end
 end

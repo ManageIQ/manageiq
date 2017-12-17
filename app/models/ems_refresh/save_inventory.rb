@@ -1,9 +1,11 @@
 module EmsRefresh::SaveInventory
-  def save_ems_inventory(ems, hashes, target = nil, disconnect = true)
-    if hashes.kind_of?(Array)
-      ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
+  # Parsed inventory can come as hash of hashes or array of InventoryCollection's.
+  def save_ems_inventory(ems, hashes_or_collections, target = nil, disconnect = true)
+    if hashes_or_collections.kind_of?(Array)
+      ManagerRefresh::SaveInventory.save_inventory(ems, hashes_or_collections) # InventoryCollections.
       return
     end
+    hashes = hashes_or_collections
 
     case ems
     when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target, disconnect)
@@ -34,9 +36,9 @@ module EmsRefresh::SaveInventory
     target = ems if target.nil? && disconnect
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
-    disconnects = if target.kind_of?(ExtManagementSystem) || target.kind_of?(Host)
+    disconnects = if disconnect && (target.kind_of?(ExtManagementSystem) || target.kind_of?(Host))
                     target.vms_and_templates.reload.to_a
-                  elsif target.kind_of?(Vm)
+                  elsif disconnect && target.kind_of?(Vm)
                     [target.ruby_clone]
                   else
                     []
@@ -64,7 +66,7 @@ module EmsRefresh::SaveInventory
     disconnects_index = disconnects.index_by { |vm| vm }
     vms_by_uid_ems = vms.group_by(&:uid_ems)
     dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
-    _log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
+    _log.info("#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}") unless dup_vms_uids.empty?
 
     invalids_found = false
     # Clear vms, so GC can clean them
@@ -187,17 +189,15 @@ module EmsRefresh::SaveInventory
   end
 
   # Convert all mapped hashes into actual tags and associate them with the object.
-  # The collection or collection[:tags] object should be an array of hashes, probably
-  # created by the ContainerLabelTagMapping.map_labels method. Each hash in the array
-  # should have the following basic structure:
-  #
-  # {:category_tag_id=>139, :entry_name=>"foo", :entry_description=>"bar"}
+  # The collection or collection[:tags] object should be an array of values
+  # created by the ContainerLabelTagMapping::Mapper#map_labels method
+  # that should already have ids set by `Mapper#find_or_create_tags` method.
   #
   # The +collection+ argument can either be a Hash, in which case the argument
-  # should have a single :tags key, or a simple Array of hashes.
+  # should have a single :tags key, or a simple Array.
   #
   def save_tags_inventory(object, collection, _target = nil)
-    return if collection.blank?
+    return if collection.nil?
     tags = collection.kind_of?(Hash) ? collection[:tags] : collection
     ContainerLabelTagMapping.retag_entity(object, tags)
   rescue => err
@@ -236,11 +236,26 @@ module EmsRefresh::SaveInventory
         hardware.save! if hardware.id.nil?
         h[:network][:hardware_id] = hardware.id
       end
+      if h[:child_devices]
+        # Save the hardware to force an id if not found
+        hardware.save! if hardware.id.nil?
+        h[:child_devices].each do |child_device|
+          child_device[:hardware_id] = hardware.id
+        end
+      end
     end
 
     deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"])
-    save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
+    save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets, :firmwares, :child_devices], [:switch, :lan])
     store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
+  end
+
+  def save_child_devices_inventory(guest_device, hashes)
+    return if hashes.nil?
+
+    deletes = guest_device.child_devices.where(:device_type => ["ethernet", "storage"])
+    save_inventory_multi(guest_device.child_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
+    store_ids_for_new_records(guest_device.child_devices, hashes, [:device_type, :uid_ems])
   end
 
   def save_disks_inventory(hardware, hashes)
@@ -276,7 +291,7 @@ module EmsRefresh::SaveInventory
       saved_hashes, new_hashes = hashes.partition { |h| h[:id] }
       saved_hashes.each { |h| deletes.delete_if { |d| d.id == h[:id] } } unless deletes.empty? || saved_hashes.empty?
 
-      save_inventory_multi(hardware.networks, new_hashes, deletes, [:ipaddress], nil, :guest_device)
+      save_inventory_multi(hardware.networks, new_hashes, deletes, [:ipaddress, :ipv6address], nil, :guest_device)
     when :scan
       save_inventory_multi(hardware.networks, hashes, :use_association, [:description, :guid])
     end

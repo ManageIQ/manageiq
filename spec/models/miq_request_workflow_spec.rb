@@ -358,6 +358,22 @@ describe MiqRequestWorkflow do
     end
   end
 
+  context "#validate_blacklist" do
+    let(:blacklist) { {:blacklist => ['foo', 'bar']} }
+
+    it "returns nil if the value is not blacklisted" do
+      expect(workflow.validate_blacklist(nil, {}, {}, blacklist, 'test')).to be_nil
+    end
+
+    it "returns a formatted message when the value is blacklisted" do
+      expect(workflow.validate_blacklist(nil, {}, {}, blacklist, 'foo')).to eq("'/' may not contain blacklisted value")
+    end
+
+    it "returns an error when no value exists" do
+      expect(workflow.validate_blacklist(nil, {}, {}, blacklist, '')).to eq "'/' is required"
+    end
+  end
+
   context "#validate regex" do
     let(:regex) { {:required_regex => "^n@test.com$"} }
     let(:regex_two) { {:required_regex => "^n$"} }
@@ -418,6 +434,31 @@ describe MiqRequestWorkflow do
     end
   end
 
+  context "#set_request_values" do
+    before do
+      workflow.set_request_values(values)
+    end
+    let(:values) { {:owner_email => owner.email} }
+    let(:owner)  { FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)]) }
+
+    it 'sets owner_group and requester_group' do
+      expect(values[:owner_group]).to eq(owner.current_group.description)
+      expect(values[:requester_group]).to eq(workflow.requester.miq_group_description)
+    end
+
+    it 'does not reset owner_group and requester_group on a second run' do
+      old_requester = workflow.requester
+      new_requester = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
+      workflow.requester = new_requester
+      new_owner = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
+
+      values[:owner_email] = new_owner.email
+      workflow.set_request_values(values)
+      expect(values[:owner_group]).to eq(owner.current_group.description)
+      expect(values[:requester_group]).to eq(old_requester.miq_group_description)
+    end
+  end
+
   context "#respool_to_folder" do
     before do
       resource_pool.ext_management_system = ems
@@ -475,6 +516,60 @@ describe MiqRequestWorkflow do
     end
   end
 
+  describe '#validate_data_types?' do
+    %w(array_integer integer float array).each do |name|
+      let("fld_#{name}".to_sym) { {:error => nil, :data_type => name.to_sym} }
+    end
+
+    it 'valid with no error if integer and is an integer' do
+      results = workflow.validate_data_types(3, fld_integer, '', true)
+      expect(results).to include true
+      expect(results[1][:error]).to be_falsey
+    end
+
+    it 'invalid with an error message if integer and is not an integer' do
+      results = workflow.validate_data_types('a', fld_integer, 'bad data', true)
+      expect(results).to include false
+      expect(results[1][:error]).to eql 'bad data'
+    end
+
+    it 'valid with no error if float and is an float' do
+      results = workflow.validate_data_types(3.23, fld_float, '', true)
+      expect(results).to include true
+      expect(results[1][:error]).to be_falsey
+    end
+
+    it 'invalid with an error message if float and is not a float' do
+      results = workflow.validate_data_types('a.aa', fld_float, 'bad data', true)
+      expect(results).to include false
+      expect(results[1][:error]).to eql 'bad data'
+    end
+
+    it 'valid with no error if array_integer and is an array' do
+      results = workflow.validate_data_types([1, 2, 3], fld_array_integer, '', true)
+      expect(results).to include true
+      expect(results[1][:error]).to be_falsey
+    end
+
+    it 'invalid with an error message if array_integer is not an array' do
+      results = workflow.validate_data_types(3, fld_array_integer, 'bad data', true)
+      expect(results).to include false
+      expect(results[1][:error]).to eql 'bad data'
+    end
+
+    it 'valid with no error if array and is an array' do
+      results = workflow.validate_data_types([1, 'test'], fld_array, '', true)
+      expect(results).to include true
+      expect(results[1][:error]).to be_falsey
+    end
+
+    it 'invalid with an error message if array is not an array' do
+      results = workflow.validate_data_types(3, fld_array, 'bad data', true)
+      expect(results).to include false
+      expect(results[1][:error]).to eql 'bad data'
+    end
+  end
+
   describe '#cast_value' do
     it 'integer' do
       expect(workflow.cast_value(1,   :integer)).to eq(1)
@@ -510,6 +605,14 @@ describe MiqRequestWorkflow do
     it 'button' do
       expect(workflow.cast_value('data', :button)).to eq('data')
       expect(workflow.cast_value(1, :button)).to      eq(1)
+    end
+
+    it 'array_integer' do
+      good_array = ["23", "2", 2, 10]
+      bad_array = ["sdf", "#", 2, 10]
+
+      expect(workflow.cast_value(good_array, :array_integer)).to eq([23, 2, 2, 10])
+      expect(workflow.cast_value(bad_array, :array_integer)).to eq([0, 0, 2, 10])
     end
 
     it 'other' do

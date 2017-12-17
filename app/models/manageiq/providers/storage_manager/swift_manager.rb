@@ -48,6 +48,10 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
     @description ||= "Swift ".freeze
   end
 
+  def name
+    "#{parent_manager.try(:name)} Swift Manager"
+  end
+
   def supports_api_version?
     true
   end

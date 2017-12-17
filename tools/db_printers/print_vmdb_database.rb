@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../../config/environment', __dir__)
+
 def print_records(recs, indent = '')
   recs = recs.sort_by { |r| r.name.downcase }
   recs.each do |r|

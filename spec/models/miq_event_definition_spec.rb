@@ -1,4 +1,5 @@
 describe MiqEventDefinition do
+  let(:event_defs) { MiqEventDefinition.all.group_by(&:name) }
   describe '.seed_default_events' do
     context 'there are 2 event definition sets' do
       let!(:set1) { create_set!('host_operations') }
@@ -16,7 +17,7 @@ describe MiqEventDefinition do
         context 'seeding default event definitions from that csv' do
           before do
             allow(File).to receive(:open).and_return(StringIO.new(csv))
-            MiqEventDefinition.seed_default_events
+            MiqEventDefinition.seed_default_events(event_defs)
           end
 
           it 'should create an event definition and make it a member of the set' do
@@ -37,7 +38,7 @@ describe MiqEventDefinition do
             context 'seeding again' do
               before do
                 allow(File).to receive(:open).and_return(StringIO.new(csv))
-                MiqEventDefinition.seed_default_events
+                MiqEventDefinition.seed_default_events(event_defs)
               end
 
               it 'should update the membership' do
@@ -128,7 +129,7 @@ describe MiqEventDefinition do
     context 'with defaults in db' do
       before do
         MiqEventDefinitionSet.seed
-        described_class.seed_default_events
+        described_class.seed_default_events(event_defs)
       end
 
       it "won't update an event with a definition (keyed as a string)" do

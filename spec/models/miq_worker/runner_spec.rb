@@ -38,4 +38,35 @@ describe MiqWorker::Runner do
       expect(@worker_base.worker_monitor_drb).to eq 0
     end
   end
+
+  context "#get_messages" do
+    before do
+      allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)
+      @worker_base = MiqWorker::Runner.new
+    end
+
+    it "gets sync_config when last config change was recent" do
+      allow(@worker_base).to receive(:server_last_change).with(:last_config_change).and_return(1.minute.from_now.utc)
+
+      expect(@worker_base.get_messages).to eq([["sync_config"]])
+    end
+  end
+
+  context "#process_message" do
+    before do
+      allow(MiqServer).to receive(:my_zone).and_return("default")
+      @miq_server = EvmSpecHelper.local_miq_server
+      allow(@miq_server).to receive(:active_role).and_return("automate)")
+
+      @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :type => "MiqGenericWorker")
+      @worker_base = MiqWorker::Runner.new(:guid => @worker.guid)
+    end
+
+    it "syncs roles and configuration" do
+      expect(@worker_base).to receive(:after_sync_active_roles)
+      expect(@worker_base).to receive(:after_sync_config)
+
+      @worker_base.send(:process_message, "sync_config")
+    end
+  end
 end

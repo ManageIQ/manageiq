@@ -1,10 +1,10 @@
 describe ServiceOrchestration do
   let(:manager_by_setter)  { FactoryGirl.create(:ems_amazon) }
-  let(:template_by_setter) { FactoryGirl.create(:orchestration_template_cfn) }
+  let(:template_by_setter) { FactoryGirl.create(:orchestration_template) }
   let(:manager_by_dialog)  { FactoryGirl.create(:ems_amazon) }
-  let(:template_by_dialog) { FactoryGirl.create(:orchestration_template_cfn) }
+  let(:template_by_dialog) { FactoryGirl.create(:orchestration_template) }
   let(:manager_in_st)      { FactoryGirl.create(:ems_amazon) }
-  let(:template_in_st)     { FactoryGirl.create(:orchestration_template_cfn) }
+  let(:template_in_st)     { FactoryGirl.create(:orchestration_template) }
   let(:deployed_stack)     { FactoryGirl.create(:orchestration_stack_amazon) }
 
   let(:service_template) do
@@ -56,13 +56,31 @@ describe ServiceOrchestration do
   end
 
   describe "#my_zone" do
-    it "takes the zone from ext_management_system" do
+    it "deployed stack, takes the zone from ext_management_system" do
       deployed_stack.ext_management_system = manager_by_setter
       expect(deployed_stack.my_zone).to eq(manager_by_setter.my_zone)
     end
 
-    it "returns nil if ext_management_system is not valid" do
-      expect(deployed_stack.my_zone).to eq(nil)
+    it "deployed stack, returns nil zone if ext_management_system is not valid" do
+      expect(deployed_stack.my_zone).to be_nil
+    end
+
+    it "service, takes the zone from orchestration_manager" do
+      ems = FactoryGirl.create(:ems_amazon, :zone => FactoryGirl.create(:zone))
+      deployed_stack.direct_vms << FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
+      expect(service_with_deployed_stack.my_zone).to eq(service.orchestration_manager.my_zone)
+    end
+
+    it "service, takes the zone from VM ext_management_system if no orchestration_manager" do
+      ems = FactoryGirl.create(:ems_amazon, :zone => FactoryGirl.create(:zone))
+      deployed_stack.direct_vms << FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
+      service.orchestration_manager = nil
+      expect(service_with_deployed_stack.my_zone).to eq(service_with_deployed_stack.vms.first.ext_management_system.my_zone)
+    end
+
+    it "service, returns nil zone if no orchestration_manager and no VMs" do
+      service.orchestration_manager = nil
+      expect(service_with_deployed_stack.my_zone).to be_nil
     end
   end
 
@@ -240,6 +258,8 @@ describe ServiceOrchestration do
       allow(ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack).to receive(
         :raw_create_stack).and_return("ems_ref")
       @resulting_stack = service.deploy_orchestration_stack
+
+      service.miq_request_task = FactoryGirl.create(:service_template_provision_task)
     end
 
     it 'sets owners for all vms included in the stack' do

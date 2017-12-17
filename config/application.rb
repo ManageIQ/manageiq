@@ -9,8 +9,26 @@ require 'active_job/railtie'
 require 'sprockets/railtie'
 require 'action_cable/engine'
 
+# We use bundler groups to select which dependencies to require in our different processes.
+#  * Anything not in a group are in bundler's 'default' group, and are required all the time
+#  * Anything in development, test, or production will get required by Bundler.require(*Rails.groups) in application.rb
+#    See: https://github.com/rails/rails/blob/c48b21685f4fec1c7a1c9b4e0dde4da89140ee22/railties/lib/rails.rb#L81-L101
+#
+#  Loading application.rb requires any additional BUNDLER_GROUPS based on the environment variable.
+#  This variable should be a comma separated list of groups.
+#  The default BUNDLER_GROUPS below includes all bundler groups not in the Rails.groups.
+#
+ENV['BUNDLER_GROUPS'] ||= "manageiq_default,ui_dependencies"
+
 if defined?(Bundler)
-  Bundler.require(*Rails.groups, :ui_dependencies)
+  groups = ENV['BUNDLER_GROUPS'].split(",").collect(&:to_sym)
+
+  if $DEBUG
+    puts "** Loading Rails bundler groups: #{Rails.groups.inspect}"
+    puts "** Loading other bundler groups: #{groups.inspect}"
+  end
+
+  Bundler.require(*Rails.groups, *groups)
 end
 
 module Vmdb

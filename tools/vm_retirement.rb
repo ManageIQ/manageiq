@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 def header
   output  = "Name\tOwner\tOwner Userid\tOwning Group\tRetired?\tRetirement Date\tRetirement Warning"
   output += "\n"
@@ -100,9 +103,9 @@ case parameters[:verb].downcase
 when "list"
   list
 when "list_invalid"
-  list_invalid parameters[:valid_warnings]
+  list_invalid(parameters[:valid_warnings])
 when "reset_invalid"
-  reset_invalid parameters[:valid_warnings], parameters[:default_warning]
+  reset_invalid(parameters[:valid_warnings], parameters[:default_warning])
 else
   puts "Invalid Verb on Command Line: <#{parameters[:verb]}>"
 end

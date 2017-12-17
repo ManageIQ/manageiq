@@ -31,21 +31,21 @@ module ManagerRefresh
                                          :options     => options)
     end
 
-    # @return [String] A String containing a name of each target in the TargetCollection
+    # @return [String] A String containing a summary
     def name
-      "Collection of targets with name: #{targets.collect(&:name)}"
+      "Collection of #{targets.size} targets"
     end
 
     # @return [String] A String containing an id of each target in the TargetCollection
     def id
-      "Collection of targets with id: #{targets.collect(&:id)}"
+      "Collection of targets with id: #{targets.collect(&:name)}"
     end
 
     # Returns targets in a format:
-    # {
-    #   :vms => {:ems_ref => Set.new(["vm_ref_1", "vm_ref2"])}
-    #   :network_ports => {:ems_ref => Set.new(["network_port_1", "network_port2"])
-    # }
+    #   {
+    #     :vms => {:ems_ref => Set.new(["vm_ref_1", "vm_ref2"])},
+    #     :network_ports => {:ems_ref => Set.new(["network_port_1", "network_port2"])
+    #   }
     #
     # Then we can quickly access all objects affected by:
     #   NetworkPort.where(target_collection.manager_refs_by_association[:network_ports].to_a) =>

@@ -329,16 +329,6 @@
     search_type: default
     db: Host
 - attributes:
-    name: default_Status / Running
-    description: Status / Running
-    filter: !ruby/object:MiqExpression
-      exp:
-        INCLUDES:
-          field: Host-power_state
-          value: "on"
-    search_type: default
-    db: Host
-- attributes:
     name: default_Status / Stopped
     description: Status / Stopped
     filter: !ruby/object:MiqExpression
@@ -377,17 +367,6 @@
         INCLUDES:
           field: Host-power_state
           value: "on"
-    search_type: default
-    db: Host
-- attributes:
-    name: default_Status / Stopped
-    description: Status / Stopped
-    filter: !ruby/object:MiqExpression
-      exp:
-        not:
-          INCLUDES:
-            field: Host-power_state
-            value: "on"
     search_type: default
     db: Host
 - attributes:
@@ -1305,3 +1284,137 @@
           value: "waiting"
     search_type: default
     db: Container
+- attributes:
+    name: default_Over Sized
+    description: Over Sized
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - ">=":
+            field: PhysicalServer.hardware-disk_capacity
+            value: 50039280896
+        - IS NOT EMPTY:
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Platform / Lenovo
+    description: Platform / Lenovo
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: PhysicalServer-type
+          value: ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: PhysicalServer-power_state
+          value: "on"
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Status / Stopped
+    description: Status / Stopped
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: PhysicalServer-power_state
+            value: "on"
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Over Allocated
+    description: Over Allocated
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - ">=":
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: 50
+        - IS NOT EMPTY:
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Under Allocated
+    description: Under Allocated
+    filter: !ruby/object:MiqExpression
+      exp:
+        and:
+        - "<=":
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: 35
+        - IS NOT EMPTY:
+            field: PhysicalServer.hardware-v_pct_free_disk_space
+            value: ""
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Guest OS / Windows
+    description: Guest OS / Windows
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: PhysicalServer.computer_system.operating_system-product_name
+          value: Win
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Guest OS / Linux
+    description: Guest OS / Linux
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: PhysicalServer.computer_system.operating_system-product_name
+            value: Win
+    search_type: default
+    db: PhysicalServer
+- attributes:
+    name: default_Environment / Dev
+    description: Environment / Dev
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Service.managed-environment
+          value: dev
+    search_type: default
+    db: Service
+- attributes:
+    name: default_Environment / Prod
+    description: Environment / Prod
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Service.managed-environment
+          value: prod
+    search_type: default
+    db: Service
+- attributes:
+    name: default_Environment / Test
+    description: Environment / Test
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Service.managed-environment
+          value: test
+    search_type: default
+    db: Service
+- attributes:
+    name: default_Environment / UAT
+    description: Environment / UAT
+    filter: !ruby/object:MiqExpression
+      exp:
+        CONTAINS:
+          tag: Service.managed-environment
+          value: uat
+    search_type: default
+    db: Service

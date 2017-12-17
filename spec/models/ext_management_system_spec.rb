@@ -33,12 +33,16 @@ describe ExtManagementSystem do
       "hawkular"                    => "Hawkular",
       "hawkular_datawarehouse"      => "Hawkular Datawarehouse",
       "kubernetes"                  => "Kubernetes",
+      "kubernetes_monitor"          => "Kubernetes Monitor",
+      "kubevirt"                    => "KubeVirt",
       "openshift"                   => "OpenShift",
+      "openshift_monitor"           => "Openshift Monitor",
       "openstack"                   => "OpenStack",
       "openstack_infra"             => "OpenStack Platform Director",
       "openstack_network"           => "OpenStack Network",
       "lenovo_ph_infra"             => "Lenovo XClarity",
       "nuage_network"               => "Nuage Network Manager",
+      "redhat_network"              => "Redhat Network",
       "rhevm"                       => "Red Hat Virtualization",
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",
@@ -405,6 +409,39 @@ describe ExtManagementSystem do
       FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
       ems.destroy
       expect(ExtManagementSystem.count).to eq(1)
+    end
+
+    it "queues up destroy for child_managers" do
+      child_manager = FactoryGirl.create(:ext_management_system)
+      ems = FactoryGirl.create(:ext_management_system, :child_managers => [child_manager])
+      expect(described_class).to receive(:schedule_destroy_queue).with(ems.id)
+      expect(described_class).to receive(:schedule_destroy_queue).with(child_manager.id)
+      described_class.destroy_queue(ems.id)
+    end
+  end
+
+  context "virtual column :supports_block_storage" do
+    it "returns true if block storage is supported" do
+      ems = FactoryGirl.create(:ext_management_system)
+      allow(ems).to receive(:supports_block_storage).and_return(true)
+      expect(ems.supports_block_storage).to eq(true)
+    end
+  end
+
+  context "virtual column :supports_cloud_object_store_container_create" do
+    it "returns true if cloud_object_store_container_create is supported" do
+      ems = FactoryGirl.create(:ext_management_system)
+      allow(ems).to receive(:supports_cloud_object_store_container_create).and_return(true)
+      expect(ems.supports_cloud_object_store_container_create).to eq(true)
+    end
+  end
+
+  describe ".raw_connect?" do
+    it "returns true if validation was successful" do
+      connection = double
+      allow(ManageIQ::Providers::Amazon::CloudManager).to receive(:raw_connect).and_return(connection)
+
+      expect(ManageIQ::Providers::Amazon::CloudManager.raw_connect?).to eq(true)
     end
   end
 end

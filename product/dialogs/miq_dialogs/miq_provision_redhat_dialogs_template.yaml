@@ -100,7 +100,7 @@
         :owner_email:
           :description: E-Mail
           :required_method: :validate_regex
-          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i 
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
           :required: true
           :display: :edit
           :data_type: :string
@@ -195,6 +195,25 @@
           :required: false
           :display: :edit
           :data_type: :string
+        :sysprep_enabled:
+          :values_from:
+            :method: :allowed_customization
+          :description: Customize
+          :required: false
+          :display: :edit
+          :default: disabled
+          :data_type: :string
+        :sysprep_upload_file:
+          :description: Upload
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_upload_text:
+          :description: Sysprep Text
+          :required_method: :validate_sysprep_upload
+          :required: true
+          :display: :edit
+          :data_type: :string
       :display: :show
     :environment:
       :description: Environment
@@ -204,7 +223,9 @@
             :method: :allowed_clusters
           :auto_select_single: true
           :description: Name
-          :required: false
+          :required: true
+          :required_method: :validate_placement
+          :required_description: Cluster Name
           :display: :show
           :data_type: :integer
         :cluster_filter:
@@ -483,6 +504,14 @@
           :display: :edit
           :data_type: :integer
           :validation_method: :validate_memory_reservation
+        :memory_limit:
+          :description: Memory (MB)
+          :required: false
+          :notes: (Max limit is determined by Operating System type and Architecture)
+          :display: :edit
+          :data_type: :integer
+          :notes_display: :show
+          :validation_method: :validate_memory_limit
         :network_adapters:
           :values:
             1: "1"

@@ -2,10 +2,12 @@ module ManagerRefresh
   class InventoryObjectLazy
     include Vmdb::Logging
 
-    attr_reader :ems_ref, :inventory_collection, :key, :default
+    attr_reader :ems_ref, :ref, :inventory_collection, :key, :default
 
-    def initialize(inventory_collection, ems_ref, key: nil, default: nil)
+    # TODO: ems_ref is inaccurate name, doubly so if it depends on ref.
+    def initialize(inventory_collection, ems_ref, ref: :manager_ref, key: nil, default: nil)
       @ems_ref              = ems_ref
+      @ref                  = ref
       @inventory_collection = inventory_collection
       @key                  = key
       @default              = default
@@ -17,8 +19,9 @@ module ManagerRefresh
 
     def inspect
       suffix = ""
+      suffix += ", ref: #{ref}" if ref.present?
       suffix += ", key: #{key}" if key.present?
-      "InventoryObjectLazy:('#{self}', #{inventory_collection})#{suffix}"
+      "InventoryObjectLazy:('#{self}', #{inventory_collection}#{suffix})"
     end
 
     def to_raw_lazy_relation
@@ -75,7 +78,7 @@ module ManagerRefresh
     end
 
     def load_object
-      inventory_collection.find(to_s)
+      inventory_collection.find(to_s, :ref => ref)
     end
   end
 end

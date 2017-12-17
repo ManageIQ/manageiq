@@ -1,15 +1,15 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-11 16:27:50.925753 Z
 title: "Hardware information for Hosts"
-conditions: 
+conditions:
 updated_on: 2008-08-11 16:41:24.006921 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Hardware Information"
 rpt_group: Custom
 priority: 10
-col_order: 
+col_order:
 - name
 - ipaddress
 - hardware.manufacturer
@@ -20,15 +20,16 @@ col_order:
 - hardware.cpu_cores_per_socket
 - hardware.memory_mb
 - hardware.number_of_nics
-timeline: 
+- hardware.serial_number
+timeline:
 id: 70
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  hardware: 
-    columns: 
+filename:
+include:
+  hardware:
+    columns:
     - manufacturer
     - cpu_type
     - model
@@ -37,14 +38,15 @@ include:
     - cpu_cores_per_socket
     - memory_mb
     - number_of_nics
+    - serial_number
 db: Host
-cols: 
+cols:
 - name
 - ipaddress
 template_type: report
-group: 
-sortby: 
-headers: 
+group:
+sortby:
+headers:
 - Host Name
 - IP Address
 - Hardware Manufacturer
@@ -55,3 +57,4 @@ headers:
 - Hardware Cores Per Socket
 - Hardware RAM
 - Hardware Number Of Nics
+- Serial Number

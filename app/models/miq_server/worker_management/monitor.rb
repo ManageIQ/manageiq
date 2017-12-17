@@ -135,16 +135,10 @@ module MiqServer::WorkerManagement::Monitor
 
     if resync_needed
       @last_sync = Time.now.utc
-      if (config_changed && roles_changed) || sync_interval_reached
-        sync_message = "sync_active_roles_and_config"
-      elsif config_changed
-        sync_message = "sync_config"
-      else
-        sync_message = "sync_active_roles"
-      end
+      sync_message = "sync_config"
 
       sync_config                if config_changed
-      set_assigned_roles         if config_changed
+      sync_assigned_roles        if config_changed
       log_role_changes           if roles_changed
       sync_active_roles          if roles_changed
       set_active_role_flags      if roles_changed
@@ -153,8 +147,22 @@ module MiqServer::WorkerManagement::Monitor
       start_apache               if roles_changed &&  apache_needed?
 
       reset_queue_messages       if config_changed || roles_changed
+
+      update_sync_timestamp(@last_sync)
     end
 
     return resync_needed, sync_message
+  end
+
+  def set_last_change(key, value)
+    key_store.set(key, value)
+  end
+
+  def key_store
+    @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
+  end
+
+  def update_sync_timestamp(last_sync)
+    set_last_change("last_config_change", last_sync)
   end
 end

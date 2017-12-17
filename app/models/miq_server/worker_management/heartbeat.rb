@@ -31,25 +31,10 @@ module MiqServer::WorkerManagement::Heartbeat
       h[:queue_name] ||= queue_name
     end unless @workers_lock.nil?
 
-    # Special process the sync_ messages to send the current values of what to synchronize
-    messages.collect do |message, *args|
-      case message
-      when "sync_active_roles"
-        [message, {:roles => @active_role_names}]
-      else
-        [message, *args]
-      end
-    end
+    messages
   end
 
   def worker_set_message(w, message, *args)
-    # Special process for this compound message, by breaking it up into 2 simpler messages
-    if message == 'sync_active_roles_and_config'
-      worker_set_message(w, 'sync_active_roles')
-      worker_set_message(w, 'sync_config')
-      return
-    end
-
     _log.info("#{w.format_full_log_msg} is being requested to #{message}")
     @workers_lock.synchronize(:EX) do
       worker_add_message(w.pid, [message, *args]) if @workers.key?(w.pid)
@@ -108,6 +93,6 @@ module MiqServer::WorkerManagement::Heartbeat
   end
 
   def workers_last_heartbeat_to_file(w)
-    File.exist?(w.heartbeat_file) ? File.mtime(w.heartbeat_file).utc : Time.now.utc
+    File.mtime(w.heartbeat_file).utc if File.exist?(w.heartbeat_file)
   end
 end

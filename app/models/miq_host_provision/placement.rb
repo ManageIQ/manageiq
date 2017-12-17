@@ -31,7 +31,7 @@ module MiqHostProvision::Placement
     if host.is_vmware?
       place_in_ems_vmware
     else
-      _log.warn "VMM Vendor [#{host.vmm_vendor_display}] is not supported"
+      _log.warn("VMM Vendor [#{host.vmm_vendor_display}] is not supported")
     end
   end
 end

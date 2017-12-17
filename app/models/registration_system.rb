@@ -73,7 +73,7 @@ module RegistrationSystem
   end
 
   def self.verify_credentials(options = {})
-    LinuxAdmin::RegistrationSystem.validate_credentials(assemble_options(options))
+    LinuxAdmin::SubscriptionManager.validate_credentials(assemble_options(options))
   rescue NotImplementedError, LinuxAdmin::CredentialError
     false
   end
@@ -88,8 +88,6 @@ module RegistrationSystem
                       :proxy_user     => option_values[:proxy_username],
                       :proxy_password => option_values[:proxy_password])
   end
-
-  private
 
   def self.assemble_options(options)
     options = database_options if options.blank?

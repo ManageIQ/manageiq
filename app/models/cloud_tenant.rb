@@ -3,9 +3,10 @@ class CloudTenant < ApplicationRecord
   TENANT_MAPPING_ASSOCIATIONS = %i(vms_and_templates).freeze
 
   include NewWithTypeStiMixin
+  include CustomActionsMixin
   extend ActsAsTree::TreeWalker
 
-  belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "ManageIQ::Providers::CloudManager"
+  belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_one    :source_tenant, :as => :source, :class_name => 'Tenant'
   has_many   :security_groups
   has_many   :cloud_networks
@@ -42,7 +43,7 @@ class CloudTenant < ApplicationRecord
     raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
 
     klass = class_by_ems(ext_management_system)
-    created_cloud_tenant = klass.raw_create_cloud_tenant(ext_management_system, options)
+    klass.raw_create_cloud_tenant(ext_management_system, options)
   end
 
   def self.raw_create_cloud_tenant(_ext_management_system, _options = {})
@@ -138,6 +139,12 @@ class CloudTenant < ApplicationRecord
       object.miq_group_id = source_tenant.default_miq_group_id
       object.save!
     end
+  end
+
+  def update_source_tenant(tenant_params)
+    _log.info("CloudTenant #{name} has tenant #{source_tenant.name}")
+    _log.info("Updating Tenant #{source_tenant.name} with parameters: #{tenant_params.inspect}")
+    source_tenant.update(tenant_params)
   end
 
   def self.with_ext_management_system(ems_id)

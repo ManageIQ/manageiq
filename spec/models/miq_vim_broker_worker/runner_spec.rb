@@ -4,16 +4,15 @@ require 'VMwareWebService/MiqVimBroker'
 describe MiqVimBrokerWorker::Runner do
   before(:each) do
     _guid_2, _server_2, @zone_2 = EvmSpecHelper.create_guid_miq_server_zone
-    guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    _guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
-    other_ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
+    FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
 
     # General stubbing for testing any worker (methods called during initialize)
     @worker_guid = SecureRandom.uuid
     @worker_record = FactoryGirl.create(:miq_vim_broker_worker, :guid => @worker_guid, :miq_server_id => server.id)
     @drb_uri = "drb://127.0.0.1:12345"
     allow(DRb).to receive(:uri).and_return(@drb_uri)
-    allow_any_instance_of(described_class).to receive(:sync_active_roles)
     allow_any_instance_of(described_class).to receive(:sync_config)
     allow_any_instance_of(described_class).to receive(:set_connection_pool_size)
     allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_check).and_return([true, ""])
@@ -152,6 +151,14 @@ describe MiqVimBrokerWorker::Runner do
         @vim_broker_worker.create_miq_vim_broker_server
         expect(MiqVimBroker.cacheScope).to eq(:cache_scope_core)
       end
+
+      it "with ems_inventory role using update_driven_refresh" do
+        stub_settings(:prototype => {:ems_vmware => {:update_driven_refresh => true}})
+        @vim_broker_worker.instance_variable_set(:@active_roles, ['ems_inventory'])
+        expect(MiqVimBroker).to receive(:new).with(:server, 0).once
+        @vim_broker_worker.create_miq_vim_broker_server
+        expect(MiqVimBroker.cacheScope).to eq(:cache_scope_core)
+      end
     end
 
     it "#prime_all_ems" do
@@ -224,7 +231,7 @@ describe MiqVimBrokerWorker::Runner do
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
           expect(q.method_name).to eq("refresh")
-          expect(q.args).to eq([[[vm.class.name, vm.id]]])
+          expect(q.data).to eq([[vm.class.name, vm.id]])
         end
 
         it "will handle queued Host updates properly" do
@@ -246,7 +253,7 @@ describe MiqVimBrokerWorker::Runner do
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
           expect(q.method_name).to eq("refresh")
-          expect(q.args).to eq([[[host.class.name, host.id]]])
+          expect(q.data).to eq([[host.class.name, host.id]])
         end
 
         it "will handle create events properly" do
@@ -349,7 +356,7 @@ describe MiqVimBrokerWorker::Runner do
           q = MiqQueue.first
           expect(q.class_name).to eq("EmsRefresh")
           expect(q.method_name).to eq("refresh")
-          expect(q.args).to eq([[[vm2.class.name, vm2.id]]])
+          expect(q.data).to eq([[vm2.class.name, vm2.id]])
         end
 
         it "will reconnect to an EMS" do

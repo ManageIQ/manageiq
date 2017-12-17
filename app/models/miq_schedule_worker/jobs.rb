@@ -28,20 +28,8 @@ class MiqScheduleWorker::Jobs
     queue_work_on_each_zone(:class_name  => "Job", :method_name => "check_jobs_for_timeout")
   end
 
-  def service_retirement_check
-    queue_work_on_each_zone(:class_name  => "Service", :method_name => "retirement_check")
-  end
-
-  def vm_retirement_check
-    queue_work_on_each_zone(:class_name  => "Vm", :method_name => "retirement_check")
-  end
-
-  def orchestration_stack_retirement_check
-    queue_work_on_each_zone(:class_name  => "OrchestrationStack", :method_name => "retirement_check")
-  end
-
-  def load_balancer_retirement_check
-    queue_work_on_each_zone(:class_name  => "LoadBalancer", :method_name => "retirement_check")
+  def retirement_check
+    queue_work_on_each_zone(:class_name => 'RetirementManager', :method_name => 'check')
   end
 
   def host_authentication_check_schedule
@@ -117,10 +105,14 @@ class MiqScheduleWorker::Jobs
 
   def archived_entities_purge_timer
     queue_work(:class_name => "Container", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerNode", :method_name => "purge_timer", :zone => nil)
     queue_work(:class_name => "ContainerGroup", :method_name => "purge_timer", :zone => nil)
     queue_work(:class_name => "ContainerImage", :method_name => "purge_timer", :zone => nil)
     queue_work(:class_name => "ContainerProject", :method_name => "purge_timer", :zone => nil)
-    queue_work(:class_name => "ContainerDefinition", :method_name => "purge_timer", :zone => nil)
+  end
+
+  def binary_blob_purge_timer
+    queue_work(:class_name => "BinaryBlob", :method_name => "purge_timer", :zone => nil)
   end
 
   def miq_schedule_queue_scheduled_work(schedule_id, rufus_job)

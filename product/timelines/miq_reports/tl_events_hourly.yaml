@@ -40,15 +40,15 @@ cols:
 
 # Included tables (joined, has_one, has_many) and columns
 include:
-  ext_management_system: 
-    columns: 
+  ext_management_system:
+    columns:
     - name
   availability_zone:
     columns:
     - name
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - timestamp
 - event_type
 - source
@@ -125,7 +125,7 @@ dims:
 
 timeline:
   :field: EmsEvent-timestamp
-  :bands: 
+  :bands:
   - :text: true
     :gap: 0.0
     :unit: Hour

@@ -21,13 +21,12 @@ describe DialogSerializer do
     let(:dialogs) { [dialog] }
 
     let(:expected_data) do
-      [{
+      {
         "description"  => description,
         "buttons"      => buttons,
         "label"        => label,
-        "blueprint_id" => nil,
         "dialog_tabs"  => %w(serialized_dialog1 serialized_dialog2)
-      }]
+      }
     end
 
     before do
@@ -36,7 +35,7 @@ describe DialogSerializer do
     end
 
     it "serializes the dialog" do
-      expect(dialog_serializer.serialize(dialogs)).to eq(expected_data)
+      expect(dialog_serializer.serialize(dialogs)[0]).to eq(expected_data)
     end
   end
 end

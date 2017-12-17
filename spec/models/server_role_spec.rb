@@ -60,7 +60,7 @@ describe ServerRole do
 
     it "should import rows properly" do
       roles = @csv.split("\n")
-      cols  = roles.shift
+      roles.shift
       roles.each do |role|
         next if role =~ /^#.*$/ # skip commented lines
         name, description, max_concurrent, external_failover, role_scope = role.split(',')

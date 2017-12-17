@@ -18,11 +18,12 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     _log.info("#{log_header} Saving EMS Inventory...")
     if debug_trace
       require 'yaml'
-      _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
+      _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
     child_keys = [
       :physical_servers,
+      :customization_scripts
     ]
 
     # Save and link other subsections
@@ -49,6 +50,20 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     child_keys = [:computer_system, :asset_details, :hosts]
     save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref], child_keys)
     store_ids_for_new_records(ems.physical_servers, hashes, :ems_ref)
+  end
+
+  def save_customization_scripts_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.customization_scripts.reset
+    deletes = if target == ems
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(ems.customization_scripts, hashes, deletes, [:manager_ref])
+    store_ids_for_new_records(ems.customization_scripts, hashes, :manager_ref)
   end
 
   #

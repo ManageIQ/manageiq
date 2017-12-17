@@ -42,7 +42,7 @@ class ResourceAction < ApplicationRecord
   end
 
   def fqname=(value)
-    self.ae_namespace, self.ae_class, self.ae_instance, attr_name = MiqAeEngine::MiqAePath.split(value)
+    self.ae_namespace, self.ae_class, self.ae_instance, _attr_name = MiqAeEngine::MiqAePath.split(value)
   end
 
   def fqname

@@ -8,7 +8,6 @@ describe MiqScheduleWorker::Runner do
       @worker = FactoryGirl.create(:miq_schedule_worker, :guid => worker_guid, :miq_server_id => @miq_server.id)
 
       allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:initialize_rufus)
-      allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:sync_active_roles)
       allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:sync_config)
       allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:set_connection_pool_size)
 
@@ -147,7 +146,7 @@ describe MiqScheduleWorker::Runner do
           @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
 
           Timecop.freeze(first_at + 1.minute) do
-            schedules = @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => "miq_schedules_1")
+            @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => "miq_schedules_1")
 
             job = @user.jobs(:tag => "miq_schedules_1").first
             expect(job.next_time).to eq(Time.utc(2011, 2, 28, 8, 30, 0))
@@ -175,7 +174,6 @@ describe MiqScheduleWorker::Runner do
 
         context "calling check_roles_changed" do
           before(:each) do
-            # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
             allow(@schedule_worker).to receive(:worker_settings).and_return(Hash.new(5.minutes))
             @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
 

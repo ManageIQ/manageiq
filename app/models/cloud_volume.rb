@@ -7,6 +7,7 @@ class CloudVolume < ApplicationRecord
   include AvailabilityMixin
   include SupportsFeatureMixin
   include CloudTenancyMixin
+  include CustomActionsMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone
@@ -19,6 +20,10 @@ class CloudVolume < ApplicationRecord
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
 
   acts_as_miq_taggable
+
+  def self.volume_types
+    where.not(:volume_type => nil).group(:volume_type).pluck(:volume_type)
+  end
 
   def self.available
     left_outer_joins(:attachments).where("disks.backing_id" => nil)
@@ -51,9 +56,7 @@ class CloudVolume < ApplicationRecord
     raise ArgumentError, _("ext_management_system cannot be found") if ext_management_system.nil?
 
     klass = class_by_ems(ext_management_system)
-    tenant = options[:cloud_tenant]
-
-    created_volume = klass.raw_create_volume(ext_management_system, options)
+    klass.raw_create_volume(ext_management_system, options)
   end
 
   def self.validate_create_volume(ext_management_system)

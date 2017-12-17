@@ -5,13 +5,17 @@ module RetirementMixin
   RETIRING = 'retiring'
   ERROR_RETIRING = 'error'
 
+  included do
+    scope :scheduled_to_retire, -> { where(arel_table[:retires_on].not_eq(nil).or(arel_table[:retired].not_eq(true))) }
+  end
+
   module ClassMethods
     def retire(ids, options = {})
       ids.each do |id|
         object = find_by(:id => id)
         object.retire(options) if object.respond_to?(:retire)
       end
-      MiqQueue.put(:class_name => base_model.name, :method_name => "retirement_check")
+      MiqQueue.put(:class_name => 'RetirementManager', :method_name => 'check')
     end
   end
 
@@ -51,9 +55,9 @@ module RetirementMixin
 
   def extend_retires_on(days, date = Time.zone.now)
     raise _("Invalid Date specified: %{date}") % {:date => date} unless date.kind_of?(ActiveSupport::TimeWithZone)
-    _log.info "Extending Retirement Date on #{self.class.name} id:<#{self.id}>, name:<#{self.name}> "
+    _log.info("Extending Retirement Date on #{self.class.name} id:<#{self.id}>, name:<#{self.name}> ")
     new_retires_date = date.in_time_zone + days.to_i.days
-    _log.info "Original Date: #{date} Extend days: #{days} New Retirement Date: #{new_retires_date}"
+    _log.info("Original Date: #{date} Extend days: #{days} New Retirement Date: #{new_retires_date}")
     self.retires_on = new_retires_date
     save
   end

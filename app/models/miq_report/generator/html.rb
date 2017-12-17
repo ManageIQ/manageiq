@@ -1,6 +1,6 @@
 module MiqReport::Generator::Html
   def build_html_rows(clickable_rows = false)
-    tz = get_time_zone(Time.zone.name) if Time.zone
+    get_time_zone(Time.zone.name) if Time.zone
     html_rows = []
     group_counter = 0
     row = 0
@@ -79,7 +79,7 @@ module MiqReport::Generator::Html
     else
       if row_data[col_name].kind_of?(Time)
         output << "<td#{style_class} " + 'style="text-align:center">'
-      elsif row_data[col_name].kind_of?(Bignum) || row_data[col_name].kind_of?(Fixnum) || row_data[col_name].kind_of?(Float)
+      elsif row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
         output << "<td#{style_class} " + 'style="text-align:right">'
       else
         output << "<td#{style_class}>"
@@ -166,7 +166,8 @@ module MiqReport::Generator::Html
     atoms = col_options.fetch_path(col, :style) unless col_options.nil?
     return if atoms.nil?
 
-    nh = {}; row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, ".")] = v } # Convert keys to match expression fields
+    nh = {}
+    row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, ".")] = v } # Convert keys to match expression fields
     field = col_to_expression_col(col)
 
     atoms.each do |atom|

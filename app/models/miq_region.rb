@@ -128,7 +128,7 @@ class MiqRegion < ApplicationRecord
       end
 
       rows = conn.delete("DELETE FROM #{t} WHERE #{conditions}")
-      _log.info "Cleared [#{rows}] rows from table [#{t}]"
+      _log.info("Cleared [#{rows}] rows from table [#{t}]")
     end
   end
 
@@ -166,27 +166,31 @@ class MiqRegion < ApplicationRecord
   end
 
   def ems_clouds
-    ext_management_systems.select { |e| e.kind_of? EmsCloud }
+    ext_management_systems.select { |e| e.kind_of?(EmsCloud) }
   end
 
   def ems_infras
-    ext_management_systems.select { |e| e.kind_of? EmsInfra }
+    ext_management_systems.select { |e| e.kind_of?(EmsInfra) }
   end
 
   def ems_containers
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::ContainerManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::ContainerManager) }
   end
 
   def ems_middlewares
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::MiddlewareManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::MiddlewareManager) }
   end
 
   def ems_datawarehouses
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::DatawarehouseManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::DatawarehouseManager) }
+  end
+
+  def ems_monitors
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::MonitoringManager) }
   end
 
   def ems_configproviders
-    ext_management_systems.select { |e| e.kind_of? ManageIQ::Providers::ConfigurationManager }
+    ext_management_systems.select { |e| e.kind_of?(ManageIQ::Providers::ConfigurationManager) }
   end
 
   def assigned_roles
@@ -207,17 +211,17 @@ class MiqRegion < ApplicationRecord
 
   def remote_ui_ipaddress
     server = remote_ui_miq_server
-    server.nil? ? nil : server.ipaddress
+    server.try(:ipaddress)
   end
 
   def remote_ui_hostname
     server = remote_ui_miq_server
-    server.nil? ? nil : (server.hostname || server.ipaddress)
+    server && (server.hostname || server.ipaddress)
   end
 
   def remote_ui_url(contact_with = :hostname)
     hostname = send("remote_ui_#{contact_with}")
-    hostname.nil? ? nil : "https://#{hostname}"
+    hostname && "https://#{hostname}"
   end
 
   def remote_ws_miq_server
@@ -230,15 +234,19 @@ class MiqRegion < ApplicationRecord
 
   def remote_ws_ipaddress
     miq_server = remote_ws_miq_server
-    miq_server.nil? ? nil : miq_server.ipaddress
+    miq_server.try(:ipaddress)
   end
 
   def remote_ws_hostname
     miq_server = remote_ws_miq_server
-    miq_server.nil? ? nil : (miq_server.hostname || miq_server.ipaddress)
+    miq_server && (miq_server.hostname || miq_server.ipaddress)
   end
 
   def remote_ws_url
+    svr = remote_ws_miq_server
+    remote_url_override = svr.settings_for_resource.webservices.url if svr
+    return remote_url_override if remote_url_override
+
     hostname = remote_ws_address
     hostname && URI::HTTPS.build(:host => hostname).to_s
   end
@@ -254,43 +262,6 @@ class MiqRegion < ApplicationRecord
 
   def self.api_system_auth_token_for_region(region_id, user)
     find_by_region(region_id).api_system_auth_token(user)
-  end
-
-  #
-  # Region atStartup - log all management systems
-  #
-
-  def self.atStartup
-    region = my_region
-    prefix = "#{_log.prefix} Region: [#{region.region}], name: [#{region.name}]"
-    log_under_management(prefix)
-    log_not_under_management(prefix)
-  end
-
-  def self.log_under_management(prefix)
-    total_vms     = 0
-    total_hosts   = 0
-    total_sockets = 0
-
-    ExtManagementSystem.all.each do |e|
-      vms     = e.all_vms_and_templates.count
-      hosts   = e.all_hosts.count
-      sockets = e.aggregate_physical_cpus
-      $log.info("#{prefix}, EMS: [#{e.id}], Name: [#{e.name}], IP Address: [#{e.ipaddress}], Hostname: [#{e.hostname}], VMs: [#{vms}], Hosts: [#{hosts}], Sockets: [#{sockets}]")
-
-      total_vms += vms
-      total_hosts += hosts
-      total_sockets += sockets
-    end
-    $log.info("#{prefix}, Under Management: VMs: [#{total_vms}], Hosts: [#{total_hosts}], Sockets: [#{total_sockets}]")
-  end
-
-  def self.log_not_under_management(prefix)
-    hosts_objs = Host.where(:ems_id => nil)
-    hosts      = hosts_objs.count
-    vms        = VmOrTemplate.where(:ems_id => nil).count
-    sockets    = my_region.aggregate_physical_cpus(hosts_objs)
-    $log.info("#{prefix}, Not Under Management: VMs: [#{vms}], Hosts: [#{hosts}], Sockets: [#{sockets}]")
   end
 
   #

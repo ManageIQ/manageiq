@@ -60,6 +60,11 @@ FactoryGirl.define do
     chargeable_field { FactoryGirl.build(:chargeable_field_cpu_cores_used) }
   end
 
+  factory :chargeback_rate_detail_cpu_cores_allocated, :parent => :chargeback_rate_detail do
+    per_unit    "cores"
+    chargeable_field { FactoryGirl.build(:chargeable_field_cpu_cores_allocated) }
+  end
+
   factory :chargeback_rate_detail_cpu_allocated, :traits => [:daily],
                                                  :parent => :chargeback_rate_detail do
     per_unit    "cpu"
@@ -96,5 +101,9 @@ FactoryGirl.define do
 
   factory :chargeback_rate_detail_fixed_compute_cost, :traits => [:daily], :parent => :chargeback_rate_detail do
     chargeable_field { FactoryGirl.build(:chargeable_field_fixed_compute_1) }
+  end
+
+  factory :chargeback_rate_detail_metering_used, :traits => [:daily], :parent => :chargeback_rate_detail do
+    chargeable_field { FactoryGirl.build(:chargeable_field_metering_used) }
   end
 end

@@ -1,4 +1,3 @@
-
 describe ActsAsTaggable do
   before(:each) do
     @host1 = FactoryGirl.create(:host, :name => "HOST1")
@@ -15,6 +14,25 @@ describe ActsAsTaggable do
     @vm3.tag_with("Red Blue Yellow", :ns => "/Test", :cat => "MixedCase")
     @vm4.tag_with("nyc chi la", :cat => "someuser")
     @vm4.tag_add("bos phi blt")
+  end
+
+  describe '#writable_classification_tags' do
+    let(:parent_classification) { FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :read_only => false) }
+    let(:classification)        { FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent => parent_classification, :read_only => true) }
+
+    before do
+      classification.assign_entry_to(@vm1)
+    end
+
+    it "returns only tags as they would be entered in UI by user(edit tags screen)" do
+      expect(@vm1.tags.count).to eq(4)
+      expect(@vm1.writable_classification_tags.count).to eq(1)
+      expect(@vm1.writable_classification_tags.first.name).to eq('/managed/environment/prod')
+      expect(@vm1.writable_classification_tags.first).to be_kind_of(Tag)
+
+      expect(@vm3.writable_classification_tags.count).to eq(0)
+      expect(@vm3.tags.count).to eq(3)
+    end
   end
 
   context ".find_tagged_with" do
@@ -101,6 +119,24 @@ describe ActsAsTaggable do
     vm = Vm.find_by(:name => "VM1")
     expect(vm.tag_add("abc", :ns => "/test/tags")).to eq(["abc"])
     expect(Vm.find_tagged_with(:all => "red blue yellow abc", :ns => "/test/tags")).to eq([@vm1])
+  end
+
+  context "#tag_remove" do
+    it "works" do
+      vm = Vm.find_by(:name => "VM1")
+      vm.tag_add("foo1", :ns => "/test/tags")
+      vm.tag_add("foo2", :ns => "/test/tags")
+      expect(vm.tag_remove("foo1", :ns => "/test/tags")).to eq(["foo1"])
+      expect(Vm.find_tagged_with(:all => "foo2", :ns => "/test/tags")).to eq([@vm1])
+      expect(Vm.find_tagged_with(:all => "foo1", :ns => "/test/tags")).to be_empty
+    end
+
+    it "does nothing if tag doesn't exist" do
+      vm = Vm.find_by(:name => "VM1")
+      vm.tag_remove("foo3", :ns => "/test/tags")
+      expect(Tag.find_by(:name => "/test/tags/foo3")).to be_nil
+      expect(Vm.find_tagged_with(:all => "foo3", :ns => "/test/tags")).to be_empty
+    end
   end
 
   context "#is_tagged_with?" do

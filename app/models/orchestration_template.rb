@@ -15,21 +15,12 @@ class OrchestrationTemplate < ApplicationRecord
             :if         => :unique_md5?
   validates_presence_of :name
 
+  scope :orderable, -> { where(:orderable => true) }
+
   before_destroy :check_not_in_use
 
   attr_accessor :remote_proxy
   alias remote_proxy? remote_proxy
-
-  # Try to create the template if the name is not found in table
-  def self.seed
-    Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
-      Dir.glob(plugin.root.join('content', 'orchestration_templates', '*.{yaml,yml}')).each do |file|
-        hash = YAML.load_file(file)
-        next if hash[:type].constantize.find_by(:name => hash[:name])
-        find_or_create_by_contents(hash)
-      end
-    end
-  end
 
   # available templates for ordering an orchestration service
   def self.available
@@ -102,11 +93,12 @@ class OrchestrationTemplate < ApplicationRecord
   # Return array of OrchestrationParameters. (Deployment options are different from parameters, but they use same class)
   def deployment_options(_manager_class = nil)
     tenant_opt = OrchestrationTemplate::OrchestrationParameter.new(
-      :name        => "tenant_name",
-      :label       => "Tenant",
-      :data_type   => "string",
-      :description => "Tenant where the stack will be deployed",
-      :required    => true,
+      :name           => "tenant_name",
+      :label          => "Tenant",
+      :data_type      => "string",
+      :description    => "Tenant where the stack will be deployed",
+      :required       => true,
+      :reconfigurable => false,
       :constraints => [
         OrchestrationTemplate::OrchestrationParameterAllowedDynamic.new(
           :fqname => "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
@@ -115,12 +107,13 @@ class OrchestrationTemplate < ApplicationRecord
     )
 
     stack_name_opt = OrchestrationTemplate::OrchestrationParameter.new(
-      :name        => "stack_name",
-      :label       => "Stack Name",
-      :data_type   => "string",
-      :description => "Name of the stack",
-      :required    => true,
-      :constraints => [
+      :name           => "stack_name",
+      :label          => "Stack Name",
+      :data_type      => "string",
+      :description    => "Name of the stack",
+      :required       => true,
+      :reconfigurable => false,
+      :constraints    => [
         OrchestrationTemplate::OrchestrationParameterPattern.new(
           :pattern => '^[A-Za-z][A-Za-z0-9\-]*$'
         )
@@ -131,7 +124,7 @@ class OrchestrationTemplate < ApplicationRecord
 
   # List managers that may be able to deploy this template
   def self.eligible_managers
-    Rbac::Filterer.filtered(ExtManagementSystem, :where_clause => {:type => eligible_manager_types})
+    Rbac::Filterer.filtered(ExtManagementSystem, :named_scope => [[:with_eligible_manager_types, eligible_manager_types]])
   end
 
   delegate :eligible_managers, :to => :class
@@ -148,7 +141,7 @@ class OrchestrationTemplate < ApplicationRecord
     test_managers.each do |mgr|
       return mgr.orchestration_template_validate(self) rescue nil
     end
-    "No #{ui_lookup(:model => 'ExtManagementSystem').downcase} is capable to validate the template"
+    "No provider is capable to validate the template"
   end
 
   def validate_format

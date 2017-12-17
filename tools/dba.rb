@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+require File.expand_path('../config/environment', __dir__)
+
 module Dba
   def self.select(*args)
     ActiveRecord::Base.connection.send(:select, *args)
@@ -7,15 +10,15 @@ module Dba
   # Extended PostgreSQL DBA functionality
   #
   def self.client_connections
-    all_connections = select(<<-SQL, "Client Connections")
-                      SELECT client_addr   AS client_address
-                           , datname       AS database
-                           , procpid       AS spid
-                           , waiting       AS number_waiting
-                           , current_query AS query
-                        FROM pg_stat_activity
-                       ORDER BY 1, 2
-                      SQL
+    select(<<-SQL, "Client Connections")
+    SELECT client_addr   AS client_address
+         , datname       AS database
+         , procpid       AS spid
+         , waiting       AS number_waiting
+         , current_query AS query
+      FROM pg_stat_activity
+     ORDER BY 1, 2
+    SQL
   end
 
   # Taken from: https://github.com/bucardo/check_postgres/blob/2.19.0/check_postgres.pl#L3492
@@ -27,7 +30,7 @@ module Dba
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   # Changed to a UNION so that it is easier to read the output and to separate table stats from idx stats.
   def self.database_bloat
-    db_array = select(<<-SQL, "Database Bloat")
+    select(<<-SQL, "Database Bloat")
               SELECT   tablename                                         AS table_name
                      , ' '                                               AS index_name
                      , reltuples::bigint                                 AS rows
@@ -165,7 +168,7 @@ module Dba
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   # Removed some CASE... logic statements as not needed for our requirements.
   def self.table_bloat
-    tbl_array = select(<<-SQL, "Table Bloat")
+    select(<<-SQL, "Table Bloat")
                 SELECT tablename                                                    AS table_name
                      , reltuples::bigint                                            AS rows
                      , relpages::bigint                                             AS pages
@@ -241,7 +244,7 @@ module Dba
   # Removed  schemaname and totalwastedbytes columns from the original to fit our requirements.
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   def self.index_bloat
-    idx_array = select(<<-SQL, "Index Bloat")
+    select(<<-SQL, "Index Bloat")
                 SELECT   tablename                                         AS table_name
                        , iname                                             AS index_name
                        , ituples::bigint                                   AS rows
@@ -328,30 +331,30 @@ module Dba
   end
 
   def self.table_statistics
-    tbl_stats_array = select(<<-SQL, "Table Statistics")
-                SELECT relname            AS table_name
-                     , seq_scan           AS table_scan
-                     , seq_tup_read       AS sequential_rows_read
-                     , idx_scan           AS index_scan
-                     , idx_tup_fetch      AS index_rows_fetched
-                     , n_tup_ins          AS rows_inserted
-                     , n_tup_upd          AS rows_updated
-                     , n_tup_del          AS rows_deleted
-                     , n_tup_hot_upd      AS rows_hot_updated
-                     , n_live_tup         AS rows_live
-                     , n_dead_tup         AS rows_dead
-                     , last_vacuum        AS last_vacuum_date
-                     , last_autovacuum    AS last_autovacuum_date
-                     , last_analyze       AS last_analyze_date
-                     , last_autoanalyze   AS last_autoanalyze_date
-                  FROM pg_stat_all_tables
-                 WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
-                 ORDER BY relname ASC ;
-                 SQL
+    select(<<-SQL, "Table Statistics")
+    SELECT relname            AS table_name
+         , seq_scan           AS table_scan
+         , seq_tup_read       AS sequential_rows_read
+         , idx_scan           AS index_scan
+         , idx_tup_fetch      AS index_rows_fetched
+         , n_tup_ins          AS rows_inserted
+         , n_tup_upd          AS rows_updated
+         , n_tup_del          AS rows_deleted
+         , n_tup_hot_upd      AS rows_hot_updated
+         , n_live_tup         AS rows_live
+         , n_dead_tup         AS rows_dead
+         , last_vacuum        AS last_vacuum_date
+         , last_autovacuum    AS last_autovacuum_date
+         , last_analyze       AS last_analyze_date
+         , last_autoanalyze   AS last_autoanalyze_date
+      FROM pg_stat_all_tables
+      WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+      ORDER BY relname ASC ;
+    SQL
   end
 
   def self.table_size
-    tbl_size_array = select(<<-SQL, "Table Size")
+    select(<<-SQL, "Table Size")
                 SELECT relname                                                           AS table_name
                      , to_char(reltuples, '999G999G999G999')                             AS rows
                      , to_char(((relpages * 8.0) / (1024 *1024)), '999G999.999')         AS size_in_gb

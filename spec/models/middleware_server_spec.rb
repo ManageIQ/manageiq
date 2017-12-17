@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MiddlewareServer do
   subject(:server) { MiddlewareServer.new }
 

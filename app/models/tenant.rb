@@ -6,6 +6,7 @@ class Tenant < ApplicationRecord
   DEFAULT_URL = nil
 
   include ActiveVmAggregationMixin
+  include CustomActionsMixin
 
   acts_as_miq_taggable
 
@@ -41,7 +42,9 @@ class Tenant < ApplicationRecord
   validate  :validate_only_one_root
   validates :description, :presence => true
   validates :name, :presence => true, :unless => :use_config_for_attributes?
-  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
+  validates :name, :uniqueness => {:scope      => :ancestry,
+                                   :conditions => -> { in_my_region },
+                                   :message    => "should be unique per parent"}
   validate :validate_default_tenant, :on => :update, :if => :default_miq_group_id_changed?
 
   scope :all_tenants,  -> { where(:divisible => true) }
@@ -151,10 +154,12 @@ class Tenant < ApplicationRecord
   end
 
   def combined_quotas
-    tenant_quotas.each_with_object({}) do |q, h|
+    TenantQuota.quota_definitions.each_with_object({}) do |d, h|
+      scope_name, _ = d
+      q = tenant_quotas.send(scope_name).take || tenant_quotas.build(:name => scope_name, :value => 0)
       h[q.name.to_sym] = q.quota_hash
       h[q.name.to_sym][:allocated]   = q.allocated
-      h[q.name.to_sym][:available]   = q.available
+      h[q.name.to_sym][:available]   = q.available unless q.new_record?
       h[q.name.to_sym][:used]        = q.used
     end.reverse_merge(TenantQuota.quota_definitions)
   end

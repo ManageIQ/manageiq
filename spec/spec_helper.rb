@@ -7,19 +7,9 @@ end
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
-require 'application_helper'
-
-require 'rails-controller-testing'
 require 'rspec/rails'
 require 'vcr'
 require 'cgi'
-
-# FIXME: This bypasses the lookup of Javascript dependencies in tests until they can be found and uncoupled
-class << ActionController::Base.helpers
-  def image_path(path, options = {})
-    path
-  end
-end
 
 # Fail tests that try to include stuff in `main`
 require_relative 'support/test_contamination'
@@ -31,6 +21,10 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f }
 # include the manageiq-gems-pending matchers
 Dir[ManageIQ::Gems::Pending.root.join("spec/support/custom_matchers/*.rb")].each { |f| require f }
+
+# To be extracted with embedded_ansible
+require ManageIQ::Providers::AnsibleTower::Engine.root.join("spec/support/vcr_helper.rb").to_s
+Dir[ManageIQ::Providers::AnsibleTower::Engine.root.join("spec/support/ansible_shared/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
@@ -54,31 +48,7 @@ RSpec.configure do |config|
     config.example_status_persistence_file_path = Rails.root.join("tmp/rspec_example_store.txt")
   end
 
-  config.include UiConstants,    :type => :view
-
-  config.include UiConstants,          :type => :controller
-  config.include Spec::Support::AuthHelper, :type => :controller
-
-  config.include Spec::Support::ApiHelper, :rest_api => true
-  config.include Spec::Support::AuthRequestHelper, :type => :request
-  config.define_derived_metadata(:file_path => /spec\/requests\/api/) do |metadata|
-    metadata[:aggregate_failures] = true
-    metadata[:rest_api] = true
-  end
-
-  config.include Spec::Support::AuthHelper, :type => :helper
-
-  config.include Spec::Support::PresenterHelper, :type => :presenter
-  config.define_derived_metadata(:file_path => /spec\/presenters/) do |metadata|
-    metadata[:type] ||= :presenter
-  end
-
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
-  config.include Spec::Support::ButtonHelper, :type => :button
-  config.include Spec::Support::AuthHelper, :type => :button
-  config.define_derived_metadata(:file_path => /spec\/helpers\/application_helper\/buttons/) do |metadata|
-    metadata[:type] = :button
-  end
 
   # config.before(:all) do
   #   EvmSpecHelper.log_ruby_object_usage
@@ -89,10 +59,7 @@ RSpec.configure do |config|
 
   config.before(:each) do |example|
     EmsRefresh.try(:debug_failures=, true)
-    ApplicationController.handle_exceptions = false if %w(controller requests).include?(example.metadata[:type])
   end
-
-  config.before(:each, :rest_api => true) { init_api_spec_env }
 
   config.around(:each) do |example|
     EvmSpecHelper.clear_caches { example.run }

@@ -1,7 +1,7 @@
 class MiqExpression::Tag < MiqExpression::Target
   REGEX = /
-(?<model_name>([[:alnum:]]*(::)?)+)
-\.(?<associations>([a-z_]+\.)*)
+(?<model_name>([[:alnum:]]*(::)?){4})
+\.?(?<associations>([a-z_]+\.)*)
 (?<namespace>\bmanaged|user_tag\b)
 -(?<column>[a-z]+[_[:alnum:]]+)
 /x
@@ -9,7 +9,7 @@ class MiqExpression::Tag < MiqExpression::Target
   MANAGED_NAMESPACE      = 'managed'.freeze
   USER_NAMESPACE         = 'user'.freeze
 
-  attr_reader :namespace
+  attr_reader :namespace, :base_namespace
 
   def self.parse(field)
     return unless field.include?('managed') || field.include?('user_tag')
@@ -22,6 +22,10 @@ class MiqExpression::Tag < MiqExpression::Target
     super(model, associations, column)
     @base_namespace = managed ? MANAGED_NAMESPACE : USER_NAMESPACE
     @namespace = "/#{@base_namespace}/#{column}"
+  end
+
+  def to_s
+    "#{[model, *associations, base_namespace].compact.join(".")}-#{column}"
   end
 
   def numeric?

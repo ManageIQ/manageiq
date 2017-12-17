@@ -28,7 +28,7 @@ def send_auth_command(challenge, response, data)
 
   text = JSON.dump(cmd)
   size = text.length + 1
-  $stdout.write "#{size}\n\n#{text}"
+  $stdout.write("#{size}\n\n#{text}")
   $stdout.flush
 end
 
@@ -48,7 +48,7 @@ def send_problem_init(problem, message, auth_result)
 
   text = JSON.dump(cmd)
   size = text.length + 1
-  $stdout.write "#{size}\n\n#{text}"
+  $stdout.write("#{size}\n\n#{text}")
   $stdout.flush
 end
 
@@ -68,7 +68,7 @@ def read_size(io)
     end
 
     if t.to_i.zero? && t != "0"
-      raise ArgumentError "Invalid frame: invalid size"
+      raise ArgumentError("Invalid frame: invalid size")
     end
 
     size = (size * 10) + t.to_i
@@ -76,7 +76,7 @@ def read_size(io)
   end
 
   if seen == 8
-    raise ArgumentError "Invalid frame: size too long"
+    raise ArgumentError("Invalid frame: size too long")
   end
 
   size
@@ -99,7 +99,7 @@ def read_auth_reply
   data = read_frame(1)
   cmd = JSON.parse(data)
   if cmd["command"] != "authorize" || !cmd["cookie"] || !cmd["response"]
-    raise ArgumentError "Did not receive a valid authorize command"
+    raise ArgumentError("Did not receive a valid authorize command")
   end
 
   cmd["response"]

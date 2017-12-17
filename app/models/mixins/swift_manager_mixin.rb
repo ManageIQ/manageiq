@@ -26,7 +26,7 @@ module SwiftManagerMixin
       begin
         swift_manager.save
         swift_manager.reload
-        _log.debug "swift_manager.id = #{swift_manager.id}"
+        _log.debug("swift_manager.id = #{swift_manager.id}")
 
         CloudObjectStoreContainer.where(:ems_id => id).update(:ems_id => swift_manager.id)
         CloudObjectStoreObject.where(:ems_id => id).update(:ems_id => swift_manager.id)

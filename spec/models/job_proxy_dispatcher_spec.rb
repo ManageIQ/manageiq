@@ -130,8 +130,6 @@ describe JobProxyDispatcher do
       context "with jobs, a default smartproxy for repo scanning" do
         before(:each) do
           allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
-          # JobProxyDispatcher.stub(:start_job_on_proxy).and_return(nil)
-          # MiqProxy.any_instance.stub(:concurrent_job_max).and_return(1)
           @repo_proxy = @proxies.last
           if @repo_proxy
             @repo_proxy.name = "repo_proxy"
@@ -174,6 +172,7 @@ describe JobProxyDispatcher do
     end
 
     context "with container and vms jobs" do
+      let (:container_image_classes) { ContainerImage.descendants.collect(&:name).append('ContainerImage') }
       before(:each) do
         @jobs = (@vms + @repo_vms).collect(&:raw_scan)
         User.current_user = FactoryGirl.create(:user)
@@ -191,10 +190,10 @@ describe JobProxyDispatcher do
         end
 
         it "returns only container images jobs when requested" do
-          jobs = dispatcher.pending_jobs(ContainerImage)
+          jobs = dispatcher.pending_jobs(dispatcher.container_image_scan_class)
           expect(jobs.count).to eq(@container_images.count)
           jobs.each do |x|
-            expect(x.target_class).to eq 'ContainerImage'
+            expect(container_image_classes).to include x.target_class
           end
           expect(jobs.count).to be > 0 # in case something unexpected goes wrong
         end
@@ -205,14 +204,14 @@ describe JobProxyDispatcher do
           jobs_by_ems, = dispatcher.pending_container_jobs
           expect(jobs_by_ems.keys).to match_array(@container_providers.map(&:id))
 
-          expect(jobs_by_ems[@container_providers.first.id].count).to eq(1)
-          expect(jobs_by_ems[@container_providers.second.id].count).to eq(2)
+          expect(jobs_by_ems[@container_providers.first.id].count).to eq(1 * container_image_classes.count)
+          expect(jobs_by_ems[@container_providers.second.id].count).to eq(2 * container_image_classes.count)
         end
       end
 
       describe "#active_container_scans_by_zone_and_ems" do
         it "returns active container acans for zone" do
-          job = @jobs.find { |j| j.target_class == ContainerImage.name }
+          job = @jobs.find { |j| container_image_classes.include?(j.target_class) }
           job.update(:dispatch_status => "active")
           provider = ExtManagementSystem.find(job.options[:ems_id])
           dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
@@ -226,30 +225,36 @@ describe JobProxyDispatcher do
         it "dispatches jobs until reaching limit" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 1})
           dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(1)
-          # 1 per ems, one ems has 1 job and the other 2
+          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
+            (3 * container_image_classes.count) - 2)
+          # 1 per ems, one ems has 1* job and the other 2*
+          # initial number of images per ems is multiplied by container_image_classes.count
         end
 
         it "does not dispach if limit is already reached" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 1})
           dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(1)
+          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
+            (3 * container_image_classes.count) - 2)
           dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(1)
+          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(
+            (3 * container_image_classes.count) - 2)
         end
 
         it "does not apply limit when concurrent_per_ems is 0" do
           stub_settings(:container_scanning => {:concurrent_per_ems => 0})
           dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(0)
-          # 1 per ems, one ems has 1 job and the other 2
+          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(0)
+          # 1 per ems, one ems has 1* job and the other 2*
+          # initial number of images per ems is multiplied by container_image_classes.count
         end
 
         it "does not apply limit when concurrent_per_ems is -1" do
           stub_settings(:container_scanning => {:concurrent_per_ems => -1})
           dispatcher.dispatch_container_scan_jobs
-          expect(Job.where(:target_class => ContainerImage, :dispatch_status => "pending").count).to eq(0)
-          # 1 per ems, one ems has 1 job and the other 2
+          expect(Job.where(:target_class => container_image_classes, :dispatch_status => "pending").count).to eq(0)
+          # 1 per ems, one ems has 1* job and the other 2*
+          # initial number of images per ems is multiplied by container_image_classes.count
         end
       end
     end

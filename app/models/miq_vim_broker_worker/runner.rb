@@ -1,6 +1,4 @@
 class MiqVimBrokerWorker::Runner < MiqWorker::Runner
-  self.wait_for_worker_monitor = false
-
   def after_initialize
     require 'thread'
 
@@ -47,8 +45,12 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     end
   end
 
+  def has_ems_inventory_role?
+    @active_roles.include?("ems_inventory") && !Settings.prototype.ems_vmware.update_driven_refresh
+  end
+
   def reset_broker_update_notification
-    @active_roles.include?("ems_inventory") ? enable_broker_update_notification : disable_broker_update_notification
+    has_ems_inventory_role? ? enable_broker_update_notification : disable_broker_update_notification
   end
 
   def enable_broker_update_notification
@@ -70,7 +72,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     # Set notify method at the class level for new connections, and at the
     #   instance level for existing connections.
-    MiqVimBroker.notifyMethod = @vim_broker_server.notifyMethod = ->(h) { @queue.enq h }
+    MiqVimBroker.notifyMethod = @vim_broker_server.notifyMethod = ->(h) { @queue.enq(h) }
 
     @notification_enabled = true
   end
@@ -93,7 +95,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def expected_broker_cache_scope
-    @active_roles.include?("ems_inventory") ? :cache_scope_ems_refresh : :cache_scope_core
+    has_ems_inventory_role? ? :cache_scope_ems_refresh : :cache_scope_core
   end
 
   def ems_ids_for_notify(address, userid)
@@ -114,7 +116,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def do_before_work_loop
-    if @active_roles.include?("ems_inventory") && @initial_emses_to_monitor.length > 0
+    if has_ems_inventory_role? && @initial_emses_to_monitor.length > 0
       _log.info("#{log_prefix} Queueing initial refresh for EMS.")
       EmsRefresh.queue_refresh(@initial_emses_to_monitor)
     end
@@ -206,12 +208,12 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     ems = ManageIQ::Providers::Vmware::InfraManager.find(ems_id)
     if ems.nil?
-      _log.error "#{log_prefix} Unable to find EMS with address: [#{event[:server]}]"
+      _log.error("#{log_prefix} Unable to find EMS with address: [#{event[:server]}]")
       return
     end
 
     unless self.class.emses_and_hosts_to_monitor.include?(ems)
-      _log.info "#{log_prefix} Not reconnecting inactive connection to #{event[:server]}"
+      _log.info("#{log_prefix} Not reconnecting inactive connection to #{event[:server]}")
       return
     end
 
@@ -323,7 +325,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     ems = ManageIQ::Providers::Vmware::InfraManager.find_by(:id => ems_id)
     if ems.nil?
-      _log.error "#{log_prefix} Unable to find EMS with id: [#{ems_id}]"
+      _log.error("#{log_prefix} Unable to find EMS with id: [#{ems_id}]")
       return
     end
 

@@ -76,24 +76,32 @@ class MiqSearch < ApplicationRecord
 
   FIXTURE_DIR = File.join(Rails.root, "db/fixtures")
   def self.seed
+    searches = where("name like 'default%'").index_by { |ms| "#{ms.name}-#{ms.db}" }
     fixture_file = File.join(FIXTURE_DIR, "miq_searches.yml")
     slist        = YAML.load_file(fixture_file) if File.exist?(fixture_file)
     slist ||= []
-
+    slist.group_by { |s| [s['attributes']['name'], s['attributes']['db']] }.each do |(name, db), dups|
+      _log.warn("duplicate entry for db=#{db} name=#{name}") if dups.size > 1
+    end
     slist.each do |search|
       attrs = search['attributes']
       name  = attrs['name']
       db    = attrs['db']
 
-      rec = find_by(:name => name, :db => db)
+      rec = searches["#{name}-#{db}"]
       if rec.nil?
         _log.info("Creating [#{name}]")
-        create!(attrs)
+        searches["#{name}-#{db}"] = create!(attrs)
       else
         # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column
         attrs.delete('search_key')
+
+        # properly compare filter
+        filter = attrs.delete('filter')
+        rec.filter = filter if rec.filter.exp != filter.exp
         rec.attributes = attrs
-        rec.save!
+
+        rec.save! if rec.changed?
       end
     end
   end

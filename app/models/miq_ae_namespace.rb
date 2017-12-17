@@ -46,7 +46,7 @@ class MiqAeNamespace < ApplicationRecord
     end
 
     new_parts.each do |p|
-      found = create(:name => p, :parent_id => found.nil? ? nil : found.id)
+      found = create(:name => p, :parent_id => found.try(:id))
     end
 
     found
@@ -54,7 +54,10 @@ class MiqAeNamespace < ApplicationRecord
 
   def self.find_tree(find_options = {})
     namespaces = where(find_options)
-    ns_lookup = namespaces.inject({}) { |h, ns| h[ns.id] = ns; h }
+    ns_lookup = namespaces.inject({}) do |h, ns|
+      h[ns.id] = ns
+      h
+    end
 
     roots = []
 

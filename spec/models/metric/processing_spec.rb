@@ -28,6 +28,28 @@ describe Metric::Processing do
   end
 
   context ".process_derived_columns" do
+    context "services" do
+      let(:vm_amazon_a) { FactoryGirl.create(:vm_amazon) }
+      let(:vm_amazon_b) { FactoryGirl.create(:vm_amazon, :powered_off) }
+      let(:service) { FactoryGirl.create(:service) }
+      let(:metric_a) { FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm_amazon_a) }
+      let(:metric_b) { FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm_amazon_b) }
+
+      before do
+        service.add_resource(vm_amazon_a)
+        service.add_resource(vm_amazon_b)
+        service.save
+      end
+
+      it "calculates derived values" do
+        derived_columns = described_class.process_derived_columns(service, metric_a.attributes.symbolize_keys)
+
+        expect(derived_columns[:derived_vm_count_on]).to eq(1)
+        expect(derived_columns[:derived_vm_count_off]).to eq(1)
+        expect(derived_columns[:derived_vm_count_total]).to eq(2)
+      end
+    end
+
     context "on :derived_host_sockets" do
       let(:hardware) { FactoryGirl.create(:hardware, :cpu_sockets => 2) }
       let(:host) { FactoryGirl.create(:host, :hardware => hardware) }

@@ -1,5 +1,5 @@
 class DialogFieldCheckBox < DialogField
-  AUTOMATE_VALUE_FIELDS = %w(required read_only visible).freeze
+  AUTOMATE_VALUE_FIELDS = %w(required read_only visible description).freeze
 
   def checked?
     value == "t"

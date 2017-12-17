@@ -38,7 +38,7 @@ class PolicyEvent < ApplicationRecord
         pe.chain_id = chain_id
       end
 
-      (r[:miq_actions] + r[:miq_policy_sets]).each do|c|
+      (r[:miq_actions] + r[:miq_policy_sets]).each do |c|
         pe.contents << PolicyEventContent.new(:resource => c, :resource_description => c.description)
       end
       pe.save

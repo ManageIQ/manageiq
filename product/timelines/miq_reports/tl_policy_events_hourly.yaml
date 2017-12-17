@@ -81,7 +81,7 @@ dims:
 
 timeline:
   :field: PolicyEvent-timestamp
-  :bands: 
+  :bands:
   - :text: true
     :gap: 0.0
     :unit: Hour

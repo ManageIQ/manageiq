@@ -1,15 +1,15 @@
---- 
-dims: 
+---
+dims:
 created_on: 2008-08-11 16:56:03.416809 Z
 title: "Hosts - Storage Adapters Information"
-conditions: 
+conditions:
 updated_on: 2008-08-11 18:35:06.834637 Z
 order: Ascending
-graph: 
+graph:
 menu_name: "Host Storage Adapters"
 rpt_group: Custom
 priority: 10
-col_order: 
+col_order:
 - name
 - ipaddress
 - hardware.storage_adapters.model
@@ -21,17 +21,17 @@ col_order:
 - hardware.storage_adapters.iscsi_name
 - hardware.storage_adapters.present
 - hardware.storage_adapters.start_connected
-timeline: 
+timeline:
 id: 71
-file_mtime: 
-categories: 
+file_mtime:
+categories:
 rpt_type: Custom
-filename: 
-include: 
-  hardware: 
-    include: 
-      storage_adapters: 
-        columns: 
+filename:
+include:
+  hardware:
+    include:
+      storage_adapters:
+        columns:
         - model
         - controller_type
         - device_name
@@ -42,15 +42,15 @@ include:
         - present
         - start_connected
 db: Host
-cols: 
+cols:
 - name
 - ipaddress
 template_type: report
 group: c
-sortby: 
+sortby:
 - name
 - hardware.storage_adapters.device_name
-headers: 
+headers:
 - Host Name
 - IP Address
 - Storage Adapter Model

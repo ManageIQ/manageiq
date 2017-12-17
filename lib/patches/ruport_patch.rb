@@ -17,7 +17,7 @@ module Ruport::Data
         if col_names
           sortable.sort_by do |r|
             stabilizer += 1
-            [Array(col_names).map do|col|
+            [Array(col_names).map do |col|
               val = r[col]
               val = val.downcase if val.kind_of?(String)
               val = val.to_s     if val.kind_of?(FalseClass) || val.kind_of?(TrueClass)

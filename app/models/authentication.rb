@@ -118,15 +118,6 @@ class Authentication < ApplicationRecord
     end
   end
 
-  def self.class_from_request_data(data)
-    if !data.key?('type') || data['type'] == to_s
-      return self
-    end
-    type = descendants.find { |klass| klass.name == data['type'] }
-    raise _('Must be an Authentication type') unless type
-    type
-  end
-
   private
 
   def set_credentials_changed_on

@@ -2,14 +2,14 @@ class ContainerProject < ApplicationRecord
   include SupportsFeatureMixin
   include CustomAttributeMixin
   include ArchivedMixin
+  include CustomActionsMixin
   include_concern 'Purging'
   belongs_to :ext_management_system, :foreign_key => "ems_id"
-  has_many :container_groups
+  has_many :container_groups, -> { active }
   has_many :container_routes
   has_many :container_replicators
   has_many :container_services
   has_many :containers, :through => :container_groups
-  has_many :container_definitions, :through => :container_groups
   has_many :container_images, -> { distinct }, :through => :container_groups
   has_many :container_nodes, -> { distinct }, :through => :container_groups
   has_many :container_quotas
@@ -19,6 +19,7 @@ class ContainerProject < ApplicationRecord
   has_many :container_builds
   has_many :container_templates
   has_many :archived_container_groups, :foreign_key => "old_container_project_id", :class_name => "ContainerGroup"
+  has_many :persistent_volume_claims
 
   # Needed for metrics
   has_many :metrics,                :as => :resource
@@ -31,7 +32,7 @@ class ContainerProject < ApplicationRecord
   virtual_total :services_count,    :container_services
   virtual_total :routes_count,      :container_routes
   virtual_total :replicators_count, :container_replicators
-  virtual_total :containers_count,  :container_definitions
+  virtual_total :containers_count,  :containers
   virtual_total :images_count,      :container_images
 
   include EventMixin
@@ -61,11 +62,8 @@ class ContainerProject < ApplicationRecord
   end
 
   def disconnect_inv
-    return if ems_id.nil?
-    _log.info "Disconnecting Container Project [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
-    "id [#{ext_management_system.id}] "
-    self.old_ems_id = ems_id
-    self.ext_management_system = nil
+    return if archived?
+    _log.info("Disconnecting Container Project [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
     self.deleted_on = Time.now.utc
     save
   end

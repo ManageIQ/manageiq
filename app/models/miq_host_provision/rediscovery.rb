@@ -15,7 +15,7 @@ module MiqHostProvision::Rediscovery
   def rediscover_host
     # TODO: why is this check here??
     unless state == 'active'
-      _log.info "provision task check has already been processed - state: [#{state}]"
+      _log.info("provision task check has already been processed - state: [#{state}]")
       return
     end
 

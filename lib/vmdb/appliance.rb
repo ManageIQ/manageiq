@@ -20,29 +20,37 @@ module Vmdb
       Vmdb::Appliance.log_diagnostics
     end
 
+    def self.PRODUCT_NAME
+      I18n.t("product.name").freeze
+    end
+
+    def self.USER_AGENT
+      "#{self.PRODUCT_NAME}/#{self.VERSION}".freeze
+    end
+
     def self.log_config(*args)
       options = args.extract_options!
       fh = options[:logger] || $log
       init_msg = options[:startup] == true ? "* [VMDB] started on [#{Time.now}] *" : "* [VMDB] configuration *"
       border = "*" * init_msg.length
-      fh.info border
-      fh.info init_msg
-      fh.info border
+      fh.info(border)
+      fh.info(init_msg)
+      fh.info(border)
 
-      fh.info "Version: #{self.VERSION}"
-      fh.info "Build:   #{self.BUILD}"
-      fh.info "RUBY Environment:  #{Object.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION : "ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} patchlevel #{RUBY_PATCHLEVEL}) [#{RUBY_PLATFORM}]"}"
-      fh.info "RAILS Environment: #{Rails.env} version #{Rails.version}"
+      fh.info("Version: #{self.VERSION}")
+      fh.info("Build:   #{self.BUILD}")
+      fh.info("RUBY Environment:  #{Object.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION : "ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} patchlevel #{RUBY_PATCHLEVEL}) [#{RUBY_PLATFORM}]"}")
+      fh.info("RAILS Environment: #{Rails.env} version #{Rails.version}")
 
-      fh.info "VMDB settings:"
+      fh.info("VMDB settings:")
       VMDBLogger.log_hashes(fh, ::Settings, :filter => Vmdb::Settings::PASSWORD_FIELDS)
-      fh.info "VMDB settings END"
-      fh.info "---"
+      fh.info("VMDB settings END")
+      fh.info("---")
 
-      fh.info "DATABASE settings:"
-      VMDBLogger.log_hashes(fh, Rails.configuration.database_configuration[Rails.env])
-      fh.info "DATABASE settings END"
-      fh.info "---"
+      fh.info("DATABASE settings:")
+      VMDBLogger.log_hashes(fh, ActiveRecord::Base.connection_config)
+      fh.info("DATABASE settings END")
+      fh.info("---")
     end
 
     def self.log_server_identity
@@ -56,33 +64,33 @@ module Vmdb
       begin
         startup = VMDBLogger.new(startup_fname)
         log_config(:logger => startup, :startup => true)
-        startup.info "Server GUID: #{MiqServer.my_guid}"
-        startup.info "Server Zone: #{MiqServer.my_zone}"
-        startup.info "Server Role: #{MiqServer.my_role}"
+        startup.info("Server GUID: #{MiqServer.my_guid}")
+        startup.info("Server Zone: #{MiqServer.my_zone}")
+        startup.info("Server Role: #{MiqServer.my_role}")
         s = MiqServer.my_server
         region = MiqRegion.my_region
-        startup.info "Server Region number: #{region.region}, name: #{region.name}" if region
-        startup.info "Server EVM id and name: #{s.id} #{s.name}"
+        startup.info("Server Region number: #{region.region}, name: #{region.name}") if region
+        startup.info("Server EVM id and name: #{s.id} #{s.name}")
 
-        startup.info "Currently assigned server roles:"
-        s.assigned_server_roles(:include => :server_role).each { |r| startup.info "Role: #{r.server_role.name}, Priority: #{r.priority}" }
+        startup.info("Currently assigned server roles:")
+        s.assigned_server_roles(:include => :server_role).each { |r| startup.info("Role: #{r.server_role.name}, Priority: #{r.priority}") }
 
         issue = `cat /etc/issue 2> /dev/null` rescue nil
-        startup.info "OS: #{issue.chomp}" unless issue.blank?
+        startup.info("OS: #{issue.chomp}") unless issue.blank?
 
         network = get_network
         unless network.empty?
-          startup.info "Network Information:"
-          network.each { |k, v| startup.info "#{k}: #{v}" }
+          startup.info("Network Information:")
+          network.each { |k, v| startup.info("#{k}: #{v}") }
         end
         mem = `cat /proc/meminfo 2> /dev/null` rescue nil
-        startup.info "System Memory Information:\n#{mem}" unless mem.blank?
+        startup.info("System Memory Information:\n#{mem}") unless mem.blank?
 
         cpu = `cat /proc/cpuinfo 2> /dev/null` rescue nil
-        startup.info "CPU Information:\n#{cpu}" unless cpu.blank?
+        startup.info("CPU Information:\n#{cpu}") unless cpu.blank?
 
         fstab = `cat /etc/fstab 2> /dev/null` rescue nil
-        startup.info "fstab information:\n#{fstab}" unless fstab.blank?
+        startup.info("fstab information:\n#{fstab}") unless fstab.blank?
       ensure
         startup.close rescue nil
       end
@@ -113,9 +121,8 @@ module Vmdb
       if File.exist?(build_file)
         build = File.read(build_file).strip.split("-").last
       else
-        date  = Time.now.strftime("%Y%m%d%H%M%S")
         sha   = `git rev-parse --short HEAD`.chomp
-        build = "#{date}_#{sha}"
+        build = "unknown_#{sha}"
       end
 
       build

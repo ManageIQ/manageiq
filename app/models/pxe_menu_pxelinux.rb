@@ -34,7 +34,7 @@ class PxeMenuPxelinux < PxeMenu
     end
 
     bad, good = items.partition { |i| i[:kernel].blank? }
-    bad.each { |i| _log.warn "Image #{i[:label]} missing kernel - Skipping" }
+    bad.each { |i| _log.warn("Image #{i[:label]} missing kernel - Skipping") }
     good
   end
 

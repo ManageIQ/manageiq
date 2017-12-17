@@ -32,6 +32,7 @@
   - ems_network
   - ems_cluster
   - ems_infra
+  - ems_infra_admin_ui
   - ems_physical_infra
   - container_dashboard
   - ems_container
@@ -42,7 +43,7 @@
   - container_service
   - container_replicator
   - container_group
-  - containers
+  - container
   - container_node
   - persistent_volume
   - container_build
@@ -87,6 +88,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-approver
   :read_only: true
@@ -109,10 +111,12 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -121,6 +125,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -144,8 +149,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_pod_show
@@ -171,6 +175,12 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
+  - sui_orders_show
 
 - :name: EvmRole-auditor
   :read_only: true
@@ -196,10 +206,12 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -209,6 +221,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -231,8 +244,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -258,6 +270,11 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
 
 - :name: EvmRole-desktop
   :read_only: true
@@ -313,6 +330,14 @@
   - vm_shelve_offload
   - vm_timeline
   - vm_chargeback
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_start
+  - sui_vm_stop
+  - sui_vm_suspend
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-operator
   :read_only: true
@@ -345,13 +370,16 @@
   - ems_infra_tag
   - ems_infra_timeline
   - ems_physical_infra_new
+  - ems_physical_infra_console
   - ems_physical_infra_delete
+  - ems_physical_infra_discover
   - ems_physical_infra_edit
   - ems_physical_infra_refresh
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_new
   - host_analyze
   - host_compare
@@ -367,6 +395,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -390,8 +419,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - provider_foreman_explorer
   - storage_delete
   - storage_scan
@@ -433,6 +461,14 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
+  - sui_vm_start
+  - sui_vm_stop
+  - sui_vm_suspend
 
 - :name: EvmRole-security
   :read_only: true
@@ -458,6 +494,7 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -466,6 +503,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -490,8 +528,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -515,6 +552,11 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_snapshot_create
+  - sui_vm_snapshot_delete
+  - sui_vm_tags
 
 - :name: EvmRole-support
   :read_only: true
@@ -536,10 +578,12 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -549,6 +593,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -569,8 +614,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -597,6 +641,11 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
 
 - :name: EvmRole-user
   :read_only: true
@@ -617,10 +666,12 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_console
   - ems_physical_infra_show
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -630,6 +681,7 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - middleware_server_check_compliance
   - miq_report_run
   - miq_report_saved_reports
   - miq_report_schedules
@@ -649,8 +701,7 @@
   - resource_pool_show_list
   - resource_pool_tag
   - rss
-  - service_show
-  - service_show_list
+  - service_view
   - storage_show
   - storage_show_list
   - storage_perf
@@ -675,6 +726,13 @@
   - vm_tag
   - vm_timeline
   - vm_chargeback
+  - sui_services_view
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-user_limited_self_service
   :read_only: true
@@ -684,6 +742,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - catalog_items_view
   - compute
   - miq_request_admin
   - miq_request_view
@@ -716,6 +775,13 @@
   - vm_shelve
   - vm_shelve_offload
   - vm_tag
+  - sui_core
+  - sui_services
+  - sui_vm
+  - sui_orders
+  - sui_svc_catalog_view
+  - sui_svc_catalog_cart
+  - sui_cart
 
 - :name: EvmRole-user_self_service
   :read_only: true
@@ -727,6 +793,8 @@
   - all_vm_rules
   - automation_manager
   - embedded_automation_manager
+  - ems_physical_infra_console
+  - catalog_items_view
   - compute
   - miq_template_clone
   - miq_template_drift
@@ -785,6 +853,7 @@
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
+  - sui
 
 - :name: EvmRole-vm_user
   :read_only: true
@@ -794,6 +863,7 @@
   - automation_manager
   - embedded_automation_manager
   - compute
+  - middleware_server_check_compliance
   - miq_request_admin
   - miq_request_view
   - miq_template_analyze
@@ -847,6 +917,16 @@
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
+  - sui_vm_details_view
+  - sui_vm_console
+  - sui_vm_web_console
+  - sui_vm_tags
+  - sui_vm_retire
+  - sui_vm_start
+  - sui_vm_stop
+  - sui_vm_suspend
+  - sui_orders_show
+  - sui_orders_operations
 
 - :name: EvmRole-tenant_administrator
   :read_only: true
@@ -912,6 +992,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-tenant_quota_administrator
   :read_only: true
@@ -968,6 +1049,7 @@
   - vm
   - vm_cloud_explorer
   - vm_infra_explorer
+  - sui_services
 
 - :name: EvmRole-consumption_administrator
   :read_only: true
@@ -982,6 +1064,7 @@
   - vms_filter_accord
   - instances_filter_accord
   - datacenter_controller
+  - storage
   - storage_pod
   - dashboard
   - miq_report
@@ -989,7 +1072,8 @@
   - chargeback
   - pictures
   - control_explorer
-  - generic_object_explorer
+  - generic_object
+  - generic_object_definition
   - my_settings
   - tasks
   - about
@@ -1006,7 +1090,7 @@
   - container_service
   - container_route
   - container_project
-  - containers
+  - container
   - container_topology
   - container_dashboard
   - ems_infra_dashboard
@@ -1015,10 +1099,14 @@
   - miq_cloud_networks
   - miq_arbitration_settings
   - miq_arbitration_rules
-  - blueprint
   - redhat_access_insights_admin
   - ems_container_ad_hoc_metrics
-
+  - monitor
+  - alert_status
+  - alert_action
+  - ems_infra
+  - rbac_user
+  - ops_settings
 
 - :name: EvmRole-container_operator
   :read_only: true
@@ -1057,3 +1145,117 @@
   - instance_view
   - vm_view
   - ems_container_ad_hoc_metrics
+  - monitor
+  - alert_status
+  - alert_action
+  - ems_infra
+  - rbac_user
+  - ops_settings
+
+- :name: EvmRole-reader
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - auth_key_pair_cloud_view
+  - automation_manager_configuration_script_view
+  - automation_manager_configured_system_view
+  - automation_manager_providers_view
+  - availability_zone_view
+  - bottlenecks
+  - catalog_items_view
+  - cloud_network_view
+  - cloudobject_store_container_view
+  - cloud_object_store_object_view
+  - cloud_subnet_view
+  - cloud_tenant_view
+  - cloud_topology
+  - cloud_volume_backup_view
+  - cloud_volume_snapshot_view
+  - cloud_volume_view
+  - configuration_job_view
+  - configuration_script_view
+  - configured_systems_filter_accord_view
+  - container_build_view
+  - container_dashboard
+  - container_filter_accord
+  - container_group_view
+  - container_image_registry_view
+  - container_image_view
+  - container_node_view
+  - container_project_view
+  - container_replicator_view
+  - container_route_view
+  - container_service_view
+  - container_template_view
+  - container_topology
+  - container_view
+  - customization_template_view
+  - dashboard_view
+  - embedded_automation_manager_credentials_view
+  - embedded_configuration_script_payload_view
+  - embedded_configuration_script_source_view
+  - ems_block_storage_view
+  - ems_cloud_view
+  - ems_cluster_view
+  - ems_container_view
+  - ems_infra_view
+  - ems_middleware_view
+  - ems_network_view
+  - ems_object_storage_view
+  - flavor_view
+  - floating_ip_view
+  - host_aggregate_view
+  - host_view
+  - image_view
+  - infra_networking_view
+  - infra_topology
+  - instance_view
+  - iso_datastore_view
+  - load_balancer_view
+  - middleware_datasource_view
+  - middleware_deployment_view
+  - middleware_domain_view
+  - middleware_messaging_view
+  - middleware_server_view
+  - middleware_topology
+  - miq_ae_class_log
+  - miq_ae_domain_view
+  - miq_report_saved_reports_view
+  - miq_report_schedule_view
+  - miq_report_view
+  - miq_request_view
+  - miq_template_snapshot_view
+  - miq_template_view
+  - my_settings
+  - network_port_view
+  - network_router_view
+  - network_topology
+  - orchestration_stack_view
+  - orchestration_templates_view
+  - persistent_volume_view
+  - planning
+  - policy_log
+  - provider_foreman_view
+  - pxe_image_type_view
+  - pxe_server_view
+  - rbac_group_view
+  - rbac_role_view
+  - rbac_tenant_view
+  - rbac_user_view
+  - redhat_access_insights_overview
+  - resource_pool_view
+  - rss
+  - security_group_view
+  - service_view
+  - st_catalog_view
+  - storage_view
+  - tasks
+  - timeline
+  - utilization
+  - virtual_template_show
+  - vm_cloud_explorer
+  - vm_explorer
+  - vm_infra_explorer
+  - vm_snapshot_view
+  - vm_view
+  - sui_services_view
+  - sui_orders_show

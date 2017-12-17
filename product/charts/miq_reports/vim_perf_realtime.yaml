@@ -37,7 +37,7 @@ cols:
 include:
 
 # Order of columns (from all tables)
-col_order: 
+col_order:
 - timestamp
 - cpu_usagemhz_rate_average
 - derived_cpu_available
@@ -69,7 +69,7 @@ headers:
 - Associated Record IDs
 
 # Condition expression for search filtering
-conditions: 
+conditions:
 
 # Order string for the SQL query
 order: ascending
@@ -91,13 +91,13 @@ group: n
 #   StackedColumn
 #   StackedThreedColumn
 
-graph: 
+graph:
   :type: Line
   :columns:
-    - cpu_usage_rate_average
+  - cpu_usage_rate_average
 
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
-dims: 
+dims:
 
 template_type: report

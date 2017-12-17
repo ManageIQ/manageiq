@@ -24,10 +24,10 @@ module ManageIQ::Providers::StorageManager::SwiftManager::RefreshParser::CrossLi
       tenant_id = hash[:tenant_id]
       tenant = @parent_ems.cloud_tenants.detect { |t| t.ems_ref == tenant_id }
       unless tenant
-        _log.info "EMS: #{@parent_ems.name}, tenant not found: #{tenant_id}"
+        _log.info("EMS: #{@parent_ems.name}, tenant not found: #{tenant_id}")
         return
       end
-      _log.debug "Found tenant: #{tenant_id}, id = #{tenant.id}"
+      _log.debug("Found tenant: #{tenant_id}, id = #{tenant.id}")
 
       hash[:cloud_tenant_id] = tenant.id
     end

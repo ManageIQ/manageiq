@@ -24,7 +24,7 @@ sortby:
 - computer_system.hardware.cpu_total_cores
 group:
 graph:
-  :type: ColumnThreed
+  :type: Column
   :count: 10
   :other: true
 dims: 1

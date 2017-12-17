@@ -20,12 +20,12 @@ module MiqReport::Generator::Sorting
                         when :string, :text, :boolean             then "00ff".hex.chr   # "\xFF"
                         when :integer, :fixnum, :decimal, :float  then @table.data.collect { |d| d.data[sb] }.compact.max.to_i + 1
                         when :datetime                            then Time.at(@table.data.collect { |d| d.data[sb] }.compact.max.to_i + 1).utc
-                        when :date                                then max = @table.data.collect { |d| d.data[sb] }.compact.max; max.nil? ? nil : max + 1
+                        when :date                                then @table.data.collect { |d| d.data[sb] }.compact.max.try(:+, 1)
                         end
     end
 
     new_sortby.each_with_index do |sb, idx|
-      @table.data.each do|d|
+      @table.data.each do |d|
         # Substitute any nils in the sort columns of the table so the sort doesn't crash
         d.data[sb] = sb_nil_sub[idx] if d.data[sb].nil?
         # Convert any booleans to string so the sort doesn't crash

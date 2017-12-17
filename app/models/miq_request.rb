@@ -2,6 +2,7 @@ class MiqRequest < ApplicationRecord
   extend InterRegionApiMethodRelay
 
   ACTIVE_STATES = %w(active queued)
+  REQUEST_UNIQUE_KEYS = %w(id state status created_on updated_on type).freeze
 
   belongs_to :source,            :polymorphic => true
   belongs_to :destination,       :polymorphic => true
@@ -64,6 +65,9 @@ class MiqRequest < ApplicationRecord
       :VmReconfigureRequest                => {
         :vm_reconfigure => N_("VM Reconfigure")
       },
+      :VmCloudReconfigureRequest           => {
+        :vm_cloud_reconfigure => N_("VM Cloud Reconfigure")
+      },
       :VmMigrateRequest                    => {
         :vm_migrate => N_("VM Migrate")
       },
@@ -72,6 +76,9 @@ class MiqRequest < ApplicationRecord
       },
       :ServiceReconfigureRequest           => {
         :service_reconfigure => N_("Service Reconfigure")
+      },
+      :PhysicalServerProvisionRequest      => {
+        :provision_physical_server => N_("Physical Server Provision")
       }
     },
     :Infrastructure => {
@@ -125,17 +132,6 @@ class MiqRequest < ApplicationRecord
     self.tenant         ||= requester.current_tenant
   end
 
-  # TODO: Move call_automate_event_queue from MiqProvisionWorkflow to be done here automagically
-  # Seems like we need to call automate after the MiqProvisionRequest in SQL and wired back to this object
-  #
-  # after_create do
-  #   self.call_automate_event_queue("request_created")
-  # end
-  #
-  # after_update do
-  #   self.call_automate_event_queue("request_updated")
-  # end
-
   def must_have_user
     errors.add(:userid, "must have valid user") unless requester
   end
@@ -163,21 +159,11 @@ class MiqRequest < ApplicationRecord
     }
   end
 
-  def call_automate_event(event_name)
-    _log.info("Raising event [#{event_name}] to Automate")
-    MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
-    _log.info("Raised  event [#{event_name}] to Automate")
-  rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
-    _log.error(message)
-    raise
-  end
-
-  def call_automate_event_sync(event_name)
-    _log.info("Raising event [#{event_name}] to Automate synchronously")
-    ws = MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name), :synchronous => true)
-    _log.info("Raised event [#{event_name}] to Automate")
-    return ws
+  def call_automate_event(event_name, synchronous: false)
+    _log.info("Raising event [#{event_name}] to Automate#{' synchronously' if synchronous}")
+    MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name), :synchronous => synchronous).tap do
+      _log.info("Raised event [#{event_name}] to Automate")
+    end
   rescue MiqAeException::Error => err
     message = _("Error returned from %{name} event processing in Automate: %{error_message}") % {:name => event_name, :error_message => err.message}
     _log.error(message)
@@ -185,7 +171,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def automate_event_failed?(event_name)
-    ws = call_automate_event_sync(event_name)
+    ws = call_automate_event(event_name, :synchronous => true)
 
     if ws.nil?
       _log.warn("Aborting because Automate failed for event <#{event_name}>")
@@ -219,7 +205,7 @@ class MiqRequest < ApplicationRecord
       execute
     rescue => err
       _log.error("#{err.message}, attempting to execute request: [#{description}]")
-      _log.error(err.backtrace.join("\n"))
+      _log.log_backtrace(err)
     end
 
     true
@@ -390,14 +376,14 @@ class MiqRequest < ApplicationRecord
 
     # self.create_request_tasks
     MiqQueue.put(
-      :class_name  => self.class.name,
-      :instance_id => id,
-      :method_name => "create_request_tasks",
-      :zone        => options.fetch(:miq_zone, my_zone),
-      :role        => my_role,
-      :task_id     => "#{self.class.name.underscore}_#{id}",
-      :msg_timeout => 3600,
-      :deliver_on  => deliver_on
+      :class_name     => self.class.name,
+      :instance_id    => id,
+      :method_name    => "create_request_tasks",
+      :zone           => options.fetch(:miq_zone, my_zone),
+      :role           => my_role,
+      :tracking_label => "#{self.class.name.underscore}_#{id}",
+      :msg_timeout    => 3600,
+      :deliver_on     => deliver_on
     )
   end
 
@@ -433,9 +419,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def create_request_task(idx)
-    req_task_attribs = attributes.dup
-    (req_task_attribs.keys - MiqRequestTask.column_names + %w(id state created_on updated_on type)).each { |key| req_task_attribs.delete(key) }
-    _log.debug("#{self.class.name} Attributes: [#{req_task_attribs.inspect}]...")
+    req_task_attribs = clean_up_keys_for_request_task
 
     customize_request_task_attributes(req_task_attribs, idx)
     req_task = self.class.new_request_task(req_task_attribs)
@@ -504,12 +488,9 @@ class MiqRequest < ApplicationRecord
   end
 
   def update_request(values, requester)
-    update_attribute(:options, options.merge(values))
-    set_description(true)
-
-    log_request_success(requester, :updated)
-
-    call_automate_event_queue("request_updated")
+    update_attributes(:options => options.merge(values))
+    self.user_message = values[:user_message] if values[:user_message].present?
+    after_update_options(requester) unless values.keys == [:user_message]
     self
   end
   api_relay_method(:update_request, :edit) do |values, requester|
@@ -558,6 +539,15 @@ class MiqRequest < ApplicationRecord
 
   private
 
+  def clean_up_keys_for_request_task
+    req_task_attributes = attributes.dup
+    (req_task_attributes.keys - MiqRequestTask.column_names + REQUEST_UNIQUE_KEYS).each { |key| req_task_attributes.delete(key) }
+
+    _log.debug("#{self.class.name} Attributes: [#{req_task_attributes.inspect}]...")
+
+    req_task_attributes
+  end
+
   def default_description
   end
 
@@ -567,5 +557,13 @@ class MiqRequest < ApplicationRecord
 
   def validate_request_type
     errors.add(:request_type, "should be #{request_types.join(", ")}") unless request_types.include?(request_type)
+  end
+
+  def after_update_options(requester)
+    set_description(true)
+
+    log_request_success(requester, :updated)
+
+    call_automate_event_queue("request_updated")
   end
 end
