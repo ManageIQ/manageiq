@@ -1,57 +1,56 @@
 ---
-- MiqReport:
-    title: All Public Cloud VMs
-    rpt_group: Custom
-    rpt_type: Custom
-    priority:
-    db: ManageIQ::Providers::CloudManager::Vm
-    cols:
-    - num_cpu
-    - num_disks
-    - created_on
-    include:
-      ext_management_system:
-        columns:
-        - emstype
-    col_order:
-    - ext_management_system.emstype
-    - num_cpu__total
-    - num_disks__null
-    - created_on
-    headers:
-    - Cloud/Infrastructure Provider
-    - Number of CPUs (Total)
-    - Number of Disks (Null)
-    - Date Created
-    conditions:
-    order: Ascending
-    sortby:
-    group:
-    graph:
-    dims:
-    filename:
-    file_mtime:
-    categories: []
-    timeline:
-    template_type: report
-    where_clause:
-    db_options: {}
-    generate_cols:
-    generate_rows:
-    col_formats:
-    -
-    -
-    -
-    -
-    tz:
-    time_profile_id:
-    display_filter:
-    col_options: {}
-    rpt_options:
-      :pdf:
-        :page_size: US-Letter
-      :queue_timeout:
-      :pivot:
-        :group_cols:
-        - ext_management_system.emstype
-    menu_name: All Public Cloud VMs
+ title: All Public Cloud VMs
+ rpt_group: Custom
+ rpt_type: Custom
+ priority:
+ db: ManageIQ::Providers::CloudManager::Vm
+ cols:
+ - num_cpu
+ - num_disks
+ - created_on
+ include:
+   ext_management_system:
+     columns:
+     - emstype
+ col_order:
+ - ext_management_system.emstype
+ - num_cpu__total
+ - num_disks__null
+ - created_on
+ headers:
+ - Cloud/Infrastructure Provider
+ - Number of CPUs (Total)
+ - Number of Disks (Null)
+ - Date Created
+ conditions:
+ order: Ascending
+ sortby:
+ group:
+ graph:
+ dims:
+ filename:
+ file_mtime:
+ categories: []
+ timeline:
+ template_type: report
+ where_clause:
+ db_options: {}
+ generate_cols:
+ generate_rows:
+ col_formats:
+ -
+ -
+ -
+ -
+ tz:
+ time_profile_id:
+ display_filter:
+ col_options: {}
+ rpt_options:
+   :pdf:
+     :page_size: US-Letter
+   :queue_timeout:
+   :pivot:
+     :group_cols:
+     - ext_management_system.emstype
+ menu_name: All Public Cloud VMs
