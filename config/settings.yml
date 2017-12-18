@@ -317,6 +317,10 @@
       - UserLoginSessionEvent
       - UserLogoutSessionEvent
       - VmAcquiredMksTicketEvent
+      - VM_CONSOLE_CONNECTED
+      - VM_CONSOLE_DISCONNECTED
+      - VM_SET_TICKET
+      - VM_SET_TICKET_FAILED
       - VmRemoteConsoleConnectedEvent
       :detail: []
       :name: Console Activity
