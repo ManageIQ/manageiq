@@ -424,9 +424,7 @@ describe ExtManagementSystem do
       it "returns a task" do
         task_id = ems.destroy_queue
 
-        queue_message = MiqQueue.first
-        status, message, result = queue_message.deliver
-        queue_message.delivered(status, message, result)
+        deliver_queue_message
 
         task = MiqTask.find(task_id)
         expect(task.state).to  eq("Finished")
@@ -439,9 +437,7 @@ describe ExtManagementSystem do
 
         expect(MiqQueue.count).to eq(1)
 
-        queue_message = MiqQueue.first
-        status, message, result = queue_message.deliver
-        queue_message.delivered(status, message, result)
+        deliver_queue_message
 
         expect(MiqQueue.count).to eq(1)
         expect(MiqQueue.last.deliver_on).to_not be_nil
@@ -451,17 +447,13 @@ describe ExtManagementSystem do
         refresh_worker = FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
         ems.destroy_queue
 
-        queue_message = MiqQueue.first
-        status, message, result = queue_message.deliver
-        queue_message.delivered(status, message, result)
+        deliver_queue_message
 
         expect(ExtManagementSystem.count).to eq(1)
 
         refresh_worker.destroy
 
-        queue_message = MiqQueue.first
-        status, message, result = queue_message.deliver
-        queue_message.delivered(status, message, result)
+        deliver_queue_message
 
         expect(ExtManagementSystem.count).to eq(0)
       end
@@ -477,6 +469,11 @@ describe ExtManagementSystem do
         expect(MiqQueue.count).to eq(2)
         expect(MiqQueue.pluck(:instance_id)).to include(ems.id, child_manager.id)
       end
+    end
+
+    def deliver_queue_message(queue_message = MiqQueue.first)
+      status, message, result = queue_message.deliver
+      queue_message.delivered(status, message, result)
     end
   end
 
