@@ -17,7 +17,7 @@ class DialogFieldSerializer < Serializer
     }
 
     if dialog_field.try(:force_multi_value) && dialog_field.default_value.present?
-      extra_attributes["default_value"] = dialog_field.default_value.split(",")
+      extra_attributes["default_value"] = dialog_field.default_value
     end
 
     if dialog_field.dynamic?
