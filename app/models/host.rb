@@ -169,7 +169,6 @@ class Host < ApplicationRecord
   include AuthenticationMixin
   include AsyncDeleteMixin
   include ComplianceMixin
-  include VimConnectMixin
   include AvailabilityMixin
 
   before_create :make_smart
@@ -902,13 +901,19 @@ class Host < ApplicationRecord
       self.vmm_product = "Esx"
       if has_credentials?(:ws)
         begin
-          with_provider_connection(:ip => ipaddr) do |vim|
-            _log.info("VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}")
-            self.vmm_product     = vim.about['name'].dup.split(' ').last
-            self.vmm_version     = vim.about['version']
-            self.vmm_buildnumber = vim.about['build']
-            self.name            = "#{vim.about['name']} (#{ipaddr})"
-          end
+          connect_opts = {
+            :ip   => ipaddr,
+            :user => authentication_userid(:ws),
+            :pass => authentication_password(:ws)
+          }
+
+          vim = ManageIQ::Providers::Vmware::InfraManager::Host.raw_connect(connect_opts)
+
+          _log.info("VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}")
+          self.vmm_product     = vim.about['name'].dup.split(' ').last
+          self.vmm_version     = vim.about['version']
+          self.vmm_buildnumber = vim.about['build']
+          self.name            = "#{vim.about['name']} (#{ipaddr})"
         rescue => err
           _log.warn("Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{authentication_userid(:ws)}] because #{err.message}")
         end
