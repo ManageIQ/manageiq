@@ -16,7 +16,9 @@ class ManageIQ::Providers::Redhat::InfraManager
         when Host
           methods = {
             :primary => {
-              :host        => target.ems_ref,
+              :cluster => target.ems_cluster.ems_ref,
+              :host    => target.ems_ref,
+              :network => { :networks => "network" }
             },
             :secondary => {
               :host        => [:statistics, :host_nics],
