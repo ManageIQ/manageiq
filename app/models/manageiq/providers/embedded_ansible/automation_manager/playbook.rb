@@ -15,15 +15,17 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook <
   # return provider raw object
   def raw_create_job_template(options)
     job_template_klass = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
-    job_template_klass.raw_create_in_provider(manager, build_parameter_list(options))
+    jt_options = build_parameter_list(options)
+    _log.info("Creating job template with options (#{jt_options})")
+    job_template_klass.raw_create_in_provider(manager, jt_options)
   end
 
   private
 
   def build_parameter_list(options)
     params = {
-      :name                     => options[:template_name] || "#{name}_#{Time.zone.now.to_i}",
-      :description              => options[:description] || '',
+      :name                     => options[:template_name] || "#{name}_#{SecureRandom.uuid}",
+      :description              => options[:description] || "Created on #{Time.zone.now}",
       :project                  => configuration_script_source.manager_ref,
       :playbook                 => name,
       :become_enabled           => options[:become_enabled].present?,
