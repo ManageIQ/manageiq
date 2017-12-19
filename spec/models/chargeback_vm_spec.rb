@@ -186,6 +186,20 @@ describe ChargebackVm do
             expect(subject.storage_allocated_hdd_metric).to eq(1.gigabytes)
             expect(subject.storage_allocated_hdd_cost).to eq(state_data[:allocated_disk_types]['hdd'] / 1.gigabytes * count_hourly_rate * hours_in_day)
           end
+
+          it "doesn't return removed cloud volume types fields" do
+            described_class.refresh_dynamic_metric_columns
+
+            fields = described_class.attribute_names
+            cloud_volume_hdd_field = "storage_allocated_#{cloud_volume_hdd.volume_type}_metric"
+            expect(fields).to include(cloud_volume_hdd_field)
+
+            cloud_volume_hdd.destroy
+
+            described_class.refresh_dynamic_metric_columns
+            fields = described_class.attribute_names
+            expect(fields).not_to include(cloud_volume_hdd_field)
+          end
         end
 
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }

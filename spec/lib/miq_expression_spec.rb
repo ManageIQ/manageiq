@@ -24,6 +24,57 @@ describe MiqExpression do
       end
       expect(displayed_columms).to match_array(expected_columns)
     end
+
+    context 'with ChargebackVm' do
+      context 'with dynamic fields' do
+        let(:volume_1) { FactoryGirl.create(:cloud_volume, :volume_type => 'TYPE1') }
+        let(:volume_2) { FactoryGirl.create(:cloud_volume, :volume_type => 'TYPE2') }
+        let(:volume_3) { FactoryGirl.create(:cloud_volume, :volume_type => 'TYPE3') }
+        let(:model)    { "ChargebackVm" }
+        let(:volume_1_type_field_cost) { "#{model}-storage_allocated_#{volume_1.volume_type}_cost" }
+        let(:volume_2_type_field_cost) { "#{model}-storage_allocated_#{volume_2.volume_type}_cost" }
+        let(:volume_3_type_field_cost) { "#{model}-storage_allocated_#{volume_3.volume_type}_cost" }
+
+        before(:each) do
+          volume_1
+          volume_2
+        end
+
+        it 'returns uncached actual fields also when dynamic fields chas been changed' do
+          report_fields = described_class.reporting_available_fields(model).map(&:second)
+
+          expect(report_fields).to include(volume_1_type_field_cost)
+          expect(report_fields).to include(volume_2_type_field_cost)
+
+          # case: change name
+          volume_2.update_attributes!(:volume_type => 'NEW_TYPE_2')
+          report_fields = described_class.reporting_available_fields(model).map(&:second)
+          expect(report_fields).to include(volume_1_type_field_cost)
+          expect(report_fields).not_to include(volume_2_type_field_cost) # old field
+
+          # check existence of new name
+          report_fields = described_class.reporting_available_fields(model).map(&:second)
+          volume_2_type_field_cost = "#{model}-storage_allocated_#{volume_2.volume_type}_cost"
+          expect(report_fields).to include(volume_1_type_field_cost)
+          expect(report_fields).to include(volume_2_type_field_cost)
+
+          # case: add volume_type
+          volume_3
+          report_fields = described_class.reporting_available_fields(model).map(&:second)
+          expect(report_fields).to include(volume_1_type_field_cost)
+          expect(report_fields).to include(volume_3_type_field_cost)
+
+          # case: remove volume_types
+          volume_2.destroy
+          volume_3.destroy
+
+          report_fields = described_class.reporting_available_fields(model).map(&:second)
+          expect(report_fields).to include(volume_1_type_field_cost)
+          expect(report_fields).not_to include(volume_2_type_field_cost)
+          expect(report_fields).not_to include(volume_3_type_field_cost)
+        end
+      end
+    end
   end
 
   describe "#valid?" do
