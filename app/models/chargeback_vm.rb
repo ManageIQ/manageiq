@@ -33,6 +33,22 @@ class ChargebackVm < Chargeback
     :total_cost               => :float,
   )
 
+  DEFAULT_STORAGE_METRICS = %w(
+    storage_allocated_unclassified_metric
+    storage_allocated_unclassified_cost
+    storage_allocated_metric
+    storage_allocated_cost
+  ).freeze
+
+  def self.attribute_names
+    loaded_attribute_names = super
+    loaded_storage_allocated_attributes = loaded_attribute_names.select { |x| x.starts_with?('storage_allocated_') }
+    loaded_sub_metric_fields            = loaded_storage_allocated_attributes - DEFAULT_STORAGE_METRICS
+    non_existing_sub_metric_fields      = loaded_sub_metric_fields - dynamic_columns_for(:float).keys
+
+    loaded_attribute_names - non_existing_sub_metric_fields
+  end
+
   # example:
   #  dynamic_columns_for(:group => [:total])
   #  returns:
