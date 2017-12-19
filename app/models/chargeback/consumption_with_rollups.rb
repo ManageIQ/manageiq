@@ -63,6 +63,10 @@ class Chargeback
       @chargeback_fields_present ||= @rollups.count(&:chargeback_fields_present?)
     end
 
+    def metering_used_fields_present
+      @metering_used_fields_present ||= @rollups.count(&:metering_used_fields_present?)
+    end
+
     private
 
     def born_at
