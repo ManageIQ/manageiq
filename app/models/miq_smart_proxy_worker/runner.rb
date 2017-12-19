@@ -17,7 +17,11 @@ class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
     #
     unless @tid.nil?
       safe_log("#{message} Waiting for Heartbeat Thread to Stop.")
-      @tid.join(worker_settings[:heartbeat_thread_shutdown_timeout]) rescue nil
+      begin
+        @tid.join(worker_settings[:heartbeat_thread_shutdown_timeout])
+      rescue NoMethodError => join_err
+        safe_log(join_err)
+      end
     end
   end
 
@@ -46,7 +50,7 @@ class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
 
   def heartbeat_thread
     @heartbeat_started.set
-    until @exit_requested do
+    until @exit_requested
       heartbeat
       sleep 30
     end
