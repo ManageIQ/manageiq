@@ -479,7 +479,11 @@ class ExtManagementSystem < ApplicationRecord
     disable! if enabled?
 
     if self.destroy == false
-      _log.info("Cannot destroy #{self.class.name} with id: #{id}, workers still in progress. Requeuing destroy...")
+      msg = "Cannot destroy #{self.class.name} with id: #{id}, workers still in progress. Requeuing destroy..."
+      MiqTask.update_status(task_id, MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, msg)
+
+      _log.info(msg)
+
       self.class.schedule_destroy_queue(id, task_id, 15.seconds.from_now)
     else
       msg = "#{self.class.name} with id: #{id} destroyed"
