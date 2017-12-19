@@ -695,6 +695,8 @@ en:
       CloudSubnet:              Cloud Subnet
       CloudTenant:              Cloud Tenant
       CloudVolume:              Cloud Volume
+      CloudVolumeBackup:        Cloud Volume Backup
+      CloudVolumeSnapshot:      Cloud Volume Snapshot
       Compliance:               Compliance History
       Compliances:              Compliance History
       Condition:                Condition
