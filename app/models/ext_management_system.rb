@@ -207,13 +207,8 @@ class ExtManagementSystem < ApplicationRecord
         :event        => "ems_created",
         :target_id    => ems.id,
         :target_class => "ExtManagementSystem",
-        :message      => "%{provider_type} %{provider_name} created" % {
-          :provider_type => Dictionary.gettext("ext_management_systems",
-                                               :type      => :table,
-                                               :notfound  => :titleize,
-                                               :plural    => false,
-                                               :translate => false),
-          :provider_name => ems.name})
+        :message      => "Provider %{provider_name} created" % {:provider_name => ems.name}
+      )
     end
   end
 
