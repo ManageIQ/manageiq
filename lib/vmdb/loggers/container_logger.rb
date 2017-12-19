@@ -1,5 +1,7 @@
 module Vmdb::Loggers
   class ContainerLogger < VMDBLogger
+    include Instrument
+
     def initialize(logdev = STDOUT, *args)
       super
       self.level = DEBUG
