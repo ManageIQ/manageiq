@@ -812,8 +812,6 @@ class Storage < ApplicationRecord
         perf.update_attributes(attrs)
       end
 
-      Benchmark.realtime_block(:process_perfs_tag) { VimPerformanceTagValue.build_from_performance_record(perf) }
-
       update_attribute(:last_perf_capture_on, hour)
 
       # We don't rollup realtime to Storage, so we need to manually create bottlenecks
