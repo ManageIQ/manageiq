@@ -972,7 +972,7 @@
   :prefetch_stale_threshold: 30.seconds
   :rails_server: puma
   :remote_console_type: VMRC
-  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate
+  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate,smartproxy
   :server_dequeue_frequency: 5.seconds
   :server_log_frequency: 5.minutes
   :server_log_timings_threshold: 1.second
@@ -1165,6 +1165,7 @@
         :memory_threshold: 2.gigabytes
         :queue_timeout: 20.minutes
         :restart_interval: 6.hours
+        :heartbeat_thread_shutdown_timeout: 10.seconds
     :schedule_worker:
       :container_entities_purge_interval: 1.day
       :binary_blob_purge_interval: 1.hour
