@@ -267,6 +267,18 @@ describe MiqProvisionRequest do
               end
               it_behaves_like "check_quota"
             end
+
+            context "active_provisions_by_owner, without email" do
+              let(:quota_method) { :active_provisions_by_owner }
+              let(:counts_hash) do
+                {:count => 0, :memory => 0, :cpu => 0, :storage => 0}
+              end
+              it "check_quota without email" do
+                load_queue
+                request.options = {}
+                expect(request.check_quota(quota_method)).to include(counts_hash)
+              end
+            end
           end
 
           context "cloud," do
@@ -292,6 +304,18 @@ describe MiqProvisionRequest do
                 {:count => 2, :memory => 2048, :cpu => 8, :storage => 20.gigabytes}
               end
               it_behaves_like "check_quota"
+            end
+
+            context "active_provisions_by_owner, without email" do
+              let(:quota_method) { :active_provisions_by_owner }
+              let(:counts_hash) do
+                {:count => 0, :memory => 0, :cpu => 0, :storage => 0}
+              end
+              it "check_quota without email" do
+                load_queue
+                request.options = {}
+                expect(request.check_quota(quota_method)).to include(counts_hash)
+              end
             end
           end
         end

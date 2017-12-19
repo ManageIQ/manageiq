@@ -253,7 +253,7 @@ module MiqProvisionQuotaMixin
 
   def quota_find_active_prov_request_by_owner(options)
     email = get_option(:owner_email).to_s.strip
-    quota_find_active_prov_request(options).select { |p| email.casecmp(p.request_owner_email(p)).zero? }
+    quota_find_active_prov_request(options).select { |p| email.casecmp(p.request_owner_email(p)).zero? } if email.present?
   end
 
   def request_owner_email(request)
@@ -346,9 +346,8 @@ module MiqProvisionQuotaMixin
               }
              }
 
-    send(prov_method, options).each do |pr|
-      service_request?(pr) ? service_quota_values(pr, result) : vm_quota_values(pr, result)
-    end
+    prs = send(prov_method, options)
+    prs.each { |pr| service_request?(pr) ? service_quota_values(pr, result) : vm_quota_values(pr, result) } if prs
     result
   end
 
