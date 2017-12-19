@@ -44,33 +44,6 @@ describe TaskHelpers::Imports::PolicySets do
     end
   end
 
-  # it 'should import all .yaml files in a specified directory' do
-  #   options = { :source => data_dir }
-  #   expect do
-  #     TaskHelpers::Imports::PolicySets.new.import(options)
-  #   end.to_not output.to_stderr
-  #
-  #   assert_test_policy_set_one_present
-  #   assert_test_policy_set_two_present
-  # end
-
-  # it 'should import a specified policy set export file' do
-  #   options = { :source => "#{data_dir}/#{policy_set_file}" }
-  #   expect do
-  #     TaskHelpers::Imports::PolicySets.new.import(options)
-  #   end.to_not output.to_stderr
-  #
-  #   assert_test_policy_set_one_present
-  #   expect(MiqPolicySet.find_by(:guid => policy_set_two_guid)).to be_nil
-  # end
-
-  # it 'should fail to import a specified policy set file' do
-  #   options = { :source => "#{data_dir}/#{bad_policy_set_file}" }
-  #   expect do
-  #     TaskHelpers::Imports::PolicySets.new.import(options)
-  #   end.to output.to_stderr
-  # end
-
   def assert_test_policy_set_one_present
     p = MiqPolicySet.find_by(:guid => policy_set_one_guid)
     expect(p.description).to eq("Policy Profile Import Test")
