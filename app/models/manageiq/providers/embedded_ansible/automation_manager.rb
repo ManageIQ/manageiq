@@ -12,7 +12,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :OpenstackCredential
   require_nested :RackspaceCredential
   require_nested :ScmCredential
-  require_nested :Satellite6Credential
   require_nested :VmwareCredential
 
   require_nested :ConfigurationScript
