@@ -143,7 +143,7 @@ describe(ServiceAnsiblePlaybook) do
       FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
       miq_request_task = FactoryGirl.create(:miq_request_task)
       miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
-      loaded_service.update_attributes(:evm_owner        => FactoryGirl.create(:user),
+      loaded_service.update_attributes(:evm_owner        => FactoryGirl.create(:user_with_group),
                                        :miq_group        => FactoryGirl.create(:miq_group),
                                        :miq_request_task => miq_request_task)
     end
@@ -151,8 +151,10 @@ describe(ServiceAnsiblePlaybook) do
     it 'creates an Ansible Tower job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
         expect(jobtemp).to eq(tower_job_temp)
-        exposed_miq = %w(api_url api_token service user group) + control_extras.keys
+        exposed_miq = %w(api_url api_token service user group X_MIQ_Group) + control_extras.keys
+        exposed_connection = %w(url token X_MIQ_Group)
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
+        expect(opts[:extra_vars].delete('manageiq_connection').keys).to include(*exposed_connection)
 
         expected_opts = provision_options[:provision_job_options].except(:hosts)
         expected_opts[:extra_vars]['pswd'] = decrpyted_val
