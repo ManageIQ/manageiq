@@ -13,7 +13,7 @@ class BinaryBlob < ApplicationRecord
       end
 
       def purge_scope(_older_than = nil)
-        where(:resource => nil)
+        where(:resource_type => 'MiqQueue').where.not('resource_id in (select id from miq_queue)')
       end
 
       def purge_associated_records(ids)
