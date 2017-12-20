@@ -117,6 +117,12 @@ describe ServiceTemplateProvisionRequest do
             {:count => 3, :memory => 3.gigabytes, :cpu => 8, :storage => 1_610_612_736}
           end
           it_behaves_like "check_quota"
+
+          it "fails without requester.email" do
+            load_queue
+            @vmware_user1.update_attributes(:email => nil)
+            expect { request.check_quota(quota_method) }.to raise_error(NoMethodError)
+          end
         end
       end
 
