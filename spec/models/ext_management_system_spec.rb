@@ -410,13 +410,70 @@ describe ExtManagementSystem do
       ems.destroy
       expect(ExtManagementSystem.count).to eq(1)
     end
+  end
 
-    it "queues up destroy for child_managers" do
-      child_manager = FactoryGirl.create(:ext_management_system)
-      ems = FactoryGirl.create(:ext_management_system, :child_managers => [child_manager])
-      expect(described_class).to receive(:schedule_destroy_queue).with(ems.id)
-      expect(described_class).to receive(:schedule_destroy_queue).with(child_manager.id)
-      described_class.destroy_queue(ems.id)
+  context "#queue_destroy" do
+    let(:server) { EvmSpecHelper.local_miq_server }
+    let(:zone)   { server.zone }
+
+    context "with no child managers" do
+      let(:ems) do
+        FactoryGirl.create(:ext_management_system, :zone => zone)
+      end
+
+      it "returns a task" do
+        task_id = ems.destroy_queue
+
+        deliver_queue_message
+
+        task = MiqTask.find(task_id)
+        expect(task.state).to  eq("Finished")
+        expect(task.status).to eq("Ok")
+      end
+
+      it "re-schedules with active workers" do
+        FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
+        ems.destroy_queue
+
+        expect(MiqQueue.count).to eq(1)
+
+        deliver_queue_message
+
+        expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.last.deliver_on).to_not be_nil
+      end
+
+      it "destroys the ems when the active worker shuts down" do
+        refresh_worker = FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
+        ems.destroy_queue
+
+        deliver_queue_message
+
+        expect(ExtManagementSystem.count).to eq(1)
+
+        refresh_worker.destroy
+
+        deliver_queue_message
+
+        expect(ExtManagementSystem.count).to eq(0)
+      end
+    end
+
+    context "with child managers" do
+      let(:child_manager) { FactoryGirl.create(:ext_management_system) }
+      let(:ems)           { FactoryGirl.create(:ext_management_system, :zone => zone, :child_managers => [child_manager]) }
+
+      it "queues up destroy for child_managers" do
+        described_class.destroy_queue(ems.id)
+
+        expect(MiqQueue.count).to eq(2)
+        expect(MiqQueue.pluck(:instance_id)).to include(ems.id, child_manager.id)
+      end
+    end
+
+    def deliver_queue_message(queue_message = MiqQueue.order(:id).first)
+      status, message, result = queue_message.deliver
+      queue_message.delivered(status, message, result)
     end
   end
 
