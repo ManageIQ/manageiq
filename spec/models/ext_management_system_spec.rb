@@ -471,7 +471,7 @@ describe ExtManagementSystem do
       end
     end
 
-    def deliver_queue_message(queue_message = MiqQueue.first)
+    def deliver_queue_message(queue_message = MiqQueue.order(:id).first)
       status, message, result = queue_message.deliver
       queue_message.delivered(status, message, result)
     end
