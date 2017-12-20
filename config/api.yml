@@ -555,7 +555,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: cloud_volume
+        :identifier: cloud_volume_show
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
