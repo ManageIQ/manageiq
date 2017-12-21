@@ -73,6 +73,8 @@
   - miq_request
   - miq_template
   - orchestration_stack
+  - physical_server
+  - physical_infra_topology
   - planning
   - policy_import_export
   - provider_foreman_explorer
@@ -112,11 +114,8 @@
   - ems_infra_tag
   - ems_infra_timeline
   - ems_physical_infra_console
-  - ems_physical_infra_show
-  - ems_physical_infra_show_list
   - ems_physical_infra_tag
-  - ems_physical_infra_timeline
-  - physical_server_timeline
+  - ems_physical_infra_view
   - host_show
   - host_show_list
   - host_perf
@@ -141,6 +140,8 @@
   - miq_template_snapshot
   - miq_template_tag
   - miq_template_timeline
+  - physical_infra_topology_view
+  - physical_server_view
   - policy_log
   - policy_simulation
   - pxe_image_type_view
@@ -207,11 +208,8 @@
   - ems_infra_tag
   - ems_infra_timeline
   - ems_physical_infra_console
-  - ems_physical_infra_show
-  - ems_physical_infra_show_list
   - ems_physical_infra_tag
-  - ems_physical_infra_timeline
-  - physical_server_timeline
+  - ems_physical_infra_view
   - host_show
   - host_show_list
   - host_perf
@@ -234,6 +232,8 @@
   - miq_template_snapshot
   - miq_template_tag
   - miq_template_timeline
+  - physical_infra_topology_view
+  - physical_server_view
   - planning
   - policy_log
   - policy_profile
@@ -284,6 +284,7 @@
   - automation_manager
   - compute
   - dashboard
+  - ems_physical_infra
   - miq_request_admin
   - miq_request_view
   - miq_template_clone
@@ -300,6 +301,9 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - physical_server
+  - physical_infra_topology
+  - physical_server_view
   - provider_foreman_explorer
   - vm_clone
   - vm_compare
@@ -375,10 +379,8 @@
   - ems_physical_infra_discover
   - ems_physical_infra_edit
   - ems_physical_infra_refresh
-  - ems_physical_infra_show
-  - ems_physical_infra_show_list
   - ems_physical_infra_tag
-  - ems_physical_infra_timeline
+  - ems_physical_infra_view
   - physical_server_timeline
   - host_new
   - host_analyze
@@ -490,10 +492,8 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
-  - ems_physical_infra_show
-  - ems_physical_infra_show_list
   - ems_physical_infra_tag
-  - ems_physical_infra_timeline
+  - ems_physical_infra_view
   - physical_server_timeline
   - host_show
   - host_show_list
@@ -579,11 +579,8 @@
   - ems_infra_tag
   - ems_infra_timeline
   - ems_physical_infra_console
-  - ems_physical_infra_show
-  - ems_physical_infra_show_list
   - ems_physical_infra_tag
-  - ems_physical_infra_timeline
-  - physical_server_timeline
+  - ems_physical_infra_view
   - host_show
   - host_show_list
   - host_perf
@@ -608,6 +605,8 @@
   - miq_template_snapshot
   - miq_template_tag
   - miq_template_timeline
+  - physical_infra_topology_view
+  - physical_server_view
   - policy_log
   - policy_simulation
   - resource_pool_show
@@ -671,7 +670,6 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
-  - physical_server_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -697,6 +695,8 @@
   - miq_template_snapshot
   - miq_template_tag
   - miq_template_timeline
+  - physical_infra_topology_view
+  - physical_server_view
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
@@ -1198,6 +1198,7 @@
   - ems_cluster_view
   - ems_container_view
   - ems_infra_view
+  - ems_physical_infra_view
   - ems_middleware_view
   - ems_network_view
   - ems_object_storage_view
@@ -1232,6 +1233,8 @@
   - orchestration_stack_view
   - orchestration_templates_view
   - persistent_volume_view
+  - physical_infra_topology_view
+  - physical_server_view
   - planning
   - policy_log
   - provider_foreman_view
