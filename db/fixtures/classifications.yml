@@ -935,6 +935,13 @@
     :example_text:
     :default: true
     :single_value: "1"
+  - :description: EAP Deployment has failed
+    :read_only: "0"
+    :syntax: string
+    :name: eap_deployment_failed
+    :example_text:
+    :default: true
+    :single_value: "1"
   :read_only: "0"
   :syntax: string
   :show: true

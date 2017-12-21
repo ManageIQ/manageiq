@@ -166,3 +166,91 @@
           action_type: default
           options: {}
       Condition: []
+- MiqPolicySet:
+    name: eap profile
+    description: EAP profile
+    set_type: MiqPolicySet
+    guid: 73c98c0d-138b-46d7-8d49-e328361f2449
+    read_only: true
+    set_data:
+    mode: control
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+    MiqPolicy:
+    - name: eap deployment failed
+      description: EAP Deployment Failed
+      expression: !ruby/object:MiqExpression
+        exp:
+          INCLUDES:
+            field: MiddlewareServer-type
+            value: Eap
+        context_type:
+      towhat: MiddlewareServer
+      guid: a93c1bab-fd53-41ee-99c7-6a02de5d72dc
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        success_synchronous: true
+        MiqEventDefinition:
+          name: middleware_deployment_error
+          description: EAP Application Deploy Failed
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: tag_eap_deployment_failed
+          description: Tag as Middleware Deployment Failed
+          action_type: tag
+          options:
+            :use_event_target: false
+            :use_localhost: true
+            :tags:
+            - "/managed/lifecycle/eap_deployment_failed"
+      - qualifier: success
+        success_sequence: 1
+        success_synchronous: true
+        MiqEventDefinition:
+          name: middleware_datasource_error
+          description: EAP Datasource Create Failed
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: tag_eap_deployment_failed
+          description: Tag as Middleware Deployment Failed
+          action_type: tag
+          options:
+            :use_event_target: false
+            :use_localhost: true
+            :tags:
+            - "/managed/lifecycle/eap_deployment_failed"
+      - qualifier: success
+        success_sequence: 1
+        success_synchronous: true
+        MiqEventDefinition:
+          name: middleware_jdbc_error
+          description: EAP JDBC Driver Deploy Failed
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: tag_eap_deployment_failed
+          description: Tag as Middleware Deployment Failed
+          action_type: tag
+          options:
+            :use_event_target: false
+            :use_localhost: true
+            :tags:
+            - "/managed/lifecycle/eap_deployment_failed"
+      Condition: []
