@@ -5911,6 +5911,10 @@
         :description: Transform VM
         :feature_type: admin
         :identifier: vm_transform
+      - :name: Mass Transform
+        :description: Transform tagged VMs
+        :feature_type: admin
+        :identifier: vm_transform_mass
       - :name: Edit EVM Server Relationship
         :description: Edit EVM Server Relationship
         :feature_type: admin
