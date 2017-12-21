@@ -83,13 +83,12 @@ describe InterRegionApiMethodRelay do
         end
 
         def expect_api_call(expected_action, expected_args = nil)
-          expect(described_class).to receive(:exec_api_call) do |region_num, collection, action, args, &block|
+          expect(described_class).to receive(:exec_api_call) do |region_num, collection, action, args, instance_id|
             expect(region_num).to eq(region)
             expect(collection).to eq(collection_name)
             expect(action).to eq(expected_action)
             expect(args).to eq(expected_args) if expected_args
-
-            expect(block.call).to eq([{:id => id}])
+            expect(instance_id).to eq(id)
           end
         end
 
@@ -229,54 +228,27 @@ describe InterRegionApiMethodRelay do
         }.to raise_error(described_class::InterRegionApiMethodRelayError)
       end
 
-      context "when no block is passed" do
-        it "calls the given action with the given args" do
-          args = {:my => "args", :here => 123}
-          expect(api_collection).to receive(action).with(args).and_return(api_success_result)
-          described_class.exec_api_call(region, collection_name, action, args)
-        end
-
-        it "defaults the args to an empty hash" do
-          expect(api_collection).to receive(action).with({}).and_return(api_success_result)
-          described_class.exec_api_call(region, collection_name, action)
-        end
-
-        it "defaults the args to an empty hash when nil is explicitly passed as args" do
-          expect(api_collection).to receive(action).with({}).and_return(api_success_result)
-          described_class.exec_api_call(region, collection_name, action, nil)
-        end
+      it "calls the given action with the given args" do
+        args = {:my => "args", :here => 123}
+        expect(api_collection).to receive(action).with(args).and_return(api_success_result)
+        described_class.exec_api_call(region, collection_name, action, args)
       end
 
-      context "when a block is passed" do
-        let(:resource_proc) { -> { "some stuff" } }
+      it "defaults the args to an empty hash" do
+        expect(api_collection).to receive(action).with({}).and_return(api_success_result)
+        described_class.exec_api_call(region, collection_name, action)
+      end
 
-        it "calls the given action with the given args" do
-          expected_args = {:my => "args", :here => 123}
-          expect(api_collection).to receive(action) do |args, &block|
-            expect(args).to eq(expected_args)
-            expect(block.call).to eq("some stuff")
-          end.and_return(api_success_result)
+      it "defaults the args to an empty hash when nil is explicitly passed as args" do
+        expect(api_collection).to receive(action).with({}).and_return(api_success_result)
+        described_class.exec_api_call(region, collection_name, action, nil)
+      end
 
-          described_class.exec_api_call(region, collection_name, action, expected_args, &resource_proc)
-        end
-
-        it "defaults the args to an empty hash" do
-          expect(api_collection).to receive(action) do |args, &block|
-            expect(args).to eq({})
-            expect(block.call).to eq("some stuff")
-          end.and_return(api_success_result)
-
-          described_class.exec_api_call(region, collection_name, action, &resource_proc)
-        end
-
-        it "defaults the args to an empty hash when nil is explicitly passed as args" do
-          expect(api_collection).to receive(action) do |args, &block|
-            expect(args).to eq({})
-            expect(block.call).to eq("some stuff")
-          end.and_return(api_success_result)
-
-          described_class.exec_api_call(region, collection_name, action, nil, &resource_proc)
-        end
+      it "calls a method on an instance if id is passed" do
+        instance = double("instance")
+        expect(api_collection).to receive(:find).with(4).and_return(instance)
+        expect(instance).to receive(action).and_return(api_success_result)
+        described_class.exec_api_call(region, collection_name, action, nil, 4)
       end
     end
   end

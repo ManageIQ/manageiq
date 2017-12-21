@@ -29,9 +29,7 @@ module InterRegionApiMethodRelay
         if in_current_region?
           super(*meth_args, &meth_block)
         else
-          InterRegionApiMethodRelay.exec_api_call(region_number, collection_name, action, api_args) do
-            [{:id => id}]
-          end
+          InterRegionApiMethodRelay.exec_api_call(region_number, collection_name, action, api_args, id)
         end
       end
     end
@@ -71,14 +69,11 @@ module InterRegionApiMethodRelay
     )
   end
 
-  def self.exec_api_call(region, collection_name, action, api_args = nil, &resource_block)
+  def self.exec_api_call(region, collection_name, action, api_args = nil, id = nil)
     api_args ||= {}
     collection = api_client_connection_for_region(region).public_send(collection_name)
-    result = if resource_block
-               collection.public_send(action, api_args, &resource_block)
-             else
-               collection.public_send(action, api_args)
-             end
+    collection_or_instance = id ? collection.find(id) : collection
+    result = collection_or_instance.public_send(action, api_args)
     case result
     when ManageIQ::API::Client::ActionResult
       raise InterRegionApiMethodRelayError, result.message if result.failed?
