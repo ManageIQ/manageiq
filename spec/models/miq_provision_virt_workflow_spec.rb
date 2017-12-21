@@ -97,6 +97,12 @@ describe MiqProvisionVirtWorkflow do
         expect(vlans.keys).to match_array(lan_keys)
         expect(vlans.values).to match_array(lan_keys)
       end
+
+      it '#load_hosts_vlans' do
+        hosts = [@host1]
+        MiqPreloader.preload(hosts, :lans => :switches)
+        expect { workflow.load_hosts_vlans(hosts, {}) }.not_to exceed_query_limit(0)
+      end
     end
   end
 
