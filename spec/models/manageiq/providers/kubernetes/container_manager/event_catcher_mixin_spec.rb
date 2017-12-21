@@ -63,7 +63,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
         }
       end
 
-      it 'extracts CONTAINER_KILLING data' do
+      it 'extracts POD_KILLING data' do
         expected_data = {
           :timestamp            => '2016-07-21T20:01:56Z',
           :kind                 => 'Pod',
@@ -77,7 +77,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
           :container_name       => 'heapster',
           :container_group_name => 'heapster-aas69',
           :container_namespace  => 'openshift-infra',
-          :event_type           => 'CONTAINER_KILLING'
+          :event_type           => 'POD_KILLING'
         }
         event = RecursiveOpenStruct.new(:object => kubernetes_event)
         expect(test_class.new.extract_event_data(event)).to eq(expected_data)
