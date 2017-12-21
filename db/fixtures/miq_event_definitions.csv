@@ -204,6 +204,12 @@ containergroup_scheduled,Pod Scheduled,Default,container_operations
 containergroup_compliance_check,Pod Compliance Check,Default,compliance
 containergroup_compliance_passed,Pod Compliance Passed,Default,compliance
 containergroup_compliance_failed,Pod Compliance Failed,Default,compliance
+containergroup_created,Pod Container Created,Default,container_operations
+containergroup_failed,Pod Container Failed,Default,container_operations
+containergroup_killing,Pod Container Killing,Default,container_operations
+containergroup_started,Pod Container Started,Default,container_operations
+containergroup_stopped,Pod Container Stopped,Default,container_operations
+containergroup_unhealthy,Pod Container Unhealthy,Default,container_operations
 
 containerreplicator_failedcreate,Replicator Failed Creating Pod,Default,container_operations
 containerreplicator_successfulcreate,Replicator Successfully Created Pod,Default,container_operations
