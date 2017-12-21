@@ -15,7 +15,7 @@ class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
     #
     # Wait for the Heartbeat Thread to stop
     #
-    unless @tid.nil?
+    if @tid
       safe_log("#{message} Waiting for Heartbeat Thread to Stop.")
       begin
         @tid.join(worker_settings[:heartbeat_thread_shutdown_timeout])
@@ -58,7 +58,7 @@ class MiqSmartProxyWorker::Runner < MiqQueueWorkerBase::Runner
 
   def do_work
     if @tid.nil? || !@tid.alive?
-      if !@tid.nil? && @tid.status.nil?
+      unless @tid.try(:status)
         dead_tid, @tid = @tid, nil
         _log.info("#{log_prefix} Waiting for the Heartbeat Thread to exit...")
         dead_tid.join # raise the exception the dead thread failed with

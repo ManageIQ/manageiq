@@ -972,7 +972,7 @@
   :prefetch_stale_threshold: 30.seconds
   :rails_server: puma
   :remote_console_type: VMRC
-  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate,smartproxy
+  :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate
   :server_dequeue_frequency: 5.seconds
   :server_log_frequency: 5.minutes
   :server_log_timings_threshold: 1.second
