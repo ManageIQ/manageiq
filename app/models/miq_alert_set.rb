@@ -3,6 +3,8 @@ class MiqAlertSet < ApplicationRecord
 
   before_validation :default_name_to_description, :on => :create
 
+  scope :on_mode, ->(mode) { where(:mode => mode) }
+
   include AssignmentMixin
 
   def self.assigned_to_target(target, options = {})
@@ -21,6 +23,24 @@ class MiqAlertSet < ApplicationRecord
 
   def active?
     !members.all? { |p| !p.active }
+  end
+
+  def assigned_resources
+    assigned_resources_tags.map do |assignment_tag|
+      match_data = assignment_tag.name.match(/^.+\/assigned_to\/(.+)\/id\/(\d+)$/)
+      resource_type, resource_id = match_data[1, 2]
+      next if resource_type.nil? || resource_id.nil?
+
+      resource_type.camelcase.constantize.find(resource_id)
+    end
+  end
+
+  def assigned_resources_tags
+    tags.select { |tag| tag.name.match(/.+\/assigned_to\/.+/) }
+  end
+
+  def assigned_resources?
+    assigned_resources_tags.any?
   end
 
   def export_to_array

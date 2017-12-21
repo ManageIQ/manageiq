@@ -28,6 +28,12 @@ FactoryGirl.define do
         create_list :storage, evaluator.storage_count, :ext_management_system => ems
       end
     end
+
+    trait :with_region do
+      after :create do |ems|
+        create :miq_region, :region => ems.region_number
+      end
+    end
   end
 
   # Intermediate classes
