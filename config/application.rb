@@ -97,6 +97,7 @@ module Vmdb
     config.autoload_paths << Rails.root.join("app", "controllers", "mixins")
     config.autoload_paths << Rails.root.join("lib")
     config.autoload_paths << Rails.root.join("lib", "services")
+    config.autoload_paths << Rails.root.join("lib", "utils")
 
     config.autoload_once_paths << Rails.root.join("lib", "vmdb", "console_methods.rb")
 
