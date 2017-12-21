@@ -62,10 +62,16 @@ class VmMigrateTask < MiqRequestTask
                 end
 
     _log.warn "Calling VM #{vc_method} for #{vm.id}:#{vm.name}"
-    if vc_method == :migrate
-      vm.migrate(host, respool)
-    else
-      vm.relocate(host, respool, datastore, nil, disk_transform)
+
+    begin
+      if vc_method == :migrate
+        vm.migrate(host, respool)
+      else
+        vm.relocate(host, respool, datastore, nil, disk_transform)
+      end
+    rescue => err
+      update_and_notify_parent(:state => 'finished', :status => 'error', :message => "Failed. Reason[#{err.message}]")
+      return
     end
 
     if AUTOMATE_DRIVES
