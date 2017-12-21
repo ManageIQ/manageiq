@@ -143,10 +143,12 @@ class EmsEvent < EventStream
     end
   end
 
+  MIDDLEWARE_SERVERS_TYPES = %w[MiddlewareServerEap MiddlewareServerWildfly].freeze
+
   def self.process_middleware_entities_in_event!(event, _options = {})
     middleware_type = event[:middleware_type]
     if middleware_type
-      klass = middleware_type.safe_constantize
+      klass = MIDDLEWARE_SERVERS_TYPES.include?(middleware_type) ? MiddlewareServer : middleware_type.safe_constantize
       unless klass.nil?
         process_object_in_event!(klass, event, :ems_ref_key => :middleware_ref)
       end
