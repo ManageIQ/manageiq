@@ -23,7 +23,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   def create_inventory
     set_status('creating inventory')
 
-    inventory_name = "#{playbook.name}_#{Time.zone.now.to_i}"
+    inventory_name = "#{playbook.name}_#{SecureRandom.uuid}"
+
+    _log.info("Creating inventory #{inventory_name} including hosts (#{options[:hosts]})")
     options[:inventory] = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory
                           .raw_create_inventory(playbook.manager, inventory_name, options[:hosts]).id
     save!
@@ -162,7 +164,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   end
 
   def delete_inventory
-    return unless options[:inventory]
+    return true unless options[:inventory]
     playbook.manager.with_provider_connection do |connection|
       connection.api.inventories.find(options[:inventory]).destroy!
     end
@@ -173,6 +175,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   end
 
   def delete_job_template
+    return true unless options[:job_template_ref]
     temp_configuration_script.raw_delete_in_provider
   rescue => err
     # log the error but do not treat the playbook running as failure

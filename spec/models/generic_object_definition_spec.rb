@@ -204,8 +204,8 @@ describe GenericObjectDefinition do
     end
 
     it 'updates the association with different class' do
-      definition.add_property_association(:vms, 'vm_cloud')
-      expect(definition.properties[:associations]).to include('vms' => 'VmCloud')
+      definition.add_property_association(:vms, 'zone')
+      expect(definition.properties[:associations]).to include('vms' => 'Zone')
     end
 
     it 'accepts GenericObject as the association' do

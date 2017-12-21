@@ -701,7 +701,7 @@ en:
       ContainerBuild:           Build
       ContainerQuota:           Container Quota
       CustomButton:             Button
-      CustomButtonSet:          Buttons Group
+      CustomButtonSet:          Button Group
       ConfigurationScriptSource: Repository
       Container:                Container
       ContainerPerformance:     Performance - Container
@@ -926,7 +926,7 @@ en:
       User:                     EVM User
       VimPerformanceTrend:      Performance Trend
       Vm:                       VM and Instance
-      VmCloud:                  Cloud Instance
+      VmCloud:                  Instance
       VmdbIndex:                Index
       VmdbTable:                VMDB Table
       VmOrTemplate:             VM or Template
@@ -982,7 +982,7 @@ en:
       container_template:          Template
       container_templates:         Templates
       custom_button:               Button
-      custom_button_set:           Buttons Group
+      custom_button_set:           Button Group
       ems_block_storage:           Block Storage Manager
       ems_block_storages:          Block Storage Managers
       ems_cloud:                   Cloud Provider
@@ -1052,6 +1052,7 @@ en:
       miq_custom_attribute:        EVM Custom Attribute
       miq_custom_attributes:       EVM Custom Attributes
       miq_event_definition:        Event
+      manageiq_providers_cloud_manager_vms: Instances
       manageiq_providers_foreman_configuration_manager_configuration_profile: Configuration Profile (Foreman)
       manageiq_providers_openstack_infra_manager_cloud_networks: Cloud Networks (OpenStack)
       manageiq_providers_openstack_cloud_manager_cloud_tenant: Cloud Tenants (OpenStack)
@@ -1103,14 +1104,6 @@ en:
       volume:                      Volume
       zone:                        Zone
       zones:                       Zones
-
-    data_type:
-      boolean:             Boolean
-      datetime:            Date/Time
-      float:               Float
-      integer:             Integer
-      string:              String
-      time:                Time
 
     ui_title:
       foreman:             Foreman

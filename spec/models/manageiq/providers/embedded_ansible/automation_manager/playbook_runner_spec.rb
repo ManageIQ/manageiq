@@ -40,6 +40,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
       it 'creates an inventory and moves on to create_job_template' do
         # Also test signal with queue
         subject.send(:minimize_indirect=, false)
+        expect(SecureRandom).to receive(:uuid).and_return('random-uuid')
         expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory).to receive(:raw_create_inventory).and_return(double(:id => 'inv1'))
         expect(subject).to receive(:queue_signal).with(:create_job_template, :deliver_on => nil)
         subject.create_inventory

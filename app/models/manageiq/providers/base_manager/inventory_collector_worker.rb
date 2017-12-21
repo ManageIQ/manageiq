@@ -16,8 +16,7 @@ class ManageIQ::Providers::BaseManager::InventoryCollectorWorker < MiqWorker
       if ems.nil?
         queue_name.titleize
       else
-        _("Inventory Collector for %{table}: %{name}") % {:table => ui_lookup(:table => "ext_management_systems"),
-                                                          :name  => ems.name}
+        _("Inventory Collector for Provider: %{name}") % {:name => ems.name}
       end
     end
   end

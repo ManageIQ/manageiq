@@ -13,7 +13,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def execute(action)
     jt = job_template(action)
-    opts = get_job_options(action).deep_merge(:extra_vars => {'manageiq' => manageiq_extra_vars(action)})
+    opts = get_job_options(action).deep_merge(:extra_vars => {'manageiq' => manageiq_extra_vars(action), 'manageiq_connection' => manageiq_connection_env})
     hosts = opts.delete(:hosts)
 
     _log.info("Launching Ansible Tower job with options:")
@@ -63,13 +63,30 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def manageiq_extra_vars(action)
     {
-      'api_url'   => MiqRegion.my_region.remote_ws_url,
-      'api_token' => Api::UserTokenService.new.generate_token(evm_owner.userid, 'api'),
-      'service'   => href_slug,
-      'user'      => evm_owner.href_slug,
-      'group'     => miq_group.href_slug,
-      'action'    => action
+      'api_url'     => api_url,
+      'api_token'   => api_token,
+      'service'     => href_slug,
+      'user'        => evm_owner.href_slug,
+      'group'       => miq_group.href_slug,
+      'action'      => action,
+      'X_MIQ_Group' => evm_owner.current_group.description
     }.merge(request_options_extra_vars)
+  end
+
+  def manageiq_connection_env
+    {
+      'url'         => api_url,
+      'token'       => api_token,
+      'X_MIQ_Group' => evm_owner.current_group.description
+    }
+  end
+
+  def api_token
+    @api_token ||= Api::UserTokenService.new.generate_token(evm_owner.userid, 'api')
+  end
+
+  def api_url
+    @api_url ||= MiqRegion.my_region.remote_ws_url
   end
 
   def request_options_extra_vars

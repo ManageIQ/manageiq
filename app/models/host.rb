@@ -17,6 +17,7 @@ class Host < ApplicationRecord
     # DB            Displayed
     "microsoft"       => "Microsoft",
     "redhat"          => "RedHat",
+    "kubevirt"        => "KubeVirt",
     "vmware"          => "VMware",
     "openstack_infra" => "OpenStack Infrastructure",
     "unknown"         => "Unknown",
@@ -168,7 +169,6 @@ class Host < ApplicationRecord
   include AuthenticationMixin
   include AsyncDeleteMixin
   include ComplianceMixin
-  include VimConnectMixin
   include AvailabilityMixin
 
   before_create :make_smart
@@ -899,20 +899,7 @@ class Host < ApplicationRecord
       self.ipaddress   = ipaddr
       self.vmm_vendor  = "vmware"
       self.vmm_product = "Esx"
-      if has_credentials?(:ws)
-        begin
-          with_provider_connection(:ip => ipaddr) do |vim|
-            _log.info("VIM Information for ESX Host with IP Address: [#{ipaddr}], Information: #{vim.about.inspect}")
-            self.vmm_product     = vim.about['name'].dup.split(' ').last
-            self.vmm_version     = vim.about['version']
-            self.vmm_buildnumber = vim.about['build']
-            self.name            = "#{vim.about['name']} (#{ipaddr})"
-          end
-        rescue => err
-          _log.warn("Cannot connect to ESX Host with IP Address: [#{ipaddr}], Username: [#{authentication_userid(:ws)}] because #{err.message}")
-        end
-      end
-      self.type = %w(esx esxi).include?(vmm_product.to_s.downcase) ? "ManageIQ::Providers::Vmware::InfraManager::HostEsx" : "ManageIQ::Providers::Vmware::InfraManager::Host"
+      self.type        = "ManageIQ::Providers::Vmware::InfraManager::HostEsx"
     elsif ost.hypervisor.include?(:ipmi)
       find_method       = :find_by_ipmi_address
       self.name         = "IPMI (#{ipaddr})"

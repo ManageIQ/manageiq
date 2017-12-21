@@ -1,7 +1,7 @@
 module Metering
   def calculate_costs(consumption, _)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
-    self.metering_used_metric = fixed_compute_metric
+    self.metering_used_metric = consumption.metering_used_fields_present if consumption.metering_used_fields_present
     self.existence_hours_metric = consumption.consumed_hours_in_interval
 
     relevant_fields.each do |field|

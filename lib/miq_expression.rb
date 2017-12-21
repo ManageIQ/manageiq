@@ -823,6 +823,7 @@ class MiqExpression
     unless opts[:typ] == "count" || opts[:typ] == "find"
       @column_cache ||= {}
       key = "#{model}_#{opts[:interval]}_#{opts[:include_model] || false}"
+      @column_cache[key] = nil if model == "ChargebackVm"
       @column_cache[key] ||= get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
       result.concat(@column_cache[key])
 
@@ -901,6 +902,7 @@ class MiqExpression
 
   def self.get_relats(model)
     @model_relats ||= {}
+    @model_relats[model] = nil if model == "ChargebackVm"
     @model_relats[model] ||= build_relats(model)
   end
 

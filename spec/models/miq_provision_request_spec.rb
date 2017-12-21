@@ -266,6 +266,12 @@ describe MiqProvisionRequest do
                 {:count => 4, :memory => 4.gigabytes, :cpu => 8, :storage => 2.gigabytes}
               end
               it_behaves_like "check_quota"
+
+              it "fails without owner_email option" do
+                load_queue
+                request.options = {}
+                expect { request.check_quota(quota_method) }.to raise_error(NoMethodError)
+              end
             end
           end
 

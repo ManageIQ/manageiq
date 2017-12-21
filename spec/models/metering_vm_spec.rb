@@ -77,5 +77,25 @@ describe MeteringVm do
       expect(subject.storage_allocated_metric).to eq(derived_vm_allocated_disk_storage)
       expect(subject.storage_used_metric).to eq(derived_vm_used_disk_storage * count_of_metric_rollup)
     end
+
+    context 'count of used hours is different than count of metric rollups' do
+      let(:used_metric_attributtes_with_zeros) do
+        # create hash with metrics as keys with zeros in values
+        # e.g. {"cpu_usagemhz_rate_average"=>0, "derived_memory_used"=>0, ...
+        Hash[MetricRollup::METERING_USED_METRIC_FIELDS.inject([]) { |result_array, metric| result_array << [metric, 0] }]
+      end
+
+      let(:count_of_metric_rollup_with_zero_used_metric) { 20 }
+
+      before do
+        vm.metric_rollups.limit(20).each { |record| record.update(used_metric_attributtes_with_zeros) }
+      end
+
+      it 'calculates metering used hours only from used metrics' do
+        expect(subject.metering_used_metric).to eq(vm.metric_rollups.count - count_of_metric_rollup_with_zero_used_metric)
+        expect(subject.metering_used_metric).to eq(40)
+        expect(subject.metering_used_metric).not_to eq(subject.fixed_compute_metric)
+      end
+    end
   end
 end

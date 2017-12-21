@@ -5,6 +5,7 @@ class VmReconfigureRequest < MiqRequest
 
   validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
+  include MiqProvisionQuotaMixin
 
   def self.request_limits(options)
     # Memory values are in megabytes

@@ -34,6 +34,7 @@ module ManageIQ::Providers
     has_many :security_contexts, :through => :containers
     has_many :container_service_port_configs, :through => :container_services
     has_many :container_routes, :through => :container_services
+    has_many :container_quota_scopes, :through => :container_quotas
     has_many :container_quota_items, :through => :container_quotas
     has_many :container_limit_items, :through => :container_limits
     has_many :container_template_parameters, :through => :container_templates

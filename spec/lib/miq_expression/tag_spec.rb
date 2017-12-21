@@ -36,21 +36,21 @@ RSpec.describe MiqExpression::Tag do
     end
 
     it "with model.associations.managed-in_tag" do
-      tag = "service.user.managed-service_level"
+      tag = "Service.user.managed-service_level"
       expect(described_class.parse(tag)).to have_attributes(:model        => Service,
                                                             :associations => ['user'],
                                                             :namespace    => "/managed/service_level")
     end
 
     it "with model.associations.user_tag-in_tag" do
-      tag = "service.user.user_tag-service_level"
+      tag = "Service.user.user_tag-service_level"
       expect(described_class.parse(tag)).to have_attributes(:model        => Service,
                                                             :associations => ['user'],
                                                             :namespace    => "/user/service_level")
     end
 
     it "with invalid case model.associations.managed-in_tag" do
-      tag = "service.user.mXaXnXaXged-service_level"
+      tag = "Service.user.mXaXnXaXged-service_level"
       expect(described_class.parse(tag)).to be_nil
     end
 
@@ -72,8 +72,17 @@ RSpec.describe MiqExpression::Tag do
     end
 
     it "returns nil with invalid case parent-model::model::somethingmanaged-se" do
-      tag = "ManageIQ::Providers::CloudManagermanaged-se'"
+      tag = "ManageIQ::Providers::CloudManagermanaged-se"
       expect(described_class.parse(tag)).to be_nil
+    end
+
+    it "can parse models in deeply nested namespaces" do
+      tag = "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem.managed-cc"
+
+      expected = {
+        :model => ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem
+      }
+      expect(described_class.parse(tag)).to have_attributes(expected)
     end
   end
 
