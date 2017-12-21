@@ -238,7 +238,7 @@ en:
       effective_cpu: CPU - Effective
       effective_memory: Memory - Effective
       ems_cluster_name: Cluster
-      emstype_description: Type
+      emstype_description: Type Description
       enabled: Active
       end_trend_value: End
       evaluation_description: What is evaluated
