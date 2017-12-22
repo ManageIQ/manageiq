@@ -75,9 +75,21 @@ class VmMigrateTask < MiqRequestTask
     end
 
     if AUTOMATE_DRIVES
-      update_and_notify_parent(:state => 'migrated', :message => "Finished #{request_class::TASK_DESCRIPTION}")
+      update_and_notify_parent(:state => 'active', :message => "#{request_class::TASK_DESCRIPTION} in progress")
     else
       update_and_notify_parent(:state => 'finished', :message => "#{request_class::TASK_DESCRIPTION} complete")
+    end
+  end
+
+  def after_ae_delivery(ae_result)
+    _log.info("ae_result=#{ae_result.inspect}")
+
+    return if ae_result == 'retry'
+
+    if ae_result == 'ok'
+      update_and_notify_parent(:state => "finished", :status => "Ok", :message => "#{request_class::TASK_DESCRIPTION} completed")
+    else
+      update_and_notify_parent(:state => "finished", :status => "Error")
     end
   end
 end
