@@ -6546,6 +6546,10 @@
       :description: View Metrics
       :feature_type: view
       :identifier: metrics_view
+  - :name: Apply Config Pattern
+    :description: Apply Config Pattern
+    :feature_type: control
+    :identifier: physical_server_apply_config_pattern
   - :name: Event Streams
     :description: Everything under Event Streams
     :feature_type: node
