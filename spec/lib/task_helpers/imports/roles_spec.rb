@@ -2,21 +2,21 @@ describe TaskHelpers::Imports::Roles do
   let(:data_dir)        { File.join(File.expand_path(__dir__), 'data', 'roles') }
   let(:role_file)       { 'Role_Import_Test.yaml' }
   let(:bad_role_file)   { 'Bad_Role_Import_Test.yml' }
-  let(:role_one_name)   { 'Role Import Test'}
-  let(:role_two_name)   { 'Role Import Test 2'}
+  let(:role_one_name)   { 'Role Import Test' }
+  let(:role_two_name)   { 'Role Import Test 2' }
 
-  EvmSpecHelper.seed_specific_product_features(%w[
-        dashboard        
-        dashboard_add
-        dashboard_view
-        host_compare
-        host_edit
-        host_scan
-        host_show_list
-        policy
-        vm
-        about
-      ])
+  EvmSpecHelper.seed_specific_product_features(%w(
+                                                 dashboard
+                                                 dashboard_add
+                                                 dashboard_view
+                                                 host_compare
+                                                 host_edit
+                                                 host_scan
+                                                 host_show_list
+                                                 policy
+                                                 vm
+                                                 about
+                                               ))
 
   describe "#import" do
     let(:options) { {:source => source} }
@@ -62,14 +62,14 @@ describe TaskHelpers::Imports::Roles do
     expect(r.name).to eq(role_one_name)
     expect(r.read_only).to be false
     expect(r.feature_identifiers).to eq(["about"])
-    expect(r.settings).to eq({:restrictions=>{:vms=>:user_or_group}})
+    expect(r.settings).to eq(:restrictions=>{:vms=>:user_or_group})
   end
 
   def assert_test_role_two_present
     r = MiqUserRole.find_by(:name => role_two_name)
     expect(r.name).to eq(role_two_name)
     expect(r.read_only).to be false
-    expect(r.feature_identifiers).to eq(%w[dashboard vm])
+    expect(r.feature_identifiers).to eq(%w(dashboard vm))
     expect(r.settings).to be nil
   end
 end

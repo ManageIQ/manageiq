@@ -78,7 +78,7 @@ describe TaskHelpers::Exports do
     end
 
     it 'removes selected attributes' do
-      filtered_attributes = TaskHelpers::Exports.exclude_attributes(all_attributes, %w[created_at updated_at id])
+      filtered_attributes = TaskHelpers::Exports.exclude_attributes(all_attributes, %w(created_at updated_at id))
       expect(filtered_attributes).to match("name" => "EvmRole-super_administrator", "read_only" => true, "settings" => nil)
     end
   end

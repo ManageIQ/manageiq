@@ -1,6 +1,6 @@
 ---
 - name:
   read_only: false
-  settings: 
+  settings:
   feature_identifiers:
   - about

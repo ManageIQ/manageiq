@@ -23,13 +23,13 @@ describe TaskHelpers::Exports::Roles do
   end
 
   after do
-    FileUtils.remove_entry export_dir
+    # FileUtils.remove_entry export_dir
   end
 
   it 'exports user roles to a given directory' do
     TaskHelpers::Exports::Roles.new.export(:directory => export_dir)
     file_contents = File.read("#{export_dir}/Test_Role.yaml")
-    expect(YAML.load(file_contents)).to eq(role_test_export)
+    expect(YAML.safe_load(file_contents)).to eq(role_test_export)
     expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(1)
   end
 
@@ -37,8 +37,8 @@ describe TaskHelpers::Exports::Roles do
     TaskHelpers::Exports::Roles.new.export(:directory => export_dir, :all => true)
     file_contents = File.read("#{export_dir}/Test_Role.yaml")
     file_contents2 = File.read("#{export_dir}/EvmRole-super_administrator.yaml")
-    expect(YAML.load(file_contents)).to eq(role_test_export)
-    expect(YAML.load(file_contents2)).to eq(role_super_export)
+    expect(YAML.safe_load(file_contents)).to eq(role_test_export)
+    expect(YAML.safe_load(file_contents2)).to eq(role_super_export)
     expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(2)
   end
 end
