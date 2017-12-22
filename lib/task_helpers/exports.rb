@@ -30,5 +30,9 @@ module TaskHelpers
 
       nil
     end
+
+    def self.exclude_attributes(attributes, excluded_attributes)
+      attributes.reject { |key, _| excluded_attributes.include?(key) }
+    end
   end
 end
