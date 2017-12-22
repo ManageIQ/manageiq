@@ -78,6 +78,7 @@ namespace :locale do
       Rails.root.join("db/fixtures/notification_types.*")          => %w(message),
       Rails.root.join("product/charts/layouts/*.yaml")             => %w(title),
       Rails.root.join("product/charts/layouts/*/*.yaml")           => %w(title),
+      Rails.root.join("product/compare/*.yaml")                    => %w(headers group menu_name title),
       Rails.root.join("product/reports/*/*.*")                     => %w(headers menu_name title),
       Rails.root.join("product/timelines/miq_reports/*.*")         => %w(title name headers),
       ManageIQ::UI::Classic::Engine.root.join('product/views/*.*') => %w(title name headers)
