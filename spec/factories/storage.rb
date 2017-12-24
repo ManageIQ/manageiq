@@ -13,6 +13,7 @@ FactoryGirl.define do
 
   factory :storage_redhat, :parent => :storage_nfs do
     sequence(:ems_ref_obj) { |n| "/api/storagedomains/#{n}" }
+    sequence(:storage_domain_type) { |n| n == 2 ? "iso" : "data" }
   end
 
   factory :storage_block, :parent => :storage do
