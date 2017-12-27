@@ -86,9 +86,6 @@ middleware_jdbc_ok,EAP JDBC Driver Deploy Succeeded,Default,middleware_operation
 middleware_jdbc_error,EAP JDBC Driver Deploy Failed,Default,middleware_operations
 middleware_jdbc_remove_ok,EAP JDBC Driver Undeploy Succeeded,Default,middleware_operations
 middleware_jdbc_remove_error,EAP JDBC Driver Undeploy Failed,Default,middleware_operations
-middlewareserver_compliance_check,Middleware Server Compliance Check,Default,compliance
-middlewareserver_compliance_passed,Middleware Server Compliance Passed,Default,compliance
-middlewareserver_compliance_failed,Middleware Server Compliance Failed,Default,compliance
 
 #
 # Company tags
