@@ -14,7 +14,8 @@ class ContainerProject < ApplicationRecord
   has_many :containers, :through => :container_groups
   has_many :container_images, -> { distinct }, :through => :container_groups
   has_many :container_nodes, -> { distinct }, :through => :container_groups
-  has_many :container_quotas
+  has_many :container_quotas, -> { active }
+  has_many :container_quota_scopes, :through => :container_quotas
   has_many :container_quota_items, :through => :container_quotas
   has_many :container_limits
   has_many :container_limit_items, :through => :container_limits
