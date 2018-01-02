@@ -53,10 +53,6 @@ module ActiveMetrics
 
         if interval_name == 'hourly'
           # TODO(lsmola) pff, it needs AR objects, quite ineffective to batch here
-          samples_arel.find_each do |perf|
-            Benchmark.realtime_block(:process_perfs_tag) { VimPerformanceTagValue.build_from_performance_record(perf) }
-          end
-
           _log.info("#{log_header} Adding missing timestamp intervals...")
           resources.each do |resource|
             Benchmark.realtime_block(:add_missing_intervals) { Metric::Processing.add_missing_intervals(resource, "hourly", start_time, end_time) }

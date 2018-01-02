@@ -105,7 +105,6 @@ describe VimPerformanceTag do
                                        )
             end
             vm.metric_rollups << perf
-            VimPerformanceTagValue.build_from_performance_record(perf)
           end
           vm.save!
         end
@@ -116,7 +115,6 @@ describe VimPerformanceTag do
                                     :cpu_usagemhz_rate_average => value
                                    )
           @host.metric_rollups << perf
-          VimPerformanceTagValue.build_from_performance_record(perf)
         end
         @host.save!
       end
