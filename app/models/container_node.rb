@@ -87,8 +87,8 @@ class ContainerNode < ApplicationRecord
   end
 
   def evaluate_alert(_alert_id, _event)
-    # currently only EmsEvents from hawkular are tested for node alerts,
-    # and these should automaticaly be translated to alerts.
+    # This is a no-op on container node, and used to be implemented only for
+    # Hawkular-generated EmsEvents.
     true
   end
 
