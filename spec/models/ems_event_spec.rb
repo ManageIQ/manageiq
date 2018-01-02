@@ -293,7 +293,6 @@ describe EmsEvent do
     it 'returns a list of expected groups' do
       event_group_names = [
         :addition,
-        :application,
         :configuration,
         :console,
         :deletion,

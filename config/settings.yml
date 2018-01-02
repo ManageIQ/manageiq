@@ -197,8 +197,6 @@
       - VmBeingCreatedEvent
       - VmBeingDeployedEvent
       :name: Creation/Addition
-    :application:
-      :name: Application
     :configuration:
       :critical:
       - ansible_tower_create
