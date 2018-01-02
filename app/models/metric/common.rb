@@ -3,7 +3,6 @@ module Metric::Common
   included do
     belongs_to  :resource, :polymorphic => true
     belongs_to  :time_profile
-    has_many    :vim_performance_tag_values, :as => :metric, :dependent => :destroy
 
     belongs_to  :parent_host,        :class_name => "Host"
     belongs_to  :parent_ems_cluster, :class_name => "EmsCluster"

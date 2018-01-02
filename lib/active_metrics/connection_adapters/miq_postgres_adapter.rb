@@ -52,7 +52,6 @@ module ActiveMetrics
         samples_inventory_collection = nil
 
         if interval_name == 'hourly'
-          # TODO(lsmola) pff, it needs AR objects, quite ineffective to batch here
           _log.info("#{log_header} Adding missing timestamp intervals...")
           resources.each do |resource|
             Benchmark.realtime_block(:add_missing_intervals) { Metric::Processing.add_missing_intervals(resource, "hourly", start_time, end_time) }

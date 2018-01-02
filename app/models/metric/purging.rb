@@ -61,29 +61,6 @@ module Metric::Purging
     purge_scope(older_than, interval).count
   end
 
-  # Used for MetricRollup (not Metric)
-  # A list of ids (not a scope) is brought in and associated vimPerformanceTagValue records are deleted
-  #
-  # TODO: Would be more efficient to just use the full scope here (not id list)
-  #   - we would then just use the standard purge_in_batches
-  #   - remove the to_a from purge_in_batches
-  #   - possibly use the standard purge_in_batches
-  #   - change the metrics rollups to use truncate instead
-  def self.purge_associated_records(metric_type, ids)
-    # Since VimPerformanceTagValues are 6 * number of tags per performance
-    # record, we need to batch in smaller trips.
-    count_tag_values = 0
-    _log.info("Purging associated tag values.")
-    ids.each_slice(50) do |vp_ids|
-      tv_count, = Benchmark.realtime_block(:purge_vim_performance_tag_values) do
-        VimPerformanceTagValue.where(:metric_id => vp_ids, :metric_type => metric_type).delete_all
-      end
-      count_tag_values += tv_count
-    end
-    _log.info("Purged #{count_tag_values} associated tag values.")
-    count_tag_values
-  end
-
   def self.purge_daily(older_than, window = nil, total_limit = nil, &block)
     purge_by_date(older_than, "daily", window, total_limit, &block)
   end
@@ -128,15 +105,14 @@ module Metric::Purging
     scope = purge_scope(older_than, interval)
     window ||= purge_window_size
     _log.info("Purging #{total_limit || "all"} #{interval} metrics older than [#{older_than}]...")
-    total, total_tag_values, timings = purge_in_batches(scope, window, 0, total_limit, &block)
+    total, timings = purge_in_batches(scope, window, 0, total_limit, &block)
     _log.info("Purging #{total_limit || "all"} #{interval} metrics older than [#{older_than}]...Complete - " +
-              "Deleted #{total} records and #{total_tag_values} associated tag values - Timings: #{timings.inspect}")
+              "Deleted #{total} records - Timings: #{timings.inspect}")
 
     total
   end
 
   def self.purge_in_batches(scope, window, total = 0, total_limit = nil)
-    total_tag_values = 0
     query = scope.select(:id).limit(window)
 
     _, timings = Benchmark.realtime_block(:total_time) do
@@ -164,16 +140,11 @@ module Metric::Purging
         break if count == 0
         total += count
 
-        if scope.klass == MetricRollup
-          count_tag_values = purge_associated_records(scope.name, batch_ids)
-          total_tag_values += count_tag_values
-        end
-
         yield(count, total) if block_given?
         break if count < window || (total_limit && (total_limit <= total))
       end
     end
 
-    [total, total_tag_values, timings]
+    [total, timings]
   end
 end
