@@ -6,7 +6,7 @@ module EmsRefresh::SaveInventoryHelper
       # Save the columns associated with the find keys, so we can coerce the hash values during fetch
       if records.first
         model = records.first.class
-        @key_attribute_types = find_key.map { |k| model.type_for_attribute(k) }
+        @key_attribute_types = find_key.map { |k| model.type_for_attribute(k.to_s) }
       else
         @key_attribute_types = []
       end
