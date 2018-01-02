@@ -74,6 +74,22 @@ FactoryGirl.define do
   end
 
   trait :storage do
-    after(:create) { |h| h.storages << FactoryGirl.create(:storage) }
+    transient do
+      storage_count 1
+    end
+
+    after :create do |h, evaluator|
+      h.storages = create_list :storage, evaluator.storage_count
+    end
+  end
+
+  trait :storage_redhat do
+    transient do
+      storage_count 1
+    end
+
+    after :create do |h, evaluator|
+      h.storages = create_list :storage_redhat, evaluator.storage_count
+    end
   end
 end
