@@ -542,7 +542,7 @@ class MiqAlert < ApplicationRecord
 
   def self.raw_events
     @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values] +
-                    %w(hawkular_alert datawarehouse_alert)
+                    %w(datawarehouse_alert)
   end
 
   def self.event_alertable?(event)
@@ -588,13 +588,9 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate_internal(target, _inputs = {})
-    if target.kind_of?(::MiddlewareServer)
-      method = "evaluate_middleware"
-      options = _inputs[:ems_event]
-    else
-      method = "evaluate_method_#{hash_expression[:eval_method]}"
-      options = hash_expression[:options] || {}
-    end
+    method = "evaluate_method_#{hash_expression[:eval_method]}"
+    options = hash_expression[:options] || {}
+
     raise "Evaluation method '#{hash_expression[:eval_method]}' does not exist" unless self.respond_to?(method)
 
     send(method, target, options)
@@ -606,10 +602,6 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluate_method_dwh_generic(target, options)
-    target.evaluate_alert(id, options)
-  end
-
-  def evaluate_middleware(target, options)
     target.evaluate_alert(id, options)
   end
 
