@@ -68,10 +68,6 @@ module ActiveMetrics
 
           # TODO: Should we change this into a single metrics.push like we do in ems_refresh?
           Benchmark.realtime_block(:process_perfs_db) { perf.update_attributes(v) }
-
-          if interval_name == 'hourly'
-            Benchmark.realtime_block(:process_perfs_tag) { VimPerformanceTagValue.build_from_performance_record(perf) }
-          end
         end
 
         if interval_name == 'hourly'

@@ -97,7 +97,6 @@ module Metric::CiMixin::Rollup
       end
 
       Benchmark.realtime_block(:db_update_perf) { perf.update_attributes(new_perf) }
-      Benchmark.realtime_block(:process_perfs_tag) { VimPerformanceTagValue.build_from_performance_record(perf) }
 
       case interval_name
       when "hourly"
