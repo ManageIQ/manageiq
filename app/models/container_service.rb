@@ -1,6 +1,8 @@
 class ContainerService < ApplicationRecord
   include CustomAttributeMixin
+  include ContainerResourceMixin
   include SupportsFeatureMixin
+
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :selector, :protocol, :port, :container_port, :portal_ip, :session_affinity
 

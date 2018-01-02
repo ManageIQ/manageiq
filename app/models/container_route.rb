@@ -1,5 +1,6 @@
 class ContainerRoute < ApplicationRecord
   include CustomAttributeMixin
+  include ContainerResourceMixin
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :container_project

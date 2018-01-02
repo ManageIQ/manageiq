@@ -1,0 +1,221 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://host.example.com:8443/oapi/v1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 18 May 2017 13:24:49 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"APIResourceList","groupVersion":"v1","resources":[{"name":"appliedclusterresourcequotas","namespaced":true,"kind":"AppliedClusterResourceQuota"},{"name":"buildconfigs","namespaced":true,"kind":"BuildConfig"},{"name":"buildconfigs/instantiate","namespaced":true,"kind":"BuildRequest"},{"name":"buildconfigs/instantiatebinary","namespaced":true,"kind":"BinaryBuildRequestOptions"},{"name":"buildconfigs/webhooks","namespaced":true,"kind":"Status"},{"name":"builds","namespaced":true,"kind":"Build"},{"name":"builds/clone","namespaced":true,"kind":"BuildRequest"},{"name":"builds/details","namespaced":true,"kind":"Build"},{"name":"builds/log","namespaced":true,"kind":"BuildLog"},{"name":"clusternetworks","namespaced":false,"kind":"ClusterNetwork"},{"name":"clusterpolicies","namespaced":false,"kind":"ClusterPolicy"},{"name":"clusterpolicybindings","namespaced":false,"kind":"ClusterPolicyBinding"},{"name":"clusterresourcequotas","namespaced":false,"kind":"ClusterResourceQuota"},{"name":"clusterresourcequotas/status","namespaced":false,"kind":"ClusterResourceQuota"},{"name":"clusterrolebindings","namespaced":false,"kind":"ClusterRoleBinding"},{"name":"clusterroles","namespaced":false,"kind":"ClusterRole"},{"name":"deploymentconfigrollbacks","namespaced":true,"kind":"DeploymentConfigRollback"},{"name":"deploymentconfigs","namespaced":true,"kind":"DeploymentConfig"},{"name":"deploymentconfigs/instantiate","namespaced":true,"kind":"DeploymentRequest"},{"name":"deploymentconfigs/log","namespaced":true,"kind":"DeploymentLog"},{"name":"deploymentconfigs/rollback","namespaced":true,"kind":"DeploymentConfigRollback"},{"name":"deploymentconfigs/scale","namespaced":true,"kind":"Scale"},{"name":"deploymentconfigs/status","namespaced":true,"kind":"DeploymentConfig"},{"name":"egressnetworkpolicies","namespaced":true,"kind":"EgressNetworkPolicy"},{"name":"generatedeploymentconfigs","namespaced":true,"kind":"DeploymentConfig"},{"name":"groups","namespaced":false,"kind":"Group"},{"name":"hostsubnets","namespaced":false,"kind":"HostSubnet"},{"name":"identities","namespaced":false,"kind":"Identity"},{"name":"images","namespaced":false,"kind":"Image"},{"name":"imagesignatures","namespaced":false,"kind":"ImageSignature"},{"name":"imagestreamimages","namespaced":true,"kind":"ImageStreamImage"},{"name":"imagestreamimports","namespaced":true,"kind":"ImageStreamImport"},{"name":"imagestreammappings","namespaced":true,"kind":"ImageStreamMapping"},{"name":"imagestreams","namespaced":true,"kind":"ImageStream"},{"name":"imagestreams/secrets","namespaced":true,"kind":"SecretList"},{"name":"imagestreams/status","namespaced":true,"kind":"ImageStream"},{"name":"imagestreamtags","namespaced":true,"kind":"ImageStreamTag"},{"name":"localresourceaccessreviews","namespaced":true,"kind":"LocalResourceAccessReview"},{"name":"localsubjectaccessreviews","namespaced":true,"kind":"LocalSubjectAccessReview"},{"name":"netnamespaces","namespaced":false,"kind":"NetNamespace"},{"name":"oauthaccesstokens","namespaced":false,"kind":"OAuthAccessToken"},{"name":"oauthauthorizetokens","namespaced":false,"kind":"OAuthAuthorizeToken"},{"name":"oauthclientauthorizations","namespaced":false,"kind":"OAuthClientAuthorization"},{"name":"oauthclients","namespaced":false,"kind":"OAuthClient"},{"name":"podsecuritypolicyreviews","namespaced":true,"kind":"PodSecurityPolicyReview"},{"name":"podsecuritypolicyselfsubjectreviews","namespaced":true,"kind":"PodSecurityPolicySelfSubjectReview"},{"name":"podsecuritypolicysubjectreviews","namespaced":true,"kind":"PodSecurityPolicySubjectReview"},{"name":"policies","namespaced":true,"kind":"Policy"},{"name":"policybindings","namespaced":true,"kind":"PolicyBinding"},{"name":"processedtemplates","namespaced":true,"kind":"Template"},{"name":"projectrequests","namespaced":false,"kind":"ProjectRequest"},{"name":"projects","namespaced":false,"kind":"Project"},{"name":"resourceaccessreviews","namespaced":true,"kind":"ResourceAccessReview"},{"name":"rolebindingrestrictions","namespaced":true,"kind":"RoleBindingRestriction"},{"name":"rolebindings","namespaced":true,"kind":"RoleBinding"},{"name":"roles","namespaced":true,"kind":"Role"},{"name":"routes","namespaced":true,"kind":"Route"},{"name":"routes/status","namespaced":true,"kind":"Route"},{"name":"selfsubjectrulesreviews","namespaced":true,"kind":"SelfSubjectRulesReview"},{"name":"subjectaccessreviews","namespaced":true,"kind":"SubjectAccessReview"},{"name":"subjectrulesreviews","namespaced":true,"kind":"SubjectRulesReview"},{"name":"templates","namespaced":true,"kind":"Template"},{"name":"useridentitymappings","namespaced":false,"kind":"UserIdentityMapping"},{"name":"users","namespaced":false,"kind":"User"}]}
+
+'
+    http_version:
+  recorded_at: Thu, 18 May 2017 13:24:49 GMT
+- request:
+    method: get
+    uri: https://host.example.com:8443/oapi/v1/namespaces/testproject/rolebindings/admin
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 18 May 2017 13:24:49 GMT
+      Content-Length:
+      - '481'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"RoleBinding","apiVersion":"v1","metadata":{"name":"admin","namespace":"testproject","selfLink":"/oapi/v1/namespaces/testproject/rolebindings/admin","uid":"e426f8a6-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"118480","creationTimestamp":"2017-04-25T15:14:35Z"},"userNames":["tevensen","kevensen","testuser"],"groupNames":null,"subjects":[{"kind":"User","name":"tevensen"},{"kind":"User","name":"kevensen"},{"kind":"User","name":"testuser"}],"roleRef":{"name":"admin"}}
+
+'
+    http_version:
+  recorded_at: Thu, 18 May 2017 13:24:49 GMT
+- request:
+    method: put
+    uri: https://host.example.com:8443/oapi/v1/namespaces/testproject/rolebindings/admin
+    body:
+      encoding: UTF-8
+      string: '{"kind":"RoleBinding","apiVersion":"v1","metadata":{"name":"admin","namespace":"testproject","selfLink":"/oapi/v1/namespaces/testproject/rolebindings/admin","uid":"e426f8a6-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"118480","creationTimestamp":"2017-04-25T15:14:35Z"},"userNames":["tevensen","kevensen","testuser"],"groupNames":null,"subjects":[{"kind":"User","name":"tevensen"},{"kind":"User","name":"kevensen"},{"kind":"User","name":"testuser"}],"roleRef":{"name":"admin"}}'
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer theToken
+      Content-Length:
+      - '480'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 18 May 2017 13:24:49 GMT
+      Content-Length:
+      - '481'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"RoleBinding","apiVersion":"v1","metadata":{"name":"admin","namespace":"testproject","selfLink":"/oapi/v1/namespaces/testproject/rolebindings/admin","uid":"e426f8a6-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"118480","creationTimestamp":"2017-04-25T15:14:35Z"},"userNames":["tevensen","kevensen","testuser"],"groupNames":null,"subjects":[{"kind":"User","name":"tevensen"},{"kind":"User","name":"kevensen"},{"kind":"User","name":"testuser"}],"roleRef":{"name":"admin"}}
+
+'
+    http_version:
+  recorded_at: Thu, 18 May 2017 13:24:50 GMT
+- request:
+    method: get
+    uri: https://host.example.com:8443/oapi/v1/namespaces/testproject/rolebindings/admin
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 18 May 2017 13:24:49 GMT
+      Content-Length:
+      - '481'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"RoleBinding","apiVersion":"v1","metadata":{"name":"admin","namespace":"testproject","selfLink":"/oapi/v1/namespaces/testproject/rolebindings/admin","uid":"e426f8a6-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"118480","creationTimestamp":"2017-04-25T15:14:35Z"},"userNames":["tevensen","kevensen","testuser"],"groupNames":null,"subjects":[{"kind":"User","name":"tevensen"},{"kind":"User","name":"kevensen"},{"kind":"User","name":"testuser"}],"roleRef":{"name":"admin"}}
+
+'
+    http_version:
+  recorded_at: Thu, 18 May 2017 13:24:50 GMT
+- request:
+    method: put
+    uri: https://host.example.com:8443/oapi/v1/namespaces/testproject/rolebindings/admin
+    body:
+      encoding: UTF-8
+      string: '{"kind":"RoleBinding","apiVersion":"v1","metadata":{"name":"admin","namespace":"testproject","selfLink":"/oapi/v1/namespaces/testproject/rolebindings/admin","uid":"e426f8a6-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"118480","creationTimestamp":"2017-04-25T15:14:35Z"},"userNames":["tevensen","kevensen","testuser","testuser2"],"groupNames":null,"subjects":[{"kind":"User","name":"tevensen"},{"kind":"User","name":"kevensen"},{"kind":"User","name":"testuser"}],"roleRef":{"name":"admin"}}'
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer theToken
+      Content-Length:
+      - '492'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 18 May 2017 13:24:49 GMT
+      Content-Length:
+      - '528'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"RoleBinding","apiVersion":"v1","metadata":{"name":"admin","namespace":"testproject","selfLink":"/oapi/v1/namespaces/testproject/rolebindings/admin","uid":"e426f8a6-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"118755","creationTimestamp":"2017-04-25T15:14:35Z"},"userNames":["tevensen","kevensen","testuser","testuser2"],"groupNames":null,"subjects":[{"kind":"User","name":"tevensen"},{"kind":"User","name":"kevensen"},{"kind":"User","name":"testuser"},{"kind":"User","name":"testuser2"}],"roleRef":{"name":"admin"}}
+
+'
+    http_version:
+  recorded_at: Thu, 18 May 2017 13:24:50 GMT
+- request:
+    method: get
+    uri: https://host.example.com:8443/oapi/v1/namespaces/testproject/rolebindings/admin
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.2 (darwin16.5.0 x86_64) ruby/2.3.3p222
+      Authorization:
+      - Bearer theToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 18 May 2017 13:24:49 GMT
+      Content-Length:
+      - '528'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"RoleBinding","apiVersion":"v1","metadata":{"name":"admin","namespace":"testproject","selfLink":"/oapi/v1/namespaces/testproject/rolebindings/admin","uid":"e426f8a6-29c9-11e7-b2c1-000c294e0cbd","resourceVersion":"118755","creationTimestamp":"2017-04-25T15:14:35Z"},"userNames":["tevensen","kevensen","testuser","testuser2"],"groupNames":null,"subjects":[{"kind":"User","name":"tevensen"},{"kind":"User","name":"kevensen"},{"kind":"User","name":"testuser"},{"kind":"User","name":"testuser2"}],"roleRef":{"name":"admin"}}
+
+'
+    http_version:
+  recorded_at: Thu, 18 May 2017 13:24:50 GMT
+recorded_with: VCR 3.0.3

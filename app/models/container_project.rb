@@ -37,6 +37,7 @@ class ContainerProject < ApplicationRecord
 
   include EventMixin
   include Metric::CiMixin
+  include ContainerResourceParentMixin
 
   PERF_ROLLUP_CHILDREN = :all_container_groups
 
@@ -66,5 +67,38 @@ class ContainerProject < ApplicationRecord
     _log.info("Disconnecting Container Project [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
     self.deleted_on = Time.now.utc
     save
+  end
+
+  def add_role_to_user(user_name, role_name)
+    role_binding = get_resource_by_name(role_name, 'RoleBinding', name).to_h
+    # If the particular binding doesn't exist or it doesn't have a userNames
+    # attribute, create a new binding.
+    if role_binding.nil? || !role_binding.key?(:userNames)
+
+    end
+
+    if role_binding.nil?
+      new_role_binding = Kubeclient::Resource.new(:kind       => 'RoleBinding',
+                                                  :apiVersion => 'v1',
+                                                  :metadata   => {:namespace => name,
+                                                                  :name      => role_name},
+                                                  :roleRef    => {:name => role_name},
+                                                  :userNames  => [user_name])
+      create_resource(new_role_binding.to_h)
+    elsif !role_binding.key?(:userNames)
+      role_binding[:userNames] = [user_name]
+      update_in_provider(role_binding.to_h)
+    else
+      role_binding[:userNames] = (role_binding[:userNames] + [user_name]).uniq
+      update_in_provider(role_binding.to_h)
+    end
+  end
+
+  def subjects_with_role(role_name)
+    role_binding = get_resource_by_name(role_name, 'RoleBinding', name).to_h
+    if role_binding.nil? || !role_binding.key?(:subjects)
+      return nil
+    end
+    role_binding[:subjects]
   end
 end
