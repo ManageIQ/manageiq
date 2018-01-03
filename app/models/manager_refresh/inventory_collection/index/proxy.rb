@@ -121,11 +121,11 @@ module ManagerRefresh
         end
 
         def data_index(name)
-          data_indexes[name] || raise("Index #{name} not defined for #{inventory_collection}")
+          data_indexes[name] || raise("Index :#{name} not defined for #{inventory_collection}")
         end
 
         def local_db_index(name)
-          local_db_indexes[name] || raise("Index #{name} not defined for #{inventory_collection}")
+          local_db_indexes[name] || raise("Index :#{name} not defined for #{inventory_collection}")
         end
 
         def missing_keys(data_keys, ref)
@@ -143,7 +143,7 @@ module ManagerRefresh
             # Skip if data on key are nil or InventoryObject or InventoryObjectLazy
             next if data[key].nil? || data[key].kind_of?(ManagerRefresh::InventoryObject) || data[key].kind_of?(ManagerRefresh::InventoryObjectLazy)
             # Raise error since relation must be nil or InventoryObject or InventoryObjectLazy
-            raise "Wrong index for '#{key}', the value must be of type Nil or InventoryObject or InventoryObjectLazy, got: #{data[key]}"
+            raise "Wrong index for key :#{key}, the value must be of type Nil or InventoryObject or InventoryObjectLazy, got: #{data[key]}"
           end
         end
 
