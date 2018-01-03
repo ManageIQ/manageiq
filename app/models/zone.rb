@@ -2,7 +2,7 @@ class Zone < ApplicationRecord
   DEFAULT_NTP_SERVERS = {:server => %w(0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org)}.freeze
 
   validates_presence_of   :name, :description
-  validates_uniqueness_of :name
+  validates :name, :unique_within_region => true
 
   serialize :settings, Hash
 
