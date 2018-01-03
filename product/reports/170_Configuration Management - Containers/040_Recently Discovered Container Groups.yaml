@@ -19,7 +19,7 @@ headers:
 - Creation
 conditions: !ruby/object:MiqExpression
   exp:
-    IS NOT NULL:
+    IS NULL:
       field: ContainerGroup-deleted_on
       value:
 order: Descending
