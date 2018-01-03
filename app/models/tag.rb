@@ -162,7 +162,7 @@ class Tag < ApplicationRecord
   # @return [ActiveRecord::Relation] Scope for tags controlled by ContainerLabelTagMapping.
   def self.controlled_by_mapping
     queries = ContainerLabelTagMapping::TAG_PREFIXES.collect do |prefix|
-      where("name LIKE ?", "#{sanitize_sql_like(prefix)}%")
+      where(arel_table[:name].matches("#{sanitize_sql_like(prefix)}%", nil, true)) # case sensitive LIKE
     end
     queries.inject(:or).read_only.is_entry
   end
