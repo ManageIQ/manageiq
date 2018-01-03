@@ -957,6 +957,7 @@ class MiqRequestWorkflow
 
   def convert_to_xml(xml, result)
     result.each do |obj, children|
+      next if obj.nil?
       @ems_xml_nodes["#{obj.class.base_class}_#{obj.id}"] = node = xml.add_element(obj.class.base_class.name, :object => ci_to_hash_struct(obj))
       convert_to_xml(node, children)
     end
