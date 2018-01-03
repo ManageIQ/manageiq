@@ -41,10 +41,9 @@ namespace :locale do
   end
 
   desc "Extract strings from various yaml files and store them in a ruby file for gettext:find"
-  task :extract_yaml_strings => :environment do
-    def update_output(string, file, output)
-      file.gsub!(pwd + '/', "")
-      file.gsub!(ManageIQ::UI::Classic::Engine.root.to_s + '/', "")
+  task :extract_yaml_strings, [:root] => :environment do |_t, args|
+    def update_output(string, file, output, root)
+      file.gsub!(root + '/', "")
       return if string.nil? || string.empty?
       if output.key?(string)
         output[string].append(file)
@@ -53,47 +52,40 @@ namespace :locale do
       end
     end
 
-    def parse_object(object, keys, file, output)
+    def parse_object(object, keys, file, output, root)
       if object.kind_of?(Hash)
         object.keys.each do |key|
           if keys.include?(key) || keys.include?(key.to_s)
             if object[key].kind_of?(Array)
-              object[key].each { |i| update_output(i, file, output) }
+              object[key].each { |i| update_output(i, file, output, root) }
             else
-              update_output(object[key], file, output)
+              update_output(object[key], file, output, root)
             end
           end
-          parse_object(object[key], keys, file, output)
+          parse_object(object[key], keys, file, output, root)
         end
       elsif object.kind_of?(Array)
         object.each do |item|
-          parse_object(item, keys, file, output)
+          parse_object(item, keys, file, output, root)
         end
       end
     end
 
-    yamls = {
-      Rails.root.join("db/fixtures/miq_product_features.*")        => %w(name description),
-      Rails.root.join("db/fixtures/miq_report_formats.*")          => %w(description),
-      Rails.root.join("db/fixtures/notification_types.*")          => %w(message),
-      Rails.root.join("product/charts/layouts/*.yaml")             => %w(title),
-      Rails.root.join("product/charts/layouts/*/*.yaml")           => %w(title),
-      Rails.root.join("product/compare/*.yaml")                    => %w(headers group menu_name title),
-      Rails.root.join("product/reports/*/*.*")                     => %w(headers menu_name title),
-      Rails.root.join("product/timelines/miq_reports/*.*")         => %w(title name headers),
-      ManageIQ::UI::Classic::Engine.root.join('product/views/*.*') => %w(title name headers)
-    }
+    config_file = args[:root].join('config/locale_task_config.yaml')
+    return unless config_file.exist?
 
+    yamls = YAML.load_file(config_file)['yaml_strings_to_extract']
     output = {}
 
     yamls.keys.each do |yaml_glob|
-      Dir.glob(yaml_glob).each do |file|
+      yaml_glob_full = args[:root].join(yaml_glob)
+      Dir.glob(yaml_glob_full).each do |file|
         yml = YAML.load_file(file)
-        parse_object(yml, yamls[yaml_glob], file, output)
+        parse_object(yml, yamls[yaml_glob], file, output, args[:root].to_s)
       end
     end
 
-    File.open(Rails.root.join("config/yaml_strings.rb"), "w+") do |f|
+    File.open(args[:root].join("config/yaml_strings.rb"), "w+") do |f|
       f.puts "# This is automatically generated file (rake locale:extract_yaml_strings)."
       f.puts "# The file contains strings extracted from various yaml files for gettext to find."
       output.keys.each do |key|
@@ -146,7 +138,12 @@ namespace :locale do
   end
 
   desc "Update ManageIQ gettext catalogs"
-  task "update" => ["run_store_model_attributes", "store_dictionary_strings", "extract_yaml_strings", "gettext:find"] do
+  task "update" do
+    Rake::Task['locale:store_dictionary_strings'].invoke
+    Rake::Task['locale:run_store_model_attributes'].invoke
+    Rake::Task['locale:extract_yaml_strings'].invoke(Rails.root)
+    Rake::Task['gettext:find'].invoke
+
     Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
       File.unlink(file)
     end
@@ -161,6 +158,9 @@ namespace :locale do
     @domain = args[:engine].gsub('::', '_')
     @engine = "#{args[:engine].camelize}::Engine".constantize
     @engine_root = @engine.root
+
+    # extract plugin's yaml strings
+    Rake::Task['locale:extract_yaml_strings'].invoke(@engine_root)
 
     namespace :gettext do
       def locale_path
@@ -183,7 +183,7 @@ namespace :locale do
                                 :report_warning => false)
     Rake::Task['gettext:find'].invoke
 
-    Dir["#{@engine.root}/locale/**/*.edit.po", "#{@engine.root}/locale/**/*.po.time_stamp"].each do |file|
+    Dir["#{@engine.root}/locale/**/*.edit.po", "#{@engine.root}/locale/**/*.po.time_stamp", "#{@engine.root}/config/yaml_strings.rb"].each do |file|
       File.unlink(file)
     end
   end
