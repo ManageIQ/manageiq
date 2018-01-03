@@ -139,7 +139,7 @@ describe DialogFieldSerializer do
       end
 
       it "serializes the category name, description and default value" do
-        default_values = "one,two"
+        default_values = "[\"one\", \"two\"]"
         dialog_field.update_attributes(:default_value => default_values)
 
         expect(dialog_field_serializer.serialize(dialog_field))
@@ -151,7 +151,7 @@ describe DialogFieldSerializer do
                      :category_name        => "best category ever",
                      :category_description => "best category ever"
                    },
-                   "default_value"           => %w(one two)
+                   "default_value"           => "[\"one\", \"two\"]"
           ))
       end
     end

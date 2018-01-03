@@ -16,10 +16,6 @@ class DialogFieldSerializer < Serializer
       "dialog_field_responders" => dialog_field.dialog_field_responders.map(&:name)
     }
 
-    if dialog_field.try(:force_multi_value) && dialog_field.default_value.present?
-      extra_attributes["default_value"] = dialog_field.default_value
-    end
-
     if dialog_field.dynamic?
       dynamic_values = dialog_field.trigger_automate_value_updates
       extra_attributes["values"] = dynamic_values
