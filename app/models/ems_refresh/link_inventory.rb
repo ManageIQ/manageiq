@@ -116,14 +116,16 @@ module EmsRefresh::LinkInventory
     end
 
     # Do the VMs to * relationships
-    #   We do disconnects for all refresh types since we have enough
-    #   information in the filtered data for all refresh types
+    #   We do disconnects for EMS, Host, and Vm target types since
+    #   we have enough information in the filtered data
+
+    do_disconnect ||= target.kind_of?(VmOrTemplate) if disconnect
 
     # Do the ResourcePools to VMs relationships
     update_relats(:resource_pools_to_vms, prev_relats, new_relats) do |r|
       rp = instance_with_id(ResourcePool, r)
       break if rp.nil?
-      [proc { |v|  rp.remove_vm(instance_with_id(VmOrTemplate, v)) }, # Disconnect proc
+      [do_disconnect ? proc { |v| rp.remove_vm(instance_with_id(VmOrTemplate, v)) } : nil, # Disconnect proc
        proc { |v|  rp.add_vm(instance_with_id(VmOrTemplate, v)) },    # Connect proc
        proc { |vs| rp.add_vm(instances_with_ids(VmOrTemplate, vs)) }] # Bulk connect proc
     end
