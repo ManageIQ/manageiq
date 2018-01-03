@@ -149,6 +149,14 @@ class Tag < ApplicationRecord
       end
   end
 
+  # @return [ActiveRecord::Relation] Scope for tags controlled by ContainerLabelTagMapping.
+  def self.controlled_by_mapping
+    queries = ContainerLabelTagMapping::TAG_PREFIXES.collect do |prefix|
+      where(arel_table[:name].matches("#{sanitize_sql_like(prefix)}%", nil, true)) # case sensitive LIKE
+    end
+    queries.inject(:or).read_only.is_entry
+  end
+
   private
 
   def remove_from_managed_filters
