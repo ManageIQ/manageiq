@@ -1614,4 +1614,8 @@ module ApplicationHelper
       _(text)
     end
   end
+
+  def accessible_select_event_types
+    ApplicationController::Timelines::SELECT_EVENT_TYPE.map {|key, value| [_(key), value]}
+  end
 end
