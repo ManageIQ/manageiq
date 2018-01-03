@@ -16,7 +16,7 @@ headers:
 - Ready Condition Status
 conditions: !ruby/object:MiqExpression
   exp:
-    IS NOT NULL:
+    IS NULL:
       field: ContainerGroup-deleted_on
       value:
 order: Ascending
