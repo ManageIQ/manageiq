@@ -187,7 +187,7 @@
           :display: :edit
           :data_type: :string
           :min_length:
-          :max_length: 100
+          :max_length: 255
         :vm_prefix:
           :description: VM Name Prefix/Suffix
           :required_method: :validate_vm_name
@@ -241,7 +241,7 @@
           :data_type: :string
           :notes_display: :show
           :min_length:
-          :max_length:
+          :max_length: 255
         :pxe_image_id:
           :values_from:
             :method: :allowed_images
