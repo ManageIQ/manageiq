@@ -1162,6 +1162,7 @@
         :memory_threshold: 2.gigabytes
         :queue_timeout: 20.minutes
         :restart_interval: 6.hours
+        :heartbeat_thread_shutdown_timeout: 10.seconds
     :schedule_worker:
       :container_entities_purge_interval: 1.day
       :authentication_check_interval: 1.hour
