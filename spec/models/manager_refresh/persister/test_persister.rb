@@ -39,7 +39,8 @@ class TestPersister < ManagerRefresh::Inventory::Persister
       network,
       :network_ports,
       references(:vms) + references(:network_ports) + references(:load_balancers),
-      :parent => manager.network_manager
+      :parent         => manager.network_manager,
+      :secondary_refs => {:by_device => [:device], :by_device_and_name => [:device, :name]}
     )
 
     add_inventory_collection_with_references(
@@ -105,7 +106,7 @@ class TestPersister < ManagerRefresh::Inventory::Persister
   def add_inventory_collection(options)
     # For tests we want to make sure the db based params are not filled
     options[:custom_manager_uuid] = nil
-    options[:custom_db_finder] = nil
+    options[:custom_db_finder]    = nil
 
     super(options)
   end
@@ -116,6 +117,13 @@ class TestPersister < ManagerRefresh::Inventory::Persister
 
   def strategy
     :local_db_find_missing_references
+  end
+
+  def shared_options
+    {
+      :strategy => strategy,
+      :targeted => targeted,
+    }
   end
 
   def references(collection)
