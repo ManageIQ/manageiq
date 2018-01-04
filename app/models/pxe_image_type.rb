@@ -4,7 +4,7 @@ class PxeImageType < ApplicationRecord
   has_many :windows_images
   has_many :iso_images
 
-  validates_uniqueness_of :name
+  validates :name, :unique_within_region => true
 
   def self.seed_file_name
     @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
