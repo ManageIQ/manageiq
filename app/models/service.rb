@@ -54,7 +54,6 @@ class Service < ApplicationRecord
   before_validation :set_tenant_from_group
   before_create     :apply_dialog_settings
 
-  delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
 
@@ -97,6 +96,14 @@ class Service < ApplicationRecord
 
   def power_states
     vms.map(&:power_state)
+  end
+
+  def custom_actions
+    service_template&.custom_actions(self)
+  end
+
+  def custom_action_buttons
+    service_template&.custom_action_buttons(self)
   end
 
   def power_state
