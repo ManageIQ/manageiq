@@ -40,6 +40,24 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
 end
 
 describe MiqReport do
+  context ".for_user" do
+    let(:my_user) { FactoryGirl.create(:user_with_group) }
+    let(:group_in_my_tenant) { FactoryGirl.create(:miq_group, :tenant => my_user.current_tenant) }
+
+    let(:other_tenant) { FactoryGirl.create(:tenant) }
+    let(:group_in_other_tenant) { FactoryGirl.create(:miq_group, :tenant => other_tenant) }
+
+    let!(:my_report) { FactoryGirl.create(:miq_report, :miq_group => my_user.current_group, :rpt_type => "Custom") }
+    let!(:report_in_my_tenant) { FactoryGirl.create(:miq_report, :miq_group => group_in_my_tenant, :rpt_type => "Custom") }
+    let!(:report_in_another_tenant) { FactoryGirl.create(:miq_report, :miq_group => group_in_other_tenant, :rpt_type => "Custom") }
+
+    it "returns reports created by me or anyone in a group in my tenant" do
+      User.current_user = my_user
+
+      expect(described_class.for_user(my_user)).to match_array([my_report, report_in_my_tenant])
+    end
+  end
+
   context "report with filtering in Registry" do
     let(:options)  { {:targets_hash => true, :userid => "admin"} }
     let(:miq_task) { FactoryGirl.create(:miq_task) }

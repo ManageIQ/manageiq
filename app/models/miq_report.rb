@@ -56,7 +56,7 @@ class MiqReport < ApplicationRecord
       all
     else
       where(
-        arel_table[:rpt_type].eq('Custom').and(arel_table[:miq_group_id].eq(user.current_group_id))
+        arel_table[:rpt_type].eq('Custom').and(arel_table[:miq_group_id].in(user.current_tenant.miq_groups.pluck(:id)))
         .or(
           arel_table[:rpt_type].eq('Default')
         )
