@@ -50,8 +50,6 @@ module ManagerRefresh
                    :association_to_foreign_key_mapping,
                    :association_to_foreign_type_mapping,
                    :attribute_references,
-                   :custom_manager_uuid,
-                   :custom_db_finder,
                    :data_collection_finalized?,
                    :db_relation,
                    :inventory_object?,

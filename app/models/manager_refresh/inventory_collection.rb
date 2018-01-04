@@ -74,9 +74,8 @@ module ManagerRefresh
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :dependency_attributes, :manager_ref,
-                :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
-                :custom_db_finder, :check_changed, :arel, :builder_params,
-                :inventory_object_attributes, :name, :saver_strategy, :manager_uuids,
+                :association, :complete, :update_only, :transitive_dependency_attributes, :check_changed, :arel,
+                :inventory_object_attributes, :name, :saver_strategy, :manager_uuids, :builder_params,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes, :references_storage
@@ -131,11 +130,11 @@ module ManagerRefresh
     #         - nil => InventoryObject objects of the InventoryCollection will be saved to the DB, only these objects
     #                  will be referable from the other InventoryCollection objects.
     #         - :local_db_cache_all => Loads InventoryObject objects from the database, it loads all the objects that
-    #                                  are a result of a [:custom_db_finder, <:parent>.<:association>, :arel] taking
+    #                                  are a result of a [<:parent>.<:association>, :arel] taking
     #                                  first defined in this order. This strategy will not save any objects in the DB.
     #         - :local_db_find_references => Loads InventoryObject objects from the database, it loads only objects that
     #                                        were referenced by the other InventoryCollections using a filtered result
-    #                                        of a [:custom_db_finder, <:parent>.<:association>, :arel] taking first
+    #                                        of a [<:parent>.<:association>, :arel] taking first
     #                                        defined in this order. This strategy will not save any objects in the DB.
     #         - :local_db_find_missing_references => InventoryObject objects of the InventoryCollection will be saved to
     #                                                the DB. Then if we reference an object that is not present, it will
@@ -261,61 +260,6 @@ module ManagerRefresh
     # @param check_changed [Boolean] By default true. If true, before updating the InventoryObject, we call Rails
     #        'changed?' method. This can optimize speed of updates heavily, but it can fail to recognize the change for
     #        e.g. Ancestry and Relationship based columns. If false, we always update the InventoryObject.
-    # @param custom_manager_uuid [Proc] A custom way of getting a unique :manager_uuid of the object using :manager_ref.
-    #        In a complex cases, where part of the :manager_ref is another InventoryObject, we cannot infer the
-    #        :manager_uuid, if it comes from the DB. In that case, we need to provide a way of getting the :manager_uuid
-    #        from the DB.
-    #
-    #        Example: Given
-    #                    InventoryCollection.new({
-    #                      :model_class         => ::Hardware,
-    #                      :manager_ref         => [:vm_or_template],
-    #                      :association         => :hardwares,
-    #                      :custom_manager_uuid => custom_manager_uuid
-    #                    })
-    #
-    #        The :manager_ref => [:vm_or_template] points to another InventoryObject and we need to get a
-    #        :manager_uuid of that object. But if InventoryCollection was loaded from the DB, we can access the
-    #        :manager_uuid only by loading it from the DB as:
-    #             custom_manager_uuid = lambda do |hardware|
-    #               [hardware.vm_or_template.ems_ref]
-    #             end
-    #
-    #        Note: make sure to combine this with :custom_db_finder, to avoid N+1 queries being done, which we can
-    #        achieve by .includes(:vm_or_template). See Example in <param :custom_db_finder>.
-    # @param custom_db_finder [Proc] A custom way of getting the InventoryCollection out of the DB in a case of any DB
-    #        based strategy. This should be used in a case of complex query needed for e.g. targeted refresh or as an
-    #        optimization for :custom_manager_uuid.
-    #
-    #        Example, we solve N+1 issue from Example <param :custom_manager_uuid> as well as a selection used for
-    #        targeted refresh getting Hardware object from the DB instead of the API:
-    #        Having
-    #                 InventoryCollection.new({
-    #                   :model_class         => ::Hardware,
-    #                   :manager_ref         => [:vm_or_template],
-    #                   :association         => :hardwares,
-    #                   :custom_manager_uuid => custom_manager_uuid,
-    #                   :custom_db_finder    => custom_db_finder
-    #                 })
-    #
-    #        We need a custom_db_finder:
-    #          custom_db_finder = lambda do |inventory_collection, selection, _projection|
-    #            relation = inventory_collection.parent.send(inventory_collection.association)
-    #                                           .includes(:vm_or_template)
-    #                                           .references(:vm_or_template)
-    #            relation = relation.where(:vms => {:ems_ref => selection[:vm_or_template]}) unless selection.blank?
-    #            relation
-    #          end
-    #
-    #        Which solved 2 things for us:
-    #        - hardware.vm_or_template.ems_ref in a :custom_manager_uuid doesn't do N+1 queries anymore. To handle
-    #          just this problem, it would be enough to return
-    #          inventory_collection.parent.send(inventory_collection.association).includes?(:vm_or_template)
-    #        - We can use :local_db_find_references strategy on this inventory collection, which could not be used
-    #          by default, since the selection needs a complex join, to be able to filter by the :vm_or_template
-    #          ems_ref.
-    #          We could still use a :local_db_cache_all strategy though, which doesn't do any selection and loads
-    #          all :hardwares from the DB.
     # @param arel [ActiveRecord::Associations::CollectionProxy|Arel::SelectManager] Instead of :parent and :association
     #        we can provide Arel directly to say what records should be compared to check if InventoryObject will be
     #        doing create/update/delete.
@@ -423,7 +367,7 @@ module ManagerRefresh
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil,
                    custom_save_block: nil, delete_method: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {},
+                   check_changed: nil, arel: nil, builder_params: {},
                    inventory_object_attributes: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
                    targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil,
@@ -431,8 +375,6 @@ module ManagerRefresh
       @model_class            = model_class
       @manager_ref            = manager_ref || [:ems_ref]
       @secondary_refs         = secondary_refs
-      @custom_manager_uuid    = custom_manager_uuid
-      @custom_db_finder       = custom_db_finder
       @association            = association || []
       @parent                 = parent || nil
       @arel                   = arel
@@ -809,7 +751,7 @@ module ManagerRefresh
       end
     end
 
-    # Extracting references to a relation friendly format, or a format processable by a custom_db_finder
+    # Extracting references to a relation friendly format
     #
     # @param new_references [Array] array of index_values of the InventoryObjects
     def extract_references(new_references = [])

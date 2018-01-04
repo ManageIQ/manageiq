@@ -104,10 +104,6 @@ class TestPersister < ManagerRefresh::Inventory::Persister
   end
 
   def add_inventory_collection(options)
-    # For tests we want to make sure the db based params are not filled
-    options[:custom_manager_uuid] = nil
-    options[:custom_db_finder]    = nil
-
     super(options)
   end
 
