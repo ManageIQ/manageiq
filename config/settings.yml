@@ -1388,6 +1388,7 @@
         :memory_threshold: 2.gigabytes
         :queue_timeout: 20.minutes
         :restart_interval: 6.hours
+        :heartbeat_thread_shutdown_timeout: 10.seconds
       :storage_metrics_collector_worker:
         :count: 2
         :nice_delta: 3
