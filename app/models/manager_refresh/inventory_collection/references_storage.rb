@@ -9,8 +9,6 @@ module ManagerRefresh
       #         were referenced by other InventoryObject objects using a lazy_find with :key.
       attr_reader :attribute_references
 
-      attr_reader :index_proxy
-
       def initialize(index_proxy)
         @index_proxy          = index_proxy
         @references           = {}
@@ -39,6 +37,8 @@ module ManagerRefresh
       end
 
       private
+
+      attr_reader :index_proxy
 
       delegate :named_ref, :to => :index_proxy
     end

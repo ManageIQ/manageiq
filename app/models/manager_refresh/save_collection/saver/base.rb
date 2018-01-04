@@ -4,8 +4,6 @@ module ManagerRefresh::SaveCollection
       include Vmdb::Logging
       include ManagerRefresh::SaveCollection::Saver::SqlHelper
 
-      attr_reader :inventory_collection, :association
-
       def initialize(inventory_collection)
         @inventory_collection = inventory_collection
         # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
@@ -68,6 +66,8 @@ module ManagerRefresh::SaveCollection
       end
 
       protected
+
+      attr_reader :inventory_collection, :association
 
       delegate :build_stringified_reference, :build_stringified_reference_for_record, :to => :inventory_collection
 
