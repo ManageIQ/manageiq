@@ -1052,8 +1052,10 @@ en:
       miq_custom_attribute:        EVM Custom Attribute
       miq_custom_attributes:       EVM Custom Attributes
       miq_event_definition:        Event
+      manageiq_providers_cloud_manager: Cloud Manager
       manageiq_providers_cloud_manager_vms: Instances
       manageiq_providers_foreman_configuration_manager_configuration_profile: Configuration Profile (Foreman)
+      manageiq_providers_network_manager: Cloud Manager
       manageiq_providers_openstack_infra_manager_cloud_networks: Cloud Networks (OpenStack)
       manageiq_providers_openstack_cloud_manager_cloud_tenant: Cloud Tenants (OpenStack)
       miq_provision:               Provision
@@ -1071,6 +1073,7 @@ en:
       miq_servers:                 Servers
       miq_task:                    Task
       miq_template:                VM Template
+      miq_templates:               VM Templates
       miq_worker:                  EVM Worker
       miq_workers:                 EVM Workers
       miq_zone:                    Zone
