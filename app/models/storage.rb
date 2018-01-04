@@ -69,6 +69,8 @@ class Storage < ApplicationRecord
   supports :smartstate_analysis do
     if ext_management_systems.blank? || !ext_management_system.class.supports_smartstate_analysis?
       unsupported_reason_add(:smartstate_analysis, _("Smartstate Analysis cannot be performed on selected Datastore"))
+    elsif ext_management_systems_with_authentication_status_ok.blank?
+      unsupported_reason_add(:smartstate_analysis, _("There are no EMSs with valid credentials for this Datastore"))
     end
   end
 
