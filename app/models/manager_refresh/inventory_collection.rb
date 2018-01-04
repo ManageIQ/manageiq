@@ -112,6 +112,9 @@ module ManagerRefresh
              :reindex_secondary_indexes!,
              :to => :index_proxy
 
+    delegate :table_name,
+             :to => :model_class
+
     # @param model_class [Class] A class of an ApplicationRecord model, that we want to persist into the DB or load from
     #        the DB.
     # @param manager_ref [Array] Array of Symbols, that are keys of the InventoryObject's data, inserted into this
@@ -475,8 +478,6 @@ module ManagerRefresh
 
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
-
-      validate_inventory_collection!
     end
 
     def store_created_records(records)
@@ -808,6 +809,26 @@ module ManagerRefresh
       end
     end
 
+    # Extracting references to a relation friendly format, or a format processable by a custom_db_finder
+    #
+    # @param new_references [Array] array of index_values of the InventoryObjects
+    def extract_references(new_references = [])
+      hash_uuids_by_ref = []
+
+      new_references.each do |index_value|
+        next if index_value.nil?
+        # TODO(lsmola) no need when hashes are the original hashes
+        uuids = index_value.split("__")
+
+        reference = {}
+        attribute_names.each_with_index do |ref, uuid_value|
+          reference[ref] = uuids[uuid_value]
+        end
+        hash_uuids_by_ref << reference
+      end
+      hash_uuids_by_ref
+    end
+
     def db_collection_for_comparison_for(manager_uuids_set)
       # TODO(lsmola) this should have the build_multi_selection_condition, like in the method above
       full_collection_for_comparison.where(manager_ref.first => manager_uuids_set)
@@ -857,20 +878,6 @@ module ManagerRefresh
       {
         :id => identity
       }
-    end
-
-    def validate_inventory_collection!
-      if @strategy == :local_db_cache_all
-        if (manager_ref & association_attributes).present?
-          # Our manager_ref unique key contains a reference, that means that index we get from the API and from the
-          # db will differ. We need a custom indexing method, so the indexing is correct.
-          if custom_manager_uuid.nil?
-            raise "The unique key list manager_ref contains a reference, which can't be built automatically when loading"\
-                  " the InventoryCollection from the DB, you need to provide a custom_manager_uuid lambda, that builds"\
-                  " the correct manager_uuid given a DB record"
-          end
-        end
-      end
     end
 
     def association_attributes
