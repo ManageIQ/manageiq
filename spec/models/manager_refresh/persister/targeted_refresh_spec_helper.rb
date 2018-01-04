@@ -88,9 +88,9 @@ module TargetedRefreshSpecHelper
 
   def assert_ems(expected_table_counts)
     expect(@ems).to have_attributes(
-                      :api_version => nil, # TODO: Should be 3.0
-                      :uid_ems => nil
-                    )
+      :api_version => nil, # TODO: Should be 3.0
+      :uid_ems     => nil
+    )
     expect(@ems.flavors.size).to eql(expected_table_counts[:flavor])
     expect(@ems.availability_zones.size).to eql(expected_table_counts[:availability_zone])
     expect(@ems.vms_and_templates.size).to eql(expected_table_counts[:vm_or_template])

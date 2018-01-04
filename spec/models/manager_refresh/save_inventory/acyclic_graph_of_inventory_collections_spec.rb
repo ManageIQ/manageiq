@@ -673,7 +673,7 @@ describe ManagerRefresh::SaveInventory do
             :model_class => Hardware,
             :parent      => @ems,
             :association => :hardwares,
-            :manager_ref => [:vm_or_template, :virtualization_type]
+            :manager_ref => %i(vm_or_template virtualization_type)
           )
 
           @vm_data_1       = vm_data(1)
@@ -778,13 +778,13 @@ describe ManagerRefresh::SaveInventory do
       :model_class => Disk,
       :parent      => @ems,
       :association => :disks,
-      :manager_ref => [:hardware, :device_name]
+      :manager_ref => %i(hardware device_name)
     )
     @data[:networks] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => Network,
       :parent      => @ems,
       :association => :networks,
-      :manager_ref => [:hardware, :description]
+      :manager_ref => %i(hardware description)
     )
     @data[:flavors] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => Flavor,
@@ -819,8 +819,8 @@ describe ManagerRefresh::SaveInventory do
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(1)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(1)[:name])],
       :location         => @data[:networks].lazy_find({:hardware => lazy_find_hardware_1, :description => "public"},
-                                                      :key     => :hostname,
-                                                      :default => 'default_value_unknown'),
+                                                      {:key     => :hostname,
+                                                       :default => 'default_value_unknown'}),
     )
 
     @vm_data_12 = vm_data(12).merge(
@@ -830,8 +830,8 @@ describe ManagerRefresh::SaveInventory do
                             @data[:key_pairs].lazy_find(key_pair_data(1)[:name]),
                             @data[:key_pairs].lazy_find(key_pair_data(12)[:name])],
       :location         => @data[:networks].lazy_find({:hardware => lazy_find_hardware_1, :description => "public"},
-                                                      :key     => :hostname,
-                                                      :default => 'default_value_unknown'),
+                                                      {:key     => :hostname,
+                                                       :default => 'default_value_unknown'}),
     )
 
     @vm_data_2 = vm_data(2).merge(
@@ -839,8 +839,8 @@ describe ManagerRefresh::SaveInventory do
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])],
       :location         => @data[:networks].lazy_find({:hardware => lazy_find_hardware_2, :description => "public"},
-                                                      :key     => :hostname,
-                                                      :default => 'default_value_unknown'),
+                                                      {:key     => :hostname,
+                                                       :default => 'default_value_unknown'}),
     )
 
     @vm_data_4 = vm_data(4).merge(
@@ -848,8 +848,8 @@ describe ManagerRefresh::SaveInventory do
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(4)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(4)[:name])].compact,
       :location         => @data[:networks].lazy_find({:hardware => lazy_find_hardware_4, :description => "public"},
-                                                      :key     => :hostname,
-                                                      :default => 'default_value_unknown'),
+                                                      {:key     => :hostname,
+                                                       :default => 'default_value_unknown'}),
     )
 
     @hardware_data_1 = hardware_data(1).merge(

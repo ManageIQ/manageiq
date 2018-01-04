@@ -439,7 +439,7 @@ module ManagerRefresh
       @custom_save_block      = custom_save_block
       @custom_reconnect_block = custom_reconnect_block
       @check_changed          = check_changed.nil? ? true : check_changed
-      @internal_attributes    = [:__feedback_edge_set_parent, :__parent_inventory_collections]
+      @internal_attributes    = %i(__feedback_edge_set_parent __parent_inventory_collections)
       @complete               = complete.nil? ? true : complete
       @update_only            = update_only.nil? ? false : update_only
       @builder_params         = builder_params
@@ -467,7 +467,7 @@ module ManagerRefresh
       @dependees                        = Set.new
 
       @data_storage = ::ManagerRefresh::InventoryCollection::DataStorage.new(self, secondary_refs)
-      @references_storage   = ::ManagerRefresh::InventoryCollection::ReferencesStorage.new(self.index_proxy)
+      @references_storage = ::ManagerRefresh::InventoryCollection::ReferencesStorage.new(index_proxy)
 
       @created_records = []
       @updated_records = []
@@ -613,7 +613,7 @@ module ManagerRefresh
       end
 
       if attributes_whitelist.present?
-        filtered_attributes = filtered_attributes.reject { |key, _value| !attributes_whitelist.include?(key) }
+        filtered_attributes = filtered_attributes.select { |key, _value| attributes_whitelist.include?(key) }
       end
 
       filtered_attributes
@@ -626,7 +626,7 @@ module ManagerRefresh
       # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
       # that have presence validation
       fixed_attributes = manager_ref
-      fixed_attributes += presence_validators.attributes unless presence_validators.blank?
+      fixed_attributes += presence_validators.attributes if presence_validators.present?
       fixed_attributes
     end
 
@@ -756,8 +756,8 @@ module ManagerRefresh
     end
 
     def to_s
-      whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" unless attributes_whitelist.blank?
-      blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" unless attributes_blacklist.blank?
+      whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" if attributes_whitelist.present?
+      blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" if attributes_blacklist.present?
 
       strategy_name = ", strategy: #{strategy}" if strategy
 
@@ -779,7 +779,7 @@ module ManagerRefresh
     end
 
     def build_multi_selection_condition(hashes, keys = nil)
-      keys       ||= manager_ref
+      keys ||= manager_ref
       table_name = model_class.table_name
       cond_data  = hashes.map do |hash|
         "(#{keys.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"

@@ -55,18 +55,18 @@ describe ManagerRefresh::Inventory::Persister do
   it "raises an exception passing bad secondsry index used by finder" do
     expected_error = "Finder has missing keys for index :by_name, missing indexes are: [:name]"
     expect do
-      persister.vms.lazy_find({:names => "name"}, :ref => :by_name)
+      persister.vms.lazy_find({:names => "name"}, {:ref => :by_name})
     end.to(raise_error(expected_error))
 
     expected_error = "Finder has missing keys for index :by_uid_ems_and_name, missing indexes are: [:uid_ems, :name]"
     expect do
-      persister.vms.lazy_find({:names => "name", :uida_ems => "uid_ems"}, :ref => :by_uid_ems_and_name)
+      persister.vms.lazy_find({:names => "name", :uida_ems => "uid_ems"}, {:ref => :by_uid_ems_and_name})
     end.to(raise_error(expected_error))
   end
 
   it "checks passing more keys to index passes just fine" do
     # There is not need to force exact match as long as all keys of the index are passed
-    vm_lazy_1 = persister.vms.lazy_find({:name => "name", :uid_ems => "uid_ems", :ems_ref => "ems_ref"}, :ref => :by_uid_ems_and_name)
+    vm_lazy_1 = persister.vms.lazy_find({:name => "name", :uid_ems => "uid_ems", :ems_ref => "ems_ref"}, {:ref => :by_uid_ems_and_name})
 
     expect(vm_lazy_1.reference.full_reference).to eq(:name => "name", :uid_ems => "uid_ems", :ems_ref => "ems_ref")
     expect(vm_lazy_1.ref).to eq(:by_uid_ems_and_name)

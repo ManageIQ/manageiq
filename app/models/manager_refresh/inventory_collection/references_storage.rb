@@ -25,7 +25,7 @@ module ManagerRefresh
       end
 
       def build_reference(index_data, ref = :manager_ref)
-        return index_data if index_data.kind_of? ::ManagerRefresh::InventoryCollection::Reference
+        return index_data if index_data.kind_of?(::ManagerRefresh::InventoryCollection::Reference)
 
         ::ManagerRefresh::InventoryCollection::Reference.new(index_data, ref, named_ref(ref))
       end

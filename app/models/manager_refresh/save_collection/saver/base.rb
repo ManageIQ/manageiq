@@ -68,6 +68,7 @@ module ManagerRefresh::SaveCollection
       end
 
       protected
+
       delegate :build_stringified_reference, :build_stringified_reference_for_record, :to => :inventory_collection
 
       private
@@ -286,7 +287,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def serializable_keys?
-        @serializable_keys_bool_cache ||= !serializable_keys.blank?
+        @serializable_keys_bool_cache ||= serializable_keys.present?
       end
 
       def supports_remote_data_timestamp?(all_attribute_keys)

@@ -5,7 +5,7 @@ class TestPersister < ManagerRefresh::Inventory::Persister
     add_inventory_collections_with_references(
       cloud,
       %i(vms),
-      {:secondary_refs => {:by_name => [:name], :by_uid_ems_and_name => [:uid_ems, :name]}}
+      :secondary_refs => {:by_name => [:name], :by_uid_ems_and_name => %i(uid_ems name)}
     )
     add_inventory_collections_with_references(
       cloud,

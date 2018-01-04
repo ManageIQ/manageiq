@@ -13,12 +13,10 @@ module ManagerRefresh
       end
 
       def to_hash
-
       end
 
       class << self
         def from_hash
-
         end
       end
 
@@ -63,4 +61,3 @@ module ManagerRefresh
     end
   end
 end
-
