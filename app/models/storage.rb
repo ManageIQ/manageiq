@@ -99,6 +99,14 @@ class Storage < ApplicationRecord
     ext_management_systems.select { |ems| ems.my_zone == zone_name }
   end
 
+  def ext_management_systems_with_authentication_status_ok
+    ext_management_systems.select(&:authentication_status_ok?)
+  end
+
+  def ext_management_systems_with_authentication_status_ok_in_zone(zone_name)
+    ext_management_systems_with_authentication_status_ok.select { |ems| ems.my_zone == zone_name }
+  end
+
   def storage_clusters
     parents.select { |parent| parent.kind_of?(StorageCluster) }
   end
@@ -125,14 +133,14 @@ class Storage < ApplicationRecord
     ext_management_system.my_zone
   end
 
-  def scan_starting(miq_task_id, host)
+  def scan_starting(miq_task_id, ems)
     miq_task = MiqTask.find_by(:id => miq_task_id)
     if miq_task.nil?
       _log.warn("MiqTask with ID: [#{miq_task_id}] cannot be found")
       return
     end
 
-    message = "Starting File refresh for Storage [#{name}] via Host [#{host.name}]"
+    message = "Starting File refresh for Storage [#{name}] via EMS [#{ems.name}]"
     miq_task.update_message(message)
   end
 
@@ -298,8 +306,8 @@ class Storage < ApplicationRecord
     ::Settings.storage.max_qitems_per_scan_request
   end
 
-  def self.max_parallel_storage_scans_per_host
-    ::Settings.storage.max_parallel_scans_per_host
+  def self.max_parallel_storage_scans_per_ems
+    ::Settings.storage.max_parallel_scans_per_ems
   end
 
   def self.scan_eligible_storages(zone_name = nil)
@@ -364,10 +372,10 @@ class Storage < ApplicationRecord
               {:store_type => store_type, :name => name, :id => id})
     end
 
-    hosts = active_hosts_with_authentication_status_ok
-    if hosts.empty?
+    emss = ext_management_systems_with_authentication_status_ok
+    if emss.empty?
       raise(MiqException::MiqStorageError,
-            _("Check that a Host is running and has valid credentials for Datastore [%{name}] with id: [%{id}]") %
+            _("Check that an EMS has valid credentials for Datastore [%{name}] with id: [%{id}]") %
               {:name => name, :id => id})
     end
     task_name = "SmartState Analysis for [#{name}]"
@@ -507,12 +515,12 @@ class Storage < ApplicationRecord
     ($_miq_worker_current_msg.class_name == self.class.name) && ($_miq_worker_current_msg.instance_id = id) && ($_miq_worker_current_msg.method_name == method_name)
   end
 
-  def smartstate_analysis_count_for_host_id(host_id)
+  def smartstate_analysis_count_for_ems_id(ems_id)
     MiqQueue.where(
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "smartstate_analysis",
-      :target_id   => host_id,
+      :target_id   => ems_id,
       :state       => "dequeue"
     ).count
   end
@@ -525,38 +533,38 @@ class Storage < ApplicationRecord
       miq_task.state_active unless miq_task.nil?
     end
 
-    hosts = active_hosts_with_authentication_status_ok_in_zone(MiqServer.my_zone)
-    if hosts.empty?
-      message = "There are no active Hosts with valid credentials connected to Storage: [#{name}] in Zone: [#{MiqServer.my_zone}]."
+    emss = ext_management_systems_with_authentication_status_ok_in_zone(MiqServer.my_zone)
+    if emss.empty?
+      message = "There are no EMSs with valid credentials connected to Storage: [#{name}] in Zone: [#{MiqServer.my_zone}]."
       _log.warn(message)
       raise MiqException::MiqUnreachableStorage,
-            _("There are no active Hosts with valid credentials connected to Storage: [%{name}] in Zone: [%{zone}].") %
+            _("There are no EMSs with valid credentials connected to Storage: [%{name}] in Zone: [%{zone}].") %
               {:name => name, :zone => MiqServer.my_zone}
     end
 
-    max_parallel_storage_scans_per_host = self.class.max_parallel_storage_scans_per_host
-    host = nil
-    hosts.each do |h|
-      next if smartstate_analysis_count_for_host_id(h.id) >= max_parallel_storage_scans_per_host
-      host = h
+    max_parallel_storage_scans_per_ems = self.class.max_parallel_storage_scans_per_ems
+    ems = nil
+    emss.each do |e|
+      next if smartstate_analysis_count_for_ems_id(e.id) >= max_parallel_storage_scans_per_ems
+      ems = e
       break
     end
 
-    if host.nil?
+    if ems.nil?
       raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) if qmessage?(method_name)
-      host = hosts.random_element
+      ems = emss.random_element
     end
 
-    $_miq_worker_current_msg.update_attributes!(:target_id => host.id) if qmessage?(method_name)
+    $_miq_worker_current_msg.update_attributes!(:target_id => ems.id) if qmessage?(method_name)
 
     st = Time.now
-    message = "Storage [#{name}] via Host [#{host.name}]"
+    message = "Storage [#{name}] via EMS [#{ems.name}]"
     _log.info("#{message}...Starting")
-    scan_starting(miq_task_id, host)
-    if host.respond_to?(:refresh_files_on_datastore)
-      host.refresh_files_on_datastore(self)
+    scan_starting(miq_task_id, ems)
+    if ems.respond_to?(:refresh_files_on_datastore)
+      ems.refresh_files_on_datastore(self)
     else
-      _log.warn("#{message}...Not Supported for #{host.class.name}")
+      _log.warn("#{message}...Not Supported for #{ems.class.name}")
     end
     update_attribute(:last_scan_on, Time.now.utc)
     _log.info("#{message}...Completed in [#{Time.now - st}] seconds")
