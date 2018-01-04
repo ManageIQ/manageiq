@@ -13,12 +13,10 @@ class Endpoint < ApplicationRecord
   after_destroy :endpoint_destroyed
 
   def endpoint_created
-    # Make sure monitoring manager is created for the prometheus endpoint
     resource.endpoint_created(role) if resource.respond_to?(:endpoint_created)
   end
 
   def endpoint_destroyed
-    # Make sure monitoring manager is delete for the prometheus endpoint
     resource.endpoint_destroyed(role) if resource.respond_to?(:endpoint_destroyed)
   end
 
