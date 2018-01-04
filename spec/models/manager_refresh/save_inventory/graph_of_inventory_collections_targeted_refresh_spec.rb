@@ -57,14 +57,14 @@ describe ManagerRefresh::SaveInventory do
           :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])]
         )
         @hardware_data_3 = hardware_data(3).merge(
-          :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+          :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(2)[:ems_ref]), :key => :guest_os),
           :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
         )
         @disk_data_3 = disk_data(3).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(3)[:ems_ref]))
         )
         @disk_data_31 = disk_data(31).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(3)[:ems_ref]))
         )
 
         # Fill InventoryCollections with data
@@ -142,7 +142,7 @@ describe ManagerRefresh::SaveInventory do
           :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])]
         )
         @hardware_data_3 = hardware_data(3).merge(
-          :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+          :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(2)[:ems_ref]), :key => :guest_os),
           :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
         )
 
@@ -169,10 +169,10 @@ describe ManagerRefresh::SaveInventory do
         )
 
         @disk_data_3 = disk_data(3).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(3)[:ems_ref]))
         )
         @disk_data_31 = disk_data(31).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(3)[:ems_ref]))
         )
 
         add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_31)
@@ -237,10 +237,10 @@ describe ManagerRefresh::SaveInventory do
           :manager_ref => [:hardware, :device_name]
         )
         @disk_data_3 = disk_data(3).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(3)[:ems_ref]))
         )
         @disk_data_32 = disk_data(32).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(3)[:ems_ref]))
         )
 
         add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_32)
@@ -335,15 +335,15 @@ describe ManagerRefresh::SaveInventory do
           :ext_management_system => @ems
         )
         @hardware_data_3 = hardware_data(3).merge(
-          :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+          :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(2)[:ems_ref]), :key => :guest_os),
           :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
         )
 
         @disk_data_3 = disk_data(3).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(3)[:ems_ref]))
         )
         @disk_data_31 = disk_data(31).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(3)[:ems_ref]))
         )
 
         # Fill InventoryCollections with data
@@ -440,11 +440,11 @@ describe ManagerRefresh::SaveInventory do
           :ext_management_system => @ems
         )
         @hardware_data_5 = hardware_data(5).merge(
-          :guest_os       => @data[:image_hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+          :guest_os       => @data[:image_hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(2)[:ems_ref]), :key => :guest_os),
           :vm_or_template => @data[:vms].lazy_find(vm_data(5)[:ems_ref])
         )
         @disk_data_5 = disk_data(5).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(5)[:ems_ref])
+          :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(5)[:ems_ref]))
         )
 
         # Fill InventoryCollections with data
@@ -747,25 +747,25 @@ describe ManagerRefresh::SaveInventory do
     )
 
     @hardware_data_1 = hardware_data(1).merge(
-      :guest_os       => @data[:hardwares].lazy_find(image_data(1)[:ems_ref], :key => :guest_os),
+      :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(1)[:ems_ref]), :key => :guest_os),
       :vm_or_template => @data[:vms].lazy_find(vm_data(1)[:ems_ref])
     )
     @hardware_data_2 = hardware_data(2).merge(
-      :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+      :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(2)[:ems_ref]), :key => :guest_os),
       :vm_or_template => @data[:vms].lazy_find(vm_data(2)[:ems_ref])
     )
 
     @disk_data_1 = disk_data(1).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref])
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(1)[:ems_ref]))
     )
     @disk_data_12 = disk_data(12).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref])
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(1)[:ems_ref]))
     )
     @disk_data_13 = disk_data(13).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref])
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(1)[:ems_ref]))
     )
     @disk_data_2 = disk_data(2).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(2)[:ems_ref])
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(2)[:ems_ref]))
     )
 
     # Fill InventoryCollections with data

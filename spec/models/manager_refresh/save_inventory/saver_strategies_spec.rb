@@ -196,15 +196,15 @@ describe ManagerRefresh::SaveInventory do
               :name => "vm_31_changed_name",
             )
             @hardware_data_2      = hardware_data(2).merge(
-              :guest_os       => @data[:hardwares].lazy_find(image_data(1)[:ems_ref], :key => :guest_os), # changed
+              :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(1)[:ems_ref]), :key => :guest_os), # changed
               :vm_or_template => @data[:vms].lazy_find(vm_data(2)[:ems_ref])
             )
             @hardware_data_3      = hardware_data(3).merge(
-              :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+              :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(2)[:ems_ref]), :key => :guest_os),
               :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
             )
             @hardware_data_31     = hardware_data(31).merge(
-              :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+              :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(2)[:ems_ref]), :key => :guest_os),
               :vm_or_template => @data[:vms].lazy_find(vm_data(31)[:ems_ref])
             )
 

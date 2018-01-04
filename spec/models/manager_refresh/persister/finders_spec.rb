@@ -23,7 +23,7 @@ describe ManagerRefresh::Inventory::Persister do
   let(:persister) { create_persister }
 
   it "raises an exception when relation object is needed, but something else is provided" do
-    expected_error = "Wrong index for 'vm_or_template', the value must be of type Nil or InventoryObject or InventoryObjectLazy, got: not_allowed_string"
+    expected_error = "Wrong index for key :vm_or_template, the value must be of type Nil or InventoryObject or InventoryObjectLazy, got: not_allowed_string"
     expect do
       persister.hardwares.lazy_find(:vm_or_template => "not_allowed_string")
     end.to(raise_error(expected_error))

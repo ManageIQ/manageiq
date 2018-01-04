@@ -158,6 +158,12 @@ describe ManagerRefresh::SaveInventory do
                 :strategy => :local_db_find_missing_references
               )
             )
+            @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
+              vms_init_data(
+                :arel     => @ems.vms.where(:ems_ref => vm_refs),
+                :strategy => :local_db_find_missing_references
+              )
+            )
             @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
               hardwares_init_data(
                 :arel     => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
@@ -167,7 +173,7 @@ describe ManagerRefresh::SaveInventory do
 
             # Parse data for InventoryCollections
             @network_port_data_1 = network_port_data(1).merge(
-              :device => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref], :key => :vm_or_template)
+              :device => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(1)[:ems_ref]), :key => :vm_or_template)
             )
 
             # Fill InventoryCollections with data
@@ -290,7 +296,7 @@ describe ManagerRefresh::SaveInventory do
             )
             @network_port_data_3 = network_port_data(3).merge(
               :name   => @data[:vms].lazy_find(vm_data(1)[:ems_ref], :key => :name, :default => "default_name"),
-              :device => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref], :key => :vm_or_template)
+              :device => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(1)[:ems_ref]), :key => :vm_or_template)
             )
             @vm_data_3               = vm_data(3).merge(
               :genealogy_parent      => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
@@ -306,7 +312,7 @@ describe ManagerRefresh::SaveInventory do
               :ext_management_system => @ems
             )
             @hardware_data_3 = hardware_data(3).merge(
-              :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+              :guest_os       => @data[:hardwares].lazy_find(@data[:miq_templates].lazy_find(image_data(2)[:ems_ref]), :key => :guest_os),
               :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
             )
 
