@@ -454,6 +454,12 @@ describe DialogImportService do
       end.to change(Dialog, :count).by(1)
     end
 
+    it "creates field associations" do
+      expect do
+        dialog_import_service.import(dialogs.first)
+      end.to change(DialogFieldAssociation, :count).by(1)
+    end
+
     it 'will raise record invalid for invalid dialog' do
       dialog_import_service.import(dialogs.first)
 

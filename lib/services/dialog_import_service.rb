@@ -91,7 +91,9 @@ class DialogImportService
   def import(dialog)
     @dialog_import_validator.determine_dialog_validity(dialog)
     new_dialog = Dialog.create(dialog.except('dialog_tabs'))
+    association_list = build_association_list(dialog)
     new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog)))
+    build_associations(new_dialog, association_list)
     new_dialog
   end
 
@@ -107,6 +109,19 @@ class DialogImportService
       end
     end
     associations
+  end
+
+  def build_associations(dialog, association_list)
+    fields = dialog.dialog_fields
+    association_list.each do |association|
+      association.values.each do |values|
+        values.each do |responder|
+          next if fields.select { |field| field.name == responder }.empty?
+          DialogFieldAssociation.create(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
+                                        :respond_id => fields.find { |field| field.name == responder }.id)
+        end
+      end
+    end
   end
 
   def create_import_file_upload(file_contents)
@@ -128,16 +143,9 @@ class DialogImportService
           "resource_actions" => build_resource_actions(dialog)
         )
       )
-      fields = new_or_existing_dialog.dialog_fields
-      (associations_to_be_created + build_old_association_list(fields).flatten).reject(&:blank?).each do |association|
-        association.values.each do |values|
-          values.each do |responder|
-            next if fields.select { |field| field.name == responder }.empty?
-            DialogFieldAssociation.create(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
-                                          :respond_id => fields.find { |field| field.name == responder }.id)
-          end
-        end
-      end
+      old_associations = build_old_association_list(new_or_existing_dialog.dialog_fields).flatten
+      association_list = (associations_to_be_created + old_associations).reject(&:blank?)
+      build_associations(new_or_existing_dialog, association_list)
     end
   end
 
