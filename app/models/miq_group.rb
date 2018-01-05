@@ -280,7 +280,7 @@ class MiqGroup < ApplicationRecord
   def ensure_can_be_destroyed
     raise _("The login group cannot be deleted") if current_user_group?
     raise _("The group has users assigned that do not belong to any other group") if single_group_users?
-    raise _("The group is the login group for at least one user in the group") if current_group_for_any_users?
+    raise _("The group is the login group for at least one user in the group") if current_group_for_any_user?
     raise _("A tenant default group can not be deleted") if tenant_group? && referenced_by_tenant?
     raise _("A read only group cannot be deleted.") if system_group?
   end

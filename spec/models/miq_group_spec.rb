@@ -255,6 +255,20 @@ describe MiqGroup do
       expect { expect { group.destroy }.to raise_error(RuntimeError, /The group has users assigned that do not belong to any other group/) }.to_not change { MiqGroup.count }
     end
 
+    it "fails if the group is the current_user group for any user in the group" do
+      group2 = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group)
+      expect { expect { group.destroy }.to raise_error(RuntimeError, /The group is the login group for at least one user in the group/) }.to_not change { MiqGroup.count }
+    end
+
+    it "succeeds if the group is not the current_user group for any user in the group" do
+      group2 = FactoryGirl.create(:miq_group)
+      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
+      expect { group.destroy }.not_to raise_error
+    end
+
     it "fails if referenced by a tenant#default_miq_group" do
       expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }
         .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
