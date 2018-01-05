@@ -203,6 +203,13 @@ class User < ApplicationRecord
     self.current_group = groups.first if current_group.nil? || !groups.include?(current_group)
   end
 
+  def change_current_group(id)
+    user_groups = miq_group_ids
+    user_groups.delete(id)
+    self.current_group = MiqGroup.find_by(:id => user_groups.first)
+    self.save!
+  end
+
   def admin?
     self.class.admin?(userid)
   end
