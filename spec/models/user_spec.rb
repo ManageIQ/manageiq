@@ -432,6 +432,15 @@ describe User do
         subject.current_group_by_description = g2.description
         expect(subject.current_group).to eq(g2)
       end
+
+      it "ignores groups from other regions" do
+        expect(subject).to be_super_admin_user
+
+        group = FactoryGirl.create(:miq_group, :id => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
+
+        subject.current_group_by_description = group.description
+        expect(subject.current_group.description).not_to eq(group.description)
+      end
     end
   end
 

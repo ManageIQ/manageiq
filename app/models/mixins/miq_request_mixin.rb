@@ -31,7 +31,7 @@ module MiqRequestMixin
   end
 
   def get_user
-    @user ||= User.find_by(:userid => userid).tap do |u|
+    @user ||= User.in_my_region.find_by(:userid => userid).tap do |u|
       u.current_group_by_description = options[:requester_group] if options[:requester_group]
     end
   end
