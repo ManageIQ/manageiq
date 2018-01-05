@@ -249,5 +249,16 @@ describe ManagerRefresh::Inventory::Persister do
         )
       end.to raise_error("Invalid definition of index :by_availability_zone_and_name, there is no attribute :availability_zone on model Vm")
     end
+
+    it "checks we allow any index attributes when we use custom_saving block" do
+      persister.send(:add_inventory_collection,
+                     :model_class       => ::Vm,
+                     :association       => :vms,
+                     :custom_save_block => ->(ems, _ic) { ems },
+                     :manager_ref       => [:a, :b, :c]
+      )
+
+      expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array([:manager_ref])
+    end
   end
 end

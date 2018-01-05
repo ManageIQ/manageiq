@@ -43,11 +43,13 @@ module ManagerRefresh
 
           attr_writer :index
 
-          delegate :build_stringified_reference, :data, :model_class, :to => :inventory_collection
+          delegate :build_stringified_reference, :data, :model_class, :custom_save_block, :to => :inventory_collection
 
           def assert_attribute_names!
             # Skip for manually defined nodes
             return if model_class.nil?
+            # When we do custom saving, we allow any indexes to be passed, to no limit the user
+            return unless custom_save_block.nil?
 
             # We cannot simply do model_class.method_defined?(attribute_name.to_sym), because e.g. db attributes seems
             # to be create lazily
