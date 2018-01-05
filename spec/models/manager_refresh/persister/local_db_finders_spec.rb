@@ -162,4 +162,46 @@ describe ManagerRefresh::Inventory::Persister do
       )
     end
   end
+
+  context "check validity of defined index" do
+    it "checks primary index attributes exist" do
+      expect do
+        persister.send(:add_inventory_collection,
+                       :model_class => ::Vm,
+                       :association => :vms,
+                       :manager_ref => [:ems_ref, :ems_gref]
+        )
+      end.to raise_error("Invalid definition of index :manager_ref, there is no attribute :ems_gref on model Vm")
+    end
+
+    it "checks secondary index attributes exist" do
+      expect do
+        persister.send(:add_inventory_collection,
+                       :model_class    => ::Vm,
+                       :association    => :vms,
+                       :secondary_refs => {:by_uid_ems_and_name => %i(uid_emsa name)}
+        )
+      end.to raise_error("Invalid definition of index :by_uid_ems_and_name, there is no attribute :uid_emsa on model Vm")
+    end
+
+    it "checks relation is allowed in index" do
+      persister.send(:add_inventory_collection,
+                     :model_class    => ::ManageIQ::Providers::CloudManager::Vm,
+                     :association    => :vms,
+                     :secondary_refs => {:by_availability_zone_and_name => %i(availability_zone name)}
+      )
+
+      expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array([:manager_ref, :by_availability_zone_and_name])
+    end
+
+    it "checks relation is on model class" do
+      expect do
+        persister.send(:add_inventory_collection,
+                       :model_class    => ::Vm,
+                       :association    => :vms,
+                       :secondary_refs => {:by_availability_zone_and_name => %i(availability_zone name)}
+        )
+      end.to raise_error("Invalid definition of index :by_availability_zone_and_name, there is no attribute :availability_zone on model Vm")
+    end
+  end
 end
