@@ -97,7 +97,18 @@ class DialogImportService
     new_dialog
   end
 
-  private
+  def build_associations(dialog, association_list)
+    fields = dialog.dialog_fields
+    association_list.each do |association|
+      association.values.each do |values|
+        values.each do |responder|
+          next if fields.select { |field| field.name == responder }.empty?
+          DialogFieldAssociation.create(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
+                                        :respond_id => fields.find { |field| field.name == responder }.id)
+        end
+      end
+    end
+  end
 
   def build_association_list(dialog)
     associations = []
@@ -111,18 +122,7 @@ class DialogImportService
     associations
   end
 
-  def build_associations(dialog, association_list)
-    fields = dialog.dialog_fields
-    association_list.each do |association|
-      association.values.each do |values|
-        values.each do |responder|
-          next if fields.select { |field| field.name == responder }.empty?
-          DialogFieldAssociation.create(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
-                                        :respond_id => fields.find { |field| field.name == responder }.id)
-        end
-      end
-    end
-  end
+  private
 
   def create_import_file_upload(file_contents)
     ImportFileUpload.create.tap do |import_file_upload|
