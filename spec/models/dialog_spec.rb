@@ -22,11 +22,6 @@ describe Dialog do
     end
   end
 
-  it "#name" do
-    dialog = FactoryGirl.create(:dialog, :label => 'dialog')
-    expect(dialog.label).to eq(dialog.name)
-  end
-
   describe "#content" do
     it "returns the serialized content" do
       dialog = FactoryGirl.create(:dialog, :description => "foo", :label => "bar")
