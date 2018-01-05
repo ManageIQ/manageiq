@@ -1048,6 +1048,9 @@
   :active_task_timeout: 6.hours
 :ui:
   :mark_translated_strings: false
+:vim_performance_states:
+  :history:
+    :purge_window_size: 1000
 :webservices:
   :consume_protocol: https
   :contactwith: ipaddress
