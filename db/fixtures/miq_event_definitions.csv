@@ -70,26 +70,6 @@ request_host_shutdown,Host Shutdown Request,Default,host_operations
 request_host_reboot,Host Reboot Request,Default,host_operations
 request_host_enable_vmotion,Host Vmotion Enable Request,Default,host_operations
 request_host_disable_vmotion,Host Vmotion Disable Request,Default,host_operations
-
-#
-# Middleware operations
-#
-middleware_deployment_ok,EAP Application Deploy Succeeded,Default,middleware_operations
-middleware_deployment_error,EAP Application Deploy Failed,Default,middleware_operations
-middleware_deployment_remove_ok,EAP Application Undeploy Succeeded,Default,middleware_operations
-middleware_deployment_remove_error,EAP Application Undeploy Failed,Default,middleware_operations
-middleware_datasource_ok,EAP Datasource Create Succeeded,Default,middleware_operations
-middleware_datasource_error,EAP Datasource Create Failed,Default,middleware_operations
-middleware_datasource_remove_ok,EAP Datasource Delete Succeeded,Default,middleware_operations
-middleware_datasource_remove_error,EAP Datasource Delete Failed,Default,middleware_operations
-middleware_jdbc_ok,EAP JDBC Driver Deploy Succeeded,Default,middleware_operations
-middleware_jdbc_error,EAP JDBC Driver Deploy Failed,Default,middleware_operations
-middleware_jdbc_remove_ok,EAP JDBC Driver Undeploy Succeeded,Default,middleware_operations
-middleware_jdbc_remove_error,EAP JDBC Driver Undeploy Failed,Default,middleware_operations
-middlewareserver_compliance_check,Middleware Server Compliance Check,Default,compliance
-middlewareserver_compliance_passed,Middleware Server Compliance Passed,Default,compliance
-middlewareserver_compliance_failed,Middleware Server Compliance Failed,Default,compliance
-
 #
 # Company tags
 #
