@@ -37,6 +37,7 @@ module Vmdb
       apply_config_value(config, $azure_log,         :level_azure,         :level_azure_in_evm)
       apply_config_value(config, $lenovo_log,        :level_lenovo,        :level_lenovo_in_evm)
       apply_config_value(config, $websocket_log,     :level_websocket,     :level_websocket_in_evm)
+      apply_config_value(config, $vcloud_log,        :level_vcloud,        :level_vcloud_in_evm)
     end
 
     private
@@ -69,6 +70,7 @@ module Vmdb
         $websocket_log     = MirroredLogger.new(path_dir.join("websocket.log"),     "<WEBSOCKET> ")
         $miq_ae_logger     = MirroredLogger.new(path_dir.join("automation.log"),    "<AutomationEngine> ")
         $miq_ae_logger.mirror_level = VMDBLogger::INFO
+        $vcloud_log        = MirroredLogger.new(path_dir.join("vcloud.log"),        "<VCLOUD> ")
       end
 
       configure_external_loggers
