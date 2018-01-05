@@ -422,7 +422,7 @@ class Host < ApplicationRecord
   end
 
   def exit_maint_mode
-    msg = validate_enter_maint_mode
+    msg = validate_exit_maint_mode
     if msg[:available] && respond_to?(:vim_exit_maintenance_mode)
       check_policy_prevent("request_host_exit_maintenance_mode", "vim_exit_maintenance_mode")
     else
