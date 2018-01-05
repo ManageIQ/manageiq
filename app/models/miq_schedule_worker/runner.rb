@@ -204,6 +204,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:binary_blob_purge_timer)
     end
 
+    every = worker_settings[:vim_performance_states_purge_interval]
+    scheduler.schedule_every(every, :first_in => every) do
+      enqueue(:vim_performance_states_purge_timer)
+    end
+
     # Schedule every 24 hours
     at = worker_settings[:storage_file_collection_time_utc]
     if Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc) < Time.now.utc
