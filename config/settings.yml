@@ -1082,10 +1082,6 @@
       :disabled: true
       :nice_delta: 1
       :poll: 5.seconds
-    :ems_refresh_core_worker:
-      :poll: 1.seconds
-      :nice_delta: 1
-      :thread_shutdown_timeout: 10.seconds
     :event_catcher:
       :defaults:
         :flooding_events_per_minute: 30
