@@ -114,7 +114,7 @@ module ManagerRefresh
           # @return [String] A condition e.g. (table1.a, table2.b) IN ((a1, b1), (a2, b2)), usable in .where of an
           #         ActiveRecord relation
           def build_multi_selection_condition(column_names, all_values)
-            cond_data    = all_values.map do |values|
+            cond_data = all_values.map do |values|
               "(#{values.map { |x| ActiveRecord::Base.connection.quote(x) }.join(",")})"
             end.join(",")
             column_names = column_names.join(",")
@@ -156,7 +156,7 @@ module ManagerRefresh
             # [[:hardware, :vm_or_template, :ems_ref], [:description] will be transformed to
             # [[:hardware, :vm_or_template]], so only relations we need for DB join and then to nested hash
             # {:hardware => {:vm_or_template => {}}}
-            paths.map { |x| x[0..-2] }.select { |x| x.present? }.each { |x| nested_hashes_schema.store_path(x, {}) }
+            paths.map { |x| x[0..-2] }.select(&:present?).each { |x| nested_hashes_schema.store_path(x, {}) }
             # Convert nested Hash to Rails friendly format, e.g. {:hardware => {:vm_or_template => {}}} will be
             # transformed to [:hardware => :vm_or_template]
             @rails_friendly_includes_schema = transform_hash_to_rails_friendly_array_recursive(nested_hashes_schema, [])

@@ -37,18 +37,21 @@ describe ManagerRefresh::Inventory::Persister do
       lazy_find_hardware2  = persister.hardwares.lazy_find(:vm_or_template => lazy_find_vm2)
       lazy_find_hardware60 = persister.hardwares.lazy_find(:vm_or_template => lazy_find_vm60)
 
-      lazy_find_network1  = persister.networks.lazy_find(
+      lazy_find_network1 = persister.networks.lazy_find(
         {:hardware => lazy_find_hardware1, :description => "public"},
-        :key     => :hostname,
-        :default => 'default_value_unknown')
-      lazy_find_network2  = persister.networks.lazy_find(
+        {:key     => :hostname,
+         :default => 'default_value_unknown'}
+      )
+      lazy_find_network2 = persister.networks.lazy_find(
         {:hardware => lazy_find_hardware2, :description => "public"},
-        :key     => :hostname,
-        :default => 'default_value_unknown')
+        {:key     => :hostname,
+         :default => 'default_value_unknown'}
+      )
       lazy_find_network60 = persister.networks.lazy_find(
         {:hardware => lazy_find_hardware60, :description => "public"},
-        :key     => :hostname,
-        :default => 'default_value_unknown')
+        {:key     => :hostname,
+         :default => 'default_value_unknown'}
+      )
 
       @vm_data101 = vm_data(101).merge(
         :flavor           => persister.flavors.lazy_find(:ems_ref => flavor_data(1)[:name]),
@@ -92,9 +95,9 @@ describe ManagerRefresh::Inventory::Persister do
         )
       )
 
-      expect(lazy_find_network1.load).to eq ("host_10_10_10_1.com")
-      expect(lazy_find_network2.load).to eq ("host_10_10_10_2.com")
-      expect(lazy_find_network60.load).to eq ("default_value_unknown")
+      expect(lazy_find_network1.load).to eq "host_10_10_10_1.com"
+      expect(lazy_find_network2.load).to eq "host_10_10_10_2.com"
+      expect(lazy_find_network60.load).to eq "default_value_unknown"
     end
 
     it "finds one by one before we scan" do
@@ -145,7 +148,7 @@ describe ManagerRefresh::Inventory::Persister do
 
   context "check secondary indexes on Vms" do
     it "finds Vm by name" do
-      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name]}, :ref => :by_name).load
+      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name]}, {:ref => :by_name}).load
       expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
       expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_name].send(:index).keys).to(
@@ -156,7 +159,7 @@ describe ManagerRefresh::Inventory::Persister do
         )
       )
 
-      vm1 = persister.vms.find({:name => vm_data(1)[:name]}, :ref => :by_name)
+      vm1 = persister.vms.find({:name => vm_data(1)[:name]}, {:ref => :by_name})
       expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
       expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_name].send(:index).keys).to(
@@ -169,7 +172,7 @@ describe ManagerRefresh::Inventory::Persister do
     end
 
     it "finds Vm by uid_ems and name" do
-      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name], :uid_ems => vm_data(1)[:uid_ems]}, :ref => :by_uid_ems_and_name).load
+      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name], :uid_ems => vm_data(1)[:uid_ems]}, {:ref => :by_uid_ems_and_name}).load
       expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
       expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_uid_ems_and_name].send(:index).keys).to(
@@ -180,7 +183,7 @@ describe ManagerRefresh::Inventory::Persister do
         )
       )
 
-      vm1 = persister.vms.find({:uid_ems => vm_data(1)[:uid_ems], :name => vm_data(1)[:name]}, :ref => :by_uid_ems_and_name)
+      vm1 = persister.vms.find({:uid_ems => vm_data(1)[:uid_ems], :name => vm_data(1)[:name]}, {:ref => :by_uid_ems_and_name})
       expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
       expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_uid_ems_and_name].send(:index).keys).to(
@@ -202,7 +205,7 @@ describe ManagerRefresh::Inventory::Persister do
       # relations?
       # TODO(lsmola) We should probably assert this sooner? Now we are getting a failure trying to add :device in
       # .includes
-      expect { persister.network_ports.lazy_find({:device => lazy_find_vm1}, :ref => :by_device).load }.to(
+      expect { persister.network_ports.lazy_find({:device => lazy_find_vm1}, {:ref => :by_device}).load }.to(
         raise_error(ActiveRecord::EagerLoadPolymorphicError,
                     "Cannot eagerly load the polymorphic association :device")
       )
@@ -215,8 +218,7 @@ describe ManagerRefresh::Inventory::Persister do
         persister.send(:add_inventory_collection,
                        :model_class => ::Vm,
                        :association => :vms,
-                       :manager_ref => [:ems_ref, :ems_gref]
-        )
+                       :manager_ref => %i(ems_ref ems_gref))
       end.to raise_error("Invalid definition of index :manager_ref, there is no attribute :ems_gref on model Vm")
     end
 
@@ -225,8 +227,7 @@ describe ManagerRefresh::Inventory::Persister do
         persister.send(:add_inventory_collection,
                        :model_class    => ::Vm,
                        :association    => :vms,
-                       :secondary_refs => {:by_uid_ems_and_name => %i(uid_emsa name)}
-        )
+                       :secondary_refs => {:by_uid_ems_and_name => %i(uid_emsa name)})
       end.to raise_error("Invalid definition of index :by_uid_ems_and_name, there is no attribute :uid_emsa on model Vm")
     end
 
@@ -234,10 +235,9 @@ describe ManagerRefresh::Inventory::Persister do
       persister.send(:add_inventory_collection,
                      :model_class    => ::ManageIQ::Providers::CloudManager::Vm,
                      :association    => :vms,
-                     :secondary_refs => {:by_availability_zone_and_name => %i(availability_zone name)}
-      )
+                     :secondary_refs => {:by_availability_zone_and_name => %i(availability_zone name)})
 
-      expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array([:manager_ref, :by_availability_zone_and_name])
+      expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array(%i(manager_ref by_availability_zone_and_name))
     end
 
     it "checks relation is on model class" do
@@ -245,8 +245,7 @@ describe ManagerRefresh::Inventory::Persister do
         persister.send(:add_inventory_collection,
                        :model_class    => ::Vm,
                        :association    => :vms,
-                       :secondary_refs => {:by_availability_zone_and_name => %i(availability_zone name)}
-        )
+                       :secondary_refs => {:by_availability_zone_and_name => %i(availability_zone name)})
       end.to raise_error("Invalid definition of index :by_availability_zone_and_name, there is no attribute :availability_zone on model Vm")
     end
 
@@ -255,8 +254,7 @@ describe ManagerRefresh::Inventory::Persister do
                      :model_class       => ::Vm,
                      :association       => :vms,
                      :custom_save_block => ->(ems, _ic) { ems },
-                     :manager_ref       => [:a, :b, :c]
-      )
+                     :manager_ref       => %i(a b c))
 
       expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array([:manager_ref])
     end

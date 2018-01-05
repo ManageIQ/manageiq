@@ -35,7 +35,7 @@ module SpecMockedData
     @key_pair2  = FactoryGirl.create(:auth_key_pair_cloud, key_pair_data(2).merge(:resource => @ems))
     @key_pair3  = FactoryGirl.create(:auth_key_pair_cloud, key_pair_data(3).merge(:resource => @ems))
 
-    @vm1  = FactoryGirl.create(
+    @vm1 = FactoryGirl.create(
       :vm_cloud,
       vm_data(1).merge(
         :flavor                => @flavor_1,
@@ -55,7 +55,7 @@ module SpecMockedData
         :ext_management_system => @ems,
       )
     )
-    @vm2  = FactoryGirl.create(
+    @vm2 = FactoryGirl.create(
       :vm_cloud,
       vm_data(2).merge(
         :flavor                => @flavor2,
@@ -65,7 +65,7 @@ module SpecMockedData
         :ext_management_system => @ems,
       )
     )
-    @vm4  = FactoryGirl.create(
+    @vm4 = FactoryGirl.create(
       :vm_cloud,
       vm_data(4).merge(
         :location              => 'default_value_unknown',
@@ -73,7 +73,7 @@ module SpecMockedData
       )
     )
 
-    @hardware1  = FactoryGirl.create(
+    @hardware1 = FactoryGirl.create(
       :hardware,
       hardware_data(1).merge(
         :guest_os       => @image1.hardware.guest_os,
@@ -87,7 +87,7 @@ module SpecMockedData
         :vm_or_template => @vm12
       )
     )
-    @hardware2  = FactoryGirl.create(
+    @hardware2 = FactoryGirl.create(
       :hardware,
       hardware_data(2).merge(
         :guest_os       => @image2.hardware.guest_os,
@@ -95,7 +95,7 @@ module SpecMockedData
       )
     )
 
-    @disk1  = FactoryGirl.create(
+    @disk1 = FactoryGirl.create(
       :disk,
       disk_data(1).merge(
         :hardware => @hardware1,
@@ -113,14 +113,14 @@ module SpecMockedData
         :hardware => @hardware12,
       )
     )
-    @disk2  = FactoryGirl.create(
+    @disk2 = FactoryGirl.create(
       :disk,
       disk_data(2).merge(
         :hardware => @hardware2,
       )
     )
 
-    @public_network1  = FactoryGirl.create(
+    @public_network1 = FactoryGirl.create(
       :network,
       public_network_data(1).merge(
         :hardware => @hardware1,
@@ -139,7 +139,7 @@ module SpecMockedData
         :description => "public_2"
       )
     )
-    @public_network2  = FactoryGirl.create(
+    @public_network2 = FactoryGirl.create(
       :network,
       public_network_data(2).merge(
         :hardware => @hardware2,
