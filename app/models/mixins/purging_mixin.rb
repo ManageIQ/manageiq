@@ -118,7 +118,8 @@ module PurgingMixin
         resource_table = connection.quote_table_name(klass.table_name)
 
         scope = joins("LEFT OUTER JOIN #{resource_table} ON #{table_name}.#{polymorphic_id_column} = #{resource_table}.id")
-                .where(resource_table => {:id => nil}, polymorphic_type_column => klass.name)
+                .where(resource_table => {:id => nil})
+                .where("#{table_name}.#{connection.quote_column_name(polymorphic_type_column)} = #{connection.quote(klass.name)}")
         total += purge_in_batches(scope, window)
       end
       total
