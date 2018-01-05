@@ -144,7 +144,53 @@ describe ManagerRefresh::Inventory::Persister do
   end
 
   context "check secondary indexes on Vms" do
+    it "finds Vm by name" do
+      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name]}, :ref => :by_name).load
+      expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
 
+      expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_name].send(:index).keys).to(
+        match_array(
+          [
+            "vm_name_1",
+          ]
+        )
+      )
+
+      vm1 = persister.vms.find({:name => vm_data(1)[:name]}, :ref => :by_name)
+      expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
+
+      expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_name].send(:index).keys).to(
+        match_array(
+          [
+            "vm_name_1",
+          ]
+        )
+      )
+    end
+
+    it "finds Vm by uid_ems and name" do
+      vm1 = persister.vms.lazy_find({:name => vm_data(1)[:name], :uid_ems => vm_data(1)[:uid_ems]}, :ref => :by_uid_ems_and_name).load
+      expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
+
+      expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_uid_ems_and_name].send(:index).keys).to(
+        match_array(
+          [
+            "vm_uid_ems_1__vm_name_1",
+          ]
+        )
+      )
+
+      vm1 = persister.vms.find({:uid_ems => vm_data(1)[:uid_ems], :name => vm_data(1)[:name]}, :ref => :by_uid_ems_and_name)
+      expect(vm1[:ems_ref]).to eq "vm_ems_ref_1"
+
+      expect(persister.vms.index_proxy.send(:local_db_indexes)[:by_uid_ems_and_name].send(:index).keys).to(
+        match_array(
+          [
+            "vm_uid_ems_1__vm_name_1",
+          ]
+        )
+      )
+    end
   end
 
   context "check secondary index with polymorphic relation inside" do
