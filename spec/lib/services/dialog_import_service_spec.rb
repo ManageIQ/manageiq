@@ -454,12 +454,54 @@ describe DialogImportService do
       end.to change(Dialog, :count).by(1)
     end
 
+    it "creates field associations" do
+      expect do
+        dialog_import_service.import(dialogs.first)
+      end.to change(DialogFieldAssociation, :count).by(1)
+    end
+
     it 'will raise record invalid for invalid dialog' do
       dialog_import_service.import(dialogs.first)
 
       expect do
         dialog_import_service.import(dialogs.first)
       end.to raise_error(ActiveRecord::RecordInvalid, /Validation failed: Name is not unique within region/)
+    end
+  end
+
+  describe "#build_associations" do
+    let(:dialog) { instance_double("Dialog", :dialog_fields => dialog_fields) }
+    let(:field1) { instance_double("DialogField", :id => 123, :name => "field1") }
+    let(:field2) { instance_double("DialogField", :id => 321, :name => "field2") }
+    let(:dialog_fields) { [field1, field2] }
+    let(:association_list) { [{"field1" => %w(responder1 field2)}] }
+
+    it "creates dialog field associations" do
+      expect do
+        dialog_import_service.build_associations(dialog, association_list)
+      end.to change(DialogFieldAssociation, :count).by(1)
+    end
+  end
+
+  describe "#build_association_list" do
+    let(:dialog) do
+      {
+        "dialog_tabs" => [{
+          "dialog_groups" => [{
+            "dialog_fields" => [field1, field2, field3]
+          }]
+        }]
+      }
+    end
+
+    let(:field1) { {"name" => "field1", "dialog_field_responders" => %w(field2 field3)} }
+    let(:field2) { {"name" => "field2", "dialog_field_responders" => %w(field3)} }
+    let(:field3) { {"name" => "field3"} }
+
+    it "creates an association list of ids based on names" do
+      expect(dialog_import_service.build_association_list(dialog)).to eq(
+        [{"field1" => %w(field2 field3)}, {"field2" => %w(field3)}]
+      )
     end
   end
 end

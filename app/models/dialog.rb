@@ -124,6 +124,8 @@ class Dialog < ApplicationRecord
   # Creates a new item without an ID,
   # Removes any items not passed in the content.
   def update_tabs(tabs)
+    association_list = dialog_import_service.build_association_list("dialog_tabs" => tabs)
+
     transaction do
       updated_tabs = []
       tabs.each do |dialog_tab|
@@ -134,10 +136,14 @@ class Dialog < ApplicationRecord
             updated_tabs << tab
           end
         else
-          updated_tabs << DialogImportService.new.build_dialog_tabs('dialog_tabs' => [dialog_tab]).first
+          updated_tabs << dialog_import_service.build_dialog_tabs('dialog_tabs' => [dialog_tab]).first
         end
       end
       self.dialog_tabs = updated_tabs
+    end
+
+    transaction do
+      dialog_import_service.build_associations(self, association_list)
     end
   end
 
@@ -161,5 +167,9 @@ class Dialog < ApplicationRecord
     if resource_actions.length > 0
       raise _("Dialog cannot be deleted because it is connected to other components.")
     end
+  end
+
+  def dialog_import_service
+    @dialog_import_service ||= DialogImportService.new
   end
 end
