@@ -75,7 +75,7 @@ class ExtManagementSystem < ApplicationRecord
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
-  validate :hostname_uniqueness_valid?, :if => :hostname_required?
+  validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
 
   scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
 
@@ -89,6 +89,11 @@ class ExtManagementSystem < ApplicationRecord
     existing_hostnames = (self.class.all - [self]).map(&:hostname).compact.map(&:downcase)
 
     errors.add(:hostname, N_("has to be unique per provider type")) if existing_hostnames.include?(hostname.downcase)
+  end
+
+  def hostname_format_valid?
+    return if hostname.ipaddress? || hostname.hostname?
+    errors.add(:hostname, _("format is invalid."))
   end
 
   include NewWithTypeStiMixin
