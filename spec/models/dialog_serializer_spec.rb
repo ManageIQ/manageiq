@@ -7,14 +7,14 @@ describe DialogSerializer do
     let(:description) { "the description" }
     let(:dialog_tab1) { DialogTab.new }
     let(:dialog_tab2) { DialogTab.new }
-    let(:label) { "the label" }
+    let(:name)        { "the name" }
 
     let(:dialog) do
       Dialog.new(
         :buttons     => buttons,
         :description => description,
         :dialog_tabs => [dialog_tab1, dialog_tab2],
-        :label       => label
+        :name        => name
       )
     end
 
@@ -24,7 +24,7 @@ describe DialogSerializer do
       {
         "description"  => description,
         "buttons"      => buttons,
-        "label"        => label,
+        "name"         => name,
         "dialog_tabs"  => %w(serialized_dialog1 serialized_dialog2)
       }
     end
