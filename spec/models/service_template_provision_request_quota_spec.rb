@@ -104,6 +104,12 @@ describe ServiceTemplateProvisionRequest do
         context "active_provisions_by_tenant," do
           let(:quota_method) { :active_provisions_by_tenant }
           it_behaves_like "check_quota"
+
+          it "invalid service_template does not raise error" do
+            requests = load_queue
+            requests.first.update_attributes(:service_template => nil)
+            expect { request.check_quota(quota_method) }.not_to raise_error
+          end
         end
 
         context "active_provisions_by_group," do
