@@ -22,8 +22,8 @@ class MiqUserRole < ApplicationRecord
   FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
 
   RESTRICTIONS = {
-    :user          => "Only User Owned",
-    :user_or_group => "Only User or Group Owned"
+    :user          => N_('Only User Owned'),
+    :user_or_group => N_('Only User or Group Owned')
   }
 
   def feature_identifiers
