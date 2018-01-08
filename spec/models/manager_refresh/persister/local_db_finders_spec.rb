@@ -138,11 +138,202 @@ describe ManagerRefresh::Inventory::Persister do
         )
       )
 
-      # TODO(lsmola) known weakens, manager_uuid is wrong, but index is correct. So this doesn't affect a functionality
+      # TODO(lsmola) known weakness, manager_uuid is wrong, but index is correct. So this doesn't affect a functionality
       # now, but it can be confusing
       expect(network1.manager_uuid).to eq "__public"
       expect(network2.manager_uuid).to eq "__public"
       expect(network60).to be_nil
+    end
+  end
+
+  context "check we can load stack resource records from the DB" do
+    it "finds in one batch after the scanning" do
+      lazy_find_stack_1_11 = persister.orchestration_stacks.lazy_find(
+        :ems_ref => orchestration_stack_data("1_11")[:ems_ref]
+      )
+      lazy_find_stack_1_12 = persister.orchestration_stacks.lazy_find(
+        :ems_ref => orchestration_stack_data("1_12")[:ems_ref]
+      )
+
+      # Assert the local db index is empty if we do not load the reference
+      expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index)).to be_nil
+
+      stack_resource_1_11_1 = persister.orchestration_stacks_resources.lazy_find(
+        {
+          :stack   => lazy_find_stack_1_11,
+          :ems_ref => orchestration_stack_resource_data("1_11_1")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref}
+      )
+      stack_resource_1_11_2 = persister.orchestration_stacks_resources.lazy_find(
+        {
+          :stack   => lazy_find_stack_1_11,
+          :ems_ref => orchestration_stack_resource_data("1_11_2")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref}
+      )
+      stack_resource_1_11_3 = persister.orchestration_stacks_resources.lazy_find(
+        {
+          :stack   => lazy_find_stack_1_11,
+          :ems_ref => orchestration_stack_resource_data("1_11_3")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref}
+      )
+      stack_1_12 = persister.orchestration_stacks_resources.lazy_find(
+        {
+          :stack   => lazy_find_stack_1_12,
+          :ems_ref => orchestration_stack_resource_data("1_12_1")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref,
+         :key => :stack},
+      )
+
+      @network_port1 = network_port_data(1).merge(
+        :device => stack_resource_1_11_1
+      )
+      @network_port2 = network_port_data(2).merge(
+        :device => stack_resource_1_11_2
+      )
+      @network_port3 = network_port_data(3).merge(
+        :device => stack_resource_1_11_3
+      )
+      @network_port4 = network_port_data(4).merge(
+        :device => stack_1_12
+      )
+
+      persister.network_ports.build(@network_port1)
+      persister.network_ports.build(@network_port2)
+      persister.network_ports.build(@network_port3)
+      persister.network_ports.build(@network_port4)
+
+      # Save the collections, which invokes scanner
+      persister.persist!
+
+      # Loading 1 should load all scanned
+      stack_resource_1_11_3.load
+
+      expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
+        match_array(
+          [
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_1",
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_2",
+            "stack_ems_ref_1_12__stack_resource_physical_resource_1_12_1",
+          ]
+        )
+      )
+
+      # Getting already loaded resource is taking it from cache
+      persister.orchestration_stacks_resources.lazy_find(
+        {
+          :stack   => lazy_find_stack_1_11,
+          :ems_ref => orchestration_stack_resource_data("1_11_3")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref}
+      ).load
+
+      expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
+        match_array(
+          [
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_1",
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_2",
+            "stack_ems_ref_1_12__stack_resource_physical_resource_1_12_1"
+          ]
+        )
+      )
+
+      expect(NetworkPort.find_by(:ems_ref => network_port_data(1)[:ems_ref]).device.ems_ref).to eq "stack_resource_physical_resource_1_11_1"
+      expect(NetworkPort.find_by(:ems_ref => network_port_data(2)[:ems_ref]).device.ems_ref).to eq "stack_resource_physical_resource_1_11_2"
+      expect(NetworkPort.find_by(:ems_ref => network_port_data(3)[:ems_ref]).device).to be_nil
+      expect(NetworkPort.find_by(:ems_ref => network_port_data(4)[:ems_ref]).device.ems_ref).to eq "stack_ems_ref_1_12"
+    end
+
+    it "finds one by one before we scan" do
+      lazy_find_stack_1_11 = persister.orchestration_stacks.lazy_find(
+        :ems_ref => orchestration_stack_data("1_11")[:ems_ref]
+      )
+      lazy_find_stack_1_12 = persister.orchestration_stacks.lazy_find(
+        :ems_ref => orchestration_stack_data("1_12")[:ems_ref]
+      )
+
+      # Assert the local db index is empty if we do not load the reference
+      expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index)).to be_nil
+
+      stack_resource_1_11_1 = persister.orchestration_stacks_resources.find(
+        {
+          :stack   => lazy_find_stack_1_11,
+          :ems_ref => orchestration_stack_resource_data("1_11_1")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref}
+      )
+
+      # Assert all references are one by one
+      expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
+        match_array(
+          [
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_1",
+          ]
+        )
+      )
+
+      stack_resource_1_11_2 = persister.orchestration_stacks_resources.lazy_find(
+        {
+          :stack   => lazy_find_stack_1_11,
+          :ems_ref => orchestration_stack_resource_data("1_11_2")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref}
+      ).load
+
+      expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
+        match_array(
+          [
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_1",
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_2"
+          ]
+        )
+      )
+
+      stack_resource_1_11_3 = persister.orchestration_stacks_resources.lazy_find(
+        {
+          :stack   => lazy_find_stack_1_11,
+          :ems_ref => orchestration_stack_resource_data("1_11_3")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref}
+      ).load
+
+      expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
+        match_array(
+          [
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_1",
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_2"
+          ]
+        )
+      )
+
+      stack_1_12 = persister.orchestration_stacks_resources.lazy_find(
+        {
+          :stack   => lazy_find_stack_1_12,
+          :ems_ref => orchestration_stack_resource_data("1_12_1")[:ems_ref]
+        },
+        {:ref => :by_stack_and_ems_ref,
+         :key => :stack},
+      ).load
+
+      expect(persister.orchestration_stacks_resources.index_proxy.send(:local_db_indexes)[:by_stack_and_ems_ref].send(:index).keys).to(
+        match_array(
+          [
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_1",
+            "stack_ems_ref_1_11__stack_resource_physical_resource_1_11_2",
+            "stack_ems_ref_1_12__stack_resource_physical_resource_1_12_1",
+          ]
+        )
+      )
+
+      expect(stack_resource_1_11_1.manager_uuid).to eq "stack_resource_physical_resource_1_11_1"
+      expect(stack_resource_1_11_2.manager_uuid).to eq "stack_resource_physical_resource_1_11_2"
+      expect(stack_resource_1_11_3).to be_nil
+      # TODO(lsmola) should we preload the relation even before the scanner found it it's referenced?
+      # :key pointing to relation is not loaded when scanner is not invoked
+      expect(stack_1_12).to be_nil
     end
   end
 

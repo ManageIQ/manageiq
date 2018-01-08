@@ -173,5 +173,54 @@ module SpecMockedData
         :device => @vm4
       )
     )
+
+    @orchestration_stack_0_1 = FactoryGirl.create(
+      :orchestration_stack,
+      orchestration_stack_data("0_1").merge(
+        :parent => nil
+      )
+    )
+
+    @orchestration_stack_1_11 = FactoryGirl.create(
+      :orchestration_stack,
+      orchestration_stack_data("1_11").merge(
+        :parent => @orchestration_stack_0_1
+      )
+    )
+
+    @orchestration_stack_1_12 = FactoryGirl.create(
+      :orchestration_stack,
+      orchestration_stack_data("1_12").merge(
+        :parent => @orchestration_stack_0_1
+      )
+    )
+
+    @orchestration_stack_resource_1_11_1 = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("1_11_1").merge(
+        :stack => @orchestration_stack_1_11
+      )
+    )
+
+    @orchestration_stack_resource_1_11_2 = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("1_11_2").merge(
+        :stack => @orchestration_stack_1_11
+      )
+    )
+
+    @orchestration_stack_resource_1_12_1 = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("1_12_1").merge(
+        :stack => @orchestration_stack_1_12
+      )
+    )
+
+    @orchestration_stack_resource_1_12_2 = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("1_12_2").merge(
+        :stack => @orchestration_stack_1_12
+      )
+    )
   end
 end

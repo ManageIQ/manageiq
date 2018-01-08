@@ -21,7 +21,13 @@ class TestPersister < ManagerRefresh::Inventory::Persister
     # Child models with references in the Parent InventoryCollections for Cloud
     add_inventory_collections(
       cloud,
-      %i(hardwares networks disks vm_and_template_labels orchestration_stacks_resources orchestration_stacks_outputs
+      %i(orchestration_stacks_resources),
+      :secondary_refs => {:by_stack_and_ems_ref => %i(stack ems_ref)}
+    )
+
+    add_inventory_collections(
+      cloud,
+      %i(hardwares networks disks vm_and_template_labels orchestration_stacks_outputs
          orchestration_stacks_parameters)
     )
 
@@ -40,7 +46,7 @@ class TestPersister < ManagerRefresh::Inventory::Persister
       :network_ports,
       references(:vms) + references(:network_ports) + references(:load_balancers),
       :parent         => manager.network_manager,
-      :secondary_refs => {:by_device => [:device], :by_device_and_name => [:device, :name]}
+      :secondary_refs => {:by_device => [:device], :by_device_and_name => %i(device name)}
     )
 
     add_inventory_collection_with_references(
