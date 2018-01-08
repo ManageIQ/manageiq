@@ -11,18 +11,6 @@ module ManageIQ::Providers
         {:name => 'build_configs'}, {:name => 'builds'}, {:name => 'templates'}
       ]
 
-      def fetch_hawk_inv(ems)
-        hawk = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(ems, '_ops')
-        keys = hawk.strings.query(:miq_metric => true)
-        keys.each_with_object({}) do |k, attributes|
-          values = hawk.strings.get_data(k.json["id"], :limit => 1, :order => "DESC")
-          attributes[k.json["id"]] = values.first["value"] unless values.empty?
-        end
-      rescue => err
-        _log.error err.message
-        return nil
-      end
-
       def parse_legacy_inventory(ems)
         request_entities = OPENSHIFT_ENTITIES.dup
         request_entities << {:name => 'images'} if refresher_options.get_container_images
@@ -34,7 +22,6 @@ module ManageIQ::Providers
           fetch_entities(openshift_client, request_entities)
         end
         entities = openshift_entities.merge(kube_entities)
-        entities["additional_attributes"] = fetch_hawk_inv(ems) || {}
         EmsRefresh.log_inv_debug_trace(entities, "inv_hash:")
         ManageIQ::Providers::Openshift::ContainerManager::RefreshParser.ems_inv_to_hashes(entities, refresher_options)
       end

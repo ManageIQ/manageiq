@@ -49,6 +49,7 @@ class MiqReport < ApplicationRecord
 
   GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
+  IMPORT_CLASS_NAMES = %w(MiqReport).freeze
 
   scope :for_user, lambda { |user|
     if user.admin_user?

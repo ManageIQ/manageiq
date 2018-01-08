@@ -2,6 +2,27 @@ describe AssignmentMixin do
   # too ingrained in AR - has many, acts_as_miq_taggable, ...
   let(:test_class) { MiqAlertSet }
 
+  describe '#get_assigned_for_target' do
+    context 'searching for ChargebackRate' do
+      let(:test_class) { ChargebackRate }
+      let(:vm)              { FactoryGirl.create(:vm_openstack) }
+      let(:hardware)        { FactoryGirl.create(:hardware, :vm_or_template_id => vm.id) }
+      let(:cloud_volume)    { FactoryGirl.create(:cloud_volume, :hardwares => [hardware]) }
+      let(:chargeback_rate) { FactoryGirl.create(:chargeback_rate, :rate_type => 'Storage') }
+
+      before do
+        ct1 = ctag("environment", "test1")
+        chargeback_rate.assign_to_tags([ct1], "storage")
+        cloud_volume.tag_add('environment/test1', :ns => '/managed')
+      end
+
+      it 'returns rates based on tagged cloud volume' do
+        result = test_class.get_assigned_for_target(vm, :parents => [cloud_volume])
+        expect(result).to match_array([chargeback_rate])
+      end
+    end
+  end
+
   describe '#assignments' do
     it "finds no assignments" do
       expect(test_class.assignments).to eq({})

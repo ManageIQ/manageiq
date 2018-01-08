@@ -222,6 +222,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def cleanup(*args)
+    unqueue_all_signals
     image = target_entity
     if image
       # TODO: check job success / failure
@@ -252,8 +253,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     if self.state != "canceling" # ensure change of states
       signal :cancel
     else
-      unqueue_all_signals
-      queue_signal(:cancel_job)
+      signal :cancel_job
     end
   end
   alias_method :cancel_job, :cleanup

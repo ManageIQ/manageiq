@@ -7,6 +7,8 @@ class ContainerImage < ApplicationRecord
   include ArchivedMixin
   include_concern 'Purging'
 
+  require 'kubeclient'
+
   DOCKER_IMAGE_PREFIX = "docker://"
   DOCKER_PULLABLE_PREFIX = "docker-pullable://".freeze
   DOCKER_PREFIXES = [DOCKER_IMAGE_PREFIX, DOCKER_PULLABLE_PREFIX].freeze
@@ -95,6 +97,9 @@ class ContainerImage < ApplicationRecord
       "security.manageiq.org/failed-policy" => causing_policy,
       "images.openshift.io/deny-execution"  => "true"
     )
+  rescue KubeException => e
+    _log.warn("#{__method__} #{e.message}")
+    raise unless e.error_code == 404
   end
 
   def openscap_failed_rules_summary

@@ -23,7 +23,7 @@ class Service < ApplicationRecord
   has_ancestry :orphan_strategy => :destroy
 
   belongs_to :tenant
-  belongs_to :service_template               # Template this service was cloned from
+  belongs_to :service_template # Template this service was cloned from
 
   has_many :dialogs, -> { distinct }, :through => :service_template
 
@@ -47,6 +47,7 @@ class Service < ApplicationRecord
   virtual_has_one    :chargeback_report
 
   before_validation :set_tenant_from_group
+  before_create     :apply_dialog_settings
 
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
@@ -67,7 +68,7 @@ class Service < ApplicationRecord
   virtual_column :power_state,                              :type => :string
   virtual_column :power_status,                             :type => :string
 
-  validates_presence_of :name
+  validates :name, :presence => true
 
   default_value_for :display, false
   default_value_for :retired, false
@@ -78,13 +79,6 @@ class Service < ApplicationRecord
 
   supports :reconfigure do
     unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
-  end
-
-  def add_resource(rsc, options = {})
-    if rsc.kind_of?(Vm) && !rsc.service.nil?
-      raise MiqException::Error, _("Vm <%{name}> is already connected to a service.") % {:name => rsc.name}
-    end
-    super
   end
 
   alias parent_service parent
@@ -238,7 +232,7 @@ class Service < ApplicationRecord
       begin
         rsc = svc_rsc.resource
         rsc_action = service_action(action, svc_rsc)
-        rsc_name =  "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
+        rsc_name = "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
         if rsc_action.nil?
           _log.info "Not Processing action for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
         elsif rsc.respond_to?(rsc_action)
@@ -363,7 +357,7 @@ class Service < ApplicationRecord
   end
 
   def chargeback_yaml
-    yaml = YAML.load_file(File.join(Rails.root, "product/chargeback/chargeback_vm_monthly.yaml"))
+    yaml = YAML.load_file(Rails.root.join('product', 'chargeback', 'chargeback_vm_monthly.yaml'))
     yaml["db_options"][:options][:service_id] = id
     yaml["title"] = chargeback_report_name
     yaml
@@ -379,5 +373,46 @@ class Service < ApplicationRecord
       :args        => options
     )
     _log.info "Added to queue: generate_chargeback_report for service #{name}"
+  end
+
+  def add_resource(rsc, options = {})
+    super.tap do |service_resource|
+      break if service_resource.nil?
+
+      # Create ancestry link between services
+      resource = service_resource.resource
+      resource.update_attributes(:parent => self) if resource.kind_of?(Service)
+    end
+  end
+
+  def enforce_single_service_parent?
+    true
+  end
+
+  def add_to_service(parenent_service)
+    parenent_service.add_resource!(self)
+  end
+
+  def remove_from_service(parenent_service)
+    update(:parent => nil)
+    parenent_service.remove_resource(self)
+  end
+
+  private
+
+  def apply_dialog_settings
+    dialog_options = options[:dialog] || {}
+
+    %w(dialog_service_name dialog_service_description).each do |field_name|
+      send(field_name, dialog_options[field_name]) if dialog_options.key?(field_name)
+    end
+  end
+
+  def dialog_service_name(value)
+    self.name = value if value.present?
+  end
+
+  def dialog_service_description(value)
+    self.description = value if value.present?
   end
 end

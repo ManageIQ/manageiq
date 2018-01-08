@@ -317,6 +317,10 @@
       - UserLoginSessionEvent
       - UserLogoutSessionEvent
       - VmAcquiredMksTicketEvent
+      - VM_CONSOLE_CONNECTED
+      - VM_CONSOLE_DISCONNECTED
+      - VM_SET_TICKET
+      - VM_SET_TICKET_FAILED
       - VmRemoteConsoleConnectedEvent
       :detail: []
       :name: Console Activity
@@ -1020,6 +1024,8 @@
   :level_vim_in_evm: error
   :level_websocket: info
   :level_websocket_in_evm: error
+  :level_vcloud: info
+  :level_vcloud_in_evm: error
 :management_system:
   :power_operation_expiration: 10.minutes
 :performance:

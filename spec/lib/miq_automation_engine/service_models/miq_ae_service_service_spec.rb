@@ -33,6 +33,10 @@ module MiqAeServiceServiceSpec
       expect(@service.name).to eq('new_test_service')
     end
 
+    it "#raises error with service name that's nil" do
+      expect { @ae_method.update_attributes!(:name => nil) }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
     it "#set the service description" do
       expect(@service.description).to eq('test_description')
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].description = 'new_test_description' "

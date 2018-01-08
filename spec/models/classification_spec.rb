@@ -440,6 +440,18 @@ describe Classification do
         Classification.seed
         expect(Classification.count).to eq(1)
       end
+
+      it "does not re-seed user-modified default categories" do
+        # If categories' names are edited they auto-save a different associated tag
+        # This tests that if seeding category and it's invalid (due to uniqueness constraints)
+        # then seeding still doesn't fail.
+        cat = Classification.find_by!(:description => "Cost Center", :parent_id => 0)
+        allow(YAML).to receive(:load_file).and_call_original
+        cat.update_attributes!(:name => "new_name")
+        expect {
+          2.times.each { Classification.seed }
+        }.to_not raise_error
+      end
     end
 
     it "does not re-seed existing categories" do

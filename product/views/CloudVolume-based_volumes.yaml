@@ -56,7 +56,7 @@ headers:
 - Type
 - Bootable?
 - Availability Zone
-- Cloud Provider
+- Storage Manager
 
 # Condition(s) string for the SQL query
 conditions:

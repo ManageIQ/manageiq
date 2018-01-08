@@ -47,6 +47,9 @@ module Api
         if vm_decorators.include? 'supports_cockpit?'
           hash['supports_cockpit?'] = vm.supports_launch_cockpit?
         end
+        if vm_decorators.include?('supports_vnc_console?')
+          hash['supports_vnc_console?'] = vm.console_supported?('VNC')
+        end
         hash
       end
     end

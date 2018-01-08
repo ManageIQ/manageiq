@@ -252,12 +252,11 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_find_active_prov_request_by_owner(options)
-    email = get_option(:owner_email).to_s.strip
-    quota_find_active_prov_request(options).select { |p| email.casecmp(p.request_owner_email(p)).zero? }
+    quota_find_active_prov_request(options).select { |p| request_owner_email(self).casecmp(p.request_owner_email(p)).zero? }
   end
 
   def request_owner_email(request)
-    service_request?(request) ? request.requester.email : request.get_option(:owner_email).to_s.strip
+    service_request?(request) ? request.requester.email : request.get_option(:owner_email)
   end
 
   def service_request?(request)

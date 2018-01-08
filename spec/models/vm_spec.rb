@@ -263,12 +263,27 @@ describe Vm do
     expect(console.url_secret).to be
   end
 
-  it '#add_to_service' do
-    vm = FactoryGirl.create(:vm_vmware)
-    service = FactoryGirl.create(:service)
+  describe '#add_to_service' do
+    let(:vm) { FactoryGirl.create(:vm_vmware) }
+    let(:service) { FactoryGirl.create(:service) }
 
-    vm.add_to_service(service)
-    service.reload
-    expect(service.vms.count).to eq(1)
+    it 'associates the vm to the service' do
+      vm.add_to_service(service)
+
+      expect(service.reload.vms).to include(vm)
+    end
+
+    it 'raise an error if the vm is already part of a service' do
+      vm.add_to_service(service)
+
+      expect { vm.add_to_service(service) }.to raise_error MiqException::Error
+    end
+  end
+
+  context "#supported_consoles" do
+    it 'returns all of the console types' do
+      vm = FactoryGirl.create(:vm)
+      expect(vm.supported_consoles.keys).to match_array([:spice, :vnc, :vmrc, :webmks, :cockpit])
+    end
   end
 end

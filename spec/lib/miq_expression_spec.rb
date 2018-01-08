@@ -2089,23 +2089,6 @@ describe MiqExpression do
     end
   end
 
-  context ".build_relats" do
-    it "includes reflections from descendant classes of Vm" do
-      relats = MiqExpression.get_relats(Vm)
-      expect(relats[:reflections][:cloud_tenant]).not_to be_blank
-    end
-
-    it "includes reflections from descendant classes of Host" do
-      relats = MiqExpression.get_relats(Host)
-      expect(relats[:reflections][:cloud_networks]).not_to be_blank
-    end
-
-    it "excludes reflections from descendant classes of VmOrTemplate " do
-      relats = MiqExpression.get_relats(VmOrTemplate)
-      expect(relats[:reflections][:cloud_tenant]).to be_blank
-    end
-  end
-
   describe "#to_human" do
     it "generates a human readable string for a 'FIELD' expression" do
       exp = MiqExpression.new(">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes"})

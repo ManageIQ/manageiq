@@ -9,6 +9,8 @@ module MiqAeMethodService
     expose :host,             :association => true
     expose :networks,         :association => true
     expose :partitions,       :association => true
+    expose :disks,            :association => true
+    expose :volumes,          :association => true
 
     def mac_addresses
       object_send(:nics).collect(&:address)

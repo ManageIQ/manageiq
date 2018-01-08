@@ -236,8 +236,8 @@
   :startup: true
 - :name: containers
   :description: Compute / Containers / Containers
-  :url: /container/explorer
-  :rbac_feature_name: containers
+  :url: /container/show_list
+  :rbac_feature_name: container
   :startup: true
 - :name: container_nodes
   :description: Compute / Containers / Container Nodes
@@ -508,4 +508,9 @@
   :description: Monitor / Alerts / Most Recent Alerts
   :url: /alerts_most_recent
   :rbac_feature_name: monitor_alerts_most_recent
+  :startup: true
+- :name: miq_proxy_tasks
+  :description: Settings / Tasks
+  :url: /miq_task/index?jobs_tab=tasks
+  :rbac_feature_name: tasks
   :startup: true

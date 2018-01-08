@@ -29,6 +29,11 @@ describe Metric::Helper do
       expect(recs).to match_array([metric_rollup_1, metric_rollup_3])
     end
 
+    it "dedups a given scope" do
+      recs = described_class.remove_duplicate_timestamps(MetricRollup.where(:id => [metric_rollup_1, metric_rollup_2, metric_rollup_3]))
+      expect(recs).to match_array([metric_rollup_1, metric_rollup_3])
+    end
+
     it "returns only unique records and merge values with the same timestamp" do
       metric_rollup_1.cpu_usage_rate_average = nil
       metric_rollup_1.save

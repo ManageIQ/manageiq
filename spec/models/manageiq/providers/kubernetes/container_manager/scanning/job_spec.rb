@@ -179,6 +179,16 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       end
     end
 
+    context "when timeout occures during pod_wait state" do
+      it "should clean all signals and not fail in the state machine" do
+        initial_q_size = MiqQueue.all.count
+        MiqQueue.put(**@job.send(:queue_options), :args => [:pod_wait,])
+        expect(MiqQueue.all.count).to eq(initial_q_size + 1)
+        @job.cancel
+        expect(MiqQueue.all.count).to eq(initial_q_size)
+      end
+    end
+
     context "#current_job_timeout" do
       it "checks for timeout in Settings" do
         expect(@job.send(:current_job_timeout)).to eq(1200)

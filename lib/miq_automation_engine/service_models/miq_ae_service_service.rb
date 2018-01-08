@@ -53,8 +53,7 @@ module MiqAeMethodService
 
     def name=(new_name)
       ar_method do
-        @object.name = new_name
-        @object.save
+        @object.update!(:name => new_name)
       end
     end
 

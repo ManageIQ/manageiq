@@ -7,6 +7,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Template < ManageIQ::Provide
       unsupported_reason_add(:smartstate_analysis, reason)
     end
   end
+  supports_not :clone
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect

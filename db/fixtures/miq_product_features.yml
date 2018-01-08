@@ -5063,7 +5063,7 @@
 - :name: Containers Explorer
   :description: Everything under Containers
   :feature_type: node
-  :identifier: containers
+  :identifier: container
   :children:
   - :name: Relationships
     :description: Everything under All Containers Accordion
@@ -6321,6 +6321,19 @@
       :description: Manage Policies of Block Storage Managers
       :feature_type: control
       :identifier: ems_block_storage_protect
+    - :name: Refresh
+      :description: Refresh Block Storage Managers
+      :feature_type: control
+      :identifier: ems_block_storage_refresh
+  - :name: Modify
+    :description: Modify Block Storage Managers
+    :feature_type: admin
+    :identifier: ems_block_storage_admin
+    :children:
+    - :name: Remove
+      :description: Remove Block Storage Manager
+      :feature_type: admin
+      :identifier: ems_block_storage_delete
 
 # EmsObjectStorage
 - :name: Object Storage Managers
@@ -6358,6 +6371,19 @@
       :description: Manage Policies of Object Storage Managers
       :feature_type: control
       :identifier: ems_object_storage_protect
+    - :name: Refresh
+      :description: Refresh Object Storage Managers
+      :feature_type: control
+      :identifier: ems_object_storage_refresh
+  - :name: Modify
+    :description: Modify Object Storage Managers
+    :feature_type: admin
+    :identifier: ems_object_storage_admin
+    :children:
+    - :name: Remove
+      :description: Remove Object Storage Manager
+      :feature_type: admin
+      :identifier: ems_object_storage_delete
 
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
