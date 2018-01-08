@@ -5,18 +5,20 @@ describe TaskHelpers::Imports::Roles do
   let(:role_one_name)   { 'Role Import Test' }
   let(:role_two_name)   { 'Role Import Test 2' }
 
-  EvmSpecHelper.seed_specific_product_features(%w(
-                                                 dashboard
-                                                 dashboard_add
-                                                 dashboard_view
-                                                 host_compare
-                                                 host_edit
-                                                 host_scan
-                                                 host_show_list
-                                                 policy
-                                                 vm
-                                                 about
-                                               ))
+  before do
+    EvmSpecHelper.seed_specific_product_features(%w(
+                                                   dashboard
+                                                   dashboard_add
+                                                   dashboard_view
+                                                   host_compare
+                                                   host_edit
+                                                   host_scan
+                                                   host_show_list
+                                                   policy
+                                                   vm
+                                                   about
+                                                 ))
+  end
 
   describe "#import" do
     let(:options) { {:source => source} }
