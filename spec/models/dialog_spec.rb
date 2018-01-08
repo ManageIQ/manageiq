@@ -260,13 +260,15 @@ describe Dialog do
               'dialog_tab_id' => dialog_tab.first.id,
               'dialog_fields' =>
                                  [{
-                                   'id'              => dialog_field.first.id,
-                                   'dialog_group_id' => dialog_group.first.id
+                                   'id'                      => dialog_field.first.id,
+                                   'name'                    => dialog_field.first.name,
+                                   'dialog_group_id'         => dialog_group.first.id,
+                                   'dialog_field_responders' => %w(dialog_field2)
                                  }] },
             {
               'label'         => 'group 2',
               'dialog_fields' => [{
-                'name'  => 'dialog_field',
+                'name'  => 'dialog_field2',
                 'label' => 'field_label'
               }]
             }
@@ -295,6 +297,14 @@ describe Dialog do
       it 'creates the dialog tab from the dialog tabs without an id' do
         dialog.update_tabs(updated_content)
         expect(dialog.reload.dialog_tabs.count).to eq(2)
+      end
+
+      it "creates associations with the correct ids" do
+        expect do
+          dialog.update_tabs(updated_content)
+        end.to change(DialogFieldAssociation, :count).by(1)
+        expect(DialogFieldAssociation.first.trigger_id).to eq(dialog_field.first.id)
+        expect(DialogFieldAssociation.first.respond_id).to eq(dialog_field.first.id + 1)
       end
     end
 
