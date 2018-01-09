@@ -1,6 +1,5 @@
 FactoryGirl.define do
-  factory :account do
-  end
+  factory :account
 
   factory :account_user, :parent => :account do
     name 'bob'

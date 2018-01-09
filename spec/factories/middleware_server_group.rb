@@ -6,6 +6,5 @@ FactoryGirl.define do
   factory :hawkular_middleware_server_group,
           :aliases => ['app/models/manageiq/providers/hawkular/middleware_manager/middleware_server_group'],
           :class   => 'ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerGroup',
-          :parent  => :middleware_server_group do
-  end
+          :parent  => :middleware_server_group
 end

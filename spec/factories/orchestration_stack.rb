@@ -3,21 +3,17 @@ FactoryGirl.define do
     ems_ref "1"
   end
 
-  factory :orchestration_stack_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::CloudManager::OrchestrationStack" do
-  end
+  factory :orchestration_stack_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::CloudManager::OrchestrationStack"
 
   factory :orchestration_stack_cloud_with_template, :parent => :orchestration_stack, :class => "ManageIQ::Providers::CloudManager::OrchestrationStack" do
     orchestration_template { FactoryGirl.create(:orchestration_template) }
   end
 
-  factory :orchestration_stack_amazon, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack" do
-  end
+  factory :orchestration_stack_amazon, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack"
 
-  factory :orchestration_stack_azure, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Azure::CloudManager::OrchestrationStack" do
-  end
+  factory :orchestration_stack_azure, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Azure::CloudManager::OrchestrationStack"
 
-  factory :orchestration_stack_openstack, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack" do
-  end
+  factory :orchestration_stack_openstack, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack"
 
   factory :orchestration_stack_openstack_infra,
           :parent => :orchestration_stack,
@@ -35,8 +31,7 @@ FactoryGirl.define do
           :class  => "ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack" do
   end
 
-  factory :orchestration_stack_parameter_openstack_infra, :class => "OrchestrationStackParameter" do
-  end
+  factory :orchestration_stack_parameter_openstack_infra, :class => "OrchestrationStackParameter"
 
   factory :orchestration_stack_parameter_openstack_infra_compute, :parent => :orchestration_stack_parameter_openstack_infra do
     after :create do |x|
@@ -52,14 +47,11 @@ FactoryGirl.define do
     end
   end
 
-  factory :orchestration_stack_resource, :class => "OrchestrationStackResource" do
-  end
+  factory :orchestration_stack_resource, :class => "OrchestrationStackResource"
 
-  factory :orchestration_stack_resource_openstack_infra, :class => "OrchestrationStackResource" do
-  end
+  factory :orchestration_stack_resource_openstack_infra, :class => "OrchestrationStackResource"
 
-  factory :orchestration_stack_output, :class => "OrchestrationStackOutput" do
-  end
+  factory :orchestration_stack_output, :class => "OrchestrationStackOutput"
 
   factory :orchestration_stack_resource_openstack_infra_compute,
           :parent => :orchestration_stack_resource_openstack_infra do
@@ -77,12 +69,9 @@ FactoryGirl.define do
     end
   end
 
-  factory :ansible_tower_job, :class => "ManageIQ::Providers::AnsibleTower::AutomationManager::Job" do
-  end
+  factory :ansible_tower_job, :class => "ManageIQ::Providers::AnsibleTower::AutomationManager::Job"
 
-  factory :embedded_ansible_job, :class => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job" do
-  end
+  factory :embedded_ansible_job, :class => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job"
 
-  factory :orchestration_stack_vmware_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack" do
-  end
+  factory :orchestration_stack_vmware_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack"
 end

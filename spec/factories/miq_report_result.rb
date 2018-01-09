@@ -1,6 +1,5 @@
 FactoryGirl.define do
-  factory :miq_report_result do
-  end
+  factory :miq_report_result
 
   factory :miq_chargeback_report_result, :parent => :miq_report_result do
     sequence(:name) { |n| "Test Chargeback Report Result #{seq_padded_for_sorting(n)}" }
