@@ -1,6 +1,6 @@
 describe VirtualTotal do
   before(:each) do
-    # rubocop:disable Style/SingleLineMethods, Style/EmptyLineBetweenDefs, Style/AccessorMethodName
+    # rubocop:disable Style/SingleLineMethods, Layout/EmptyLineBetweenDefs, Naming/AccessorMethodName
     class VitualTotalTestBase < ActiveRecord::Base
       self.abstract_class = true
 
@@ -68,7 +68,7 @@ describe VirtualTotal do
       scope :published, -> { where(:published => true)  }
       scope :wip,       -> { where(:published => false) }
     end
-    # rubocop:enable Style/SingleLineMethods, Style/EmptyLineBetweenDefs, Style/AccessorMethodName
+    # rubocop:enable Style/SingleLineMethods, Layout/EmptyLineBetweenDefs, Naming/AccessorMethodName
   end
 
   after(:each) do

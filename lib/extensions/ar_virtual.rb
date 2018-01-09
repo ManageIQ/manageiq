@@ -605,7 +605,7 @@ module ActiveRecord
     # syntax from the original codebase.
     #
     # rubocop:disable Style/BlockDelimiters, Style/SpaceAfterComma, Style/HashSyntax
-    # rubocop:disable Style/AlignHash, Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Layout/AlignHash, Metrics/AbcSize, Metrics/MethodLength
     class JoinDependency
       def instantiate(result_set, aliases)
         primary_key = aliases.column_alias(join_root, join_root.primary_key)
