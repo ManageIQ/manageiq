@@ -102,7 +102,7 @@
   - chargeback_reports
   - customization_template_view
   - iso_datastore_view
-  - control_explorer_view
+  - control_explorer
   - dashboard
   - ems_cluster_show
   - ems_cluster_show_list
@@ -195,7 +195,7 @@
   - chargeback_reports
   - customization_template_view
   - iso_datastore_view
-  - control_explorer_view
+  - control_explorer
   - dashboard
   - ems_cluster_show
   - ems_cluster_show_list
@@ -477,7 +477,7 @@
   - compute
   - chargeback
   - chargeback_reports
-  - control_explorer_view
+  - control_explorer
   - dashboard
   - datastore
   - ems_cluster_show
@@ -562,7 +562,7 @@
   - compute
   - chargeback
   - chargeback_reports
-  - control_explorer_view
+  - control_explorer
   - dashboard
   - datastore
   - ems_cluster_show
