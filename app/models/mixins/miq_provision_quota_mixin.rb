@@ -320,6 +320,7 @@ module MiqProvisionQuotaMixin
   end
 
   def service_quota_values(request, result)
+    return unless request.service_template
     request.service_template.service_resources.each do |sr|
       if request.service_template.service_type == 'composite'
         bundle_quota_values(sr, result)
