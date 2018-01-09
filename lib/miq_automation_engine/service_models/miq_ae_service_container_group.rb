@@ -11,8 +11,6 @@ module MiqAeMethodService
     expose :container_project,      :association => true
     expose :container_build_pod,    :association => true
     expose :container_volumes,      :association => true
-    expose :metrics,                :association => true
-    expose :metric_rollups,         :association => true
     expose :vim_performance_states, :association => true
     expose :is_tagged_with?
     expose :tags

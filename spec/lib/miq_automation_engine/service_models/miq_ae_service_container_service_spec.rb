@@ -31,13 +31,5 @@ module MiqAeServiceContainerSpec
     it "#container_image_registry" do
       expect(described_class.instance_methods).to include(:container_image_registry)
     end
-
-    it "#metrics" do
-      expect(described_class.instance_methods).to include(:metrics)
-    end
-
-    it "#metric_rollups" do
-      expect(described_class.instance_methods).to include(:metric_rollups)
-    end
   end
 end
