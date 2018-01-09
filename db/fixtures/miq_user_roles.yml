@@ -122,7 +122,7 @@
   - ontap_storage_volume_show
   - ontap_storage_volume_show_list
   - ontap_storage_volume_tag
-  - control_explorer_view
+  - control_explorer
   - dashboard
   - ems_cluster_show
   - ems_cluster_show_list
@@ -237,7 +237,7 @@
   - ontap_storage_volume_show
   - ontap_storage_volume_show_list
   - ontap_storage_volume_tag
-  - control_explorer_view
+  - control_explorer
   - dashboard
   - ems_cluster_show
   - ems_cluster_show_list
@@ -548,7 +548,7 @@
   - ontap_storage_volume_show
   - ontap_storage_volume_show_list
   - ontap_storage_volume_tag
-  - control_explorer_view
+  - control_explorer
   - dashboard
   - datastore
   - ems_cluster_show
@@ -649,7 +649,7 @@
   - cim_storage_extent_show_list
   - ontap_storage_volume_show
   - ontap_storage_volume_show_list
-  - control_explorer_view
+  - control_explorer
   - dashboard
   - datastore
   - ems_cluster_show
