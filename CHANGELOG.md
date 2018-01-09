@@ -5,9 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-  - Adding hostname format validation [(#16714)](https://github.com/ManageIQ/manageiq/pull/16714)
-  - Added get_targets_for_base class methods [(#16707)](https://github.com/ManageIQ/manageiq/pull/16707)
-
 ## Gaprindashvili-1
 
 ### Added
