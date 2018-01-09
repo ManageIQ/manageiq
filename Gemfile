@@ -172,7 +172,8 @@ group :rest_api, :manageiq_default do
 end
 
 group :scheduler, :manageiq_default do
-  gem "rufus-scheduler", :git => "https://github.com/chrisarcand/rufus-scheduler.git", :branch => "3-1-with-ruby-2-4-support", :require => false
+  # Modified gems (forked on Github)
+  gem "rufus-scheduler", "=3.1.10.2", :git => "https://github.com/ManageIQ/rufus-scheduler.git", :require => false, :tag => "v3.1.10-2"
 end
 
 group :seed, :manageiq_default do
