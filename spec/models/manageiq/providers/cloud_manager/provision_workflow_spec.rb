@@ -6,7 +6,7 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
   let(:template) { FactoryGirl.create(:miq_template, :name => "template", :ext_management_system => ems) }
   let(:workflow) do
     stub_dialog
-    allow_any_instance_of(User).to receive(:get_timezone).and_return(Time.zone)
+    allow(User).to receive_messages(:server_timezone => "UTC")
     allow_any_instance_of(described_class).to receive(:update_field_visibility)
     described_class.new({:src_vm_id => template.id}, admin.userid)
   end
