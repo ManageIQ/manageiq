@@ -1,6 +1,5 @@
 FactoryGirl.define do
-  factory :custom_attribute do
-  end
+  factory :custom_attribute
 
   factory :miq_custom_attribute, :parent => :custom_attribute do
     source   'EVM'

@@ -1,6 +1,5 @@
 FactoryGirl.define do
-  factory :guest_device do
-  end
+  factory :guest_device
 
   factory :guest_device_nic, :parent => :guest_device do
     sequence(:device_name) { |n| "Network Adapter #{seq_padded_for_sorting(n)}" }

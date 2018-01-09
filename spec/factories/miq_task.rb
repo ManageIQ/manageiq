@@ -5,6 +5,5 @@ FactoryGirl.define do
     sequence(:name) { |n| "task_#{seq_padded_for_sorting(n)}" }
   end
 
-  factory :miq_task_plain, :class => :miq_task do
-  end
+  factory :miq_task_plain, :class => :miq_task
 end

@@ -6,9 +6,6 @@ FactoryGirl.define do
     kernel_options          "vga=788 -- quiet"
   end
 
-  factory :pxe_image_ipxe, :parent => :pxe_image, :class => 'PxeImageIpxe' do
-  end
-
-  factory :pxe_image_pxelinux, :parent => :pxe_image, :class => 'PxeImagePxelinux' do
-  end
+  factory :pxe_image_ipxe, :parent => :pxe_image, :class => 'PxeImageIpxe'
+  factory :pxe_image_pxelinux, :parent => :pxe_image, :class => 'PxeImagePxelinux'
 end

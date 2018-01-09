@@ -35,102 +35,86 @@ FactoryGirl.define do
   factory :ems_infra,
           :aliases => ["manageiq/providers/infra_manager"],
           :class   => "ManageIQ::Providers::InfraManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_physical_infra,
           :aliases => ["manageiq/providers/physical_infra_manager"],
           :class   => "ManageIQ::Providers::PhysicalInfraManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_cloud,
           :aliases => ["manageiq/providers/cloud_manager"],
           :class   => "ManageIQ::Providers::CloudManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_datawarehouse,
           :aliases => ["manageiq/providers/datawarehouse_manager"],
           :class   => "ManageIQ::Providers::DatawarehouseManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_network,
           :aliases => ["manageiq/providers/network_manager"],
           :class   => "ManageIQ::Providers::NetworkManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
           :class   => "ManageIQ::Providers::StorageManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_cinder,
           :aliases => ["manageiq/providers/storage_manager/cinder_manager"],
           :class   => "ManageIQ::Providers::StorageManager::CinderManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_swift,
           :aliases => ["manageiq/providers/storage_manager/swift_manager"],
           :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_container,
           :aliases => ["manageiq/providers/container_manager"],
           :class   => "ManageIQ::Providers::ContainerManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :ems_middleware,
           :aliases => ["manageiq/providers/middleware_manager"],
           :class   => "ManageIQ::Providers::MiddlewareManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :configuration_manager,
           :aliases => ["manageiq/providers/configuration_manager"],
           :class   => "ManageIQ::Providers::ConfigurationManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   # Automation managers
 
   factory :automation_manager,
           :aliases => ["manageiq/providers/automation_manager"],
           :class   => "ManageIQ::Providers::AutomationManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   factory :external_automation_manager,
           :aliases => ["manageiq/providers/external_automation_manager"],
           :class   => "ManageIQ::Providers::ExternalAutomationManager",
-          :parent  => :automation_manager do
-  end
+          :parent  => :automation_manager
 
   factory :embedded_automation_manager,
           :aliases => ["manageiq/providers/embedded_automation_manager"],
           :class   => "ManageIQ::Providers::EmbeddedAutomationManager",
-          :parent  => :automation_manager do
-  end
+          :parent  => :automation_manager
 
   factory :provisioning_manager,
           :aliases => ["manageiq/providers/provisioning_manager"],
           :class   => "ManageIQ::Providers::ProvisioningManager",
-          :parent  => :ext_management_system do
-  end
+          :parent  => :ext_management_system
 
   # Leaf classes for ems_infra
 
   factory :ems_vmware,
           :aliases => ["manageiq/providers/vmware/infra_manager"],
           :class   => "ManageIQ::Providers::Vmware::InfraManager",
-          :parent  => :ems_infra do
-  end
+          :parent  => :ems_infra
 
   factory :ems_vmware_with_authentication,
           :parent => :ems_vmware do
@@ -142,8 +126,7 @@ FactoryGirl.define do
   factory :ems_microsoft,
           :aliases => ["manageiq/providers/microsoft/infra_manager"],
           :class   => "ManageIQ::Providers::Microsoft::InfraManager",
-          :parent  => :ems_infra do
-  end
+          :parent  => :ems_infra
 
   factory :ems_microsoft_with_authentication,
           :parent => :ems_microsoft do
@@ -155,8 +138,7 @@ FactoryGirl.define do
   factory :ems_redhat,
           :aliases => ["manageiq/providers/redhat/infra_manager"],
           :class   => "ManageIQ::Providers::Redhat::InfraManager",
-          :parent  => :ems_infra do
-  end
+          :parent  => :ems_infra
 
   factory :ems_redhat_v3,
           :parent => :ems_redhat do
@@ -185,8 +167,7 @@ FactoryGirl.define do
   factory :ems_openstack_infra,
           :aliases => ["manageiq/providers/openstack/infra_manager"],
           :class   => "ManageIQ::Providers::Openstack::InfraManager",
-          :parent  => :ems_infra do
-  end
+          :parent  => :ems_infra
 
   factory :ems_openstack_infra_with_stack,
           :parent => :ems_openstack_infra do
@@ -216,14 +197,12 @@ FactoryGirl.define do
   factory :ems_vmware_cloud,
           :aliases => ["manageiq/providers/vmware/cloud_manager"],
           :class   => "ManageIQ::Providers::Vmware::CloudManager",
-          :parent  => :ems_cloud do
-  end
+          :parent  => :ems_cloud
 
   factory :ems_vmware_cloud_network,
           :aliases => ["manageiq/providers/vmware/network_manager"],
           :class   => "ManageIQ::Providers::Vmware::NetworkManager",
-          :parent  => :ems_cloud do
-  end
+          :parent  => :ems_cloud
 
   # Leaf classes for ems_cloud
 
@@ -258,14 +237,12 @@ FactoryGirl.define do
   factory :ems_azure,
           :aliases => ["manageiq/providers/azure/cloud_manager"],
           :class   => "ManageIQ::Providers::Azure::CloudManager",
-          :parent  => :ems_cloud do
-  end
+          :parent  => :ems_cloud
 
   factory :ems_azure_network,
           :aliases => ["manageiq/providers/azure/network_manager"],
           :class   => "ManageIQ::Providers::Azure::NetworkManager",
-          :parent  => :ems_network do
-  end
+          :parent  => :ems_network
 
   factory :ems_azure_with_authentication,
           :parent => :ems_azure do
@@ -279,8 +256,7 @@ FactoryGirl.define do
   factory :ems_openstack,
           :aliases => ["manageiq/providers/openstack/cloud_manager"],
           :class   => "ManageIQ::Providers::Openstack::CloudManager",
-          :parent  => :ems_cloud do
-  end
+          :parent  => :ems_cloud
 
   factory :ems_openstack_with_authentication,
           :parent => :ems_openstack do
@@ -293,14 +269,12 @@ FactoryGirl.define do
   factory :ems_openstack_network,
           :aliases => ["manageiq/providers/openstack/network_manager"],
           :class   => "ManageIQ::Providers::Openstack::NetworkManager",
-          :parent  => :ems_network do
-  end
+          :parent  => :ems_network
 
   factory :ems_nuage_network,
           :aliases => ["manageiq/providers/nuage/network_manager"],
           :class   => "ManageIQ::Providers::Nuage::NetworkManager",
-          :parent  => :ems_network do
-  end
+          :parent  => :ems_network
 
   factory :ems_google,
           :aliases => ["manageiq/providers/google/cloud_manager"],
@@ -328,8 +302,7 @@ FactoryGirl.define do
   factory :ems_kubernetes,
           :aliases => ["manageiq/providers/kubernetes/container_manager"],
           :class   => "ManageIQ::Providers::Kubernetes::ContainerManager",
-          :parent  => :ems_container do
-  end
+          :parent  => :ems_container
 
   factory :ems_kubernetes_with_authentication_err,
           :parent => :ems_kubernetes do
@@ -342,8 +315,7 @@ FactoryGirl.define do
   factory :ems_openshift,
           :aliases => ["manageiq/providers/openshift/container_manager"],
           :class   => "ManageIQ::Providers::Openshift::ContainerManager",
-          :parent  => :ems_container do
-  end
+          :parent  => :ems_container
 
   # Leaf classes for configuration_manager
 
@@ -380,22 +352,19 @@ FactoryGirl.define do
   factory :provisioning_manager_foreman,
           :aliases => ["manageiq/providers/foreman/provisioning_manager"],
           :class   => "ManageIQ::Providers::Foreman::ProvisioningManager",
-          :parent  => :provisioning_manager do
-  end
+          :parent  => :provisioning_manager
 
   # Leaf classes for middleware_manager
 
   factory :ems_hawkular,
           :aliases => ["manageiq/providers/hawkular/middleware_manager"],
           :class   => "ManageIQ::Providers::Hawkular::MiddlewareManager",
-          :parent  => :ems_middleware do
-  end
+          :parent  => :ems_middleware
 
   # Leaf classes for datawarehouse_manager
 
   factory :ems_hawkular_datawarehouse,
           :aliases => ["manageiq/providers/hawkular/datawarehouse_manager"],
           :class   => "ManageIQ::Providers::Hawkular::DatawarehouseManager",
-          :parent  => :ems_datawarehouse do
-  end
+          :parent  => :ems_datawarehouse
 end

@@ -1,12 +1,10 @@
 FactoryGirl.define do
-  factory :middleware_messaging do
-  end
+  factory :middleware_messaging
 
   factory :hawkular_middleware_messaging,
           :aliases => ['app/models/manageiq/providers/hawkular/middleware_manager/middleware_messaging'],
           :class   => 'ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareMessaging',
-          :parent  => :middleware_messaging do
-  end
+          :parent  => :middleware_messaging
 
   factory :hawkular_middleware_messaging_initialized,
           :parent => :hawkular_middleware_messaging do
