@@ -1,44 +1,25 @@
+AllCops:
+  Exclude:
+  - lib/generators/provider/templates/**/*
+  - db/schema.rb
 GlobalVars:
   AllowedVariables:
   # Loggers
-  - $audit_log
   - $api_log
+  - $audit_log
   - $aws_log
   - $azure_log
   - $datawarehouse_log
   - $fog_log
+  - $kube_log
   - $lenovo_log
   - $log
   - $miq_ae_logger
+  - $mw_log
   - $policy_log
   - $rails_log
   - $rhevm_log
-  - $kube_log
-  - $mw_log
   - $scvmm_log
+  - $vcloud_log
   - $vim_log
   - $websocket_log
-  - $vcloud_log
-  # In Automate methods
-  - $evm
-#
-# Special Exclusions
-#
-AllCops:
-  TargetRubyVersion: 2.2
-  Exclude:
-    - lib/generators/provider/templates/**/*
-    - db/schema.rb
-    - vendor/**/*
-ClassAndModuleCamelCase:
-  Exclude:
-    - lib/miq_automation_engine/service_models/*.rb
-FileName:
-  Exclude:
-    - lib/miq_automation_engine/service_models/*.rb
-Metrics/LineLength:
-  Exclude:
-    - Gemfile
-Style/ExtraSpacing:
-  Exclude:
-    - Gemfile
