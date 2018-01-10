@@ -8,20 +8,20 @@ class MiqAction < ApplicationRecord
 
   silence_warnings do
     const_set("TYPES",
-              "create_snapshot"         => "Create a Snapshot",
-              "email"                   => "Send an E-mail",
-              "snmp_trap"               => "Send an SNMP Trap",
-              "tag"                     => "Tag",
-              "reconfigure_memory"      => "Reconfigure Memory",
-              "reconfigure_cpus"        => "Reconfigure CPUs",
-              "custom_automation"       => "Invoke a Custom Automation",
-              "evaluate_alerts"         => "Evaluate Alerts",
-              "assign_scan_profile"     => "Assign Profile to Analysis Task",
-              "set_custom_attribute"    => "Set a Custom Attribute in vCenter",
-              "inherit_parent_tags"     => "Inherit Parent Tags",
-              "remove_tags"             => "Remove Tags",
-              "delete_snapshots_by_age" => "Delete Snapshots by Age",
-              "run_ansible_playbook"    => "Run Ansible Playbook"
+              "create_snapshot"         => N_("Create a Snapshot"),
+              "email"                   => N_("Send an E-mail"),
+              "snmp_trap"               => N_("Send an SNMP Trap"),
+              "tag"                     => N_("Tag"),
+              "reconfigure_memory"      => N_("Reconfigure Memory"),
+              "reconfigure_cpus"        => N_("Reconfigure CPUs"),
+              "custom_automation"       => N_("Invoke a Custom Automation"),
+              "evaluate_alerts"         => N_("Evaluate Alerts"),
+              "assign_scan_profile"     => N_("Assign Profile to Analysis Task"),
+              "set_custom_attribute"    => N_("Set a Custom Attribute in vCenter"),
+              "inherit_parent_tags"     => N_("Inherit Parent Tags"),
+              "remove_tags"             => N_("Remove Tags"),
+              "delete_snapshots_by_age" => N_("Delete Snapshots by Age"),
+              "run_ansible_playbook"    => N_("Run Ansible Playbook")
              )
   end
 
