@@ -122,7 +122,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     end
   end
 
-  def vm_migrate(vm, options = {})
+  def vm_migrate(vm, options = {}, timeout = 30, limit = 100)
     host_id = URI(options[:host]).path.split('/').last
 
     migration_options = {
@@ -131,9 +131,25 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
       }
     }
 
+    started_time = Time.zone.now
     with_version4_vm_service(vm) do |service|
       service.migrate(migration_options)
     end
+
+    finished_event = nil
+    times = 0
+    while finished_event.nil?
+      times += 1
+      sleep timeout
+      finished_event = vm.ems_events.where(:event_type => %w[VM_MIGRATION_FAILED_FROM_TO VM_MIGRATION_DONE])
+                         .find_by(EventStream.arel_table[:timestamp].gt(started_time))
+      if times == limit
+        _log.error("Migration event no received failing the request")
+        raise ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error
+      end
+    end
+
+    raise ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error if finished_event.event_type == "VM_MIGRATION_FAILED_FROM_TO"
   end
 
   def unsupported_migration_options

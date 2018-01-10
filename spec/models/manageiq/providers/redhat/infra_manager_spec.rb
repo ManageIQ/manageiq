@@ -333,4 +333,33 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       end
     end
   end
+
+  context 'vm_migration' do
+    before do
+      @ems = FactoryGirl.create(:ems_redhat)
+      @vm = FactoryGirl.create(:vm_redhat, :ext_management_system => @ems)
+
+      service = double
+      allow(service).to receive(:migrate).with(:host => {:id => "11089411-53a2-4337-8613-7c1d411e8ae8"})
+      allow(@ems).to receive(:with_version4_vm_service).and_return(service)
+    end
+
+    it "succeeds migration" do
+      ems_event = FactoryGirl.create(:ems_event, :event_type => "VM_MIGRATION_DONE", :message => "migration done", :ext_management_system => @ems, :vm => @vm, :timestamp => Time.zone.now + 1)
+      @vm.ems_events << ems_event
+
+      expect { @ems.vm_migrate(@vm, {:host => "/ovirt-engine/api/hosts/11089411-53a2-4337-8613-7c1d411e8ae8"}, 1) }.to_not raise_error
+    end
+
+    it "fails migration" do
+      ems_event = FactoryGirl.create(:ems_event, :event_type => "VM_MIGRATION_FAILED_FROM_TO", :message => "migration failed", :ext_management_system => @ems, :vm => @vm, :timestamp => Time.zone.now + 1)
+      @vm.ems_events << ems_event
+
+      expect { @ems.vm_migrate(@vm, {:host => "/ovirt-engine/api/hosts/11089411-53a2-4337-8613-7c1d411e8ae8"}, 1) }.to raise_error(ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error)
+    end
+
+    it "never receives an event" do
+      expect { @ems.vm_migrate(@vm, {:host => "/ovirt-engine/api/hosts/11089411-53a2-4337-8613-7c1d411e8ae8"}, 1, 2) }.to raise_error(ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error)
+    end
+  end
 end
