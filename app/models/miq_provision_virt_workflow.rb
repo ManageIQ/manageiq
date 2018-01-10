@@ -155,6 +155,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         f[:notes] = vm_description
       when :vlan
         get_field(:vlan)
+        vlan ||= @values[fn].first
         set_value_from_list(fn, f, vlan, allowed_vlans)
       end
     end
