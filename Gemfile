@@ -57,7 +57,7 @@ gem "high_voltage",                   "~>3.0.0"
 gem "htauth",                         "2.0.0",         :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
-gem "linux_admin",                    "~>1.2.0",       :require => false
+gem "linux_admin",                    "~>1.0.1",       :require => false
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"
 gem "more_core_extensions",           "~>3.2"
