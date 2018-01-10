@@ -25,7 +25,6 @@ class MiqAlert < ApplicationRecord
     EmsCluster
     ExtManagementSystem
     MiqServer
-    MiddlewareServer
     ContainerNode
   )
 
