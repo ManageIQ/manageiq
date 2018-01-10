@@ -1,0 +1,26 @@
+---
+yaml_strings_to_extract:
+  db/fixtures/miq_product_features.*:
+  - name
+  - description
+  db/fixtures/miq_report_formats.*:
+  - description
+  db/fixtures/notification_types.*:
+  - message
+  product/charts/layouts/*.yaml:
+  - title
+  product/charts/layouts/*/*.yaml:
+  - title
+  product/compare/*.yaml:
+  - headers
+  - group
+  - menu_name
+  - title
+  product/reports/*/*.*:
+  - headers
+  - menu_name
+  - title
+  product/timelines/miq_reports/*.*:
+  - title
+  - name
+  - headers
