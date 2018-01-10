@@ -892,6 +892,7 @@ en:
       MiqTemplate:              VM Template and Image
       MiqUserRole:              Role
       MiqWidget:                Widget
+      MiqWidgetSet:             Dashboard
       MiqWorker:                EVM Worker
       NetworkPort:              Network Port
       NetworkRouter:            Network Router
