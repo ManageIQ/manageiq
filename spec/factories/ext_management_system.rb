@@ -28,6 +28,12 @@ FactoryGirl.define do
         create_list :storage, evaluator.storage_count, :ext_management_system => ems
       end
     end
+
+    trait :with_invalid_authentication do
+      after(:create) do |x|
+        x.authentications << FactoryGirl.create(:authentication, :status => "invalid")
+      end
+    end
   end
 
   # Intermediate classes
