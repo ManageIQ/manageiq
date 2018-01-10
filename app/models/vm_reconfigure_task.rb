@@ -32,6 +32,7 @@ class VmReconfigureTask < MiqRequestTask
     new_settings << "Total Processors: #{req_obj.options[:number_of_cpus].to_i}" unless req_obj.options[:number_of_cpus].blank?
     new_settings << "Add Disks: #{req_obj.options[:disk_add].length}" unless req_obj.options[:disk_add].blank?
     new_settings << "Remove Disks: #{req_obj.options[:disk_remove].length}" unless req_obj.options[:disk_remove].blank?
+    new_settings << "Resize Disks: #{req_obj.options[:disk_resize].length}" unless req_obj.options[:disk_resize].blank?
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
   end
 
