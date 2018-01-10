@@ -440,8 +440,9 @@
               :vlans: true
             :method: :allowed_vlans
           :description: Network
-          :required: false
+          :required: true
           :display: :edit
+          :default: <Template>
           :data_type: :string
         :mac_address:
           :description: MAC Address
