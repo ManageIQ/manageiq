@@ -304,41 +304,6 @@
   :url: /network_topology
   :rbac_feature_name: network_topology_view
   :startup: true
-- :name: ems_middleware
-  :description: Middleware / Providers
-  :url: /ems_middleware/show_list
-  :rbac_feature_name: ems_middleware_show_list
-  :startup: true
-- :name: middleware_domains
-  :description: Middleware / Domains
-  :url: /middleware_domain/show_list
-  :rbac_feature_name: middleware_domain_show_list
-  :startup: true
-- :name: middleware_servers
-  :description: Middleware / Servers
-  :url: /middleware_server/show_list
-  :rbac_feature_name: middleware_server_show_list
-  :startup: true
-- :name: middleware_deployments
-  :description: Middleware / Deployments
-  :url: /middleware_deployment/show_list
-  :rbac_feature_name: middleware_deployment_show_list
-  :startup: true
-- :name: middleware_datasources
-  :description: Middleware / Datasources
-  :url: /middleware_datasource/show_list
-  :rbac_feature_name: middleware_datasource_show_list
-  :startup: true
-- :name: middleware_messagings
-  :description: Middleware / Messagings
-  :url: /middleware_messaging/show_list
-  :rbac_feature_name: middleware_messaging_show_list
-  :startup: true
-- :name: middleware_topology
-  :description: Middleware / Topology
-  :url: /middleware_topology
-  :rbac_feature_name: middleware_topology_view
-  :startup: true
 - :name: ems_datawarehouse
   :description: Datawarehouse / Providers
   :url: /ems_datawarehouse
