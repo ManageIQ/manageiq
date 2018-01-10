@@ -7,13 +7,17 @@ FactoryGirl.define do
     end
   end
 
-  factory :customization_template_cloud_init do
+  factory :customization_template_cloud_init,
+          :parent => :customization_template,
+          :class  => "CustomizationTemplateCloudInit" do
     after(:build) do |x|
       x.pxe_image_type ||= FactoryGirl.create(:pxe_image_type)
     end
   end
 
-  factory :customization_template_kickstart do
+  factory :customization_template_kickstart,
+          :parent => :customization_template,
+          :class  => "CustomizationTemplateKickstart" do
     sequence(:name)        { |n| "customization_template_kickstart_#{seq_padded_for_sorting(n)}" }
     sequence(:description) { |n| "Customization Template Kickstart #{seq_padded_for_sorting(n)}" }
     after(:build) do |x|
@@ -21,7 +25,9 @@ FactoryGirl.define do
     end
   end
 
-  factory :customization_template_sysprep do
+  factory :customization_template_sysprep,
+          :parent => :customization_template,
+          :class  => "CustomizationTemplateSysprep" do
     sequence(:name)        { |n| "customization_template_syspre_#{seq_padded_for_sorting(n)}" }
     sequence(:description) { |n| "Customization Template Sysprep #{seq_padded_for_sorting(n)}" }
     after(:build) do |x|
