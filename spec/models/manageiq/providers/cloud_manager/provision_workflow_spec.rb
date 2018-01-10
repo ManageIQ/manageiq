@@ -124,6 +124,18 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
                                               :ext_management_system => ems.network_manager)
     end
 
+    context "#allowed_cloud_networks" do
+      it "without a zone", :skip_before do
+        expect(workflow.allowed_cloud_networks.length).to be_zero
+      end
+
+      it "with a zone" do
+        workflow.values[:placement_availability_zone] = [@az1.id, @az1.name]
+        expect(workflow.allowed_cloud_networks.length).to eq(1)
+        expect(workflow.allowed_cloud_networks).to eq(@cn1.id => @cn1.name)
+      end
+    end
+
     context "#allowed_cloud_subnets" do
       it "without a cloud_network", :skip_before do
         expect(workflow.allowed_cloud_subnets.length).to be_zero
