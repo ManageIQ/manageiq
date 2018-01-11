@@ -793,7 +793,6 @@ en:
       ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
       ManageIQ::Providers::InfraManager::Template:                          Template
-      ManageIQ::Providers::MiddlewareManager:                               Middleware Provider
       ManageIQ::Providers::NetworkManager:                                  Network Manager
       ManageIQ::Providers::PhysicalInfraManager:                            Physical Infrastructure Provider 
       ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (OpenStack)
@@ -855,17 +854,9 @@ en:
       ManageIQ::Providers::Vmware::InfraManager::Host:                      Host (Vmware)
       ManageIQ::Providers::Vmware::InfraManager::HostEsx:                   Host (Vmware)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
-      ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap:     Middleware Server (EAP)
-      ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly: Middleware Server (WildFly)
       MeteringContainerImage:   Metering for Image
       MeteringContainerProject: Metering for Project
       MeteringVm:               Metering for VM
-      MiddlewareDatasource:     Middleware Datasource
-      MiddlewareDomain:         Middleware Domain
-      MiddlewareMessaging:      Middleware Messaging
-      MiddlewareDeployment:     Middleware Deployment
-      MiddlewareServer:         Middleware Server
-      MiddlewareServerGroup:    Middleware Server Group
       MiqAction:                Action
       MiqAeClass:               Automate Class
       MiqAeDomain:              Automate Domain
@@ -1003,8 +994,6 @@ en:
       ems_container:               Containers Provider
       ems_containers:              Containers Providers
       ems_datawarehouse:           Datawarehouse Provider
-      ems_middleware:              Middleware Provider
-      ems_middlewares:             Middleware Providers
       ems_object_storage:          Object Storage Manager
       ems_object_storages:         Object Storage Managers
       evm_server:                  EVM Server
@@ -1014,18 +1003,6 @@ en:
       ems_storage:                 Storage Manager
       floating_ips:                Floating IP
       load_balancer:               Load Balancer
-      middleware_server:           Middleware Server
-      middleware_servers:          Middleware Servers
-      middleware_datasource:       Middleware Datasource
-      middleware_datasources:      Middleware Datasources
-      middleware_domain:           Middleware Domain
-      middleware_domains:          Middleware Domains
-      middleware_messaging:        Middleware Messaging
-      middleware_messagings:       Middleware Messagings
-      middleware_deployment:       Middleware Deployment
-      middleware_deployments:      Middleware Deployments
-      middleware_server_group:     Middleware Server Group
-      middleware_server_groups:    Middleware Server Groups
       network_port:                Network Port
       network_router:              Network Router
       evm_owner:                   EVM Owner
