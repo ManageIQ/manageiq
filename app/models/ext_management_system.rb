@@ -30,6 +30,10 @@ class ExtManagementSystem < ApplicationRecord
   belongs_to :provider
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
   has_many :configured_systems, :dependent => :destroy, :foreign_key => "manager_id"
+  has_many :configuration_profiles, :dependent => :destroy, :foreign_key => "manager_id"
+  has_many :configuration_scripts, :dependent => :destroy, :foreign_key => "manager_id"
+  has_many :configuration_script_sources, :dependent => :destroy, :foreign_key => "manager_id"
+  has_many :configuration_script_payloads, :through => :configuration_script_sources
 
   belongs_to :tenant
   has_many :container_deployments, :foreign_key => :deployed_on_ems_id, :inverse_of => :deployed_on_ems
