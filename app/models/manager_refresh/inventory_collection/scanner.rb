@@ -61,6 +61,7 @@ module ManagerRefresh
 
           if targeted? && parent_inventory_collections.blank?
             # We want to track what manager_uuids we should query from a db, for the targeted refresh
+            # TODO(lsmola) this has to track references
             manager_uuid = inventory_object.manager_uuid
             manager_uuids << manager_uuid if manager_uuid
           end
@@ -103,35 +104,46 @@ module ManagerRefresh
         # Storing attributes and their dependencies
         (dependency_attributes[key] ||= Set.new) << value_inventory_collection if value.dependency?
 
-        # For concurrent safe strategies, we want to pre-build the relations using the lazy_link data, so we can fill up
-        # the foreign key in first pass.
-        if [:concurrent_safe, :concurrent_safe_batch].include?(saver_strategy)
-          # TODO(lsmola) manager_ref.size == 1, we can support any size
-          if value_inventory_collection.manager_ref.size == 1 && inventory_object_lazy?(value) &&
-             !value.ems_ref.blank? && value.key.nil? && value.dependency?
-            # Instead of loading the reference from the DB, we'll add the dummy InventoryObject (having only ems_ref and
-            # info from the builder_params) to the correct InventoryCollection. Which will either be found in the DB or
-            # created as a small dummy object. The refresh of the object will then fill the rest of the data, while not
-            # touching the reference.
-
-            # TODO(lsmola) solve the :key, since that requires data from the actual reference. At best our DB should be
-            # designed the way, we don't duplicate the data, but rather get them with a join. (3NF!)
-
-            if value.ems_ref
-              value_inventory_collection.find_or_build(value.ems_ref)
-              value_inventory_collection.skeletal_manager_uuids << value.ems_ref
-            end
-          end
-        end
-
         # Storing a reference in the target inventory_collection, then each IC knows about all the references and can
         # e.g. load all the referenced uuids from a DB
         value_inventory_collection.add_reference(value.reference, :key => value.try(:key))
+
+        skeletal_precreate(value_inventory_collection, value)
 
         if inventory_object_lazy?(value)
           # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
           transitive_dependency_attributes << key if value.transitive_dependency?
         end
+      end
+
+
+      # Instead of loading the reference from the DB, we'll add the skeletal InventoryObject (having manager_ref and
+      # info from the builder_params) to the correct InventoryCollection. Which will either be found in the DB or
+      # created as a skeletal object. The later refresh of the object will then fill the rest of the data, while not
+      # touching the reference.
+      # @param value_inventory_collection [InventoryCollection] Inventory collection of the value
+      # @param value [InventoryObjectLazy] Scanned InventoryObject or lazy link
+      def skeletal_precreate(value_inventory_collection, value)
+        # For concurrent safe strategies, we want to pre-build the relations using the lazy_link data, so we can fill up
+        # the foreign key in first pass.
+        return unless [:concurrent_safe, :concurrent_safe_batch].include?(saver_strategy)
+
+        # To be able to do the skeletal precreate, we need InventoryObjectLazy, that needs to be a dependency
+        return unless inventory_object_lazy?(value) && value.dependency?
+        # TODO(lsmola) solve the :key, since that requires data from the actual reference. At best our DB should be
+        # designed the way, we don't duplicate the data, but rather get them with a join. (3NF!)
+
+        # We can only do skeletal pre-create for primary index reference
+        return unless value.reference.primary?
+
+        return if (full_reference = value.reference.full_reference).blank?
+
+        # TODO(lsmola) we need to do a recursive skeletal precreate
+        # Do a skeletal precreate of InventoryObject in value_inventory_collection, using full reference
+        value_inventory_collection.build(full_reference)
+
+        # TODO(what do I need this for?)
+        value_inventory_collection.skeletal_manager_uuids << value.stringified_reference
       end
     end
   end
