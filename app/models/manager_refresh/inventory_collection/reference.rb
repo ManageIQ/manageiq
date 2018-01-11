@@ -14,6 +14,10 @@ module ManagerRefresh
         @stringified_reference = self.class.build_stringified_reference(full_reference, keys)
       end
 
+      def primary?
+        ref == :manager_ref
+      end
+
       def to_hash
       end
 
