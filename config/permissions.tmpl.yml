@@ -11,6 +11,7 @@
 - :conf
 - :help
 - :inf
+- :mdl
 - :monitor
 - :monitor_alerts
 - :dwh
