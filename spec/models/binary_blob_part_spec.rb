@@ -3,7 +3,7 @@
 describe BinaryBlobPart do
   context "#data= and #data" do
     before(:each) do
-      @part = FactoryGirl.create(:binary_blob_part)
+      @part = FactoryGirl.build(:binary_blob_part)
     end
 
     subject do
