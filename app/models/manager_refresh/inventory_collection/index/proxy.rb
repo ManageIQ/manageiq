@@ -95,7 +95,7 @@ module ManagerRefresh
                                                     :ref => ref, :key => key, :default => default)
         end
 
-        def named_ref(ref)
+        def named_ref(ref = primary_index_ref)
           all_refs[ref]
         end
 
