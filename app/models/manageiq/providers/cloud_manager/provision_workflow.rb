@@ -26,9 +26,18 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   end
 
   def allowed_cloud_networks(_options = {})
+    return {} unless (src_obj = provider_or_tenant_object)
+
     source = load_ar_obj(get_source_vm)
     targets = get_targets_for_source(source, :cloud_filter, CloudNetwork, 'cloud_network_id')
-    allowed_ci(:cloud_network, [:availability_zone], targets.map(&:id))
+
+    if src_obj.all_cloud_networks.nil?
+      return allowed_ci(:cloud_network, [:availability_zone], targets.map(&:id))
+    else
+      src_obj.all_cloud_networks.each_with_object({}) do |cn, hash|
+        hash[cn.id] = cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})"
+      end
+    end
   end
 
   def allowed_guest_access_key_pairs(_options = {})
