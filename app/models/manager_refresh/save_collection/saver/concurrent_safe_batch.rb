@@ -242,15 +242,6 @@ module ManagerRefresh::SaveCollection
         end
       end
 
-      def values_for_database!(all_attribute_keys, attributes)
-        all_attribute_keys.each do |key|
-          if (type = serializable_keys[key])
-            attributes[key] = type.serialize(attributes[key])
-          end
-        end
-        attributes
-      end
-
       def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result)
         # The remote_data_timestamp is adding a WHERE condition to ON CONFLICT UPDATE. As a result, the RETURNING
         # clause is not guaranteed to return all ids of the inserted/updated records in the result. In that case

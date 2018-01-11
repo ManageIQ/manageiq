@@ -72,6 +72,15 @@ module ManagerRefresh::SaveCollection
 
       delegate :build_stringified_reference, :build_stringified_reference_for_record, :to => :inventory_collection
 
+      def values_for_database!(all_attribute_keys, attributes)
+        all_attribute_keys.each do |key|
+          if (type = serializable_keys[key])
+            attributes[key] = type.serialize(attributes[key])
+          end
+        end
+        attributes
+      end
+
       private
 
       attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
