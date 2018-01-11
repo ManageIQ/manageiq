@@ -255,20 +255,6 @@ describe MiqGroup do
       expect { expect { group.destroy }.to raise_error(RuntimeError, /The group has users assigned that do not belong to any other group/) }.to_not change { MiqGroup.count }
     end
 
-    it "fails if the group is the current_user group for any user in the group" do
-      group2 = FactoryGirl.create(:miq_group)
-      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
-      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group)
-      expect { expect { group.destroy }.to raise_error(RuntimeError, /The group is the login group for at least one user in the group/) }.to_not change { MiqGroup.count }
-    end
-
-    it "succeeds if the group is not the current_user group for any user in the group" do
-      group2 = FactoryGirl.create(:miq_group)
-      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
-      FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
-      expect { group.destroy }.not_to raise_error
-    end
-
     it "fails if referenced by a tenant#default_miq_group" do
       expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }
         .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
@@ -536,4 +522,29 @@ describe MiqGroup do
       expect(testgroup1.single_group_users?).to eq(true)
     end
   end
+
+  describe "#reset_current_group_for_users" do
+    it "changes the current_group for users that have the deleted group as the current_group" do
+      testgroup1 = FactoryGirl.create(:miq_group)
+      testgroup2 = FactoryGirl.create(:miq_group)
+      testgroup3 = FactoryGirl.create(:miq_group)
+      user1 = FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup2)
+      user2 = FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup3], :current_group => testgroup3)
+      expect{ testgroup2.destroy }.not_to raise_error
+      expect(User.find_by(:id => user1.id).current_group.id).to eq(testgroup1.id)
+      expect(User.find_by(:id => user2.id).current_group.id).to eq(testgroup3.id)
+    end
+
+    it "should not be called if the user does not have the deleted group as the current_group" do
+      testgroup1 = FactoryGirl.create(:miq_group)
+      testgroup2 = FactoryGirl.create(:miq_group)
+      testgroup3 = FactoryGirl.create(:miq_group)
+      user1 = FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup2)
+      user2 = FactoryGirl.create(:user, :miq_groups => [testgroup3], :current_group => testgroup3)
+      expect{ testgroup1.destroy }.not_to raise_error
+      expect(User.find_by(:id => user1).current_group.id).to eq(testgroup2.id)
+      expect(User.find_by(:id => user2).current_group.id).to eq(testgroup3.id)
+    end
+  end
 end
+
