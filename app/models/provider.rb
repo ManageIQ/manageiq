@@ -34,6 +34,10 @@ class Provider < ApplicationRecord
     parent.name.demodulize
   end
 
+  def self.api_allowed_attributes
+    %w[]
+  end
+
   def image_name
     self.class.short_token.underscore
   end
