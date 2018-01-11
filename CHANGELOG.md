@@ -5,6 +5,75 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 76 ending 2018-01-01
+
+### Added
+- Automate
+  - Add quota mixin for vm_reconfigure_request and vm_migrate_request. [(#16626)](https://github.com/ManageIQ/manageiq/pull/16626)
+- Control
+  - Add rake script to export/import policies and policy profiles [(#15256)](https://github.com/ManageIQ/manageiq/pull/15256)
+- Core
+  - Scale the deployment config to 0 before deleting it [(#16630)](https://github.com/ManageIQ/manageiq/pull/16630)
+- i18n
+  - Add product/compare/.yaml to string extraction [(#16691)](https://github.com/ManageIQ/manageiq/pull/16691)
+  - ActiveRecord extension for pluggable human model names [(#16596)](https://github.com/ManageIQ/manageiq/pull/16596)
+- Providers
+  - Added "Mass Transform" feature [(#16686)](https://github.com/ManageIQ/manageiq/pull/16686)
+  - Procfile.example - add workers needed for embedded ansible [(#16679)](https://github.com/ManageIQ/manageiq/pull/16679)
+  - Add KubeVirt provider [(#16660)](https://github.com/ManageIQ/manageiq/pull/16660)
+  - Add ContainerQuotaScope model save them in save_inventory [(#16655)](https://github.com/ManageIQ/manageiq/pull/16655)
+  - Introduce $vcloud_log that logs into log/vcloud.log [(#16641)](https://github.com/ManageIQ/manageiq/pull/16641)
+  - Changing the key of network device to be both ipv4 + ipv6 [(#16619)](https://github.com/ManageIQ/manageiq/pull/16619)
+- UI
+  - Add method for Vm to get 'My Company'  tags [(#16607)](https://github.com/ManageIQ/manageiq/pull/16607)
+
+### Fixed
+- Authentication
+  - Add raw_connect? method to ExtManagementSystem [(#16636)](https://github.com/ManageIQ/manageiq/pull/16636)
+- Automate
+  - Rescue migration error and update status [(#16705)](https://github.com/ManageIQ/manageiq/pull/16705)
+  - Use UUID to ensure the uniqueness of job template name [(#16672)](https://github.com/ManageIQ/manageiq/pull/16672)
+  - Add container events to pod [(#16583)](https://github.com/ManageIQ/manageiq/pull/16583)
+- Chargeback
+  - Stop cashing fields for ChargebackVm report [(#16683)](https://github.com/ManageIQ/manageiq/pull/16683)
+  - Consider cloud volumes as data storages in chargeback [(#16638)](https://github.com/ManageIQ/manageiq/pull/16638)
+- Control
+  - Add vm_destroy event to MiqEventDefinition. [(#16557)](https://github.com/ManageIQ/manageiq/pull/16557)
+- Core
+  - Send IDs through exec_api_call as a regular param not a block [(#16708)](https://github.com/ManageIQ/manageiq/pull/16708)
+  - Parse models of > 3 namespaces [(#16704)](https://github.com/ManageIQ/manageiq/pull/16704)
+  - Make ContainerLogger respond to #instrument [(#16694)](https://github.com/ManageIQ/manageiq/pull/16694)
+  - Fix email issue in miq_provision_quota_mixin active_provision by_owner method. [(#16693)](https://github.com/ManageIQ/manageiq/pull/16693)
+  - Allow full error log [(#16550)](https://github.com/ManageIQ/manageiq/pull/16550)
+- Providers
+  - Create a task when destroying an ems [(#16669)](https://github.com/ManageIQ/manageiq/pull/16669)
+  - remove satellite6 credential type from embedded ansible space [(#16663)](https://github.com/ManageIQ/manageiq/pull/16663)
+  - Move embedded manager factory object out of shared_example [(#16645)](https://github.com/ManageIQ/manageiq/pull/16645)
+  - Disconnect flag not respected in link_ems_inventory [(#16618)](https://github.com/ManageIQ/manageiq/pull/16618)
+  - Fix missing operations for MW datasource. [(#16611)](https://github.com/ManageIQ/manageiq/pull/16611)
+- Provisioning
+  - Fix allowed_vlans to call preload correctly. [(#16702)](https://github.com/ManageIQ/manageiq/pull/16702)
+  - Hide by default the Middleware tab in UI [(#16698)](https://github.com/ManageIQ/manageiq/pull/16698)
+  - Label has been deprecated and I need PR for day [(#16671)](https://github.com/ManageIQ/manageiq/pull/16671)
+- RBAC
+ - Removed redundant "Monitor" main tab node. [(#16648)](https://github.com/ManageIQ/manageiq/pull/16648)
+- Reporting
+  - Calculate Metering Used Hours only from used metrics in metering reports [(#16677)](https://github.com/ManageIQ/manageiq/pull/16677)
+  - Update translation to resolve ambiguous Provider:Type field [(#16673)](https://github.com/ManageIQ/manageiq/pull/16673)
+  - Add proper translation for manageiq_providers_cloud_manager_vms [(#16666)](https://github.com/ManageIQ/manageiq/pull/16666)
+- UI
+  - Add Compute Infrastructure Hosts filter for ESX 6.5 [(#16703)](https://github.com/ManageIQ/manageiq/pull/16703)
+  - Fixes Custom Button Group model lookup in yaml [(#16664)](https://github.com/ManageIQ/manageiq/pull/16664)
+  - Update user roles to proper access physical infrastructure views [(#16637)](https://github.com/ManageIQ/manageiq/pull/16637)
+
+### Removed
+- i18n
+  - Remove data_type subtree from locale/en.yml [(#16603)](https://github.com/ManageIQ/manageiq/pull/16603)
+- Providers
+  - Removing all middleware performance charts [(#16713)](https://github.com/ManageIQ/manageiq/pull/16713)
+  - Remove middleware reports [(#16712)](https://github.com/ManageIQ/manageiq/pull/16712)
+  - Revert "Enable mwPolicies" [(#16701)](https://github.com/ManageIQ/manageiq/pull/16701)
+
 ## Unreleased as of Sprint 75 ending 2017-12-11
 
 ### Added
