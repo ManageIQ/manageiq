@@ -4,7 +4,7 @@ require 'pathname'
 gem_root = Pathname.new(__dir__).join("..")
 
 if gem_root.join("spec/manageiq").symlink?
-  puts "== SKIPPING update of spec/manageiq because its symlinked =="
+  puts "== SKIPPING update of spec/manageiq because it is symlinked =="
 else
   puts "== Updating manageiq sample app =="
   system("git pull", :chdir => gem_root.join("spec/manageiq"))
