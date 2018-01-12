@@ -328,6 +328,10 @@ class MiqServer < ApplicationRecord
     ::Settings.server.worker_monitor_frequency.to_i_with_method
   end
 
+  def memory_threshold
+    ::Settings.server.memory_threshold.to_i_with_method
+  end
+
   def threshold_exceeded?(name, now = Time.now.utc)
     @thresholds ||= Hash.new(1.day.ago.utc)
     exceeded = now > (@thresholds[name] + send(name))
@@ -348,6 +352,7 @@ class MiqServer < ApplicationRecord
     Benchmark.realtime_block(:log_active_servers)      { log_active_servers }               if threshold_exceeded?(:server_log_frequency, now)
     Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
     Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
+    monitor_myself
   rescue SystemExit
     # TODO: We're rescuing Exception below. WHY? :bomb:
     # A SystemExit would be caught below, so we need to explicitly rescue/raise.
@@ -363,6 +368,22 @@ class MiqServer < ApplicationRecord
       _log.error("#{err.message}, during reconnect!")
     else
       _log.info("Reconnecting to database after error...Successful")
+    end
+  end
+
+  def monitor_myself
+    if memory_usage.to_i > memory_threshold
+      msg = "server(pid: #{pid}, name: #{name}) memory usage [#{memory_usage.to_i}] exceeded limit: [#{memory_threshold}].  Exiting server process."
+      _log.warn(msg)
+
+      notification_options = {
+        :name             => name,
+        :memory_usage     => memory_usage.to_i,
+        :memory_threshold => memory_threshold,
+        :pid              => pid
+      }
+      Notification.create(:type => "evm_server_memory_exceeded", :options => notification_options)
+      shutdown_and_exit(1)
     end
   end
 
