@@ -3,11 +3,13 @@ require_dependency 'embedded_ansible'
 
 describe ContainerEmbeddedAnsible do
   let(:miq_database) { MiqDatabase.first }
+  let(:orchestrator) { double("ContainerOrchestrator") }
 
   before do
     allow(ContainerOrchestrator).to receive(:available?).and_return(true)
     allow(MiqEnvironment::Command).to receive(:is_appliance?).and_return(false)
     allow(Docker).to receive(:validate_version!).and_raise(RuntimeError)
+    allow(ContainerOrchestrator).to receive(:new).and_return(orchestrator)
 
     FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
     MiqDatabase.seed
@@ -27,55 +29,86 @@ describe ContainerEmbeddedAnsible do
   end
 
   describe "#start" do
-    around do |example|
-      ENV["ANSIBLE_ADMIN_PASSWORD"] = "thepassword"
-      example.run
-      ENV.delete("ANSIBLE_ADMIN_PASSWORD")
-    end
+    it "waits for the service to respond" do
+      expect(subject).to receive(:create_ansible_secret)
+      expect(subject).to receive(:create_ansible_service)
+      expect(subject).to receive(:create_ansible_deployment_config)
 
-    it "sets the admin password using the environment variable and waits for the service to respond" do
-      orch = double("ContainerOrchestrator")
-      expect(ContainerOrchestrator).to receive(:new).and_return(orch)
-
-      expect(orch).to receive(:scale).with("ansible", 1)
       expect(subject).to receive(:alive?).and_return(true)
 
       subject.start
-      expect(miq_database.reload.ansible_admin_authentication.password).to eq("thepassword")
     end
   end
 
   describe "#stop" do
-    it "scales the ansible pod to 0 replicas" do
-      orch = double("ContainerOrchestrator")
-      expect(ContainerOrchestrator).to receive(:new).and_return(orch)
-
-      expect(orch).to receive(:scale).with("ansible", 0)
+    it "removes all the previously created objects" do
+      expect(orchestrator).to receive(:delete_deployment_config).with("ansible")
+      expect(orchestrator).to receive(:delete_service).with("ansible")
+      expect(orchestrator).to receive(:delete_secret).with("ansible-secrets")
 
       subject.stop
     end
   end
 
   describe "#api_connection" do
-    around do |example|
-      ENV["ANSIBLE_SERVICE_HOST"] = "192.0.2.1"
-      ENV["ANSIBLE_SERVICE_PORT_HTTP"] = "1234"
-      example.run
-      ENV.delete("ANSIBLE_SERVICE_HOST")
-      ENV.delete("ANSIBLE_SERVICE_PORT_HTTP")
-    end
-
-    it "connects to the ansible service when running in a container" do
+    it "connects to the ansible service" do
       miq_database.set_ansible_admin_authentication(:password => "adminpassword")
 
       expect(AnsibleTowerClient::Connection).to receive(:new).with(
-        :base_url   => "http://192.0.2.1:1234/api/v1",
+        :base_url   => "http://ansible/api/v1",
         :username   => "admin",
         :password   => "adminpassword",
         :verify_ssl => 0
       )
 
       subject.api_connection
+    end
+  end
+
+  describe "#create_ansible_secret (private)" do
+    it "uses the existing values in our database" do
+      miq_database.ansible_secret_key = "secretkey"
+      miq_database.set_ansible_rabbitmq_authentication(:password => "rabbitpass")
+      miq_database.set_ansible_admin_authentication(:password => "12345")
+      miq_database.set_ansible_database_authentication(:password => "dbpassword")
+
+      expected_data = {
+        "secret-key"        => "secretkey",
+        "admin-password"    => "12345",
+        "database-password" => "dbpassword",
+        "rabbit-password"   => "rabbitpass"
+      }
+      expect(orchestrator).to receive(:create_secret).with("ansible-secrets", expected_data)
+      subject.send(:create_ansible_secret)
+    end
+  end
+
+  describe "#container_environment (private)" do
+    let!(:db_user)     { miq_database.set_ansible_database_authentication(:password => "dbpassword").userid }
+    let!(:rabbit_user) { miq_database.set_ansible_rabbitmq_authentication(:password => "rabbitpass").userid }
+
+    around do |example|
+      ENV["POSTGRESQL_SERVICE_HOST"] = "postgres.example.com"
+      example.run
+      ENV.delete("POSTGRESQL_SERVICE_HOST")
+    end
+
+    it "sends RABBITMQ_USER_NAME value from the database" do
+      env_array = subject.send(:container_environment)
+      env_entry = {:name => "RABBITMQ_USER_NAME", :value => rabbit_user}
+      expect(env_array).to include(env_entry)
+    end
+
+    it "sends DATABASE_SERVICE_NAME value from the PG service host" do
+      env_array = subject.send(:container_environment)
+      env_entry = {:name => "DATABASE_SERVICE_NAME", :value => "postgres.example.com"}
+      expect(env_array).to include(env_entry)
+    end
+
+    it "sends POSTGRESQL_USER value from the database" do
+      env_array = subject.send(:container_environment)
+      env_entry = {:name => "POSTGRESQL_USER", :value => db_user}
+      expect(env_array).to include(env_entry)
     end
   end
 end

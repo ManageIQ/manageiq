@@ -71,7 +71,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
   def provider_uri_hash
     if MiqEnvironment::Command.is_container?
-      {:scheme => "https", :host => ENV["ANSIBLE_SERVICE_HOST"], :path => "/api/v1"}
+      {:scheme => "https", :host => ContainerEmbeddedAnsible::ANSIBLE_SERVICE_NAME, :path => "/api/v1"}
     elsif Rails.env.development?
       {:scheme => "http", :host => "localhost", :path => "/api/v1", :port => 54321}
     else

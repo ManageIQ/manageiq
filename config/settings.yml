@@ -106,6 +106,10 @@
     :rabbitmq_image_tag: 3
     :memcached_image_name: memcached
     :memcached_image_tag: alpine
+  :container:
+    :image_name: manageiq/embedded-ansible
+    :image_tag: latest
+    :service_account: miq-privileged
 :ems:
 # provider specific settings are nested here, but they are in the provider repos
 # e.g.:
