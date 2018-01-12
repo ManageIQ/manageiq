@@ -469,6 +469,19 @@ module Rbac
       end
     end
 
+    def multi_regional_filtered_ids(scope, user, miq_group)
+      return nil if user.nil? && miq_group.nil?
+
+      users_in_regions  = User.where(:userid => user.try(:userid)).order(:id)
+      users_in_regions = [nil] if users_in_regions.empty?
+      groups_in_regions = MiqGroup.where(:description => miq_group.try(:description)).order(:id)
+      groups_in_regions = [nil] if groups_in_regions.empty?
+      users_in_regions.zip(groups_in_regions).map do |regional_user, regional_group|
+        u, g, f = get_user_info(regional_user, nil, regional_group, nil)
+        calc_filtered_ids(scope, f, u, g, nil)
+      end.flatten
+    end
+
     ##
     # Main scoping method
     #
@@ -483,7 +496,10 @@ module Rbac
       end
 
       if apply_rbac_directly?(klass)
-        filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, nil)
+        filtered_ids = multi_regional_filtered_ids(scope, user, miq_group)
+        if filtered_ids && filtered_ids.count == 1 && filtered_ids.first.nil?
+          filtered_ids = nil
+        end
         scope_by_ids(scope, filtered_ids)
       elsif apply_rbac_through_association?(klass)
         # if subclasses of MetricRollup or Metric, use the associated

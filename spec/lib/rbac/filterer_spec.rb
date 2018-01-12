@@ -1186,8 +1186,10 @@ describe Rbac::Filterer do
         end
 
         it "works when targets are empty" do
-          results = described_class.search(:class => "Service").first
-          expect(results.length).to eq(5)
+          User.with_user(user) do
+            results = described_class.search(:class => "Service").first
+            expect(results.length).to eq(5)
+          end
         end
       end
     end
