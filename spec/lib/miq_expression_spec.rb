@@ -84,6 +84,13 @@ describe MiqExpression do
       human_form = described_class.value2human('ChargebackVm-storage_allocated_ceph-sas_cost')
       expect(human_form).to eq('Chargeback for Vms : Storage Allocated Ceph Sas Cost')
     end
+
+    let(:cloud_volume_other_type) { './,; {}()*&^%$#@!)(+"\'' }
+
+    it 'transforms column with more special characters' do
+      human_form = described_class.value2human("ChargebackVm-storage_allocated_#{cloud_volume_other_type}_cost")
+      expect(human_form).to eq("Chargeback for Vms : Storage Allocated #{cloud_volume_other_type} Cost")
+    end
   end
 
   describe "#valid?" do

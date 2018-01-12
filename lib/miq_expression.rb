@@ -609,6 +609,11 @@ class MiqExpression
       column_human = if col
                        if col.starts_with?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
                          CustomAttributeMixin.to_human(col)
+                       elsif parsed_field.try(:storage_allocated_field?)
+                         uri_parser = URI::RFC2396_Parser.new
+                         dict_col = "#{parsed_field.model}.#{uri_parser.escape(parsed_field.column, /\./)}"
+                         human_value = Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize)
+                         URI::RFC2396_Parser.new.unescape(human_value.gsub('%2 E', '%2E'))
                        else
                          Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize)
                        end

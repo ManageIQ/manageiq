@@ -153,9 +153,14 @@ describe ChargebackVm do
         context 'with cloud volume types' do
           let!(:cloud_volume_sdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'sdd') }
           let!(:cloud_volume_hdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'hdd') }
+
+          let(:cloud_volume_other_type)   { './,; {}()*&^% $#@!)(+\"\'' }
+          let!(:cloud_volume_other)       { FactoryGirl.create(:cloud_volume_openstack, :volume_type => cloud_volume_other_type) }
+
           let(:state_data) do
             {
               :allocated_disk_types => {
+                cloud_volume_other_type => 5.gigabytes,
                 'sdd' => 3.gigabytes,
                 'hdd' => 1.gigabytes,
               },
@@ -179,6 +184,9 @@ describe ChargebackVm do
 
           it 'charges sub metrics as cloud volume types' do
             skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+
+            expect(subject.send("storage_allocated_#{cloud_volume_other_type}_metric")).to eq(5.gigabytes)
+            expect(subject.send("storage_allocated_#{cloud_volume_other_type}_cost")).to eq(state_data[:allocated_disk_types][cloud_volume_other_type] / 1.gigabytes * count_hourly_rate * hours_in_day)
 
             expect(subject.storage_allocated_sdd_metric).to eq(3.gigabytes)
             expect(subject.storage_allocated_sdd_cost).to eq(state_data[:allocated_disk_types]['sdd'] / 1.gigabytes * count_hourly_rate * hours_in_day)
