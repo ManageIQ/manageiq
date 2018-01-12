@@ -88,19 +88,17 @@ unassigned_company_tag_parent_storage,Un-Tag Parent Datastore Complete,Default,t
 #
 # VM configuration
 #
-vm_create,VM Create Complete,Default,vm_configurational
-# vm_delete,VM Deletion,Default,vm_configurational
-vm_clone,VM Clone Complete,Default,vm_configurational
-vm_clone_start,VM Clone Start,Default,vm_configurational
-# vm_deploy,VM Deployment from Template,Default,vm_configurational
-vm_template,VM Template Create Complete,Default,vm_configurational
 vm_reconfigure,VM Settings Change,Default,vm_configurational
 vm_renamed_event,VM Renamed Event,Default,vm_configurational
-request_vm_destroy,VM Delete (from Disk) Request,Default,vm_configurational
 #
 # VM lifecycle
 #
 vm_destroy,VM Delete (from Disk),Default,vm_process
+request_vm_destroy,VM Delete (from Disk) Request,Default,vm_process
+vm_create,VM Create Complete,Default,vm_process
+# vm_delete,VM Deletion,Default,vm_process
+# vm_deploy,VM Deployment from Template,Default,vm_process
+vm_template,VM Template Create Complete,Default,vm_process
 vm_retired,VM Retired,Default,vm_process
 request_vm_retire,VM Retire Request,Default,vm_process
 vm_retire_warn,VM Retirement Warning,Default,vm_process
@@ -108,6 +106,8 @@ vm_provisioned,VM Provision Complete,Default,vm_process
 #
 # VM operations
 #
+vm_clone,VM Clone Complete,Default,vm_operational
+vm_clone_start,VM Clone Start,Default,vm_operational
 vm_start,VM Power On,Default,vm_operational
 request_vm_start,VM Power On Request,Default,vm_operational
 # vm_shutdown,VM Shutdown,Default,vm_operational
