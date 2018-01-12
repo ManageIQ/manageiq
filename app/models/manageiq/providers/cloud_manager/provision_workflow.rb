@@ -26,8 +26,8 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   end
 
   def allowed_cloud_networks(_options = {})
-    source = load_ar_obj(get_source_vm)
-    targets = get_targets_for_source(source, :cloud_filter, CloudNetwork, 'cloud_network_id')
+    return {} unless (src = provider_or_tenant_object)
+    targets = get_targets_for_source(src, :cloud_filter, CloudNetwork, 'cloud_networks')
     allowed_ci(:cloud_network, [:availability_zone], targets.map(&:id))
   end
 
@@ -95,7 +95,6 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
         hash[cn.id] = cn.name
       end
     else
-      return {} unless load_ar_obj(src[:ems]).cloud_subnets
       load_ar_obj(src[:ems]).cloud_subnets.collect(&:cloud_network).each_with_object({}) do |cn, hash|
         hash[cn.id] = cn.name
       end
