@@ -3,6 +3,7 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
   let(:admin) { FactoryGirl.create(:user_with_group) }
   let(:ems) { FactoryGirl.create(:ems_cloud) }
+  let(:network_manager) { FactoryGirl.create(:ems_network, :parent_ems_id => ems.id) }
   let(:template) { FactoryGirl.create(:miq_template, :name => "template", :ext_management_system => ems) }
   let(:workflow) do
     stub_dialog
@@ -117,7 +118,6 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
       @cs2 = FactoryGirl.create(:cloud_subnet, :cloud_network         => @cn1,
                                                :availability_zone     => @az2,
                                                :ext_management_system => ems.network_manager)
-
       @ip1 = FactoryGirl.create(:floating_ip, :cloud_network_only    => true,
                                               :ext_management_system => ems.network_manager)
       @ip2 = FactoryGirl.create(:floating_ip, :cloud_network_only    => false,
@@ -126,6 +126,8 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
     context "#allowed_cloud_networks" do
       it "without a zone", :skip_before do
+        network_manager
+
         expect(workflow.allowed_cloud_networks.length).to be_zero
       end
 
