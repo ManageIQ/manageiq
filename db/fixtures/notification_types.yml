@@ -104,6 +104,11 @@
   :expires_in: 24.hours
   :level: :warning
   :audience: global
+- :name: evm_server_memory_exceeded
+  :message: 'The server %{name} memory usage %{memory_usage} exceeded limit %{memory_threshold}.  The server process %{pid} exited and will be restarted.'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: superadmin
 - :name: mw_op_success
   :message: 'The operation %{op_name} %{op_arg} on %{mw_server} completed successfully.'
   :expires_in: 24.hours

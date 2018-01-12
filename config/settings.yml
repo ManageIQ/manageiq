@@ -958,6 +958,7 @@
   :heartbeat_frequency: 30.seconds
   :host:
   :listening_port: '443'
+  :memory_threshold: 2.gigabytes
   :mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
   :mks_version: 2.1.0.0
   :monitor_poll: 5.seconds
