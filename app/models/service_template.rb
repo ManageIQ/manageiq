@@ -3,7 +3,7 @@ class ServiceTemplate < ApplicationRecord
 
   GENERIC_ITEM_SUBTYPES = {
     "custom"          => _("Custom"),
-    "vm"              => _("VM"),
+    "vm"              => _("Virtual Machine"),
     "playbook"        => _("Playbook"),
     "hosted_database" => _("Hosted Database"),
     "load_balancer"   => _("Load Balancer"),
@@ -16,12 +16,12 @@ class ServiceTemplate < ApplicationRecord
     "generic"                    => _("Generic"),
     "generic_orchestration"      => _("Orchestration"),
     "generic_ansible_playbook"   => _("Ansible Playbook"),
-    "generic_ansible_tower"      => _("AnsibleTower"),
+    "generic_ansible_tower"      => _("Ansible Tower"),
     "generic_container_template" => _("OpenShift Template"),
     "google"                     => _("Google"),
     "microsoft"                  => _("SCVMM"),
     "openstack"                  => _("OpenStack"),
-    "redhat"                     => _("RHEV"),
+    "redhat"                     => _("Red Hat Virtualization"),
     "vmware"                     => _("VMware")
   }.freeze
 
