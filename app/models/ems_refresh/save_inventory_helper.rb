@@ -187,7 +187,7 @@ module EmsRefresh::SaveInventoryHelper
   end
 
   def hashes_of_target_empty?(hashes, target)
-    hashes.blank? || (hashes[:storages].blank? &&
+    hashes.blank? ||
     case target
     when VmOrTemplate
       hashes[:vms].blank?
@@ -195,6 +195,6 @@ module EmsRefresh::SaveInventoryHelper
       hashes[:hosts].blank?
     when EmsFolder
       hashes[:folders].blank?
-    end)
+    end
   end
 end
