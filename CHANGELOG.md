@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+  - Change get_targets_for_source to use correct params [(#16811)](https://github.com/ManageIQ/manageiq/pull/16811)
+
+
 ## Gaprindashvili-1
 
 ### Added
@@ -226,7 +229,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Physical Infra: Add Topology feature [(#14589)](https://github.com/ManageIQ/manageiq/pull/14589)
   - Refresh Physical Servers [(#16344)](https://github.com/ManageIQ/manageiq/pull/16344)
   - Additions for Amazon tag mapping in graph refresh [(#16734)](https://github.com/ManageIQ/manageiq/pull/16734)
+  - Reconnect host on provider add [(#16767)](https://github.com/ManageIQ/manageiq/pull/16767)
 - Provisioning
+  - Change get_targets_for_source to use correct params [(#16811)](https://github.com/ManageIQ/manageiq/pull/16811)
   - VMware placement to support only Clusters or only Folders. [(#15951)](https://github.com/ManageIQ/manageiq/pull/15951)
 - RBAC
   - Added SUI notifications product feature [(#16107)](https://github.com/ManageIQ/manageiq/pull/16107)
@@ -374,6 +379,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Delete tag assignments when deleting a tag that is referenced in an assignment [(#16039)](https://github.com/ManageIQ/manageiq/pull/16039)
   - Rate selection using union of all tags in reporting(consumption) period [(#15888)](https://github.com/ManageIQ/manageiq/pull/15888)
 - Core
+  - Fix for failure to update service dialog - Couldn't find DialogField without an ID [(#16753)](https://github.com/ManageIQ/manageiq/pull/16753)
+  - Add missing gettext into MiqUserRole [(#16752)](https://github.com/ManageIQ/manageiq/pull/16752)
   - Use USS (unique set size) instead of PSS for all the things [(#16570)](https://github.com/ManageIQ/manageiq/pull/16570)
   - Make ContainerLogger respond to #instrument [(#16694)](https://github.com/ManageIQ/manageiq/pull/16694)
   - Allow full error log [(#16550)](https://github.com/ManageIQ/manageiq/pull/16550)
@@ -414,6 +421,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Events
   - Fix the ems_event add_queue method [(#16187)](https://github.com/ManageIQ/manageiq/pull/16187)
 - i18n
+  - Add missing gettext into MiqAction [(#16766)](https://github.com/ManageIQ/manageiq/pull/16766)
   - Add missing model names into locale/en.yml [(#16604)](https://github.com/ManageIQ/manageiq/pull/16604)
   - Fix string interpolations [(#16468)](https://github.com/ManageIQ/manageiq/pull/16468)
   - Add Middleware Server EAP/Wildfly translation [(#16492)](https://github.com/ManageIQ/manageiq/pull/16492)
@@ -569,6 +577,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Adding hostname format validation [(#16714)](https://github.com/ManageIQ/manageiq/pull/16714)
   - Added get_targets_for_base class methods [(#16707)](https://github.com/ManageIQ/manageiq/pull/16707)
 - Provisioning
+  - Changes cloud network list to follow availability zone rules [(#16688)](https://github.com/ManageIQ/manageiq/pull/16688)
+  - Adding the option to set default vlan [(#16504)](https://github.com/ManageIQ/manageiq/pull/16504)
   - Fix email issue in miq_provision_quota_mixin active_provision by_owner method [(#16693)](https://github.com/ManageIQ/manageiq/pull/16693)
   - Fix allowed_vlans to call preload correctly [(#16702)](https://github.com/ManageIQ/manageiq/pull/16702)
 - RBAC
@@ -616,12 +626,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
   - Return correct resource hrefs [(#14549)](https://github.com/ManageIQ/manageiq/pull/14549)
   - Removing ems_events from config/api.yml [(#14699)](https://github.com/ManageIQ/manageiq/pull/14699)
 - Services
+  - Fix check_quota(:active_provisions) for Service MiqRequest invalid service_template [(#16769)](https://github.com/ManageIQ/manageiq/pull/16769)
   - Change the type name for the catalog Item from 'Container Template' to 'Openshift Template' [(#16639)](https://github.com/ManageIQ/manageiq/pull/16639)
   - ServiceTemplate: add scope for unassigned items. [(#16445)](https://github.com/ManageIQ/manageiq/pull/16445)
 - Smartstate
   - Increase Timeouts and Worker Memory for Azure SSA [(#16016)](https://github.com/ManageIQ/manageiq/pull/16016)
   - Add Heartbeat Thread to SmartProxy Worker [(#16685)](https://github.com/ManageIQ/manageiq/pull/16685)
 - User Interface
+  - Added factories that are need to run spec tests in the BZ fix [(#16794)](https://github.com/ManageIQ/manageiq/pull/16794)
+  - Add MiqWdigetSet to Dashboard dictionary translation [(#16784)](https://github.com/ManageIQ/manageiq/pull/16784)
+  - Update group/role EvmGroup-desktop product features [(#16788)](https://github.com/ManageIQ/manageiq/pull/16788)
+  - Fixed control explorer feature id [(#16780)](https://github.com/ManageIQ/manageiq/pull/16780)
   - Update user roles to proper access physical infrastructure views [(#16637)](https://github.com/ManageIQ/manageiq/pull/16637)
   - Add Compute Infrastructure Hosts filter for ESX 6.5 [(#16703)](https://github.com/ManageIQ/manageiq/pull/16703)
   - Set default values for help menu link target types in settings.yml [(#16549)](https://github.com/ManageIQ/manageiq/pull/16549)
