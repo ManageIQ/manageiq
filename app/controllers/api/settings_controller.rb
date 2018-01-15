@@ -14,6 +14,8 @@ module Api
     private
 
     def whitelist_settings(settings)
+      return settings if super_admin?
+
       result_hash = {}
       ApiConfig.collections[:settings][:categories].each do |category_path|
         result_hash.deep_merge!(settings_entry_to_hash(category_path, entry_value(settings, category_path)))
