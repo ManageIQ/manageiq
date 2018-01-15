@@ -1,4 +1,6 @@
 class BinaryBlobPart < ApplicationRecord
+  validates :data, :presence => true
+
   def self.default_part_size
     @default_part_size ||= 1.megabyte
   end
@@ -18,24 +20,5 @@ class BinaryBlobPart < ApplicationRecord
     iv.chomp!(", ")
     iv.rstrip!
     "#{to_s.chop}#{iv}>"
-  end
-
-  def data
-    val = read_attribute(:data)
-    unless size.nil? || size == val.bytesize
-      raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
-    end
-    unless md5.nil? || md5 == Digest::MD5.hexdigest(val)
-      raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
-    end
-    val
-  end
-
-  def data=(val)
-    raise ArgumentError, "data cannot be set to nil" if val.nil?
-    write_attribute(:data, val)
-    self.md5 = Digest::MD5.hexdigest(val)
-    self.size = val.bytesize
-    self
   end
 end
