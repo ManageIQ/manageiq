@@ -286,6 +286,6 @@ class MiqGroup < ApplicationRecord
   end
 
   def reset_current_group_for_users
-    users.where(:current_group_id => id).each {|u| u.change_current_group(id)}
+    users.where(:current_group_id => id).each { |u| u.change_current_group(id) }
   end
 end

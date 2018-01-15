@@ -207,7 +207,7 @@ class User < ApplicationRecord
     user_groups = miq_group_ids
     user_groups.delete(id)
     self.current_group = MiqGroup.find_by(:id => user_groups.first)
-    self.save!
+    save!
   end
 
   def admin?

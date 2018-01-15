@@ -530,7 +530,7 @@ describe MiqGroup do
       testgroup3 = FactoryGirl.create(:miq_group)
       user1 = FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup2)
       user2 = FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup3], :current_group => testgroup3)
-      expect{ testgroup2.destroy }.not_to raise_error
+      expect { testgroup2.destroy }.not_to raise_error
       expect(User.find_by(:id => user1.id).current_group.id).to eq(testgroup1.id)
       expect(User.find_by(:id => user2.id).current_group.id).to eq(testgroup3.id)
     end
@@ -541,10 +541,9 @@ describe MiqGroup do
       testgroup3 = FactoryGirl.create(:miq_group)
       user1 = FactoryGirl.create(:user, :miq_groups => [testgroup1, testgroup2], :current_group => testgroup2)
       user2 = FactoryGirl.create(:user, :miq_groups => [testgroup3], :current_group => testgroup3)
-      expect{ testgroup1.destroy }.not_to raise_error
+      expect { testgroup1.destroy }.not_to raise_error
       expect(User.find_by(:id => user1).current_group.id).to eq(testgroup2.id)
       expect(User.find_by(:id => user2).current_group.id).to eq(testgroup3.id)
     end
   end
 end
-
