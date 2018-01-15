@@ -206,6 +206,7 @@ class User < ApplicationRecord
   def change_current_group(id)
     user_groups = miq_group_ids
     user_groups.delete(id)
+    raise _("The user's loging group cannot be changed.") if user_groups.empty?
     self.current_group = MiqGroup.find_by(:id => user_groups.first)
     save!
   end
