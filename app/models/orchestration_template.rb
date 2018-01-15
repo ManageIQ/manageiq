@@ -22,6 +22,25 @@ class OrchestrationTemplate < ApplicationRecord
   attr_accessor :remote_proxy
   alias remote_proxy? remote_proxy
 
+  DEPRECATED_TYPES = {
+    'OrchestrationTemplateCfn'   => 'ManageIQ::Providers::Amazon::CloudManager::OrchestrationTemplate',
+    'OrchestrationTemplateHot'   => 'ManageIQ::Providers::Openstack::CloudManager::OrchestrationTemplate',
+    'OrchestrationTemplateVnfd'  => 'ManageIQ::Providers::Openstack::CloudManager::VnfdTemplate',
+    'OrchestrationTemplateAzure' => 'ManageIQ::Providers::Azure::CloudManager::OrchestrationTemplate',
+  }.freeze
+
+  # Temporarily maintain backward compatibility for API users. Should be removed later.
+  def self.new(*args, &block)
+    if (h = args.first).kind_of?(Hash)
+      old_type = h[:type] || h['type']
+      if (new_type = DEPRECATED_TYPES[old_type]).present?
+        _log.warn("#{old_type} has been renamed to #{new_type}")
+        args.unshift(args.shift.except('type').merge(:type => new_type))
+      end
+    end
+    super(*args, &block)
+  end
+
   # available templates for ordering an orchestration service
   def self.available
     where(:draft => false, :orderable => true)
