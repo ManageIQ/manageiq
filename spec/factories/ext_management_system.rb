@@ -129,6 +129,13 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_vmware_with_valid_authentication,
+          :parent => :ems_vmware do
+    after(:create) do |x|
+      x.authentications << FactoryGirl.create(:authentication, :status => "Valid")
+    end
+  end
+
   factory :ems_microsoft,
           :aliases => ["manageiq/providers/microsoft/infra_manager"],
           :class   => "ManageIQ::Providers::Microsoft::InfraManager",
