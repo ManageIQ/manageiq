@@ -82,11 +82,6 @@ module ManagerRefresh
       # the given :arel scope, we will always attempt to create the recod, so we need unique index to avoid duplication
       # of records.
       return unless %i(concurrent_safe concurrent_safe_batch).include?(saver_strategy)
-      # Allow skeletal pre-create only for targeted refresh, full refresh should have all edges connected
-      # TODO(lsmola) actually this is not true, e.g. cloud have several full refreshes, where e.g. storage manager
-      # records can have missing edges to cloud manager records. For this to drop, we need build method to call
-      # assign_attributes, or use everywhere find_or_build(hash).assign_attributes(hash)
-      return unless targeted?
       # Pre-create only for strategies that will be persisting data, i.e. are not saved already
       return if saved?
       # We can only do skeletal pre-create for primary index reference, since that is needed to create DB unique index
