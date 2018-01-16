@@ -1,4 +1,3 @@
 FactoryGirl.define do
-  factory :asset_details do
-  end
+  factory :asset_detail
 end
