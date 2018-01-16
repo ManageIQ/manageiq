@@ -10,8 +10,7 @@ module ManagerRefresh
 
       delegate :each, :size, :to => :data
 
-      delegate :find,
-               :primary_index,
+      delegate :primary_index,
                :build_primary_index_for,
                :build_secondary_indexes_for,
                :named_ref,
@@ -32,7 +31,7 @@ module ManagerRefresh
       end
 
       def <<(inventory_object)
-        unless primary_index.find(inventory_object.manager_uuid)
+        if inventory_object.manager_uuid.present? && !primary_index.find(inventory_object.manager_uuid)
           data << inventory_object
 
           # TODO(lsmola) Maybe we do not need the secondary indexes here?
@@ -54,29 +53,31 @@ module ManagerRefresh
       end
 
       def find_or_build_by(manager_uuid_hash)
-        if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
-          raise "Allowed find_or_build_by keys are #{manager_ref}"
+        find_in_data(manager_uuid_hash) || build(manager_uuid_hash)
+      end
+
+      def find_in_data(hash)
+        hash = enrich_data(hash)
+
+        if manager_ref.any? { |x| !hash.key?(x) }
+          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
         end
 
-        build(manager_uuid_hash)
+        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
+        primary_index.find(uuid)
       end
 
       def build(hash)
-        hash = builder_params.merge(hash)
-
-        # Faster way to build uuid than inventory_object.manager_uuid
-        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
-
-        # Each InventoryObject must be able to build an UUID, return nil if it can't
-        return nil if uuid.blank?
-        # Return existing InventoryObject if we have it
-        return primary_index.find(uuid) if primary_index.find(uuid)
-
         # Build the InventoryObject
-        inventory_object = new_inventory_object(hash)
+        inventory_object = new_inventory_object(enrich_data(hash))
         # Store new InventoryObject and return it
         push(inventory_object)
-        inventory_object
+
+        return inventory_object unless inventory_object.nil?
+
+        # TODO(lsmola) prepare for changing behavior, build will return nil if it can't build or the record is already
+        # there. Maybe we should even make build a private method.
+        find_in_data(enrich_data(hash))
       end
 
       def to_a
@@ -125,6 +126,13 @@ module ManagerRefresh
             end
           end
         end
+      end
+
+      private
+
+      def enrich_data(hash)
+        # This is 25% faster than builder_params.merge(hash)
+        {}.merge!(builder_params).merge!(hash)
       end
     end
   end
