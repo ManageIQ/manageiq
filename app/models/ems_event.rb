@@ -89,7 +89,6 @@ class EmsEvent < EventStream
     process_availability_zone_in_event!(event_hash)
     process_cluster_in_event!(event_hash)
     process_container_entities_in_event!(event_hash)
-    process_middleware_entities_in_event!(event_hash)
 
     # Write the event
     new_event = create_event(event_hash)
@@ -141,17 +140,6 @@ class EmsEvent < EventStream
     [ContainerNode, ContainerGroup, ContainerReplicator].each do |entity|
       process_object_in_event!(entity, event)
     end
-  end
-
-  def self.process_middleware_entities_in_event!(event, _options = {})
-    middleware_type = event[:middleware_type]
-    if middleware_type
-      klass = middleware_type.safe_constantize
-      unless klass.nil?
-        process_object_in_event!(klass, event, :ems_ref_key => :middleware_ref)
-      end
-    end
-    event.except!(:middleware_ref, :middleware_type)
   end
 
   def self.process_availability_zone_in_event!(event, options = {})
@@ -221,7 +209,6 @@ class EmsEvent < EventStream
 
     target_type = "src_vm_or_template"  if target_type == "src_vm"
     target_type = "dest_vm_or_template" if target_type == "dest_vm"
-    target_type = "middleware_server"   if event.event_type == "hawkular_alert"
     target_type = "target"              if event.event_type == "datawarehouse_alert"
 
     event.send(target_type)
