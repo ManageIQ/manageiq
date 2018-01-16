@@ -46,6 +46,7 @@ describe VmdbDatabaseConnection do
     VmdbDatabaseConnection.connection_pool.disconnect!
     locked_latch = Concurrent::Event.new
     continue_latch = Concurrent::Event.new
+    wait_latch     = Concurrent::Event.new
 
     get_lock = Thread.new do
       VmdbDatabaseConnection.connection.transaction do
@@ -57,19 +58,17 @@ describe VmdbDatabaseConnection do
 
     wait_for_lock = Thread.new do
       VmdbDatabaseConnection.connection.transaction do
+        wait_latch.set
         locked_latch.wait # wait until `get_lock` has the lock
         VmdbDatabaseConnection.connection.execute('LOCK users IN EXCLUSIVE MODE')
       end
     end
 
     locked_latch.wait # wait until `get_lock` has the lock
-    # spin until `wait_for_lock` is waiting to acquire the lock
-    loop { break if wait_for_lock.status == "sleep" }
-
-    connections = VmdbDatabaseConnection.all
+    wait_latch.wait   # spin until `wait_for_lock` is waiting to acquire the lock
 
     give_up = 10.seconds.from_now
-    until (blocked_conn = connections.detect(&:blocked_by))
+    until (blocked_conn = VmdbDatabaseConnection.all.detect(&:blocked_by))
       if Time.current > give_up
         continue_latch.set
         get_lock.join
@@ -79,7 +78,7 @@ describe VmdbDatabaseConnection do
       sleep 1
     end
 
-    blocked_by = connections.detect { |conn| conn.spid == blocked_conn.blocked_by }
+    blocked_by = VmdbDatabaseConnection.all.detect { |conn| conn.spid == blocked_conn.blocked_by }
     expect(blocked_by).to be_truthy
     expect(blocked_conn.spid).not_to eq(blocked_by.spid)
 
