@@ -5,10 +5,6 @@ describe ServiceTemplateProvisionRequest do
   let(:admin) { FactoryGirl.create(:user_admin) }
   context "quota methods" do
     context "for cloud and infra providers," do
-      def create_task(user, request)
-        FactoryGirl.create(:service_template_provision_task, :miq_request => request, :miq_request_id => request.id, :type => 'ServiceTemplateProvisionTask', :description => "task", :tenant => user.current_tenant)
-      end
-
       def create_request(user, template, prov_options = {})
         FactoryGirl.create(:service_template_provision_request, :requester   => user,
                                                                 :description => "request",
@@ -19,33 +15,8 @@ describe ServiceTemplateProvisionRequest do
                                                                 :options     => prov_options.merge(:owner_email => user.email))
       end
 
-      def request_queue_entry(request)
-        FactoryGirl.create(:miq_queue,
-                           :state       => MiqQueue::STATE_DEQUEUE,
-                           :instance_id => request.id,
-                           :class_name  => 'ServiceTemplateProvisionRequest',
-                           :method_name => 'create_request_tasks')
-      end
-
-      def task_queue_entry(task)
-        FactoryGirl.create(:miq_queue,
-                           :state          => MiqQueue::STATE_DEQUEUE,
-                           :args           => [{:object_type => "ServiceTemplateProvisionRequest", :object_id => task.id}],
-                           :tracking_label => 'service_template_provision_task',
-                           :class_name     => 'MiqAeEngine',
-                           :method_name    => 'deliver')
-      end
-
-      def create_test_task(user, service_template)
-        request = create_request(user, service_template)
-        create_task(user, request)
-        request
-      end
-
-      def queue(requests)
-        requests.each do |request|
-          request.miq_request_tasks.empty? ? request_queue_entry(request) : task_queue_entry(request.miq_request_tasks.first)
-        end
+      def create_test_request(user, service_template)
+        create_request(user, service_template)
       end
 
       def create_service_bundle(user, items, options = {})
@@ -59,14 +30,14 @@ describe ServiceTemplateProvisionRequest do
 
       shared_examples_for "check_quota" do
         it "check" do
-          load_queue
+          load_requests
           stats = request.check_quota(quota_method)
           expect(stats).to include(counts_hash)
         end
       end
 
       context "infra," do
-        let(:vmware_tasks) do
+        let(:vmware_requests) do
           ems = FactoryGirl.create(:ems_vmware)
           group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
           @vmware_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
@@ -83,11 +54,9 @@ describe ServiceTemplateProvisionRequest do
           requests << build_vmware_service_item
 
           requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
-          create_task(@user, requests.last)
 
           @user = @vmware_user2
           requests << build_vmware_service_item
-          create_task(@user, requests.last)
 
           requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
 
@@ -95,8 +64,8 @@ describe ServiceTemplateProvisionRequest do
           requests
         end
 
-        let(:load_queue) { queue(vmware_tasks) }
-        let(:request) { create_test_task(@vmware_user1, @vmware_template) }
+        let(:load_requests) { vmware_requests }
+        let(:request) { create_test_request(@vmware_user1, @vmware_template) }
         let(:counts_hash) do
           {:count => 6, :memory => 6.gigabytes, :cpu => 16, :storage => 3.gigabytes}
         end
@@ -106,7 +75,7 @@ describe ServiceTemplateProvisionRequest do
           it_behaves_like "check_quota"
 
           it "invalid service_template does not raise error" do
-            requests = load_queue
+            requests = load_requests
             requests.first.update_attributes(:service_template => nil)
             expect { request.check_quota(quota_method) }.not_to raise_error
           end
@@ -125,7 +94,7 @@ describe ServiceTemplateProvisionRequest do
           it_behaves_like "check_quota"
 
           it "fails without requester.email" do
-            load_queue
+            load_requests
             @vmware_user1.update_attributes(:email => nil)
             expect { request.check_quota(quota_method) }.to raise_error(NoMethodError)
           end
@@ -142,7 +111,7 @@ describe ServiceTemplateProvisionRequest do
           @service_request = build_service_template_request("google_service_item", @user, :dialog => {"test" => "dialog"})
         end
 
-        let(:google_tasks) do
+        let(:google_requests) do
           ems = FactoryGirl.create(:ems_google_with_authentication,
                                    :availability_zones => [FactoryGirl.create(:availability_zone_google)])
           group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
@@ -162,11 +131,9 @@ describe ServiceTemplateProvisionRequest do
           requests << build_google_service_item
 
           requests << create_service_bundle(@user, [@google_template], @google_prov_options)
-          create_task(@user, requests.last)
 
           @user = @google_user2
           requests << build_google_service_item
-          create_task(@user, requests.last)
 
           requests << create_service_bundle(@user, [@google_template], @google_prov_options)
 
@@ -174,8 +141,8 @@ describe ServiceTemplateProvisionRequest do
           requests
         end
 
-        let(:load_queue) { queue(google_tasks) }
-        let(:request) { create_test_task(@google_user1, @google_template) }
+        let(:load_requests) { google_requests }
+        let(:request) { create_test_request(@google_user1, @google_template) }
         let(:counts_hash) do
           {:count => 4, :memory => 4096, :cpu => 16, :storage => 40.gigabytes}
         end
