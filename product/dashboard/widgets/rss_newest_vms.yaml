@@ -1,14 +1,14 @@
 description: rss_newest_vms
 title: "EVM: Recently Discovered VMs"
-content_type: rss   
+content_type: report
 options:
   :row_count: 5
 visibility:
   :roles:
   - _ALL_
 user_id:
-resource_name: newest_vms
-resource_type: RssFeed
+resource_name: Recently Discovered VMs
+resource_type: MiqReport
 miq_schedule_options:
   :run_at:
     :interval: 
