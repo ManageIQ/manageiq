@@ -1,4 +1,4 @@
-class AssetDetails < ApplicationRecord
+class AssetDetail < ApplicationRecord
   include NewWithTypeStiMixin
 
   acts_as_miq_taggable
