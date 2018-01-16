@@ -1,0 +1,61 @@
+---
+title: Virtual machines added
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: Vm
+cols:
+- name
+- vendor_display
+- location
+- href_slug
+- ems_created_on
+- description
+include: {}
+col_order:
+- name
+- vendor_display
+- location
+- href_slug
+- ems_created_on
+- description
+headers:
+- Name
+- Vendor Display
+- Location
+- Href Slug
+- Created on Time
+- Description
+conditions:
+order: Descending
+sortby:
+- ems_created_on
+- description
+group:
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+menu_name: Recently Discovered VMs
