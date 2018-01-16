@@ -808,4 +808,23 @@ describe Service do
     @service_c121 = FactoryGirl.create(:service, :service => @service_c12)
     @service_c2   = FactoryGirl.create(:service, :service => @service)
   end
+
+  context "custom actions" do
+    let(:service_template) { FactoryGirl.create(:service_template) }
+    let(:service) { FactoryGirl.create(:service, :service_template => service_template) }
+
+    describe "#custom_actions" do
+      it "get list of custom actions from linked service template" do
+        expect(service_template).to receive(:custom_actions)
+        service.custom_actions
+      end
+    end
+
+    describe "#custom_action_buttons" do
+      it "get list of custom action buttons from linked service template" do
+        expect(service_template).to receive(:custom_action_buttons)
+        service.custom_action_buttons
+      end
+    end
+  end
 end
