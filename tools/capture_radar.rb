@@ -14,7 +14,7 @@ end
 labels = CustomAttribute.where(:name => "com.redhat.component")
 # TODO Need to add project to this here
 # Question - If a container is short lived, will we still be able to find it here?
-labels_containers = labels.each_with_object(Hash.new { |h,k| h[k] = [] }) { |l, h| h[l.value] += l.resource.containers.to_a }
+labels_containers = labels.each_with_object(Hash.new { |h,k| h[k] = [] }) { |l, h| h[l] += l.resource.containers.to_a }
 
 labels_metrics = Hash.new { |h,k| h[k] = [] }
 labels_containers.each do |l, containers|
@@ -25,15 +25,23 @@ end
 
 # labels_metrics.each {|l,m| puts "#{l} => #{m.map(&:resource_id).inspect}"}
 
-max_by_label = Hash.new { |h,k| h[k] = {} }
+labels_maxes = Hash.new { |h,k| h[k] = {} }
 labels_metrics.each do |label, metrics|
   metrics.each do |m|
     hour_ts = m.timestamp.beginning_of_hour
     cpu_cores = m.derived_cpu_total_cores_used
-    
-    max_by_label[label][hour_ts] ||= 0
-    max_by_label[label][hour_ts] = cpu_cores if cpu_cores > max_by_label[label][hour_ts]
+
+    labels_maxes[label][hour_ts] ||= { :cpu_usage_rate_average => 0 }
+    labels_maxes[label][hour_ts][:cpu_usage_rate_average] = cpu_cores if cpu_cores > labels_maxes[label][hour_ts][:cpu_usage_rate_average]
   end
 end
 
-ap max_by_label["jboss-eap-6-eap64-openshift-docker"]
+labels_maxes.each do |label, hours|
+  hours.each do |hour_ts, values|
+    mr = label.metric_rollups.find_or_initialize_by(:timestamp => hour_ts, :capture_interval_name => "hourly")
+    mr.update_attributes(
+      :resource_name          => label.value,
+      :cpu_usage_rate_average => values[:cpu_usage_rate_average]
+    )
+  end
+end
