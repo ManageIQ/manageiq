@@ -45,6 +45,10 @@
 #   When Active Record calls `Bbb.descendants` to construct the `type`
 #   condition, `Ccc` is automatically loaded.
 #
+
+require "active_record"
+require_relative "../manageiq"
+
 class DescendantLoader
   CACHE_VERSION = 2
 
@@ -61,6 +65,13 @@ class DescendantLoader
     io.puts l.map(&:name).sort.join("  ")
     io.puts l.size
     io.puts
+  end
+
+  def self.setup
+    return if @setup_complete
+    ActiveRecord::Base.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
+    ActiveSupport::Dependencies.send(:prepend, DescendantLoader::AsDependenciesClearWithLoader)
+    @setup_complete = true
   end
 
   # Extract class definitions (namely: a list of which scopes it might
@@ -160,7 +171,7 @@ class DescendantLoader
   # RubyParser is slow, so wrap it in a simple mtime-based cache.
   module Cache
     def cache_path
-      Rails.root.join('tmp/cache/sti_loader.yml')
+      ManageIQ.root.join('tmp/cache/sti_loader.yml')
     end
 
     def load_cache
@@ -200,7 +211,7 @@ class DescendantLoader
 
   module Mapper
     def descendants_paths
-      @descendants_paths ||= [Rails.root.join("app/models")]
+      @descendants_paths ||= [ManageIQ.root.join("app/models")]
     end
 
     def class_inheritance_relationships
@@ -267,9 +278,7 @@ class DescendantLoader
   end
 end
 
-ActiveRecord::Base.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
-ActiveSupport::Dependencies.send(:prepend, DescendantLoader::AsDependenciesClearWithLoader)
-ActsAsArModel.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
+DescendantLoader.setup
 
 at_exit do
   DescendantLoader.instance.save_cache!

@@ -1,3 +1,5 @@
+require_relative "extensions/descendant_loader.rb"
+
 class ActsAsArModel
   include Vmdb::Logging
 
@@ -21,7 +23,11 @@ class ActsAsArModel
     superclass == ActsAsArModel ? self : superclass.base_class
   end
 
-  class << self; alias_method :base_model, :base_class; end
+  class << self
+    alias base_model base_class
+
+    prepend DescendantLoader::ArDescendantsWithLoader
+  end
 
   #
   # Column methods
