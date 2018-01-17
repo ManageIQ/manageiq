@@ -129,8 +129,8 @@ describe AsyncDeleteMixin do
 
       should_define_destroy_queue_instance_method
       should_define_destroy_queue_class_method
-      should_queue_destroy_on_instance("orchestrate_destroy")
-      should_queue_destroy_on_class_with_many_ids("orchestrate_destroy")
+      should_queue_destroy_on_instance
+      should_queue_destroy_on_class_with_many_ids
 
       should_define_delete_queue_instance_method
       should_define_delete_queue_class_method
