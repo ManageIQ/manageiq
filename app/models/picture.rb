@@ -1,10 +1,8 @@
 class Picture < ApplicationRecord
-  has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
-
+  validates :content, :presence => true
   validates :extension,
             :presence  => true,
             :inclusion => { :in => %w(png jpg svg), :message => 'must be a png, jpg, or svg' }
-  validates :content, :presence => true
 
   virtual_has_one :image_href, :class_name => "String"
 
@@ -41,30 +39,13 @@ class Picture < ApplicationRecord
     end
   end
 
-  def content
-    binary_blob.try(:binary)
-  end
-
   def content=(value)
-    self.binary_blob ||= BinaryBlob.new
-    self.binary_blob.binary = value
+    value.force_encoding('ASCII-8BIT')
+    super(value).tap { self.md5 = Digest::MD5.hexdigest(value) }
   end
 
   def size
     content.try(:length).to_i
-  end
-
-  def md5
-    self.binary_blob.try(:md5)
-  end
-
-  def extension
-    self.binary_blob.try(:data_type)
-  end
-
-  def extension=(value)
-    self.binary_blob ||= BinaryBlob.new
-    self.binary_blob.data_type = value
   end
 
   def basename

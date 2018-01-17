@@ -1,8 +1,6 @@
 FactoryGirl.define do
   factory :picture do
+    content   'foo'
     extension 'png'
-    after(:build) do |x|
-      x.content = 'foo'
-    end
   end
 end
