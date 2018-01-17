@@ -30,8 +30,6 @@ describe ExtManagementSystem do
       "foreman_provisioning"        => "Foreman Provisioning",
       "gce"                         => "Google Compute Engine",
       "gce_network"                 => "Google Network",
-      "hawkular"                    => "Hawkular",
-      "hawkular_datawarehouse"      => "Hawkular Datawarehouse",
       "kubernetes"                  => "Kubernetes",
       "kubernetes_monitor"          => "Kubernetes Monitor",
       "kubevirt"                    => "KubeVirt",

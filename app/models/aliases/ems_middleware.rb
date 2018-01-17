@@ -1,1 +1,0 @@
-::EmsMiddleware = ::ManageIQ::Providers::MiddlewareManager
