@@ -8,10 +8,8 @@ opts = Trollop.options(ARGV) do
 
   opt :hours, "Hours", :short => "h", :type => :int, :default => 4
   opt :days,  "Days",  :short => "d", :type => :int
+  opt :label, "Label", :short => "l", :type => :string, :default => "com.redhat.component"
 end
-
-puts opts.inspect
-
 Trollop.die :hours, "is required" unless opts[:hours] || opts[:days_given]
 
 Metric
@@ -33,7 +31,7 @@ TIME_RANGE = if opts[:days_given]
                [opts[:hours].hours.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
              end
 
-labels = CustomAttribute.where(:section => ['labels', 'docker_labels'], :resource_type => ['ContainerImage', 'ContainerGroup'], :name => "com.redhat.component")
+labels = CustomAttribute.where(:section => ['labels', 'docker_labels'], :resource_type => ['ContainerImage', 'ContainerGroup'], :name => opts[:label])
 
 # Question - If a container is short lived, will we still be able to find it here?
 labels_containers = labels.each_with_object(Hash.new { |h,k| h[k] = [] }) { |l, h| h[l] += l.resource.containers.to_a }
@@ -60,7 +58,7 @@ labels_metrics.each do |label_project, metrics|
   end
 end
 
-# Store the max CUP cores values in metric_rollups
+# Store the max CPU cores values in metric_rollups
 labels_maxes.each do |label_project, hours|
   label, project = label_project
   hours.each do |hour_ts, values|
