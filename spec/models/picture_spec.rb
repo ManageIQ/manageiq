@@ -40,37 +40,6 @@ describe Picture do
       subject.extension = "svg"
       expect(subject.valid?).to be_truthy
     end
-
-    it "on new record" do
-      ext = "png"
-      subject.extension = ext.dup
-      expect(subject.extension).to eq(ext)
-
-      subject.save
-
-      p = described_class.first
-      expect(p.extension).to eq(ext)
-
-      subject.reload
-      expect(subject.extension).to eq(ext)
-    end
-
-    it "on existing record" do
-      subject.save
-      subject.reload
-
-      ext = "jpg"
-      subject.extension = ext.dup
-      expect(subject.extension).to eq(ext)
-
-      subject.save
-
-      p = described_class.first
-      expect(p.extension).to eq(ext)
-
-      subject.reload
-      expect(subject.extension).to eq(ext)
-    end
   end
 
   it "#size" do
