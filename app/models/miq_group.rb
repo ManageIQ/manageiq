@@ -22,6 +22,7 @@ class MiqGroup < ApplicationRecord
   validates :description, :presence => true, :unique_within_region => true
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
+  after_destroy :reset_current_group_for_users
 
   # For REST API compatibility only; Don't use otherwise!
   accepts_nested_attributes_for :entitlement
@@ -278,5 +279,9 @@ class MiqGroup < ApplicationRecord
     raise _("The group has users assigned that do not belong to any other group") if single_group_users?
     raise _("A tenant default group can not be deleted") if tenant_group? && referenced_by_tenant?
     raise _("A read only group cannot be deleted.") if system_group?
+  end
+
+  def reset_current_group_for_users
+    User.where(:id => user_ids, :current_group_id => id).each(&:change_current_group)
   end
 end
