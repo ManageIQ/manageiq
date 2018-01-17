@@ -38,6 +38,7 @@ labels = CustomAttribute.where(:section => ['labels', 'docker_labels'], :resourc
 # Question - If a container is short lived, will we still be able to find it here?
 labels_containers = labels.each_with_object(Hash.new { |h,k| h[k] = [] }) { |l, h| h[l] += l.resource.containers.to_a }
 
+# Group metrics by label/project
 labels_metrics = Hash.new { |h,k| h[k] = [] }
 labels_containers.each do |l, containers|
   containers.each do |c|
@@ -45,17 +46,21 @@ labels_containers.each do |l, containers|
   end
 end
 
+# Calculate the max total (of all containers running with the same label/project) CPU cores for each hour of metrics
 labels_maxes = Hash.new { |h,k| h[k] = {} }
 labels_metrics.each do |label_project, metrics|
-  metrics.each do |m|
-    hour_ts = m.timestamp.beginning_of_hour
-    cpu_cores = m.derived_cpu_total_cores_used
+  # Group the metrics for this label/project by timestamp so that we can determine the sum of CPU cores usage for
+  # each 20 interval and use that for comparing the max usages for the hour
+  metrics.group_by { |m| m.timestamp }.each do |ts, metrics|
+    hour_ts = ts.beginning_of_hour
+    cpu_cores = metrics.map { |m| m.derived_cpu_total_cores_used }.sum
 
     labels_maxes[label_project][hour_ts] ||= { :cpu_usage_rate_average => 0 }
     labels_maxes[label_project][hour_ts][:cpu_usage_rate_average] = cpu_cores if cpu_cores > labels_maxes[label_project][hour_ts][:cpu_usage_rate_average]
   end
 end
 
+# Store the max CUP cores values in metric_rollups
 labels_maxes.each do |label_project, hours|
   label, project = label_project
   hours.each do |hour_ts, values|
