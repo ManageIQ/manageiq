@@ -66,10 +66,14 @@ module ManagerRefresh::SaveCollection
 
         _log.debug("Processing #{inventory_collection} of size #{inventory_collection.size}...")
 
-        update_or_destroy_records!(batch_iterator(association), inventory_objects_index, attributes_index, all_attribute_keys)
+        unless inventory_collection.create_only?
+          update_or_destroy_records!(batch_iterator(association), inventory_objects_index, attributes_index, all_attribute_keys)
+        end
 
-        unless inventory_collection.custom_reconnect_block.nil?
-          inventory_collection.custom_reconnect_block.call(inventory_collection, inventory_objects_index, attributes_index)
+        unless inventory_collection.create_only?
+          unless inventory_collection.custom_reconnect_block.nil?
+            inventory_collection.custom_reconnect_block.call(inventory_collection, inventory_objects_index, attributes_index)
+          end
         end
 
         all_attribute_keys << :type if supports_sti?

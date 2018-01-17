@@ -73,7 +73,7 @@ module ManagerRefresh
     attr_accessor :parent_inventory_collections
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
-                :internal_attributes, :delete_method, :dependency_attributes, :manager_ref,
+                :internal_attributes, :delete_method, :dependency_attributes, :manager_ref, :create_only,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :check_changed, :arel,
                 :inventory_object_attributes, :name, :saver_strategy, :manager_uuids, :builder_params,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
@@ -367,7 +367,7 @@ module ManagerRefresh
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil,
                    custom_save_block: nil, delete_method: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   check_changed: nil, arel: nil, builder_params: {},
+                   check_changed: nil, arel: nil, builder_params: {}, create_only: nil,
                    inventory_object_attributes: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
                    targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil,
@@ -387,6 +387,7 @@ module ManagerRefresh
       @internal_attributes    = %i(__feedback_edge_set_parent __parent_inventory_collections)
       @complete               = complete.nil? ? true : complete
       @update_only            = update_only.nil? ? false : update_only
+      @create_only            = create_only.nil? ? false : create_only
       @builder_params         = builder_params
       @name                   = name || association || model_class.to_s.demodulize.tableize
       @saver_strategy         = process_saver_strategy(saver_strategy)
@@ -487,6 +488,10 @@ module ManagerRefresh
 
     def create_allowed?
       !update_only?
+    end
+
+    def create_only?
+      create_only
     end
 
     def saved?
