@@ -13,7 +13,7 @@ end
 
 TIME_RANGE = [(Time.now - 3.month).beginning_of_hour..Time.now.beginning_of_hour]
 
-labels = CustomAttribute.where(:name => "com.redhat.component")
+labels = CustomAttribute.where(:section => ['labels', 'docker_labels'], :resource_type => ['ContainerImage', 'ContainerGroup'], :name => "com.redhat.component")
 
 # Question - If a container is short lived, will we still be able to find it here?
 labels_containers = labels.each_with_object(Hash.new { |h,k| h[k] = [] }) { |l, h| h[l] += l.resource.containers.to_a }
