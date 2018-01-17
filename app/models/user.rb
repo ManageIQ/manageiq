@@ -203,6 +203,14 @@ class User < ApplicationRecord
     self.current_group = groups.first if current_group.nil? || !groups.include?(current_group)
   end
 
+  def change_current_group
+    user_groups = miq_group_ids
+    user_groups.delete(current_group_id)
+    raise _("The user's current group cannot be changed because the user does not belong to any other group") if user_groups.empty?
+    self.current_group = MiqGroup.find_by(:id => user_groups.first)
+    save!
+  end
+
   def admin?
     self.class.admin?(userid)
   end

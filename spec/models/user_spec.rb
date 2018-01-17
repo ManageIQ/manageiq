@@ -547,6 +547,23 @@ describe User do
     end
   end
 
+  describe "#change_current_group" do
+    let(:group1) { FactoryGirl.create(:miq_group) }
+    let(:group2) { FactoryGirl.create(:miq_group) }
+
+    it "changes the user to a group other than the current one" do
+      user = FactoryGirl.create(:user, :miq_groups => [group1, group2], :current_group => group1)
+      user.change_current_group
+      expect(user.current_group).to eq(group2)
+    end
+
+    it "raises an error if there is no group other than the current one to switch to" do
+      user = FactoryGirl.create(:user, :miq_groups => [group1], :current_group => group1)
+      expect { user.change_current_group }
+        .to raise_error(RuntimeError, /The user's current group cannot be changed because the user does not belong to any other group/)
+    end
+  end
+
   context ".super_admin" do
     it "has super_admin" do
       FactoryGirl.create(:miq_group, :role => "super_administrator")
