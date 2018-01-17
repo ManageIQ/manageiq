@@ -403,71 +403,67 @@ describe ExtManagementSystem do
       expect(ExtManagementSystem.count).to eq(0)
     end
 
-    it "does not destroy an ems with active workers" do
+    it "destroys an ems with active workers" do
       ems = FactoryGirl.create(:ext_management_system)
-      FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
+      worker = FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
       ems.destroy
-      expect(ExtManagementSystem.count).to eq(1)
+      expect(ExtManagementSystem.count).to eq(0)
+      expect(worker.class.exists?(worker.id)).to be_falsy
     end
   end
 
-  context "#queue_destroy" do
+  context ".destroy_queue" do
+    let(:ems)    { FactoryGirl.create(:ext_management_system, :zone => zone) }
+    let(:ems2)   { FactoryGirl.create(:ext_management_system, :zone => zone) }
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:zone)   { server.zone }
 
-    context "with no child managers" do
-      let(:ems) do
-        FactoryGirl.create(:ext_management_system, :zone => zone)
-      end
+    it "queues up destroy" do
+      described_class.destroy_queue([ems.id, ems2.id])
 
-      it "returns a task" do
-        task_id = ems.destroy_queue
+      expect(MiqQueue.count).to eq(2)
+      expect(MiqQueue.pluck(:instance_id)).to match_array([ems.id, ems2.id])
+    end
+  end
 
-        deliver_queue_message
+  context "#destroy_queue" do
+    let(:ems)    { FactoryGirl.create(:ext_management_system, :zone => zone) }
+    let(:server) { EvmSpecHelper.local_miq_server }
+    let(:zone)   { server.zone }
 
-        task = MiqTask.find(task_id)
-        expect(task.state).to  eq("Finished")
-        expect(task.status).to eq("Ok")
-      end
+    it "returns a task" do
+      task_id = ems.destroy_queue
 
-      it "re-schedules with active workers" do
-        FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
-        ems.destroy_queue
+      deliver_queue_message
 
-        expect(MiqQueue.count).to eq(1)
-
-        deliver_queue_message
-
-        expect(MiqQueue.count).to eq(1)
-        expect(MiqQueue.last.deliver_on).to_not be_nil
-      end
-
-      it "destroys the ems when the active worker shuts down" do
-        refresh_worker = FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
-        ems.destroy_queue
-
-        deliver_queue_message
-
-        expect(ExtManagementSystem.count).to eq(1)
-
-        refresh_worker.destroy
-
-        deliver_queue_message
-
-        expect(ExtManagementSystem.count).to eq(0)
-      end
+      expect(MiqTask.find(task_id)).to have_attributes(
+        :state  => "Finished",
+        :status => "Ok",
+      )
     end
 
-    context "with child managers" do
-      let(:child_manager) { FactoryGirl.create(:ext_management_system) }
-      let(:ems)           { FactoryGirl.create(:ext_management_system, :zone => zone, :child_managers => [child_manager]) }
+    it "destroys the ems when no active worker exists" do
+      ems.destroy_queue
 
-      it "queues up destroy for child_managers" do
-        described_class.destroy_queue(ems.id)
+      expect(MiqQueue.count).to eq(1)
 
-        expect(MiqQueue.count).to eq(2)
-        expect(MiqQueue.pluck(:instance_id)).to include(ems.id, child_manager.id)
-      end
+      deliver_queue_message
+
+      expect(MiqQueue.count).to eq(0)
+      expect(ExtManagementSystem.count).to eq(0)
+    end
+
+    it "destroys the ems when active worker exists" do
+      FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
+      ems.destroy_queue
+
+      expect(MiqQueue.count).to eq(1)
+
+      deliver_queue_message
+
+      expect(MiqQueue.count).to eq(0)
+      expect(ExtManagementSystem.count).to eq(0)
+      expect(MiqWorker.count).to eq(0)
     end
 
     def deliver_queue_message(queue_message = MiqQueue.order(:id).first)

@@ -6,7 +6,7 @@ class ManageIQ::Providers::EmbeddedAnsible::Provider < ::Provider
   has_one :automation_manager,
           :foreign_key => "provider_id",
           :class_name  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
-          :dependent   => :destroy,
+          :dependent   => :destroy, # to be removed after ansible_tower side code is updated
           :autosave    => true
 
   def self.raw_connect(base_url, username, password, verify_ssl)
