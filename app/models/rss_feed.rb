@@ -82,6 +82,10 @@ class RssFeed < ApplicationRecord
     Tag.where("name like '/managed/roles/%'").pluck(:name).collect { |n| n.split("/").last }
   end
 
+  def self.display_name(number = 1)
+    n_('RSS Feed', 'RSS Feeds', number)
+  end
+
   private
 
   def self.eval_item_attr(script, rec)

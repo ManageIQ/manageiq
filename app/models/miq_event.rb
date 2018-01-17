@@ -176,4 +176,8 @@ class MiqEvent < EventStream
     source_event_id = full_data.fetch_path(:source_event_id)
     @source_event = EventStream.find_by(:id => source_event_id) if source_event_id
   end
+
+  def self.display_name(number = 1)
+    n_('Event', 'Events', number)
+  end
 end

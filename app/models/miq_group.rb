@@ -267,6 +267,10 @@ class MiqGroup < ApplicationRecord
     end
   end
 
+  def self.display_name(number = 1)
+    n_('Group', 'Groups', number)
+  end
+
   private
 
   # if this tenant is changing, make sure this is not a default group

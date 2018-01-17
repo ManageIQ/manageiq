@@ -441,4 +441,8 @@ class MiqSchedule < ApplicationRecord
     return "" if zone.nil?
     zone.name
   end
+
+  def self.display_name(number = 1)
+    n_('Schedule', 'Schedules', number)
+  end
 end # class MiqSchedule

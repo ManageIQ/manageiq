@@ -354,6 +354,10 @@ class MiqTask < ApplicationRecord
     end
   end
 
+  def self.display_name(number = 1)
+    n_('Task', 'Tasks', number)
+  end
+
   private
 
   def initialize_attributes

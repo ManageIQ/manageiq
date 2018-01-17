@@ -6,4 +6,8 @@ class AuthenticationLdap < Authentication
     end
     super(hash)
   end
+
+  def self.display_name(number = 1)
+    n_('Authentication (LDAP)', 'Authentications (LDAP)', number)
+  end
 end

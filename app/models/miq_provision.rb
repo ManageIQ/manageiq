@@ -96,4 +96,8 @@ class MiqProvision < MiqProvisionTask
                                                     :name    => prov_obj.vm_template.name,
                                                     :vm_name => vm_name}
   end
+
+  def self.display_name(number = 1)
+    n_('Provision', 'Provisions', number)
+  end
 end

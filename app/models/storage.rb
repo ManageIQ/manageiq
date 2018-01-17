@@ -848,4 +848,8 @@ class Storage < ApplicationRecord
   def self.supports?(store_type)
     Storage::SUPPORTED_STORAGE_TYPES.include?(store_type)
   end
+
+  def self.display_name(number = 1)
+    n_('Datastore', 'Datastores', number)
+  end
 end

@@ -633,5 +633,10 @@ class MiqWorker < ApplicationRecord
     delta = worker_settings[:nice_delta]
     delta.kind_of?(Integer) ? delta.to_s : "+10"
   end
+
+  def self.display_name(number = 1)
+    n_('Worker', 'Workers', number)
+  end
+
   private_class_method :nice_increment
 end

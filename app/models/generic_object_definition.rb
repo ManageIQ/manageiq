@@ -147,6 +147,10 @@ class GenericObjectDefinition < ApplicationRecord
     CustomButton.buttons_for("GenericObject")
   end
 
+  def self.display_name(number = 1)
+    n_('Generic Object Class', 'Generic Object Classes', number)
+  end
+
   private
 
   def get_objects_of_association(attr, values)

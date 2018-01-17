@@ -197,4 +197,8 @@ class PxeServer < ApplicationRecord
     end
     _log.info("#{log_message}...Complete")
   end
+
+  def self.display_name(number = 1)
+    n_('PXE Server', 'PXE Servers', number)
+  end
 end

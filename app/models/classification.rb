@@ -466,6 +466,10 @@ class Classification < ApplicationRecord
     name.downcase.tr('^a-z0-9_:', '_')[0, NAME_MAX_LENGTH]
   end
 
+  def self.display_name(number = 1)
+    n_('Category', 'Categories', number)
+  end
+
   private
 
   def self.add_entries_from_hash(cat, entries)

@@ -7,4 +7,8 @@ class ServiceTemplateCatalog < ApplicationRecord
   has_many  :service_templates, :dependent => :nullify
 
   acts_as_miq_taggable
+
+  def self.display_name(number = 1)
+    n_('Catalog', 'Catalogs', number)
+  end
 end

@@ -615,4 +615,8 @@ class MiqServer < ApplicationRecord
   def miq_region
     ::MiqRegion.my_region
   end
+
+  def self.display_name(number = 1)
+    n_('Server', 'Servers', number)
+  end
 end # class MiqServer

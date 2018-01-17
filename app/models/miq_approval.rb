@@ -46,6 +46,10 @@ class MiqApproval < ApplicationRecord
     false
   end
 
+  def self.display_name(number = 1)
+    n_('Approval', 'Approvals', number)
+  end
+
   private
 
   def execute_approval(user)

@@ -24,4 +24,8 @@ class MeteringContainerImage < ChargebackContainerImage
   def self.build_results_for_report_MeteringContainerImage(options)
     build_results_for_report_ChargebackContainerImage(options)
   end
+
+  def self.display_name(number = 1)
+    n_('Metering for Image', 'Metering for Images', number)
+  end
 end

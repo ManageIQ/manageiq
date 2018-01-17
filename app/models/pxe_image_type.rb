@@ -30,4 +30,8 @@ class PxeImageType < ApplicationRecord
   def esx?
     name.to_s.downcase == 'esx'
   end
+
+  def self.display_name(number = 1)
+    n_('Image Type', 'Image Types', number)
+  end
 end

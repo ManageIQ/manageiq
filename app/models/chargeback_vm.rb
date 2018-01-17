@@ -188,6 +188,10 @@ class ChargebackVm < Chargeback
       end
   end
 
+  def self.display_name(number = 1)
+    n_('Chargeback for VMs', 'Chargebacks for VMs', number)
+  end
+
   private
 
   def init_extra_fields(consumption, region)

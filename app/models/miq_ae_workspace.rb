@@ -23,6 +23,10 @@ class MiqAeWorkspace < ApplicationRecord
     end
   end
 
+  def self.display_name(number = 1)
+    n_('Automation Workspace', 'Automation Workspaces', number)
+  end
+
   def self.workspace_from_token(token)
     ws = MiqAeWorkspace.find_by(:guid => token)
     raise MiqAeException::WorkspaceNotFound, "Workspace Not Found for token=[#{token}]" if ws.nil?

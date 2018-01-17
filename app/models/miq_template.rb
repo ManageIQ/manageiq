@@ -37,4 +37,8 @@ class MiqTemplate < VmOrTemplate
   end
 
   def active?; false; end
+
+  def self.display_name(number = 1)
+    n_('Template and Image', 'Templates and Images', number)
+  end
 end

@@ -33,4 +33,8 @@ class MiqAlertStatusAction < ApplicationRecord
   def update_status_assignee
     miq_alert_status.update_attributes!(:assignee => assignee) if %w(assign unassign).include?(action_type)
   end
+
+  def self.display_name(number = 1)
+    n_('Alert Status Action', 'Alert Status Actions', number)
+  end
 end

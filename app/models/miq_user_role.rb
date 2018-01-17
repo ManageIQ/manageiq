@@ -119,4 +119,8 @@ class MiqUserRole < ApplicationRecord
   def self.default_tenant_role
     find_by(:name => DEFAULT_TENANT_ROLE_NAME)
   end
+
+  def self.display_name(number = 1)
+    n_('Role', 'Roles', number)
+  end
 end

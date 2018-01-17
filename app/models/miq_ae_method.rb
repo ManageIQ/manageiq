@@ -128,4 +128,8 @@ class MiqAeMethod < ApplicationRecord
     ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(name)
     ::MiqAeMethod.where(ae_method_filter).where(:class_id => class_id).first
   end
+
+  def self.display_name(number = 1)
+    n_('Automate Method', 'Automate Methods', number)
+  end
 end

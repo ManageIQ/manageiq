@@ -118,6 +118,10 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
      :message   => _("%{message} is not available for %{name}.") % {:message => message_prefix, :name => name}}
   end
 
+  def self.display_name(number = 1)
+    n_('Image', 'Images', number)
+  end
+
   private
 
   def raise_created_event

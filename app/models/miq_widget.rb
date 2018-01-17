@@ -576,6 +576,10 @@ class MiqWidget < ApplicationRecord
     options.fetch(:timezone_matters, true)
   end
 
+  def self.display_name(number = 1)
+    n_('Widget', 'Widgets', number)
+  end
+
   private
 
   def content_generator

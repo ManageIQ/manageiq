@@ -233,6 +233,10 @@ class MiqReport < ApplicationRecord
     headers[column_index]
   end
 
+  def self.display_name(number = 1)
+    n_('Report', 'Reports', number)
+  end
+
   private
 
   def va_sql_cols

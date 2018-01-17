@@ -23,4 +23,8 @@ class FloatingIp < ApplicationRecord
     # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
     ext_management_system && ext_management_system.class::FloatingIp
   end
+
+  def self.display_name(number = 1)
+    n_('Floating IP', 'Floating IPs', number)
+  end
 end

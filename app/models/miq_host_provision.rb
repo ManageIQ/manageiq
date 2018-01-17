@@ -42,4 +42,8 @@ class MiqHostProvision < MiqRequestTask
   end
 
   delegate :name, :to => :host, :prefix => true
+
+  def self.display_name(number = 1)
+    n_('Host Provision', 'Host Provisions', number)
+  end
 end

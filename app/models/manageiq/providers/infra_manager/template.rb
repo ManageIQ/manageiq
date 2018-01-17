@@ -8,6 +8,10 @@ class ManageIQ::Providers::InfraManager::Template < MiqTemplate
                             ManageIQ::Providers::Kubevirt::InfraManager::Template))
   end
 
+  def self.display_name(number = 1)
+    n_('Template', 'Templates', number)
+  end
+
   private
 
   def raise_created_event

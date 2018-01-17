@@ -345,6 +345,10 @@ class MiqReportResult < ApplicationRecord
             miq_report_results.miq_report_id")
   end
 
+  def self.display_name(number = 1)
+    n_('Report Result', 'Report Results', number)
+  end
+
   private
 
   def user_timezone

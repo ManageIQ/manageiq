@@ -87,4 +87,8 @@ module ManageIQ::Providers
       "#{parent_manager.try(:name)} Network Manager"
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Network Manager', 'Network Managers', number)
+  end
 end

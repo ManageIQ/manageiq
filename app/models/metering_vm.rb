@@ -27,4 +27,8 @@ class MeteringVm < ChargebackVm
   def self.build_results_for_report_MeteringVm(options)
     build_results_for_report_ChargebackVm(options)
   end
+
+  def self.display_name(number = 1)
+    n_('Metering for VM', 'Metering for VMs', number)
+  end
 end

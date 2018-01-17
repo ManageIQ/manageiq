@@ -85,4 +85,8 @@ class MiqRetireTask < MiqRequestTask
       end
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Retire Task', 'Retire Tasks', number)
+  end
 end

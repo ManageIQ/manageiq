@@ -269,4 +269,8 @@ class VimPerformanceTrend < ActsAsArModel
 
     title
   end
+
+  def self.display_name(number = 1)
+    n_('Performance Trend', 'Performance Trends', number)
+  end
 end

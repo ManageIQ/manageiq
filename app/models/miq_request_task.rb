@@ -202,6 +202,10 @@ class MiqRequestTask < ApplicationRecord
     end
   end
 
+  def self.display_name(number = 1)
+    n_('Request Task', 'Request Tasks', number)
+  end
+
   private
 
   def validate_request_type

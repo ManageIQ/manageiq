@@ -986,6 +986,10 @@ class MiqAction < ApplicationRecord
     FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
 
+  def self.display_name(number = 1)
+    n_('Action', 'Actions', number)
+  end
+
   private
 
   def invoke_or_queue(
