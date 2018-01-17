@@ -1,3 +1,19 @@
+#!/usr/bin/env ruby
+require File.expand_path("../config/environment", __dir__)
+require 'trollop'
+
+opts = Trollop.options(ARGV) do
+  banner "USAGE:   #{__FILE__} -h <number of hours back to query metrics>\n" \
+         "Example: #{__FILE__} -d <number of days back to query metrics>"
+
+  opt :hours, "Hours", :short => "h", :type => :int, :default => 4
+  opt :days,  "Days",  :short => "d", :type => :int
+end
+
+puts opts.inspect
+
+Trollop.die :hours, "is required" unless opts[:hours] || opts[:days_given]
+
 Metric
 class Metric
   def derived_cpu_total_cores_used
@@ -11,7 +27,11 @@ class CustomAttribute
   has_many   :metric_rollups, :as => :resource
 end
 
-TIME_RANGE = [(Time.now - 3.month).beginning_of_hour..Time.now.beginning_of_hour]
+TIME_RANGE = if opts[:days_given]
+               [opts[:days].days.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
+             else
+               [opts[:hours].hours.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
+             end
 
 labels = CustomAttribute.where(:section => ['labels', 'docker_labels'], :resource_type => ['ContainerImage', 'ContainerGroup'], :name => "com.redhat.component")
 
