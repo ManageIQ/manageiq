@@ -102,10 +102,6 @@ group :google, :manageiq_default do
   manageiq_plugin "manageiq-providers-google"
 end
 
-group :hawkular, :manageiq_default do
-  manageiq_plugin "manageiq-providers-hawkular"
-end
-
 group :kubernetes, :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-kubernetes"
 end
