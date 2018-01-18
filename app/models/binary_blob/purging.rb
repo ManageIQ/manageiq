@@ -5,15 +5,11 @@ class BinaryBlob < ApplicationRecord
 
     module ClassMethods
       def purge_timer
-        purge_queue(:scope)
+        purge_queue(:orphaned, 'resource')
       end
 
       def purge_window_size
         ::Settings.binary_blob.purge_window_size
-      end
-
-      def purge_scope(_older_than = nil)
-        where(:resource_type => 'MiqQueue').where.not('resource_id in (select id from miq_queue)')
       end
 
       def purge_associated_records(ids)
