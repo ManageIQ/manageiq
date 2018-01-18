@@ -98,7 +98,36 @@ module PurgingMixin
       _log.info("Purging #{table_name.humanize}...Complete - Deleted #{total} records")
     end
 
+    def purge_by_orphaned(fk_name, window = purge_window_size)
+      _log.info("Purging orphans in #{table_name.humanize}...")
+      total = purge_orphans(fk_name, window)
+      _log.info("Purging orphans in #{table_name.humanize}...Complete - Deleted #{total} records")
+      total
+    end
+
     private
+
+    def purge_orphans(fk_name, window)
+      # For now, this only supports polymorphic references
+      # We don't currently have a situation where a table with a regular reference needs to be purged
+      polymorphic_type_column = "#{fk_name}_type"
+      polymorphic_id_column   = connection.quote_column_name("#{fk_name}_id")
+      total = 0
+
+      polymorphic_classes(polymorphic_type_column).each do |klass|
+        resource_table = connection.quote_table_name(klass.table_name)
+
+        scope = joins("LEFT OUTER JOIN #{resource_table} ON #{table_name}.#{polymorphic_id_column} = #{resource_table}.id")
+                .where(resource_table => {:id => nil})
+                .where("#{table_name}.#{connection.quote_column_name(polymorphic_type_column)} = #{connection.quote(klass.name)}")
+        total += purge_in_batches(scope, window)
+      end
+      total
+    end
+
+    def polymorphic_classes(polymorphic_type_column)
+      distinct(polymorphic_type_column).pluck(polymorphic_type_column).map(&:constantize)
+    end
 
     # Private:  The ids to purge if we want to keep a fixed number of records
     # for each resource. Newer records (with a higher id/ lower rank) are kept.

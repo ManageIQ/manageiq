@@ -1,4 +1,6 @@
 class VimPerformanceState < ApplicationRecord
+  include_concern 'Purging'
+
   serialize :state_data
 
   belongs_to :resource, :polymorphic => true
