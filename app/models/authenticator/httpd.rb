@@ -60,8 +60,7 @@ module Authenticator
       user_attrs, _membership_list = identity
       return super if user_attrs[:domain].nil?
 
-      upn_username = "#{user_attrs[:username]}@#{user_attrs[:domain]}".downcase
-
+      upn_username = username_to_upn_name(user_attrs)
       user = find_userid_as_upn(upn_username)
       user ||= find_userid_as_distinguished_name(user_attrs)
       user ||= find_userid_as_username(identity, username)
@@ -73,8 +72,7 @@ module Authenticator
     def lookup_by_identity(username, request = nil)
       if request
         user_attrs, _membership_list = user_details_from_headers(username, request)
-        upn_username = "#{user_attrs[:username]}@#{user_attrs[:domain]}".downcase
-
+        upn_username = username_to_upn_name(user_attrs)
         user =   find_userid_as_upn(upn_username)
         user ||= find_userid_as_distinguished_name(user_attrs)
       end
@@ -95,6 +93,13 @@ module Authenticator
       dn_domain = user_attrs[:domain].downcase.split(".").map { |s| "dc=#{s}" }.join(",")
       user = User.in_my_region.where("userid LIKE ?", "%=#{user_attrs[:username]},%,#{dn_domain}").last
       user
+    end
+
+    def username_to_upn_name(user_attrs)
+      return user_attrs[:username] if user_attrs[:domain].nil?
+
+      user_name = user_attrs[:username].split("@").first
+      "#{user_name}@#{user_attrs[:domain]}".downcase
     end
 
     def user_details_from_external_directory(username)
