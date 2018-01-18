@@ -40,7 +40,7 @@ module ManageIQ::Providers::EmbeddedAnsible::Provider::DefaultAnsibleObjects
   end
 
   def delete_ansible_object(name)
-    default_ansible_objects.find_by(:name => name).try(:delete)
+    default_ansible_objects.find_by(:name => name).try(:destroy)
   end
 
   private
