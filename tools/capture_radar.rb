@@ -62,7 +62,7 @@ end
 labels_maxes.each do |label_project, hours|
   label, project = label_project
   hours.each do |hour_ts, values|
-    mr = label.metric_rollups.find_or_initialize_by(
+    mr = label.metric_rollups.find_or_create_by(
       :timestamp => hour_ts,
       :resource_name => project.name,
       :capture_interval_name => "hourly"
