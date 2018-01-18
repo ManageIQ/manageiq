@@ -33,7 +33,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
   def allowed_guest_access_key_pairs(_options = {})
     source = load_ar_obj(get_source_vm)
-    targets = get_targets_for_ems(source, :cloud_filter, ManageIQ::Providers, 'key_pairs')
+    targets = get_targets_for_ems(source, :cloud_filter, ManageIQ::Providers::CloudManager::AuthKeyPair, 'key_pairs')
     targets.each_with_object({}) { |kp, h| h[kp.id] = kp.name }
   end
 
