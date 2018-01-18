@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
+
+OUTPUT_CSV_FILE_PATH = 'report_radar.csv'.freeze
+HEADERS_AND_COLUMNS = ['Hour', 'Date', 'Label of image (key : value)', 'Project', 'Used Cores'].freeze
+
 require File.expand_path("../config/environment", __dir__)
 require 'trollop'
 
@@ -40,10 +44,6 @@ time_range = if opts[:start] || opts[:end]
              else
                [opts[:days].days.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
              end
-
-OUTPUT_CSV_FILE_PATH = 'cores_usage_per_label.csv'.freeze
-
-HEADERS_AND_COLUMNS = ['Hour', 'Date', 'Label of image (key : value)', 'Project', 'Used Cores'].freeze
 
 CSV.open(OUTPUT_CSV_FILE_PATH, "wb") do |csv|
   csv << HEADERS_AND_COLUMNS
