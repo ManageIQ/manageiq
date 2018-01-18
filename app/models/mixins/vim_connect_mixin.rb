@@ -3,6 +3,7 @@ module VimConnectMixin
 
   def connect(options = {})
     options[:auth_type] ||= :ws
+    raise _("no console credentials defined") if options[:auth_type] == :console && !authentication_type(options[:auth_type])
     raise _("no credentials defined") if missing_credentials?(options[:auth_type])
 
     options[:use_broker] = (self.class.respond_to?(:use_vim_broker?) ? self.class.use_vim_broker? : ManageIQ::Providers::Vmware::InfraManager.use_vim_broker?) unless options.key?(:use_broker)
