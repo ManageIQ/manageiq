@@ -52,6 +52,13 @@ class MiqRequest < ApplicationRecord
 
   include MiqRequestMixin
 
+  scope :created_recently,    ->(days_ago)   { where("created_on > ?", days_ago.days.ago) }
+  scope :with_approval_state, ->(state)      { where(:approval_state => state) }
+  scope :with_type,           ->(type)       { where(:type => type) }
+  scope :with_request_type,   ->(type)       { where(:request_type => type) }
+  scope :with_reason,         ->(op, reason) { where("reason #{op} ?", reason) }
+  scope :with_requester,      ->(id)         { where(:requester_id => User.with_same_userid(id).collect(&:id)) }
+
   MODEL_REQUEST_TYPES = {
     :Service        => {
       :MiqProvisionRequest                 => {
