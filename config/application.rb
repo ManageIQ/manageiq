@@ -90,6 +90,15 @@ module Vmdb
     # Customize any additional options below...
 
     config.autoload_paths += config.eager_load_paths
+
+    # NOTE:  If you are going to make changes to autoload_paths, please make
+    # sure they are all strings.  Rails will push these paths into the
+    # $LOAD_PATH.
+    #
+    # More info can be found in the ruby-lang bug:
+    #
+    #   https://bugs.ruby-lang.org/issues/14372
+    #
     config.autoload_paths << Rails.root.join("app", "models", "aliases").to_s
     config.autoload_paths << Rails.root.join("app", "models", "mixins").to_s
     config.autoload_paths << Rails.root.join("lib", "miq_automation_engine", "models").to_s
