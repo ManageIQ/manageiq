@@ -47,13 +47,15 @@ time_range = if opts[:start] || opts[:end]
 
 CSV.open(OUTPUT_CSV_FILE_PATH, "wb") do |csv|
   csv << HEADERS_AND_COLUMNS
-
   MetricRollup.where(:timestamp     => time_range,
                      :resource_type => 'CustomAttribute').order(:timestamp).select(:timestamp, :resource_name, :cpu_usage_rate_average, :resource_id, :resource_type).each do |mr|
-    date         = mr.timestamp.to_date
-    hour         = mr.timestamp.hour
-    project_name = mr.resource_name
-    label_name   = "#{mr.resource.name}:#{mr.resource.value}"
+    date           = mr.timestamp.to_date
+    hour           = mr.timestamp.hour
+    resource_names = JSON.parse(mr.resource_name)
+
+    project_name = resource_names["container_project_name"]
+    label_name   = "#{resource_names['label_name']}:#{resource_names['label_value']}"
+
     csv << [hour, date, label_name, project_name, mr.cpu_usage_rate_average]
   end
 end
