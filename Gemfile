@@ -218,6 +218,7 @@ end
 unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
+    gem "graphiql-rails",   "~>1.4"
     gem "haml_lint",        "~>0.20.0", :require => false
     gem "rubocop",          "~>0.52.1", :require => false
     # ruby_parser is required for i18n string extraction
