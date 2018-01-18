@@ -157,6 +157,7 @@ describe "Providers API" do
       end
 
       def define_user
+        @user = user
         @role = role
         user
       end
