@@ -69,7 +69,7 @@ labels_maxes.each do |label_project, hours|
     )
 
     mr.update_attributes(
-      :cpu_usage_rate_average => values[:cpu_usage_rate_average]
-    )
+        :cpu_usage_rate_average => values[:cpu_usage_rate_average]
+    ) if mr.cpu_usage_rate_average < values[:cpu_usage_rate_average]
   end
 end
