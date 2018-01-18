@@ -31,7 +31,7 @@ TIME_RANGE = if opts[:days_given]
                [opts[:hours].hours.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
              end
 
-labels = CustomAttribute.where(:section => ['labels', 'docker_labels'], :resource_type => ['ContainerImage', 'ContainerGroup'], :name => opts[:label])
+labels = CustomAttribute.where(:section => ['labels', 'docker_labels'], :resource_type => 'ContainerImage', :name => opts[:label])
 
 # Question - If a container is short lived, will we still be able to find it here?
 labels_containers = labels.each_with_object(Hash.new { |h,k| h[k] = [] }) { |l, h| h[l] += l.resource.containers.to_a }
