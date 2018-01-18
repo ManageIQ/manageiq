@@ -1,4 +1,4 @@
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join("tools").to_s
 
 require "fix_auth/auth_model"
 require "fix_auth/auth_config_model"

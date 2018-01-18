@@ -1,4 +1,4 @@
-$LOAD_PATH << Rails.root.join("tools", "miqldap_to_sssd")
+$LOAD_PATH << Rails.root.join("tools", "miqldap_to_sssd").to_s
 
 require "configure_apache"
 require "tempfile"
