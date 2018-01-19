@@ -4,7 +4,10 @@ OUTPUT_CSV_FILE_PATH = 'report_radar.csv'.freeze
 HEADERS_AND_COLUMNS = ['Hour', 'Date', 'Label of image (key : value)', 'Project', 'Used Cores'].freeze
 
 require File.expand_path("../../config/environment", __dir__)
+require './tools/radar/rollup_radar_mixin'
 require 'trollop'
+
+include RollupRadarMixin
 
 opts = Trollop.options(ARGV) do
   banner "USAGE:  #{__FILE__} -d <number of days back to query metrics, default is 1 day>\n" \
@@ -47,11 +50,11 @@ time_range = if opts[:start] || opts[:end]
 
 CSV.open(OUTPUT_CSV_FILE_PATH, "wb") do |csv|
   csv << HEADERS_AND_COLUMNS
-  MetricRollup.where(:timestamp     => time_range,
-                     :resource_type => 'CustomAttribute').order(:timestamp).select(:timestamp, :resource_name, :cpu_usage_rate_average, :resource_id, :resource_type).each do |mr|
+  MaxByLabel.where(:timestamp => time_range).
+             order(:timestamp).select(:timestamp, :label, :cpu_usage_rate_average).each do |mr|
     date           = mr.timestamp.to_date
     hour           = mr.timestamp.hour
-    resource_names = JSON.parse(mr.resource_name)
+    resource_names = JSON.parse(mr.label)
 
     project_name = resource_names["container_project_name"]
     label_name   = "#{resource_names['label_name']}:#{resource_names['label_value']}"

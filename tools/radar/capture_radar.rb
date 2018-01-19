@@ -26,6 +26,8 @@ class ContainerImage
   has_many :container_image_labels, -> { where(:section => ['labels', 'docker_labels']) }, :class_name => "CustomAttribute", :as => :resource
 end
 
+include RollupRadarMixin
+
 TIME_RANGE = if opts[:days_given]
                [opts[:days].days.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
              else
@@ -35,10 +37,8 @@ TIME_RANGE = if opts[:days_given]
 get_hourly_maxes_per_group(opts[:label], TIME_RANGE).each do |row|
   resource_names_json = row.without('hourly_timestamp', 'max_sum_used_cores').to_json
 
-  mr = MetricRollup.find_or_create_by(:resource_type         => 'CustomAttribute',
-                                      :timestamp             => row['hourly_timestamp'],
-                                      :capture_interval_name => "hourly",
-                                      :resource_name         => resource_names_json)
+  mr = MaxByLabel.find_or_create_by(:timestamp => row['hourly_timestamp'],
+                                    :label     => resource_names_json)
 
   cpu_usage_rate_average = mr.cpu_usage_rate_average || 0
   next unless cpu_usage_rate_average < row['max_sum_used_cores']

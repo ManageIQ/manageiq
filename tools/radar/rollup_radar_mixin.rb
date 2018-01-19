@@ -1,6 +1,20 @@
 module RollupRadarMixin
   extend ActiveSupport::Concern
 
+  require 'sqlite3'
+  class MaxByLabel < ApplicationRecord
+    self.establish_connection(
+        :adapter  => "sqlite3",
+        :database => "db/radar.sqlite3"
+    )
+
+    connection.create_table :max_by_labels do |t|
+      t.datetime :timestamp
+      t.string   :label
+      t.float    :cpu_usage_rate_average
+    end unless connection.table_exists?(:max_by_labels)
+  end
+
   def date_trunc(by, attribute)
     Arel::Nodes::NamedFunction.new(
       'DATE_TRUNC', [Arel.sql("'#{by}'"), attribute]
