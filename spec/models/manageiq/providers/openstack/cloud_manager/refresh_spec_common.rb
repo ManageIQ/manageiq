@@ -81,7 +81,7 @@ module Openstack
       expect(Disk.count).to                              eq disks_count
       expect(Hardware.count).to                          eq vms_count + images_count
       expect(Vm.count).to                                eq vms_count
-      expect(OperatingSystem.count).to                   eq 0
+      expect(OperatingSystem.count).to                   eq vms_count + images_count
       expect(Snapshot.count).to                          eq 0
       expect(SystemService.count).to                     eq 0
       expect(GuestDevice.count).to                       eq 0
@@ -253,7 +253,7 @@ module Openstack
       # TODO(lsmola) 2 networks per each floatingip assigned, it's kinda weird now, will replace with
       # neutron models, then the number of networks will fit the number of neutron networks
       # expect(Network.count).to           eq vms_count * 2
-      expect(OperatingSystem.count).to                   eq 0
+      expect(OperatingSystem.count).to                   eq vms_count + images_count
       expect(Snapshot.count).to                          eq 0
       expect(SystemService.count).to                     eq 0
       expect(GuestDevice.count).to                       eq 0
@@ -657,7 +657,7 @@ module Openstack
         expect(template.ems_ref).to be_guid
 
         expect(template.ext_management_system).to  eq @ems
-        expect(template.operating_system).to       be_nil # TODO: This should probably not be nil
+        expect(template.operating_system).not_to   be_nil
         expect(template.custom_attributes.size).to eq 0
         expect(template.snapshots.size).to         eq 0
         expect(template.hardware).not_to           be_nil
@@ -738,7 +738,7 @@ module Openstack
       expect(vm.flavor.name).to            eq vm_expected[:__flavor_name]
       expect(vm.key_pairs.map(&:name)).to  eq [vm_expected[:key_name]]
       expect(vm.genealogy_parent.name).to  eq vm_expected[:__image_name]
-      expect(vm.operating_system).to       be_nil # TODO: This should probably not be nil
+      expect(vm.operating_system).not_to   be_nil
       expect(vm.custom_attributes.size).to eq 0
       expect(vm.snapshots.size).to         eq 0
 

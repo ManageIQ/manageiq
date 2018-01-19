@@ -228,7 +228,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(template.ems_ref).to be_guid
 
     expect(template.ext_management_system).to eq @ems
-    expect(template.operating_system).to be_nil # TODO: This should probably not be nil
+    expect(template.operating_system).not_to be_nil
     expect(template.custom_attributes.size).to eq 0
     expect(template.snapshots.size).to         eq 0
     expect(template.hardware).not_to               be_nil

@@ -307,6 +307,7 @@ module ManageIQ::Providers
       end
 
       parent_image_uid = server.image["id"]
+      parent_image = @data_index.fetch_path(:vms, parent_image_uid)
 
       new_result = {
         :type                => "ManageIQ::Providers::Openstack::CloudManager::Vm",
@@ -348,6 +349,18 @@ module ManageIQ::Providers
 
       disks = new_result[:hardware][:disks]
       dev = "vda"
+
+      if parent_image
+        guest_os = parent_image.fetch_path(:hardware, :guest_os)
+        os_distro = parent_image.fetch_path(:operating_system, :distribution)
+        os_version = parent_image.fetch_path(:operating_system, :version)
+        new_result.store_path(:operating_system, :distribution, os_distro)
+        new_result.store_path(:operating_system, :version, os_version)
+      else
+        guest_os = "unknown"
+      end
+      new_result.store_path(:hardware, :guest_os, guest_os)
+      new_result.store_path(:operating_system, :product_name, guest_os)
 
       if flavor
         if (sz = flavor[:root_disk_size]) == 0

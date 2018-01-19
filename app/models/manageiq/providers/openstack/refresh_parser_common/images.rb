@@ -14,6 +14,7 @@ module ManageIQ::Providers::Openstack
       def parse_image(image)
         uid               = image.id
         parent_server_uid = parse_image_parent_id(image)
+        guest_os = OperatingSystem.normalize_os_name(image.try(:os_distro) || 'unknown')
 
         new_result = {
           :type               => self.class.miq_template_type,
@@ -25,7 +26,13 @@ module ManageIQ::Providers::Openstack
           :template           => true,
           :publicly_available => public?(image),
           :cloud_tenants      => image_tenants(image),
+          :operating_system   => {
+            :product_name => guest_os,
+            :distribution => image.try(:os_distro),
+            :version      => image.try(:os_version)
+          },
           :hardware           => {
+            :guest_os            => guest_os,
             :bitness             => architecture(image),
             :disk_size_minimum   => (image.min_disk * 1.gigabyte),
             :memory_mb_minimum   => image.min_ram,
