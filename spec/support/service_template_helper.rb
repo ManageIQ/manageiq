@@ -96,6 +96,9 @@ module Spec
                            :type           => 'ServiceTemplateProvisionRequest',
                            :request_type   => 'clone_to_service',
                            :approval_state => 'approved',
+                           :status         => 'Ok',
+                           :process        => true,
+                           :request_state  => 'active',
                            :source_id      => root.id,
                            :requester      => user,
                            :options        => options)
