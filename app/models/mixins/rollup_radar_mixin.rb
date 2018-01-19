@@ -5,6 +5,12 @@ module RollupRadarMixin
     ActiveRecord::Base.connection.quote(value)
   end
 
+  def date_trunc(by, attribute)
+    Arel::Nodes::NamedFunction.new(
+      'DATE_TRUNC', [Arel.sql("'#{by}'"), attribute]
+    )
+  end
+
   def get_hourly_maxes_per_group(label_name, time_range)
     joins_structure = [
       :container => [
@@ -32,23 +38,29 @@ module RollupRadarMixin
                           ])
                    .order("container_groups.container_project_id") # we have to order by something existing, since rails puts there :id
 
-    maxes_query = <<-SQL
-      WITH sums AS (
-        #{sums_query.to_sql}
-      )
-      SELECT sums.label_name,
-             sums.label_value,
-             container_projects.name as container_project_name,
-             date_trunc('hour', sums.timestamp) as hourly_timestamp,
-             max(sums.sum_used_cores) as max_sum_used_cores
-        FROM sums
-          INNER JOIN container_projects ON container_projects.id = sums.container_project_id
-          GROUP BY sums.label_name,
-                   sums.label_value,
-                   container_projects.name,
-                   date_trunc('hour', sums.timestamp)
-    SQL
+    # Now lets build an outer query that will pick a max of sum_used_cores, in each group
+    sums               = Arel::Table.new(:sums)
+    composed_cte       = Arel::Nodes::As.new(sums, Arel.sql("(#{sums_query.to_sql})"))
+    container_projects = ContainerProject.arel_table
 
-    ActiveRecord::Base.connection.execute(maxes_query).to_a
+    shared_project_and_group_by = [
+      sums[:label_name],
+      sums[:label_value]
+    ]
+
+    arel = sums
+             .project(
+               *shared_project_and_group_by,
+               container_projects[:name].as("container_project_name"),
+               date_trunc('hour', sums[:timestamp]).as("hourly_timestamp"),
+               sums[:sum_used_cores].maximum.as("max_sum_used_cores"))
+             .join(container_projects).on(container_projects[:id].eq(sums[:container_project_id]))
+             .with(composed_cte)
+             .group(
+               *shared_project_and_group_by,
+               container_projects[:name],
+               "hourly_timestamp")
+
+    ActiveRecord::Base.connection.execute(arel.to_sql).to_a
   end
 end
