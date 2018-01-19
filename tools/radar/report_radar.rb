@@ -3,7 +3,7 @@
 OUTPUT_CSV_FILE_PATH = 'report_radar.csv'.freeze
 HEADERS_AND_COLUMNS = ['Hour', 'Date', 'Label of image (key : value)', 'Project', 'Used Cores'].freeze
 
-require File.expand_path("../config/environment", __dir__)
+require File.expand_path("../../config/environment", __dir__)
 require 'trollop'
 
 opts = Trollop.options(ARGV) do

@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
-require File.expand_path("../config/environment", __dir__)
+require File.expand_path("../../config/environment", __dir__)
 require 'trollop'
+require './tools/radar/rollup_radar_mixin'
+include RollupRadarMixin
 
 opts = Trollop.options(ARGV) do
   banner "USAGE:   #{__FILE__} -h <number of hours back to query metrics>\n" \
@@ -23,8 +25,6 @@ ContainerImage
 class ContainerImage
   has_many :container_image_labels, -> { where(:section => ['labels', 'docker_labels']) }, :class_name => "CustomAttribute", :as => :resource
 end
-
-include RollupRadarMixin
 
 TIME_RANGE = if opts[:days_given]
                [opts[:days].days.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
