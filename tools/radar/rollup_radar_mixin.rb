@@ -24,9 +24,7 @@ module RollupRadarMixin
                             "metrics.timestamp",
                             "sum((metrics.cpu_usage_rate_average * metrics.derived_vm_numvcpus) / 100.0) AS sum_used_cores"
                            ])
-                   .where(:resource_type => "Container")
-                   .where(:timestamp => time_range)
-                   .where("custom_attributes.name" => label_name)
+                   .where(:resource_type => "Container", :timestamp => time_range, "custom_attributes.name" => label_name)
                    .group(["custom_attributes.name",
                            "custom_attributes.value",
                            "container_groups.container_project_id",
