@@ -6,7 +6,7 @@ describe "Authentication API" do
 
   context "Basic Authentication" do
     it "test basic authentication with bad credentials" do
-      basic_authorize "baduser", "badpassword"
+      api_basic_authorize :user => 'baduser', :password => 'badpassword'
 
       run_get entrypoint_url
 

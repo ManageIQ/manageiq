@@ -403,8 +403,7 @@ describe "Services API" do
     end
 
     it "accepts action when service is reconfigurable" do
-      api_basic_authorize
-      update_user_role(@role, action_identifier(:services, :reconfigure))
+      api_basic_authorize action_identifier(:services, :reconfigure)
 
       st1.resource_actions = [ra1]
       svc1.service_template_id = st1.id
