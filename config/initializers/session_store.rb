@@ -10,7 +10,7 @@ else
 
   session_options = {}
   if MiqEnvironment::Command.is_appliance?
-    session_options[:secure]   = true unless MiqEnvironment::Command.is_container?
+    session_options[:secure]   = true unless ENV["ALLOW_INSECURE_SESSION"]
     session_options[:httponly] = true
   end
 
