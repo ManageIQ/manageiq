@@ -35,10 +35,11 @@ TIME_RANGE = if opts[:days_given]
              end
 
 get_hourly_maxes_per_group(opts[:label], TIME_RANGE).each do |row|
-  resource_names_json = row.without('hourly_timestamp', 'max_sum_used_cores').to_json
-
-  mr = MaxByLabel.find_or_create_by(:timestamp => row['hourly_timestamp'],
-                                    :label     => resource_names_json)
+  mr = MaxByLabel.find_or_create_by(:timestamp    => row['hourly_timestamp'],
+                                    :label_name   => row['label_name'],
+                                    :label_value  => row['label_value'],
+                                    :project_name => row['container_project_name']
+  )
 
   cpu_usage_rate_average = mr.cpu_usage_rate_average || 0
   next unless cpu_usage_rate_average < row['max_sum_used_cores']

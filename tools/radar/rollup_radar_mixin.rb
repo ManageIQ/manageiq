@@ -10,7 +10,9 @@ module RollupRadarMixin
 
     connection.create_table :max_by_labels do |t|
       t.datetime :timestamp
-      t.string   :label
+      t.string   :label_name
+      t.string   :label_value
+      t.string   :project_name
       t.float    :cpu_usage_rate_average
     end unless connection.table_exists?(:max_by_labels)
   end

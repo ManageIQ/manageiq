@@ -50,15 +50,12 @@ time_range = if opts[:start] || opts[:end]
 
 CSV.open(OUTPUT_CSV_FILE_PATH, "wb") do |csv|
   csv << HEADERS_AND_COLUMNS
-  MaxByLabel.where(:timestamp => time_range).
-             order(:timestamp).select(:timestamp, :label, :cpu_usage_rate_average).each do |mr|
-    date           = mr.timestamp.to_date
-    hour           = mr.timestamp.hour
-    resource_names = JSON.parse(mr.label)
+  MaxByLabel.where(:timestamp => time_range).order(:timestamp).each do |mr|
+    date         = mr.timestamp.to_date
+    hour         = mr.timestamp.hour
+    label        = [mr.label_name, mr.label_value].join(" : ")
+    project_name = mr.project_name
 
-    project_name = resource_names["container_project_name"]
-    label_name   = "#{resource_names['label_name']}:#{resource_names['label_value']}"
-
-    csv << [hour, date, label_name, project_name, mr.cpu_usage_rate_average]
+    csv << [hour, date, label, project_name, mr.cpu_usage_rate_average]
   end
 end
