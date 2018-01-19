@@ -41,7 +41,8 @@ get_hourly_maxes_per_group(opts[:label], TIME_RANGE).each do |row|
                                       :resource_name         => resource_names_json)
 
   cpu_usage_rate_average = mr.cpu_usage_rate_average || 0
+  next unless cpu_usage_rate_average < row['max_sum_used_cores']
   mr.update_attributes(
-      :cpu_usage_rate_average => row['max_sum_used_cores']
-  ) if cpu_usage_rate_average < row['max_sum_used_cores']
+    :cpu_usage_rate_average => row['max_sum_used_cores']
+  )
 end
