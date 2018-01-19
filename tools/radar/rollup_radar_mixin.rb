@@ -1,10 +1,6 @@
 module RollupRadarMixin
   extend ActiveSupport::Concern
 
-  def quote(value)
-    ActiveRecord::Base.connection.quote(value)
-  end
-
   def date_trunc(by, attribute)
     Arel::Nodes::NamedFunction.new(
       'DATE_TRUNC', [Arel.sql("'#{by}'"), attribute]
