@@ -275,25 +275,13 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_find_active_prov_request(_options)
-    prov_req_ids = MiqQueue.where(
-      :class_name  => %w(MiqProvisionRequest ServiceTemplateProvisionRequest),
-      :method_name => 'create_request_tasks',
-      :state       => 'dequeue'
-    ).pluck(:instance_id)
-
-    prov_ids = []
-    MiqQueue
-      .where(:method_name => 'deliver', :state => %w(ready dequeue), :class_name => 'MiqAeEngine')
-      .where("tracking_label like ?", '%_provision_%')
-      .each do |q|
-        if q.args
-          args = q.args.first
-          prov_ids << args[:object_id] if args[:object_type].include?('Provision') && !args[:object_id].blank?
-        end
-      end
-    prov_req_ids += MiqRequestTask.where(:id => prov_ids).pluck("miq_request_id")
-
-    MiqRequest.where(:id => prov_req_ids.compact.uniq)
+    MiqRequest.where(
+      :approval_state => 'approved',
+      :type           => %w(MiqProvisionRequest ServiceTemplateProvisionRequest),
+      :request_state  => %w(active queued pending),
+      :status         => 'Ok',
+      :process        => true
+    ).where.not(:id => id)
   end
 
   def vm_quota_values(pr, result)
