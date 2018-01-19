@@ -23,8 +23,8 @@ class ManageIQ::Providers::<%= class_name %>::CloudManager::EventCatcher::Runner
 
   def event_to_hash(event, ems_id)
     {
-      :event_type => "DUMMY_PROVIDER_#{event[:name]}",
-      :source     => 'DUMMY_PROVIDER',
+      :event_type => "<%= provider_name.upcase %>#{event[:name]}",
+      :source     => '<%= provider_name.upcase %>',
       :timestamp  => event[:timestamp],
       :vm_ems_ref => event[:vm_ems_ref],
       :full_data  => event,
