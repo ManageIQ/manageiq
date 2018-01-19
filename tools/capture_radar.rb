@@ -16,15 +16,12 @@ ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 Metric
 class Metric
-  def derived_cpu_total_cores_used
-    return if cpu_usage_rate_average.nil? || derived_vm_numvcpus.nil? || derived_vm_numvcpus == 0
-    (cpu_usage_rate_average * derived_vm_numvcpus) / 100.0
-  end
+  belongs_to :container, :class_name => "Container", :foreign_type => "Container", :foreign_key => :resource_id
 end
 
-CustomAttribute
-class CustomAttribute
-  has_many   :metric_rollups, :as => :resource
+ContainerImage
+class ContainerImage
+  has_many :container_image_labels, -> { where(:section => ['labels', 'docker_labels']) }, :class_name => "CustomAttribute", :as => :resource
 end
 
 include RollupRadarMixin
@@ -48,4 +45,3 @@ get_hourly_maxes_per_group(opts[:label], TIME_RANGE).each do |row|
       :cpu_usage_rate_average => row['max_sum_used_cores']
   ) if cpu_usage_rate_average < row['max_sum_used_cores']
 end
-
