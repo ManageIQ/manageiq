@@ -55,6 +55,14 @@ module ManageIQ::Providers
 
     virtual_column :port_show, :type => :string
 
+    before_create :sort_endpoints_default_first
+
+    def sort_endpoints_default_first
+      to_sort = endpoints
+      self.endpoints = []
+      self.endpoints = to_sort.sort { |x| x.role == 'default' ? -1 : 1 }
+    end
+
     supports :external_logging do
       unless respond_to?(:external_logging_route_name)
         unsupported_reason_add(:external_logging, _('This provider type does not support external_logging'))
