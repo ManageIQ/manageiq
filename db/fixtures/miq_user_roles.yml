@@ -1096,6 +1096,7 @@
   - redhat_access_insights_admin
   - ems_container_ad_hoc_metrics
   - monitor
+  - monitor_alerts
   - alert_status
   - alert_action
   - ems_infra
@@ -1140,6 +1141,7 @@
   - vm_view
   - ems_container_ad_hoc_metrics
   - monitor
+  - monitor_alerts
   - alert_status
   - alert_action
   - ems_infra
