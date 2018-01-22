@@ -3,8 +3,33 @@ require "sinatra/base"
 class ManageIQ::Providers::BaseManager::Operations < Sinatra::Application
   include Vmdb::Logging
 
-  post '/api/vm/:ref/start' do
+  # VM Power Operations
+  post "/api/vm/:ref/start" do
     invoke_raw_method("vm_start")
+  end
+
+  post "/api/vm/:ref/stop" do
+    invoke_raw_method("vm_stop")
+  end
+
+  post "/api/vm/:ref/suspend" do
+    invoke_raw_method("vm_suspend")
+  end
+
+  post "/api/vm/:ref/shutdown" do
+    invoke_raw_method("vm_shutdown_guest")
+  end
+
+  post "/api/vm/:ref/reboot" do
+    invoke_raw_method("vm_reboot_guest")
+  end
+
+  post "/api/vm/:ref/reset" do
+    invoke_raw_method("vm_reset")
+  end
+
+  post "/api/vm/:ref/unregister" do
+    invoke_raw_method("vm_unregister")
   end
 
   private
