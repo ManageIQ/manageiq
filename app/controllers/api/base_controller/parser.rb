@@ -22,7 +22,7 @@ module Api
         # Method Validation for the collection or sub-collection specified
         if cname && ctype
           mname = @req.method
-          unless collection_config.supports_http_method?(cname, mname) || ignore_http_method_validation?
+          unless collection_config.supports_http_method?(cname, mname) || mname == :options
             raise BadRequestError, "Unsupported HTTP Method #{mname} for the #{ctype} #{cname} specified"
           end
         end
@@ -37,7 +37,7 @@ module Api
       end
 
       def validate_api_action
-        return if @req.collection.blank? || ignore_http_method_validation?
+        return unless @req.collection
         send("validate_#{@req.method}_method")
       end
 
@@ -173,12 +173,6 @@ module Api
 
       private
 
-      def ignore_http_method_validation?
-        settings_request = @req.subcollection == 'settings' && collection_option?(:settings)
-
-        settings_request || @req.method == :options
-      end
-
       #
       # For Posts we need to support actions, let's validate those
       #
@@ -283,7 +277,6 @@ module Api
       def validate_api_request_subcollection(cname, ctype)
         # Sub-Collection Validation for the specified Collection
         if cname && @req.subcollection
-          return [cname, ctype] if @req.subcollection == 'settings' && collection_option?(:settings)
           return [cname, ctype] if collection_option?(:arbitrary_resource_path)
           ctype = "Sub-Collection"
           unless collection_config.subcollection?(cname, @req.subcollection)
