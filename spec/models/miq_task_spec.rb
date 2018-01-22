@@ -330,6 +330,20 @@ describe MiqTask do
     end
   end
 
+  context "before save callback" do
+    describe "#started" do
+      let(:task) { FactoryGirl.create(:miq_task_plain) }
+
+      it "initilizes 'started_on' attribute if task become Active " do
+        expect(task.started_on).to be nil
+        Timecop.freeze do
+          task.update_attributes!(:state => MiqTask::STATE_ACTIVE)
+          expect(task.started_on).to eq Time.now.utc
+        end
+      end
+    end
+  end
+
   describe "#update_status" do
     let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
 
