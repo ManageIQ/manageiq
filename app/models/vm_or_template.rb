@@ -343,6 +343,36 @@ class VmOrTemplate < ApplicationRecord
     ext_management_system.send(verb, self, options)
   end
 
+  def run_command_via_operations_worker(verb, options = {})
+    unless ext_management_system
+      raise _("VM/Template <%{name}> with Id: <%{id}> is not associated with a provider.") % {:name => name, :id => id}
+    end
+    unless ext_management_system.authentication_status_ok?
+      raise _("VM/Template <%{name}> with Id: <%{id}>: Provider authentication failed.") % {:name => name, :id => id}
+    end
+
+    operations_klass = ext_management_system.class::OperationsWorker
+
+    operations_uri = operations_klass.uri(ext_management_system)
+    unless operations_uri
+      raise _("VM/Template <%{name}> with Id: <%{id}> doesn't have an operations URI") % {:name => name, :id => id}
+    end
+
+    _log.info("Invoking [#{verb}] through EMS: [#{ext_management_system.name}]")
+    options = {:user_event => "Console Request Action [#{verb}], VM [#{name}]"}.merge(options)
+
+    uri        = "#{operations_uri}/vm/#{ems_ref}/#{verb}"
+    connection = operations_klass.connect_params(ext_management_system)
+
+    params     = {
+      :connection => connection,
+      :args       => options,
+    }
+
+    result = RestClient.post(uri, params)
+    result.code == 200
+  end
+
   # policy_event: the event sent to automate for policy resolution
   # cb_method:    the MiqQueue callback method along with the parameters that is called
   #               when automate process is done and the event is not prevented to proceed by policy

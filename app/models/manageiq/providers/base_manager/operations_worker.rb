@@ -38,4 +38,8 @@ class ManageIQ::Providers::BaseManager::OperationsWorker < MiqWorker
 
     worker.uri
   end
+
+  def self.connect_params(_ems)
+    raise NotImplementedError, _("must be implemented in subclass")
+  end
 end
