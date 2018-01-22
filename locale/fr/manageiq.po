@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-31 12:36+0100\n"
-"PO-Revision-Date: 2017-11-16 04:02-0500\n"
-"Last-Translator: Nathalie Stoquart <nateltrad@gmail.com>\n"
+"PO-Revision-Date: 2017-12-12 07:20-0500\n"
+"Last-Translator: croe <croe@redhat.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,8 +28,7 @@ msgstr ""
 #: ../app/models/classification.rb:182
 msgid "  Unable to add the following tags to %{class_name} %{id}: %{names}."
 msgstr ""
-"Impossible d''ajouter les balises suivantes à %{class_name} %{id} : "
-"%{names}."
+"Impossible d'ajouter les balises suivantes à %{class_name} %{id} : %{names}."
 
 #: ../app/models/classification.rb:177
 msgid ""
@@ -44,7 +43,7 @@ msgid ""
 "      is not associated with a provider."
 msgstr ""
 "Le serveur  #<GetText::RubyLexX:0x0055fbe0e25bf8> <%{name}> avec l''ID : "
-"<%{id}> n''est pas associé à un fournisseur."
+"<%{id}> n'est pas associé à un fournisseur."
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual
 #. Machines/150_All Departments with Performance.yaml
@@ -119,7 +118,7 @@ msgstr "\"#{db}Performance.#{c}\""
 #: ../app/models/service_order.rb:100
 msgid "\"Cannot copy a service order in the #{STATE_CART} state\""
 msgstr ""
-"\"Impossible de copier une commande de service dans l''état #{STATE_CART}\""
+"\"Impossible de copier une commande de service dans l'état #{STATE_CART}\""
 
 #: ../app/models/mixins/yaml_import_export_mixin.rb:48
 msgid ""
@@ -160,11 +159,11 @@ msgid ""
 " missing credentials"
 msgstr ""
 "%{class_name} [%{name}] est attaché à <%{ems_class_name}: %{ems_name}> avec "
-"identifiants d''authentification manquants"
+"identifiants d'authentification manquants"
 
 #: ../app/models/miq_provision/options_helper.rb:36
 msgid "%{class_name} [%{name}] is not attached to a Management System"
-msgstr "%{class_name} [%{name}] n''est pas attaché à un Système de gestion"
+msgstr "%{class_name} [%{name}] n'est pas attaché à un Système de gestion"
 
 #: ../app/models/mixins/alert_mixin.rb:4
 msgid "%{class_name} expected to respond to event_logs and doesn't!"
@@ -209,7 +208,7 @@ msgid ""
 "%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], "
 "PID=[%{pid_number}], GUID=[%{guid_number}]"
 msgstr ""
-"%{log} DRb_URI est vide pour MiqServer d''ID=[%{number}], NAME=[%{name}], "
+"%{log} DRb_URI est vide pour MiqServer d'ID=[%{number}], NAME=[%{name}], "
 "PID=[%{pid_number}], GUID=[%{guid_number}]"
 
 #: ../app/models/miq_queue_worker_base/runner.rb:138
@@ -389,7 +388,7 @@ msgid ""
 "A Server #<GetText::RubyLexX:0x0055fbe0cff620> <%{name}> with Id: <%{id}> is"
 " not associated with a provider."
 msgstr ""
-"Un serveur #<GetText::RubyLexX:0x0055fbe0cff620> <%{name}> avec l''ID : "
+"Un serveur #<GetText::RubyLexX:0x0055fbe0cff620> <%{name}> avec l'ID : "
 "<%{id}> n''est pas associé à un fournisseur."
 
 #: ../app/models/physical_server/operations/config_pattern.rb:4
@@ -397,8 +396,8 @@ msgid ""
 "A Server #<GetText::RubyLexX:0x0055fbe0d7fe38> <%{name}> with Id: <%{id}> is"
 " not associated with a provider."
 msgstr ""
-"Un serveur #<GetText::RubyLexX:0x0055fbe0d7fe38> <%{name}> avec l''ID : "
-"<%{id}> n''est pas associé à un fournisseur."
+"Un serveur #<GetText::RubyLexX:0x0055fbe0d7fe38> <%{name}> avec l'ID : "
+"<%{id}> n'est pas associé à un fournisseur."
 
 #: ../app/models/manageiq/providers/cloud_manager/provision/cloning.rb:13
 msgid "A VM with name: [%{name}] already exists"
@@ -414,15 +413,15 @@ msgstr "Un groupe en lecture seule ne peut être supprimé"
 
 #: ../app/models/tenant.rb:324
 msgid "A tenant created by tenant mapping cannot be deleted"
-msgstr "Impossible de supprimer un tenant créé par une association de tenants"
+msgstr "Impossible de supprimer un client créé par une association de clients"
 
 #: ../app/models/miq_group.rb:269
 msgid "A tenant default group can not be deleted"
-msgstr "Un groupe de tenants par défaut ne peut être supprimé"
+msgstr "Un groupe de clients par défaut ne peut être supprimé"
 
 #: ../app/models/tenant.rb:323
 msgid "A tenant with groups associated cannot be deleted."
-msgstr "Un tenant auquel des groupes sont associés ne peut être supprimé"
+msgstr "Un client auquel des groupes sont associés ne peut être supprimé"
 
 #: ../app/models/miq_action.rb:815
 msgid ""
@@ -594,7 +593,7 @@ msgstr "Répertoire personnel"
 
 #: ../config/model_attributes.rb:11
 msgid "Account|Href slug"
-msgstr "Compte|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:12
 msgid "Account|Last logon"
@@ -639,7 +638,7 @@ msgid ""
 "[%{id}]"
 msgstr ""
 "Action non prise en charge pour le type de magasin de données "
-"[%{store_type}], [%{name}] avec l''ID : [%{id}]"
+"[%{store_type}], [%{name}] avec l'ID : [%{id}]"
 
 #: ../app/models/miq_action.rb:472
 msgid "Action script exited with rc=%{rc_value}, error=%{error_text}"
@@ -728,13 +727,13 @@ msgstr "Échantillon d'activité - Jour (MM JJ AA)"
 #. TRANSLATORS: en.yml key: dictionary.column.v_month
 #: ../config/dictionary_strings.rb:1026
 msgid "Activity Sample - Month (YYYY/MM)"
-msgstr "Échantillon d''AAAAActivité - Mois (YYYY/MM)"
+msgstr "Échantillon d'AAAAActivité - Mois (YYYY/MM)"
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_time
 #. TRANSLATORS: en.yml key: dictionary.column.v_statistic_time
 #: ../config/dictionary_strings.rb:1070 ../config/dictionary_strings.rb:1250
 msgid "Activity Sample - Time (HH MM SS)"
-msgstr "Échantillon d''Activité - Heure (HH MM SS)"
+msgstr "Échantillon d'Activité - Heure (HH MM SS)"
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual
 #. Machines/009_VM Disk Usage.yaml
@@ -752,7 +751,7 @@ msgstr "Échantillon d'activité - Horodatage (jour/heure)"
 #. TRANSLATORS: en.yml key: dictionary.column.statistic_time
 #: ../config/dictionary_strings.rb:960 ../config/dictionary_strings.rb:1242
 msgid "Activity Sample - Timestamp (Day/Time)"
-msgstr "Echantillon d''Activité - Heure donnée (Jour/Heure)"
+msgstr "Echantillon d'Activité - Heure donnée (Jour/Heure)"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1948
@@ -1144,12 +1143,12 @@ msgstr "Ajouter un Sous-réseau"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:504
 msgid "Add a Tenant"
-msgstr "Ajouter un tenant"
+msgstr "Ajouter un client"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1713
 msgid "Add a Tenant/Project"
-msgstr "Ajouter un tenant/projet"
+msgstr "Ajouter un client/projet"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1659
@@ -1282,23 +1281,23 @@ msgstr "Nom d'affichage"
 
 #: ../config/model_attributes.rb:22
 msgid "AdvancedSetting|Href slug"
-msgstr "AdvancedSetting|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:23
 msgid "AdvancedSetting|Max"
-msgstr "AdvancedSetting|Max"
+msgstr "Max"
 
 #: ../config/model_attributes.rb:24
 msgid "AdvancedSetting|Min"
-msgstr "AdvancedSetting|Min"
+msgstr "Min"
 
 #: ../config/model_attributes.rb:25
 msgid "AdvancedSetting|Name"
-msgstr "AdvancedSetting|Nom"
+msgstr "Nom"
 
 #: ../config/model_attributes.rb:26
 msgid "AdvancedSetting|Read only"
-msgstr "AdvancedSetting|Lecture seule"
+msgstr "Lecture seule"
 
 #: ../config/model_attributes.rb:27
 msgid "AdvancedSetting|Region description"
@@ -1439,7 +1438,7 @@ msgstr "Tous les Services"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1573
 msgid "All Tasks"
-msgstr "Toutes les tâches"
+msgstr "Toutes les Tâches"
 
 #. TRANSLATORS: file: product/views/EmsCluster.yaml
 #: ../config/yaml_strings.rb:6808
@@ -1827,43 +1826,43 @@ msgstr "Informations sur l'actif"
 
 #: ../config/model_attributes.rb:33
 msgid "AssetDetails|Contact"
-msgstr "AssetDetails|Contact"
+msgstr "Contact"
 
 #: ../config/model_attributes.rb:34
 msgid "AssetDetails|Description"
-msgstr "AssetDetails|Description"
+msgstr "Description"
 
 #: ../config/model_attributes.rb:35
 msgid "AssetDetails|Href slug"
-msgstr "AssetDetails|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:36
 msgid "AssetDetails|Location"
-msgstr "AssetDetails|Position"
+msgstr "Position"
 
 #: ../config/model_attributes.rb:37
 msgid "AssetDetails|Lowest rack unit"
-msgstr "AssetDetails|Unité de rack la plus basse"
+msgstr "Unité de rack la plus basse"
 
 #: ../config/model_attributes.rb:38
 msgid "AssetDetails|Rack name"
-msgstr "AssetDetails|Nom du rack"
+msgstr "Nom du rack"
 
 #: ../config/model_attributes.rb:39
 msgid "AssetDetails|Region description"
-msgstr "AssetDetails|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:40
 msgid "AssetDetails|Region number"
-msgstr "AssetDetails|Numéro de la région"
+msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:41
 msgid "AssetDetails|Resource type"
-msgstr "AssetDetails|Type de ressource"
+msgstr "Type de ressource"
 
 #: ../config/model_attributes.rb:42
 msgid "AssetDetails|Room"
-msgstr "AssetDetails|Salle"
+msgstr "Salle"
 
 #: ../config/model_attributes.rb:43
 msgid "Assigned server role"
@@ -1881,7 +1880,7 @@ msgstr "Actif"
 
 #: ../config/model_attributes.rb:45
 msgid "AssignedServerRole|Href slug"
-msgstr "AssignedServerRole|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:46
 msgid "AssignedServerRole|Priority"
@@ -1956,7 +1955,7 @@ msgid ""
 "Attaching Volume %{subject} to Instance %{instance_name} completed "
 "successfully."
 msgstr ""
-"L''association du volume %{subject} à l''instance %{instance_name} a abouti."
+"l'association du volume %{subject} à l'instance %{instance_name} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3762
@@ -1964,8 +1963,8 @@ msgid ""
 "Attaching Volume %{subject} to Instance %{instance_name} failed: "
 "%{error_message}"
 msgstr ""
-"L''association du volume %{subject} à l''instance %{instance_name} a échoué "
-": %{error_message}"
+"L'association du volume %{subject} à l'instance %{instance_name} a échoué : "
+"%{error_message}"
 
 #: ../config/model_attributes.rb:49
 msgid "Audit event"
@@ -1981,7 +1980,7 @@ msgstr "Événement"
 
 #: ../config/model_attributes.rb:52
 msgid "AuditEvent|Href slug"
-msgstr "AuditEvent|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:53
 msgid "AuditEvent|Message"
@@ -2050,27 +2049,27 @@ msgstr "Pile d'orchestration de l'authentification"
 
 #: ../config/model_attributes.rb:110
 msgid "AuthenticationConfigurationScriptBase|Href slug"
-msgstr "AuthenticationConfigurationScriptBase|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:111
 msgid "AuthenticationConfigurationScriptBase|Region description"
-msgstr "AuthenticationConfigurationScriptBase|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:112
 msgid "AuthenticationConfigurationScriptBase|Region number"
-msgstr "AuthenticationConfigurationScriptBase|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:114
 msgid "AuthenticationOrchestrationStack|Href slug"
-msgstr "AuthenticationOrchestrationStack|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:115
 msgid "AuthenticationOrchestrationStack|Region description"
-msgstr "AuthenticationOrchestrationStack|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:116
 msgid "AuthenticationOrchestrationStack|Region number"
-msgstr "AuthenticationOrchestrationStack|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:62
 msgid "Authentication|Auth key"
@@ -2110,7 +2109,7 @@ msgstr "Domaine hébergé par Google"
 
 #: ../config/model_attributes.rb:71
 msgid "Authentication|Href slug"
-msgstr "Authentication|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:72
 msgid "Authentication|Htpassd users"
@@ -2154,7 +2153,7 @@ msgstr "Connexion"
 
 #: ../config/model_attributes.rb:82
 msgid "Authentication|Manager ref"
-msgstr "Authentication|Réf. du gestionnaire"
+msgstr "Réf. du gestionnaire"
 
 #: ../config/model_attributes.rb:83
 msgid "Authentication|Name"
@@ -2186,7 +2185,7 @@ msgstr "Ouvrir les infos utilisateur avec l'ID"
 
 #: ../config/model_attributes.rb:90
 msgid "Authentication|Options"
-msgstr "Authentication|Options"
+msgstr "Options"
 
 #: ../config/model_attributes.rb:91
 msgid "Authentication|Password"
@@ -2346,27 +2345,27 @@ msgstr "Espace de travail d'automatisation"
 
 #: ../config/model_attributes.rb:118
 msgid "AutomateWorkspace|Guid"
-msgstr "AutomateWorkspace|GUID"
+msgstr "GUID"
 
 #: ../config/model_attributes.rb:119
 msgid "AutomateWorkspace|Href slug"
-msgstr "AutomateWorkspace|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:120
 msgid "AutomateWorkspace|Input"
-msgstr "AutomateWorkspace|Entrée"
+msgstr "Entrée"
 
 #: ../config/model_attributes.rb:121
 msgid "AutomateWorkspace|Output"
-msgstr "AutomateWorkspace|Sortie"
+msgstr "Sortie"
 
 #: ../config/model_attributes.rb:122
 msgid "AutomateWorkspace|Region description"
-msgstr "AutomateWorkspace|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:123
 msgid "AutomateWorkspace|Region number"
-msgstr "AutomateWorkspace|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../app/models/system_service.rb:30
 msgid "Automatic"
@@ -2475,7 +2474,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:132
 msgid "AvailabilityZone|Href slug"
-msgstr "AvailabilityZone|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:133
 msgid "AvailabilityZone|Max cpu usage rate average avg over time period"
@@ -2854,7 +2853,7 @@ msgstr "Données"
 
 #: ../config/model_attributes.rb:161
 msgid "BinaryBlobPart|Href slug"
-msgstr "BinaryBlobPart|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:162
 msgid "BinaryBlobPart|Md5"
@@ -2878,7 +2877,7 @@ msgstr "Type de données"
 
 #: ../config/model_attributes.rb:151
 msgid "BinaryBlob|Href slug"
-msgstr "BinaryBlob|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:152
 msgid "BinaryBlob|Md5"
@@ -2926,7 +2925,7 @@ msgstr "Nom de l'événement"
 
 #: ../config/model_attributes.rb:169
 msgid "BlacklistedEvent|Href slug"
-msgstr "BlacklistedEvent|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:170
 msgid "BlacklistedEvent|Provider model"
@@ -3035,7 +3034,7 @@ msgstr "Futur"
 
 #: ../config/model_attributes.rb:179
 msgid "BottleneckEvent|Href slug"
-msgstr "BottleneckEvent|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:180
 msgid "BottleneckEvent|Message"
@@ -4350,31 +4349,31 @@ msgstr "Champ payant"
 
 #: ../config/model_attributes.rb:188
 msgid "ChargeableField|Description"
-msgstr "ChargeableField|Description"
+msgstr "Description"
 
 #: ../config/model_attributes.rb:189
 msgid "ChargeableField|Group"
-msgstr "ChargeableField|Groupe"
+msgstr "Groupe"
 
 #: ../config/model_attributes.rb:190
 msgid "ChargeableField|Href slug"
-msgstr "ChargeableField|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:191
 msgid "ChargeableField|Metric"
-msgstr "ChargeableField|Métrique"
+msgstr "Métrique"
 
 #: ../config/model_attributes.rb:192
 msgid "ChargeableField|Region description"
-msgstr "ChargeableField|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:193
 msgid "ChargeableField|Region number"
-msgstr "ChargeableField|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:194
 msgid "ChargeableField|Source"
-msgstr "ChargeableField|Source"
+msgstr "Source"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1036
@@ -4442,7 +4441,7 @@ msgstr "Nom complet"
 
 #: ../config/model_attributes.rb:223
 msgid "ChargebackRateDetailCurrency|Href slug"
-msgstr "ChargebackRateDetailCurrency|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:224
 msgid "ChargebackRateDetailCurrency|Name"
@@ -4466,7 +4465,7 @@ msgstr "Unicode hex"
 
 #: ../config/model_attributes.rb:230
 msgid "ChargebackRateDetailMeasure|Href slug"
-msgstr "ChargebackRateDetailMeasure|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:231
 msgid "ChargebackRateDetailMeasure|Name"
@@ -4514,7 +4513,7 @@ msgstr "Groupe"
 
 #: ../config/model_attributes.rb:211
 msgid "ChargebackRateDetail|Href slug"
-msgstr "ChargebackRateDetail|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:212
 msgid "ChargebackRateDetail|Metric"
@@ -4542,7 +4541,7 @@ msgstr "Source"
 
 #: ../config/model_attributes.rb:218
 msgid "ChargebackRateDetail|Sub metric"
-msgstr "ChargebackRateDetail|Métrique secondaire"
+msgstr "Métrique secondaire"
 
 #: ../config/model_attributes.rb:219
 msgid "ChargebackRateDetail|Updated on"
@@ -4566,7 +4565,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:200
 msgid "ChargebackRate|Href slug"
-msgstr "ChargebackRate|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:201
 msgid "ChargebackRate|Rate type"
@@ -4594,7 +4593,7 @@ msgstr "Taux fixe"
 
 #: ../config/model_attributes.rb:240
 msgid "ChargebackTier|Href slug"
-msgstr "ChargebackTier|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:241
 msgid "ChargebackTier|Region description"
@@ -4638,9 +4637,9 @@ msgid ""
 "Check that a Host is running and has valid credentials for Datastore "
 "[%{name}] with id: [%{id}]"
 msgstr ""
-"Vérifiez qu''un hôte est en cours d''exécution et comporte des informations "
-"d''identification valides pour le magasin de données [%{name}] portant l''ID"
-" : [%{id}]"
+"Vérifiez qu'un hôte est en cours d'exécution et comporte des informations "
+"d'identification valides pour le magasin de données [%{name}] portant l'ID :"
+" [%{id}]"
 
 #. TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 #: ../config/yaml_strings.rb:6885
@@ -4715,7 +4714,7 @@ msgstr "Texte en exemple"
 
 #: ../config/model_attributes.rb:249
 msgid "Classification|Href slug"
-msgstr "Classification|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:250
 msgid "Classification|Icon"
@@ -4727,7 +4726,7 @@ msgstr "Nom"
 
 #: ../config/model_attributes.rb:252
 msgid "Classification|Ns"
-msgstr "Classification|Ns"
+msgstr "Ns"
 
 #: ../config/model_attributes.rb:253
 msgid "Classification|Perf by tag"
@@ -5081,13 +5080,13 @@ msgstr "Sous-réseaux Cloud (Openstack)"
 #: ../config/dictionary_strings.rb:1290 ../config/dictionary_strings.rb:2240
 #: ../config/yaml_strings.rb:7030
 msgid "Cloud Tenant"
-msgstr "Tenant cloud"
+msgstr "Client cloud"
 
 #. TRANSLATORS: en.yml key:
 #. dictionary.model.ManageIQ::Providers::Openstack::CloudManager::CloudTenant
 #: ../config/dictionary_strings.rb:1844
 msgid "Cloud Tenant (OpenStack)"
-msgstr "Tenant cloud (OpenStack)"
+msgstr "Client cloud (OpenStack)"
 
 #. TRANSLATORS: en.yml key: dictionary.model.CloudTenant (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_tenant (plural form)
@@ -5096,7 +5095,7 @@ msgstr "Tenant cloud (OpenStack)"
 #: ../config/dictionary_strings.rb:1292 ../config/dictionary_strings.rb:2242
 #: ../config/dictionary_strings.rb:2244 ../config/yaml_strings.rb:484
 msgid "Cloud Tenants"
-msgstr "Tenant cloud"
+msgstr "Client cloud"
 
 #. TRANSLATORS: en.yml key:
 #. dictionary.model.ManageIQ::Providers::Openstack::CloudManager::CloudTenant
@@ -5105,7 +5104,7 @@ msgstr "Tenant cloud"
 #. dictionary.table.manageiq_providers_openstack_cloud_manager_cloud_tenant
 #: ../config/dictionary_strings.rb:1846 ../config/dictionary_strings.rb:2574
 msgid "Cloud Tenants (OpenStack)"
-msgstr "Tenant cloud (OpenStack)"
+msgstr "Client cloud (OpenStack)"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:382
@@ -5219,11 +5218,11 @@ msgstr "Port réseau du sous-réseau cloud"
 
 #: ../config/model_attributes.rb:370
 msgid "Cloud tenant"
-msgstr "Tenant cloud"
+msgstr "Client cloud"
 
 #: ../config/model_attributes.rb:379
 msgid "Cloud tenant flavor"
-msgstr "Gabarit du tenant cloud"
+msgstr "Gabarit du client cloud"
 
 #: ../config/model_attributes.rb:383
 msgid "Cloud volume"
@@ -5257,7 +5256,7 @@ msgstr "Activé"
 
 #: ../config/model_attributes.rb:276
 msgid "CloudDatabaseFlavor|Href slug"
-msgstr "CloudDatabaseFlavor|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:277
 msgid "CloudDatabaseFlavor|Max connections"
@@ -5305,7 +5304,7 @@ msgstr "Attributs supplémentaires"
 
 #: ../config/model_attributes.rb:264
 msgid "CloudDatabase|Href slug"
-msgstr "CloudDatabase|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:265
 msgid "CloudDatabase|Max storage"
@@ -5382,7 +5381,7 @@ msgstr "Attributs supplémentaires"
 
 #: ../config/model_attributes.rb:291
 msgid "CloudNetwork|Href slug"
-msgstr "CloudNetwork|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:292
 msgid "CloudNetwork|Maximum transmission unit"
@@ -5445,7 +5444,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:307
 msgid "CloudObjectStoreContainer|Href slug"
-msgstr "CloudObjectStoreContainer|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:308
 msgid "CloudObjectStoreContainer|Key"
@@ -5453,7 +5452,7 @@ msgstr "Clé"
 
 #: ../config/model_attributes.rb:309
 msgid "CloudObjectStoreContainer|Name"
-msgstr "CloudObjectStoreContainer|Nom"
+msgstr "Nom"
 
 #: ../config/model_attributes.rb:310
 msgid "CloudObjectStoreContainer|Object count"
@@ -5492,7 +5491,7 @@ msgstr "Etag"
 
 #: ../config/model_attributes.rb:318
 msgid "CloudObjectStoreObject|Href slug"
-msgstr "CloudObjectStoreObject|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:319
 msgid "CloudObjectStoreObject|Key"
@@ -5508,7 +5507,7 @@ msgstr "Nom"
 
 #: ../config/model_attributes.rb:322
 msgid "CloudObjectStoreObject|Region description"
-msgstr "CloudObjectStoreObject|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:323
 msgid "CloudObjectStoreObject|Region number"
@@ -5520,7 +5519,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:326
 msgid "CloudResourceQuota|Href slug"
-msgstr "CloudResourceQuota|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:327
 msgid "CloudResourceQuota|Name"
@@ -5560,7 +5559,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:337
 msgid "CloudService|Href slug"
-msgstr "CloudService|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:338
 msgid "CloudService|Region description"
@@ -5597,7 +5596,7 @@ msgstr "Adresse"
 
 #: ../config/model_attributes.rb:367
 msgid "CloudSubnetNetworkPort|Href slug"
-msgstr "CloudSubnetNetworkPort|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:368
 msgid "CloudSubnetNetworkPort|Region description"
@@ -5645,7 +5644,7 @@ msgstr "Itinéraires hôte"
 
 #: ../config/model_attributes.rb:354
 msgid "CloudSubnet|Href slug"
-msgstr "CloudSubnet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:355
 msgid "CloudSubnet|Ip version"
@@ -5686,51 +5685,51 @@ msgstr "Nombre total de machines virtuelles"
 #. TRANSLATORS: file: product/views/CloudTenant.yaml
 #: ../config/yaml_strings.rb:7032
 msgid "CloudTenant"
-msgstr "CloudTenant"
+msgstr "ClientCloud"
 
 #: ../config/model_attributes.rb:380
 msgid "CloudTenantFlavor|Href slug"
-msgstr "CloudTenantFlavor|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:381
 msgid "CloudTenantFlavor|Region description"
-msgstr "CloudTenantFlavor|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:382
 msgid "CloudTenantFlavor|Region number"
-msgstr "CloudTenantFlavor|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:371
 msgid "CloudTenant|Description"
-msgstr "CloudTenant|Description"
+msgstr "Description"
 
 #: ../config/model_attributes.rb:372
 msgid "CloudTenant|Ems ref"
-msgstr "CloudTenant|Réf. EMS"
+msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:373
 msgid "CloudTenant|Enabled"
-msgstr "CloudTenant|Activé"
+msgstr "Activé"
 
 #: ../config/model_attributes.rb:374
 msgid "CloudTenant|Href slug"
-msgstr "CloudTenant|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:375
 msgid "CloudTenant|Name"
-msgstr "CloudTenant|Nom"
+msgstr "Nom"
 
 #: ../config/model_attributes.rb:376
 msgid "CloudTenant|Region description"
-msgstr "CloudTenant|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:377
 msgid "CloudTenant|Region number"
-msgstr "CloudTenant|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:378
 msgid "CloudTenant|Total vms"
-msgstr "CloudTenant|Nombre total de machines virtuelles"
+msgstr "Nombre total de machines virtuelles"
 
 #. TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
 #. TRANSLATORS: file: product/views/CloudVolume.yaml
@@ -5763,7 +5762,7 @@ msgstr "Comporte des sauvegardes dépendantes"
 
 #: ../config/model_attributes.rb:402
 msgid "CloudVolumeBackup|Href slug"
-msgstr "CloudVolumeBackup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:403
 msgid "CloudVolumeBackup|Is incremental"
@@ -5814,11 +5813,11 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:414
 msgid "CloudVolumeSnapshot|Encrypted"
-msgstr "CloudVolumeSnapshot|Chiffré"
+msgstr "Chiffré"
 
 #: ../config/model_attributes.rb:415
 msgid "CloudVolumeSnapshot|Href slug"
-msgstr "CloudVolumeSnapshot|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:416
 msgid "CloudVolumeSnapshot|Name"
@@ -5862,15 +5861,15 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:388
 msgid "CloudVolume|Encrypted"
-msgstr "CloudVolume|Chiffré"
+msgstr "Chiffré"
 
 #: ../config/model_attributes.rb:389
 msgid "CloudVolume|Href slug"
-msgstr "CloudVolume|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:390
 msgid "CloudVolume|Iops"
-msgstr "CloudVolume|IOP"
+msgstr "IOP"
 
 #: ../config/model_attributes.rb:391
 msgid "CloudVolume|Name"
@@ -6302,7 +6301,7 @@ msgstr "Date de création"
 
 #: ../config/model_attributes.rb:435
 msgid "ComplianceDetail|Href slug"
-msgstr "ComplianceDetail|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:436
 msgid "ComplianceDetail|Miq policy desc"
@@ -6338,7 +6337,7 @@ msgstr "Type d'événement"
 
 #: ../config/model_attributes.rb:425
 msgid "Compliance|Href slug"
-msgstr "Compliance|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:426
 msgid "Compliance|Region description"
@@ -6398,7 +6397,7 @@ msgstr "Système informatique"
 
 #: ../config/model_attributes.rb:443
 msgid "ComputerSystem|Href slug"
-msgstr "ComputerSystem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:444
 msgid "ComputerSystem|Managed entity type"
@@ -6447,7 +6446,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:468
 msgid "ConditionSet|Href slug"
-msgstr "ConditionSet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:469
 msgid "ConditionSet|Mode"
@@ -6526,7 +6525,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:455
 msgid "Condition|Href slug"
-msgstr "Condition|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:456
 msgid "Condition|Modifier"
@@ -6650,7 +6649,7 @@ msgstr "Balise de configuration"
 
 #: ../config/model_attributes.rb:480
 msgid "ConfigurationLocation|Href slug"
-msgstr "ConfigurationLocation|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:481
 msgid "ConfigurationLocation|Manager ref"
@@ -6686,7 +6685,7 @@ msgstr "Gestionnaire de configuration Foreman"
 
 #: ../config/model_attributes.rb:488
 msgid "ConfigurationOrganization|Href slug"
-msgstr "ConfigurationOrganization|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:489
 msgid "ConfigurationOrganization|Manager ref"
@@ -6751,7 +6750,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:504
 msgid "ConfigurationProfile|Href slug"
-msgstr "ConfigurationProfile|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:505
 msgid "ConfigurationProfile|Manager ref"
@@ -6791,11 +6790,11 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:515
 msgid "ConfigurationScriptBase|Href slug"
-msgstr "ConfigurationScriptBase|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:516
 msgid "ConfigurationScriptBase|Manager ref"
-msgstr "Ref du gestionnaire"
+msgstr "Réf du gestionnaire"
 
 #: ../config/model_attributes.rb:517
 msgid "ConfigurationScriptBase|Name"
@@ -6823,7 +6822,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:524
 msgid "ConfigurationScriptSource|Href slug"
-msgstr "ConfigurationScriptSource|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:525
 msgid "ConfigurationScriptSource|Manager ref"
@@ -6855,7 +6854,7 @@ msgstr "Suppression ou mise à jour scm"
 
 #: ../config/model_attributes.rb:532
 msgid "ConfigurationScriptSource|Scm type"
-msgstr "Source du script de configuration|Type Scm"
+msgstr "Type Scm"
 
 #: ../config/model_attributes.rb:533
 msgid "ConfigurationScriptSource|Scm update on launch"
@@ -6867,7 +6866,7 @@ msgstr "URL Scm"
 
 #: ../config/model_attributes.rb:535
 msgid "ConfigurationScriptSource|Status"
-msgstr "ConfigurationScriptSource|État"
+msgstr "État"
 
 #: ../config/model_attributes.rb:536
 msgid "ConfigurationScriptSource|Total payloads"
@@ -6875,7 +6874,7 @@ msgstr "Total de charges utiles"
 
 #: ../config/model_attributes.rb:538
 msgid "ConfigurationTag|Href slug"
-msgstr "ConfigurationTag|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:539
 msgid "ConfigurationTag|Manager ref"
@@ -7000,7 +6999,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:555
 msgid "ConfiguredSystem|Href slug"
-msgstr "ConfiguredSystem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:556
 msgid "ConfiguredSystem|Ipaddress"
@@ -7409,7 +7408,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:666
 msgid "ContainerBuildPod|Href slug"
-msgstr "ContainerBuildPod|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:667
 msgid "ContainerBuildPod|Message"
@@ -7509,7 +7508,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:638
 msgid "ContainerBuild|Href slug"
-msgstr "ContainerBuild|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:639
 msgid "ContainerBuild|Name"
@@ -7565,7 +7564,7 @@ msgstr "Type d'entité de conteneur"
 
 #: ../config/model_attributes.rb:679
 msgid "ContainerCondition|Href slug"
-msgstr "ContainerCondition|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:680
 msgid "ContainerCondition|Last heartbeat time"
@@ -7617,7 +7616,7 @@ msgstr "Périphériques de stockage Docker"
 
 #: ../config/model_attributes.rb:705
 msgid "ContainerDeploymentNode|Href slug"
-msgstr "ContainerDeploymentNode|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:706
 msgid "ContainerDeploymentNode|Labels"
@@ -7653,7 +7652,7 @@ msgstr "Déployer un registre"
 
 #: ../config/model_attributes.rb:693
 msgid "ContainerDeployment|Href slug"
-msgstr "ContainerDeployment|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:694
 msgid "ContainerDeployment|Kind"
@@ -7685,7 +7684,7 @@ msgstr "Chemin d'accès au champ"
 
 #: ../config/model_attributes.rb:712
 msgid "ContainerEnvVar|Href slug"
-msgstr "ContainerEnvVar|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:713
 msgid "ContainerEnvVar|Name"
@@ -7705,7 +7704,7 @@ msgstr "Valeur"
 
 #: ../config/model_attributes.rb:766
 msgid "ContainerGroupsContainerServices|Href slug"
-msgstr "ContainerGroupsContainerServices|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:767
 msgid "ContainerGroupsContainerServices|Region description"
@@ -7797,7 +7796,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:738
 msgid "ContainerGroup|Href slug"
-msgstr "ContainerGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:739
 msgid "ContainerGroup|Ipaddress"
@@ -7948,7 +7947,7 @@ msgstr "Hôte"
 
 #: ../config/model_attributes.rb:806
 msgid "ContainerImageRegistry|Href slug"
-msgstr "ContainerImageRegistry|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:807
 msgid "ContainerImageRegistry|Name"
@@ -8048,7 +8047,7 @@ msgstr "Ports exposés"
 
 #: ../config/model_attributes.rb:790
 msgid "ContainerImage|Href slug"
-msgstr "ContainerImage|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:791
 msgid "ContainerImage|Image ref"
@@ -8096,11 +8095,11 @@ msgstr "Balise"
 
 #: ../config/model_attributes.rb:802
 msgid "ContainerImage|Total containers"
-msgstr "ContainerImage|Nombre total de conteneurs"
+msgstr "Nombre total de conteneurs"
 
 #: ../config/model_attributes.rb:812
 msgid "ContainerLabelTagMapping|Href slug"
-msgstr "ContainerLabelTagMapping|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:813
 msgid "ContainerLabelTagMapping|Label name"
@@ -8132,7 +8131,7 @@ msgstr "Demande par défaut"
 
 #: ../config/model_attributes.rb:830
 msgid "ContainerLimitItem|Href slug"
-msgstr "ContainerLimitItem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:831
 msgid "ContainerLimitItem|Item type"
@@ -8176,7 +8175,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:822
 msgid "ContainerLimit|Href slug"
-msgstr "ContainerLimit|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:823
 msgid "ContainerLimit|Name"
@@ -8213,9 +8212,7 @@ msgstr "Utilisation processeur - Moyenne taux MHz - Taux élevé sur la période
 
 #: ../config/model_attributes.rb:842
 msgid "ContainerNode|Cpu usagemhz rate average low over time period"
-msgstr ""
-"ContainerNode|Utilisation processeur - Moyenne taux MHz - Taux bas sur la "
-"période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:843
 msgid "ContainerNode|Created on"
@@ -8259,7 +8256,7 @@ msgstr "Personnalisé 9"
 
 #: ../config/model_attributes.rb:853
 msgid "ContainerNode|Deleted on"
-msgstr "ContainerNode|Supprimé le"
+msgstr "Supprimé le"
 
 #: ../config/model_attributes.rb:854
 msgid "ContainerNode|Derived memory used avg over time period"
@@ -8283,7 +8280,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:859
 msgid "ContainerNode|Href slug"
-msgstr "ContainerNode|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:860
 msgid "ContainerNode|Identity infra"
@@ -8436,7 +8433,7 @@ msgstr "Port hôte"
 
 #: ../config/model_attributes.rb:892
 msgid "ContainerPortConfig|Href slug"
-msgstr "ContainerPortConfig|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:893
 msgid "ContainerPortConfig|Name"
@@ -8553,7 +8550,7 @@ msgstr "Nombre de groupes"
 
 #: ../config/model_attributes.rb:921
 msgid "ContainerProject|Href slug"
-msgstr "ContainerProject|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:922
 msgid "ContainerProject|Images count"
@@ -8662,11 +8659,11 @@ msgstr "Nombre de services"
 
 #: ../config/model_attributes.rb:953
 msgid "ContainerQuotaItem|Deleted on"
-msgstr "ContainerQuotaItem|Supprimé le"
+msgstr "Supprimé le"
 
 #: ../config/model_attributes.rb:954
 msgid "ContainerQuotaItem|Href slug"
-msgstr "ContainerQuotaItem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:955
 msgid "ContainerQuotaItem|Quota desired"
@@ -8674,7 +8671,7 @@ msgstr "Quota souhaité"
 
 #: ../config/model_attributes.rb:956
 msgid "ContainerQuotaItem|Quota desired display"
-msgstr "ContainerQuotaItem|Affichage du quota souhaité"
+msgstr "Affichage du quota souhaité"
 
 #: ../config/model_attributes.rb:957
 msgid "ContainerQuotaItem|Quota enforced"
@@ -8682,7 +8679,7 @@ msgstr "Quota appliqué"
 
 #: ../config/model_attributes.rb:958
 msgid "ContainerQuotaItem|Quota enforced display"
-msgstr "ContainerQuotaItem|Affichage du quota appliqué"
+msgstr "Affichage du quota appliqué"
 
 #: ../config/model_attributes.rb:959
 msgid "ContainerQuotaItem|Quota observed"
@@ -8690,7 +8687,7 @@ msgstr "Quota observé"
 
 #: ../config/model_attributes.rb:960
 msgid "ContainerQuotaItem|Quota observed display"
-msgstr "ContainerQuotaItem|Affichage du quota observé"
+msgstr "Affichage du quota observé"
 
 #: ../config/model_attributes.rb:961
 msgid "ContainerQuotaItem|Region description"
@@ -8710,7 +8707,7 @@ msgstr "Date de création"
 
 #: ../config/model_attributes.rb:944
 msgid "ContainerQuota|Deleted on"
-msgstr "ContainerQuota|Supprimé le"
+msgstr "Supprimé le"
 
 #: ../config/model_attributes.rb:945
 msgid "ContainerQuota|Ems created on"
@@ -8722,7 +8719,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:947
 msgid "ContainerQuota|Href slug"
-msgstr "ContainerQuota|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:948
 msgid "ContainerQuota|Name"
@@ -8823,7 +8820,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:984
 msgid "ContainerReplicator|Href slug"
-msgstr "ContainerReplicator|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:985
 msgid "ContainerReplicator|Last compliance status"
@@ -8990,7 +8987,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:1018
 msgid "ContainerRoute|Href slug"
-msgstr "ContainerRoute|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1019
 msgid "ContainerRoute|Name"
@@ -9023,7 +9020,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:1066
 msgid "ContainerServicePortConfig|Href slug"
-msgstr "ContainerServicePortConfig|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1067
 msgid "ContainerServicePortConfig|Name"
@@ -9131,7 +9128,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:1044
 msgid "ContainerService|Href slug"
-msgstr "ContainerService|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1045
 msgid "ContainerService|Max cpu usage rate average avg over time period"
@@ -9298,7 +9295,7 @@ msgstr "Générer"
 
 #: ../config/model_attributes.rb:1108
 msgid "ContainerTemplateParameter|Href slug"
-msgstr "ContainerTemplateParameter|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1109
 msgid "ContainerTemplateParameter|Name"
@@ -9366,7 +9363,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:1086
 msgid "ContainerTemplate|Href slug"
-msgstr "ContainerTemplate|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1087
 msgid "ContainerTemplate|Name"
@@ -9374,7 +9371,7 @@ msgstr "Nom"
 
 #: ../config/model_attributes.rb:1088
 msgid "ContainerTemplate|Object labels"
-msgstr "ContainerTemplate|Libellés d'objet"
+msgstr "Libellés d'objet"
 
 #: ../config/model_attributes.rb:1089
 msgid "ContainerTemplate|Objects"
@@ -9458,7 +9455,7 @@ msgstr "Nom du point d'accès GlusterFS"
 
 #: ../config/model_attributes.rb:1131
 msgid "ContainerVolume|Href slug"
-msgstr "ContainerVolume|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1132
 msgid "ContainerVolume|Iscsi iqn"
@@ -9588,19 +9585,19 @@ msgstr "Réf. de stockage"
 
 #: ../config/model_attributes.rb:569
 msgid "Container|Capabilities add"
-msgstr "Container|Ajout de fonctionnalités"
+msgstr "Ajout de fonctionnalités"
 
 #: ../config/model_attributes.rb:570
 msgid "Container|Capabilities drop"
-msgstr "Container|Suppression de fonctionnalités"
+msgstr "Suppression de fonctionnalités"
 
 #: ../config/model_attributes.rb:571
 msgid "Container|Command"
-msgstr "Container|Commande"
+msgstr "Commande"
 
 #: ../config/model_attributes.rb:572
 msgid "Container|Cpu cores"
-msgstr "Container|Cœurs de processeur"
+msgstr "Cœurs de processeur"
 
 #: ../config/model_attributes.rb:573
 msgid "Container|Cpu usagemhz rate average avg over time period"
@@ -9644,15 +9641,15 @@ msgstr "Terminé à"
 
 #: ../config/model_attributes.rb:583
 msgid "Container|Href slug"
-msgstr "Container|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:584
 msgid "Container|Image"
-msgstr "Container|Image"
+msgstr "Image"
 
 #: ../config/model_attributes.rb:585
 msgid "Container|Image pull policy"
-msgstr "Container|Stratégie de récupération d'images"
+msgstr "Stratégie de récupération d'images"
 
 #: ../config/model_attributes.rb:586
 msgid "Container|Last exit code"
@@ -9688,11 +9685,11 @@ msgstr "Dernier état"
 
 #: ../config/model_attributes.rb:594
 msgid "Container|Limit cpu cores"
-msgstr "Container|Limite de cœurs de processeur"
+msgstr "Limite de cœurs de processeur"
 
 #: ../config/model_attributes.rb:595
 msgid "Container|Limit memory bytes"
-msgstr "Container|Mémoire limite en octets"
+msgstr "Mémoire limite en octets"
 
 #: ../config/model_attributes.rb:596
 msgid "Container|Max cpu usage rate average avg over time period"
@@ -9767,7 +9764,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:608
 msgid "Container|Memory"
-msgstr "Container|Mémoire"
+msgstr "Mémoire"
 
 #: ../config/model_attributes.rb:609
 msgid "Container|Message"
@@ -9779,7 +9776,7 @@ msgstr "Nom"
 
 #: ../config/model_attributes.rb:611
 msgid "Container|Privileged"
-msgstr "Container|Privilégié"
+msgstr "Privilégié"
 
 #: ../config/model_attributes.rb:612
 msgid "Container|Reason"
@@ -9795,11 +9792,11 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:615
 msgid "Container|Request cpu cores"
-msgstr "Container|Demande - Cœurs de processeur"
+msgstr "Demande - Cœurs de processeur"
 
 #: ../config/model_attributes.rb:616
 msgid "Container|Request memory bytes"
-msgstr "Container|Demande - Octets de mémoire"
+msgstr "Demande - Octets de mémoire"
 
 #: ../config/model_attributes.rb:617
 msgid "Container|Restart count"
@@ -9807,11 +9804,11 @@ msgstr "Nombre de redémarrages"
 
 #: ../config/model_attributes.rb:618
 msgid "Container|Run as non root"
-msgstr "Container|Exécuter comme non-root"
+msgstr "Exécuter comme non-root"
 
 #: ../config/model_attributes.rb:619
 msgid "Container|Run as user"
-msgstr "Container|Exécuter comme utilisateur"
+msgstr "Exécuter comme utilisateur"
 
 #: ../config/model_attributes.rb:620
 msgid "Container|Signal"
@@ -10323,7 +10320,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3768
 msgid "Creating Volume %{volume_name} completed successfully."
-msgstr "La création du volume  %{volume_name} a abuti."
+msgstr "La création du volume  %{volume_name} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3770
@@ -10585,7 +10582,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:1152
 msgid "CustomAttribute|Href slug"
-msgstr "CustomAttribute|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1153
 msgid "CustomAttribute|Name"
@@ -10641,7 +10638,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:1184
 msgid "CustomButtonSet|Href slug"
-msgstr "CustomButtonSet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1185
 msgid "CustomButtonSet|Mode"
@@ -10697,11 +10694,11 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:1167
 msgid "CustomButton|Disabled text"
-msgstr "CustomButton|Texte désactivé"
+msgstr "Texte désactivé"
 
 #: ../config/model_attributes.rb:1168
 msgid "CustomButton|Enablement expression"
-msgstr "CustomButton|Expression d'activation"
+msgstr "Expression d'activation"
 
 #: ../config/model_attributes.rb:1169
 msgid "CustomButton|Guid"
@@ -10709,7 +10706,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:1170
 msgid "CustomButton|Href slug"
-msgstr "CustomButton|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1171
 msgid "CustomButton|Name"
@@ -10741,7 +10738,7 @@ msgstr "Visibilité"
 
 #: ../config/model_attributes.rb:1178
 msgid "CustomButton|Visibility expression"
-msgstr "CustomButton|Expression de visibilité"
+msgstr "Expression de visibilité"
 
 #: ../config/model_attributes.rb:1179
 msgid "CustomButton|Wait for complete"
@@ -10793,15 +10790,15 @@ msgstr "Modèle de personnalisation"
 
 #: ../config/model_attributes.rb:1196
 msgid "CustomizationScript|Description"
-msgstr "CustomizationScript|Description"
+msgstr "Description"
 
 #: ../config/model_attributes.rb:1197
 msgid "CustomizationScript|Href slug"
-msgstr "CustomizationScript|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1198
 msgid "CustomizationScript|In use"
-msgstr "CustomizationScript|En cours d'utilisation"
+msgstr "En cours d'utilisation"
 
 #: ../config/model_attributes.rb:1199
 msgid "CustomizationScript|Manager ref"
@@ -10821,7 +10818,7 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:1203
 msgid "CustomizationScript|User defined"
-msgstr "CustomizationScript|Défini par l'utilisateur"
+msgstr "Défini par l'utilisateur"
 
 #: ../config/model_attributes.rb:1205
 msgid "CustomizationSpec|Description"
@@ -10829,7 +10826,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:1206
 msgid "CustomizationSpec|Href slug"
-msgstr "CustomizationSpec|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1207
 msgid "CustomizationSpec|Last update time"
@@ -10861,7 +10858,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:1215
 msgid "CustomizationTemplate|Href slug"
-msgstr "CustomizationTemplate|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1216
 msgid "CustomizationTemplate|Name"
@@ -11033,7 +11030,7 @@ msgstr "Sauvegarde de base de données"
 
 #: ../config/model_attributes.rb:1222
 msgid "DatabaseBackup|Href slug"
-msgstr "DatabaseBackup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1223
 msgid "DatabaseBackup|Name"
@@ -11813,7 +11810,7 @@ msgstr "Supprimer un Planning"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1717
 msgid "Delete a Tenant/Project"
-msgstr "Supprimer un tenant/projet"
+msgstr "Supprimer un client/projet"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1665
@@ -12092,7 +12089,7 @@ msgid ""
 "Detaching Volume %{subject} from Instance %{instance_name} completed "
 "successfully."
 msgstr ""
-"La dissociation du volume %{subject} de l''instance %{instance_name} a "
+"La dissociation du volume %{subject} de l'instance %{instance_name} a "
 "abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
@@ -12101,8 +12098,8 @@ msgid ""
 "Detaching Volume %{subject} from Instance %{instance_name} failed: "
 "%{error_message}"
 msgstr ""
-"La dissociation du volume %{subject} de l''instance %{instance_name} a "
-"échoué : %{error_message}"
+"La dissociation du volume %{subject} de l'instance %{instance_name} a échoué"
+" : %{error_message}"
 
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual
 #. Machines/021_Detailed - VMs NOT migration ready.yaml
@@ -12246,7 +12243,7 @@ msgstr "Dynamique"
 
 #: ../config/model_attributes.rb:1242
 msgid "DialogField|Href slug"
-msgstr "DialogField|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1243
 msgid "DialogField|Label"
@@ -12354,7 +12351,7 @@ msgstr "Options de la méthode d'affichage"
 
 #: ../config/model_attributes.rb:1270
 msgid "DialogGroup|Href slug"
-msgstr "DialogGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1271
 msgid "DialogGroup|Label"
@@ -12390,7 +12387,7 @@ msgstr "Options de la méthode d'affichage"
 
 #: ../config/model_attributes.rb:1280
 msgid "DialogTab|Href slug"
-msgstr "DialogTab|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1281
 msgid "DialogTab|Label"
@@ -12430,7 +12427,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:1229
 msgid "Dialog|Href slug"
-msgstr "Dialog|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1230
 msgid "Dialog|Label"
@@ -13058,7 +13055,7 @@ msgstr "Espace libre"
 
 #: ../config/model_attributes.rb:1298
 msgid "Disk|Href slug"
-msgstr "Disk|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1299
 msgid "Disk|Location"
@@ -13475,7 +13472,7 @@ msgstr "Afficher les différents modèles liés à un CI"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:492
 msgid "Display Individual Tenants"
-msgstr "Afficher les différents tenants"
+msgstr "Afficher les différents clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1655
@@ -13867,7 +13864,7 @@ msgstr "Afficher les listes de modèles liés à un CI"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:490
 msgid "Display Lists of Tenants"
-msgstr "Afficher les listes de tenants"
+msgstr "Afficher les listes de clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1653
@@ -14036,7 +14033,7 @@ msgstr "Afficher les chronologies pour les modèles"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:496
 msgid "Display Timelines for Tenants"
-msgstr "Afficher les chronologies pour les tenants"
+msgstr "Afficher les chronologies pour les clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3029
@@ -14255,7 +14252,7 @@ msgstr "Données"
 
 #: ../config/model_attributes.rb:1315
 msgid "DriftState|Href slug"
-msgstr "DriftState|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1316
 msgid "DriftState|Region description"
@@ -15095,7 +15092,7 @@ msgstr "Modifier les balises des gestionnaires de stockage"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:500
 msgid "Edit Tags of Tenants"
-msgstr "Modifier les balises des tenants"
+msgstr "Modifier les balises des clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:522
@@ -15342,12 +15339,12 @@ msgstr "Modifier un modèle"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:506
 msgid "Edit a Tenant"
-msgstr "Modifier un tenant"
+msgstr "Modifier un client"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1715
 msgid "Edit a Tenant/Project"
-msgstr "Modifier un tenant/projet"
+msgstr "Modifier un client/projet"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1661
@@ -15784,7 +15781,7 @@ msgstr "Haute disponibilité (HA) - Nombre d'échecs max."
 
 #: ../config/model_attributes.rb:1390
 msgid "EmsCluster|Href slug"
-msgstr "EmsCluster|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1391
 msgid "EmsCluster|Last drift state timestamp"
@@ -15986,7 +15983,7 @@ msgstr "Masqué"
 
 #: ../config/model_attributes.rb:1433
 msgid "EmsFolder|Href slug"
-msgstr "EmsFolder|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1434
 msgid "EmsFolder|Name"
@@ -16116,7 +16113,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:1443
 msgid "Endpoint|Href slug"
-msgstr "Endpoint|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1444
 msgid "Endpoint|Ipaddress"
@@ -16185,7 +16182,7 @@ msgstr "Droit d'accès"
 
 #: ../config/model_attributes.rb:1455
 msgid "Entitlement|Filter expression"
-msgstr "Entitlement|Expression du filtre"
+msgstr "Expression du filtre"
 
 #: ../config/model_attributes.rb:1456
 msgid "Entitlement|Filters"
@@ -16193,7 +16190,7 @@ msgstr "Filtres"
 
 #: ../config/model_attributes.rb:1457
 msgid "Entitlement|Href slug"
-msgstr "Entitlement|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1458
 msgid "Entitlement|Region description"
@@ -16269,13 +16266,13 @@ msgstr "Évacuer l'instance"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3738
 msgid "Evacuating Instance %{instance_name} completed successfully."
-msgstr "L''évacuation de l''instance %{instance_name} a abouti."
+msgstr "l'évacuation de l'instance %{instance_name} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3740
 msgid "Evacuating Instance %{instance_name} failed: %{error_message}"
 msgstr ""
-"L''évacuation de l''instance %{instance_name} a échoué : %{error_message}"
+"l'évacuation de l'instance %{instance_name} a échoué : %{error_message}"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqEventDefinition
 #. TRANSLATORS: en.yml key: dictionary.table.miq_event_definition
@@ -16330,7 +16327,7 @@ msgstr "Message de l'événement"
 
 #: ../app/models/manageiq/providers/base_manager/event_catcher.rb:14
 msgid "Event Monitor for Provider: %{name}"
-msgstr "Moniteur d''événement pour  le fournisseur : %{name}"
+msgstr "Moniteur d'événement pour  le fournisseur : %{name}"
 
 #. TRANSLATORS: en.yml key: dictionary.column.event_src
 #. TRANSLATORS: file: product/reports/500_Events -
@@ -16420,7 +16417,7 @@ msgstr "Généré"
 
 #: ../config/model_attributes.rb:1464
 msgid "EventLog|Href slug"
-msgstr "EventLog|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1465
 msgid "EventLog|Level"
@@ -16504,7 +16501,7 @@ msgstr "UID du cluster EMS"
 
 #: ../config/model_attributes.rb:1486
 msgid "EventStream|Ems ref"
-msgstr "EventStream|Réf. EMS"
+msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:1487
 msgid "EventStream|Event type"
@@ -16520,7 +16517,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:1490
 msgid "EventStream|Href slug"
-msgstr "EventStream|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1491
 msgid "EventStream|Is task"
@@ -16536,7 +16533,7 @@ msgstr "Nom du déploiement de middleware"
 
 #: ../config/model_attributes.rb:1494
 msgid "EventStream|Middleware domain name"
-msgstr "EventStream|Nom du domaine de middleware"
+msgstr "Nom du domaine de middleware"
 
 #: ../config/model_attributes.rb:1495
 msgid "EventStream|Middleware server name"
@@ -16718,7 +16715,7 @@ msgstr "Tout sous Sous-réseaux cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:486
 msgid "Everything under Cloud Tenants"
-msgstr "Tout sous tenants cloud"
+msgstr "Tout sous clients cloud"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:590
@@ -17302,7 +17299,7 @@ msgstr "Description du type EMS"
 
 #: ../config/model_attributes.rb:1532
 msgid "ExtManagementSystem|Enabled"
-msgstr "ExtManagementSystem|Activé"
+msgstr "Activé"
 
 #: ../config/model_attributes.rb:1533
 msgid "ExtManagementSystem|Guid"
@@ -17322,7 +17319,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:1537
 msgid "ExtManagementSystem|Href slug"
-msgstr "ExtManagementSystem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1538
 msgid "ExtManagementSystem|Ipaddress"
@@ -17443,7 +17440,7 @@ msgstr "Nom"
 
 #: ../config/model_attributes.rb:1560
 msgid "ExtManagementSystem|Options"
-msgstr "ExtManagementSystem|Options"
+msgstr "Options"
 
 #: ../config/model_attributes.rb:1561
 msgid "ExtManagementSystem|Port"
@@ -17479,17 +17476,17 @@ msgstr "Abonnement"
 
 #: ../config/model_attributes.rb:1569
 msgid "ExtManagementSystem|Supports block storage"
-msgstr "ExtManagementSystem|Prend en charge le stockage en blocs"
+msgstr "Prend en charge le stockage en blocs"
 
 #: ../config/model_attributes.rb:1570
 msgid "ExtManagementSystem|Supports cloud object store container create"
 msgstr ""
-"ExtManagementSystem|Prend en charge la création du conteneur de supports de "
-"sauvegarde des objets cloud"
+"Prend en charge la création du conteneur de supports de sauvegarde des "
+"objets cloud"
 
 #: ../config/model_attributes.rb:1571
 msgid "ExtManagementSystem|Tenant mapping enabled"
-msgstr "Association de tenants activée"
+msgstr "Association de clients activée"
 
 #: ../config/model_attributes.rb:1572
 msgid "ExtManagementSystem|Total cloud memory"
@@ -17719,7 +17716,7 @@ msgstr "État d'authentification"
 
 #: ../config/model_attributes.rb:1593
 msgid "FileDepot|Href slug"
-msgstr "FileDepot|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1594
 msgid "FileDepot|Name"
@@ -17797,7 +17794,7 @@ msgstr "Groupe"
 
 #: ../config/model_attributes.rb:1609
 msgid "Filesystem|Href slug"
-msgstr "Filesystem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1610
 msgid "Filesystem|Md5"
@@ -17909,7 +17906,7 @@ msgstr "Protocole hôte"
 
 #: ../config/model_attributes.rb:1632
 msgid "FirewallRule|Href slug"
-msgstr "FirewallRule|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1633
 msgid "FirewallRule|Name"
@@ -17949,44 +17946,44 @@ msgstr "Date de mise à jour"
 
 #: ../config/model_attributes.rb:1642
 msgid "Firmware"
-msgstr "Microprogramme"
+msgstr "Firmware"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3378
 msgid "Firmwares"
-msgstr "Microprogrammes"
+msgstr "Firmwares"
 
 #: ../config/model_attributes.rb:1643
 msgid "Firmware|Build"
-msgstr "Firmware|Compilation"
+msgstr "Compilation"
 
 #: ../config/model_attributes.rb:1644
 msgid "Firmware|Href slug"
-msgstr "Firmware|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1645
 msgid "Firmware|Name"
-msgstr "Firmware|Nom"
+msgstr "Nom"
 
 #: ../config/model_attributes.rb:1646
 msgid "Firmware|Region description"
-msgstr "Firmware|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:1647
 msgid "Firmware|Region number"
-msgstr "Firmware|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:1648
 msgid "Firmware|Release date"
-msgstr "Firmware|Date de sortie"
+msgstr "Date de sortie"
 
 #: ../config/model_attributes.rb:1649
 msgid "Firmware|Resource type"
-msgstr "Firmware|Type de ressource"
+msgstr "Type de ressource"
 
 #: ../config/model_attributes.rb:1650
 msgid "Firmware|Version"
-msgstr "Firmware|Version"
+msgstr "Version"
 
 #. TRANSLATORS: file: product/views/FloatingIp.yaml
 #: ../config/yaml_strings.rb:7513
@@ -18085,7 +18082,7 @@ msgstr "Taille du disque éphémère"
 
 #: ../config/model_attributes.rb:1661
 msgid "Flavor|Href slug"
-msgstr "Flavor|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1662
 msgid "Flavor|Memory"
@@ -18223,7 +18220,7 @@ msgstr "Adresse IP fixe"
 
 #: ../config/model_attributes.rb:1679
 msgid "FloatingIp|Href slug"
-msgstr "FloatingIp|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1680
 msgid "FloatingIp|Region description"
@@ -18486,11 +18483,11 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:1693
 msgid "GenericObjectDefinition|Generic objects count"
-msgstr "GenericObjectDefinition|Nombre d'objets génériques"
+msgstr "Nombre d'objets génériques"
 
 #: ../config/model_attributes.rb:1694
 msgid "GenericObjectDefinition|Href slug"
-msgstr "GenericObjectDefinition|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1695
 msgid "GenericObjectDefinition|Name"
@@ -18510,11 +18507,11 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:1684
 msgid "GenericObject|Generic object definition name"
-msgstr "GenericObject|Nom de la définition d'objet générique"
+msgstr "Nom de la définition d'objet générique"
 
 #: ../config/model_attributes.rb:1685
 msgid "GenericObject|Href slug"
-msgstr "GenericObject|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1686
 msgid "GenericObject|Name"
@@ -18563,7 +18560,7 @@ msgstr "Heure de validation"
 
 #: ../config/model_attributes.rb:1703
 msgid "GitReference|Href slug"
-msgstr "GitReference|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1704
 msgid "GitReference|Name"
@@ -18583,7 +18580,7 @@ msgstr "État d'authentification"
 
 #: ../config/model_attributes.rb:1709
 msgid "GitRepository|Href slug"
-msgstr "GitRepository|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1710
 msgid "GitRepository|Last refresh on"
@@ -18810,7 +18807,7 @@ msgstr "Périphérique invité"
 
 #: ../config/model_attributes.rb:1717
 msgid "GuestApplication|Arch"
-msgstr "GuestApplication|Architecture"
+msgstr "Architecture"
 
 #: ../config/model_attributes.rb:1718
 msgid "GuestApplication|Description"
@@ -18818,7 +18815,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:1719
 msgid "GuestApplication|Href slug"
-msgstr "GuestApplication|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1720
 msgid "GuestApplication|Install time"
@@ -18906,7 +18903,7 @@ msgstr "Type de périphérique"
 
 #: ../config/model_attributes.rb:1742
 msgid "GuestDevice|Field replaceable unit"
-msgstr "GuestDevice|Unité remplaçable sur site"
+msgstr "Unité remplaçable sur site"
 
 #: ../config/model_attributes.rb:1743
 msgid "GuestDevice|Filename"
@@ -18918,7 +18915,7 @@ msgstr "Espace libre"
 
 #: ../config/model_attributes.rb:1745
 msgid "GuestDevice|Href slug"
-msgstr "GuestDevice|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1746
 msgid "GuestDevice|Iscsi alias"
@@ -18934,7 +18931,7 @@ msgstr "Emplacement"
 
 #: ../config/model_attributes.rb:1749
 msgid "GuestDevice|Manufacturer"
-msgstr "GuestDevice|Fabricant"
+msgstr "Fabricant"
 
 #: ../config/model_attributes.rb:1750
 msgid "GuestDevice|Mode"
@@ -19183,7 +19180,7 @@ msgstr "Noms d'hôte"
 
 #: ../config/model_attributes.rb:1779
 msgid "Hardware|Href slug"
-msgstr "Hardware|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1780
 msgid "Hardware|Introspected"
@@ -19251,7 +19248,7 @@ msgstr "Type de périphérique root"
 
 #: ../config/model_attributes.rb:1796
 msgid "Hardware|Serial number"
-msgstr "Hardware|Numéro de série"
+msgstr "Numéro de série"
 
 #: ../config/model_attributes.rb:1797
 msgid "Hardware|Size on disk"
@@ -19799,7 +19796,7 @@ msgstr "HostAggregate"
 
 #: ../config/model_attributes.rb:1932
 msgid "HostAggregateHost|Href slug"
-msgstr "HostAggregateHost|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1933
 msgid "HostAggregateHost|Region description"
@@ -19839,7 +19836,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:1913
 msgid "HostAggregate|Href slug"
-msgstr "HostAggregate|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1914
 msgid "HostAggregate|Max cpu usage rate average avg over time period"
@@ -19937,7 +19934,7 @@ msgstr "Nbre total VM"
 
 #: ../config/model_attributes.rb:1936
 msgid "HostServiceGroup|Href slug"
-msgstr "HostServiceGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1937
 msgid "HostServiceGroup|Name"
@@ -19957,7 +19954,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:1942
 msgid "HostStorage|Href slug"
-msgstr "HostStorage|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1943
 msgid "HostStorage|Read only"
@@ -19973,7 +19970,7 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:1947
 msgid "HostSwitch|Href slug"
-msgstr "HostSwitch|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1948
 msgid "HostSwitch|Region description"
@@ -20122,7 +20119,7 @@ msgstr "Hôtes : date de mise en gestion pour la semaine dernière"
 
 #: ../config/model_attributes.rb:1806
 msgid "Host|Address"
-msgstr "Host|Adresse"
+msgstr "Adresse"
 
 #: ../config/model_attributes.rb:1807
 msgid "Host|Admin disabled"
@@ -20294,7 +20291,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:1849
 msgid "Host|Href slug"
-msgstr "Host|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1850
 msgid "Host|Hyperthreading"
@@ -20840,7 +20837,7 @@ msgstr "Importer/Exporter"
 
 #: ../config/model_attributes.rb:1951
 msgid "ImportFileUpload|Href slug"
-msgstr "ImportFileUpload|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1952
 msgid "ImportFileUpload|Region description"
@@ -21208,7 +21205,7 @@ msgstr "Type sort_order <%{value}> spécifié non valide."
 
 #: ../app/models/manageiq/providers/base_manager/inventory_collector_worker.rb:18
 msgid "Inventory Collector for %{table}: %{name}"
-msgstr "Collecteur d''inventaire pour %{table} : %{name}"
+msgstr "Collecteur d'inventaire pour %{table} : %{name}"
 
 #. TRANSLATORS: file:
 #. product/views/ManageIQ_Providers_AutomationManager_InventoryGroup.yaml
@@ -21238,7 +21235,7 @@ msgstr "Image ISO"
 
 #: ../config/model_attributes.rb:1955
 msgid "IsoDatastore|Href slug"
-msgstr "IsoDatastore|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1956
 msgid "IsoDatastore|Last refresh on"
@@ -21258,7 +21255,7 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:1961
 msgid "IsoImage|Href slug"
-msgstr "IsoImage|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1962
 msgid "IsoImage|Name"
@@ -21397,7 +21394,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:1971
 msgid "Job|Href slug"
-msgstr "Job|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1972
 msgid "Job|Message"
@@ -21659,7 +21656,7 @@ msgstr "Transmissions forgées"
 
 #: ../config/model_attributes.rb:1992
 msgid "Lan|Href slug"
-msgstr "Lan|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:1993
 msgid "Lan|Mac changes"
@@ -21951,7 +21948,7 @@ msgstr "Profondeur maximale de l'appartenance à un groupe"
 
 #: ../config/model_attributes.rb:2009
 msgid "LdapDomain|Href slug"
-msgstr "LdapDomain|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2010
 msgid "LdapDomain|Last group sync"
@@ -21995,7 +21992,7 @@ msgstr "DN"
 
 #: ../config/model_attributes.rb:2021
 msgid "LdapGroup|Href slug"
-msgstr "LdapGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2022
 msgid "LdapGroup|Mail"
@@ -22019,7 +22016,7 @@ msgstr "Lors de la création"
 
 #: ../config/model_attributes.rb:2028
 msgid "LdapManagement|Href slug"
-msgstr "LdapManagement|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2029
 msgid "LdapManagement|Region description"
@@ -22040,7 +22037,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:2033
 msgid "LdapRegion|Href slug"
-msgstr "LdapRegion|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2034
 msgid "LdapRegion|Name"
@@ -22064,7 +22061,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:2040
 msgid "LdapServer|Href slug"
-msgstr "LdapServer|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2041
 msgid "LdapServer|Mode"
@@ -22120,7 +22117,7 @@ msgstr "Prénom"
 
 #: ../config/model_attributes.rb:2055
 msgid "LdapUser|Href slug"
-msgstr "LdapUser|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2056
 msgid "LdapUser|Last name"
@@ -22213,7 +22210,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2077
 msgid "LifecycleEvent|Href slug"
-msgstr "LifecycleEvent|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2078
 msgid "LifecycleEvent|Location"
@@ -22259,13 +22256,13 @@ msgstr "Liste"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3734
 msgid "Live migrating Instance %{instance_name} completed successfully."
-msgstr "La migration dynamique de l''instance %{instance_name} a abouti."
+msgstr "La migration dynamique de l'instance %{instance_name} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3736
 msgid "Live migrating Instance %{instance_name} failed: %{error_message}"
 msgstr ""
-"La migration dynamique de l''instance %{instance_name} a échoué : "
+"La migration dynamique de l'instance %{instance_name} a échoué : "
 "%{error_message}"
 
 #. TRANSLATORS: en.yml key: dictionary.model.LoadBalancer
@@ -22360,7 +22357,7 @@ msgstr "Équilibreur de charges (Microsoft Azure)"
 
 #: ../config/model_attributes.rb:2112
 msgid "LoadBalancerHealthCheckMember|Href slug"
-msgstr "LoadBalancerHealthCheckMember|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2113
 msgid "LoadBalancerHealthCheckMember|Region description"
@@ -22388,7 +22385,7 @@ msgstr "Seuil sain"
 
 #: ../config/model_attributes.rb:2100
 msgid "LoadBalancerHealthCheck|Href slug"
-msgstr "LoadBalancerHealthCheck|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2101
 msgid "LoadBalancerHealthCheck|Interval"
@@ -22432,7 +22429,7 @@ msgstr "Chemin URL"
 
 #: ../config/model_attributes.rb:2130
 msgid "LoadBalancerListenerPool|Href slug"
-msgstr "LoadBalancerListenerPool|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2131
 msgid "LoadBalancerListenerPool|Region description"
@@ -22452,7 +22449,7 @@ msgstr "Réf. ems"
 
 #: ../config/model_attributes.rb:2120
 msgid "LoadBalancerListener|Href slug"
-msgstr "LoadBalancerListener|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2121
 msgid "LoadBalancerListener|Instance port range"
@@ -22488,7 +22485,7 @@ msgstr "Total VM"
 
 #: ../config/model_attributes.rb:2154
 msgid "LoadBalancerPoolMemberPool|Href slug"
-msgstr "LoadBalancerPoolMemberPool|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2155
 msgid "LoadBalancerPoolMemberPool|Region description"
@@ -22508,7 +22505,7 @@ msgstr "Réf. ems"
 
 #: ../config/model_attributes.rb:2146
 msgid "LoadBalancerPoolMember|Href slug"
-msgstr "LoadBalancerPoolMember|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2147
 msgid "LoadBalancerPoolMember|Load balancer health check states"
@@ -22544,7 +22541,7 @@ msgstr "Réf. ems"
 
 #: ../config/model_attributes.rb:2136
 msgid "LoadBalancerPool|Href slug"
-msgstr "LoadBalancerPool|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2137
 msgid "LoadBalancerPool|Load balancer algorithm"
@@ -22587,7 +22584,7 @@ msgstr "Réf. ems"
 
 #: ../config/model_attributes.rb:2086
 msgid "LoadBalancer|Href slug"
-msgstr "LoadBalancer|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2087
 msgid "LoadBalancer|Name"
@@ -22745,7 +22742,7 @@ msgstr "Historique"
 
 #: ../config/model_attributes.rb:2161
 msgid "LogFile|Href slug"
-msgstr "LogFile|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2162
 msgid "LogFile|Local file"
@@ -24034,22 +24031,19 @@ msgstr "Valeur moyenne du taux d'utilisation de processeur max. absolu"
 #: ../config/model_attributes.rb:2257
 msgid "MetricRollup|Abs max cpu usagemhz rate average timestamp"
 msgstr ""
-"MetricRollup|Horodatage moyen du taux d'utilisation de processeur (MHz) max."
-" absolu"
+"Horodatage moyen du taux d'utilisation de processeur (MHz) max. absolu"
 
 #: ../config/model_attributes.rb:2258
 msgid "MetricRollup|Abs max cpu usagemhz rate average value"
-msgstr ""
-"MetricRollup|Valeur moyenne du taux d'utilisation de processeur (MHz) max. "
-"absolu"
+msgstr "Valeur moyenne du taux d'utilisation de processeur (MHz) max. absolu"
 
 #: ../config/model_attributes.rb:2259
 msgid "MetricRollup|Abs max derived memory used timestamp"
-msgstr "MetricRollup|Horodatage d'utilisation de mémoire dérivée max. absolue"
+msgstr "Horodatage d'utilisation de mémoire dérivée max. absolue"
 
 #: ../config/model_attributes.rb:2260
 msgid "MetricRollup|Abs max derived memory used value"
-msgstr "MetricRollup|Valeur d'utilisation de mémoire dérivée max. absolue"
+msgstr "Valeur d'utilisation de mémoire dérivée max. absolue"
 
 #: ../config/model_attributes.rb:2261
 msgid "MetricRollup|Abs max disk usage rate average timestamp"
@@ -24086,22 +24080,19 @@ msgstr "Valeur moyenne du taux d'utilisation de processeur min. absolu"
 #: ../config/model_attributes.rb:2269
 msgid "MetricRollup|Abs min cpu usagemhz rate average timestamp"
 msgstr ""
-"MetricRollup|Horodatage moyen du taux d'utilisation de processeur (MHz) min."
-" absolu"
+"Horodatage moyen du taux d'utilisation de processeur (MHz) min. absolu"
 
 #: ../config/model_attributes.rb:2270
 msgid "MetricRollup|Abs min cpu usagemhz rate average value"
-msgstr ""
-"MetricRollup|Valeur moyenne du taux d'utilisation de processeur (MHz) min. "
-"absolu"
+msgstr "Valeur moyenne du taux d'utilisation de processeur (MHz) min. absolu"
 
 #: ../config/model_attributes.rb:2271
 msgid "MetricRollup|Abs min derived memory used timestamp"
-msgstr "MetricRollup|Horodatage d'utilisation de mémoire dérivée min. absolue"
+msgstr "Horodatage d'utilisation de mémoire dérivée min. absolue"
 
 #: ../config/model_attributes.rb:2272
 msgid "MetricRollup|Abs min derived memory used value"
-msgstr "MetricRollup|Valeur d'utilisation de mémoire dérivée min. absolue"
+msgstr "Valeur d'utilisation de mémoire dérivée min. absolue"
 
 #: ../config/model_attributes.rb:2273
 msgid "MetricRollup|Abs min disk usage rate average timestamp"
@@ -24333,7 +24324,7 @@ msgstr "Taux d'utilisation de disque moyenne"
 
 #: ../config/model_attributes.rb:2330
 msgid "MetricRollup|Href slug"
-msgstr "MetricRollup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2331
 msgid "MetricRollup|Intervals in rollup"
@@ -25146,7 +25137,7 @@ msgstr "Taux d'utilisation de disque moyenne"
 
 #: ../config/model_attributes.rb:2224
 msgid "Metric|Href slug"
-msgstr "Metric|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2225
 msgid "Metric|Intervals in rollup"
@@ -25445,7 +25436,7 @@ msgstr "Flux"
 
 #: ../config/model_attributes.rb:2484
 msgid "MiddlewareDatasource|Href slug"
-msgstr "MiddlewareDatasource|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2485
 msgid "MiddlewareDatasource|Name"
@@ -25477,7 +25468,7 @@ msgstr "Flux"
 
 #: ../config/model_attributes.rb:2493
 msgid "MiddlewareDeployment|Href slug"
-msgstr "MiddlewareDeployment|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2494
 msgid "MiddlewareDeployment|Name"
@@ -25505,31 +25496,31 @@ msgstr "État"
 
 #: ../config/model_attributes.rb:2501
 msgid "MiddlewareDiagnosticReport|Error message"
-msgstr "MiddlewareDiagnosticReport|Message d'erreur"
+msgstr "Message d'erreur"
 
 #: ../config/model_attributes.rb:2502
 msgid "MiddlewareDiagnosticReport|Href slug"
-msgstr "MiddlewareDiagnosticReport|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2503
 msgid "MiddlewareDiagnosticReport|Queued at"
-msgstr "MiddlewareDiagnosticReport|Mis en file d'attente à"
+msgstr "Mis en file d'attente à"
 
 #: ../config/model_attributes.rb:2504
 msgid "MiddlewareDiagnosticReport|Region description"
-msgstr "MiddlewareDiagnosticReport|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:2505
 msgid "MiddlewareDiagnosticReport|Region number"
-msgstr "MiddlewareDiagnosticReport|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:2506
 msgid "MiddlewareDiagnosticReport|Requesting user"
-msgstr "MiddlewareDiagnosticReport|Utilisateur à l'origine de la demande"
+msgstr "Utilisateur à l'origine de la demande"
 
 #: ../config/model_attributes.rb:2507
 msgid "MiddlewareDiagnosticReport|Status"
-msgstr "MiddlewareDiagnosticReport|État"
+msgstr "État"
 
 #: ../config/model_attributes.rb:2509
 msgid "MiddlewareDomain|Ems ref"
@@ -25541,7 +25532,7 @@ msgstr "Flux"
 
 #: ../config/model_attributes.rb:2511
 msgid "MiddlewareDomain|Href slug"
-msgstr "MiddlewareDomain|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2512
 msgid "MiddlewareDomain|Name"
@@ -25581,7 +25572,7 @@ msgstr "Flux"
 
 #: ../config/model_attributes.rb:2522
 msgid "MiddlewareMessaging|Href slug"
-msgstr "MiddlewareMessaging|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2523
 msgid "MiddlewareMessaging|Messaging type"
@@ -25617,7 +25608,7 @@ msgstr "Flux"
 
 #: ../config/model_attributes.rb:2545
 msgid "MiddlewareServerGroup|Href slug"
-msgstr "MiddlewareServerGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2546
 msgid "MiddlewareServerGroup|Name"
@@ -25661,7 +25652,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:2533
 msgid "MiddlewareServer|Href slug"
-msgstr "MiddlewareServer|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2534
 msgid "MiddlewareServer|Lives on type"
@@ -26029,7 +26020,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2570
 msgid "MiqActionSet|Href slug"
-msgstr "MiqActionSet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2571
 msgid "MiqActionSet|Mode"
@@ -26093,7 +26084,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2559
 msgid "MiqAction|Href slug"
-msgstr "MiqAction|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2560
 msgid "MiqAction|Name"
@@ -26133,7 +26124,7 @@ msgstr "Nom d'affichage"
 
 #: ../config/model_attributes.rb:2585
 msgid "MiqAeClass|Href slug"
-msgstr "MiqAeClass|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2586
 msgid "MiqAeClass|Inherits"
@@ -26201,11 +26192,11 @@ msgstr "Nom d'affichage"
 
 #: ../config/model_attributes.rb:2603
 msgid "MiqAeField|Href slug"
-msgstr "MiqAeField|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2604
 msgid "MiqAeField|Max retries"
-msgstr "MiqAeField|Nb max. de tentatives"
+msgstr "Nb max. de tentatives"
 
 #: ../config/model_attributes.rb:2605
 msgid "MiqAeField|Max time"
@@ -26225,7 +26216,7 @@ msgstr "En entrée"
 
 #: ../config/model_attributes.rb:2609
 msgid "MiqAeField|On error"
-msgstr "MiqAeField|En cas d'erreur"
+msgstr "En cas d'erreur"
 
 #: ../config/model_attributes.rb:2610
 msgid "MiqAeField|On exit"
@@ -26261,7 +26252,7 @@ msgstr "Mis à jour par"
 
 #: ../config/model_attributes.rb:2618
 msgid "MiqAeField|Updated on"
-msgstr "MiqAeField|Mis à jour le"
+msgstr "Mis à jour le"
 
 #: ../config/model_attributes.rb:2619
 msgid "MiqAeField|Visibility"
@@ -26281,7 +26272,7 @@ msgstr "Nom d'affichage"
 
 #: ../config/model_attributes.rb:2624
 msgid "MiqAeInstance|Href slug"
-msgstr "MiqAeInstance|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2625
 msgid "MiqAeInstance|Inherits"
@@ -26325,11 +26316,11 @@ msgstr "Nom d'affichage"
 
 #: ../config/model_attributes.rb:2636
 msgid "MiqAeMethod|Embedded methods"
-msgstr "MiqAeMethod|Méthodes intégrées"
+msgstr "Méthodes intégrées"
 
 #: ../config/model_attributes.rb:2637
 msgid "MiqAeMethod|Href slug"
-msgstr "MiqAeMethod|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2638
 msgid "MiqAeMethod|Language"
@@ -26337,7 +26328,7 @@ msgstr "Langue"
 
 #: ../config/model_attributes.rb:2639
 msgid "MiqAeMethod|Location"
-msgstr "MiqAeMethod|Emplacement"
+msgstr "Emplacement"
 
 #: ../config/model_attributes.rb:2640
 msgid "MiqAeMethod|Name"
@@ -26345,7 +26336,7 @@ msgstr "Nom"
 
 #: ../config/model_attributes.rb:2641
 msgid "MiqAeMethod|Options"
-msgstr "MiqAeMethod|Options"
+msgstr "Options"
 
 #: ../config/model_attributes.rb:2642
 msgid "MiqAeMethod|Region description"
@@ -26361,7 +26352,7 @@ msgstr "Portée"
 
 #: ../config/model_attributes.rb:2645
 msgid "MiqAeMethod|Updated by"
-msgstr "MiqAeMethod|Mise à jour par"
+msgstr "Mise à jour par"
 
 #: ../config/model_attributes.rb:2646
 msgid "MiqAeMethod|Updated on"
@@ -26397,7 +26388,7 @@ msgstr "Activé"
 
 #: ../config/model_attributes.rb:2655
 msgid "MiqAeNamespace|Href slug"
-msgstr "MiqAeNamespace|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2656
 msgid "MiqAeNamespace|Last import on"
@@ -26461,7 +26452,7 @@ msgstr "Nom d'affichage"
 
 #: ../config/model_attributes.rb:2672
 msgid "MiqAeValue|Href slug"
-msgstr "MiqAeValue|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2673
 msgid "MiqAeValue|Max retries"
@@ -26513,7 +26504,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:2686
 msgid "MiqAeWorkspace|Href slug"
-msgstr "MiqAeWorkspace|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2687
 msgid "MiqAeWorkspace|Region description"
@@ -26525,7 +26516,7 @@ msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:2689
 msgid "MiqAeWorkspace|Setters"
-msgstr "MiqAeWorkspace|Méthodes Setter"
+msgstr "Méthodes Setter"
 
 #: ../config/model_attributes.rb:2690
 msgid "MiqAeWorkspace|Updated on"
@@ -26553,7 +26544,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2719
 msgid "MiqAlertSet|Href slug"
-msgstr "MiqAlertSet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2720
 msgid "MiqAlertSet|Mode"
@@ -26605,7 +26596,7 @@ msgstr "Commentaire"
 
 #: ../config/model_attributes.rb:2748
 msgid "MiqAlertStatusAction|Href slug"
-msgstr "MiqAlertStatusAction|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2749
 msgid "MiqAlertStatusAction|Region description"
@@ -26641,7 +26632,7 @@ msgstr "Caché"
 
 #: ../config/model_attributes.rb:2737
 msgid "MiqAlertStatus|Href slug"
-msgstr "MiqAlertStatus|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2738
 msgid "MiqAlertStatus|Region description"
@@ -26665,7 +26656,7 @@ msgstr "Résultat"
 
 #: ../config/model_attributes.rb:2743
 msgid "MiqAlertStatus|Severity"
-msgstr "MiqAlertStatus|Gravité"
+msgstr "Gravité"
 
 #: ../config/model_attributes.rb:2744
 msgid "MiqAlertStatus|Url"
@@ -26701,15 +26692,15 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2701
 msgid "MiqAlert|Hash expression"
-msgstr "MiqAlert|Expression de hachage"
+msgstr "Expression de hachage"
 
 #: ../config/model_attributes.rb:2702
 msgid "MiqAlert|Href slug"
-msgstr "MiqAlert|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2703
 msgid "MiqAlert|Miq expression"
-msgstr "MiqAlert|Expression MIQ"
+msgstr "Expression MIQ"
 
 #: ../config/model_attributes.rb:2704
 msgid "MiqAlert|Notify automate"
@@ -26749,7 +26740,7 @@ msgstr "Répondre aux événements"
 
 #: ../config/model_attributes.rb:2713
 msgid "MiqAlert|Severity"
-msgstr "MiqAlert|Gravité"
+msgstr "Gravité"
 
 #: ../config/model_attributes.rb:2714
 msgid "MiqAlert|Updated on"
@@ -26773,7 +26764,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:2756
 msgid "MiqApproval|Href slug"
-msgstr "MiqApproval|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2757
 msgid "MiqApproval|Reason"
@@ -26817,7 +26808,7 @@ msgstr "Jeton secret csrf"
 
 #: ../config/model_attributes.rb:2768
 msgid "MiqDatabase|Href slug"
-msgstr "MiqDatabase|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2769
 msgid "MiqDatabase|Postgres update available"
@@ -26881,7 +26872,7 @@ msgstr "Nom du fichier"
 
 #: ../config/model_attributes.rb:2785
 msgid "MiqDialog|Href slug"
-msgstr "MiqDialog|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2786
 msgid "MiqDialog|Name"
@@ -26957,7 +26948,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:2805
 msgid "MiqEnterprise|Href slug"
-msgstr "MiqEnterprise|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2806
 msgid "MiqEnterprise|Max cpu usage rate average avg over time period"
@@ -26968,8 +26959,8 @@ msgid ""
 "MiqEnterprise|Max cpu usage rate average avg over time period without "
 "overhead"
 msgstr ""
-"MiqEnterprise|Taux d'utilisation max. des processeurs - Moyenne sur la "
-"période sans surcoût"
+"Taux d'utilisation max. des processeurs - Moyenne sur la période sans "
+"surcoût"
 
 #: ../config/model_attributes.rb:2808
 msgid "MiqEnterprise|Max cpu usage rate average high over time period"
@@ -27066,7 +27057,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2840
 msgid "MiqEventDefinitionSet|Href slug"
-msgstr "MiqEventDefinitionSet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2841
 msgid "MiqEventDefinitionSet|Mode"
@@ -27138,7 +27129,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2831
 msgid "MiqEventDefinition|Href slug"
-msgstr "MiqEventDefinition|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2832
 msgid "MiqEventDefinition|Name"
@@ -27222,7 +27213,7 @@ msgstr "Type de groupe"
 
 #: ../config/model_attributes.rb:2867
 msgid "MiqGroup|Href slug"
-msgstr "MiqGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2868
 msgid "MiqGroup|Miq user role name"
@@ -27274,7 +27265,7 @@ msgstr "Échec synchrone"
 
 #: ../config/model_attributes.rb:2898
 msgid "MiqPolicyContent|Href slug"
-msgstr "MiqPolicyContent|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2899
 msgid "MiqPolicyContent|Qualifier"
@@ -27314,7 +27305,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2909
 msgid "MiqPolicySet|Href slug"
-msgstr "MiqPolicySet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2910
 msgid "MiqPolicySet|Mode"
@@ -27382,7 +27373,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2884
 msgid "MiqPolicy|Href slug"
-msgstr "MiqPolicy|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2885
 msgid "MiqPolicy|Mode"
@@ -27422,7 +27413,7 @@ msgstr "Mise à jour le"
 
 #: ../config/model_attributes.rb:2932
 msgid "MiqProductFeaturesShare|Href slug"
-msgstr "MiqProductFeaturesShare|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2933
 msgid "MiqProductFeaturesShare|Region description"
@@ -27446,7 +27437,7 @@ msgstr "Masquée"
 
 #: ../config/model_attributes.rb:2924
 msgid "MiqProductFeature|Href slug"
-msgstr "MiqProductFeature|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2925
 msgid "MiqProductFeature|Identifier"
@@ -27498,7 +27489,7 @@ msgstr "Type de gestionnaire"
 
 #: ../config/model_attributes.rb:2942
 msgid "MiqQueue|Href slug"
-msgstr "MiqQueue|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2943
 msgid "MiqQueue|Lock version"
@@ -27550,7 +27541,7 @@ msgstr "État"
 
 #: ../config/model_attributes.rb:2955
 msgid "MiqQueue|Tracking label"
-msgstr "MiqQueue|Libellé de suivi"
+msgstr "Libellé de suivi"
 
 #: ../config/model_attributes.rb:2956
 msgid "MiqQueue|Updated on"
@@ -27624,7 +27615,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2974
 msgid "MiqRegion|Href slug"
-msgstr "MiqRegion|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:2975
 msgid "MiqRegion|Max cpu usage rate average avg over time period"
@@ -27718,7 +27709,7 @@ msgstr "Type de données"
 
 #: ../config/model_attributes.rb:3048
 msgid "MiqReportResultDetail|Href slug"
-msgstr "MiqReportResultDetail|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3049
 msgid "MiqReportResultDetail|Region description"
@@ -27738,7 +27729,7 @@ msgstr "Base de données"
 
 #: ../config/model_attributes.rb:3031
 msgid "MiqReportResult|Href slug"
-msgstr "MiqReportResult|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3032
 msgid "MiqReportResult|Last accessed on"
@@ -27794,7 +27785,7 @@ msgstr "ID utilisateur"
 
 #: ../config/model_attributes.rb:2991
 msgid "MiqReport|Based on"
-msgstr "MiqReport|Basé sur"
+msgstr "Basé sur"
 
 #: ../config/model_attributes.rb:2992
 msgid "MiqReport|Categories"
@@ -27870,11 +27861,11 @@ msgstr "En-têtes"
 
 #: ../config/model_attributes.rb:3010
 msgid "MiqReport|Href slug"
-msgstr "MiqReport|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3011
 msgid "MiqReport|Human expression"
-msgstr "MiqReport|Expression humaine"
+msgstr "Expression humaine"
 
 #: ../config/model_attributes.rb:3012
 msgid "MiqReport|Include"
@@ -27954,7 +27945,7 @@ msgstr "Type de description"
 
 #: ../config/model_attributes.rb:3083
 msgid "MiqRequestTask|Href slug"
-msgstr "MiqRequestTask|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3084
 msgid "MiqRequestTask|Message"
@@ -28026,7 +28017,7 @@ msgstr "Exécutée le"
 
 #: ../config/model_attributes.rb:3057
 msgid "MiqRequest|Href slug"
-msgstr "MiqRequest|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3058
 msgid "MiqRequest|Message"
@@ -28098,7 +28089,7 @@ msgstr "ID utilisateur"
 
 #: ../config/model_attributes.rb:3075
 msgid "MiqRequest|V allowed tags"
-msgstr "MiqRequest|Balises autorisées"
+msgstr "Balises autorisées"
 
 #: ../config/model_attributes.rb:3076
 msgid "MiqRequest|V approved by"
@@ -28134,7 +28125,7 @@ msgstr "Filtrer"
 
 #: ../config/model_attributes.rb:3102
 msgid "MiqSchedule|Href slug"
-msgstr "MiqSchedule|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3103
 msgid "MiqSchedule|Last run on"
@@ -28210,7 +28201,7 @@ msgstr "Type de péripéhrique"
 
 #: ../config/model_attributes.rb:3122
 msgid "MiqScsiLun|Href slug"
-msgstr "MiqScsiLun|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3123
 msgid "MiqScsiLun|Lun"
@@ -28238,7 +28229,7 @@ msgstr "Adresse"
 
 #: ../config/model_attributes.rb:3130
 msgid "MiqScsiTarget|Href slug"
-msgstr "MiqScsiTarget|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3131
 msgid "MiqScsiTarget|Iscsi alias"
@@ -28278,7 +28269,7 @@ msgstr "Filtre"
 
 #: ../config/model_attributes.rb:3141
 msgid "MiqSearch|Href slug"
-msgstr "MiqSearch|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3142
 msgid "MiqSearch|Name"
@@ -28326,7 +28317,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3154
 msgid "MiqServer|Has active cockpit ws"
-msgstr "MiqServer|Dispose d'un espace de travail (WS) Cockpit actif"
+msgstr "Dispose d'un espace de travail (WS) Cockpit actif"
 
 #: ../config/model_attributes.rb:3155
 msgid "MiqServer|Has active userinterface"
@@ -28346,7 +28337,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:3159
 msgid "MiqServer|Href slug"
-msgstr "MiqServer|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3160
 msgid "MiqServer|Ipaddress"
@@ -28478,7 +28469,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:3193
 msgid "MiqShortcut|Href slug"
-msgstr "MiqShortcut|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3194
 msgid "MiqShortcut|Name"
@@ -28540,7 +28531,7 @@ msgstr "Date de création"
 
 #: ../config/model_attributes.rb:3204
 msgid "MiqTask|Href slug"
-msgstr "MiqTask|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3205
 msgid "MiqTask|Identifier"
@@ -28604,7 +28595,7 @@ msgstr "Compte du groupe"
 
 #: ../config/model_attributes.rb:3221
 msgid "MiqUserRole|Href slug"
-msgstr "MiqUserRole|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3222
 msgid "MiqUserRole|Name"
@@ -28636,7 +28627,7 @@ msgstr "Contenu"
 
 #: ../config/model_attributes.rb:3248
 msgid "MiqWidgetContent|Href slug"
-msgstr "MiqWidgetContent|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3249
 msgid "MiqWidgetContent|Region description"
@@ -28664,7 +28655,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3256
 msgid "MiqWidgetSet|Href slug"
-msgstr "MiqWidgetSet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3257
 msgid "MiqWidgetSet|Mode"
@@ -28712,7 +28703,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:3269
 msgid "MiqWidgetShortcut|Href slug"
-msgstr "MiqWidgetShortcut|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3270
 msgid "MiqWidgetShortcut|Region description"
@@ -28744,7 +28735,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3233
 msgid "MiqWidget|Href slug"
-msgstr "MiqWidget|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3234
 msgid "MiqWidget|Last generated content on"
@@ -28808,7 +28799,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3277
 msgid "MiqWorker|Href slug"
-msgstr "MiqWorker|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3278
 msgid "MiqWorker|Last heartbeat"
@@ -29310,7 +29301,7 @@ msgstr "Modifier le client/projet"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:502
 msgid "Modify Tenants"
-msgstr "Modifier les tenants"
+msgstr "Modifier les clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1559
@@ -30239,7 +30230,7 @@ msgstr "Activé"
 
 #: ../config/model_attributes.rb:3316
 msgid "NetworkGroup|Href slug"
-msgstr "NetworkGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3317
 msgid "NetworkGroup|Name"
@@ -30264,7 +30255,7 @@ msgstr "Port réseau"
 
 #: ../config/model_attributes.rb:3347
 msgid "NetworkPortSecurityGroup|Href slug"
-msgstr "NetworkPortSecurityGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3348
 msgid "NetworkPortSecurityGroup|Region description"
@@ -30340,7 +30331,7 @@ msgstr "Adresses IP dynamiques"
 
 #: ../config/model_attributes.rb:3338
 msgid "NetworkPort|Href slug"
-msgstr "NetworkPort|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3339
 msgid "NetworkPort|Ipaddresses"
@@ -30401,11 +30392,11 @@ msgstr "Disponibilité élevée"
 
 #: ../config/model_attributes.rb:3357
 msgid "NetworkRouter|Href slug"
-msgstr "NetworkRouter|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3358
 msgid "NetworkRouter|Main route table"
-msgstr "NetworkRouter|Table de routage principale"
+msgstr "Table de routage principale"
 
 #: ../config/model_attributes.rb:3359
 msgid "NetworkRouter|Name"
@@ -30413,7 +30404,7 @@ msgstr "Nom"
 
 #: ../config/model_attributes.rb:3360
 msgid "NetworkRouter|Propagating vgws"
-msgstr "NetworkRouter|Propagation de VGWS"
+msgstr "Propagation de VGWS"
 
 #: ../config/model_attributes.rb:3361
 msgid "NetworkRouter|Region description"
@@ -30474,7 +30465,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:3304
 msgid "Network|Href slug"
-msgstr "Network|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3305
 msgid "Network|Ipaddress"
@@ -30696,7 +30687,7 @@ msgstr "Détails"
 
 #: ../config/model_attributes.rb:3375
 msgid "NotificationRecipient|Href slug"
-msgstr "NotificationRecipient|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3376
 msgid "NotificationRecipient|Region description"
@@ -30720,7 +30711,7 @@ msgstr "Expire dans"
 
 #: ../config/model_attributes.rb:3382
 msgid "NotificationType|Href slug"
-msgstr "NotificationType|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3383
 msgid "NotificationType|Level"
@@ -30753,7 +30744,7 @@ msgstr "Type de clause"
 
 #: ../config/model_attributes.rb:3368
 msgid "Notification|Href slug"
-msgstr "Notification|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3369
 msgid "Notification|Options"
@@ -31146,7 +31137,7 @@ msgstr "Résultat de règle OpenSCAP"
 
 #: ../config/model_attributes.rb:3389
 msgid "OpenscapResult|Href slug"
-msgstr "OpenscapResult|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3390
 msgid "OpenscapResult|Region description"
@@ -31158,11 +31149,11 @@ msgstr "Numéro de la région"
 
 #: ../config/model_attributes.rb:3392
 msgid "OpenscapResult|Resource type"
-msgstr "OpenscapResult|Type de ressource"
+msgstr "Type de ressource"
 
 #: ../config/model_attributes.rb:3394
 msgid "OpenscapRuleResult|Href slug"
-msgstr "OpenscapRuleResult|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3395
 msgid "OpenscapRuleResult|Name"
@@ -31202,7 +31193,7 @@ msgstr "Opérer serveurs"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1723
 msgid "Operate Tenants"
-msgstr "Opérer les tenants"
+msgstr "Opérer les clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1667
@@ -31230,7 +31221,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:3428
 msgid "OperatingSystemFlavor|Href slug"
-msgstr "OperatingSystemFlavor|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3429
 msgid "OperatingSystemFlavor|Manager ref"
@@ -31262,7 +31253,7 @@ msgstr "Distribution"
 
 #: ../config/model_attributes.rb:3404
 msgid "OperatingSystem|Href slug"
-msgstr "OperatingSystem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3405
 msgid "OperatingSystem|Kernel version"
@@ -31423,7 +31414,7 @@ msgstr "Pile d'orchestration"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3750
 msgid "Orchestration Stack %{subject} has been retired."
-msgstr "La pile d''orchestration %{subject} a été retirée."
+msgstr "La pile d'orchestration %{subject} a été retirée."
 
 #. TRANSLATORS: en.yml key:
 #. dictionary.model.ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack
@@ -31535,7 +31526,7 @@ msgstr "Réf ems"
 
 #: ../config/model_attributes.rb:3461
 msgid "OrchestrationStackOutput|Href slug"
-msgstr "OrchestrationStackOutput|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3462
 msgid "OrchestrationStackOutput|Key"
@@ -31559,7 +31550,7 @@ msgstr "Réf ems"
 
 #: ../config/model_attributes.rb:3468
 msgid "OrchestrationStackParameter|Href slug"
-msgstr "OrchestrationStackParameter|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3469
 msgid "OrchestrationStackParameter|Name"
@@ -31591,7 +31582,7 @@ msgstr "Heure de fin"
 
 #: ../config/model_attributes.rb:3477
 msgid "OrchestrationStackResource|Href slug"
-msgstr "OrchestrationStackResource|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3478
 msgid "OrchestrationStackResource|Last updated"
@@ -31655,7 +31646,7 @@ msgstr "Hôtes"
 
 #: ../config/model_attributes.rb:3439
 msgid "OrchestrationStack|Href slug"
-msgstr "OrchestrationStack|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3440
 msgid "OrchestrationStack|Name"
@@ -31711,7 +31702,7 @@ msgstr "Motif du statut"
 
 #: ../config/model_attributes.rb:3453
 msgid "OrchestrationStack|Stdout"
-msgstr "OrchestrationStack|Stdout"
+msgstr "Sortie standard"
 
 #: ../config/model_attributes.rb:3454
 msgid "OrchestrationStack|Total cloud networks"
@@ -31727,7 +31718,7 @@ msgstr "Total des VM"
 
 #: ../config/model_attributes.rb:3457
 msgid "OrchestrationStack|Verbosity"
-msgstr "OrchestrationStack|Niveau de détail"
+msgstr "Niveau de détail"
 
 #: ../config/model_attributes.rb:3489
 msgid "OrchestrationTemplate|Content"
@@ -31747,7 +31738,7 @@ msgstr "Réf ems"
 
 #: ../config/model_attributes.rb:3493
 msgid "OrchestrationTemplate|Href slug"
-msgstr "OrchestrationTemplate|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3494
 msgid "OrchestrationTemplate|Md5"
@@ -31814,7 +31805,7 @@ msgstr "Date de création"
 
 #: ../config/model_attributes.rb:3502
 msgid "OsProcess|Href slug"
-msgstr "OsProcess|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3503
 msgid "OsProcess|Memory size"
@@ -32092,7 +32083,7 @@ msgstr "Espace libre"
 
 #: ../config/model_attributes.rb:3518
 msgid "Partition|Href slug"
-msgstr "Partition|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3519
 msgid "Partition|Location"
@@ -32179,7 +32170,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:3534
 msgid "Patch|Href slug"
-msgstr "Patch|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3535
 msgid "Patch|Installed"
@@ -32645,7 +32636,7 @@ msgstr "Effectuer les opérations sur les modèles"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:498
 msgid "Perform Operations on Tenants"
-msgstr "Effectuer les opérations sur les tenants"
+msgstr "Effectuer les opérations sur les clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3129
@@ -32866,11 +32857,11 @@ msgstr "Réf ems"
 
 #: ../config/model_attributes.rb:3551
 msgid "PersistentVolumeClaim|Href slug"
-msgstr "PersistentVolumeClaim|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3552
 msgid "PersistentVolumeClaim|Limits"
-msgstr "PersistentVolumeClaim|Limites"
+msgstr "Limites"
 
 #: ../config/model_attributes.rb:3553
 msgid "PersistentVolumeClaim|Name"
@@ -32890,7 +32881,7 @@ msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:3557
 msgid "PersistentVolumeClaim|Requests"
-msgstr "PersistentVolumeClaim|Demandes"
+msgstr "Demandes"
 
 #: ../config/model_attributes.rb:3558
 msgid "PersistentVolumeClaim|Resource version"
@@ -32989,11 +32980,11 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:3564
 msgid "PhysicalServer|Href slug"
-msgstr "PhysicalServer|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3565
 msgid "PhysicalServer|Location led state"
-msgstr "PhysicalServer|État du voyant d'emplacement"
+msgstr "État du voyant d'emplacement"
 
 #: ../config/model_attributes.rb:3566
 msgid "PhysicalServer|Machine type"
@@ -33009,11 +33000,11 @@ msgstr "Modèle"
 
 #: ../config/model_attributes.rb:3569
 msgid "PhysicalServer|Name"
-msgstr "PhysicalServer|Nom"
+msgstr "Nom"
 
 #: ../config/model_attributes.rb:3570
 msgid "PhysicalServer|Power state"
-msgstr "PhysicalServer|État de l'alimentation"
+msgstr "État de l'alimentation"
 
 #: ../config/model_attributes.rb:3571
 msgid "PhysicalServer|Product name"
@@ -33041,7 +33032,7 @@ msgstr "EMS UID"
 
 #: ../config/model_attributes.rb:3577
 msgid "PhysicalServer|Vendor"
-msgstr "PhysicalServer|Fournisseur"
+msgstr "Fournisseur"
 
 #: ../config/model_attributes.rb:3578
 msgid "Picture"
@@ -33054,7 +33045,7 @@ msgstr "Images"
 
 #: ../config/model_attributes.rb:3579
 msgid "Picture|Href slug"
-msgstr "Picture|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3580
 msgid "Picture|Region description"
@@ -33247,7 +33238,7 @@ msgstr "Contenenu d'événement de stratégie"
 
 #: ../config/model_attributes.rb:3596
 msgid "PolicyEventContent|Href slug"
-msgstr "PolicyEventContent|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3597
 msgid "PolicyEventContent|Region description"
@@ -33271,7 +33262,7 @@ msgstr "Type d'événement"
 
 #: ../config/model_attributes.rb:3585
 msgid "PolicyEvent|Href slug"
-msgstr "PolicyEvent|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3586
 msgid "PolicyEvent|Miq event definition description"
@@ -33786,7 +33777,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3604
 msgid "Provider|Href slug"
-msgstr "Provider|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3605
 msgid "Provider|Name"
@@ -34018,7 +34009,7 @@ msgstr "Serveur PXE"
 
 #: ../config/model_attributes.rb:3622
 msgid "PxeImageType|Href slug"
-msgstr "PxeImageType|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3623
 msgid "PxeImageType|Name"
@@ -34046,7 +34037,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:3613
 msgid "PxeImage|Href slug"
-msgstr "PxeImage|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3614
 msgid "PxeImage|Initrd"
@@ -34086,7 +34077,7 @@ msgstr "Nom de fichier"
 
 #: ../config/model_attributes.rb:3630
 msgid "PxeMenu|Href slug"
-msgstr "PxeMenu|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3631
 msgid "PxeMenu|Region description"
@@ -34110,7 +34101,7 @@ msgstr "Répertoire de personnalisations"
 
 #: ../config/model_attributes.rb:3637
 msgid "PxeServer|Href slug"
-msgstr "PxeServer|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3638
 msgid "PxeServer|Last refresh on"
@@ -34725,7 +34716,7 @@ msgstr "Format"
 
 #: ../config/model_attributes.rb:3651
 msgid "RegistryItem|Href slug"
-msgstr "RegistryItem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3652
 msgid "RegistryItem|Name"
@@ -34791,7 +34782,7 @@ msgstr "Ascendance"
 
 #: ../config/model_attributes.rb:3659
 msgid "Relationship|Href slug"
-msgstr "Relationship|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3660
 msgid "Relationship|Region description"
@@ -35132,7 +35123,7 @@ msgstr "Supprimer les modèles du TemplateDB"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:508
 msgid "Remove Tenants"
-msgstr "Supprimer les tenants"
+msgstr "Supprimer les clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3105
@@ -35378,11 +35369,11 @@ msgstr "Réserver"
 
 #: ../config/model_attributes.rb:3665
 msgid "Reserve|Reserved"
-msgstr "Reserve|Reservé"
+msgstr "Reservé"
 
 #: ../config/model_attributes.rb:3666
 msgid "Reserve|Resource type"
-msgstr "Reserve|Type de ressource"
+msgstr "Type de ressource"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:763
@@ -35519,7 +35510,7 @@ msgstr "Type de modèle de configuration"
 
 #: ../config/model_attributes.rb:3675
 msgid "ResourceAction|Href slug"
-msgstr "ResourceAction|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3676
 msgid "ResourceAction|Region description"
@@ -35539,7 +35530,7 @@ msgstr "Réf ems"
 
 #: ../config/model_attributes.rb:3681
 msgid "ResourceGroup|Href slug"
-msgstr "ResourceGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3682
 msgid "ResourceGroup|Name"
@@ -35615,7 +35606,7 @@ msgstr "Obj réf EMS"
 
 #: ../config/model_attributes.rb:3701
 msgid "ResourcePool|Href slug"
-msgstr "ResourcePool|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3702
 msgid "ResourcePool|Is default"
@@ -36042,7 +36033,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:3726
 msgid "RssFeed|Href slug"
-msgstr "RssFeed|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3727
 msgid "RssFeed|Link"
@@ -36102,7 +36093,7 @@ msgstr "Exécuter à"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:964
 msgid "Run Now"
-msgstr "Exécuter maintenant"
+msgstr "Exécuter mainclient"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:943
@@ -36227,7 +36218,7 @@ msgstr "Heure de fin"
 
 #: ../config/model_attributes.rb:3737
 msgid "ScanHistory|Href slug"
-msgstr "ScanHistory|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3738
 msgid "ScanHistory|Message"
@@ -36276,7 +36267,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:3764
 msgid "ScanItemSet|Href slug"
-msgstr "ScanItemSet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3765
 msgid "ScanItemSet|Mode"
@@ -36344,7 +36335,7 @@ msgstr "Guid"
 
 #: ../config/model_attributes.rb:3752
 msgid "ScanItem|Href slug"
-msgstr "ScanItem|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3753
 msgid "ScanItem|Item type"
@@ -36376,31 +36367,31 @@ msgstr "Mise à jour"
 
 #: ../config/model_attributes.rb:3776
 msgid "ScanResult|Href slug"
-msgstr "ScanResult|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3777
 msgid "ScanResult|Region description"
-msgstr "ScanResult|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:3778
 msgid "ScanResult|Region number"
-msgstr "ScanResult|Numéro de région"
+msgstr "Numéro de région"
 
 #: ../config/model_attributes.rb:3779
 msgid "ScanResult|Resource type"
-msgstr "ScanResult|Type de ressource"
+msgstr "Type de ressource"
 
 #: ../config/model_attributes.rb:3780
 msgid "ScanResult|Scan result message"
-msgstr "ScanResult|Message du résultat de balayage"
+msgstr "Message du résultat de balayage"
 
 #: ../config/model_attributes.rb:3781
 msgid "ScanResult|Scan status"
-msgstr "ScanResult|État du balayage"
+msgstr "État du balayage"
 
 #: ../config/model_attributes.rb:3782
 msgid "ScanResult|Scan type"
-msgstr "ScanResult|Type de balayage"
+msgstr "Type de balayage"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqSchedule
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
@@ -36537,7 +36528,7 @@ msgstr "Groupe de sécurité"
 
 #: ../config/model_attributes.rb:3784
 msgid "SecurityContext|Href slug"
-msgstr "SecurityContext|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3785
 msgid "SecurityContext|Region description"
@@ -36582,7 +36573,7 @@ msgstr "Réf EMS"
 
 #: ../config/model_attributes.rb:3795
 msgid "SecurityGroup|Href slug"
-msgstr "SecurityGroup|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3796
 msgid "SecurityGroup|Name"
@@ -36660,7 +36651,7 @@ msgstr "Reprise externe"
 
 #: ../config/model_attributes.rb:3804
 msgid "ServerRole|Href slug"
-msgstr "ServerRole|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3805
 msgid "ServerRole|Max concurrent"
@@ -36826,7 +36817,7 @@ msgstr "Catalogue de modèles de service"
 
 #: ../config/model_attributes.rb:3879
 msgid "ServiceOrder|Href slug"
-msgstr "ServiceOrder|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3880
 msgid "ServiceOrder|Name"
@@ -36858,7 +36849,7 @@ msgstr "Idx de groupe"
 
 #: ../config/model_attributes.rb:3888
 msgid "ServiceResource|Href slug"
-msgstr "ServiceResource|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3889
 msgid "ServiceResource|Name"
@@ -36922,7 +36913,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:3928
 msgid "ServiceTemplateCatalog|Href slug"
-msgstr "ServiceTemplateCatalog|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3929
 msgid "ServiceTemplateCatalog|Name"
@@ -36966,7 +36957,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:3911
 msgid "ServiceTemplate|Href slug"
-msgstr "ServiceTemplate|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3912
 msgid "ServiceTemplate|Long description"
@@ -37092,19 +37083,15 @@ msgstr "Ascendance"
 
 #: ../config/model_attributes.rb:3825
 msgid "Service|Cpu usagemhz rate average avg over time period"
-msgstr ""
-"Service|Utilisation processeur - Moyenne taux MHz - Moyenne sur la période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Moyenne sur la période"
 
 #: ../config/model_attributes.rb:3826
 msgid "Service|Cpu usagemhz rate average high over time period"
-msgstr ""
-"Service|Utilisation processeur - Moyenne taux MHz - Taux élevé sur la "
-"période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Taux élevé sur la période"
 
 #: ../config/model_attributes.rb:3827
 msgid "Service|Cpu usagemhz rate average low over time period"
-msgstr ""
-"Service|Utilisation processeur - Moyenne taux MHz - Taux bas sur la période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:3828
 msgid "Service|Custom 1"
@@ -37144,15 +37131,15 @@ msgstr "Personnalisé 9"
 
 #: ../config/model_attributes.rb:3837
 msgid "Service|Derived memory used avg over time period"
-msgstr "Service|Mémoire dérivée utilisée - Moyenne sur la période"
+msgstr "Mémoire dérivée utilisée - Moyenne sur la période"
 
 #: ../config/model_attributes.rb:3838
 msgid "Service|Derived memory used high over time period"
-msgstr "Service|Mémoire dérivée utilisée - Taux élevé sur la période"
+msgstr "Mémoire dérivée utilisée - Taux élevé sur la période"
 
 #: ../config/model_attributes.rb:3839
 msgid "Service|Derived memory used low over time period"
-msgstr "Service|Mémoire dérivée utilisée - Taux bas sur la période"
+msgstr "Mémoire dérivée utilisée - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:3840
 msgid "Service|Description"
@@ -37184,86 +37171,80 @@ msgstr "A un parent"
 
 #: ../config/model_attributes.rb:3847
 msgid "Service|Href slug"
-msgstr "Service|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3848
 msgid "Service|Initiator"
-msgstr "Service|Initiateur"
+msgstr "Initiateur"
 
 #: ../config/model_attributes.rb:3849
 msgid "Service|Max cpu usage rate average avg over time period"
-msgstr ""
-"Service|Moyenne taux d'utilisation max. processeur - Moyenne sur la période"
+msgstr "Moyenne taux d'utilisation max. processeur - Moyenne sur la période"
 
 #: ../config/model_attributes.rb:3850
 msgid ""
 "Service|Max cpu usage rate average avg over time period without overhead"
 msgstr ""
-"Service|Moyenne taux d'utilisation max. processeur - Moyenne sur la période "
-"sans surcharge système"
+"Moyenne taux d'utilisation max. processeur - Moyenne sur la période sans "
+"surcharge système"
 
 #: ../config/model_attributes.rb:3851
 msgid "Service|Max cpu usage rate average high over time period"
 msgstr ""
-"Service|Moyenne taux d'utilisation max. processeur - Taux élevé sur la "
-"période"
+"Moyenne taux d'utilisation max. processeur - Taux élevé sur la période"
 
 #: ../config/model_attributes.rb:3852
 msgid ""
 "Service|Max cpu usage rate average high over time period without overhead"
 msgstr ""
-"Service|Moyenne taux d'utilisation max. processeur - Taux élevé sur la "
-"période sans surcharge système"
+"Moyenne taux d'utilisation max. processeur - Taux élevé sur la période sans "
+"surcharge système"
 
 #: ../config/model_attributes.rb:3853
 msgid "Service|Max cpu usage rate average low over time period"
-msgstr ""
-"Service|Moyenne taux d'utilisation max. processeur - Taux bas sur la période"
+msgstr "Moyenne taux d'utilisation max. processeur - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:3854
 msgid ""
 "Service|Max cpu usage rate average low over time period without overhead"
 msgstr ""
-"Service|Moyenne taux d'utilisation max. processeur - Taux bas sur la période"
-" sans surcharge système"
+"Moyenne taux d'utilisation max. processeur - Taux bas sur la période sans "
+"surcharge système"
 
 #: ../config/model_attributes.rb:3855
 msgid "Service|Max mem usage absolute average avg over time period"
-msgstr ""
-"Service|Moyenne absolue d'utilisation mémoire max. - Moyenne sur la période"
+msgstr "Moyenne absolue d'utilisation mémoire max. - Moyenne sur la période"
 
 #: ../config/model_attributes.rb:3856
 msgid ""
 "Service|Max mem usage absolute average avg over time period without overhead"
 msgstr ""
-"Service|Moyenne absolue d'utilisation mémoire max. - Moyenne sur la période "
-"sans surcharge système"
+"Moyenne absolue d'utilisation mémoire max. - Moyenne sur la période sans "
+"surcharge système"
 
 #: ../config/model_attributes.rb:3857
 msgid "Service|Max mem usage absolute average high over time period"
 msgstr ""
-"Service|Moyenne absolue d'utilisation mémoire max. - Taux élevé sur la "
-"période"
+"Moyenne absolue d'utilisation mémoire max. - Taux élevé sur la période"
 
 #: ../config/model_attributes.rb:3858
 msgid ""
 "Service|Max mem usage absolute average high over time period without "
 "overhead"
 msgstr ""
-"Service|Moyenne absolue d'utilisation mémoire max. - Taux élevé sur la "
-"période sans surcharge système"
+"Moyenne absolue d'utilisation mémoire max. - Taux élevé sur la période sans "
+"surcharge système"
 
 #: ../config/model_attributes.rb:3859
 msgid "Service|Max mem usage absolute average low over time period"
-msgstr ""
-"Service|Moyenne absolue d'utilisation mémoire max. - Taux bas sur la période"
+msgstr "Moyenne absolue d'utilisation mémoire max. - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:3860
 msgid ""
 "Service|Max mem usage absolute average low over time period without overhead"
 msgstr ""
-"Service|Moyenne absolue d'utilisation mémoire max. - Taux bas sur la période"
-" sans surcharge système"
+"Moyenne absolue d'utilisation mémoire max. - Taux bas sur la période sans "
+"surcharge système"
 
 #: ../config/model_attributes.rb:3861
 msgid "Service|Name"
@@ -37410,7 +37391,7 @@ msgstr "Changement de paramètres"
 
 #: ../config/model_attributes.rb:3933
 msgid "SettingsChange|Href slug"
-msgstr "SettingsChange|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3934
 msgid "SettingsChange|Key"
@@ -37447,11 +37428,11 @@ msgstr "Partage"
 
 #: ../config/model_attributes.rb:3940
 msgid "Share|Allow tenant inheritance"
-msgstr "Autoriser l'héritage du tenant"
+msgstr "Autoriser l'héritage du client"
 
 #: ../config/model_attributes.rb:3941
 msgid "Share|Href slug"
-msgstr "Share|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3942
 msgid "Share|Region description"
@@ -37618,7 +37599,7 @@ msgstr "Afficher les données de capacité et d'utilisation des modèles"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:494
 msgid "Show Capacity & Utilization data of Tenants"
-msgstr "Afficher les données de capacité et d'utilisation des tenants"
+msgstr "Afficher les données de capacité et d'utilisation des clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3027
@@ -37963,7 +37944,7 @@ msgstr "Nom de fichier"
 
 #: ../config/model_attributes.rb:3954
 msgid "Snapshot|Href slug"
-msgstr "Snapshot|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3955
 msgid "Snapshot|Name"
@@ -38062,7 +38043,7 @@ msgstr "Nom de la VM source"
 
 #: ../app/models/miq_provision_virt_workflow.rb:130
 msgid "Source VM [%{name}] does not belong to a Provider"
-msgstr "La VM source [%{name}] n''appartient pas à un fournisseur"
+msgstr "La VM source [%{name}] n'appartient pas à un fournisseur"
 
 #: ../app/models/mixins/miq_provision_mixin.rb:165
 msgid "Source VM not provided"
@@ -38552,7 +38533,7 @@ msgstr "Nom étendu"
 
 #: ../config/model_attributes.rb:4031
 msgid "StorageFile|Href slug"
-msgstr "StorageFile|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4032
 msgid "StorageFile|Mtime"
@@ -38584,7 +38565,7 @@ msgstr "Taille, numérique (V)"
 
 #: ../config/model_attributes.rb:4047
 msgid "StorageProfileStorage|Href slug"
-msgstr "StorageProfileStorage|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4048
 msgid "StorageProfileStorage|Region description"
@@ -38600,7 +38581,7 @@ msgstr "Réf EMS"
 
 #: ../config/model_attributes.rb:4041
 msgid "StorageProfile|Href slug"
-msgstr "StorageProfile|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4042
 msgid "StorageProfile|Name"
@@ -38676,7 +38657,7 @@ msgstr "Espace libre"
 
 #: ../config/model_attributes.rb:3978
 msgid "Storage|Href slug"
-msgstr "Storage|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:3979
 msgid "Storage|Last perf capture on"
@@ -38929,27 +38910,27 @@ msgstr "Sous-réseaux"
 
 #: ../config/model_attributes.rb:4051
 msgid "Subnet|Cidr"
-msgstr "Subnet|CIDR"
+msgstr "Cidr"
 
 #: ../config/model_attributes.rb:4052
 msgid "Subnet|Ems ref"
-msgstr "Subnet|Réf. EMS"
+msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:4053
 msgid "Subnet|Href slug"
-msgstr "Subnet|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4054
 msgid "Subnet|Name"
-msgstr "Subnet|Nom"
+msgstr "Nom"
 
 #: ../config/model_attributes.rb:4055
 msgid "Subnet|Region description"
-msgstr "Subnet|Description de la région"
+msgstr "Description de la région"
 
 #: ../config/model_attributes.rb:4056
 msgid "Subnet|Region number"
-msgstr "Subnet|Numéro de région"
+msgstr "Numéro de région"
 
 #. TRANSLATORS: file:
 #. product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_topic.yaml
@@ -39100,7 +39081,7 @@ msgstr "Transmissions forgées"
 
 #: ../config/model_attributes.rb:4061
 msgid "Switch|Href slug"
-msgstr "Switch|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4062
 msgid "Switch|Mac changes"
@@ -39108,7 +39089,7 @@ msgstr "Changements de Mac"
 
 #: ../config/model_attributes.rb:4063
 msgid "Switch|Mtu"
-msgstr "Switch|MTU"
+msgstr "MTU"
 
 #: ../config/model_attributes.rb:4064
 msgid "Switch|Name"
@@ -39187,7 +39168,7 @@ msgstr "Nom d'hôte"
 
 #: ../config/model_attributes.rb:4074
 msgid "SystemConsole|Href slug"
-msgstr "SystemConsole|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4075
 msgid "SystemConsole|Opened"
@@ -39263,7 +39244,7 @@ msgstr "Activer niveaux d'exécution"
 
 #: ../config/model_attributes.rb:4094
 msgid "SystemService|Href slug"
-msgstr "SystemService|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4095
 msgid "SystemService|Image path"
@@ -39356,7 +39337,7 @@ msgstr "Balisage"
 
 #: ../config/model_attributes.rb:4113
 msgid "Tagging|Href slug"
-msgstr "Tagging|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4114
 msgid "Tagging|Region description"
@@ -39378,7 +39359,7 @@ msgstr "Cible"
 
 #: ../config/model_attributes.rb:4108
 msgid "Tag|Href slug"
-msgstr "Tag|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4109
 msgid "Tag|Name"
@@ -39505,23 +39486,23 @@ msgstr "Accordéon des modèles"
 #. TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
 #: ../config/yaml_strings.rb:7210 ../config/model_attributes.rb:4117
 msgid "Tenant"
-msgstr "Tenant"
+msgstr "Client"
 
 #. TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant
 #. Quotas.yaml
 #: ../config/yaml_strings.rb:5739
 msgid "Tenant Name"
-msgstr "Nom du tenant"
+msgstr "Nom du client"
 
 #. TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant
 #. Quotas.yaml
 #: ../config/yaml_strings.rb:5737
 msgid "Tenant Quotas"
-msgstr "Quotas de tenants"
+msgstr "Quotas de clients"
 
 #: ../config/model_attributes.rb:4144
 msgid "Tenant quota"
-msgstr "Quota tenant"
+msgstr "Quota client"
 
 #: ../config/model_attributes.rb:4145
 msgid "TenantQuota|Allocated"
@@ -39533,7 +39514,7 @@ msgstr "Disponible"
 
 #: ../config/model_attributes.rb:4147
 msgid "TenantQuota|Href slug"
-msgstr "TenantQuota|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4148
 msgid "TenantQuota|Name"
@@ -39571,7 +39552,7 @@ msgstr "Valeur d'avertissement"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1709
 msgid "Tenants"
-msgstr "Tenants"
+msgstr "Clients"
 
 #: ../config/model_attributes.rb:4118
 msgid "Tenant|Allocated memory"
@@ -39607,7 +39588,7 @@ msgstr "Domaine"
 
 #: ../config/model_attributes.rb:4126
 msgid "Tenant|Href slug"
-msgstr "Tenant|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4127
 msgid "Tenant|Login logo content type"
@@ -39776,12 +39757,12 @@ msgstr "Le groupe de connexion ne peut pas être supprimé"
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3752
 msgid "The operation %{method} on %{target_name} completed successfully."
-msgstr "L''opération %{method} sur %{target_name} a abouti."
+msgstr "l'opération %{method} sur %{target_name} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3754
 msgid "The operation %{method} on %{target_name} failed: %{error}"
-msgstr "L''opération %{method} sur %{target_name} a échoué : %{error}"
+msgstr "l'opération %{method} sur %{target_name} a échoué : %{error}"
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3726
@@ -39801,7 +39782,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3742
 msgid "The operation %{op_name} %{op_arg} on %{tower} completed successfully."
-msgstr "L''opération %{op_name} %{op_arg} sur %{tower} a abouti."
+msgstr "l'opération %{op_name} %{op_arg} sur %{tower} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3744
@@ -39809,7 +39790,7 @@ msgid ""
 "The operation %{op_name} %{op_arg} on %{tower} has failed to complete. "
 "Please check the logs for further details."
 msgstr ""
-"L''opération %{op_name} %{op_arg} sur %{tower} a échoué. Consultez les "
+"l'opération %{op_name} %{op_arg} sur %{tower} a échoué. Consultez les "
 "journaux pour plus de détails."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
@@ -39817,7 +39798,7 @@ msgstr ""
 msgid ""
 "The operation %{snapshot_op} on snapshot of %{subject} completed "
 "successfully."
-msgstr "L''opération %{snapshot_op} sur le cliché de %{subject} a abouti."
+msgstr "l'opération %{snapshot_op} sur le cliché de %{subject} a abouti."
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 #: ../config/yaml_strings.rb:3730
@@ -39828,7 +39809,7 @@ msgstr "Le rôle %{role_name} a été activé sur le serveur %{server_name}"
 #: ../config/yaml_strings.rb:3732
 msgid "The role %{role_name} has started activation on server %{server_name}"
 msgstr ""
-"Le rôle %{role_name} a lancé l''activation sur le serveur %{server_name}"
+"Le rôle %{role_name} a lancé l'activation sur le serveur %{server_name}"
 
 #: ../app/models/miq_task.rb:334
 msgid "The selected Task was cancelled"
@@ -39925,7 +39906,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:4159
 msgid "TimeProfile|Href slug"
-msgstr "TimeProfile|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4160
 msgid "TimeProfile|Profile"
@@ -41633,7 +41614,7 @@ msgstr "Prénom"
 
 #: ../config/model_attributes.rb:4183
 msgid "User|Href slug"
-msgstr "User|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4184
 msgid "User|Icon"
@@ -43480,7 +43461,7 @@ msgstr "Afficher les modèles"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:488
 msgid "View Tenants"
-msgstr "Afficher les tenants"
+msgstr "Afficher les clients"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1892
@@ -43550,7 +43531,7 @@ msgstr "Jours"
 
 #: ../config/model_attributes.rb:4201
 msgid "VimPerformanceOperatingRange|Href slug"
-msgstr "VimPerformanceOperatingRange|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4202
 msgid "VimPerformanceOperatingRange|Region description"
@@ -43574,7 +43555,7 @@ msgstr "Intervalle de capture"
 
 #: ../config/model_attributes.rb:4208
 msgid "VimPerformanceState|Href slug"
-msgstr "VimPerformanceState|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4209
 msgid "VimPerformanceState|Region description"
@@ -43614,7 +43595,7 @@ msgstr "Nom de colonne"
 
 #: ../config/model_attributes.rb:4219
 msgid "VimPerformanceTagValue|Href slug"
-msgstr "VimPerformanceTagValue|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4220
 msgid "VimPerformanceTagValue|Metric type"
@@ -43913,7 +43894,7 @@ msgstr "Cœurs processeur par socket"
 
 #: ../config/model_attributes.rb:4249
 msgid "VmOrTemplate|Cpu hot add enabled"
-msgstr "VmOrTemplate|Ajout de CPU à chaud activé"
+msgstr "Ajout de CPU à chaud activé"
 
 #: ../config/model_attributes.rb:4250
 msgid "VmOrTemplate|Cpu hot remove enabled"
@@ -44313,7 +44294,7 @@ msgstr "Noms d'hôtes"
 
 #: ../config/model_attributes.rb:4349
 msgid "VmOrTemplate|Href slug"
-msgstr "VmOrTemplate|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4350
 msgid "VmOrTemplate|Ipaddresses"
@@ -44920,7 +44901,7 @@ msgstr "Inodes utilisés sur le disque"
 
 #: ../config/model_attributes.rb:4500
 msgid "VmdbDatabaseMetric|Href slug"
-msgstr "VmdbDatabaseMetric|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4501
 msgid "VmdbDatabaseMetric|Region description"
@@ -44953,7 +44934,7 @@ msgstr "Disque données"
 
 #: ../config/model_attributes.rb:4483
 msgid "VmdbDatabase|Href slug"
-msgstr "VmdbDatabase|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4484
 msgid "VmdbDatabase|Ipaddress"
@@ -44990,7 +44971,7 @@ msgstr "Index VMDB"
 
 #: ../config/model_attributes.rb:4506
 msgid "VmdbIndex|Href slug"
-msgstr "VmdbIndex|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4507
 msgid "VmdbIndex|Name"
@@ -45014,7 +44995,7 @@ msgstr "Nom de l'intervalle de capture"
 
 #: ../config/model_attributes.rb:4513
 msgid "VmdbMetric|Href slug"
-msgstr "VmdbMetric|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4514
 msgid "VmdbMetric|Index rows fetched"
@@ -45119,7 +45100,7 @@ msgstr "VmdbTableEvm"
 
 #: ../config/model_attributes.rb:4539
 msgid "VmdbTable|Href slug"
-msgstr "VmdbTable|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4540
 msgid "VmdbTable|Name"
@@ -45303,7 +45284,7 @@ msgstr "% espace libre"
 
 #: ../config/model_attributes.rb:4549
 msgid "Volume|Href slug"
-msgstr "Volume|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4550
 msgid "Volume|Name"
@@ -45484,7 +45465,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:4562
 msgid "WindowsImage|Href slug"
-msgstr "WindowsImage|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4563
 msgid "WindowsImage|Index"
@@ -45667,7 +45648,7 @@ msgstr "Description"
 
 #: ../config/model_attributes.rb:4585
 msgid "Zone|Href slug"
-msgstr "Zone|Identifiant URL HREF"
+msgstr "Identifiant URL HREF"
 
 #: ../config/model_attributes.rb:4586
 msgid "Zone|Max cpu usage rate average avg over time period"
@@ -45901,7 +45882,7 @@ msgstr "heures"
 #: ../app/models/chargeback/report_options.rb:88
 #: ../app/models/chargeback/report_options.rb:106
 msgid "interval '%{interval}' is not supported"
-msgstr "l''intervalle '%{interval}' n'est pas supporté"
+msgstr "l'intervalle '%{interval}' n'est pas supporté"
 
 #: ../app/models/metric/ci_mixin/rollup.rb:7
 msgid "invalid interval name %{name}"
@@ -46154,7 +46135,7 @@ msgstr "raw_associate_floating_ip doit être implémenté dans une sous-classe"
 
 #: ../app/models/cloud_tenant.rb:49
 msgid "raw_create_cloud_tenant must be implemented in a subclass"
-msgstr "raw_create_cloud_tenant doit être implémenté dans une sous-classe"
+msgstr "raw_create_cloud_client doit être implémenté dans une sous-classe"
 
 #: ../app/models/orchestration_stack.rb:95
 msgid "raw_create_stack must be implemented in a subclass"
@@ -46174,7 +46155,7 @@ msgstr "raw_delete_cloud_subnet doit être implémenté dans une sous-classe"
 
 #: ../app/models/cloud_tenant.rb:98
 msgid "raw_delete_cloud_tenant must be implemented in a subclass"
-msgstr "raw_delete_cloud_tenant doit être implémenté dans une sous-classe"
+msgstr "raw_delete_cloud_client doit être implémenté dans une sous-classe"
 
 #: ../app/models/flavor.rb:100
 msgid "raw_delete_flavor must be implemented in a subclass"
@@ -46231,7 +46212,7 @@ msgstr "raw_status doit être implémenté dans une sous-classe"
 
 #: ../app/models/cloud_tenant.rb:73
 msgid "raw_update_cloud_tenant must be implemented in a subclass"
-msgstr "raw_update_cloud_tenant doit être implémenté dans une sous-classe"
+msgstr "raw_update_cloud_client doit être implémenté dans une sous-classe"
 
 #: ../app/models/load_balancer.rb:62
 msgid "raw_update_load_balancer must be implemented in a subclass"

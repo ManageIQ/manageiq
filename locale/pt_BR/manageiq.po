@@ -4,13 +4,14 @@
 # Ludek Janda <ljanda@redhat.com>, 2017. #zanata
 # Milan Zázrivec <mzazrivec@redhat.com>, 2017. #zanata
 # renata <translator01_redhat@roundtableinc.net>, 2017. #zanata
+# sreedevisamudrala <sreedevi.samudrala@welocalize.com>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-31 12:36+0100\n"
-"PO-Revision-Date: 2017-11-22 05:36-0500\n"
-"Last-Translator: Milan Zázrivec <mzazrivec@redhat.com>\n"
+"PO-Revision-Date: 2018-01-18 01:18-0500\n"
+"Last-Translator: sreedevisamudrala <sreedevi.samudrala@welocalize.com>\n"
 "Language-Team: PortuguesBR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32591,7 +32592,7 @@ msgstr "Desempenho - ContainerProject"
 #. (plural form)
 #: ../config/dictionary_strings.rb:1364
 msgid "Performance - ContainerProjects"
-msgstr "Desempenho - ContainerProjects"
+msgstr "Desempenho - Projetos de contêiner"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ContainerPerformance (plural
 #. form)

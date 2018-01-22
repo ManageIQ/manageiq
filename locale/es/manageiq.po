@@ -17,13 +17,14 @@
 # Reviwer <ed.rh02@oceantranslations.com>, 2017. #zanata
 # Translator <tr.rh02@oceantranslations.com>, 2017. #zanata
 # sreedevisamudrala <sreedevi.samudrala@welocalize.com>, 2017. #zanata
+# sreedevisamudrala <sreedevi.samudrala@welocalize.com>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-31 12:36+0100\n"
-"PO-Revision-Date: 2017-11-17 04:03-0500\n"
-"Last-Translator: Julieta Scenna <julieta.scenna@gmail.com>\n"
+"PO-Revision-Date: 2018-01-20 12:07-0500\n"
+"Last-Translator: sreedevisamudrala <sreedevi.samudrala@welocalize.com>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -288,7 +289,7 @@ msgstr "%{name} no puede contener un valor de la lista negra"
 
 #: ../app/models/miq_request_workflow/dialog_field_validation.rb:21
 msgid "%{name} must be at least %{length} characters"
-msgstr "%{name} debe ser de al menos %{length} caracteres"
+msgstr "%{name} debe tener al menos %{length} caracteres"
 
 #: ../app/models/miq_request_workflow/dialog_field_validation.rb:34
 msgid "%{name} must be correctly formatted"
@@ -364,11 +365,11 @@ msgstr ""
 
 #: ../app/models/miq_alert.rb:477
 msgid "< Heap Max (%)"
-msgstr "< Montón máx. (%)"
+msgstr "< Acumulación máx. (%)"
 
 #: ../app/models/miq_alert.rb:482
 msgid "< Non Heap Committed (%)"
-msgstr "< No del montón asignado (%)"
+msgstr "> No de la aculumación asignada (%)"
 
 #: ../app/models/mixins/service_mixin.rb:115
 msgid "<%{class_name}> <%{id}>:<%{name}> is already connected to a service."
@@ -384,11 +385,11 @@ msgstr "<Ningún título>"
 
 #: ../app/models/miq_alert.rb:476
 msgid "> Heap Max (%)"
-msgstr ">  Montón máx. (%)"
+msgstr ">  Acumulación máx. (%)"
 
 #: ../app/models/miq_alert.rb:481
 msgid "> Non Heap Committed (%)"
-msgstr "> No del montón  asignado (%)"
+msgstr "> No de la aculumación asignada (%)"
 
 #: ../app/models/physical_server/operations/led.rb:18
 msgid ""
@@ -940,12 +941,12 @@ msgstr "Añadir tipos de Imágenes de Sistema"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1391
 msgid "Add Tab"
-msgstr "Añadir Pestaña"
+msgstr "Añadir pestaña"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1393
 msgid "Add Tab to Dialog"
-msgstr "Añadir Pestaña a cuadro de diálogo"
+msgstr "Añadir pestaña a cuadro de diálogo"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1561
@@ -1121,12 +1122,12 @@ msgstr "Añadir un repositorio"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1700
 msgid "Add a Role"
-msgstr "Añadir un Rol"
+msgstr "Añadir un rol"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2423
 msgid "Add a Router"
-msgstr "Agregar un enrutador"
+msgstr "Añadir un enrutador"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:970
@@ -1176,7 +1177,7 @@ msgstr "Añadir un asistente"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1630
 msgid "Add a Zone"
-msgstr "Añadir una Zona"
+msgstr "Añadir una zona"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2363
@@ -1226,12 +1227,12 @@ msgstr "Añadir y eliminar un asistente"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2094
 msgid "Add middleware datasource"
-msgstr "Agregar una fuente de datos Middleware"
+msgstr "Añadir una fuente de datos Middleware"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2090
 msgid "Add middleware deployment"
-msgstr "Agregar implementación de middleware"
+msgstr "Añadir implementación de middleware"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2222
@@ -1241,7 +1242,7 @@ msgstr "Añadir implementación de Middleware para el grupo de servidores"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2092
 msgid "Add middleware jdbc driver"
-msgstr "Agregar controlador JDBC de middleware"
+msgstr "Añadir controlador JDBC de middleware"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3580
@@ -1269,63 +1270,63 @@ msgstr "Configuración avanzada"
 #. TRANSLATORS: file: product/views/AdvancedSetting.yaml
 #: ../config/yaml_strings.rb:7765
 msgid "AdvancedSetting"
-msgstr "AdvancedSetting"
+msgstr "ConfiguraciónAvanzada"
 
 #: ../config/model_attributes.rb:18
 msgid "AdvancedSetting|Created on"
-msgstr "AdvancedSetting|Creado el"
+msgstr "ConfiguraciónAvanzada|Creado el"
 
 #: ../config/model_attributes.rb:19
 msgid "AdvancedSetting|Default value"
-msgstr "AdvancedSetting|Valor predeterminado"
+msgstr "ConfiguraciónAvanzada|Valor predeterminado"
 
 #: ../config/model_attributes.rb:20
 msgid "AdvancedSetting|Description"
-msgstr "AdvancedSetting|Descripción"
+msgstr "ConfiguraciónAvanzada|Descripción"
 
 #: ../config/model_attributes.rb:21
 msgid "AdvancedSetting|Display name"
-msgstr "AdvancedSetting|Mostrar nombre"
+msgstr "ConfiguraciónAvanzada|Mostrar nombre"
 
 #: ../config/model_attributes.rb:22
 msgid "AdvancedSetting|Href slug"
-msgstr "AdvancedSetting|Href slug"
+msgstr "ConfiguraciónAvanzada|Href slug"
 
 #: ../config/model_attributes.rb:23
 msgid "AdvancedSetting|Max"
-msgstr "AdvancedSetting|Máx."
+msgstr "ConfiguraciónAvanzada|Máx."
 
 #: ../config/model_attributes.rb:24
 msgid "AdvancedSetting|Min"
-msgstr "AdvancedSetting|Mín."
+msgstr "ConfiguraciónAvanzada|Mín."
 
 #: ../config/model_attributes.rb:25
 msgid "AdvancedSetting|Name"
-msgstr "AdvancedSetting|Nombre"
+msgstr "ConfiguraciónAvanzada|Nombre"
 
 #: ../config/model_attributes.rb:26
 msgid "AdvancedSetting|Read only"
-msgstr "AdvancedSetting|Solo lectura"
+msgstr "ConfiguraciónAvanzada|Solo lectura"
 
 #: ../config/model_attributes.rb:27
 msgid "AdvancedSetting|Region description"
-msgstr "AdvancedSetting|Descripción de la región"
+msgstr "ConfiguraciónAvanzada|Descripción de la región"
 
 #: ../config/model_attributes.rb:28
 msgid "AdvancedSetting|Region number"
-msgstr "AdvancedSetting|Número de región"
+msgstr "ConfiguraciónAvanzada|Número de región"
 
 #: ../config/model_attributes.rb:29
 msgid "AdvancedSetting|Resource type"
-msgstr "AdvancedSetting|Tipo de recurso"
+msgstr "ConfiguraciónAvanzada|Tipo de recurso"
 
 #: ../config/model_attributes.rb:30
 msgid "AdvancedSetting|Updated on"
-msgstr "AdvancedSetting|Actualizado el"
+msgstr "ConfiguraciónAvanzada|Actualizado el"
 
 #: ../config/model_attributes.rb:31
 msgid "AdvancedSetting|Value"
-msgstr "AdvancedSetting|Valor"
+msgstr "ConfiguraciónAvanzada|Valor"
 
 #. TRANSLATORS: file: product/reports/130_Configuration Management -
 #. Clusters/040_Cluster Resources.yaml
@@ -1506,7 +1507,7 @@ msgstr "Número de máquinas virtuales asignadas"
 #. Reports/140_Provisioning Activity - by VM.yaml
 #: ../config/yaml_strings.rb:5847
 msgid "Allocated RAM (MB)"
-msgstr "RAM (MB) Asignada"
+msgstr "RAM (MB) asignada"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-
 #. all_vms_and_templates.yaml
@@ -1534,11 +1535,11 @@ msgstr "Tamaño asignado"
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #: ../config/dictionary_strings.rb:174 ../config/yaml_strings.rb:7167
 msgid "Allocated Storage"
-msgstr "Almacenamiento Asignado"
+msgstr "Almacenamiento asignado"
 
 #: ../app/models/tenant_quota.rb:97
 msgid "Allocated Storage in GB"
-msgstr "Almacenamiento Asignado en GB"
+msgstr "Almacenamiento asignado en GB"
 
 #: ../app/models/tenant_quota.rb:93
 msgid "Allocated Virtual CPUs"
@@ -1714,7 +1715,7 @@ msgstr "Iniciador de aplicaciones"
 #. Machines/060_VMware Tools Versions.yaml
 #: ../config/yaml_strings.rb:6247
 msgid "Application Name"
-msgstr "Nombre de la Aplicación"
+msgstr "Nombre de la aplicación"
 
 #. TRANSLATORS: file: product/views/GuestApplication.yaml
 #: ../config/yaml_strings.rb:7284
@@ -1752,7 +1753,7 @@ msgstr "Aprobar y Denegar peticiones"
 #. Reports/140_Provisioning Activity - by VM.yaml
 #: ../config/yaml_strings.rb:5788
 msgid "Approved By"
-msgstr "Aprobado Por"
+msgstr "Aprobado por"
 
 #. TRANSLATORS: file: product/reports/900_Provisioning - Activity
 #. Reports/110_Provisioning Activity - by Approver.yaml
@@ -1764,7 +1765,7 @@ msgstr "Aprobado Por"
 #. Reports/140_Provisioning Activity - by VM.yaml
 #: ../config/yaml_strings.rb:5793
 msgid "Approved By Email"
-msgstr "Aprobado Por Email"
+msgstr "Aprobado por email"
 
 #. TRANSLATORS: file: product/reports/900_Provisioning - Activity
 #. Reports/110_Provisioning Activity - by Approver.yaml
@@ -11048,12 +11049,12 @@ msgstr "Conteo diario de máquinas virtuales (máx.)"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:881
 msgid "Dashboard"
-msgstr "Escritorio"
+msgstr "Panel"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1002
 msgid "Dashboard Widgets"
-msgstr "asistentes del panel"
+msgstr "Asistentes del panel"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1004
@@ -11063,7 +11064,7 @@ msgstr "Asistentes del panel Accordion"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3468
 msgid "Dashboard features"
-msgstr "Características del panel de control"
+msgstr "Características del panel"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:984
@@ -16935,7 +16936,7 @@ msgstr "Todo bajo Plantillas de personalización"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:883
 msgid "Everything under Dashboard"
-msgstr "Todo bajo Panel"
+msgstr "Todo lo referente al panel"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:843
@@ -21033,7 +21034,7 @@ msgstr "Índices"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2680
 msgid "Infra Providers Dashboard"
-msgstr "Paneles de proveedores de infraestructura"
+msgstr "Panel de proveedores de infraestructura"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:161
@@ -43397,7 +43398,7 @@ msgstr "Ver imágenes"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2682
 msgid "View Infra Providers Dashboard"
-msgstr "Vista de paneles de proveedores de infraestructura"
+msgstr "Vista del panel de proveedores de infraestructura"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:163
