@@ -20,6 +20,10 @@ module EmsRefresh
     Settings.ems_refresh[:debug_trace]
   end
 
+  def self.invalid_authentication_grace_period
+    Settings.ems_refresh[:invalid_authentication_grace_period].to_i.minutes
+  end
+
   # If true, Refreshers will raise any exceptions encountered, instead
   # of quietly recording them as failures and continuing.
   mattr_accessor :debug_failures
@@ -54,6 +58,8 @@ module EmsRefresh
 
     # Queue the refreshes
     task_ids = targets_by_ems.collect do |ems, ts|
+      next unless validate_ems_authentication(ems)
+
       ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq
       queue_merge(ts, ems, opts[:create_task])
     end
@@ -218,6 +224,18 @@ module EmsRefresh
     )
   end
   private_class_method :create_refresh_task
+
+  def self.validate_ems_authentication(ems)
+    return true if ems.authentication_status_ok?
+
+    authentication = ems.default_authentication
+    return true if authentication && authentication.last_valid_on < invalid_authentication_grace_period.ago
+
+    _log.warn("Not queueing refresh for ems [#{ems.name}] ID: [#{ems.id}] due to invalid authentication")
+
+    false
+  end
+  private_class_method :validate_ems_authentication
 
   #
   # Helper methods for advanced debugging
