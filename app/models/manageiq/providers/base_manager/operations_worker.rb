@@ -23,4 +23,19 @@ class ManageIQ::Providers::BaseManager::OperationsWorker < MiqWorker
   def self.normalized_type
     @normalized_type ||= "ems_operations_worker"
   end
+
+  def self.uri(ems)
+    worker = find_by_ems(ems).where(MiqWorker::CONDITION_CURRENT).first
+    if worker.nil?
+      _log.warn("No active EMS Operations Worker found")
+      return nil
+    end
+
+    if worker.uri.blank?
+      _log.warn("EMS Operations Worker URI is blank")
+      return nil
+    end
+
+    worker.uri
+  end
 end

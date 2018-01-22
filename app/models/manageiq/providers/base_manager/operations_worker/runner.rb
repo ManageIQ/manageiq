@@ -13,6 +13,7 @@ class ManageIQ::Providers::BaseManager::OperationsWorker::Runner < ::MiqWorker::
 
   def do_before_work_loop
     start_operations_thread
+    set_worker_uri
   end
 
   def before_exit(message, _exit_code)
@@ -61,6 +62,10 @@ class ManageIQ::Providers::BaseManager::OperationsWorker::Runner < ::MiqWorker::
     thread_started.wait
 
     _log.info("Operations thread starting...Complete")
+  end
+
+  def set_worker_uri
+    @worker.update_attributes(:uri => "#{operations_klass.bind}:#{operations_klass.port}/api")
   end
 
   def stop_operations_thread
