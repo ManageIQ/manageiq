@@ -27,8 +27,8 @@ class MiqTask < ApplicationRecord
   before_validation :initialize_attributes, :on => :create
 
   before_destroy :check_active, :check_associations
-  before_save :started
-  
+  before_save :ensure_started
+
   virtual_has_one :task_results
   virtual_attribute :state_or_status, :string, :arel => (lambda do |t|
     t.grouping(Arel::Nodes::Case.new(t[:state]).when(STATE_FINISHED).then(t[:status]).else(t[:state]))
@@ -50,7 +50,7 @@ class MiqTask < ApplicationRecord
   scope :no_status_selected,      ->           { running.where.not(:status => %(Ok Error Warn)) }
   scope :with_status_in,          ->(s, *rest) { rest.reduce(MiqTask.send(s)) { |chain, r| chain.or(MiqTask.send(r)) } }
 
-  def started
+  def ensure_started
     self.started_on ||= Time.now.utc if state == STATE_ACTIVE
   end
 
