@@ -1,4 +1,4 @@
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join("tools").to_s
 
 require "miqldap_to_sssd/cli"
 

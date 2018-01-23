@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require File.expand_path("../config/environment", __dir__)
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join("tools").to_s
 require 'trollop'
 require 'server_settings_replicator/server_settings_replicator'
 
