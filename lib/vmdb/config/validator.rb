@@ -70,23 +70,9 @@ module VMDB
         return valid, errors
       end
 
-      AUTH_TYPES = %w(ldap ldaps httpd amazon database none)
-
       def authentication(data)
-        valid, errors = true, []
-
-        return valid, errors if data.mode == 'none'
-
-        authenticator = Authenticator.authenticator_class(data.mode)
-
-        if authenticator
-          errors = authenticator.validate_config(data)
-          valid = errors.empty?
-        else
-          valid = false
-          errors << [:mode, "authentication type, \"#{data.mode}\", invalid. Should be one of: #{Authenticator::Base.subclasses.map(&:authenticates_for).join(", ")}"]
-        end
-
+        errors = Authenticator.validate_config(data)
+        valid = errors.empty?
         return valid, errors
       end
 

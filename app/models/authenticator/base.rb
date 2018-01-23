@@ -23,6 +23,10 @@ module Authenticator
       @config = config
     end
 
+    def validate_config
+      self.class.validate_config(config)
+    end
+
     def uses_stored_password?
       false
     end
