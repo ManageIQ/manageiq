@@ -8,7 +8,7 @@ opts = Trollop.options(ARGV) do
   banner "USAGE:   #{__FILE__} -h <number of hours back to query metrics>\n" \
          "Example: #{__FILE__} -d <number of days back to query metrics>"
 
-  opt :hours, "Hours", :short => "h", :type => :int, :default => 4
+  opt :hours, "Hours", :short => "h", :type => :int, :default => 2
   opt :days,  "Days",  :short => "d", :type => :int
   opt :label, "Label", :short => "l", :type => :string, :default => "com.redhat.component"
 end
