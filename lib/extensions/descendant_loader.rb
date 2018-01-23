@@ -267,9 +267,11 @@ class DescendantLoader
   end
 end
 
-ActiveRecord::Base.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
-ActiveSupport::Dependencies.send(:prepend, DescendantLoader::AsDependenciesClearWithLoader)
-ActsAsArModel.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
+# Patch Class to support non-AR models in the models directory
+Class.prepend(DescendantLoader::ArDescendantsWithLoader)
+# Patch ActiveRecord specifically to get ahead of ActiveSupport::DescendantsTracker
+#   The patching of Class does not put it in the right place in the ancestors chain
+ActiveRecord::Base.singleton_class.prepend(DescendantLoader::ArDescendantsWithLoader)
 
 at_exit do
   DescendantLoader.instance.save_cache!
