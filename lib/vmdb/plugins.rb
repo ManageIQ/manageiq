@@ -15,22 +15,21 @@ module Vmdb
     end
 
     def register_vmdb_plugins
-      Rails.application.railties.each do |railtie|
-        next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
-        register_vmdb_plugin(railtie)
+      plugin_registry.plugins.each do |plugin|
+        register_vmdb_plugin(plugin)
       end
 
       @vmdb_plugins
     end
 
-    def register_vmdb_plugin(engine)
-      @vmdb_plugins << engine
+    def register_vmdb_plugin(plugin)
+      @vmdb_plugins << plugin
 
-      register_automate_domains(engine)
-      register_provider_plugin(engine)
+      register_automate_domains(plugin)
+      register_provider_plugin(plugin)
 
       # make sure STI models are recognized
-      DescendantLoader.instance.descendants_paths << engine.root.join('app')
+      DescendantLoader.instance.descendants_paths << plugin.root.join('app')
     end
 
     def registered_provider_plugin_names
@@ -47,15 +46,29 @@ module Vmdb
 
     private
 
-    def register_provider_plugin(engine)
-      if engine.class.name.start_with?("ManageIQ::Providers::")
-        provider_name = ManageIQ::Providers::Inflector.provider_name(engine).underscore.to_sym
-        @registered_provider_plugin_map[provider_name] = engine
+    def plugin_registry
+      @plugin_registry ||= build_plugin_registry
+    end
+
+    def build_plugin_registry
+      if defined?(Rails)
+        require_relative "plugins/registry/rails.rb"
+        Vmdb::Plugins::Registry::Rails.instance
+      else
+        require_relative "plugins/registry/bundler.rb"
+        Vmdb::Plugins::Registry::Bundler.instance
       end
     end
 
-    def register_automate_domains(engine)
-      Dir.glob(engine.root.join("content", "automate", "*")).each do |domain_directory|
+    def register_provider_plugin(plugin)
+      if plugin_registry.provider_plugin? plugin
+        provider_name = plugin_registry.provider_name(plugin)
+        @registered_provider_plugin_map[provider_name] = plugin
+      end
+    end
+
+    def register_automate_domains(plugin)
+      Dir.glob(plugin.root.join("content", "automate", "*")).each do |domain_directory|
         @registered_automate_domains << AutomateDomain.new(domain_directory)
       end
     end
