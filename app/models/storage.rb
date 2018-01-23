@@ -308,10 +308,6 @@ class Storage < ApplicationRecord
     ::Settings.storage.max_qitems_per_scan_request
   end
 
-  def self.max_parallel_storage_scans_per_ems
-    ::Settings.storage.max_parallel_scans_per_ems
-  end
-
   def self.scan_eligible_storages(zone_name = nil)
     zone_caption = zone_name ? " for zone [#{zone_name}]" : ""
     _log.info("Computing#{zone_caption} Started")
@@ -544,14 +540,7 @@ class Storage < ApplicationRecord
               {:name => name, :zone => MiqServer.my_zone}
     end
 
-    max_parallel_storage_scans_per_ems = self.class.max_parallel_storage_scans_per_ems
-    ems = nil
-    emss.each do |e|
-      next if smartstate_analysis_count_for_ems_id(e.id) >= max_parallel_storage_scans_per_ems
-      ems = e
-      break
-    end
-
+    ems = emss.detect { |e| smartstate_analysis_count_for_ems_id(e.id) >= ::Settings.storage.max_parallel_scans_per_ems }
     if ems.nil?
       raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) if qmessage?(method_name)
       ems = emss.random_element

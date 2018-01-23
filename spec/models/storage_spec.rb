@@ -18,11 +18,6 @@ describe Storage do
     expect(Storage.scan_watchdog_interval).to eq(5.minutes)
   end
 
-  it "#max_parallel_storage_scans_per_ems" do
-    stub_settings(:storage => {'max_parallel_scans_per_ems' => 3})
-    expect(Storage.max_parallel_storage_scans_per_ems).to eq(3)
-  end
-
   it "#max_qitems_per_scan_request" do
     stub_settings(:storage => {'max_qitems_per_scan_request' => 3})
     expect(Storage.max_qitems_per_scan_request).to eq(3)
@@ -260,7 +255,6 @@ describe Storage do
         end
 
         it "#scan_queue" do
-          allow(Storage).to receive_messages(:max_parallel_storage_scans => 1)
           bogus_id = @storage1.id - 1
           miq_task = FactoryGirl.create(:miq_task)
           miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
