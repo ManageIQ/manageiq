@@ -14,7 +14,6 @@ class GenericObject < ApplicationRecord
            :type_cast,
            :property_association_defined?,
            :property_methods, :property_method_defined?,
-           :custom_actions, :custom_action_buttons,
            :to => :generic_object_definition, :allow_nil => true
 
   delegate :name, :to => :generic_object_definition, :prefix => true, :allow_nil => false
@@ -25,6 +24,14 @@ class GenericObject < ApplicationRecord
     attributes = (attributes || {}).symbolize_keys
     attributes = attributes.slice(:generic_object_definition).merge(attributes.except(:generic_object_definition))
     super
+  end
+
+  def custom_actions
+    generic_object_definition&.custom_actions(self)
+  end
+
+  def custom_action_buttons
+    generic_object_definition&.custom_action_buttons(self)
   end
 
   def property_attributes=(options)

@@ -334,6 +334,64 @@ describe GenericObjectDefinition do
       }
       expect(definition.custom_actions).to match(expected)
     end
+
+    context "expression evaluation" do
+      let(:generic) { FactoryGirl.build(:generic_object, :generic_object_definition => definition, :name => 'hello') }
+      let(:true_expression_on_definition) do
+        MiqExpression.new("=" => {"field" => "GenericObjectDefinition-name", "value" => "test_definition"})
+      end
+      let(:false_expression_on_definition) do
+        MiqExpression.new("=" => {"field" => "GenericObjectDefinition-name", "value" => "not_test_definition"})
+      end
+      let(:true_expression_on_generic) do
+        MiqExpression.new("=" => {"field" => "GenericObject-name", "value" => "hello"})
+      end
+      let(:false_expression_on_generic) do
+        MiqExpression.new("=" => {"field" => "GenericObject-name", "value" => "not_hello"})
+      end
+
+      before do
+        FactoryGirl.create(:custom_button,
+                           :name                  => "visible button on Generic Object",
+                           :applies_to_class      => "GenericObject",
+                           :visibility_expression => true_expression_on_generic)
+        FactoryGirl.create(:custom_button,
+                           :name                  => "hidden button on Generic Object",
+                           :applies_to_class      => "GenericObject",
+                           :visibility_expression => false_expression_on_generic)
+        FactoryGirl.create(:custom_button,
+                           :name                  => "visible button on Generic Object Definition",
+                           :applies_to_class      => "GenericObjectDefinition",
+                           :applies_to_id         => definition.id,
+                           :visibility_expression => true_expression_on_definition)
+        FactoryGirl.create(:custom_button,
+                           :name                  => "hidden button on Generic Object Definition",
+                           :applies_to_class      => "GenericObjectDefinition",
+                           :applies_to_id         => definition.id,
+                           :visibility_expression => false_expression_on_definition)
+      end
+
+      it "uses appropriate object: parameter, which is GenericObject or definition for expression evaluation" do
+        expected = {
+          :buttons       => a_collection_containing_exactly(
+            a_hash_including("name" => "visible button on Generic Object"),
+            a_hash_including("name" => "visible button on Generic Object Definition")
+          ),
+          :button_groups => []
+        }
+        expect(definition.custom_actions(generic)).to match(expected)
+      end
+
+      it "uses GenericObjectDefinition object to evaluate expressionif if no parameter passed" do
+        expected = {
+          :buttons       => [
+            a_hash_including("name" => "visible button on Generic Object Definition")
+          ],
+          :button_groups => []
+        }
+        expect(definition.custom_actions).to match(expected)
+      end
+    end
   end
 
   shared_examples 'AR attribute allowing letters' do |hash|
