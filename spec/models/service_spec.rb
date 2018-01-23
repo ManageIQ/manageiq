@@ -207,6 +207,19 @@ describe Service do
       expect(@service.all_vms).to    match_array [@vm, @vm1, @vm1, @vm2]
     end
 
+    it "#v_total_vms" do
+      expect(@service.v_total_vms).to eq 4
+      expect(@service.attribute_present?(:v_total_vms)).to eq false
+    end
+
+    it "#v_total_vms with arel" do
+      service = Service.select(:id, :v_total_vms)
+                       .where(:id => @service.id)
+                       .first
+      expect(service.v_total_vms).to eq 4
+      expect(service.attribute_present?(:v_total_vms)).to eq true
+    end
+
     it "#direct_service" do
       expect(@vm.direct_service).to eq(@service)
       expect(@vm1.direct_service).to eq(@service_c1)

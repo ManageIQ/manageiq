@@ -42,7 +42,6 @@ class Service < ApplicationRecord
   virtual_has_many   :power_states, :uses => :all_vms
   virtual_has_many   :orchestration_stacks
   virtual_has_many   :generic_objects
-  virtual_total      :v_total_vms, :vms
 
   virtual_has_one    :custom_actions
   virtual_has_one    :custom_action_buttons
@@ -69,6 +68,9 @@ class Service < ApplicationRecord
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
   include_concern 'ResourceLinking'
+
+  virtual_total :v_total_vms, :vms,
+                :arel => aggregate_hardware_arel("v_total_vms", vms_tbl[:id].count, :skip_hardware => true)
 
   virtual_column :has_parent,                               :type => :boolean
   virtual_column :power_state,                              :type => :string
