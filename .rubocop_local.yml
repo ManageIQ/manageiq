@@ -17,7 +17,6 @@ GlobalVars:
   - $lenovo_log
   - $log
   - $miq_ae_logger
-  - $mw_log
   - $policy_log
   - $rails_log
   - $rhevm_log
