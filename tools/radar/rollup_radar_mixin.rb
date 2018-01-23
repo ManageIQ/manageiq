@@ -5,7 +5,7 @@ end
 
 ContainerImage
 class ContainerImage
-  has_many :container_image_labels, -> { where(:section => ['labels', 'docker_labels']) }, :class_name => "CustomAttribute", :as => :resource
+  has_many :container_image_labels, -> { where(:section => %w(labels docker_labels)) }, :class_name => "CustomAttribute", :as => :resource
 end
 
 module RollupRadarMixin
@@ -13,18 +13,20 @@ module RollupRadarMixin
 
   require 'sqlite3'
   class MaxByLabel < ApplicationRecord
-    self.establish_connection(
-        :adapter  => "sqlite3",
-        :database => "db/radar.sqlite3"
+    establish_connection(
+      :adapter  => "sqlite3",
+      :database => "db/radar.sqlite3"
     )
 
-    connection.create_table :max_by_labels do |t|
-      t.datetime :timestamp
-      t.string   :label_name
-      t.string   :label_value
-      t.string   :project_name
-      t.float    :cpu_usage_rate_average
-    end unless connection.table_exists?(:max_by_labels)
+    unless connection.table_exists?(:max_by_labels)
+      connection.create_table :max_by_labels do |t|
+        t.datetime :timestamp
+        t.string   :label_name
+        t.string   :label_value
+        t.string   :project_name
+        t.float    :cpu_usage_rate_average
+      end
+    end
   end
 
   def date_trunc(by, attribute)

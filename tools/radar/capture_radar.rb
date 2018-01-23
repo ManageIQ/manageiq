@@ -28,8 +28,7 @@ get_hourly_maxes_per_group(opts[:label], TIME_RANGE).each do |row|
   mr = MaxByLabel.find_or_create_by(:timestamp    => row['hourly_timestamp'],
                                     :label_name   => row['label_name'],
                                     :label_value  => row['label_value'],
-                                    :project_name => row['container_project_name']
-  )
+                                    :project_name => row['container_project_name'])
 
   cpu_usage_rate_average = mr.cpu_usage_rate_average || 0
   next unless cpu_usage_rate_average < row['max_sum_used_cores']

@@ -11,13 +11,13 @@ describe RollupRadarMixin do
 
   let(:container_group) do
     FactoryGirl.create(:container_group, :container_project     => container_project,
-                       :ext_management_system => ems)
+                                         :ext_management_system => ems)
   end
 
   let(:container_image_a) do
     FactoryGirl.create(:container_image,
                        :ext_management_system => ems,
-                       :custom_attributes => [custom_attribute_a])
+                       :custom_attributes     => [custom_attribute_a])
   end
 
   let(:container_a) do
@@ -30,9 +30,9 @@ describe RollupRadarMixin do
 
   let(:custom_attribute_a) do
     FactoryGirl.create(:custom_attribute,
-                       :name     => 'com.redhat.component',
-                       :value    => 'EAP7',
-                       :section  => 'docker_labels')
+                       :name    => 'com.redhat.component',
+                       :value   => 'EAP7',
+                       :section => 'docker_labels')
   end
 
   let(:container_b) do
@@ -46,14 +46,14 @@ describe RollupRadarMixin do
   let(:container_image_b) do
     FactoryGirl.create(:container_image,
                        :ext_management_system => ems,
-                       :custom_attributes => [custom_attribute_b])
+                       :custom_attributes     => [custom_attribute_b])
   end
 
   let(:custom_attribute_b) do
     FactoryGirl.create(:custom_attribute,
-                       :name     => 'com.redhat.component',
-                       :value    => 'EAP7',
-                       :section  => 'docker_labels')
+                       :name    => 'com.redhat.component',
+                       :value   => 'EAP7',
+                       :section => 'docker_labels')
   end
 
   let(:ts)              { Time.parse('2012-09-01 23:59:59Z').utc.in_time_zone(Metric::Helper.get_time_zone(nil)) }
@@ -93,9 +93,9 @@ describe RollupRadarMixin do
       containers.each do |container|
         start_sample_time = sample_time
         add_metric_for(container, start_sample_time)
-        start_sample_time +=rollup_step
+        start_sample_time += rollup_step
         add_metric_for(container, start_sample_time)
-        start_sample_time +=rollup_step
+        start_sample_time += rollup_step
         add_metric_for(container, start_sample_time)
       end
     end
@@ -106,7 +106,7 @@ describe RollupRadarMixin do
     expected.sort_by! { |x| Time.parse(x['hourly_timestamp']).utc }
 
     results.zip(expected).each do |result, expected_result|
-      expect(result).to include(expected_result)
+      expect(result).to(include(expected_result))
     end
   end
 
@@ -264,16 +264,16 @@ describe RollupRadarMixin do
 
       # matrix of metrics
       sett[container_a][t] = basic_metric_params(20, 1)
-      sett[container_a][t + 20.second] = basic_metric_params(20, 1)
-      sett[container_a][t + 40.second] = basic_metric_params(20, 1)
+      sett[container_a][t + 20.seconds] = basic_metric_params(20, 1)
+      sett[container_a][t + 40.seconds] = basic_metric_params(20, 1)
       sett
     end
 
     let(:custom_attribute_a) do
       FactoryGirl.create(:custom_attribute,
-                         :name     => 'com.redhat.component_different',
-                         :value    => 'EAP7',
-                         :section  => 'docker_labels')
+                         :name    => 'com.redhat.component_different',
+                         :value   => 'EAP7',
+                         :section => 'docker_labels')
     end
 
     before(:each) do
