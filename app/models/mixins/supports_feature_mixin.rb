@@ -61,6 +61,7 @@ module SupportsFeatureMixin
     :add_host                            => 'Add Host',
     :add_interface                       => 'Add Interface',
     :add_security_group                  => 'Add Security Group',
+    :alert_labels                        => 'Alert Labels',
     :associate_floating_ip               => 'Associate a Floating IP',
     :clone                               => 'Clone',
     # FIXME: this is just a internal helper and should be refactored

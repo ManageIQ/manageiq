@@ -17,6 +17,12 @@ describe MiqAlertStatus do
   let(:show_action) do
     FactoryGirl.create(:miq_alert_status_action, :action_type => 'show', :user => user1, :miq_alert_status => alert)
   end
+  let(:labels) do
+    [
+      FactoryGirl.create(:miq_alert_status_label, :name => 'myfistlabelname', :value => 'myfistlabelvalue'),
+      FactoryGirl.create(:miq_alert_status_label, :name => 'mysecondlabelname', :value => 'mysecondlabelvalue'),
+    ]
+  end
 
   describe "Validation" do
     it "should reject unexpected severities" do
@@ -125,6 +131,26 @@ describe MiqAlertStatus do
     it "returns false after show action" do
       alert.miq_alert_status_actions = [assignment_action, hide_action, show_action]
       expect(alert.hidden?).to be_falsey
+    end
+  end
+
+  describe "#labels" do
+    it "returns an empty array if not connected to a ext_management_system" do
+      expect(alert).to receive(:ext_management_system).and_return(nil)
+      expect(alert.labels).to eq([])
+    end
+
+    it "returns an empty array if the ext_management_system does not support alert labels" do
+      expect(ems).to receive(:supports_alert_labels?).and_return(false)
+      expect(alert).to receive(:ext_management_system).and_return(ems)
+      expect(alert.labels).to eq([])
+    end
+
+    it "returns the labels fetched by the ext_management_system" do
+      expect(ems).to receive(:supports_alert_labels?).and_return(true)
+      expect(ems).to receive(:alert_labels).and_return(labels)
+      expect(alert).to receive(:ext_management_system).and_return(ems)
+      expect(alert.labels).to eq(labels)
     end
   end
 end
