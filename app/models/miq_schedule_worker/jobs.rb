@@ -49,11 +49,11 @@ class MiqScheduleWorker::Jobs
   end
 
   def host_authentication_check_schedule
-    queue_work_on_each_zone(:class_name  => "Host", :method_name => "authentication_check_schedule")
+    queue_work_on_each_zone(:class_name  => "Host", :method_name => "authentication_check_schedule", :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def ems_authentication_check_schedule
-    queue_work_on_each_zone(:class_name  => "ExtManagementSystem", :method_name => "authentication_check_schedule")
+    queue_work_on_each_zone(:class_name  => "ExtManagementSystem", :method_name => "authentication_check_schedule", :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def storage_authentication_check_schedule
