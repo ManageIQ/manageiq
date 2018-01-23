@@ -3,7 +3,7 @@ describe "tenant quotas API" do
 
   context "with an appropriate role" do
     it "can list all the quotas form a tenant" do
-      api_basic_authorize action_identifier(:quotas, :read, :subcollection_actions, :get)
+      api_basic_authorize subcollection_action_identifier(:tenants, :quotas, :read, :get)
 
       quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
       quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 20)
@@ -22,7 +22,7 @@ describe "tenant quotas API" do
     end
 
     it "can show a single quota from a tenant" do
-      api_basic_authorize action_identifier(:quotas, :read, :subresource_actions, :get)
+      api_basic_authorize subcollection_action_identifier(:tenants, :quotas, :read, :get)
 
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
