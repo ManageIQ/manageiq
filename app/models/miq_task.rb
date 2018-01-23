@@ -273,11 +273,24 @@ class MiqTask < ApplicationRecord
     queue_options[:miq_callback] = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback, :args => ['Finished']}
     method_opts = queue_options[:args].first
     method_opts[:task_id] = task.id if method_opts.kind_of?(Hash)
-    MiqQueue.put(queue_options)
+
+    start_task_queue_options = queue_options.merge(
+      :args        => queue_options,
+      :class_name  => task.class.name,
+      :method_name => :start_task,
+      :instance_id => task.id
+    )
+    MiqQueue.put(start_task_queue_options)
 
     # return task id to the UI
     _log.info("Task: [#{task.id}] #{msg}")
     task.id
+  end
+
+  def start_task(work)
+    state_active
+    obj, args = MiqQueue.deliver_preprocess(work[:class_name], work[:instance_id], work[:args], work[:data], work[:target_id])
+    obj.send(work[:method_name], *args)
   end
 
   def self.wait_for_taskid(task_id, options = {})
