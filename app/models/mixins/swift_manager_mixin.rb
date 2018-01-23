@@ -5,8 +5,7 @@ module SwiftManagerMixin
     has_one  :swift_manager,
              :foreign_key => :parent_ems_id,
              :class_name  => "ManageIQ::Providers::StorageManager::SwiftManager",
-             :autosave    => true,
-             :dependent   => :destroy
+             :autosave    => true
 
     delegate :cloud_object_store_containers,
              :cloud_object_store_objects,
