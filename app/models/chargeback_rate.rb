@@ -154,7 +154,7 @@ class ChargebackRate < ApplicationRecord
   end
 
   def ensure_nondefault
-    if default?
+    if default? || description == 'Default Container Image Rate'
       errors.add(:rate, "default rate cannot be deleted")
       throw :abort
     end
