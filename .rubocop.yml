@@ -42,7 +42,7 @@ Metrics/LineLength:
   Exclude:
     - Gemfile
     - gems/pending/Gemfile
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   Exclude:
     - Gemfile
     - gems/pending/Gemfile
