@@ -5,6 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 77 ending 2018-01-15
+
+### Added
+- Control
+  - Label VM events with appropriate groups. [(#16352)](https://github.com/ManageIQ/manageiq/pull/16352)
+- Core
+  - Create embedded ansible deployment on demand [(#15963)](https://github.com/ManageIQ/manageiq/pull/15963)
+- i18n
+  - Add missing Cloud Volume model names [(#16689)](https://github.com/ManageIQ/manageiq/pull/16689)
+- Providers
+  - Additions for Amazon tag mapping in graph refresh [(#16734)](https://github.com/ManageIQ/manageiq/pull/16734)
+- Provisioning
+  - Change get_targets_for_source to use correct params [(#16811)](https://github.com/ManageIQ/manageiq/pull/16811)
+  - Adding the option to set default vlan [(#16504)](https://github.com/ManageIQ/manageiq/pull/16504)
+- Reporting
+  - Add more translations for cloud resources and templates [(#16744)](https://github.com/ManageIQ/manageiq/pull/16744)
+- User Interface
+  - Resize disk reconfigure screen [(#16711)](https://github.com/ManageIQ/manageiq/pull/16711)
+
+### Fixed
+- Automate
+  - Scope User and MiqGroup searches within the current region [(#16756)](https://github.com/ManageIQ/manageiq/pull/16756)
+- Core
+  - Server shuts down if memory usage exceeds a limit [(#16807)](https://github.com/ManageIQ/manageiq/pull/16807)
+  - Fix for STI scoping across leaves [(#16775)](https://github.com/ManageIQ/manageiq/pull/16775)
+  - Add missing gettext into MiqUserRole [(#16752)](https://github.com/ManageIQ/manageiq/pull/16752)
+  - Ensure that the zone name is unique only within the current region [(#16731)](https://github.com/ManageIQ/manageiq/pull/16731)
+- i18n
+  - Add missing gettext into MiqAction [(#16766)](https://github.com/ManageIQ/manageiq/pull/16766)
+- Providers
+  - Reconnect host on provider add [(#16767)](https://github.com/ManageIQ/manageiq/pull/16767)
+  - Scan Storage via EMS not Host [(#16743)](https://github.com/ManageIQ/manageiq/pull/16743)
+  - Set limits for VM and Template names and descriptions [(#16736)](https://github.com/ManageIQ/manageiq/pull/16736)
+  - Fix missing do_disconnect check in link_inventory [(#16726)](https://github.com/ManageIQ/manageiq/pull/16726)
+  - Disconnect inventory on targeted refresh [(#16718)](https://github.com/ManageIQ/manageiq/pull/16718)
+  - Fixed: ESxi host does not exit maintenance mode. [(#16710)](https://github.com/ManageIQ/manageiq/pull/16710)
+  - Added get_targets_for base class methods [(#16707)](https://github.com/ManageIQ/manageiq/pull/16707)
+  - Stop generating `vim_performance_tag_values` rows [(#16692)](https://github.com/ManageIQ/manageiq/pull/16692)
+  - ensure monitoring manager deletion and creation on endpoint update [(#16635)](https://github.com/ManageIQ/manageiq/pull/16635)
+- Provisioning
+  - Changes cloud network list to follow availability zone rules [(#16688)](https://github.com/ManageIQ/manageiq/pull/16688)
+- Reporting
+  - Expand scope of report definitions that visible to a user [(#16716)](https://github.com/ManageIQ/manageiq/pull/16716)
+- Services
+  - Fix check_quota(:active_provisions) for Service MiqRequest invalid service_template. [(#16769)](https://github.com/ManageIQ/manageiq/pull/16769)
+- Smart State
+  - Add Heartbeat Thread to SmartProxy Worker [(#16685)](https://github.com/ManageIQ/manageiq/pull/16685)
+- User Interface
+  - Added factories that are need to run spec tests in the BZ fix [(#16794)](https://github.com/ManageIQ/manageiq/pull/16794)
+  - Update group/role EvmGroup-desktop product features [(#16788)](https://github.com/ManageIQ/manageiq/pull/16788)
+  - Add MiqWdigetSet to Dashboard dictionary translation [(#16784)](https://github.com/ManageIQ/manageiq/pull/16784)
+  - Fixed control explorer feature id [(#16780)](https://github.com/ManageIQ/manageiq/pull/16780)
+  - Fix for failure to update service dialog - Couldn't find DialogField without an ID [(#16753)](https://github.com/ManageIQ/manageiq/pull/16753)
+  - Renamed action to copy Service Dialog [(#16623)](https://github.com/ManageIQ/manageiq/pull/16623)
+
 ## Unreleased as of Sprint 76 ending 2018-01-01
 
 ### Added
