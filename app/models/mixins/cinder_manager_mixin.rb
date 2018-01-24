@@ -7,8 +7,7 @@ module CinderManagerMixin
     has_one  :cinder_manager,
              :foreign_key => :parent_ems_id,
              :class_name  => "ManageIQ::Providers::StorageManager::CinderManager",
-             :autosave    => true,
-             :dependent   => :destroy
+             :autosave    => true
 
     delegate :cloud_volumes,
              :cloud_volume_snapshots,
