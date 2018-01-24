@@ -563,14 +563,14 @@ module VirtualFields
     def remove_virtual_fields(associations)
       case associations
       when String, Symbol
-        virtual_field?(associations) ? nil : associations
+        virtual_field?(associations) ? {} : associations
       when Array
         associations.collect { |association| remove_virtual_fields(association) }.compact
       when Hash
         associations.each_with_object({}) do |(parent, child), h|
           next if virtual_field?(parent)
           reflection = reflect_on_association(parent.to_sym)
-          h[parent] = reflection.options[:polymorphic] ? nil : reflection.klass.remove_virtual_fields(child) if reflection
+          h[parent] = reflection.options[:polymorphic] ? {} : reflection.klass.remove_virtual_fields(child) if reflection
         end
       else
         associations

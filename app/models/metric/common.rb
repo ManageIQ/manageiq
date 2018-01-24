@@ -181,7 +181,7 @@ module Metric::Common
     end
 
     def with_resource
-      where.not(:resource => nil)
+      where.not(:resource => {})
     end
   end
 end

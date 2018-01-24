@@ -8,10 +8,9 @@ describe MetricRollup do
           .includes(:resource => {}, :time_profile => {})
           .references(:time_profile => {}).last
       end.not_to raise_error
+    end
 
-      # TODO: Also, there is a bug that exists in only the manageiq repo and not rails
-      # TODO: that causes the error "ActiveRecord::ConfigurationError: nil"
-      # TODO: instead of the expected "ActiveRecord::EagerLoadPolymorphicError" error.
+    it "raises eager load polymorphic error when referencing bogus table" do
       expect do
         Tagging.includes(:taggable => {}).where('bogus_table.column = 1').references(:bogus_table => {}).to_a
       end.to raise_error ActiveRecord::EagerLoadPolymorphicError
