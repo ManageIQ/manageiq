@@ -398,22 +398,20 @@ class MiqQueue < ApplicationRecord
     begin
       raise _("class_name cannot be nil") if class_name.nil?
 
-      obj = class_name.constantize
-
-      if instance_id
-        begin
-          if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
-            obj = requester
-          else
-            obj = obj.find(instance_id)
-          end
-        rescue ActiveRecord::RecordNotFound => err
-          _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
-          return STATUS_WARN, nil, nil
-        rescue => err
-          _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
-          return STATUS_ERROR, err.message, nil
-        end
+      begin
+        obj = if instance_id.nil?
+                class_name.constantize
+              elsif (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
+                requester
+              else
+                class_name.constantize.find(instance_id)
+              end
+      rescue ActiveRecord::RecordNotFound => err
+        _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
+        return STATUS_WARN, nil, nil
+      rescue => err
+        _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
+        return STATUS_ERROR, err.message, nil
       end
 
       data = self.data
