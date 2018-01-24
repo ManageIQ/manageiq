@@ -50,8 +50,16 @@ class MiqTask < ApplicationRecord
   scope :no_status_selected,      ->           { running.where.not(:status => %(Ok Error Warn)) }
   scope :with_status_in,          ->(s, *rest) { rest.reduce(MiqTask.send(s)) { |chain, r| chain.or(MiqTask.send(r)) } }
 
+  def started_on
+    self._started_on || created_on
+  end
+
+  def _started_on
+    read_attribute(:started_on)
+  end
+
   def ensure_started
-    self.started_on ||= Time.now.utc if state == STATE_ACTIVE
+    self.started_on = Time.now.utc if state == STATE_ACTIVE && self._started_on.nil?
   end
 
   def self.update_status_for_timed_out_active_tasks
