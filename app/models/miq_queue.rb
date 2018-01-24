@@ -396,21 +396,20 @@ class MiqQueue < ApplicationRecord
     _log.info("#{MiqQueue.format_short_log_msg(self)}, Delivering...")
 
     raise _("class_name cannot be nil") if class_name.nil?
-    begin
-      obj = if instance_id.nil?
-              class_name.constantize
-            elsif (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
-              requester
-            else
-              class_name.constantize.find(instance_id)
-            end
-    rescue ActiveRecord::RecordNotFound => err
-      _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
-      return STATUS_WARN, nil, nil
-    rescue => err
-      _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
-      return STATUS_ERROR, err.message, nil
-    end
+
+    #######################
+    mode = :loading_message
+
+    obj = if instance_id.nil?
+            class_name.constantize
+          elsif (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
+            requester
+          else
+            class_name.constantize.find(instance_id)
+          end
+
+    #######################
+    mode = :delivering
 
     data = self.data
     args.push(data) if data
@@ -418,6 +417,7 @@ class MiqQueue < ApplicationRecord
 
     result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args) }
     return STATUS_OK, "Message delivered successfully", result
+    #######################
   rescue MiqException::MiqQueueRetryLater => err
     unget(err.options)
     message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
@@ -428,6 +428,13 @@ class MiqQueue < ApplicationRecord
     _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
     return STATUS_TIMEOUT, message, nil
   rescue StandardError, SyntaxError => error
+    if mode == :loading_message && error.kind_of?(ActiveRecord::RecordNotFound)
+      _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{error.message}")
+      return STATUS_WARN, nil, nil
+    elsif mode == :loading_message
+      _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{error.message}")
+      return STATUS_ERROR, error.message, nil
+    end
     _log.error("#{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
     _log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
     self.last_exception = error
