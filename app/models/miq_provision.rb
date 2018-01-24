@@ -59,11 +59,14 @@ class MiqProvision < MiqProvisionTask
   end
 
   def after_request_task_create
-    vm_name                      = get_next_vm_name
-    options[:vm_target_name]     = vm_name
-    options[:vm_target_hostname] = get_hostname(vm_name)
-    self.description             = self.class.get_description(self, vm_name)
-    save
+    update_vm_name(get_next_vm_name)
+  end
+
+  def update_vm_name(new_name, update_request: true)
+    options[:vm_target_name]     = new_name
+    options[:vm_target_hostname] = get_hostname(new_name)
+
+    update_attributes(:description => self.class.get_description(self, new_name), :options => options)
   end
 
   def after_ae_delivery(ae_result)
