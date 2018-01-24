@@ -5,8 +5,7 @@ module HasNetworkManagerMixin
     has_one :network_manager,
             :foreign_key => :parent_ems_id,
             :class_name  => "ManageIQ::Providers::NetworkManager",
-            :autosave    => true,
-            :dependent   => :destroy
+            :autosave    => true
 
     delegate :floating_ips,
              :security_groups,
