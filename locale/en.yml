@@ -90,7 +90,7 @@ en:
         cpu_ready_delta_summation:     CPU - Time Spent In Ready State (ms)
         cpu_system_delta_summation:    CPU - Time Spent in System State (ms)
         cpu_usagemhz_rate_average:     CPU - Usage Rate for Collected Intervals (MHz)
-        cpu_used_delta_summation:      CPU - Time Used (ms)
+        cpu_used_delta_summation:      CPU - Total time usage (VMware) (ms)
         cpu_wait_delta_summation:      CPU - Time Spent in Wait State (ms)
         derived_cpu_available:         CPU - Total - from VM Analysis (MHz)
         derived_cpu_reserved:          CPU - Reserved (MHz)
