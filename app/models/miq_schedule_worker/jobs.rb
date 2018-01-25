@@ -68,14 +68,8 @@ class MiqScheduleWorker::Jobs
 
   def metric_capture_perf_capture_timer
     zone = MiqServer.my_server(true).zone
-    if zone.role_active?("ems_metrics_coordinator")
-      queue_work(
-        :class_name  => "Metric::Capture",
-        :method_name => "perf_capture_timer",
-        :role        => "ems_metrics_coordinator",
-        :priority    => MiqQueue::HIGH_PRIORITY,
-        :state       => ["ready", "dequeue"]
-      )
+    if zone.role_active?("ems_metrics_collector")
+      Metric::Capture.perf_collect_all_metrics_queue(zone.ext_management_systems, "realtime")
     end
   end
 

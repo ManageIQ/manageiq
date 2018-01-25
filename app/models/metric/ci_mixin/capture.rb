@@ -113,18 +113,26 @@ module Metric::CiMixin::Capture
     end
   end
 
+  # legacy miq_queue messages
+  # went away in 4.6
   def perf_capture_realtime(*args)
     perf_capture('realtime', *args)
   end
 
+  # legacy miq_queue messages
+  # went away in 4.6
   def perf_capture_hourly(*args)
     perf_capture('hourly', *args)
   end
 
+  # legacy miq_queue messages
+  # went away in 4.6
   def perf_capture_historical(*args)
     perf_capture('historical', *args)
   end
 
+  # legacy miq_queue messages
+  # went away in 4.6
   def perf_capture(interval_name, start_time = nil, end_time = nil)
     unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
       raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
@@ -232,6 +240,8 @@ module Metric::CiMixin::Capture
     [start_range, end_range, counters_data]
   end
 
+  # legacy miq_queue messages
+  # went away in 4.6
   def perf_capture_callback(task_ids, _status, _message, _result)
     tasks = MiqTask.where(:id => task_ids)
     tasks.each do |t|

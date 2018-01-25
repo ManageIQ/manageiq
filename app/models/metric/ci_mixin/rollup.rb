@@ -111,11 +111,15 @@ module Metric::CiMixin::Rollup
     _log.info("#{log_header}...Complete - Timings: #{t.inspect}")
   end
 
+  def perf_rollup_range_cb(start_time, end_time, interval_name, time_profile, _status, _message, _result)
+    perf_rollup_range(start_time, end_time, interval_name, time_profile)
+  end
+
   def perf_rollup_range(start_time, end_time, interval_name, time_profile = nil)
     times = case interval_name
             when 'realtime'
               Metric::Helper.realtime_timestamps_from_range(start_time, end_time)
-            when 'hourly'
+            when 'hourly', 'historical'
               Metric::Helper.hours_from_range(start_time, end_time)
             when 'daily'
               raise ArgumentError, _("time_profile must be passed if interval name is 'daily'") if time_profile.nil?
