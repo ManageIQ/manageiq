@@ -393,7 +393,14 @@ class VmScan < Job
             delete_snapshot_by_description(mor, vm)
           else
             user_event = end_user_event_message(vm, false)
-            vm.ext_management_system.vm_remove_snapshot(vm, :snMor => mor, :user_event => user_event)
+            if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
+              vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
+            elsif vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
+                  (vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) && vm.require_snapshot_for_scan?)
+              vm.ext_management_system.vm_delete_evm_snapshot(vm, :snMor => mor)
+            else
+              vm.ext_management_system.vm_remove_snapshot(vm, :snMor => mor, :user_event => user_event)
+            end
           end
         else
           raise _("No Providers available to delete snapshot")
@@ -466,8 +473,7 @@ class VmScan < Job
     _log.info("job canceling, #{options[:message]}")
 
     begin
-      vm = VmOrTemplate.find_by(:id => target_id)
-      process_delete_evm_snapshot(vm)
+      delete_snapshot(context[:snapshot_mor])
     rescue => err
       _log.log_backtrace(err)
     end
@@ -492,26 +498,22 @@ class VmScan < Job
     end
   end
 
-  def process_delete_evm_snapshot(vm)
-    unless context[:snapshot_mor].nil?
-      mor = context[:snapshot_mor]
-      context[:snapshot_mor] = nil
-      set_status("Deleting snapshot before cancelling / aborting job")
-      if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
-        vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
-      elsif vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
-            (vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) && vm.require_snapshot_for_scan?)
-        vm.ext_management_system.vm_delete_evm_snapshot(vm, :snMor => mor)
-      else
-        delete_snapshot(mor)
-      end
-    end
-  end
-
   def process_abort(*args)
     begin
       vm = VmOrTemplate.find_by(:id => target_id)
-      process_delete_evm_snapshot(vm)
+      unless context[:snapshot_mor].nil?
+        mor = context[:snapshot_mor]
+        context[:snapshot_mor] = nil
+        set_status("Deleting snapshot before aborting job")
+        if vm.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
+          vm.ext_management_system.vm_delete_evm_snapshot(vm, mor)
+        elsif vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm) ||
+              (vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) && vm.require_snapshot_for_scan?)
+          vm.ext_management_system.vm_delete_evm_snapshot(vm, :snMor => mor)
+        else
+          delete_snapshot(mor)
+        end
+      end
       if vm
         inputs = {:vm => vm, :host => vm.host}
         MiqEvent.raise_evm_job_event(vm, {:type => "scan", :suffix => "abort"}, inputs)
