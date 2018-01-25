@@ -2,8 +2,7 @@ class ServerRole < ApplicationRecord
   has_many :assigned_server_roles
   has_many :miq_servers, :through => :assigned_server_roles
 
-  validates_presence_of     :name
-  validates_uniqueness_of   :name
+  validates :name, :presence => true, :uniqueness => true
 
   def self.seed
     server_roles = all.index_by(&:name)
