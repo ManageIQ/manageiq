@@ -45,9 +45,9 @@ class MiqLdap
     @follow_referrals = options.delete(:follow_referrals) || ::Settings.authentication.follow_referrals
     options[:host] ||= ::Settings.authentication.ldaphost
     options[:port] ||= ::Settings.authentication.ldapport
-    options[:encryption] = {:method => :simple_tls} if mode == "ldaps"
-
     options[:host] = resolve_host(options[:host], options[:port])
+    options[:encryption] = mode == "ldaps" ? {:method => :simple_tls} : {}
+    options.store_path(:encryption, :tls_options, :verify_mode, OpenSSL::SSL::VERIFY_NONE) if options[:host].ipaddress?
 
     # Make sure we do NOT log the clear-text password
     log_options = Vmdb::Settings.mask_passwords!(options.deep_clone)
@@ -56,18 +56,19 @@ class MiqLdap
     @ldap = Net::LDAP.new(options)
   end
 
-  IP_REGEXP = /^(\d{1,3}\.){3}\d{1,3}$/
-
   def resolve_host(hosts, port)
     hosts = hosts.to_miq_a
+
     selected_host = nil
+    valid_address = false
 
     hosts.each do |host|
-      if host =~ IP_REGEXP
+      if host.ipaddress?
+        selected_host = host
         addresses = host.to_miq_a # Host is already an IP Address, no need to resolve
       else
         begin
-          _canonical, _aliases, _type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
+          selected_host, _aliases, _type, *addresses = TCPSocket.gethostbyname(host) # Resolve hostname to IP Address
           $log.info("MiqLdap.connection: Resolved host [#{host}] has these IP Address: #{addresses.inspect}") if $log
         rescue => err
           $log.debug("Warning: '#{err.message}', resolving host: [host]")
@@ -79,14 +80,14 @@ class MiqLdap
         begin
           $log.info("MiqLdap.connection: Connecting to IP Address [#{address}]") if $log
           @conn = TCPSocket.new(address, port)
-          selected_host = address
+          valid_address = true
           break
         rescue => err
           $log.debug("Warning: '#{err.message}', connecting to IP Address [#{address}]")
         end
       end
 
-      return selected_host if selected_host
+      return selected_host if valid_address
     end
 
     raise Net::LDAP::Error.new("unable to establish a connection to server")
