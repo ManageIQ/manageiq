@@ -47,10 +47,6 @@ class ServerRole < ApplicationRecord
     order(:name).pluck(:name)
   end
 
-  def self.database_scoped_role_names
-    where(:role_scope => 'database').order(:name).pluck(:name)
-  end
-
   def self.region_scoped_roles
     @region_scoped_roles ||= region_roles.to_a
   end
