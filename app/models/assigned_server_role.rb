@@ -9,7 +9,7 @@ class AssignedServerRole < ApplicationRecord
   LOW_PRIORITY         = 3
   DEFAULT_PRIORITY     = MEDIUM_PRIORITY
   AVAILABLE_PRIORITIES = [HIGH_PRIORITY,  MEDIUM_PRIORITY, LOW_PRIORITY]
-  validates_inclusion_of :priority, :in => AVAILABLE_PRIORITIES, :allow_nil => true
+  validates :priority, :inclusion => {:in => AVAILABLE_PRIORITIES}, :allow_nil => true
 
   def massage_active_field
     self.active = false if active.nil?
