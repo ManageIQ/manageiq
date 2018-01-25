@@ -213,8 +213,8 @@ module EmsRefresh::SaveInventoryContainer
 
     container_service.container_service_port_configs.reset
 
-    save_inventory_multi(container_service.container_service_port_configs, hashes, :use_association, [:ems_ref])
-    store_ids_for_new_records(container_service.container_service_port_configs, hashes, :ems_ref)
+    save_inventory_multi(container_service.container_service_port_configs, hashes, :use_association, [:name])
+    store_ids_for_new_records(container_service.container_service_port_configs, hashes, :name)
   end
 
   def save_container_env_vars_inventory(container, hashes)
