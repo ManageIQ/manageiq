@@ -999,6 +999,10 @@
       :description: Scale an Infrastructure Provider down
       :feature_type: admin
       :identifier: ems_infra_scaledown
+    - :name: Change Password
+      :description: Change Password of Infrastructure Providers
+      :feature_type: admin
+      :identifier: ems_infra_change_password
 
 # Datacenters
 - :name: Datacenters
