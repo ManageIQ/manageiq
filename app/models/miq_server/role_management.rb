@@ -81,7 +81,7 @@ module MiqServer::RoleManagement
 
     ids = roles == ["*"] ? server_roles.pluck(:id) : ServerRole.where(:name => roles).pluck(:id)
     assigned_server_roles.where(:server_role_id => ids).each do |a|
-      next if a.database_owner?
+      next if a.server_role == ServerRole.database_owner
       next if a.active == active
       active ? a.activate : a.deactivate
     end

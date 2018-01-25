@@ -22,10 +22,6 @@ class AssignedServerRole < ApplicationRecord
     update_attributes(:priority => DEFAULT_PRIORITY, :active => false)
   end
 
-  def database_owner?
-    server_role == ServerRole.database_owner
-  end
-
   def is_master?
     miq_server.is_master_for_role?(server_role)
   end
