@@ -248,7 +248,7 @@ class VmScan < Job
                 (vm.kind_of?(ManageIQ::Providers::Azure::CloudManager::Vm) && vm.require_snapshot_for_scan?)
             vm.ext_management_system.vm_delete_evm_snapshot(vm, :snMor => mor)
           else
-            delete_snapshot(mor)
+            delete_snapshot(mor, vm)
           end
         rescue => err
           _log.error(err.to_s)
@@ -505,7 +505,7 @@ class VmScan < Job
         mor = context[:snapshot_mor]
         context[:snapshot_mor] = nil
         set_status("Deleting snapshot before aborting job")
-        delete_snapshot(mor)
+        delete_snapshot(mor, vm)
       end
       if vm
         inputs = {:vm => vm, :host => vm.host}
