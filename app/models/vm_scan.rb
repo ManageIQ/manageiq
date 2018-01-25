@@ -493,7 +493,6 @@ class VmScan < Job
   end
 
   def process_delete_evm_snapshot(vm)
-    vm = VmOrTemplate.find_by(:id => target_id)
     unless context[:snapshot_mor].nil?
       mor = context[:snapshot_mor]
       context[:snapshot_mor] = nil
