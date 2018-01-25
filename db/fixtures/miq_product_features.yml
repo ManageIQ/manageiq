@@ -3694,6 +3694,10 @@
       :description: Refresh Containers Providers
       :feature_type: control
       :identifier: ems_container_refresh
+    - :name: Capture Metrics
+      :description: Capture Metrics for Containers Providers
+      :feature_type: control
+      :identifier: ems_container_capture_metrics
     - :name: Resume
       :description: Enable Containers Providers
       :feature_type: control
