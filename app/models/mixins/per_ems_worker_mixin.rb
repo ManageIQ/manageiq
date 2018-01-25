@@ -29,7 +29,7 @@ module PerEmsWorkerMixin
     def sync_workers
       ws      = find_current_or_starting
       current = ws.collect(&:queue_name).sort
-      desired = self.has_required_role? ? desired_queue_names.sort : []
+      desired = should_start_worker? ? desired_queue_names.sort : []
       result  = {:adds => [], :deletes => []}
 
       unless compare_queues(current, desired)
@@ -57,7 +57,7 @@ module PerEmsWorkerMixin
     end
 
     def start_workers
-      return unless self.has_required_role?
+      return unless should_start_worker?
       all_valid_ems_in_zone.each do |ems|
         start_worker_for_ems(ems)
       end

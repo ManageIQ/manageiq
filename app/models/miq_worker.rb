@@ -121,6 +121,10 @@ class MiqWorker < ApplicationRecord
     server_scope(server_id).where(:status => STATUSES_ALIVE)
   end
 
+  def self.should_start_worker?
+    has_required_role?
+  end
+
   def self.has_required_role?
     roles = if required_roles.kind_of?(Proc)
               required_roles.call
@@ -143,7 +147,7 @@ class MiqWorker < ApplicationRecord
   def self.sync_workers
     w       = include_stopping_workers_on_synchronize ? find_alive : find_current_or_starting
     current = w.length
-    desired = self.has_required_role? ? workers : 0
+    desired = should_start_worker? ? workers : 0
     result  = {:adds => [], :deletes => []}
 
     if current != desired
@@ -231,7 +235,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.start_workers
-    return unless self.has_required_role?
+    return unless should_start_worker?
     workers.times { start_worker }
   end
 

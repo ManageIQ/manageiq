@@ -14,8 +14,7 @@ class MiqCockpitWsWorker < MiqWorker
   end
 
   def self.should_start_worker?
-    return false unless has_required_role?
-    can_start_cockpit_ws?
+    super && can_start_cockpit_ws?
   end
 
   def self.sync_workers
