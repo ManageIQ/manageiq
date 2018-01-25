@@ -104,6 +104,9 @@ class PglogicalSubscription < ActsAsArModel
 
   def backlog
     connection.xlog_location_diff(remote_node_lsn, remote_replication_lsn)
+  rescue PG::Error => e
+    _log.error(e.message)
+    nil
   end
 
   # translate the output from the pglogical stored proc to our object columns

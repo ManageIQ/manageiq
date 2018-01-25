@@ -458,5 +458,11 @@ describe PglogicalSubscription do
 
       expect(described_class.first.backlog).to eq(12_120)
     end
+
+    it "returns nill if error raised inside" do
+      expect(MiqRegionRemote).to receive(:with_remote_connection).and_raise(PG::Error)
+
+      expect(described_class.first.backlog).to be nil
+    end
   end
 end
