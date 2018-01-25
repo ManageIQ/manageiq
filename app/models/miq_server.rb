@@ -31,6 +31,7 @@ class MiqServer < ApplicationRecord
 
   virtual_column :zone_description, :type => :string
 
+  scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
 
   STATUS_STARTING       = 'starting'.freeze
@@ -46,10 +47,6 @@ class MiqServer < ApplicationRecord
   STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
 
   RESTART_EXIT_STATUS = 123
-
-  def self.active_miq_servers
-    where(:status => STATUSES_ACTIVE)
-  end
 
   def hostname
     h = super
