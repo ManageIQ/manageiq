@@ -700,23 +700,23 @@ en:
       Compliance:               Compliance History
       Compliances:              Compliance History
       Condition:                Condition
-      ContainerBuild:           Build
+      ContainerBuild:           Container Build
       ContainerQuota:           Container Quota
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
       ConfigurationScriptSource: Repository
       Container:                Container
       ContainerPerformance:     Performance - Container
-      ContainerGroup:           Pod
+      ContainerGroup:           Container Pod
       ContainerGroupPerformance: Performance - Pod
-      ContainerImageRegistry:   Image Registry
+      ContainerImageRegistry:   Container Image Registry
       ContainerImage:           Container Image
-      ContainerNode:            Node
+      ContainerNode:            Container Node
       ContainerNodePerformance: Performance - Container Node
-      ContainerProject:         Project
-      ContainerProjectPerformance: Performance - ContainerProject
-      ContainerRoute:           Route
-      ContainerReplicator:      Replicator
+      ContainerProject:         Container Project
+      ContainerProjectPerformance: Performance - Container Project
+      ContainerRoute:           Container Route
+      ContainerReplicator:      Container Replicator
       ContainerService:         Container Service
       ContainerTemplate:        Container Template
       EmsCluster:               Cluster / Deployment Role
