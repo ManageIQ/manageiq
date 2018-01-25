@@ -60,11 +60,7 @@ class ServerRole < ApplicationRecord
   end
 
   def regional_role?
-    current_role_scope == "region"
-  end
-
-  def current_role_scope
-    role_scope
+    role_scope == "region"
   end
 
   def master_supported?
