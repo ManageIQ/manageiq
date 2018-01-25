@@ -4,6 +4,10 @@ class ServerRole < ApplicationRecord
 
   validates :name, :presence => true, :uniqueness => true
 
+  scope :database_roles, -> { where(:role_scope => 'database').order(:name) }
+  scope :region_roles,   -> { where(:role_scope => 'region').order(:name) }
+  scope :zone_roles,     -> { where(:role_scope => 'zone').order(:name) }
+
   def self.seed
     server_roles = all.index_by(&:name)
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
@@ -48,11 +52,11 @@ class ServerRole < ApplicationRecord
   end
 
   def self.region_scoped_roles
-    @region_scoped_roles ||= where(:role_scope => 'region').order(:name).to_a
+    @region_scoped_roles ||= region_roles.to_a
   end
 
   def self.zone_scoped_roles
-    @zone_scoped_roles ||= where(:role_scope => 'zone').order(:name).to_a
+    @zone_scoped_roles ||= zone_roles.to_a
   end
 
   def self.regional_role?(role)
