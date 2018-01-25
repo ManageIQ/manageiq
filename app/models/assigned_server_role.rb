@@ -4,6 +4,8 @@ class AssignedServerRole < ApplicationRecord
 
   before_save :massage_active_field
 
+  delegate :master_supported?, :name, :to => :server_role
+
   HIGH_PRIORITY        = 1
   MEDIUM_PRIORITY      = 2
   LOW_PRIORITY         = 3
@@ -16,13 +18,9 @@ class AssignedServerRole < ApplicationRecord
     nil
   end
 
-  delegate :name, :to => :server_role
-
   def reset
     update_attributes(:priority => DEFAULT_PRIORITY, :active => false)
   end
-
-  delegate :master_supported?, :to => :server_role
 
   def database_owner?
     server_role == ServerRole.database_owner
