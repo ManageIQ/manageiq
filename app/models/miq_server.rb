@@ -578,15 +578,6 @@ class MiqServer < ApplicationRecord
     my_zone == zone_name
   end
 
-  CONDITION_CURRENT = {:status => ["starting", "started"]}
-  def self.find_started_in_my_region
-    in_my_region.where(CONDITION_CURRENT)
-  end
-
-  def self.find_all_started_servers
-    where(CONDITION_CURRENT)
-  end
-
   def find_other_started_servers_in_region
     MiqRegion.my_region.active_miq_servers.to_a.delete_if { |s| s.id == id }
   end
