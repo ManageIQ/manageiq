@@ -123,7 +123,7 @@ module MiqServer::RoleManagement
   end
 
   def server_role_names
-    server_roles.collect(&:name).sort
+    server_roles.pluck(:name).sort
   end
   alias_method :my_roles,            :server_role_names
   alias_method :assigned_role_names, :server_role_names
@@ -174,11 +174,11 @@ module MiqServer::RoleManagement
   end
 
   def inactive_role_names
-    inactive_roles.collect(&:name).sort
+    inactive_roles.pluck(:name).sort
   end
 
   def active_role_names
-    active_roles.collect(&:name).sort
+    active_roles.pluck(:name).sort
   end
 
   def active_role
