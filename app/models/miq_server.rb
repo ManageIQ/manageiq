@@ -501,10 +501,6 @@ class MiqServer < ApplicationRecord
     true
   end
 
-  def state
-    "on"
-  end
-
   def started?
     status == "started"
   end
