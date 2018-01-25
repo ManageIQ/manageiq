@@ -33,6 +33,7 @@ class MiqServer < ApplicationRecord
 
   scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
+  delegate :description, :to => :zone, :prefix => true
 
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze
@@ -547,10 +548,6 @@ class MiqServer < ApplicationRecord
 
   def self.my_zone(force_reload = false)
     my_server(force_reload).my_zone
-  end
-
-  def zone_description
-    zone.try(:description)
   end
 
   def self.my_roles(force_reload = false)
