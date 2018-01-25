@@ -2,7 +2,7 @@ class AssignedServerRole < ApplicationRecord
   belongs_to :miq_server
   belongs_to :server_role
 
-  before_save :massage_active_field
+  default_value_for :active, false
 
   delegate :master_supported?, :name, :to => :server_role
 
@@ -12,11 +12,6 @@ class AssignedServerRole < ApplicationRecord
   DEFAULT_PRIORITY     = MEDIUM_PRIORITY
   AVAILABLE_PRIORITIES = [HIGH_PRIORITY,  MEDIUM_PRIORITY, LOW_PRIORITY]
   validates :priority, :inclusion => {:in => AVAILABLE_PRIORITIES}, :allow_nil => true
-
-  def massage_active_field
-    self.active = false if active.nil?
-    nil
-  end
 
   def reset
     update_attributes(:priority => DEFAULT_PRIORITY, :active => false)
