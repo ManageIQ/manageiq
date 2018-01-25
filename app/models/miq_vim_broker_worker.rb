@@ -21,13 +21,17 @@ class MiqVimBrokerWorker < MiqWorker
     return 1
   }
 
+  class << self
+    # has_required_role_configured? does not look at emses_to_monitor
+    alias has_required_role_configured? has_required_role?
+  end
+
   def self.supports_container?
     true
   end
 
   def self.has_required_role?
-    return false if emses_to_monitor.empty?
-    super
+    super && !emses_to_monitor.empty?
   end
 
   def self.emses_to_monitor
