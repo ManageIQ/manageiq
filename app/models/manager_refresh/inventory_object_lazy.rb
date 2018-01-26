@@ -68,7 +68,7 @@ module ManagerRefresh
 
     private
 
-    delegate :saved?, :saver_strategy, :targeted?, :to => :inventory_collection
+    delegate :parallel_safe?, :saved?, :saver_strategy, :skeletal_primary_index, :targeted?, :to => :inventory_collection
     delegate :full_reference, :keys, :primary?, :to => :reference
 
 
@@ -81,7 +81,7 @@ module ManagerRefresh
       # We can do skeletal pre-create only for strategies using unique indexes. Since this can build records out of
       # the given :arel scope, we will always attempt to create the recod, so we need unique index to avoid duplication
       # of records.
-      return unless %i(concurrent_safe concurrent_safe_batch).include?(saver_strategy)
+      return unless parallel_safe?
       # Pre-create only for strategies that will be persisting data, i.e. are not saved already
       return if saved?
       # We can only do skeletal pre-create for primary index reference, since that is needed to create DB unique index
@@ -93,7 +93,7 @@ module ManagerRefresh
       # TODO(lsmola) for composite keys, it's still valid to have one of the keys nil, figure out how to allow this
       return if keys.any? { |x| full_reference[x].blank? }
 
-      inventory_collection.build(full_reference)
+      skeletal_primary_index.build(full_reference)
 
       # TODO(lsmola) what do I need this for? Skeletal record can break :key, since the record won't be fetched by DB
       # strategy and :key is missing in skeletal record. Write spec!
