@@ -82,6 +82,28 @@ module ManagerRefresh::SaveCollection
           inventory_objects_index.each_slice(batch_size_for_persisting) do |batch|
             create_records!(all_attribute_keys, batch, attributes_index)
           end
+
+          # Let the GC clean this up
+          inventory_objects_index = nil
+          attributes_index = nil
+
+          if inventory_collection.parallel_safe?
+            # We will create also remaining skeletal records
+            skeletal_attributes_index        = {}
+            skeletal_inventory_objects_index = {}
+
+            inventory_collection.skeletal_primary_index.each do |_, inventory_object|
+              attributes = inventory_object.attributes_with_keys(inventory_collection, all_attribute_keys)
+              index      = build_stringified_reference(attributes, unique_index_keys)
+
+              skeletal_attributes_index[index]        = attributes
+              skeletal_inventory_objects_index[index] = inventory_object
+            end
+
+            skeletal_inventory_objects_index.each_slice(batch_size_for_persisting) do |batch|
+              create_records!(all_attribute_keys, batch, skeletal_attributes_index)
+            end
+          end
         end
         _log.debug("Processing #{inventory_collection}, "\
                    "created=#{inventory_collection.created_records.count}, "\
