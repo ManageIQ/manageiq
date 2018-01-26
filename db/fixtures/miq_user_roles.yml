@@ -117,6 +117,7 @@
   - ems_physical_infra_console
   - ems_physical_infra_tag
   - ems_physical_infra_view
+  - ems_physical_infra_tag
   - host_show
   - host_show_list
   - host_perf
@@ -188,7 +189,6 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
-  - all_vm_rules
   - automation_manager
   - embedded_automation_manager
   - bottlenecks
@@ -199,23 +199,31 @@
   - iso_datastore_view
   - control_explorer
   - dashboard
-  - ems_cluster_show
-  - ems_cluster_show_list
-  - ems_cluster_perf
+  - ems_cluster_view
   - ems_cluster_tag
-  - ems_cluster_timeline
-  - ems_infra_show
-  - ems_infra_show_list
+  - ems_infra_view
   - ems_infra_tag
-  - ems_infra_timeline
+  - ems_infra_check_compliance
   - ems_physical_infra_console
   - ems_physical_infra_tag
   - ems_physical_infra_view
   - host_show
   - host_show_list
   - host_perf
+  - infra_networking_view
+  - infra_networking_tag
+  - instance_view
+  - instance_check_compliance
+  - instance_policy_sim
+  - instance_tag
+  - image_view
+  - image_check_compliance
+  - image_policy_sim
+  - image_tag
+  - iso_datastore_view
+  - host_view
+  - host_check_compliance
   - host_tag
-  - host_timeline
   - miq_task_my_ui
   - my_settings_default_views
   - my_settings_time_profiles
@@ -224,14 +232,11 @@
   - miq_report_saved_reports
   - miq_report_schedules
   - miq_report_view
+  - miq_template_view
   - miq_template_check_compliance
-  - miq_template_perf
   - miq_template_policy_sim
-  - miq_template_show
-  - miq_template_show_list
-  - miq_template_snapshot
+  - miq_template_snapshot_view
   - miq_template_tag
-  - miq_template_timeline
   - physical_infra_topology_view
   - physical_server_view
   - planning
@@ -254,8 +259,11 @@
   - timeline
   - usage
   - utilization
+  - vm_view
   - vm_check_compliance
+  - vm_compare
   - vm_console
+  - vm_drift
   - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
