@@ -125,7 +125,7 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
       @az2 = FactoryGirl.create(:availability_zone, :ext_management_system => ems)
       @az3 = FactoryGirl.create(:availability_zone, :ext_management_system => ems)
 
-      @cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => ems.network_manager)
+      @cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => ems.network_manager, :cidr => "10.0.0./8")
 
       @cs1 = FactoryGirl.create(:cloud_subnet, :cloud_network         => @cn1,
                                                :availability_zone     => @az1,
@@ -149,7 +149,7 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
       it "with a zone" do
         workflow.values[:placement_availability_zone] = [@az1.id, @az1.name]
         expect(workflow.allowed_cloud_networks.length).to eq(1)
-        expect(workflow.allowed_cloud_networks).to eq(@cn1.id => @cn1.name)
+        expect(workflow.allowed_cloud_networks).to eq(@cn1.id => "#{@cn1.name} (#{@cn1.cidr})")
       end
     end
 

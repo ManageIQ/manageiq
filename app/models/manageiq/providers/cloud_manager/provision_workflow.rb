@@ -88,15 +88,19 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
     super(ci, relats, sources, filtered_ids)
   end
 
+  def cloud_network_display_name(cn)
+    cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})"
+  end
+
   def availability_zone_to_cloud_network(src)
     if src[:availability_zone]
       load_ar_obj(src[:availability_zone]).cloud_subnets.each_with_object({}) do |cs, hash|
         cn = cs.cloud_network
-        hash[cn.id] = cn.name
+        hash[cn.id] = cloud_network_display_name(cn)
       end
     else
       load_ar_obj(src[:ems]).all_cloud_networks.each_with_object({}) do |cn, hash|
-        hash[cn.id] = cn.name
+        hash[cn.id] = cloud_network_display_name(cn)
       end
     end
   end
