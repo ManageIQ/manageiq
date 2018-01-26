@@ -23,7 +23,7 @@ describe TaskHelpers::Exports::Roles do
   end
 
   after do
-    # FileUtils.remove_entry export_dir
+    FileUtils.remove_entry export_dir
   end
 
   it 'exports user roles to a given directory' do
