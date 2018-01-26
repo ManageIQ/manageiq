@@ -130,7 +130,6 @@ class TestContainersPersister < ManagerRefresh::Inventory::Persister
           # TODO: should match on digest when available
           :manager_ref            => [:image_ref],
           :delete_method          => :disconnect_inv,
-          :custom_reconnect_block => custom_reconnect_block
         )
       )
     # images have custom_attributes but that's done conditionally in openshift parser
@@ -140,12 +139,11 @@ class TestContainersPersister < ManagerRefresh::Inventory::Persister
         shared_options.merge(
           :model_class            => ContainerGroup,
           :parent                 => manager,
-          :builder_params         => {:ems_id => manager.id},
+          :builder_params         => {:ems_id => manager.id, :deleted_on => nil},
           :association            => :container_groups,
           :secondary_refs         => {:by_container_project_and_name => [:container_project, :name]},
           :attributes_blacklist   => [:namespace],
           :delete_method          => :disconnect_inv,
-          :custom_reconnect_block => custom_reconnect_block
         )
       )
     initialize_container_conditions_collection(manager, :container_groups)
@@ -170,7 +168,6 @@ class TestContainersPersister < ManagerRefresh::Inventory::Persister
           :association            => :containers,
           # parser sets :ems_ref => "#{pod_id}_#{container.name}_#{container.image}"
           :delete_method          => :disconnect_inv,
-          :custom_reconnect_block => custom_reconnect_block
         )
       )
     @collections[:container_port_configs] =
@@ -391,37 +388,4 @@ class TestContainersPersister < ManagerRefresh::Inventory::Persister
   def add_collection(collection)
     @collections[collection.name] = collection
   end
-
-  def custom_reconnect_block
-    # TODO(lsmola) once we have DB unique indexes, we can stop using manual reconnect, since it adds processing time
-    lambda do |inventory_collection, inventory_objects_index, attributes_index|
-      relation = inventory_collection.model_class.where(:ems_id => inventory_collection.parent.id).archived
-
-      # Skip reconnect if there are no archived entities
-      return if relation.archived.count <= 0
-      raise "Allowed only manager_ref size of 1, got #{inventory_collection.manager_ref}" if inventory_collection.manager_ref.count > 1
-
-      inventory_objects_index.each_slice(1000) do |batch|
-        relation.where(inventory_collection.manager_ref.first => batch.map(&:first)).each do |record|
-          index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
-
-          # We need to delete the record from the inventory_objects_index and attributes_index, otherwise it
-          # would be sent for create.
-          inventory_object = inventory_objects_index.delete(index)
-          hash             = attributes_index.delete(index)
-
-          # Make the entity active again, otherwise we would be duplicating nested entities
-          hash[:deleted_on] = nil
-
-          record.assign_attributes(hash.except(:id, :type))
-          if !inventory_collection.check_changed? || record.changed?
-            record.save!
-            inventory_collection.store_updated_records(record)
-          end
-
-          inventory_object.id = record.id
-        end
-      end
-    end
-    end
 end
