@@ -2865,43 +2865,6 @@
           :feature_type: admin
           :hidden: true
           :identifier: zone_delete
-    - :name: LDAP
-      :description: LDAP
-      :feature_type: node
-      :hidden: true
-      :identifier: ldap
-      :children:
-      - :name: Modify
-        :description: Modify a LDAP
-        :feature_type: admin
-        :identifier: ldap_admin
-        :hidden: true
-        :children:
-        - :name: Add
-          :description: Add a LDAP domain
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_domain_add
-        - :name: Edit
-          :description: Edit a LDAP domain
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_domain_edit
-        - :name: Delete
-          :description: Delete a LDAP domain
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_domain_delete
-        - :name: Edit
-          :description: Edit a LDAP region
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_region_edit
-        - :name: Delete
-          :description: Delete a LDAP region
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_region_delete
     - :name: Regions
       :description: Regions
       :feature_type: node

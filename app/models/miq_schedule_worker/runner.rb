@@ -54,7 +54,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     schedules_for_database_operations_role
     schedules_for_ems_metrics_coordinator_role
     schedules_for_event_role
-    schedules_for_ldap_synchronization_role
   end
 
   def load_user_schedules
@@ -281,22 +280,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     ) { enqueue(:metric_purge_all_timer) }
 
     @schedules[:database_operations]
-  end
-
-  def schedules_for_ldap_synchronization_role
-    # These schedules need to run with the LDAP SYnchronizartion role
-    return unless schedule_enabled?(:ldap_synchronization)
-    scheduler = scheduler_for(:ldap_synchronization)
-
-    sched = ::Settings.ldap_synchronization.ldap_synchronization_schedule
-    _log.info("ldap_synchronization_schedule: #{sched}")
-
-    scheduler.schedule_cron(
-      sched,
-      :tags => [:ldap_synchronization, :ldap_synchronization_schedule],
-    ) { enqueue(:ldap_server_sync_data_from_timer) }
-
-    @schedules[:ldap_synchronization]
   end
 
   def schedules_for_ems_metrics_coordinator_role

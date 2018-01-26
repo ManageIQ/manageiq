@@ -220,51 +220,6 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "LDAP synchronization role" do
-          before(:each) do
-            stub_server_configuration(Hash.new(5.minutes))
-            allow(@schedule_worker).to receive(:heartbeat)
-
-            # Initialize active_roles
-            @schedule_worker.instance_variable_set(:@active_roles, [])
-
-            @region = MiqRegion.seed
-            allow(MiqRegion).to receive(:my_region).and_return(@region)
-            @schedule_worker.instance_variable_set(:@active_roles, ["ldap_synchronization"])
-
-            @ldap_synchronization_collection = {:ldap_synchronization_schedule => "0 2 * * *"}
-            config                           = {:ldap_synchronization => @ldap_synchronization_collection}
-
-            stub_server_configuration(config)
-          end
-
-          context "#schedules_for_ldap_synchronization_role" do
-            before(:each) do
-              allow(@region).to receive(:role_active?).with("ldap_synchronization").and_return(true)
-            end
-
-            it "queues the right items" do
-              scheduled_jobs = @schedule_worker.schedules_for_ldap_synchronization_role
-              expect(scheduled_jobs.size).to be(1)
-
-              scheduled_jobs.each do |job|
-                case job.tags
-                when %w(ldap_synchronization ldap_synchronization_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
-                  expect(job.original).to eq(@ldap_synchronization_collection[:ldap_synchronization_schedule])
-                  while_calling_job(job) do
-                    expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name => "LdapServer", :method_name => "sync_data_from_timer").first
-                    expect(message).not_to be_nil
-                  end
-                else
-                  raise_unexpected_job_error(job)
-                end
-              end
-            end
-          end
-        end
-
         context "Database operations role" do
           before(:each) do
             stub_server_configuration(Hash.new(5.minutes))
