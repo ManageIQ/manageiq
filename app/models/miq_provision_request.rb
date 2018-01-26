@@ -66,8 +66,12 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def post_create_request_tasks
+    update_description_from_tasks
+  end
+
+  def update_description_from_tasks
     return unless requested_task_idx.length == 1
-    update_attributes(:description => miq_request_tasks.first.description)
+    update_attributes(:description => miq_request_tasks.reload.first.description)
   end
 
   def my_role

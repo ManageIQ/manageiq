@@ -13,6 +13,8 @@ describe MiqProvision do
       }
     end
 
+    let(:miq_region) { MiqRegion.create }
+
     context "with VMware infrastructure" do
       before(:each) do
         @ems         = FactoryGirl.create(:ems_vmware_with_authentication)
@@ -54,7 +56,7 @@ describe MiqProvision do
         end
 
         it "should create a valid target_name and hostname" do
-          MiqRegion.seed
+          expect(MiqRegion).to receive(:my_region).and_return(miq_region).twice
           ae_workspace = double("ae_workspace")
           expect(ae_workspace).to receive(:root).and_return(@target_vm_name)
           expect(MiqAeEngine).to receive(:resolve_automation_object).and_return(ae_workspace).exactly(3).times
@@ -78,11 +80,40 @@ describe MiqProvision do
           expect(@vm_prov.get_option(:vm_target_hostname)).to eq(name_002.gsub(/ +|_+/, "-"))
         end
 
+        context "#update_vm_name" do
+          it "does not modify a fully resolved vm_name" do
+            @vm_prov.update_vm_name(@target_vm_name)
+            expect(@vm_prov.get_option(:vm_target_name)).to eq(@target_vm_name)
+          end
+
+          it "Enumerates vm_name that contains the naming sequence characters" do
+            expect(MiqRegion).to receive(:my_region).and_return(miq_region)
+
+            @vm_prov.update_vm_name("#{@target_vm_name}$n{3}")
+            expect(@vm_prov.get_option(:vm_target_name)).to eq("#{@target_vm_name}001")
+          end
+
+          it "Updates the request description with only name parameter passed" do
+            expect(@pr).to receive(:update_description_from_tasks).and_call_original
+
+            @vm_prov.update_vm_name(@target_vm_name)
+
+            expect(@vm_prov.description).to eq("Provision from [template1] to [clone test]")
+            expect(@pr.description).to eq(@vm_prov.description)
+          end
+
+          it "Does not update the request description when `update_request` parameter is false" do
+            expect(@pr).not_to receive(:update_description_from_tasks)
+
+            @vm_prov.update_vm_name(@target_vm_name, :update_request => false)
+          end
+        end
+
         context "when auto naming sequence exceeds the range" do
           before do
-            region = MiqRegion.seed
-            region.naming_sequences.create(:name => "#{@target_vm_name}$n{3}", :source => "provisioning", :value => 998)
-            region.naming_sequences.create(:name => "#{@target_vm_name}$n{4}", :source => "provisioning", :value => 10)
+            expect(MiqRegion).to receive(:my_region).exactly(3).times.and_return(miq_region)
+            miq_region.naming_sequences.create(:name => "#{@target_vm_name}$n{3}", :source => "provisioning", :value => 998)
+            miq_region.naming_sequences.create(:name => "#{@target_vm_name}$n{4}", :source => "provisioning", :value => 10)
           end
 
           it "should advance to next range but based on the existing sequence number for the new range" do
