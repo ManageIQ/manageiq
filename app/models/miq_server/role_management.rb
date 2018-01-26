@@ -145,7 +145,7 @@ module MiqServer::RoleManagement
 
         # MiqServer#server_role_names may include database scoped roles, which are managed elsewhere,
         # so ignore them when determining added and removed roles.
-        current -= ServerRole.database_scoped_role_names
+        current -= ServerRole.database_roles.pluck(:name)
 
         # TODO: Change this to use replace method under Rails 2.x
         removes = ServerRole.where(:name => (current - desired))

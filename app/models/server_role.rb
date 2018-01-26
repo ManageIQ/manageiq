@@ -2,8 +2,11 @@ class ServerRole < ApplicationRecord
   has_many :assigned_server_roles
   has_many :miq_servers, :through => :assigned_server_roles
 
-  validates_presence_of     :name
-  validates_uniqueness_of   :name
+  validates :name, :presence => true, :uniqueness => true
+
+  scope :database_roles, -> { where(:role_scope => 'database').order(:name) }
+  scope :region_roles,   -> { where(:role_scope => 'region').order(:name) }
+  scope :zone_roles,     -> { where(:role_scope => 'zone').order(:name) }
 
   def self.seed
     server_roles = all.index_by(&:name)
@@ -31,29 +34,21 @@ class ServerRole < ApplicationRecord
 
   def self.to_role(server_role)
     # server_role can either be a Role Name (string or symbol) or an instance of a ServerRole
-    unless server_role.kind_of?(ServerRole)
-      role_name   = server_role.to_s.strip.downcase
-      server_role = ServerRole.find_by(:name => role_name)
-      raise _("Role <%{name}> not defined in server_roles table") % {:name => role_name} if server_role.nil?
-    end
-
-    server_role
+    return server_role if server_role.kind_of?(ServerRole)
+    role_name = server_role.to_s.strip.downcase
+    ServerRole.find_by(:name => role_name) || raise(_("Role <%{name}> not defined in server_roles table") % {:name => role_name})
   end
 
   def self.all_names
     order(:name).pluck(:name)
   end
 
-  def self.database_scoped_role_names
-    where(:role_scope => 'database').order(:name).pluck(:name)
-  end
-
   def self.region_scoped_roles
-    @region_scoped_roles ||= where(:role_scope => 'region').order(:name).to_a
+    @region_scoped_roles ||= region_roles.to_a
   end
 
   def self.zone_scoped_roles
-    @zone_scoped_roles ||= where(:role_scope => 'zone').order(:name).to_a
+    @zone_scoped_roles ||= zone_roles.to_a
   end
 
   def self.regional_role?(role)
@@ -61,11 +56,7 @@ class ServerRole < ApplicationRecord
   end
 
   def regional_role?
-    current_role_scope == "region"
-  end
-
-  def current_role_scope
-    role_scope
+    role_scope == "region"
   end
 
   def master_supported?
