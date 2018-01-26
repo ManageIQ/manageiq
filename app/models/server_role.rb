@@ -55,6 +55,10 @@ class ServerRole < ApplicationRecord
     region_scoped_roles.any? { |r| r.name == role.to_s }
   end
 
+  def self.database_owner
+    @database_owner ||= find_by(:name => 'database_owner')
+  end
+
   def regional_role?
     role_scope == "region"
   end
@@ -65,9 +69,5 @@ class ServerRole < ApplicationRecord
 
   def unlimited?
     max_concurrent == 0
-  end
-
-  def self.database_owner
-    @database_owner ||= find_by(:name => 'database_owner')
   end
 end
