@@ -4,6 +4,8 @@ module ManagerRefresh
       class Proxy
         include Vmdb::Logging
 
+        attr_reader :skeletal_primary_index
+
         def initialize(inventory_collection, secondary_refs = {})
           @inventory_collection = inventory_collection
 
@@ -28,6 +30,13 @@ module ManagerRefresh
               @data_indexes[index_name]
             )
           end
+
+          @skeletal_primary_index = ManagerRefresh::InventoryCollection::Index::Type::Skeletal.new(
+            inventory_collection,
+            :skeletal_primary_index_ref,
+            named_ref,
+            primary_index
+          )
         end
 
         def build_primary_index_for(inventory_object)

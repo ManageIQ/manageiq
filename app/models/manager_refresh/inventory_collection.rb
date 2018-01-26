@@ -107,8 +107,10 @@ module ManagerRefresh
              :find_by,
              :lazy_find,
              :lazy_find_by,
+             :named_ref,
              :primary_index,
              :reindex_secondary_indexes!,
+             :skeletal_primary_index,
              :to => :index_proxy
 
     delegate :table_name,
@@ -502,6 +504,10 @@ module ManagerRefresh
       dependencies.all?(&:saved?)
     end
 
+    def parallel_safe?
+      @parallel_safe_cache ||= %i(concurrent_safe concurrent_safe_batch).include?(saver_strategy)
+    end
+
     def data_collection_finalized?
       data_collection_finalized
     end
@@ -523,16 +529,18 @@ module ManagerRefresh
       # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
       if targeted?
         if parent_inventory_collections.nil? && manager_uuids.blank? && skeletal_manager_uuids.blank? &&
-           all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil?
+           all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil? &&
+           skeletal_primary_index.blank?
           # It's a noop Parent targeted InventoryCollection
           true
-        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.manager_uuids.blank? }
+        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.manager_uuids.blank? } &&
+              skeletal_primary_index.blank?
           # It's a noop Child targeted InventoryCollection
           true
         else
           false
         end
-      elsif data.blank? && !delete_allowed?
+      elsif data.blank? && !delete_allowed? && skeletal_primary_index.blank?
         # If we have no data to save and delete is not allowed, we can just skip
         true
       else

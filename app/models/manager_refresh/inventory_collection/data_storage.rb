@@ -14,6 +14,7 @@ module ManagerRefresh
                :build_primary_index_for,
                :build_secondary_indexes_for,
                :named_ref,
+               :skeletal_primary_index,
                :to => :index_proxy
 
       delegate :builder_params,
@@ -68,8 +69,18 @@ module ManagerRefresh
       end
 
       def build(hash)
+        # We will take existing skeletal record, so we don't duplicate references for saving. We can have duplicated
+        # reference from local_db index, (if we are using .find in parser, that causes N+1 db queries), but that is ok,
+        # since that one is not being saved.
+        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
+        inventory_object = skeletal_primary_index.delete(uuid)
+        if inventory_object
+          # We want to update the skeletal record with actual data
+          inventory_object.assign_attributes(hash)
+        end
+
         # Build the InventoryObject
-        inventory_object = new_inventory_object(enrich_data(hash))
+        inventory_object ||= new_inventory_object(enrich_data(hash))
         # Store new InventoryObject and return it
         push(inventory_object)
 
