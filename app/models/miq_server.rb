@@ -579,19 +579,19 @@ class MiqServer < ApplicationRecord
   end
 
   def find_other_started_servers_in_region
-    MiqRegion.my_region.active_miq_servers.to_a.delete_if { |s| s.id == id }
+    self.class.active_miq_servers.in_my_region.where.not(:id => id).to_a
   end
 
   def find_other_servers_in_region
-    MiqRegion.my_region.miq_servers.to_a.delete_if { |s| s.id == id }
+    self.class.active_miq_servers.where.not(:id => id).to_a
   end
 
   def find_other_started_servers_in_zone
-    zone.active_miq_servers.to_a.delete_if { |s| s.id == id }
+    self.class.active_miq_servers.where(:zone_id => zone_id).where.not(:id => id).to_a
   end
 
   def find_other_servers_in_zone
-    zone.miq_servers.to_a.delete_if { |s| s.id == id }
+    self.class.where(:zone_id => zone_id).where.not(:id => id).to_a
   end
 
   def log_prefix
