@@ -1431,10 +1431,8 @@ class VmOrTemplate < ApplicationRecord
   end)
 
   def v_datastore_path
-    s = storage
     datastorepath = location || ""
-    datastorepath = "#{s.name}/#{datastorepath}"  unless s.nil?
-    datastorepath
+    storage ? "#{storage.name}/#{datastorepath}" : datastorepath
   end
 
   def miq_provision_template
