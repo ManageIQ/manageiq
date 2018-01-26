@@ -264,17 +264,18 @@ module ManagerRefresh::SaveCollection
         inventory_collection.store_created_records(result)
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
-          map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result)
+          map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result, :on_conflict => on_conflict)
         end
       end
 
-      def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result)
+      def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result, on_conflict:)
         # The remote_data_timestamp is adding a WHERE condition to ON CONFLICT UPDATE. As a result, the RETURNING
         # clause is not guaranteed to return all ids of the inserted/updated records in the result. In that case
         # we test if the number of results matches the expected batch size. Then if the counts do not match, the only
         # safe option is to query all the data from the DB, using the unique_indexes. The batch size will also not match
         # for every remainders(a last batch in a stream of batches)
-        if !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size_for_persisting
+        # For ON CONFLICT DO NOTHING, we need to always fetch the records
+        if (on_conflict != :do_nothing) && (!supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size_for_persisting)
           result.each do |inserted_record|
             key                 = unique_index_columns.map { |x| inserted_record[x.to_s] }
             inventory_object    = indexed_inventory_objects[key]
