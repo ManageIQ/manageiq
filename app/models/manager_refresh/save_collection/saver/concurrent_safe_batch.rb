@@ -101,7 +101,7 @@ module ManagerRefresh::SaveCollection
             end
 
             skeletal_inventory_objects_index.each_slice(batch_size_for_persisting) do |batch|
-              create_records!(all_attribute_keys, batch, skeletal_attributes_index)
+              create_records!(all_attribute_keys, batch, skeletal_attributes_index, :on_conflict => :do_nothing)
             end
           end
         end
@@ -231,7 +231,7 @@ module ManagerRefresh::SaveCollection
         get_connection.execute(query)
       end
 
-      def create_records!(all_attribute_keys, batch, attributes_index)
+      def create_records!(all_attribute_keys, batch, attributes_index, on_conflict: nil)
         indexed_inventory_objects = {}
         hashes                    = []
         create_time               = time_now
@@ -259,7 +259,7 @@ module ManagerRefresh::SaveCollection
         return if hashes.blank?
 
         result = get_connection.execute(
-          build_insert_query(all_attribute_keys, hashes)
+          build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict)
         )
         inventory_collection.store_created_records(result)
         if inventory_collection.dependees.present?

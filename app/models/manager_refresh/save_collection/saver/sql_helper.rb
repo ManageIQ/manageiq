@@ -11,7 +11,7 @@ module ManagerRefresh::SaveCollection
         "#{quote_column_name(key)} = EXCLUDED.#{quote_column_name(key)}"
       end
 
-      def build_insert_query(all_attribute_keys, hashes)
+      def build_insert_query(all_attribute_keys, hashes, on_conflict: nil)
         # Cache the connection for the batch
         connection = get_connection
 
@@ -28,13 +28,19 @@ module ManagerRefresh::SaveCollection
               #{values}
         }
 
-        if on_conflict_update
-          insert_query += %{
-            ON CONFLICT (#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")})
-              DO
-                UPDATE
-                  SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
-          }
+        if inventory_collection.parallel_safe?
+          if on_conflict == :do_nothing
+            insert_query += %{
+              ON CONFLICT DO NOTHING
+            }
+          elsif on_conflict_update
+            insert_query += %{
+              ON CONFLICT (#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")})
+                DO
+                  UPDATE
+                    SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
+            }
+          end
         end
 
         # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
