@@ -28,6 +28,9 @@ describe ManagerRefresh::Inventory::Persister do
 
   let(:persister) { create_containers_persister }
 
+  # TODO(lsmola) we have to make this pass for :complete => true but also for :targeted => true, targeted needs
+  # conditions here https://github.com/Ladas/manageiq/blob/0b7ceab23388a19c5da8672b2e8baaef8baf8a80/app/models/manager_refresh/inventory_collection.rb#L531
+
   it "tests container relations are pre-created and updated by other refresh" do
     persister.containers.build(
       container_data(
@@ -154,10 +157,9 @@ describe ManagerRefresh::Inventory::Persister do
 
     # The batch saving must not save full record and skeletal record together, otherwise that would
     # lead to nullifying of all attributes of the existing record, that skeletal record points to.
-    # TODO(lsmola) make sure we do smart batching, so this doesn't happen
     expect(ContainerProject.find_by(:ems_ref => "container_project_ems_ref_1")).to(
       have_attributes(
-        :name => nil, # This has to be "container_project_name_1",
+        :name => "container_project_name_1", # This has to be "container_project_name_1",
         :ems_id  => @ems.id,
         :ems_ref => "container_project_ems_ref_1",
       )
@@ -170,6 +172,16 @@ describe ManagerRefresh::Inventory::Persister do
       )
     )
   end
+
+  it "test skeletal precreate sets a base STI type and entity full refresh updates it, then skeletal leaves it be" do
+    # TODO(lsmola) we need to allow STI type to be updatable
+
+  end
+
+  it "test updating 2 partial records has correct smart batches" do
+    # TODO(lsmola) smart batching should be tested elsewhere
+  end
+
 
   it "tests smart batching batches only records with the same fields" do
     FactoryGirl.create(:container_project, container_project_data(1).merge(:ems_id => @ems.id))
@@ -244,7 +256,9 @@ describe ManagerRefresh::Inventory::Persister do
 
   it "we reconnect existing container group" do
     # TODO(lsmola) this belongs to targeted refresh spec
-    # TODO(lsmola) this currently needs custom_reconnect_block, delete it make this pass without it
+    # TODO(lsmola) to reconnect correctly, we need :deleted_on => nil, in :builder_params, is that viable? We probably
+    # do not want to solve this in general? If yes, we would have to allow this to be settable in parser. E.g.
+    # for OpenShift pods watch targeted refresh, we can refresh already disconnected entity
     FactoryGirl.create(:container_group, container_group_data(1).merge(
       :ems_id     => @ems.id,
       :deleted_on => Time.now.utc)
@@ -449,11 +463,9 @@ describe ManagerRefresh::Inventory::Persister do
     )
 
     container_group = ContainerGroup.first
-    # TODO(lsmola) Here should be container_project_name_1, but since this came from skeletal pre-create, the :name
-    # attribute was not set.
     expect(container_group).to(
       have_attributes(
-        :name    => nil,
+        :name    => "container_project_name_1",
         :ems_ref => "container_group_ems_ref_1"
       )
     )
