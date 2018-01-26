@@ -1,6 +1,20 @@
 module MiqProvision::Automate
   extend ActiveSupport::Concern
 
+  module ClassMethods
+    def vm_name_from_automate(prov_obj)
+      prov_obj.save
+      attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'}
+      MiqAeEngine.set_automation_attributes_from_objects([prov_obj.get_user], attrs)
+      MiqAeEngine.resolve_automation_object("REQUEST",
+                                            prov_obj.get_user,
+                                            attrs,
+                                            :vmdb_object => prov_obj).root("vmname").tap do
+        prov_obj.reload
+      end
+    end
+  end
+
   def get_placement_via_automate
     attrs = automate_attributes('get_placement')
     ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
