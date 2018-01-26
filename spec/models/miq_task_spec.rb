@@ -335,10 +335,10 @@ describe MiqTask do
       let(:task) { FactoryGirl.create(:miq_task_plain) }
 
       it "initilizes 'started_on' attribute if task become Active " do
-        expect(task.started_on).to be nil
+        expect(task._started_on).to be nil
         Timecop.freeze do
           task.update_attributes!(:state => MiqTask::STATE_ACTIVE)
-          expect(task.started_on).to eq Time.now.utc
+          expect(task._started_on).to eq Time.now.utc
         end
       end
     end
@@ -350,22 +350,22 @@ describe MiqTask do
     context "to 'Active' state" do
       it "sets 'started_on => Time.now.utc' if 'started_on' is nil" do
         Timecop.freeze do
-          expect(miq_task.started_on).to be nil
+          expect(miq_task._started_on).to be nil
           miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
-          expect(miq_task.started_on).to eq Time.now.utc
+          expect(miq_task._started_on).to eq Time.now.utc
         end
       end
 
       it "does not set 'started_on' if passed state is not 'active'" do
         miq_task.update_status("Any state", MiqTask::STATUS_OK, "")
-        expect(miq_task.started_on).to be nil
+        expect(miq_task._started_on).to be nil
       end
 
       it "does not changed 'started_on' if task already has 'started-on' attribute set" do
         some_time = Time.now.utc - 5.hours
         miq_task.update_attributes!(:started_on => some_time)
         miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
-        expect(miq_task.started_on).to eq some_time
+        expect(miq_task._started_on).to eq some_time
       end
 
       it "sets 'miq_server' association" do
@@ -381,9 +381,9 @@ describe MiqTask do
 
     it "sets 'started_on => Time.now.utc' if 'started_on' is nil" do
       Timecop.freeze do
-        expect(miq_task.started_on).to be nil
+        expect(miq_task._started_on).to be nil
         miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
-        expect(miq_task.started_on).to eq Time.now.utc
+        expect(miq_task._started_on).to eq Time.now.utc
       end
     end
 
@@ -391,7 +391,7 @@ describe MiqTask do
       some_time = Time.now.utc - 5.hours
       miq_task.update_attributes!(:started_on => some_time)
       miq_task.update_status(MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "")
-      expect(miq_task.started_on).to eq some_time
+      expect(miq_task._started_on).to eq some_time
     end
 
     it "sets 'miq_server' association" do

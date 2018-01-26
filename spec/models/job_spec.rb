@@ -395,7 +395,7 @@ describe Job do
         end
 
         it "updates 'started_on' attribute of miq_task if job's 'started_on' attribute was updated" do
-          expect(@task.started_on).to be nil
+          expect(@task._started_on).to be nil
           time = Time.new.utc.change(:usec => 0)
           @job.update_attributes(:started_on => time)
           expect(@task.reload.started_on).to eq time
