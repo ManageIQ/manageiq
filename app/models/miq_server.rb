@@ -594,10 +594,6 @@ class MiqServer < ApplicationRecord
     self.class.where(:zone_id => zone_id).where.not(:id => id).to_a
   end
 
-  def log_prefix
-    @log_prefix ||= "MIQ(#{self.class.name})"
-  end
-
   def display_name
     "#{name} [#{id}]"
   end
