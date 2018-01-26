@@ -14,7 +14,8 @@ module ManagerRefresh
                    :named_ref,
                    :to => :inventory_collection
 
-          delegate :each,
+          delegate :blank?,
+                   :each,
                    :to => :index
 
           # Find value based on index_value
