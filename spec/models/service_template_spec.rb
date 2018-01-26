@@ -45,7 +45,7 @@ describe ServiceTemplate do
     end
 
     it "does not show hidden buttons" do
-      service_template = FactoryGirl.create(:service_template, :name => "bar")
+      service_template = FactoryGirl.create(:service_template)
       service = FactoryGirl.create(:service, :name => "foo", :service_template => service_template)
       true_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "foo"})
       false_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "labar"})
