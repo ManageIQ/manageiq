@@ -8,6 +8,7 @@ module MiqAeMethodService
     expose :vm_template,           :association => true
     expose :target_type
     expose :source_type
+    expose :update_vm_name
 
     expose_eligible_resources :hosts
     expose_eligible_resources :storages
