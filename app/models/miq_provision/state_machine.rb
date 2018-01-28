@@ -1,4 +1,5 @@
 module MiqProvision::StateMachine
+  include MiqPolicyMixin
   def run_provision
     self.source = get_source  # just in case automate changed src_vm_id in the options hash
     signal :create_destination
@@ -72,11 +73,24 @@ module MiqProvision::StateMachine
 
   def autostart_destination
     if get_option(:vm_auto_start)
-      message = "Starting"
+      message = "Checking policy preventing start"
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
-      destination.start
+      destination.enforce_policy(:request_vm_start, {}, {:miq_callback => prevent_callback_settings(:autostart_destination_callback)})
+    else
+      signal :post_create_destination
     end
+  end
+
+  def autostart_destination_callback
+    signal :autostart_destination_raw
+  end
+
+  def autostart_destination_raw
+    message = "Starting"
+    _log.info("#{message} #{for_destination}")
+    update_and_notify_parent(:message => message)
+    destination.raw_start
 
     signal :post_create_destination
   end
