@@ -108,6 +108,14 @@ describe 'VM::Operations' do
       allow(@vm).to receive(:ext_management_system).and_return(@ems_double)
     end
 
+    it 'returns the correct error message if the vm vendor is vmware and it does not have an ext_management_system' do
+      allow(@vm).to receive(:ext_management_system).and_return(nil)
+      allow(@vm).to receive(:power_state).and_return('off')
+
+      expect(@vm.supports_launch_vnc_console?).to be_falsey
+      expect(@vm.unsupported_reason(:launch_vnc_console)).to include('the VM is not powered on')
+    end
+
     it 'does not support if vendor is vmware and api version is >= 6.5' do
       allow(@ems_double).to receive(:api_version).and_return('6.5')
       allow(@vm).to receive(:vendor).and_return('vmware')
