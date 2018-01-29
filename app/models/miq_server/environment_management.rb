@@ -29,16 +29,8 @@ module MiqServer::EnvironmentManagement
     end
 
     def startup_mode
-      mode = ""
-      # Find out startup mode
-      if self.minimal_env?
-        mode = "Minimal"
-        mode << " [#{minimal_env_options.join(', ')}]" unless minimal_env_options.empty?
-      else
-        mode = "Normal"
-      end
-
-      mode
+      return "Normal" unless minimal_env?
+      "Minimal".tap { |s| s << " [#{minimal_env_options.join(', ').presence}]" if minimal_env_options.present? }
     end
 
     def get_network_information
