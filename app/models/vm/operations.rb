@@ -36,7 +36,7 @@ module Vm::Operations
     end
 
     supports :launch_vnc_console do
-      if vendor == 'vmware' && ext_management_system.api_version.to_f >= 6.5
+      if vendor == 'vmware' && ext_management_system.try(:api_version).to_f >= 6.5
         unsupported_reason_add(:launch_vnc_console, _('VNC consoles are unsupported on VMware ESXi 6.5 and later.'))
       elsif power_state != 'on'
         unsupported_reason_add(:launch_vnc_console, _('The web-based VNC console is not available because the VM is not powered on'))
