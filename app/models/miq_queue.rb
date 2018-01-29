@@ -392,6 +392,7 @@ class MiqQueue < ApplicationRecord
   def deliver(requester = nil)
     result = nil
     delivered_on
+    pre_post_deliver(:PRE, 'Started', '')
     _log.info("#{MiqQueue.format_short_log_msg(self)}, Delivering...")
 
     begin
@@ -458,18 +459,26 @@ class MiqQueue < ApplicationRecord
   def delivered(state, msg, result)
     self.state = state
     _log.info("#{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - delivered_on}] seconds")
-    m_callback(msg, result) unless miq_callback.blank?
+    pre_post_deliver(:POST, msg, result)
+    m_callback(miq_callback, msg, result) unless miq_callback.blank?
   rescue => err
     _log.error("#{MiqQueue.format_short_log_msg(self)}, #{err.message}")
   ensure
     destroy_potentially_stale_record
   end
 
+  def pre_post_deliver(pre_post, msg, result)
+    return unless miq_callback && miq_callback.key?(:CALLBACKS) && miq_callback[:CALLBACKS].key?(pre_post)
+    (miq_callback[:CALLBACKS][pre_post] || []).each do |callback|
+      m_callback(callback, msg, result)
+    end
+  end
+
   def delivered_on
     @delivered_on ||= Time.now
   end
 
-  def m_callback(msg, result)
+  def m_callback(miq_callback, msg, result)
     if miq_callback[:class_name] && miq_callback[:method_name]
       begin
         klass = miq_callback[:class_name].constantize
@@ -498,7 +507,7 @@ class MiqQueue < ApplicationRecord
         _log.log_backtrace(err)
       end
     else
-      _log.warn("#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping")
+      _log.warn("#{MiqQueue.format_short_log_msg(self)}, Callback is not well-defined, skipping") unless miq_callback[:CALLBACKS]
     end
   end
 

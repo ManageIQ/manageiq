@@ -243,6 +243,19 @@ class MiqTask < ApplicationRecord
     binary_blob.binary = YAML.dump(value)
   end
 
+  def self.generic_action_callbacks(task_id)
+    {
+      :CALLBACKS => {
+        :PRE => [
+          {:class_name => self.name, :instance_id => task_id, :method_name => :queue_callback, :args => ['Active']}
+        ],
+        :POST => [
+          {:class_name => self.name, :instance_id => task_id, :method_name => :queue_callback, :args => ['Finished']}
+        ]
+      }
+    }
+  end
+
   def self.generic_action_with_callback(options, queue_options)
     # Pre-reqs:
     # options hash contains the following required keys:
@@ -270,7 +283,7 @@ class MiqTask < ApplicationRecord
       :message => msg)
 
     # Set the callback for this task to set the status based on the results of the actions
-    queue_options[:miq_callback] = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback, :args => ['Finished']}
+    queue_options[:miq_callback] = generic_action_callbacks(task.id)
     method_opts = queue_options[:args].first
     method_opts[:task_id] = task.id if method_opts.kind_of?(Hash)
     MiqQueue.put(queue_options)

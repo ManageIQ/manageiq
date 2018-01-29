@@ -184,14 +184,7 @@ module EmsRefresh
                   task.id
                 end
 
-      unless task_id.nil?
-        item[:miq_callback] = {
-          :class_name  => 'MiqTask',
-          :method_name => :queue_callback,
-          :instance_id => task_id,
-          :args        => ['Finished']
-        }
-      end
+      item[:miq_callback] = MiqTask.generic_action_callbacks(task_id) if task_id
       item.merge(
         :data        => targets,
         :task_id     => task_id,

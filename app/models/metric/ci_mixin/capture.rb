@@ -92,6 +92,9 @@ module Metric::CiMixin::Capture
           qi.delete(:state)
           if cb && item_interval == "realtime"
             qi[:miq_callback] = cb
+            if task_id
+              cb.merge(MiqTask.generic_action_callbacks(task_id))
+            end
           end
           qi
         elsif msg.state == "ready" && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
