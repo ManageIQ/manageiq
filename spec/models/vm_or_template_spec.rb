@@ -1137,4 +1137,19 @@ describe VmOrTemplate do
       )
     end
   end
+
+  context "#v_datastore_path" do
+    it "with no location or storage" do
+      expect(Vm.new.v_datastore_path).to eq("")
+    end
+
+    it "with location but no storage" do
+      expect(Vm.new(:location => "test location").v_datastore_path).to eq("test location")
+    end
+
+    it "with location and storage" do
+      storage = Storage.new(:name => "storage name")
+      expect(Vm.new(:location => "test location", :storage => storage).v_datastore_path).to eq("storage name/test location")
+    end
+  end
 end
