@@ -246,7 +246,7 @@ end
 # To develop a gem locally and override its source to a checked out repo
 #   you can use this helper method in Gemfile.dev.rb e.g.
 #
-# override_gem 'manageiq-ui-classic', :path => File.expand_path("../manageiq-ui-classic", __dir__)
+# override_gem 'manageiq-ui-classic', :path => "../manageiq-ui-classic"
 #
 def override_gem(name, *args)
   if dependencies.any?
@@ -254,6 +254,9 @@ def override_gem(name, *args)
     dependencies.delete(dependency)
 
     calling_file = caller_locations.detect { |loc| !loc.path.include?("lib/bundler") }.path
+    calling_dir  = File.dirname(calling_file)
+
+    args.last[:path] = File.expand_path(args.last[:path], calling_dir) if args.last.kind_of?(Hash) && args.last[:path]
     gem(name, *args).tap do
       warn "** override_gem: #{name}, #{args.inspect}, caller: #{calling_file}" unless ENV["RAILS_ENV"] == "production"
     end
