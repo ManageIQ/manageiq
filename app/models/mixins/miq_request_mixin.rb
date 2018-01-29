@@ -15,6 +15,10 @@ module MiqRequestMixin
 
   def user_message=(msg)
     msg = msg.truncate(255)
+    self.user_message_untruncated = msg
+  end
+
+  def user_message_untruncated=(msg)
     options[:user_message] = msg
     update_attribute(:options, options)
     update_attributes(:message => msg) unless msg.blank?
