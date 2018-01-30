@@ -66,4 +66,20 @@ describe TaskHelpers::Exports do
       expect(TaskHelpers::Exports.validate_directory(@export_dir)).to eq('Destination directory must be writable')
     end
   end
+
+  describe '.exclude_attributes' do
+    let(:all_attributes) do
+      { "id"         => 1,
+        "name"       => "EvmRole-super_administrator",
+        "read_only"  => true,
+        "created_at" => Time.zone.now,
+        "updated_at" => Time.zone.now,
+        "settings"   => nil }
+    end
+
+    it 'removes selected attributes' do
+      filtered_attributes = TaskHelpers::Exports.exclude_attributes(all_attributes, %w(created_at updated_at id))
+      expect(filtered_attributes).to match("name" => "EvmRole-super_administrator", "read_only" => true, "settings" => nil)
+    end
+  end
 end

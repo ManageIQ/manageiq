@@ -1,0 +1,6 @@
+---
+- name:
+  read_only: false
+  settings:
+  feature_identifiers:
+  - about

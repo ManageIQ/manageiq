@@ -1,0 +1,7 @@
+---
+- name: Role Import Test 2
+  read_only: false
+  settings:
+  feature_identifiers:
+  - dashboard
+  - vm
