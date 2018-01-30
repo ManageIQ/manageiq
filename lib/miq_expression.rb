@@ -1112,8 +1112,8 @@ class MiqExpression
            if field == :count
              :integer
            else
-             col_info = get_col_info(field)
-             [:bytes, :megabytes].include?(col_info[:format_sub_type]) ? :integer : col_info[:data_type]
+             f = parse_field_or_tag(field)
+             %i(bytes megabytes).include?(f.sub_type) ? :integer : f.column_type
            end
          end
 

@@ -103,7 +103,7 @@ module MiqExpression::SubstMixin
       if first_exp.key?("field") # Base token settings on exp type
         field = exp[exp.keys.first]["field"]
         acc[token][:field]      = field
-        acc[token][:value_type] = MiqExpression.get_col_info(field)[:format_sub_type]
+        acc[token][:value_type] = MiqExpression.parse_field_or_tag(field).try(:sub_type)
       elsif first_exp.key?("tag")
         acc[token][:tag]   = first_exp["tag"]
       elsif first_exp.key?("count")
