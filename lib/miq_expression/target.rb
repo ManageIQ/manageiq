@@ -48,6 +48,10 @@ class MiqExpression::Target
     [:has_many, :has_and_belongs_to_many].include?(reflections.last.macro)
   end
 
+  def reflection_supported_by_sql?
+    model.follow_associations(associations).present?
+  end
+
   def reflections
     klass = model
     associations.collect do |association|

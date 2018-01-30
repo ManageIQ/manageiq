@@ -40,7 +40,7 @@ class MiqExpression::Field < MiqExpression::Target
   end
 
   def attribute_supported_by_sql?
-    !custom_attribute_column? && target.attribute_supported_by_sql?(column)
+    !custom_attribute_column? && target.attribute_supported_by_sql?(column) && reflection_supported_by_sql?
   end
 
   def custom_attribute_column?
