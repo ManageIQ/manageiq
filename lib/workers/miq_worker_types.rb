@@ -56,6 +56,7 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Vmware::InfraManager::MetricsCollectorWorker"           => %i(manageiq_default),
   "ManageIQ::Providers::Vmware::InfraManager::RefreshWorker"                    => %i(manageiq_default),
   "ManageIQ::Providers::Vmware::NetworkManager::RefreshWorker"                  => %i(manageiq_default),
+  "ManageIQ::Providers::Vmware::InfraManager::OperationsWorker"                 => %i(manageiq_default),
   "EmbeddedAnsibleWorker"                                                       => %i(manageiq_default),
   "MiqCockpitWsWorker"                                                          => %i(manageiq_default),
   "MiqEmsMetricsProcessorWorker"                                                => %i(manageiq_default),
@@ -85,6 +86,7 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Openstack::NetworkManager::MetricsCollectorWorker
   ManageIQ::Providers::Redhat::NetworkManager::MetricsCollectorWorker
   ManageIQ::Providers::Openstack::InfraManager::MetricsCollectorWorker
+  ManageIQ::Providers::Vmware::InfraManager::OperationsWorker
   EmbeddedAnsibleWorker
   MiqReportingWorker
   MiqSmartProxyWorker

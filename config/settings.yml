@@ -1090,6 +1090,9 @@
       :disabled: true
       :nice_delta: 1
       :poll: 5.seconds
+    :ems_operations_worker:
+      :defaults:
+        :thread_shutdown_timeout: 10
     :ems_refresh_core_worker:
       :poll: 1.seconds
       :nice_delta: 1
