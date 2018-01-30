@@ -2801,9 +2801,7 @@ describe MiqExpression do
         :format_sub_type                => :bytes,
         :include                        => {},
         :tag                            => false,
-        :virtual_column                 => true,
         :sql_support                    => false,
-        :virtual_reflection             => false
       )
     end
 
@@ -2816,9 +2814,7 @@ describe MiqExpression do
         :format_sub_type                => :boolean,
         :include                        => {},
         :tag                            => false,
-        :virtual_column                 => true,
         :sql_support                    => true,
-        :virtual_reflection             => false
       )
     end
 
@@ -2831,9 +2827,7 @@ describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :virtual_column                 => false,
         :sql_support                    => false,
-        :virtual_reflection             => false
       )
     end
 
@@ -2845,9 +2839,7 @@ describe MiqExpression do
         :excluded_by_preprocess_options => false,
         :include                        => {},
         :tag                            => true,
-        :virtual_column                 => false,
         :sql_support                    => true,
-        :virtual_reflection             => false
       )
     end
 
@@ -2859,9 +2851,7 @@ describe MiqExpression do
         :excluded_by_preprocess_options => false,
         :include                        => {},
         :tag                            => true,
-        :virtual_column                 => false,
         :sql_support                    => true,
-        :virtual_reflection             => false
       )
     end
 
@@ -2873,9 +2863,7 @@ describe MiqExpression do
         :excluded_by_preprocess_options => false,
         :include                        => {},
         :tag                            => true,
-        :virtual_column                 => false,
         :sql_support                    => true,
-        :virtual_reflection             => false
       )
     end
 
@@ -2888,9 +2876,7 @@ describe MiqExpression do
         :format_sub_type                => :integer,
         :include                        => {},
         :tag                            => false,
-        :virtual_column                 => false,
         :sql_support                    => true,
-        :virtual_reflection             => false
       )
     end
 
@@ -2903,9 +2889,7 @@ describe MiqExpression do
         :format_sub_type                => :string,
         :include                        => {:guest_applications => {}},
         :tag                            => false,
-        :virtual_column                 => false,
         :sql_support                    => true,
-        :virtual_reflection             => false
       )
     end
 
@@ -2918,9 +2902,7 @@ describe MiqExpression do
         :format_sub_type                => :bytes,
         :include                        => {},
         :tag                            => false,
-        :virtual_column                 => true,
         :sql_support                    => false,
-        :virtual_reflection             => true
       )
     end
 
@@ -2933,9 +2915,7 @@ describe MiqExpression do
         :format_sub_type                => nil,
         :include                        => {},
         :tag                            => false,
-        :virtual_column                 => false,
         :sql_support                    => false,
-        :virtual_reflection             => true
       )
     end
 
@@ -2947,9 +2927,7 @@ describe MiqExpression do
         :excluded_by_preprocess_options => false,
         :include                        => {},
         :tag                            => false,
-        :virtual_column                 => true,
         :sql_support                    => false,
-        :virtual_reflection             => true
       )
     end
 
@@ -2962,9 +2940,7 @@ describe MiqExpression do
         :format_sub_type                => :boolean,
         :include                        => {},
         :tag                            => false,
-        :virtual_column                 => true,
         :sql_support                    => false,
-        :virtual_reflection             => true
       )
     end
   end
