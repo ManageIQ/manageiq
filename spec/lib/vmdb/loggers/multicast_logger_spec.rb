@@ -26,4 +26,18 @@ describe Vmdb::Loggers::MulticastLogger do
     subject.level = 3
     [logger1, logger2, subject].each { |l| expect(l.level).to eq(3) }
   end
+
+  context "#<<" do
+    it "forwards to the other loggers" do
+      expect(logger1).to receive(:<<).with("test message")
+      expect(logger2).to receive(:<<).with("test message")
+
+      subject << "test message"
+    end
+
+    it "returns the size of the logged message" do
+      expect(subject << "test message").to eql(12)
+      expect(subject << "test message   ").to eql(12)
+    end
+  end
 end
