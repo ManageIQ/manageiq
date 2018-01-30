@@ -24,6 +24,12 @@ module Vmdb::Loggers
       true
     end
 
+    def <<(msg)
+      msg = msg.strip
+      loggers.each { |l| l.send(:<<, msg) }
+      msg.size
+    end
+
     def reopen(_logdev = nil)
       raise NotImplementedError, "#{self.class.name} should not be reopened since it is backed by multiple loggers."
     end
