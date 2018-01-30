@@ -270,12 +270,14 @@ describe MiqVimBrokerWorker::Runner do
           }
 
           expected_folder_hash = {
-            :folder => {
-              :type        => klass,
-              :ems_ref     => mor,
-              :ems_ref_obj => mor,
-              :uid_ems     => mor
-            }
+            :folders => [
+              {
+                :type        => klass,
+                :ems_ref     => mor,
+                :ems_ref_obj => mor,
+                :uid_ems     => mor
+              }
+            ]
           }
 
           @vim_broker_worker.instance_variable_get(:@queue).enq(event.dup)
