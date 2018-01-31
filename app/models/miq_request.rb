@@ -52,6 +52,12 @@ class MiqRequest < ApplicationRecord
 
   include MiqRequestMixin
 
+  scope :created_recently,    ->(days_ago)   { where("created_on > ?", days_ago.days.ago) }
+  scope :with_approval_state, ->(state)      { where(:approval_state => state) }
+  scope :with_type,           ->(type)       { where(:type => type) }
+  scope :with_request_type,   ->(type)       { where(:request_type => type) }
+  scope :with_requester,      ->(id)         { where(:requester_id => User.with_same_userid(id).collect(&:id)) }
+
   MODEL_REQUEST_TYPES = {
     :Service        => {
       :MiqProvisionRequest                 => {
@@ -91,7 +97,7 @@ class MiqRequest < ApplicationRecord
         :automation => N_("Automation")
       }
     }
-  }
+  }.freeze
 
   REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
@@ -103,6 +109,12 @@ class MiqRequest < ApplicationRecord
     request_type = (data[:__request_type__] || data[:request_type]).try(:to_sym)
     model_symbol = REQUEST_TYPE_TO_MODEL[request_type] || raise(ArgumentError, "Invalid request_type")
     model_symbol.to_s.constantize
+  end
+
+  def self.with_reason_like(reason)
+    # Reason string uses * wildcard, scope is required to convert it into % wildcard for LIKE statement
+    reason = reason.match(/\A(?<start>\*?)(?<content>.*?)(?<end>\*?)\z/)
+    where("reason LIKE (?)", "#{reason[:start] ? '%' : ''}#{sanitize_sql_like(reason[:content])}#{reason[:end] ? '%' : ''}")
   end
 
   # Supports old-style requests where specific request was a seperate table connected as a resource
