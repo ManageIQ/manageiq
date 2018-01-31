@@ -1,10 +1,12 @@
 class DialogImportService
   class ImportNonYamlError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
+  class DialogFieldAssociationCircularReferenceError < StandardError; end
 
-  def initialize(dialog_field_importer = DialogFieldImporter.new, dialog_import_validator = DialogImportValidator.new)
+  def initialize(dialog_field_importer = DialogFieldImporter.new, dialog_import_validator = DialogImportValidator.new, dialog_field_association_validator = DialogFieldAssociationValidator.new)
     @dialog_field_importer = dialog_field_importer
     @dialog_import_validator = dialog_import_validator
+    @dialog_field_association_validator = dialog_field_association_validator
   end
 
   def cancel_import(import_file_upload_id)
@@ -76,6 +78,7 @@ class DialogImportService
   end
 
   def build_dialog_fields(dialog_group)
+    check_field_associations(dialog_group["dialog_fields"])
     dialog_group["dialog_fields"].collect do |dialog_field|
       dialog_field["options"].try(:symbolize_keys!)
       @dialog_field_importer.import_field(dialog_field)
@@ -86,6 +89,11 @@ class DialogImportService
     (dialog['resource_actions'] || []).collect do |resource_action|
       ResourceAction.create(resource_action.merge('dialog_id' => dialog['id']))
     end
+  end
+
+  def check_field_associations(fields)
+    associations = fields.each_with_object({}) { |df, hsh| hsh.merge!(df["name"] => df["dialog_field_responders"]) if df["dialog_field_responders"].present? }
+    raise DialogFieldAssociationCircularReferenceError if @dialog_field_association_validator.circular_references(associations)
   end
 
   def import(dialog)
@@ -100,8 +108,8 @@ class DialogImportService
   def build_associations(dialog, association_list)
     fields = dialog.dialog_fields
     association_list.each do |association|
-      association.values.each do |values|
-        values.each do |responder|
+      association.each_value do |value|
+        value.each do |responder|
           next if fields.select { |field| field.name == responder }.empty?
           DialogFieldAssociation.create(:trigger_id => fields.find { |field| field.name.include?(association.keys.first) }.id,
                                         :respond_id => fields.find { |field| field.name == responder }.id)
@@ -115,7 +123,7 @@ class DialogImportService
     dialog["dialog_tabs"].flat_map do |tab|
       tab["dialog_groups"].flat_map do |group|
         group["dialog_fields"].flat_map do |field|
-          associations << { field["name"] => field["dialog_field_responders"] } unless field["dialog_field_responders"].nil?
+          associations << { field["name"] => field["dialog_field_responders"] } if field["dialog_field_responders"].present?
         end
       end
     end
