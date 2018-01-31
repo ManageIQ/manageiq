@@ -1,4 +1,5 @@
 class Switch < ApplicationRecord
+  include NewWithTypeStiMixin
   include CustomActionsMixin
 
   has_many :host_switches, :dependent => :destroy

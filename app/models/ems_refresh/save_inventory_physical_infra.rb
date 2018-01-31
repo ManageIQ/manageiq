@@ -2,6 +2,7 @@
 # Calling order for EmsPhysicalInfra:
 # - ems
 #   - physical_racks
+#   - physical_switches
 #   - physical_servers
 #
 
@@ -22,7 +23,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
       _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
-    child_keys = %i(physical_racks physical_servers customization_scripts)
+    child_keys = %i(physical_racks physical_switches physical_servers customization_scripts)
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
@@ -42,6 +43,14 @@ module EmsRefresh::SaveInventoryPhysicalInfra
 
     save_inventory_multi(ems.physical_racks, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.physical_racks, hashes, :ems_ref)
+  end
+
+  def save_physical_switches_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    deletes = target == ems ? :use_association : []
+
+    save_inventory_multi(ems.physical_switches, hashes, deletes, [:uid_ems], %i(asset_detail hardware))
   end
 
   def save_physical_servers_inventory(ems, hashes, target = nil)
