@@ -3,6 +3,12 @@ module ManagerRefresh::SaveCollection
     class ConcurrentSafeBatch < ManagerRefresh::SaveCollection::Saver::Base
       private
 
+      delegate :association_to_base_class_mapping,
+               :association_to_foreign_key_mapping,
+               :association_to_foreign_type_mapping,
+               :attribute_references,
+               :to => :inventory_collection
+
       def record_key(record, key)
         send(record_key_method, record, key)
       end
@@ -268,14 +274,37 @@ module ManagerRefresh::SaveCollection
         end
       end
 
+      # The remote_data_timestamp is adding a WHERE condition to ON CONFLICT UPDATE. As a result, the RETURNING
+      # clause is not guaranteed to return all ids of the inserted/updated records in the result. In that case
+      # we test if the number of results matches the expected batch size. Then if the counts do not match, the only
+      # safe option is to query all the data from the DB, using the unique_indexes. The batch size will also not match
+      # for every remainders(a last batch in a stream of batches)
+      # For ON CONFLICT DO NOTHING, we need to always fetch the records plus the attribute_references
       def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result, on_conflict:)
-        # The remote_data_timestamp is adding a WHERE condition to ON CONFLICT UPDATE. As a result, the RETURNING
-        # clause is not guaranteed to return all ids of the inserted/updated records in the result. In that case
-        # we test if the number of results matches the expected batch size. Then if the counts do not match, the only
-        # safe option is to query all the data from the DB, using the unique_indexes. The batch size will also not match
-        # for every remainders(a last batch in a stream of batches)
-        # For ON CONFLICT DO NOTHING, we need to always fetch the records
-        if (on_conflict != :do_nothing) && (!supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size_for_persisting)
+        if on_conflict == :do_nothing
+          # This path applies only for skeletal precreate now
+          # TODO(lsmola) lets just preload all referenced attributes and relations? Then we are just fine
+          inventory_collection.model_class.where(
+            build_multi_selection_query(hashes)
+          ).select(unique_index_columns + [:id] + attribute_references.to_a).each do |record|
+            key              = unique_index_columns.map { |x| record.public_send(x) }
+            inventory_object = indexed_inventory_objects[key]
+
+            # Load also attribute_references, so lazy_find with :key pointing to skeletal reference works
+            attributes = record.attributes.symbolize_keys
+            attribute_references.each do |ref|
+              inventory_object[ref] = attributes[ref]
+
+              if (foreign_key = association_to_foreign_key_mapping[ref])
+                base_class_name       = attributes[association_to_foreign_type_mapping[ref].try(:to_sym)] || association_to_base_class_mapping[ref]
+                id                    = attributes[foreign_key.to_sym]
+                inventory_object[ref] = ManagerRefresh::ApplicationRecordReference.new(base_class_name, id)
+              end
+            end
+
+            inventory_object.id = record.id if inventory_object
+          end
+        elsif !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size_for_persisting
           result.each do |inserted_record|
             key                 = unique_index_columns.map { |x| inserted_record[x.to_s] }
             inventory_object    = indexed_inventory_objects[key]
