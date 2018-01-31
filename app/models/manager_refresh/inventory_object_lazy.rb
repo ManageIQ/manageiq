@@ -94,10 +94,6 @@ module ManagerRefresh
       return if keys.any? { |x| full_reference[x].blank? }
 
       skeletal_primary_index.build(full_reference)
-
-      # TODO(lsmola) what do I need this for? Skeletal record can break :key, since the record won't be fetched by DB
-      # strategy and :key is missing in skeletal record. Write spec!
-      # value_inventory_collection.skeletal_manager_uuids << value.stringified_reference
     end
 
     def load_object_with_key

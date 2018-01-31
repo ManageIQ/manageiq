@@ -76,7 +76,7 @@ module ManagerRefresh
                 :internal_attributes, :delete_method, :dependency_attributes, :manager_ref, :create_only,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :check_changed, :arel,
                 :inventory_object_attributes, :name, :saver_strategy, :manager_uuids, :builder_params,
-                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
+                :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes, :references_storage
 
@@ -402,7 +402,6 @@ module ManagerRefresh
       @manager_uuids                = Set.new.merge(manager_uuids)
       @all_manager_uuids            = all_manager_uuids
       @parent_inventory_collections = parent_inventory_collections
-      @skeletal_manager_uuids       = Set.new.merge(manager_uuids)
       @targeted_arel                = targeted_arel
       @targeted                     = !!targeted
 
@@ -528,7 +527,7 @@ module ManagerRefresh
     def noop?
       # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
       if targeted?
-        if parent_inventory_collections.nil? && manager_uuids.blank? && skeletal_manager_uuids.blank? &&
+        if parent_inventory_collections.nil? && manager_uuids.blank? &&
            all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil? &&
            skeletal_primary_index.blank?
           # It's a noop Parent targeted InventoryCollection
@@ -751,12 +750,12 @@ module ManagerRefresh
           targeted_arel.call(self)
         elsif manager_ref.count > 1
           # TODO(lsmola) optimize with ApplicationRecordIterator
-          hashes = extract_references(manager_uuids + skeletal_manager_uuids)
+          hashes = extract_references(manager_uuids)
           full_collection_for_comparison.where(build_multi_selection_condition(hashes))
         else
           ManagerRefresh::ApplicationRecordIterator.new(
             :inventory_collection => self,
-            :manager_uuids_set    => (manager_uuids + skeletal_manager_uuids).to_a.flatten.compact
+            :manager_uuids_set    => manager_uuids.to_a.flatten.compact
           )
         end
       else

@@ -45,7 +45,6 @@ module ManagerRefresh
                :parent_inventory_collections,
                :parent_inventory_collections=,
                :references,
-               :skeletal_manager_uuids,
                :transitive_dependency_attributes,
                :to => :inventory_collection
 
