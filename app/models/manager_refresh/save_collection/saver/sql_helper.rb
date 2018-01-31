@@ -147,8 +147,8 @@ module ManagerRefresh::SaveCollection
         # Cache the connection for the batch
         connection = get_connection
 
-        # We want to ignore type and create timestamps when updating
-        all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type created_at created_on).include?(x) }
+        # We want to ignore create timestamps when updating
+        all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(created_at created_on).include?(x) }
         all_attribute_keys_array << :id
 
         values = hashes.map! do |hash|

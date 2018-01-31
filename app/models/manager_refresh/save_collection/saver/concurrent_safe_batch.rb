@@ -92,6 +92,7 @@ module ManagerRefresh::SaveCollection
         all_attribute_keys << :updated_at if supports_updated_at?
         all_attribute_keys << :created_on if supports_created_on?
         all_attribute_keys << :updated_on if supports_updated_on?
+        all_attribute_keys << :type if supports_sti?
 
         _log.debug("Processing #{inventory_collection} of size #{inventory_collection.size}...")
 
@@ -103,7 +104,6 @@ module ManagerRefresh::SaveCollection
           inventory_collection.custom_reconnect_block&.call(inventory_collection, inventory_objects_index, attributes_index)
         end
 
-        all_attribute_keys << :type if supports_sti?
         # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
         if inventory_collection.create_allowed?
           on_conflict = inventory_collection.parallel_safe? ? :do_update : nil
@@ -183,7 +183,7 @@ module ManagerRefresh::SaveCollection
               end
 
               hash_for_update = if inventory_collection.use_ar_object?
-                                  record.assign_attributes(hash.except(:id, :type))
+                                  record.assign_attributes(hash.except(:id))
                                   values_for_database!(all_attribute_keys,
                                                        record.attributes.symbolize_keys)
                                 elsif serializable_keys?

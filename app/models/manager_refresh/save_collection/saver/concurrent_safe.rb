@@ -13,7 +13,7 @@ module ManagerRefresh::SaveCollection
       #        key value
       def update_record!(record, hash, inventory_object)
         assign_attributes_for_update!(hash, time_now)
-        record.assign_attributes(hash.except(:id, :type))
+        record.assign_attributes(hash.except(:id))
 
         if !inventory_object.inventory_collection.check_changed? || record.changed?
           update_query = inventory_object.inventory_collection.model_class.where(:id => record.id)
@@ -39,6 +39,7 @@ module ManagerRefresh::SaveCollection
         data               = inventory_collection.model_class.new(hash).attributes.symbolize_keys
 
         # TODO(lsmola) abstract common behavior into base class
+        all_attribute_keys << :type if supports_sti?
         all_attribute_keys << :created_at if supports_created_at?
         all_attribute_keys << :updated_at if supports_updated_at?
         all_attribute_keys << :created_on if supports_created_on?

@@ -291,6 +291,7 @@ module ManagerRefresh::SaveCollection
       # @param hash [Hash] data hash
       # @param update_time [Time] data hash
       def assign_attributes_for_update!(hash, update_time)
+        hash[:type]         = model_class.name if supports_sti? && hash[:type].nil?
         hash[:updated_on]   = update_time if supports_updated_on?
         hash[:updated_at]   = update_time if supports_updated_at?
       end
@@ -300,7 +301,6 @@ module ManagerRefresh::SaveCollection
       # @param hash [Hash] data hash
       # @param create_time [Time] data hash
       def assign_attributes_for_create!(hash, create_time)
-        hash[:type]         = model_class.name if supports_sti? && hash[:type].nil?
         hash[:created_on]   = create_time if supports_created_on?
         hash[:created_at]   = create_time if supports_created_at?
         assign_attributes_for_update!(hash, create_time)
