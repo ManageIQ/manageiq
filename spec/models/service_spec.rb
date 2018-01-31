@@ -840,4 +840,8 @@ describe Service do
       end
     end
   end
+
+  describe '#configuration_script' do
+    it { expect(subject.configuration_script).to be_nil }
+  end
 end

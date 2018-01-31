@@ -435,6 +435,9 @@ class Service < ApplicationRecord
     parent_service.remove_resource(self)
   end
 
+  def configuration_script
+  end
+
   private
 
   def apply_dialog_settings
