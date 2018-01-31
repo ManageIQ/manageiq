@@ -51,6 +51,11 @@ class MiqServer < ApplicationRecord
     where(:status => STATUSES_ACTIVE)
   end
 
+  def hostname
+    h = super
+    h if h.to_s.hostname?
+  end
+
   def starting_server_record
     self.started_on = self.last_heartbeat = Time.now.utc
     self.stopped_on = ""
@@ -176,7 +181,7 @@ class MiqServer < ApplicationRecord
       server_hash[:ipaddress] = config_hash[:host] = ipaddr
     end
 
-    unless hostname.blank?
+    if hostname.present? && hostname.hostname?
       hostname = nil if hostname =~ /.*localhost.*/
       server_hash[:hostname] = config_hash[:hostname] = hostname
     end
