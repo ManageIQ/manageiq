@@ -52,6 +52,11 @@ class MiqServer < ApplicationRecord
     where(:status => STATUSES_ACTIVE)
   end
 
+  def hostname
+    h = super
+    h if h.to_s.hostname?
+  end
+
   def self.atStartup
     starting_roles = ::Settings.server.role
 
@@ -195,7 +200,7 @@ class MiqServer < ApplicationRecord
       server_hash[:ipaddress] = config_hash[:host] = ipaddr
     end
 
-    unless hostname.blank?
+    if hostname.present? && hostname.hostname?
       hostname = nil if hostname =~ /.*localhost.*/
       server_hash[:hostname] = config_hash[:hostname] = hostname
     end

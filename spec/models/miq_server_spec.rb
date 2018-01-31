@@ -12,6 +12,13 @@ describe MiqServer do
     described_class.invoke_at_startups
   end
 
+  context "#hostname" do
+    it("with a valid hostname")    { expect(MiqServer.new(:hostname => "test").hostname).to eq("test") }
+    it("with a valid fqdn")        { expect(MiqServer.new(:hostname => "test.example.com").hostname).to eq("test.example.com") }
+    it("with an invalid hostname") { expect(MiqServer.new(:hostname => "test_host").hostname).to be_nil }
+    it("without a hostname")       { expect(MiqServer.new.hostname).to be_nil }
+  end
+
   context ".my_guid" do
     let(:guid_file) { Rails.root.join("GUID") }
 
