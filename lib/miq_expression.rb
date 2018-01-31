@@ -806,15 +806,19 @@ class MiqExpression
       result[:format_sub_type] = MiqReport::Formats.sub_type(col.to_sym) || result[:data_type]
       result[:virtual_column] = model.virtual_attribute?(col.to_s)
       result[:sql_support] = !result[:virtual_reflection] && model.attribute_supported_by_sql?(col.to_s)
-      result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)
+      result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(f, options)
     end
     result
   end
 
-  def self.exclude_col_by_preprocess_options?(col, options)
-    return false unless options.kind_of?(Hash)
-    return false unless options[:vim_performance_daily_adhoc]
-    Metric::Rollup.excluded_col_for_expression?(col.to_sym)
+  def self.exclude_col_by_preprocess_options?(field, options)
+    if options.kind_of?(Hash) && options[:vim_performance_daily_adhoc]
+      Metric::Rollup.excluded_col_for_expression?(field.column.to_sym)
+    elsif field.target == Service
+      Service::AGGREGATE_ALL_VM_ATTRS.include?(field.column.to_sym)
+    else
+      false
+    end
   end
 
   def lenient_evaluate(obj, tz = nil)
