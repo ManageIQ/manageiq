@@ -158,7 +158,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
 
     tid = Thread.new do
       begin
-        monitor_events
+        can_monitor? ? monitor_events : wait_silently
       rescue EventCatcherHandledException
         Thread.exit
       rescue TemporaryFailure
@@ -176,6 +176,18 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     _log.info("#{log_prefix} Started Event Monitor Thread")
 
     tid
+  end
+
+  def wait_silently
+    _log.info("#{log_prefix} Event Monitor Thread waiting silently")
+    until @exit_requested
+      event_monitor_running
+      sleep 5
+    end
+  end
+
+  def can_monitor?
+    true
   end
 
   def drain_queue
