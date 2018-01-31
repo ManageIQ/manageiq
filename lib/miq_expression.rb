@@ -482,9 +482,13 @@ class MiqExpression
   end
 
   def self.exclude_col_by_preprocess_options?(field, options)
-    return false unless options.kind_of?(Hash)
-    return false unless options[:vim_performance_daily_adhoc]
-    Metric::Rollup.excluded_col_for_expression?(field.column.to_sym)
+    if options.kind_of?(Hash) && options[:vim_performance_daily_adhoc]
+      Metric::Rollup.excluded_col_for_expression?(field.column.to_sym)
+    elsif field.target == Service
+      Service::AGGREGATE_ALL_VM_ATTRS.include?(field.column.to_sym)
+    else
+      false
+    end
   end
 
   def lenient_evaluate(obj, tz = nil)
