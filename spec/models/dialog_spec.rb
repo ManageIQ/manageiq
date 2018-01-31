@@ -391,6 +391,36 @@ describe Dialog do
       end
     end
 
+    context "non-circular field associations" do
+      let(:dialog_tab) { FactoryGirl.create(:dialog_tab, :dialog => dialog) }
+      let(:dialog_group) { FactoryGirl.create(:dialog_group, :dialog_tab => dialog_tab) }
+      let(:dialog_field1) { FactoryGirl.build(:dialog_field, :dialog_group => dialog_group, :label => 'field 1', :name => 'field1') }
+      let(:dialog_field2) { FactoryGirl.build(:dialog_field, :dialog_group => dialog_group, :label => 'field 2', :name => 'field2') }
+      let(:dialog_field3) { FactoryGirl.build(:dialog_field, :dialog_group => dialog_group, :label => 'field 3', :name => 'field3') }
+
+      before do
+        FactoryGirl.create(:dialog_field_association, :trigger => dialog_field1, :respond => dialog_field2)
+        dialog.dialog_tabs << dialog_tab
+      end
+
+      it "adds error on simple circular reference" do
+        FactoryGirl.create(:dialog_field_association, :trigger => dialog_field2, :respond => dialog_field1)
+
+        expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog field associations cannot be circular/)
+      end
+
+      it "adds error on complex circular reference" do
+        FactoryGirl.create(:dialog_field_association, :trigger => dialog_field2, :respond => dialog_field3)
+        FactoryGirl.create(:dialog_field_association, :trigger => dialog_field3, :respond => dialog_field1)
+
+        expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, /Dialog field associations cannot be circular/)
+      end
+
+      it "validates with non-circular reference" do
+        expect { dialog.save! }.not_to raise_error
+      end
+    end
+
     it "validates with tab" do
       dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
       expect_any_instance_of(DialogTab).to receive(:valid?)
