@@ -235,13 +235,21 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
-  describe "sql detection" do
+  describe "#attribute_supported_by_sql?" do
     it "detects if column is supported by sql with custom_attribute" do
       expect(MiqExpression::Field.parse("Vm-virtual_custom_attribute_example").attribute_supported_by_sql?).to be_falsey
     end
 
     it "detects if column is supported by sql with regular column" do
       expect(MiqExpression::Field.parse("Vm-name").attribute_supported_by_sql?).to be_truthy
+    end
+
+    it "detects if column is supported by sql through regular association" do
+      expect(MiqExpression::Field.parse("Host.vms-name").attribute_supported_by_sql?).to be_truthy
+    end
+
+    it "detects if column is supported by sql through virtual association" do
+      expect(MiqExpression::Field.parse("Vm.service-name").attribute_supported_by_sql?).to be_falsey
     end
   end
 
@@ -282,6 +290,20 @@ RSpec.describe MiqExpression::Field do
 
     it "detects string as non-numeric" do
       expect(MiqExpression::Field.parse("Vm-name")).not_to be_numeric
+    end
+  end
+
+  describe "#reflection_supported_by_sql?" do
+    it "detects if column is accessed directly" do
+      expect(MiqExpression::Field.parse("Host-name")).to be_reflection_supported_by_sql
+    end
+
+    it "detects if column is accessed through regular association" do
+      expect(MiqExpression::Field.parse("Host.vms-name")).to be_reflection_supported_by_sql
+    end
+
+    it "detects if column is accessed through regular virtual association" do
+      expect(MiqExpression::Field.parse("Vm.service-name")).not_to be_reflection_supported_by_sql
     end
   end
 
