@@ -433,6 +433,9 @@ class Service < ApplicationRecord
     parenent_service.remove_resource(self)
   end
 
+  def configuration_script
+  end
+
   private
 
   def apply_dialog_settings
