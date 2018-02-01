@@ -14,6 +14,7 @@ describe MiqRequest do
         :VmReconfigureRequest                     => {:vm_reconfigure            => "VM Reconfigure"},
         :VmCloudReconfigureRequest                => {:vm_cloud_reconfigure      => "VM Cloud Reconfigure"},
         :VmMigrateRequest                         => {:vm_migrate                => "VM Migrate"},
+        :VmRetireRequest                          => {:vm_retire                 => "VM Retire"},
         :AutomationRequest                        => {:automation                => "Automation"},
         :ServiceTemplateProvisionRequest          => {:clone_to_service          => "Service Provision"},
         :ServiceReconfigureRequest                => {:service_reconfigure       => "Service Reconfigure"},

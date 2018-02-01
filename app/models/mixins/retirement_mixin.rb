@@ -125,11 +125,13 @@ module RetirementMixin
       return if retired_validated?
       _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
     else
-      update_attributes(:retirement_requester => requester)
-      event_name = "request_#{retirement_event_prefix}_retire"
-      _log.info("calling #{event_name}")
+      _log.info("Creating request for #{self.class.name} #{id}")
       begin
-        raise_retirement_event(event_name, requester)
+        options = {:src_ids => id}
+        VmRetireRequest.make_request(@request_id, options, User.current_user.try(:userid))
+
+        # still need the next line for orchestration and services
+        # raise_retirement_event(event_name, requester)
       rescue => err
         _log.log_backtrace(err)
       end
