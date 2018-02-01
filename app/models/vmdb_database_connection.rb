@@ -124,7 +124,7 @@ class VmdbDatabaseConnection < ApplicationRecord
   end
 
   def miq_server
-    @miq_server ||= miq_worker ? miq_worker.miq_server : MiqServer.find_started_in_my_region.find_by(:sql_spid => spid)
+    @miq_server ||= miq_worker.try(:miq_server) || MiqServer.find_started_in_my_region.find_by(:sql_spid => spid)
   end
 
   def zone
