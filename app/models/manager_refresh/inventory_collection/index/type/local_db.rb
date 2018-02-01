@@ -93,7 +93,7 @@ module ManagerRefresh
             all_values = []
             full_references.each do |ref|
               value = []
-              schema.each do |schema_item_path, _column_name|
+              schema.each_key do |schema_item_path|
                 value << fetch_hash_path(schema_item_path, ref)
               end
               all_values << value
