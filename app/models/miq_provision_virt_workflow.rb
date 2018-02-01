@@ -938,6 +938,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def self.from_ws_ver_1_x(version, user, template_fields, vm_fields, requester, tags, options)
+    custom_spec_existence(vm_fields["sysprep_custom_spec"], vm_fields["sysprep_spec_override"])
+
     options = MiqHashStruct.new if options.nil?
     _log.warn("Web-service provisioning starting with interface version <#{version}> by requester <#{user.userid}>")
 
@@ -972,6 +974,50 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   rescue => err
     _log.error("<#{err}>")
     raise err
+  end
+
+  def self.custom_spec_existence(custom_spec_name, override)
+    if custom_spec_name.nil?
+      options[:sysprep_enabled] = ['disabled', '(Do not customize)']
+      update_attribute(:options, options)
+    else
+      custom_spec_workflow(custom_spec_name, override)
+    end
+    true
+  end
+
+  def self.custom_spec_workflow(custom_spec_name, override)
+    custom_spec_name = custom_spec_name.name unless custom_spec_name.kind_of?(String)
+    workflow do |prov_wf|
+      options[:sysprep_enabled] = %w(fields Specification)
+      prov_wf.init_from_dialog(options)
+      prov_wf.get_all_dialogs
+      prov_wf.allowed_customization_specs
+      prov_wf.get_timezones
+      prov_wf.refresh_field_values(options)
+      custom_spec = prov_wf.allowed_customization_specs.detect { |cs| cs.name == custom_spec_name }
+      if custom_spec.nil?
+        raise MiqException::MiqProvisionError,
+              _("Customization Specification [%{name}] does not exist.") % {:name => custom_spec_name}
+      end
+
+      options[:sysprep_custom_spec] = [custom_spec.id, custom_spec.name]
+      override_value = override == false ? [false, 0] : [true, 0]
+      options[:sysprep_spec_override] = override_value
+      # Call refresh_field_values a second time so it recognizes the config change
+      # and loads the defaults the customization spec settings
+      apply_config_changes(prov_wf, options)
+      update_attribute(:options, options)
+    end
+  end
+
+  def self.apply_config_changes(prov_wf, options)
+    prov_wf.refresh_field_values(options)
+    self.options.keys.each do |key|
+      v_old = self.options[key]
+      v_new = options[key]
+      _log.info("option <#{key}> was changed from <#{v_old.inspect}> to <#{v_new.inspect}>") unless v_old == v_new
+    end
   end
 
   private
@@ -1090,4 +1136,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     raise _("Unable to find Host with Id: [%{id}]") % {:id => src[:host_id]} if src[:host].nil?
     [load_ar_obj(src[:host])]
   end
+
+  private_class_method :custom_spec_existence, :custom_spec_workflow, :apply_config_changes
 end
