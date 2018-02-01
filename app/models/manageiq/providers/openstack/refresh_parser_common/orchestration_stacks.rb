@@ -16,7 +16,7 @@ module ManageIQ::Providers
         private
 
         def stacks
-          @stacks ||= detailed_stacks
+          @stacks ||= uniques(detailed_stacks)
         end
 
         def detailed_stacks

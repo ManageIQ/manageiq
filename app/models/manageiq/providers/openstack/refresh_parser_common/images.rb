@@ -7,6 +7,7 @@ module ManageIQ::Providers::Openstack
                  else
                    @image_service.handled_list(:images)
                  end
+        images = uniques(images)
         process_collection(images, :vms) { |image| parse_image(image) }
       end
 

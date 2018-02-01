@@ -7,6 +7,7 @@ module ManageIQ::Providers::Openstack
                   else
                     @connection.handled_list(:flavors)
                   end
+        flavors = uniques(flavors)
         process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
       end
 
