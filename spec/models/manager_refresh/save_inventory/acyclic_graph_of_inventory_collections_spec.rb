@@ -1,5 +1,5 @@
 require_relative 'spec_helper'
-require_relative 'spec_parsed_data'
+require_relative '../helpers/spec_parsed_data'
 
 describe ManagerRefresh::SaveInventory do
   include SpecHelper
@@ -673,7 +673,7 @@ describe ManagerRefresh::SaveInventory do
             :model_class => Hardware,
             :parent      => @ems,
             :association => :hardwares,
-            :manager_ref => [:vm_or_template, :virtualization_type]
+            :manager_ref => %i(vm_or_template virtualization_type)
           )
 
           @vm_data_1       = vm_data(1)
@@ -778,13 +778,13 @@ describe ManagerRefresh::SaveInventory do
       :model_class => Disk,
       :parent      => @ems,
       :association => :disks,
-      :manager_ref => [:hardware, :device_name]
+      :manager_ref => %i(hardware device_name)
     )
     @data[:networks] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => Network,
       :parent      => @ems,
       :association => :networks,
-      :manager_ref => [:hardware, :description]
+      :manager_ref => %i(hardware description)
     )
     @data[:flavors] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => Flavor,
@@ -807,13 +807,20 @@ describe ManagerRefresh::SaveInventory do
     @key_pair_data_2  = key_pair_data(2)
     @key_pair_data_3  = key_pair_data(3)
 
+    lazy_find_vm_1       = @data[:vms].lazy_find(:ems_ref => vm_data(1)[:ems_ref])
+    lazy_find_hardware_1 = @data[:hardwares].lazy_find(:vm_or_template => lazy_find_vm_1)
+    lazy_find_vm_2       = @data[:vms].lazy_find(:ems_ref => vm_data(2)[:ems_ref])
+    lazy_find_hardware_2 = @data[:hardwares].lazy_find(:vm_or_template => lazy_find_vm_2)
+    lazy_find_vm_4       = @data[:vms].lazy_find(:ems_ref => vm_data(4)[:ems_ref])
+    lazy_find_hardware_4 = @data[:hardwares].lazy_find(:vm_or_template => lazy_find_vm_4)
+
     @vm_data_1 = vm_data(1).merge(
       :flavor           => @data[:flavors].lazy_find(flavor_data(1)[:name]),
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(1)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(1)[:name])],
-      :location         => @data[:networks].lazy_find("#{vm_data(1)[:ems_ref]}__public",
-                                                      :key     => :hostname,
-                                                      :default => 'default_value_unknown'),
+      :location         => @data[:networks].lazy_find({:hardware => lazy_find_hardware_1, :description => "public"},
+                                                      {:key     => :hostname,
+                                                       :default => 'default_value_unknown'}),
     )
 
     @vm_data_12 = vm_data(12).merge(
@@ -822,27 +829,27 @@ describe ManagerRefresh::SaveInventory do
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(1)[:name]),
                             @data[:key_pairs].lazy_find(key_pair_data(1)[:name]),
                             @data[:key_pairs].lazy_find(key_pair_data(12)[:name])],
-      :location         => @data[:networks].lazy_find("#{vm_data(1)[:ems_ref]}__public",
-                                                      :key     => :hostname,
-                                                      :default => 'default_value_unknown'),
+      :location         => @data[:networks].lazy_find({:hardware => lazy_find_hardware_1, :description => "public"},
+                                                      {:key     => :hostname,
+                                                       :default => 'default_value_unknown'}),
     )
 
     @vm_data_2 = vm_data(2).merge(
       :flavor           => @data[:flavors].lazy_find(flavor_data(2)[:name]),
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])],
-      :location         => @data[:networks].lazy_find("#{vm_data(2)[:ems_ref]}__public",
-                                                      :key     => :hostname,
-                                                      :default => 'default_value_unknown'),
+      :location         => @data[:networks].lazy_find({:hardware => lazy_find_hardware_2, :description => "public"},
+                                                      {:key     => :hostname,
+                                                       :default => 'default_value_unknown'}),
     )
 
     @vm_data_4 = vm_data(4).merge(
       :flavor           => @data[:flavors].lazy_find(flavor_data(4)[:name]),
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(4)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(4)[:name])].compact,
-      :location         => @data[:networks].lazy_find("#{vm_data(4)[:ems_ref]}__public",
-                                                      :key     => :hostname,
-                                                      :default => 'default_value_unknown'),
+      :location         => @data[:networks].lazy_find({:hardware => lazy_find_hardware_4, :description => "public"},
+                                                      {:key     => :hostname,
+                                                       :default => 'default_value_unknown'}),
     )
 
     @hardware_data_1 = hardware_data(1).merge(
@@ -861,41 +868,41 @@ describe ManagerRefresh::SaveInventory do
     )
 
     @disk_data_1 = disk_data(1).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref]),
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(1)[:ems_ref])),
     )
 
     @disk_data_12 = disk_data(12).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(12)[:ems_ref]),
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(12)[:ems_ref])),
     )
 
     @disk_data_13 = disk_data(13).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(12)[:ems_ref]),
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(12)[:ems_ref])),
     )
 
     @disk_data_2 = disk_data(2).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(2)[:ems_ref]),
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(2)[:ems_ref])),
     )
 
     @public_network_data_1 = public_network_data(1).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref]),
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(1)[:ems_ref])),
     )
 
     @public_network_data_12 = public_network_data(12).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(12)[:ems_ref]),
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(12)[:ems_ref])),
     )
 
     @public_network_data_13 = public_network_data(13).merge(
-      :hardware    => @data[:hardwares].lazy_find(vm_data(12)[:ems_ref]),
+      :hardware    => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(12)[:ems_ref])),
       :description => "public_2"
     )
 
     @public_network_data_14 = public_network_data(14).merge(
-      :hardware    => @data[:hardwares].lazy_find(vm_data(12)[:ems_ref]),
+      :hardware    => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(12)[:ems_ref])),
       :description => "public_2" # duplicate key, network will be ignored
     )
 
     @public_network_data_2 = public_network_data(2).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(2)[:ems_ref]),
+      :hardware => @data[:hardwares].lazy_find(@data[:vms].lazy_find(vm_data(2)[:ems_ref])),
     )
   end
 

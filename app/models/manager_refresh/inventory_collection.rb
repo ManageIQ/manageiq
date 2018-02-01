@@ -57,14 +57,6 @@ module ManagerRefresh
     #   InventoryCollection, since it is already persisted into the DB.
     attr_accessor :saved
 
-    # @return [Set] A set of InventoryObjects manager_uuids, which tells us which InventoryObjects were
-    #         referenced by other InventoryObjects using a lazy_find.
-    attr_accessor :references
-
-    # @return [Set] A set of InventoryObject attributes names, which tells us InventoryObject attributes
-    #         were referenced by other InventoryObject objects using a lazy_find with :key.
-    attr_accessor :attribute_references
-
     # If present, InventoryCollection switches into delete_complement mode, where it will
     # delete every record from the DB, that is not present in this list. This is used for the batch processing,
     # where we don't know which InventoryObject should be deleted, but we know all manager_uuids of all
@@ -87,7 +79,7 @@ module ManagerRefresh
                 :inventory_object_attributes, :name, :saver_strategy, :manager_uuids,
                 :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :created_records, :updated_records, :deleted_records,
-                :custom_reconnect_block, :batch_extra_attributes
+                :custom_reconnect_block, :batch_extra_attributes, :references_storage
 
     delegate :<<,
              :build,
@@ -103,6 +95,14 @@ module ManagerRefresh
              :to_a,
              :to_raw_data,
              :to => :data_storage
+
+    delegate :add_reference,
+             :attribute_references,
+             :build_reference,
+             :references,
+             :build_stringified_reference,
+             :build_stringified_reference_for_record,
+             :to => :references_storage
 
     delegate :find,
              :find_by,
@@ -439,7 +439,7 @@ module ManagerRefresh
       @custom_save_block      = custom_save_block
       @custom_reconnect_block = custom_reconnect_block
       @check_changed          = check_changed.nil? ? true : check_changed
-      @internal_attributes    = [:__feedback_edge_set_parent, :__parent_inventory_collections]
+      @internal_attributes    = %i(__feedback_edge_set_parent __parent_inventory_collections)
       @complete               = complete.nil? ? true : complete
       @update_only            = update_only.nil? ? false : update_only
       @builder_params         = builder_params
@@ -465,10 +465,9 @@ module ManagerRefresh
       @attributes_whitelist             = Set.new
       @transitive_dependency_attributes = Set.new
       @dependees                        = Set.new
-      @references                       = Set.new
-      @attribute_references             = Set.new
 
-      @data_storage = ManagerRefresh::InventoryCollection::DataStorage.new(self, secondary_refs)
+      @data_storage = ::ManagerRefresh::InventoryCollection::DataStorage.new(self, secondary_refs)
+      @references_storage = ::ManagerRefresh::InventoryCollection::ReferencesStorage.new(index_proxy)
 
       @created_records = []
       @updated_records = []
@@ -567,6 +566,11 @@ module ManagerRefresh
       value.kind_of?(::ManagerRefresh::InventoryObjectLazy)
     end
 
+    def object_index_with_keys(keys, record)
+      # TODO(lsmola) remove, last usage is in k8s reconnect logic
+      build_stringified_reference_for_record(record, keys)
+    end
+
     def noop?
       # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
       if targeted?
@@ -609,7 +613,7 @@ module ManagerRefresh
       end
 
       if attributes_whitelist.present?
-        filtered_attributes = filtered_attributes.reject { |key, _value| !attributes_whitelist.include?(key) }
+        filtered_attributes = filtered_attributes.select { |key, _value| attributes_whitelist.include?(key) }
       end
 
       filtered_attributes
@@ -622,7 +626,7 @@ module ManagerRefresh
       # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
       # that have presence validation
       fixed_attributes = manager_ref
-      fixed_attributes += presence_validators.attributes unless presence_validators.blank?
+      fixed_attributes += presence_validators.attributes if presence_validators.present?
       fixed_attributes
     end
 
@@ -752,8 +756,8 @@ module ManagerRefresh
     end
 
     def to_s
-      whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" unless attributes_whitelist.blank?
-      blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" unless attributes_blacklist.blank?
+      whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" if attributes_whitelist.present?
+      blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" if attributes_blacklist.present?
 
       strategy_name = ", strategy: #{strategy}" if strategy
 
@@ -774,24 +778,8 @@ module ManagerRefresh
       10_000
     end
 
-    def hash_index_with_keys(keys, hash)
-      stringify_reference(keys.map { |attribute| hash[attribute].to_s })
-    end
-
-    def object_index_with_keys(keys, object)
-      stringify_reference(keys.map { |attribute| object.public_send(attribute).to_s })
-    end
-
-    def stringify_joiner
-      "__"
-    end
-
-    def stringify_reference(reference)
-      reference.join(stringify_joiner)
-    end
-
     def build_multi_selection_condition(hashes, keys = nil)
-      keys       ||= manager_ref
+      keys ||= manager_ref
       table_name = model_class.table_name
       cond_data  = hashes.map do |hash|
         "(#{keys.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"

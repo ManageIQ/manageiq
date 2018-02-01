@@ -4,8 +4,6 @@ module ManagerRefresh::SaveCollection
       include Vmdb::Logging
       include ManagerRefresh::SaveCollection::Saver::SqlHelper
 
-      attr_reader :inventory_collection, :association
-
       def initialize(inventory_collection)
         @inventory_collection = inventory_collection
         # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
@@ -67,6 +65,12 @@ module ManagerRefresh::SaveCollection
         save!(association)
       end
 
+      protected
+
+      attr_reader :inventory_collection, :association
+
+      delegate :build_stringified_reference, :build_stringified_reference_for_record, :to => :inventory_collection
+
       private
 
       attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
@@ -78,7 +82,7 @@ module ManagerRefresh::SaveCollection
         inventory_objects_index = {}
         inventory_collection.each do |inventory_object|
           attributes = inventory_object.attributes(inventory_collection)
-          index      = inventory_collection.hash_index_with_keys(unique_index_keys, attributes)
+          index      = build_stringified_reference(attributes, unique_index_keys)
 
           attributes_index[index]        = attributes
           inventory_objects_index[index] = inventory_object
@@ -88,7 +92,7 @@ module ManagerRefresh::SaveCollection
         # Records that are in the DB, we will be updating or deleting them.
         ActiveRecord::Base.transaction do
           association.find_each do |record|
-            index = inventory_collection.object_index_with_keys(unique_index_keys, record)
+            index = build_stringified_reference_for_record(record, unique_index_keys)
 
             next unless assert_distinct_relation(record.id)
             next unless assert_unique_record(record, index)
@@ -283,7 +287,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def serializable_keys?
-        @serializable_keys_bool_cache ||= !serializable_keys.blank?
+        @serializable_keys_bool_cache ||= serializable_keys.present?
       end
 
       def supports_remote_data_timestamp?(all_attribute_keys)

@@ -51,7 +51,7 @@ module ManagerRefresh::SaveCollection
 
         inventory_collection.each do |inventory_object|
           attributes = inventory_object.attributes_with_keys(inventory_collection, all_attribute_keys)
-          index      = inventory_collection.hash_index_with_keys(unique_index_keys, attributes)
+          index      = build_stringified_reference(attributes, unique_index_keys)
 
           # Interesting fact: not building attributes_index and using only inventory_objects_index doesn't do much
           # of a difference, since the most objects inside are shared.
@@ -101,6 +101,8 @@ module ManagerRefresh::SaveCollection
             next unless assert_distinct_relation(primary_key_value)
 
             # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
+            # TODO(lsmola) maybe we can drop the whole pure sql fetching, since everything will be targeted refresh
+            # with streaming refresh? Maybe just metrics and events will not be, but those should be upsert only
             index = unique_index_keys_to_s.map do |attribute|
               if attribute == "timestamp"
                 type = model_class.type_for_attribute(attribute)
@@ -108,7 +110,7 @@ module ManagerRefresh::SaveCollection
               else
                 record_key(record, attribute).to_s
               end
-            end.join(inventory_collection.stringify_joiner)
+            end.join("__")
 
             inventory_object = inventory_objects_index.delete(index)
             hash             = attributes_index.delete(index)

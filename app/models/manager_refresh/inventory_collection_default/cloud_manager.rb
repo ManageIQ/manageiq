@@ -37,6 +37,33 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
       attributes.merge!(extra_attributes)
     end
+
+    def vm_and_template_labels(extra_attributes = {})
+      # TODO(lsmola) make a generic CustomAttribute IC and move it to base class
+      attributes = {
+        :model_class                  => CustomAttribute,
+        :association                  => :vm_and_template_labels,
+        :manager_ref                  => [:resource, :name],
+        :parent_inventory_collections => [:vms, :miq_templates],
+        :inventory_object_attributes  => [
+          :resource,
+          :section,
+          :name,
+          :value,
+          :source,
+        ]
+      }
+
+      attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        inventory_collection.parent.vm_and_template_labels.where(
+          'vms' => {:ems_ref => manager_uuids}
+        )
+      end
+
+      attributes.merge!(extra_attributes)
+    end
+
     def networks(extra_attributes = {})
       attributes = {
         :model_class                  => ::Network,

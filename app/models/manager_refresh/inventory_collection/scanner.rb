@@ -126,15 +126,11 @@ module ManagerRefresh
 
         # Storing a reference in the target inventory_collection, then each IC knows about all the references and can
         # e.g. load all the referenced uuids from a DB
-        value_to_s = value.to_s
-        value_inventory_collection.references << value_to_s if value_to_s
+        value_inventory_collection.add_reference(value.reference, :key => value.try(:key))
 
         if inventory_object_lazy?(value)
           # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
           transitive_dependency_attributes << key if value.transitive_dependency?
-
-          # If we access an attribute of the value, using a :key, we want to keep a track of that
-          value_inventory_collection.attribute_references << value.key if value.key
         end
       end
     end
