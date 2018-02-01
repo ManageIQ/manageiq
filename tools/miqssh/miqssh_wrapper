@@ -1,8 +1,5 @@
 #!/bin/bash
 #
-# Author: Jeffrey Cutter
-# License: GPL v3
-#
 
 NAME=$(basename $0)
 DIR=$(dirname $0)
