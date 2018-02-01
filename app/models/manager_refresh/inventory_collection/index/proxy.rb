@@ -56,7 +56,7 @@ module ManagerRefresh
 
         def find(reference, ref: primary_index_ref)
           # TODO(lsmola) lazy_find will support only hash, then we can remove the _by variant
-          # TODO(lsmola) this method shoul return lazy too, the rest of the finders should be deprecated
+          # TODO(lsmola) this method should return lazy too, the rest of the finders should be deprecated
           return if reference.nil?
           return unless assert_index(reference, ref)
 
