@@ -38,7 +38,8 @@ module ManagerRefresh
                :to => :inventory_collection
 
       # The data scanner modifies inside of the :inventory_collection
-      delegate :attribute_references,
+      delegate :association_to_class_mapping,
+               :attribute_references,
                :data_collection_finalized=,
                :dependency_attributes,
                :manager_uuids,
@@ -131,6 +132,42 @@ module ManagerRefresh
         if inventory_object_lazy?(value)
           # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
           transitive_dependency_attributes << key if value.transitive_dependency?
+        end
+
+        unless Rails.env.production?
+          # TODO(lsmola) in the future, we might want to move this to an attribute setter, then we would see a traceback
+          # pointing into the exact place in the parser.
+          #
+          # Lets do correctness asserts, to help developers to find bugs
+          assert_attribute!(key, value)
+        end
+      end
+
+      def assert_attribute!(key, value)
+        assert_correct_relation_type!(key, value)
+      end
+
+      def assert_correct_relation_type!(key, value)
+        # TODO(lsmola) we check for relationships that can't be nil before save, maybe we should unify this?
+        return unless value # nil can be assigned to any association
+        return unless association_to_class_mapping[key] # For polymorphic associations, this is empty
+
+        value_class = if inventory_object_lazy?(value) && value.key
+                        value.inventory_collection.association_to_class_mapping[value.key]
+                      elsif
+                        value.inventory_collection.model_class
+                      end
+
+        # value_class can still be nil e.g. if the :key points to polymorphic relation or is not defined as relation
+        return unless value_class
+
+        unless association_to_class_mapping[key] >= value_class
+          # The class of the object we are putting into relation has to be the same class or subclass of what is defined
+          # in the relation.
+          raise "Wrong relation found in InventoryCollection<:#{inventory_collection.name}> and attribute<:#{key}>. "\
+                "Trying to assign object of InventoryCollection<:#{value.inventory_collection.name}> with class "\
+                "#{value.inventory_collection.model_class}, but the :#{key} relation requires that the class is >= "\
+                "#{association_to_class_mapping[key]}."
         end
       end
     end

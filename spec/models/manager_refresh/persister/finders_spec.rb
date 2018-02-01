@@ -22,6 +22,50 @@ describe ManagerRefresh::Inventory::Persister do
 
   let(:persister) { create_persister }
 
+  context "check lazy find correct type" do
+    it "throws exception when we try to fill relation with lazy inventory object of a wrong type" do
+      bad_lazy_find = persister.network_ports.lazy_find(:ems_ref => network_port_data(1)[:ems_ref])
+      persister.hardwares.build(hardware_data(1, :vm_or_template => bad_lazy_find))
+
+      # Save the collections, which invokes scanner and that should explode with exception
+      expect { persister.persist! }.to(
+        raise_error(
+          "Wrong relation found in InventoryCollection<:hardwares> and attribute<:vm_or_template>. Trying to assign "\
+          "object of InventoryCollection<:network_ports> with class NetworkPort, but the :vm_or_template relation "\
+          "requires that the class is >= VmOrTemplate.")
+      )
+    end
+
+    it "throws exception when we try to fill relation with inventory object of a wrong type" do
+      bad_inventory_object = persister.network_ports.build(:ems_ref => network_port_data(1)[:ems_ref])
+      persister.hardwares.build(hardware_data(1, :vm_or_template => bad_inventory_object))
+
+      # Save the collections, which invokes scanner and that should explode with exception
+      expect { persister.persist! }.to(
+        raise_error(
+          "Wrong relation found in InventoryCollection<:hardwares> and attribute<:vm_or_template>. Trying to assign "\
+          "object of InventoryCollection<:network_ports> with class NetworkPort, but the :vm_or_template relation "\
+          "requires that the class is >= VmOrTemplate.")
+      )
+    end
+
+    it "ignores polymoprphic relations, since any table is allowed there" do
+      persister.network_ports.build(
+        network_port_data(1).merge(
+          :device => persister.vms.lazy_find("fake")
+        )
+      )
+
+      persister.network_ports.build(
+        network_port_data(1).merge(
+          :device => persister.cloud_networks.lazy_find("fake")
+        )
+      )
+
+      persister.persist! # passes without exceptions
+    end
+  end
+
   it "raises an exception when relation object is needed, but something else is provided" do
     expected_error = "Wrong index for key :vm_or_template, the value must be of type Nil or InventoryObject or InventoryObjectLazy, got: not_allowed_string"
     expect do

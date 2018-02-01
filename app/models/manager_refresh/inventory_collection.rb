@@ -674,6 +674,14 @@ module ManagerRefresh
       end
     end
 
+    def association_to_class_mapping
+      return {} unless model_class
+
+      @association_to_class_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.name] = x.klass unless x.polymorphic?
+      end
+    end
+
     def foreign_keys
       return [] unless model_class
 
