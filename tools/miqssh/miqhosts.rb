@@ -32,7 +32,6 @@ def load_file(file)
     data[k].uniq!
     data[k].sort!
   end
-  #return data
 end
 
 # Method to list the valid groups.
