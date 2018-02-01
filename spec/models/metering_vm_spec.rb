@@ -98,4 +98,38 @@ describe MeteringVm do
       end
     end
   end
+
+  let(:allowed_attributes) do
+    %w(start_date
+       end_date
+       interval_name
+       display_range
+       entity
+       tag_name
+       label_name
+       fixed_compute_metric
+       id
+       vm_id
+       vm_name
+       vm_uid
+       vm_guid
+       owner_name
+       provider_name
+       provider_uid
+       cpu_allocated_metric
+       cpu_used_metric
+       disk_io_used_metric
+       memory_allocated_metric
+       memory_used_metric
+       net_io_used_metric
+       storage_allocated_metric
+       storage_used_metric
+       metering_used_metric
+       existence_hours_metric
+  )
+  end
+
+  it 'lists proper attributes' do
+    expect(described_class.attribute_names).to match_array(allowed_attributes)
+  end
 end
