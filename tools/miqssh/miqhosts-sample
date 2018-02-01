@@ -1,0 +1,12 @@
+# This file is a sample.  See miqhosts-gen script to generate this file by querying the VMDB.
+#
+# hostname_or_ip  <white space>	groups to assign host to separated by commas.
+#
+# Lines starting with a # are ignored.
+#
+miqdb01.example.com db
+miqui01.example.com ui
+miqwrk01.example.com workers,zone1
+miqwrk02.example.com workers,zone1
+miqwrk03.example.com workers,zone2
+miqwrk04.example.com workers,zone2
