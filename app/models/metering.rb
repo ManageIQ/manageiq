@@ -1,4 +1,14 @@
 module Metering
+  extend ActiveSupport::Concern
+
+  included do
+    DISALLOWED_SUFFIXES = %w(_cost chargeback_rates).freeze
+
+    def self.attribute_names
+      super.reject { |x| x.ends_with?(*DISALLOWED_SUFFIXES) }
+    end
+  end
+
   def calculate_costs(consumption, _)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
     self.metering_used_metric = consumption.metering_used_fields_present if consumption.metering_used_fields_present
