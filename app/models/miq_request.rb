@@ -77,6 +77,9 @@ class MiqRequest < ApplicationRecord
       :VmMigrateRequest                    => {
         :vm_migrate => N_("VM Migrate")
       },
+      :VmRetireRequest                     => {
+        :vm_retire => N_("VM Retire")
+      },
       :ServiceTemplateProvisionRequest     => {
         :clone_to_service => N_("Service Provision")
       },
