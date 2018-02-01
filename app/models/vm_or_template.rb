@@ -939,20 +939,13 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def storage2hosts
-    hosts = []
-    if host.nil?
-      store = storage
-      hosts = store.hosts if hosts.empty? && store
-      hosts = [myhost] if hosts.empty?
-    else
-      store = storage
-      hosts = store.hosts.to_a if hosts.empty? && store
-      hosts = [myhost] if hosts.empty?
+    hosts = storage.hosts.to_a if storage
+    hosts = [myhost] if hosts.blank?
+    return hosts unless host
 
-      # VMware needs a VMware host to resolve datastore names
-      if vendor == 'vmware'
-        hosts.delete_if { |h| !h.is_vmware? }
-      end
+    # VMware needs a VMware host to resolve datastore names
+    if vendor == 'vmware'
+      hosts.delete_if { |h| !h.is_vmware? }
     end
 
     hosts
