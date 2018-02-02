@@ -5,10 +5,8 @@
 # upgrades authentication mode from LDAP(s) to External Auth with SSSD
 # Alternatively, it will update all user records to have a userid in UPN format
 
-if __FILE__ == $PROGRAM_NAME
-  $LOAD_PATH.push(File.expand_path(__dir__))
-  $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(miqldap_to_sssd))))
-end
+$LOAD_PATH.push(File.expand_path(__dir__))
+$LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(miqldap_to_sssd))))
 
 require File.expand_path('../config/environment', __dir__)
 

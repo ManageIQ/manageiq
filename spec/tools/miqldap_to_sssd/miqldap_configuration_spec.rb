@@ -1,16 +1,15 @@
-$LOAD_PATH << Rails.root.join("tools", "miqldap_to_sssd").to_s
+$LOAD_PATH << Rails.root.join("tools").to_s
 
-require "miqldap_configuration"
+require "miqldap_to_sssd"
 
 describe MiqLdapToSssd::MiqLdapConfiguration do
   before do
-    stub_const("LOGGER", double)
-    allow(LOGGER).to receive(:debug)
+    allow(MiqLdapToSssd::LOGGER).to receive(:debug)
   end
 
   describe '#retrieve_initial_settings' do
     it 'raises an error when the basedn domain can not be determined' do
-      expect(LOGGER).to receive(:fatal)
+      expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
       subject = described_class.new(:basedn => nil, :basedn_domain => nil)
       expect { subject.retrieve_initial_settings }.to raise_error(MiqLdapToSssd::MiqLdapConfigurationArgumentError)
     end
