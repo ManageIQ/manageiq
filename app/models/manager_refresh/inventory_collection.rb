@@ -75,7 +75,7 @@ module ManagerRefresh
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :dependency_attributes, :manager_ref, :create_only,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :check_changed, :arel,
-                :inventory_object_attributes, :name, :saver_strategy, :manager_uuids, :builder_params,
+                :inventory_object_attributes, :name, :saver_strategy, :targeted_scope, :builder_params,
                 :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes, :references_storage
@@ -324,10 +324,10 @@ module ManagerRefresh
     #        ManagerRefresh::InventoryCollection objects, that serve as parents to this InventoryCollection. Then this
     #        InventoryCollection completeness will be encapsulated by the parent_inventory_collections :manager_uuids
     #        instead of this InventoryCollection :manager_uuids.
-    # @param manager_uuids [Array] Array of manager_uuids of the InventoryObjects we want to create/update/delete. Using
+    # @param manager_uuids [Array|Proc] Array of manager_uuids of the InventoryObjects we want to create/update/delete. Using
     #        this attribute, the db_collection_for_comparison will be automatically limited by the manager_uuids, in a
     #        case of a simple relation. In a case of a complex relation, we can leverage :manager_uuids in a
-    #        custom :targeted_arel.
+    #        custom :targeted_arel. We can pass also lambda, for lazy_evaluation.
     # @param all_manager_uuids [Array] Array of all manager_uuids of the InventoryObjects. With the :targeted true,
     #        having this parameter defined will invoke only :delete_method on a complement of this set, making sure
     #        the DB has only this set of data after. This :attribute serves for deleting of top level
@@ -399,7 +399,13 @@ module ManagerRefresh
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
 
       # Targeted mode related attributes
-      @manager_uuids                = Set.new.merge(manager_uuids)
+      # TODO(lsmola) Get rid of string references and enforce ManagerRefresh::InventoryCollection::Reference object here
+      @targeted_scope = manager_uuids.each_with_object({}) do |reference, obj|
+        reference_key      = reference.respond_to?(:stringified_reference) ? reference.stringified_reference : reference
+        reference_value    = reference.respond_to?(:stringified_reference) ? reference : nil
+        obj[reference_key] = reference_value
+      end
+      # TODO(lsmola) Should we refactor this to use references too?
       @all_manager_uuids            = all_manager_uuids
       @parent_inventory_collections = parent_inventory_collections
       @targeted_arel                = targeted_arel
@@ -527,12 +533,12 @@ module ManagerRefresh
     def noop?
       # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
       if targeted?
-        if parent_inventory_collections.nil? && manager_uuids.blank? &&
+        if parent_inventory_collections.nil? && targeted_scope.blank? &&
            all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil? &&
            skeletal_primary_index.blank?
           # It's a noop Parent targeted InventoryCollection
           true
-        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.manager_uuids.blank? } &&
+        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.targeted_scope.blank? } &&
               skeletal_primary_index.blank?
           # It's a noop Child targeted InventoryCollection
           true
@@ -733,6 +739,13 @@ module ManagerRefresh
       10_000
     end
 
+    def manager_uuids
+      # TODO(lsmola) LEGACY: this is still being used by :targetel_arel definitions and it expects array of strings
+      raise "This works only for :manager_ref size 1" if manager_ref.size > 1
+      key = manager_ref.first
+      transform_references_to_hashes(targeted_scope).map { |x| x[key] }
+    end
+
     def build_multi_selection_condition(hashes, keys = nil)
       keys ||= manager_ref
       table_name = model_class.table_name
@@ -748,25 +761,39 @@ module ManagerRefresh
       if targeted?
         if targeted_arel.respond_to?(:call)
           targeted_arel.call(self)
-        elsif manager_ref.count > 1
-          # TODO(lsmola) optimize with ApplicationRecordIterator
-          hashes = extract_references(manager_uuids)
-          full_collection_for_comparison.where(build_multi_selection_condition(hashes))
         else
-          ManagerRefresh::ApplicationRecordIterator.new(
-            :inventory_collection => self,
-            :manager_uuids_set    => manager_uuids.to_a.flatten.compact
-          )
+          targeted_iterator_for(targeted_scope)
         end
       else
         full_collection_for_comparison
       end
     end
 
+    def transform_references_to_hashes(references)
+      # TODO(lsmola) remove when we ensure only ManagerRefresh::InventoryCollection::Reference is in targeted_scope
+      string_references, references = references.partition { |_key, value| value.nil? }
+
+      hash_references = references.map { |x| x.second.full_reference }
+      hash_references.concat(extract_references(string_references.map(&:first)))
+    end
+
+    def targeted_selection_for(references)
+      build_multi_selection_condition(transform_references_to_hashes(references))
+    end
+
+    def targeted_iterator_for(references)
+      ManagerRefresh::ApplicationRecordIterator.new(
+        :inventory_collection => self,
+        :manager_uuids_set    => references
+      )
+    end
+
     # Extracting references to a relation friendly format
     #
     # @param new_references [Array] array of index_values of the InventoryObjects
     def extract_references(new_references = [])
+      # TODO(lsmola) Remove this when we allow only ManagerRefresh::InventoryCollection::Reference, decoding/encoding
+      # from string is ugly
       hash_uuids_by_ref = []
 
       new_references.each do |index_value|
@@ -783,9 +810,8 @@ module ManagerRefresh
       hash_uuids_by_ref
     end
 
-    def db_collection_for_comparison_for(manager_uuids_set)
-      # TODO(lsmola) this should have the build_multi_selection_condition, like in the method above
-      full_collection_for_comparison.where(manager_ref.first => manager_uuids_set)
+    def db_collection_for_comparison_for(references)
+      full_collection_for_comparison.where(targeted_selection_for(references))
     end
 
     def db_collection_for_comparison_for_complement_of(manager_uuids_set)
