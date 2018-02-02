@@ -41,7 +41,7 @@ module ManagerRefresh
       delegate :attribute_references,
                :data_collection_finalized=,
                :dependency_attributes,
-               :manager_uuids,
+               :targeted_scope,
                :parent_inventory_collections,
                :parent_inventory_collections=,
                :references,
@@ -60,9 +60,7 @@ module ManagerRefresh
 
           if targeted? && parent_inventory_collections.blank?
             # We want to track what manager_uuids we should query from a db, for the targeted refresh
-            # TODO(lsmola) this has to track references
-            manager_uuid = inventory_object.manager_uuid
-            manager_uuids << manager_uuid if manager_uuid
+            targeted_scope[inventory_object.manager_uuid] = inventory_object.reference
           end
         end
 
