@@ -275,6 +275,13 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       :tags => [:database_operations, :database_metrics_purge_schedule],
     ) { enqueue(:metric_purge_all_timer) }
 
+    sched = ::Settings.database.maintenance.reindex_schedule
+    _log.info("database_maintenance_reindex_schedule: #{sched}")
+    scheduler.schedule_cron(
+      sched,
+      :tags => %i(database_operations database_maintenance_reindex_schedule),
+    ) { enqueue(:database_maintenance_reindex_timer) }
+
     @schedules[:database_operations]
   end
 

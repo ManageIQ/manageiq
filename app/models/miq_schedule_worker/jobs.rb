@@ -139,6 +139,12 @@ class MiqScheduleWorker::Jobs
     end
   end
 
+  def database_maintenance_reindex_timer
+    ::Settings.database.maintenance.reindex_tables.each do |class_name|
+      queue_work(:class_name => class_name, :method_name => "reindex", :role => "database_operations", :zone => nil)
+    end
+  end
+
   def check_for_stuck_dispatch(threshold_seconds)
     class_n = "JobProxyDispatcher"
     method_n = "dispatch"
