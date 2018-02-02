@@ -94,12 +94,14 @@ class EvmDatabaseOps
 
       prepare_for_restore(db_opts[:local_file])
 
-      backup = PostgresAdmin.restore(db_opts)
+      # remove all the connections before we restore; AR will reconnect on the next query
+      ActiveRecord::Base.connection_pool.disconnect!
+      backup_file = PostgresAdmin.restore(db_opts)
     ensure
       session.disconnect if session
     end
 
-    uri ||= backup
+    uri ||= backup_file
     _log.info("[#{db_opts[:dbname]}] database has been restored from file: [#{uri}]")
     uri
   end
