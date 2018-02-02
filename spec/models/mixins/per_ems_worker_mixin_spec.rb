@@ -15,12 +15,37 @@ describe PerEmsWorkerMixin do
     expect(@worker_class.queue_name_for_ems(@ems)).to eq(@ems_queue_name)
   end
 
-  it ".all_valid_ems_in_zone" do
-    expect(@worker_class.all_valid_ems_in_zone).to be_empty
+  describe ".all_valid_ems_in_zone" do
+    it "ems enabled" do
+      expect(@worker_class.all_valid_ems_in_zone).to be_empty
 
-    @ems.update(:enabled => true)
-    @ems.authentications.first.validation_successful
-    expect(@worker_class.all_valid_ems_in_zone).to eq([@ems])
+      @ems.update(:enabled => true)
+      @ems.authentications.first.validation_successful
+      expect(@worker_class.all_valid_ems_in_zone).to eq([@ems])
+    end
+
+    context "worker_wanted or not" do
+      before(:each) do
+        allow(@worker_class).to receive(:all_ems_in_zone).and_return([@ems])
+        allow(@ems).to receive(:enabled).and_return(true)
+        allow(@ems).to receive(:authentication_status_ok?).and_return(true)
+      end
+
+      it ".worker_wanted? argumet" do
+        expect(@ems).to receive(:worker_wanted?).with(@worker_class.name)
+        @worker_class.all_valid_ems_in_zone
+      end
+
+      it "falsy .worker_wanted?" do
+        allow(@ems).to receive(:worker_wanted?).and_return(false)
+        expect(@worker_class.all_valid_ems_in_zone).to be_empty
+      end
+
+      it "truthy .worker_wanted?" do
+        allow(@ems).to receive(:worker_wanted?).and_return(true)
+        expect(@worker_class.all_valid_ems_in_zone).to eq([@ems])
+      end
+    end
   end
 
   it "#worker_options" do
