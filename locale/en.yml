@@ -785,6 +785,10 @@ en:
       ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
       ManageIQ::Providers::Vmware::CloudManager::Vm:                        Instance (VMware vCloud)
+      ManageIQ::Providers::Amazon::CloudManager::Flavor:                    Flavor (Amazon)
+      ManageIQ::Providers::Google::CloudManager::Flavor:                    Flavor (Google)
+      ManageIQ::Providers::Azure::CloudManager::Flavor:                     Flavor (Microsoft Azure)
+      ManageIQ::Providers::Openstack::CloudManager::Flavor:                 Flavor (OpenStack)
       ManageIQ::Providers::CloudManager::Template:                          Image
       ManageIQ::Providers::Amazon::CloudManager::Template:                  Image (Amazon)
       ManageIQ::Providers::CloudManager::VirtualTemplate:                   Resourceless Server Template
