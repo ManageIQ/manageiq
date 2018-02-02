@@ -91,29 +91,29 @@
     - MiqWorker
     :vacuum_schedule: "0 2 * * 6"
     :vacuum_tables:
-    - Vm
-    - BinaryBlobPart
     - BinaryBlob
+    - BinaryBlobPart
     - CustomizationSpec
+    - EventLog
     - FirewallRule
     - Host
-    - Storage
-    - MiqSchedule
-    - EventLog
-    - PolicyEvent
-    - Snapshot
     - Job
-    - Network
     - MiqQueue
     - MiqRequestTask
-    - MiqWorker
-    - MiqServer
-    - MiqSearch
+    - MiqSchedule
     - MiqScsiLun
     - MiqScsiTarget
+    - MiqSearch
+    - MiqServer
+    - MiqWorker
+    - Network
+    - PolicyEvent
+    - Snapshot
+    - Storage
     - StorageFile
     - Tagging
     - VimPerformanceState
+    - Vm
   :metrics_collection:
     :collection_schedule: "1 * * * *"
     :daily_rollup_schedule: "23 0 * * *"

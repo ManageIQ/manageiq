@@ -13,8 +13,8 @@ module ActiveRecord
 
     def self.reindex
       _log.info("Reindexing table #{reindex_table_name}")
-      connection.reindex_table(reindex_table_name)
-      _log.info("Reindexing table #{reindex_table_name}")
+      result = connection.reindex_table(reindex_table_name)
+      _log.info("Completed Reindexing of table #{reindex_table_name} with result #{result.result_status}")
     end
 
     def self.reindex_table_name
