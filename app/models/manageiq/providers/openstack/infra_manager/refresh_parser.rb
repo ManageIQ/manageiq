@@ -99,11 +99,11 @@ module ManageIQ
       end
 
       def servers
-        @servers ||= @connection.handled_list(:servers)
+        @servers ||= uniques(@connection.handled_list(:servers))
       end
 
       def hosts
-        @hosts ||= @baremetal_service.handled_list(:nodes)
+        @hosts ||= uniques(@baremetal_service.handled_list(:nodes))
       end
 
       def clouds

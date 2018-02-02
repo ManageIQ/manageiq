@@ -49,9 +49,9 @@ module ManageIQ::Providers
 
     def get_inventory_collection(collection_type)
       if ::Settings.ems.ems_openstack.refresh.is_admin
-        @network_service.handled_list(collection_type, {}, true)
+        uniques(@network_service.handled_list(collection_type, {}, true))
       else
-        @network_service.handled_list(collection_type)
+        uniques(@network_service.handled_list(collection_type))
       end
     end
 
