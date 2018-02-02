@@ -287,6 +287,13 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       :tags => %i(database_operations database_maintenance_reindex_schedule),
     ) { enqueue(:database_maintenance_reindex_timer) }
 
+    sched = ::Settings.database.maintenance.vacuum_schedule
+    _log.info("database_maintenance_vacuum_schedule: #{sched}")
+    scheduler.schedule_cron(
+      sched,
+      :tags => %i(database_operations database_maintenance_vacuum_schedule),
+    ) { enqueue(:database_maintenance_vacuum_timer) }
+
     @schedules[:database_operations]
   end
 

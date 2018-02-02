@@ -149,6 +149,12 @@ class MiqScheduleWorker::Jobs
     end
   end
 
+  def database_maintenance_vacuum_timer
+    ::Settings.database.maintenance.vacuum_tables.each do |class_name|
+      queue_work(:class_name => class_name, :method_name => "vacuum", :role => "database_operations", :zone => nil)
+    end
+  end
+
   def check_for_stuck_dispatch(threshold_seconds)
     class_n = "JobProxyDispatcher"
     method_n = "dispatch"
