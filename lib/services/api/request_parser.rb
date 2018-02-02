@@ -10,7 +10,7 @@ module Api
 
     def self.parse_options(data)
       raise BadRequestError, "Request is missing options" if data["options"].blank?
-      data["options"].symbolize_keys
+      data["options"].deep_symbolize_keys
     end
 
     def self.parse_auto_approve(data)

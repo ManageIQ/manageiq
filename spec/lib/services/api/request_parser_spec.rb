@@ -28,9 +28,9 @@ RSpec.describe Api::RequestParser do
       expect { described_class.parse_options({}) }.to raise_error(Api::BadRequestError, /missing options/)
     end
 
-    it "symbolizes keys" do
-      actual = described_class.parse_options("options" => {"foo" => "bar"})
-      expected = {:foo => "bar"}
+    it "deep symbolizes keys" do
+      actual = described_class.parse_options("options" => {"foo" => "bar", "foobar" => {"bazz" => "foo"}})
+      expected = {:foo => "bar", :foobar => {:bazz => "foo"}}
       expect(actual).to eq(expected)
     end
   end
