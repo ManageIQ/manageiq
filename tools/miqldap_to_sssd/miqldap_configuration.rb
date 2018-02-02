@@ -47,7 +47,7 @@ module MiqLdapToSssd
 
       # If the caller did not provide a base DN domain name derive it from the configured Base DN.
       if initial_settings[:basedn_domain].nil?
-        initial_settings[:basedn_domain] = initial_settings[:basedn].split(",").collect do |p|
+        initial_settings[:basedn_domain] = initial_settings[:basedn].downcase.split(",").collect do |p|
           p.split('dc=')[1]
         end.compact.join('.')
       end

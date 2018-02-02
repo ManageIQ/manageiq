@@ -1,13 +1,8 @@
-$LOAD_PATH << Rails.root.join("tools", "miqldap_to_sssd").to_s
+$LOAD_PATH << Rails.root.join("tools").to_s
 
-require "configure_selinux"
+require "miqldap_to_sssd"
 
 describe MiqLdapToSssd::ConfigureSELinux do
-  before do
-    stub_const("LOGGER", double)
-    allow(LOGGER).to receive(:debug)
-  end
-
   describe '#configure' do
     before do
       @initial_settings = {:ldapport => '22'}
@@ -36,7 +31,7 @@ describe MiqLdapToSssd::ConfigureSELinux do
     end
 
     it 'handles semanage already defined result' do
-      expect(LOGGER).to_not receive(:fatal)
+      expect(MiqLdapToSssd::LOGGER).to_not receive(:fatal)
       expect(AwesomeSpawn).to receive(:run).once
         .and_return(double(:command_line => "semanage", :failure? => true, :error => "malfunction already defined"))
 
@@ -54,14 +49,14 @@ describe MiqLdapToSssd::ConfigureSELinux do
     end
 
     it 'handles semanage failures' do
-      expect(LOGGER).to receive(:fatal).with("semanage failed with: malfunction")
+      expect(MiqLdapToSssd::LOGGER).to receive(:fatal).with("semanage failed with: malfunction")
       expect(AwesomeSpawn).to receive(:run)
         .and_return(double(:command_line => "semanage", :failure? => true, :error => "malfunction"))
       expect { described_class.new(@initial_settings).configure }.to raise_error(MiqLdapToSssd::ConfigureSELinuxError)
     end
 
     it 'handles setsebool failures' do
-      expect(LOGGER).to receive(:fatal).with("setsebool failed with: malfunction")
+      expect(MiqLdapToSssd::LOGGER).to receive(:fatal).with("setsebool failed with: malfunction")
       expect(AwesomeSpawn).to receive(:run).once
         .with("semanage",
               :params => {nil => "port",
