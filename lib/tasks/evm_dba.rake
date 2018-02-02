@@ -194,7 +194,7 @@ namespace :evm do
 
     namespace :restore do
       desc 'Restore the local ManageIQ EVM Database (VMDB) from a local backup file'
-      task :local do
+      task :local => :environment do
         require 'trollop'
         opts = Trollop.options(EvmRakeHelper.extract_command_options) do
           opt :local_file, "Destination file", :type => :string, :required => true
@@ -215,7 +215,7 @@ namespace :evm do
       end
 
       desc 'Restore the local ManageIQ EVM Database (VMDB) from a remote backup file'
-      task :remote do
+      task :remote => :environment do
         require 'trollop'
         opts = Trollop.options(EvmRakeHelper.extract_command_options) do
           opt :uri,              "Destination depot URI",       :type => :string, :required => true
