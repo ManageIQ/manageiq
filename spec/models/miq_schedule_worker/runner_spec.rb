@@ -276,6 +276,7 @@ describe MiqScheduleWorker::Runner do
 
             @metrics_collection = {:collection_schedule => "1 * * * *", :daily_rollup_schedule => "23 0 * * *"}
             @metrics_history    = {:purge_schedule => "50 * * * *"}
+            @database_maintenance = {:reindex_schedule => "1 * * * *", :reindex_tables => %w(Metric MiqQueue MiqWorker)}
             database_config     = {:metrics_collection => @metrics_collection, :metrics_history => @metrics_history}
             stub_server_configuration(:database => database_config)
           end
@@ -287,7 +288,7 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
-              expect(scheduled_jobs.size).to be(3)
+              expect(scheduled_jobs.size).to be(4)
 
               scheduled_jobs.each do |job|
                 expect(job).to be_a_kind_of(Rufus::Scheduler::CronJob)
@@ -313,6 +314,13 @@ describe MiqScheduleWorker::Runner do
                       message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
+                  when %w(database_operations database_maintenance_reindex_schedule)
+                    expect(job.original).to eq(@database_maintenance[:reindex_schedule])
+                    expect(MiqQueue.count).to eq(3)
+                    @database_maintenance[:reindex_tables].each do |class_name|
+                      message = MiqQueue.where(:class_name => class_name, :method_name => "reindex").first
+                      expect(message).to have_attributes(:role => "database_operations", :zone => nil)
+                    end
                   else
                     raise_unexpected_job_error(job)
                   end
@@ -328,7 +336,7 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
-              expect(scheduled_jobs.size).to be(3)
+              expect(scheduled_jobs.size).to be(4)
 
               scheduled_jobs.each do |job|
                 expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
@@ -353,6 +361,13 @@ describe MiqScheduleWorker::Runner do
 
                     %w(VmdbDatabaseMetric VmdbMetric).each do |class_name|
                       message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
+                      expect(message).to have_attributes(:role => "database_operations", :zone => nil)
+                    end
+                  when %w(database_operations database_maintenance_reindex_schedule)
+                    expect(job.original).to eq(@database_maintenance[:reindex_schedule])
+                    expect(MiqQueue.count).to eq(3)
+                    @database_maintenance[:reindex_tables].each do |class_name|
+                      message = MiqQueue.where(:class_name => class_name, :method_name => "reindex").first
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
                   else
