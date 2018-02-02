@@ -92,6 +92,8 @@ class EvmDatabaseOps
         db_opts[:local_file] = session.uri_to_local_path(uri)
       end
 
+      prepare_for_restore(db_opts[:local_file])
+
       backup = PostgresAdmin.restore(db_opts)
     ensure
       session.disconnect if session
@@ -100,6 +102,46 @@ class EvmDatabaseOps
     uri ||= backup
     _log.info("[#{db_opts[:dbname]}] database has been restored from file: [#{uri}]")
     uri
+  end
+
+  private_class_method def self.prepare_for_restore(filename)
+    backup_type = validate_backup_file_type(filename)
+
+    if application_connections?
+      message = "Database restore failed. Shut down all evmserverd processes before attempting a database restore"
+      _log.error(message)
+      raise message
+    end
+
+    MiqRegion.replication_type = :none
+    60.times do
+      break if VmdbDatabaseConnection.where("application_name LIKE 'pglogical manager%'").count.zero?
+      _log.info("Waiting for pglogical connections to close...")
+      sleep 5
+    end
+
+    connection_count = backup_type == :basebackup ? VmdbDatabaseConnection.unscoped.count : VmdbDatabaseConnection.count
+    if connection_count > 1
+      message = "Database restore failed. #{connection_count - 1} connections remain to the database."
+      _log.error(message)
+      raise message
+    end
+  end
+
+  private_class_method def self.validate_backup_file_type(filename)
+    if PostgresAdmin.base_backup_file?(filename)
+      :basebackup
+    elsif PostgresAdmin.pg_dump_file?(filename)
+      :pgdump
+    else
+      message = "#{filename} is not in a recognized database backup format"
+      _log.error(message)
+      raise message
+    end
+  end
+
+  private_class_method def self.application_connections?
+    VmdbDatabaseConnection.all.map(&:application_name).any? { |app_name| app_name.start_with?("MIQ") }
   end
 
   def self.gc(options = {})
