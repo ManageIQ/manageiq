@@ -26,6 +26,7 @@ class MiqAlert < ApplicationRecord
     ExtManagementSystem
     MiqServer
     ContainerNode
+    ContainerProject
   )
 
   def self.base_tables
