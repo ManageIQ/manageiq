@@ -89,6 +89,12 @@ class ExtManagementSystem < ApplicationRecord
     existing_hostnames = (self.class.all - [self]).map(&:hostname).compact.map(&:downcase)
 
     errors.add(:hostname, N_("has to be unique per provider type")) if existing_hostnames.include?(hostname.downcase)
+
+    # if hostname is ipaddress check against dicovered ipaddress in database too
+    if hostname.ipaddress?
+      existing_ipaddress = (self.class.all - [self]).map(&:ipaddress).compact.map { |ipaddress| ipaddress.gsub(/\/$/, '') }
+      errors.add(:ipaddress, N_("has to be unique per provider type")) if existing_ipaddress.include?(hostname)
+    end
   end
 
   def hostname_format_valid?
