@@ -107,6 +107,17 @@ describe MiqProvision do
 
             @vm_prov.update_vm_name(@target_vm_name, :update_request => false)
           end
+
+          it "When task is part of a ServiceTemplateProvisionRequest the description should not update" do
+            request_descripton = "Service Name Test"
+            service_provision_request = FactoryGirl.create(:service_template_provision_request, :description => request_descripton)
+            @vm_prov.update_attributes(:miq_request_id => service_provision_request.id)
+
+            expect(service_provision_request).not_to receive(:update_description_from_tasks)
+            @vm_prov.update_vm_name(@target_vm_name, :update_request => true)
+
+            expect(service_provision_request.description).to eq(request_descripton)
+          end
         end
 
         context "when auto naming sequence exceeds the range" do
