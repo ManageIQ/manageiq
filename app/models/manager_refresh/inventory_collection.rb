@@ -761,12 +761,26 @@ module ManagerRefresh
       if targeted?
         if targeted_arel.respond_to?(:call)
           targeted_arel.call(self)
+        elsif parent_inventory_collections.present?
+          targeted_arel_default
         else
           targeted_iterator_for(targeted_scope)
         end
       else
         full_collection_for_comparison
       end
+    end
+
+    # Builds targeted query limiting the results by the :references defined in parent_inventory_collections
+    def targeted_arel_default
+      if parent_inventory_collections.collect { |x| x.model_class.base_class }.uniq.count > 1
+        raise "Multiple :parent_inventory_collections with different base class are not supported by default. Write "\
+              ":targeted_arel manually, or separate InventoryCollection in 2."
+      end
+      parent_collection = parent_inventory_collections.first
+      references        = parent_inventory_collections.collect(&:targeted_scope).reduce({}, :merge!)
+
+      full_collection_for_comparison.where(parent_collection.targeted_selection_for(references))
     end
 
     def transform_references_to_hashes(references)
@@ -781,10 +795,11 @@ module ManagerRefresh
       build_multi_selection_condition(transform_references_to_hashes(references))
     end
 
-    def targeted_iterator_for(references)
+    def targeted_iterator_for(references, query = nil)
       ManagerRefresh::ApplicationRecordIterator.new(
         :inventory_collection => self,
-        :manager_uuids_set    => references
+        :manager_uuids_set    => references,
+        :query                => query
       )
     end
 
