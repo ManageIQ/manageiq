@@ -3,10 +3,6 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 require "miqldap_to_sssd"
 
 describe MiqLdapToSssd::MiqLdapConfiguration do
-  before do
-    allow(MiqLdapToSssd::LOGGER).to receive(:debug)
-  end
-
   describe '#retrieve_initial_settings' do
     it 'raises an error when the basedn domain can not be determined' do
       expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
