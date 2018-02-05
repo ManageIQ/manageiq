@@ -73,6 +73,7 @@ module SpecParsedData
   def orchestration_stack_data(i, data = {})
     {
       :ems_ref               => "stack_ems_ref_#{i}",
+      :type                  => "ManageIQ::Providers::CloudManager::OrchestrationStack",
       :ext_management_system => @ems,
       :name                  => "stack_name_#{i}",
       :description           => "stack_description_#{i}",

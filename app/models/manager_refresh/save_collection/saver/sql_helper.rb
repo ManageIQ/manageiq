@@ -17,7 +17,6 @@ module ManagerRefresh::SaveCollection
 
         # Make sure we don't send a primary_key for INSERT in any form, it could break PG sequencer
         all_attribute_keys_array = all_attribute_keys.to_a - [primary_key.to_s, primary_key.to_sym]
-        table_name               = inventory_collection.model_class.table_name
         values                   = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(connection, hash[x], x) }.join(",")})"
         end.join(",")
@@ -78,7 +77,6 @@ module ManagerRefresh::SaveCollection
         # We want to ignore type and create timestamps when updating
         all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(type created_at created_on).include?(x) }
         all_attribute_keys_array << :id
-        table_name               = inventory_collection.model_class.table_name
 
         values = hashes.map! do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(connection, hash[x], x, true) }.join(",")})"

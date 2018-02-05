@@ -425,7 +425,6 @@ describe ManagerRefresh::SaveInventory do
           :arel                => @ems.hardwares,
           :manager_ref         => [:vm_or_template],
           :strategy            => :local_db_cache_all,
-          :custom_manager_uuid => ->(hardware) { [hardware.vm_or_template.try(:ems_ref)] },
           :name                => :image_hardwares,
         )
 

@@ -4,7 +4,7 @@ module ManagerRefresh
 
     attr_reader :reference, :inventory_collection, :key, :default
 
-    delegate :stringified_reference, :ref, :to => :reference
+    delegate :stringified_reference, :ref, :[], :to => :reference
 
     def initialize(inventory_collection, index_data, ref: :manager_ref, key: nil, default: nil)
       @inventory_collection = inventory_collection
