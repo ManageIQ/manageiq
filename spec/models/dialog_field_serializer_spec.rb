@@ -125,13 +125,18 @@ describe DialogFieldSerializer do
 
     context "when the dialog_field is a tag control type" do
       let(:dialog_field) do
-        DialogFieldTagControl.new(expected_serialized_values.merge(:resource_action => resource_action, :dialog_field_responders => dialog_field_responders))
+        DialogFieldTagControl.new(expected_serialized_values.merge(
+          :resource_action         => resource_action,
+          :dialog_field_responders => dialog_field_responders
+        ))
       end
 
       let(:type) { "DialogFieldTagControl" }
-      let(:options) { {:category_id => "123"} }
+      let(:options) { {:category_id => "123", :force_single_value => false} }
       let(:dynamic) { false }
-      let(:category) { double("Category", :name => "best category ever", :description => "best category ever") }
+      let(:category) do
+        double("Category", :name => "best category ever", :description => "best category ever", :single_value => true)
+      end
 
       before do
         allow(Category).to receive(:find_by).with(:id => "123").and_return(category)
@@ -149,7 +154,8 @@ describe DialogFieldSerializer do
                    "options"                 => {
                      :category_id          => "123",
                      :category_name        => "best category ever",
-                     :category_description => "best category ever"
+                     :category_description => "best category ever",
+                     :force_single_value   => true
                    },
                    "default_value"           => "[\"one\", \"two\"]"
           ))
