@@ -1108,6 +1108,7 @@
       :poll_escalate_max: 30.seconds
       :poll_method: :normal
       :restart_interval: 0.hours
+      :spawn_worker: false
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
     :embedded_ansible_worker:
@@ -1252,6 +1253,7 @@
       :nice_delta: 3
       :poll: 1.seconds
       :reconnect_retry_interval: 5.minutes
+      :spawn_worker: true
       :vim_broker_status_interval: 15.minutes
       :vim_broker_update_interval: 0.seconds
       :vim_broker_max_wait: 60

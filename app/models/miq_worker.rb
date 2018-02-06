@@ -343,11 +343,11 @@ class MiqWorker < ApplicationRecord
   end
 
   def start_runner
-    if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
-      start_runner_via_spawn
-    else
-      start_runner_via_fork
-    end
+    spawn_worker? ? start_runner_via_spawn : start_runner_via_fork
+  end
+
+  def spawn_worker?
+    ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork) || worker_settings[:spawn_worker]
   end
 
   def start_runner_via_fork
