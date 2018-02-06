@@ -370,9 +370,18 @@ describe VirtualTotal do
       expect(model_with_children(2).v_total_storages).to eq(2)
     end
 
-    it "is not defined in sql" do
-      expect(base_model.attribute_supported_by_sql?(:v_total_storages)).to be(false)
-    end
+    # it "is defined in sql" do # TODO
+    #   expect(base_model.attribute_supported_by_sql?(:v_total_storages)).to be(true)
+    # end
+
+    # it "sorts by total" do
+    #   host0 = model_with_children(0)
+    #   host2 = model_with_children(2)
+    #   host1 = model_with_children(1)
+
+    #   expect(base_model.order(:v_total_storages).pluck(:id))
+    #     .to eq([host0, host1, host2].map(&:id))
+    # end
 
     def model_with_children(count)
       FactoryGirl.create(:host).tap do |host|
