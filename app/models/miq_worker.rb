@@ -320,6 +320,7 @@ class MiqWorker < ApplicationRecord
   def self.after_fork
     close_pg_sockets_inherited_from_parent
     DRb.stop_service
+    close_drb_pool_connections
     renice(Process.pid)
   end
 
@@ -333,6 +334,23 @@ class MiqWorker < ApplicationRecord
         _log.info "Closing socket: #{socket}"
         IO.for_fd(socket).close
       end
+    end
+  end
+
+  # Close all open DRb connections so that connections in the parent's memory space
+  # which is shared due to forking the child process do not pollute the child's DRb
+  # connection pool.  This can lead to errors when the children connect to a server
+  # and get an incorrect response back.
+  #
+  # ref: https://bugs.ruby-lang.org/issues/2718
+  def self.close_drb_pool_connections
+    require 'drb'
+
+    # HACK: DRb doesn't provide an interface to close open pool connections.
+    #
+    # Once that is added this should be replaced.
+    DRb::DRbConn.instance_variable_get(:@mutex).synchronize do
+      DRb::DRbConn.instance_variable_get(:@pool).each(&:close)
     end
   end
 
