@@ -383,7 +383,8 @@
   - ems_physical_infra_refresh
   - ems_physical_infra_tag
   - ems_physical_infra_view
-  - physical_server_timeline
+  - physical_server_view
+  - physical_infra_topology_view
   - host_new
   - host_analyze
   - host_compare
