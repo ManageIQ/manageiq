@@ -120,19 +120,41 @@ describe MiqLdap do
     expect(MiqLdap.sid_to_s(data)).to eq("S-1-5-21-4106323499-3255682937-2389761597-1183")
   end
 
-  it 'returns a hostname when a hostname is availble and does not set verify mode' do
-    allow(TCPSocket).to receive(:gethostbyname).and_return(["testhostname", "aliases", "type", "192.168.252.20"])
-    allow(TCPSocket).to receive(:new)
-    ldap = MiqLdap.new(:host => ["testhostname", "localhost", "dummy", @host])
-    expect(ldap.ldap.host).to eq("testhostname")
-    expect(ldap.ldap.instance_variable_get(:@encryption).try(:has_key_path?, :tls_options, :verify_mode)).to be_falsey
+  context 'when a hostname is available' do
+    before do
+      allow(TCPSocket).to receive(:gethostbyname).and_return(["testhostname", "aliases", "type", "192.168.252.20"])
+      allow(TCPSocket).to receive(:new)
+    end
+
+    it 'when mode is ldaps returns a hostname and does not set verify_mode' do
+      ldap = MiqLdap.new(:mode => "ldaps", :host => ["testhostname", "localhost", "dummy", @host])
+      expect(ldap.ldap.host).to eq("testhostname")
+      expect(ldap.ldap.instance_variable_get(:@encryption).try(:has_key_path?, :tls_options, :verify_mode)).to be_falsey
+    end
+
+    it 'when mode is ldap returns a hostname and does not set encryption options' do
+      ldap = MiqLdap.new(:mode => "ldap", :host => ["testhostname", "localhost", "dummy", @host])
+      expect(ldap.ldap.host).to eq("testhostname")
+      expect(ldap.ldap.instance_variable_get(:@encryption)).to be_nil
+    end
   end
 
-  it 'returns an IPAddress and disables verify mode when only an IPAddress is availble' do
-    expect(TCPSocket).not_to receive(:gethostbyname)
-    allow(TCPSocket).to receive(:new)
-    ldap = MiqLdap.new(:host => ["192.168.254.15", "localhost", "dummy", @host])
-    expect(ldap.ldap.host).to eq("192.168.254.15")
-    expect(ldap.ldap.instance_variable_get(:@encryption).fetch_path(:tls_options, :verify_mode)).to eq(OpenSSL::SSL::VERIFY_NONE)
+  context 'when only an IPAddress is available' do
+    before do
+      expect(TCPSocket).not_to receive(:gethostbyname)
+      allow(TCPSocket).to receive(:new)
+    end
+
+    it 'when mode is ldaps returns an IPAddress and disables verify_mode' do
+      ldap = MiqLdap.new(:mode => "ldaps", :host => ["192.168.254.15", "localhost", "dummy", @host])
+      expect(ldap.ldap.host).to eq("192.168.254.15")
+      expect(ldap.ldap.instance_variable_get(:@encryption).fetch_path(:tls_options, :verify_mode)).to eq(OpenSSL::SSL::VERIFY_NONE)
+    end
+
+    it 'when mode is ldap returns an IPAddress and does not set encryption options' do
+      ldap = MiqLdap.new(:mode => "ldap", :host => ["192.168.254.15", "localhost", "dummy", @host])
+      expect(ldap.ldap.host).to eq("192.168.254.15")
+      expect(ldap.ldap.instance_variable_get(:@encryption)).to be_nil
+    end
   end
 end
