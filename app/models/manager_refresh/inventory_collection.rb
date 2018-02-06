@@ -749,12 +749,31 @@ module ManagerRefresh
     def build_multi_selection_condition(hashes, keys = nil)
       keys ||= manager_ref
       table_name = model_class.table_name
+
+      # TODO(lsmola) the IN query doesn't work when comparing to NULL, there is a hack with COALESCE, but that might
+      # get slower than just using AND and OR, since PG translates IN query to that anyway. We should do benchmarks
+      # if the IN is more optimized or not.
+      # multi_selection_in_query(table_name, keys, hashes
+      multi_selection_and_or_query(table_name, keys, hashes)
+    end
+
+    def multi_selection_in_query(table_name, keys, hashes)
       cond_data  = hashes.map do |hash|
         "(#{keys.map { |x| ActiveRecord::Base.connection.quote(hash[x]) }.join(",")})"
       end.join(",")
       column_names = keys.map { |key| "#{table_name}.#{ActiveRecord::Base.connection.quote_column_name(key)}" }.join(",")
 
       "(#{column_names}) IN (#{cond_data})"
+    end
+
+    def multi_selection_and_or_query(table_name, keys, hashes)
+      hashes.map do |hash|
+        "(#{keys.map { |key| equal_condition(table_name, key, hash[key]) }.join(" AND ")})"
+      end.join(" OR ")
+    end
+
+    def equal_condition(table_name, key, value)
+      "#{table_name}.#{ActiveRecord::Base.connection.quote_column_name(key)} #{value.nil? ? 'IS' : '='} #{ActiveRecord::Base.connection.quote(value)}"
     end
 
     def db_collection_for_comparison
@@ -780,7 +799,7 @@ module ManagerRefresh
       parent_collection = parent_inventory_collections.first
       references        = parent_inventory_collections.collect(&:targeted_scope).reduce({}, :merge!)
 
-      full_collection_for_comparison.where(parent_collection.targeted_selection_for(references))
+      parent_collection.targeted_iterator_for(references, full_collection_for_comparison)
     end
 
     def transform_references_to_hashes(references)
