@@ -11,11 +11,11 @@ module ManageIQ::Providers::StorageManager::SwiftManager::RefreshParser::CrossLi
     end
 
     def cross_link
-      @data[:cloud_object_store_containers].each do |container_hash|
+      @data[:cloud_object_store_containers]&.each do |container_hash|
         link_to_tenant(container_hash)
       end
 
-      @data[:cloud_object_store_objects].each do |object_hash|
+      @data[:cloud_object_store_objects]&.each do |object_hash|
         link_to_tenant(object_hash)
       end
     end
