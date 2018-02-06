@@ -4361,9 +4361,12 @@
     :identifier: persistent_volume_view
     :children:
     - :name: List
-      :description: Display Lists of Persistent Volumes
+      :description: Display all Persistent Volumes
       :feature_type: view
       :identifier: persistent_volume_show_list
+    - :name: List
+      :description: Display a list of Persistent Volumes
+      :identifier: persistent_volumes_show_list
     - :name: Show
       :description: Display Individual Persistent Volume
       :feature_type: view
