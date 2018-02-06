@@ -4,13 +4,11 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :Credential
   require_nested :AmazonCredential
   require_nested :AzureCredential
-  require_nested :AzureClassicCredential
   require_nested :CloudCredential
   require_nested :GoogleCredential
   require_nested :MachineCredential
   require_nested :NetworkCredential
   require_nested :OpenstackCredential
-  require_nested :RackspaceCredential
   require_nested :ScmCredential
   require_nested :VmwareCredential
 
