@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DIR=$(dirname $0)
+
+HOSTS=$(awk '!/^#/ {print $1}' $DIR/miqhosts)
+
+for i in $HOSTS
+do
+  ssh-copy-id -o StrictHostKeyChecking=no root@$i
+done
