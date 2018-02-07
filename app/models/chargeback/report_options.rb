@@ -17,7 +17,8 @@ class Chargeback
     :userid,
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U
-    :method_for_allocated_metrics
+    :method_for_allocated_metrics,
+    :group_by_tenant?
   ) do
     def self.new_from_h(hash)
       new(*hash.values_at(*members))
@@ -115,10 +116,18 @@ class Chargeback
       end
     end
 
+    def tenant_for(consumption)
+      consumption.resource.tenant
+    end
+
     def classification_for(consumption)
       tag = consumption.tag_names.find { |x| x.starts_with?(groupby_tag) } # 'department/*'
       tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
       tag_hash[tag]
+    end
+
+    def group_by_tenant?
+      self[:groupby] == 'tenant'
     end
 
     private
