@@ -8,10 +8,6 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudTenant < ::CloudTenant
   has_many :private_networks,
            :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private"
 
-  def all_private_networks
-    private_networks + (try(:ext_management_system).try(:private_networks).try(:where, :shared => true) || [])
-  end
-
   def self.raw_create_cloud_tenant(ext_management_system, options)
     tenant = nil
     ext_management_system.with_provider_connection(connection_options) do |service|
