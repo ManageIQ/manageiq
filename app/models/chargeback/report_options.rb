@@ -120,6 +120,10 @@ class Chargeback
       consumption.resource.tenant
     end
 
+    def group_with(records)
+      group_by_tenant? ? records.group_by { |x| x.resource.tenant.id } : records.group_by(&:resource_id)
+    end
+
     def classification_for(consumption)
       tag = consumption.tag_names.find { |x| x.starts_with?(groupby_tag) } # 'department/*'
       tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
