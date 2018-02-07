@@ -118,13 +118,11 @@ class EmsEvent < EventStream
   def self.process_vm_in_event!(event, options = {})
     prefix           = options[:prefix]
     options[:id_key] = "#{prefix}vm_or_template_id".to_sym
+    uid_ems          = event.delete(:vm_uid_ems)
     process_object_in_event!(Vm, event, options)
 
     if options[:id_key] == :vm_or_template_id && event[:vm_or_template_id].nil?
-      # uid_ems is used for non-VC events, and should be nil for VC events.
-      uid_ems = event.fetch_path(:full_data, :vm, :uid_ems)
-      vm      = VmOrTemplate.find_by(:uid_ems => uid_ems) unless uid_ems.nil?
-
+      vm = VmOrTemplate.find_by(:uid_ems => uid_ems) unless uid_ems.nil?
       unless vm.nil?
         event[:vm_or_template_id] = vm.id
         event[:vm_name] ||= vm.name

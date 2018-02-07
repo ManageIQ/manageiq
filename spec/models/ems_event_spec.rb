@@ -252,6 +252,37 @@ describe EmsEvent do
     end
   end
 
+  context ".add" do
+    let(:ems) { FactoryGirl.create(:ext_management_system) }
+    context "with a VM" do
+      let(:vm) { FactoryGirl.create(:vm, :uid_ems => '3ace5197-3d6a-4cb3-aeb2-e8348e428775', :ems_ref => 'vm-123') }
+      let(:event) do
+        {
+          :ems_id     => ems.id,
+          :event_type => 'VmDestroyedEvent',
+          :vm_ems_ref => vm.ems_ref,
+          :vm_uid_ems => vm.uid_ems,
+        }
+      end
+
+      context "with a connected VM" do
+        before { vm.update_attributes(:ems_id => ems.id) }
+
+        it "should link the event to the vm" do
+          ems_event = EmsEvent.add(ems.id, event)
+          expect(ems_event.vm_or_template_id).to eq(vm.id)
+        end
+      end
+
+      context "with a disconnected VM" do
+        it "should link the event to the vm" do
+          ems_event = EmsEvent.add(ems.id, event)
+          expect(ems_event.vm_or_template_id).to eq(vm.id)
+        end
+      end
+    end
+  end
+
   context '.event_groups' do
     let(:provider_event) { 'SomeSpecialProviderEvent' }
 
