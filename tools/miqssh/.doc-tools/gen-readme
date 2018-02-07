@@ -1,0 +1,28 @@
+#!/bin/bash
+
+DIR=$(dirname $(realpath $0))
+DEST=$(dirname $DIR)
+cat $DIR/HEAD.md > $DEST/README.md
+
+if [ ! -f $DEST/miqhosts ]
+then
+  CLEAN_MIQHOSTS=true
+  cp $DEST/miqhosts-sample $DEST/miqhosts
+fi
+
+commands="miqssh miqscp miqcollect miqgrep miqtail"
+
+for i in $commands
+do
+  echo "## $i"
+  echo '```'
+  $DEST/$i -h
+  echo '```'
+done >> $DEST/README.md
+
+if [ "$CLEAN_MIQHOSTS" == 'true' ]
+then
+  rm -f $DEST/miqhosts
+fi
+
+cat $DIR/FOOT.md >> $DEST/README.md
