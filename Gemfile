@@ -161,7 +161,7 @@ group :automate, :seed, :manageiq_default do
 end
 
 group :replication, :manageiq_default do
-  gem "pg-pglogical",                   "~>2.1.1",       :require => false
+  gem "pg-pglogical",                   "~>2.1.2",       :require => false
 end
 
 group :rest_api, :manageiq_default do
