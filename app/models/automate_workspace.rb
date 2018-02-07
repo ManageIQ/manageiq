@@ -33,6 +33,10 @@ class AutomateWorkspace < ApplicationRecord
     merge_output!(hash)
   end
 
+  def to_param
+    guid
+  end
+
   private
 
   def encrypted_value(object_name, attribute)
