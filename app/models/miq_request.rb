@@ -549,6 +549,10 @@ class MiqRequest < ApplicationRecord
     "#{self.class::SOURCE_CLASS_NAME}:#{requested_task_idx.inspect}"
   end
 
+  def options=(hash)
+    write_attribute(:options, hash.symbolize_keys)
+  end
+
   private
 
   def clean_up_keys_for_request_task

@@ -202,6 +202,10 @@ class MiqRequestTask < ApplicationRecord
     end
   end
 
+  def options=(hash)
+    write_attribute(:options, hash.symbolize_keys)
+  end
+
   private
 
   def validate_request_type
