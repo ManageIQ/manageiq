@@ -27,6 +27,10 @@ class ExtManagementSystem < ApplicationRecord
     end
   end
 
+  def self.api_allowed_attributes
+    %w[]
+  end
+
   belongs_to :provider
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
 
