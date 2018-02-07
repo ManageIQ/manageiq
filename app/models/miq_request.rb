@@ -550,7 +550,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def options=(hash)
-    write_attribute(:options, hash.symbolize_keys)
+    self[:options] = hash.symbolize_keys
   end
 
   private
