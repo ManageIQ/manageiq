@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+
+NAME=$(basename $0)
+DIR=$(dirname $0)
+
+function usage {
+  echo
+  echo "USAGE: $NAME [-g group] [-s]"
+  echo
+  exit 1
+}
+
+while getopts g:so: OPT
+do
+  case $OPT in
+    g) group="-g $OPTARG" ;;
+    s) s="-s" ;;
+    o) output="-o $OPTARG" ;;
+    Q) Q="-Q" ;;
+    *) usage ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+case $NAME in
+  miqstatus) tool="miqssh" command="cd /var/www/miq/vmdb && rake evm:status" ;;
+  miqworkermemcheck) tool="miqgrep" outputfile="/tmp/.miqworkermemcheck.$$" Q="-Q" output="-o $outputfile" command="exceeded limit" ;;
+  *) echo "Unknown command."
+     usage
+     ;;
+esac
+
+$tool $group $s $output $Q "$command"
+
+case $NAME in
+  miqworkermemcheck)
+    cat $outputfile  | perl -ne '$_ =~ /^\[(.*?)\] .*(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{6}).*Worker \[(\S+)\] .* (process memory usage) \[(\d+)\] (exceeded limit) \[(\d+)\], /; print "$1 $2 $3 $4 $5 $6 $7\n"'
+    rm -f $outputfile
+    ;;
+esac
