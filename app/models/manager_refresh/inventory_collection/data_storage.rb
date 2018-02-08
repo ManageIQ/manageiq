@@ -14,6 +14,7 @@ module ManagerRefresh
                :primary_index,
                :build_primary_index_for,
                :build_secondary_indexes_for,
+               :named_ref,
                :to => :index_proxy
 
       delegate :builder_params,
@@ -57,20 +58,22 @@ module ManagerRefresh
           raise "Allowed find_or_build_by keys are #{manager_ref}"
         end
 
-        # Not using find by since if could take record from db, then any changes would be ignored, since such record will
-        # not be stored to DB, maybe we should rethink this?
-        primary_index.find(manager_uuid_hash) || build(manager_uuid_hash)
+        build(manager_uuid_hash)
       end
 
       def build(hash)
-        hash             = builder_params.merge(hash)
-        inventory_object = new_inventory_object(hash)
+        hash = builder_params.merge(hash)
 
-        uuid = inventory_object.manager_uuid
+        # Faster way to build uuid than inventory_object.manager_uuid
+        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
+
         # Each InventoryObject must be able to build an UUID, return nil if it can't
         return nil if uuid.blank?
         # Return existing InventoryObject if we have it
         return primary_index.find(uuid) if primary_index.find(uuid)
+
+        # Build the InventoryObject
+        inventory_object = new_inventory_object(hash)
         # Store new InventoryObject and return it
         push(inventory_object)
         inventory_object
