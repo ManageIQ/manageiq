@@ -26,8 +26,9 @@ module Api
     def edit_resource(type, id, data)
       service_dialog = resource_search(id, type, Dialog)
       begin
-        service_dialog.update!(data.except('content'))
-        service_dialog.update_tabs(data['content']['dialog_tabs']) if data['content']
+        $api_log.warn("Both 'dialog_tabs':[...] and 'content':{'dialog_tabs':[...]} were specified. 'content':{'dialog_tabs':[...]} will be ignored.") if data.key?('dialog_tabs') && data['content'].try(:key?, 'dialog_tabs')
+        service_dialog.update_tabs(data['dialog_tabs'] || data['content']['dialog_tabs']) if data['dialog_tabs'] || data['content']
+        service_dialog.update!(data.except('dialog_tabs', 'content'))
       rescue => err
         raise BadRequestError, "Failed to update service dialog - #{err}"
       end
