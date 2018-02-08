@@ -279,27 +279,31 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
                                       :cloud_tenant          => @ct2,
                                       :ext_management_system => provider.network_manager)
 
-            @cn_shared = FactoryGirl.create(:cloud_network_private_openstack,
-                                            :shared                => true,
-                                            :cloud_tenant          => @ct2,
-                                            :ext_management_system => provider.network_manager)
+            @cn_shared        = FactoryGirl.create(:cloud_network_private_openstack,
+                                                   :shared                => true,
+                                                   :cloud_tenant          => @ct2,
+                                                   :ext_management_system => provider.network_manager)
+            @cn_public_shared = FactoryGirl.create(:cloud_network_public_openstack,
+                                                   :shared                => true,
+                                                   :cloud_tenant          => @ct2,
+                                                   :ext_management_system => provider.network_manager)
           end
 
           it "#allowed_cloud_networks with tenant selected" do
             workflow.values.merge!(:cloud_tenant => @ct2.id)
             cns = workflow.allowed_cloud_networks
-            expect(cns.keys).to match_array [@cn2.id, @cn_shared.id]
+            expect(cns.keys).to match_array [@cn2.id, @cn3.id, @cn_shared.id, @cn_public_shared.id]
           end
 
           it "#allowed_cloud_networks with another tenant selected" do
             workflow.values[:cloud_tenant] = @ct1.id
             cns = workflow.allowed_cloud_networks
-            expect(cns.keys).to match_array [@cn1.id, @cn_shared.id]
+            expect(cns.keys).to match_array [@cn1.id, @cn_shared.id, @cn_public_shared.id]
           end
 
           it "#allowed_cloud_networks with tenant not selected" do
             cns = workflow.allowed_cloud_networks
-            expect(cns.keys).to match_array [@cn2.id, @cn1.id, @cn_shared.id]
+            expect(cns.keys).to match_array [@cn2.id, @cn3.id, @cn1.id, @cn_shared.id, @cn_public_shared.id]
           end
         end
 

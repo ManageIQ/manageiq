@@ -486,9 +486,9 @@ module Openstack
 
         if network.external_facing?
           vms = network.private_networks.map { |x| (network_vms(x) + network_stacks(x)) }.flatten.uniq
-          expect(network.vms.count).to eq vms.count
+          expect(network.public_network_vms.count).to eq vms.count
 
-          non_stack_vms          = network.vms.select { |x| x.orchestration_stack.blank? }
+          non_stack_vms          = network.public_network_vms.select { |x| x.orchestration_stack.blank? }
           non_stack_expected_vms = network.private_networks.map { |x| (network_vms(x)) }.flatten.uniq
           expect(non_stack_vms.map(&:name)).to match_array(non_stack_expected_vms.map { |x| x[:name] })
         else
@@ -516,20 +516,25 @@ module Openstack
         expect(network.ext_management_system).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager)
         expect(network.cloud_subnets.count).to   be > 0
         expect(network.cloud_subnets.first).to   be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet)
-        expect(network.vms.count).to             be > 0
-        expect(network.vms.first).to             be_kind_of(ManageIQ::Providers::Openstack::CloudManager::Vm)
-        expect(network.network_routers.count).to be > 0
-        expect(network.network_routers.first).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter)
+
         if network.external_facing?
           # It's a public network
+          expect(network.public_network_vms.count).to be > 0
+          expect(network.public_network_vms.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::Vm)
+          expect(network.public_network_routers.count).to be > 0
+          expect(network.public_network_routers.first).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter)
           expect(network).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public)
           expect(network.private_networks.count).to be > 0
           expect(network.floating_ips.count).to     be > 0
           expect(network.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private)
 
-          assert_objects_with_hashes(network.network_routers, network_data.routers(network.name))
+          assert_objects_with_hashes(network.public_network_routers, network_data.routers(network.name))
         else
           # It's a private network
+          expect(network.vms.count).to be > 0
+          expect(network.vms.first).to be_kind_of(ManageIQ::Providers::Openstack::CloudManager::Vm)
+          expect(network.network_routers.count).to be > 0
+          expect(network.network_routers.first).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter)
           expect(network).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private)
           expect(network.public_networks.count).to be > 0
           expect(network.public_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public)
