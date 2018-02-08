@@ -77,9 +77,7 @@ module ManagerRefresh::SaveCollection
         end
 
         unless inventory_collection.create_only?
-          unless inventory_collection.custom_reconnect_block.nil?
-            inventory_collection.custom_reconnect_block.call(inventory_collection, inventory_objects_index, attributes_index)
-          end
+          inventory_collection.custom_reconnect_block&.call(inventory_collection, inventory_objects_index, attributes_index)
         end
 
         all_attribute_keys << :type if supports_sti?
@@ -98,7 +96,7 @@ module ManagerRefresh::SaveCollection
             skeletal_attributes_index        = {}
             skeletal_inventory_objects_index = {}
 
-            inventory_collection.skeletal_primary_index.each do |_, inventory_object|
+            inventory_collection.skeletal_primary_index.each_value do |inventory_object|
               attributes = inventory_object.attributes_with_keys(inventory_collection, all_attribute_keys)
               index      = build_stringified_reference(attributes, unique_index_keys)
 
@@ -295,11 +293,10 @@ module ManagerRefresh::SaveCollection
             attribute_references.each do |ref|
               inventory_object[ref] = attributes[ref]
 
-              if (foreign_key = association_to_foreign_key_mapping[ref])
-                base_class_name       = attributes[association_to_foreign_type_mapping[ref].try(:to_sym)] || association_to_base_class_mapping[ref]
-                id                    = attributes[foreign_key.to_sym]
-                inventory_object[ref] = ManagerRefresh::ApplicationRecordReference.new(base_class_name, id)
-              end
+              next unless (foreign_key = association_to_foreign_key_mapping[ref])
+              base_class_name       = attributes[association_to_foreign_type_mapping[ref].try(:to_sym)] || association_to_base_class_mapping[ref]
+              id                    = attributes[foreign_key.to_sym]
+              inventory_object[ref] = ManagerRefresh::ApplicationRecordReference.new(base_class_name, id)
             end
 
             inventory_object.id = record.id if inventory_object

@@ -74,10 +74,9 @@ module ManagerRefresh
         # since that one is not being saved.
         uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
         inventory_object = skeletal_primary_index.delete(uuid)
-        if inventory_object
-          # We want to update the skeletal record with actual data
-          inventory_object.assign_attributes(hash)
-        end
+
+        # We want to update the skeletal record with actual data
+        inventory_object&.assign_attributes(hash)
 
         # Build the InventoryObject
         inventory_object ||= new_inventory_object(enrich_data(hash))
