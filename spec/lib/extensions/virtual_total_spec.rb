@@ -409,7 +409,7 @@ describe VirtualTotal do
 
       def model_with_children(count)
         FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware)).tap do |vm|
-          count.times { vm.hardware.disks.create(FactoryGirl.attributes_for(:disk, :size => 10.0)) }
+          count.times { vm.hardware.disks.create(:size => 10.0) }
         end.reload
       end
     end
