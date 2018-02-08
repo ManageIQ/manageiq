@@ -139,6 +139,41 @@ describe MiqServer do
     end
   end
 
+  context "#configure_yum_proxy" do
+    it "with no proxy server" do
+      expect(IniFile).not_to receive(:load)
+
+      @server.configure_yum_proxy
+    end
+
+    it "with proxy server but no credentials" do
+      database.update_attributes(:registration_http_proxy_server => "http://my_proxy:port")
+
+      Tempfile.open do |tempfile|
+        stub_inifile = IniFile.new(:filename => tempfile.path)
+        expect(IniFile).to receive(:load).and_return(stub_inifile)
+
+        @server.configure_yum_proxy
+
+        expect(File.read(tempfile)).to eq("[main]\nproxy = http://my_proxy:port\n\n")
+      end
+    end
+
+    it "with proxy server and credentials" do
+      database.update_authentication(:registration_http_proxy => {:userid => "user", :password => "pass"})
+      database.update_attributes(:registration_http_proxy_server => "http://my_proxy:port")
+
+      Tempfile.open do |tempfile|
+        stub_inifile = IniFile.new(:filename => tempfile.path)
+        expect(IniFile).to receive(:load).and_return(stub_inifile)
+
+        @server.configure_yum_proxy
+
+        expect(File.read(tempfile)).to eq("[main]\nproxy = http://my_proxy:port\nproxy_username = user\nproxy_password = pass\n\n")
+      end
+    end
+  end
+
   context "#repo_enabled?" do
     it "true" do
       expect(reg_system).to receive(:enabled_repos).and_return(["abc", database.update_repo_names].flatten)
