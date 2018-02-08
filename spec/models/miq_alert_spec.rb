@@ -159,7 +159,7 @@ describe MiqAlert do
       it "miq_alert_status.description = miq_alert.description event if overriden by ems_event.description" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!", :type => 'WhateverEvent')
+          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!")
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.description).to eq("VM Unregistered")
