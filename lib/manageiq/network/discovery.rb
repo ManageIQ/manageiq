@@ -7,7 +7,7 @@ module ManageIQ
     end
 
     module Discovery
-  	  PROVIDERS_BY_TYPE = {
+      PROVIDERS_BY_TYPE = {
         :ipmi            => "ManageIQ::Network::IPMI::Discovery",
         :msvirtualserver => "ManageIQ::Providers::Microsoft::Discovery",
         :mswin           => "ManageIQ::Providers::Microsoft::Discovery",
@@ -17,7 +17,7 @@ module ManageIQ
         :esx             => "ManageIQ::Providers::Vmware::Discovery",
         :virtualcenter   => "ManageIQ::Providers::Vmware::Discovery",
         :vmwareserver    => "ManageIQ::Providers::Vmware::Discovery"
-      }
+      }.freeze
 
       def self.scan_host(ost)
         ost.os = []
@@ -37,9 +37,9 @@ module ManageIQ
           ost.discover_types.each do |type|
             next unless PROVIDERS_BY_TYPE.include?(type)
             klass = Object.const_get(PROVIDERS_BY_TYPE[type])
-            $log.info "#{klass}: probing ip = #{ost.ipaddr}" if $log
+            $log&.info("#{klass}: probing ip = #{ost.ipaddr}")
             klass.probe(ost)
-            $log.info "#{klass}: probe of ip = #{ost.ipaddr} complete" if $log
+            $log&.info("#{klass}: probe of ip = #{ost.ipaddr} complete")
           end
         end
       end

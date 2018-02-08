@@ -5,44 +5,32 @@ module ManageIQ
   module Network
     class Port
       def self.all_open?(ost, ports)
-        ports.each { |port| return false unless any_open?(ost, port) }
-        true
-      endf
+        ports.all? { |port| open?(ost, port) }
+      end
 
       def self.any_open?(ost, ports)
-        ports = [ports] unless ports.kind_of?(Array)
-        ports.each { |port| return true if open?(ost, port) }
-        false
+        Array(ports).any? { |port| open?(ost, port) }
       end
 
       def self.open?(ost, port)
         ost.timeout ||= 10
         begin
           Timeout.timeout(ost.timeout) do
-            s = TCPSocket.open(ost.ipaddr, port)
-            s.close
-            $log.debug("Port: IP = #{ost.ipaddr}, port = #{port}, Open") if $log
+            TCPSocket.open(ost.ipaddr, port).close
+            $log&.debug("Port open: IP = #{ost.ipaddr}, port = #{port}")
             true
           end
         rescue Timeout::Error => err
-          $log.debug("Port scan timeout: ip = #{ost.ipaddr}, port = #{port}, #{err}") if $log
+          $log&.debug("Port scan timeout: ip = #{ost.ipaddr}, port = #{port}, #{err}")
           false
         rescue StandardError => err
-          $log.debug("Port scan error: ip = #{ost.ipaddr}, port = #{port}, #{err}") if $log
+          $log&.debug("Port scan error: ip = #{ost.ipaddr}, port = #{port}, #{err}")
           false
         end
       end
 
-      def self.scan_array(ost, ports)
-        ports_found = []
-        ports.each { |port| ports_found << port if open?(ost, port) }
-        ports_found
-      end
-
-      def self.scan_range(ost, start_port, end_port)
-        ports_found = []
-        start_port.upto(end_port) { |port| ports_found << port if open?(ost, port) }
-        ports_found
+      def self.scan_open(ost, ports)
+        Array(ports).select { |port| open?(ost, port) }
       end
     end
   end
