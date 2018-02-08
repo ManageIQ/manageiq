@@ -4,6 +4,7 @@ Guidelines:
 * Keep Pull Request titles short and to the point, ideally under 72 characters
 * Provide as much context/info in the description as necessary to get the reviewer up to the same domain knowledge level as yourself
 * Keep code changes as short as possible and implementing a single feature/fix/refactoring, when possible
+* Please, make reviewers work easier by checking, if you are not introducing any technical debt: https://github.com/ManageIQ/guides/blob/master/reviewers_guidelines.md
 
 Links [Optional]
 ----------------
