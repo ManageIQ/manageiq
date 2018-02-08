@@ -20,6 +20,16 @@ describe MiqLdapToSssd::Cli do
       expect(opts).to eq(:basedn_domain => "example.com")
     end
 
+    it "should parse bind DN" do
+      opts = described_class.new.parse(%w(-b cn=Manager,dc=example,dc=com)).options.slice(:bind_dn)
+      expect(opts).to eq(:bind_dn => "cn=Manager,dc=example,dc=com")
+    end
+
+    it "should parse bind pwd" do
+      opts = described_class.new.parse(%w(-p password)).options.slice(:bind_pwd)
+      expect(opts).to eq(:bind_pwd => "password")
+    end
+
     it "should parse TLS cacert path and directory" do
       opts = described_class.new.parse(%w(-c /a/path/to/a/cacert)).options.slice(:tls_cacert, :tls_cacertdir)
       expect(opts).to eq(:tls_cacert => "/a/path/to/a/cacert", :tls_cacertdir => "/a/path/to/a")
