@@ -162,7 +162,7 @@ describe ExtManagementSystem do
 
   context "with multiple endpoints using connection_configurations" do
     let(:ems) do
-      FactoryGirl.build("ems_openstack",
+      FactoryGirl.build(:ems_openstack,
                         :hostname                  => "example.org",
                         :connection_configurations => [{:endpoint => {:role     => "amqp",
                                                                       :hostname => "amqp.example.org"}}])
@@ -181,7 +181,7 @@ describe ExtManagementSystem do
 
   context "with multiple endpoints using connection_configurations (string keys)" do
     let(:ems) do
-      FactoryGirl.build("ems_openstack",
+      FactoryGirl.build(:ems_openstack,
                         "hostname"                  => "example.org",
                         "connection_configurations" => [{"endpoint" => {"role"     => "amqp",
                                                                         "hostname" => "amqp.example.org"}}])
