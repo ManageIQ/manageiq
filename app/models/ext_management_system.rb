@@ -153,7 +153,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_total  :total_miq_templates,     :miq_templates
   virtual_total  :total_hosts,             :hosts
   virtual_total  :total_storages,          :storages
-  virtual_total  :total_clusters,          :clusters
+  virtual_total  :total_clusters,          :ems_clusters
   virtual_column :zone_name,               :type => :string, :uses => :zone
   virtual_column :total_vms_on,            :type => :integer
   virtual_column :total_vms_off,           :type => :integer
