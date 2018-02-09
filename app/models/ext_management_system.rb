@@ -678,6 +678,21 @@ class ExtManagementSystem < ApplicationRecord
     User.super_admin.tap { |u| u.current_group = tenant.default_miq_group }
   end
 
+  def self.inventory_status
+    data = includes(:zone)
+           .select(:id, :zone_id, :name, :total_hosts, :total_vms, :total_clusters)
+           .map do |ems|
+             [
+               ems.region_id, ems.zone.name, ems.name,
+               ems.total_clusters, ems.total_hosts, ems.total_vms, ems.total_storages
+             ]
+           end
+    return if data.empty?
+    data = data.sort_by { |e| [e[0], e[1], e[2], e[3]] }
+
+    data.unshift %w(region zone ems clusters hosts vms storages)
+  end
+
   private
 
   def build_connection(options = {})

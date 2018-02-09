@@ -495,4 +495,18 @@ describe ExtManagementSystem do
       expect(ManageIQ::Providers::Amazon::CloudManager.raw_connect?).to eq(true)
     end
   end
+
+  describe ".inventory_status" do
+    it "works with infra providers" do
+      ems = FactoryGirl.create(:ems_infra)
+      host = FactoryGirl.create(:host, :ext_management_system => ems)
+      FactoryGirl.create(:vm_infra, :ext_management_system => ems, :host => host)
+      FactoryGirl.create(:vm_infra, :ext_management_system => ems, :host => host)
+
+      result = ExtManagementSystem.inventory_status
+      expect(result.size).to eq(2)
+      expect(result[0]).to eq(%w(region zone ems clusters hosts vms storages))
+      expect(result[1][3..-1]).to eq([0, 1, 2, 0])
+    end
+  end
 end
