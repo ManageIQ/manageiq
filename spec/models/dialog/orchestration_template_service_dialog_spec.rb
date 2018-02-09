@@ -25,14 +25,14 @@ describe Dialog::OrchestrationTemplateServiceDialog do
     context "when allowed values are given" do
       let(:param_options) do
         constraint = OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => %w(val1 val2), :allow_multiple => true)
-        {:default_value => 'val1', :constraints => [constraint]}
+        {:default_value => '["val1"]', :constraints => [constraint]}
       end
 
       it "creates a dropdown field with pairs of values" do
         assert_field(test_field(dialog),
                      DialogFieldDropDownList,
                      :name              => "param_user",
-                     :default_value     => "val1",
+                     :default_value     => "[\"val1\"]",
                      :values            => [%w(val1 val1), %w(val2 val2)],
                      :reconfigurable    => true,
                      :force_multi_value => true)
