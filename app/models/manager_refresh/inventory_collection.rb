@@ -836,7 +836,7 @@ module ManagerRefresh
         uuids = index_value.split("__")
 
         reference = {}
-        attribute_names.each_with_index do |ref, uuid_value|
+        manager_ref.each_with_index do |ref, uuid_value|
           reference[ref] = uuids[uuid_value]
         end
         hash_uuids_by_ref << reference
