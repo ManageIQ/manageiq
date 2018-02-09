@@ -5,7 +5,7 @@
 
 TAIL_NUMBER=3
 ALL_TAIL_NUMBER=999999999999999
-NAME=$(basename $(realpath $0))
+NAME=$(basename $0)
 DIR=$(dirname $0)
 miqhosts_cmd="$DIR/miqhosts.rb"
 miqhosts_file="$DIR/miqhosts"
