@@ -495,7 +495,13 @@ then
       "miqssh") ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$ARGS" ;;
       "miqscp") ansible all -i $HOSTS -f $PARALLELISM -m copy -a "src=$1 dest=$2" ;;
       "miqcollect") ansible all -i $HOSTS -f $PARALLELISM -m fetch -a "src=$1 dest=$2/$(basename $1)-{{ inventory_hostname }} flat=yes" ;;
-      "miqgrep") ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE ;;
+      "miqgrep")
+        if [ -n "$PATTERN" ]
+        then
+          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE
+        else
+          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE
+        fi ;;
     esac
 
   else
