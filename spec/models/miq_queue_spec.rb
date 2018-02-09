@@ -53,18 +53,6 @@ describe MiqQueue do
       expect(result).to be_nil
     end
 
-    it "handles random AR error" do
-      msg = MiqQueue.new(:class_name => "MiqServer", :instance_id => @miq_server.id, :method_name => "my_zone")
-
-      expect(MiqServer).to receive(:find).with(@miq_server.id).and_raise("ugh")
-      expect(msg._log).to receive(:error).with(/will not be delivered because/)
-
-      status, message, result = msg.deliver
-      expect(status).to eq(MiqQueue::STATUS_ERROR)
-      expect(message).to eq("ugh")
-      expect(result).to be_nil
-    end
-
     it "passes args" do
       # not a valid method, just making sure everything is passed
       expect(MiqServer).to receive(:my_zone).with("1", "2").and_return("MY ZONE")
