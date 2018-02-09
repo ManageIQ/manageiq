@@ -879,6 +879,7 @@
   :level_vim: warn
   :level_websocket: info
   :level_vcloud: info
+  :level_nuage: info
 :ntp:
   :server:
   - 0.pool.ntp.org
