@@ -680,17 +680,27 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.inventory_status
     data = includes(:zone)
-           .select(:id, :zone_id, :name, :total_hosts, :total_vms, :total_clusters)
+           .select(:id, :parent_ems_id, :zone_id, :type, :name, :total_hosts, :total_vms, :total_clusters)
            .map do |ems|
              [
-               ems.region_id, ems.zone.name, ems.name,
-               ems.total_clusters, ems.total_hosts, ems.total_vms, ems.total_storages
+               ems.region_id, ems.zone.name, ems.class.short_token, ems.name,
+               ems.total_clusters, ems.total_hosts, ems.total_vms, ems.total_storages,
+               ems.try(:containers).try(:count)
              ]
            end
     return if data.empty?
     data = data.sort_by { |e| [e[0], e[1], e[2], e[3]] }
-    data = data.map { |row| row.map { |col| col.to_s == "0" ? nil : col } }
-    data.unshift %w(region zone ems clusters hosts vms storages)
+    # remove 0's (except for the region)
+    data = data.map { |row| row.each_with_index.map { |col, i| i.positive? && col.to_s == "0" ? nil : col } }
+    data.unshift(%w(region zone kind ems clusters hosts vms storages containers))
+    # remove columns where all values (except for the header) are blank
+    data.first.dup.each do |col_header|
+      col = data.first.index(col_header)
+      if data[1..-1].none? { |row| row[col] }
+        data.each { |row| row.delete_at(col) }
+      end
+    end
+    data
   end
 
   private

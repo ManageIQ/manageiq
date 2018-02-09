@@ -505,8 +505,18 @@ describe ExtManagementSystem do
 
       result = ExtManagementSystem.inventory_status
       expect(result.size).to eq(2)
-      expect(result[0]).to eq(%w(region zone ems clusters hosts vms storages))
-      expect(result[1][3..-1]).to eq([0, 1, 2, 0])
+      expect(result[0]).to eq(%w(region zone kind ems hosts vms))
+      expect(result[1][4..-1]).to eq([1, 2])
+    end
+
+    it "works with container providers" do
+      ems = FactoryGirl.create(:ems_container)
+      FactoryGirl.create(:container, :ems_id => ems.id)
+      FactoryGirl.create(:container, :ems_id => ems.id)
+      result = ExtManagementSystem.inventory_status
+      expect(result.size).to eq(2)
+      expect(result[0]).to eq(%w(region zone kind ems containers))
+      expect(result[1][4..-1]).to eq([2])
     end
   end
 end
