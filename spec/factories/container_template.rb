@@ -1,4 +1,1 @@
-FactoryGirl.define do
-  factory :container_template do
-  end
-end
+FactoryGirl.define { factory(:container_template) }

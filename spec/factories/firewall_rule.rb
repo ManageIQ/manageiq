@@ -1,4 +1,3 @@
 FactoryGirl.define do
-  factory :firewall_rule do
-  end
+  factory :firewall_rule
 end
