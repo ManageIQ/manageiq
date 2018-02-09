@@ -98,6 +98,7 @@ module Vmdb
       apply_config_value(config, $lenovo_log,        :level_lenovo)
       apply_config_value(config, $websocket_log,     :level_websocket)
       apply_config_value(config, $vcloud_log,        :level_vcloud)
+      apply_config_value(config, $nuage_log,         :level_nuage)
     end
 
     def self.create_loggers
@@ -122,6 +123,7 @@ module Vmdb
       $websocket_log     = create_multicast_logger(path_dir.join("websocket.log"))
       $miq_ae_logger     = create_multicast_logger(path_dir.join("automation.log"))
       $vcloud_log        = create_multicast_logger(path_dir.join("vcloud.log"))
+      $nuage_log         = create_multicast_logger(path_dir.join("nuage.log"))
 
       configure_external_loggers
     end

@@ -24,6 +24,7 @@ GlobalVars:
   - $vcloud_log
   - $vim_log
   - $websocket_log
+  - $nuage_log
 Rails/Exit:
   Exclude:
   - lib/workers/bin/*
