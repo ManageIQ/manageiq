@@ -55,6 +55,7 @@ describe EvmDatabaseOps do
       allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
       allow(PostgresAdmin).to receive(:runcmd_with_logging)
       allow(PostgresAdmin).to receive(:pg_dump_file?).and_return(true)
+      allow(PostgresAdmin).to receive(:base_backup_file?).and_return(false)
     end
 
     it "from local backup" do
