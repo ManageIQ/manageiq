@@ -72,7 +72,7 @@ namespace :locale do
     end
 
     config_file = args[:root].join('config/locale_task_config.yaml')
-    return unless config_file.exist?
+    next unless config_file.exist?
 
     yamls = YAML.load_file(config_file)['yaml_strings_to_extract']
     output = {}
