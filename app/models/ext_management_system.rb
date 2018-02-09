@@ -689,7 +689,7 @@ class ExtManagementSystem < ApplicationRecord
            end
     return if data.empty?
     data = data.sort_by { |e| [e[0], e[1], e[2], e[3]] }
-
+    data = data.map { |row| row.map { |col| col.to_s == "0" ? nil : col } }
     data.unshift %w(region zone ems clusters hosts vms storages)
   end
 
