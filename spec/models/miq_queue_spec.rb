@@ -6,13 +6,119 @@ describe MiqQueue do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
-    it "works with deliver_on" do
+    it "requires class_name" do
+      msg = MiqQueue.new(:class_name => nil)
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_ERROR)
+      expect(message).to eq("class_name cannot be nil")
+      expect(result).to be_nil
+    end
+
+    it "requires valid class_name" do
+      msg = MiqQueue.new(:class_name => "NotARealClazz")
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_ERROR)
+      expect(message).to eq("uninitialized constant NotARealClazz")
+      expect(result).to be_nil
+    end
+
+    it "uses class_name without instance_id" do
+      expect(MiqServer).to receive(:my_zone).and_return("MY ZONE")
+      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone")
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_OK)
+      expect(message).to eq("Message delivered successfully")
+      expect(result).to eq("MY ZONE")
+    end
+
+    it "uses object with instance_id" do
+      msg = MiqQueue.new(:class_name => "MiqServer", :instance_id => @miq_server.id, :method_name => "my_zone")
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_OK)
+      expect(message).to eq("Message delivered successfully")
+      expect(result).to eq(@miq_server.my_zone)
+    end
+
+    it "handles record not found" do
+      invalid_server_id = MiqServer.maximum(:id) + 1
+      msg = MiqQueue.new(:class_name => "MiqServer", :instance_id => invalid_server_id, :method_name => "my_zone")
+
+      expect(msg._log).to receive(:warn).with(/will not be delivered because/)
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_WARN)
+      expect(message).to be_nil
+      expect(result).to be_nil
+    end
+
+    it "passes args" do
+      # not a valid method, just making sure everything is passed
+      expect(MiqServer).to receive(:my_zone).with("1", "2").and_return("MY ZONE")
+      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :args => %w(1 2))
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_OK)
+      expect(message).to eq("Message delivered successfully")
+      expect(result).to eq("MY ZONE")
+    end
+
+    it "passes data" do
+      # not a valid method, but stubbing it out
+      expect(MiqServer).to receive(:my_zone).with("1", "2", "3").and_return("MY ZONE")
+      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :data => "3", :args => %w(1 2))
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_OK)
+      expect(message).to eq("Message delivered successfully")
+      expect(result).to eq("MY ZONE")
+    end
+
+    it "passes target_id" do
+      # not a valid method, but stubbing it out
+      expect(MiqServer).to receive(:my_zone).with(1).and_return("MY ZONE")
+      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone", :target_id => "1")
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_OK)
+      expect(message).to eq("Message delivered successfully")
+      expect(result).to eq("MY ZONE")
+    end
+
+    it "doesn't pass target_id if an instance_id is passed" do
+      expect(MiqServer).to receive(:find).with(@miq_server.id).and_return(@miq_server)
+      expect(@miq_server).to receive(:my_zone).and_return("MY ZONE")
+      msg = MiqQueue.new(:class_name => "MiqServer", :instance_id => @miq_server.id, :method_name => "my_zone", :target_id => @miq_server.id)
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_OK)
+      expect(message).to eq("Message delivered successfully")
+      expect(result).to eq("MY ZONE")
+    end
+
+    it "handles timeout errors" do
+      expect(MiqServer).to receive(:my_zone).and_raise(Timeout::Error, "timeout issue")
+      msg = MiqQueue.new(:class_name => "MiqServer", :method_name => "my_zone")
+
+      expect(msg._log).to receive(:error).with(/timed out after/)
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_TIMEOUT)
+      expect(message).to match(/timed out after/)
+      expect(result).to be_nil
+    end
+
+    it "works with MiqQueueRetryLater(deliver_on)" do
       deliver_on = Time.now.utc + 1.minute
       allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
-      msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
-      status, _message, _result = msg.deliver
+      msg = FactoryGirl.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
+      status, message, result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
+      expect(message).to match(/Message not processed/)
+
+      expect(result).to be_nil
       expect(msg.state).to eq(MiqQueue::STATE_READY)
       expect(msg.handler).to    be_nil
       expect(msg.deliver_on).to eq(deliver_on)
@@ -28,11 +134,15 @@ describe MiqQueue do
     end
 
     it "sets last_exception on raised Exception" do
-      allow(MiqServer).to receive(:foobar).and_raise(StandardError)
-      msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
-      status, _message, _result = msg.deliver
+      ex = StandardError.new("something blewup")
+      allow(MiqServer).to receive(:foobar).and_raise(ex)
+      msg = FactoryGirl.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
+      expect(msg._log).to receive(:error).with(/Error:/)
+      expect(msg._log).to receive(:log_backtrace)
+      status, message, _result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_ERROR)
-      expect(msg.last_exception).to be_kind_of(Exception)
+      expect(message).to eq("something blewup")
+      expect(msg.last_exception).to eq(ex)
     end
   end
 
