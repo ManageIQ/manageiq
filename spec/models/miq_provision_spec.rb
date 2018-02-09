@@ -209,6 +209,15 @@ describe MiqProvision do
     end
   end
 
+  describe "options" do
+    let(:miq_provision) { FactoryGirl.build(:miq_provision, :options => {'a' => "1"}) }
+    context 'converted' do
+      it 'symbols' do
+        expect(miq_provision.options[:a]).to eq("1")
+      end
+    end
+  end
+
   describe "#placement_auto" do
     let(:miq_provision) { FactoryGirl.build(:miq_provision, :options => {:placement_auto => placement_option}) }
 

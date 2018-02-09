@@ -430,6 +430,22 @@ describe MiqRequest do
     end
   end
 
+  context "options" do
+    before do
+      allow(MiqServer).to receive(:my_zone).and_return("New York")
+    end
+
+    let(:request) do
+      FactoryGirl.create(:miq_provision_request,
+                         :requester => fred,
+                         :options   => {'abc' => "1"})
+    end
+
+    it 'strings are symbolized' do
+      expect(request.options[:abc]).to eq("1")
+    end
+  end
+
   context "#update_request" do
     before do
       allow(MiqServer).to receive(:my_zone).and_return("New York")
