@@ -136,33 +136,65 @@ describe DialogFieldDropDownList do
       end
     end
 
-    context "#initialize_with_values" do
-      before(:each) do
-        @df.values = [%w(3 X), %w(2 Y), %w(1 Z)]
-        @df.load_values_on_init = true
-      end
+    it "#automate_key_name" do
+      expect(@df.automate_key_name).to eq("dialog_drop_down_list")
+    end
+  end
+
+  describe "#initialize_with_values" do
+    let(:dialog_field) { described_class.new(:options => {:force_multi_value => force_multi_value}) }
+
+    before do
+      dialog_field.values = [%w(3 X), %w(2 Y), %w(1 Z)]
+      dialog_field.load_values_on_init = true
+    end
+
+    context "when force_multi_value is not true" do
+      let(:force_multi_value) { false }
 
       it "uses the nil as the default value" do
-        @df.default_value = nil
-        @df.initialize_with_values({})
-        expect(@df.value).to eq(nil)
+        dialog_field.default_value = nil
+        dialog_field.initialize_with_values({})
+        expect(dialog_field.value).to eq(nil)
       end
 
       it "with default value" do
-        @df.default_value = "1"
-        @df.initialize_with_values({})
-        expect(@df.value).to eq("1")
+        dialog_field.default_value = "1"
+        dialog_field.initialize_with_values({})
+        expect(dialog_field.value).to eq("1")
       end
 
       it "uses the nil when there is a non-matching default value" do
-        @df.default_value = "4"
-        @df.initialize_with_values({})
-        expect(@df.value).to eq(nil)
+        dialog_field.default_value = "4"
+        dialog_field.initialize_with_values({})
+        expect(dialog_field.value).to eq(nil)
       end
     end
 
-    it "#automate_key_name" do
-      expect(@df.automate_key_name).to eq("dialog_drop_down_list")
+    context "when force_multi_value is true" do
+      let(:force_multi_value) { true }
+
+      context "when the default values are included in the value list" do
+        before do
+          dialog_field.default_value = "[\"3\", \"2\"]"
+        end
+
+        it "uses the default value" do
+          dialog_field.initialize_with_values({})
+          expect(dialog_field.value).to eq("[\"3\", \"2\"]")
+        end
+      end
+
+      context "when the default values are not included in the value list" do
+        before do
+          dialog_field.default_value = "[\"4\"]"
+        end
+
+        it "uses nil" do
+          dialog_field.initialize_with_values({})
+          expect(dialog_field.value).to eq(nil)
+        end
+      end
     end
   end
 
