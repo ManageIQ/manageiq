@@ -1,0 +1,33 @@
+---
+- description: Tag Test Failure
+  icon:
+  read_only: false
+  syntax: string
+  single_value: true
+  example_text: Brant Test
+  parent_id: 0
+  show: true
+  default:
+  perf_by_tag: false
+  name: tag_test_Failure
+  entries:
+  - description: A
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: a
+  - description: One
+    icon:
+    read_only: false
+    syntax: string
+    single_value: false
+    example_text:
+    show: true
+    default:
+    perf_by_tag:
+    name: '1'
