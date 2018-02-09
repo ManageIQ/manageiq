@@ -78,10 +78,9 @@ describe DialogFieldImporter do
     context "when the type of the dialog field is a tag control" do
       let(:type) { "DialogFieldTagControl" }
 
-      context "when the import file contains a category name" do
+      context "when the import file contains a category name with no category_id" do
         let(:options) do
           {
-            :category_id          => "123",
             :category_name        => "best_category",
             :category_description => category_description
           }
@@ -123,12 +122,38 @@ describe DialogFieldImporter do
         end
       end
 
-      context "when the import file only contains a category id" do
-        let(:options) { {:category_id => "123"} }
+      context "when the import file contains a category id a category name and a description" do
+        before do
+          @existing_category = Category.create!(:name => "best_category", :description => "best_category")
+        end
+        let(:options) do
+          {
+            :category_id          => @existing_category.id,
+            :category_name        => @existing_category.name,
+            :category_description => @existing_category.description
+          }
+        end
 
         it "uses the category id provided" do
           dialog_field_importer.import_field(dialog_field)
-          expect(DialogFieldTagControl.first.category).to eq("123")
+          expect(DialogFieldTagControl.first.category).to eq(@existing_category.id.to_s)
+        end
+      end
+
+      context "when the import file contains a category id with a different description" do
+        before do
+          @existing_category = Category.create!(:name => "best_category", :description => "best_category")
+        end
+        let(:options) do
+          {
+            :category_id          => @existing_category.id,
+            :category_description => "bad description"
+          }
+        end
+
+        it "returns nil" do
+          dialog_field_importer.import_field(dialog_field)
+          expect(DialogFieldTagControl.first.category).to eq(nil)
         end
       end
     end
