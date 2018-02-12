@@ -6083,11 +6083,11 @@
     :children:
     - :name: Create Transformation Mapping
       :description: Create Transformation Mapping
-      :identifier: tranformation_mapping_new
+      :identifier: transformation_mapping_new
       :feature_type: admin
     - :name: Edit Transformation Mapping
       :description: Edit Transformation Mapping
-      :identifier: tranformation_mapping_edit
+      :identifier: transformation_mapping_edit
       :feature_type: admin
     - :name: Delete Transformation Mapping
       :description: Delete Transformation Mapping
