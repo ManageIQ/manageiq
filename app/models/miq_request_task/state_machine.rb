@@ -3,7 +3,7 @@ module MiqRequestTask::StateMachine
   delegate :my_zone, :to => :source,      :allow_nil => true
 
   def my_task_id
-    "#{self.class.base_model.name.underscore}_#{id}"
+    "#{miq_request_id}_#{self.class.base_model.name.underscore}_#{id}"
   end
 
   def signal_abort
