@@ -23,6 +23,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
   def do_work
     embedded_ansible.start if !embedded_ansible.alive? && !embedded_ansible.running?
+    provider.authentication_check if embedded_ansible.alive? && !provider.authentication_status_ok?
   end
 
   def before_exit(*_)
@@ -37,7 +38,6 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
   def update_embedded_ansible_provider
     server   = MiqServer.my_server(true)
-    provider = ManageIQ::Providers::EmbeddedAnsible::Provider.first_or_initialize
 
     provider.name = "Embedded Ansible"
     provider.zone = server.zone
@@ -64,6 +64,10 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def message_sync_config(*_args); end
 
   private
+
+  def provider
+    @provider ||= ManageIQ::Providers::EmbeddedAnsible::Provider.first_or_initialize
+  end
 
   def provider_url
     URI::Generic.build(provider_uri_hash).to_s
