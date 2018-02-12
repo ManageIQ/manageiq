@@ -43,7 +43,7 @@ class ServiceReconfigureTask < MiqRequestTask
         :args           => [args],
         :role           => 'automate',
         :zone           => zone,
-        :tracking_label => "#{self.class.name.underscore}_#{id}"
+        :tracking_label => my_task_id
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
