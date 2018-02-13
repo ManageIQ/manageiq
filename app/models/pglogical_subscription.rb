@@ -91,7 +91,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def validate(new_connection_params = {})
-    find_password
+    find_password if new_connection_params['password'].blank?
     connection_hash = attributes.merge(new_connection_params.delete_blanks)
     MiqRegionRemote.validate_connection_settings(connection_hash['host'],
                                                  connection_hash['port'],
