@@ -93,6 +93,19 @@ module MiqReport::Generator
     end
   end
 
+  # would like this format to go away
+  # will go away when we drop build_reportable_data
+  def invent_report_includes
+    return {} unless col_order
+    col_order.each_with_object({}) do |col, ret|
+      next unless col.include?(".")
+      *rels, column = col.split(".")
+      if col !~ /managed\./ && col !~ /virtual_custom/
+        (rels.inject(ret) { |h, rel| h[rel] ||= {} }["columns"] ||= []) << column
+      end
+    end
+  end
+
   def include_as_hash(includes = include, klass = db_class, klass_cols = cols)
     result = {}
     if klass_cols && klass && klass.respond_to?(:virtual_attribute?)
@@ -377,8 +390,9 @@ module MiqReport::Generator
     objs = build_add_missing_timestamps(objs)
 
     data = build_includes(objs)
+    inc = include.presence || invent_report_includes
     result = data.collect do |entry|
-      build_reportable_data(entry, {:only => only_cols, "include" => include}, nil)
+      build_reportable_data(entry, {:only => only_cols, "include" => inc}, nil)
     end.flatten
 
     if rpt_options && rpt_options[:pivot]
@@ -638,9 +652,10 @@ module MiqReport::Generator
   def build_includes(objs)
     results = []
 
+    inc = include.presence || invent_report_includes
     objs.each do |obj|
       entry = {:obj => obj}
-      build_search_includes(obj, entry, include) if include
+      build_search_includes(obj, entry, inc) if inc
       results.push(entry)
     end
 
@@ -661,6 +676,7 @@ module MiqReport::Generator
     end
   end
 
+  # simplify to use col_sort_order. "include" won't be necessary)
   def build_reportable_data(entry, options, parent_association)
     rec = entry[:obj]
     data_records = [build_get_attributes_with_options(rec, options)]
