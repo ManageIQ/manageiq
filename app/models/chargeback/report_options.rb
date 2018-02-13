@@ -121,7 +121,23 @@ class Chargeback
     end
 
     def group_with(records)
-      group_by_tenant? ? records.group_by { |x| x.resource.tenant.id } : records.group_by(&:resource_id)
+      if group_by_tenant?
+        tenant_grouped_rollups = records.group_by { |x| x.resource.tenant }
+        tenant_schema = tenant_grouped_rollups.keys.map { |x| { x.id => x.subtree } }
+        tenant_subtree_grouped_rollups = {}
+
+        tenant_schema.each do |tenant_sub_tree_ids|
+          tenant_sub_tree_ids.each do |tenant_id, tenant_sub_tree|
+            tenant_sub_tree.each do |fetch_tenant|
+              tenant_subtree_grouped_rollups[tenant_id] ||= []
+              tenant_subtree_grouped_rollups[tenant_id].push(tenant_grouped_rollups[fetch_tenant])
+            end
+          end
+        end
+        Hash[tenant_subtree_grouped_rollups.map { |x| [x.first, x.second.flatten.compact] }]
+      else
+        records.group_by(&:resource_id)
+      end
     end
 
     def classification_for(consumption)
