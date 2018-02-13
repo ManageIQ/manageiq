@@ -1,8 +1,8 @@
-require 'manageiq/network/discovery'
+require 'manageiq/network_discovery/discovery'
 require 'ostruct'
 require 'benchmark'
 
-RSpec.describe ManageIQ::Network::Port do
+RSpec.describe ManageIQ::NetworkDiscovery::Port do
   before do
     @ost = OpenStruct.new
     @ost.ipaddr = '172.16.254.1'

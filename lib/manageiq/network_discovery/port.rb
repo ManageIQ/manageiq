@@ -2,7 +2,7 @@ require 'timeout'
 require 'socket'
 
 module ManageIQ
-  module Network
+  module NetworkDiscovery
     class Port
       def self.all_open?(ost, ports)
         ports.all? { |port| open?(ost, port) }
