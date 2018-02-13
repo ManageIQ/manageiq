@@ -36,6 +36,7 @@ gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
+gem "grpc",                           "~>1.3.0"
 gem "hamlit",                         "~>2.7.0"
 gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
