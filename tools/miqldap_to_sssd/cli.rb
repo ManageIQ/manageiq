@@ -18,6 +18,18 @@ module MiqLdapToSssd
             :default => nil,
             :type    => :string
 
+        opt :bind_dn,
+            "The Bind DN, credential to use to authenticate against LDAP e.g. cn=Manager,dc=example,dc=com",
+            :short   => "b",
+            :default => nil,
+            :type    => :string
+
+        opt :bind_pwd,
+            "The Base DN domain name, e.g. example.com",
+            :short   => "p",
+            :default => nil,
+            :type    => :string
+
         opt :tls_cacert,
             "Path to certificate file",
             :short   => "c",
