@@ -65,7 +65,7 @@ module TargetedRefreshSpecHelper
       :disk                          => Disk.count,
       :guest_device                  => GuestDevice.count,
       :hardware                      => Hardware.count,
-      :network                       => Network.count,
+      :network                       => ::Network.count,
       :operating_system              => OperatingSystem.count,
       :snapshot                      => Snapshot.count,
       :system_service                => SystemService.count,

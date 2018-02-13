@@ -82,7 +82,7 @@ module ScanningMixin
     # Find out what XML file document we are being passed.
     case xml_node.root.name
     when "miq"
-      for element_class in [OperatingSystem, Account, SystemService, GuestApplication, Patch, Network]
+      for element_class in [OperatingSystem, Account, SystemService, GuestApplication, Patch, ::Network]
         begin
           element_class.add_elements(self, xml_node)
           updated = true

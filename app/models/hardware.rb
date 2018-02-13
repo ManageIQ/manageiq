@@ -5,7 +5,7 @@ class Hardware < ApplicationRecord
   belongs_to  :host
   belongs_to  :computer_system
 
-  has_many    :networks, :dependent => :destroy
+  has_many    :networks, :dependent => :destroy, :class_name => '::Network'
   has_many    :firmwares, :as => :resource, :dependent => :destroy
 
   has_many    :disks, -> { order(:location) }, :dependent => :destroy

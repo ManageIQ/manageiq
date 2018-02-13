@@ -783,7 +783,7 @@ describe ManagerRefresh::SaveInventory do
       :manager_ref => %i(hardware device_name)
     )
     @data[:networks] = ::ManagerRefresh::InventoryCollection.new(
-      :model_class => Network,
+      :model_class => ::Network,
       :parent      => @ems,
       :association => :networks,
       :manager_ref => %i(hardware description)
