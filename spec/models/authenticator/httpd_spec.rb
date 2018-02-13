@@ -550,6 +550,26 @@ describe Authenticator::Httpd do
           authenticate
         end
       end
+
+      context "when group names have escaped special characters" do
+        let(:config) { {:httpd_role => true} }
+        let(:headers) do
+          super().merge('X-Remote-User-Groups' => CGI.escape('spécial_char@fqdn:moré@fqdn'))
+        end
+        let(:user_attrs) do
+          { :username  => "testuser",
+            :fullname  => "Test User",
+            :firstname => "Alice",
+            :lastname  => "Aardvark",
+            :email     => "testuser@example.com",
+            :domain    => "example.com" }
+        end
+
+        it "handles group names with escaped special characters" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["spécial_char@fqdn", "moré@fqdn"])
+          authenticate
+        end
+      end
     end
   end
 end
