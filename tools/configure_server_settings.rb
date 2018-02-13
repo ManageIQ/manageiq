@@ -32,7 +32,7 @@ key = keys.pop.to_sym
 keys.each { |p| path = path[p.to_sym] }
 
 puts "Setting [#{opts[:path]}], old value: [#{path[key]}], new value: [#{opts[:value]}]"
-path[key] = opts[:value]
+path[key] = eval(opts[:value])
 
 valid, errors = VMDB::Config::Validator.new(settings).validate
 unless valid
