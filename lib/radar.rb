@@ -1,5 +1,4 @@
 class Radar
-  require Rails.root.join('tools/radar/rollup_radar_mixin')
   extend RollupRadarMixin
 
   def self.capture(last = nil, label = nil)
