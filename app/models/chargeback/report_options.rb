@@ -17,7 +17,8 @@ class Chargeback
     :userid,
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U
-    :method_for_allocated_metrics
+    :method_for_allocated_metrics,
+    :group_by_tenant?
   ) do
     def self.new_from_h(hash)
       new(*hash.values_at(*members))
@@ -115,10 +116,38 @@ class Chargeback
       end
     end
 
+    def tenant_for(consumption)
+      consumption.resource.tenant
+    end
+
+    def group_with(records)
+      if group_by_tenant?
+        tenant_grouped_rollups = records.group_by { |x| x.resource.tenant }
+        tenant_schema = tenant_grouped_rollups.keys.map { |x| { x.id => x.subtree } }
+        tenant_subtree_grouped_rollups = {}
+
+        tenant_schema.each do |tenant_sub_tree_ids|
+          tenant_sub_tree_ids.each do |tenant_id, tenant_sub_tree|
+            tenant_sub_tree.each do |fetch_tenant|
+              tenant_subtree_grouped_rollups[tenant_id] ||= []
+              tenant_subtree_grouped_rollups[tenant_id].push(tenant_grouped_rollups[fetch_tenant])
+            end
+          end
+        end
+        Hash[tenant_subtree_grouped_rollups.map { |x| [x.first, x.second.flatten.compact] }]
+      else
+        records.group_by(&:resource_id)
+      end
+    end
+
     def classification_for(consumption)
       tag = consumption.tag_names.find { |x| x.starts_with?(groupby_tag) } # 'department/*'
       tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
       tag_hash[tag]
+    end
+
+    def group_by_tenant?
+      self[:groupby] == 'tenant'
     end
 
     private
