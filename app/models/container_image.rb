@@ -26,6 +26,7 @@ class ContainerImage < ApplicationRecord
   has_many :openscap_rule_results, :through => :openscap_result
   has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
   has_many :docker_labels, -> { where(:section => "docker_labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
+  has_many :container_image_labels, -> { where(:section => %w(labels docker_labels)) }, :class_name => "CustomAttribute", :as => :resource
   has_one :last_scan_result, :class_name => ScanResult, :as => :resource, :dependent => :destroy, :autosave => true
 
   serialize :exposed_ports, Hash
