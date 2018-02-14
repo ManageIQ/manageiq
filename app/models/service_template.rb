@@ -416,11 +416,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def build_resource_action(ae_endpoint, action)
-    fqname = if ae_endpoint.empty?
-               self.class.send(action[:method], *action[:args]) || ""
-             else
-               ae_endpoint[:fqname]
-             end
+    fqname = ae_endpoint[:fqname] || self.class.send(action[:method], *action[:args]) || ""
 
     build_options = {:action        => action[:name],
                      :fqname        => fqname,
