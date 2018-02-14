@@ -33,6 +33,7 @@ class Chargeback
         raise "Invalid method for allocated calculations #{method}"
       end
 
+      return :sum_of_maxes_from_grouped_values if method == :max && group_by_tenant?
       method
     end
 

@@ -462,7 +462,7 @@ describe ChargebackVm do
           expect(subject_row_for_tenant(tenant_2).cpu_used_cost).to eq(2 * 50 * hourly_usage * monthly_used_rate)
 
           expect(subject_row_for_tenant(tenant_3).cpu_used_metric).to eq(2 * 50 * hourly_usage)
-          expect(subject_row_for_tenant(tenant_3).cpu_used_cost).to eq( 2 * 50 * hourly_usage * monthly_used_rate)
+          expect(subject_row_for_tenant(tenant_3).cpu_used_cost).to eq(2 * 50 * hourly_usage * monthly_used_rate)
 
           expect(subject_row_for_tenant(tenant_4).cpu_used_metric).to eq(2 * 50 * hourly_usage)
           expect(subject_row_for_tenant(tenant_4).cpu_used_cost).to eq(2 * 50 * hourly_usage * monthly_used_rate)
@@ -502,7 +502,7 @@ describe ChargebackVm do
             expect(subject_row_for_tenant(tenant_2).cpu_used_cost).to eq(hourly_usage * 2 * 50 * monthly_used_rate)
 
             expect(subject_row_for_tenant(tenant_3).cpu_used_metric).to eq(hourly_usage * 2 * 50)
-            expect(subject_row_for_tenant(tenant_3).cpu_used_cost).to eq(hourly_usage * 2 * 50* monthly_used_rate)
+            expect(subject_row_for_tenant(tenant_3).cpu_used_cost).to eq(hourly_usage * 2 * 50 * monthly_used_rate)
 
             expect(subject_row_for_tenant(tenant_4).cpu_used_metric).to eq(hourly_usage * 2 * 50)
             expect(subject_row_for_tenant(tenant_4).cpu_used_cost).to eq(hourly_usage * 2 * 50 * monthly_used_rate)
@@ -540,11 +540,11 @@ describe ChargebackVm do
               expect(subject_row_for_tenant(tenant_1).cpu_used_cost).to eq(all_vms_cpu_cost)
 
               # Tenant 5 Vms
-              result_vm_1_5 = result_row_for_vm(vm_1_5)
-              result_vm_2_5 = result_row_for_vm(vm_2_5)
+              result_vm15 = result_row_for_vm(vm_1_5)
+              result_vm25 = result_row_for_vm(vm_2_5)
 
-              expect(subject_row_for_tenant(tenant_5).cpu_used_metric).to eq(result_vm_1_5.cpu_used_metric + result_vm_2_5.cpu_used_metric)
-              expect(subject_row_for_tenant(tenant_5).cpu_used_cost).to eq(result_vm_1_5.cpu_used_cost + result_vm_2_5.cpu_used_cost)
+              expect(subject_row_for_tenant(tenant_5).cpu_used_metric).to eq(result_vm15.cpu_used_metric + result_vm25.cpu_used_metric)
+              expect(subject_row_for_tenant(tenant_5).cpu_used_cost).to eq(result_vm15.cpu_used_cost + result_vm25.cpu_used_cost)
             end
 
             it 'calculated allocted metric and cost with using max(max is not summed up - it is taken maximum)' do
