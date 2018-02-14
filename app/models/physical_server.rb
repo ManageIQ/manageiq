@@ -23,6 +23,7 @@ class PhysicalServer < ApplicationRecord
   has_one :hardware, :through => :computer_system
   has_one :host, :inverse_of => :physical_server
   has_one :asset_detail, :as => :resource, :dependent => :destroy
+  has_many :guest_devices, :through => :hardware
 
   scope :with_hosts, -> { where("physical_servers.id in (select hosts.physical_server_id from hosts)") }
 
