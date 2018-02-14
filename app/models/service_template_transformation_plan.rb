@@ -90,4 +90,5 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
       :provision              => {}
     }
   end
+  private_class_method :validate_config_info
 end

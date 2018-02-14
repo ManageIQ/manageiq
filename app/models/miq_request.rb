@@ -96,6 +96,11 @@ class MiqRequest < ApplicationRecord
       :AutomationRequest => {
         :automation => N_("Automation")
       }
+    },
+    :Transformation => {
+      :ServiceTemplateTransformationPlanRequest => {
+        :transformation_plan => N_("Transformation Plan")
+      }
     }
   }.freeze
 

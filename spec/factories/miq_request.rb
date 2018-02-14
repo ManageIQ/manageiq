@@ -13,6 +13,10 @@ FactoryGirl.define do
       source { create(:miq_template) }
     end
 
+    factory :service_template_transformation_plan_request, :class => "ServiceTemplateTransformationPlanRequest" do
+      source { create(:service_template_transformation_plan) }
+    end
+
     trait :with_approval do
       transient do
         reason ""
