@@ -794,7 +794,7 @@ module ManagerRefresh
     def targeted_arel_default
       if parent_inventory_collections.collect { |x| x.model_class.base_class }.uniq.count > 1
         raise "Multiple :parent_inventory_collections with different base class are not supported by default. Write "\
-              ":targeted_arel manually, or separate InventoryCollection in 2."
+              ":targeted_arel manually, or separate [#{self}] into 2 InventoryCollection objects."
       end
       parent_collection = parent_inventory_collections.first
       references        = parent_inventory_collections.collect(&:targeted_scope).reduce({}, :merge!)
