@@ -16,7 +16,7 @@ class Radar
       cpu_usage_rate_average = mr.cpu_usage_rate_average || 0
       next unless cpu_usage_rate_average < row['max_sum_used_cores']
       mr.update_attributes(
-          :cpu_usage_rate_average => row['max_sum_used_cores']
+        :cpu_usage_rate_average => row['max_sum_used_cores']
       )
     end
   end
