@@ -15,6 +15,8 @@ class GuestDevice < ApplicationRecord
   has_many :firmwares, :dependent => :destroy
   has_many :child_devices, -> { where(:parent_device_id => ids) }, :foreign_key => "parent_device_id", :class_name => "GuestDevice", :dependent => :destroy
 
+  alias_attribute :name, :device_name
+
   def self.with_ethernet_type
     where(:device_type => "ethernet")
   end
