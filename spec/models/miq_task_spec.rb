@@ -202,6 +202,7 @@ describe MiqTask do
       expect(message.method_name).to eq("my_method")
       expect(message.args).to eq([1, 2, 3])
       expect(message.zone).to eq(zone)
+      expect(message.miq_task_id).to eq(tid)
     end
   end
 
