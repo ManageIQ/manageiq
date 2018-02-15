@@ -13,6 +13,7 @@ class MiqGroup < ApplicationRecord
   has_many   :miq_report_results, :dependent => :nullify
   has_many   :miq_widget_contents, :dependent => :destroy
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
+  has_many   :miq_product_features, :through => :miq_user_role
 
   virtual_column :miq_user_role_name, :type => :string,  :uses => :miq_user_role
   virtual_column :read_only,          :type => :boolean
