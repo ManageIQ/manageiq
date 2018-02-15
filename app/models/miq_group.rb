@@ -17,6 +17,7 @@ class MiqGroup < ApplicationRecord
 
   virtual_column :miq_user_role_name, :type => :string,  :uses => :miq_user_role
   virtual_column :read_only,          :type => :boolean
+  virtual_has_one :sui_product_features, :class_name => "Array"
 
   delegate :self_service?, :limited_self_service?, :disallowed_roles, :to => :miq_user_role, :allow_nil => true
 
@@ -259,6 +260,13 @@ class MiqGroup < ApplicationRecord
     group_user_ids = user_ids
     return false if group_user_ids.empty?
     users.includes(:miq_groups).where(:id => group_user_ids).where.not(:miq_groups => {:id => id}).count != group_user_ids.size
+  end
+
+  def sui_product_features
+    return [] unless miq_user_role.allows?(:identifier => 'sui')
+    MiqProductFeature.feature_all_children('sui').each_with_object([]) do |sui_feature, sui_features|
+      sui_features << sui_feature if miq_user_role.allows?(:identifier => sui_feature)
+    end
   end
 
   private
