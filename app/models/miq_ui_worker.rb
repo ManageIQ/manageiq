@@ -31,6 +31,6 @@ class MiqUiWorker < MiqWorker
   end
 
   def container_image_name
-    "docker.io/carbonin/manageiq-ui-worker"
+    "manageiq/manageiq-ui-worker"
   end
 end

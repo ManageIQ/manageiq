@@ -47,7 +47,7 @@ class MiqWorker
 
     # Can be overriden by including classes
     def container_image_name
-      "docker.io/carbonin/manageiq-webserver-worker"
+      "manageiq/manageiq-webserver-worker"
     end
   end
 end

@@ -19,7 +19,7 @@ class MiqWorker
     end
 
     def container_image_name
-      "docker.io/carbonin/manageiq-base-worker"
+      "manageiq/manageiq-base-worker"
     end
 
     def container_image_tag
