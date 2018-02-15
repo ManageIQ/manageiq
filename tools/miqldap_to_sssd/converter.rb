@@ -19,7 +19,7 @@ module MiqLdapToSssd
       LOGGER.debug("Running #{$PROGRAM_NAME}")
 
       do_conversion unless initial_settings[:only_change_userids]
-      ConfigureDatabase.new.change_userids_to_upn unless initial_settings[:skip_post_coversion_userid_change]
+      ConfigureDatabase.new.change_userids_to_upn unless initial_settings[:skip_post_conversion_userid_change]
 
       Services.restart
 
