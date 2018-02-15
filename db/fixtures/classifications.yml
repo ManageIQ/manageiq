@@ -1022,3 +1022,51 @@
   :parent_id: 0
   :default: true
   :single_value: "1"
+- :description: V2V - Transformation Host
+  :entries:
+  - :description: True
+    :read_only: "0"
+    :syntax: string
+    :name: "true"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: False
+    :read_only: "0"
+    :syntax: string
+    :name: "false"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: v2v_transformation_host
+  :example_text: Transformation Host role enabled for V2V.
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
+- :description: V2V - Transformation Method
+  :entries:
+  - :description: VDDK
+    :read_only: "0"
+    :syntax: string
+    :name: vddk
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: SSH
+    :read_only: "0"
+    :syntax: string
+    :name: ssh
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: v2v_transformation_method
+  :example_text: Transformation methods supported for V2V.
+  :parent_id: 0
+  :default: true
+  :single_value: "0"
