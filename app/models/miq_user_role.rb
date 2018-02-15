@@ -27,8 +27,7 @@ class MiqUserRole < ApplicationRecord
   }
 
   def feature_identifiers
-    # TODO: Why can't this be #pluck?
-    miq_product_features.collect(&:identifier)
+    miq_product_features.pluck(:identifier)
   end
 
   # @param identifier [String] Product feature identifier to check if this role allows access to it
