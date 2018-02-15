@@ -43,7 +43,7 @@ module MiqLdapToSssd
 
       begin
         miq_ext_auth = File.read("#{HTTPD_CONF_DIR}/manageiq-external-auth.conf")
-        miq_ext_auth[/(\s*)KrbAuthRealms(\s*)(.*)/, 3] = initial_settings[:basedn_domain]
+        miq_ext_auth[/(\s*)KrbAuthRealms(\s*)(.*)/, 3] = initial_settings[:domain]
         File.write("#{HTTPD_CONF_DIR}/manageiq-external-auth.conf", miq_ext_auth)
       rescue Errno::ENOENT, IndexError => err
         LOGGER.fatal(err.message)

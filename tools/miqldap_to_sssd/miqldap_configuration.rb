@@ -27,8 +27,8 @@ module MiqLdapToSssd
 
     private
 
-    def check_for_basedn_domain
-      if initial_settings[:basedn_domain].nil? && initial_settings[:basedn].nil?
+    def check_for_domain
+      if initial_settings[:domain].nil? && initial_settings[:basedn].nil?
         LOGGER.fatal(NO_BASE_DN_DOMAIN)
         raise MiqLdapConfigurationArgumentError, NO_BASE_DN_DOMAIN
       end
@@ -65,11 +65,11 @@ module MiqLdapToSssd
     end
 
     def derive_domain
-      check_for_basedn_domain
+      check_for_domain
 
       # If the caller did not provide a base DN domain name derive it from the configured Base DN.
-      if initial_settings[:basedn_domain].nil?
-        initial_settings[:basedn_domain] = initial_settings[:basedn].downcase.split(",").collect do |p|
+      if initial_settings[:domain].nil?
+        initial_settings[:domain] = initial_settings[:basedn].downcase.split(",").collect do |p|
           p.split('dc=')[1]
         end.compact.join('.')
       end

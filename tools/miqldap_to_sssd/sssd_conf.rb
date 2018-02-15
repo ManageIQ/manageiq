@@ -37,8 +37,8 @@ module MiqLdapToSssd
       File.open(SSSD_CONF_FILE, "w") do |f|
         sssd_conf_contents.each do |section, values|
           if section == :domain
-            f.write("\n[domain/#{initial_settings[:basedn_domain]}]\n")
-            f.write("\n[application/#{initial_settings[:basedn_domain]}]\n")
+            f.write("\n[domain/#{initial_settings[:domain]}]\n")
+            f.write("\n[application/#{initial_settings[:domain]}]\n")
           else
             f.write("\n[#{section}]\n")
           end

@@ -15,11 +15,11 @@ module MiqLdapToSssd
     end
 
     def default_domain_suffix
-      initial_settings[:basedn_domain]
+      initial_settings[:domain]
     end
 
     def domains
-      initial_settings[:basedn_domain]
+      initial_settings[:domain]
     end
 
     def sbus_timeout
