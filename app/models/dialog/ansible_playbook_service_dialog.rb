@@ -8,7 +8,7 @@ class Dialog
     # The job_template contains the playbook
     def create_dialog(label, extra_vars, hosts = 'localhost')
       Dialog.new(:label => label, :buttons => "submit,cancel").tap do |dialog|
-        tab = dialog.dialog_tabs.build(:display => "edit", :label => "Basic Information", :position => 0)
+        tab = dialog.dialog_tabs.build(:dialog => dialog, :display => "edit", :label => "Basic Information", :position => 0)
         add_options_group(tab, 0, hosts)
         unless extra_vars.blank?
           add_variables_group(tab, 1, extra_vars)

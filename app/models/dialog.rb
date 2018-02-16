@@ -4,8 +4,8 @@ class Dialog < ApplicationRecord
   # The following gets around a glob symbolic link issue
   YAML_FILES_PATTERN = "{,*/**/}*.{yaml,yml}".freeze
 
-  has_many :dialog_tabs, -> { order(:position) }, :dependent => :destroy
   validate :validate_children
+  has_many :dialog_tabs, -> { order(:position) }, :dependent => :destroy, :autosave => true
 
   include DialogMixin
   has_many :resource_actions
@@ -13,6 +13,7 @@ class Dialog < ApplicationRecord
 
   before_destroy :reject_if_has_resource_actions
   validates      :name, :unique_within_region => true
+  validates      :dialog_tabs, :presence => {:message => ->(object, _) { "missing for Dialog #{object.name}" }}
 
   alias_attribute  :name, :label
 
@@ -55,12 +56,6 @@ class Dialog < ApplicationRecord
   end
 
   def validate_children
-    # To remove the meaningless error message like "Dialog tabs is invalid" when child's validation fails
-    errors[:dialog_tabs].delete("is invalid")
-    if dialog_tabs.blank?
-      errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
-    end
-
     duplicate_field_names = dialog_fields.collect(&:name).duplicates
     if duplicate_field_names.present?
       errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicate_field_names.join(', ')})

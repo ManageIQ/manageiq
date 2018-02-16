@@ -3,6 +3,7 @@ class DialogTab < ApplicationRecord
   has_many   :dialog_groups, -> { order(:position) }, :dependent => :destroy
   belongs_to :dialog
   validate :validate_children
+  validates :dialog, :presence => true
 
   alias_attribute :order, :position
 

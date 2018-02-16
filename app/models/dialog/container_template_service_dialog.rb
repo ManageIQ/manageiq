@@ -7,7 +7,7 @@ class Dialog
     # This dialog is to be used by a container template service
     def create_dialog(name, parameters)
       Dialog.new(:name => name, :buttons => "submit,cancel").tap do |dialog|
-        tab = dialog.dialog_tabs.build(:display => "edit", :label => "Basic Information", :position => 0)
+        tab = dialog.dialog_tabs.build(:dialog => dialog, :display => "edit", :label => "Basic Information", :position => 0)
         add_options_group(tab, 0)
         add_parameters_group(tab, 1, parameters)
         dialog.save!
