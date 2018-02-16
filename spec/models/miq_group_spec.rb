@@ -546,4 +546,28 @@ describe MiqGroup do
       expect(User.find_by(:id => user2).current_group.id).to eq(testgroup3.id)
     end
   end
+
+  describe "#sui_product_features" do
+    let(:role) { double }
+
+    before do
+      allow(subject).to receive(:miq_user_role).and_return(role)
+    end
+
+    it "Returns an empty array for roles without sui support" do
+      allow(role).to receive(:allows?).with(:identifier => 'sui').and_return(false)
+
+      expect(subject.sui_product_features).to be_empty
+    end
+
+    it "Returns the expected sui roles" do
+      allow(MiqProductFeature).to receive(:feature_all_children).with('sui').and_return(%w(sui_role_a sui_role_b sui_role_c))
+      %w(sui sui_role_a sui_role_c).each do |ident|
+        allow(role).to receive(:allows?).with(:identifier => ident).and_return(true)
+      end
+      allow(role).to receive(:allows?).with(:identifier => 'sui_role_b').and_return(false)
+
+      expect(subject.sui_product_features).to eq(%w(sui_role_a sui_role_c))
+    end
+  end
 end
