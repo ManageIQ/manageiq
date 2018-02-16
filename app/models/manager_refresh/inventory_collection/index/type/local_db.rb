@@ -90,36 +90,27 @@ module ManagerRefresh
             paths                          = schema.keys
             rails_friendly_includes_schema = get_rails_friendly_includes_schema(paths)
 
-            all_values = []
-            full_references.each do |ref|
-              value = []
-              schema.each_key do |schema_item_path|
-                value << fetch_hash_path(schema_item_path, ref)
-              end
-              all_values << value
+            all_values = full_references.map do |ref|
+              schema.map do |schema_item_path, arel_column|
+                arel_column.eq(fetch_hash_path(schema_item_path, ref))
+              end.inject(:and)
             end
 
             # Return the the correct relation based on strategy and selection&projection
             projection = nil
 
-            db_relation(rails_friendly_includes_schema, schema.values, all_values, projection).find_each do |record|
+            db_relation(rails_friendly_includes_schema, all_values, projection).find_each do |record|
               process_db_record!(record, paths)
             end
           end
 
-          # Builds a multiselection conditions like (table1.a, table2.b) IN ((a1, b1), (a2, b2))
-          # @param column_names [Array] Array of column names in format "<table_name>.<column_name>"
-          # @param all_values [Array<Array>] nested array of values in format [[a1, b1], [a2, b2]] the nested array
-          #        values must have the order of column_names
-          # @return [String] A condition e.g. (table1.a, table2.b) IN ((a1, b1), (a2, b2)), usable in .where of an
-          #         ActiveRecord relation
-          def build_multi_selection_condition(column_names, all_values)
-            cond_data = all_values.map do |values|
-              "(#{values.map { |x| ActiveRecord::Base.connection.quote(x) }.join(",")})"
-            end.join(",")
-            column_names = column_names.join(",")
-
-            "(#{column_names}) IN (#{cond_data})"
+          # Builds a multiselection conditions like (table1.a = a1 AND table2.b = b1) OR (table1.a = a2 AND table2.b = b2)
+          # @param all_values [Array<Arel::Nodes::And>] nested array of arel nodes
+          # @return [String] A condition usable in .where of an ActiveRecord relation
+          def build_multi_selection_condition(all_values)
+            # We do pure SQL OR, since Arel is nesting every .or into another parentheses, otherwise this would be just
+            # all_values.inject(:or)
+            all_values.map { |value| "(#{value.to_sql})" }.join(" OR ")
           end
 
           # Traverses the schema_item_path e.g. [:hardware, :vm_or_template, :ems_ref] and gets the value on the path
@@ -141,7 +132,7 @@ module ManagerRefresh
           end
 
           def get_schema(full_references)
-            @schema ||= get_schema_recursive(attribute_names, table_name, full_references.first, {}, [], 0)
+            @schema ||= get_schema_recursive(attribute_names, model_class.arel_table, full_references.first, {}, [], 0)
           end
 
           # Converts an array of paths to attributes in different DB tables into rails friendly format, that can be used
@@ -178,7 +169,7 @@ module ManagerRefresh
             current_layer
           end
 
-          def get_schema_recursive(attribute_names, table_name, data, schema, path, total_level)
+          def get_schema_recursive(attribute_names, arel_table, data, schema, path, total_level)
             raise "Nested too deep" if total_level > 100
 
             attribute_names.each do |key|
@@ -188,20 +179,20 @@ module ManagerRefresh
 
               if inventory_object?(value)
                 get_schema_recursive(value.inventory_collection.manager_ref,
-                                     value.inventory_collection.table_name,
+                                     value.inventory_collection.model_class.arel_table,
                                      value,
                                      schema,
                                      new_path,
                                      total_level + 1)
               elsif inventory_object_lazy?(value)
                 get_schema_recursive(value.inventory_collection.index_proxy.named_ref(value.ref),
-                                     value.inventory_collection.table_name,
+                                     value.inventory_collection.model_class.arel_table,
                                      value.reference.full_reference,
                                      schema,
                                      new_path,
                                      total_level + 1)
               else
-                schema[new_path] = "#{table_name}.#{ActiveRecord::Base.connection.quote_column_name(key)}"
+                schema[new_path] = arel_table[key]
               end
             end
 
@@ -221,13 +212,13 @@ module ManagerRefresh
           #        values must have the order of column_names
           # @param projection [Array] A projection array resulting in Project operation (in Relation algebra terms)
           # @return [ActiveRecord::AssociationRelation] relation object having filtered data
-          def db_relation(rails_friendly_includes_schema, column_names, all_values = nil, projection = nil)
+          def db_relation(rails_friendly_includes_schema, all_values = nil, projection = nil)
             relation = if !parent.nil? && !association.nil?
                          parent.send(association)
                        elsif !arel.nil?
                          arel
                        end
-            relation = relation.where(build_multi_selection_condition(column_names, all_values)) if relation && all_values
+            relation = relation.where(build_multi_selection_condition(all_values)) if relation && all_values
             relation = relation.select(projection) if relation && projection
             relation = relation.includes(rails_friendly_includes_schema).references(rails_friendly_includes_schema) if rails_friendly_includes_schema.present?
             relation || model_class.none
