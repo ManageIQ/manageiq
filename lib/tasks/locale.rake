@@ -137,14 +137,25 @@ namespace :locale do
     system({"RAILS_ENV" => "i18n"}, "bundle exec rake locale:store_model_attributes")
   end
 
+  desc "Convert JavaScript supersets to JavaScript"
+  task "convert_to_js", [:root] do |_, args|
+    root = args[:root] || pwd
+    files = Dir.glob("#{root}/{app,db,lib,config}/**/*.{js,jsx}").reject { |f| f["/locale/"] }
+    files.each do |file|
+      cmd = "babel -o #{file}.converted.js #{file}"
+      `#{cmd}`
+    end
+  end
+
   desc "Update ManageIQ gettext catalogs"
   task "update" do
     Rake::Task['locale:store_dictionary_strings'].invoke
     Rake::Task['locale:run_store_model_attributes'].invoke
+    Rake::Task['locale:convert_to_js'].invoke(Rails.root)
     Rake::Task['locale:extract_yaml_strings'].invoke(Rails.root)
     Rake::Task['gettext:find'].invoke
 
-    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
+    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp", "{app,db,lib,config}/**/*.converted.js"].each do |file|
       File.unlink(file)
     end
   end
@@ -159,6 +170,9 @@ namespace :locale do
     @engine = "#{args[:engine].camelize}::Engine".constantize
     @engine_root = @engine.root
 
+    # convert js supersets to javascript
+    Rake::Task['locale:convert_to_js'].invoke(@engine_root)
+
     # extract plugin's yaml strings
     Rake::Task['locale:extract_yaml_strings'].invoke(@engine_root)
 
@@ -168,7 +182,7 @@ namespace :locale do
       end
 
       def files_to_translate
-        Dir.glob("#{@engine.root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,js}")
+        Dir.glob("#{@engine.root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,converted.js}")
       end
 
       def text_domain
@@ -183,7 +197,7 @@ namespace :locale do
                                 :report_warning => false)
     Rake::Task['gettext:find'].invoke
 
-    Dir["#{@engine.root}/locale/**/*.edit.po", "#{@engine.root}/locale/**/*.po.time_stamp", "#{@engine.root}/config/yaml_strings.rb"].each do |file|
+    Dir["#{@engine.root}/locale/**/*.edit.po", "#{@engine.root}/locale/**/*.po.time_stamp", "#{@engine.root}/config/yaml_strings.rb", "#{@engine.root}/{app,db,lib,config}/**/*.converted.js"].each do |file|
       File.unlink(file)
     end
   end
