@@ -447,6 +447,7 @@ class MiqQueue < ApplicationRecord
 
   def dispatch_method(obj, args)
     Timeout.timeout(msg_timeout) do
+      args = activate_miq_task(args)
       obj.send(method_name, *args)
     end
   end
@@ -541,6 +542,13 @@ class MiqQueue < ApplicationRecord
   end
 
   private
+
+  def activate_miq_task(args)
+    MiqTask.update_status(miq_task_id, MiqTask::STATE_ACTIVE,  MiqTask::STATUS_OK, "Task starting") if miq_task
+    pars = args.first
+    pars[:miq_task_id] = miq_task_id if pars.kind_of?(Hash)
+    args
+  end
 
   # default values for get operations
   def self.default_get_options(options)
