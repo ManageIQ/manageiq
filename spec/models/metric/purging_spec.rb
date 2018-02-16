@@ -94,6 +94,7 @@ describe Metric::Purging do
         end
         expect(Metric.count).to eq(17)
         # keep metric for 05:13 - 09:13
+        # note: old metrics will delete metrics at 09:14..09:59 - the new metrics will keep those
         described_class.purge_realtime(4.hours.ago)
         expect(Metric.all.map { |metric| metric.timestamp.hour }.sort).to eq [5, 6, 7, 8, 9]
         expect(Metric.count).to eq(5)
