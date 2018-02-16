@@ -92,6 +92,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def check_not_responding(class_name = nil)
+    return [] if MiqEnvironment::Command.is_container?
     processed_workers = []
     miq_workers.each do |w|
       next unless class_name.nil? || (w.type == class_name)
