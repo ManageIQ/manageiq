@@ -61,6 +61,14 @@ module Metric::Purging
     purge_scope(older_than, interval).count
   end
 
+  # Used for MetricRollup (not Metric)
+  # A list of ids (not a scope) is brought in and associated vimPerformanceTagValue records are deleted
+  #
+  # TODO: Would be more efficient to just use the full scope here (not id list)
+  #   - we would then just use the standard purge_in_batches
+  #   - remove the to_a from purge_in_batches
+  #   - possibly use the standard purge_in_batches
+  #   - change the metrics rollups to use truncate instead
   def self.purge_associated_records(metric_type, ids)
     # Since VimPerformanceTagValues are 6 * number of tags per performance
     # record, we need to batch in smaller trips.
@@ -85,8 +93,32 @@ module Metric::Purging
   end
 
   def self.purge_realtime(older_than, window = nil, total_limit = nil, &block)
-    purge_by_date(older_than, "realtime", window, total_limit, &block)
+    truncate_child_tables(older_than)
   end
+
+  # truncate metrics child tables
+  # Determines hours not being preserved and truncates them
+  # Used for realtime metrics.
+  def self.truncate_child_tables(older_than)
+    target_hours = determine_target_hours(older_than, Time.now.utc)
+    return if target_hours.blank?
+
+    target_hours.each do |hour|
+      Metric.connection.truncate(Metric.reindex_table_name(hour), "Metric Truncate table #{hour}")
+    end
+  end
+
+  def self.determine_target_hours(older_than, end_date)
+    return [] if (end_date - older_than) > 24.hours
+
+    start_hour = older_than.utc.hour
+    end_hour = end_date.utc.hour
+    end_hour += 24 if start_hour > end_hour
+
+    good_hours = (start_hour..end_hour).map { |h| h % 24 }
+    (0..23).to_a - good_hours.to_a
+  end
+  private_class_method :determine_target_hours
 
   def self.purge(older_than, interval, window = nil, total_limit = nil, &block)
     purge_by_date(older_than, interval, window, total_limit, &block)
