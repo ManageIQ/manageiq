@@ -12,5 +12,15 @@ FactoryGirl.define do
     factory :miq_provision_request,              :class => "MiqProvisionRequest" do
       source { create(:miq_template) }
     end
+
+    trait :with_approval do
+      transient do
+        reason ""
+      end
+
+      after(:create) do |request, evaluator|
+        request.miq_approvals << FactoryGirl.create(:miq_approval, :reason => evaluator.reason)
+      end
+    end
   end
 end
