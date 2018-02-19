@@ -3,6 +3,6 @@ class MiqUiWorker::Runner < MiqWorker::Runner
 
   def prepare
     super
-    MiqApache::Control.start if MiqEnvironment::Command.is_container?
+    MiqApache::Control.start if MiqEnvironment::Command.is_podified?
   end
 end
