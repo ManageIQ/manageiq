@@ -29,7 +29,7 @@ class MiqGroup < ApplicationRecord
   # For REST API compatibility only; Don't use otherwise!
   accepts_nested_attributes_for :entitlement
 
-  serialize :settings
+  serialize :settings, ActiveSupport::HashWithIndifferentAccess
 
   default_value_for :group_type, USER_GROUP
   default_value_for(:sequence) { next_sequence }
@@ -47,17 +47,9 @@ class MiqGroup < ApplicationRecord
     description
   end
 
-  def settings
-    current = super
-    return if current.nil?
-
-    self.settings = current.with_indifferent_access
-    super
-  end
-
   def settings=(new_settings)
-    indifferent_settings = new_settings.try(:with_indifferent_access)
-    super(indifferent_settings)
+    new_settings = new_settings.with_indifferent_access unless new_settings.kind_of?(ActiveSupport::HashWithIndifferentAccess)
+    super(new_settings)
   end
 
   def self.with_allowed_roles_for(user_or_group)
