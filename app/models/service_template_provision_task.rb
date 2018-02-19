@@ -128,7 +128,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       }
 
       # Automate entry point overrides from the resource_action
-      ra = source.resource_actions.detect { |ra| ra.action == 'Provision' } if source.respond_to?(:resource_actions)
+      ra = resource_action
 
       unless ra.nil?
         args[:namespace]        = ra.ae_namespace unless ra.ae_namespace.blank?
@@ -138,7 +138,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         args[:attrs].merge!(ra.ae_attributes)
       end
 
-      args[:attrs].merge!(MiqAeEngine.create_automation_attributes(destination.class.base_model.name => destination))
+      args[:attrs].merge!(MiqAeEngine.create_automation_attributes(destination.class.base_model.name => destination)) if destination.present?
       args[:user_id]      = get_user.id
       args[:miq_group_id] = get_user.current_group.id
       args[:tenant_id]    = get_user.current_tenant.id
@@ -156,6 +156,10 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     else
       execute_queue
     end
+  end
+
+  def resource_action
+    source.resource_actions.detect { |ra| ra.action == 'Provision' } if source.respond_to?(:resource_actions)
   end
 
   def service_resource
