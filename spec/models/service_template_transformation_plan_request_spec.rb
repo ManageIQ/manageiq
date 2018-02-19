@@ -15,8 +15,10 @@ describe ServiceTemplateTransformationPlanRequest do
   end
 
   describe 'customize_request_task_attributes' do
-    it 'overrides #customize_request_task_attributes' do
-      expect(described_class.instance_methods(false)).to include(:customize_request_task_attributes)
+    it 'sets the source option to be the vm in the vm_request' do
+      req_task_attrs = {}
+      request.customize_request_task_attributes(req_task_attrs, vm_requests[0])
+      expect(req_task_attrs[:source]).to eq(vms[0])
     end
   end
 

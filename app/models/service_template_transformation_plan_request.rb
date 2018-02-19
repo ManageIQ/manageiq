@@ -16,6 +16,7 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def validate_vm(_vm_id)
+    # TODO: enhance the logic to determine whether this VM can be included in this request
     true
   end
 

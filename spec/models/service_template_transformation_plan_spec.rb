@@ -33,7 +33,6 @@ describe ServiceTemplateTransformationPlan do
   describe '.create_catalog_item' do
     it 'creates and returns a transformation plan' do
       service_template = described_class.create_catalog_item(catalog_item_options)
-      service_template.reload
 
       expect(service_template.name).to eq('Transformation Plan')
       expect(service_template.transformation_mapping).to eq(transformation_mapping)

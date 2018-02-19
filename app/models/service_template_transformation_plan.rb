@@ -70,9 +70,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
                 config_info[:transformation_mapping]
               end
 
-    if mapping.blank?
-      raise _('Must provide an existing transformation mapping')
-    end
+    raise _('Must provide an existing transformation mapping') if mapping.blank?
 
     vms = if config_info[:vm_ids]
             VmOrTemplate.find(config_info[:vm_ids])
@@ -80,14 +78,12 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
             config_info[:vms]
           end
 
-    if vms.blank?
-      raise _('Must select a list of valid vms')
-    end
+    raise _('Must select a list of valid vms') if vms.blank?
 
     {
       :transformation_mapping => mapping,
       :vms                    => vms,
-      :provision              => {}
+      :provision              => config_info[:provision] || {}
     }
   end
   private_class_method :validate_config_info

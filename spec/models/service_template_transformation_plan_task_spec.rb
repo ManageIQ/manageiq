@@ -4,8 +4,11 @@ describe ServiceTemplateTransformationPlanTask do
   end
 
   describe '#after_request_task_create' do
-    it 'overrides #after_request_task_create' do
-      expect(described_class.instance_methods(false)).to include(:after_request_task_create)
+    it 'does not create child tasks' do
+      allow(subject).to receive(:source).and_return(double('vm', :name => 'any'))
+      expect(subject).not_to receive(:create_child_tasks)
+      expect(subject).to receive(:update_attributes).with(hash_including(:description))
+      subject.after_request_task_create
     end
   end
 
