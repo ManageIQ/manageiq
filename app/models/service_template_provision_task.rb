@@ -201,7 +201,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   def update_and_notify_parent(*args)
     prev_state = state
     super
-    task_finished if state == "finished" && prev_state != "finished"
+    try("task_#{state}") if prev_state != state
   end
 
   def task_finished

@@ -19,4 +19,19 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     options[:progress] = (options[:progress] || {}).merge(progress)
     save
   end
+
+  def task_finished
+    # update the status of vm transformation status in the plan
+    vm_request.update_attributes(:status => status == 'Ok' ? 'Completed' : 'Failed')
+  end
+
+  def task_active
+    vm_request.update_attributes(:status => 'Active')
+  end
+
+  private
+
+  def vm_request
+    miq_request.vm_requests.find_by(:resource => source)
+  end
 end
