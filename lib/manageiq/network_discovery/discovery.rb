@@ -2,13 +2,9 @@ require 'net/ping'
 
 module ManageIQ
   module NetworkDiscovery
-    module IPMI
-      autoload :Discovery, 'manageiq/network_discovery/ipmi/discovery'
-    end
-
     module Discovery
       PROVIDERS_BY_TYPE = {
-        :ipmi            => "ManageIQ::NetworkDiscovery::IPMI::Discovery",
+        :ipmi            => "ManageIQ::Util::IPMI::Discovery",
         :msvirtualserver => "ManageIQ::Providers::Microsoft::Discovery",
         :mswin           => "ManageIQ::Providers::Microsoft::Discovery",
         :scvmm           => "ManageIQ::Providers::Microsoft::Discovery",
