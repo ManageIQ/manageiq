@@ -6,7 +6,7 @@ module MiqEnvironment
 
     def self.supports_memcached?
       return @supports_memcached unless @supports_memcached.nil?
-      @supports_memcached = is_linux? && is_appliance? && !is_container? && supports_command?('memcached') && supports_command?('memcached-tool') && supports_command?('service')
+      @supports_memcached = is_linux? && is_appliance? && !is_podified? && supports_command?('memcached') && supports_command?('memcached-tool') && supports_command?('service')
     end
 
     def self.supports_apache?
@@ -22,6 +22,11 @@ module MiqEnvironment
     def self.is_container?
       return @is_container unless @is_container.nil?
       @is_container = ENV["CONTAINER"] == "true"
+    end
+
+    def self.is_podified?
+      return @is_podified unless @is_podified.nil?
+      @is_podified = is_container? && ContainerOrchestrator.available?
     end
 
     def self.is_appliance?

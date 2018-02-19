@@ -124,7 +124,7 @@ module Authenticator
     end
 
     def user_attrs_from_external_directory(username)
-      if MiqEnvironment::Command.is_container?
+      if MiqEnvironment::Command.is_podified?
         user_attrs_from_external_directory_via_dbus_api_service(username)
       else
         user_attrs_from_external_directory_via_dbus(username)

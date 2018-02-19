@@ -370,7 +370,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.containerized_worker?
-    MiqEnvironment::Command.is_container? && supports_container?
+    MiqEnvironment::Command.is_podified? && supports_container?
   end
 
   def containerized_worker?
@@ -525,7 +525,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def status_update
-    return if MiqEnvironment::Command.is_container?
+    return if MiqEnvironment::Command.is_podified?
 
     begin
       pinfo = MiqProcess.processInfo(pid)

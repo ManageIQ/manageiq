@@ -135,7 +135,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.get_httpd_groups_by_user(user)
-    if MiqEnvironment::Command.is_container?
+    if MiqEnvironment::Command.is_podified?
       get_httpd_groups_by_user_via_dbus_api_service(user)
     else
       get_httpd_groups_by_user_via_dbus(user)
