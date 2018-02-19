@@ -269,6 +269,18 @@ class MiqGroup < ApplicationRecord
     end
   end
 
+  def add_managed_filters_to(object)
+    group_tags = get_managed_filters
+
+    return if group_tags.empty?
+
+    group_tags.each do |category_tags|
+      _, _, classification = Classification.tag_name_to_objects(category_tags.first)
+      next unless classification
+      classification.assign_entry_to(object, false)
+    end
+  end
+
   private
 
   # if this tenant is changing, make sure this is not a default group

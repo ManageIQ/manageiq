@@ -205,4 +205,12 @@ module ActsAsTaggable
   def perf_tags
     tag_list(:ns => '/managed').split.join("|")
   end
+
+  def add_current_user_tags
+    user = User.current_user
+    return if user.nil?
+    return if user.super_admin_user?
+
+    user.try(:current_group).try(:add_managed_filters_to, self)
+  end
 end

@@ -570,4 +570,45 @@ describe MiqGroup do
       expect(subject.sui_product_features).to eq(%w(sui_role_a sui_role_c))
     end
   end
+
+  context 'creating ems when current user has managed tags' do
+    let(:user)                  { FactoryGirl.create(:user_with_group) }
+    let(:user_with_other_tag)   { FactoryGirl.create(:user_with_group) }
+    let!(:classification) { FactoryGirl.create(:classification_department_with_tags) }
+    let!(:other_classification) { FactoryGirl.create(:classification_cost_center_with_tags) }
+
+    let(:tag_name)       { "/managed/department/accounting" } # defined by let!(:classification)
+    let(:other_tag_name) { "/managed/cc/001" } # defined by let!(:other_classification)
+
+    before(:each) do
+      allow(User).to receive(:server_timezone).and_return("UTC")
+
+      group = user.current_group
+      group.entitlement = Entitlement.new
+      group.entitlement.set_managed_filters([[tag_name]])
+      group.save!
+
+      User.current_user = user
+    end
+
+    it "displays created ems" do
+      ems = FactoryGirl.create(:ext_management_system)
+      ems.add_current_user_tags
+
+      expect(ems.tags.map(&:name)).to match_array([tag_name])
+      expect(Rbac::Filterer.filtered(ExtManagementSystem, :user => user)).to match_array([ems])
+    end
+
+    it "doesn't display created ems for user with different tag" do
+      group = user_with_other_tag.current_group
+      group.entitlement = Entitlement.new
+      group.entitlement.set_managed_filters([[other_tag_name]])
+      group.save!
+
+      ems = FactoryGirl.create(:ext_management_system)
+      ems.add_current_user_tags
+
+      expect(Rbac::Filterer.filtered(ExtManagementSystem, :user => user_with_other_tag)).to be_empty
+    end
+  end
 end
