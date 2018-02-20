@@ -43,7 +43,7 @@ class VmReconfigureTask < MiqRequestTask
   end
 
   def do_request
-    config = vm.build_config_spec(options)
+    config = vm.build_config_spec(options.with_indifferent_access)
     dump_obj(config, "#{_log.prefix} Config spec: ", $log, :info)
     vm.spec_reconfigure(config)
 
