@@ -46,6 +46,9 @@ class Chargeback < ActsAsArModel
       "#{classification_id}_#{ts_key}"
     elsif @options[:groupby_label].present?
       "#{groupby_label_value(consumption, @options[:groupby_label])}_#{ts_key}"
+    elsif @options.group_by_tenant?
+      tenant = @options.tenant_for(consumption)
+      "#{tenant ? tenant.id : 'none'}_#{ts_key}"
     else
       default_key(consumption, ts_key)
     end
@@ -75,6 +78,7 @@ class Chargeback < ActsAsArModel
     self.interval_name = options.interval
     self.chargeback_rates = ''
     self.entity ||= consumption.resource
+    self.tenant_name = consumption.resource.try(:tenant).try(:name) if options.group_by_tenant?
   end
 
   def showback_category
@@ -164,6 +168,7 @@ class Chargeback < ActsAsArModel
     static_cols       = group_by == "project" ? report_static_cols - ["image_name"] : report_static_cols
     static_cols       = group_by == "tag" ? [report_tag_field] : static_cols
     static_cols       = group_by == "label" ? [report_label_field] : static_cols
+    static_cols       = group_by == "tenant" ? ['tenant_name'] : static_cols
     rpt.cols         += static_cols
     rpt.col_order     = static_cols + ["display_range"]
     rpt.sortby        = static_cols + ["start_date"]
