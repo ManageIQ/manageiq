@@ -294,10 +294,6 @@ class VmOrTemplate < ApplicationRecord
     manager_class.short_token
   end
 
-  def self.manager_refresh_unique_index_columns
-    [:ems_id, :ems_ref]
-  end
-
   def to_s
     name
   end

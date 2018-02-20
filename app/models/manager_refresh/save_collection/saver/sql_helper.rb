@@ -34,8 +34,11 @@ module ManagerRefresh::SaveCollection
               ON CONFLICT DO NOTHING
             }
           elsif on_conflict_update
+            index_where_condition = unique_index_for(unique_index_keys).where
+            where_to_sql = index_where_condition ? "WHERE #{index_where_condition}" : ""
+
             insert_query += %{
-              ON CONFLICT (#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")})
+              ON CONFLICT (#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")}) #{where_to_sql}
                 DO
                   UPDATE
                     SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}

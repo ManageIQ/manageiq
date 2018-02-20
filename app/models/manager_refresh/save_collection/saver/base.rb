@@ -241,26 +241,39 @@ module ManagerRefresh::SaveCollection
         assign_attributes_for_update!(hash, create_time)
       end
 
-      def unique_index_columns
-        return @unique_index_columns if @unique_index_columns
+      def unique_indexes
+        @unique_indexes_cache if @unique_indexes_cache
 
-        if model_class.respond_to?(:manager_refresh_unique_index_columns)
-          return @unique_index_columns = model_class.manager_refresh_unique_index_columns
-        end
+        @unique_indexes_cache = model_class.connection.indexes(model_class.table_name).select(&:unique)
 
-        unique_indexes = model_class.connection.indexes(model_class.table_name).select(&:unique)
-        if unique_indexes.count > 1
-          raise "Cannot infer unique index automatically, since the table #{model_class.table_name}"\
-                " of the #{inventory_collection} contains more than 1 unique index: '#{unique_indexes.collect(&:name)}'."\
-                " Please define the unique index columns explicitly on a model as a class method"\
-                " self.manager_refresh_unique_index_columns returning [:column1, :column2, etc.]"
-        end
-
-        if unique_indexes.blank?
+        if @unique_indexes_cache.blank?
           raise "#{inventory_collection} and its table #{model_class.table_name} must have a unique index defined, to"\
                 " be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
         end
-        @unique_index_columns = unique_indexes.first.columns.map(&:to_sym)
+
+        @unique_indexes_cache
+      end
+
+      def unique_index_for(keys)
+        @unique_index_for_keys_cache ||= {}
+        @unique_index_for_keys_cache[keys] if @unique_index_for_keys_cache[keys]
+
+        # Find all uniq indexes that that are covering our keys
+        uniq_key_candidates = unique_indexes.each_with_object([]) { |i, obj| obj << i if (keys - i.columns.map(&:to_sym)).empty? }
+
+        if @unique_indexes_cache.blank?
+          raise "#{inventory_collection} and its table #{model_class.table_name} must have a unique index defined "\
+                "covering columns #{keys} to be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
+        end
+
+        # Take the uniq key having the least number of columns
+        @unique_index_for_keys_cache[keys] = uniq_key_candidates.min_by { |x| x.columns.count }
+      end
+
+      def unique_index_columns
+        return @unique_index_columns if @unique_index_columns
+
+        @unique_index_columns = unique_index_for(unique_index_keys).columns.map(&:to_sym)
       end
 
       def supports_sti?
