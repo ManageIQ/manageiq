@@ -73,10 +73,10 @@ module ManagerRefresh
     attr_accessor :parent_inventory_collections
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
-                :internal_attributes, :delete_method, :dependency_attributes, :manager_ref,
+                :internal_attributes, :delete_method, :dependency_attributes, :manager_ref, :create_only,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :check_changed, :arel,
                 :inventory_object_attributes, :name, :saver_strategy, :manager_uuids, :builder_params,
-                :skeletal_manager_uuids, :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
+                :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes, :references_storage
 
@@ -107,8 +107,10 @@ module ManagerRefresh
              :find_by,
              :lazy_find,
              :lazy_find_by,
+             :named_ref,
              :primary_index,
              :reindex_secondary_indexes!,
+             :skeletal_primary_index,
              :to => :index_proxy
 
     delegate :table_name,
@@ -367,7 +369,7 @@ module ManagerRefresh
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil,
                    custom_save_block: nil, delete_method: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   check_changed: nil, arel: nil, builder_params: {},
+                   check_changed: nil, arel: nil, builder_params: {}, create_only: nil,
                    inventory_object_attributes: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
                    targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil,
@@ -387,6 +389,7 @@ module ManagerRefresh
       @internal_attributes    = %i(__feedback_edge_set_parent __parent_inventory_collections)
       @complete               = complete.nil? ? true : complete
       @update_only            = update_only.nil? ? false : update_only
+      @create_only            = create_only.nil? ? false : create_only
       @builder_params         = builder_params
       @name                   = name || association || model_class.to_s.demodulize.tableize
       @saver_strategy         = process_saver_strategy(saver_strategy)
@@ -399,7 +402,6 @@ module ManagerRefresh
       @manager_uuids                = Set.new.merge(manager_uuids)
       @all_manager_uuids            = all_manager_uuids
       @parent_inventory_collections = parent_inventory_collections
-      @skeletal_manager_uuids       = Set.new.merge(manager_uuids)
       @targeted_arel                = targeted_arel
       @targeted                     = !!targeted
 
@@ -489,12 +491,20 @@ module ManagerRefresh
       !update_only?
     end
 
+    def create_only?
+      create_only
+    end
+
     def saved?
       saved
     end
 
     def saveable?
       dependencies.all?(&:saved?)
+    end
+
+    def parallel_safe?
+      @parallel_safe_cache ||= %i(concurrent_safe concurrent_safe_batch).include?(saver_strategy)
     end
 
     def data_collection_finalized?
@@ -517,17 +527,19 @@ module ManagerRefresh
     def noop?
       # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
       if targeted?
-        if parent_inventory_collections.nil? && manager_uuids.blank? && skeletal_manager_uuids.blank? &&
-           all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil?
+        if parent_inventory_collections.nil? && manager_uuids.blank? &&
+           all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil? &&
+           skeletal_primary_index.blank?
           # It's a noop Parent targeted InventoryCollection
           true
-        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.manager_uuids.blank? }
+        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.manager_uuids.blank? } &&
+              skeletal_primary_index.blank?
           # It's a noop Child targeted InventoryCollection
           true
         else
           false
         end
-      elsif data.blank? && !delete_allowed?
+      elsif data.blank? && !delete_allowed? && skeletal_primary_index.blank?
         # If we have no data to save and delete is not allowed, we can just skip
         true
       else
@@ -738,12 +750,12 @@ module ManagerRefresh
           targeted_arel.call(self)
         elsif manager_ref.count > 1
           # TODO(lsmola) optimize with ApplicationRecordIterator
-          hashes = extract_references(manager_uuids + skeletal_manager_uuids)
+          hashes = extract_references(manager_uuids)
           full_collection_for_comparison.where(build_multi_selection_condition(hashes))
         else
           ManagerRefresh::ApplicationRecordIterator.new(
             :inventory_collection => self,
-            :manager_uuids_set    => (manager_uuids + skeletal_manager_uuids).to_a.flatten.compact
+            :manager_uuids_set    => manager_uuids.to_a.flatten.compact
           )
         end
       else

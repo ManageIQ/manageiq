@@ -3,6 +3,12 @@ module ManagerRefresh::SaveCollection
     class ConcurrentSafeBatch < ManagerRefresh::SaveCollection::Saver::Base
       private
 
+      delegate :association_to_base_class_mapping,
+               :association_to_foreign_key_mapping,
+               :association_to_foreign_type_mapping,
+               :attribute_references,
+               :to => :inventory_collection
+
       def record_key(record, key)
         send(record_key_method, record, key)
       end
@@ -66,10 +72,12 @@ module ManagerRefresh::SaveCollection
 
         _log.debug("Processing #{inventory_collection} of size #{inventory_collection.size}...")
 
-        update_or_destroy_records!(batch_iterator(association), inventory_objects_index, attributes_index, all_attribute_keys)
+        unless inventory_collection.create_only?
+          update_or_destroy_records!(batch_iterator(association), inventory_objects_index, attributes_index, all_attribute_keys)
+        end
 
-        unless inventory_collection.custom_reconnect_block.nil?
-          inventory_collection.custom_reconnect_block.call(inventory_collection, inventory_objects_index, attributes_index)
+        unless inventory_collection.create_only?
+          inventory_collection.custom_reconnect_block&.call(inventory_collection, inventory_objects_index, attributes_index)
         end
 
         all_attribute_keys << :type if supports_sti?
@@ -77,6 +85,28 @@ module ManagerRefresh::SaveCollection
         if inventory_collection.create_allowed?
           inventory_objects_index.each_slice(batch_size_for_persisting) do |batch|
             create_records!(all_attribute_keys, batch, attributes_index)
+          end
+
+          # Let the GC clean this up
+          inventory_objects_index = nil
+          attributes_index = nil
+
+          if inventory_collection.parallel_safe?
+            # We will create also remaining skeletal records
+            skeletal_attributes_index        = {}
+            skeletal_inventory_objects_index = {}
+
+            inventory_collection.skeletal_primary_index.each_value do |inventory_object|
+              attributes = inventory_object.attributes_with_keys(inventory_collection, all_attribute_keys)
+              index      = build_stringified_reference(attributes, unique_index_keys)
+
+              skeletal_attributes_index[index]        = attributes
+              skeletal_inventory_objects_index[index] = inventory_object
+            end
+
+            skeletal_inventory_objects_index.each_slice(batch_size_for_persisting) do |batch|
+              create_records!(all_attribute_keys, batch, skeletal_attributes_index, :on_conflict => :do_nothing)
+            end
           end
         end
         _log.debug("Processing #{inventory_collection}, "\
@@ -205,7 +235,7 @@ module ManagerRefresh::SaveCollection
         get_connection.execute(query)
       end
 
-      def create_records!(all_attribute_keys, batch, attributes_index)
+      def create_records!(all_attribute_keys, batch, attributes_index, on_conflict: nil)
         indexed_inventory_objects = {}
         hashes                    = []
         create_time               = time_now
@@ -233,31 +263,45 @@ module ManagerRefresh::SaveCollection
         return if hashes.blank?
 
         result = get_connection.execute(
-          build_insert_query(all_attribute_keys, hashes)
+          build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict)
         )
         inventory_collection.store_created_records(result)
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
-          map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result)
+          map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result, :on_conflict => on_conflict)
         end
       end
 
-      def values_for_database!(all_attribute_keys, attributes)
-        all_attribute_keys.each do |key|
-          if (type = serializable_keys[key])
-            attributes[key] = type.serialize(attributes[key])
+      # The remote_data_timestamp is adding a WHERE condition to ON CONFLICT UPDATE. As a result, the RETURNING
+      # clause is not guaranteed to return all ids of the inserted/updated records in the result. In that case
+      # we test if the number of results matches the expected batch size. Then if the counts do not match, the only
+      # safe option is to query all the data from the DB, using the unique_indexes. The batch size will also not match
+      # for every remainders(a last batch in a stream of batches)
+      # For ON CONFLICT DO NOTHING, we need to always fetch the records plus the attribute_references
+      def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result, on_conflict:)
+        if on_conflict == :do_nothing
+          # This path applies only for skeletal precreate now
+          # TODO(lsmola) lets just preload all referenced attributes and relations? Then we are just fine
+          inventory_collection.model_class.where(
+            build_multi_selection_query(hashes)
+          ).select(unique_index_columns + [:id] + attribute_references.to_a).each do |record|
+            key              = unique_index_columns.map { |x| record.public_send(x) }
+            inventory_object = indexed_inventory_objects[key]
+
+            # Load also attribute_references, so lazy_find with :key pointing to skeletal reference works
+            attributes = record.attributes.symbolize_keys
+            attribute_references.each do |ref|
+              inventory_object[ref] = attributes[ref]
+
+              next unless (foreign_key = association_to_foreign_key_mapping[ref])
+              base_class_name       = attributes[association_to_foreign_type_mapping[ref].try(:to_sym)] || association_to_base_class_mapping[ref]
+              id                    = attributes[foreign_key.to_sym]
+              inventory_object[ref] = ManagerRefresh::ApplicationRecordReference.new(base_class_name, id)
+            end
+
+            inventory_object.id = record.id if inventory_object
           end
-        end
-        attributes
-      end
-
-      def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result)
-        # The remote_data_timestamp is adding a WHERE condition to ON CONFLICT UPDATE. As a result, the RETURNING
-        # clause is not guaranteed to return all ids of the inserted/updated records in the result. In that case
-        # we test if the number of results matches the expected batch size. Then if the counts do not match, the only
-        # safe option is to query all the data from the DB, using the unique_indexes. The batch size will also not match
-        # for every remainders(a last batch in a stream of batches)
-        if !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size_for_persisting
+        elsif !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size_for_persisting
           result.each do |inserted_record|
             key                 = unique_index_columns.map { |x| inserted_record[x.to_s] }
             inventory_object    = indexed_inventory_objects[key]

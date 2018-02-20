@@ -3,15 +3,20 @@ module ManagerRefresh
     class Reference
       include Vmdb::Logging
 
-      attr_reader :full_reference, :ref, :stringified_reference
+      attr_reader :full_reference, :keys, :ref, :stringified_reference
 
       delegate :[], :to => :full_reference
 
       def initialize(data, ref, keys)
         @full_reference = build_full_reference(data, keys)
         @ref            = ref
+        @keys           = keys
 
         @stringified_reference = self.class.build_stringified_reference(full_reference, keys)
+      end
+
+      def primary?
+        ref == :manager_ref
       end
 
       def to_hash
