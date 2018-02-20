@@ -47,5 +47,11 @@ module AggregationMixin
 
       hdws.inject(0) { |t, hdw| t + hdw.send(field).to_i }
     end
+
+    def lans
+      hosts = all_hosts
+      MiqPreloader.preload(hosts, :lans)
+      hosts.flat_map(&:lans).compact.uniq
+    end
   end
 end
