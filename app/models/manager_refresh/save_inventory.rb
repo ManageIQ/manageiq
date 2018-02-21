@@ -1,6 +1,11 @@
 module ManagerRefresh
   class SaveInventory
     class << self
+      # Saves the passed InventoryCollection objects
+      #
+      # @param ems [ExtManagementSystem] manager owning the inventory_collections
+      # @param inventory_collections [Array<ManagerRefresh::InventoryCollection>] array of InventoryCollection objects
+      #        for saving
       def save_inventory(ems, inventory_collections)
         _log.debug("#{log_header(ems)} Scanning Inventory Collections...Start")
         ManagerRefresh::InventoryCollection::Scanner.scan!(inventory_collections)
@@ -21,6 +26,8 @@ module ManagerRefresh
 
       private
 
+      # @param ems [ExtManagementSystem] manager owning the inventory_collections
+      # @return [String] helper string for logging
       def log_header(ems)
         "EMS: [#{ems.name}], id: [#{ems.id}]"
       end

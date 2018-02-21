@@ -4,6 +4,7 @@ module ManagerRefresh::SaveCollection
       include Vmdb::Logging
       include ManagerRefresh::SaveCollection::Saver::SqlHelper
 
+      # @param inventory_collection [ManagerRefresh::InventoryCollection] InventoryCollection object we will be saving
       def initialize(inventory_collection)
         @inventory_collection = inventory_collection
         # TODO(lsmola) do I need to reload every time? Also it should be enough to clear the associations.
@@ -65,6 +66,7 @@ module ManagerRefresh::SaveCollection
         end
       end
 
+      # Saves the InventoryCollection
       def save_inventory_collection!
         # If we have a targeted InventoryCollection that wouldn't do anything, quickly skip it
         return if inventory_collection.noop?
@@ -81,6 +83,11 @@ module ManagerRefresh::SaveCollection
 
       delegate :build_stringified_reference, :build_stringified_reference_for_record, :to => :inventory_collection
 
+      # Applies serialize method for each relevant attribute, which will cast the value to the right type.
+      #
+      # @param all_attribute_keys [Symbol] attribute keys we want to process
+      # @param attributes [Hash] attributes hash
+      # @return [Hash] modified hash from parameter attributes with casted values
       def values_for_database!(all_attribute_keys, attributes)
         all_attribute_keys.each do |key|
           if (type = serializable_keys[key])
@@ -96,6 +103,9 @@ module ManagerRefresh::SaveCollection
                   :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes,
                   :batch_size, :batch_size_for_persisting, :model_class, :serializable_keys, :deserializable_keys, :pg_types, :table_name
 
+      # Saves the InventoryCollection
+      #
+      # @param association [Symbol] An existing association on manager
       def save!(association)
         attributes_index        = {}
         inventory_objects_index = {}
@@ -153,14 +163,19 @@ module ManagerRefresh::SaveCollection
         raise e
       end
 
+      # @return [String] a string for logging purposes
       def inventory_collection_details
         "strategy: #{inventory_collection.strategy}, saver_strategy: #{inventory_collection.saver_strategy}, targeted: #{inventory_collection.targeted?}"
       end
 
+      # @param record [ApplicationRecord] ApplicationRecord object
+      # @param key [Symbol] A key that is an attribute of the AR object
+      # @return [Object] Value of attribute name :key on the :record
       def record_key(record, key)
         record.public_send(key)
       end
 
+      # Deletes a complement of referenced data
       def delete_complement
         return unless inventory_collection.delete_allowed?
 
@@ -185,16 +200,25 @@ module ManagerRefresh::SaveCollection
                    "#{all_manager_uuids_size}, deleted=#{deleted_counter}...Complete")
       end
 
+      # Deletes/soft-deletes a given record
+      #
+      # @param [ApplicationRecord] record we want to delete
       def delete_record!(record)
         record.public_send(inventory_collection.delete_method)
         inventory_collection.store_deleted_records(record)
       end
 
+      # @return [TrueClass] always return true, this method is redefined in default saver
       def assert_unique_record(_record, _index)
         # TODO(lsmola) can go away once we indexed our DB with unique indexes
         true
       end
 
+      # Check if relation provided is distinct, i.e. the relation should not return the same primary key value twice.
+      #
+      # @param primary_key_value [Bigint] primary key value
+      # @raise [Exception] if env is not production and relation is not distinct
+      # @return [Boolean] false if env is production and relation is not distinct
       def assert_distinct_relation(primary_key_value)
         if unique_db_primary_keys.include?(primary_key_value) # Include on Set is O(1)
           # Change the InventoryCollection's :association or :arel parameter to return distinct results. The :through
@@ -213,6 +237,13 @@ module ManagerRefresh::SaveCollection
         true
       end
 
+      # Check that the needed foreign key leads to real value. This check simulates NOT NULL and FOREIGN KEY constraints
+      # we should have in the DB. The needed foreign keys are identified as fixed_foreign_keys, which are the foreign
+      # keys needed for saving of the record.
+      #
+      # @param hash [Hash] data we want to save
+      # @raise [Exception] if env is not production and a foreign_key is missing
+      # @return [Boolean] false if env is production and a foreign_key is missing
       def assert_referential_integrity(hash)
         inventory_collection.fixed_foreign_keys.each do |x|
           next unless hash[x].nil?
@@ -229,8 +260,9 @@ module ManagerRefresh::SaveCollection
         true
       end
 
+      # @return [Time] A rails friendly time getting config from ActiveRecord::Base.default_timezone (can be :local
+      #         or :utc)
       def time_now
-        # A rails friendly time getting config from ActiveRecord::Base.default_timezone (can be :local or :utc)
         if ActiveRecord::Base.default_timezone == :utc
           Time.now.utc
         else
@@ -238,11 +270,19 @@ module ManagerRefresh::SaveCollection
         end
       end
 
+      # Enriches data hash with timestamp columns
+      #
+      # @param hash [Hash] data hash
+      # @param update_time [Time] data hash
       def assign_attributes_for_update!(hash, update_time)
         hash[:updated_on]   = update_time if supports_updated_on?
         hash[:updated_at]   = update_time if supports_updated_at?
       end
 
+      # Enriches data hash with timestamp and type columns
+      #
+      # @param hash [Hash] data hash
+      # @param create_time [Time] data hash
       def assign_attributes_for_create!(hash, create_time)
         hash[:type]         = model_class.name if supports_sti? && hash[:type].nil?
         hash[:created_on]   = create_time if supports_created_on?
@@ -250,6 +290,7 @@ module ManagerRefresh::SaveCollection
         assign_attributes_for_update!(hash, create_time)
       end
 
+      # @return [Array<ActiveRecord::ConnectionAdapters::IndexDefinition>] array of all unique indexes known to model
       def unique_indexes
         @unique_indexes_cache if @unique_indexes_cache
 
@@ -263,6 +304,11 @@ module ManagerRefresh::SaveCollection
         @unique_indexes_cache
       end
 
+      # Finds an index that fits the list of columns (keys) the best
+      #
+      # @param keys [Array<Symbol>]
+      # @raise [Exception] if the unique index for the columns was not found
+      # @return [ActiveRecord::ConnectionAdapters::IndexDefinition] unique index fitting the keys
       def unique_index_for(keys)
         @unique_index_for_keys_cache ||= {}
         @unique_index_for_keys_cache[keys] if @unique_index_for_keys_cache[keys]
@@ -279,17 +325,20 @@ module ManagerRefresh::SaveCollection
         @unique_index_for_keys_cache[keys] = uniq_key_candidates.min_by { |x| x.columns.count }
       end
 
+      # @return [Array<Symbol>] all columns that are part of the best fit unique index
       def unique_index_columns
         return @unique_index_columns if @unique_index_columns
 
         @unique_index_columns = unique_index_for(unique_index_keys).columns.map(&:to_sym)
       end
 
+      # @return [Boolean] true if the model_class supports STI
       def supports_sti?
         @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
         @supports_sti_cache
       end
 
+      # @return [Boolean] true if the model_class has created_on column
       def supports_created_on?
         if @supports_created_on_cache.nil?
           @supports_created_on_cache = (model_class.column_names.include?("created_on") && ActiveRecord::Base.record_timestamps)
@@ -297,6 +346,7 @@ module ManagerRefresh::SaveCollection
         @supports_created_on_cache
       end
 
+      # @return [Boolean] true if the model_class has updated_on column
       def supports_updated_on?
         if @supports_updated_on_cache.nil?
           @supports_updated_on_cache = (model_class.column_names.include?("updated_on") && ActiveRecord::Base.record_timestamps)
@@ -304,6 +354,7 @@ module ManagerRefresh::SaveCollection
         @supports_updated_on_cache
       end
 
+      # @return [Boolean] true if the model_class has created_at column
       def supports_created_at?
         if @supports_created_at_cache.nil?
           @supports_created_at_cache = (model_class.column_names.include?("created_at") && ActiveRecord::Base.record_timestamps)
@@ -311,6 +362,7 @@ module ManagerRefresh::SaveCollection
         @supports_created_at_cache
       end
 
+      # @return [Boolean] true if the model_class has updated_at column
       def supports_updated_at?
         if @supports_updated_at_cache.nil?
           @supports_updated_at_cache = (model_class.column_names.include?("updated_at") && ActiveRecord::Base.record_timestamps)
@@ -318,10 +370,12 @@ module ManagerRefresh::SaveCollection
         @supports_updated_at_cache
       end
 
+      # @return [Boolean] true if any serializable keys are present
       def serializable_keys?
         @serializable_keys_bool_cache ||= serializable_keys.present?
       end
 
+      # @return [Boolean] true if the model_class has remote_data_timestamp column
       def supports_remote_data_timestamp?(all_attribute_keys)
         all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
       end

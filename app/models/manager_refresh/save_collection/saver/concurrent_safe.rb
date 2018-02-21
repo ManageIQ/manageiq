@@ -5,6 +5,12 @@ module ManagerRefresh::SaveCollection
       # configurable
       private
 
+      # Updates the passed record with hash data and stores primary key value into inventory_object.
+      #
+      # @param record [ApplicationRecord] record we want to update in DB
+      # @param hash [Hash] data we want to update the record with
+      # @param inventory_object [ManagerRefresh::InventoryObject] InventoryObject instance where we will store primary
+      #        key value
       def update_record!(record, hash, inventory_object)
         assign_attributes_for_update!(hash, time_now)
         record.assign_attributes(hash.except(:id, :type))
@@ -23,6 +29,11 @@ module ManagerRefresh::SaveCollection
         inventory_object.id = record.id
       end
 
+      # Creates a new record in the DB using the passed hash data
+      #
+      # @param hash [Hash] hash with data we want to persist to DB
+      # @param inventory_object [ManagerRefresh::InventoryObject] InventoryObject instance where we will store primary
+      #        key value
       def create_record!(hash, inventory_object)
         all_attribute_keys = hash.keys
         data               = inventory_collection.model_class.new(hash).attributes.symbolize_keys

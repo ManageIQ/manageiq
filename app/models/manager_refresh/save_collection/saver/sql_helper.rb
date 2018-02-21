@@ -1,16 +1,21 @@
 module ManagerRefresh::SaveCollection
   module Saver
     module SqlHelper
-      def on_conflict_update
-        true
-      end
-
       # TODO(lsmola) all below methods should be rewritten to arel, but we need to first extend arel to be able to do
       # this
+
+      # Builds ON CONFLICT UPDATE updating branch for one column identified by the passed key
+      #
+      # @param key [Symbol] key that is column name
+      # @return [String] SQL clause for upserting one column
       def build_insert_set_cols(key)
         "#{quote_column_name(key)} = EXCLUDED.#{quote_column_name(key)}"
       end
 
+      # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
+      # @param hashes [Array<Hash>] data used for building a batch insert sql query
+      # @param on_conflict [Symbol, NilClass] defines behavior on conflict with unique index constraint, allowed values
+      #        are :do_update, :do_nothing, nil
       def build_insert_query(all_attribute_keys, hashes, on_conflict: nil)
         # Cache the connection for the batch
         connection = get_connection
@@ -33,7 +38,7 @@ module ManagerRefresh::SaveCollection
             insert_query += %{
               ON CONFLICT DO NOTHING
             }
-          elsif on_conflict_update
+          elsif on_conflict == :do_update
             index_where_condition = unique_index_for(unique_index_keys).where
             where_to_sql = index_where_condition ? "WHERE #{index_where_condition}" : ""
 
@@ -67,18 +72,30 @@ module ManagerRefresh::SaveCollection
         insert_query
       end
 
+      # Builds update clause for one column identified by the passed key
+      #
+      # @param key [Symbol] key that is column name
+      # @return [String] SQL clause for updating one column
       def build_update_set_cols(key)
         "#{quote_column_name(key)} = updated_values.#{quote_column_name(key)}"
       end
 
+      # Returns quoted column name
+      # @param key [Symbol] key that is column name
+      # @returns [String] quoted column name
       def quote_column_name(key)
         get_connection.quote_column_name(key)
       end
 
+      # @return [ActiveRecord::ConnectionAdapters::AbstractAdapter] ActiveRecord connection
       def get_connection
         ActiveRecord::Base.connection
       end
 
+      # Build batch update query
+      #
+      # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
+      # @param hashes [Array<Hash>] data used for building a batch update sql query
       def build_update_query(all_attribute_keys, hashes)
         # Cache the connection for the batch
         connection = get_connection
@@ -116,10 +133,22 @@ module ManagerRefresh::SaveCollection
         update_query
       end
 
+      # Builds a multiselection conditions like (table1.a = a1 AND table2.b = b1) OR (table1.a = a2 AND table2.b = b2)
+      #
+      # @param hashes [Array<Hash>] data we want to use for the query
+      # @return [String] condition usable in .where of an ActiveRecord relation
       def build_multi_selection_query(hashes)
         inventory_collection.build_multi_selection_condition(hashes, unique_index_columns)
       end
 
+      # Quotes a value. For update query, the value also needs to be explicitly casted, which we can do by
+      # type_cast_for_pg param set to true.
+      #
+      # @param connection [ActiveRecord::ConnectionAdapters::AbstractAdapter] ActiveRecord connection
+      # @param value [Object] value we want to quote
+      # @param name [Symbol] name of the column
+      # @param type_cast_for_pg [Boolean] true if we want to also cast the quoted value
+      # @return [String] quoted and based on type_cast_for_pg param also casted value
       def quote(connection, value, name = nil, type_cast_for_pg = nil)
         # TODO(lsmola) needed only because UPDATE FROM VALUES needs a specific PG typecasting, remove when fixed in PG
         if type_cast_for_pg
@@ -132,6 +161,12 @@ module ManagerRefresh::SaveCollection
         raise e
       end
 
+      # Quotes and type casts the value.
+      #
+      # @param connection [ActiveRecord::ConnectionAdapters::AbstractAdapter] ActiveRecord connection
+      # @param value [Object] value we want to quote
+      # @param name [Symbol] name of the column
+      # @return [String] quoted and casted value
       def quote_and_pg_type_cast(connection, value, name)
         pg_type_cast(
           connection.quote(value),
@@ -139,6 +174,11 @@ module ManagerRefresh::SaveCollection
         )
       end
 
+      # Returns a type casted value in format needed by PostgreSQL
+      #
+      # @param value [Object] value we want to quote
+      # @param sql_type [String] PostgreSQL column type
+      # @return [String] type casted value in format needed by PostgreSQL
       def pg_type_cast(value, sql_type)
         if sql_type.nil?
           value
