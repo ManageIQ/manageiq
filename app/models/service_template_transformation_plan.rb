@@ -11,7 +11,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     service_resources.find_by(:resource_type => 'TransformationMapping').resource
   end
 
-  def vm_requests
+  def vm_resources
     service_resources.where(:resource_type => 'VmOrTemplate')
   end
 
