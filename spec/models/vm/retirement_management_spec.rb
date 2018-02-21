@@ -132,7 +132,7 @@ describe "VM Retirement Management" do
     expect(vm.retirement_due?).to be_truthy
   end
 
-  it "#raise_retirement_event" do
+  it "#raise_retirement_event without current user" do
     event_name = 'foo'
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
                   :retirement_initiator => "system"}
@@ -141,6 +141,19 @@ describe "VM Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
 
     @vm.raise_retirement_event(event_name)
+  end
+
+  it "#raise_retirement_event with current user" do
+    user = FactoryGirl.create(:user_with_group, :userid => 'freddy')
+    event_name = 'foo'
+    event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
+                  :retirement_initiator => "user", :userid => 'freddy'}
+    options = {:zone => @vm.my_zone}
+
+    User.with_user(user) do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
+      @vm.raise_retirement_event(event_name)
+    end
   end
 
   it "#raise_audit_event" do
