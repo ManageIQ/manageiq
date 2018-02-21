@@ -385,7 +385,7 @@ _("Memory - Effective")
 # TRANSLATORS: en.yml key: dictionary.column.ems_cluster_name
 _("Cluster")
 # TRANSLATORS: en.yml key: dictionary.column.emstype_description
-_("Type")
+_("Type Description")
 # TRANSLATORS: en.yml key: dictionary.column.enabled
 _("Active")
 # TRANSLATORS: en.yml key: dictionary.column.end_trend_value
@@ -1262,12 +1262,20 @@ _("EVM Audit Events")
 _("Availability Zone")
 # TRANSLATORS: en.yml key: dictionary.model.AvailabilityZone (plural form)
 _("Availability Zones")
+# TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
+_("Bottleneck Event")
+# TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent (plural form)
+_("Bottleneck Events")
 # TRANSLATORS: en.yml key: dictionary.model.HostAggregate
 _("Host Aggregate")
 # TRANSLATORS: en.yml key: dictionary.model.HostAggregate (plural form)
 _("Host Aggregates")
 # TRANSLATORS: en.yml key: dictionary.model.ChargebackVm
 _("Chargeback for Vms")
+# TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage
+_("Chargeback for Image")
+# TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage (plural form)
+_("Chargeback for Images")
 # TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerProject
 _("Chargeback for Projects")
 # TRANSLATORS: en.yml key: dictionary.model.ChargebackRate
@@ -1282,6 +1290,8 @@ _("Categories")
 _("Cloud Network")
 # TRANSLATORS: en.yml key: dictionary.model.CloudNetwork (plural form)
 _("Cloud Networks")
+# TRANSLATORS: en.yml key: dictionary.model.CloudResourceQuota
+_("Cloud Resource Quota")
 # TRANSLATORS: en.yml key: dictionary.model.CloudSubnet
 _("Cloud Subnet")
 # TRANSLATORS: en.yml key: dictionary.model.CloudSubnet (plural form)
@@ -1294,6 +1304,14 @@ _("Cloud Tenants")
 _("Cloud Volume")
 # TRANSLATORS: en.yml key: dictionary.model.CloudVolume (plural form)
 _("Cloud Volumes")
+# TRANSLATORS: en.yml key: dictionary.model.CloudVolumeBackup
+_("Cloud Volume Backup")
+# TRANSLATORS: en.yml key: dictionary.model.CloudVolumeBackup (plural form)
+_("Cloud Volume Backups")
+# TRANSLATORS: en.yml key: dictionary.model.CloudVolumeSnapshot
+_("Cloud Volume Snapshot")
+# TRANSLATORS: en.yml key: dictionary.model.CloudVolumeSnapshot (plural form)
+_("Cloud Volume Snapshots")
 # TRANSLATORS: en.yml key: dictionary.model.Compliance
 _("Compliance History")
 # TRANSLATORS: en.yml key: dictionary.model.Compliance (plural form)
@@ -1310,6 +1328,8 @@ _("Conditions")
 _("Build")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerBuild (plural form)
 _("Builds")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerQuota
+_("Container Quota")
 # TRANSLATORS: en.yml key: dictionary.model.CustomButton
 _("Button")
 # TRANSLATORS: en.yml key: dictionary.model.CustomButton (plural form)
@@ -1428,10 +1448,18 @@ _("Flavors")
 _("Floating IP")
 # TRANSLATORS: en.yml key: dictionary.model.FloatingIp (plural form)
 _("Floating IPs")
+# TRANSLATORS: en.yml key: dictionary.model.GenericObject
+_("Generic Object")
+# TRANSLATORS: en.yml key: dictionary.model.GenericObject (plural form)
+_("Generic Objects")
 # TRANSLATORS: en.yml key: dictionary.model.GenericObjectDefinition
 _("Generic Object Class")
 # TRANSLATORS: en.yml key: dictionary.model.GenericObjectDefinition (plural form)
 _("Generic Object Classes")
+# TRANSLATORS: en.yml key: dictionary.model.GuestApplication
+_("Guest Application")
+# TRANSLATORS: en.yml key: dictionary.model.GuestApplication (plural form)
+_("Guest Applications")
 # TRANSLATORS: en.yml key: dictionary.model.Host
 _("Host / Node")
 # TRANSLATORS: en.yml key: dictionary.model.Host (plural form)
@@ -1752,6 +1780,10 @@ _("Pods (Kubernetes)")
 _("Container Provider (OpenShift)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager (plural form)
 _("Container Providers (OpenShift)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager::ContainerTemplate
+_("Container Template (OpenShift)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openshift::ContainerManager::ContainerTemplate (plural form)
+_("Container Templates (OpenShift)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager
 _("Network Provider (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::NetworkManager (plural form)
@@ -1908,6 +1940,26 @@ _("Hosts (Vmware)")
 _("Physical Server (Lenovo)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer (plural form)
 _("Physical Servers (Lenovo)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap
+_("Middleware Server (EAP)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerEap (plural form)
+_("Middleware Servers (EAP)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly
+_("Middleware Server (WildFly)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServerWildfly (plural form)
+_("Middleware Servers (WildFly)")
+# TRANSLATORS: en.yml key: dictionary.model.MeteringContainerImage
+_("Metering for Image")
+# TRANSLATORS: en.yml key: dictionary.model.MeteringContainerImage (plural form)
+_("Metering for Images")
+# TRANSLATORS: en.yml key: dictionary.model.MeteringContainerProject
+_("Metering for Project")
+# TRANSLATORS: en.yml key: dictionary.model.MeteringContainerProject (plural form)
+_("Metering for Projects")
+# TRANSLATORS: en.yml key: dictionary.model.MeteringVm
+_("Metering for VM")
+# TRANSLATORS: en.yml key: dictionary.model.MeteringVm (plural form)
+_("Metering for VMs")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource
 _("Middleware Datasource")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDatasource (plural form)
@@ -2036,6 +2088,10 @@ _("Roles")
 _("Widget")
 # TRANSLATORS: en.yml key: dictionary.model.MiqWidget (plural form)
 _("Widgets")
+# TRANSLATORS: en.yml key: dictionary.model.MiqWidgetSet
+_("Dashboard")
+# TRANSLATORS: en.yml key: dictionary.model.MiqWidgetSet (plural form)
+_("Dashboards")
 # TRANSLATORS: en.yml key: dictionary.model.MiqWorker
 _("EVM Worker")
 # TRANSLATORS: en.yml key: dictionary.model.MiqWorker (plural form)
@@ -2084,6 +2140,10 @@ _("Persistent Volumes")
 _("Physical Server")
 # TRANSLATORS: en.yml key: dictionary.model.PhysicalServer (plural form)
 _("Physical Servers")
+# TRANSLATORS: en.yml key: dictionary.model.PolicyEvent
+_("Policy Event")
+# TRANSLATORS: en.yml key: dictionary.model.PolicyEvent (plural form)
+_("Policy Events")
 # TRANSLATORS: en.yml key: dictionary.model.ProductUpdate
 _("Product Update")
 # TRANSLATORS: en.yml key: dictionary.model.ProductUpdate (plural form)
@@ -2152,6 +2212,14 @@ _("Datastore Files")
 _("Performance - Datastore")
 # TRANSLATORS: en.yml key: dictionary.model.StoragePerformance (plural form)
 _("Performance - Datastores")
+# TRANSLATORS: en.yml key: dictionary.model.Switch
+_("Switch")
+# TRANSLATORS: en.yml key: dictionary.model.Switch (plural form)
+_("Switches")
+# TRANSLATORS: en.yml key: dictionary.model.Tenant
+_("Tenant")
+# TRANSLATORS: en.yml key: dictionary.model.Tenant (plural form)
+_("Tenants")
 # TRANSLATORS: en.yml key: dictionary.model.TimeProfile
 _("Time Profile")
 # TRANSLATORS: en.yml key: dictionary.model.TimeProfile (plural form)
@@ -2168,6 +2236,10 @@ _("Performance Trends")
 _("VM and Instance")
 # TRANSLATORS: en.yml key: dictionary.model.Vm (plural form)
 _("VM and Instances")
+# TRANSLATORS: en.yml key: dictionary.model.VmCloud
+_("Instance")
+# TRANSLATORS: en.yml key: dictionary.model.VmCloud (plural form)
+_("Instances")
 # TRANSLATORS: en.yml key: dictionary.model.VmdbIndex
 _("Index")
 # TRANSLATORS: en.yml key: dictionary.model.VmdbIndex (plural form)
@@ -2420,11 +2492,11 @@ _("EVM Servers")
 _("Network Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ems_network (plural form)
 _("Network Providers")
-# TRANSLATORS: en.yml key: dictionary.table.ems_phyical_infra
+# TRANSLATORS: en.yml key: dictionary.table.ems_physical_infra
 _("Physical Infrastructure Provider")
-# TRANSLATORS: en.yml key: dictionary.table.ems_phyical_infra (plural form)
+# TRANSLATORS: en.yml key: dictionary.table.ems_physical_infra (plural form)
 _("Physical Infrastructure Providers")
-# TRANSLATORS: en.yml key: dictionary.table.ems_phyical_infras
+# TRANSLATORS: en.yml key: dictionary.table.ems_physical_infras
 _("Physical Infrastructure Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_storage
 _("Storage Manager")
@@ -2564,10 +2636,20 @@ _("EVM Custom Attributes")
 _("Event")
 # TRANSLATORS: en.yml key: dictionary.table.miq_event_definition (plural form)
 _("Events")
+# TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager
+_("Cloud Manager")
+# TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager (plural form)
+_("Cloud Managers")
+# TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_cloud_manager_vms
+_("Instances")
 # TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_foreman_configuration_manager_configuration_profile
 _("Configuration Profile (Foreman)")
 # TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_foreman_configuration_manager_configuration_profile (plural form)
 _("Configuration Profiles (Foreman)")
+# TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager
+_("Cloud Manager")
+# TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_network_manager (plural form)
+_("Cloud Managers")
 # TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_infra_manager_cloud_networks
 _("Cloud Networks (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_cloud_manager_cloud_tenant
@@ -2615,6 +2697,8 @@ _("Tasks")
 # TRANSLATORS: en.yml key: dictionary.table.miq_template
 _("VM Template")
 # TRANSLATORS: en.yml key: dictionary.table.miq_template (plural form)
+_("VM Templates")
+# TRANSLATORS: en.yml key: dictionary.table.miq_templates
 _("VM Templates")
 # TRANSLATORS: en.yml key: dictionary.table.miq_worker
 _("EVM Worker")
