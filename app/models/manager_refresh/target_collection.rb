@@ -4,9 +4,11 @@ module ManagerRefresh
 
     delegate :<<, :to => :targets
 
-    # @param manager [ManageIQ::Providers::BaseManager] The Manager owning the TargetCollection
-    # @param event [EmsEvent] AnEmsEvent associated with the TargetCollection
-    # @param targets [Array] An Array of ManagerRefresh::Target objects or ApplicationRecord objects
+    # @param manager [ManageIQ::Providers::BaseManager] manager owning the TargetCollection
+    # @param manager_id [Integer] primary key of manager owning the TargetCollection
+    # @param event [EmsEvent] EmsEvent associated with the TargetCollection
+    # @param targets [Array<ManagerRefresh::Target, ApplicationRecord>] Array of ManagerRefresh::Target objects or
+    #                ApplicationRecord objects
     def initialize(manager: nil, manager_id: nil, event: nil, targets: [])
       @manager    = manager
       @manager_id = manager_id
