@@ -1,0 +1,564 @@
+#!/bin/bash
+#
+# Note: This program can enable you to do things faster, including mistakes, use at your own risk.
+#
+
+TAIL_NUMBER=3
+ALL_TAIL_NUMBER=999999999999999
+NAME=$(basename $0)
+DIR=$(dirname $0)
+miqhosts_cmd="$DIR/miqhosts.rb"
+miqhosts_file="$DIR/miqhosts"
+USER="root"
+REQUEST=false
+
+if [ ! -f $miqhosts_file ]
+then
+  echo
+  echo "$miqhosts_file does not exist."
+  echo
+  echo "Some initial setup is required to use this.  See $DIR/INSTALL.txt."
+  echo
+  exit 1
+fi
+
+if [ $NAME == "miqgrep-collate" ]
+then
+  NAME=miqgrep
+fi
+
+if [ $NAME == "miqgrep-request" ]
+then
+  NAME=miqgrep
+  REQUEST=true
+fi
+
+if [ $NAME == "miqtail-request" ]
+then
+  NAME=miqtail
+  REQUEST=true
+fi
+
+groups=$($miqhosts_cmd $miqhosts_file list_groups)
+
+function usage_common {
+  echo "DESCRIPTION: $2"
+  echo
+  echo "USAGE: $NAME [-g group] [-s] $1"
+  echo
+  shift 2
+  echo "DETAILS:"
+  if [ $# -ne 0 ]
+  then
+    for i in "$@"
+    do
+      if [ -n "$i" ]
+      then
+        echo "$i"
+      fi
+    done
+    echo
+  else
+    echo
+  fi
+  echo "  -s to run serially"
+  echo
+}
+
+function usage_case {
+  echo
+  echo "  -i is optional to ignore case with grep"
+}
+
+function usage_log_file {
+  echo
+  echo "  log_file is optional and defaults to automation.log"
+  echo "    For ManageIQ logs, log_file can be in the format of evm or evm.log"
+  echo "    For any other files, use /the/full/path/to/file"
+}
+
+function usage_pattern {
+  echo
+  echo "  pattern may be specified as a regex suitable for egrep taking care to prevent the shell from interpretation"
+  echo "  pattern may be specified as 'nogrep' to have no grep or use cat instead of grep"
+  echo "  -r request_id maybe used to search for a request_id and associated task_ids"
+  echo "    request_id can be provided with or without commas"
+}
+
+function usage_tail {
+  echo
+  echo "  -l can be used to place output in separate window panes, by default output is merged"
+  echo
+  echo "  In multitail:"
+  echo "    Move around the buffer similar to less by pressing 'b'"
+  echo "    Exit whatever context you are in by pressing 'q'"
+}
+
+function usage_grep {
+  echo
+  echo "  -a can be used to also grep archived logs"
+}
+
+function usage_output {
+  if [ $NAME == 'miqgrep' ]
+  then
+    echo
+    echo "  -o outputfile can be used to save output to outputfile"
+    echo "  -Q can be used to not less the output file automatically"
+  fi
+}
+
+function usage_help {
+  echo "  -h | --help for this usage statement"
+  echo
+}
+
+function usage_regex {
+  USAGE=$1
+  DESCRIPTION=$2
+  shift 2
+  usage_common "$USAGE" "$DESCRIPTION" "$(eval usage_case)" "$(eval usage_pattern)" "$(eval usage_output)" "$(eval usage_log_file)" "$@"
+}
+
+
+function usage {
+  echo
+  case $NAME in
+    "miqssh") usage_common "command args" "ssh and run command with args" ;;
+    "miqscp") usage_common "local_file remote_dest_dir" "push files out using scp" " " "  Only one file is supported at a time" ;;
+    "miqcollect") usage_common "remote_file local_dest_dir" "pull files in using scp" " " "  Wildcards are accepted for remote_file but should only match one file" " " "  local_files are appended with remote hostname" ;;
+    "miqgrep") usage_regex "[-a] [-i] [-o outputfile] [-Q] (pattern | -r request_id) [log_file]" "grep log_file for pattern or request_id and associated task_ids and collate all results and display using less" "$(eval usage_grep)" ;;
+    "miqtail") usage_regex "[-i] [-l] (pattern | -r request_id) [log_file]" "multitail and grep pattern or request_id and associated task_ids" "$(eval usage_tail)" ;;
+  esac
+  echo "AVAILABLE GROUPS (default is all):"
+  echo
+  for i in $groups
+  do
+    echo "  $i"
+  done
+  echo
+  echo "To see matching hosts for a given group, use:"
+  echo
+  echo "$NAME [-q] -g <group> list"
+  echo "  -q to suppress header"
+  echo
+  exit 1
+}
+
+function clean_tmp_files {
+  rm -f $TMPFILE
+  clean_pssh_out
+}
+
+function clean_pssh_out {
+  if [ "$TRANSPORT" == 'pssh' ]
+  then
+    rm -rf $PSSH_OUTDIR
+  fi
+}
+
+if [ $NAME == 'miqtail' ]
+then
+  GREP='grep -e'
+else
+  GREP='zgrep -e'
+fi
+
+L='L'
+
+SAVEOUT=false
+
+. $DIR/.config
+
+while getopts ac:g:hilqQo:sr OPT
+do
+  case $OPT in
+    a) GREP_ARCHIVED=true ;;
+    c) TAIL_NUMBER=$OPTARG ;;
+    g) group=$OPTARG ;;
+    i) GREP="$GREP -i" ;;
+    l) L='l' ;;
+    q) QUIET=true ;;
+    o) SAVEOUT=true
+       TMPFILE=$OPTARG
+      ;;
+    Q) NOLESS=true ;;
+    s) PARALLELISM=1 ;;
+    r) REQUEST=true ;;
+    *) usage ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+if [[ -z "$TRANSPORT" || -z "$PARALLELISM" ]]
+then
+  echo "TRANSPORT and/or PARALLELISM not specified, see $DIR/.config."
+  exit 1
+fi
+
+which $TRANSPORT > /dev/null 2>&1
+if [ $? -ne 0 ]
+then
+  echo "TRANSPORT=$TRANSPORT and $TRANSPORT is not found."
+  exit 1
+fi
+
+if [ "$TRANSPORT" == 'pssh' ]
+then
+  PSSH_OUTDIR="/tmp/.$NAME.pssh.$$"
+  if [ -e "$PSSH_OUTDIR" ]
+  then
+    echo
+    read -p "PSSH_OUTDIR $PSSH_OUTDIR already exists!  Remove? (Y/N) " answer
+    answer=$(echo $answer | cut -c1 | tr [A-Z] [a-z])
+    if [ "$answer" == 'y' ]
+    then
+      rm -rf $PSSH_OUTDIR
+      if [ $? -ne 0 ]
+      then
+        echo "Unable to remove $PSSH_OUTDIR!"
+        exit 1
+      fi
+    else
+      exit 1
+    fi
+  fi
+fi
+
+if [ $NAME == 'miqgrep' ]
+then
+  if [ -z "$TMPFILE" ]
+  then
+    TMPFILE="/tmp/.$NAME.$$"
+  fi
+
+  if [ -e "$TMPFILE" ]
+  then
+    echo
+    read -p "TMPFILE $TMPFILE already exists!  Erase? (Y/N) " answer
+    answer=$(echo $answer | cut -c1 | tr [A-Z] [a-z])
+    if [ "$answer" == 'y' ]
+    then
+      > $TMPFILE
+      if [ $? -ne 0 ]
+      then
+        echo "Unable to erase $TMPFILE!"
+        exit 1
+      fi
+    else
+      exit 1
+    fi
+  fi
+fi
+
+if [[ $NAME != 'miqgrep' && "$SAVEOUT" == 'true' ]]
+then
+  echo
+  echo "$NAME does not support -o option."
+  usage
+fi
+
+if [ "$SAVEOUT" == 'false' ]
+then
+  trap clean_tmp_files EXIT
+else
+  trap clean_pssh_out EXIT
+fi
+
+if [ $NAME == 'miqssh' ]
+then
+  if [ $# -lt 1 ]
+  then
+    echo
+    echo "Not enough arguments!"
+    usage
+  fi
+elif [[ "$2" == "list" && $# -lt 2 ]]
+then
+  echo
+  echo "Not enough arguments!"
+  usage
+elif [[ $NAME == 'miqgrep' || $NAME == "miqtail" ]]
+then
+  if [[ $# -ne 1 && $# -ne 2 ]]
+  then
+    echo
+    echo "Wrong number of arguments!"
+    usage
+  fi
+else
+  if [ $# -ne 2 ]
+  then
+    echo
+    echo "Wrong number of arguments!"
+    usage
+  fi
+fi
+
+if [ -z "$group" ]
+then
+  group=all
+fi
+
+if [ ! -r "$miqhosts_file" ]
+then
+  echo
+  echo "$miqhosts_file not available!"
+  usage
+fi
+
+if [ ! -x "$miqhosts_cmd" ]
+then
+  echo
+  echo "$miqhosts_file not executable!"
+  usage
+fi
+
+if [ $REQUEST == 'true' ]
+then
+  if [ ! -d '/var/www/miq/vmdb' ]
+  then
+    echo
+    echo "ERROR: $NAME must be run from a ManageIQ appliance!"
+    echo
+    exit 1
+  fi
+fi
+
+if [ $NAME == 'miqtail' ]
+then
+  which multitail > /dev/null 2>&1
+  if [ $? -ne 0 ]
+  then
+    echo
+    echo "ERROR: $NAME requires multitail be installed in PATH!"
+    echo
+    exit 1
+  fi
+fi
+
+# Check that we have a ruby available for miqhosts_cmd to use
+/usr/bin/env ruby --version > /dev/null 2>&1
+if [ $? -ne 0 ]
+then
+  echo
+  echo "Unable to find ruby with /usr/bin/env ruby.  Please make sure ruby is installed."
+  echo
+  exit 1
+fi
+
+/usr/bin/env perl -v > /dev/null 2>&1
+if [ $? -ne 0 ]
+then
+  echo
+  echo "Unable to find perl with /usr/bin/env perl.  Please make sure perl is installed."
+  echo
+  exit 1
+fi
+
+group_good=false
+
+for i in $groups
+do
+  if [ "$i" == "$group" ]
+  then
+    group_good=true
+  fi
+done
+
+if [ "$group_good" != "true" ]
+then
+  echo
+  echo "Group $group not found in $miqhosts_file"
+  usage
+fi
+
+if [[ "$QUIET" != 'true' && "$TRANSPORT" != 'pssh' && "$TRANSPORT" != 'ansible' || ( $NAME == 'miqgrep' && $REQUEST == 'true' ) ]]
+then
+  echo
+fi
+
+SERVERS=$($miqhosts_cmd $miqhosts_file list_servers $group)
+
+if [ "$1" == "list" ]
+then
+  if [ "$QUIET" != 'true' ]
+  then
+    echo "Matching servers:"
+  fi
+  for i in $SERVERS
+  do
+    echo $i
+  done
+  exit
+fi
+
+if [[ $NAME == 'miqgrep' || $NAME == 'miqtail' ]]
+then
+  PATTERN="$1"
+  if [ "$PATTERN" == 'nogrep' ]
+  then
+    if [ $NAME == 'miqgrep' ]
+    then
+      GREP='cat'
+    PATTERN=''
+    fi
+  fi
+  if [ $REQUEST == 'true' ]
+  then
+    REQUEST_ID=$(echo $PATTERN | sed 's/,//g')
+    echo "*** looking for tasks associated with request_id: $REQUEST_ID ***"
+    cd /var/www/miq/vmdb
+    #TASK_IDS=$(echo "select id from miq_request_tasks where miq_request_id = $REQUEST_ID" | rails db | awk '$1!="id" && !/^---/ && !/^\(/ {print $1}' | sort -n)
+    TASK_IDS=$(psql -d vmdb_production -c "select id from miq_request_tasks where miq_request_id = $REQUEST_ID" | awk '$1!="id" && !/^---/ && !/^\(/ {print $1}' | sort -n)
+    echo
+    TASK_IDS=$(echo $TASK_IDS)
+    cd - > /dev/null
+    PATTERN="request_$REQUEST_ID$(for i in $TASK_IDS; do echo -n "|task_$i|provision_$i"; done)"
+    echo "*** looking for request_id: $REQUEST_ID and task_id/provision_id: $TASK_IDS ***"
+    echo
+    if [[ $NAME == 'miqtail' && REQUEST == 'true' ]]
+    then
+      sleep 1
+    fi
+  fi
+  PATTERN=$(echo $PATTERN | sed -e 's/|/\\|/g')
+  LOG=$2
+  if [ -z "$LOG" ]
+  then
+    LOG='automation.log'
+  fi
+  if [ "$(echo $LOG | cut -c1)" != "/" ]
+  then
+    LOG="/var/www/miq/vmdb/log/$(echo $LOG | sed 's/\.log$//').log"
+  fi
+  if [ $NAME == 'miqgrep' ]
+  then
+    if [ "$GREP_ARCHIVED" == 'true' ]
+    then
+      LOG="$LOG-* $LOG"
+    fi
+    if [ "$TAIL_NUMBER" == 'all' ]
+    then
+      TAIL_NUMBER=$ALL_TAIL_NUMBER
+    fi
+    TAIL="tail -$TAIL_NUMBER"
+  else
+    TAIL="tail"
+  fi
+fi
+
+ARGS=$*
+ARGS=$(echo $ARGS | sed 's/*/\\*/g')
+
+if [ $NAME != 'miqtail' ]
+then
+
+  if [ "$TRANSPORT" == 'ssh' ]
+  then
+
+    for i in $SERVERS
+    do
+      echo "*** $i ***"
+      case $NAME in
+        "miqssh") ssh $USER@$i $ARGS ;;
+        "miqscp") scp $1 $USER@$i:$2 ;;
+        "miqcollect") scp $USER@$i:$1 $2/$(basename $1)-$i ;;
+        "miqgrep") ssh $USER@$i "$GREP \"$PATTERN\" $LOG" | perl -pe 's/^\/.*?://' | sed -e "s/^/[$i] /" >> $TMPFILE ;;
+      esac
+      echo
+    done
+
+  elif [ "$TRANSPORT" == 'pssh' ]
+  then
+
+    HOSTS=""
+    for i in $SERVERS
+    do
+      HOSTS="$HOSTS -H $USER@$i"
+    done
+
+    case $NAME in
+      "miqssh") pssh -t 0 -i $HOSTS $ARGS ;;
+      "miqscp") pscp.pssh -t 0 $HOSTS $1 $2 ;;
+      "miqcollect") pslurp -t 0 $HOSTS -L $2 $1 . ;;
+      "miqgrep") pssh -t 0 $HOSTS -o $PSSH_OUTDIR "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" ;;
+    esac
+
+  elif [ "$TRANSPORT" == 'ansible' ]
+  then
+
+    HOSTS=$(echo $SERVERS | sed -e 's/ /,/g')
+
+    case $NAME in
+      "miqssh") ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$ARGS" ;;
+      "miqscp") ansible all -i $HOSTS -f $PARALLELISM -m copy -a "src=$1 dest=$2" ;;
+      "miqcollect") ansible all -i $HOSTS -f $PARALLELISM -m fetch -a "src=$1 dest=$2/$(basename $1)-{{ inventory_hostname }} flat=yes" ;;
+      "miqgrep")
+        if [ -n "$PATTERN" ]
+        then
+          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE
+        else
+          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE
+        fi ;;
+    esac
+
+  else
+    echo "$TRANSPORT must be one of ssh, pssh, or ansible."
+    exit 1
+  fi
+
+  if [ $NAME == 'miqgrep' ]
+  then
+    if [ "$TRANSPORT" == 'ansible' ]
+    then
+      echo
+    fi
+    echo "*** collating results ***"
+    if [ "$TRANSPORT" == 'pssh' ]
+    then
+      cat $PSSH_OUTDIR/* > $TMPFILE
+    fi
+    if [ "$TRANSPORT" == 'ansible' ]
+    then
+      awk '!/.* \| .* \| rc=.* >>/ {print}' $TMPFILE > $TMPFILE.ansible
+      mv $TMPFILE.ansible $TMPFILE
+      sleep 1
+    fi
+    sort -k 4 $TMPFILE > $TMPFILE.sort
+    mv $TMPFILE.sort $TMPFILE
+    if [ "$NOLESS" != "true" ]
+    then
+      less $TMPFILE
+    fi
+    echo
+  fi
+
+else
+
+  COMMAND='multitail'
+  TAIL='tail -f'
+  if [ "$PATTERN" == 'nogrep' ]
+  then
+    CLIENT_CMD="$TAIL $LOG"
+  else
+    CLIENT_CMD="$TAIL $LOG | $GREP \\\"$PATTERN\\\""
+  fi
+
+  for i in $SERVERS
+  do
+    COMMAND="$COMMAND -$L \"ssh $i '$CLIENT_CMD' | sed -u -e 's/^/[$i] /'\""
+  done
+
+  echo "Running: $COMMAND"
+
+  eval $COMMAND
+
+fi
+
+if [ "$SAVEOUT" == 'true' ]
+then
+  echo "Output File: $TMPFILE"
+fi
+

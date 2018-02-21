@@ -4,6 +4,8 @@ module ManagerRefresh
       class Proxy
         include Vmdb::Logging
 
+        attr_reader :skeletal_primary_index
+
         def initialize(inventory_collection, secondary_refs = {})
           @inventory_collection = inventory_collection
 
@@ -28,6 +30,13 @@ module ManagerRefresh
               @data_indexes[index_name]
             )
           end
+
+          @skeletal_primary_index = ManagerRefresh::InventoryCollection::Index::Type::Skeletal.new(
+            inventory_collection,
+            :skeletal_primary_index_ref,
+            named_ref,
+            primary_index
+          )
         end
 
         def build_primary_index_for(inventory_object)
@@ -66,9 +75,9 @@ module ManagerRefresh
           when :local_db_find_references, :local_db_cache_all
             local_db_index_find(reference)
           when :local_db_find_missing_references
-            data_index_find(reference) || local_db_index_find(reference)
+            find_in_data_or_skeletal_index(reference) || local_db_index_find(reference)
           else
-            data_index_find(reference)
+            find_in_data_or_skeletal_index(reference)
           end
         end
 
@@ -95,7 +104,7 @@ module ManagerRefresh
                                                     :ref => ref, :key => key, :default => default)
         end
 
-        def named_ref(ref)
+        def named_ref(ref = primary_index_ref)
           all_refs[ref]
         end
 
@@ -103,10 +112,25 @@ module ManagerRefresh
 
         delegate :association_to_foreign_key_mapping,
                  :build_stringified_reference,
+                 :parallel_safe?,
                  :strategy,
                  :to => :inventory_collection
 
         attr_reader :all_refs, :data_indexes, :inventory_collection, :primary_ref, :local_db_indexes, :secondary_refs
+
+        def find_in_data_or_skeletal_index(reference)
+          if parallel_safe?
+            # With parallel safe strategies, we create skeletal nodes that we can look for
+            data_index_find(reference) || skeletal_index_find(reference)
+          else
+            data_index_find(reference)
+          end
+        end
+
+        def skeletal_index_find(reference)
+          # Find in skeletal index, but we are able to create skeletal index only for primary indexes
+          skeletal_primary_index.find(reference.stringified_reference) if reference.primary?
+        end
 
         def data_index_find(reference)
           data_index(reference.ref).find(reference.stringified_reference)

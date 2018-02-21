@@ -20,4 +20,17 @@ class MiqUiWorker < MiqWorker
   end
 
   include MiqWebServerWorkerMixin
+  include MiqWorker::ServiceWorker
+
+  def self.supports_container?
+    true
+  end
+
+  def container_port
+    3001
+  end
+
+  def container_image_name
+    "manageiq/manageiq-ui-worker"
+  end
 end

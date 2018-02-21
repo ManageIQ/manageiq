@@ -24,15 +24,17 @@ class VmReconfigureTask < MiqRequestTask
     end
 
     new_settings = []
-    unless req_obj.options[:vm_memory].blank?
+    if req_obj.options[:vm_memory].present?
       new_settings << "Memory: #{req_obj.options[:vm_memory].to_i} MB"
     end
-    new_settings << "Processor Sockets: #{req_obj.options[:number_of_sockets].to_i}" unless req_obj.options[:number_of_sockets].blank?
-    new_settings << "Processor Cores Per Socket: #{req_obj.options[:cores_per_socket].to_i}" unless req_obj.options[:cores_per_socket].blank?
-    new_settings << "Total Processors: #{req_obj.options[:number_of_cpus].to_i}" unless req_obj.options[:number_of_cpus].blank?
-    new_settings << "Add Disks: #{req_obj.options[:disk_add].length}" unless req_obj.options[:disk_add].blank?
-    new_settings << "Remove Disks: #{req_obj.options[:disk_remove].length}" unless req_obj.options[:disk_remove].blank?
-    new_settings << "Resize Disks: #{req_obj.options[:disk_resize].length}" unless req_obj.options[:disk_resize].blank?
+    new_settings << "Processor Sockets: #{req_obj.options[:number_of_sockets].to_i}" if req_obj.options[:number_of_sockets].present?
+    new_settings << "Processor Cores Per Socket: #{req_obj.options[:cores_per_socket].to_i}" if req_obj.options[:cores_per_socket].present?
+    new_settings << "Total Processors: #{req_obj.options[:number_of_cpus].to_i}" if req_obj.options[:number_of_cpus].present?
+    new_settings << "Add Disks: #{req_obj.options[:disk_add].length}" if req_obj.options[:disk_add].present?
+    new_settings << "Remove Disks: #{req_obj.options[:disk_remove].length}" if req_obj.options[:disk_remove].present?
+    new_settings << "Resize Disks: #{req_obj.options[:disk_resize].length}" if req_obj.options[:disk_resize].present?
+    new_settings << "Add Network Adapters: #{req_obj.options[:network_adapter_add].length}" if req_obj.options[:network_adapter_add].present?
+    new_settings << "Remove Network Adapters: #{req_obj.options[:network_adapter_remove].length}" if req_obj.options[:network_adapter_remove].present?
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
   end
 

@@ -103,7 +103,7 @@ describe EmbeddedAnsibleWorker::Runner do
 
       context "in a container" do
         before do
-          expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+          expect(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
         end
 
         it "creates the provider with the service name for the URL" do
@@ -119,6 +119,41 @@ describe EmbeddedAnsibleWorker::Runner do
           userid, password = provider.auth_user_pwd
           expect(userid).to eq("admin")
           expect(password).to eq("secret")
+        end
+      end
+    end
+
+    context "#do_work" do
+      it "starts embedded ansible if it is not alive and not running" do
+        allow(embedded_ansible_instance).to receive(:alive?).and_return(false)
+        allow(embedded_ansible_instance).to receive(:running?).and_return(false)
+
+        expect(embedded_ansible_instance).to receive(:start)
+
+        runner.do_work
+      end
+
+      context "with a provider" do
+        let(:provider) { FactoryGirl.create(:provider_embedded_ansible, :with_authentication) }
+
+        it "runs an authentication check if embedded ansible is alive and the credentials are not valid" do
+          auth = provider.authentications.first
+          auth.status = "Error"
+          auth.save!
+
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          allow(runner).to receive(:provider).and_return(provider)
+          expect(provider).to receive(:authentication_check)
+
+          runner.do_work
+        end
+
+        it "doesn't run an authentication check if the credentials are valid" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          allow(runner).to receive(:provider).and_return(provider)
+          expect(provider).not_to receive(:authentication_check)
+
+          runner.do_work
         end
       end
     end

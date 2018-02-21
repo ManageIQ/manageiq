@@ -72,25 +72,6 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :parent_inventory_collections => [:vms],
       }
 
-      attributes[:custom_manager_uuid] = lambda do |network|
-        [network.hardware.vm_or_template.ems_ref, network.description]
-      end
-
-      attributes[:custom_db_finder] = lambda do |inventory_collection, selection, _projection|
-        relation = inventory_collection.parent.send(inventory_collection.association)
-                                       .joins(:hardware => :vm_or_template)
-                                       .references(:hardware => :vm_or_template)
-
-        unless selection.blank?
-          vms_ems_refs = selection.map { |x| x[:hardware] }.uniq
-          descriptions = selection.map { |x| x[:description] }.uniq
-
-          relation = relation.where(:hardware => {'vms' => {:ems_ref => vms_ems_refs}})
-          relation = relation.where(:description => descriptions)
-        end
-        relation
-      end
-
       attributes[:targeted_arel] = lambda do |inventory_collection|
         manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
         inventory_collection.parent.networks.joins(:hardware => :vm_or_template).where(

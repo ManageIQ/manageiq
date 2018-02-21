@@ -126,6 +126,7 @@ describe MeteringVm do
        storage_used_metric
        metering_used_metric
        existence_hours_metric
+       tenant_name
   )
   end
 

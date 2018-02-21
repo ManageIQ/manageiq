@@ -8,17 +8,22 @@ class Zone < ApplicationRecord
 
   has_many :miq_servers
   has_many :ext_management_systems
+  has_many :container_managers, :class_name => "ManageIQ::Providers::ContainerManager"
   has_many :miq_schedules, :dependent => :destroy
   has_many :ldap_regions
   has_many :providers
 
-  has_many :hosts,               :through => :ext_management_systems
-  has_many :clustered_hosts,     :through => :ext_management_systems
-  has_many :non_clustered_hosts, :through => :ext_management_systems
-  has_many :vms_and_templates,   :through => :ext_management_systems
-  has_many :vms,                 :through => :ext_management_systems
-  has_many :miq_templates,       :through => :ext_management_systems
-  has_many :ems_clusters,        :through => :ext_management_systems
+  has_many :hosts,                 :through => :ext_management_systems
+  has_many :clustered_hosts,       :through => :ext_management_systems
+  has_many :non_clustered_hosts,   :through => :ext_management_systems
+  has_many :vms_and_templates,     :through => :ext_management_systems
+  has_many :vms,                   :through => :ext_management_systems
+  has_many :miq_templates,         :through => :ext_management_systems
+  has_many :ems_clusters,          :through => :ext_management_systems
+  has_many :container_nodes,       :through => :container_managers
+  has_many :container_groups,      :through => :container_managers
+  has_many :container_replicators, :through => :container_managers
+  has_many :containers,            :through => :container_managers
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
 
   before_destroy :check_zone_in_use_on_destroy

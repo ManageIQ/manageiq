@@ -1,13 +1,8 @@
-$LOAD_PATH << Rails.root.join("tools", "miqldap_to_sssd").to_s
+$LOAD_PATH << Rails.root.join("tools").to_s
 
-require "authconfig"
+require "miqldap_to_sssd"
 
 describe MiqLdapToSssd::AuthConfig do
-  before do
-    stub_const("LOGGER", double)
-    allow(LOGGER).to receive(:debug)
-  end
-
   describe '#run_auth_config' do
     before do
       @initial_settings = {:mode => "bob", :ldaphost => ["hostname"], :ldapport => 22}
@@ -32,7 +27,7 @@ describe MiqLdapToSssd::AuthConfig do
     end
 
     it 'handles authconfig failures' do
-      expect(LOGGER).to receive(:fatal)
+      expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
       expect(AwesomeSpawn).to receive(:run)
         .and_return(double(:command_line => "authconfig", :failure? => true, :error => "malfunction"))
       expect { described_class.new(@initial_settings).run_auth_config }.to raise_error(MiqLdapToSssd::AuthConfigError)

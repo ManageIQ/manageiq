@@ -935,7 +935,7 @@ class VmOrTemplate < ApplicationRecord
 
   def log_proxies_format_instance(object)
     return 'Nil' if object.nil?
-    "#{object.class.name}:#{object.id}-#{object.name}:#{object.state}"
+    "#{object.class.name}:#{object.id}-#{object.name}:#{object.try(:state)}"
   end
 
   def storage2hosts

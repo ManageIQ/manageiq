@@ -11,6 +11,8 @@ module ManagerRefresh
             @inventory_collection = inventory_collection
             @index_name           = index_name
             @attribute_names      = attribute_names
+
+            assert_attribute_names!
           end
 
           delegate :keys, :to => :index
@@ -41,7 +43,23 @@ module ManagerRefresh
 
           attr_writer :index
 
-          delegate :build_stringified_reference, :data, :to => :inventory_collection
+          delegate :build_stringified_reference, :data, :model_class, :custom_save_block, :to => :inventory_collection
+
+          def assert_attribute_names!
+            # Skip for manually defined nodes
+            return if model_class.nil?
+            # When we do custom saving, we allow any indexes to be passed, to no limit the user
+            return unless custom_save_block.nil?
+
+            # We cannot simply do model_class.method_defined?(attribute_name.to_sym), because e.g. db attributes seems
+            # to be create lazily
+            test_model_object = model_class.new
+            attribute_names.each do |attribute_name|
+              unless test_model_object.respond_to?(attribute_name.to_sym)
+                raise "Invalid definition of index :#{index_name}, there is no attribute :#{attribute_name} on model #{model_class}"
+              end
+            end
+          end
         end
       end
     end

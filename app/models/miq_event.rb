@@ -17,7 +17,7 @@ class MiqEvent < EventStream
   SUPPORTED_POLICY_AND_ALERT_CLASSES = [Host, VmOrTemplate, Storage,
                                         EmsCluster, ResourcePool, MiqServer,
                                         ExtManagementSystem,
-                                        ContainerReplicator, ContainerGroup,
+                                        ContainerReplicator, ContainerGroup, ContainerProject,
                                         ContainerNode, ContainerImage, PhysicalServer].freeze
 
   def self.raise_evm_event(target, raw_event, inputs = {}, options = {})

@@ -27,8 +27,7 @@ class MiqUserRole < ApplicationRecord
   }
 
   def feature_identifiers
-    # TODO: Why can't this be #pluck?
-    miq_product_features.collect(&:identifier)
+    miq_product_features.pluck(:identifier)
   end
 
   # @param identifier [String] Product feature identifier to check if this role allows access to it
@@ -75,26 +74,29 @@ class MiqUserRole < ApplicationRecord
   end
 
   def self.seed
-    seed_from_array(YAML.load_file(FIXTURE_YAML))
+    roles = all.index_by(&:name)
+    seed_from_array(roles, YAML.load_file(FIXTURE_YAML))
 
+    # NOTE: typically there are no extra fixtures (so merge_features is typically false)
     Dir.glob(File.join(FIXTURE_PATH, "*.yml")).each do |fixture|
-      seed_from_array(YAML.load_file(fixture), true)
+      seed_from_array(roles, YAML.load_file(fixture), true)
     end
   end
 
-  def self.seed_from_array(array, merge_features = false)
+  def self.seed_from_array(roles, array, merge_features = false)
     array.each do |hash|
       feature_ids = hash.delete(:miq_product_feature_identifiers)
 
       hash[:miq_product_features] = MiqProductFeature.where(:identifier => feature_ids).to_a
-      role = find_by(:name => hash[:name]) || new(hash.except(:id))
+      role = roles[hash[:name]] ||= new(hash.except(:id))
       new_role = role.new_record?
       hash[:miq_product_features] &&= role.miq_product_features if !new_role && merge_features
       unless role.settings.nil? # Makse sure existing settings are merged in with the new ones.
         new_settings = hash.delete(:settings) || {}
         role.settings.merge!(new_settings)
       end
-      role.update_attributes(hash.except(:id))
+      role.attributes = hash.except(:id)
+      role.save if role.changed?
     end
   end
 

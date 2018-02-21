@@ -12,9 +12,21 @@ module MiqLdapToSssd
       self.options = Trollop.options(args) do
         banner "Usage: ruby #{$PROGRAM_NAME} [options]\n"
 
-        opt :basedn_domain,
-            "The Base DN domain name, e.g. example.com",
+        opt :domain,
+            "The domain name for the Base DN, e.g. example.com",
             :short   => "d",
+            :default => nil,
+            :type    => :string
+
+        opt :bind_dn,
+            "The Bind DN, credential to use to authenticate against LDAP e.g. cn=Manager,dc=example,dc=com",
+            :short   => "b",
+            :default => nil,
+            :type    => :string
+
+        opt :bind_pwd,
+            "The password for the Bind DN.",
+            :short   => "p",
             :default => nil,
             :type    => :string
 
@@ -30,7 +42,7 @@ module MiqLdapToSssd
             :default => false,
             :type    => :flag
 
-        opt :skip_post_coversion_userid_change,
+        opt :skip_post_conversion_userid_change,
             "Do the MiqLdap to SSSD conversion but skip the normalizing of the userids",
             :short   => "s",
             :default => false,

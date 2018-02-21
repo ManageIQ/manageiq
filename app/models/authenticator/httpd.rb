@@ -120,11 +120,11 @@ module Authenticator
                     :lastname  => request.headers['X-REMOTE-USER-LASTNAME'],
                     :email     => request.headers['X-REMOTE-USER-EMAIL'],
                     :domain    => request.headers['X-REMOTE-USER-DOMAIN']}
-      [user_attrs, (request.headers['X-REMOTE-USER-GROUPS'] || '').split(/[;:,]/)]
+      [user_attrs, (CGI.unescape(request.headers['X-REMOTE-USER-GROUPS'] || '')).split(/[;:,]/)]
     end
 
     def user_attrs_from_external_directory(username)
-      if MiqEnvironment::Command.is_container?
+      if MiqEnvironment::Command.is_podified?
         user_attrs_from_external_directory_via_dbus_api_service(username)
       else
         user_attrs_from_external_directory_via_dbus(username)

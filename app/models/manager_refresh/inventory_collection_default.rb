@@ -114,18 +114,6 @@ class ManagerRefresh::InventoryCollectionDefault
         :use_ar_object                => true,
       }
 
-      attributes[:custom_manager_uuid] = lambda do |hardware|
-        [hardware.vm_or_template.ems_ref]
-      end
-
-      attributes[:custom_db_finder] = lambda do |inventory_collection, selection, _projection|
-        relation = inventory_collection.parent.send(inventory_collection.association)
-                                       .includes(:vm_or_template)
-                                       .references(:vm_or_template)
-        relation = relation.where(:vms => {:ems_ref => selection.map { |x| x[:vm_or_template] }}) unless selection.blank?
-        relation
-      end
-
       attributes[:targeted_arel] = lambda do |inventory_collection|
         manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
         inventory_collection.parent.hardwares.joins(:vm_or_template).where(
@@ -182,12 +170,6 @@ class ManagerRefresh::InventoryCollectionDefault
           :storage
         ],
       }
-
-      if extra_attributes[:strategy] == :local_db_cache_all
-        attributes[:custom_manager_uuid] = lambda do |disk|
-          [disk.hardware.vm_or_template.ems_ref, disk.device_name]
-        end
-      end
 
       attributes[:targeted_arel] = lambda do |inventory_collection|
         manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }

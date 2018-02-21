@@ -46,8 +46,11 @@ class MiqLdap
     options[:host] ||= ::Settings.authentication.ldaphost
     options[:port] ||= ::Settings.authentication.ldapport
     options[:host] = resolve_host(options[:host], options[:port])
-    options[:encryption] = mode == "ldaps" ? {:method => :simple_tls} : {}
-    options.store_path(:encryption, :tls_options, :verify_mode, OpenSSL::SSL::VERIFY_NONE) if options[:host].ipaddress?
+
+    if mode == "ldaps"
+      options[:encryption] = {:method => :simple_tls}
+      options.store_path(:encryption, :tls_options, :verify_mode, OpenSSL::SSL::VERIFY_NONE) if options[:host].ipaddress?
+    end
 
     # Make sure we do NOT log the clear-text password
     log_options = Vmdb::Settings.mask_passwords!(options.deep_clone)

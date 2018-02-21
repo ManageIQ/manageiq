@@ -120,24 +120,18 @@ class VmdbDatabaseConnection < ApplicationRecord
   end
 
   def miq_worker
-    return @miq_worker if defined?(@miq_worker)
-    @miq_worker = MiqWorker.find_current_in_my_region.find_by(:sql_spid => spid)
+    @miq_worker ||= MiqWorker.find_current_in_my_region.find_by(:sql_spid => spid)
   end
 
   def miq_server
-    return @miq_server if defined?(@miq_server)
-    w = miq_worker
-    @miq_server = w ? w.miq_server : MiqServer.find_started_in_my_region.find_by(:sql_spid => spid)
+    @miq_server ||= miq_worker.try(:miq_server) || MiqServer.active_miq_servers.in_my_region.find_by(:sql_spid => spid)
   end
 
   def zone
-    return @zone if defined?(@zone)
-    @zone = miq_server && miq_server.zone
+    @zone ||= miq_server.try(:zone)
   end
 
   def pid
-    return @pid if defined?(@pid)
-    parent = miq_worker || miq_server
-    @pid = parent && parent.pid
+    @pid ||= (miq_worker || miq_server).try(:pid)
   end
 end

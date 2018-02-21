@@ -35,7 +35,7 @@ gem "docker-api",                     "~>1.33.6",      :require => false
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
-gem "gettext_i18n_rails_js",          "~>1.1.0"
+gem "gettext_i18n_rails_js",          "~>1.3.0"
 gem "hamlit",                         "~>2.7.0"
 gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
@@ -44,7 +44,6 @@ gem "linux_admin",                    "~>1.2.0",       :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "manageiq-messaging",                              :require => false, :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
-gem "manageiq-network_discovery",     "~>0.1.2",       :require => false
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>2.6.1",       :path => File.expand_path("mime-types-redirector", __dir__)
 gem "more_core_extensions",           "~>3.5"
@@ -162,7 +161,7 @@ group :automate, :seed, :manageiq_default do
 end
 
 group :replication, :manageiq_default do
-  gem "pg-pglogical",                   "~>2.1.1",       :require => false
+  gem "pg-pglogical",                   "~>2.1.2",       :require => false
 end
 
 group :rest_api, :manageiq_default do
@@ -183,7 +182,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.2",       :require => false
+  gem "manageiq-smartstate",            "~>0.2.8",       :require => false
 end
 
 group :consumption, :manageiq_default do

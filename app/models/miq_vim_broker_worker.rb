@@ -1,4 +1,6 @@
 class MiqVimBrokerWorker < MiqWorker
+  include MiqWorker::ReplicaPerWorker
+
   require_nested :Runner
 
   self.required_roles         = lambda {
@@ -18,6 +20,10 @@ class MiqVimBrokerWorker < MiqWorker
     return self.has_minimal_env_option? ? 1 : 0 if MiqServer.minimal_env?
     return 1
   }
+
+  def self.supports_container?
+    true
+  end
 
   def self.has_required_role?
     return false if emses_to_monitor.empty?

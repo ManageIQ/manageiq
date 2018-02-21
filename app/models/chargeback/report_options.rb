@@ -17,7 +17,8 @@ class Chargeback
     :userid,
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U
-    :method_for_allocated_metrics
+    :method_for_allocated_metrics,
+    :group_by_tenant?
   ) do
     def self.new_from_h(hash)
       new(*hash.values_at(*members))
@@ -32,6 +33,7 @@ class Chargeback
         raise "Invalid method for allocated calculations #{method}"
       end
 
+      return :sum_of_maxes_from_grouped_values if method == :max && group_by_tenant?
       method
     end
 
@@ -115,10 +117,22 @@ class Chargeback
       end
     end
 
+    def tenant_for(consumption)
+      consumption.resource.tenant
+    end
+
+    def group_with(records)
+      group_by_tenant? ? records.group_by { |x| x.resource.tenant.id } : records.group_by(&:resource_id)
+    end
+
     def classification_for(consumption)
       tag = consumption.tag_names.find { |x| x.starts_with?(groupby_tag) } # 'department/*'
       tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
       tag_hash[tag]
+    end
+
+    def group_by_tenant?
+      self[:groupby] == 'tenant'
     end
 
     private

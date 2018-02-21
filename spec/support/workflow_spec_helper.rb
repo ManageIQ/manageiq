@@ -40,9 +40,10 @@ module Spec
       end
 
       def stub_automate_workspace(url, user, *result)
-        workspace_stub = double
+        workspace_stub = double("Double for #stub_automate_workspace")
         expect(workspace_stub).to receive(:instantiate).with(url, user, nil)
         expect(workspace_stub).to receive(:root).and_return(*result)
+        allow(workspace_stub).to  receive(:to_expanded_xml).and_return(*result)
         expect(MiqAeEngine::MiqAeWorkspaceRuntime).to receive(:new).and_return(workspace_stub)
       end
     end

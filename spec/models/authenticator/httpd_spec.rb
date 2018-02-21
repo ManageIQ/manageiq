@@ -550,6 +550,54 @@ describe Authenticator::Httpd do
           authenticate
         end
       end
+
+      context "when group names have escaped special characters" do
+        let(:config) { {:httpd_role => true} }
+        let(:headers) do
+          super().merge('X-Remote-User-Groups' => CGI.escape('spécial_char@fqdn:moré@fqdn'))
+        end
+        let(:user_attrs) do
+          { :username  => "testuser",
+            :fullname  => "Test User",
+            :firstname => "Alice",
+            :lastname  => "Aardvark",
+            :email     => "testuser@example.com",
+            :domain    => "example.com" }
+        end
+
+        it "handles group names with escaped special characters" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, ["spécial_char@fqdn", "moré@fqdn"])
+          authenticate
+        end
+      end
+
+      context "when there are no group names" do
+        let(:config) { {:httpd_role => true} }
+        let(:headers) do
+          {
+            'X-Remote-User'           => username,
+            'X-Remote-User-FullName'  => 'Test User',
+            'X-Remote-User-FirstName' => 'Alice',
+            'X-Remote-User-LastName'  => 'Aardvark',
+            'X-Remote-User-Email'     => 'testuser@example.com',
+            'X-Remote-User-Domain'    => 'example.com',
+            'X-Remote-User-Groups'    => nil,
+          }
+        end
+        let(:user_attrs) do
+          { :username  => "testuser",
+            :fullname  => "Test User",
+            :firstname => "Alice",
+            :lastname  => "Aardvark",
+            :email     => "testuser@example.com",
+            :domain    => "example.com" }
+        end
+
+        it "handles nil group names" do
+          expect(subject).to receive(:find_external_identity).with(username, user_attrs, [])
+          authenticate
+        end
+      end
     end
   end
 end

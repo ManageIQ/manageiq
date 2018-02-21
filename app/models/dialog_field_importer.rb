@@ -31,13 +31,16 @@ class DialogFieldImporter
   private
 
   def set_category_for_tag_control(dialog_field, dialog_field_attributes)
-    category_name = dialog_field_attributes["options"][:category_name]
-    if category_name
-      category_description = dialog_field_attributes["options"][:category_description]
-      category = Category.find_by_name(category_name)
-      dialog_field.category = category.try(:description) == category_description ? category.id.to_s : nil
-    else
-      dialog_field.category = dialog_field_attributes["options"][:category_id]
-    end
+    dialog_field.category = adjust_category(dialog_field_attributes['options'])
+  end
+
+  def adjust_category(opts)
+    return nil if opts[:category_description].nil?
+    category = if opts[:category_id]
+                 Category.find(opts[:category_id])
+               elsif opts[:category_name]
+                 Category.find_by_name(opts[:category_name])
+               end
+    category.try(:description) == opts[:category_description] ? category.try(:id).to_s : nil
   end
 end

@@ -2,7 +2,7 @@ class MiqAutomate
   def self.async_datastore_reset
     task = MiqTask.create(:name => "Automate Datastore Reset")
 
-    if MiqServer.find_all_started_servers.detect { |s| s.has_active_role?("automate") }.nil?
+    if MiqServer.active_miq_servers.detect { |s| s.has_active_role?("automate") }.nil?
       task.update_status("Finished", "Error", "No Server has Automate Role enabled")
     else
       MiqQueue.submit_job(

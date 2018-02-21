@@ -2,6 +2,8 @@ class ContainerProject < ApplicationRecord
   include SupportsFeatureMixin
   include CustomAttributeMixin
   include ArchivedMixin
+  include MiqPolicyMixin
+  include TenantIdentityMixin
   include CustomActionsMixin
   include_concern 'Purging'
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -20,6 +22,7 @@ class ContainerProject < ApplicationRecord
   has_many :container_templates
   has_many :archived_container_groups, :foreign_key => "old_container_project_id", :class_name => "ContainerGroup"
   has_many :persistent_volume_claims
+  has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy
 
   # Needed for metrics
   has_many :metrics,                :as => :resource
@@ -34,6 +37,8 @@ class ContainerProject < ApplicationRecord
   virtual_total :replicators_count, :container_replicators
   virtual_total :containers_count,  :containers
   virtual_total :images_count,      :container_images
+
+  after_create :raise_creation_event
 
   include EventMixin
   include Metric::CiMixin
@@ -66,5 +71,15 @@ class ContainerProject < ApplicationRecord
     _log.info("Disconnecting Container Project [#{name}] id [#{id}] from EMS [#{ext_management_system.name}] id [#{ext_management_system.id}]")
     self.deleted_on = Time.now.utc
     save
+  end
+
+  def self.raise_creation_events(container_project_ids)
+    where(:id => container_project_ids).find_each do |record|
+      MiqEvent.raise_evm_event(record, 'containerproject_created', {})
+    end
+  end
+
+  def raise_creation_event
+    MiqEvent.raise_evm_event(self, 'containerproject_created', {})
   end
 end

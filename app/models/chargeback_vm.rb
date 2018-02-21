@@ -6,6 +6,7 @@ class ChargebackVm < Chargeback
     :vm_guid                  => :string,
     :owner_name               => :string,
     :provider_name            => :string,
+    :tenant_name              => :string,
     :provider_uid             => :string,
     :cpu_allocated_metric     => :float,
     :cpu_allocated_cost       => :float,

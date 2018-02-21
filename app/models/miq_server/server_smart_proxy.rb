@@ -90,7 +90,7 @@ module MiqServer::ServerSmartProxy
           timeout_adj = 8
         end
       end
-      $log.debug("#{log_prefix}: queuing call to #{self.class.name}##{ost.method_name}")
+      _log.debug("queuing call to #{self.class.name}##{ost.method_name}")
       # Queue call to scan_metadata or sync_metadata.
       MiqQueue.submit_job(
         :service     => "smartproxy",
@@ -136,7 +136,7 @@ module MiqServer::ServerSmartProxy
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
     job    = Job.find_by(:guid => ost.taskid)
-    _log.debug("#{log_prefix}: #{target.name} (#{target.class.name})")
+    _log.debug("#{target.name} (#{target.class.name})")
     begin
       target.perform_metadata_sync(ost)
     rescue Exception => err

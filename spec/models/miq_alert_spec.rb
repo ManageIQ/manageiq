@@ -159,7 +159,7 @@ describe MiqAlert do
       it "miq_alert_status.description = miq_alert.description event if overriden by ems_event.description" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!", :type => 'WhateverEvent')
+          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!")
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.description).to eq("VM Unregistered")
@@ -454,6 +454,7 @@ describe MiqAlert do
       @miq_server = EvmSpecHelper.local_miq_server
       @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
       @ems_other  = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
+      @ems_kub    = FactoryGirl.create(:ems_kubernetes, :zone => @miq_server.zone)
       @alert      = FactoryGirl.create(:miq_alert, :responds_to_events => "_hourly_timer_")
       @alert_prof = FactoryGirl.create(:miq_alert_set, :alerts => [@alert])
     end
@@ -464,6 +465,7 @@ describe MiqAlert do
       @alert_prof.assign_to_objects(@ems.id, "ExtManagementSystem")
 
       expect(MiqAlert).to receive(:evaluate_alerts).with(@ems, "_hourly_timer_")
+      expect(MiqAlert).to receive(:evaluate_alerts).with(@ems_kub, "_hourly_timer_")
       MiqAlert.evaluate_hourly_timer
     end
 
@@ -502,6 +504,17 @@ describe MiqAlert do
       expect(MiqAlert).to receive(:evaluate_alerts).once.with(storage_no_ems, "_hourly_timer_")
       expect(MiqAlert).not_to receive(:evaluate_alerts).with(storage_in_another, "_hourly_timer_")
       MiqAlert.evaluate_hourly_timer
+    end
+
+    it "evaluates for container entities" do
+      [:container_node, :container_group, :container_replicator, :container].each do |entity|
+        container_entity_in_zone = FactoryGirl.create(entity, :ext_management_system => @ems_kub)
+        @alert.update_attributes(:db => entity.to_s.camelize)
+        @alert_prof.mode = container_entity_in_zone.class.base_model.name
+        @alert_prof.assign_to_objects(container_entity_in_zone.id, entity.to_s.camelize)
+        expect(MiqAlert).to receive(:evaluate_alerts).once.with(container_entity_in_zone, "_hourly_timer_")
+        MiqAlert.evaluate_hourly_timer
+      end
     end
   end
 

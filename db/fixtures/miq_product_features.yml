@@ -2869,43 +2869,6 @@
           :feature_type: admin
           :hidden: true
           :identifier: zone_delete
-    - :name: LDAP
-      :description: LDAP
-      :feature_type: node
-      :hidden: true
-      :identifier: ldap
-      :children:
-      - :name: Modify
-        :description: Modify a LDAP
-        :feature_type: admin
-        :identifier: ldap_admin
-        :hidden: true
-        :children:
-        - :name: Add
-          :description: Add a LDAP domain
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_domain_add
-        - :name: Edit
-          :description: Edit a LDAP domain
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_domain_edit
-        - :name: Delete
-          :description: Delete a LDAP domain
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_domain_delete
-        - :name: Edit
-          :description: Edit a LDAP region
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_region_edit
-        - :name: Delete
-          :description: Delete a LDAP region
-          :feature_type: admin
-          :hidden: true
-          :identifier: ldap_region_delete
     - :name: Regions
       :description: Regions
       :feature_type: node
@@ -6056,6 +6019,43 @@
     :description: Show Most Recent Alerts
     :feature_type: view
     :identifier: monitor_alerts_most_recent
+
+# Transformation Mappings
+- :name: Transformation Mappings
+  :description: Everything under Transformation Mappings
+  :feature_type: node
+  :identifier: transformation_mapping
+  :children:
+  - :name: View
+    :description: View Transformation Mapping
+    :feature_type: view
+    :identifier: transformation_mapping_view
+    :children:
+    - :name: List
+      :description: Display Lists of Transformation Mappings
+      :feature_type: view
+      :identifier: transformation_mapping_show_list
+    - :name: Show
+      :description: Display Individual Transformation Mappings
+      :feature_type: view
+      :identifier: transformation_mapping_show
+  - :name: Modify
+    :description: Modify Transformation Mappings
+    :feature_type: admin
+    :identifier: transformation_mappings_admin
+    :children:
+    - :name: Create Transformation Mapping
+      :description: Create Transformation Mapping
+      :identifier: transformation_mapping_new
+      :feature_type: admin
+    - :name: Edit Transformation Mapping
+      :description: Edit Transformation Mapping
+      :identifier: transformation_mapping_edit
+      :feature_type: admin
+    - :name: Delete Transformation Mapping
+      :description: Delete Transformation Mapping
+      :identifier: transformation_mapping_delete
+      :feature_type: admin
 
 # API
 - :name: API

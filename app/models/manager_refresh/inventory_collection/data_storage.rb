@@ -10,10 +10,11 @@ module ManagerRefresh
 
       delegate :each, :size, :to => :data
 
-      delegate :find,
-               :primary_index,
+      delegate :primary_index,
                :build_primary_index_for,
                :build_secondary_indexes_for,
+               :named_ref,
+               :skeletal_primary_index,
                :to => :index_proxy
 
       delegate :builder_params,
@@ -31,7 +32,7 @@ module ManagerRefresh
       end
 
       def <<(inventory_object)
-        unless primary_index.find(inventory_object.manager_uuid)
+        if inventory_object.manager_uuid.present? && !primary_index.find(inventory_object.manager_uuid)
           data << inventory_object
 
           # TODO(lsmola) Maybe we do not need the secondary indexes here?
@@ -53,24 +54,30 @@ module ManagerRefresh
       end
 
       def find_or_build_by(manager_uuid_hash)
-        if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
-          raise "Allowed find_or_build_by keys are #{manager_ref}"
-        end
+        build(manager_uuid_hash)
+      end
 
-        # Not using find by since if could take record from db, then any changes would be ignored, since such record will
-        # not be stored to DB, maybe we should rethink this?
-        primary_index.find(manager_uuid_hash) || build(manager_uuid_hash)
+      def find_in_data(hash)
+        _hash, _uuid, inventory_object = primary_index_scan(hash)
+        inventory_object
       end
 
       def build(hash)
-        hash             = builder_params.merge(hash)
-        inventory_object = new_inventory_object(hash)
+        hash, uuid, inventory_object = primary_index_scan(hash)
 
-        uuid = inventory_object.manager_uuid
-        # Each InventoryObject must be able to build an UUID, return nil if it can't
-        return nil if uuid.blank?
-        # Return existing InventoryObject if we have it
-        return primary_index.find(uuid) if primary_index.find(uuid)
+        # Return InventoryObject if found in primary index
+        return inventory_object unless inventory_object.nil?
+
+        # We will take existing skeletal record, so we don't duplicate references for saving. We can have duplicated
+        # reference from local_db index, (if we are using .find in parser, that causes N+1 db queries), but that is ok,
+        # since that one is not being saved.
+        inventory_object = skeletal_primary_index.delete(uuid)
+
+        # We want to update the skeletal record with actual data
+        inventory_object&.assign_attributes(hash)
+
+        # Build the InventoryObject
+        inventory_object ||= new_inventory_object(enrich_data(hash))
         # Store new InventoryObject and return it
         push(inventory_object)
         inventory_object
@@ -122,6 +129,24 @@ module ManagerRefresh
             end
           end
         end
+      end
+
+      private
+
+      def primary_index_scan(hash)
+        hash = enrich_data(hash)
+
+        if manager_ref.any? { |x| !hash.key?(x) }
+          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
+        end
+
+        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
+        return hash, uuid, primary_index.find(uuid)
+      end
+
+      def enrich_data(hash)
+        # This is 25% faster than builder_params.merge(hash)
+        {}.merge!(builder_params).merge!(hash)
       end
     end
   end

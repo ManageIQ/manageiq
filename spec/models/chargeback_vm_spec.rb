@@ -369,6 +369,196 @@ describe ChargebackVm do
         end
       end
 
+      context 'monthly report, group by tenants' do
+        let(:options) do
+          {
+            :interval                     => "monthly",
+            :interval_size                => 12,
+            :end_interval_offset          => 1,
+            :tenant_id                    => tenant_1.id,
+            :method_for_allocated_metrics => :max,
+            :include_metrics              => true,
+            :groupby                      => "tenant",
+          }
+        end
+
+        let(:monthly_used_rate)      { hourly_rate * hours_in_month }
+        let(:monthly_allocated_rate) { count_hourly_rate * hours_in_month }
+
+        # My Company
+        #   \___Tenant 2
+        #   \___Tenant 3
+        #     \__Tenant 4
+        #     \__Tenant 5
+        #
+        let(:tenant_1) { Tenant.root_tenant }
+        let(:vm_1_1)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_1, :miq_group => nil) }
+        let(:vm_2_1)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_1, :miq_group => nil) }
+
+        let(:tenant_2) { FactoryGirl.create(:tenant, :name => 'Tenant 2', :parent => tenant_1) }
+        let(:vm_1_2)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_2, :miq_group => nil) }
+        let(:vm_2_2)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_2, :miq_group => nil) }
+
+        let(:tenant_3) { FactoryGirl.create(:tenant, :name => 'Tenant 3', :parent => tenant_1) }
+        let(:vm_1_3)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_3, :miq_group => nil) }
+        let(:vm_2_3)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_3, :miq_group => nil) }
+
+        let(:tenant_4) { FactoryGirl.create(:tenant, :name => 'Tenant 4', :divisible => false, :parent => tenant_3) }
+        let(:vm_1_4)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_4, :miq_group => nil) }
+        let(:vm_2_4)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_4, :miq_group => nil) }
+
+        let(:tenant_5) { FactoryGirl.create(:tenant, :name => 'Tenant 5', :divisible => false, :parent => tenant_3) }
+        let(:vm_1_5)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_5, :miq_group => nil) }
+        let(:vm_2_5)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_5, :miq_group => nil) }
+
+        subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first }
+
+        let(:derived_vm_numvcpus_tenant_5) { 1 }
+        let(:cpu_usagemhz_rate_average_tenant_5) { 50 }
+
+        before(:each) do
+          add_metric_rollups_for([vm_1_1, vm_2_1], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => 1, :cpu_usagemhz_rate_average => 50))
+          add_metric_rollups_for([vm_1_2, vm_2_2], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => 1, :cpu_usagemhz_rate_average => 50))
+          add_metric_rollups_for([vm_1_3, vm_2_3], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => 1, :cpu_usagemhz_rate_average => 50))
+          add_metric_rollups_for([vm_1_4, vm_2_4], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => 1, :cpu_usagemhz_rate_average => 50))
+          add_metric_rollups_for([vm_1_5, vm_2_5], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => derived_vm_numvcpus_tenant_5, :cpu_usagemhz_rate_average => cpu_usagemhz_rate_average_tenant_5))
+        end
+
+        it 'reports each tenants' do
+          expect(subject.map(&:tenant_name)).to match_array([tenant_1, tenant_2, tenant_3, tenant_4, tenant_5].map(&:name))
+        end
+
+        def subject_row_for_tenant(tenant)
+          subject.detect { |x| x.tenant_name == tenant.name }
+        end
+
+        let(:hourly_usage) { 30 * 3.0 / 720 } # count of metric rollups / hours in month
+
+        it 'calculates allocated,used metric with using max,avg method with vcpus=1.0 and 50% usage' do
+          # sum of maxes from each VM:
+          # (max from first tenant_1's VM +  max from second tenant_1's VM) * monthly_allocated_rate
+          expect(subject_row_for_tenant(tenant_1).cpu_allocated_metric).to eq(1 + 1)
+          expect(subject_row_for_tenant(tenant_1).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+          expect(subject_row_for_tenant(tenant_2).cpu_allocated_metric).to eq(1 + 1)
+          expect(subject_row_for_tenant(tenant_2).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+          expect(subject_row_for_tenant(tenant_3).cpu_allocated_metric).to eq(1 + 1)
+          expect(subject_row_for_tenant(tenant_3).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+          expect(subject_row_for_tenant(tenant_4).cpu_allocated_metric).to eq(1 + 1)
+          expect(subject_row_for_tenant(tenant_4).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+          expect(subject_row_for_tenant(tenant_5).cpu_allocated_metric).to eq(1 + 1)
+          expect(subject_row_for_tenant(tenant_5).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+          # each tenant has 2 VMs and each VM  has 50 of cpu usage:
+          # 5 tenants(tenant_1 has 4 tenants and plus tenant_1 ) * 2 VMs * 50% of usage
+          expect(subject_row_for_tenant(tenant_1).cpu_used_metric).to eq(2 * 50 * hourly_usage)
+          # and cost - there is multiplication by monthly_used_rate
+          expect(subject_row_for_tenant(tenant_1).cpu_used_cost).to eq(2 * 50 * hourly_usage * monthly_used_rate)
+
+          expect(subject_row_for_tenant(tenant_2).cpu_used_metric).to eq(2 * 50 * hourly_usage)
+          expect(subject_row_for_tenant(tenant_2).cpu_used_cost).to eq(2 * 50 * hourly_usage * monthly_used_rate)
+
+          expect(subject_row_for_tenant(tenant_3).cpu_used_metric).to eq(2 * 50 * hourly_usage)
+          expect(subject_row_for_tenant(tenant_3).cpu_used_cost).to eq(2 * 50 * hourly_usage * monthly_used_rate)
+
+          expect(subject_row_for_tenant(tenant_4).cpu_used_metric).to eq(2 * 50 * hourly_usage)
+          expect(subject_row_for_tenant(tenant_4).cpu_used_cost).to eq(2 * 50 * hourly_usage * monthly_used_rate)
+
+          expect(subject_row_for_tenant(tenant_5).cpu_used_metric).to eq(2 * 50 * hourly_usage)
+          expect(subject_row_for_tenant(tenant_5).cpu_used_cost).to eq(2 * 50 * hourly_usage * monthly_used_rate)
+        end
+
+        context 'vcpu=5 for VMs of tenant_5' do
+          let(:derived_vm_numvcpus_tenant_5)       { 5 }
+          let(:cpu_usagemhz_rate_average_tenant_5) { 75 }
+
+          it 'calculates allocated,used metric with using max,avg method with vcpus=1.0 and 50% usage' do
+            expect(subject_row_for_tenant(tenant_1).cpu_allocated_metric).to eq(1 + 1)
+            expect(subject_row_for_tenant(tenant_1).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+            expect(subject_row_for_tenant(tenant_2).cpu_allocated_metric).to eq(1 + 1)
+            expect(subject_row_for_tenant(tenant_2).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+            expect(subject_row_for_tenant(tenant_3).cpu_allocated_metric).to eq(1 + 1)
+            expect(subject_row_for_tenant(tenant_3).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+            expect(subject_row_for_tenant(tenant_4).cpu_allocated_metric).to eq(1 + 1)
+            expect(subject_row_for_tenant(tenant_4).cpu_allocated_cost).to eq((1 + 1) * monthly_allocated_rate)
+
+            expect(subject_row_for_tenant(tenant_5).cpu_allocated_metric).to eq(5 + 5)
+            expect(subject_row_for_tenant(tenant_5).cpu_allocated_cost).to eq((5 + 5) * monthly_allocated_rate)
+
+            # each tenant has 2 VMs and each VM  has 50 of cpu usage:
+            # 5 tenants(tenant_1 has 4 tenants and plus tenant_1 ) * 2 VMs * 50% of usage
+            # but tenant_5 has  2 VMs and each VM  has 75 of cpu usage
+            expect(subject_row_for_tenant(tenant_1).cpu_used_metric).to eq(hourly_usage * 2 * 50)
+            # and cost - there is multiplication by  monthly_used_rate
+            expect(subject_row_for_tenant(tenant_1).cpu_used_cost).to eq(hourly_usage * 2 * 50 * monthly_used_rate)
+
+            expect(subject_row_for_tenant(tenant_2).cpu_used_metric).to eq(hourly_usage * 2 * 50)
+            expect(subject_row_for_tenant(tenant_2).cpu_used_cost).to eq(hourly_usage * 2 * 50 * monthly_used_rate)
+
+            expect(subject_row_for_tenant(tenant_3).cpu_used_metric).to eq(hourly_usage * 2 * 50)
+            expect(subject_row_for_tenant(tenant_3).cpu_used_cost).to eq(hourly_usage * 2 * 50 * monthly_used_rate)
+
+            expect(subject_row_for_tenant(tenant_4).cpu_used_metric).to eq(hourly_usage * 2 * 50)
+            expect(subject_row_for_tenant(tenant_4).cpu_used_cost).to eq(hourly_usage * 2 * 50 * monthly_used_rate)
+
+            expect(subject_row_for_tenant(tenant_5).cpu_used_metric).to eq(hourly_usage * 2 * 75)
+            expect(subject_row_for_tenant(tenant_5).cpu_used_cost).to eq(hourly_usage * 2 * 75 * monthly_used_rate)
+          end
+
+          context 'test against group by vm report' do
+            let(:options_group_vm) do
+              {
+                :interval                     => "monthly",
+                :interval_size                => 12,
+                :end_interval_offset          => 1,
+                :tenant_id                    => tenant_1.id,
+                :method_for_allocated_metrics => :max,
+                :include_metrics              => true,
+                :groupby                      => "vm"
+              }
+            end
+
+            def result_row_for_vm(vm)
+              result_group_by_vm.detect { |x| x.vm_name == vm.name }
+            end
+
+            let(:result_group_by_vm) { ChargebackVm.build_results_for_report_ChargebackVm(options_group_vm).first }
+
+            it 'calculates used metric and cost same as report for each vm' do
+              # Tenant 1 VMs
+              all_vms_cpu_metric = [vm_1_1, vm_2_1].map { |vm| result_row_for_vm(vm).cpu_used_metric }.sum
+              all_vms_cpu_cost   = [vm_1_1, vm_2_1].map { |vm| result_row_for_vm(vm).cpu_used_cost }.sum
+
+              # Tenant 1
+              expect(subject_row_for_tenant(tenant_1).cpu_used_metric).to eq(all_vms_cpu_metric)
+              expect(subject_row_for_tenant(tenant_1).cpu_used_cost).to eq(all_vms_cpu_cost)
+
+              # Tenant 5 Vms
+              result_vm15 = result_row_for_vm(vm_1_5)
+              result_vm25 = result_row_for_vm(vm_2_5)
+
+              expect(subject_row_for_tenant(tenant_5).cpu_used_metric).to eq(result_vm15.cpu_used_metric + result_vm25.cpu_used_metric)
+              expect(subject_row_for_tenant(tenant_5).cpu_used_cost).to eq(result_vm15.cpu_used_cost + result_vm25.cpu_used_cost)
+            end
+
+            it 'calculated allocted metric and cost with using max(max is not summed up - it is taken maximum)' do
+              # Tenant 1 VMs
+              all_vms_cpu_metric = [vm_1_1, vm_2_1].map { |vm| result_row_for_vm(vm).cpu_allocated_metric }.sum
+              all_vms_cpu_cost   = [vm_1_1, vm_2_1].map { |vm| result_row_for_vm(vm).cpu_allocated_cost }.sum
+
+              expect(subject_row_for_tenant(tenant_1).cpu_allocated_metric).to eq(all_vms_cpu_metric)
+              expect(subject_row_for_tenant(tenant_1).cpu_allocated_cost).to eq(all_vms_cpu_cost)
+            end
+          end
+        end
+      end
+
       context "Monthly" do
         let(:options) { base_options.merge(:interval => 'monthly') }
         before do

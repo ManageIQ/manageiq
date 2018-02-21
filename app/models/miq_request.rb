@@ -96,6 +96,11 @@ class MiqRequest < ApplicationRecord
       :AutomationRequest => {
         :automation => N_("Automation")
       }
+    },
+    :Transformation => {
+      :ServiceTemplateTransformationPlanRequest => {
+        :transformation_plan => N_("Transformation Plan")
+      }
     }
   }.freeze
 
@@ -114,7 +119,7 @@ class MiqRequest < ApplicationRecord
   def self.with_reason_like(reason)
     # Reason string uses * wildcard, scope is required to convert it into % wildcard for LIKE statement
     reason = reason.match(/\A(?<start>\*?)(?<content>.*?)(?<end>\*?)\z/)
-    where("reason LIKE (?)", "#{reason[:start] ? '%' : ''}#{sanitize_sql_like(reason[:content])}#{reason[:end] ? '%' : ''}")
+    joins(:miq_approvals).where("miq_approvals.reason LIKE (?)", "#{reason[:start] ? '%' : ''}#{sanitize_sql_like(reason[:content])}#{reason[:end] ? '%' : ''}")
   end
 
   # Supports old-style requests where specific request was a seperate table connected as a resource

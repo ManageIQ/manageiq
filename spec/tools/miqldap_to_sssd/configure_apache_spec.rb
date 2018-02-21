@@ -1,13 +1,11 @@
-$LOAD_PATH << Rails.root.join("tools", "miqldap_to_sssd").to_s
+$LOAD_PATH << Rails.root.join("tools").to_s
 
-require "configure_apache"
+require "miqldap_to_sssd"
 require "tempfile"
 require "fileutils"
 
 describe MiqLdapToSssd::ConfigureApache do
   before do
-    stub_const("LOGGER", double)
-    allow(LOGGER).to receive(:debug)
     @spec_name = File.basename(__FILE__).split(".rb").first.freeze
   end
 
@@ -41,7 +39,7 @@ describe MiqLdapToSssd::ConfigureApache do
     end
 
     before do
-      @initial_settings = {:basedn_domain => "bob.your.uncle.com"}
+      @initial_settings = {:domain => "bob.your.uncle.com"}
 
       @test_dir = "#{Dir.tmpdir}/#{@spec_name}"
       @template_dir = "#{@test_dir}/TEMPLATE"
@@ -77,13 +75,13 @@ describe MiqLdapToSssd::ConfigureApache do
 
     it 'raises an error when a TEMPLATE file is missing' do
       FileUtils.rm_f("#{@pam_template_dir}/httpd-auth")
-      expect(LOGGER).to receive(:fatal)
+      expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
       expect { described_class.new(@initial_settings).configure }.to raise_error(MiqLdapToSssd::ConfigureApacheError)
     end
 
     it 'raises an error when KrbAuthRealms is missing from manageiq-external-auth.conf' do
       File.open("#{@httpd_template_dir}/manageiq-external-auth.conf.erb", "w") { |f| f.write("hello walls") }
-      expect(LOGGER).to receive(:fatal)
+      expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
       expect { described_class.new(@initial_settings).configure }.to raise_error(MiqLdapToSssd::ConfigureApacheError)
     end
   end
