@@ -146,7 +146,7 @@ class Host < ApplicationRecord
   virtual_has_many   :event_logs,                                   :uses => {:operating_system => :event_logs}
   virtual_has_many   :firewall_rules,                               :uses => {:operating_system => :firewall_rules}
 
-  virtual_total :v_total_storages, :storages
+  virtual_total :v_total_storages, :host_storages
   virtual_total :v_total_vms, :vms
   virtual_total :v_total_miq_templates, :miq_templates
 

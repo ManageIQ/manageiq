@@ -375,7 +375,6 @@ describe Host do
       host = FactoryGirl.create(:host)
       host.storages.create(FactoryGirl.attributes_for(:storage))
       expect(host.v_total_storages).to eq(1)
-      expect(Host.attribute_supported_by_sql?(:v_total_storages)).to be false
     end
   end
 
