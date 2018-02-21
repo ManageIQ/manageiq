@@ -54,25 +54,23 @@ module ManagerRefresh
       end
 
       def find_or_build_by(manager_uuid_hash)
-        find_in_data(manager_uuid_hash) || build(manager_uuid_hash)
+        build(manager_uuid_hash)
       end
 
       def find_in_data(hash)
-        hash = enrich_data(hash)
-
-        if manager_ref.any? { |x| !hash.key?(x) }
-          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
-        end
-
-        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
-        primary_index.find(uuid)
+        _hash, _uuid, inventory_object = primary_index_scan(hash)
+        inventory_object
       end
 
       def build(hash)
+        hash, uuid, inventory_object = primary_index_scan(hash)
+
+        # Return InventoryObject if found in primary index
+        return inventory_object unless inventory_object.nil?
+
         # We will take existing skeletal record, so we don't duplicate references for saving. We can have duplicated
         # reference from local_db index, (if we are using .find in parser, that causes N+1 db queries), but that is ok,
         # since that one is not being saved.
-        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
         inventory_object = skeletal_primary_index.delete(uuid)
 
         # We want to update the skeletal record with actual data
@@ -82,12 +80,7 @@ module ManagerRefresh
         inventory_object ||= new_inventory_object(enrich_data(hash))
         # Store new InventoryObject and return it
         push(inventory_object)
-
-        return inventory_object unless inventory_object.nil?
-
-        # TODO(lsmola) prepare for changing behavior, build will return nil if it can't build or the record is already
-        # there. Maybe we should even make build a private method.
-        find_in_data(enrich_data(hash))
+        inventory_object
       end
 
       def to_a
@@ -139,6 +132,17 @@ module ManagerRefresh
       end
 
       private
+
+      def primary_index_scan(hash)
+        hash = enrich_data(hash)
+
+        if manager_ref.any? { |x| !hash.key?(x) }
+          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
+        end
+
+        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
+        return hash, uuid, primary_index.find(uuid)
+      end
 
       def enrich_data(hash)
         # This is 25% faster than builder_params.merge(hash)
