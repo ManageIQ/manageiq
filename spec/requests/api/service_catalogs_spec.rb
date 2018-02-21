@@ -24,6 +24,22 @@ describe "Service Catalogs API" do
     st_id ? "#{st_base}/#{st_id}" : st_base
   end
 
+  describe "GET /api/service_catalogs/:id?attributes=service_templates" do
+    it "returns the service templates for a service catalog" do
+      catalog = FactoryGirl.create(:service_template_catalog)
+      template = FactoryGirl.create(:service_template, :service_template_catalog => catalog)
+      api_basic_authorize action_identifier(:service_catalogs, :read, :resource_actions, :get)
+
+      run_get("#{service_catalogs_url(catalog.id)}?attributes=service_templates")
+
+      expected = {
+        "service_templates" => [a_hash_including("id" => template.id)]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
   describe "Service Catalogs create" do
     it "rejects resource creation without appropriate role" do
       api_basic_authorize
