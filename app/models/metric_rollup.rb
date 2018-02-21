@@ -1,3 +1,4 @@
+# @see Metric
 class MetricRollup < ApplicationRecord
   include Metric::Common
   include_concern 'Metric::ChargebackHelper'
