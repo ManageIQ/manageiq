@@ -15,7 +15,10 @@ module RetirementMixin
         object = find_by(:id => id)
         object.retire(options) if object.respond_to?(:retire)
       end
-      MiqQueue.put(:class_name => 'RetirementManager', :method_name => 'check')
+      q_options = {:class_name => 'RetirementManager', :method_name => 'check'}
+      user = User.current_user
+      q_options.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
+      MiqQueue.put(q_options)
     end
   end
 
@@ -136,10 +139,11 @@ module RetirementMixin
   def finish_retirement
     raise _("%{name} already retired") % {:name => name} if retired?
     $log.info("Finishing Retirement for [#{name}]")
+    requester = retirement_requester
     update_attributes(:retires_on => Time.zone.now, :retired => true, :retirement_state => "retired")
     message = "#{self.class.base_model.name}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], has been retired"
     $log.info("Calling audit event for: #{message} ")
-    raise_audit_event(retired_event_name, message)
+    raise_audit_event(retired_event_name, message, requester)
     $log.info("Called audit event for: #{message} ")
   end
 
@@ -178,18 +182,21 @@ module RetirementMixin
   end
 
   def raise_retirement_event(event_name, requester = nil)
+    requester ||= User.current_user.try(:userid)
     q_options = retire_queue_options
     $log.info("Raising Retirement Event for [#{name}] with queue options: #{q_options.inspect}")
     MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester), q_options)
   end
 
-  def raise_audit_event(event_name, message)
+  def raise_audit_event(event_name, message, requester = nil)
+    requester ||= User.current_user.try(:userid)
     event_hash = {
       :target_class => retirement_base_model_name,
       :target_id    => id.to_s,
       :event        => event_name,
       :message      => message
     }
+    event_hash[:userid] = requester if requester.present?
     AuditEvent.success(event_hash)
   end
 
