@@ -835,7 +835,7 @@ class Host < ApplicationRecord
       end
 
       discover_options = {:ipaddr         => ipaddr,
-                          :usePing        => options[:ping],
+                          :ping           => options[:ping],
                           :timeout        => options[:timeout],
                           :discover_types => options[:discover_types],
                           :credentials    => options[:credentials]
@@ -942,11 +942,11 @@ class Host < ApplicationRecord
   end
 
   def rediscover(ipaddr, discover_types = [:esx])
-    require 'manageiq-network_discovery'
-    ost = OpenStruct.new(:usePing => true, :discover_types => discover_types, :ipaddr => ipaddr)
+    require 'manageiq/network_discovery/discovery'
+    ost = OpenStruct.new(:ping => true, :discover_types => discover_types, :ipaddr => ipaddr)
     _log.info("Rediscovering Host: #{ipaddr} with types: #{discover_types.inspect}")
     begin
-      ManageIQ::NetworkDiscovery.scanHost(ost)
+      ManageIQ::NetworkDiscovery::Discovery.scan_host(ost)
       _log.info("Rediscovering Host: #{ipaddr} raw results: #{self.class.ost_inspect(ost)}")
 
       unless ost.hypervisor.empty?
@@ -962,11 +962,11 @@ class Host < ApplicationRecord
   end
 
   def self.discoverHost(options)
-    require 'manageiq-network_discovery'
+    require 'manageiq/network_discovery/discovery'
     ost = OpenStruct.new(Marshal.load(options))
     _log.info("Discovering Host: #{ost_inspect(ost)}")
     begin
-      ManageIQ::NetworkDiscovery.scanHost(ost)
+      ManageIQ::NetworkDiscovery::Discovery.scan_host(ost)
 
       if ost.hypervisor.empty?
         _log.info("NOT Discovered: #{ost_inspect(ost)}")

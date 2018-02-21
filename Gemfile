@@ -43,7 +43,6 @@ gem "kubeclient",                     "~>2.4.0",       :require => false # For s
 gem "linux_admin",                    "~>1.2.1",       :require => false
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "manageiq-messaging",                              :require => false, :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
-gem "manageiq-network_discovery",     "~>0.1.2",       :require => false
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>2.6.1",       :path => "mime-types-redirector"
 gem "more_core_extensions",           "~>3.5"
