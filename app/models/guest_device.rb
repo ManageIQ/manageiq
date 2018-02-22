@@ -1,5 +1,6 @@
 class GuestDevice < ApplicationRecord
   belongs_to :hardware
+  belongs_to :parent_device, :class_name => "GuestDevice"
 
   has_one :vm_or_template, :through => :hardware
   has_one :vm,             :through => :hardware
@@ -13,5 +14,5 @@ class GuestDevice < ApplicationRecord
   has_many :miq_scsi_targets, :dependent => :destroy
 
   has_many :firmwares, :dependent => :destroy
-  has_many :child_devices, -> { where(:parent_device_id => ids) }, :foreign_key => "parent_device_id", :class_name => "GuestDevice", :dependent => :destroy
+  has_many :child_devices, :class_name => "GuestDevice", :foreign_key => :parent_device_id, :dependent => :destroy
 end
