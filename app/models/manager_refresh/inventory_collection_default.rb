@@ -114,13 +114,6 @@ class ManagerRefresh::InventoryCollectionDefault
         :use_ar_object                => true,
       }
 
-      attributes[:targeted_arel] = lambda do |inventory_collection|
-        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
-        inventory_collection.parent.hardwares.joins(:vm_or_template).where(
-          'vms' => {:ems_ref => manager_uuids}
-        )
-      end
-
       attributes.merge!(extra_attributes)
     end
 
@@ -138,13 +131,6 @@ class ManagerRefresh::InventoryCollectionDefault
           :version
         ],
       }
-
-      attributes[:targeted_arel] = lambda do |inventory_collection|
-        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
-        inventory_collection.parent.operating_systems.joins(:vm_or_template).where(
-          'vms' => {:ems_ref => manager_uuids}
-        )
-      end
 
       attributes.merge!(extra_attributes)
     end
@@ -170,13 +156,6 @@ class ManagerRefresh::InventoryCollectionDefault
           :storage
         ],
       }
-
-      attributes[:targeted_arel] = lambda do |inventory_collection|
-        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
-        inventory_collection.parent.disks.joins(:hardware => :vm_or_template).where(
-          :hardware => {'vms' => {:ems_ref => manager_uuids}}
-        )
-      end
 
       attributes.merge!(extra_attributes)
     end

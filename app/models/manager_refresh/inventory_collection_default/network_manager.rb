@@ -89,13 +89,6 @@ class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefres
         :parent_inventory_collections => [:security_groups],
       }
 
-      extra_attributes[:targeted_arel] = lambda do |inventory_collection|
-        manager_uuids = inventory_collection.parent_inventory_collections.flat_map { |c| c.manager_uuids.to_a }
-        inventory_collection.parent.firewall_rules.references(:security_groups).where(
-          :security_groups => {:ems_ref => manager_uuids}
-        )
-      end
-
       attributes.merge!(extra_attributes)
     end
 
