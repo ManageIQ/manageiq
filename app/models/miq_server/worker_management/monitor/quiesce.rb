@@ -35,7 +35,10 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     @quiesce_loop_timeout = @worker_monitor_settings[:quiesce_loop_timeout] || 5.minutes
     worker_monitor_poll = (@worker_monitor_settings[:poll] || 1.seconds).to_i_with_method
 
-    miq_workers.each { |w| stop_worker(w) }
+    miq_workers.each do |w|
+      MiqEnvironment::Command.is_podified? && w.containerized_worker? ? w.delete_container_objects : stop_worker(w)
+    end
+
     loop do
       reload # Reload from SQL this MiqServer AND its miq_workers association
       break if self.workers_quiesced?
