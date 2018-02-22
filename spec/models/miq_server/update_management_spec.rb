@@ -89,6 +89,17 @@ describe MiqServer do
 
       @server.attempt_registration
     end
+
+    it "should raise a notification if registration fails" do
+      NotificationType.seed
+      result = AwesomeSpawn::CommandResult.new("stuff", "things", "more things", 1)
+      err = LinuxAdmin::SubscriptionManagerError.new("things", result)
+      expect(@server).to receive(:register).and_raise(err)
+      expect { @server.attempt_registration }.to raise_error(LinuxAdmin::SubscriptionManagerError)
+
+      note = Notification.find_by(:notification_type_id => NotificationType.find_by(:name => "server_registration_error").id)
+      expect(note.options.keys).to include(:server_name)
+    end
   end
 
   context "#register" do
