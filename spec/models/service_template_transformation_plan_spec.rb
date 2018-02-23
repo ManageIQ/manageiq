@@ -12,6 +12,7 @@ describe ServiceTemplateTransformationPlan do
   describe '#validate_order' do
     it 'always allows a plan to be ordered' do
       expect(subject.validate_order).to be_truthy
+      expect(subject.orderable?).to be_truthy # alias
     end
   end
 
