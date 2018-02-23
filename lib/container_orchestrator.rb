@@ -47,18 +47,26 @@ class ContainerOrchestrator
     scale(name, 0)
     connection.delete_deployment_config(name, my_namespace)
     delete_replication_controller(rc.metadata.name) if rc
+  rescue KubeException => e
+    raise unless e.message =~ /not found/
   end
 
   def delete_replication_controller(name)
     kube_connection.delete_replication_controller(name, my_namespace)
+  rescue KubeException => e
+    raise unless e.message =~ /not found/
   end
 
   def delete_service(name)
     kube_connection.delete_service(name, my_namespace)
+  rescue KubeException => e
+    raise unless e.message =~ /not found/
   end
 
   def delete_secret(name)
     kube_connection.delete_secret(name, my_namespace)
+  rescue KubeException => e
+    raise unless e.message =~ /not found/
   end
 
   private
