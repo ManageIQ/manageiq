@@ -9,8 +9,8 @@ opts = Trollop.options(ARGV) do
 
   opt :dry_run,  "Dry Run",                            :short => "d"
   opt :serverid, "Server Id",                          :short => "s", :type => :integer, :required => true
-  opt :path,     "Path within advanced settings hash", :short => "p", :type => :string, :required => true
-  opt :value,    "New Value for setting",              :short => "v", :type => :string, :required => true
+  opt :path,     "Path within advanced settings hash", :short => "p", :type => :string,  :required => true
+  opt :value,    "New Value for setting",              :short => "v", :type => :string,  :required => true
   opt :integer,  "Value Provided is an Integer",       :short => "i", :type => :boolean, :default => false
 
   depends :path, :serverid, :value
