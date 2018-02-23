@@ -18,6 +18,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   def validate_order
     true
   end
+  alias orderable? validate_order
 
   def self.default_provisioning_entry_point(_service_type)
     '/Transformation/StateMachines/VMTransformation/Transformation'
