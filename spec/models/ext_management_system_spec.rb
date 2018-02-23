@@ -79,7 +79,7 @@ describe ExtManagementSystem do
   end
 
   it ".ems_infra_discovery_types" do
-    expected_types = %w(scvmm rhevm virtualcenter)
+    expected_types = %w(scvmm rhevm virtualcenter openstack_infra)
 
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
   end
