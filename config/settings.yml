@@ -915,6 +915,10 @@
   :level_websocket: info
   :level_vcloud: info
   :level_nuage: info
+:notifications:
+  :history:
+    :purge_window_size: 1000
+    :keep_notifications: 1.week
 :ntp:
   :server:
   - 0.pool.ntp.org
@@ -1222,6 +1226,7 @@
       :log_database_statistics_interval: 1.days
       :memory_threshold: 500.megabytes
       :nice_delta: 3
+      :notifications_purge_interval: 1.day
       :orchestration_stack_retired_interval: 10.minutes
       :performance_collection_interval: 3.minutes
       :performance_collection_start_delay: 5.minutes
