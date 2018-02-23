@@ -196,6 +196,8 @@ class ExtManagementSystem < ApplicationRecord
                               [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
                             elsif ost.hypervisor.include?(:rhevm)
                               [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
+                            elsif ost.hypervisor.include?(:openstack_infra)
+                              [ManageIQ::Providers::Openstack::InfraManager, 'OpenStack Director']
                             else
                               [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
                             end
@@ -430,7 +432,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.ems_infra_discovery_types
-    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
+    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm openstack_infra)
   end
 
   def self.ems_physical_infra_discovery_types
