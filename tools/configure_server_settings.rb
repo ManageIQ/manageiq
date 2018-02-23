@@ -19,11 +19,11 @@ end
 puts opts.inspect
 
 # Grab the value that we have set
-if opts[:integer]
-  newval = opts[:value].to_i
-else
-  newval = opts[:value]
-end
+newval = if opts[:integer]
+           opts[:value].to_i
+         else
+           opts[:value]
+         end
 
 server = MiqServer.where(:id => opts[:serverid]).take
 unless server
