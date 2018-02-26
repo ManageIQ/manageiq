@@ -27,6 +27,8 @@ Trollop.die :path,     "is required" unless opts[:path_given]
 Trollop.die :value,    "is required" unless opts[:value_given]
 Trollop.die :type,     "must be one of #{TYPES.inspect}" unless TYPES.include?(opts[:type])
 
+newval = ''
+
 # Grab the value that we have set and translate to appropriate var class
 case opts[:type]
 when "integer"
