@@ -2,28 +2,44 @@
 require File.expand_path("../config/environment", __dir__)
 require 'trollop'
 
+TYPES = %w{ string integer boolean symbol float }
+
 opts = Trollop.options(ARGV) do
   banner "USAGE:   #{__FILE__} -s <server id> -p <settings path separated by a /> -v <new value>\n" \
-         "Example: #{__FILE__} -d -s 1 -p reporting/history/keep_reports -v 42\n" \
-         "Example: #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/count -v 4 -i"
+         "Example (String): #{__FILE__} -d -s 1 -p reporting/history/keep_reports -v 42\n" \
+         "Example (Integer): #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/count -v 1 -t integer\n" \
+         "Example (Boolean): #{__FILE__} -s 1 -p ui/mark_translated_strings -v true -t boolean\n" \
+         "Example (Float): #{__FILE__} -s 1 -p capacity/profile/1/vcpu_commitment_ratio -v 1.5 -t float"
 
-  opt :dry_run,  "Dry Run",                            :short => "d"
-  opt :serverid, "Server Id",                          :short => "s", :type => :integer, :required => true
-  opt :path,     "Path within advanced settings hash", :short => "p", :type => :string,  :required => true
-  opt :value,    "New Value for setting",              :short => "v", :type => :string,  :required => true
-  opt :integer,  "Value Provided is an Integer",       :short => "i", :type => :boolean, :default => false
-
-  depends :path, :serverid, :value
+  opt :dry_run,  "Dry Run",                                  :short => "d"
+  opt :serverid, "Server Id",                                :short => "s", :type => :integer, :required => true
+  opt :path,     "Path within advanced settings hash",       :short => "p", :type => :string,  :required => true
+  opt :value,    "New Value for setting",                    :short => "v", :type => :string,  :required => true
+  opt :type,     "Type of value provided, #{TYPES.inspect}", :short => "t", :type => :string,  :default => "string"
 end
 
 puts opts.inspect
 
+Trollop.die :serverid, "is required" unless opts[:serverid_given]
+Trollop.die :path,     "is required" unless opts[:path_given]
+Trollop.die :value,    "is required" unless opts[:value_given]
+Trollop.die :type,     "must be one of #{TYPES.inspect}" unless TYPES.include?(opts[:type])
+
 # Grab the value that we have set
-newval = if opts[:integer]
-           opts[:value].to_i
-         else
-           opts[:value]
-         end
+case opts[:type]
+when "integer"
+  newval = opts[:value].to_i
+when "boolean"
+  if opts[:value].downcase == "true"
+    newval = true
+  elsif opts[:value].downcase == "false"
+    newval = false
+  end
+when "symbol"
+  newval = opts[:value].to_sym
+when "float"
+  newval = opts[:value].to_f
+end
 
 server = MiqServer.where(:id => opts[:serverid]).take
 unless server
