@@ -2,7 +2,7 @@ describe EmsRefresh do
   context ".queue_refresh" do
     before(:each) do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @ems = FactoryGirl.create(:ems_vmware_with_valid_authentication, :zone => zone)
     end
 
     it "with Ems" do
@@ -48,8 +48,8 @@ describe EmsRefresh do
   context ".queue_refresh_task" do
     before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems  = FactoryGirl.create(:ems_vmware, :zone => zone)
-      @ems2 = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @ems  = FactoryGirl.create(:ems_vmware_with_valid_authentication, :zone => zone)
+      @ems2 = FactoryGirl.create(:ems_vmware_with_valid_authentication, :zone => zone)
     end
 
     context "with a refresh already on the queue" do
