@@ -93,9 +93,9 @@ class EvmApplication
   def self.output_workers_status(servers)
     data = []
     servers.each do |s|
-      mb_usage = w.proportional_set_size || w.memory_usage
-      mb_threshold = w.worker_settings[:memory_threshold]
       s.miq_workers.order(:type).each do |w|
+        mb_usage = w.proportional_set_size || w.memory_usage
+        mb_threshold = w.worker_settings[:memory_threshold]
         data <<
           [w.type,
            w.status.sub("stopping", "stop pending"),
