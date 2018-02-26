@@ -6,7 +6,6 @@ class GitWorktree
   ENTRY_KEYS = [:path, :dev, :ino, :mode, :gid, :uid, :ctime, :mtime]
   DEFAULT_FILE_MODE = 0100644
   LOCK_REFERENCE = 'refs/locks'
-  MASTER_REF = 'refs/heads/master'
 
   def initialize(options = {})
     raise ArgumentError, "Must specify path" unless options.key?(:path)
@@ -74,7 +73,7 @@ class GitWorktree
     current_index.add(entry)
   end
 
-  def remove(path )
+  def remove(path)
     current_index.remove(path)
   end
 
@@ -126,7 +125,7 @@ class GitWorktree
   def file_attributes(fname)
     walker = Rugged::Walker.new(@repo)
     walker.sorting(Rugged::SORT_DATE)
-    walker.push(@repo.ref(MASTER_REF).target)
+    walker.push(@repo.ref(local_ref).target)
     commit = walker.find { |c| c.diff(:paths => [fname]).size > 0 }
     return {} unless commit
     {:updated_on => commit.time.gmtime, :updated_by => commit.author[:name]}
@@ -169,9 +168,21 @@ class GitWorktree
 
   private
 
+  def current_branch
+    @repo.head_unborn? ? 'master' : @repo.head.name.sub(/^refs\/heads\//, '')
+  end
+
+  def upstream_ref
+    "refs/remotes/#{@remote_name}/#{current_branch}"
+  end
+
+  def local_ref
+    "refs/heads/#{current_branch}"
+  end
+
   def fetch_and_merge
     fetch
-    commit = @repo.ref("refs/remotes/#{@remote_name}/master").target
+    commit = @repo.ref(upstream_ref).target
     merge(commit)
   end
 
@@ -187,21 +198,21 @@ class GitWorktree
   def merge_and_push(commit)
     rebase = false
     push_lock do
-      @saved_cid = @repo.ref(MASTER_REF).target.oid
+      @saved_cid = @repo.ref(local_ref).target.oid
       merge(commit, rebase)
       rebase = true
-      @repo.push(@remote_name, [MASTER_REF], :credentials => @cred)
+      @repo.push(@remote_name, [local_ref], :credentials => @cred)
     end
   end
 
   def merge(commit, rebase = false)
-    master_branch = @repo.ref(MASTER_REF)
-    merge_index = master_branch ? @repo.merge_commits(master_branch.target, commit) : nil
+    current_branch = @repo.ref(local_ref)
+    merge_index = current_branch ? @repo.merge_commits(current_branch.target, commit) : nil
     if merge_index && merge_index.conflicts?
-      result = differences_with_master(commit)
+      result = differences_with_current(commit)
       raise GitWorktreeException::GitConflicts, result
     end
-    commit = rebase(commit, merge_index, master_branch.try(:target)) if rebase
+    commit = rebase(commit, merge_index, current_branch.try(:target)) if rebase
     @repo.reset(commit, :soft)
   end
 
@@ -217,7 +228,7 @@ class GitWorktree
 
   def commit(message)
     tree = @current_index.write_tree(@repo)
-    parents = @repo.empty? ? [] : [@repo.ref(MASTER_REF).target].compact
+    parents = @repo.empty? ? [] : [@repo.ref(local_ref).target].compact
     create_commit(message, tree, parents)
   end
 
@@ -268,7 +279,7 @@ class GitWorktree
   end
 
   def lookup_commit_tree
-    return nil unless @repo.branches['master']
+    return nil if !@commit_sha && !@repo.branches['master']
     ct = @commit_sha ? @repo.lookup(@commit_sha) : @repo.branches['master'].target
     ct.tree if ct
   end
@@ -306,7 +317,7 @@ class GitWorktree
   end
 
   def lock
-    @repo.references.create(LOCK_REFERENCE, MASTER_REF)
+    @repo.references.create(LOCK_REFERENCE, local_ref)
     yield
   rescue Rugged::ReferenceError
     sleep 0.1
@@ -316,7 +327,7 @@ class GitWorktree
   end
 
   def push_lock
-    @repo.references.create(LOCK_REFERENCE, MASTER_REF)
+    @repo.references.create(LOCK_REFERENCE, local_ref)
     begin
       yield
     rescue Rugged::ReferenceError => err
@@ -332,9 +343,9 @@ class GitWorktree
     end
   end
 
-  def differences_with_master(commit)
+  def differences_with_current(commit)
     differences = {}
-    diffs = @repo.diff(commit, @repo.ref(MASTER_REF).target)
+    diffs = @repo.diff(commit, @repo.ref(local_ref).target)
     diffs.deltas.each do |delta|
       result = []
       delta.diff.each_line do |line|
