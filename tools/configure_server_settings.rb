@@ -30,8 +30,9 @@ path = settings.config
 keys = opts[:path].split("/")
 key = keys.pop.to_sym
 keys.each { |p| path = path[p.to_sym] }
+opts[:value] = opts[:value].to_i if !!(opts[:value].match /^(\d)+$/ )
 
-puts "Setting [#{opts[:path]}], old value: [#{path[key]}], new value: [#{opts[:value]}]"
+puts "Setting [#{opts[:path]}], old value: [#{path[key]}](#{path[key].class}), new value: [#{opts[:value]}](#{opts[:value].class})"
 path[key] = opts[:value]
 
 valid, errors = VMDB::Config::Validator.new(settings).validate
