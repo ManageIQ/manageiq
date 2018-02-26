@@ -130,15 +130,20 @@ module ManagerRefresh::SaveCollection
 
             next unless assert_distinct_relation(primary_key_value)
 
+            # Incoming values are in SQL string form.
             # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
             # TODO(lsmola) maybe we can drop the whole pure sql fetching, since everything will be targeted refresh
             # with streaming refresh? Maybe just metrics and events will not be, but those should be upsert only
             index = unique_index_keys_to_s.map do |attribute|
+              value = record_key(record, attribute)
               if attribute == "timestamp"
+                # TODO: can this be covered by @deserializable_keys?
                 type = model_class.type_for_attribute(attribute)
-                type.cast(record_key(record, attribute)).utc.iso8601.to_s
+                type.cast(value).utc.iso8601.to_s
+              elsif (type = deserializable_keys[attribute.to_sym])
+                type.deserialize(value).to_s
               else
-                record_key(record, attribute).to_s
+                value.to_s
               end
             end.join("__")
 
@@ -303,7 +308,11 @@ module ManagerRefresh::SaveCollection
           end
         elsif !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size_for_persisting
           result.each do |inserted_record|
-            key                 = unique_index_columns.map { |x| inserted_record[x.to_s] }
+            key = unique_index_columns.map do |x|
+              value = inserted_record[x.to_s]
+              type = deserializable_keys[x]
+              type ? type.deserialize(value) : value
+            end
             inventory_object    = indexed_inventory_objects[key]
             inventory_object.id = inserted_record[primary_key] if inventory_object
           end
