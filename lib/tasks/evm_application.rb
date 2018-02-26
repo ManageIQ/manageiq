@@ -93,6 +93,8 @@ class EvmApplication
   def self.output_workers_status(servers)
     data = []
     servers.each do |s|
+      mb_usage = w.proportional_set_size || w.memory_usage
+      mb_threshold = w.worker_settings[:memory_threshold]
       s.miq_workers.order(:type).each do |w|
         data <<
           [w.type,
@@ -104,7 +106,7 @@ class EvmApplication
            w.queue_name || w.uri,
            w.started_on && w.started_on.iso8601,
            w.last_heartbeat && w.last_heartbeat.iso8601,
-           (mem = (w.unique_set_size || w.memory_usage)).nil? ? "" : mem / 1.megabyte]
+           mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""]
       end
     end
 
