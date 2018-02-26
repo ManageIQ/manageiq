@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 79 ending 2018-02-12
+
+### Added
+- Add product features needed for v2v Transformation Mappings API [(#16947)](https://github.com/ManageIQ/manageiq/pull/16947)
+- Add reindex to job scheduler  [(#16929)](https://github.com/ManageIQ/manageiq/pull/16929)
+- Don't return in a rake task [(#16920)](https://github.com/ManageIQ/manageiq/pull/16920)
+- Declare Kubevirt's template as eligible for provision [(#16873)](https://github.com/ManageIQ/manageiq/pull/16873)
+- Add scopes for MiqRequest [(#16843)](https://github.com/ManageIQ/manageiq/pull/16843)
+- Add api_allowed_attributes to ExtManagementSystem and Provider [(#16802)](https://github.com/ManageIQ/manageiq/pull/16802)
+- Introduce model changes for v2v [(#16787)](https://github.com/ManageIQ/manageiq/pull/16787)
+- Graph refresh enhance local db finders [(#16741)](https://github.com/ManageIQ/manageiq/pull/16741)
+- Graph refresh use advanced references [(#16659)](https://github.com/ManageIQ/manageiq/pull/16659)
+- Introduce $nuage_log that logs into log/nuage.log [(#16455)](https://github.com/ManageIQ/manageiq/pull/16455)
+- Introduce model changes for v2v [(#16787)](https://github.com/ManageIQ/manageiq/pull/16787)
+- Adds unique within region check to pxe image type names [(#16745)](https://github.com/ManageIQ/manageiq/pull/16745)
+
+### Fixed
+- Re-check the provider authentication if the API is responding [(#16989)](https://github.com/ManageIQ/manageiq/pull/16989)
+- Use correct comparison for multi-value default value inclusion rules [(#16978)](https://github.com/ManageIQ/manageiq/pull/16978)
+- Configure yum proxy if given for updates [(#16972)](https://github.com/ManageIQ/manageiq/pull/16972)
+- Lookup a category_id if a tag control passes it in [(#16965)](https://github.com/ManageIQ/manageiq/pull/16965)
+- Fix physical server and topology access rights for EvmRole-operator [(#16958)](https://github.com/ManageIQ/manageiq/pull/16958)
+- Fix for differing behavior in DialogFieldTagControl multi/single drop downs [(#16955)](https://github.com/ManageIQ/manageiq/pull/16955)
+- Only set encryption option to net-ldap when needed. [(#16954)](https://github.com/ManageIQ/manageiq/pull/16954)
+- Close open connections from parent after fork [(#16953)](https://github.com/ManageIQ/manageiq/pull/16953)
+- Follow up to update_vm_name for Service template provisioning [(#16949)](https://github.com/ManageIQ/manageiq/pull/16949)
+- Fix filename when downloading pdf from Flavor summary [(#16944)](https://github.com/ManageIQ/manageiq/pull/16944)
+- Remove chargeback rate from metering reports [(#16928)](https://github.com/ManageIQ/manageiq/pull/16928)
+- Support mixed case basedn. [(#16925)](https://github.com/ManageIQ/manageiq/pull/16925)
+- No longer assume that a value is an array [(#16924)](https://github.com/ManageIQ/manageiq/pull/16924)
+- Implement #configuration_script because of virtual_has_one relationship [(#16923)](https://github.com/ManageIQ/manageiq/pull/16923)
+- Make sure Containers Exist Before Processing [(#16922)](https://github.com/ManageIQ/manageiq/pull/16922)
+- Exclude Service::AGGREGATE_ALL_VM_ATTRS from MiqExp.to_sql [(#16915)](https://github.com/ManageIQ/manageiq/pull/16915)
+- Only store the hostname if the hostname is valid [(#16913)](https://github.com/ManageIQ/manageiq/pull/16913)
+- Checking killed worker with is_alive? [(#16908)](https://github.com/ManageIQ/manageiq/pull/16908)
+- Add << method to MulticastLogger [(#16904)](https://github.com/ManageIQ/manageiq/pull/16904)
+- Add a 'Container Project Discovered' event [(#16903)](https://github.com/ManageIQ/manageiq/pull/16903)
+
 ## Gaprindashvili-1 - Released 2018-01-31
 
 ### Added
