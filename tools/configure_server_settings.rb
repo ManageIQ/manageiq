@@ -2,7 +2,7 @@
 require File.expand_path("../config/environment", __dir__)
 require 'trollop'
 
-TYPES = %w{ string integer boolean symbol float }
+TYPES = %w(string integer boolean symbol float).freeze
 
 opts = Trollop.options(ARGV) do
   banner "USAGE:   #{__FILE__} -s <server id> -p <settings path separated by a /> -v <new value>\n" \
