@@ -37,7 +37,11 @@ class Metric < ApplicationRecord
 
   include Metric::Common
 
-  def self.reindex_table_name
-    "metrics_#{Time.now.utc.hour + 1}"
+  # @param time [ActiveSupport::TimeWithZone, Time, Integer, nil] the hour to run (default: 1 hour from now)
+  # @return the table for the given hour
+  # Unfortunatly, Integer responds_to :hour, so :strftime was used instead.
+  def self.reindex_table_name(time = Time.now.utc.hour + 1)
+    hour = (time.respond_to?(:strftime) ? time.hour : time) % 24
+    "metrics_%02d" % hour
   end
 end
