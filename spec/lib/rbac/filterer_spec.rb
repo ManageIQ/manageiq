@@ -76,6 +76,30 @@ describe Rbac::Filterer do
       end
     end
 
+    context 'with tags' do
+      let(:role)         { FactoryGirl.create(:miq_user_role) }
+      let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+      let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+
+      before do
+        tagged_group.entitlement = Entitlement.new
+        tagged_group.entitlement.set_belongsto_filters([])
+        tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+        tagged_group.save!
+      end
+      
+      context "searching for tenants" do
+        before do
+          owner_tenant.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'list tagged tenants' do
+          results = described_class.search(:class => Tenant, :user => user).first
+          expect(results).to match_array [owner_tenant]
+        end
+      end
+    end
+
     context 'with virtual custom attributes' do
       let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
       let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
