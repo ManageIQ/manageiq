@@ -628,13 +628,14 @@ describe Rbac::Filterer do
         end
       end
 
-      it "returns all users" do
+      it "returns users from current user's groups" do
+        other_user.miq_groups << group
         get_rbac_results_for_and_expect_objects(User, [user, other_user])
       end
 
-      it "returns all groups" do
+      it "returns user's groups" do
         _expected_groups = [group, other_group] # this will create more groups than 2
-        get_rbac_results_for_and_expect_objects(MiqGroup, MiqGroup.all)
+        get_rbac_results_for_and_expect_objects(MiqGroup, user.miq_groups)
       end
 
       context "with self-service user" do
@@ -1567,8 +1568,10 @@ describe Rbac::Filterer do
     end
 
     context "with group's VMs" do
+      let(:group_user) { FactoryGirl.create(:user, :miq_groups => [group2, group]) }
+      let(:group2) { FactoryGirl.create(:miq_group, :role => 'support') }
+
       before(:each) do
-        group2 = FactoryGirl.create(:miq_group, :role => 'support')
         4.times do |i|
           FactoryGirl.create(:vm_vmware,
                              :name             => "Test VM #{i}",
@@ -1585,12 +1588,12 @@ describe Rbac::Filterer do
             value: connected
             field: MiqGroup.vms-connection_state
         '
-        results, attrs = described_class.search(:class          => "MiqGroup",
-                                                :filter         => filter,
-                                                :miq_group      => group)
 
-        expect(results.length).to eq(2)
-        expect(attrs[:auth_count]).to eq(2)
+        User.with_user(group_user) do
+          results, attrs = described_class.search(:class => "MiqGroup", :filter => filter, :miq_group => group)
+          expect(results.length).to eq(2)
+          expect(attrs[:auth_count]).to eq(2)
+        end
       end
 
       it "when filtering on a virtual column (FB15509)" do
@@ -1601,11 +1604,11 @@ describe Rbac::Filterer do
             value: false
             field: MiqGroup.vms-disconnected
         '
-        results, attrs = described_class.search(:class          => "MiqGroup",
-                                                :filter         => filter,
-                                                :miq_group      => group)
-        expect(results.length).to eq(2)
-        expect(attrs[:auth_count]).to eq(2)
+        User.with_user(group_user) do
+          results, attrs = described_class.search(:class => "MiqGroup", :filter => filter, :miq_group => group)
+          expect(results.length).to eq(2)
+          expect(attrs[:auth_count]).to eq(2)
+        end
       end
     end
 
