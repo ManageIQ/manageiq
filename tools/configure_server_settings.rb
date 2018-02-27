@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require File.expand_path("../config/environment", __dir__)
+require 'bundler/setup'
 require 'trollop'
 
 TYPES = %w(string integer boolean symbol float).freeze
@@ -46,6 +46,8 @@ newval =
     opts[:value].to_f
   end
 
+# load rails after checking CLI args so we can report args errors as fast as possible
+require File.expand_path("../config/environment", __dir__)
 server = MiqServer.where(:id => opts[:serverid]).take
 unless server
   puts "Unable to find server with id [#{opts[:serverid]}]"
