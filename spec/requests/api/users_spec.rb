@@ -203,6 +203,18 @@ RSpec.describe "users API" do
       expect(response).to have_http_status(:not_found)
     end
 
+    it "rejects edits of miq_groups" do
+      api_basic_authorize collection_action_identifier(:users, :edit)
+
+      run_post(users_url(user1.id), gen_request(:edit, "miq_groups" => {}))
+
+      expected = {
+        "error" => a_hash_including("message" => "Cannot specify 'miq_groups', must use 'group'")
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it "supports single user edit" do
       api_basic_authorize collection_action_identifier(:users, :edit)
 

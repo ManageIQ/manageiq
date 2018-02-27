@@ -54,6 +54,7 @@ module Api
     end
 
     def parse_set_group(data)
+      raise BadRequestError, "Cannot specify 'miq_groups', must use 'group'" if data.key?("miq_groups")
       group = parse_fetch_group(data.delete("group"))
       data["miq_groups"] = Array(group) if group
     end
