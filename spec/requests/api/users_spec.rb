@@ -187,6 +187,27 @@ RSpec.describe "users API" do
   end
 
   describe "users edit" do
+    it "does not allow edits of current_user" do
+      api_basic_authorize collection_action_identifier(:users, :edit)
+
+      request = {
+        "action"    => "edit",
+        "resources" => [{
+          "href"          => api_user_url(nil, user1),
+          "current_group" => {}
+        }]
+      }
+      post(api_users_url, :params => request)
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => "Invalid attribute(s) current_group specified for a user"
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
     it "rejects user edits without appropriate role" do
       api_basic_authorize
 
