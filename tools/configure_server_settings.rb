@@ -6,7 +6,7 @@ TYPES = %w(string integer boolean symbol float).freeze
 
 opts = Trollop.options(ARGV) do
   banner "USAGE:   #{__FILE__} -s <server id> -p <settings path separated by a /> -v <new value>\n" \
-         "Example (String): #{__FILE__} -s 1 -p reporting/history/keep_reports -v 42\n" \
+         "Example (String): #{__FILE__} -s 1 -p reporting/history/keep_reports -v 3.months\n" \
          "Example (Integer): #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/count -v 1 -t integer\n" \
          "Example (Boolean): #{__FILE__} -s 1 -p ui/mark_translated_strings -v true -t boolean\n" \
          "Example (Symbol): #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/poll_method -v escalate -t symbol\n" \
@@ -27,25 +27,24 @@ Trollop.die :path,     "is required" unless opts[:path_given]
 Trollop.die :value,    "is required" unless opts[:value_given]
 Trollop.die :type,     "must be one of #{TYPES.inspect}" unless TYPES.include?(opts[:type])
 
-newval = ''
-
 # Grab the value that we have set and translate to appropriate var class
-case opts[:type]
-when "string"
-  newval = opts[:value]
-when "integer"
-  newval = opts[:value].to_i
-when "boolean"
-  if opts[:value].downcase == "true"
-    newval = true
-  elsif opts[:value].downcase == "false"
-    newval = false
+newval =
+  case opts[:type]
+  when "string"
+    opts[:value]
+  when "integer"
+    opts[:value].to_i
+  when "boolean"
+    if opts[:value].downcase == "true"
+      true
+    elsif opts[:value].downcase == "false"
+      false
+    end
+  when "symbol"
+    opts[:value].to_sym
+  when "float"
+    opts[:value].to_f
   end
-when "symbol"
-  newval = opts[:value].to_sym
-when "float"
-  newval = opts[:value].to_f
-end
 
 server = MiqServer.where(:id => opts[:serverid]).take
 unless server
