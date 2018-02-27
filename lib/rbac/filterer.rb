@@ -52,7 +52,7 @@ module Rbac
       VmOrTemplate
     )
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User)
+    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User Tenant)
 
     NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
       CloudNetwork
@@ -499,6 +499,9 @@ module Rbac
         scope_by_parent_ids(associated_class, scope, filtered_ids)
       elsif [MiqUserRole, MiqGroup, User].include?(klass)
         scope_for_user_role_group(klass, scope, miq_group, user, rbac_filters['managed'])
+      elsif klass == Tenant
+        filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, rbac_filters['managed']))
+        scope_by_ids(scope, filtered_ids)
       else
         scope
       end
