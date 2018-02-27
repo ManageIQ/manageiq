@@ -6,11 +6,11 @@ TYPES = %w(string integer boolean symbol float).freeze
 
 opts = Trollop.options(ARGV) do
   banner "USAGE:   #{__FILE__} -s <server id> -p <settings path separated by a /> -v <new value>\n" \
-         "Example (String): #{__FILE__} -s 1 -p reporting/history/keep_reports -v 3.months\n" \
+         "Example (String):  #{__FILE__} -s 1 -p reporting/history/keep_reports -v 3.months\n" \
          "Example (Integer): #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/count -v 1 -t integer\n" \
          "Example (Boolean): #{__FILE__} -s 1 -p ui/mark_translated_strings -v true -t boolean\n" \
-         "Example (Symbol): #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/poll_method -v escalate -t symbol\n" \
-         "Example (Float): #{__FILE__} -s 1 -p capacity/profile/1/vcpu_commitment_ratio -v 1.5 -t float"
+         "Example (Symbol):  #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/poll_method -v escalate -t symbol\n" \
+         "Example (Float):   #{__FILE__} -s 1 -p capacity/profile/1/vcpu_commitment_ratio -v 1.5 -t float"
 
   opt :dry_run,  "Dry Run",                                  :short => "d"
   opt :serverid, "Server Id",                                :short => "s", :type => :integer, :required => true
