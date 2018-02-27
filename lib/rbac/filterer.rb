@@ -463,6 +463,7 @@ module Rbac
 
         if MiqUserRole != klass
           filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
+          scope = scope.with_current_user_groups(user)
         end
 
         scope_by_ids(scope, filtered_ids)
