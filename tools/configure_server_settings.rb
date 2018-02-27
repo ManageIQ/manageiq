@@ -63,7 +63,7 @@ keys.each { |p| path = path[p.to_sym] }
 if opts[:force]
   puts "Change [#{opts[:path]}], old class: [#{path[key].class}], new class: [#{newval.class}]"
 elsif path[key] && path[key].class != newval.class
-  STDERR.puts "The new value's class #{newval.class} does not match the prior one's #{path[key].class}.  Use -f to force update, this may break things!"
+  STDERR.puts "The new value's class #{newval.class} does not match the prior one's #{path[key].class}. Use -t to specify the type for the provided value. Use -f to force changing this value. Note, -f may break things! See -h for examples."
   exit 1
 end
 
