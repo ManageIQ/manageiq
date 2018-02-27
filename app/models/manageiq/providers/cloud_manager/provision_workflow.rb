@@ -28,6 +28,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   def allowed_cloud_networks(_options = {})
     return {} unless (src = provider_or_tenant_object)
     targets = get_targets_for_source(src, :cloud_filter, CloudNetwork, 'all_cloud_networks')
+    targets = filter_openstack_networks(targets) if openstack?(targets)
     allowed_ci(:cloud_network, [:availability_zone], targets.map(&:id))
   end
 
@@ -140,5 +141,17 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
     return nil if src[:ems].nil?
     obj = src[:cloud_tenant] || src[:ems]
     load_ar_obj(obj)
+  end
+
+  def openstack?(networks)
+    networks.select do |cloud_network|
+      cloud_network.class.ancestors.include?("ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork")
+    end.any?
+  end
+
+  def filter_openstack_networks(networks)
+    networks.select do |cloud_network|
+      cloud_network.eligible_for_vm_provisioning? == true
+    end
   end
 end
