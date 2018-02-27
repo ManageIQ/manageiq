@@ -158,6 +158,17 @@ describe Rbac::Filterer do
           expect(results).to match_array [host_aggregate]
         end
       end
+
+      context "searching for tenants" do
+        before do
+          owner_tenant.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'list tagged tenants' do
+          results = described_class.search(:class => Tenant, :user => user).first
+          expect(results).to match_array [owner_tenant]
+        end
+      end
     end
 
     context 'with virtual custom attributes' do
