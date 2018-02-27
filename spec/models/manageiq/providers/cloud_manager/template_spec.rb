@@ -1,9 +1,32 @@
 describe TemplateCloud do
-  it "#post_create_actions" do
-    expect(subject).to receive(:reconnect_events)
-    expect(subject).to receive(:classify_with_parent_folder_path)
-    expect(MiqEvent).to receive(:raise_evm_event).with(subject, "vm_template", :vm => subject)
+  describe "actions" do
+    it "#post_create_actions" do
+      expect(subject).to receive(:reconnect_events)
+      expect(subject).to receive(:classify_with_parent_folder_path)
+      expect(MiqEvent).to receive(:raise_evm_event).with(subject, "vm_template", :vm => subject)
 
-    subject.post_create_actions
+      subject.post_create_actions
+    end
+  end
+
+  let(:root_tenant) do
+    Tenant.seed
+  end
+
+  let(:default_tenant) do
+    root_tenant
+    Tenant.default_tenant
+  end
+
+  describe "miq_group" do
+    let(:user)         { FactoryGirl.create(:user, :userid => 'user', :miq_groups => [tenant_group]) }
+    let(:tenant)       { FactoryGirl.build(:tenant, :parent => default_tenant) }
+    let(:tenant_users) { FactoryGirl.create(:miq_user_role, :name => "tenant-users") }
+    let(:tenant_group) { FactoryGirl.create(:miq_group, :miq_user_role => tenant_users, :tenant => tenant) }
+    let(:cloud_template_1) { FactoryGirl.create(:class => "TemplateCloud") }
+
+    it "finds correct tenant id clause for regular tenants" do
+      expect(TemplateCloud.tenant_id_clause(user)).to eql ["(vms.template = true AND (vms.tenant_id IN (?) OR vms.publicly_available = true))", [default_tenant.id, tenant.id]]
+    end
   end
 end
