@@ -8,8 +8,12 @@ class ChargebackRateDetail < ApplicationRecord
 
   validates :group, :source, :chargeback_rate, :presence => true
   validate :contiguous_tiers?
+  include ReservedMixin
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
+  reserve_attribute :sub_metric, :string
+
+  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric sub_metric).freeze
+
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),
     "daily"   => _("Daily"),
@@ -18,6 +22,23 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => _('Yearly')
   }.freeze
 
+  def sub_metrics
+    if metric == 'derived_vm_allocated_disk_storage'
+      volume_types = CloudVolume.volume_types
+      unless volume_types.empty?
+        res = {}
+        res[_('All')] = ''
+        volume_types.each { |type| res[type.capitalize] = type }
+        res[_('Other - Unclassified')] = 'unclassified'
+        res
+      end
+    end
+  end
+
+  def sub_metric_human
+    sub_metric.present? ? sub_metric.capitalize : 'All'
+  end
+
   def charge(relevant_fields, consumption)
     result = {}
     if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
@@ -25,17 +46,18 @@ class ChargebackRateDetail < ApplicationRecord
       if !consumption.chargeback_fields_present && fixed?
         cost = 0
       end
-      metric_keys.each { |field| result[field] = metric_value }
-      cost_keys.each   { |field| result[field] = cost }
+
+      metric_keys(sub_metric).each { |field| result[field] = metric_value }
+      cost_keys(sub_metric).each { |field| result[field] = cost }
     end
     result
   end
 
-  def metric_value_by(consumption)
+  def metric_value_by(consumption, sub_metric = nil)
     return 1.0 if fixed?
 
     return 0 if consumption.none?(metric)
-    return consumption.max(metric) if allocated?
+    return consumption.max(metric, sub_metric) if allocated?
     return consumption.avg(metric) if used?
   end
 
@@ -217,18 +239,17 @@ class ChargebackRateDetail < ApplicationRecord
 
   private
 
-  def metric_keys
-    ["#{rate_name}_metric"] # metric value (e.g. Storage [Used|Allocated|Fixed])
+  def metric_keys(sub_metric = nil)
+    ["#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}metric"] # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
-  def cost_keys
-    ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
-     "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
-     'total_cost']
+  def cost_keys(sub_metric = nil)
+    keys = ["#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}cost", 'total_cost'] # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
+    sub_metric ? keys : keys + ["#{group}_cost"] # cost associated with metric's group (e.g. Storage Total Cost)
   end
 
   def metric_and_cost_by(consumption)
-    metric_value = metric_value_by(consumption)
+    metric_value = metric_value_by(consumption, sub_metric)
     [metric_value, hourly_cost(metric_value, consumption) * consumption.consumed_hours_in_interval]
   end
 
@@ -271,9 +292,22 @@ class ChargebackRateDetail < ApplicationRecord
         end
 
         rate_details.push(detail_new)
+
+        if detail_new.metric == 'derived_vm_allocated_disk_storage'
+          volume_types = CloudVolume.volume_types
+          volume_types.push('unclassified') if volume_types.present?
+          volume_types.each do |volume_type|
+            storage_detail_new = detail_new.dup
+            storage_detail_new.sub_metric = volume_type
+            detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
+              storage_detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
+            end
+            rate_details.push(storage_detail_new)
+          end
+        end
       end
     end
 
-    rate_details.sort_by { |rd| [rd[:group], rd[:description]] }
+    rate_details.sort_by { |rd| [rd[:group], rd[:description], rd[:sub_metric].to_s] }
   end
 end

@@ -60,6 +60,7 @@ class Chargeback < ActsAsArModel
 
   def calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
+    self.class.try(:refresh_dynamic_metric_columns)
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
@@ -143,6 +144,14 @@ class Chargeback < ActsAsArModel
 
     define_method(custom_attribute.to_sym) do
       entity.send(custom_attribute)
+    end
+  end
+
+  def self.default_column_for_format(col)
+    if col.start_with?('storage_allocated')
+      col.ends_with?('cost') ? 'storage_allocated_cost' : 'storage_allocated_metric'
+    else
+      col
     end
   end
 

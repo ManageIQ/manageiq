@@ -1,3 +1,4 @@
+- breakdown_present = @record.chargeback_rate_details.any? { |d| d.sub_metric.present? }
 = render :partial => "layouts/flash_msg"
 - if @edit && @edit[:current]
   = render :partial => "cb_rate_edit"
@@ -7,6 +8,9 @@
     .form-group
       %label.col-md-2.control-label
         = _('Description')
+        - if breakdown_present
+          %th{:rowspan => '2'}= _('Sub Metric')
+
       .col-md-8
         %p.form-control-static
           = h(@record.description)
@@ -28,7 +32,7 @@
     %tbody
       /Currency code is the same for all the chargeback_rate_details
       - code_currency = @record.chargeback_rate_details.first.detail_currency.code
-      - @record.chargeback_rate_details.to_a.sort_by { |rd| [rd[:group].downcase, rd[:description].downcase] }.each_with_index do |detail, detail_index|
+      - @record.chargeback_rate_details.to_a.sort_by { |rd| [rd[:group].downcase, rd[:description].downcase, rd.sub_metric.to_s.downcase] }.each_with_index do |detail, detail_index|
       - tiers = detail.chargeback_tiers.order(:start)
         - @cur_group = detail[:group] if @cur_group.nil?
         - if @cur_group != detail[:group]
@@ -41,6 +45,10 @@
             = h(rate_detail_group(detail[:group]))
           %td{:rowspan => num_tiers}
             = detail[:description]
+            - if breakdown_present
+              %td{:rowspan => num_tiers}
+                - if detail.sub_metrics.present?
+                  = detail.sub_metric_human
           - tier = tiers.first
           %td
             = tier.start ? tier.start : 0

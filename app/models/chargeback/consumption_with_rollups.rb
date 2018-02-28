@@ -4,6 +4,8 @@ class Chargeback
              :hash_features_affecting_rate, :tag_list_with_prefix, :parents_determining_rate,
              :to => :first_metric_rollup_record
 
+    attr_accessor :start_time, :end_time
+
     def initialize(metric_rollup_records, start_time, end_time)
       super(start_time, end_time)
       @rollups = metric_rollup_records
@@ -13,12 +15,12 @@ class Chargeback
       first_metric_rollup_record.tag_names.split('|')
     end
 
-    def max(metric)
-      values(metric).max
+    def max(metric, sub_metric = nil)
+      values(metric, sub_metric).max
     end
 
-    def avg(metric)
-      metric_sum = values(metric).sum
+    def avg(metric, sub_metric = nil)
+      metric_sum = values(metric, sub_metric).sum
       metric_sum / consumed_hours_in_interval
     end
 
@@ -37,9 +39,14 @@ class Chargeback
       [super, first_metric_rollup_record.timestamp].compact.min
     end
 
-    def values(metric)
+    def sub_metric_rollups(sub_metric)
+      q = VimPerformanceState.where(:timestamp => start_time...end_time, :resource => resource, :capture_interval => 3_600)
+      q.map { |x| (x.allocated_disk_types ? x.allocated_disk_types[sub_metric] : nil) || 0  }
+    end
+
+    def values(metric, sub_metric = nil)
       @values ||= {}
-      @values[metric] ||= @rollups.collect(&metric.to_sym).compact
+      @values["#{metric}#{sub_metric}"] ||= sub_metric ? sub_metric_rollups(sub_metric) : @rollups.collect(&metric.to_sym).compact
     end
 
     def first_metric_rollup_record

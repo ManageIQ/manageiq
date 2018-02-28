@@ -555,6 +555,8 @@ class ChargebackController < ApplicationController
       end
 
       temp[:id] = params[:typ] == "copy" ? nil : detail.id
+      temp[:sub_metrics] = detail.sub_metrics
+      temp[:sub_metric_human] = detail.sub_metric_human
 
       tiers[detail_index] ||= []
 
@@ -589,7 +591,7 @@ class ChargebackController < ApplicationController
   def cb_rate_get_form_vars
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:details].each_with_index do |detail, detail_index|
-      %i{per_time per_unit}.each do |measure|
+      %i(per_time per_unit sub_metric).each do |measure|
         key = "#{measure}_#{detail_index}".to_sym
         detail[measure] = params[key] if params[key]
       end
@@ -613,6 +615,7 @@ class ChargebackController < ApplicationController
     @edit[:new][:details].each_with_index do |detail, detail_index|
       rate_detail = detail[:id] ? ChargebackRateDetail.find(detail[:id]) : ChargebackRateDetail.new
       rate_detail.attributes = detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES)
+      rate_detail.sub_metric = detail[:sub_metric] if rate_detail.sub_metric
       rate_detail_edit = @edit[:new][:details][detail_index]
       # C: Record the currency selected in the edit view, in my chargeback_rate_details table
       rate_detail.chargeback_rate_detail_currency_id = rate_detail_edit[:currency]

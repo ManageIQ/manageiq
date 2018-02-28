@@ -19,6 +19,10 @@ class CloudVolume < ApplicationRecord
 
   acts_as_miq_taggable
 
+  def self.volume_types
+    where.not(:volume_type => nil).group(:volume_type).pluck(:volume_type)
+  end
+
   def self.available
     joins("LEFT OUTER JOIN disks ON disks.backing_id = cloud_volumes.id")
       .where("disks.backing_id" => nil)

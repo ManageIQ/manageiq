@@ -47,6 +47,26 @@ class ChargebackVm < Chargeback
     :entity                   => :binary
   )
 
+  # example:
+  #  dynamic_columns_for(:group => [:total])
+  #  returns:
+  # { 'storage_allocated_volume_type1_metric' => {:group => [:total]},
+  #   'storage_allocated_volume_type1_cost'   => {:group => [:total]},
+  # }
+  def self.dynamic_columns_for(column_type)
+    volume_types = CloudVolume.volume_types
+    volume_types.push(nil) if volume_types.present?
+    volume_types.each_with_object({}) do |volume_type, result|
+      [:metric, :cost].collect do |type|
+        result["storage_allocated_#{volume_type || 'unclassified'}_#{type}"] = column_type
+      end
+    end
+  end
+
+  def self.refresh_dynamic_metric_columns
+    set_columns_hash(dynamic_columns_for(:integer))
+  end
+
   def self.build_results_for_report_ChargebackVm(options)
     # Options: a hash transformable to Chargeback::ReportOptions
 
@@ -77,6 +97,10 @@ class ChargebackVm < Chargeback
 
   def self.report_static_cols
     %w(vm_name)
+  end
+
+  def self.sub_metric_columns
+    dynamic_columns_for(:grouping => [:total])
   end
 
   def self.report_col_options
@@ -111,7 +135,7 @@ class ChargebackVm < Chargeback
       "storage_used_cost"        => {:grouping => [:total]},
       "storage_used_metric"      => {:grouping => [:total]},
       "total_cost"               => {:grouping => [:total]}
-    }
+    }.merge(sub_metric_columns)
   end
 
   def self.vm_owner(consumption)
