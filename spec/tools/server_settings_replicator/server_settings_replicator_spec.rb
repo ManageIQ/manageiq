@@ -10,8 +10,13 @@ describe ServerSettingsReplicator do
   describe "#replicate" do
     it "targets only other servers" do
       miq_server.add_settings_for_resource(settings)
+      expected_output = <<~MESSAGE
+        Replicating from server id=#{miq_server.id}, path=k1/k2 to 1 servers
+        Settings: {:k1=>{:k2=>{:k3=>"v3"}}}
+        Done
+      MESSAGE
       expect(described_class).to receive(:copy_to).with([miq_server_remote], settings)
-      described_class.replicate(miq_server, 'k1/k2')
+      expect { described_class.replicate(miq_server, 'k1/k2') }.to output(expected_output).to_stdout
     end
   end
 
