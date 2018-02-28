@@ -102,10 +102,11 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
 
     def operating_systems(extra_attributes = {})
       attributes = {
-        :model_class                 => ::OperatingSystem,
-        :manager_ref                 => [:vm_or_template],
-        :association                 => :operating_systems,
-        :inventory_object_attributes => [
+        :model_class                  => ::OperatingSystem,
+        :manager_ref                  => [:vm_or_template],
+        :parent_inventory_collections => [:vms],
+        :association                  => :operating_systems,
+        :inventory_object_attributes  => [
           :name,
           :product_name,
           :product_type,
