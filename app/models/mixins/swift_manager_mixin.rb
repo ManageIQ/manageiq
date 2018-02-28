@@ -15,6 +15,7 @@ module SwiftManagerMixin
     private
 
     def ensure_swift_managers
+      return false unless swift_service
       created = ensure_swift_manager
       swift_manager.name            = "#{name} Swift Manager"
       swift_manager.zone_id         = zone_id
