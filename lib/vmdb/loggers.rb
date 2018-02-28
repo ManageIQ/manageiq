@@ -153,9 +153,9 @@ module Vmdb
       old_level      = logger.level
       new_level_name = (config[key] || "INFO").to_s.upcase
       new_level      = VMDBLogger.const_get(new_level_name)
+      logger.level   = new_level
       if old_level != new_level
         $log.info("MIQ(#{name}.apply_config) Log level for #{File.basename(logger.filename)} has been changed to [#{new_level_name}]")
-        logger.level = new_level
       end
     end
     private_class_method :apply_config_value
