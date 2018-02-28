@@ -8,6 +8,7 @@ class LoadBalancerPool < ApplicationRecord
 
   has_many :load_balancer_listener_pools, :dependent => :destroy
   has_many :load_balancer_listeners, :through => :load_balancer_listener_pools
+  has_many :load_balancers, :through => :load_balancer_listeners
   has_many :load_balancer_pool_member_pools, :dependent => :destroy
   has_many :load_balancer_pool_members, :through => :load_balancer_pool_member_pools
 
