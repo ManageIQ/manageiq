@@ -3,6 +3,8 @@ module ManagerRefresh
     module Index
       module Type
         class Skeletal < ManagerRefresh::InventoryCollection::Index::Type::Base
+          # (see ManagerRefresh::InventoryCollection::Index::Type::Base#initialize)
+          # @param primary_index [ManagerRefresh::InventoryCollection::Index::Type::Data] Data index of primary_index
           def initialize(inventory_collection, index_name, attribute_names, primary_index)
             super
 
@@ -36,6 +38,7 @@ module ManagerRefresh
 
           # Builds index record with skeletal InventoryObject and returns it, or returns nil if it's already present
           # in primary_index or skeletal_primary_index
+          #
           # @param attributes [Hash] Skeletal data of the index, must contain unique index keys and everything else
           #        needed for creating the record in the Database
           # @return [InventoryObject|nil] Returns built value or nil

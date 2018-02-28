@@ -6,6 +6,8 @@ module ManagerRefresh
 
         attr_reader :skeletal_primary_index
 
+        # @param inventory_collection [ManagerRefresh::InventoryCollection] InventoryCollection object owning the proxy
+        # @param secondary_refs [Hash] Secondary_refs in format {:name_of_the_ref => [:attribute1, :attribute2]}
         def initialize(inventory_collection, secondary_refs = {})
           @inventory_collection = inventory_collection
 
@@ -39,6 +41,10 @@ module ManagerRefresh
           )
         end
 
+        # Builds primary index for passed InventoryObject
+        #
+        # @param inventory_object [ManagerRefresh::InventoryObject] InventoryObject we want to index
+        # @return [ManagerRefresh::InventoryObject] Passed InventoryObject
         def build_primary_index_for(inventory_object)
           # Building the object, we need to provide all keys of a primary index
           assert_index(inventory_object.data, primary_index_ref)

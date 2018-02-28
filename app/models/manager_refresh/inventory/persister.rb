@@ -26,27 +26,42 @@ class ManagerRefresh::Inventory::Persister
     ManagerRefresh::SaveInventory.save_inventory(manager, inventory_collections)
   end
 
+  # @return [Array<Symbol>] array of InventoryCollection object names
   def self.supported_collections
     @supported_collections ||= Concurrent::Array.new
   end
 
+  # Returns Persister object loaded from a passed JSON
+  #
+  # @param json_data [String] input JSON data
+  # @return [ManagerRefresh::Inventory::Persister] Persister object loaded from a passed JSON
   def self.from_json(json_data)
     from_raw_data(JSON.parse(json_data))
   end
 
+  # Returns serialized Persisted object to JSON
+  # @return [String] serialized Persisted object to JSON
   def to_json
     JSON.dump(to_raw_data)
   end
 
+  # Returns Persister object loaded from a passed YAML
+  #
+  # @param json_data [String] input JSON data
+  # @return [ManagerRefresh::Inventory::Persister] Persister object loaded from a passed YAML
   def self.from_yaml(yaml_data)
-    from_raw_data(YAML.load(yaml_data))
+    from_raw_data(YAML.safe_load(yaml_data))
   end
 
+  # Returns serialized Persisted object to YAML
+  # @return [String] serialized Persisted object to YAML
   def to_yaml
     YAML.dump(to_raw_data)
   end
 
-  # creates method on class that lazy initializes an InventoryCollection
+  # Creates method on class that lazy initializes an InventoryCollection
+  #
+  # @param options [Hash] kwargs for ManagerRefresh::InventoryCollection instantiation
   def self.has_inventory(options)
     name = (options[:association] || options[:model_class].name.pluralize.underscore).to_sym
 
@@ -73,18 +88,22 @@ class ManagerRefresh::Inventory::Persister
     end
   end
 
+  # @return [Config::Options] Options for the manager type
   def options
     @options ||= Settings.ems_refresh[manager.class.ems_type]
   end
 
+  # @return [Array<ManagerRefresh::InventoryCollection>] array of InventoryCollection objects of the persister
   def inventory_collections
     collections.values
   end
 
+  # @return [Array<Symbol>] array of InventoryCollection object names of the persister
   def inventory_collections_names
     collections.keys
   end
 
+  # @return [ManagerRefresh::InventoryCollection] returns a defined InventoryCollection or undefined method
   def method_missing(method_name, *arguments, &block)
     if inventory_collections_names.include?(method_name)
       self.class.define_collections_reader(method_name)
@@ -94,10 +113,12 @@ class ManagerRefresh::Inventory::Persister
     end
   end
 
+  # @return [Boolean] true if InventoryCollection with passed method_name name is defined
   def respond_to_missing?(method_name, _include_private = false)
     inventory_collections_names.include?(method_name) || super
   end
 
+  # Defines a new attr reader returning InventoryCollection object
   def self.define_collections_reader(collection_key)
     define_method(collection_key) do
       collections[collection_key]
@@ -110,6 +131,7 @@ class ManagerRefresh::Inventory::Persister
     # can be implemented in a subclass
   end
 
+  # @return [Hash] kwargs shared for all InventoryCollection objects
   def shared_options
     # can be implemented in a subclass
     {}
@@ -163,6 +185,7 @@ class ManagerRefresh::Inventory::Persister
     end
   end
 
+  # @return [Hash] entire Persister object serialized to hash
   def to_raw_data
     collections_data = collections.map do |key, collection|
       next if collection.data.blank? && collection.manager_uuids.blank? && collection.all_manager_uuids.nil?
@@ -185,6 +208,10 @@ class ManagerRefresh::Inventory::Persister
   class << self
     protected
 
+    # Returns Persister object built from serialized data
+    #
+    # @param persister_data [Hash] serialized Persister object in hash
+    # @return [ManagerRefresh::Inventory::Persister] Persister object built from serialized data
     def from_raw_data(persister_data)
       persister_data.transform_keys!(&:to_s)
 

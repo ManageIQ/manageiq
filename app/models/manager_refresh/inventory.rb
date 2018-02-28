@@ -6,6 +6,10 @@ module ManagerRefresh
 
     attr_accessor :collector, :parsers, :persister
 
+    # Based on the given provider/manager class, this returns correct parser class
+    #
+    # @param klass class of the Provider/Manager
+    # @return [Class] Correct class name of the Parser
     def self.parser_class_for(klass)
       provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
       "#{provider_module}::Inventory::Parser::#{klass.name.demodulize}".safe_constantize
@@ -13,6 +17,10 @@ module ManagerRefresh
       nil
     end
 
+    # Based on the given provider/manager class, this returns correct persister class
+    #
+    # @param klass class of the Provider/Manager
+    # @return [Class] Correct class name of the persister
     def self.persister_class_for(klass)
       provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
       "#{provider_module}::Inventory::Persister::#{klass.name.demodulize}".safe_constantize
@@ -31,6 +39,8 @@ module ManagerRefresh
     end
 
     # Invokes all associated parsers storing parsed data into persister.inventory_collections
+    #
+    # @return [ManagerRefresh::Inventory::Persister] persister object, to allow chaining
     def parse
       parsers.each do |parser|
         parser.collector = collector
@@ -41,6 +51,9 @@ module ManagerRefresh
       persister
     end
 
+    # Returns all InventoryCollections contained in persister
+    #
+    # @return [Array<ManagerRefresh::InventoryCollection>] List of InventoryCollections objects
     def inventory_collections
       parse.inventory_collections
     end

@@ -22,17 +22,23 @@ module ManagerRefresh
     end
 
     # A Rails recommended interface for deserializing an object
+    # @return [ManagerRefresh::Target] ManagerRefresh::Target instance
     def self.load(*args)
       new(*args)
     end
 
     # A Rails recommended interface for serializing an object
+    #
+    # @param obj [ManagerRefresh::Target] ManagerRefresh::Target instance we want to serialize
+    # @return [Hash] serialized object
     def self.dump(obj)
       obj.dump
     end
 
     # Returns a serialized ManagerRefresh::Target object. This can be used to initialize a new object, then the object
     # target acts the same as the object ManagerRefresh::Target.new(target.serialize)
+    #
+    # @return [Hash] serialized object
     def dump
       {
         :manager_id  => manager_id,
@@ -58,6 +64,7 @@ module ManagerRefresh
 
     # Loads ManagerRefresh::Target ApplicationRecord representation from our DB, this requires that ManagerRefresh::Target
     # has been refreshed, otherwise the AR object can be missing.
+    #
     # @return [ApplicationRecord] A ManagerRefresh::Target loaded from the database as AR object
     def load_from_db
       manager.public_send(association).find_by(manager_ref)

@@ -3,6 +3,9 @@ module ManagerRefresh
     module Index
       module Type
         class LocalDb < ManagerRefresh::InventoryCollection::Index::Type::Base
+          # (see ManagerRefresh::InventoryCollection::Index::Type::Base#initialize)
+          # @param data_index[ManagerRefresh::InventoryCollection::Index::Type::Data] Related data index, so we can
+          #        figure out what data we are building vs. what we need to fetch from the DB
           def initialize(inventory_collection, index_name, attribute_names, data_index)
             super
 
@@ -16,7 +19,7 @@ module ManagerRefresh
           # same find will not hit database twice. Also if we use lazy_links and this is called when
           # data_collection_finalized?, we load all data from the DB, referenced by lazy_links, in one query.
           #
-          # @param reference [String] a ManagerRefresh::InventoryCollection::Reference object
+          # @param reference [ManagerRefresh::InventoryCollection::Reference] Reference we want to find
           def find(reference)
             # Use the cached index only data_collection_finalized?, meaning no new reference can occur
             if data_collection_finalized? && all_references_loaded? && index
@@ -131,6 +134,14 @@ module ManagerRefresh
             path.inject(object) { |x, r| x.public_send(r) }
           end
 
+          # For full_reference {:hardware => lazy_find_hardware(lazy_find_vm_or_template(:ems_ref))}
+          # we get schema of
+          # {[:hardware, :vm_or_template, :ems_ref] => VmOrTemplate.arel_table[:ems_ref]]
+          #
+          # @param full_references [Hash] ManagerRefresh::InventoryCollection::Reference object full_reference method
+          #        containing full reference to InventoryObject
+          # @return [Hash] Hash containing key representing path to record's attribute and value representing arel
+          #         definition of column
           def get_schema(full_references)
             @schema ||= get_schema_recursive(attribute_names, model_class.arel_table, full_references.first, {}, [], 0)
           end
@@ -153,6 +164,9 @@ module ManagerRefresh
             @rails_friendly_includes_schema = transform_hash_to_rails_friendly_array_recursive(nested_hashes_schema, [])
           end
 
+          # @param hash [Hash] Nested hash representing join schema e.g. {:hardware => {:vm_or_template => {}}}
+          # @param current_layer [Array] One layer of the joins schema
+          # @return [Array] Transformed hash applicable for Rails .joins, e.g. [:hardware => [:vm_or_template]]
           def transform_hash_to_rails_friendly_array_recursive(hash, current_layer)
             array_attributes, hash_attributes = hash.partition { |_key, value| value.blank? }
 
@@ -169,6 +183,15 @@ module ManagerRefresh
             current_layer
           end
 
+          # A recursive method for getting a schema out of full_reference (see #get_schema)
+          #
+          # @param attribute_names [Array<Symbol>] Array of attribute names
+          # @param arel_table [Arel::Table]
+          # @param data [Hash] The full reference layer
+          # @param schema [Hash] Recursively built schema
+          # @param path [Array] Recursively build path
+          # @param total_level [Integer] Guard for max recursive nesting
+          # @return [Hash] Recursively built schema
           def get_schema_recursive(attribute_names, arel_table, data, schema, path, total_level)
             raise "Nested too deep" if total_level > 100
 
@@ -199,6 +222,9 @@ module ManagerRefresh
             schema
           end
 
+          # Returns keys of the reference
+          #
+          # @return [Array] Keys of the reference
           def index_references
             Set.new(references[index_name].try(:keys) || [])
           end
@@ -207,7 +233,6 @@ module ManagerRefresh
           #
           # @param rails_friendly_includes_schema [Array] Schema usable in .includes and .references methods of
           #        ActiveRecord relation object
-          # @param column_names [Array] Array of column names in format "<table_name>.<column_name>"
           # @param all_values [Array<Array>] nested array of values in format [[a1, b1], [a2, b2]] the nested array
           #        values must have the order of column_names
           # @param projection [Array] A projection array resulting in Project operation (in Relation algebra terms)
