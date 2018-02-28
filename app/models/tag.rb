@@ -8,6 +8,13 @@ class Tag < ApplicationRecord
 
   before_destroy :remove_from_managed_filters
 
+  # Note those scopes exclude Tags that don't have a Classification.
+  scope :visible,   -> { joins(:classification).merge(Classification.visible) }
+  scope :read_only, -> { joins(:classification).merge(Classification.read_only) }
+  scope :writable,  -> { joins(:classification).merge(Classification.writable) }
+  scope :is_category, -> { joins(:classification).merge(Classification.is_category) }
+  scope :is_entry,    -> { joins(:classification).merge(Classification.is_entry) }
+
   def self.list(object, options = {})
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"

@@ -12,6 +12,7 @@ class ContainerLabelTagMapping < ApplicationRecord
   #
   # All involved tags must also have a Classification.
 
+  TAG_PREFIXES = ['/managed/amazon:', '/managed/kubernetes:'].freeze
   AUTOTAG_PREFIX = "kubernetes".freeze
 
   MAPPABLE_ENTITIES = [
