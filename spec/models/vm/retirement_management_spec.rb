@@ -26,7 +26,7 @@ describe "VM Retirement Management" do
   end
 
   it "#retire_now" do
-    expect(MiqEvent).to receive(:raise_evm_event).once
+    expect(VmRetireRequest).to receive(:make_request).once
 
     @vm.retire_now
   end
@@ -37,7 +37,7 @@ describe "VM Retirement Management" do
                   :retirement_initiator => "user", :userid => 'freddy'}
     options = {:zone => @zone.name}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
+    expect(VmRetireRequest).to receive(:make_request).once
 
     @vm.retire_now('freddy')
   end
@@ -48,7 +48,7 @@ describe "VM Retirement Management" do
                   :retirement_initiator => "system"}
     options = {:zone => @zone.name}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
+    expect(VmRetireRequest).to receive(:make_request).once
 
     @vm.retire_now
   end

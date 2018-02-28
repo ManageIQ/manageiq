@@ -24,7 +24,7 @@ describe "Service Retirement Management" do
 
   it "#retire_now" do
     expect(@service.retirement_state).to be_nil
-    expect(MiqEvent).to receive(:raise_evm_event).once
+    expect(ServiceRetireRequest).to receive(:make_request).once
     @service.retire_now
     @service.reload
   end
@@ -35,7 +35,7 @@ describe "Service Retirement Management" do
     event_hash = {:service => @service, :type => "Service",
                   :retirement_initiator => "user", :userid => "freddy"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {}).once
+    expect(ServiceRetireRequest).to receive(:make_request).once
 
     @service.retire_now('freddy')
     @service.reload
@@ -47,7 +47,7 @@ describe "Service Retirement Management" do
     event_hash = {:service => @service, :type => "Service",
                   :retirement_initiator => "system"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {}).once
+    expect(ServiceRetireRequest).to receive(:make_request).once
 
     @service.retire_now
     @service.reload

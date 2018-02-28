@@ -128,10 +128,8 @@ module RetirementMixin
       _log.info("Creating request for #{self.class.name} #{id}")
       begin
         options = {:src_ids => id}
-        VmRetireRequest.make_request(@request_id, options, User.current_user.try(:userid))
-
-        # still need the next line for orchestration and services
-        # raise_retirement_event(event_name, requester)
+        request_type = (self.class.name.demodulize + "RetireRequest").constantize
+        request_type.make_request(@request_id, options, User.current_user.try(:userid))
       rescue => err
         _log.log_backtrace(err)
       end
