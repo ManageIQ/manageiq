@@ -2,7 +2,7 @@ module VmdbDatabase::Seeding
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def seed
+    def refresh
       db = seed_self
       db.seed
       db

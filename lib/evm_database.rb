@@ -14,7 +14,6 @@ class EvmDatabase
     MiqGroup
     User
     MiqReport
-    VmdbDatabase
   )
 
   ORDERED_CLASSES = %w(
