@@ -4,11 +4,12 @@ describe "Service Retirement Management" do
     @service = FactoryGirl.create(:service)
   end
 
+  # shouldn't be running make_retire_request because it's the bimodal not from ui part
   it "#retirement_check" do
     expect(MiqEvent).to receive(:raise_evm_event)
     @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@service.retirement_last_warn).to be_nil
-    expect_any_instance_of(@service.class).to receive(:retire_now).once
+    expect(@service).to receive(:make_retire_request).once
     @service.retirement_check
     @service.reload
     expect(@service.retirement_last_warn).not_to be_nil
@@ -24,7 +25,7 @@ describe "Service Retirement Management" do
 
   it "#retire_now" do
     expect(@service.retirement_state).to be_nil
-    expect(ServiceRetireRequest).to receive(:make_request).once
+    expect(MiqEvent).to receive(:raise_evm_event).once
     @service.retire_now
     @service.reload
   end
@@ -35,7 +36,7 @@ describe "Service Retirement Management" do
     event_hash = {:service => @service, :type => "Service",
                   :retirement_initiator => "user", :userid => "freddy"}
 
-    expect(ServiceRetireRequest).to receive(:make_request).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {}).once
 
     @service.retire_now('freddy')
     @service.reload
@@ -47,7 +48,7 @@ describe "Service Retirement Management" do
     event_hash = {:service => @service, :type => "Service",
                   :retirement_initiator => "system"}
 
-    expect(ServiceRetireRequest).to receive(:make_request).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {}).once
 
     @service.retire_now
     @service.reload
@@ -76,7 +77,7 @@ describe "Service Retirement Management" do
     vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
     @service << vm
     expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to receive(:retire_now).once
+    expect(@service.service_resources.first.resource).to_not receive(:retire_now)
     @service.retire_service_resources
   end
 
@@ -87,7 +88,7 @@ describe "Service Retirement Management" do
     @service.update_attributes(:retirement_requester => userid)
     @service << vm
     expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to receive(:retire_now).with(userid).once
+    expect(@service.service_resources.first.resource).to_not receive(:retire_now).with(userid)
     @service.retire_service_resources
   end
 
@@ -96,7 +97,7 @@ describe "Service Retirement Management" do
     vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
     @service << vm
     expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to receive(:retire_now).with(nil).once
+    expect(@service.service_resources.first.resource).to_not receive(:retire_now).with(nil)
     @service.retire_service_resources
   end
 
