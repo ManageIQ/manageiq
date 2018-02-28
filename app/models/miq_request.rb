@@ -97,14 +97,13 @@ class MiqRequest < ApplicationRecord
         :automation => N_("Automation")
       }
     },
-    :Transformation => {
-      :ServiceTemplateTransformationPlanRequest => {
-        :transformation_plan => N_("Transformation Plan")
-      }
-    }
   }.freeze
 
-  REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
+  REQUEST_TYPES_BACKEND_ONLY = {
+    :MiqProvisionRequestTemplate              => {:template            => "VM Provision Template"},
+    :ServiceTemplateTransformationPlanRequest => {:transformation_plan => "Transformation Plan"}
+  }
+
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
   REQUEST_TYPE_TO_MODEL = MODEL_REQUEST_TYPES.values.each_with_object({}) do |i, h|
     i.each { |k, v| v.keys.each { |vk| h[vk] = k } }
