@@ -10,6 +10,11 @@ module RetirementMixin
   end
 
   module ClassMethods
+    def make_retire_request
+      options = {:task => task, :userid => current_user, :ids => objs, :src_ids => objs}
+      (klass.to_s + "RetireRequest").constantize.make_request(@request_id, options, current_user)
+    end
+
     def retire(ids, options = {})
       ids.each do |id|
         object = find_by(:id => id)
@@ -117,7 +122,7 @@ module RetirementMixin
       end
     end
 
-    retire_now if retirement_due?
+    make_retire_request if retirement_due?
   end
 
   def retire_now(requester = nil)
@@ -125,11 +130,11 @@ module RetirementMixin
       return if retired_validated?
       _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
     else
-      _log.info("Creating request for #{self.class.name} #{id}")
+      update_attributes(:retirement_requester => requester)
+      event_name = "request_#{retirement_event_prefix}_retire"
+      _log.info("calling #{event_name}")
       begin
-        options = {:src_ids => id}
-        request_type = (self.class.name.demodulize + "RetireRequest").constantize
-        request_type.make_request(@request_id, options, User.current_user.try(:userid))
+        raise_retirement_event(event_name, requester)
       rescue => err
         _log.log_backtrace(err)
       end

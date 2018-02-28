@@ -10,7 +10,7 @@ describe "VM Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event).once
     @vm.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@vm.retirement_last_warn).to be_nil
-    expect_any_instance_of(@vm.class).to receive(:retire_now).once
+    expect(@vm).to receive(:make_retire_request).once
     @vm.retirement_check
     @vm.reload
     expect(@vm.retirement_last_warn).not_to be_nil
@@ -26,7 +26,7 @@ describe "VM Retirement Management" do
   end
 
   it "#retire_now" do
-    expect(VmRetireRequest).to receive(:make_request).once
+    expect(MiqEvent).to receive(:raise_evm_event).once
 
     @vm.retire_now
   end
@@ -37,7 +37,7 @@ describe "VM Retirement Management" do
                   :retirement_initiator => "user", :userid => 'freddy'}
     options = {:zone => @zone.name}
 
-    expect(VmRetireRequest).to receive(:make_request).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
 
     @vm.retire_now('freddy')
   end
@@ -48,7 +48,7 @@ describe "VM Retirement Management" do
                   :retirement_initiator => "system"}
     options = {:zone => @zone.name}
 
-    expect(VmRetireRequest).to receive(:make_request).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
 
     @vm.retire_now
   end

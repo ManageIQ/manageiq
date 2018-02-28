@@ -8,7 +8,7 @@ describe "Service Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event)
     @stack.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@stack.retirement_last_warn).to be_nil
-    expect_any_instance_of(@stack.class).to receive(:retire_now).once
+    expect(@stack).to receive(:make_retire_request).once
     @stack.retirement_check
     @stack.reload
     expect(@stack.retirement_last_warn).not_to be_nil
@@ -24,7 +24,7 @@ describe "Service Retirement Management" do
 
   it "#retire_now" do
     expect(@stack.retirement_state).to be_nil
-    expect(MiqEvent).to receive(:raise_evm_event).once
+    expect(OrchestrationStackRetireRequest).to_not receive(:make_request)
     @stack.retire_now
     @stack.reload
   end
@@ -35,7 +35,7 @@ describe "Service Retirement Management" do
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
                   :retirement_initiator => "user", :userid => "freddy"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {}).once
+    expect(OrchestrationStackRetireRequest).to_not receive(:make_request)
 
     @stack.retire_now('freddy')
     @stack.reload
@@ -47,7 +47,7 @@ describe "Service Retirement Management" do
     event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
                   :retirement_initiator => "system"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {}).once
+    expect(OrchestrationStackRetireRequest).to_not receive(:make_request)
 
     @stack.retire_now
     @stack.reload
