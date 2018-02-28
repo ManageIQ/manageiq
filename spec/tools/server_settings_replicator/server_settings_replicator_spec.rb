@@ -4,15 +4,13 @@ require "server_settings_replicator/server_settings_replicator"
 
 describe ServerSettingsReplicator do
   let(:miq_server) { EvmSpecHelper.local_miq_server }
-  let!(:miq_server_remote) { EvmSpecHelper.remote_miq_server }
+  let(:miq_server_remote) { EvmSpecHelper.remote_miq_server }
   let(:settings) { {:k1 => {:k2 => {:k3 => 'v3'}}} }
 
-  describe "#replicate" do
-    it "targets only other servers" do
-      miq_server.add_settings_for_resource(settings)
-      expect(described_class).to receive(:copy_to).with([miq_server_remote], settings)
-      described_class.replicate(miq_server, 'k1/k2')
-    end
+  it "replicates" do
+    miq_server.add_settings_for_resource(settings)
+    expect(described_class).to receive(:copy_to).with([miq_server_remote], settings)
+    described_class.replicate(miq_server, 'k1/k2', [miq_server_remote])
   end
 
   describe "#construct_setting_tree" do
