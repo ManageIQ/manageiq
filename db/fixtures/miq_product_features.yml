@@ -4601,6 +4601,21 @@
     :feature_type: view
     :identifier: container_dashboard_view
 
+# Container Pods
+- :name: Container Pods
+  :description: Containers Pods
+  :feature_type: node
+  :identifier: container_pod
+  :children:
+  - :name: View
+    :description: View Container Pods
+    :feature_type: view
+    :identifier: container_pod_view
+  - :name: Show
+    :description: Display Individual Container Pods
+    :feature_type: view
+    :identifier: container_pod_show
+
 # Infra Provider Dashboard
 - :name: Infra Providers Dashboard
   :description: Infra Providers Dashboard
