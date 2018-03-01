@@ -133,4 +133,24 @@ describe MeteringVm do
   it 'lists proper attributes' do
     expect(described_class.attribute_names).to match_array(allowed_attributes)
   end
+
+  let(:report_col_options) do
+    {
+      "cpu_allocated_metric"     => {:grouping => [:total]},
+      "cpu_used_metric"          => {:grouping => [:total]},
+      "disk_io_used_metric"      => {:grouping => [:total]},
+      "existence_hours_metric"   => {:grouping => [:total]},
+      "fixed_compute_metric"     => {:grouping => [:total]},
+      "memory_allocated_metric"  => {:grouping => [:total]},
+      "memory_used_metric"       => {:grouping => [:total]},
+      "metering_used_metric"     => {:grouping => [:total]},
+      "net_io_used_metric"       => {:grouping => [:total]},
+      "storage_allocated_metric" => {:grouping => [:total]},
+      "storage_used_metric"      => {:grouping => [:total]},
+    }
+  end
+
+  it 'sets grouping settings for all related columns' do
+    expect(described_class.report_col_options).to eq(report_col_options)
+  end
 end
