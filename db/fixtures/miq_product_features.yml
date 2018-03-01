@@ -4552,6 +4552,10 @@
         :description: Display Lists of Containers
         :feature_type: view
         :identifier: container_show_list
+      - :name: Show
+        :description: Display Individual Containers
+        :feature_type: view
+        :identifier: container_show
       - :name: Timeline
         :description: Display Timelines for Containers
         :feature_type: view
