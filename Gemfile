@@ -131,10 +131,10 @@ group :openstack, :manageiq_default do
   manageiq_plugin "manageiq-providers-openstack"
 end
 
-group :ovirt, :manageiq_default do
-  manageiq_plugin "manageiq-providers-ovirt"
-  gem "ovirt_metrics",                  "~>2.0.0",       :require => false
-end
+#group :ovirt, :manageiq_default do
+#  manageiq_plugin "manageiq-providers-ovirt"
+#  gem "ovirt_metrics",                  "~>2.0.0",       :require => false
+#end
 
 group :scvmm, :manageiq_default do
   manageiq_plugin "manageiq-providers-scvmm"
