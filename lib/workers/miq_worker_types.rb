@@ -11,7 +11,6 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Azure::CloudManager::EventCatcher"                      => %i(manageiq_default),
   "ManageIQ::Providers::Azure::CloudManager::MetricsCollectorWorker"            => %i(manageiq_default),
   "ManageIQ::Providers::Azure::CloudManager::RefreshWorker"                     => %i(manageiq_default),
-  "ManageIQ::Providers::Azure::NetworkManager::RefreshWorker"                   => %i(manageiq_default),
   "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::EventCatcher"       => %i(manageiq_default),
   "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RefreshWorker"      => %i(manageiq_default),
   "ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker"           => %i(manageiq_default),
