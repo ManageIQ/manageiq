@@ -9,6 +9,12 @@ describe RelationshipMixin do
   # host with no tree
   let(:host) { FactoryGirl.create(:host) }
 
+  describe "#remove_children" do
+    it "handles [nil]" do
+      expect { vms[3].remove_children(nil) }.to_not raise_error
+    end
+  end
+
   context "tree with relationship" do
     it "#with_relationship_type and #relationship_type" do
       expect(vms[0].relationship_type).not_to eq(test_rel_type)
