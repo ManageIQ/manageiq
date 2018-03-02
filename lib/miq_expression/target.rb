@@ -52,14 +52,16 @@ class MiqExpression::Target
     model.follow_associations(associations).present?
   end
 
+  # AR or virtual reflections
   def reflections
-    klass = model
-    associations.collect do |association|
-      klass.reflection_with_virtual(association).tap do |reflection|
-        raise ArgumentError, "One or more associations are invalid: #{associations.join(", ")}" unless reflection
-        klass = reflection.klass
-      end
-    end
+    model.collect_reflections_with_virtual(associations) ||
+      raise(ArgumentError, "One or more associations are invalid: #{associations.join(", ")}")
+  end
+
+  # only AR reflections
+  def collect_reflections
+    model.collect_reflections(associations) ||
+      raise(ArgumentError, "One or more associations are invalid: #{associations.join(", ")}")
   end
 
   def target

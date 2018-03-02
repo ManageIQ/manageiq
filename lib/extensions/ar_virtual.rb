@@ -483,12 +483,23 @@ module VirtualReflections
       association_names.inject(self) { |klass, name| klass.try!(:reflection_with_virtual, name).try!(:klass) }
     end
 
+    # invalid associations return a nil
+    # real reflections are followed
+    # a virtual association will stop the traversal
+    # @returns [nil, Array<Relation>]
     def collect_reflections(association_names)
       klass = self
-      association_names.collect do |name|
-        reflection = klass.reflect_on_association(name) || break
+      association_names.each_with_object([]) do |name, ret|
+        reflection = klass.reflect_on_association(name)
+        if reflection.nil?
+          if klass.reflection_with_virtual(name)
+            break(ret)
+          else
+            break
+          end
+        end
         klass = reflection.klass
-        reflection
+        ret << reflection
       end
     end
 

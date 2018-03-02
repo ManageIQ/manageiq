@@ -876,7 +876,9 @@ describe VirtualFields do
     # Vms.belongs_to :host
     # Vms.virtual_has_many :processes
     it "stops at virtual reflections" do
-      expect(ExtManagementSystem.collect_reflections(%w(vms processes))).to be_nil
+      expect(ExtManagementSystem.collect_reflections(%w(vms processes))).to eq(
+        [ExtManagementSystem.reflect_on_association(:vms)]
+      )
     end
   end
 
