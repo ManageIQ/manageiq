@@ -60,7 +60,10 @@ class MiqAeMethod < ApplicationRecord
   end
 
   def to_export_yaml
-    export_attributes
+    export_attributes.tap do |hash|
+      hash.delete('options') if options.empty?
+      hash.delete('embedded_methods') if embedded_methods.empty?
+    end
   end
 
   def method_inputs
