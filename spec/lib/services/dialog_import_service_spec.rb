@@ -496,12 +496,16 @@ describe DialogImportService do
 
     let(:field1) { {"name" => "field1", "dialog_field_responders" => %w(field2 field3)} }
     let(:field2) { {"name" => "field2", "dialog_field_responders" => %w(field3)} }
-    let(:field3) { {"name" => "field3"} }
+    let(:field3) { {"name" => "field3", "dialog_field_responders" => []} }
 
     it "creates an association list of ids based on names" do
       expect(dialog_import_service.build_association_list(dialog)).to eq(
         [{"field1" => %w(field2 field3)}, {"field2" => %w(field3)}]
       )
+    end
+
+    it "association list doesn't include empty arrays" do
+      expect(dialog_import_service.build_association_list(dialog)).not_to include("field3" => [])
     end
   end
 end

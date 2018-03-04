@@ -103,7 +103,7 @@ describe EmbeddedAnsibleWorker::Runner do
 
       context "in a container" do
         before do
-          expect(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+          expect(MiqEnvironment::Command).to receive(:is_podified?).and_return(true)
         end
 
         it "creates the provider with the service name for the URL" do

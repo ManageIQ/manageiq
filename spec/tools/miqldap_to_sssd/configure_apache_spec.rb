@@ -39,7 +39,7 @@ describe MiqLdapToSssd::ConfigureApache do
     end
 
     before do
-      @initial_settings = {:basedn_domain => "bob.your.uncle.com"}
+      @initial_settings = {:domain => "bob.your.uncle.com"}
 
       @test_dir = "#{Dir.tmpdir}/#{@spec_name}"
       @template_dir = "#{@test_dir}/TEMPLATE"

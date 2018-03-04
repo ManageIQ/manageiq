@@ -1,3 +1,5 @@
+require 'bigdecimal'
+
 module SpecParsedData
   def vm_data(i, data = {})
     {
@@ -98,6 +100,19 @@ module SpecParsedData
       :ems_ref               => "network_port_ems_ref_#{i}",
       :status                => "network_port_status#{i}",
       :mac_address           => "network_port_mac_#{i}",
+    }.merge(data)
+  end
+
+  def container_quota_items_data(i, data = {})
+    {
+      :quota_desired => BigDecimal("#{i}.#{i}"),
+    }.merge(data)
+  end
+
+  def container_quota_items_attrs_data(i, data = {})
+    {
+      :name          => "container_quota_items_attrs_#{i}",
+      :resource_type => "ContainerQuotaItem",
     }.merge(data)
   end
 end

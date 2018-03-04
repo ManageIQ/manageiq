@@ -882,8 +882,6 @@
     :port:
     :user:
     :scheme:
-:ldap_synchronization:
-  :ldap_synchronization_schedule: "0 2 * * *"
 :log:
   :collection:
     :archive:

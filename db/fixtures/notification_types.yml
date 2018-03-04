@@ -264,3 +264,8 @@
   :expires_in: 24.hours
   :level: error
   :audience: global
+- :name: server_registration_error
+  :message: 'Registration failed for server %{server_name}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: superadmin

@@ -10,10 +10,11 @@ module ManagerRefresh
 
       delegate :each, :size, :to => :data
 
-      delegate :find,
-               :primary_index,
+      delegate :primary_index,
                :build_primary_index_for,
                :build_secondary_indexes_for,
+               :named_ref,
+               :skeletal_primary_index,
                :to => :index_proxy
 
       delegate :builder_params,
@@ -23,6 +24,9 @@ module ManagerRefresh
                :new_inventory_object,
                :to => :inventory_collection
 
+      # @param inventory_collection [ManagerRefresh::InventoryCollection] InventoryCollection object we want the storage
+      #        for
+      # @param secondary_refs [Hash] Secondary_refs in format {:name_of_the_ref => [:attribute1, :attribute2]}
       def initialize(inventory_collection, secondary_refs)
         @inventory_collection = inventory_collection
         @data                 = []
@@ -30,8 +34,12 @@ module ManagerRefresh
         @index_proxy = ManagerRefresh::InventoryCollection::Index::Proxy.new(inventory_collection, secondary_refs)
       end
 
+      # Adds passed InventoryObject into the InventoryCollection's storage
+      #
+      # @param inventory_object [ManagerRefresh::InventoryObject]
+      # @return [ManagerRefresh::InventoryCollection] Returns current InventoryCollection, to allow chaining
       def <<(inventory_object)
-        unless primary_index.find(inventory_object.manager_uuid)
+        if inventory_object.manager_uuid.present? && !primary_index.find(inventory_object.manager_uuid)
           data << inventory_object
 
           # TODO(lsmola) Maybe we do not need the secondary indexes here?
@@ -46,41 +54,69 @@ module ManagerRefresh
 
       alias push <<
 
+      # Finds of builds a new InventoryObject. By building it, we also put in into the InventoryCollection's storage.
+      #
+      # @param manager_uuid [String] manager_uuid of the InventoryObject
+      # @return [ManagerRefresh::InventoryObject] Found or built InventoryObject
       def find_or_build(manager_uuid)
         raise "The uuid consists of #{manager_ref.size} attributes, please find_or_build_by method" if manager_ref.size > 1
 
         find_or_build_by(manager_ref.first => manager_uuid)
       end
 
-      def find_or_build_by(manager_uuid_hash)
-        if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
-          raise "Allowed find_or_build_by keys are #{manager_ref}"
-        end
-
-        # Not using find by since if could take record from db, then any changes would be ignored, since such record will
-        # not be stored to DB, maybe we should rethink this?
-        primary_index.find(manager_uuid_hash) || build(manager_uuid_hash)
+      # (see #build)
+      def find_or_build_by(hash)
+        build(hash)
       end
 
-      def build(hash)
-        hash             = builder_params.merge(hash)
-        inventory_object = new_inventory_object(hash)
+      # Finds InventoryObject.
+      #
+      # @param hash [Hash] Hash that needs to contain attributes defined in :manager_ref of the InventoryCollection
+      # @return [ManagerRefresh::InventoryObject] Found or built InventoryObject object
+      def find_in_data(hash)
+        _hash, _uuid, inventory_object = primary_index_scan(hash)
+        inventory_object
+      end
 
-        uuid = inventory_object.manager_uuid
-        # Each InventoryObject must be able to build an UUID, return nil if it can't
-        return nil if uuid.blank?
-        # Return existing InventoryObject if we have it
-        return primary_index.find(uuid) if primary_index.find(uuid)
+      # Finds of builds a new InventoryObject. By building it, we also put in into the InventoryCollection's storage.
+      #
+      # @param hash [Hash] Hash that needs to contain attributes defined in :manager_ref of the
+      #        InventoryCollection
+      # @return [ManagerRefresh::InventoryObject] Found or built InventoryObject object
+      def build(hash)
+        hash, uuid, inventory_object = primary_index_scan(hash)
+
+        # Return InventoryObject if found in primary index
+        return inventory_object unless inventory_object.nil?
+
+        # We will take existing skeletal record, so we don't duplicate references for saving. We can have duplicated
+        # reference from local_db index, (if we are using .find in parser, that causes N+1 db queries), but that is ok,
+        # since that one is not being saved.
+        inventory_object = skeletal_primary_index.delete(uuid)
+
+        # We want to update the skeletal record with actual data
+        inventory_object&.assign_attributes(hash)
+
+        # Build the InventoryObject
+        inventory_object ||= new_inventory_object(enrich_data(hash))
+
         # Store new InventoryObject and return it
         push(inventory_object)
         inventory_object
       end
 
+      # Returns array of built InventoryObject objects
+      #
+      # @return [Array<ManagerRefresh::InventoryObject>] Array of built InventoryObject objects
       def to_a
         data
       end
 
-      # Import/export methods
+      # Reconstructs InventoryCollection from it's serialized form
+      #
+      # @param inventory_objects_data [Array[Hash]] Serialized array of InventoryObject objects as hashes
+      # @param available_inventory_collections [Array<ManagerRefresh::InventoryCollection>] List of available
+      #        InventoryCollection objects
       def from_raw_data(inventory_objects_data, available_inventory_collections)
         inventory_objects_data.each do |inventory_object_data|
           hash = inventory_object_data.each_with_object({}) do |(key, value), result|
@@ -94,6 +130,13 @@ module ManagerRefresh
         end
       end
 
+      # Transform serialized references into lazy InventoryObject objects
+      #
+      # @param value [Object, Hash] Serialized InventoryObject into Hash
+      # @param available_inventory_collections [Array<ManagerRefresh::InventoryCollection>] List of available
+      #        InventoryCollection objects
+      # @return [Object, ManagerRefresh::InventoryObjectLazy] Returns ManagerRefresh::InventoryObjectLazy object
+      #         if the serialized form was a reference, or return original value
       def from_raw_value(value, available_inventory_collections)
         if value.kind_of?(Hash) && (value['type'] || value[:type]) == "ManagerRefresh::InventoryObjectLazy"
           value.transform_keys!(&:to_s)
@@ -108,6 +151,9 @@ module ManagerRefresh
         end
       end
 
+      # Serializes InventoryCollection's data storage into Array of Hashes, which we can turn into JSON or YAML
+      #
+      # @return [Array<Hash>] Serialized InventoryCollection's data storage
       def to_raw_data
         data.map do |inventory_object|
           inventory_object.data.transform_values do |value|
@@ -122,6 +168,34 @@ module ManagerRefresh
             end
           end
         end
+      end
+
+      private
+
+      # Scans primary index for existing InventoryObject, that would be equivalent to passed hash. It also returns
+      # enriched data and uuid, so we do not have to compute it multiple times.
+      #
+      # @param hash [Hash] Attributes for the InventoryObject
+      # @return [Array(Hash, String, ManagerRefresh::InventoryObject)] Returns enriched data, uuid and InventoryObject
+      # if found (otherwise nil)
+      def primary_index_scan(hash)
+        hash = enrich_data(hash)
+
+        if manager_ref.any? { |x| !hash.key?(x) }
+          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
+        end
+
+        uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
+        return hash, uuid, primary_index.find(uuid)
+      end
+
+      # Returns new hash enriched by (see ManagerRefresh::InventoryCollection#builder_params) hash
+      #
+      # @param hash [Hash] Input hash
+      # @return [Hash] Enriched hash by (see ManagerRefresh::InventoryCollection#builder_params)
+      def enrich_data(hash)
+        # This is 25% faster than builder_params.merge(hash)
+        {}.merge!(builder_params).merge!(hash)
       end
     end
   end

@@ -8,6 +8,7 @@ class ManagerRefresh::Inventory::Collector
     @target  = refresh_target
   end
 
+  # @return [Config::Options] Options for the manager type
   def options
     @options ||= Settings.ems_refresh[manager.class.ems_type]
   end

@@ -13,9 +13,11 @@ class MiqGroup < ApplicationRecord
   has_many   :miq_report_results, :dependent => :nullify
   has_many   :miq_widget_contents, :dependent => :destroy
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
+  has_many   :miq_product_features, :through => :miq_user_role
 
   virtual_column :miq_user_role_name, :type => :string,  :uses => :miq_user_role
   virtual_column :read_only,          :type => :boolean
+  virtual_has_one :sui_product_features, :class_name => "Array"
 
   delegate :self_service?, :limited_self_service?, :disallowed_roles, :to => :miq_user_role, :allow_nil => true
 
@@ -133,7 +135,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.get_httpd_groups_by_user(user)
-    if MiqEnvironment::Command.is_container?
+    if MiqEnvironment::Command.is_podified?
       get_httpd_groups_by_user_via_dbus_api_service(user)
     else
       get_httpd_groups_by_user_via_dbus(user)
@@ -258,6 +260,13 @@ class MiqGroup < ApplicationRecord
     group_user_ids = user_ids
     return false if group_user_ids.empty?
     users.includes(:miq_groups).where(:id => group_user_ids).where.not(:miq_groups => {:id => id}).count != group_user_ids.size
+  end
+
+  def sui_product_features
+    return [] unless miq_user_role.allows?(:identifier => 'sui')
+    MiqProductFeature.feature_all_children('sui').each_with_object([]) do |sui_feature, sui_features|
+      sui_features << sui_feature if miq_user_role.allows?(:identifier => sui_feature)
+    end
   end
 
   private

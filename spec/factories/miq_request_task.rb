@@ -40,4 +40,6 @@ FactoryGirl.define do
     state        'pending'
     request_type 'clone_to_service'
   end
+
+  factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask'
 end

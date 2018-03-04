@@ -3,16 +3,26 @@ module ManagerRefresh
     class TopologicalSort
       attr_reader :graph
 
+      # @param graph [ManagerRefresh::Graph] graph object we want to sort
       def initialize(graph)
         @graph = graph
       end
 
+      # Sorts the graph into layers of InventoryCollection objects processable in parallel
+      #
+      # @return [Array<Array>] Array of arrays(layers) of InventoryCollection objects
       def topological_sort
         make_topological_sort(graph.nodes, graph.edges)
       end
 
       private
 
+      # (see #topological_sort)
+      #
+      # @param original_nodes [Array<ManagerRefresh::InventoryCollection>] List of nodes, where node is
+      #        InventoryCollection object
+      # @param edges [Array<Array>] List of edges, where edge is defined as [InventoryCollection, InventoryCollection]
+      # @return [Array<Array>] Array of arrays(layers) of InventoryCollection objects
       def make_topological_sort(original_nodes, edges)
         ################################################################################################################
         # Topological sort of the graph of the DTO collections to find the right order of saving DTO collections and

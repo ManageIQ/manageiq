@@ -123,10 +123,6 @@ class MiqScheduleWorker::Jobs
     MiqSchedule.queue_scheduled_work(schedule_id, rufus_job.job_id, rufus_job.next_time.to_i, rufus_job.opts)
   end
 
-  def ldap_server_sync_data_from_timer
-    queue_work(:class_name => "LdapServer", :method_name => "sync_data_from_timer")
-  end
-
   def vmdb_database_capture_metrics_timer
     role = MiqRegion.my_region.role_active?("database_owner") ? "database_owner" : "database_operations"
     queue_work(:class_name => "VmdbDatabase", :method_name => "capture_metrics_timer", :role => role, :zone => nil)

@@ -1,6 +1,12 @@
 module ManagerRefresh::SaveCollection
   class TopologicalSort < ManagerRefresh::SaveCollection::Base
     class << self
+      # Saves the passed InventoryCollection objects by doing a topology sort of the graph, then going layer by layer
+      # and saving InventoryCollection object in each layer.
+      #
+      # @param ems [ExtManagementSystem] manager owning the inventory_collections
+      # @param inventory_collections [Array<ManagerRefresh::InventoryCollection>] array of InventoryCollection objects
+      #        for saving
       def save_collections(ems, inventory_collections)
         graph = ManagerRefresh::InventoryCollection::Graph.new(inventory_collections)
         graph.build_directed_acyclic_graph!

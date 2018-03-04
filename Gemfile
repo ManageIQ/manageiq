@@ -35,16 +35,15 @@ gem "docker-api",                     "~>1.33.6",      :require => false
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
-gem "gettext_i18n_rails_js",          "~>1.1.0"
+gem "gettext_i18n_rails_js",          "~>1.3.0"
 gem "hamlit",                         "~>2.7.0"
 gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
-gem "kubeclient",                     "~>2.4.0",       :require => false # For scaling pods at runtime
-gem "linux_admin",                    "~>1.2.0",       :require => false
+gem "kubeclient",                     "~>2.4",         :require => false # For scaling pods at runtime
+gem "linux_admin",                    "~>1.2.1",       :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
 gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "manageiq-messaging",                              :require => false, :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
-gem "manageiq-network_discovery",     "~>0.1.2",       :require => false
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>2.6.1",       :path => File.expand_path("mime-types-redirector", __dir__)
 gem "more_core_extensions",           "~>3.5"

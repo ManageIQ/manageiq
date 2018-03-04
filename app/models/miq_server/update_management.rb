@@ -63,6 +63,10 @@ module MiqServer::UpdateManagement
     configure_yum_proxy
     # HACK: #enable_repos is not always successful immediately after #attach_products, retry to ensure they are enabled.
     5.times { repos_enabled? ? break : enable_repos }
+  rescue LinuxAdmin::SubscriptionManagerError => e
+    _log.error("Registration Failed: #{e.message}")
+    Notification.create(:type => "server_registration_error", :options => {:server_name => MiqServer.my_server.name})
+    raise
   end
 
   def register

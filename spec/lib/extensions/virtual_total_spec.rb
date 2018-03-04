@@ -362,21 +362,23 @@ describe VirtualTotal do
     end
   end
 
-  describe ".virtual_total (with through relation (host#v_total_storages)" do
-    let(:base_model) { Host }
+  describe ".virtual_total (with through relation (ems#total_storages)" do
+    let(:base_model) { ExtManagementSystem }
 
     it "calculates totals locally" do
-      expect(model_with_children(0).v_total_storages).to eq(0)
-      expect(model_with_children(2).v_total_storages).to eq(2)
+      expect(model_with_children(0).total_storages).to eq(0)
+      expect(model_with_children(2).total_storages).to eq(2)
     end
 
     it "is not defined in sql" do
-      expect(base_model.attribute_supported_by_sql?(:v_total_storages)).to be(false)
+      expect(base_model.attribute_supported_by_sql?(:total_storages)).to be(false)
     end
 
     def model_with_children(count)
-      FactoryGirl.create(:host).tap do |host|
-        count.times { host.storages.create(FactoryGirl.attributes_for(:storage)) }
+      FactoryGirl.create(:ext_management_system).tap do |ems|
+        ems.hosts.create(FactoryGirl.attributes_for(:host)).tap do |host|
+          count.times { host.storages.create(FactoryGirl.attributes_for(:storage)) }
+        end
       end.reload
     end
   end

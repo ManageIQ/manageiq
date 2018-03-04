@@ -153,7 +153,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_total  :total_miq_templates,     :miq_templates
   virtual_total  :total_hosts,             :hosts
   virtual_total  :total_storages,          :storages
-  virtual_total  :total_clusters,          :clusters
+  virtual_total  :total_clusters,          :ems_clusters
   virtual_column :zone_name,               :type => :string, :uses => :zone
   virtual_column :total_vms_on,            :type => :integer
   virtual_column :total_vms_off,           :type => :integer
@@ -199,6 +199,8 @@ class ExtManagementSystem < ApplicationRecord
                               [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
                             elsif ost.hypervisor.include?(:rhevm)
                               [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
+                            elsif ost.hypervisor.include?(:openstack_infra)
+                              [ManageIQ::Providers::Openstack::InfraManager, 'OpenStack Director']
                             else
                               [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
                             end
@@ -428,7 +430,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.ems_infra_discovery_types
-    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
+    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm openstack_infra)
   end
 
   def self.ems_physical_infra_discovery_types
@@ -676,6 +678,31 @@ class ExtManagementSystem < ApplicationRecord
 
   def tenant_identity
     User.super_admin.tap { |u| u.current_group = tenant.default_miq_group }
+  end
+
+  def self.inventory_status
+    data = includes(:zone)
+           .select(:id, :parent_ems_id, :zone_id, :type, :name, :total_hosts, :total_vms, :total_clusters)
+           .map do |ems|
+             [
+               ems.region_id, ems.zone.name, ems.class.short_token, ems.name,
+               ems.total_clusters, ems.total_hosts, ems.total_vms, ems.total_storages,
+               ems.try(:containers).try(:count)
+             ]
+           end
+    return if data.empty?
+    data = data.sort_by { |e| [e[0], e[1], e[2], e[3]] }
+    # remove 0's (except for the region)
+    data = data.map { |row| row.each_with_index.map { |col, i| i.positive? && col.to_s == "0" ? nil : col } }
+    data.unshift(%w(region zone kind ems clusters hosts vms storages containers))
+    # remove columns where all values (except for the header) are blank
+    data.first.dup.each do |col_header|
+      col = data.first.index(col_header)
+      if data[1..-1].none? { |row| row[col] }
+        data.each { |row| row.delete_at(col) }
+      end
+    end
+    data
   end
 
   private

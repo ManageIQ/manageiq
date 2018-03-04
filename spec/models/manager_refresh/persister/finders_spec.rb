@@ -136,4 +136,16 @@ describe ManagerRefresh::Inventory::Persister do
     expect(hardware_lazy_1.reference.full_reference).to eq(:vm_or_template => vm_lazy)
     expect(hardware_lazy_2.reference.full_reference).to eq hardware_lazy_2.reference.full_reference
   end
+
+  it "checks build finds existing inventory object instead of duplicating" do
+    expect(persister.vms.build(vm_data(1)).object_id).to eq(persister.vms.build(vm_data(1)).object_id)
+  end
+
+  it "checks find_or_build finds existing inventory object instead of duplicating" do
+    expect(persister.vms.find_or_build(vm_data(1)).object_id).to eq(persister.vms.find_or_build(vm_data(1)).object_id)
+  end
+
+  it "checks find_or_build_by finds existing inventory object instead of duplicating" do
+    expect(persister.vms.find_or_build_by(vm_data(1)).object_id).to eq(persister.vms.find_or_build_by(vm_data(1)).object_id)
+  end
 end
