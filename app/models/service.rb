@@ -370,11 +370,11 @@ class Service < ApplicationRecord
   end
 
   def chargeback_report_name
-    "Chargeback-Vm-Monthly-#{name}"
+    "Chargeback-Vm-Monthly-#{name}-#{id}"
   end
 
   def generate_chargeback_report(options = {})
-    _log.info("Generation of chargeback report for service #{name} started...")
+    _log.info("Generation of chargeback report for service #{name} with #{id} started...")
     MiqReportResult.where(:name => chargeback_report_name).destroy_all
     report = MiqReport.new(chargeback_yaml)
     options[:report_sync] = true
