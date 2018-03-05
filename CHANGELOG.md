@@ -5,10 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-  - Change get_targets_for_source to use correct params [(#16811)](https://github.com/ManageIQ/manageiq/pull/16811)
+## Gaprindashvili-2
 
+### Added
+- Refactor VM naming method in provisioning task to support call from automate [(#16897)](https://github.com/ManageIQ/manageiq/pull/16897)
 
-## Gaprindashvili-1
+### Fixed
+- Add back the missing IP address range in Virtual Private Cloud name. [(#16898)](https://github.com/ManageIQ/manageiq/pull/16898)
+- Fix Deleting Snapshot on Smartstate Cancel [(#16885)](https://github.com/ManageIQ/manageiq/pull/16897)
+- Fix supports_launch_vnc_console? for VMWare VMs [(#16905)](https://github.com/ManageIQ/manageiq/pull/16905)
+- Add << method to MulticastLogger [(#16904)](https://github.com/ManageIQ/manageiq/pull/16904)
+- Exclude Service::AGGREGATE_ALL_VM_ATTRS from MiqExp.to_sql [(#16915)](https://github.com/ManageIQ/manageiq/pull/16915)
+- No longer assume that a value is an array [(#16924)](https://github.com/ManageIQ/manageiq/pull/16924)
+- Follow up to update_vm_name for Service template provisioning [(#16949)](https://github.com/ManageIQ/manageiq/pull/16949)
+- Add nil check to serializer for invalid categories [(#16951)](https://github.com/ManageIQ/manageiq/pull/16951)
+- Make sure Containers Exist Before Processing [(#16922)](https://github.com/ManageIQ/manageiq/pull/16922)
+- Fix for differing behavior in DialogFieldTagControl multi/single drop downs [(#16955)](https://github.com/ManageIQ/manageiq/pull/16955)
+- Dropping azure classic and rackspace credential types [(#16936)](https://github.com/ManageIQ/manageiq/pull/16936)
+- Only set encryption option to net-ldap when needed. [(#16954)](https://github.com/ManageIQ/manageiq/pull/16954)
+- Use correct comparison for multi-value default value inclusion rules [(#16978)](https://github.com/ManageIQ/manageiq/pull/16978)
+- Checking killed worker with is_alive? [(#16908)](https://github.com/ManageIQ/manageiq/pull/16908)
+- Lookup a category_id if a tag control passes it in [(#16965)](https://github.com/ManageIQ/manageiq/pull/16965)
+- Fix MulticastLogger DEBUG mode [(#16990)](https://github.com/ManageIQ/manageiq/pull/16990)
+
+## Gaprindashvili-1 - Released 2018-02-01
 
 ### Added
 - Alerts
