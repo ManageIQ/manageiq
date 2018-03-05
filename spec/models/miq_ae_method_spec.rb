@@ -142,7 +142,8 @@ describe MiqAeMethod do
 
     expect(result['name']).to eql('foo_method')
     expect(result['location']).to eql('inline')
-    expect(result['options']).to be_nil
-    expect(result['embedded_methods']).to be_nil
+    keys = result.keys
+    expect(keys.exclude?('options')).to be_truthy
+    expect(keys.exclude?('embedded_methods')).to be_truthy
   end
 end
