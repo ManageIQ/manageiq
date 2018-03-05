@@ -3,8 +3,13 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     ServiceTemplateTransformationPlanTask
   end
 
+  def self.get_description(req_obj)
+    source_name = req_obj.source.name
+    req_obj.kind_of?(ServiceTemplateTransformationPlanRequest) ? source_name : "Transforming VM [#{source_name}]"
+  end
+
   def after_request_task_create
-    update_attributes(:description => "Transforming VM #{source.name}")
+    update_attributes(:description => get_description)
   end
 
   def resource_action
