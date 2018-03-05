@@ -141,11 +141,11 @@
     :image_name: manageiq/embedded-ansible
     :image_tag: latest
     :service_account: miq-privileged
-:ems:
 # provider specific settings are nested here, but they are in the provider repos
 # e.g.:
-#  :ems_<provider_name>:
-#    :use_feature: false
+# :ems:
+#    :ems_<provider_name>:
+#      :use_feature: false
 :event_streams:
   :history:
     :keep_events: 6.months
