@@ -5299,6 +5299,10 @@
         :description: Ansible Credentials Refresh
         :feature_type: control
         :identifier: embedded_automation_manager_credentials_refresh
+      - :name: Edit Tags
+        :description: Edit Tags for the selected Ansible Credentials
+        :feature_type: control
+        :identifier: ansible_credential_tag
 
 # Automation Manager
 - :name: Ansible Tower
