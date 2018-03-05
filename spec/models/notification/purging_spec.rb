@@ -10,20 +10,11 @@ describe Notification do
 
       it "creates a query for every notification_type expire_in value" do
         Timecop.freeze(Time.current) do
-          db_strftime = "%Y-%m-%d %H:%M:%S.%6N"
-          type_1_day_expires  = type_1_day.expires_in.seconds.ago.utc.strftime(db_strftime)
-          type_7_day_expires  = type_7_day.expires_in.seconds.ago.utc.strftime(db_strftime)
-          type_14_day_expires = type_14_day.expires_in.seconds.ago.utc.strftime(db_strftime)
-
           expected_sql = <<-SQL.lines.map(&:strip).join(" ")
             SELECT "notifications".*
             FROM "notifications"
-            WHERE ((("notifications"."notification_type_id" IN (#{type_1_day.id})
-                   AND "notifications"."created_at" < '#{type_1_day_expires}')
-               OR ("notifications"."notification_type_id" IN (#{type_7_day.id})
-                   AND "notifications"."created_at" < '#{type_7_day_expires}'))
-               OR ("notifications"."notification_type_id" IN (#{type_14_day.id})
-                   AND "notifications"."created_at" < '#{type_14_day_expires}'))
+            INNER JOIN "notification_types" ON "notification_types"."id" = "notifications"."notification_type_id"
+            WHERE (notifications.created_at + notification_types.expires_in * INTERVAL '1 second' < now())
           SQL
 
           expect(described_class.purge_scope(nil).to_sql).to eq(expected_sql)
