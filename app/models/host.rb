@@ -182,6 +182,10 @@ class Host < ApplicationRecord
     end
   end
 
+  supports_not :host_introspect
+  supports_not :host_manageable
+  supports_not :host_provide
+
   def self.non_clustered
     where(:ems_cluster_id => nil)
   end
