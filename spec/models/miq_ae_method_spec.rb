@@ -127,4 +127,23 @@ describe MiqAeMethod do
                             :location => "inline")
     expect(m1.domain.name).to eql('dom1')
   end
+
+  it "#to_export_yaml" do
+    d1 = FactoryGirl.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
+    n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    m1 = FactoryGirl.create(:miq_ae_method,
+                            :class_id => c1.id,
+                            :name     => "foo_method",
+                            :scope    => "instance",
+                            :language => "ruby",
+                            :location => "inline")
+    result = m1.to_export_yaml
+
+    expect(result['name']).to eql('foo_method')
+    expect(result['location']).to eql('inline')
+    keys = result.keys
+    expect(keys.exclude?('options')).to be_truthy
+    expect(keys.exclude?('embedded_methods')).to be_truthy
+  end
 end
