@@ -72,5 +72,15 @@ describe ServiceTemplateTransformationPlanTask do
         expect(plan.vm_resources.first.status).to eq('Completed')
       end
     end
+
+    describe '.get_description' do
+      it 'describes a task' do
+        expect(described_class.get_description(task)).to include("Transforming VM")
+      end
+
+      it 'describes a request' do
+        expect(described_class.get_description(request)).to eq(plan.name)
+      end
+    end
   end
 end
