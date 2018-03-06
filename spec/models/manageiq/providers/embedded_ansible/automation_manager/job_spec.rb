@@ -3,11 +3,6 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
 
   it_behaves_like 'ansible job'
 
-  it 'processes retire_now properly' do
-    expect(job).to receive(:finish_retirement).once
-    job.retire_now
-  end
-
   describe '#raw_stdout_via_worker' do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
