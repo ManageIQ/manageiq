@@ -137,6 +137,17 @@ describe Rbac::Filterer do
         tagged_group.save!
       end
 
+      context 'searching for instances of ConfigurationScriptSource' do
+        let!(:configuration_script_source) { FactoryGirl.create_list(:embedded_ansible_configuration_script_source, 2).first }
+
+        it 'lists only tagged ConfigurationScriptSources' do
+          configuration_script_source.tag_with('/managed/environment/prod', :ns => '*')
+
+          results = described_class.search(:class => ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource, :user => user).first
+          expect(results).to match_array [configuration_script_source]
+        end
+      end
+
       context 'searching for instances of AuthKeyPair' do
         let!(:auth_key_pair_cloud) { FactoryGirl.create_list(:auth_key_pair_cloud, 2).first }
 
