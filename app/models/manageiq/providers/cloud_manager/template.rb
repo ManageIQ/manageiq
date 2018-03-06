@@ -20,6 +20,17 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
                             ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate))
   end
 
+  def self.create_image_queue(userid, ext_management_system, options = {})
+    queue_opts = {
+      :class_name  => 'ManageIQ::Providers::Openstack::CloudManager::Template',
+      :method_name => 'create_image',
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   private
 
   def raise_created_event
