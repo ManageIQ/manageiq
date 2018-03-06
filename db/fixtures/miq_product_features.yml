@@ -4776,6 +4776,10 @@
         :description: Ansible Playbooks Refresh
         :feature_type: control
         :identifier: embedded_configuration_script_payload_refresh
+      - :name: Edit Tags
+        :description: Edit Tags for the selected Ansible Playbooks
+        :feature_type: control
+        :identifier: embedded_configuration_script_payload_tag
 
   - :name: Credentials
     :description: Everything under Credentials
