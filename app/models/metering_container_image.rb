@@ -10,6 +10,7 @@ class MeteringContainerImage < ChargebackContainerImage
     {
       "cpu_cores_allocated_metric" => {:grouping => [:total]},
       "cpu_cores_used_metric"      => {:grouping => [:total]},
+      "existence_hours_metric"     => {:grouping => [:total]},
       "fixed_compute_metric"       => {:grouping => [:total]},
       "memory_allocated_metric"    => {:grouping => [:total]},
       "memory_used_metric"         => {:grouping => [:total]},
