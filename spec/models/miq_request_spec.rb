@@ -313,6 +313,12 @@ describe MiqRequest do
         cleaned_attribs = request.send(:clean_up_keys_for_request_task)
         expect(cleaned_attribs).to_not match_array(removable_keys)
       end
+
+      it '#clean_up_keys_for_request_task removes options user_message' do
+        request.update_attributes!(:options => {:user_message => 'doesntmatter'})
+        cleaned_attribs = request.send(:clean_up_keys_for_request_task)
+        expect(cleaned_attribs["options"]).to_not include(:user_message)
+      end
     end
 
     it 'non VM provisioning' do

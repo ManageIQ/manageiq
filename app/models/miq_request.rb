@@ -542,6 +542,7 @@ class MiqRequest < ApplicationRecord
   def clean_up_keys_for_request_task
     req_task_attributes = attributes.dup
     (req_task_attributes.keys - MiqRequestTask.column_names + REQUEST_UNIQUE_KEYS).each { |key| req_task_attributes.delete(key) }
+    req_task_attributes["options"].delete(:user_message)
 
     _log.debug("#{self.class.name} Attributes: [#{req_task_attributes.inspect}]...")
 
