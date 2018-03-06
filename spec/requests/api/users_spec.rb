@@ -193,11 +193,11 @@ RSpec.describe "users API" do
       request = {
         "action"    => "edit",
         "resources" => [{
-          "href"          => api_user_url(nil, user1),
+          "href"          => users_url(user1.id),
           "current_group" => {}
         }]
       }
-      post(api_users_url, :params => request)
+      run_post(users_url, request)
 
       expected = {
         'error' => a_hash_including(
