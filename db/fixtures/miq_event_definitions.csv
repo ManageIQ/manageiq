@@ -2,28 +2,28 @@ name,description,event_type,set_type
 #
 # EVM Server operations
 #
-evm_server_start,EVM Server Start,Default,evm_operations
-evm_server_stop,EVM Server Stop,Default,evm_operations
-evm_server_not_responding,EVM Server Not Responding,Default,evm_operations
-evm_server_memory_exceeded,EVM Server Exceeded Memory Limit,Default,evm_operations
-evm_server_is_master,EVM Server is Master,Default,evm_operations
-evm_server_system_disk_high_usage,EVM Server High System Disk Usage,Default,evm_operations
-evm_server_boot_disk_high_usage,EVM Server High /boot Disk Usage,Default,evm_operations
-evm_server_home_disk_high_usage,EVM Server High /home Disk Usage,Default,evm_operations
-evm_server_var_disk_high_usage,EVM Server High /var Disk Usage,Default,evm_operations
-evm_server_var_log_disk_high_usage,EVM Server High /var/log Disk Usage,Default,evm_operations
-evm_server_var_log_audit_disk_high_usage,EVM Server High /var/log/audit Disk Usage,Default,evm_operations
-evm_server_miq_tmp_disk_high_usage,EVM Server High Temp Storage Disk Usage,Default,evm_operations
-evm_server_tmp_disk_high_usage,EVM Server High /tmp Disk Usage,Default,evm_operations
-evm_server_db_disk_high_usage,EVM Server High DB Disk Usage,Default,evm_operations
-evm_server_db_backup_low_space,EVM Server Database Backup Insufficient Space,Default,evm_operations
-evm_worker_start,EVM Worker Started,Default,evm_operations
-evm_worker_stop,EVM Worker Stopped,Default,evm_operations
-evm_worker_killed, EVM Worker Killed,Default,evm_operations
-evm_worker_not_responding, EVM Worker Not Responding,Default,evm_operations
-evm_worker_memory_exceeded, EVM Worker Exceeded Memory Limit,Default,evm_operations
-evm_worker_uptime_exceeded, EVM Worker Exceeded Uptime Limit,Default,evm_operations
-evm_worker_exit_file, EVM Worker Exit File,Default,evm_operations
+evm_server_start,Server Start,Default,evm_operations
+evm_server_stop,Server Stop,Default,evm_operations
+evm_server_not_responding,Server Not Responding,Default,evm_operations
+evm_server_memory_exceeded,Server Exceeded Memory Limit,Default,evm_operations
+evm_server_is_master,Server is Master,Default,evm_operations
+evm_server_system_disk_high_usage,Server High System Disk Usage,Default,evm_operations
+evm_server_boot_disk_high_usage,Server High /boot Disk Usage,Default,evm_operations
+evm_server_home_disk_high_usage,Server High /home Disk Usage,Default,evm_operations
+evm_server_var_disk_high_usage,Server High /var Disk Usage,Default,evm_operations
+evm_server_var_log_disk_high_usage,Server High /var/log Disk Usage,Default,evm_operations
+evm_server_var_log_audit_disk_high_usage,Server High /var/log/audit Disk Usage,Default,evm_operations
+evm_server_miq_tmp_disk_high_usage,Server High Temp Storage Disk Usage,Default,evm_operations
+evm_server_tmp_disk_high_usage,Server High /tmp Disk Usage,Default,evm_operations
+evm_server_db_disk_high_usage,Server High DB Disk Usage,Default,evm_operations
+evm_server_db_backup_low_space,Server Database Backup Insufficient Space,Default,evm_operations
+evm_worker_start,Worker Started,Default,evm_operations
+evm_worker_stop,Worker Stopped,Default,evm_operations
+evm_worker_killed,Worker Killed,Default,evm_operations
+evm_worker_not_responding,Worker Not Responding,Default,evm_operations
+evm_worker_memory_exceeded,Worker Exceeded Memory Limit,Default,evm_operations
+evm_worker_uptime_exceeded,Worker Exceeded Uptime Limit,Default,evm_operations
+evm_worker_exit_file,Worker Exit File,Default,evm_operations
 
 #
 # External Management System operations
