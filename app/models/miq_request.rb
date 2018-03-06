@@ -404,10 +404,10 @@ class MiqRequest < ApplicationRecord
   end
 
   def create_request_tasks
-    _log.info("Creating request task instances for: <#{description}>...")
-
+    # Quota denial will result in automate_event_failed? being true
     return if automate_event_failed?("request_starting")
 
+    _log.info("Creating request task instances for: <#{description}>...")
     # Create a MiqRequestTask object for each requested item
     options[:delivered_on] = Time.now.utc
     update_attribute(:options, options)
