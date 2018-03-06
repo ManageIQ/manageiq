@@ -687,14 +687,18 @@ class ExtManagementSystem < ApplicationRecord
              [
                ems.region_id, ems.zone.name, ems.class.short_token, ems.name,
                ems.total_clusters, ems.total_hosts, ems.total_vms, ems.total_storages,
-               ems.try(:containers).try(:count)
+               ems.try(:containers).try(:count),
+               ems.try(:container_groups).try(:count),
+               ems.try(:container_images).try(:count),
+               ems.try(:container_nodes).try(:count),
+               ems.try(:container_projects).try(:count),
              ]
            end
     return if data.empty?
     data = data.sort_by { |e| [e[0], e[1], e[2], e[3]] }
     # remove 0's (except for the region)
     data = data.map { |row| row.each_with_index.map { |col, i| i.positive? && col.to_s == "0" ? nil : col } }
-    data.unshift(%w(region zone kind ems clusters hosts vms storages containers))
+    data.unshift(%w(region zone kind ems clusters hosts vms storages containers groups images nodes projects))
     # remove columns where all values (except for the header) are blank
     data.first.dup.each do |col_header|
       col = data.first.index(col_header)
