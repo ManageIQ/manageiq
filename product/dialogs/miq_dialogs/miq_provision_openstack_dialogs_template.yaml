@@ -179,6 +179,7 @@
           :required: false
           :display: :edit
           :data_type: :array_integer
+          :auto_select_single: false
         :floating_ip_address:
           :values_from:
             :method: :allowed_floating_ip_addresses
