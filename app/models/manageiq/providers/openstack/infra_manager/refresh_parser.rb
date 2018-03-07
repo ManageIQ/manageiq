@@ -86,7 +86,7 @@ module ManageIQ
           # Filtering just server resources which is important to us for getting Purpose of the node
           # (compute, controller, etc.).
           resources += all_stack_server_resources(stack).select do |x|
-            %w(OS::TripleO::Server OS::Nova::Server).include?(x["resource_type"])
+            [/OS::TripleO::\w*Server$/, /OS::Nova::Server/].any?{ |type| x["resource_type"] =~ type}
           end
         end
         @all_server_resources = resources
@@ -143,7 +143,7 @@ module ManageIQ
         indexed_servers = {}
         servers.each { |s| indexed_servers[s.id] = s }
 
-        # Indexed Heat resources, we are interested only in OS::Nova::Server/OS::TripleO::Server
+        # Indexed Heat resources, we are interested only in OS::Nova::Server/OS::TripleO::#{role}Server
         indexed_resources = {}
         all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
@@ -349,7 +349,7 @@ module ManageIQ
           next unless uid
 
           nova_server = stack[:resources].detect do |r|
-            %w(OS::TripleO::Server OS::Nova::Server).include?(r[:resource_category])
+            [/OS::TripleO::\w*Server$/, /OS::Nova::Server/].any?{ |role| r[:resource_category] =~ role}
           end
           next unless nova_server
 
