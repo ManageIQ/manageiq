@@ -76,7 +76,7 @@ module ManageIQ::Providers
     end
 
     def networks
-      @networks ||= @network_service.list_networks.body["networks"]
+      @networks ||= uniques(@network_service.list_networks.body["networks"])
     rescue
       []
     end
