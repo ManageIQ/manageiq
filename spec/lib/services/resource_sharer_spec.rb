@@ -78,8 +78,10 @@ describe ResourceSharer do
       let(:resource_to_be_shared) { FactoryGirl.build(:miq_group) }
 
       it "is invalid" do
-        expect(subject).not_to be_valid
-        expect(subject.errors.full_messages).to include(a_string_including("Resource is not sharable"))
+        User.with_user(user) do
+          expect(subject).not_to be_valid
+          expect(subject.errors.full_messages).to include(a_string_including("Resource is not sharable"))
+        end
       end
     end
 
