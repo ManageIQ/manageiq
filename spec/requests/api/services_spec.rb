@@ -743,6 +743,7 @@ describe "Services API" do
 
     it 'returns individual success and failures' do
       user = FactoryGirl.create(:user)
+      user.miq_groups << @user.current_group
       api_basic_authorize(collection_action_identifier(:services, :add_resource))
       request = {
         'action'    => 'add_resource',
@@ -783,6 +784,7 @@ describe "Services API" do
 
     it 'requires the resource to respond to add_to_service' do
       user = FactoryGirl.create(:user)
+      user.miq_groups << @user.current_group
       api_basic_authorize(collection_action_identifier(:services, :add_resource))
       request = {
         'action'   => 'add_resource',
