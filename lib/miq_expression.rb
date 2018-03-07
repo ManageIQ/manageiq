@@ -919,6 +919,7 @@ class MiqExpression
       model.constantize.try(:refresh_dynamic_metric_columns)
       md = model_details(model, :include_model => false, :include_tags => true).select do |c|
         allowed_suffixes = ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES
+        allowed_suffixes += ReportController::Reports::Editor::METERING_VM_ALLOWED_FIELD_SUFFIXES if model.starts_with?('Metering')
         c.last.ends_with?(*allowed_suffixes)
       end
       td = if TAG_CLASSES.include?(cb_model)
