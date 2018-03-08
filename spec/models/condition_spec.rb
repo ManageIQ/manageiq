@@ -37,26 +37,27 @@ describe Condition do
     end
 
     context "expression with <find>" do
+      let(:cluster) {  FactoryGirl.create(:ems_cluster) }
       before do
-        @cluster = FactoryGirl.create(:ems_cluster)
-        @host1 = FactoryGirl.create(:host, :ems_cluster => @cluster, :name => "XXX")
-        @host2 = FactoryGirl.create(:host, :ems_cluster => @cluster)
+
+        @host1 = FactoryGirl.create(:host, :ems_cluster => cluster, :name => "XXX")
+        @host2 = FactoryGirl.create(:host, :ems_cluster => cluster)
         @rp1 = FactoryGirl.create(:resource_pool)
         @rp2 = FactoryGirl.create(:resource_pool)
 
-        @cluster.with_relationship_type("ems_metadata") { @cluster.add_child @rp1 }
+        cluster.with_relationship_type("ems_metadata") { cluster.add_child @rp1 }
         @rp1.with_relationship_type("ems_metadata") { @rp1.add_child @rp2 }
 
-        @vm1 = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_cluster => @cluster)
+        @vm1 = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_cluster => cluster)
         @vm1.with_relationship_type("ems_metadata") { @vm1.parent = @rp1 }
 
-        @vm2 = FactoryGirl.create(:vm_vmware, :host => @host2, :ems_cluster => @cluster)
+        @vm2 = FactoryGirl.create(:vm_vmware, :host => @host2, :ems_cluster => cluster)
         @vm2.with_relationship_type("ems_metadata") { @vm2.parent = @rp2 }
       end
 
       it "valid expression" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2</check></find>"
-        expect(Condition.subst(expr, @cluster)).to be_truthy
+        expect(Condition.subst(expr, cluster)).to be_truthy
       end
 
       it "has_one support" do
@@ -66,32 +67,32 @@ describe Condition do
 
       it "invalid expression should not raise security error because it is now parsed and not evaluated" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2; system('ls /etc')</check></find>"
-        expect { Condition.subst(expr, @cluster) }.not_to raise_error
+        expect { Condition.subst(expr, cluster) }.not_to raise_error
       end
 
       it "tests all allowed operators in find/check expression clause" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> == 0</check></find>"
-        expect(Condition.subst(expr, @cluster)).to eq('false')
+        expect(Condition.subst(expr, cluster)).to eq('false')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> > 0</check></find>"
-        expect(Condition.subst(expr, @cluster)).to eq('true')
+        expect(Condition.subst(expr, cluster)).to eq('true')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 0</check></find>"
-        expect(Condition.subst(expr, @cluster)).to eq('true')
+        expect(Condition.subst(expr, cluster)).to eq('true')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'true'</search><check mode=count><count> < 0</check></find>"
-        expect(Condition.subst(expr, @cluster)).to eq('false')
+        expect(Condition.subst(expr, cluster)).to eq('false')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> <= 0</check></find>"
-        expect(Condition.subst(expr, @cluster)).to eq('false')
+        expect(Condition.subst(expr, cluster)).to eq('false')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> != 0</check></find>"
-        expect(Condition.subst(expr, @cluster)).to eq('true')
+        expect(Condition.subst(expr, cluster)).to eq('true')
       end
 
       it "rejects and expression with an illegal operator" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> !! 0</check></find>"
-        expect { expect(Condition.subst(expr, @cluster)).to eq('false') }.to raise_error(RuntimeError, "Illegal operator, '!!'")
+        expect { expect(Condition.subst(expr, cluster)).to eq('false') }.to raise_error(RuntimeError, "Illegal operator, '!!'")
       end
     end
 
