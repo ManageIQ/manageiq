@@ -82,17 +82,18 @@ describe EmsEvent do
   end
 
   context "with availability zones" do
+    let(:vm) { FactoryGirl.create(:vm_openstack, :ems_ref => "vm1")}
+    
     before :each do
       @zone = FactoryGirl.create(:small_environment)
       @ems  = @zone.ext_management_systems.first
-      @vm = FactoryGirl.create(:vm_openstack, :ems_ref => "vm1")
-      @availability_zone = FactoryGirl.create(:availability_zone_openstack, :ems_ref => "az1")
+           @availability_zone = FactoryGirl.create(:availability_zone_openstack, :ems_ref => "az1")
     end
 
     context ".process_availability_zone_in_event!" do
       before :each do
         @event_hash = {
-          :vm_or_template_id => @vm.id
+          :vm_or_template_id => vm.id
         }
       end
 
@@ -110,8 +111,8 @@ describe EmsEvent do
       context "when the event has no availability zone" do
         context "and the VM has an availability zone" do
           before :each do
-            @vm.availability_zone_id = @availability_zone.id
-            @vm.save
+            vm.availability_zone_id = @availability_zone.id
+            vm.save
           end
 
           it "should use the VM's availability zone" do
@@ -182,10 +183,10 @@ describe EmsEvent do
       before :each do
         @event_hash = {
           :event_type  => "event_with_availability_zone",
-          :target_type => @vm.class.name,
-          :target_id   => @vm.id,
+          :target_type => vm.class.name,
+          :target_id   => vm.id,
           :ems_ref     => "first",
-          :vm_ems_ref  => @vm.ems_ref,
+          :vm_ems_ref  => vm.ems_ref,
           :timestamp   => Time.now,
           :ems_id      => @ems.id
         }
@@ -193,10 +194,10 @@ describe EmsEvent do
 
       context "when the event does not have an availability zone" do
         it "should create an event record with the VMs availability zone" do
-          @vm.availability_zone_id = @availability_zone.id
-          @vm.save
+          vm.availability_zone_id = @availability_zone.id
+          vm.save
 
-          new_event = EmsEvent.add(@vm.ems_id, @event_hash)
+          new_event = EmsEvent.add(vm.ems_id, @event_hash)
           expect(new_event.availability_zone_id).to eq @availability_zone.id
         end
       end
@@ -204,10 +205,10 @@ describe EmsEvent do
       context "when the event does contain an availability zone" do
         it "should use the availability zone from the event" do
           @event_hash[:availability_zone_ems_ref] = @availability_zone.ems_ref
-          @vm.availability_zone_id = nil
-          @vm.save
+          vm.availability_zone_id = nil
+          vm.save
 
-          new_event = EmsEvent.add(@vm.ems_id, @event_hash)
+          new_event = EmsEvent.add(vm.ems_id, @event_hash)
           expect(new_event.availability_zone_id).to eq @availability_zone.id
         end
       end
