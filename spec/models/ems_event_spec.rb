@@ -44,23 +44,20 @@ describe EmsEvent do
 
     context "on pod" do
       let(:pod_event_hash) { event_hash.merge(:container_group_ems_ref => ems_ref) }
-
-      before :each do
-        @container_group = FactoryGirl.create(:container_group,
+      let!(:container_group) { FactoryGirl.create(:container_group,
                                               :ext_management_system => ems,
                                               :container_project     => container_project,
                                               :name                  => "Test Group",
-                                              :ems_ref               => ems_ref)
-      end
+                                              :ems_ref               => ems_ref)}
 
       it "process_container_entities_in_event! links pod id to event" do
         EmsEvent.process_container_entities_in_event!(pod_event_hash)
-        expect(pod_event_hash[:container_group_id]).to eq @container_group.id
+        expect(pod_event_hash[:container_group_id]).to eq container_group.id
       end
 
       it "constructed event has .container_group" do
         event = EmsEvent.add(ems.id, pod_event_hash)
-        expect(event.container_group).to eq @container_group
+        expect(event.container_group).to eq container_group
       end
     end
 
