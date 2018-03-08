@@ -25,17 +25,14 @@ describe EmsEvent do
 
     context "on node" do
       let(:node_event_hash) { @event_hash.merge(:container_node_ems_ref => ems_ref) }
-
-      before :each do
-        @container_node = FactoryGirl.create(:container_node,
+      let!(:container_node) { FactoryGirl.create(:container_node,
                                              :ext_management_system => @ems,
                                              :name                  => "Test Node",
-                                             :ems_ref               => ems_ref)
-      end
+					     :ems_ref               => ems_ref)}
 
       it "process_container_entities_in_event! links node id to event" do
         EmsEvent.process_container_entities_in_event!(node_event_hash)
-        expect(node_event_hash[:container_node_id]).to eq @container_node.id
+        expect(node_event_hash[:container_node_id]).to eq container_node.id
       end
 
       it "process_container_entities_in_event! doesn't clear event ems_ref" do
@@ -45,7 +42,7 @@ describe EmsEvent do
 
       it "constructed event has .container_node" do
         event = EmsEvent.add(@ems.id, node_event_hash)
-        expect(event.container_node).to eq @container_node
+        expect(event.container_node).to eq container_node
       end
     end
 
