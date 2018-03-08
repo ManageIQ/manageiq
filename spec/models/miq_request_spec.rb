@@ -248,6 +248,49 @@ describe MiqRequest do
 
           request.deny(fred, reason)
         end
+
+        describe ".with_reason_like" do
+          let(:reason) { %w(abcd abcde cde) }
+          subject { described_class.with_reason_like(pattern).count }
+
+          before { request.miq_approvals = approvals }
+
+          ["ab*", "*bc*", "*de"].each do |pattern|
+            context "'#{pattern}'" do
+              let(:pattern) { pattern }
+              it { is_expected.to eq(2) }
+            end
+          end
+
+          context "integrates well with .created_recently" do
+            # when joined with MiqApprovals, there are two `created_on` columns
+            let(:pattern) { "*c*" }
+            subject { described_class.with_reason_like(pattern).created_recently(days_ago).distinct.count }
+
+            before do
+              FactoryGirl.create(:vm_migrate_request, :requester => fred, :created_on => 10.days.ago, :miq_approvals => approvals)
+              FactoryGirl.create(:vm_migrate_request, :requester => fred, :created_on => 14.days.ago, :miq_approvals => approvals)
+              FactoryGirl.create(:vm_migrate_request, :requester => fred, :created_on => 3.days.ago,  :miq_approvals => approvals)
+            end
+
+            {
+              7  => 2,
+              11 => 3,
+              15 => 4
+            }.each do |days, count|
+              context "filtering #{days} ago" do
+                let(:days_ago) { days }
+                it { is_expected.to eq(count) }
+              end
+            end
+          end
+
+          def approvals
+            reason.collect do |r|
+              FactoryGirl.create(:miq_approval, :approver => fred, :reason => r, :stamper => barney, :stamped_on => Time.now.utc)
+            end
+          end
+        end
       end
     end
 
