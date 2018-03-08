@@ -97,20 +97,20 @@ describe Condition do
     end
 
     context "expression with <registry>" do
+      let(:vm) {  FactoryGirl.create(:vm_vmware, :registry_items => [@reg_num, @reg_string]) }
       before do
         @reg_num    = FactoryGirl.create(:registry_item, :name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall", :data => 0)
         @reg_string = FactoryGirl.create(:registry_item, :name => "HKLM\\SOFTWARE\\Microsoft\\Ole : EnableDCOM", :data => 'y')
-        @vm = FactoryGirl.create(:vm_vmware, :registry_items => [@reg_num, @reg_string])
       end
 
       it "string type registry key data is single quoted" do
         expr = "<registry>#{@reg_string.name}</registry>"
-        expect(Condition.subst(expr, @vm)).to eq('"y"')
+        expect(Condition.subst(expr, vm)).to eq('"y"')
       end
 
       it "numerical type registry key data is single quoted" do
         expr = "<registry>#{@reg_num.name}</registry>"
-        expect(Condition.subst(expr, @vm)).to eq('"0"')
+        expect(Condition.subst(expr, vm)).to eq('"0"')
       end
     end
 
