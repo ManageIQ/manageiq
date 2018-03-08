@@ -1,11 +1,5 @@
 describe CustomButton do
   context "with no buttons" do
-    before(:each) do
-      @miq_server = EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
-
-      allow_any_instance_of(User).to receive(:role).and_return("admin")
-      @user = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
-    end
 
     describe '#evaluate_enablement_expression_for' do
       let(:miq_expression) { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => 'vm_1'}) }
@@ -80,6 +74,7 @@ describe CustomButton do
         before(:each) do
           @vm    = FactoryGirl.create(:vm_vmware)
           @user2 = FactoryGirl.create(:user_with_group)
+          EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
         end
 
         it "calls automate without saved User and MiqServer" do
