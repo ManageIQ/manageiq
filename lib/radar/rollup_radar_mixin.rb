@@ -3,12 +3,7 @@ class Metric
   belongs_to :container, :class_name => "Container", :foreign_type => "Container", :foreign_key => :resource_id
 end
 
-ContainerImage
-class ContainerImage
-  has_many :container_image_labels, -> { where(:section => %w(labels docker_labels)) }, :class_name => "CustomAttribute", :as => :resource
-end
-
-module RollupRadarMixin
+module Radar::RollupRadarMixin
   extend ActiveSupport::Concern
 
   require 'sqlite3'

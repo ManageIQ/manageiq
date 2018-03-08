@@ -151,6 +151,13 @@ class MiqScheduleWorker::Jobs
     end
   end
 
+  def capture_radar_timer
+    settings = ::Settings.radar
+    return unless settings.enabled == true
+
+    queue_work(:class_name => Radar, :method_name => "capture", :server_guid => MiqServer.my_guid)
+  end
+
   def check_for_stuck_dispatch(threshold_seconds)
     class_n = "JobProxyDispatcher"
     method_n = "dispatch"

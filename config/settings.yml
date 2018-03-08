@@ -1231,6 +1231,7 @@
       :performance_rollup_purging_start_delay: 5.minutes
       :policy_events_purge_interval: 1.day
       :poll: 15.seconds
+      :radar_capture_interval: 1.hour
       :report_result_purge_interval: 1.week
       :server_log_stats_interval: 5.minutes
       :server_stats_interval: 60.seconds
@@ -1267,3 +1268,7 @@
       :count: 1
 :hawkular_tenant_labels:
   :_hawkular_admin: Hawkular Admin
+:radar:
+  :enabled: false
+  :label: com.redhat.component
+  :capture_last: 2.hours

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 require File.expand_path("../../config/environment", __dir__)
 require 'trollop'
-require './tools/radar/rollup_radar_mixin'
-include RollupRadarMixin
 
 opts = Trollop.options(ARGV) do
   banner "USAGE:   #{__FILE__} -h <number of hours back to query metrics>\n" \
@@ -16,23 +14,5 @@ Trollop.die :hours, "is required" unless opts[:hours] || opts[:days_given]
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 
-include RollupRadarMixin
-
-TIME_RANGE = if opts[:days_given]
-               [opts[:days].days.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
-             else
-               [opts[:hours].hours.ago.utc.beginning_of_hour..Time.now.utc.end_of_hour]
-             end
-
-get_hourly_maxes_per_group(opts[:label], TIME_RANGE).each do |row|
-  mr = MaxByLabel.find_or_create_by(:timestamp    => row['hourly_timestamp'],
-                                    :label_name   => row['label_name'],
-                                    :label_value  => row['label_value'],
-                                    :project_name => row['container_project_name'])
-
-  cpu_usage_rate_average = mr.cpu_usage_rate_average || 0
-  next unless cpu_usage_rate_average < row['max_sum_used_cores']
-  mr.update_attributes(
-    :cpu_usage_rate_average => row['max_sum_used_cores']
-  )
-end
+capture_last = opts[:days_given] ? opts[:days].days : opts[:hours].hours
+Radar.capture(capture_last, opts[:label])

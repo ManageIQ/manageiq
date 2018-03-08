@@ -121,6 +121,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       ) { enqueue(:miq_server_queue_update_registration_status) }
     end
 
+    # Capture RADAR
+    every = worker_settings[:radar_capture_interval]
+    scheduler.schedule_every(every, :first_in => every) do
+      enqueue(:capture_radar_timer)
+    end
+
     @schedules[:all]
   end
 

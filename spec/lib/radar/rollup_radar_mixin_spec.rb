@@ -1,7 +1,7 @@
-require './tools/radar/rollup_radar_mixin.rb'
+# require './tools/radar/rollup_radar_mixin.rb'
 
-describe RollupRadarMixin do
-  include RollupRadarMixin
+describe Radar::RollupRadarMixin do
+  include Radar::RollupRadarMixin
 
   let(:ems) { FactoryGirl.create(:ems_openshift, :name => 'OpenShiftProvider') }
 

@@ -4,10 +4,9 @@ OUTPUT_CSV_FILE_PATH = 'report_radar.csv'.freeze
 HEADERS_AND_COLUMNS = ['Hour', 'Date', 'Label of image (key : value)', 'Project', 'Used Cores'].freeze
 
 require File.expand_path("../../config/environment", __dir__)
-require './tools/radar/rollup_radar_mixin'
 require 'trollop'
 
-include RollupRadarMixin
+include Radar::RollupRadarMixin
 
 opts = Trollop.options(ARGV) do
   banner "USAGE:  #{__FILE__} -d <number of days back to query metrics, default is 1 day>\n" \
