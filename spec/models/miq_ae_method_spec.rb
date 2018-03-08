@@ -1,5 +1,5 @@
 describe MiqAeMethod do
-let (:user) { FactoryGirl.create(:user_with_group) }
+  let(:user) { FactoryGirl.create(:user_with_group) }
   it "should return editable as false if the parent namespace/class is not editable" do
     n1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => user.current_tenant)
     c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
@@ -25,10 +25,10 @@ let (:user) { FactoryGirl.create(:user_with_group) }
   end
 
   context "#copy" do
-  let (:d2) { FactoryGirl.create(:miq_ae_domain, :name => "domain2", :priority => 2) }
-  let (:ns1) { FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id) } 
-  let (:m1) { FactoryGirl.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method1", :scope => "instance", :language => "ruby", :location => "inline") } 
-  let (:m2) { FactoryGirl.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method2", :scope => "instance", :language => "ruby", :location => "inline") }
+  let(:d2) { FactoryGirl.create(:miq_ae_domain, :name => "domain2", :priority => 2) }
+  let(:ns1) { FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id) }
+  let(:m1) { FactoryGirl.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method1", :scope => "instance", :language => "ruby", :location => "inline") }
+  let(:m2) { FactoryGirl.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method2", :scope => "instance", :language => "ruby", :location => "inline") }
     before do
       @d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
       @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
