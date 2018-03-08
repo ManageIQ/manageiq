@@ -17,10 +17,7 @@ describe EmsEvent do
 	:ems_ref    => "event-ref",
         :ems_id     => ems.id,
         :event_type => "STUFF_HAPPENED"}}
-
-    before :each do
-      @container_project = FactoryGirl.create(:container_project, :ext_management_system => ems)
-    end
+    let(:container_project) {FactoryGirl.create(:container_project, :ext_management_system => ems)}
 
     context "on node" do
       let(:node_event_hash) { event_hash.merge(:container_node_ems_ref => ems_ref) }
@@ -51,7 +48,7 @@ describe EmsEvent do
       before :each do
         @container_group = FactoryGirl.create(:container_group,
                                               :ext_management_system => ems,
-                                              :container_project     => @container_project,
+                                              :container_project     => container_project,
                                               :name                  => "Test Group",
                                               :ems_ref               => ems_ref)
       end
@@ -73,7 +70,7 @@ describe EmsEvent do
       before :each do
         @container_replicator = FactoryGirl.create(:container_replicator,
                                                    :ext_management_system => ems,
-                                                   :container_project     => @container_project,
+                                                   :container_project     => container_project,
                                                    :name                  => "Test Replicator",
                                                    :ems_ref               => ems_ref)
       end
