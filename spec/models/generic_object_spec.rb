@@ -355,18 +355,15 @@ describe GenericObject do
   end
 
   context "custom buttons" do
-    let(:service_template) { FactoryGirl.create(:service_template) }
-    let(:service) { FactoryGirl.create(:service, :service_template => service_template) }
-
     describe "#custom_actions" do
-      it "returns list of custom actions retrived linked GenericObjectDefinition" do
+      it "returns list of custom actions retrived from linked GenericObjectDefinition" do
         expect(definition).to receive(:custom_actions).with(go)
         go.custom_actions
       end
     end
 
     describe "#custom_action_buttons" do
-      it "returns list of custom action buttons retrived linked GenericObjectDefinition" do
+      it "returns list of custom action buttons retrived from linked GenericObjectDefinition" do
         expect(definition).to receive(:custom_action_buttons).with(go)
         go.custom_action_buttons
       end
