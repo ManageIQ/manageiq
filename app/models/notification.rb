@@ -1,4 +1,6 @@
 class Notification < ApplicationRecord
+  include_concern 'Purging'
+
   belongs_to :notification_type
   belongs_to :initiator, :class_name => User, :foreign_key => 'user_id'
   belongs_to :subject, :polymorphic => true

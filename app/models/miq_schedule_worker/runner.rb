@@ -203,6 +203,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue(:binary_blob_purge_timer)
     end
 
+    every = worker_settings[:notifications_purge_interval]
+    scheduler.schedule_every(every, :first_in => every) do
+      enqueue(:notification_purge_timer)
+    end
+
     every = worker_settings[:vim_performance_states_purge_interval]
     scheduler.schedule_every(every, :first_in => every) do
       enqueue(:vim_performance_states_purge_timer)
