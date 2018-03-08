@@ -206,16 +206,16 @@ describe MiqTask do
   end
 
   context "when there are multiple MiqTasks" do
+    let(:miq_task1) { FactoryGirl.create(:miq_task_plain) }
+    let(:miq_task2) { FactoryGirl.create(:miq_task_plain) }
+    let(:miq_task3) { FactoryGirl.create(:miq_task_plain) }
     before(:each) do
-      @miq_task1 = FactoryGirl.create(:miq_task_plain)
-      @miq_task2 = FactoryGirl.create(:miq_task_plain)
-      @miq_task3 = FactoryGirl.create(:miq_task_plain)
       @zone = 'New York'
       allow(MiqServer).to receive(:my_zone).and_return(@zone)
     end
 
     it "should queue up deletes when calling MiqTask.delete_by_id" do
-      MiqTask.delete_by_id([@miq_task1.id, @miq_task3.id])
+      MiqTask.delete_by_id([miq_task1.id, miq_task3.id])
       expect(MiqQueue.count).to eq(1)
       message = MiqQueue.first
 
@@ -223,13 +223,13 @@ describe MiqTask do
       expect(message.method_name).to eq("destroy")
       expect(message.args).to        be_kind_of(Array)
       expect(message.args.length).to eq(1)
-      expect(message.args.first).to match_array([@miq_task1.id, @miq_task3.id])
+      expect(message.args.first).to match_array([miq_task1.id, miq_task3.id])
       expect(message.zone).to eq(@zone)
     end
 
     it "should queue up proper deletes when calling MiqTask.delete_older" do
-      Timecop.travel(10.minutes.ago) { @miq_task2.state_queued }
-      Timecop.travel(12.minutes.ago) { @miq_task3.state_queued }
+      Timecop.travel(10.minutes.ago) { miq_task2.state_queued }
+      Timecop.travel(12.minutes.ago) { miq_task3.state_queued }
       date_5_minutes_ago = 5.minutes.ago.utc
       condition = "name LIKE 'name LIKE 'Performance rollup for %''"
       MiqTask.delete_older(date_5_minutes_ago, condition)
