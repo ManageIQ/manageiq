@@ -1731,10 +1731,14 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: miq_ae_customization_explorer
+        :identifier:
+        - miq_ae_customization_explorer
+        - svc_catalog_provision
       :post:
       - :name: query
-        :identifier: miq_ae_customization_explorer
+        :identifier:
+        - miq_ae_customization_explorer
+        - svc_catalog_provision
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
       - :name: delete
@@ -1748,7 +1752,9 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: miq_ae_customization_explorer
+        :identifier:
+        - miq_ae_customization_explorer
+        - svc_catalog_provision
       :post:
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
