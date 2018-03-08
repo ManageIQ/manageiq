@@ -1,8 +1,8 @@
 require "tempfile"
 
 describe RegistrationSystem do
-    let(:creds) { {:userid => "SomeUser", :password => "SomePass"} }
-    let(:proxy_creds) { {:userid => "bob", :password => "pass"} }
+  let(:creds) { {:userid => "SomeUser", :password => "SomePass"} }
+  let(:proxy_creds) { {:userid => "bob", :password => "pass"} }
   before do
     EvmSpecHelper.create_guid_miq_server_zone
   end
@@ -67,7 +67,7 @@ describe RegistrationSystem do
     end
 
     it "validate that one queue item was created for this task" do
-      RegistrationSystem.verify_credentials_queue()
+      RegistrationSystem.verify_credentials_queue(creds)
       expect(MiqQueue.count).to eq(1)
     end
 
