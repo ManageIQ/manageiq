@@ -12,13 +12,13 @@ describe EmsEvent do
 
   context "container events" do
     let(:ems_ref) { "test_ems_ref" }
+    let(:ems) {FactoryGirl.create(:ems_kubernetes)}
 
     before :each do
-      @ems = FactoryGirl.create(:ems_kubernetes)
-      @container_project = FactoryGirl.create(:container_project, :ext_management_system => @ems)
+      @container_project = FactoryGirl.create(:container_project, :ext_management_system => ems)
       @event_hash = {
         :ems_ref    => "event-ref",
-        :ems_id     => @ems.id,
+        :ems_id     => ems.id,
         :event_type => "STUFF_HAPPENED"
       }
     end
@@ -26,7 +26,7 @@ describe EmsEvent do
     context "on node" do
       let(:node_event_hash) { @event_hash.merge(:container_node_ems_ref => ems_ref) }
       let!(:container_node) { FactoryGirl.create(:container_node,
-                                             :ext_management_system => @ems,
+                                             :ext_management_system => ems,
                                              :name                  => "Test Node",
 					     :ems_ref               => ems_ref)}
 
@@ -41,7 +41,7 @@ describe EmsEvent do
       end
 
       it "constructed event has .container_node" do
-        event = EmsEvent.add(@ems.id, node_event_hash)
+        event = EmsEvent.add(ems.id, node_event_hash)
         expect(event.container_node).to eq container_node
       end
     end
@@ -51,7 +51,7 @@ describe EmsEvent do
 
       before :each do
         @container_group = FactoryGirl.create(:container_group,
-                                              :ext_management_system => @ems,
+                                              :ext_management_system => ems,
                                               :container_project     => @container_project,
                                               :name                  => "Test Group",
                                               :ems_ref               => ems_ref)
@@ -63,7 +63,7 @@ describe EmsEvent do
       end
 
       it "constructed event has .container_group" do
-        event = EmsEvent.add(@ems.id, pod_event_hash)
+        event = EmsEvent.add(ems.id, pod_event_hash)
         expect(event.container_group).to eq @container_group
       end
     end
@@ -73,7 +73,7 @@ describe EmsEvent do
 
       before :each do
         @container_replicator = FactoryGirl.create(:container_replicator,
-                                                   :ext_management_system => @ems,
+                                                   :ext_management_system => ems,
                                                    :container_project     => @container_project,
                                                    :name                  => "Test Replicator",
                                                    :ems_ref               => ems_ref)
@@ -85,7 +85,7 @@ describe EmsEvent do
       end
 
       it "constructed event has .container_replicator" do
-        event = EmsEvent.add(@ems.id, repl_event_hash)
+        event = EmsEvent.add(ems.id, repl_event_hash)
         expect(event.container_replicator).to eq @container_replicator
       end
     end
