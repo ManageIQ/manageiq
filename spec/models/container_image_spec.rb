@@ -1,26 +1,25 @@
 describe ContainerImage do
+  let(:reg) { ContainterImageRegustry.new(:name => "docker.io", :host => "docker.io", :port => "1234")}
+  let(:baseImage) {ContainterImage.new(:name => "fedora")}
+
   it "#full_name" do
-    image = ContainerImage.new(:name => "fedora")
-    expect(image.full_name).to eq("fedora")
+    expect(baseImage.full_name).to eq("fedora")
 
-    image.tag = "v1"
-    expect(image.full_name).to eq("fedora:v1")
+    baseImage.tag = "v1"
+    expect(baseImage.full_name).to eq("fedora:v1")
 
-    reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io", :port => "1234")
-    image.container_image_registry = reg
-    expect(image.full_name).to eq("docker.io:1234/fedora:v1")
+    baseImage.container_image_registry = reg
+    expect(baseImage.full_name).to eq("docker.io:1234/fedora:v1")
 
-    image.image_ref = "docker-pullable://registry/repo/name@id"
-    expect(image.full_name).to eq("registry/repo/name@id")
+    baseImage.image_ref = "docker-pullable://registry/repo/name@id"
+    expect(baseImage.full_name).to eq("registry/repo/name@id")
   end
 
   it "#display_registry" do
-    image = ContainerImage.new(:name => "fedora")
-    expect(image.display_registry).to eq("Unknown image source")
+    expect(baseImage.display_registry).to eq("Unknown image source")
 
-    reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io", :port => "1234")
-    image.container_image_registry = reg
-    expect(image.display_registry).to eq("docker.io:1234")
+    baseImage.container_image_registry = reg
+    expect(baseImage.display_registry).to eq("docker.io:1234")
   end
 
   it "#docker_id" do
