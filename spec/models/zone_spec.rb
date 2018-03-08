@@ -191,4 +191,14 @@ describe Zone do
       ).to eq(1)
     end
   end
+
+  context "validate multi region" do
+    let!(:other_region_id)         { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let!(:default_in_other_region) { described_class.create(:name => "default", :description => "Default Zone", :id => other_region_id) }
+    let!(:default_in_my_region)    { described_class.create(:name => "default", :description => "Default Zone") }
+
+    it ".default_zone returns a zone in the current region" do
+      expect(described_class.default_zone).to eq(default_in_my_region)
+    end
+  end
 end

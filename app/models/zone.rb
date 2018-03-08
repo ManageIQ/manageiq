@@ -69,7 +69,7 @@ class Zone < ApplicationRecord
   end
 
   def self.default_zone
-    find_by(:name => "default")
+    in_my_region.find_by(:name => "default")
   end
 
   def remote_cockpit_ws_miq_server
