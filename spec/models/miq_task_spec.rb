@@ -1,6 +1,6 @@
 describe MiqTask do
   context "when I add an MiqTask" do
-    let (:miq_task) { FactoryGirl.create(:miq_task_plain) }
+    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
 
     it "should initialize properly" do
       expect(miq_task.state).to eq(MiqTask::STATE_INITIALIZED)
