@@ -66,23 +66,20 @@ describe EmsEvent do
 
     context "on replicator" do
       let(:repl_event_hash) { event_hash.merge(:container_replicator_ems_ref => ems_ref) }
-
-      before :each do
-        @container_replicator = FactoryGirl.create(:container_replicator,
+      let!(:container_replicator) {FactoryGirl.create(:container_replicator,
                                                    :ext_management_system => ems,
                                                    :container_project     => container_project,
                                                    :name                  => "Test Replicator",
-                                                   :ems_ref               => ems_ref)
-      end
+                                                   :ems_ref               => ems_ref)}
 
       it "process_container_entities_in_event! links replicator id to event" do
         EmsEvent.process_container_entities_in_event!(repl_event_hash)
-        expect(repl_event_hash[:container_replicator_id]).to eq @container_replicator.id
+        expect(repl_event_hash[:container_replicator_id]).to eq container_replicator.id
       end
 
       it "constructed event has .container_replicator" do
         event = EmsEvent.add(ems.id, repl_event_hash)
-        expect(event.container_replicator).to eq @container_replicator
+        expect(event.container_replicator).to eq container_replicator
       end
     end
   end
