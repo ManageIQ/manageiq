@@ -264,19 +264,19 @@ describe MiqTask do
   end
 
   describe '#results_ready?' do
-    before(:each) { @miq_task = FactoryGirl.create(:miq_task_plain) }
+    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
     it 'returns false when task_results are missing' do
-      expect(@miq_task.task_results).to be_blank
-      expect(@miq_task.status).to eq(MiqTask::STATUS_OK)
-      expect(@miq_task.results_ready?).to be_falsey
+      expect(miq_task.task_results).to be_blank
+      expect(miq_task.status).to eq(MiqTask::STATUS_OK)
+      expect(miq_task.results_ready?).to be_falsey
     end
     it 'returns false when status is error' do
-      @miq_task.error('bang')
-      expect(@miq_task.results_ready?).to be_falsey
+      miq_task.error('bang')
+      expect(miq_task.results_ready?).to be_falsey
     end
     it 'returns true when status is ok and results are not blank' do
-      @miq_task.task_results = 'x'
-      expect(@miq_task.results_ready?).to be_truthy
+      miq_task.task_results = 'x'
+      expect(miq_task.results_ready?).to be_truthy
     end
   end
 
