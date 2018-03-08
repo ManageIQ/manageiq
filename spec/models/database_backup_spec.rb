@@ -1,13 +1,14 @@
 describe DatabaseBackup do
   context "region" do
+    let!(:region) { FactoryGirl.create(:miq_region, :region => 3) }
+
     before(:each) do
-      @region = FactoryGirl.create(:miq_region, :region => 3)
-      allow(described_class).to receive_messages(:my_region_number => @region.region)
+      allow(described_class).to receive_messages(:my_region_number => region.region)
     end
 
     it "should set region_name based on my_region_number if database backup has a region" do
       backup = FactoryGirl.create(:database_backup)
-      expect(backup.region_name).to eq("region_#{@region.region}")
+      expect(backup.region_name).to eq("region_#{region.region}")
     end
 
     it "should set region_name to region_0 if region is unknown" do
@@ -18,7 +19,7 @@ describe DatabaseBackup do
     end
 
     it "should set class method region_name to MiqRegion.my_region.region" do
-      expect(DatabaseBackup.region_name).to eq("region_#{@region.region}")
+      expect(DatabaseBackup.region_name).to eq("region_#{region.region}")
     end
   end
 
