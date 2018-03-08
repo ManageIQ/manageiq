@@ -13,18 +13,17 @@ describe EmsEvent do
   context "container events" do
     let(:ems_ref) { "test_ems_ref" }
     let(:ems) {FactoryGirl.create(:ems_kubernetes)}
+    let(:event_hash){{
+	:ems_ref    => "event-ref",
+        :ems_id     => ems.id,
+        :event_type => "STUFF_HAPPENED"}}
 
     before :each do
       @container_project = FactoryGirl.create(:container_project, :ext_management_system => ems)
-      @event_hash = {
-        :ems_ref    => "event-ref",
-        :ems_id     => ems.id,
-        :event_type => "STUFF_HAPPENED"
-      }
     end
 
     context "on node" do
-      let(:node_event_hash) { @event_hash.merge(:container_node_ems_ref => ems_ref) }
+      let(:node_event_hash) { event_hash.merge(:container_node_ems_ref => ems_ref) }
       let!(:container_node) { FactoryGirl.create(:container_node,
                                              :ext_management_system => ems,
                                              :name                  => "Test Node",
@@ -47,7 +46,7 @@ describe EmsEvent do
     end
 
     context "on pod" do
-      let(:pod_event_hash) { @event_hash.merge(:container_group_ems_ref => ems_ref) }
+      let(:pod_event_hash) { event_hash.merge(:container_group_ems_ref => ems_ref) }
 
       before :each do
         @container_group = FactoryGirl.create(:container_group,
@@ -69,7 +68,7 @@ describe EmsEvent do
     end
 
     context "on replicator" do
-      let(:repl_event_hash) { @event_hash.merge(:container_replicator_ems_ref => ems_ref) }
+      let(:repl_event_hash) { event_hash.merge(:container_replicator_ems_ref => ems_ref) }
 
       before :each do
         @container_replicator = FactoryGirl.create(:container_replicator,
