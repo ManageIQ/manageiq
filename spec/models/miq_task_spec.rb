@@ -209,9 +209,9 @@ describe MiqTask do
     let(:miq_task1) { FactoryGirl.create(:miq_task_plain) }
     let(:miq_task2) { FactoryGirl.create(:miq_task_plain) }
     let(:miq_task3) { FactoryGirl.create(:miq_task_plain) }
+    let(:zone) { 'New York' }
     before(:each) do
-      @zone = 'New York'
-      allow(MiqServer).to receive(:my_zone).and_return(@zone)
+      allow(MiqServer).to receive(:my_zone).and_return(zone)
     end
 
     it "should queue up deletes when calling MiqTask.delete_by_id" do
@@ -224,7 +224,7 @@ describe MiqTask do
       expect(message.args).to        be_kind_of(Array)
       expect(message.args.length).to eq(1)
       expect(message.args.first).to match_array([miq_task1.id, miq_task3.id])
-      expect(message.zone).to eq(@zone)
+      expect(message.zone).to eq(zone)
     end
 
     it "should queue up proper deletes when calling MiqTask.delete_older" do
@@ -243,7 +243,7 @@ describe MiqTask do
       expect(message.args.length).to eq(2)
       expect(message.args.first).to eq(date_5_minutes_ago)
       expect(message.args.second).to eq(condition)
-      expect(message.zone).to eq(@zone)
+      expect(message.zone).to eq(zone)
 
       message.destroy
 
@@ -259,7 +259,7 @@ describe MiqTask do
       expect(message.args.length).to eq(2)
       expect(message.args.first).to eq(date_11_minutes_ago)
       expect(message.args.second).to be nil
-      expect(message.zone).to eq(@zone)
+      expect(message.zone).to eq(zone)
     end
   end
 
