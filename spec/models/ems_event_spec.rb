@@ -91,20 +91,18 @@ describe EmsEvent do
     end
 
     context ".process_availability_zone_in_event!" do
-      before :each do
-        @event_hash = {
+      let(:event_hash){{
           :vm_or_template_id => vm.id
-        }
-      end
+        }}
 
       context "when the event has an availability zone" do
         before :each do
-          @event_hash[:availability_zone_ems_ref] = @availability_zone.ems_ref
+          event_hash[:availability_zone_ems_ref] = @availability_zone.ems_ref
         end
 
         it "should use the availability zone from the event" do
-          EmsEvent.process_availability_zone_in_event!(@event_hash)
-          expect(@event_hash[:availability_zone_id]).to eq @availability_zone.id
+          EmsEvent.process_availability_zone_in_event!(event_hash)
+          expect(event_hash[:availability_zone_id]).to eq @availability_zone.id
         end
       end
 
@@ -116,15 +114,15 @@ describe EmsEvent do
           end
 
           it "should use the VM's availability zone" do
-            EmsEvent.process_availability_zone_in_event!(@event_hash)
-            expect(@event_hash[:availability_zone_id]).to eq @availability_zone.id
+            EmsEvent.process_availability_zone_in_event!(event_hash)
+            expect(event_hash[:availability_zone_id]).to eq @availability_zone.id
           end
         end
 
         context "and the VM does not have an availability zone" do
           it "should not put an availability zone in the event hash" do
-            EmsEvent.process_availability_zone_in_event!(@event_hash)
-            expect(@event_hash[:availability_zone_id]).to be_nil
+            EmsEvent.process_availability_zone_in_event!(event_hash)
+            expect(event_hash[:availability_zone_id]).to be_nil
           end
         end
       end
