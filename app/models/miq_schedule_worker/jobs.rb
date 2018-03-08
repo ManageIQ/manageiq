@@ -95,6 +95,10 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "EventStream", :method_name => "purge_timer", :zone => nil)
   end
 
+  def notification_purge_timer
+    queue_work(:class_name => "Notification", :method_name => "purge_timer", :zone => nil)
+  end
+
   def policy_event_purge_timer
     queue_work(:class_name => "PolicyEvent", :method_name => "purge_timer", :zone => nil)
   end
