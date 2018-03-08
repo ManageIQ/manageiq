@@ -403,6 +403,12 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
       virtual = calculate_adjusted_virtual_memory(vm, memory)
       guaranteed = calculate_adjusted_guaranteed_memory(vm, memory)
 
+      # The required memory cannot exceed the max configured memory of the VM. Therefore, we'll increase the max
+      # memory up to 1TB or to the required limit, to allow a successful update for the VM.
+      # Once 'max' memory attribute will be introduced, this code should be replaced with the specified max memory.
+      supports_max = ext_management_system.version_at_least?('4.1')
+      max = calculate_max_memory(vm, memory) if supports_max
+
       # If the virtual machine is running we need to update first the configuration that will be used during the
       # next run, as the guaranteed memory can't be changed for the running virtual machine.
       if vm.status == OvirtSDK4::VmStatus::UP
@@ -410,8 +416,9 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
           OvirtSDK4::Vm.new(
             :memory        => virtual,
             :memory_policy => {
-              :guaranteed => guaranteed
-            }
+              :guaranteed => guaranteed,
+              :max        => (max if supports_max)
+            }.compact
           ),
           :next_run => true
         )
@@ -425,8 +432,9 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
           OvirtSDK4::Vm.new(
             :memory        => virtual,
             :memory_policy => {
-              :guaranteed => guaranteed
-            }
+              :guaranteed => guaranteed,
+              :max        => (max if supports_max)
+            }.compact
           )
         )
       end
@@ -495,6 +503,27 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
 
       # Return the adjusted guaranteed memory:
       adjusted
+    end
+
+    #
+    # Adjusts the max memory of a virtual machine so that it satisfies the constraints imposed by the
+    # engine. The max memory is supported since version 4.1 and limited to 1TB according to the UI limits
+    # defined for ovirt provider.
+    #
+    # @param vm [OvirtSDK4::Vm] The current representation of the virtual machine.
+    # @param memory [Integer] The new amount of memory requested by the user.
+    # @return [Integer] The amount of max memory to request so that it satisfies the constraints imposed by
+    #   the engine.
+    #
+    def calculate_max_memory(vm, memory)
+      max = vm.memory_policy&.max || memory
+      if memory >= 1.terabyte
+        max = memory
+      else
+        max = [memory * 4, 1.terabyte].min if memory > max
+      end
+
+      max
     end
 
     #

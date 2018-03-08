@@ -113,8 +113,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V
         allow(@vm_proxy).to receive(:memory_policy).and_return(@memory_policy)
         allow(@vm_proxy).to receive(:name).and_return("vm_name")
         @memory_spec = { :memory => memory, :memory_policy => { :guaranteed => guaranteed } }
-      end
 
+      end
       subject(:reconfigure_vm) { @ems.vm_reconfigure(@vm, :spec => spec) }
       let(:spec) { { 'memoryMB' => 8.gigabytes / 1.megabyte } }
       let(:memory) { 8.gigabytes }
@@ -173,6 +173,70 @@ describe ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V
             expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(mod_memory_spec))
             reconfigure_vm
           end
+        end
+      end
+    end
+
+    describe "max memory" do
+      before do
+        @memory_policy = double("memory_policy")
+        allow(@memory_policy).to receive(:guaranteed).and_return(2.gigabytes)
+        allow(@vm_proxy).to receive(:status).and_return(OvirtSDK4::VmStatus::DOWN)
+        allow(@vm_proxy).to receive(:memory).and_return(0)
+        allow(@vm_proxy).to receive(:memory_policy).and_return(@memory_policy)
+        allow(@vm_proxy).to receive(:name).and_return("vm_name")
+      end
+
+      subject(:reconfigure_vm) { @ems.vm_reconfigure(@vm, :spec => spec) }
+
+      let(:spec) { { 'memoryMB' => 8.gigabytes / 1.megabyte } }
+      let(:memory) { 8.gigabytes }
+      let(:max) { 6.gigabytes }
+
+      context "api version supports max" do
+        before do
+          allow(@ems).to receive(:version_at_least?).with('4.1').and_return(true)
+          @memory_spec = { :memory => memory, :memory_policy => { :guaranteed => 2.gigabyte, :max => max } }
+        end
+
+        context "memory limit is smaller than 1TB" do
+          it "sets the max memory 4 times of the required limit" do
+            allow(@memory_policy).to receive(:max).and_return(6.gigabytes)
+
+            mod_memory_policy = { :guaranteed => 2.gigabyte, :max => 32.gigabytes }
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => 8.gigabytes, :memory_policy => mod_memory_policy))
+            reconfigure_vm
+          end
+
+          it "doesn't change the max if greater the max is greater than the limit" do
+            allow(@memory_policy).to receive(:max).and_return(16.gigabytes)
+
+            mod_memory_policy = { :guaranteed => 2.gigabyte, :max => 16.gigabytes }
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => 8.gigabytes, :memory_policy => mod_memory_policy))
+            reconfigure_vm
+          end
+        end
+
+        context "memory limit is greater than 1TB" do
+          let(:spec) { { 'memoryMB' => 2.terabytes / 1.megabyte } }
+
+          it "sets the max memory as the limit" do
+            allow(@memory_policy).to receive(:max).and_return(16.gigabytes)
+
+            mod_memory_policy = { :guaranteed => 2.gigabyte, :max => 2.terabytes }
+            expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => 2.terabytes, :memory_policy => mod_memory_policy))
+            reconfigure_vm
+          end
+        end
+      end
+
+      context "api version doesn't support max" do
+        it "doesn't pass the max in the request" do
+          allow(@ems).to receive(:version_at_least?).with('4.1').and_return(false)
+
+          mod_memory_policy = { :guaranteed => 2.gigabyte }
+          expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => 8.gigabytes, :memory_policy => mod_memory_policy))
+          reconfigure_vm
         end
       end
     end
