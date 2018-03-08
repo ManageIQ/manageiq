@@ -144,64 +144,62 @@ describe MiqGroup do
   end
 
   context "Testing active VM aggregation" do
+    let (:miq_group) { FactoryGirl.create(:miq_group, :description => "test group") }
+    let (:ram_size) { 1024 }
+    let (:disk_size) { 1000000 }
+    let (:num_cpu) { 2 }
+    let (:ems) { FactoryGirl.create(:ems_vmware, :name => "test_vcenter") }
+    let (:storage) { FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS") }
     before :each do
-      @ram_size = 1024
-      @disk_size = 1000000
-      @num_cpu = 2
-
-      @miq_group = FactoryGirl.create(:miq_group, :description => "test group")
-      @ems = FactoryGirl.create(:ems_vmware, :name => "test_vcenter")
-      @storage  = FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
-
-      @hw1 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw2 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw3 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw4 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
-      @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
-      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
-      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
+      @hw1 = FactoryGirl.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
+      @hw2 = FactoryGirl.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
+      @hw3 = FactoryGirl.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
+      @hw4 = FactoryGirl.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
+      @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw1.id)
+      @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw2.id)
+      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw3.id)
+      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryGirl.create(:vm_vmware,
                                       :name         => "Active VM",
-                                      :miq_group_id => @miq_group.id,
-                                      :ems_id       => @ems.id,
-                                      :storage_id   => @storage.id,
+                                      :miq_group_id => miq_group.id,
+                                      :ems_id       => ems.id,
+                                      :storage_id   => storage.id,
                                       :hardware     => @hw1)
       @archived_vm = FactoryGirl.create(:vm_vmware,
                                         :name         => "Archived VM",
-                                        :miq_group_id => @miq_group.id,
+                                        :miq_group_id => miq_group.id,
                                         :hardware     => @hw2)
       @orphaned_vm = FactoryGirl.create(:vm_vmware,
                                         :name         => "Orphaned VM",
-                                        :miq_group_id => @miq_group.id,
-                                        :storage_id   => @storage.id,
+                                        :miq_group_id => miq_group.id,
+                                        :storage_id   => storage.id,
                                         :hardware     => @hw3)
       @retired_vm = FactoryGirl.create(:vm_vmware,
                                        :name         => "Retired VM",
-                                       :miq_group_id => @miq_group.id,
+                                       :miq_group_id => miq_group.id,
                                        :retired      => true,
                                        :hardware     => @hw4)
     end
 
     it "#active_vms" do
-      expect(@miq_group.active_vms).to match_array([@active_vm])
+      expect(miq_group.active_vms).to match_array([@active_vm])
     end
 
     it "#allocated_memory" do
-      expect(@miq_group.allocated_memory).to eq(@ram_size.megabyte)
+      expect(miq_group.allocated_memory).to eq(ram_size.megabyte)
     end
 
     it "#allocated_vcpu" do
-      expect(@miq_group.allocated_vcpu).to eq(@num_cpu)
+      expect(miq_group.allocated_vcpu).to eq(num_cpu)
     end
 
     it "#allocated_storage" do
-      expect(@miq_group.allocated_storage).to eq(@disk_size)
+      expect(miq_group.allocated_storage).to eq(disk_size)
     end
 
     it "#provisioned_storage" do
-      expect(@miq_group.provisioned_storage).to eq(@ram_size.megabyte + @disk_size)
+      expect(miq_group.provisioned_storage).to eq(ram_size.megabyte + disk_size)
     end
 
     %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|
@@ -211,14 +209,14 @@ describe MiqGroup do
     end
 
     it "when the virtual column is nil" do
-      hw = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
+      hw = FactoryGirl.create(:hardware, :cpu_sockets => num_cpu, :memory_mb => ram_size)
       FactoryGirl.create(:vm_vmware,
                          :name         => "VM with no disk",
-                         :miq_group_id => @miq_group.id,
-                         :ems_id       => @ems.id,
-                         :storage_id   => @storage.id,
+                         :miq_group_id => miq_group.id,
+                         :ems_id       => ems.id,
+                         :storage_id   => storage.id,
                          :hardware     => hw)
-      expect(@miq_group.allocated_storage).to eq(@disk_size)
+      expect(miq_group.allocated_storage).to eq(disk_size)
     end
   end
 
