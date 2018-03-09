@@ -453,7 +453,7 @@ describe Service do
                                   :method_name => "generate_chargeback_report",
                                   :args        => {:report_source => "Test Run"})
         end
-        @service.queue_chargeback_report_generation(:report_source => "Test Run")
+        expect(@service.queue_chargeback_report_generation(:report_source => "Test Run")).to be_kind_of(MiqTask)
       end
     end
 
