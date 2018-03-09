@@ -847,6 +847,26 @@ describe MiqReport do
     end
   end
 
+  describe "#column_is_hidden?" do
+    let(:report) do
+      MiqReport.new(
+        :name        => "VMs",
+        :title       => "Virtual Machines",
+        :db          => "Vm",
+        :cols        => %w(name guid hostname ems_ref vendor),
+        :col_order   => %w(name hostname vendor guid emf_ref),
+        :headers     => %w(Name Host Vendor Guid EMS),
+        :col_options => {"guid" => {:hidden => true}, "ems_ref" => {:hidden => true}}
+      )
+    end
+
+    it "detects hidden columns defined in #col_options" do
+      expect(report.column_is_hidden?(:guid)).to be_truthy
+      expect(report.column_is_hidden?(:ems_ref)).to be_truthy
+      expect(report.column_is_hidden?(:vendor)).to be_falsey
+    end
+  end
+
   context "chargeback reports" do
     let(:hourly_rate) { 0.01 }
     let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }

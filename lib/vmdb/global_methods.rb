@@ -94,7 +94,7 @@ module Vmdb
       unless report.headers.nil?
         report.headers.each_with_index do |h, i|
           col = report.col_order[i]
-          next if report.col_options[col].try(:has_key?, :hidden) && report.col_options[col][:hidden]
+          next if report.column_is_hidden?(col)
 
           html << "<th>" << CGI.escapeHTML(_(h.to_s)) << "</th>"
         end
