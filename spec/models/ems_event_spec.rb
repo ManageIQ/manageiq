@@ -76,8 +76,7 @@ describe EmsEvent do
     end
 
     context ".process_availability_zone_in_event!" do
-      let(:event_hash) { { :vm_or_template_id => vm.id } } 
-      
+      let(:event_hash) { { :vm_or_template_id => vm.id } }
       context "when the event has an availability zone" do
         before :each do
           event_hash[:availability_zone_ems_ref] = @availability_zone.ems_ref
