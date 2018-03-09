@@ -98,9 +98,9 @@ module Vmdb
       apply_config_value(config, $policy_log,        :level_policy)
       apply_config_value(config, $rhevm_log,         :level_rhevm)
       apply_config_value(config, $scvmm_log,         :level_scvmm)
-      apply_config_value(config, $websocket_log,     :level_websocket)
       apply_config_value(config, $vcloud_log,        :level_vcloud)
       apply_config_value(config, $vim_log,           :level_vim)
+      apply_config_value(config, $websocket_log,     :level_websocket)
     end
 
     def self.create_loggers
@@ -123,9 +123,9 @@ module Vmdb
       $policy_log        = create_multicast_logger(path_dir.join("policy.log"))
       $rhevm_log         = create_multicast_logger(path_dir.join("rhevm.log"))
       $scvmm_log         = create_multicast_logger(path_dir.join("scvmm.log"))
-      $websocket_log     = create_multicast_logger(path_dir.join("websocket.log"))
       $vcloud_log        = create_multicast_logger(path_dir.join("vcloud.log"))
       $vim_log           = create_multicast_logger(path_dir.join("vim.log"))
+      $websocket_log     = create_multicast_logger(path_dir.join("websocket.log"))
 
       configure_external_loggers
     end
