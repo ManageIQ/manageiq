@@ -181,6 +181,16 @@ class MiqReport < ApplicationRecord
     sortby ? col_order.index(sortby.first) : 0
   end
 
+  def column_is_hidden?(col)
+    return false unless col_options
+
+    @hidden_cols ||= col_options.keys.each_with_object([]) do |c, a|
+      a << c if col_options[c][:hidden]
+    end
+
+    @hidden_cols.include?(col.to_s)
+  end
+
   def self.from_hash(h)
     new(h)
   end

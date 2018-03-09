@@ -45,7 +45,7 @@ module MiqReport::Generator::Html
         row = 1 - row
 
         col_order.each_with_index do |c, c_idx|
-          next if col_options[c].try(:has_key?, :hidden) && col_options[c][:hidden]
+          next if column_is_hidden?(c)
 
           build_html_col(output, c, self.col_formats[c_idx], d.data)
         end
