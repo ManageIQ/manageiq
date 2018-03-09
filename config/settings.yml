@@ -915,6 +915,8 @@
   :level_websocket: info
   :level_vcloud: info
   :level_nuage: info
+  :level_automation: info
+  :level_policy: info
 :notifications:
   :history:
     :purge_window_size: 1000

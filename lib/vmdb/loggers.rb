@@ -99,6 +99,8 @@ module Vmdb
       apply_config_value(config, $websocket_log,     :level_websocket)
       apply_config_value(config, $vcloud_log,        :level_vcloud)
       apply_config_value(config, $nuage_log,         :level_nuage)
+      apply_config_value(config, $miq_ae_logger,     :level_automation)
+      apply_config_value(config, $policy_log,        :level_policy)
     end
 
     def self.create_loggers
