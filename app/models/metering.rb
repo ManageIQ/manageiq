@@ -1,9 +1,8 @@
 module Metering
   extend ActiveSupport::Concern
+  DISALLOWED_SUFFIXES = %w(_cost chargeback_rates).freeze
 
   included do
-    DISALLOWED_SUFFIXES = %w(_cost chargeback_rates).freeze
-
     def self.attribute_names
       super.reject { |x| x.ends_with?(*DISALLOWED_SUFFIXES) }
     end
