@@ -18,7 +18,7 @@ describe EmsEvent do
 
     context "on node" do
       let(:node_event_hash) { event_hash.merge(:container_node_ems_ref => ems_ref) }
-      let!(:container_node) { FactoryGirl.create(:container_node, :ext_management_system => ems, :name => "Test Node", :ems_ref => ems_ref)}
+      let!(:container_node) { FactoryGirl.create(:container_node, :ext_management_system => ems, :name => "Test Node", :ems_ref => ems_ref) }
 
       it "process_container_entities_in_event! links node id to event" do
         EmsEvent.process_container_entities_in_event!(node_event_hash)
@@ -53,11 +53,7 @@ describe EmsEvent do
 
     context "on replicator" do
       let(:repl_event_hash) { event_hash.merge(:container_replicator_ems_ref => ems_ref) }
-      let!(:container_replicator) { FactoryGirl.create(:container_replicator,
-                                                   :ext_management_system => ems,
-                                                   :container_project     => container_project,
-                                                   :name                  => "Test Replicator",
-                                                   :ems_ref               => ems_ref) }
+      let!(:container_replicator) { FactoryGirl.create(:container_replicator,:ext_management_system => ems, :container_project => container_project,:name => "Test Replicator", :ems_ref => ems_ref) }
 
       it "process_container_entities_in_event! links replicator id to event" do
         EmsEvent.process_container_entities_in_event!(repl_event_hash)
@@ -81,9 +77,9 @@ describe EmsEvent do
     end
 
     context ".process_availability_zone_in_event!" do
-      let(:event_hash){{
-          :vm_or_template_id => vm.id
-        }}
+      let(:event_hash) do {
+          :vm_or_template_id => vm.id 
+        } end
 
       context "when the event has an availability zone" do
         before :each do
