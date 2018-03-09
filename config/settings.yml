@@ -905,18 +905,18 @@
     :ping_depot_timeout: 20
   :level: info
   :level_rails: info
+  :level_api: info
+  :level_automation: info
+  :level_cn_monitoring: info
+  :level_fog: info
   :level_lenovo: info
   :level_mw: info
-  :level_cn_monitoring: info
-  :level_api: info
-  :level_fog: info
+  :level_nuage: info
+  :level_policy: info
   :level_scvmm: info
+  :level_vcloud: info
   :level_vim: warn
   :level_websocket: info
-  :level_vcloud: info
-  :level_nuage: info
-  :level_automation: info
-  :level_policy: info
 :notifications:
   :history:
     :purge_window_size: 1000
