@@ -1,8 +1,7 @@
 describe DialogField do
   context "legacy tests" do
 
-    let(:df) { FactoryGirl.create(:dialog_field)}
-		    
+    let(:df) { FactoryGirl.create(:dialog_field) }    
     it "sets default value for required attribute" do
       expect(df.required).to eq(false)
       expect(df.visible).to eq(true)
