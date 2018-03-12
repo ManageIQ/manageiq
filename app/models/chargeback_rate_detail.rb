@@ -12,7 +12,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
 
-  delegate :metric_key, :cost_keys, :to => :chargeable_field
+  delegate :metric_key, :cost_keys, :rate_key, :to => :chargeable_field
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id sub_metric).freeze
   PER_TIME_TYPES = {
@@ -84,6 +84,14 @@ class ChargebackRateDetail < ApplicationRecord
     sub_metric.present? ? sub_metric.capitalize : 'All'
   end
 
+  def rate_values(consumption, options)
+    fixed_rate, variable_rate = find_rate(chargeable_field.measure(consumption, options, sub_metric))
+    hourly_fixed_rate         = hourly(fixed_rate, consumption)
+    hourly_variable_rate      = hourly(variable_rate, consumption)
+
+    "#{hourly_fixed_rate}/#{hourly_variable_rate}"
+  end
+
   def charge(relevant_fields, consumption, options)
     result = {}
     if (relevant_fields & [metric_key, cost_keys[0]]).present?
@@ -91,6 +99,8 @@ class ChargebackRateDetail < ApplicationRecord
       if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
       end
+
+      result[rate_key(sub_metric)] = rate_values(consumption, options)
       result[metric_key(sub_metric)] = metric_value
       cost_keys(sub_metric).each { |field| result[field] = cost }
     end
