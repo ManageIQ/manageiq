@@ -575,6 +575,25 @@ describe ChargebackVm do
           expect(subject.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
         end
 
+        context 'with nonzero fixed rate' do
+          let(:hourly_variable_tier_rate) { {:fixed_rate => 100, :variable_rate => hourly_rate.to_s} }
+
+          it 'shows rates' do
+            skip('this case needs to be added in new chargeback') if Settings.new_chargeback
+
+            expect(subject.cpu_allocated_rate).to eq("0.0/1.0")
+            expect(subject.cpu_used_rate).to eq("100.0/0.01")
+            expect(subject.disk_io_used_rate).to eq("100.0/0.01")
+            expect(subject.fixed_compute_1_rate).to eq("100.0/0.01")
+            expect(subject.memory_allocated_rate).to eq("100.0/0.01")
+            expect(subject.memory_used_rate).to eq("100.0/0.01")
+            expect(subject.metering_used_rate).to eq("0.0/1.0")
+            expect(subject.net_io_used_rate).to eq("100.0/0.01")
+            expect(subject.storage_allocated_rate).to eq("0.0/1.0")
+            expect(subject.storage_used_rate).to eq("0.0/1.0")
+          end
+        end
+
         let(:fixed_rate) { 10.0 }
 
         context "fixed and variable rate" do
