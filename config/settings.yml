@@ -796,6 +796,7 @@
     - DrsMigrateVM_Task
     :DrsVmPoweredOnEvent:
     - PowerOnVM_Task
+    - PowerOnMultiVM_Task
     :EnteredMaintenanceModeEvent:
     - EnterMaintenanceMode_Task
     :ExitMaintenanceModeEvent:
@@ -825,6 +826,7 @@
     - PowerOffVM_Task
     :VmPoweredOnEvent:
     - PowerOnVM_Task
+    - PowerOnMultiVM_Task
     - ResetVM_Task
     :VmReconfiguredEvent:
     - ReconfigVM_Task
