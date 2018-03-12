@@ -206,4 +206,10 @@ describe EvmApplication do
       expect(described_class.deployment_status).to eq("redeployment")
     end
   end
+
+  describe ".encryption_key_valid?" do
+    it "returns true when we are using the correct encryption key" do
+      expect(described_class.encryption_key_valid?).to be_truthy
+    end
+  end
 end

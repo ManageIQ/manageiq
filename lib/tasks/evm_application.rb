@@ -142,6 +142,20 @@ class EvmApplication
     region_file.write(new_region)
   end
 
+  def self.encryption_key_valid?
+    # if we're a new deployment we won't even be able to get the database row, so just return true
+    return true if deployment_status == "new_deployment"
+
+    db = MiqDatabase.first
+    # both of these should raise if we have the wrong key
+    db.session_secret_token
+    db.csrf_secret_token
+
+    true
+  rescue MiqPassword::MiqPasswordError
+    false
+  end
+
   def self.deployment_status
     return "new_deployment" if ActiveRecord::Migrator.current_version.zero?
     return "new_replica"    if MiqServer.my_server.nil?
