@@ -77,11 +77,11 @@ class ChargeableField < ApplicationRecord
     group == 'metering' && source == 'used'
   end
 
-  private
-
   def rate_name
     "#{group}_#{source}"
   end
+
+  private
 
   def used?
     source == 'used'
