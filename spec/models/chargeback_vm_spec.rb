@@ -187,6 +187,12 @@ describe ChargebackVm do
             expect(subject.storage_allocated_hdd_cost).to eq(state_data[:allocated_disk_types]['hdd'] / 1.gigabytes * count_hourly_rate * hours_in_day)
           end
 
+          it 'shows rates' do
+            skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+            expect(subject.storage_allocated_sdd_rate).to eq("0.0/1.0")
+            expect(subject.storage_allocated_hdd_rate).to eq("0.0/1.0")
+          end
+
           it "doesn't return removed cloud volume types fields" do
             described_class.refresh_dynamic_metric_columns
 
