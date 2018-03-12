@@ -927,19 +927,6 @@
   - 1.pool.ntp.org
   - 2.pool.ntp.org
 :performance:
-  :capture_threshold:
-    :default: 10.minutes
-    :ems_cluster: 50.minutes
-    :host: 50.minutes
-    :storage: 60.minutes
-    :vm: 50.minutes
-    :container: 50.minutes
-    :container_group: 50.minutes
-    :container_node: 50.minutes
-  :capture_threshold_with_alerts:
-    :default: 1.minutes
-    :host: 20.minutes
-    :vm: 20.minutes
   :concurrent_requests:
     :historical: 1
     :hourly: 1

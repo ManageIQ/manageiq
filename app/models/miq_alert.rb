@@ -140,10 +140,6 @@ class MiqAlert < ApplicationRecord
     end
   end
 
-  def self.target_needs_realtime_capture?(target)
-    !assigned_to_target(target, "#{target.class.base_model.name.underscore}_perf_complete").empty?
-  end
-
   def self.normalize_target(target)
     if target.kind_of?(Array)
       klass, id = target
