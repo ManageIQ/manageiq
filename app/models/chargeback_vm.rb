@@ -68,6 +68,7 @@ class ChargebackVm < Chargeback
 
   def self.refresh_dynamic_metric_columns
     set_columns_hash(dynamic_columns_for(:float))
+    super
   end
 
   def self.build_results_for_report_ChargebackVm(options)

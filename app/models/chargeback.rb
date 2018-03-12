@@ -22,6 +22,10 @@ class Chargeback < ActsAsArModel
       end
   end
 
+  def self.refresh_dynamic_metric_columns
+    set_columns_hash(dynamic_rate_columns)
+  end
+
   def self.build_results_for_report_chargeback(options)
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
