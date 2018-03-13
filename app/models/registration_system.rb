@@ -74,7 +74,7 @@ module RegistrationSystem
 
   def self.verify_credentials(options = {})
     LinuxAdmin::SubscriptionManager.validate_credentials(assemble_options(options))
-  rescue NotImplementedError, LinuxAdmin::CredentialError
+  rescue NotImplementedError, LinuxAdmin::CredentialError, AwesomeSpawn::NoSuchFileError
     false
   end
 
