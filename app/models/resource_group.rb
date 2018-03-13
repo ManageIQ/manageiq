@@ -1,4 +1,5 @@
 class ResourceGroup < ApplicationRecord
+  acts_as_miq_taggable
   alias_attribute :images, :templates
 
   has_many :vm_or_templates
