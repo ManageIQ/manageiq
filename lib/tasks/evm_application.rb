@@ -143,10 +143,11 @@ class EvmApplication
   end
 
   def self.encryption_key_valid?
-    # if we're a new deployment we won't even be able to get the database row, so just return true
+    # if we're a new deployment we won't even be able to get the database row
+    # and if there is no database row, allow this key to be used
     return true if deployment_status == "new_deployment"
+    return true unless (db = MiqDatabase.first)
 
-    db = MiqDatabase.first
     # both of these should raise if we have the wrong key
     db.session_secret_token
     db.csrf_secret_token
