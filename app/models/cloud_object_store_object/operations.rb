@@ -1,7 +1,7 @@
 module CloudObjectStoreObject::Operations
   extend ActiveSupport::Concern
 
-  def delete_cloud_object_store_object
+  def cloud_object_store_object_delete
     raw_delete
   end
 
