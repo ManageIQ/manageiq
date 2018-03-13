@@ -823,19 +823,19 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def reconnect_events
-    events = EmsEvent.where("(vm_location = ? AND vm_or_template_id IS NULL) OR (dest_vm_location = ? AND dest_vm_or_template_id IS NULL)", path, path)
+    events = EmsEvent.where("ems_id = ? AND ((vm_ems_ref = ? AND vm_or_template_id IS NULL) OR (dest_vm_ems_ref = ? AND dest_vm_or_template_id IS NULL))", ext_management_system.id, ems_ref, ems_ref)
     events.each do |e|
       do_save = false
 
       src_vm = e.src_vm_or_template
-      if src_vm.nil? && e.vm_location == path
+      if src_vm.nil? && e.vm_ems_ref == ems_ref
         src_vm = self
         e.vm_or_template_id = src_vm.id
         do_save = true
       end
 
       dest_vm = e.dest_vm_or_template
-      if dest_vm.nil? && e.dest_vm_location == path
+      if dest_vm.nil? && e.dest_vm_ems_ref == ems_ref
         dest_vm = self
         e.dest_vm_or_template_id = dest_vm.id
         do_save = true
