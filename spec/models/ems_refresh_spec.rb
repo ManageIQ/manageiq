@@ -45,6 +45,56 @@ describe EmsRefresh do
     end
   end
 
+  context "stopping targets unbounded growth" do
+    before(:each) do
+      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
+    end
+
+    let(:targets) do
+      targets = []
+      (0..996).each do |i|
+        targets << ManagerRefresh::Target.load(
+          :manager_id  => @ems.id,
+          :association => :vms,
+          :manager_ref => {:ems_ref => "vm_1"},
+          :event_id    => i,
+          :options     => {:opt1 => "opt#{i}", :opt2 => "opt2"}
+        )
+      end
+
+      targets << vm_target
+      targets << host_target
+      targets << @ems
+      targets
+    end
+
+    let(:vm_target) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
+    let(:host_target) { FactoryGirl.create(:host_vmware, :ext_management_system => @ems) }
+
+    it "doesn't call uniq on targets if size is <= 1000" do
+      described_class.queue_refresh(targets)
+
+      expect(MiqQueue.last.data.size).to eq(1_000)
+    end
+
+    it "uniques targets if next queuing breaches size 1000" do
+      described_class.queue_refresh(targets)
+      described_class.queue_refresh([host_target, vm_target, @ems])
+
+      expect(MiqQueue.last.data.size).to eq(4)
+      described_class.queue_refresh(targets)
+      expect(MiqQueue.last.data.size).to eq(4)
+    end
+
+    it "uniques targets if queuing breaches size 1000" do
+      # We need different Vm, since targets are uniqued before queueing
+      described_class.queue_refresh(targets << FactoryGirl.create(:vm_vmware, :ext_management_system => @ems))
+
+      expect(MiqQueue.last.data.size).to eq(5)
+    end
+  end
+
   context ".queue_refresh_task" do
     before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
