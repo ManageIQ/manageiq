@@ -31,6 +31,9 @@ class MiqServer < ApplicationRecord
 
   virtual_column :zone_description, :type => :string
 
+  default_value_for(:name, "EVM")
+  default_value_for(:zone) { Zone.default_zone }
+
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
 
   STATUS_STARTING       = 'starting'.freeze
