@@ -329,6 +329,109 @@ describe Rbac::Filterer do
       end
     end
 
+    context "with non-sql filter" do
+      subject { described_class.new }
+
+      let(:expression)        { MiqExpression.new("=" => {"field" => "Vm-vendor_display", "value" => "VMware"}) }
+      let(:search_attributes) { { :class => "Vm", :filter => expression } }
+      let(:results)           { subject.search(search_attributes).first }
+
+      before { [owned_vm, other_vm] }
+
+      it "finds the Vms" do
+        expect(results.to_a).to match_array [owned_vm, other_vm]
+        expect(results.count).to eq 2
+      end
+
+      it "does not add references without includes" do
+        expect(subject).to receive(:include_references).with(anything, Vm, nil, nil, true).and_call_original
+        results
+      end
+
+      context "with :include_for_find" do
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+        let(:results)        { subject.search(include_search).first }
+
+        it "finds the Vms" do
+          expect(results.to_a).to match_array [owned_vm, other_vm]
+          expect(results.count).to eq 2
+        end
+
+        it "does not add references since there isn't a SQL filter" do
+          expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, true).and_call_original
+          results
+        end
+      end
+    end
+
+    context "with a miq_expression filter on vms" do
+      let(:expression)        { MiqExpression.new("=" => {"field" => "Vm-vendor", "value" => "vmware"}) }
+      let(:search_attributes) { { :class => "Vm", :filter => expression } }
+      let(:results)           { described_class.search(search_attributes).first }
+
+      before { [owned_vm, other_vm] }
+
+      it "finds the Vms" do
+        expect(results.to_a).to match_array [owned_vm, other_vm]
+        expect(results.count).to eq 2
+      end
+
+      it "does not add references without includes" do
+        # empty string here is basically passing `.references(nil)`, and the
+        # extra empty hash here is from the MiqExpression (which will result in
+        # the same), both of which will no-op to when determining if there are
+        # joins in ActiveRecord, and will not create a JoinDependency query
+        expect(results.references_values).to match_array ["", "{}"]
+      end
+
+      context "with :include_for_find" do
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+        let(:results)        { described_class.search(include_search).first }
+
+        it "finds the Service" do
+          expect(results.to_a).to match_array [owned_vm, other_vm]
+          expect(results.count).to eq 2
+        end
+
+        it "adds references" do
+          expect(results.references_values).to match_array ["{:evm_owner=>{}}", "{}"]
+        end
+      end
+    end
+
+    context "with :extra_cols on a Service" do
+      let(:extra_cols)        { [:owned_by_current_user] }
+      let(:search_attributes) { { :class => "Service", :extra_cols => extra_cols } }
+      let(:results)           { described_class.search(search_attributes).first }
+
+      before { FactoryGirl.create :service, :evm_owner => owner_user }
+
+      it "finds the Service" do
+        expect(results.first.attributes["owned_by_current_user"]).to be false
+      end
+
+      it "does not add references with no includes" do
+        # The single empty string is the result of a nil from both the lack of
+        # a MiqExpression filter and the user filter, which is deduped in
+        # ActiveRecord's internals and results in a `.references(nil)`
+        # effectively
+        expect(results.references_values).to match_array [""]
+      end
+
+      context "with :include_for_find" do
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+        let(:results)        { described_class.search(include_search).first }
+
+        it "finds the Service" do
+          expect(results.first.attributes["owned_by_current_user"]).to be false
+        end
+
+        it "adds references" do
+          expect(results.references_values).to match_array ["", "{:evm_owner=>{}}"]
+        end
+      end
+    end
+
     describe "with find_options_for_tenant filtering" do
       before do
         owned_vm # happy path
@@ -360,12 +463,6 @@ describe Rbac::Filterer do
       it "with :miq_group_id finds Vm" do
         results = described_class.search(:class => "Vm", :miq_group_id => owner_group.id).first
         expect(results).to match_array [owned_vm]
-      end
-
-      it "with :extra_cols finds Service" do
-        FactoryGirl.create :service, :evm_owner => owner_user
-        results = described_class.search(:class => "Service", :extra_cols => [:owned_by_current_user]).first
-        expect(results.first.attributes["owned_by_current_user"]).to be false
       end
 
       it "leaving tenant doesnt find Vm" do
@@ -1824,27 +1921,28 @@ describe Rbac::Filterer do
   describe "#include_references (private)" do
     subject { described_class.new }
 
+    let(:skip)             { false }
     let(:klass)            { VmOrTemplate }
     let(:scope)            { klass.all }
     let(:include_for_find) { { :miq_server => {} } }
     let(:exp_includes)     { { :host => {} } }
 
     it "adds include_for_find .references to the scope" do
-      method_args      = [scope, klass, include_for_find, nil]
+      method_args      = [scope, klass, include_for_find, nil, skip]
       resulting_scope  = subject.send(:include_references, *method_args)
 
       expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", ""])
     end
 
     it "adds exp_includes .references to the scope" do
-      method_args      = [scope, klass, nil, exp_includes]
+      method_args      = [scope, klass, nil, exp_includes, skip]
       resulting_scope  = subject.send(:include_references, *method_args)
 
       expect(resulting_scope.references_values).to eq(["", "{:host=>{}}"])
     end
 
     it "adds include_for_find and exp_includes .references to the scope" do
-      method_args      = [scope, klass, include_for_find, exp_includes]
+      method_args      = [scope, klass, include_for_find, exp_includes, skip]
       resulting_scope  = subject.send(:include_references, *method_args)
 
       expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", "{:host=>{}}"])
@@ -1855,7 +1953,18 @@ describe Rbac::Filterer do
       let(:include_for_find) { { :resource => {} } }
 
       it "does not add .references to the scope" do
-        method_args      = [scope, klass, include_for_find, nil]
+        method_args      = [scope, klass, include_for_find, nil, skip]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.references_values).to eq([])
+      end
+    end
+
+    context "when skip is passed as true" do
+      let(:skip) { true }
+
+      it "does not add .references to the scope" do
+        method_args      = [scope, klass, include_for_find, exp_includes, skip]
         resulting_scope  = subject.send(:include_references, *method_args)
 
         expect(resulting_scope.references_values).to eq([])

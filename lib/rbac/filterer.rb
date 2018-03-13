@@ -248,6 +248,7 @@ module Rbac
 
       exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
+      skip_references            = skip_references?(options, attrs)
 
       # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
       # if you note, the limits are put back into scope a few lines down from here
@@ -257,7 +258,7 @@ module Rbac
               .includes(include_for_find).includes(exp_includes)
               .order(order)
 
-      scope = include_references(scope, klass, include_for_find, exp_includes)
+      scope = include_references(scope, klass, include_for_find, exp_includes, skip_references)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
       targets = scope
 
@@ -291,7 +292,22 @@ module Rbac
       klass.respond_to?(:finder_needs_type_condition?) ? klass.finder_needs_type_condition? : false
     end
 
-    def include_references(scope, klass, include_for_find, exp_includes)
+    # This is a very primitive way of determining whether we want to skip
+    # adding references to the query.
+    #
+    # For now, basically it checks if the caller has not provided :extra_cols,
+    # or if the MiqExpression can't apply the limit in SQL.  If both of those
+    # are true, then we don't add `.references` to the scope.
+    #
+    # If still invalid, there is an EXPLAIN check in #include_references that
+    # will make sure the query is valid and if not, will include the references
+    # as done previously.
+    def skip_references?(options, attrs)
+      options[:extra_cols].blank? && !attrs[:apply_limit_in_sql]
+    end
+
+    def include_references(scope, klass, include_for_find, exp_includes, skip)
+      return scope if skip
       ref_includes = Hash(include_for_find).merge(Hash(exp_includes))
       unless polymorphic_include?(klass, ref_includes)
         scope = scope.references(include_for_find).references(exp_includes)
