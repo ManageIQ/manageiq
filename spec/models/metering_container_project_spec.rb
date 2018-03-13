@@ -62,6 +62,8 @@ describe MeteringContainerProject do
       expect(subject.metering_used_metric).to eq(count_of_metric_rollup)
       expect(subject.existence_hours_metric).to eq(month_beginning.end_of_month.day * 24)
       expect(subject.net_io_used_metric).to eq(net_usage_rate_average * count_of_metric_rollup)
+      expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
+      expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
     end
   end
 end

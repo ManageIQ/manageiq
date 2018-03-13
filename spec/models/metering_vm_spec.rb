@@ -76,6 +76,21 @@ describe MeteringVm do
       expect(subject.net_io_used_metric).to eq(net_usage_rate_average * count_of_metric_rollup)
       expect(subject.storage_allocated_metric).to eq(derived_vm_allocated_disk_storage)
       expect(subject.storage_used_metric).to eq(derived_vm_used_disk_storage * count_of_metric_rollup)
+      expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
+      expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
+    end
+
+    context "vm started later then beginning of report interval and it was retired earlier then end of report interval " do
+      let(:beginning_of_resource_existence) { month_beginning + 5.days }
+      let(:end_of_resource_existence)       { month_beginning + 20.days }
+
+      it 'uses datetime from Vm#created_on and Vm#retires_on' do
+        vm.update_attributes(:created_on => beginning_of_resource_existence, :retires_on => end_of_resource_existence)
+        vm.metric_rollups.each { |mr| mr.update_attributes(:timestamp => beginning_of_resource_existence) }
+
+        expect(subject.beginning_of_resource_existence_in_report_interval).to eq(beginning_of_resource_existence)
+        expect(subject.end_of_resource_existence_in_report_interval).to eq(end_of_resource_existence)
+      end
     end
 
     context 'count of used hours is different than count of metric rollups' do
@@ -127,6 +142,8 @@ describe MeteringVm do
        metering_used_metric
        existence_hours_metric
        tenant_name
+       beginning_of_resource_existence_in_report_interval
+       end_of_resource_existence_in_report_interval
   )
   end
 

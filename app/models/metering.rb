@@ -13,6 +13,8 @@ module Metering
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
     self.metering_used_metric = consumption.metering_used_fields_present if consumption.metering_used_fields_present
     self.existence_hours_metric = consumption.consumed_hours_in_interval
+    self.beginning_of_resource_existence_in_report_interval = consumption.consumption_start
+    self.end_of_resource_existence_in_report_interval = consumption.consumption_end
 
     relevant_fields.each do |field|
       next unless self.class.report_col_options.include?(field)
