@@ -58,6 +58,8 @@ describe MeteringContainerImage do
       expect(subject.memory_allocated_metric).to eq(@container.limit_memory_bytes / 1.megabytes)
       expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_cpu_cores)
       expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_memory_bytes / 1.megabytes)
+      expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
+      expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
     end
   end
 
