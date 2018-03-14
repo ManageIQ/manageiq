@@ -1262,10 +1262,14 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: ems_infra_show_list
+        :identifier:
+        - ems_infra_show_list
+        - ems_block_storage_show_list
       :post:
       - :name: query
-        :identifier: ems_infra_show_list
+        :identifier:
+        - ems_infra_show_list
+        - ems_block_storage_show_list
       - :name: create
         :identifier: ems_infra_new
       - :name: edit
@@ -1277,7 +1281,9 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: ems_infra_show
+        :identifier:
+        - ems_infra_show
+        - ems_block_storage_show
       :post:
       - :name: edit
         :identifier: ems_infra_edit
