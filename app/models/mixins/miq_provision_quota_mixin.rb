@@ -282,6 +282,10 @@ module MiqProvisionQuotaMixin
       :status         => 'Ok',
       :process        => true
     ).where.not(:id => id)
+              .where(%{source_type IS NULL OR
+       (source_type = 'VmOrTemplate' AND source_id IN (SELECT id FROM vms)) OR
+       (source_type = 'ServiceTemplate' AND source_id IN (SELECT id FROM service_templates))
+     })
   end
 
   def vm_quota_values(pr, result)
