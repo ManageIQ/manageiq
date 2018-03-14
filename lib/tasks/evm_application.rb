@@ -73,18 +73,18 @@ class EvmApplication
   def self.output_servers_status(servers)
     data = servers.collect do |s|
       {
-        "Zone"           => s.zone.name,
-        "Server"         => s.name,
-        "Status"         => s.status,
-        "ID"             => s.id,
-        "PID"            => s.pid,
-        "SPID"           => s.sql_spid,
-        "URL"            => s.drb_uri,
-        "Started On"     => s.started_on&.iso8601,
-        "Last Heartbeat" => s.last_heartbeat&.iso8601,
-        "MB Usage"       => (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
-        "Master?"        => s.is_master,
-        "Active Roles"   => s.active_role_names.join(':'),
+        "Zone"      => s.zone.name,
+        "Server"    => s.name,
+        "Status"    => s.status,
+        "ID"        => s.id,
+        "PID"       => s.pid,
+        "SPID"      => s.sql_spid,
+        "URL"       => s.drb_uri,
+        "Started"   => s.started_on&.iso8601,
+        "Heartbeat" => s.last_heartbeat&.iso8601,
+        "MB Usage"  => (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
+        "Master?"   => s.is_master,
+        "Roles"     => s.active_role_names.join(':'),
       }
     end
     puts data.tableize(:columns => data.first.keys) if data.present?
@@ -96,16 +96,16 @@ class EvmApplication
         mb_usage = w.proportional_set_size || w.memory_usage
         mb_threshold = w.worker_settings[:memory_threshold]
         {
-          "Worker Type"      => w.type,
-          "Status"           => w.status.sub("stopping", "stop pending"),
-          "ID"               => w.id,
-          "PID"              => w.pid,
-          "SPID"             => w.sql_spid,
-          "Server id"        => w.miq_server_id,
-          "Queue Name / URL" => w.queue_name || w.uri,
-          "Started On"       => w.started_on&.iso8601,
-          "Last Heartbeat"   => w.last_heartbeat&.iso8601,
-          "MB Usage"         => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
+          "Worker Type" => w.type,
+          "Status"      => w.status.sub("stopping", "stop pending"),
+          "ID"          => w.id,
+          "PID"         => w.pid,
+          "SPID"        => w.sql_spid,
+          "Server id"   => w.miq_server_id,
+          "Queue"       => w.queue_name || w.uri,
+          "Started"     => w.started_on&.iso8601,
+          "Heartbeat"   => w.last_heartbeat&.iso8601,
+          "MB Usage"    => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
         }
       end
     end
