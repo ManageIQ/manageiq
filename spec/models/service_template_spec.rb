@@ -45,9 +45,10 @@ describe ServiceTemplate do
     end
 
     it "does not show hidden buttons" do
-      service_template = FactoryGirl.create(:service_template, :name => "foo")
-      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
-      false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
+      service_template = FactoryGirl.create(:service_template)
+      service = FactoryGirl.create(:service, :name => "foo", :service_template => service_template)
+      true_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "foo"})
+      false_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "labar"})
       FactoryGirl.create(:custom_button,
                          :name                  => "visible button",
                          :applies_to_class      => "Service",
@@ -79,7 +80,7 @@ describe ServiceTemplate do
           )
         ]
       }
-      expect(service_template.custom_actions).to match(expected)
+      expect(service_template.custom_actions(service)).to match(expected)
     end
 
     context "expression evaluation" do
@@ -143,8 +144,9 @@ describe ServiceTemplate do
 
     it "serializes the enablement" do
       service_template = FactoryGirl.create(:service_template, :name => "foo")
-      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
-      false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
+      service = FactoryGirl.create(:service, :name => "bar", :service_template => service_template)
+      true_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "bar"})
+      false_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "foo"})
       FactoryGirl.create(:custom_button,
                          :name                  => "enabled button",
                          :applies_to_class      => "Service",
@@ -178,7 +180,7 @@ describe ServiceTemplate do
           )
         ]
       }
-      expect(service_template.custom_actions).to match(expected)
+      expect(service_template.custom_actions(service)).to match(expected)
     end
   end
 
@@ -188,18 +190,22 @@ describe ServiceTemplate do
       true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
       false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
       visible_button = FactoryGirl.create(:custom_button,
-                                          :applies_to_class      => "Service",
+                                          :applies_to_class      => "ServiceTemplate",
+                                          :applies_to_id         => service_template.id,
                                           :visibility_expression => true_expression)
       _hidden_button = FactoryGirl.create(:custom_button,
-                                          :applies_to_class      => "Service",
+                                          :applies_to_class      => "ServiceTemplate",
+                                          :applies_to_id         => service_template.id,
                                           :visibility_expression => false_expression)
       visible_button_in_group = FactoryGirl.create(:custom_button,
-                                                   :applies_to_class      => "Service",
+                                                   :applies_to_class      => "ServiceTemplate",
+                                                   :applies_to_id         => service_template.id,
                                                    :visibility_expression => true_expression)
       hidden_button_in_group = FactoryGirl.create(:custom_button,
-                                                  :applies_to_class      => "Service",
+                                                  :applies_to_class      => "ServiceTemplate",
+                                                  :applies_to_id         => service_template.id,
                                                   :visibility_expression => false_expression)
-      FactoryGirl.create(:custom_button_set).tap do |group|
+      service_template.custom_button_sets << FactoryGirl.create(:custom_button_set).tap do |group|
         group.add_member(visible_button_in_group)
         group.add_member(hidden_button_in_group)
       end
