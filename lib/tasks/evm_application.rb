@@ -50,27 +50,27 @@ class EvmApplication
     puts "Checking EVM status..."
 
     server = MiqServer.my_server(true)
-    servers = Set.new
-    servers << server if server
-    if include_remotes
-      all_servers =
-        MiqServer
-        .order(:zone_id, :status)
-        .includes(:active_roles, :miq_workers, :zone)
-        .all.to_a
-      servers.merge(all_servers)
-    end
+    servers =
+      if include_remotes
+        MiqServer.includes(:active_roles, :miq_workers, :zone).all.to_a
+      else
+        [server]
+      end
 
     if servers.empty?
       puts "Local EVM Server not Found"
     else
-      output_servers_status(servers)
+      output_status(servers_status(servers))
       puts "\n"
-      output_workers_status(servers)
+      output_status(workers_status(servers))
     end
   end
 
-  def self.output_servers_status(servers)
+  def self.output_status(data)
+    puts data.tableize(:columns => data.first.keys) if data.present?
+  end
+
+  def self.servers_status(servers)
     data = servers.collect do |s|
       {
         "Rgn"       => s.region_number,
@@ -87,12 +87,12 @@ class EvmApplication
         "Roles"     => s.active_role_names.join(':'),
       }
     end
-    puts data.tableize(:columns => data.first.keys) if data.present?
+    data.sort_by { |s| [s["Rgn"], s["Zone"], s["Server"]] }
   end
 
-  def self.output_workers_status(servers)
+  def self.workers_status(servers)
     data = servers.flat_map do |s|
-      s.miq_workers.order(:type).collect do |w|
+      s.miq_workers.collect do |w|
         mb_usage = w.proportional_set_size || w.memory_usage
         mb_threshold = w.worker_settings[:memory_threshold]
         simple_type = w.type&.gsub(/(ManageIQ::Providers::|Manager|Worker|Miq)/, '')
@@ -111,7 +111,7 @@ class EvmApplication
         }
       end
     end
-    puts data.tableize(:columns => data.first.keys) if data.present?
+    data.sort_by { |w| [w["Rgn"], w["Zone"], w["Server"], w["Type"], w["PID"]] }
   end
 
   def self.update_start
