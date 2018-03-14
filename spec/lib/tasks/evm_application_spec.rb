@@ -31,8 +31,8 @@ describe EvmApplication do
       val.to_s.rjust(send("#{col.downcase}_padding"))
     end
 
-    let(:local)    { EvmSpecHelper.create_guid_miq_server_zone[1] }
-    let(:remote)   { EvmSpecHelper.remote_miq_server }
+    let(:local)    { EvmSpecHelper.local_miq_server }
+    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true) }
     let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
     let!(:socket)  { FactoryGirl.create(:miq_websocket_worker, :miq_server => local, :pid => 7000) }
     let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote) }
@@ -55,18 +55,18 @@ describe EvmApplication do
     context "for just the local server" do
       it "displays server status for the local server and it's workers" do
         server_info = <<-SERVER_INFO.strip_heredoc
-           #{header(:Zone, :ljust)} | Server                   | Status  | #{header(:ID)       } | PID | SPID | URL | Started On           | Last Heartbeat       | MB Usage | Master? | Active Roles
-          -#{line_for(:Zone)      }-+--------------------------+---------+-#{line_for(:ID)     }-+-----+------+-----+----------------------+----------------------+----------+---------+--------------
+           #{header(:Zone, :ljust)} | Server                   | Status  | #{header(:ID)       } | PID | SPID | URL | Started              | Heartbeat            | MB Usage | Master? | Roles
+          -#{line_for(:Zone)      }-+--------------------------+---------+-#{line_for(:ID)     }-+-----+------+-----+----------------------+----------------------+----------+---------+-------
            #{local.zone.name      } | #{      local.name     } | started | #{pad(local.id, :ID)} |     |      |     | #{local_started_on } | #{local_heartbeat  } |          | false   |
         SERVER_INFO
         worker_info = <<-WORKER_INFO.strip_heredoc
-           Worker Type        | Status | #{header(:WID)        } | #{header(:PID)         } | SPID | #{header(:Server_id)       } | Queue Name / URL | Started On | Last Heartbeat | MB Usage
-          --------------------+--------+-#{line_for(:WID)      }-+-#{line_for(:PID)       }-+------+-#{line_for(:Server_id)     }-+------------------+------------+----------------+----------
-           MiqUiWorker        | ready  | #{pad(ui.id, :WID)    } | #{pad(ui.pid, :PID)    } |      | #{pad(local.id, :Server_id)} |                  |            |                |
-           MiqWebsocketWorker | ready  | #{pad(socket.id, :WID)} | #{pad(socket.pid, :PID)} |      | #{pad(local.id, :Server_id)} |                  |            |                |
+           Worker Type        | Status | #{header(:WID)        } | #{header(:PID)         } | SPID | #{header(:Server_id)       } | Queue | Started | Heartbeat | MB Usage
+          --------------------+--------+-#{line_for(:WID)      }-+-#{line_for(:PID)       }-+------+-#{line_for(:Server_id)     }-+-------+---------+-----------+----------
+           MiqUiWorker        | ready  | #{pad(ui.id, :WID)    } | #{pad(ui.pid, :PID)    } |      | #{pad(local.id, :Server_id)} |       |         |           |
+           MiqWebsocketWorker | ready  | #{pad(socket.id, :WID)} | #{pad(socket.pid, :PID)} |      | #{pad(local.id, :Server_id)} |       |         |           |
         WORKER_INFO
 
-        expect(described_class).to receive(:puts).with(server_info)
+   expect(described_class).to receive(:puts).with(server_info)
         expect(described_class).to receive(:puts).with(worker_info)
 
         EvmApplication.status
@@ -85,18 +85,18 @@ describe EvmApplication do
 
       it "displays server status for the all servers and workers" do
         server_info = <<-SERVER_INFO.strip_heredoc
-           #{header(:Zone, :ljust)} | Server                   | Status  | #{header(:ID)        } | PID | SPID | URL | Started On           | Last Heartbeat       | MB Usage | Master? | Active Roles
-          -#{line_for(:Zone)      }-+--------------------------+---------+-#{line_for(:ID)      }-+-----+------+-----+----------------------+----------------------+----------+---------+--------------
+           #{header(:Zone, :ljust)} | Server                   | Status  | #{header(:ID)        } | PID | SPID | URL | Started              | Heartbeat            | MB Usage | Master? | Roles
+          -#{line_for(:Zone)      }-+--------------------------+---------+-#{line_for(:ID)      }-+-----+------+-----+----------------------+----------------------+----------+---------+-------
            #{local.zone.name      } | #{      local.name     } | started | #{pad(local.id, :ID) } |     |      |     | #{local_started_on } | #{local_heartbeat  } |          | false   |
-           #{remote.zone.name     } | #{      remote.name    } | started | #{pad(remote.id, :ID)} |     |      |     | #{remote_started_on} | #{remote_heartbeat } |          | false   |
+           #{remote.zone.name     } | #{      remote.name    } | started | #{pad(remote.id, :ID)} |     |      |     | #{remote_started_on} | #{remote_heartbeat } |          | true    |
         SERVER_INFO
         worker_info = <<-WORKER_INFO.strip_heredoc
-           Worker Type                                     | Status | #{header(:WID)         } | #{header(:PID)          } | SPID | #{header(:Server_id)        } | Queue Name / URL | Started On | Last Heartbeat | MB Usage
-          -------------------------------------------------+--------+-#{line_for(:WID)       }-+-#{line_for(:PID)        }-+------+-#{line_for(:Server_id)      }-+------------------+------------+----------------+----------
-           MiqUiWorker                                     | ready  | #{pad(ui.id, :WID)     } | #{pad(ui.pid, :PID)     } |      | #{pad(local.id, :Server_id) } |                  |            |                |
-           MiqWebsocketWorker                              | ready  | #{pad(socket.id, :WID) } | #{pad(socket.pid, :PID) } |      | #{pad(local.id, :Server_id) } |                  |            |                |
-           ManageIQ::Providers::BaseManager::RefreshWorker | ready  | #{pad(refresh.id, :WID)} | #{pad(refresh.pid, :PID)} |      | #{pad(remote.id, :Server_id)} |                  |            |                |
-           MiqGenericWorker                                | ready  | #{pad(generic.id, :WID)} | #{pad(generic.pid, :PID)} |      | #{pad(remote.id, :Server_id)} |                  |            |                |
+           Worker Type                                     | Status | #{header(:WID)         } | #{header(:PID)          } | SPID | #{header(:Server_id)        } | Queue | Started | Heartbeat | MB Usage
+          -------------------------------------------------+--------+-#{line_for(:WID)       }-+-#{line_for(:PID)        }-+------+-#{line_for(:Server_id)      }-+-------+---------+-----------+----------
+           MiqUiWorker                                     | ready  | #{pad(ui.id, :WID)     } | #{pad(ui.pid, :PID)     } |      | #{pad(local.id, :Server_id) } |       |         |           |
+           MiqWebsocketWorker                              | ready  | #{pad(socket.id, :WID) } | #{pad(socket.pid, :PID) } |      | #{pad(local.id, :Server_id) } |       |         |           |
+           ManageIQ::Providers::BaseManager::RefreshWorker | ready  | #{pad(refresh.id, :WID)} | #{pad(refresh.pid, :PID)} |      | #{pad(remote.id, :Server_id)} |       |         |           |
+           MiqGenericWorker                                | ready  | #{pad(generic.id, :WID)} | #{pad(generic.pid, :PID)} |      | #{pad(remote.id, :Server_id)} |       |         |           |
         WORKER_INFO
 
         expect(described_class).to receive(:puts).with(server_info)
