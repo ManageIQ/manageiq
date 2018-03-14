@@ -54,7 +54,7 @@ gem "openscap",                       "~>0.4.3",       :require => false
 gem "pg",                             "~>0.18.2",      :require => false
 gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>5.0.2"
+gem "rails",                          "~>5.0.6"
 gem "rails-i18n",                     "~>5.x"
 gem "rake",                           ">=11.0",        :require => false
 gem "rest-client",                    "~>2.0.0",       :require => false
