@@ -95,17 +95,19 @@ class EvmApplication
       s.miq_workers.order(:type).collect do |w|
         mb_usage = w.proportional_set_size || w.memory_usage
         mb_threshold = w.worker_settings[:memory_threshold]
+        simple_type = w.type&.gsub(/(ManageIQ::Providers::|Manager|Worker|Miq)/, '')
         {
-          "Worker Type" => w.type,
-          "Status"      => w.status.sub("stopping", "stop pending"),
-          "ID"          => w.id,
-          "PID"         => w.pid,
-          "SPID"        => w.sql_spid,
-          "Server id"   => w.miq_server_id,
-          "Queue"       => w.queue_name || w.uri,
-          "Started"     => w.started_on&.iso8601,
-          "Heartbeat"   => w.last_heartbeat&.iso8601,
-          "MB Usage"    => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
+          "Rgn"       => s.region_number,
+          "Zone"      => s.zone.name,
+          "Type"      => simple_type,
+          "Status"    => w.status.sub("stopping", "stop pending"),
+          "PID"       => w.pid,
+          "SPID"      => w.sql_spid,
+          "Server"    => s.name,
+          "Queue"     => w.queue_name || w.uri,
+          "Started"   => w.started_on&.iso8601,
+          "Heartbeat" => w.last_heartbeat&.iso8601,
+          "MB Usage"  => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
         }
       end
     end
