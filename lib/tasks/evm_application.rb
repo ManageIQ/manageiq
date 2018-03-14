@@ -73,17 +73,17 @@ class EvmApplication
   def self.output_servers_status(servers)
     data = servers.collect do |s|
       {
+        "Rgn"       => s.region_number,
         "Zone"      => s.zone.name,
-        "Server"    => s.name,
+        "Server"    => s.name + (s.is_master ? "*" : ""),
         "Status"    => s.status,
-        "ID"        => s.id,
         "PID"       => s.pid,
         "SPID"      => s.sql_spid,
-        "URL"       => s.drb_uri,
+        "Workers"   => s.miq_workers.size,
+        "Version"   => s.version,
         "Started"   => s.started_on&.iso8601,
         "Heartbeat" => s.last_heartbeat&.iso8601,
         "MB Usage"  => (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
-        "Master?"   => s.is_master,
         "Roles"     => s.active_role_names.join(':'),
       }
     end

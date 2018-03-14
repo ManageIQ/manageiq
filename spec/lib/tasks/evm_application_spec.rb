@@ -31,8 +31,9 @@ describe EvmApplication do
       val.to_s.rjust(send("#{col.downcase}_padding"))
     end
 
-    let(:local)    { EvmSpecHelper.local_miq_server }
-    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true) }
+    let(:local)    { EvmSpecHelper.local_miq_server(:version => '9.9.9.9', :last_heartbeat => 2.day.ago) }
+    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :version => '9.9.9.8', :last_heartbeat => nil) }
+    let(:rgn)      { local.region_number }
     let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
     let!(:socket)  { FactoryGirl.create(:miq_websocket_worker, :miq_server => local, :pid => 7000) }
     let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote) }
@@ -55,9 +56,9 @@ describe EvmApplication do
     context "for just the local server" do
       it "displays server status for the local server and it's workers" do
         server_info = <<-SERVER_INFO.strip_heredoc
-           #{header(:Zone, :ljust)} | Server                   | Status  | #{header(:ID)       } | PID | SPID | URL | Started              | Heartbeat            | MB Usage | Master? | Roles
-          -#{line_for(:Zone)      }-+--------------------------+---------+-#{line_for(:ID)     }-+-----+------+-----+----------------------+----------------------+----------+---------+-------
-           #{local.zone.name      } | #{      local.name     } | started | #{pad(local.id, :ID)} |     |      |     | #{local_started_on } | #{local_heartbeat  } |          | false   |
+           Rgn #{  }| #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | Started              | Heartbeat            | MB Usage | Roles
+          -----#{  }+-#{line_for(:Zone)      }-+--------------------------+---------+-----+------+---------+---------+----------------------+----------------------+----------+-------
+             #{rgn} | #{local.zone.name      } | #{      local.name     } | started |     |      |       2 | 9.9.9.9 | #{local_started_on } | #{local_heartbeat  } |          |
         SERVER_INFO
         worker_info = <<-WORKER_INFO.strip_heredoc
            Worker Type        | Status | #{header(:WID)        } | #{header(:PID)         } | SPID | #{header(:Server_id)       } | Queue | Started | Heartbeat | MB Usage
@@ -75,7 +76,6 @@ describe EvmApplication do
 
     context "with remote servers" do
       let(:remote_started_on) { remote.started_on.iso8601 }
-      let(:remote_heartbeat)  { remote.last_heartbeat.iso8601 }
 
       let(:id_padding)        { ["ID", local.id.to_s, remote.id.to_s].map(&:size).max }
       let(:pid_padding)       { MiqWorker.all.pluck(:pid).map { |pid| pid.to_s.size }.unshift(3).max }
@@ -85,10 +85,10 @@ describe EvmApplication do
 
       it "displays server status for the all servers and workers" do
         server_info = <<-SERVER_INFO.strip_heredoc
-           #{header(:Zone, :ljust)} | Server                   | Status  | #{header(:ID)        } | PID | SPID | URL | Started              | Heartbeat            | MB Usage | Master? | Roles
-          -#{line_for(:Zone)      }-+--------------------------+---------+-#{line_for(:ID)      }-+-----+------+-----+----------------------+----------------------+----------+---------+-------
-           #{local.zone.name      } | #{      local.name     } | started | #{pad(local.id, :ID) } |     |      |     | #{local_started_on } | #{local_heartbeat  } |          | false   |
-           #{remote.zone.name     } | #{      remote.name    } | started | #{pad(remote.id, :ID)} |     |      |     | #{remote_started_on} | #{remote_heartbeat } |          | true    |
+           Rgn #{  }| #{header(:Zone, :ljust)} | Server                    | Status  | PID | SPID | Workers | Version | Started              | Heartbeat            | MB Usage | Roles
+          -----#{  }+-#{line_for(:Zone)      }-+---------------------------+---------+-----+------+---------+---------+----------------------+----------------------+----------+-------
+             #{rgn} | #{local.zone.name      } | #{      local.name     }  | started |     |      |       2 | 9.9.9.9 | #{local_started_on } | #{local_heartbeat  } |          |
+             #{rgn} | #{remote.zone.name     } | #{     remote.name     }* | started |     |      |       2 | 9.9.9.8 |                      | #{remote_heartbeat } |          |
         SERVER_INFO
         worker_info = <<-WORKER_INFO.strip_heredoc
            Worker Type                                     | Status | #{header(:WID)         } | #{header(:PID)          } | SPID | #{header(:Server_id)        } | Queue | Started | Heartbeat | MB Usage
