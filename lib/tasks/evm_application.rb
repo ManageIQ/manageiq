@@ -72,46 +72,44 @@ class EvmApplication
 
   def self.output_servers_status(servers)
     data = servers.collect do |s|
-      [s.zone.name,
-       s.name,
-       s.status,
-       s.id,
-       s.pid,
-       s.sql_spid,
-       s.drb_uri,
-       s.started_on && s.started_on.iso8601,
-       s.last_heartbeat && s.last_heartbeat.iso8601,
-       (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
-       s.is_master,
-       s.active_role_names.join(':'),
-      ]
+      {
+        "Zone"           => s.zone.name,
+        "Server"         => s.name,
+        "Status"         => s.status,
+        "ID"             => s.id,
+        "PID"            => s.pid,
+        "SPID"           => s.sql_spid,
+        "URL"            => s.drb_uri,
+        "Started On"     => s.started_on&.iso8601,
+        "Last Heartbeat" => s.last_heartbeat&.iso8601,
+        "MB Usage"       => (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
+        "Master?"        => s.is_master,
+        "Active Roles"   => s.active_role_names.join(':'),
+      }
     end
-    header = ["Zone", "Server", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "MB Usage", "Master?", "Active Roles"]
-    puts data.unshift(header).tableize
+    puts data.tableize(:columns => data.first.keys) if data.present?
   end
 
   def self.output_workers_status(servers)
-    data = []
-    servers.each do |s|
-      s.miq_workers.order(:type).each do |w|
+    data = servers.flat_map do |s|
+      s.miq_workers.order(:type).collect do |w|
         mb_usage = w.proportional_set_size || w.memory_usage
         mb_threshold = w.worker_settings[:memory_threshold]
-        data <<
-          [w.type,
-           w.status.sub("stopping", "stop pending"),
-           w.id,
-           w.pid,
-           w.sql_spid,
-           w.miq_server_id,
-           w.queue_name || w.uri,
-           w.started_on && w.started_on.iso8601,
-           w.last_heartbeat && w.last_heartbeat.iso8601,
-           mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""]
+        {
+          "Worker Type"      => w.type,
+          "Status"           => w.status.sub("stopping", "stop pending"),
+          "ID"               => w.id,
+          "PID"              => w.pid,
+          "SPID"             => w.sql_spid,
+          "Server id"        => w.miq_server_id,
+          "Queue Name / URL" => w.queue_name || w.uri,
+          "Started On"       => w.started_on&.iso8601,
+          "Last Heartbeat"   => w.last_heartbeat&.iso8601,
+          "MB Usage"         => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
+        }
       end
     end
-
-    header = ["Worker Type", "Status", "ID", "PID", "SPID", "Server id", "Queue Name / URL", "Started On", "Last Heartbeat", "MB Usage"]
-    puts data.unshift(header).tableize unless data.empty?
+    puts data.tableize(:columns => data.first.keys) if data.present?
   end
 
   def self.update_start
