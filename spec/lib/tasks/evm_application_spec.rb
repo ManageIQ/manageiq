@@ -17,6 +17,120 @@ describe EvmApplication do
     end
   end
 
+  describe ".servers_status" do
+    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local)    { EvmSpecHelper.local_miq_server(:last_heartbeat => 2.day.ago, :zone => local_zone) }
+    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
+    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
+    let!(:socket)  { FactoryGirl.create(:miq_websocket_worker, :miq_server => local, :pid => 7000) }
+    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote) }
+    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+
+    it "displays server status for local and remote servers" do
+      expect(described_class.servers_status([local, remote])).to eq(
+        [
+          {
+            "Rgn"       => local.region_number,
+            "Zone"      => local.zone.name,
+            "Server"    => local.name,
+            "Status"    => "started",
+            "PID"       => nil,
+            "SPID"      => nil,
+            "Workers"   => 2,
+            "Version"   => "9.9.9.9",
+            "Started"   => local.started_on.iso8601,
+            "Heartbeat" => local.last_heartbeat.iso8601,
+            "MB Usage"  => "",
+            "Roles"     => "",
+          },
+          {
+            "Rgn"       => remote.region_number,
+            "Zone"      => remote.zone.name,
+            "Server"    => remote.name + "*",
+            "Status"    => "started",
+            "PID"       => nil,
+            "SPID"      => nil,
+            "Workers"   => 2,
+            "Version"   => "9.9.9.9",
+            "Started"   => remote.started_on.iso8601,
+            "Heartbeat" => nil,
+            "MB Usage"  => "",
+            "Roles"     => "",
+          },
+        ]
+      )
+    end
+  end
+
+  describe ".worker_status" do
+    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local)    { EvmSpecHelper.local_miq_server(:last_heartbeat => 2.day.ago, :zone => local_zone) }
+    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
+    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
+    let!(:socket)  { FactoryGirl.create(:miq_websocket_worker, :miq_server => local, :pid => 7000) }
+    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote) }
+    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+
+    it "displays worker status for local and remote server" do
+      expect(described_class.workers_status([local, remote])).to eq(
+        [
+          {
+            "Rgn"       => local.region_number,
+            "Zone"      => local.zone.name,
+            "Type"      => "Ui",
+            "Status"    => "ready",
+            "PID"       => ui.pid,
+            "SPID"      => nil,
+            "Server"    => local.name,
+            "Queue"     => nil,
+            "Started"   => nil,
+            "Heartbeat" => nil,
+            "MB Usage"  => "",
+          },
+          {
+            "Rgn"       => local.region_number,
+            "Zone"      => local.zone.name,
+            "Type"      => "Websocket",
+            "Status"    => "ready",
+            "PID"       => socket.pid,
+            "SPID"      => nil,
+            "Server"    => local.name,
+            "Queue"     => nil,
+            "Started"   => nil,
+            "Heartbeat" => nil,
+            "MB Usage"  => "",
+          },
+          {
+            "Rgn"       => remote.region_number,
+            "Zone"      => remote.zone.name,
+            "Type"      => "Base::Refresh",
+            "Status"    => "ready",
+            "PID"       => refresh.pid,
+            "SPID"      => nil,
+            "Server"    => remote.name,
+            "Queue"     => nil,
+            "Started"   => nil,
+            "Heartbeat" => nil,
+            "MB Usage"  => "",
+          },
+          {
+            "Rgn"       => remote.region_number,
+            "Zone"      => remote.zone.name,
+            "Type"      => "Generic",
+            "Status"    => "ready",
+            "PID"       => generic.pid,
+            "SPID"      => nil,
+            "Server"    => remote.name,
+            "Queue"     => nil,
+            "Started"   => nil,
+            "Heartbeat" => nil,
+            "MB Usage"  => "",
+          },
+        ]
+      )
+    end
+  end
+
   describe ".status" do
     def header(col, adjust = :rjust)
       hdr = col == :WID ? "ID" : col.to_s # edge case
@@ -31,8 +145,9 @@ describe EvmApplication do
       val.to_s.rjust(send("#{col.downcase}_padding"))
     end
 
-    let(:local)    { EvmSpecHelper.local_miq_server(:version => '9.9.9.9', :last_heartbeat => 2.day.ago) }
-    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :version => '9.9.9.8', :last_heartbeat => nil) }
+    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local)    { EvmSpecHelper.local_miq_server(:last_heartbeat => 2.day.ago, :zone => local_zone) }
+    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
     let(:rgn)      { local.region_number }
     let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
     let!(:socket)  { FactoryGirl.create(:miq_websocket_worker, :miq_server => local, :pid => 7000) }
@@ -64,7 +179,7 @@ describe EvmApplication do
              #{rgn} | #{local.zone.name      } | Websocket | ready  | #{pad(socket.pid, :PID)} |      | #{      local.name     } |       |         |           |
         WORKER_INFO
 
-   expect(described_class).to receive(:puts).with(server_info)
+        expect(described_class).to receive(:puts).with(server_info)
         expect(described_class).to receive(:puts).with(worker_info)
 
         EvmApplication.status
@@ -82,7 +197,7 @@ describe EvmApplication do
            Rgn #{  }| #{header(:Zone, :ljust)} | Server                    | Status  | PID | SPID | Workers | Version | Started              | Heartbeat            | MB Usage | Roles
           -----#{  }+-#{line_for(:Zone)      }-+---------------------------+---------+-----+------+---------+---------+----------------------+----------------------+----------+-------
              #{rgn} | #{local.zone.name      } | #{      local.name     }  | started |     |      |       2 | 9.9.9.9 | #{local_started_on } | #{local_heartbeat  } |          |
-             #{rgn} | #{remote.zone.name     } | #{     remote.name     }* | started |     |      |       2 | 9.9.9.8 | #{remote_started_on} |                      |          |
+             #{rgn} | #{remote.zone.name     } | #{     remote.name     }* | started |     |      |       2 | 9.9.9.9 | #{remote_started_on} |                      |          |
         SERVER_INFO
         worker_info = <<-WORKER_INFO.strip_heredoc
            Rgn #{  }| #{header(:Zone, :ljust)} | Type          | Status | #{header(:PID)          } | SPID | Server                   | Queue | Started | Heartbeat | MB Usage
