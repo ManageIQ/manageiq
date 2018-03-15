@@ -91,7 +91,15 @@ describe RegistrationSystem do
     end
 
     it "should rescue NotImplementedError" do
-      allow_any_instance_of(LinuxAdmin::Rhn).to receive_messages(:registered? => true)
+      if Gem::Version.new(LinuxAdmin::VERSION) > Gem::Version.new("1.2.1")
+        raise "Hey, this test can be changed now"
+        # To fix, just simply remove the `rhn_double`, and following two
+        # `allow` stubs, along with this if block.
+      end
+      rhn_double = double("LinuxAdmin::Rhn")
+      allow(LinuxAdmin::Rhn).to receive_messages(:new => rhn_double)
+      allow(rhn_double).to      receive_messages(:registered? => false)
+      allow_any_instance_of(LinuxAdmin::SubscriptionManager).to receive_messages(:registered? => true)
       expect(RegistrationSystem.verify_credentials(creds)).to be_falsey
     end
 
