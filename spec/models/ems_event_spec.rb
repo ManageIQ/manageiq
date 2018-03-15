@@ -270,6 +270,7 @@ describe EmsEvent do
         :snapshot,
         :status,
         :storage,
+        :update,
       ]
       expect(described_class.event_groups.keys).to match_array(event_group_names)
       expect(described_class.event_groups[:addition]).to include(:name => 'Creation/Addition')
