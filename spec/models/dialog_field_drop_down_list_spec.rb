@@ -2,7 +2,7 @@ describe DialogFieldDropDownList do
   context "dialog_field_drop_down_list" do
     let(:data_type) { "string" }
     let(:sort_by) { :description }
-    let(:sort_order) { :ascending }    
+    let(:sort_order) { :ascending }
     let(:df) { FactoryGirl.create(:dialog_field_sorted_item, :label => 'drop_down_list', :name => 'drop_down_list', :data_type => data_type, :sort_by => sort_by, :sort_order => sort_order) }
 
     describe "#sort_by" do
@@ -355,7 +355,7 @@ describe DialogFieldDropDownList do
         end
       end
 
-      context "dialog field dropdown without options hash" do        
+      context "dialog field dropdown without options hash" do
         let(:df) { FactoryGirl.create(:dialog_field_drop_down_list, :name => 'test drop down') }
 
         describe "#force_multi_value" do
@@ -390,11 +390,8 @@ describe DialogFieldDropDownList do
         end
       end
 
-      context "dialog field dropdown with options hash" do        
-        let(:df) { FactoryGirl.create(:dialog_field_drop_down_list,
-                                   :name    => 'test drop down',
-                                   :options => {:force_multi_value => true} )
-	}
+      context "dialog field dropdown with options hash" do
+        let(:df) { FactoryGirl.create(:dialog_field_drop_down_list, :name => 'test drop down', :options => {:force_multi_value => true}) }
         it "#force_multi_value" do
           expect(df.force_multi_value).to be_truthy
         end
