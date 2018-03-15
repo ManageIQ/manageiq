@@ -146,7 +146,7 @@ describe MiqGroup do
   context "Testing active VM aggregation" do
     let(:miq_group) { FactoryGirl.create(:miq_group, :description => "test group") }
     let(:ram_size) { 1024 }
-    let(:disk_size) { 1000000 }
+    let(:disk_size) { 1_000_000 }
     let(:num_cpu) { 2 }
     let(:ems) { FactoryGirl.create(:ems_vmware, :name => "test_vcenter") }
     let(:storage) { FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS") }
