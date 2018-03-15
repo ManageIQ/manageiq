@@ -42,7 +42,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :non_clustered_hosts, -> { non_clustered }, :class_name => "Host", :foreign_key => "ems_id"
   has_many :clustered_hosts, -> { clustered }, :class_name => "Host", :foreign_key => "ems_id"
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify,
-           :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
+           :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :operating_systems, :through => :vms_and_templates
