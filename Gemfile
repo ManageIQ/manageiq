@@ -43,7 +43,7 @@ gem "aws-sdk",                        "~>2",           :require => false
 gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.3.0",       :require => false
-gem "dalli",                          "~>2.7.4",       :require => false
+gem "dalli",                          "=2.7.6",        :require => false
 gem "default_value_for",              "~>3.0.2"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
