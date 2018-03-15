@@ -205,7 +205,7 @@ describe EmsEvent do
     it 'returns a list of groups' do
       event_group_names = [
         :addition, :application, :configuration, :console, :deletion, :general, :import_export, :migration, :network,
-        :power, :snapshot, :status, :storage
+        :power, :snapshot, :status, :storage, :update
       ]
       expect(described_class.event_groups.keys).to match_array(event_group_names)
       expect(described_class.event_groups[:addition]).to include(:name => 'Creation/Addition')
