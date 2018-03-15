@@ -1253,11 +1253,14 @@ describe "Vms API" do
     end
 
     it "to a single Vm" do
+      auth = FactoryGirl.create(:authentication, :authtype => "console")
+      ems = FactoryGirl.create(:ems_vmware, :authentications => [auth])
+      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
       api_basic_authorize action_identifier(:vms, :request_console)
 
-      run_post(vm_url, gen_request(:request_console))
+      run_post(vms_url(vm.id), gen_request(:request_console))
 
-      expect_single_action_result(:success => true, :message => /#{vm.id}.* requesting console/i, :href => vm_url)
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* requesting console/i, :href => vms_url(vm.id))
     end
   end
 
