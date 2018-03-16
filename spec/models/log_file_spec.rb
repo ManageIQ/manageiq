@@ -75,7 +75,10 @@ describe LogFile do
       end
 
       it "delivering MiqServer._request_logs message should call _post_my_logs with correct args" do
-        expected_options = {:timeout => described_class::LOG_REQUEST_TIMEOUT, :taskid => @task.id, :callback => {:instance_id => @task.id, :class_name => 'MiqTask', :method_name => :queue_callback_on_exceptions, :args => ['Finished']}}
+        expected_options = {:timeout     => described_class::LOG_REQUEST_TIMEOUT,
+                            :taskid      => @task.id, :miq_task_id => nil,
+                            :callback    => {:instance_id => @task.id, :class_name => 'MiqTask',
+                                             :method_name => :queue_callback_on_exceptions, :args => ['Finished']}}
         expect_any_instance_of(MiqServer).to receive(:_post_my_logs).with(expected_options)
 
         @message.delivered(*@message.deliver)
@@ -88,7 +91,7 @@ describe LogFile do
         end
 
         it "MiqServer#post_logs message should have correct args" do
-          expect(message.args).to         eq([{:taskid => @task.id}])
+          expect(message.args).to         eq([{:taskid => @task.id, :miq_task_id => nil}])
           expect(message.priority).to     eq(MiqQueue::HIGH_PRIORITY)
           expect(message.miq_callback).to eq(:instance_id => @task.id, :class_name => 'MiqTask', :method_name => :queue_callback_on_exceptions, :args => ['Finished'])
           expect(message.msg_timeout).to  eq(described_class::LOG_REQUEST_TIMEOUT)
