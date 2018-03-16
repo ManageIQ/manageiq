@@ -37,8 +37,8 @@ describe EvmApplication do
             "SPID"      => nil,
             "Workers"   => 1,
             "Version"   => "9.9.9.9",
-            "Started"   => local.started_on.iso8601,
-            "Heartbeat" => local.last_heartbeat.iso8601,
+            "Started"   => local.started_on.strftime("%H:%M:%S%Z"),
+            "Heartbeat" => local.last_heartbeat.strftime("%Y-%m-%d"),
             "MB Usage"  => "",
             "Roles"     => "",
           },
@@ -51,8 +51,8 @@ describe EvmApplication do
             "SPID"      => nil,
             "Workers"   => 2,
             "Version"   => "9.9.9.9",
-            "Started"   => remote.started_on.iso8601,
-            "Heartbeat" => nil,
+            "Started"   => remote.started_on.strftime("%H:%M:%S%Z"),
+            "Heartbeat" => "",
             "MB Usage"  => "",
             "Roles"     => "",
           },
@@ -81,8 +81,8 @@ describe EvmApplication do
             "SPID"      => nil,
             "Server"    => local.name,
             "Queue"     => nil,
-            "Started"   => nil,
-            "Heartbeat" => nil,
+            "Started"   => "",
+            "Heartbeat" => "",
             "MB Usage"  => "",
           },
           {
@@ -94,8 +94,8 @@ describe EvmApplication do
             "SPID"      => nil,
             "Server"    => remote.name,
             "Queue"     => nil,
-            "Started"   => nil,
-            "Heartbeat" => nil,
+            "Started"   => "",
+            "Heartbeat" => "",
             "MB Usage"  => "",
           },
           {
@@ -107,8 +107,8 @@ describe EvmApplication do
             "SPID"      => nil,
             "Server"    => remote.name,
             "Queue"     => nil,
-            "Started"   => nil,
-            "Heartbeat" => nil,
+            "Started"   => "",
+            "Heartbeat" => "",
             "MB Usage"  => "",
           },
         ]
@@ -126,8 +126,8 @@ describe EvmApplication do
       "-" * send("#{col.downcase}_padding")
     end
 
-    def pad(val, col)
-      val.to_s.rjust(send("#{col.downcase}_padding"))
+    def pad(val, col, adjust = :rjust)
+      val.to_s.send(adjust, send("#{col.downcase}_padding"))
     end
 
     let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
@@ -138,21 +138,23 @@ describe EvmApplication do
     let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7000) }
     let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
-    let(:local_started_on)  { local.started_on.iso8601 }
-    let(:local_heartbeat)   { local.last_heartbeat.iso8601 }
+    let(:local_started_on)  { local.started_on.strftime("%H:%M:%S%Z") }
+    let(:local_heartbeat)   { local.last_heartbeat.strftime("%Y-%m-%d") }
 
     let(:pid_padding)       { ["PID", ui.pid.to_s, generic.pid.to_s].map(&:size).max }
     let(:zone_padding)      { local.zone.name.to_s.size }
-    let(:rgn_padding)    { 3 }
+    let(:started_padding)   { ["Started", local_started_on].map(&:size).max }
+    let(:heartbeat_padding) { ["Heartbeat", local_heartbeat].map(&:size).max }
+    let(:rgn_padding)       { 3 }
 
     context "for just the local server" do
       it "displays server status for the local server and it's workers" do
 
         expected_output = <<~SERVER_INFO
           Checking EVM status...
-           #{header(:Rgn)  } | #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | Started              | Heartbeat            | MB Usage | Roles
-          -#{line_for(:Rgn)}-+-#{line_for(:Zone)      }-+--------------------------+---------+-----+------+---------+---------+----------------------+----------------------+----------+-------
-           #{pad(rgn, :Rgn)} | #{local.zone.name      } | #{      local.name     } | started |     |      |       1 | 9.9.9.9 | #{local_started_on } | #{local_heartbeat  } |          |
+           #{header(:Rgn)  } | #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust)  } | MB Usage | Roles
+          -#{line_for(:Rgn)}-+-#{line_for(:Zone)      }-+--------------------------+---------+-----+------+---------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)        }-+----------+-------
+           #{pad(rgn, :Rgn)} | #{local.zone.name      } | #{      local.name     } | started |     |      |       1 | 9.9.9.9 | #{local_started_on          } | #{local_heartbeat             } |          |
 
            #{header(:Rgn)  } | #{header(:Zone, :ljust)} | Type | Status | #{header(:PID)         } | SPID | Server                   | Queue | Started | Heartbeat | MB Usage
           -#{line_for(:Rgn)}-+-#{line_for(:Zone)      }-+------+--------+-#{line_for(:PID)       }-+------+--------------------------+-------+---------+-----------+----------
@@ -164,26 +166,27 @@ describe EvmApplication do
     end
 
     context "with remote servers" do
-      let(:remote_started_on) { remote.started_on.iso8601 }
+      let(:remote_started_on) { remote.started_on.strftime("%H:%M:%S%Z") }
 
       let(:pid_padding)       { MiqWorker.all.pluck(:pid).map { |pid| pid.to_s.size }.unshift(3).max }
       let(:zone_padding)      { ["Zone", local.zone.name.to_s, remote.zone.name.to_s].map(&:size).max }
+      let(:started_padding)   { ["Started", remote_started_on, local_started_on].map(&:size).max }
 
       it "displays server status for the all servers and workers" do
         expected_output = <<~SERVER_INFO
           Checking EVM status...
-           #{header(:Zone, :ljust)} | Server                    | Workers | Started              | Heartbeat
-          -#{line_for(:Zone)      }-+---------------------------+---------+----------------------+----------------------
-           #{local.zone.name      } | #{      local.name     }  |       1 | #{local_started_on } | #{local_heartbeat  }
-           #{remote.zone.name     } | #{     remote.name     }* |       2 | #{remote_started_on} |
+           #{header(:Zone, :ljust)               } | Server                    | Workers | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust).rstrip}
+          -#{line_for(:Zone)                     }-+---------------------------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)}-
+           #{pad(local.zone.name, :Zone, :ljust) } | #{      local.name     }  |       1 | #{local_started_on          } | #{local_heartbeat}
+           #{pad(remote.zone.name, :Zone, :ljust)} | #{     remote.name     }* |       2 | #{remote_started_on         } |
 
           For all rows: Rgn=#{rgn}, Status=started, Version=9.9.9.9
 
-           #{header(:Zone, :ljust)} | Type          | #{header(:PID)          } | Server
-          -#{line_for(:Zone)      }-+---------------+-#{line_for(:PID)        }-+--------------------------
-           #{local.zone.name      } | Ui            | #{pad(ui.pid, :PID)     } | #{      local.name     }
-           #{remote.zone.name     } | Base::Refresh | #{pad(refresh.pid, :PID)} | #{     remote.name     }
-           #{remote.zone.name     } | Generic       | #{pad(generic.pid, :PID)} | #{     remote.name     }
+           #{header(:Zone, :ljust)               } | Type          | #{header(:PID)          } | Server
+          -#{line_for(:Zone)                     }-+---------------+-#{line_for(:PID)        }-+--------------------------
+           #{pad(local.zone.name, :Zone, :ljust) } | Ui            | #{pad(ui.pid, :PID)     } | #{      local.name     }
+           #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | #{pad(refresh.pid, :PID)} | #{     remote.name     }
+           #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | #{pad(generic.pid, :PID)} | #{     remote.name     }
 
           For all rows: Rgn=#{rgn}, Status=ready
         SERVER_INFO

@@ -88,6 +88,12 @@ class EvmApplication
   end
   private_class_method :redundant_columns
 
+  def self.compact_date(date)
+    return "" unless date
+    date < 1.day.ago ? date.strftime("%Y-%m-%d") : date.strftime("%H:%M:%S%Z")
+  end
+  private_class_method :compact_date
+
   def self.servers_status(servers)
     data = servers.collect do |s|
       {
@@ -99,8 +105,8 @@ class EvmApplication
         "SPID"      => s.sql_spid,
         "Workers"   => s.miq_workers.size,
         "Version"   => s.version,
-        "Started"   => s.started_on&.iso8601,
-        "Heartbeat" => s.last_heartbeat&.iso8601,
+        "Started"   => compact_date(s.started_on),
+        "Heartbeat" => compact_date(s.last_heartbeat),
         "MB Usage"  => (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
         "Roles"     => s.active_role_names.join(':'),
       }
@@ -123,8 +129,8 @@ class EvmApplication
           "SPID"      => w.sql_spid,
           "Server"    => s.name,
           "Queue"     => w.queue_name || w.uri,
-          "Started"   => w.started_on&.iso8601,
-          "Heartbeat" => w.last_heartbeat&.iso8601,
+          "Started"   => compact_date(w.started_on),
+          "Heartbeat" => compact_date(w.last_heartbeat),
           "MB Usage"  => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
         }
       end
