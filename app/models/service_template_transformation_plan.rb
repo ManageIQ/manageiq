@@ -75,6 +75,8 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
 
     vms = if config_info[:vm_ids]
             VmOrTemplate.find(config_info[:vm_ids])
+          elsif config_info[:vm_refs]
+            validate_and_find_by_refs(mapping, config_info[:vm_refs])
           else
             config_info[:vms]
           end
@@ -88,4 +90,25 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     }
   end
   private_class_method :validate_config_info
+
+  # refs_config is an array of hash
+  # each hash can have keys: name(required), host, uid
+  def self.validate_and_find_by_refs(_mapping, refs_array)
+    refs_array.collect {|hash| vm_by_ref(hash) }
+  end
+  private_class_method :validate_and_find_by_refs
+
+  def self.vm_by_ref(ref_hash)
+    vm_name = ref_hash['name']
+
+    conditions = {:name => vm_name}
+    conditions[:uid_ems] = ref_hash['uid'] if ref_hash['uid'].present?
+    vms = Vm.where(conditions)
+    vms = vms.select { |vm| vm.host.name == ref_hash['host']} if ref_hash['host'].present?
+
+    raise _("VM(#{vm_name} does not exist in inventory)") if vms.empty?
+    raise _("Multiple VMs with name(#{vm_name}) in inventory") if vms.size > 1
+    vms.first
+  end
+  private_class_method :vm_by_ref
 end
