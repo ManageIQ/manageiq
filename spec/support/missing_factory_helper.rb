@@ -3,17 +3,21 @@ module Spec
   module Support
     module MissingFactoryHelper
       def build(factory, *args, &block)
-        registered_factory_symbols.include?(factory) ? super : class_from_symbol(factory).new(*args)
+        factory_exists?(factory) ? super : class_from_symbol(factory).new(*args)
       end
 
       def create(factory, *args, &block)
-        registered_factory_symbols.include?(factory) ? super : class_from_symbol(factory).create!(*args)
+        factory_exists?(factory) ? super : class_from_symbol(factory).create!(*args)
       end
 
       private
 
       def class_from_symbol(symbol)
         symbol.to_s.classify.constantize
+      end
+
+      def factory_exists?(factory)
+        registered_factory_symbols.include?(factory.to_sym)
       end
 
       def registered_factory_symbols
