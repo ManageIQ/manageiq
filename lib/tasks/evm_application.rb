@@ -67,7 +67,7 @@ class EvmApplication
   end
 
   def self.output_status(data)
-    return unless data.present?
+    return if data.blank?
     duplicate_columns = redundant_columns(data)
     puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
     if duplicate_columns.present?
@@ -78,7 +78,7 @@ class EvmApplication
   end
 
   def self.redundant_columns(data, column_names = nil, dups = {})
-    return dups unless data.size > 1
+    return dups if data.size <= 1
     column_names ||= data.first.keys
     column_names.each do |col_header|
       values = data.collect { |row| row[col_header] }.uniq
