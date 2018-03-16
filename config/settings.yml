@@ -781,6 +781,9 @@
       - USER_UPDATE_STORAGE_POOL_FAILED
       :detail: []
       :name: Storage
+    :update:
+      :detail: []
+      :name: Update
   :task_final_events:
     :ClusterCreatedEvent:
     - CreateClusterEx
