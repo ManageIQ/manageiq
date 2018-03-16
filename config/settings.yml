@@ -885,6 +885,9 @@
       - NODE_INVALIDDISKCAPACITY
       :detail: []
       :name: Storage
+    :update:
+      :detail: []
+      :name: Update
   :task_final_events:
     :ClusterCreatedEvent:
     - CreateClusterEx
