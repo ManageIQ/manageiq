@@ -121,7 +121,7 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :ems_events_src,  :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_vm_or_template_id
 
-  has_many                  :policy_events, -> { where(["target_id = ? OR target_class = 'VmOrTemplate'", id]).order(:timestamp) }, :class_name => "PolicyEvent"
+  has_many                  :policy_events, ->(vm) { where(["target_id = ? AND target_class = 'VmOrTemplate'", vm.id]).order(:timestamp) }, :foreign_key => "target_id"
 
   has_many                  :miq_events, :as => :target, :dependent => :destroy
 
