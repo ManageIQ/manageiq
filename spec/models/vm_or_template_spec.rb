@@ -1229,4 +1229,12 @@ describe VmOrTemplate do
       expect(Vm.new(:location => "test location", :storage => storage).v_datastore_path).to eq("storage name/test location")
     end
   end
+
+  context "#policy_events" do
+    it "returns the policy events with target class of VmOrTemplate and target_id of the vm" do
+      policy_event = FactoryGirl.create(:policy_event, :target_class => "VmOrTemplate", :target_id => vm.id)
+
+      expect(vm.policy_events).to eq([policy_event])
+    end
+  end
 end
