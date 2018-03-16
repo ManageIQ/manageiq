@@ -83,4 +83,108 @@ describe Metric::Purging do
       end
     end
   end
+
+  context "#purge_realtime" do
+    before { EvmSpecHelper.create_guid_miq_server_zone }
+    let(:vm1) { FactoryGirl.create(:vm_vmware) }
+
+    it "deletes mid day" do
+      Timecop.freeze('2018-02-01T09:12:00Z') do
+        (0..16).each do |hours|
+          FactoryGirl.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
+        end
+        expect(Metric.count).to eq(17)
+        # keep metric for 05:13 - 09:13
+        # note: old metrics will delete metrics at 09:14..09:59 - the new metrics will keep those
+        described_class.purge_realtime(4.hours.ago)
+        expect(Metric.all.map { |metric| metric.timestamp.hour }.sort).to eq [5, 6, 7, 8, 9]
+        expect(Metric.count).to eq(5)
+      end
+    end
+
+    it "deletes just after midnight" do
+      Timecop.freeze('2018-02-01T02:12:00Z') do
+        (0..16).each do |hours|
+          FactoryGirl.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
+        end
+        expect(Metric.count).to eq(17)
+        # keep metric for 22:13 - 02:13
+        described_class.purge_realtime(4.hours.ago)
+        expect(Metric.all.map { |metric| metric.timestamp.hour }.sort).to eq [0, 1, 2, 22, 23]
+        expect(Metric.count).to eq(5)
+      end
+    end
+
+    it "deletes just after new years" do
+      EvmSpecHelper.create_guid_miq_server_zone
+
+      Timecop.freeze('2018-01-01T02:12:00Z') do
+        (0..16).each do |hours|
+          FactoryGirl.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
+        end
+        expect(Metric.count).to eq(17)
+        # keep metric for 22:13 - 02:13
+        described_class.purge_realtime(4.hours.ago)
+        expect(Metric.all.map { |metric| metric.timestamp.hour }.sort).to eq [0, 1, 2, 22, 23]
+        expect(Metric.count).to eq(5)
+      end
+    end
+
+    it "deletes just after daylight savings (spring forward)" do
+      EvmSpecHelper.create_guid_miq_server_zone
+      Timecop.freeze('2017-03-12T08:12:00Z') do # 2:00am+05 EST is time of change
+        # this is overkill. since we prune every 21 minutes, there will only be ~1 table with data
+        (0..16).each do |hours|
+          FactoryGirl.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
+        end
+        expect(Metric.count).to eq(17)
+        # keep metric for 04:13 - 08:13
+        described_class.purge_realtime(4.hours.ago)
+        expect(Metric.all.map { |metric| metric.timestamp.hour }.sort).to eq [4, 5, 6, 7, 8]
+        expect(Metric.count).to eq(5)
+      end
+    end
+
+    it "deletes just after daylight savings (fallback)" do
+      EvmSpecHelper.create_guid_miq_server_zone
+      Timecop.freeze('2017-11-05T08:12:00Z') do # 2:00am+05 EST is time of change
+        # this is overkill. since we prune every 21 minutes, there will only be ~1 table with data
+        (0..16).each do |hours|
+          FactoryGirl.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
+        end
+        expect(Metric.count).to eq(17)
+        # keep metric for 04:13 - 08:13
+        described_class.purge_realtime(4.hours.ago)
+        expect(Metric.all.map { |metric| metric.timestamp.hour }.sort).to eq [4, 5, 6, 7, 8]
+        expect(Metric.count).to eq(5)
+      end
+    end
+
+    context "with 8 hour retention" do
+      # since the window duration is passed into the queue / this method, this config change will not matter
+      let(:settings) do
+        {
+          :performance => {
+            :history => {
+              :keep_realtime_performance => "8.hours",
+              :purge_window_size         => 10,
+            }
+          }
+        }
+      end
+
+      it "deletes just after midnight" do
+        Timecop.freeze('2018-02-01T02:12:00Z') do
+          (0..23).each do |hours|
+            FactoryGirl.create(:metric_vm_rt, :resource_id => vm1.id, :timestamp => (hours.hours.ago + 1.minute))
+          end
+          expect(Metric.count).to eq(24)
+          # keep metric for 18:13 - 02:13
+          described_class.purge_realtime(8.hours.ago)
+          expect(Metric.all.map { |metric| metric.timestamp.hour }.sort).to eq [0, 1, 2, 18, 19, 20, 21, 22, 23]
+          expect(Metric.count).to eq(9)
+        end
+      end
+    end
+  end
 end

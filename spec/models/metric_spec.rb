@@ -1169,6 +1169,34 @@ describe Metric do
     end
   end
 
+  context "#reindex_table_name" do
+    it "defaults to 1 hour from now" do
+      Timecop.freeze("2017-01-30T09:20UTC") do
+        expect(Metric.reindex_table_name).to eq("metrics_10")
+      end
+    end
+
+    it "pads table to 2 digits" do
+      Timecop.freeze("2017-01-30T03:20UTC") do
+        expect(Metric.reindex_table_name).to eq("metrics_04")
+      end
+    end
+
+    it "provides hour wrap around" do
+      Timecop.freeze("2017-01-30T23:20UTC") do
+        expect(Metric.reindex_table_name).to eq("metrics_00")
+      end
+    end
+
+    it "allows time to be passed in" do
+      expect(Metric.reindex_table_name(Time.parse("2017-01-30T23:20Z").utc)).to eq("metrics_23")
+    end
+
+    it "allows hour integer to be passed in" do
+      expect(Metric.reindex_table_name(23)).to eq("metrics_23")
+    end
+  end
+
   private
 
   def assert_queued_rollup(q_item, instance_id, class_name, args, deliver_on, method = "perf_rollup")
