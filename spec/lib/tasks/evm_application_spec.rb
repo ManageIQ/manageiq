@@ -19,10 +19,10 @@ describe EvmApplication do
 
   describe ".servers_status" do
     let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
-    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.day.ago, :zone => local_zone) }
+    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7000) }
+    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
     let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     it "displays server status for local and remote servers" do
@@ -63,10 +63,10 @@ describe EvmApplication do
 
   describe ".worker_status" do
     let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
-    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.day.ago, :zone => local_zone) }
+    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7000) }
+    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
     let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     it "displays worker status for local and remote server" do
@@ -131,11 +131,11 @@ describe EvmApplication do
     end
 
     let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
-    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.day.ago, :zone => local_zone) }
+    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
     let(:rgn)      { local.region_number }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7000) }
+    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
     let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     let(:local_started_on)  { local.started_on.strftime("%H:%M:%S%Z") }
