@@ -144,6 +144,13 @@ module SupportsFeatureMixin
   included do
     QUERYABLE_FEATURES.keys.each do |feature|
       supports_not(feature)
+      if respond_to?(:virtual_column)
+        virtual_column("supports_#{feature}", :type => :boolean)
+
+        define_method("supports_#{feature}") do
+          public_send("supports_#{feature}?")
+        end
+      end
     end
 
     private_class_method :unsupported
