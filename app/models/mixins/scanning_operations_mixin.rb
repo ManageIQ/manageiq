@@ -16,5 +16,9 @@ module ScanningOperationsMixin
       :task_id     => jobid,
     )
     _log.info("target [#{guid}] data put on queue, job [#{jobid}]")
+    true
+  rescue StandardError => err
+    _log.log_backtrace(err)
+    false
   end
 end
