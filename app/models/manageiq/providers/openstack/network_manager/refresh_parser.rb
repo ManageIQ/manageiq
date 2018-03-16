@@ -76,7 +76,13 @@ module ManageIQ::Providers
     end
 
     def networks
-      @networks ||= get_inventory_collection(:networks)
+      @networks ||= uniques(@network_service.list_networks.body["networks"])
+    rescue
+      []
+    end
+
+    def subnets
+      @subnets ||= get_inventory_collection(:subnets)
     end
 
     def network_ports
@@ -113,14 +119,11 @@ module ManageIQ::Providers
     def get_subnets
       return unless @network_service.name == :neutron
 
-      networks.each do |n|
-        new_net = @data_index.fetch_path(:cloud_networks, n.id)
-        new_net[:cloud_subnets] = n.subnets.collect { |s| parse_subnet(s, n) }
+      process_collection(subnets, :cloud_subnets) { |s| parse_subnet(s, s.network_id) }
 
-        # Lets store also subnets into indexed data, so we can reference them elsewhere
-        new_net[:cloud_subnets].each do |x|
-          @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
-        end
+      networks.each do |n|
+        new_net = @data_index.fetch_path(:cloud_networks, n["id"])
+        new_net[:cloud_subnets] = n["subnets"].collect { |s| @data_index.fetch_path(:cloud_subnets, s) }
       end
     end
 
@@ -162,30 +165,30 @@ module ManageIQ::Providers
     end
 
     def parse_network(network)
-      uid     = network.id
-      status  = (network.status.to_s.downcase == "active") ? "active" : "inactive"
+      uid     = network["id"]
+      status  = (network["status"].to_s.downcase == "active") ? "active" : "inactive"
 
-      network_type_suffix = network.router_external ? "::Public" : "::Private"
+      network_type_suffix = network["router:external"] ? "::Public" : "::Private"
 
       new_result = {
         :type                      => self.class.cloud_network_type + network_type_suffix,
-        :name                      => network.name,
+        :name                      => network["name"],
         :ems_ref                   => uid,
-        :shared                    => network.shared,
+        :shared                    => network["shared"],
         :status                    => status,
-        :enabled                   => network.admin_state_up,
-        :external_facing           => network.router_external,
-        :cloud_tenant              => parent_manager_fetch_path(:cloud_tenants, network.tenant_id),
+        :enabled                   => network["admin_state_up"],
+        :external_facing           => network["router:external"],
+        :cloud_tenant              => parent_manager_fetch_path(:cloud_tenants, network["tenant_id"]),
         :orchestration_stack       => parent_manager_fetch_path(:orchestration_stacks, @resource_to_stack[uid]),
-        :provider_physical_network => network.provider_physical_network,
-        :provider_network_type     => network.provider_network_type,
-        :provider_segmentation_id  => network.provider_segmentation_id,
-        :port_security_enabled     => network.attributes["port_security_enabled"],
-        :qos_policy_id             => network.attributes["qos_policy_id"],
-        :vlan_transparent          => network.attributes["vlan_transparent"],
+        :provider_physical_network => network["provider:physical_network"],
+        :provider_network_type     => network["provider:network_type"],
+        :provider_segmentation_id  => network["provider:segmentation_id"],
+        :port_security_enabled     => network["port_security_enabled"],
+        :qos_policy_id             => network["qos_policy_id"],
+        :vlan_transparent          => network["vlan_transparent"],
 
         # TODO(lsmola) expose attributes in FOG
-        :maximum_transmission_unit => network.attributes["mtu"],
+        :maximum_transmission_unit => network["mtu"],
       }
       return uid, new_result
     end
@@ -273,13 +276,15 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    def parse_subnet(subnet, network)
-      {
+    def parse_subnet(subnet, _network)
+      network = @data_index.fetch_path(:cloud_networks, subnet.network_id)
+      network[:cloud_subnets] ||= []
+      new_result = {
         :type                           => self.class.cloud_subnet_type,
         :name                           => subnet.name,
         :ems_ref                        => subnet.id,
         :cidr                           => subnet.cidr,
-        :status                         => (network.status.to_s.downcase == "active") ? "active" : "inactive",
+        :status                         => (network["status"].to_s.downcase == "active") ? "active" : "inactive",
         :network_protocol               => "ipv#{subnet.ip_version}",
         :gateway                        => subnet.gateway_ip,
         :dhcp_enabled                   => subnet.enable_dhcp,
@@ -292,6 +297,8 @@ module ManageIQ::Providers
         :ip_version                     => subnet.ip_version,
         :parent_cloud_subnet            => subnet.attributes["vsd_managed"] ? CloudSubnet.find_by(:ems_ref => subnet.attributes["vsd_id"]) : nil,
       }
+      network[:cloud_subnets] << new_result
+      return subnet.id, new_result
     end
 
     def parse_firewall_rule_neutron(rule)
