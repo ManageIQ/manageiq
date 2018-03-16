@@ -5,7 +5,8 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::Cloning
       status   = instance.state.downcase.to_sym
 
       if status == :error
-        raise MiqException::MiqProvisionError, "An error occurred while provisioning Instance #{instance.name}"
+        error_message = instance.fault["message"]
+        raise MiqException::MiqProvisionError, "An error occurred while provisioning Instance #{instance.name}: #{error_message}"
       end
       return true if status == :active
       return false, status
@@ -46,5 +47,8 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::Cloning
       instance = openstack.servers.create(clone_options)
       return instance.id
     end
+  rescue => e
+    error_message = parse_error_message_from_fog_response(e)
+    raise MiqException::MiqProvisionError, "An error occurred while provisioning Instance #{clone_options[:name]}: #{error_message}", e.backtrace
   end
 end
