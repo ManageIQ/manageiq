@@ -10,6 +10,7 @@ class ContainerQuota < ApplicationRecord
   # - ContainerQuotaItems can be added/deleted/changed, and we use archiving to
   #   record changes too!
   include ArchivedMixin
+  include_concern 'Purging'
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :container_project
