@@ -206,4 +206,26 @@ class EvmApplication
     return "upgrade"        if ActiveRecord::Migrator.needs_migration?
     "redeployment"
   end
+
+  def self.queue_overview
+    output_status(queue_status)
+  end
+
+  def self.queue_status
+    MiqQueue.select(:zone, :queue_name, :role, :class_name, :method_name)
+            .select('min(coalesce(deliver_on, created_on)) as oldest')
+            .select('count(*) as count')
+            .group(:zone, :queue_name, :role, :class_name, :method_name)
+            .order(:zone, :queue_name, :role, 'oldest desc', :class_name, :method_name)
+            .map do |e|
+              {
+                "Zone"   => e.zone,
+                "Queue"  => e.queue_name,
+                "Role"   => e.role,
+                "method" => "#{e.class_name}.#{e.method_name}",
+                "oldest" => e['oldest'].strftime("%Y-%m-%d"),
+                "count"  => e['count']
+              }
+            end
+  end
 end
