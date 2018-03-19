@@ -56,6 +56,11 @@ namespace :evm do
     puts inventory.tableize if inventory.present?
   end
 
+  desc "Report overview of queue"
+  task :queue => :environment do
+    EvmApplication.queue_overview
+  end
+
   desc "Determine if the configured encryption key is valid"
   task :validate_encryption_key => :environment do
     raise "Invalid encryption key" unless EvmApplication.encryption_key_valid?
