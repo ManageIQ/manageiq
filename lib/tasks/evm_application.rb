@@ -99,7 +99,7 @@ class EvmApplication
       {
         "Rgn"       => s.region_number,
         "Zone"      => s.zone.name,
-        "Server"    => s.name + (s.is_master ? "*" : ""),
+        "Server"    => (s.name || "UNKNOWN") + (s.is_master ? "*" : ""),
         "Status"    => s.status,
         "PID"       => s.pid,
         "SPID"      => s.sql_spid,
