@@ -14,7 +14,7 @@ module ManagerRefresh
         _log.info("#{log_header(ems)} Saving EMS Inventory...")
 
         inventory_object_saving_strategy = Settings.ems_refresh[ems.class.ems_type].try(:[], :inventory_object_saving_strategy)
-        if inventory_object_saving_strategy == :recursive
+        if inventory_object_saving_strategy.try(:to_sym) == :recursive
           ManagerRefresh::SaveCollection::Recursive.save_collections(ems, inventory_collections)
         else
           ManagerRefresh::SaveCollection::TopologicalSort.save_collections(ems, inventory_collections)

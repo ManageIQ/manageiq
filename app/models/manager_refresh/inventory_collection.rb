@@ -458,6 +458,7 @@ module ManagerRefresh
     def process_saver_strategy(saver_strategy)
       return :default unless saver_strategy
 
+      saver_strategy = saver_strategy.to_sym
       case saver_strategy
       when :default, :batch, :concurrent_safe, :concurrent_safe_batch
         saver_strategy
@@ -476,6 +477,7 @@ module ManagerRefresh
 
       return unless strategy_name
 
+      strategy_name = strategy_name.to_sym
       case strategy_name
       when :local_db_cache_all
         self.data_collection_finalized = true
