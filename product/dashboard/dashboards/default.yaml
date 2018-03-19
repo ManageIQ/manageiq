@@ -10,6 +10,7 @@ set_data_by_description:
   :col2:
   - report_top_cpu_consumers_weekly
   - chart_virtual_infrastructure_platforms
+  - rss_newest_servers
   :col3:
   - chart_guest_os_information_any_os
   - rss_newest_vms
