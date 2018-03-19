@@ -1,6 +1,6 @@
 describe "PartitionAlignment" do
   context "Running test" do
-    before(:each) do
+    before do
       aligned = 64.kilobytes
       not_aligned = 1
 

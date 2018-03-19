@@ -6,7 +6,7 @@ describe MiqRegion do
     ApplicationRecord.region_to_range(remote_region_number).first
   end
   context "after seeding" do
-    before(:each) do
+    before do
       MiqRegion.seed
     end
 

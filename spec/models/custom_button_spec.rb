@@ -34,7 +34,7 @@ describe CustomButton do
     end
 
     context "when I create a button via save_as_button class method" do
-      before(:each) do
+      before do
         @button_name   = "Power ON"
         @button_text   = "Power ON during Business Hours ONLY"
         @button_number = 3
@@ -71,7 +71,7 @@ describe CustomButton do
       end
 
       context "when invoking for a particular VM" do
-        before(:each) do
+        before do
           @vm    = FactoryGirl.create(:vm_vmware)
           @user2 = FactoryGirl.create(:user_with_group)
           EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
@@ -137,7 +137,7 @@ describe CustomButton do
   end
 
   context "validates uniqueness" do
-    before(:each) do
+    before do
       @vm = FactoryGirl.create(:vm_vmware)
       @default_name = @default_description = "boom"
     end

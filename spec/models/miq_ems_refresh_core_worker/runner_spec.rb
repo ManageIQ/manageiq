@@ -1,5 +1,5 @@
 describe MiqEmsRefreshCoreWorker::Runner do
-  before(:each) do
+  before do
     _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone)
 
@@ -15,7 +15,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
 
   context "#process_update" do
     context "against a ManageIQ::Providers::Vmware::InfraManager::Vm" do
-      before(:each) do
+      before do
         Timecop.travel(1.day.ago) do
           @vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :raw_power_state => "unknown")
         end
@@ -87,7 +87,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
         end
 
         context "and networks already persisted" do
-          before(:each) do
+          before do
             @hw = FactoryGirl.create(:hardware, :vm_or_template => @vm)
             @nics = (1..2).collect { FactoryGirl.create(:guest_device_nic_with_network, :hardware => @hw) }.sort_by(&:address)
             @expected_addresses = @nics.collect { |n| [n.network.ipaddress, n.network.ipv6address] }
@@ -144,7 +144,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
     end
 
     context "against a ManageIQ::Providers::Vmware::InfraManager::Template" do
-      before(:each) do
+      before do
         Timecop.travel(1.day.ago) do
           @template = FactoryGirl.create(:template_vmware_with_ref, :ext_management_system => @ems)
         end

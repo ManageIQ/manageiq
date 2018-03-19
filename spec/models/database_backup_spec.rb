@@ -2,7 +2,7 @@ describe DatabaseBackup do
   context "region" do
     let!(:region) { FactoryGirl.create(:miq_region, :region => 3) }
 
-    before(:each) do
+    before do
       allow(described_class).to receive_messages(:my_region_number => region.region)
     end
 
@@ -24,7 +24,7 @@ describe DatabaseBackup do
   end
 
   context "schedule" do
-    before(:each) do
+    before do
       EvmSpecHelper.local_miq_server
 
       @name = "adhoc schedule"

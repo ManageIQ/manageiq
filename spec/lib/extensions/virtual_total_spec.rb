@@ -1,5 +1,5 @@
 describe VirtualTotal do
-  before(:each) do
+  before do
     # rubocop:disable Style/SingleLineMethods, Layout/EmptyLineBetweenDefs, Naming/AccessorMethodName
     class VitualTotalTestBase < ActiveRecord::Base
       self.abstract_class = true
@@ -71,7 +71,7 @@ describe VirtualTotal do
     # rubocop:enable Style/SingleLineMethods, Layout/EmptyLineBetweenDefs, Naming/AccessorMethodName
   end
 
-  after(:each) do
+  after do
     VitualTotalTestBase.remove_connection
     Object.send(:remove_const, :VtAuthor)
     Object.send(:remove_const, :VtBook)
@@ -160,7 +160,7 @@ describe VirtualTotal do
     end
 
     context "with order clauses in the relation" do
-      before(:each) do
+      before do
         # Monkey patching VtAuthor for these specs
         class VtAuthor < VitualTotalTestBase
           has_many :recently_published_books, -> { published.order(:created_on => :desc) },
@@ -217,7 +217,7 @@ describe VirtualTotal do
     end
 
     context "with a special books class" do
-      before(:each) do
+      before do
         class SpecialVtBook < VtBook
           default_scope { where(:special => true) }
 
@@ -236,7 +236,7 @@ describe VirtualTotal do
         end
       end
 
-      after(:each) do
+      after do
         Object.send(:remove_const, :SpecialVtBook)
       end
 

@@ -2,7 +2,7 @@ require 'VMwareWebService/MiqVim'
 require 'VMwareWebService/MiqVimBroker'
 
 describe MiqVimBrokerWorker::Runner do
-  before(:each) do
+  before do
     _guid_2, _server_2, @zone_2 = EvmSpecHelper.create_guid_miq_server_zone
     _guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
@@ -33,7 +33,7 @@ describe MiqVimBrokerWorker::Runner do
   end
 
   context "with a worker created" do
-    before(:each) do
+    before do
       expect_any_instance_of(described_class).to receive(:after_initialize).once
       @vim_broker_worker = described_class.new(:guid => @worker_guid)
       allow(@vim_broker_worker).to receive(:worker_settings).and_return(
@@ -205,7 +205,7 @@ describe MiqVimBrokerWorker::Runner do
 
     context "#drain_event" do
       context "instance with update notification enabled" do
-        before(:each) do
+        before do
           @vim_broker_worker.instance_variable_set(:@vim_broker_server, double('dummy_broker_server').as_null_object)
           @vim_broker_worker.instance_variable_set(:@active_roles, ['ems_inventory'])
           @vim_broker_worker.instance_variable_set(:@queue, Queue.new)

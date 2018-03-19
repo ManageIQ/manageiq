@@ -1,5 +1,5 @@
 describe WebsocketServer do
-  before(:each) do
+  before do
     allow(logger).to receive(:info)
     @server = described_class.new(:logger => logger)
     Thread.list.reject { |t| t == Thread.current }.each(&:kill)
@@ -41,7 +41,7 @@ describe WebsocketServer do
   describe '#cleanup' do
     subject { @server.send(:cleanup, error) }
 
-    before(:each) do
+    before do
       pairing.merge!(
         left  => WebsocketServer::Pairing.new(true, proxy),
         right => WebsocketServer::Pairing.new(false, proxy)

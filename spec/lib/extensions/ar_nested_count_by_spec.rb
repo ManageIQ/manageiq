@@ -1,6 +1,6 @@
 describe "AR Nested Count By extension" do
   context "miq_queue with messages" do
-    before(:each) do
+    before do
       @zone = EvmSpecHelper.local_miq_server.zone
 
       FactoryGirl.create(:miq_queue, :zone => @zone.name, :state => MiqQueue::STATE_DEQUEUE,  :role => "role1", :priority => 20)

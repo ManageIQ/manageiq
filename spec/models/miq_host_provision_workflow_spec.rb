@@ -6,7 +6,7 @@ describe MiqHostProvisionWorkflow do
 
   context "seeded" do
     context "After setup," do
-      before(:each) do
+      before do
         @server = EvmSpecHelper.local_miq_server
 
         FactoryGirl.create(:user_admin)
@@ -29,7 +29,7 @@ describe MiqHostProvisionWorkflow do
       end
 
       context "With a Valid IPMI Host," do
-        before(:each) do
+        before do
           ems = FactoryGirl.create(:ems_vmware, :name => "Test EMS", :zone => @server.zone)
           FactoryGirl.create(:host_with_ipmi, :ext_management_system => ems)
           pxe_server = FactoryGirl.create(:pxe_server,

@@ -2,7 +2,7 @@ describe Zone do
   include_examples ".seed called multiple times"
 
   context "with two small envs" do
-    before(:each) do
+    before do
       @zone1 = FactoryGirl.create(:small_environment)
       @host1 = @zone1.ext_management_systems.first.hosts.first
       @zone1.reload
@@ -147,7 +147,7 @@ describe Zone do
 
   context "ConfigurationManagementMixin" do
     describe "#remote_cockpit_ws_miq_server" do
-      before(:each) do
+      before do
         @csv = <<-CSV.gsub(/^\s+/, "")
           name,description,max_concurrent,external_failover,role_scope
           cockpit_ws,Cockpit,1,false,zone

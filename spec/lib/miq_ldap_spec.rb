@@ -1,7 +1,7 @@
 # encoding: US-ASCII
 
 describe MiqLdap do
-  before(:each) do
+  before do
     @host     = 'mycompany.com'
 
     # TODO: Use an actual user so this test actually tests something in the CI server

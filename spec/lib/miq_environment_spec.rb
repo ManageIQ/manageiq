@@ -1,11 +1,11 @@
 describe MiqEnvironment do
   context "with linux platform" do
-    before(:each) do
+    before do
       @old_impl = Sys::Platform::IMPL
       silence_warnings { Sys::Platform::IMPL = :linux }
     end
 
-    after(:each) do
+    after do
       silence_warnings { Sys::Platform::IMPL = @old_impl } if @old_impl
     end
 

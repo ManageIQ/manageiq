@@ -82,7 +82,7 @@ describe MiqAeClass do
       ns.update_attributes!(:priority => value)
     end
 
-    before(:each) do
+    before do
       @user = FactoryGirl.create(:user_with_group, 'name' => 'Fred')
       model_data_dir = Rails.root.join("spec/models/miq_ae_class/data")
       EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain1'), "DOMAIN1")
@@ -292,7 +292,7 @@ describe MiqAeClass do
   end
 
   context "state_machine_class tests" do
-    before(:each) do
+    before do
       n1 = FactoryGirl.create(:miq_ae_system_domain, :name => 'ns1', :priority => 10)
       @c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     end

@@ -35,7 +35,7 @@ describe MiqWorker do
       expect(described_class.has_required_role?).to eq(expected_result)
     end
 
-    before(:each) do
+    before do
       active_roles = %w(foo bar).map { |rn| FactoryGirl.create(:server_role, :name => rn) }
       @server = EvmSpecHelper.local_miq_server(:active_roles => active_roles)
     end
@@ -108,13 +108,13 @@ describe MiqWorker do
   end
 
   context ".workers_configured_count" do
-    before(:each) do
+    before do
       @configured_count = 2
       allow(described_class).to receive(:worker_settings).and_return(:count => @configured_count)
       @maximum_workers_count = described_class.maximum_workers_count
     end
 
-    after(:each) do
+    after do
       described_class.maximum_workers_count = @maximum_workers_count
     end
 
@@ -336,7 +336,7 @@ describe MiqWorker do
   end
 
   context "instance" do
-    before(:each) do
+    before do
       allow(described_class).to receive(:nice_increment).and_return("+10")
       @worker = FactoryGirl.create(:miq_worker)
     end

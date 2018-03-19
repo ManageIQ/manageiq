@@ -1,6 +1,6 @@
 describe MiqAlert do
   context "With single server with a single generic worker with the notifier role," do
-    before(:each) do
+    before do
       @miq_server = EvmSpecHelper.local_miq_server(:role => 'notifier')
       @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
       @vm     = FactoryGirl.create(:vm_vmware)
@@ -23,7 +23,7 @@ describe MiqAlert do
     end
 
     context "where a vm_scan_complete event is raised for a VM" do
-      before(:each) do
+      before do
         MiqAlert.all.each { |a| a.update_attribute(:enabled, true) } # enable out of the box alerts
         MiqAlert.evaluate_alerts(@vm, "vm_scan_complete")
       end
@@ -39,7 +39,7 @@ describe MiqAlert do
     end
 
     context "where a vm_scan_complete event is raised for a VM" do
-      before(:each) do
+      before do
         MiqAlert.all.each { |a| a.update_attribute(:enabled, true) } # enable out of the box alerts
         @events_to_alerts.each do |arr|
           MiqAlert.evaluate_alerts([@vm.class.base_class.name, @vm.id], arr.first)
@@ -61,7 +61,7 @@ describe MiqAlert do
     end
 
     context "where all alerts are disabled" do
-      before(:each) do
+      before do
         MiqAlert.all.each { |a| a.update_attribute(:enabled, false) }
         MiqAlert.evaluate_alerts([@vm.class.base_class.name, @vm.id], "vm_scan_complete")
       end
@@ -73,12 +73,12 @@ describe MiqAlert do
     end
 
     context "with a single alert, not evaluated" do
-      before(:each) do
+      before do
         @alert = MiqAlert.find_by(:description => "VM Unregistered")
       end
 
       context "with a delay_next_evaluation value of 5 minutes" do
-        before(:each) do
+        before do
           @alert.options ||= {}
           @alert.options.store_path(:notifications, :delay_next_evaluation, 5.minutes)
         end
@@ -92,7 +92,7 @@ describe MiqAlert do
     end
 
     context "with a single alert, evaluated to true" do
-      before(:each) do
+      before do
         @alert = MiqAlert.find_by(:description => "VM Unregistered")
         allow(@alert).to receive_messages(:eval_expression => true)
       end
@@ -247,7 +247,7 @@ describe MiqAlert do
       end
 
       context "with the alert now evaluated to false" do
-        before(:each)  do
+        before  do
           @alert.evaluate([@vm.class.base_class.name, @vm.id])
           allow(@alert).to receive_messages(:eval_expression => false)
           @alert.options.store_path(:notifications, :delay_next_evaluation, 0)
@@ -272,7 +272,7 @@ describe MiqAlert do
       end
 
       context "with a delay_next_evaluation value of 5 minutes" do
-        before(:each) do
+        before do
           @alert.evaluate([@vm.class.base_class.name, @vm.id])
           @alert.options ||= {}
           @alert.options.store_path(:notifications, :delay_next_evaluation, 5.minutes)
@@ -294,7 +294,7 @@ describe MiqAlert do
     end
 
     context "where all alerts are unassigned" do
-      before(:each) do
+      before do
         @original_assigned     = MiqAlert.assigned_to_target(@vm, "vm_perf_complete") # force cache load
         @original_assigned_all = MiqAlert.assigned_to_target(@vm)                     # force cache load
         MiqAlertSet.all.each(&:remove_all_assigned_tos)

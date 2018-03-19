@@ -1,6 +1,6 @@
 describe "MiqSchedule Filter" do
   context "Getting schedule targets" do
-    before(:each) do
+    before do
       @server1 = EvmSpecHelper.local_miq_server
 
       # Vm Scan Schedules
@@ -40,7 +40,7 @@ describe "MiqSchedule Filter" do
     end
 
     context "for a scheduled report" do
-      before(:each) do
+      before do
         MiqReport.seed_report("Vendor and Guest OS")
         @report = MiqReport.first
         @report_schedule = FactoryGirl.create(:miq_schedule,

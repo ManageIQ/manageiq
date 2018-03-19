@@ -1,7 +1,7 @@
 # this is basically copied from miq_report_result/purging.rb
 describe DriftState do
   context "::Purging" do
-    before(:each) do
+    before do
       @vmdb_config = {
         :drift_states => {
           :history => {
@@ -43,7 +43,7 @@ describe DriftState do
     end
 
     context "#purge_queue" do
-      before(:each) do
+      before do
         EvmSpecHelper.create_guid_miq_server_zone
         described_class.purge_queue(:remaining, 1)
       end

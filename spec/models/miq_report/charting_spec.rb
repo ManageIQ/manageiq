@@ -1,5 +1,5 @@
 describe MiqReport do
-  before(:each) do
+  before do
     EvmSpecHelper.local_miq_server
 
     @group = FactoryGirl.create(:miq_group)

@@ -1,6 +1,6 @@
 describe "Server Monitor" do
   context "After Setup," do
-    before(:each) do
+    before do
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,role_scope
         automate,Automation Engine,0,false,region
@@ -41,7 +41,7 @@ describe "Server Monitor" do
     end
 
     context "with 1 Server" do
-      before(:each) do
+      before do
         @miq_server = EvmSpecHelper.local_miq_server
         @miq_server.monitor_servers
 
@@ -108,7 +108,7 @@ describe "Server Monitor" do
       end
 
       context "after initial monitor_servers" do
-        before(:each) do
+        before do
           @miq_server.monitor_server_roles
         end
 
@@ -229,7 +229,7 @@ describe "Server Monitor" do
     end
 
     context "with 2 Servers in 2 Zones where I am the Master" do
-      before(:each) do
+      before do
         @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true)
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, scheduler, reporting'
@@ -269,7 +269,7 @@ describe "Server Monitor" do
       end
 
       context "after monitor_servers" do
-        before(:each) do
+        before do
           @miq_server1.monitor_server_roles
           @miq_server2.reload
         end
@@ -283,7 +283,7 @@ describe "Server Monitor" do
       end
 
       context "with Non-Master having the active roles" do
-        before(:each) do
+        before do
           @miq_server2.activate_roles("event")
           @miq_server1.monitor_server_roles
         end
@@ -294,7 +294,7 @@ describe "Server Monitor" do
         end
 
         context "where Non-Master shuts down cleanly" do
-          before(:each) do
+          before do
             @miq_server2.deactivate_all_roles
             @miq_server2.stopped_on = Time.now.utc
             @miq_server2.status = "stopped"
@@ -314,7 +314,7 @@ describe "Server Monitor" do
         end
 
         context "where Non-Master is not responding" do
-          before(:each) do
+          before do
             @miq_server1.monitor_servers
             Timecop.travel 5.minutes do
               @miq_server1.monitor_servers
@@ -347,7 +347,7 @@ describe "Server Monitor" do
     end
 
     context "with 2 Servers where I am the non-Master" do
-      before(:each) do
+      before do
         @miq_server1 = EvmSpecHelper.local_miq_server
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, scheduler, reporting'
@@ -373,7 +373,7 @@ describe "Server Monitor" do
       end
 
       context "where Master shuts down cleanly" do
-        before(:each) do
+        before do
           @miq_server2.deactivate_all_roles
           @miq_server2.stopped_on = Time.now.utc
           @miq_server2.status = "stopped"
@@ -400,12 +400,12 @@ describe "Server Monitor" do
       end
 
       context "where Master is not responding" do
-        before(:each) do
+        before do
           Timecop.travel 5.minutes
           @miq_server1.monitor_servers
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -437,7 +437,7 @@ describe "Server Monitor" do
     end
 
     context "with 3 Servers where I am the Master" do
-      before(:each) do
+      before do
         @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true, :name => "Miq1")
         @miq_server1.deactivate_all_roles
         @roles1 = [['ems_operations', 2], ['event', 2], ['ems_inventory', 3], ['ems_metrics_coordinator', 2],]
@@ -545,7 +545,7 @@ describe "Server Monitor" do
       end
 
       context "when Server3 is stopped" do
-        before(:each) do
+        before do
           @miq_server3.deactivate_all_roles
           @miq_server3.stopped_on = Time.now.utc
           @miq_server3.status = "stopped"
@@ -575,7 +575,7 @@ describe "Server Monitor" do
         end
 
         context "and then restarted" do
-          before(:each) do
+          before do
             @miq_server3.status = "started"
             @miq_server3.save!
 
@@ -606,7 +606,7 @@ describe "Server Monitor" do
       end
 
       context "when Server2 is stopped" do
-        before(:each) do
+        before do
           @miq_server2.deactivate_all_roles
           @miq_server2.stopped_on = Time.now.utc
           @miq_server2.status = "stopped"
@@ -636,7 +636,7 @@ describe "Server Monitor" do
         end
 
         context "and then restarted" do
-          before(:each) do
+          before do
             @miq_server2.status = "started"
             @miq_server2.save!
 
@@ -668,7 +668,7 @@ describe "Server Monitor" do
     end
 
     context "with 3 Servers where I am the non-Master" do
-      before(:each) do
+      before do
         @miq_server1 = EvmSpecHelper.local_miq_server(:name => "Server 1")
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, ems_inventory'
@@ -704,7 +704,7 @@ describe "Server Monitor" do
       end
 
       context "where Master shuts down cleanly" do
-        before(:each) do
+        before do
           @miq_server2.deactivate_all_roles
           @miq_server2.stopped_on = Time.now.utc
           @miq_server2.status = "stopped"
@@ -746,12 +746,12 @@ describe "Server Monitor" do
       end
 
       context "where Master is not responding" do
-        before(:each) do
+        before do
           Timecop.travel 5.minutes
           @miq_server1.monitor_servers
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -786,13 +786,13 @@ describe "Server Monitor" do
     end
 
     context "In 2 Zones," do
-      before(:each) do
+      before do
         @zone1 = FactoryGirl.create(:zone)
         @zone2 = FactoryGirl.create(:zone, :name => "zone2", :description => "Zone 2")
       end
 
       context "with 2 Servers across Zones where there is no master" do
-        before(:each) do
+        before do
           @miq_server1 = EvmSpecHelper.local_miq_server(:zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
 
@@ -825,7 +825,7 @@ describe "Server Monitor" do
       end
 
       context "with 2 Servers across Zones where I am the Master" do
-        before(:each) do
+        before do
           @miq_server1 = EvmSpecHelper.local_miq_server(:is_master => true, :zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
           @roles1 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 2], ['scheduler', 1], ['reporting', 1]]
@@ -856,7 +856,7 @@ describe "Server Monitor" do
         end
 
         context "Server2 moved into zone of Server 1" do
-          before(:each) do
+          before do
             @miq_server2.zone = @zone1
             @miq_server2.save!
           end

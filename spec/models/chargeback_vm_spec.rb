@@ -107,7 +107,7 @@ describe ChargebackVm do
 
       context "by service" do
         let(:options) { base_options.merge(:interval => 'monthly', :interval_size => 4, :service_id => @service.id) }
-        before(:each) do
+        before do
           @service = FactoryGirl.create(:service)
           @service << @vm1
           @service.save
@@ -416,7 +416,7 @@ describe ChargebackVm do
         let(:derived_vm_numvcpus_tenant_5) { 1 }
         let(:cpu_usagemhz_rate_average_tenant_5) { 50 }
 
-        before(:each) do
+        before do
           add_metric_rollups_for([vm_1_1, vm_2_1], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => 1, :cpu_usagemhz_rate_average => 50))
           add_metric_rollups_for([vm_1_2, vm_2_2], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => 1, :cpu_usagemhz_rate_average => 50))
           add_metric_rollups_for([vm_1_3, vm_2_3], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => 1, :cpu_usagemhz_rate_average => 50))

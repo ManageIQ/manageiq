@@ -1,6 +1,6 @@
 describe AutomationRequest do
   let(:admin) { FactoryGirl.create(:user, :role => "admin") }
-  before(:each) do
+  before do
     allow(MiqServer).to receive(:my_zone).and_return(Zone.seed.name)
     @zone        = FactoryGirl.create(:zone, :name => "fred")
     @approver    = FactoryGirl.create(:user_miq_request_approver)
@@ -169,7 +169,7 @@ describe AutomationRequest do
 
   context "#approve" do
     context "an unapproved request with a single approver" do
-      before(:each) do
+      before do
         @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
         @reason = "Why Not?"
       end
@@ -209,7 +209,7 @@ describe AutomationRequest do
   end
 
   context "#create_request_tasks" do
-    before(:each) do
+    before do
       @ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
       root = {'ae_result' => 'ok'}
       @ws = double('ws')

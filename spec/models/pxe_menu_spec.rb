@@ -1,5 +1,5 @@
 describe PxeMenu do
-  before(:each) do
+  before do
     @contents_pxelinux = <<-PXEMENU
 default vesamenu.c32
 Menu Title ManageIQ TFTP Boot Menu
@@ -130,7 +130,7 @@ PXEMENU
   end
 
   context "#synchronize" do
-    before(:each) do
+    before do
       @pxe_server = FactoryGirl.create(:pxe_server)
       allow(@pxe_server).to receive_messages(:read_file => @contents_ipxe)
     end

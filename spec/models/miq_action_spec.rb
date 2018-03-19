@@ -1,6 +1,6 @@
 describe MiqAction do
   describe "#invoke_or_queue" do
-    before(:each) do
+    before do
       @action = MiqAction.new
     end
 
@@ -12,7 +12,7 @@ describe MiqAction do
   end
 
   context "#action_custom_automation" do
-    before(:each) do
+    before do
       tenant = FactoryGirl.create(:tenant)
       group  = FactoryGirl.create(:miq_group, :tenant => tenant)
       @user = FactoryGirl.create(:user, :userid => "test", :miq_groups => [group])
@@ -86,7 +86,7 @@ describe MiqAction do
   end
 
   context "#raise_automation_event" do
-    before(:each) do
+    before do
       @vm   = FactoryGirl.create(:vm_vmware)
       allow(@vm).to receive(:my_zone).and_return("vm_zone")
       FactoryGirl.create(:miq_event_definition, :name => "raise_automation_event")
@@ -133,7 +133,7 @@ describe MiqAction do
   end
 
   context "#action_ems_refresh" do
-    before(:each) do
+    before do
       FactoryGirl.create(:miq_action, :name => "ems_refresh")
       @action = MiqAction.find_by(:name => "ems_refresh")
       expect(@action).not_to be_nil

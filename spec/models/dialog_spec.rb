@@ -62,7 +62,7 @@ describe Dialog do
   end
 
   context "#destroy" do
-    before(:each) do
+    before do
       @dialog = FactoryGirl.create(:dialog, :label => 'dialog')
     end
 
@@ -81,7 +81,7 @@ describe Dialog do
   end
 
   describe "dialog structures" do
-    before(:each) do
+    before do
       @dialog       = FactoryGirl.build(:dialog, :label => 'dialog')
       @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
       @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
@@ -133,7 +133,7 @@ describe Dialog do
   end
 
   context "#remove_all_resources" do
-    before(:each) do
+    before do
       @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
       @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
       @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
@@ -163,7 +163,7 @@ describe Dialog do
   end
 
   context "remove resources" do
-    before(:each) do
+    before do
       @dialog             = FactoryGirl.create(:dialog,       :label => 'dialog')
       @dialog_tab         = FactoryGirl.create(:dialog_tab,   :label => 'tab')
       @dialog_group       = FactoryGirl.create(:dialog_group, :label => 'group')
@@ -208,7 +208,7 @@ describe Dialog do
   end
 
   context "#each_field" do
-    before(:each) do
+    before do
       @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')
       @dialog_tab    = FactoryGirl.create(:dialog_tab, :label => 'tab')
       @dialog_group  = FactoryGirl.create(:dialog_group, :label => 'group')
@@ -331,7 +331,7 @@ describe Dialog do
   end
 
   context "#dialog_fields" do
-    before(:each) do
+    before do
       @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')
       @dialog_tab    = FactoryGirl.create(:dialog_tab, :label => 'tab')
       @dialog_group  = FactoryGirl.create(:dialog_group, :label => 'group')

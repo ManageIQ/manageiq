@@ -1,5 +1,5 @@
 describe 'VM::Operations' do
-  before(:each) do
+  before do
     @miq_server = EvmSpecHelper.local_miq_server
     @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
     @vm         = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
@@ -25,7 +25,7 @@ describe 'VM::Operations' do
     end
 
     context 'cloud providers' do
-      before(:each) { @ipaddresses = %w(10.10.1.121 35.190.140.48) }
+      before { @ipaddresses = %w(10.10.1.121 35.190.140.48) }
       it 'returns the public ipv4 address for AWS' do
         ems = FactoryGirl.create(:ems_google, :project => 'manageiq-dev')
         az  = FactoryGirl.create(:availability_zone_google)

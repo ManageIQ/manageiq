@@ -1,6 +1,6 @@
 describe EmsRefresh do
   context ".queue_refresh" do
-    before(:each) do
+    before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
     end
@@ -46,7 +46,7 @@ describe EmsRefresh do
   end
 
   context "stopping targets unbounded growth" do
-    before(:each) do
+    before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
     end

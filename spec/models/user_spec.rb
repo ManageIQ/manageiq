@@ -158,7 +158,7 @@ describe User do
   end
 
   context "#authorize_ldap" do
-    before(:each) do
+    before do
       @fq_user = "thin1@manageiq.com"
       @task = MiqTask.create(:name => "LDAP User Authorization of '#{@fq_user}'", :userid => @fq_user)
       @auth_config =
@@ -215,14 +215,14 @@ describe User do
   end
 
   context "group assignment" do
-    before(:each) do
+    before do
       @group1 = FactoryGirl.create(:miq_group, :description => "EvmGroup 1")
       @group2 = FactoryGirl.create(:miq_group, :description => "EvmGroup 2")
       @group3 = FactoryGirl.create(:miq_group, :description => "EvmGroup 3")
     end
 
     describe "#miq_groups=" do
-      before(:each) do
+      before do
         @user = FactoryGirl.create(:user, :miq_groups => [@group3])
       end
 
@@ -252,7 +252,7 @@ describe User do
     end
 
     describe "#current_group=" do
-      before(:each) do
+      before do
         @user = FactoryGirl.create(:user, :miq_groups => [@group1, @group2])
       end
 

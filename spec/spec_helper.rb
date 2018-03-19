@@ -57,7 +57,7 @@ RSpec.configure do |config|
   #   EvmSpecHelper.log_ruby_object_usage
   # end
 
-  config.before(:each) do |example|
+  config.before do |example|
     EmsRefresh.try(:debug_failures=, true)
   end
 

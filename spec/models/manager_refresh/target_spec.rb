@@ -1,5 +1,5 @@
 describe ManagerRefresh::Target do
-  before(:each) do
+  before do
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_cloud, :zone => @zone)
 

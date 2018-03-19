@@ -1,5 +1,5 @@
 describe PerEmsWorkerMixin do
-  before(:each) do
+  before do
     _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone)
     @ems_queue_name = "ems_#{@ems.id}"
@@ -42,7 +42,7 @@ describe PerEmsWorkerMixin do
 
   context ".stop_worker_for_ems" do
     context "when worker status is started" do
-      before(:each) do
+      before do
         @worker_record.status = MiqWorker::STATUS_STARTED
         @worker_record.save
       end
@@ -70,7 +70,7 @@ describe PerEmsWorkerMixin do
     end
 
     context "when worker status is not started" do
-      before(:each) do
+      before do
         @worker_record.status = MiqWorker::STATUS_STARTING
         @worker_record.save
       end

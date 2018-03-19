@@ -1,5 +1,5 @@
 describe EmsCluster::CapacityPlanning do
-  before(:each) do
+  before do
     @cluster = FactoryGirl.create(:ems_cluster)
   end
 
@@ -159,7 +159,7 @@ describe EmsCluster::CapacityPlanning do
     end
 
     context "with effective_resource not set" do
-      before(:each) do
+      before do
         allow(@cluster).to receive(:effective_cpu).and_return(nil)
       end
 
@@ -188,7 +188,7 @@ describe EmsCluster::CapacityPlanning do
       end
 
       context "and HA enabled" do
-        before(:each) do
+        before do
           @cluster.update_attribute(:ha_enabled, true)
         end
 
@@ -266,7 +266,7 @@ describe EmsCluster::CapacityPlanning do
   end
 
   context "#capacity_resources_per_vm_with_min_max" do
-    before(:each) do
+    before do
       allow(@cluster).to receive(:capacity_resources_per_vm).and_return(3.530)
     end
 

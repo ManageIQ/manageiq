@@ -2,7 +2,7 @@ describe MiqReport do
   include Spec::Support::ArelHelper
 
   context "::Search" do
-    before(:each) do
+    before do
       @miq_report = MiqReport.new(:db => "Vm")
     end
 
