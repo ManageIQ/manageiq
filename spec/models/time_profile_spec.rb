@@ -1,5 +1,5 @@
 describe TimeProfile do
-  before(:each) do
+  before do
     @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
   end
@@ -24,7 +24,7 @@ describe TimeProfile do
   end
 
   context "will seed the database" do
-    before(:each) do
+    before do
       TimeProfile.seed
     end
 
@@ -64,7 +64,7 @@ describe TimeProfile do
   end
 
   context "with an existing time profile with rollups disabled" do
-    before(:each) do
+    before do
       @tp = FactoryGirl.create(:time_profile)
       MiqQueue.delete_all
     end
@@ -89,7 +89,7 @@ describe TimeProfile do
   end
 
   context "with an existing time profile with rollups enabled" do
-    before(:each) do
+    before do
       @tp = FactoryGirl.create(:time_profile_with_rollup)
       MiqQueue.delete_all
     end
@@ -111,7 +111,7 @@ describe TimeProfile do
   end
 
   context "profiles_for_user" do
-    before(:each) do
+    before do
       TimeProfile.seed
     end
 
@@ -136,7 +136,7 @@ describe TimeProfile do
   end
 
   context "profile_for_user_tz" do
-    before(:each) do
+    before do
       TimeProfile.seed
     end
 

@@ -77,7 +77,7 @@ describe Tag do
   end
 
   context "categorization" do
-    before(:each) do
+    before do
       FactoryGirl.create(:classification_department_with_tags)
 
       @tag            = Tag.find_by(:name => "/managed/department/finance")

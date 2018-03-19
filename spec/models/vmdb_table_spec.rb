@@ -1,6 +1,6 @@
 describe VmdbTable do
   context "#seed_indexes" do
-    before(:each) do
+    before do
       @db = VmdbDatabase.seed_self
       @vmdb_table = FactoryGirl.create(:vmdb_table, :vmdb_database => @db, :name => 'foo')
     end

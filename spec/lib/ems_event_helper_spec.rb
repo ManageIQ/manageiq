@@ -1,6 +1,6 @@
 describe EmsEventHelper do
   context "fb12322 - MiqAeEvent.build_evm_event blows up expecting inputs[:policy] to be an instance of MiqPolicy, but it is a hash of { :vmdb_class => 'MiqPolicy', :vmdb_id => 42}" do
-    before(:each) do
+    before do
       [Zone, ExtManagementSystem, Host, Vm, Storage, EmsEvent, MiqEventDefinition, MiqPolicy, MiqAction, MiqPolicyContent, MiqPolicySet].each(&:delete_all)
 
       @zone      = FactoryGirl.create(:zone)

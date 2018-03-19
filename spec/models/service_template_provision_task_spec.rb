@@ -1,6 +1,6 @@
 describe ServiceTemplateProvisionTask do
   context "with multiple tasks" do
-    before(:each) do
+    before do
       @admin = FactoryGirl.create(:user_with_group)
 
       @request = FactoryGirl.create(:service_template_provision_request,
@@ -219,7 +219,7 @@ describe ServiceTemplateProvisionTask do
     end
 
     context "with a service" do
-      before(:each) do
+      before do
         @service = FactoryGirl.create(:service, :name => 'Test Service')
       end
 

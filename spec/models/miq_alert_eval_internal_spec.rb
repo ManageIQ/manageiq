@@ -1,11 +1,11 @@
 describe "MiqAlert Evaluation Internal" do
   context "With VM as a target," do
-    before(:each) do
+    before do
       @vm = FactoryGirl.create(:vm_vmware)
     end
 
     context "evaluating an event threshold alert" do
-      before(:each) do
+      before do
         @events = []
         @events << FactoryGirl.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => Time.now.utc)
         @events << FactoryGirl.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 1.day.ago.utc)
@@ -32,7 +32,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a realtime performance alert" do
-      before(:each) do
+      before do
         t = 2.minutes.ago.utc
         6.times do |i|
           FactoryGirl.create(:metric_vm_rt, :resource_id => @vm.id, :timestamp => t, :mem_vmmemctl_absolute_average => (250 + (i * 10)))
@@ -62,7 +62,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a changed vm value alert" do
-      before(:each) do
+      before do
         # TODO: create drift for test
         expression = {
           :eval_method => "changed_vm_value",
@@ -83,7 +83,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a reconfigured hardware value alert" do
-      before(:each) do
+      before do
         # TODO: create drift for test
         expression = {
           :eval_method => "reconfigured_hardware_value",
@@ -104,7 +104,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a VM event log threshold alert" do
-      before(:each) do
+      before do
         # TODO: Create factories with event_logs
         expression = {
           :eval_method => "event_log_threshold",
@@ -131,7 +131,7 @@ describe "MiqAlert Evaluation Internal" do
     end
 
     context "evaluating a VM Alarm alert" do
-      before(:each) do
+      before do
         expression = {
           :eval_method => "ems_alarm",
           :mode        => "internal",
@@ -154,12 +154,12 @@ describe "MiqAlert Evaluation Internal" do
   end
 
   context "With Host as a target," do
-    before(:each) do
+    before do
       @host = FactoryGirl.create(:host)
     end
 
     context "evaluating a hostd log threshold alert" do
-      before(:each) do
+      before do
         # TODO: Create factories with event_logs
         expression = {
           :eval_method => "hostd_log_threshold",
@@ -185,12 +185,12 @@ describe "MiqAlert Evaluation Internal" do
   end
 
   context "With MiqServer as a target," do
-    before(:each) do
+    before do
       @server = FactoryGirl.create(:miq_server, :zone => FactoryGirl.create(:zone))
     end
 
     context "evaluating an alert with no expression" do
-      before(:each) do
+      before do
         expression = {:eval_method => "nothing"}
         @alert = FactoryGirl.create(:miq_alert_vm, :expression => expression)
         @alert_prof = FactoryGirl.create(:miq_alert_set, :mode => @server.class.name)

@@ -521,7 +521,7 @@ describe Rbac::Filterer do
     end
 
     context "for Metrics::Rollup" do
-      before(:each) do
+      before do
         vm = FactoryGirl.create(:vm_vmware)
         FactoryGirl.create(
           :metric_rollup_vm_daily,
@@ -571,7 +571,7 @@ describe Rbac::Filterer do
     let(:group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) }
     let(:user)  { FactoryGirl.create(:user, :miq_groups => [group]) }
 
-    before(:each) do
+    before do
       @tags = {
         2 => "/managed/environment/prod",
         3 => "/managed/environment/dev",
@@ -668,7 +668,7 @@ describe Rbac::Filterer do
       end
 
       context "with self-service user" do
-        before(:each) do
+        before do
           allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
         end
 
@@ -725,13 +725,13 @@ describe Rbac::Filterer do
 
     context "with Hosts" do
       let(:hosts) { [@host1, @host2] }
-      before(:each) do
+      before do
         @host1 = FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local")
         @host2 = FactoryGirl.create(:host, :name => "Host2", :hostname => "host2.local")
       end
 
       context "having Metric data" do
-        before(:each) do
+        before do
           @timestamps = [
             ["2010-04-14T20:52:30Z", 100.0],
             ["2010-04-14T21:51:10Z", 1.0],
@@ -754,7 +754,7 @@ describe Rbac::Filterer do
         end
 
         context "with only managed filters" do
-          before(:each) do
+          before do
             group.entitlement = Entitlement.new
             group.entitlement.set_managed_filters([["/managed/environment/prod"], ["/managed/service_level/silver"]])
             group.entitlement.set_belongsto_filters([])
@@ -796,7 +796,7 @@ describe Rbac::Filterer do
         end
 
         context "with only belongsto filters" do
-          before(:each) do
+          before do
             group.entitlement = Entitlement.new
             group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|ems1"])
             group.entitlement.set_managed_filters([])
@@ -834,7 +834,7 @@ describe Rbac::Filterer do
       end
 
       context "with VMs and Templates" do
-        before(:each) do
+        before do
           @ems = FactoryGirl.create(:ems_vmware, :name => 'ems1')
           @host1.update_attributes(:ext_management_system => @ems)
           @host2.update_attributes(:ext_management_system => @ems)
@@ -866,7 +866,7 @@ describe Rbac::Filterer do
         end
 
         context "search on EMSes" do
-          before(:each) do
+          before do
             @ems2 = FactoryGirl.create(:ems_vmware, :name => 'ems2')
           end
 
@@ -1020,7 +1020,7 @@ describe Rbac::Filterer do
       end
 
       context "when applying a filter to the host and it's cluster (FB17114)" do
-        before(:each) do
+        before do
           @ems = FactoryGirl.create(:ems_vmware, :name => 'ems')
           @ems_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}"
           @root = FactoryGirl.create(:ems_folder, :name => "Datacenters")
@@ -1151,7 +1151,7 @@ describe Rbac::Filterer do
     end
 
     context "with services" do
-      before(:each) do
+      before do
         @service1 = FactoryGirl.create(:service)
         @service2 = FactoryGirl.create(:service)
         @service3 = FactoryGirl.create(:service, :evm_owner => user)
@@ -1168,7 +1168,7 @@ describe Rbac::Filterer do
         end
 
         context "with self-service user" do
-          before(:each) do
+          before do
             allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
           end
 
@@ -1189,7 +1189,7 @@ describe Rbac::Filterer do
         end
 
         context "with limited self-service user" do
-          before(:each) do
+          before do
             allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
             allow_any_instance_of(MiqGroup).to receive_messages(:limited_self_service? => true)
           end
@@ -1418,7 +1418,7 @@ describe Rbac::Filterer do
     context "with tagged VMs" do
       let(:ems) { FactoryGirl.create(:ext_management_system) }
 
-      before(:each) do
+      before do
         [
           FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local"),
           FactoryGirl.create(:host, :name => "Host2", :hostname => "host2.local"),
@@ -1450,7 +1450,7 @@ describe Rbac::Filterer do
         end
 
         context "with self-service user" do
-          before(:each) do
+          before do
             allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
           end
 
@@ -1478,7 +1478,7 @@ describe Rbac::Filterer do
         end
 
         context "with limited self-service user" do
-          before(:each) do
+          before do
             allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
             allow_any_instance_of(MiqGroup).to receive_messages(:limited_self_service? => true)
           end
@@ -1559,7 +1559,7 @@ describe Rbac::Filterer do
       end
 
       context "with only managed filters (FB9153, FB11442)" do
-        before(:each) do
+        before do
           group.entitlement = Entitlement.new
           group.entitlement.set_managed_filters([["/managed/environment/prod"], ["/managed/service_level/silver"]])
           group.save!
@@ -1619,7 +1619,7 @@ describe Rbac::Filterer do
       let(:group_user) { FactoryGirl.create(:user, :miq_groups => [group2, group]) }
       let(:group2) { FactoryGirl.create(:miq_group, :role => 'support') }
 
-      before(:each) do
+      before do
         4.times do |i|
           FactoryGirl.create(:vm_vmware,
                              :name             => "Test VM #{i}",

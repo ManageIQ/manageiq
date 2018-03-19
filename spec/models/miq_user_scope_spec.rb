@@ -1,6 +1,6 @@
 describe MiqUserScope do
   context "testing hash_to_scope method" do
-    before(:each) do
+    before do
     end
 
     it "should return the correct converted scope instance" do
@@ -13,7 +13,7 @@ describe MiqUserScope do
   end
 
   context "testing get_filters method" do
-    before(:each) do
+    before do
       @scope1 = MiqUserScope.new(
         :view =>           {:belongsto =>
                                           {:_all_ =>               ["/belongsto/ExtManagementSystem|VC1/EmsFolder|Datacenters/EmsFolder|DataCenter1/EmsFolder|host/EmsCluster|Cluster1",
@@ -87,7 +87,7 @@ describe MiqUserScope do
   end
 
   context "testing merging methods" do
-    before(:each) do
+    before do
       @exp1  = {">" => {"value" => "2", "count" => "Vm.hardware.disks"}}
       @exp2  = {">=" => {"value" => "4096", "field" => "Vm-mem_cpu"}}
       @scope = MiqUserScope.new(

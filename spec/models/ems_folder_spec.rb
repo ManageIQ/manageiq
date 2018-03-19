@@ -1,6 +1,6 @@
 describe EmsFolder do
   context "with folder tree" do
-    before(:each) do
+    before do
       @root = FactoryGirl.create(:ems_folder, :name => "root")
 
       @dc   = FactoryGirl.create(:ems_folder, :name => "dc")

@@ -2,7 +2,7 @@ describe "DatabaseConfiguration patch" do
   let(:db_config_path) { File.expand_path "../../../config/database.yml", __dir__ }
   let(:fake_db_config) { Pathname.new("does/not/exist") }
 
-  before(:each) do
+  before do
     allow(ManageIQ).to receive_messages(:env => ActiveSupport::StringInquirer.new("production"))
 
     @app = Vmdb::Application.new
@@ -10,7 +10,7 @@ describe "DatabaseConfiguration patch" do
   end
 
   context "ERB in the template" do
-    before(:each) do
+    before do
       database_config = StringIO.new "---\nvalue: <%= 1 %>\n"
       allow(database_config).to receive(:exist?).and_return(true)
       allow(Pathname).to receive(:new).and_return(database_config)

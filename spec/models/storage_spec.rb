@@ -65,7 +65,7 @@ describe Storage do
   end
 
   context "with multiple storages" do
-    before(:each) do
+    before do
       @server = EvmSpecHelper.local_miq_server
       @zone   = @server.zone
 
@@ -157,7 +157,7 @@ describe Storage do
     end
 
     context "on a host with authentication status ok" do
-      before(:each) do
+      before do
         allow_any_instance_of(Authentication).to receive(:after_authentication_changed)
         FactoryGirl.create(:authentication, :resource => @host1, :status => "Valid")
       end
@@ -221,7 +221,7 @@ describe Storage do
       end
 
       context "with performance capture disabled" do
-        before(:each) do
+        before do
           allow_any_instance_of(Storage).to receive_messages(:perf_capture_enabled? => false)
         end
 
@@ -242,7 +242,7 @@ describe Storage do
       end
 
       context "with performance capture enabled" do
-        before(:each) do
+        before do
           allow_any_instance_of(Storage).to receive_messages(:perf_capture_enabled? => true)
           allow(MiqEvent).to receive(:raise_evm_job_event)
         end

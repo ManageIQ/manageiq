@@ -84,7 +84,7 @@ describe VmOrTemplate do
 
   context ".event_by_property" do
     context "should add an EMS event" do
-      before(:each) do
+      before do
         Timecop.freeze(Time.now)
 
         @host            = FactoryGirl.create(:host,      :name  => "host")
@@ -94,7 +94,7 @@ describe VmOrTemplate do
         @event_timestamp = Time.now.utc
       end
 
-      after(:each) do
+      after do
         Timecop.return
       end
 
@@ -123,7 +123,7 @@ describe VmOrTemplate do
   end
 
   context "#add_ems_event" do
-    before(:each) do
+    before do
       @host            = FactoryGirl.create(:host, :name => "host 1")
       @vm              = FactoryGirl.create(:vm_vmware, :name => "vm 1", :location => "/local/path", :host => @host, :uid_ems => "1", :ems_id => 101)
       @event_type      = "foo"
@@ -138,7 +138,7 @@ describe VmOrTemplate do
     end
 
     context "should add an EMS Event" do
-      before(:each) do
+      before do
         @ipaddress       = "192.268.20.1"
         @hardware        = FactoryGirl.create(:hardware, :vm_or_template_id => @vm.id)
         @network         = FactoryGirl.create(:network,  :hardware_id       => @hardware.id, :ipaddress => @ipaddress)

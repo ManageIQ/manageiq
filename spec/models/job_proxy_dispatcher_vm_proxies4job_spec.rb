@@ -2,20 +2,20 @@ describe "JobProxyDispatcherVmProxies4Job" do
   include Spec::Support::JobProxyDispatcherHelper
 
   context "with two servers on same zone, vix disk enabled for all, " do
-    before(:each) do
+    before do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
-      before(:each) do
+      before do
         _hosts, _proxies, _storages, @vms = build_entities
         @vm = @vms.first
       end
 
       context "with available active proxy" do
-        before(:each) do
+        before do
           allow(@vm).to receive_messages(:storage2proxies => [@server1])
           allow(@vm).to receive_messages(:storage2active_proxies => [@server1])
         end
@@ -26,12 +26,12 @@ describe "JobProxyDispatcherVmProxies4Job" do
       end
 
       context "with no eligible active proxies, " do
-        before(:each) do
+        before do
           allow(@vm).to receive_messages(:storage2active_proxies => [])
         end
 
         context "with @server1 in list of all eligible proxies before filtering, " do
-          before(:each) do
+          before do
             allow(@vm).to receive_messages(:storage2proxies => [@server1])
           end
 
@@ -41,7 +41,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
         end
 
         context "with empty list of all eligible proxies before filtering, " do
-          before(:each) do
+          before do
             allow(@vm).to receive_messages(:storage2proxies => [])
           end
 
@@ -52,7 +52,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
       end
 
       context "with a vm scan job, with no eligible proxies, " do
-        before(:each) do
+        before do
           @job = @vm.raw_scan
           allow(@vm).to receive_messages(:storage2proxies => [])
           allow(@vm).to receive_messages(:storage2activeproxies => [])
@@ -64,7 +64,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
         end
 
         context "with VmAmazon, " do
-          before(:each) do
+          before do
             @vm.type = "ManageIQ::Providers::Amazon::CloudManager::Vm"
             @vm.save
             @vm = VmOrTemplate.find(@vm.id)

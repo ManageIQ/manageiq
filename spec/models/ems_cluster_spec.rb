@@ -1,6 +1,6 @@
 describe EmsCluster do
   context("VMware") do
-    before(:each) do
+    before do
       @cluster = FactoryGirl.create(:ems_cluster)
       @host1 = FactoryGirl.create(:host, :ems_cluster => @cluster)
       @host2 = FactoryGirl.create(:host, :ems_cluster => @cluster)
@@ -60,7 +60,7 @@ describe EmsCluster do
   end
 
   context("RedHat") do
-    before(:each) do
+    before do
       @cluster = FactoryGirl.create(:ems_cluster)
       @host1 = FactoryGirl.create(:host, :ems_cluster => @cluster)
       @host2 = FactoryGirl.create(:host, :ems_cluster => @cluster)
@@ -177,7 +177,7 @@ describe EmsCluster do
   end
 
   context "#node_types" do
-    before(:each) do
+    before do
       @ems1 = FactoryGirl.create(:ems_vmware)
       @ems2 = FactoryGirl.create(:ems_openstack_infra)
     end

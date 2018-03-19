@@ -14,7 +14,7 @@ describe Vm do
   end
 
   context "#template=" do
-    before(:each) { @vm = FactoryGirl.create(:vm_vmware) }
+    before { @vm = FactoryGirl.create(:vm_vmware) }
 
     it "false" do
       @vm.update_attribute(:template, false)
@@ -83,7 +83,7 @@ describe Vm do
   end
 
   context "with relationships of multiple types" do
-    before(:each) do
+    before do
       @rp        = FactoryGirl.create(:resource_pool, :name => "RP")
       @parent_vm = FactoryGirl.create(:vm_vmware, :name => "Parent VM")
       @vm        = FactoryGirl.create(:vm_vmware, :name => "VM")
@@ -97,7 +97,7 @@ describe Vm do
     end
 
     context "#destroy" do
-      before(:each) do
+      before do
         @vm.destroy
       end
 
@@ -113,7 +113,7 @@ describe Vm do
   end
 
   context "#invoke_tasks_local" do
-    before(:each) do
+    before do
       EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host)
       @vm = FactoryGirl.create(:vm_vmware, :host => @host)
@@ -281,7 +281,7 @@ describe Vm do
   end
 
   context "#cockpit_url" do
-    before(:each) do
+    before do
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,role_scope
         cockpit_ws,Cockpit,1,false,zone

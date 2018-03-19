@@ -4,7 +4,7 @@ describe ManageIQ::Providers::CloudManager::Provision do
     let(:template) { FactoryGirl.create(:template_cloud, :ext_management_system => provider) }
     let(:vm) { FactoryGirl.create(:vm_cloud, :ext_management_system => provider, :ems_ref => "vm_1") }
 
-    before(:each) do
+    before do
       subject.source = template
     end
 

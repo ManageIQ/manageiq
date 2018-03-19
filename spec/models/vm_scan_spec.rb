@@ -1,6 +1,6 @@
 describe VmScan do
   context "A single VM Scan Job on VMware provider," do
-    before(:each) do
+    before do
       @server = EvmSpecHelper.local_miq_server(:capabilities => {:vixDisk => true})
       assign_smartproxy_role_to_server(@server)
 
@@ -57,12 +57,12 @@ describe VmScan do
     end
 
     context "without Broker Running and with valid MiqVimBrokerWorker record," do
-      before(:each) do
+      before do
         @vim_broker_worker = FactoryGirl.create(:miq_vim_broker_worker, :miq_server_id => @server.id)
       end
 
       context "in status of 'starting'," do
-        before(:each) do
+        before do
           @vim_broker_worker.update_attributes(:status => 'starting')
         end
 
@@ -75,7 +75,7 @@ describe VmScan do
       end
 
       context "in status of 'stopped'," do
-        before(:each) do
+        before do
           @vim_broker_worker.update_attributes(:status => 'stopped')
         end
 
@@ -88,7 +88,7 @@ describe VmScan do
       end
 
       context "in status of 'killed'," do
-        before(:each) do
+        before do
           @vim_broker_worker.update_attributes(:status => 'killed')
         end
 
@@ -101,7 +101,7 @@ describe VmScan do
       end
 
       context "in status of 'started'," do
-        before(:each) do
+        before do
           @vim_broker_worker.update_attributes(:status => 'started')
           JobProxyDispatcher.dispatch
           @job.reload
@@ -113,7 +113,7 @@ describe VmScan do
         end
 
         context "when signaled with 'start'" do
-          before(:each) do
+          before do
             q = MiqQueue.last
             q.delivered(*q.deliver)
             @job.reload
@@ -233,7 +233,7 @@ describe VmScan do
 
     describe "#call_snapshot_create" do
       context "for providers other than OpenStack and Microsoft" do
-        before(:each) { @job.miq_server_id = @server.id }
+        before { @job.miq_server_id = @server.id }
 
         it "does not call #create_snapshot but sends signal :snapshot_complete" do
           expect(@job).to receive(:signal).with(:snapshot_complete)
@@ -242,7 +242,7 @@ describe VmScan do
         end
 
         context "if snapshot for scan required" do
-          before(:each) do
+          before do
             allow(@vm).to receive(:require_snapshot_for_scan?).and_return(true)
             allow(MiqServer).to receive(:use_broker_for_embedded_proxy?).and_return(true)
           end
@@ -285,7 +285,7 @@ describe VmScan do
     end
 
     describe "#call_scan" do
-      before(:each) do
+      before do
         @job.miq_server_id = @server.id
         allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
         allow(MiqServer).to receive(:find).with(@server.id).and_return(@server)
@@ -317,7 +317,7 @@ describe VmScan do
     end
 
     describe "#call_synchronize" do
-      before(:each) do
+      before do
         @job.miq_server_id = @server.id
         allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
         allow(MiqServer).to receive(:find).with(@server.id).and_return(@server)
@@ -347,7 +347,7 @@ describe VmScan do
 
     describe "#call_snapshot_delete" do
       let(:snapshot_description) { "Snapshot description" }
-      before(:each) do
+      before do
         allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
         @job.update_attributes(:state => 'snapshot_delete')
         @job.context[:snapshot_mor] = snapshot_description

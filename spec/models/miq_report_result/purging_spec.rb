@@ -11,7 +11,7 @@ describe MiqReportResult do
       }
     end
 
-    before(:each) do
+    before do
       stub_settings(settings)
 
       @rr1 = [
@@ -72,7 +72,7 @@ describe MiqReportResult do
     end
 
     context "#purge_queue" do
-      before(:each) do
+      before do
         EvmSpecHelper.create_guid_miq_server_zone
         described_class.purge_queue(:remaining, 1)
       end

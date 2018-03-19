@@ -1,6 +1,6 @@
 describe ResourcePool do
   context "Testing VM count virtual columns" do
-    before(:each) do
+    before do
       @rp1 = FactoryGirl.create(:resource_pool, :name => "RP 1")
       @rp2 = FactoryGirl.create(:resource_pool, :name => "RP 2")
       @rp3 = FactoryGirl.create(:resource_pool, :name => "RP 3")

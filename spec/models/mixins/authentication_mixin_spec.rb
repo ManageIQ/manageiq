@@ -89,7 +89,7 @@ describe AuthenticationMixin do
   end
 
   context "authorization event and check for container providers" do
-    before(:each) do
+    before do
       allow(MiqServer).to receive(:my_zone).and_return("default")
     end
 
@@ -161,13 +161,13 @@ describe AuthenticationMixin do
   end
 
   context "with server and zone" do
-    before(:each) do
+    before do
       @miq_server = EvmSpecHelper.local_miq_server
       @data = {:default => {:userid => "test", :password => "blah"}}
     end
 
     context "with multiple zones, emses, and hosts" do
-      before(:each) do
+      before do
         @zone1 = @miq_server.zone
         @zone2 = FactoryGirl.create(:zone, :name => 'test1')
         @ems1  = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone1)
@@ -296,7 +296,7 @@ describe AuthenticationMixin do
     end
 
     context "with a host and ems" do
-      before(:each) do
+      before do
         @host         = FactoryGirl.create(:host_vmware_esx_with_authentication)
         @host_no_auth = FactoryGirl.create(:host_vmware_esx)
         @ems          = FactoryGirl.create(:ems_vmware_with_authentication)
@@ -580,13 +580,13 @@ describe AuthenticationMixin do
       end
 
       context "with credentials_changed_on set to now and jump 1 minute" do
-        before(:each) do
+        before do
           @before = Time.now.utc
           @auth.update_attribute(:credentials_changed_on, @before)
           Timecop.travel 1.minute
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -604,7 +604,7 @@ describe AuthenticationMixin do
       end
 
       context "with saved authentications" do
-        before(:each) do
+        before do
           @ems.update_authentication(@data, :save => true)
           @conditions = {:class_name => @ems.class.base_class.name, :instance_id => @ems.id, :method_name => 'authentication_check_types', :role => @ems.authentication_check_role}
           @queued_auth_checks = MiqQueue.where(@conditions)
@@ -622,7 +622,7 @@ describe AuthenticationMixin do
       end
 
       context "creds unchanged" do
-        before(:each) do
+        before do
           @data[:default][:userid] = @orig_ems_user
           @data[:default][:password] = @orig_ems_pwd
         end
@@ -645,7 +645,7 @@ describe AuthenticationMixin do
       end
 
       context "creds incomplete userid" do
-        before(:each) do
+        before do
           @data[:default][:userid] = nil
           @data[:default][:password] = @orig_ems_pwd
         end

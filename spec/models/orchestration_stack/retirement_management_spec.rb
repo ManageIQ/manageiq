@@ -1,5 +1,5 @@
 describe "Service Retirement Management" do
-  before(:each) do
+  before do
     @miq_server = EvmSpecHelper.local_miq_server
     @stack = FactoryGirl.create(:orchestration_stack)
   end
