@@ -34,7 +34,7 @@ module ManageIQ::Providers
     end
 
     def object_store
-      return if @swift_service.nil? || @swift_service.blank? || @swift_service.name != :swift
+      return if @swift_service.blank? || @swift_service.name != :swift
 
       @swift_service.handled_list(:directories).each do |dir|
         result = process_collection_item(dir, :cloud_object_store_containers) { |c| parse_container(c, dir.project) }
