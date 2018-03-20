@@ -74,7 +74,7 @@ describe MiqReportResult do
   end
 
   context "persisting generated report results" do
-    before(:each) do
+    before do
       5.times do |i|
         vm = FactoryGirl.build(:vm_vmware)
         vm.evm_owner_id = @user1.id               if i > 2
@@ -106,7 +106,7 @@ describe MiqReportResult do
     end
 
     context "for miq_report_result is used different miq_group_id than user's current id" do
-      before(:each) do
+      before do
         MiqUserRole.seed
         role = MiqUserRole.find_by(:name => "EvmRole-operator")
         @miq_group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Group1")

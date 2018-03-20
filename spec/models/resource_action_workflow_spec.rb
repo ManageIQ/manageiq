@@ -1,7 +1,7 @@
 describe ResourceActionWorkflow do
   let(:admin) { FactoryGirl.create(:user_with_group) }
   context "#create" do
-    before(:each) do
+    before do
       @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
       @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
       @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
@@ -47,7 +47,7 @@ describe ResourceActionWorkflow do
     end
 
     context "with workflow" do
-      before(:each) do
+      before do
         @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
       end
 

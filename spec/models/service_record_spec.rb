@@ -1,6 +1,6 @@
 describe ServiceResource do
   context "default values" do
-    before(:each) do
+    before do
       @resource = ServiceResource.new
     end
 

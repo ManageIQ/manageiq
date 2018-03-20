@@ -239,7 +239,7 @@ describe ExtManagementSystem do
   end
 
   context "with two small envs" do
-    before(:each) do
+    before do
       @zone1 = FactoryGirl.create(:small_environment)
       @zone2 = FactoryGirl.create(:small_environment)
     end
@@ -260,7 +260,7 @@ describe ExtManagementSystem do
   end
 
   context "with virtual totals" do
-    before(:each) do
+    before do
       @ems = FactoryGirl.create(:ems_vmware)
       2.times do
         FactoryGirl.create(:vm_vmware,

@@ -56,7 +56,7 @@ describe "Widget RSS Content" do
   </channel></rss>
   EOF
 
-  before(:each) do
+  before do
     RssFeed.sync_from_yml_dir
 
     EvmSpecHelper.local_miq_server

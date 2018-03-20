@@ -1,5 +1,5 @@
 describe AutomationTask do
-  before(:each) do
+  before do
     allow(MiqServer).to receive(:my_zone).and_return("default")
     @admin       = FactoryGirl.create(:user_admin)
 

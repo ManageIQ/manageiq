@@ -1,6 +1,6 @@
 describe EmsRefresh::MetadataRelats do
   context ".vmdb_relats" do
-    before(:each) do
+    before do
       @zone        = FactoryGirl.create(:zone)
       @ems         = FactoryGirl.create(:ems_vmware, :zone => @zone)
 
@@ -44,7 +44,7 @@ describe EmsRefresh::MetadataRelats do
     end
 
     context "with an invalid relats tree" do
-      before(:each) do
+      before do
         @rp2 = FactoryGirl.create(:resource_pool, :ext_management_system => @ems)
         @host.set_child(@rp2)
         @host_folder.add_host(@host)

@@ -1,5 +1,5 @@
 describe "VM Retirement Management" do
-  before(:each) do
+  before do
     miq_server = EvmSpecHelper.local_miq_server
     @zone = miq_server.zone
     @ems = FactoryGirl.create(:ems_vmware, :zone => @zone)

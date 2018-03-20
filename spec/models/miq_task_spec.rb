@@ -211,7 +211,7 @@ describe MiqTask do
     let(:miq_task2) { FactoryGirl.create(:miq_task_plain) }
     let(:miq_task3) { FactoryGirl.create(:miq_task_plain) }
     let(:zone) { 'New York' }
-    before(:each) do
+    before do
       allow(MiqServer).to receive(:my_zone).and_return(zone)
     end
 

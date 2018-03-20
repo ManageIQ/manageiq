@@ -1,5 +1,5 @@
 describe "Message Timeout Handling" do
-  before(:each) do
+  before do
     @guid = SecureRandom.uuid
     allow(MiqServer).to receive(:my_guid).and_return(@guid)
 
@@ -11,7 +11,7 @@ describe "Message Timeout Handling" do
   end
 
   context "A Worker Handling a Message with a timeout of 3600 seconds" do
-    before(:each) do
+    before do
       MiqQueue.put(
         :msg_timeout => 3600,
         :class_name  => "Vm",
@@ -33,7 +33,7 @@ describe "Message Timeout Handling" do
   end
 
   context "An MiqServer monitoring Workers, with a Message Queued with a timeout of 3600 seconds" do
-    before(:each) do
+    before do
       @worker.update_attributes(:last_heartbeat => Time.now.utc, :status => 'started')
       @msg = MiqQueue.put(
         :msg_timeout => 3600,

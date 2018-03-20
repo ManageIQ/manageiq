@@ -54,12 +54,12 @@ describe ServiceReconfigureTask do
   end
 
   describe "#deliver_to_automate" do
-    before(:each) do
+    before do
       allow(request).to receive(:approved?).and_return(true)
     end
 
     context "automation entry point available" do
-      before(:each) do
+      before do
         FactoryGirl.create(:resource_action, :action       => 'Reconfigure',
                                              :resource     => template,
                                              :ae_namespace => 'namespace',

@@ -1,5 +1,5 @@
 describe PxeServer do
-  before(:each) do
+  before do
     EvmSpecHelper.local_miq_server
     @pxe_server = FactoryGirl.create(:pxe_server, :uri_prefix => "nfs", :uri => "nfs:///#{@mnt_point}")
   end
@@ -23,7 +23,7 @@ describe PxeServer do
   end
 
   context "pxelinux depot" do
-    before(:each) do
+    before do
       @pxe_server.pxe_directory = "pxelinux.cfg"
       class << @pxe_server
         def test_mount_point
@@ -67,7 +67,7 @@ describe PxeServer do
     end
 
     context "#sync_images" do
-      before(:each) do
+      before do
         @expected = [
           ["default",              "Ubuntu-10.10-Desktop-amd64-LIVE_BOOT", "ubuntu-10.10-desktop-amd64/vmlinuz"],
           ["default",              "Ubuntu-10.10-Desktop-i386-LIVE_BOOT",  "ubuntu-10.10-desktop-i386/vmlinuz"],
@@ -161,7 +161,7 @@ PXE
   end
 
   context "ipxe depot" do
-    before(:each) do
+    before do
       @pxe_server.pxe_directory = "ipxe/mac"
       class << @pxe_server
         def test_mount_point
@@ -205,7 +205,7 @@ PXE
     end
 
     context "#sync_images" do
-      before(:each) do
+      before do
         @expected = [
           ["00-50-56-91-79-d5", "00-50-56-91-79-d5", "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz", "ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:50:56:91:79:d5"]
         ]
@@ -292,7 +292,7 @@ PXE
   end
 
   context "with pxe images" do
-    before(:each) do
+    before do
       pxe_menu          = FactoryGirl.create(:pxe_menu,  :pxe_server => @pxe_server)
       @advertised_image = FactoryGirl.create(:pxe_image, :pxe_server => @pxe_server, :pxe_menu => pxe_menu)
       @discovered_image = FactoryGirl.create(:pxe_image, :pxe_server => @pxe_server)

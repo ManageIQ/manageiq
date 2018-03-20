@@ -1,5 +1,5 @@
 describe PidFile do
-  before(:each) do
+  before do
     @fname = 'foo.bar'
     @pid_file = PidFile.new(@fname)
   end
@@ -11,7 +11,7 @@ describe PidFile do
     end
 
     context "file does exist" do
-      before(:each) do
+      before do
         allow(File).to receive(:file?).with(@fname).and_return(true)
       end
 
@@ -68,7 +68,7 @@ describe PidFile do
     end
 
     context "#pid returns valid value" do
-      before(:each) do
+      before do
         @pid = 42
         allow(@pid_file).to receive(:pid).and_return(@pid)
       end
@@ -84,7 +84,7 @@ describe PidFile do
       end
 
       context "MiqProcess.command_line returns valid value" do
-        before(:each) do
+        before do
           @cmd_line = "my favorite program"
           allow(MiqProcess).to receive(:command_line).and_return(@cmd_line)
         end

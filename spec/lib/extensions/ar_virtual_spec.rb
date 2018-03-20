@@ -1,6 +1,6 @@
 describe VirtualFields do
   context "TestClass" do
-    before(:each) do
+    before do
       class TestClassBase < ActiveRecord::Base
         self.abstract_class = true
 
@@ -35,7 +35,7 @@ describe VirtualFields do
       end
     end
 
-    after(:each) do
+    after do
       TestClassBase.remove_connection
       Object.send(:remove_const, :TestClass)
       Object.send(:remove_const, :TestClassBase)
@@ -222,7 +222,7 @@ describe VirtualFields do
     end
 
     context "with virtual columns" do
-      before(:each) do
+      before do
         TestClass.virtual_column :vcol1, :type => :string
         TestClass.virtual_column :vcol2, :type => :string
 
@@ -240,7 +240,7 @@ describe VirtualFields do
             virtual_column :vcolsub1, :type => :string
           end
         end
-        before(:each) do
+        before do
           test_sub_class
           @vcols_sub_strs = @vcols_strs + ["vcolsub1"]
           @vcols_sub_syms = @vcols_syms + [:vcolsub1]
@@ -438,7 +438,7 @@ describe VirtualFields do
     end
 
     context "with virtual reflections" do
-      before(:each) do
+      before do
         TestClass.virtual_has_one :vref1
         TestClass.virtual_has_one :vref2
 
@@ -456,7 +456,7 @@ describe VirtualFields do
             virtual_has_one :vrefsub1
           end
         end
-        before(:each) do
+        before do
           test_sub_class
           @vrefs_sub_syms = @vrefs_syms + [:vrefsub1]
           @refs_sub_syms  = @vrefs_sub_syms + [:ref1, :ref2]
@@ -468,7 +468,7 @@ describe VirtualFields do
     end
 
     context "with both virtual columns and reflections" do
-      before(:each) do
+      before do
         TestClass.virtual_column  :vcol1, :type => :string
         TestClass.virtual_has_one :vref1
       end
@@ -613,7 +613,7 @@ describe VirtualFields do
       end
 
       context "with relation in foreign table" do
-        before(:each) do
+        before do
           class TestOtherClass < ActiveRecord::Base
             def self.connection
               TestClassBase.connection
@@ -624,7 +624,7 @@ describe VirtualFields do
           end
         end
 
-        after(:each) do
+        after do
           TestOtherClass.remove_connection
           Object.send(:remove_const, :TestOtherClass)
         end
@@ -906,7 +906,7 @@ describe VirtualFields do
   end
 
   context "preloading" do
-    before(:each) do
+    before do
       FactoryGirl.create(:vm_vmware,
                          :hardware         => FactoryGirl.create(:hardware),
                          :operating_system => FactoryGirl.create(:operating_system),

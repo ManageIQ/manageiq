@@ -1,6 +1,6 @@
 describe "Server Role Management" do
   context "After Setup," do
-    before(:each) do
+    before do
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,role_scope
         automate,Automation Engine,0,false,region

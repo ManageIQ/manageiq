@@ -1,6 +1,6 @@
 describe Job do
   context "With a single scan job," do
-    before(:each) do
+    before do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
 
@@ -17,7 +17,7 @@ describe Job do
     end
 
     context "where job is dispatched but never started" do
-      before(:each) do
+      before do
         @job.update_attribute(:dispatch_status, "active")
 
         Timecop.travel 5.minutes
@@ -25,12 +25,12 @@ describe Job do
         Job.check_jobs_for_timeout
       end
 
-      after(:each) do
+      after do
         Timecop.return
       end
 
       context "after queue message is processed" do
-        before(:each) do
+        before do
           @msg = MiqQueue.get(:role => "smartstate", :zone => @zone.name)
           status, message, result = @msg.deliver
           @msg.delivered(status, message, result)
@@ -61,7 +61,7 @@ describe Job do
     end
 
     context "where job is for a repository VM (no zone)" do
-      before(:each) do
+      before do
         @job.update_attributes(:state => "scanning", :dispatch_status => "active", :zone => nil)
 
         Timecop.travel 5.minutes
@@ -75,7 +75,7 @@ describe Job do
         @job.reload
       end
 
-      after(:each) do
+      after do
         Timecop.return
       end
 
@@ -88,7 +88,7 @@ describe Job do
     end
 
     context "where job is for a VM that disappeared" do
-      before(:each) do
+      before do
         @job.update_attributes(:state => "scanning", :dispatch_status => "active", :zone => nil)
 
         @vm.destroy
@@ -104,7 +104,7 @@ describe Job do
         @job.reload
       end
 
-      after(:each) do
+      after do
         Timecop.return
       end
 
@@ -117,7 +117,7 @@ describe Job do
     end
 
     context "where 2 VMs in 2 Zones have an EVM Snapshot" do
-      before(:each) do
+      before do
         scan_type   = nil
         build       = '12345'
         description = "Snapshot for scan job: #{@job.guid}, EVM Server build: #{build} #{scan_type} Server Time: #{Time.now.utc.iso8601}"
@@ -153,7 +153,7 @@ describe Job do
       end
 
       context "where job is not found and the snapshot timestamp is less than an hour old with default job_not_found_delay" do
-        before(:each) do
+        before do
           @job.destroy
           Job.check_for_evm_snapshots
         end
@@ -164,7 +164,7 @@ describe Job do
       end
 
       context "where job is not found and the snapshot timestamp is less than an hour old with job_not_found_delay from worker settings" do
-        before(:each) do
+        before do
           @job.destroy
           Job.check_for_evm_snapshots(@schedule_worker_settings[:evm_snapshot_delete_delay_for_job_not_found])
         end
@@ -175,13 +175,13 @@ describe Job do
       end
 
       context "where job is not found and the snapshot timestamp is more than an hour old with job_not_found_delay from worker settings" do
-        before(:each) do
+        before do
           @job.destroy
           Timecop.travel 61.minutes
           Job.check_for_evm_snapshots(@schedule_worker_settings[:evm_snapshot_delete_delay_for_job_not_found])
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -191,13 +191,13 @@ describe Job do
       end
 
       context "where job is not found and job_not_found_delay passed with 5 minutes and the snapshot timestamp is more than an 5 minutes old" do
-        before(:each) do
+        before do
           @job.destroy
           Timecop.travel 6.minutes
           Job.check_for_evm_snapshots(5.minutes)
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -207,7 +207,7 @@ describe Job do
       end
 
       context "where job is not found and the snapshot timestamp is nil" do
-        before(:each) do
+        before do
           @job.destroy
           @snapshot.update_attribute(:description, "Foo")
           Job.check_for_evm_snapshots
@@ -219,7 +219,7 @@ describe Job do
       end
 
       context "where job is active" do
-        before(:each) do
+        before do
           @job.update_attribute(:state, "active")
           Job.check_for_evm_snapshots
         end
@@ -230,7 +230,7 @@ describe Job do
       end
 
       context "where job is finished" do
-        before(:each) do
+        before do
           @job.update_attribute(:state, "finished")
           Job.check_for_evm_snapshots
         end
@@ -246,7 +246,7 @@ describe Job do
     end
 
     context "where scan jobs exist for both vms and container images" do
-      before(:each) do
+      before do
         User.current_user = FactoryGirl.create(:user)
         @ems_k8s = FactoryGirl.create(
           :ems_kubernetes, :hostname => "test.com", :zone => @zone, :port => 8443,
@@ -287,7 +287,7 @@ describe Job do
     end
 
     describe ".check_jobs_for_timeout" do
-      before(:each) do
+      before do
         @job.update_attributes(:state => "active")
         @queue_item = MiqQueue.put(:task_id => @job.guid)
       end
@@ -328,7 +328,7 @@ describe Job do
   end
 
   context "before_destroy callback" do
-    before(:each) do
+    before do
       @job = Job.create_job("VmScan", :name => "Hello, World!")
     end
 

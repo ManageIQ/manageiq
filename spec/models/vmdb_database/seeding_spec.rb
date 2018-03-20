@@ -12,7 +12,7 @@ describe VmdbDatabase do
     end
 
     context "#seed" do
-      before(:each) do
+      before do
         MiqDatabase.seed
         @db = FactoryGirl.create(:vmdb_database)
       end

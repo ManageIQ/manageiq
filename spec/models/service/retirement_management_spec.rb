@@ -1,5 +1,5 @@
 describe "Service Retirement Management" do
-  before(:each) do
+  before do
     @server = EvmSpecHelper.local_miq_server
     @service = FactoryGirl.create(:service)
   end

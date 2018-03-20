@@ -45,11 +45,11 @@ describe TaskHelpers::Exports do
   describe '.validate_directory' do
     let(:export_dir2) { Dir.tmpdir + "/thisdoesntexist" }
 
-    before(:each) do
+    before do
       @export_dir = Dir.mktmpdir('miq_exp_dir')
     end
 
-    after(:each) do
+    after do
       FileUtils.remove_entry @export_dir
     end
 

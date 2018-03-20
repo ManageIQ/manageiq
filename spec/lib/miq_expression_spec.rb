@@ -37,7 +37,7 @@ describe MiqExpression do
         let(:volume_2_type_field_cost) { "#{model}-storage_allocated_#{volume_2.volume_type}_cost" }
         let(:volume_3_type_field_cost) { "#{model}-storage_allocated_#{volume_3.volume_type}_cost" }
 
-        before(:each) do
+        before do
           volume_1
           volume_2
         end

@@ -215,7 +215,7 @@ describe ServiceTemplate do
   end
 
   context "#type_display" do
-    before(:each) do
+    before do
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
     end
 
@@ -235,7 +235,7 @@ describe ServiceTemplate do
   end
 
   context "#atomic?" do
-    before(:each) do
+    before do
       @st1 = FactoryGirl.create(:service_template)
     end
 
@@ -250,7 +250,7 @@ describe ServiceTemplate do
   end
 
   context "#composite?" do
-    before(:each) do
+    before do
       @st1 = FactoryGirl.create(:service_template)
     end
 
@@ -287,7 +287,7 @@ describe ServiceTemplate do
   end
 
   context "with multiple services" do
-    before(:each) do
+    before do
       @svc_a = FactoryGirl.create(:service_template, :name => 'Svc A')
       @svc_b = FactoryGirl.create(:service_template, :name => 'Svc B')
       @svc_c = FactoryGirl.create(:service_template, :name => 'Svc C')
@@ -429,7 +429,7 @@ describe ServiceTemplate do
   end
 
   context "with a small env" do
-    before(:each) do
+    before do
       @zone1 = FactoryGirl.create(:small_environment)
       allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
@@ -482,7 +482,7 @@ describe ServiceTemplate do
     end
 
     context "with a VM Provision Request Template" do
-      before(:each) do
+      before do
         admin = FactoryGirl.create(:user_admin)
 
         vm_template = Vm.first

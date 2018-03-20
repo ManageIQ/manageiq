@@ -1,5 +1,5 @@
 describe GuestDevice do
-  before(:each) do
+  before do
     @vm_gd = FactoryGirl.create(:guest_device_nic)
     @vm    = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :guest_devices => [@vm_gd]))
 

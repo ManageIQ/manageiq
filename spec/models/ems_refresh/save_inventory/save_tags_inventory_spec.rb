@@ -11,7 +11,7 @@ context "save_tags_inventory" do
     entry.tag
   end
 
-  before(:each) do
+  before do
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_amazon, :zone => @zone)
 

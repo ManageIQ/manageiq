@@ -1,12 +1,12 @@
 describe EmsRefresh::SaveInventory do
   context "save_vms_inventory handling duplicate uids" do
-    before(:each) do
+    before do
       @zone = FactoryGirl.create(:zone)
       @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
     end
 
     context "check save_ems_inventory_no_disconnect" do
-      before(:each) do
+      before do
         @zone = FactoryGirl.create(:zone)
         @ems = FactoryGirl.create(:ems_redhat, :zone => @zone)
         FactoryGirl.create(:resource_pool,
@@ -103,7 +103,7 @@ describe EmsRefresh::SaveInventory do
     end
 
     context "with no dups in the database" do
-      before(:each) do
+      before do
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
         @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
       end
@@ -150,7 +150,7 @@ describe EmsRefresh::SaveInventory do
     end
 
     context "with dups in the database" do
-      before(:each) do
+      before do
         @uid = SecureRandom.uuid
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
         @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
@@ -198,7 +198,7 @@ describe EmsRefresh::SaveInventory do
     end
 
     context "with disconnected dups in the database" do
-      before(:each) do
+      before do
         @uid = SecureRandom.uuid
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => nil,  :uid_ems => @uid)
         @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
@@ -247,7 +247,7 @@ describe EmsRefresh::SaveInventory do
     end
 
     context "with non-dup on a different EMS in the database" do
-      before(:each) do
+      before do
         @ems2 = FactoryGirl.create(:ems_vmware)
         @uid  = SecureRandom.uuid
         @vm1  = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems2, :uid_ems => @uid)
@@ -273,7 +273,7 @@ describe EmsRefresh::SaveInventory do
     end
 
     context "with disconnected non-dup in the database" do
-      before(:each) do
+      before do
         @uid  = SecureRandom.uuid
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => nil, :uid_ems => @uid)
         @vm2 = FactoryGirl.build(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
@@ -293,7 +293,7 @@ describe EmsRefresh::SaveInventory do
     end
 
     context "with no dups in the database, but with nil ems_refs (after upgrade)" do
-      before(:each) do
+      before do
         @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
         @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
 

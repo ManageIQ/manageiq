@@ -1,6 +1,6 @@
 describe Relationship do
   describe "#filtered?" do
-    before(:each) do
+    before do
       @rel = FactoryGirl.build(:relationship_vm_vmware)
     end
 

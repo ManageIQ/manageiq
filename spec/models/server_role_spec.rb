@@ -1,6 +1,6 @@
 describe ServerRole do
   context "Without Seeding" do
-    before(:each) do
+    before do
       @server_roles = []
       [
         ['event',                   1],
@@ -27,7 +27,7 @@ describe ServerRole do
   end
 
   context "With Seeding" do
-    before(:each) do
+    before do
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,role_scope
         automate,Automation Engine,0,false,region

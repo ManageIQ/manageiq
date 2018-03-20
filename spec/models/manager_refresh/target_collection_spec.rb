@@ -1,5 +1,5 @@
 describe ManagerRefresh::TargetCollection do
-  before(:each) do
+  before do
     @zone               = FactoryGirl.create(:zone)
     @ems                = FactoryGirl.create(:ems_cloud, :zone => @zone, :name => "ems_name")
     @ems_physical_infra = FactoryGirl.create(:ems_physical_infra, :zone => @zone)

@@ -5,7 +5,7 @@ describe MiqPolicy do
     # test verifies that changing things under the covers doesn't affect
     # calling conditions.
 
-    before(:each) do
+    before do
       @ps = FactoryGirl.create(:miq_policy_set, :name => "ps")
       @p  = FactoryGirl.create(:miq_policy)
       @ps.add_member(@p)

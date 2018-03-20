@@ -1,5 +1,5 @@
 describe MiqCockpit::WS do
-  before(:each) do
+  before do
     @server = FactoryGirl.create(:miq_server, :hostname => "hostname")
     @miq_server = EvmSpecHelper.local_miq_server
     @miq_server.ipaddress = "10.0.0.1"
@@ -104,7 +104,7 @@ describe MiqCockpit::WS do
   end
 
   describe 'update_config' do
-    before(:each) do
+    before do
       @login_command = Rails.root.join("tools", "cockpit", "cockpit-auth-miq")
     end
 

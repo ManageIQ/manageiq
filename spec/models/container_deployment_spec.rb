@@ -1,5 +1,5 @@
 describe ContainerDeployment do
-  before(:each) do
+  before do
     @container_deployment = FactoryGirl.create(:container_deployment,
                                                :method_type => "non_managed",
                                                :version     => "v2",
@@ -74,7 +74,7 @@ variant: openshift-enterprise
   end
 
   context "#cockpit_url" do
-    before(:each) do
+    before do
       @csv = <<-CSV.gsub(/^\s+/, "")
         name,description,max_concurrent,external_failover,role_scope
         cockpit_ws,Cockpit,1,false,zone
@@ -130,7 +130,7 @@ variant: openshift-enterprise
   end
 
   context "authentication yml generation" do
-    before(:each) do
+    before do
       @container_deployment.authentications.destroy_all
     end
     it "parse allow all correctly" do

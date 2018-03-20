@@ -1,7 +1,7 @@
 describe ServiceTemplateProvisionRequest do
   let(:admin) { FactoryGirl.create(:user_admin) }
   context "with multiple tasks" do
-    before(:each) do
+    before do
       @request  = FactoryGirl.create(:service_template_provision_request, :description => 'Service Request', :requester => admin)
 
       @task_1   = FactoryGirl.create(:service_template_provision_task, :description => 'Task 1',     :userid => admin.userid, :miq_request_id => @request.id)

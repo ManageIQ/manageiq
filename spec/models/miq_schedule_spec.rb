@@ -1,7 +1,7 @@
 describe MiqSchedule do
   before { EvmSpecHelper.create_guid_miq_server_zone }
   context 'with schedule infrastructure and valid run_ats' do
-    before(:each) do
+    before do
       @valid_run_ats =  [{:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily", :value => "1"}},
                          {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "once"}}]
     end
@@ -123,7 +123,7 @@ describe MiqSchedule do
     end
 
     context "with valid schedules" do
-      before(:each) do
+      before do
         @valid_schedules = []
 
         @valid_run_ats.each do |run_at|
@@ -168,14 +168,14 @@ describe MiqSchedule do
       end
 
       context "at 1 AM EST create start_time and tz based on Eastern Time" do
-        before(:each) do
+        before do
           @start = Time.parse("Sun March 10 01:00:00 -0500 2010")
           Timecop.travel(@start + 10.minutes)
           @east_tz = "Eastern Time (US & Canada)"
           @first.update_attribute(:run_at, :start_time => @start.dup.utc, :interval => {:unit => "daily", :value => "1"}, :tz => @east_tz)
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -188,12 +188,12 @@ describe MiqSchedule do
         end
 
         context "after jumping to 1 AM EDT" do
-          before(:each) do
+          before do
             @start = Time.parse("Sun March 15 01:00:00 -0400 2010")
             Timecop.travel(@start + 10.minutes)
           end
 
-          after(:each) do
+          after do
             Timecop.return
           end
 
@@ -208,14 +208,14 @@ describe MiqSchedule do
       end
 
       context "at 1 AM EDT create start_time and tz based on Eastern Time" do
-        before(:each) do
+        before do
           @start = Time.parse("Sun October 6 01:00:00 -0400 2010")
           @east_tz = "Eastern Time (US & Canada)"
           Timecop.travel(@start + 10.minutes)
           @first.update_attribute(:run_at, :start_time => @start.dup.utc, :interval => {:unit => "daily", :value => "1"}, :tz => @east_tz)
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -228,12 +228,12 @@ describe MiqSchedule do
         end
 
         context "after jumping to 1 AM EST" do
-          before(:each) do
+          before do
             @start = Time.parse("Sun November 7 01:00:00 -0500 2010")
             Timecop.travel(@start + 10.minutes)
           end
 
-          after(:each) do
+          after do
             Timecop.return
           end
 
@@ -248,7 +248,7 @@ describe MiqSchedule do
       end
 
       context "at 1 AM EST create start_time and tz based on UTC" do
-        before(:each) do
+        before do
           @start = Time.parse("Sun March 10 01:00:00 -0500 2010")
           @east_tz = "Eastern Time (US & Canada)"
           @utc_tz  = "UTC"
@@ -256,7 +256,7 @@ describe MiqSchedule do
           @first.update_attribute(:run_at, :start_time => @start.dup.utc, :interval => {:unit => "daily", :value => "1"})
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -277,12 +277,12 @@ describe MiqSchedule do
         end
 
         context "after jumping to 1 AM EDT" do
-          before(:each) do
+          before do
             @start = Time.parse("Sun March 15 01:00:00 -0400 2010")
             Timecop.travel(@start + 10.minutes)
           end
 
-          after(:each) do
+          after do
             Timecop.return
           end
 
@@ -305,7 +305,7 @@ describe MiqSchedule do
       end
 
       context "at 1 AM AKDT create start_time and tz based on Alaska time and interval every 3 days" do
-        before(:each) do
+        before do
           @east_tz = "Eastern Time (US & Canada)"
           @ak_tz = "Alaska"
           @utc_tz  = "UTC"
@@ -315,7 +315,7 @@ describe MiqSchedule do
           @first.update_attribute(:run_at, :start_time => @ak_time.dup.utc, :interval => {:unit => "daily", :value => "3"}, :tz => @ak_tz)
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
@@ -340,12 +340,12 @@ describe MiqSchedule do
         end
 
         context "after jumping to EST" do
-          before(:each) do
+          before do
             @start = Time.parse("Sun November 7 01:00:00 -0500 2010")
             Timecop.travel(@start + 10.minutes)
           end
 
-          after(:each) do
+          after do
             Timecop.return
           end
 
@@ -368,17 +368,17 @@ describe MiqSchedule do
       end
 
       context "with Time.now stubbed as 'Jan 1 2011' at 6 am UTC" do
-        before(:each) do
+        before do
           @now = Time.parse("2011-01-01 06:00:00 Z")
           Timecop.travel(@now)
         end
 
-        after(:each) do
+        after do
           Timecop.return
         end
 
         context "with no last run time" do
-          before(:each) do
+          before do
             @first.update_attribute(:last_run_on, nil)
           end
 
@@ -414,7 +414,7 @@ describe MiqSchedule do
         end
 
         context "with last run time 20 minutes ago" do
-          before(:each) do
+          before do
             time = @now - 20.minutes
             @first.update_attribute(:last_run_on, time)
           end
@@ -477,7 +477,7 @@ describe MiqSchedule do
     end
 
     context "valid db_gc unsaved schedule, run_adhoc_db_gc" do
-      before(:each) do
+      before do
         @task_id = MiqSchedule.run_adhoc_db_gc(:userid => "admin", :aggressive => true)
         @gc_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").first
 
@@ -496,7 +496,7 @@ describe MiqSchedule do
       end
 
       context "deliver DatabaseBackup.gc message" do
-        before(:each) do
+        before do
           # stub out the actual backup behavior
           allow(PostgresAdmin).to receive(:gc)
 
@@ -547,7 +547,7 @@ describe MiqSchedule do
       end
 
       context "calling run adhoc_db_backup" do
-        before(:each) do
+        before do
           @task_id = @schedule.run_adhoc_db_backup
           @backup_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").first
 
@@ -572,7 +572,7 @@ describe MiqSchedule do
       end
 
       context "calling queue scheduled work via a db_backup schedule firing" do
-        before(:each) do
+        before do
           MiqSchedule.queue_scheduled_work(@schedule.id, nil, Time.now.utc.to_i, nil)
           @invoke_actions_message = MiqQueue.where(:class_name => "MiqSchedule", :instance_id => @schedule.id, :method_name => "invoke_actions").first
         end
@@ -586,7 +586,7 @@ describe MiqSchedule do
         end
 
         context "deliver invoke actions message" do
-          before(:each) do
+          before do
             status, message, result = @invoke_actions_message.deliver
             @invoke_actions_message.delivered(status, message, result)
             @backup_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").first
@@ -609,13 +609,13 @@ describe MiqSchedule do
           end
 
           context "_backup is stubbed" do
-            before(:each) do
+            before do
               # stub out the actual backup behavior
               allow_any_instance_of(DatabaseBackup).to receive(:_backup)
             end
 
             context "deliver DatabaseBackup.backup message" do
-              before(:each) do
+              before do
                 @status, message, result = @backup_message.deliver
                 @backup_message.delivered(@status, message, result)
               end
@@ -628,7 +628,7 @@ describe MiqSchedule do
             end
 
             context "deliver DatabaseBackup.backup message with adhoc true" do
-              before(:each) do
+              before do
                 @schedule.update_attribute(:adhoc, true)
                 @schedule_id = @schedule.id
                 @status, message, result = @backup_message.deliver
@@ -641,7 +641,7 @@ describe MiqSchedule do
             end
 
             context "deliver DatabaseBackup.backup message with adhoc false" do
-              before(:each) do
+              before do
                 @schedule.update_attribute(:adhoc, false)
                 @schedule_id = @schedule.id
                 @status, message, result = @backup_message.deliver
