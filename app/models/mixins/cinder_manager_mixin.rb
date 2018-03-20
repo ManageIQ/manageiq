@@ -18,7 +18,6 @@ module CinderManagerMixin
     private
 
     def ensure_cinder_managers
-      return false unless cinder_service
       created = ensure_cinder_manager
       cinder_manager.name            = "#{name} Cinder Manager"
       cinder_manager.zone_id         = zone_id

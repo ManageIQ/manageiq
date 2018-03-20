@@ -16,7 +16,7 @@ module ManageIQ::Providers
       @data              = {}
       @data_index        = {}
 
-      @swift_service     = ems.parent_manager.swift_service
+      @swift_service     = ems.parent_manager&.swift_service
     end
 
     def ems_inv_to_hashes
@@ -34,7 +34,7 @@ module ManageIQ::Providers
     end
 
     def object_store
-      return if @swift_service.blank? || @swift_service.name != :swift
+      return if @swift_service.nil? || @swift_service.blank? || @swift_service.name != :swift
 
       @swift_service.handled_list(:directories).each do |dir|
         result = process_collection_item(dir, :cloud_object_store_containers) { |c| parse_container(c, dir.project) }
