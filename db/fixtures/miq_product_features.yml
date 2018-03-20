@@ -5945,7 +5945,10 @@
       :description: Provision Physical Server
       :feature_type: control
       :identifier: physical_server_provision
-
+    - :name: Physical Server Remote Console
+      :description: Access Physical Server Remote Console
+      :feature_type: control
+      :identifier: physical_server_remote_console
 # Firmwares
 - :name: Firmwares
   :description: Everything under Firmware
