@@ -187,6 +187,12 @@ describe ChargebackVm do
             expect(subject.storage_allocated_hdd_cost).to eq(state_data[:allocated_disk_types]['hdd'] / 1.gigabytes * count_hourly_rate * hours_in_day)
           end
 
+          it 'shows rates' do
+            skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+            expect(subject.storage_allocated_sdd_rate).to eq("0.0/1.0")
+            expect(subject.storage_allocated_hdd_rate).to eq("0.0/1.0")
+          end
+
           it "doesn't return removed cloud volume types fields" do
             described_class.refresh_dynamic_metric_columns
 
@@ -573,6 +579,25 @@ describe ChargebackVm do
           expect(subject.cpu_used_metric).to be_within(0.01).of(used_metric)
           expect(subject.cpu_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
           expect(subject.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
+        end
+
+        context 'with nonzero fixed rate' do
+          let(:hourly_variable_tier_rate) { {:fixed_rate => 100, :variable_rate => hourly_rate.to_s} }
+
+          it 'shows rates' do
+            skip('this case needs to be added in new chargeback') if Settings.new_chargeback
+
+            expect(subject.cpu_allocated_rate).to eq("0.0/1.0")
+            expect(subject.cpu_used_rate).to eq("100.0/0.01")
+            expect(subject.disk_io_used_rate).to eq("100.0/0.01")
+            expect(subject.fixed_compute_1_rate).to eq("100.0/0.01")
+            expect(subject.memory_allocated_rate).to eq("100.0/0.01")
+            expect(subject.memory_used_rate).to eq("100.0/0.01")
+            expect(subject.metering_used_rate).to eq("0.0/1.0")
+            expect(subject.net_io_used_rate).to eq("100.0/0.01")
+            expect(subject.storage_allocated_rate).to eq("0.0/1.0")
+            expect(subject.storage_used_rate).to eq("0.0/1.0")
+          end
         end
 
         let(:fixed_rate) { 10.0 }
