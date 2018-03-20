@@ -18,7 +18,7 @@ module ManageIQ::Providers
       @data              = {}
       @data_index        = {}
 
-      @cinder_service    = ems.&parent_manager&.cinder_service
+      @cinder_service    = ems.parent_manager&.cinder_service
     end
 
     def ems_inv_to_hashes
