@@ -247,7 +247,7 @@ describe MiqAlert do
       end
 
       context "with the alert now evaluated to false" do
-        before  do
+        before do
           @alert.evaluate([@vm.class.base_class.name, @vm.id])
           allow(@alert).to receive_messages(:eval_expression => false)
           @alert.options.store_path(:notifications, :delay_next_evaluation, 0)
