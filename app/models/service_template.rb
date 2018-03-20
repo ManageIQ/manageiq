@@ -103,6 +103,14 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
+  # options should be the same as the one in .create_catalog_item
+  # returns a hash
+  #   :status => 'Ok' / 'Error'
+  #   :reason => {} # optional. reason can be a well structured hash to itemize details
+  def self.pre_creation_check(options)
+    raise NotImplementedError, _("pre_creation_check method is not implemented")
+  end
+
   def update_catalog_item(options, auth_user = nil)
     config_info = validate_update_config_info(options)
     unless config_info
