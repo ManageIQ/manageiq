@@ -94,6 +94,21 @@ class EvmApplication
   end
   private_class_method :compact_date
 
+  def self.compact_queue_uri(queue_name, uri)
+    if queue_name.nil?
+      if uri
+        uri_parts = uri.split(":")
+        [uri_parts.first, uri_parts.last].join(":")
+      else
+        ""
+      end
+    elsif queue_name.kind_of?(Array)
+      queue_name.join(":")
+    else
+      queue_name
+    end
+  end
+
   def self.servers_status(servers)
     data = servers.collect do |s|
       {
@@ -128,7 +143,7 @@ class EvmApplication
           "PID"       => w.pid,
           "SPID"      => w.sql_spid,
           "Server"    => s.name,
-          "Queue"     => w.queue_name || w.uri,
+          "Queue"     => compact_queue_uri(w.queue_name, w.uri),
           "Started"   => compact_date(w.started_on),
           "Heartbeat" => compact_date(w.last_heartbeat),
           "MB Usage"  => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
