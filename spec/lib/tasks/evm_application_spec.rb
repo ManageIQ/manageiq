@@ -17,6 +17,105 @@ describe EvmApplication do
     end
   end
 
+  describe ".servers_status" do
+    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
+    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
+    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+
+    it "displays server status for local and remote servers" do
+      expect(described_class.servers_status([local, remote])).to eq(
+        [
+          {
+            "Region"    => local.region_number,
+            "Zone"      => local.zone.name,
+            "Server"    => local.name,
+            "Status"    => "started",
+            "PID"       => nil,
+            "SPID"      => nil,
+            "Workers"   => 1,
+            "Version"   => "9.9.9.9",
+            "Started"   => local.started_on.strftime("%H:%M:%S%Z"),
+            "Heartbeat" => local.last_heartbeat.strftime("%Y-%m-%d"),
+            "MB Usage"  => "",
+            "Roles"     => "",
+          },
+          {
+            "Region"    => remote.region_number,
+            "Zone"      => remote.zone.name,
+            "Server"    => remote.name + "*",
+            "Status"    => "started",
+            "PID"       => nil,
+            "SPID"      => nil,
+            "Workers"   => 2,
+            "Version"   => "9.9.9.9",
+            "Started"   => remote.started_on.strftime("%H:%M:%S%Z"),
+            "Heartbeat" => "",
+            "MB Usage"  => "",
+            "Roles"     => "",
+          },
+        ]
+      )
+    end
+  end
+
+  describe ".worker_status" do
+    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
+    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
+    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+
+    it "displays worker status for local and remote server" do
+      expect(described_class.workers_status([local, remote])).to eq(
+        [
+          {
+            "Region"    => local.region_number,
+            "Zone"      => local.zone.name,
+            "Type"      => "Ui",
+            "Status"    => "ready",
+            "PID"       => ui.pid,
+            "SPID"      => nil,
+            "Server"    => local.name,
+            "Queue"     => "",
+            "Started"   => "",
+            "Heartbeat" => "",
+            "MB Usage"  => "",
+          },
+          {
+            "Region"    => remote.region_number,
+            "Zone"      => remote.zone.name,
+            "Type"      => "Base::Refresh",
+            "Status"    => "ready",
+            "PID"       => refresh.pid,
+            "SPID"      => nil,
+            "Server"    => remote.name,
+            "Queue"     => "",
+            "Started"   => "",
+            "Heartbeat" => "",
+            "MB Usage"  => "",
+          },
+          {
+            "Region"    => remote.region_number,
+            "Zone"      => remote.zone.name,
+            "Type"      => "Generic",
+            "Status"    => "ready",
+            "PID"       => generic.pid,
+            "SPID"      => nil,
+            "Server"    => remote.name,
+            "Queue"     => "",
+            "Started"   => "",
+            "Heartbeat" => "",
+            "MB Usage"  => "",
+          },
+        ]
+      )
+    end
+  end
+
   describe ".status" do
     def header(col, adjust = :rjust)
       hdr = col == :WID ? "ID" : col.to_s # edge case
@@ -27,82 +126,75 @@ describe EvmApplication do
       "-" * send("#{col.downcase}_padding")
     end
 
-    def pad(val, col)
-      val.to_s.rjust(send("#{col.downcase}_padding"))
+    def pad(val, col, adjust = :rjust)
+      val.to_s.send(adjust, send("#{col.downcase}_padding"))
     end
 
-    let(:local)    { EvmSpecHelper.create_guid_miq_server_zone[1] }
-    let(:remote)   { EvmSpecHelper.remote_miq_server }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80000) }
-    let!(:socket)  { FactoryGirl.create(:miq_websocket_worker, :miq_server => local, :pid => 7000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote) }
+    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
+    let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
+    let(:rgn)      { local.region_number }
+    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
     let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
-    let(:local_started_on)  { local.started_on.iso8601 }
-    let(:local_heartbeat)   { local.last_heartbeat.iso8601 }
+    let(:local_started_on)  { local.started_on.strftime("%H:%M:%S%Z") }
+    let(:local_heartbeat)   { local.last_heartbeat.strftime("%Y-%m-%d") }
 
-    let(:id_padding)        { [2, local.id.to_s.size].max }
-    let(:pid_padding)       { ["PID", ui.pid.to_s, socket.pid.to_s].map(&:size).max }
-    let(:server_id_padding) { [9, local.id.to_s.size].max }
-    let(:wid_padding)       { ["ID", ui.id.to_s, socket.id.to_s].map(&:size).max }
+    let(:pid_padding)       { ["PID", ui.pid.to_s, generic.pid.to_s].map(&:size).max }
     let(:zone_padding)      { local.zone.name.to_s.size }
-
-    before do
-      allow(described_class).to receive(:puts).with("Checking EVM status...")
-      allow(described_class).to receive(:puts).with("\n")
-    end
+    let(:started_padding)   { ["Started", local_started_on].map(&:size).max }
+    let(:heartbeat_padding) { ["Heartbeat", local_heartbeat].map(&:size).max }
+    let(:region_padding)    { 6 }
 
     context "for just the local server" do
       it "displays server status for the local server and it's workers" do
-        server_info = <<-SERVER_INFO.strip_heredoc
-           #{header(:Zone, :ljust)} | Server                   | Status  | #{header(:ID)       } | PID | SPID | URL | Started On           | Last Heartbeat       | MB Usage | Master? | Active Roles
-          -#{line_for(:Zone)      }-+--------------------------+---------+-#{line_for(:ID)     }-+-----+------+-----+----------------------+----------------------+----------+---------+--------------
-           #{local.zone.name      } | #{      local.name     } | started | #{pad(local.id, :ID)} |     |      |     | #{local_started_on } | #{local_heartbeat  } |          | false   |
+
+        expected_output = <<~SERVER_INFO
+          Checking EVM status...
+           #{header(:Region)  } | #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust)  } | MB Usage | Roles
+          -#{line_for(:Region)}-+-#{line_for(:Zone)      }-+--------------------------+---------+-----+------+---------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)        }-+----------+-------
+           #{pad(rgn, :Region)} | #{local.zone.name      } | #{      local.name     } | started |     |      |       1 | 9.9.9.9 | #{local_started_on          } | #{local_heartbeat             } |          |
+
+          * marks a master appliance
+
+           #{header(:Region)  } | #{header(:Zone, :ljust)} | Type | Status | #{header(:PID)         } | SPID | Server                   | Queue | Started | Heartbeat | MB Usage
+          -#{line_for(:Region)}-+-#{line_for(:Zone)      }-+------+--------+-#{line_for(:PID)       }-+------+--------------------------+-------+---------+-----------+----------
+           #{pad(rgn, :Region)} | #{local.zone.name      } | Ui   | ready  | #{pad(ui.pid, :PID)    } |      | #{      local.name     } |       |         |           |
         SERVER_INFO
-        worker_info = <<-WORKER_INFO.strip_heredoc
-           Worker Type        | Status | #{header(:WID)        } | #{header(:PID)         } | SPID | #{header(:Server_id)       } | Queue Name / URL | Started On | Last Heartbeat | MB Usage
-          --------------------+--------+-#{line_for(:WID)      }-+-#{line_for(:PID)       }-+------+-#{line_for(:Server_id)     }-+------------------+------------+----------------+----------
-           MiqUiWorker        | ready  | #{pad(ui.id, :WID)    } | #{pad(ui.pid, :PID)    } |      | #{pad(local.id, :Server_id)} |                  |            |                |
-           MiqWebsocketWorker | ready  | #{pad(socket.id, :WID)} | #{pad(socket.pid, :PID)} |      | #{pad(local.id, :Server_id)} |                  |            |                |
-        WORKER_INFO
 
-        expect(described_class).to receive(:puts).with(server_info)
-        expect(described_class).to receive(:puts).with(worker_info)
-
-        EvmApplication.status
+      expect { EvmApplication.status }.to output(expected_output).to_stdout
       end
     end
 
     context "with remote servers" do
-      let(:remote_started_on) { remote.started_on.iso8601 }
-      let(:remote_heartbeat)  { remote.last_heartbeat.iso8601 }
+      let(:remote_started_on) { remote.started_on.strftime("%H:%M:%S%Z") }
 
-      let(:id_padding)        { ["ID", local.id.to_s, remote.id.to_s].map(&:size).max }
       let(:pid_padding)       { MiqWorker.all.pluck(:pid).map { |pid| pid.to_s.size }.unshift(3).max }
-      let(:server_id_padding) { [9, local.id.to_s.size, remote.id.to_s.size].max }
-      let(:wid_padding)       { MiqWorker.all.pluck(:id).map { |pid| pid.to_s.size }.unshift(2).max }
       let(:zone_padding)      { ["Zone", local.zone.name.to_s, remote.zone.name.to_s].map(&:size).max }
+      let(:started_padding)   { ["Started", remote_started_on, local_started_on].map(&:size).max }
 
       it "displays server status for the all servers and workers" do
-        server_info = <<-SERVER_INFO.strip_heredoc
-           #{header(:Zone, :ljust)} | Server                   | Status  | #{header(:ID)        } | PID | SPID | URL | Started On           | Last Heartbeat       | MB Usage | Master? | Active Roles
-          -#{line_for(:Zone)      }-+--------------------------+---------+-#{line_for(:ID)      }-+-----+------+-----+----------------------+----------------------+----------+---------+--------------
-           #{local.zone.name      } | #{      local.name     } | started | #{pad(local.id, :ID) } |     |      |     | #{local_started_on } | #{local_heartbeat  } |          | false   |
-           #{remote.zone.name     } | #{      remote.name    } | started | #{pad(remote.id, :ID)} |     |      |     | #{remote_started_on} | #{remote_heartbeat } |          | false   |
+        expected_output = <<~SERVER_INFO
+          Checking EVM status...
+           #{header(:Zone, :ljust)               } | Server                    | Workers | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust).rstrip}
+          -#{line_for(:Zone)                     }-+---------------------------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)}-
+           #{pad(local.zone.name, :Zone, :ljust) } | #{      local.name     }  |       1 | #{local_started_on          } | #{local_heartbeat}
+           #{pad(remote.zone.name, :Zone, :ljust)} | #{     remote.name     }* |       2 | #{remote_started_on         } |
+
+          For all rows: Region=#{rgn}, Status=started, Version=9.9.9.9
+          * marks a master appliance
+
+           #{header(:Zone, :ljust)               } | Type          | #{header(:PID)          } | Server
+          -#{line_for(:Zone)                     }-+---------------+-#{line_for(:PID)        }-+--------------------------
+           #{pad(local.zone.name, :Zone, :ljust) } | Ui            | #{pad(ui.pid, :PID)     } | #{      local.name     }
+           #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | #{pad(refresh.pid, :PID)} | #{     remote.name     }
+           #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | #{pad(generic.pid, :PID)} | #{     remote.name     }
+
+          For all rows: Region=#{rgn}, Status=ready
         SERVER_INFO
-        worker_info = <<-WORKER_INFO.strip_heredoc
-           Worker Type                                     | Status | #{header(:WID)         } | #{header(:PID)          } | SPID | #{header(:Server_id)        } | Queue Name / URL | Started On | Last Heartbeat | MB Usage
-          -------------------------------------------------+--------+-#{line_for(:WID)       }-+-#{line_for(:PID)        }-+------+-#{line_for(:Server_id)      }-+------------------+------------+----------------+----------
-           MiqUiWorker                                     | ready  | #{pad(ui.id, :WID)     } | #{pad(ui.pid, :PID)     } |      | #{pad(local.id, :Server_id) } |                  |            |                |
-           MiqWebsocketWorker                              | ready  | #{pad(socket.id, :WID) } | #{pad(socket.pid, :PID) } |      | #{pad(local.id, :Server_id) } |                  |            |                |
-           ManageIQ::Providers::BaseManager::RefreshWorker | ready  | #{pad(refresh.id, :WID)} | #{pad(refresh.pid, :PID)} |      | #{pad(remote.id, :Server_id)} |                  |            |                |
-           MiqGenericWorker                                | ready  | #{pad(generic.id, :WID)} | #{pad(generic.pid, :PID)} |      | #{pad(remote.id, :Server_id)} |                  |            |                |
-        WORKER_INFO
 
-        expect(described_class).to receive(:puts).with(server_info)
-        expect(described_class).to receive(:puts).with(worker_info)
-
-        EvmApplication.status(true)
+        expect { EvmApplication.status(true) }.to output(expected_output).to_stdout
       end
     end
   end

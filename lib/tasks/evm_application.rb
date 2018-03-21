@@ -50,68 +50,111 @@ class EvmApplication
     puts "Checking EVM status..."
 
     server = MiqServer.my_server(true)
-    servers = Set.new
-    servers << server if server
-    if include_remotes
-      all_servers =
-        MiqServer
-        .order(:zone_id, :status)
-        .includes(:active_roles, :miq_workers, :zone)
-        .all.to_a
-      servers.merge(all_servers)
-    end
+    servers =
+      if include_remotes
+        MiqServer.includes(:active_roles, :miq_workers, :zone).all.to_a
+      else
+        [server]
+      end
 
     if servers.empty?
       puts "Local EVM Server not Found"
     else
-      output_servers_status(servers)
+      output_status(servers_status(servers), "* marks a master appliance")
       puts "\n"
-      output_workers_status(servers)
+      output_status(workers_status(servers))
     end
   end
 
-  def self.output_servers_status(servers)
+  def self.output_status(data, footnote = nil)
+    return if data.blank?
+    duplicate_columns = redundant_columns(data)
+    puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
+
+    # dont give headsup for empty values
+    heads_up = duplicate_columns.select { |n, v| n == "Region" || (v != 0 && v.present?) }
+    if heads_up.present?
+      puts "", "For all rows: #{heads_up.map { |n, v| "#{n}=#{v}" }.join(", ")}"
+      puts footnote if footnote
+    elsif footnote
+      puts "", footnote
+    end
+  end
+
+  def self.redundant_columns(data, column_names = nil, dups = {})
+    return dups if data.size <= 1
+    column_names ||= data.first.keys
+    column_names.each do |col_header|
+      values = data.collect { |row| row[col_header] }.uniq
+      dups[col_header] = values.first if values.size < 2
+    end
+    dups
+  end
+  private_class_method :redundant_columns
+
+  def self.compact_date(date)
+    return "" unless date
+    date < 1.day.ago ? date.strftime("%Y-%m-%d") : date.strftime("%H:%M:%S%Z")
+  end
+  private_class_method :compact_date
+
+  def self.compact_queue_uri(queue_name, uri)
+    if queue_name.nil?
+      if uri
+        uri_parts = uri.split(":")
+        [uri_parts.first, uri_parts.last].join(":")
+      else
+        ""
+      end
+    elsif queue_name.kind_of?(Array)
+      queue_name.join(":")
+    else
+      queue_name
+    end
+  end
+
+  def self.servers_status(servers)
     data = servers.collect do |s|
-      [s.zone.name,
-       s.name,
-       s.status,
-       s.id,
-       s.pid,
-       s.sql_spid,
-       s.drb_uri,
-       s.started_on && s.started_on.iso8601,
-       s.last_heartbeat && s.last_heartbeat.iso8601,
-       (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
-       s.is_master,
-       s.active_role_names.join(':'),
-      ]
+      {
+        "Region"       => s.region_number,
+        "Zone"      => s.zone.name,
+        "Server"    => (s.name || "UNKNOWN") + (s.is_master ? "*" : ""),
+        "Status"    => s.status,
+        "PID"       => s.pid,
+        "SPID"      => s.sql_spid,
+        "Workers"   => s.miq_workers.size,
+        "Version"   => s.version,
+        "Started"   => compact_date(s.started_on),
+        "Heartbeat" => compact_date(s.last_heartbeat),
+        "MB Usage"  => (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
+        "Roles"     => s.active_role_names.join(':'),
+      }
     end
-    header = ["Zone", "Server", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "MB Usage", "Master?", "Active Roles"]
-    puts data.unshift(header).tableize
+    data.sort_by { |s| [s["Region"], s["Zone"], s["Server"]] }
   end
 
-  def self.output_workers_status(servers)
-    data = []
-    servers.each do |s|
-      s.miq_workers.order(:type).each do |w|
+  def self.workers_status(servers)
+    data = servers.flat_map do |s|
+      s.miq_workers.collect do |w|
         mb_usage = w.proportional_set_size || w.memory_usage
         mb_threshold = w.worker_settings[:memory_threshold]
-        data <<
-          [w.type,
-           w.status.sub("stopping", "stop pending"),
-           w.id,
-           w.pid,
-           w.sql_spid,
-           w.miq_server_id,
-           w.queue_name || w.uri,
-           w.started_on && w.started_on.iso8601,
-           w.last_heartbeat && w.last_heartbeat.iso8601,
-           mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""]
+        simple_type = w.type&.gsub(/(ManageIQ::Providers::|Manager|Worker|Miq)/, '')
+        {
+          "Region"       => s.region_number,
+          "Zone"      => s.zone.name,
+          "Type"      => simple_type,
+          "Status"    => w.status.sub("stopping", "stop pending"),
+          "PID"       => w.pid,
+          "SPID"      => w.sql_spid,
+          "Server"    => s.name,
+          "Queue"     => compact_queue_uri(w.queue_name, w.uri),
+          "Started"   => compact_date(w.started_on),
+          "Heartbeat" => compact_date(w.last_heartbeat),
+          "MB Usage"  => mb_usage ? "#{mb_usage / 1.megabyte}/#{mb_threshold / 1.megabyte}" : ""
+        }
       end
     end
-
-    header = ["Worker Type", "Status", "ID", "PID", "SPID", "Server id", "Queue Name / URL", "Started On", "Last Heartbeat", "MB Usage"]
-    puts data.unshift(header).tableize unless data.empty?
+    data.sort_by { |w| [w["Region"], w["Zone"], w["Server"], w["Type"], w["PID"]] }
   end
 
   def self.update_start
