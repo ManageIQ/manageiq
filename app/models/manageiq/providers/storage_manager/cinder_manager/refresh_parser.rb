@@ -19,7 +19,7 @@ module ManageIQ::Providers
       @data              = {}
       @data_index        = {}
 
-      @cinder_service    = ems.parent_manager.cinder_service
+      @cinder_service    = ems.parent_manager&.cinder_service
     end
 
     def ems_inv_to_hashes
@@ -40,7 +40,7 @@ module ManageIQ::Providers
     end
 
     def volumes
-      @volumes ||= @cinder_service.handled_list(:volumes)
+      @volumes ||= @cinder_service&.handled_list(:volumes)
     end
 
     def get_volumes
@@ -48,13 +48,13 @@ module ManageIQ::Providers
     end
 
     def get_snapshots
-      process_collection(@cinder_service.handled_list(:list_snapshots_detailed,
+      process_collection(@cinder_service&.handled_list(:list_snapshots_detailed,
                                                       :__request_body_index => "snapshots"),
                          :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
     end
 
     def get_backups
-      process_collection(@cinder_service.list_backups_detailed.body["backups"],
+      process_collection(@cinder_service&.list_backups_detailed.body["backups"],
                          :cloud_volume_backups) { |backup| parse_backup(backup) }
     end
 
