@@ -27,7 +27,7 @@ describe EmsCloud do
   end
 
   context "OpenStack CloudTenant Mapping" do
-    let(:ems_cloud) { FactoryGirl.create(:ems_openstack, :tenant_mapping_enabled => true) }
+    let(:ems_cloud) { FactoryGirl.create(:ems_openstack_with_authentication, :tenant_mapping_enabled => true) }
     let(:ems_infra) { FactoryGirl.create(:ext_management_system) }
 
     describe "#supports_cloud_tenant_mapping" do
