@@ -53,4 +53,66 @@ module EmbeddedAnsibleWorker::ObjectManagement
       :variables => {'ansible_connection' => "local"}.to_yaml
     ).id
   end
+
+  CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR = Pathname.new("/var/lib/awx_consolidated_source").freeze
+  def ensure_plugin_playbooks_project_seeded(connection)
+    clean_consolidated_plugin_directory
+    copy_plugin_ansible_content
+
+    commit_git_plugin_content
+
+    project = existing_plugin_playbook_project(connection)
+    if project
+      update_playbook_project(project)
+    else
+      create_playbook_project(connection)
+    end
+  ensure
+    # we already have 2 copies: one in the gem and one imported into ansible in the project, delete the temporary one
+    clean_consolidated_plugin_directory
+  end
+
+  private
+
+  def clean_consolidated_plugin_directory
+    FileUtils.rm_rf(CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
+  end
+
+  def copy_plugin_ansible_content
+    FileUtils.mkdir_p(CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
+
+    # TODO: make this a public api via an attr_reader
+    Vmdb::Plugins.instance.instance_variable_get(:@registered_ansible_content).each do |content|
+      FileUtils.cp_r(Dir.glob("#{content.path}/*"), CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
+    end
+  end
+
+  def commit_git_plugin_content
+    Dir.chdir(CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR) do
+      # ruggedize this
+      `git init`
+      `git add -A`
+      `git commit -m "YOLO Initial Commit"`
+    end
+  end
+
+  PLUGIN_PLAYBOOK_PROJECT_NAME = "Default ManageIQ Playbook Project".freeze
+  PLAYBOOK_PROJECT_ATTRIBUTES = {
+      :name                 => PLUGIN_PLAYBOOK_PROJECT_NAME,
+      :scm_type             => "git",
+      :scm_url              => "file://#{CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR}",
+      :scm_update_on_launch => false
+  }.freeze
+
+  def existing_plugin_playbook_project(connection)
+    connection.api.projects.all(:name => PLUGIN_PLAYBOOK_PROJECT_NAME).first
+  end
+
+  def update_playbook_project(project)
+    project.update_attributes!(PLAYBOOK_PROJECT_ATTRIBUTES)
+  end
+
+  def create_playbook_project(connection)
+    connection.api.projects.create!(PLAYBOOK_PROJECT_ATTRIBUTES.to_json)
+  end
 end
