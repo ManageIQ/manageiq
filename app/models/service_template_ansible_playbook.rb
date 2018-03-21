@@ -105,7 +105,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       end.to_json
     end
 
-    [:credential, :cloud_credential, :network_credential].each do |credential|
+    %i(credential vault_credential cloud_credential network_credential).each do |credential|
       cred_sym = "#{credential}_id".to_sym
       params[credential] = Authentication.find(info[cred_sym]).manager_ref if info[cred_sym]
     end
