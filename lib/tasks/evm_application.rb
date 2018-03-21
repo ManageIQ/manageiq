@@ -60,20 +60,24 @@ class EvmApplication
     if servers.empty?
       puts "Local EVM Server not Found"
     else
-      output_status(servers_status(servers))
+      output_status(servers_status(servers), "* marks a master appliance")
       puts "\n"
       output_status(workers_status(servers))
     end
   end
 
-  def self.output_status(data)
+  def self.output_status(data, footnote = nil)
     return if data.blank?
     duplicate_columns = redundant_columns(data)
     puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
-    if duplicate_columns.present?
-      # dont give headsup for empty values
-      heads_up = duplicate_columns.select { |n, v| n == "Rgn" || (v != 0 && v.present?) }
-      puts "", "For all rows: #{heads_up.map { |n, v| "#{n}=#{v}" }.join(", ")}" if heads_up.present?
+
+    # dont give headsup for empty values
+    heads_up = duplicate_columns.select { |n, v| n == "Region" || (v != 0 && v.present?) }
+    if heads_up.present?
+      puts "", "For all rows: #{heads_up.map { |n, v| "#{n}=#{v}" }.join(", ")}"
+      puts footnote if footnote
+    elsif footnote
+      puts "", footnote
     end
   end
 
@@ -112,7 +116,7 @@ class EvmApplication
   def self.servers_status(servers)
     data = servers.collect do |s|
       {
-        "Rgn"       => s.region_number,
+        "Region"       => s.region_number,
         "Zone"      => s.zone.name,
         "Server"    => (s.name || "UNKNOWN") + (s.is_master ? "*" : ""),
         "Status"    => s.status,
@@ -126,7 +130,7 @@ class EvmApplication
         "Roles"     => s.active_role_names.join(':'),
       }
     end
-    data.sort_by { |s| [s["Rgn"], s["Zone"], s["Server"]] }
+    data.sort_by { |s| [s["Region"], s["Zone"], s["Server"]] }
   end
 
   def self.workers_status(servers)
@@ -136,7 +140,7 @@ class EvmApplication
         mb_threshold = w.worker_settings[:memory_threshold]
         simple_type = w.type&.gsub(/(ManageIQ::Providers::|Manager|Worker|Miq)/, '')
         {
-          "Rgn"       => s.region_number,
+          "Region"       => s.region_number,
           "Zone"      => s.zone.name,
           "Type"      => simple_type,
           "Status"    => w.status.sub("stopping", "stop pending"),
@@ -150,7 +154,7 @@ class EvmApplication
         }
       end
     end
-    data.sort_by { |w| [w["Rgn"], w["Zone"], w["Server"], w["Type"], w["PID"]] }
+    data.sort_by { |w| [w["Region"], w["Zone"], w["Server"], w["Type"], w["PID"]] }
   end
 
   def self.update_start

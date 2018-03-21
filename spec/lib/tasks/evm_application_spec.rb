@@ -29,7 +29,7 @@ describe EvmApplication do
       expect(described_class.servers_status([local, remote])).to eq(
         [
           {
-            "Rgn"       => local.region_number,
+            "Region"    => local.region_number,
             "Zone"      => local.zone.name,
             "Server"    => local.name,
             "Status"    => "started",
@@ -43,7 +43,7 @@ describe EvmApplication do
             "Roles"     => "",
           },
           {
-            "Rgn"       => remote.region_number,
+            "Region"    => remote.region_number,
             "Zone"      => remote.zone.name,
             "Server"    => remote.name + "*",
             "Status"    => "started",
@@ -73,7 +73,7 @@ describe EvmApplication do
       expect(described_class.workers_status([local, remote])).to eq(
         [
           {
-            "Rgn"       => local.region_number,
+            "Region"    => local.region_number,
             "Zone"      => local.zone.name,
             "Type"      => "Ui",
             "Status"    => "ready",
@@ -86,7 +86,7 @@ describe EvmApplication do
             "MB Usage"  => "",
           },
           {
-            "Rgn"       => remote.region_number,
+            "Region"    => remote.region_number,
             "Zone"      => remote.zone.name,
             "Type"      => "Base::Refresh",
             "Status"    => "ready",
@@ -99,7 +99,7 @@ describe EvmApplication do
             "MB Usage"  => "",
           },
           {
-            "Rgn"       => remote.region_number,
+            "Region"    => remote.region_number,
             "Zone"      => remote.zone.name,
             "Type"      => "Generic",
             "Status"    => "ready",
@@ -145,20 +145,22 @@ describe EvmApplication do
     let(:zone_padding)      { local.zone.name.to_s.size }
     let(:started_padding)   { ["Started", local_started_on].map(&:size).max }
     let(:heartbeat_padding) { ["Heartbeat", local_heartbeat].map(&:size).max }
-    let(:rgn_padding)       { 3 }
+    let(:region_padding)    { 6 }
 
     context "for just the local server" do
       it "displays server status for the local server and it's workers" do
 
         expected_output = <<~SERVER_INFO
           Checking EVM status...
-           #{header(:Rgn)  } | #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust)  } | MB Usage | Roles
-          -#{line_for(:Rgn)}-+-#{line_for(:Zone)      }-+--------------------------+---------+-----+------+---------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)        }-+----------+-------
-           #{pad(rgn, :Rgn)} | #{local.zone.name      } | #{      local.name     } | started |     |      |       1 | 9.9.9.9 | #{local_started_on          } | #{local_heartbeat             } |          |
+           #{header(:Region)  } | #{header(:Zone, :ljust)} | Server                   | Status  | PID | SPID | Workers | Version | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust)  } | MB Usage | Roles
+          -#{line_for(:Region)}-+-#{line_for(:Zone)      }-+--------------------------+---------+-----+------+---------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)        }-+----------+-------
+           #{pad(rgn, :Region)} | #{local.zone.name      } | #{      local.name     } | started |     |      |       1 | 9.9.9.9 | #{local_started_on          } | #{local_heartbeat             } |          |
 
-           #{header(:Rgn)  } | #{header(:Zone, :ljust)} | Type | Status | #{header(:PID)         } | SPID | Server                   | Queue | Started | Heartbeat | MB Usage
-          -#{line_for(:Rgn)}-+-#{line_for(:Zone)      }-+------+--------+-#{line_for(:PID)       }-+------+--------------------------+-------+---------+-----------+----------
-           #{pad(rgn, :Rgn)} | #{local.zone.name      } | Ui   | ready  | #{pad(ui.pid, :PID)    } |      | #{      local.name     } |       |         |           |
+          * marks a master appliance
+
+           #{header(:Region)  } | #{header(:Zone, :ljust)} | Type | Status | #{header(:PID)         } | SPID | Server                   | Queue | Started | Heartbeat | MB Usage
+          -#{line_for(:Region)}-+-#{line_for(:Zone)      }-+------+--------+-#{line_for(:PID)       }-+------+--------------------------+-------+---------+-----------+----------
+           #{pad(rgn, :Region)} | #{local.zone.name      } | Ui   | ready  | #{pad(ui.pid, :PID)    } |      | #{      local.name     } |       |         |           |
         SERVER_INFO
 
       expect { EvmApplication.status }.to output(expected_output).to_stdout
@@ -180,7 +182,8 @@ describe EvmApplication do
            #{pad(local.zone.name, :Zone, :ljust) } | #{      local.name     }  |       1 | #{local_started_on          } | #{local_heartbeat}
            #{pad(remote.zone.name, :Zone, :ljust)} | #{     remote.name     }* |       2 | #{remote_started_on         } |
 
-          For all rows: Rgn=#{rgn}, Status=started, Version=9.9.9.9
+          For all rows: Region=#{rgn}, Status=started, Version=9.9.9.9
+          * marks a master appliance
 
            #{header(:Zone, :ljust)               } | Type          | #{header(:PID)          } | Server
           -#{line_for(:Zone)                     }-+---------------+-#{line_for(:PID)        }-+--------------------------
@@ -188,7 +191,7 @@ describe EvmApplication do
            #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | #{pad(refresh.pid, :PID)} | #{     remote.name     }
            #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | #{pad(generic.pid, :PID)} | #{     remote.name     }
 
-          For all rows: Rgn=#{rgn}, Status=ready
+          For all rows: Region=#{rgn}, Status=ready
         SERVER_INFO
 
         expect { EvmApplication.status(true) }.to output(expected_output).to_stdout
