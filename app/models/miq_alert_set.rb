@@ -5,6 +5,8 @@ class MiqAlertSet < ApplicationRecord
 
   include AssignmentMixin
 
+  virtual_has_one :get_assigned_tos
+
   def self.assigned_to_target(target, options = {})
     get_assigned_for_target(target, options)
   end
