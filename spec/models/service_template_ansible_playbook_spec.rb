@@ -2,6 +2,7 @@ describe ServiceTemplateAnsiblePlaybook do
   let(:user)     { FactoryGirl.create(:user_with_group) }
   let(:auth_one) { FactoryGirl.create(:authentication, :manager_ref => 6) }
   let(:auth_two) { FactoryGirl.create(:authentication, :manager_ref => 10) }
+  let(:auth_three) { FactoryGirl.create(:authentication, :manager_ref => 14) }
 
   let(:script_source) { FactoryGirl.create(:configuration_script_source, :manager => ems) }
 
@@ -35,6 +36,7 @@ describe ServiceTemplateAnsiblePlaybook do
           :verbosity             => 3,
           :credential_id         => auth_one.id,
           :network_credential_id => auth_two.id,
+          :vault_credential_id   => auth_three.id,
           :playbook_id           => playbook.id
         },
       }
@@ -134,7 +136,8 @@ describe ServiceTemplateAnsiblePlaybook do
         :become_enabled     => true,
         :verbosity          => 3,
         :credential         => '6',
-        :network_credential => '10'
+        :network_credential => '10',
+        :vault_credential   => '14'
       )
 
       expect(params.keys).to_not include(:extra_vars, :cloud_credentials)
