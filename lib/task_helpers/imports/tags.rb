@@ -32,7 +32,8 @@ module TaskHelpers
       # Tag Categories that are not visible in the UI and should not be imported
       SPECIAL_TAGS = %w(/managed/folder_path_yellow /managed/folder_path_blue /managed/user/role).freeze
 
-      UPDATE_FIELDS = %w(description example_text show perf_by_tag).freeze
+      UPDATE_CAT_FIELDS = %w(description example_text show perf_by_tag).freeze
+      UPDATE_ENTRY_FIELDS = %w(description name).freeze
 
       REGION_NUMBER = MiqRegion.my_region_number.freeze
 
@@ -55,11 +56,12 @@ module TaskHelpers
         entries = tag_category.delete('entries')
 
         if classification
-          classification.update_attributes!(tag_category.select { |k| UPDATE_FIELDS.include?(k) })
+          classification.update_attributes(tag_category.select { |k| UPDATE_CAT_FIELDS.include?(k) })
         else
           classification = Classification.create(tag_category)
-          raise ClassificationYamlError.new("Tag Category error", classification.errors.full_messages) unless classification.valid?
         end
+
+        raise ClassificationYamlError.new("Tag Category error", classification.errors.full_messages) unless classification.valid?
 
         import_entries(classification, entries)
       end
@@ -69,18 +71,20 @@ module TaskHelpers
         entries.each_with_index do |entry, index|
           entry["name"] = entry["name"].to_s
           tag_entry = classification.find_entry_by_name(entry['name'])
+          tag_entry = classification.entries.detect { |e| e.description == entry['description'] } if tag_entry.nil?
 
           if tag_entry
-            tag_entry.update_attributes!(entry.select { |k| UPDATE_FIELDS.include?(k) })
+            tag_entry.update_attributes(entry.select { |k| UPDATE_ENTRY_FIELDS.include?(k) })
           else
             tag_entry = Classification.create(entry.merge('parent_id' => classification.id))
-            unless tag_entry.valid?
-              tag_entry.errors.full_messages.each do |message|
-                errors << "Entry #{index}: #{message}"
-              end
-            end
+          end
+
+          next if tag_entry.valid?
+          tag_entry.errors.full_messages.each do |message|
+            errors << "Entry #{index}: #{message}"
           end
         end
+
         raise ClassificationYamlError.new("Tag Entry errors", errors) unless errors.empty?
       end
     end
