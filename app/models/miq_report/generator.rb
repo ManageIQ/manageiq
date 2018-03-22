@@ -192,8 +192,6 @@ module MiqReport::Generator
   def _generate_table(options = {})
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
 
-    custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
-
     includes = get_include_for_find
 
     load_custom_attributes
@@ -869,5 +867,9 @@ module MiqReport::Generator
 
   def interval
     @interval ||= db_options.present? && db_options[:interval]
+  end
+
+  def custom_results_method
+    @custom_results_method ||= db_options && db_options[:rpt_type] ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
   end
 end
