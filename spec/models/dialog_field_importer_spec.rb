@@ -88,8 +88,8 @@ describe DialogFieldImporter do
         let(:category_description) { "best_category" }
 
         context "when the category exists by name and description" do
-          before do
-            @existing_category = Category.create!(:name => "best_category", :description => "best_category")
+          let!(:category) do
+            Classification.is_category.create!(:name => "best_category", :description => "best_category")
           end
 
           context "when the category description does not match" do
@@ -104,7 +104,7 @@ describe DialogFieldImporter do
           context "when the category description matches" do
             it "uses the correct category, ignoring id" do
               dialog_field_importer.import_field(dialog_field)
-              expect(DialogFieldTagControl.first.category).to eq(@existing_category.id.to_s)
+              expect(DialogFieldTagControl.first.category).to eq(category.id.to_s)
             end
           end
         end
@@ -124,8 +124,8 @@ describe DialogFieldImporter do
 
       context "when the import file contains a category_id" do
         before do
-          @first_category    = Category.create!(:name => "first_category", :description => "first_category")
-          @existing_category = Category.create!(:name => "best_category", :description => "best_category")
+          @first_category    = Classification.is_category.create!(:name => "first_category", :description => "first_category")
+          @existing_category = Classification.is_category.create!(:name => "best_category", :description => "best_category")
         end
 
         let(:options) do

@@ -145,14 +145,13 @@ describe DialogFieldSerializer do
       end
 
       let(:type) { "DialogFieldTagControl" }
-      let(:options) { {:category_id => "123", :force_single_value => false} }
+      let(:options) { {:category_id => category.id.to_s, :force_single_value => false} }
       let(:dynamic) { false }
       let(:category) do
-        double("Category", :name => "best category ever", :description => "best category ever", :single_value => true)
+        Classification.is_category.create!(:name => "best_category_ever", :description => "best category ever", :single_value => true)
       end
 
       before do
-        allow(Category).to receive(:find_by).with(:id => "123").and_return(category)
         allow(dialog_field).to receive(:values).and_return("values")
       end
 
@@ -165,8 +164,8 @@ describe DialogFieldSerializer do
                    "resource_action"         => "serialized resource action",
                    "dialog_field_responders" => dialog_field_responders,
                    "options"                 => {
-                     :category_id          => "123",
-                     :category_name        => "best category ever",
+                     :category_id          => category.id.to_s,
+                     :category_name        => "best_category_ever",
                      :category_description => "best category ever",
                      :force_single_value   => true
                    },

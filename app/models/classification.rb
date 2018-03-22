@@ -321,6 +321,11 @@ class Classification < ApplicationRecord
     @name ||= tag2name(tag_name || tag.name)
   end
 
+  # useful for categories
+  def tags
+    Tag.joins(:classification).where(:classifications => {:parent_id => id})
+  end
+
   attr_writer :name
 
   def find_entry_by_name(name, region_id = my_region_number)

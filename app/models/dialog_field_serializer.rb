@@ -21,7 +21,7 @@ class DialogFieldSerializer < Serializer
     end
 
     if dialog_field.type == "DialogFieldTagControl"
-      category = Category.find_by(:id => dialog_field.category)
+      category = Classification.is_category.find_by(:id => dialog_field.category)
       if category
         dialog_field.options.merge!(:category_name => category.name, :category_description => category.description)
         dialog_field.options[:force_single_value] = dialog_field.options[:force_single_value] || category.single_value
