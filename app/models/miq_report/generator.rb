@@ -206,31 +206,8 @@ module MiqReport::Generator
       results = generate_interval_metric_results(options)
 
     else
-      # Basic report
-      # Daily and Hourly for: C&U main reports go through here too
-      # TODO: need to enhance only_cols to better support virtual columns
-      # only_cols += conditions.columns_for_sql if conditions # Add cols references in expression to ensure they are present for evaluation
-      # NOTE: using search to get user property "managed", otherwise this is overkill
-      targets = db_class
-      targets = db_class.find_entries(ext_options) if targets.respond_to?(:find_entries)
-      # TODO: add once only_cols is fixed
-      # targets = targets.select(only_cols)
-      where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
-      rbac_opts = options.merge(
-        :targets          => targets,
-        :filter           => conditions,
-        :include_for_find => includes,
-        :where_clause     => where_clause,
-        :skip_counts      => true,
-      )
+      results = generate_basic_results(options)
 
-      ## add in virtual attributes that can be calculated from sql
-      rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.nil? || va_sql_cols.empty?
-
-      results, attrs = Rbac.search(rbac_opts)
-      results = Metric::Helper.remove_duplicate_timestamps(results)
-      results = BottleneckEvent.remove_duplicate_find_results(results) if db == "BottleneckEvent"
-      @user_categories = attrs[:user_filters]["managed"]
     end
 
     if db_options && db_options[:long_term_averages] && results.first.kind_of?(MetricRollup)
@@ -322,6 +299,35 @@ module MiqReport::Generator
                                      :userid       => options[:userid],
                                      :miq_group_id => options[:miq_group_id])
     Metric::Helper.remove_duplicate_timestamps(results)
+  end
+
+  # Basic report
+  # Daily and Hourly for: C&U main reports go through here too
+  def generate_basic_results(options = {})
+    # TODO: need to enhance only_cols to better support virtual columns
+    # only_cols += conditions.columns_for_sql if conditions # Add cols references in expression to ensure they are present for evaluation
+    # NOTE: using search to get user property "managed", otherwise this is overkill
+    targets = db_class
+    targets = db_class.find_entries(ext_options) if targets.respond_to?(:find_entries)
+    # TODO: add once only_cols is fixed
+    # targets = targets.select(only_cols)
+    where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
+    rbac_opts = options.merge(
+      :targets          => targets,
+      :filter           => conditions,
+      :include_for_find => get_include_for_find,
+      :where_clause     => where_clause,
+      :skip_counts      => true
+    )
+
+    ## add in virtual attributes that can be calculated from sql
+    rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.blank?
+
+    results, attrs = Rbac.search(rbac_opts)
+    results = Metric::Helper.remove_duplicate_timestamps(results)
+    results = BottleneckEvent.remove_duplicate_find_results(results) if db == "BottleneckEvent"
+    @user_categories = attrs[:user_filters]["managed"]
+    results
   end
 
   def build_create_results(options, taskid = nil)
