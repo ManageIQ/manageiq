@@ -11,6 +11,7 @@ set_data_by_description:
   - report_top_cpu_consumers_weekly
   - chart_virtual_infrastructure_platforms
   - rss_newest_servers
+  - chart_server_health
   :col3:
   - chart_guest_os_information_any_os
   - rss_newest_vms
