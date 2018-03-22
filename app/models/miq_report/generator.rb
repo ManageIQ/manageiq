@@ -192,8 +192,6 @@ module MiqReport::Generator
   def _generate_table(options = {})
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
 
-    includes = get_include_for_find
-
     load_custom_attributes
 
     time_profile.tz ||= tz if time_profile # Default time zone in profile to report time zone
@@ -227,7 +225,7 @@ module MiqReport::Generator
           db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
           :category     => performance[:group_by_category],
           :cat_model    => options[:cat_model],
-          :include      => includes
+          :include      => get_include_for_find
         )
         build_correlate_tag_cols
       end
@@ -243,10 +241,14 @@ module MiqReport::Generator
 
       time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
+      db_includes = get_include_for_find
       results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_klass)
-                              .where(where_clause).where(exp_sql).where(options[:where_clause])
+                              .where(where_clause).where(exp_sql)
+                              .where(options[:where_clause])
                               .where(:timestamp => time_range)
-                              .includes(includes).includes(exp_includes || []).references(includes)
+                              .includes(db_includes)
+                              .references(db_includes)
+                              .includes(exp_includes || [])
                               .limit(options[:limit])
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
@@ -262,8 +264,12 @@ module MiqReport::Generator
       exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || db_klass.respond_to?(:instances_are_derived?)
 
       results = db_klass.with_interval_and_time_range(interval, time_range)
-                     .where(where_clause).where(options[:where_clause]).where(exp_sql)
-                     .includes(includes).includes(exp_includes || []).limit(options[:limit])
+                        .where(where_clause)
+                        .where(options[:where_clause])
+                        .where(exp_sql)
+                        .includes(get_include_for_find)
+                        .includes(exp_includes || [])
+                        .limit(options[:limit])
 
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
