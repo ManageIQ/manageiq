@@ -963,6 +963,7 @@
 :container_entities:
   :history:
     :keep_archived_entities: 6.months
+    :keep_archived_quotas: 6.months
     :purge_window_size: 1000
 :product:
   :maindb: ExtManagementSystem

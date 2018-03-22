@@ -2,6 +2,7 @@ class ContainerQuotaItem < ApplicationRecord
   # This model is unusual in using archiving not only to record deletions but also changes in quota_desired, quota_enforced, quota_observed.
   # Instead of updating in-place, we archive the old record and create a new one.
   include ArchivedMixin
+  include_concern 'Purging'
 
   belongs_to :container_quota
   has_many :container_quota_scopes, :through => :container_quota

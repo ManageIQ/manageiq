@@ -113,6 +113,8 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "ContainerGroup", :method_name => "purge_timer", :zone => nil)
     queue_work(:class_name => "ContainerImage", :method_name => "purge_timer", :zone => nil)
     queue_work(:class_name => "ContainerProject", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerQuota", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerQuotaItem", :method_name => "purge_timer", :zone => nil)
   end
 
   def miq_schedule_queue_scheduled_work(schedule_id, rufus_job)
