@@ -4,30 +4,81 @@
   read_only: false
   syntax: string
   single_value: true
-  example_text: Brant Test
+  example_text:
   parent_id: 0
   show: true
-  default:
-  perf_by_tag: false
-  name: roles
+  default: true
+  perf_by_tag:
+  name: role
   entries:
-  - description: A
+  - description: Administrator
     icon:
     read_only: false
     syntax: string
-    single_value: false
+    single_value: true
     example_text:
     show: true
-    default:
+    default: true
     perf_by_tag:
-    name: a
-  - description: One
+    name: administrator
+  - description: Super Administrator
     icon:
     read_only: false
     syntax: string
-    single_value: false
+    single_value: true
     example_text:
     show: true
-    default:
+    default: true
     perf_by_tag:
-    name: '1'
+    name: super_administrator
+  - description: Helpdesk / Support
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: support
+  - description: Auditor
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: auditor
+  - description: Approver
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: approver
+  - description: User
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: user
+  - description: Operator
+    icon:
+    read_only: false
+    syntax: string
+    single_value: true
+    example_text:
+    show: true
+    default: true
+    perf_by_tag:
+    name: operator
+  ns: "/managed/user"

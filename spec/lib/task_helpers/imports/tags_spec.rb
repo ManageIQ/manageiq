@@ -2,12 +2,9 @@ describe TaskHelpers::Imports::Tags do
   let(:data_dir)        { File.join(File.expand_path(__dir__), 'data', 'tags') }
   let(:tag_file1)       { 'Import_Test.yaml' }
   let(:tag_file2)       { 'Location.yaml' }
-  let(:bad_tag_file1)   { 'Tag_Test_Fail_Cat_Desc.yml' }
-  let(:bad_tag_file2)   { 'Tag_Test_Fail_Cat_Name.yml' }
-  let(:bad_tag_file3)   { 'Tag_Test_Fail_Cat_Name2.yml' }
-  let(:bad_tag_file4)   { 'Tag_Test_Fail_Cat_Yaml.yml' }
-  let(:bad_tag_file5)   { 'Tag_Test_Fail_Entry_Desc.yml' }
-  let(:bad_tag_file6)   { 'Tag_Test_Fail_Entry_Name.yml' }
+  let(:bad_tag_file1)   { 'Tag_Test_Fail_Cat.yml' }
+  let(:bad_tag_file2)   { 'Tag_Test_Fail_Cat_Yaml.yml' }
+  let(:bad_tag_file3)   { 'Tag_Test_Fail_Entry.yml' }
   let(:tag_one_name)    { 'import_test' }
   let(:tag_two_name)    { 'location' }
   let(:tag_one_entry)   { '/managed/import_test/1' }
@@ -64,7 +61,7 @@ describe TaskHelpers::Imports::Tags do
     end
 
     describe "when the source is an invalid tag file" do
-      context "no category description" do
+      context "no category name or description" do
         let(:source) { "#{data_dir}/#{bad_tag_file1}" }
         it 'fails to import a tag file' do
           expect do
@@ -73,7 +70,7 @@ describe TaskHelpers::Imports::Tags do
         end
       end
 
-      context "no category name" do
+      context "invalid category attribute" do
         let(:source) { "#{data_dir}/#{bad_tag_file2}" }
         it 'fails to import a tag file' do
           expect do
@@ -82,35 +79,8 @@ describe TaskHelpers::Imports::Tags do
         end
       end
 
-      context "invalid category name" do
+      context "invalid entries" do
         let(:source) { "#{data_dir}/#{bad_tag_file3}" }
-        it 'fails to import a tag file' do
-          expect do
-            TaskHelpers::Imports::Tags.new.import(options)
-          end.to output.to_stderr
-        end
-      end
-
-      context "invalid category attribute" do
-        let(:source) { "#{data_dir}/#{bad_tag_file4}" }
-        it 'fails to import a tag file' do
-          expect do
-            TaskHelpers::Imports::Tags.new.import(options)
-          end.to output.to_stderr
-        end
-      end
-
-      context "no entry description" do
-        let(:source) { "#{data_dir}/#{bad_tag_file5}" }
-        it 'fails to import a tag file' do
-          expect do
-            TaskHelpers::Imports::Tags.new.import(options)
-          end.to output.to_stderr
-        end
-      end
-
-      context "no entry name" do
-        let(:source) { "#{data_dir}/#{bad_tag_file6}" }
         it 'fails to import a tag file' do
           expect do
             TaskHelpers::Imports::Tags.new.import(options)

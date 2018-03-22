@@ -1,10 +1,6 @@
 module TaskHelpers
   class Imports
     class Tags
-      class ClassificationDescError < StandardError; end
-      class ClassificationNameError < StandardError; end
-      class ClassificationEntryDescError < StandardError; end
-      class ClassificationEntryNameError < StandardError; end
       class ClassificationYamlError < StandardError
         attr_accessor :details
 
@@ -22,17 +18,9 @@ module TaskHelpers
           begin
             tag_categories = YAML.load_file(fname)
             import_tags(tag_categories)
-          rescue ClassificationDescError
-            warn("Error importing #{fname} : Tag category description is required")
-          rescue ClassificationNameError
-            warn("Error importing #{fname} : Tag category name is required")
-          rescue ClassificationEntryDescError
-            warn("Error importing #{fname} : Tag entry description is required")
-          rescue ClassificationEntryNameError
-            warn("Error importing #{fname} : Tag entry name is required")
           rescue ClassificationYamlError => e
             warn("Error importing #{fname} : #{e.message}")
-            e.details.each { |k, v| warn("#{k}: #{v.first[:error]}") }
+            e.details.each { |d| warn("\t#{d}") }
           rescue ActiveModel::UnknownAttributeError => e
             warn("Error importing #{fname} : #{e.message}")
           end
@@ -41,14 +29,17 @@ module TaskHelpers
 
       private
 
-      # Description attribute of Tag Categories that are not visible in the UI
-      SPECIAL_TAGS = ['Parent Folder Path (VMs & Templates)', 'Parent Folder Path (Hosts & Clusters)', 'User roles'].freeze
+      # Tag Categories that are not visible in the UI and should not be imported
+      SPECIAL_TAGS = %w(/managed/folder_path_yellow /managed/folder_path_blue /managed/user/role).freeze
 
       UPDATE_FIELDS = %w(description example_text show perf_by_tag).freeze
 
+      REGION_NUMBER = MiqRegion.my_region_number.freeze
+
       def import_tags(tag_categories)
         tag_categories.each do |tag_category|
-          next if SPECIAL_TAGS.include?(tag_category['description'])
+          tag = tag_category["ns"] ? "#{tag_category["ns"]}/#{tag_category["name"]}" : "/managed/#{tag_category["name"]}"
+          next if SPECIAL_TAGS.include?(tag)
           Classification.transaction do
             import_classification(tag_category)
           end
@@ -56,10 +47,10 @@ module TaskHelpers
       end
 
       def import_classification(tag_category)
-        raise ClassificationDescError unless tag_category['description']
-        raise ClassificationNameError unless tag_category['name']
+        ns = tag_category["ns"] ? tag_category["ns"] : "/managed"
+        tag_category["name"] = tag_category["name"].to_s
 
-        classification = Classification.find_by_name(tag_category['name'])
+        classification = Classification.find_by_name(tag_category['name'], REGION_NUMBER, ns, 0)
 
         entries = tag_category.delete('entries')
 
@@ -67,26 +58,30 @@ module TaskHelpers
           classification.update_attributes!(tag_category.select { |k| UPDATE_FIELDS.include?(k) })
         else
           classification = Classification.create(tag_category)
-          raise ClassificationYamlError.new("Tag Category error", classification.errors.details) if classification.errors.count.positive?
+          raise ClassificationYamlError.new("Tag Category error", classification.errors.full_messages) unless classification.valid?
         end
 
         import_entries(classification, entries)
       end
 
       def import_entries(classification, entries)
-        entries.each do |entry|
-          raise ClassificationEntryDescError unless entry['description']
-          raise ClassificationEntryNameError unless entry['name']
-
+        errors = []
+        entries.each_with_index do |entry, index|
+          entry["name"] = entry["name"].to_s
           tag_entry = classification.find_entry_by_name(entry['name'])
 
           if tag_entry
             tag_entry.update_attributes!(entry.select { |k| UPDATE_FIELDS.include?(k) })
           else
-            Classification.create(entry.merge('parent_id' => classification.id))
-            raise ClassificationYamlError.new("Tag Entry error", classification.errors.details) if classification.errors.count.positive?
+            tag_entry = Classification.create(entry.merge('parent_id' => classification.id))
+            unless tag_entry.valid?
+              tag_entry.errors.full_messages.each do |message|
+                errors << "Entry #{index}: #{message}"
+              end
+            end
           end
         end
+        raise ClassificationYamlError.new("Tag Entry errors", errors) unless errors.empty?
       end
     end
   end

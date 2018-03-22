@@ -1,5 +1,5 @@
 ---
-- description: Import Test
+- description:
   icon:
   read_only: false
   syntax: string
@@ -9,7 +9,7 @@
   show: true
   default:
   perf_by_tag: false
-  name: import_test
+  name:
   entries:
   - description: A
     icon:
@@ -20,7 +20,7 @@
     show: true
     default:
     perf_by_tag:
-    name:
+    name: a
   - description: One
     icon:
     read_only: false
