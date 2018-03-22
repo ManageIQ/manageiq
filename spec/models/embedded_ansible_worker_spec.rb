@@ -37,6 +37,7 @@ describe EmbeddedAnsibleWorker do
         expect(cred_collection).to receive(:create!).and_return(cred_resource)
         expect(inv_collection).to receive(:create!).and_return(inv_resource)
         expect(host_collection).to receive(:create!).and_return(host_resource)
+        expect(subject).to receive(:ensure_plugin_playbooks_project_seeded)
 
         subject.ensure_initial_objects(provider, api_connection)
       end

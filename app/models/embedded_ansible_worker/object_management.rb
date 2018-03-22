@@ -6,6 +6,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     ensure_credential(provider, connection)
     ensure_inventory(provider, connection)
     ensure_host(provider, connection)
+    ensure_plugin_playbooks_project_seeded(connection)
   end
 
   def remove_demo_data(connection)
