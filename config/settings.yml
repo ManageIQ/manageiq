@@ -1175,6 +1175,7 @@
           :poll_method: :normal
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
+          :dequeue_method: :sql
         :ems_refresh_worker_ansible_tower_automation: {}
         :ems_refresh_worker_embedded_ansible_automation: {}
         :ems_refresh_worker_foreman_configuration: {}
