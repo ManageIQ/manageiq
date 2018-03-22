@@ -197,19 +197,7 @@ module MiqReport::Generator
       results = generate_custom_method_results(options)
 
     elsif performance
-      # Original C&U charts breakdown by tags
-      if performance[:group_by_category] && performance[:interval_name]
-        results, self.extras[:interval]  = db_class.vms_by_category(performance)
-        build_table(results, db, options)
-      else
-        results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.group_by_tags(
-          db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
-          :category     => performance[:group_by_category],
-          :cat_model    => options[:cat_model],
-          :include      => get_include_for_find
-        )
-        build_correlate_tag_cols
-      end
+      results = generate_performance_results(options)
 
     elsif interval == 'daily' && db_klass <= MetricRollup
       # Ad-hoc daily performance reports
@@ -308,6 +296,22 @@ module MiqReport::Generator
     end
     # TODO: results = results.select(only_cols)
     self.extras.merge!(ext) if ext && ext.kind_of?(Hash)
+    results
+  end
+
+  # Original C&U charts breakdown by tags
+  def generate_performance_results(options = {})
+    if performance[:group_by_category] && performance[:interval_name]
+      results, self.extras[:interval]  = db_class.vms_by_category(performance)
+    else
+      results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.group_by_tags(
+        db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
+        :category  => performance[:group_by_category],
+        :cat_model => options[:cat_model],
+        :include   => get_include_for_find
+      )
+      build_correlate_tag_cols
+    end
     results
   end
 
