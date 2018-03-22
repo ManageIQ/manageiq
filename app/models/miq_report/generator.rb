@@ -192,7 +192,6 @@ module MiqReport::Generator
   def _generate_table(options = {})
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
 
-    klass = db.kind_of?(Class) ? db : Object.const_get(db)
     interval = db_options.present? && db_options[:interval]
     custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
 
@@ -207,9 +206,9 @@ module MiqReport::Generator
     self.extras ||= {}
 
     if custom_results_method
-      if klass.respond_to?(custom_results_method)
+      if db_klass.respond_to?(custom_results_method)
         # Use custom method in DB class to get report results if defined
-        results, ext = klass.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
+        results, ext = db_klass.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
                                                                                     :ext_options => ext_options,
                                                                                     :report_cols => cols))
       elsif self.respond_to?(custom_results_method)
@@ -236,7 +235,7 @@ module MiqReport::Generator
         build_correlate_tag_cols
       end
 
-    elsif interval == 'daily' && klass <= MetricRollup
+    elsif interval == 'daily' && db_klass <= MetricRollup
       # Ad-hoc daily performance reports
       #   Daily for: Performance - Clusters...
       unless conditions.nil?
@@ -247,7 +246,7 @@ module MiqReport::Generator
 
       time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
-      results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, klass)
+      results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_klass)
                               .where(where_clause).where(exp_sql).where(options[:where_clause])
                               .where(:timestamp => time_range)
                               .includes(includes).includes(exp_includes || []).references(includes)
@@ -263,9 +262,9 @@ module MiqReport::Generator
       time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
 
       # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
-      exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || klass.respond_to?(:instances_are_derived?)
+      exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || db_klass.respond_to?(:instances_are_derived?)
 
-      results = klass.with_interval_and_time_range(interval, time_range)
+      results = db_klass.with_interval_and_time_range(interval, time_range)
                      .where(where_clause).where(options[:where_clause]).where(exp_sql)
                      .includes(includes).includes(exp_includes || []).limit(options[:limit])
 
@@ -363,14 +362,13 @@ module MiqReport::Generator
   end
 
   def build_table(data, db, options = {})
-    klass = db.respond_to?(:constantize) ? db.constantize : db
     data = data.to_a
-    objs = data[0] && data[0].kind_of?(Integer) ? klass.where(:id => data) : data.compact
+    objs = data[0] && data[0].kind_of?(Integer) ? db_klass.where(:id => data) : data.compact
 
     remove_loading_relations_for_virtual_custom_attributes
 
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support
-    if klass.to_s.ends_with?("Performance")
+    if db_klass.to_s.ends_with?("Performance")
       res_cols = ['resource_name', 'resource_type', 'resource_id']
       self.cols = (cols + res_cols).uniq
       orig_col_order = col_order.dup
