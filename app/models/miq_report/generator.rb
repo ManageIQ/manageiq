@@ -194,19 +194,7 @@ module MiqReport::Generator
     _generate_table_prep
 
     if custom_results_method
-      if db_klass.respond_to?(custom_results_method)
-        # Use custom method in DB class to get report results if defined
-        results, ext = db_klass.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
-                                                                                    :ext_options => ext_options,
-                                                                                    :report_cols => cols))
-      elsif self.respond_to?(custom_results_method)
-        # Use custom method in MiqReport class to get report results if defined
-        results, ext = send(custom_results_method, options)
-      else
-        raise _("Unsupported report type '%{type}'") % {:type => db_options[:rpt_type]}
-      end
-      # TODO: results = results.select(only_cols)
-      self.extras.merge!(ext) if ext && ext.kind_of?(Hash)
+      results = generate_custom_method_results(options)
 
     elsif performance
       # Original C&U charts breakdown by tags
@@ -304,6 +292,23 @@ module MiqReport::Generator
 
     build_apply_time_profile(results)
     build_table(results, db, options)
+  end
+
+  def generate_custom_method_results(options = {})
+    if db_klass.respond_to?(custom_results_method)
+      # Use custom method in DB class to get report results if defined
+      results, ext = db_klass.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
+                                                                                     :ext_options => ext_options,
+                                                                                     :report_cols => cols))
+    elsif respond_to?(custom_results_method)
+      # Use custom method in MiqReport class to get report results if defined
+      results, ext = send(custom_results_method, options)
+    else
+      raise _("Unsupported report type '%{type}'") % {:type => db_options[:rpt_type]}
+    end
+    # TODO: results = results.select(only_cols)
+    self.extras.merge!(ext) if ext && ext.kind_of?(Hash)
+    results
   end
 
   def build_create_results(options, taskid = nil)
