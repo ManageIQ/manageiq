@@ -203,26 +203,8 @@ module MiqReport::Generator
       results = generate_daily_metric_rollup_results(options)
 
     elsif interval
-      # Ad-hoc performance reports
+      results = generate_interval_metric_results(options)
 
-      time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
-
-      # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
-      exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || db_klass.respond_to?(:instances_are_derived?)
-
-      results = db_klass.with_interval_and_time_range(interval, time_range)
-                        .where(where_clause)
-                        .where(options[:where_clause])
-                        .where(exp_sql)
-                        .includes(get_include_for_find)
-                        .includes(exp_includes || [])
-                        .limit(options[:limit])
-
-      results = Rbac.filtered(results, :class        => db,
-                                       :filter       => conditions,
-                                       :userid       => options[:userid],
-                                       :miq_group_id => options[:miq_group_id])
-      results = Metric::Helper.remove_duplicate_timestamps(results)
     else
       # Basic report
       # Daily and Hourly for: C&U main reports go through here too
@@ -313,6 +295,28 @@ module MiqReport::Generator
                             .references(db_includes)
                             .includes(exp_includes || [])
                             .limit(options[:limit])
+    results = Rbac.filtered(results, :class        => db,
+                                     :filter       => conditions,
+                                     :userid       => options[:userid],
+                                     :miq_group_id => options[:miq_group_id])
+    Metric::Helper.remove_duplicate_timestamps(results)
+  end
+
+  # Ad-hoc performance reports
+  def generate_interval_metric_results(options = {})
+    time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
+
+    # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
+    exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || db_klass.respond_to?(:instances_are_derived?)
+
+    results = db_klass.with_interval_and_time_range(interval, time_range)
+                      .where(where_clause)
+                      .where(options[:where_clause])
+                      .where(exp_sql)
+                      .includes(get_include_for_find)
+                      .includes(exp_includes || [])
+                      .limit(options[:limit])
+
     results = Rbac.filtered(results, :class        => db,
                                      :filter       => conditions,
                                      :userid       => options[:userid],
