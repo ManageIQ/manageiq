@@ -99,12 +99,12 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
 
   def cinder_service
     vs = openstack_handle.detect_volume_service
-    vs.name == :cinder ? vs : nil
+    vs&.name == :cinder ? vs : nil
   end
 
   def swift_service
     vs = openstack_handle.detect_storage_service
-    vs.name == :swift ? vs : nil
+    vs&.name == :swift ? vs : nil
   end
 
   def self.ems_type
