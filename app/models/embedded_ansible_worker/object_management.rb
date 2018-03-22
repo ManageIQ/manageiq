@@ -89,10 +89,19 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
   def commit_git_plugin_content
     Dir.chdir(CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR) do
-      # ruggedize this
-      `git init`
-      `git add -A`
-      `git commit -m "YOLO Initial Commit"`
+      require 'rugged'
+      repo = Rugged::Repository.init_at(".")
+      index = repo.index
+      index.add_all("*")
+      index.write
+
+      options              = {}
+      options[:tree]       = index.write_tree(repo)
+      options[:author]     = options[:committer] = { :email => "system@localhost", :name => "System", :time => Time.now.utc }
+      options[:message]    = "Initial Commit"
+      options[:parents]    = []
+      options[:update_ref] = 'HEAD'
+      Rugged::Commit.create(repo, options)
     end
   end
 
