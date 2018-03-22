@@ -191,14 +191,7 @@ module MiqReport::Generator
 
   def _generate_table(options = {})
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
-
-    load_custom_attributes
-
-    time_profile.tz ||= tz if time_profile # Default time zone in profile to report time zone
-    ext_options = {:tz => tz, :time_profile => time_profile}
-    # TODO: these columns need to be converted to real SQL columns
-    # only_cols = cols
-    self.extras ||= {}
+    _generate_table_prep
 
     if custom_results_method
       if db_klass.respond_to?(custom_results_method)
@@ -869,6 +862,22 @@ module MiqReport::Generator
     else
       child.to_s
     end
+  end
+
+  # Preps the current instance and db class for building a report
+  def _generate_table_prep
+    # Make sure the db_klass has the custom_attribute definitions defined for
+    # the report being built.
+    load_custom_attributes
+
+    # Default time zone in profile to report time zone
+    time_profile.tz ||= tz if time_profile
+    self.ext_options  = {:tz => tz, :time_profile => time_profile}
+
+    # TODO: these columns need to be converted to real SQL columns
+    # only_cols = cols
+
+    self.extras ||= {}
   end
 
   def interval
