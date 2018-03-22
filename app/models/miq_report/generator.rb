@@ -193,22 +193,17 @@ module MiqReport::Generator
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
     _generate_table_prep
 
-    if custom_results_method
-      results = generate_custom_method_results(options)
-
-    elsif performance
-      results = generate_performance_results(options)
-
-    elsif interval == 'daily' && db_klass <= MetricRollup
-      results = generate_daily_metric_rollup_results(options)
-
-    elsif interval
-      results = generate_interval_metric_results(options)
-
-    else
-      results = generate_basic_results(options)
-
-    end
+    results = if custom_results_method
+                generate_custom_method_results(options)
+              elsif performance
+                generate_performance_results(options)
+              elsif interval == 'daily' && db_klass <= MetricRollup
+                generate_daily_metric_rollup_results(options)
+              elsif interval
+                generate_interval_metric_results(options)
+              else
+                generate_basic_results(options)
+              end
 
     if db_options && db_options[:long_term_averages] && results.first.kind_of?(MetricRollup)
       # Calculate long_term_averages and save in extras
