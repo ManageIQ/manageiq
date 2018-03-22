@@ -200,30 +200,8 @@ module MiqReport::Generator
       results = generate_performance_results(options)
 
     elsif interval == 'daily' && db_klass <= MetricRollup
-      # Ad-hoc daily performance reports
-      #   Daily for: Performance - Clusters...
-      unless conditions.nil?
-        conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
-        exp_sql, exp_includes = conditions.to_sql
-        # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
-      end
+      results = generate_daily_metric_rollup_results(options)
 
-      time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
-      # TODO: add .select(only_cols)
-      db_includes = get_include_for_find
-      results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_klass)
-                              .where(where_clause).where(exp_sql)
-                              .where(options[:where_clause])
-                              .where(:timestamp => time_range)
-                              .includes(db_includes)
-                              .references(db_includes)
-                              .includes(exp_includes || [])
-                              .limit(options[:limit])
-      results = Rbac.filtered(results, :class        => db,
-                                       :filter       => conditions,
-                                       :userid       => options[:userid],
-                                       :miq_group_id => options[:miq_group_id])
-      results = Metric::Helper.remove_duplicate_timestamps(results)
     elsif interval
       # Ad-hoc performance reports
 
@@ -313,6 +291,33 @@ module MiqReport::Generator
       build_correlate_tag_cols
     end
     results
+  end
+
+  # Ad-hoc daily performance reports
+  #   Daily for: Performance - Clusters...
+  def generate_daily_metric_rollup_results(options = {})
+    unless conditions.nil?
+      conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
+      exp_sql, exp_includes = conditions.to_sql
+      # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
+    end
+
+    time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
+    # TODO: add .select(only_cols)
+    db_includes = get_include_for_find
+    results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_klass)
+                            .where(where_clause).where(exp_sql)
+                            .where(options[:where_clause])
+                            .where(:timestamp => time_range)
+                            .includes(db_includes)
+                            .references(db_includes)
+                            .includes(exp_includes || [])
+                            .limit(options[:limit])
+    results = Rbac.filtered(results, :class        => db,
+                                     :filter       => conditions,
+                                     :userid       => options[:userid],
+                                     :miq_group_id => options[:miq_group_id])
+    Metric::Helper.remove_duplicate_timestamps(results)
   end
 
   def build_create_results(options, taskid = nil)
