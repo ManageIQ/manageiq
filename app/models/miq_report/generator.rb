@@ -207,7 +207,7 @@ module MiqReport::Generator
 
     if db_options && db_options[:long_term_averages] && results.first.kind_of?(MetricRollup)
       # Calculate long_term_averages and save in extras
-      self.extras[:long_term_averages] = Metric::LongTermAverages.get_averages_over_time_period(results.first.resource, db_options[:long_term_averages].merge(:ext_options => ext_options))
+      extras[:long_term_averages] = Metric::LongTermAverages.get_averages_over_time_period(results.first.resource, db_options[:long_term_averages].merge(:ext_options => ext_options))
     end
 
     build_apply_time_profile(results)
@@ -227,16 +227,16 @@ module MiqReport::Generator
       raise _("Unsupported report type '%{type}'") % {:type => db_options[:rpt_type]}
     end
     # TODO: results = results.select(only_cols)
-    self.extras.merge!(ext) if ext && ext.kind_of?(Hash)
+    extras.merge!(ext) if ext && ext.kind_of?(Hash)
     results
   end
 
   # Original C&U charts breakdown by tags
   def generate_performance_results(options = {})
     if performance[:group_by_category] && performance[:interval_name]
-      results, self.extras[:interval]  = db_class.vms_by_category(performance)
+      results, extras[:interval] = db_class.vms_by_category(performance)
     else
-      results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.group_by_tags(
+      results, extras[:group_by_tag_cols], extras[:group_by_tags] = db_class.group_by_tags(
         db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
         :category  => performance[:group_by_category],
         :cat_model => options[:cat_model],
