@@ -454,6 +454,7 @@ module ManagerRefresh
       @loaded_references                = Set.new
       @db_data_index                    = nil
       @data_collection_finalized        = false
+      @all_references_loaded            = false
 
       @created_records = []
       @updated_records = []
@@ -980,6 +981,7 @@ module ManagerRefresh
 
     private
 
+    attr_accessor :all_references_loaded
     attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index
 
     # Returns array of records identities
@@ -1004,7 +1006,7 @@ module ManagerRefresh
     # @param manager_uuid [String] a manager_uuid of the InventoryObject we search in the local DB
     def find_in_db(manager_uuid)
       # Use the cached db_data_index only data_collection_finalized?, meaning no new reference can occur
-      if data_collection_finalized? && db_data_index
+      if data_collection_finalized? && db_data_index && all_references_loaded
         return db_data_index[manager_uuid]
       else
         return db_data_index[manager_uuid] if db_data_index && db_data_index[manager_uuid]
@@ -1016,6 +1018,8 @@ module ManagerRefresh
       loaded_references.merge(data_index.keys)
       # Load the rest of the references from the DB
       populate_db_data_index!
+
+      self.all_references_loaded = true if data_collection_finalized?
 
       db_data_index[manager_uuid]
     end
