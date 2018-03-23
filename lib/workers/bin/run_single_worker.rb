@@ -35,6 +35,10 @@ opt_parser = OptionParser.new do |opts|
     puts opts
     exit
   end
+
+  opts.on("-f", "--force", "Ignore missing server roles and run anyway") do
+    options[:force] = true
+  end
 end
 opt_parser.parse!
 worker_class = ARGV[0]
@@ -62,7 +66,7 @@ worker_class = worker_class.constantize
 missing_roles = ServerRole.where(:name => worker_class.required_roles) - MiqServer.my_server.active_roles
 unless missing_roles.empty?
   STDERR.puts "ERR:  Server roles are not sufficient for `#{worker_class}` worker. Missing: #{missing_roles.collect(&:name)}"
-  exit 1
+  exit 1 unless options[:force]
 end
 
 worker_class.before_fork
