@@ -113,11 +113,16 @@ module ManageIQ::Providers
 
       source_tenant.descendants.each do |tenant|
         next if tenant.source
-        next if tenant.parent == source_tenant # tenant is already under provider's tenant
+
+        if tenant.parent == source_tenant # tenant is already under provider's tenant
+          _log.info("Setting source_id and source_type to nil for #{tenant.name} under provider's tenant #{source_tenant.name}")
+          tenant.update_attributes(:source_id => nil, :source_type => nil)
+          next
+        end
 
         # move tenant under the provider's tenant
         _log.info("Moving out #{tenant.name} under provider's tenant #{source_tenant.name}")
-        tenant.update_attributes(:parent => source_tenant)
+        tenant.update_attributes(:parent => source_tenant, :source_id => nil, :source_type => nil)
       end
     end
 
