@@ -9,8 +9,7 @@ class MiqUserRole < ApplicationRecord
 
   virtual_column :vm_restriction,                   :type => :string
 
-  validates_presence_of   :name
-  validates_uniqueness_of :name
+  validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
 
   serialize :settings
 
