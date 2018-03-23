@@ -56,25 +56,6 @@ module InitDataHelper
     init_data(network.network_ports(extra_attributes))
   end
 
-  # Following 2 are fictional, not like this in practice.
-  def container_quota_items_init_data(extra_attributes = {})
-    init_data(extra_attributes).merge(
-      :model_class => ContainerQuotaItem,
-      :arel        => ContainerQuotaItem.all,
-      :manager_ref => [:quota_desired], # a decimal column
-    )
-  end
-
-  # Quota items don't even have custom attrs; this is just to have a dependent
-  # for quota items collection to test their .id are set correctly.
-  def container_quota_items_attrs_init_data(extra_attributes = {})
-    init_data(extra_attributes).merge(
-      :model_class => CustomAttribute,
-      :arel        => CustomAttribute.where(:resource_type => 'ContainerQuotaItem'),
-      :manager_ref => [:name],
-    )
-  end
-
   def cloud
     ManagerRefresh::InventoryCollectionDefault::CloudManager
   end

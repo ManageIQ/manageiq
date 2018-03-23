@@ -101,18 +101,13 @@ module ManagerRefresh::SaveCollection
 
             next unless assert_distinct_relation(primary_key_value)
 
-            # Incoming values are in SQL string form.
             # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
             index = unique_index_keys_to_s.map do |attribute|
-              value = record_key(record, attribute)
               if attribute == "timestamp"
-                # TODO: can this be covered by @deserializable_keys?
                 type = model_class.type_for_attribute(attribute)
-                type.cast(value).utc.iso8601.to_s
-              elsif (type = deserializable_keys[attribute.to_sym])
-                type.deserialize(value).to_s
+                type.cast(record_key(record, attribute)).utc.iso8601.to_s
               else
-                value.to_s
+                record_key(record, attribute).to_s
               end
             end.join(inventory_collection.stringify_joiner)
 
@@ -263,11 +258,7 @@ module ManagerRefresh::SaveCollection
         # for every remainders(a last batch in a stream of batches)
         if !supports_remote_data_timestamp?(all_attribute_keys) || result.count == batch_size_for_persisting
           result.each do |inserted_record|
-            key = unique_index_columns.map do |x|
-              value = inserted_record[x.to_s]
-              type = deserializable_keys[x]
-              type ? type.deserialize(value) : value
-            end
+            key                 = unique_index_columns.map { |x| inserted_record[x.to_s] }
             inventory_object    = indexed_inventory_objects[key]
             inventory_object.id = inserted_record[primary_key] if inventory_object
           end
