@@ -102,6 +102,11 @@ describe Tag do
 
       expect(categorization).to eq(expected_categorization)
     end
+
+    it "category tags have no category" do
+      category_tag = @tag.category.tag
+      expect(category_tag.category).to be_nil
+    end
   end
 
   describe ".find_by_classification_name" do

@@ -1,7 +1,7 @@
 class Tag < ApplicationRecord
   has_many :taggings, :dependent => :destroy
   has_one :classification
-  virtual_has_one :category,       :class_name => "Classification"
+  has_one :category, :through => :classification, :source => :parent
   virtual_has_one :categorization, :class_name => "Hash"
 
   has_many :container_label_tag_mappings
@@ -135,10 +135,6 @@ class Tag < ApplicationRecord
 
   def ==(comparison_object)
     super || name.downcase == comparison_object.to_s.downcase
-  end
-
-  def category
-    @category ||= Classification.find_by_name(name_path.split('/').first, nil)
   end
 
   def show

@@ -6,7 +6,7 @@ context "save_tags_inventory" do
     mapping = FactoryGirl.create(:tag_mapping_with_category,
                                  :category_name        => category_name,
                                  :category_description => category_name)
-    category = mapping.tag.category
+    category = mapping.tag.classification
     entry = category.add_entry(:name => tag_name, :description => tag_name)
     entry.tag
   end
