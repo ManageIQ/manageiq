@@ -411,7 +411,7 @@ module ManagerRefresh
       @secondary_refs         = secondary_refs
       @custom_manager_uuid    = custom_manager_uuid
       @custom_db_finder       = custom_db_finder
-      @association            = association || []
+      @association            = association || nil
       @parent                 = parent || nil
       @arel                   = arel
       @dependency_attributes  = dependency_attributes || {}
@@ -1086,7 +1086,8 @@ module ManagerRefresh
 
       new_references.each do |manager_uuid|
         next if manager_uuid.nil?
-        uuids = manager_uuid.split(stringify_joiner)
+
+        uuids = manager_uuid.to_s.split(stringify_joiner)
 
         reference = {}
         manager_ref.each_with_index do |ref, index|
