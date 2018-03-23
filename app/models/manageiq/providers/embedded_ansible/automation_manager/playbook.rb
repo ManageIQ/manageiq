@@ -39,7 +39,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook <
       :extra_vars               => options[:extra_vars].try(:to_json)
     }
 
-    %i(credential cloud_credential network_credential).each do |credential|
+    %i(credential vault_credential cloud_credential network_credential).each do |credential|
       cred_sym = "#{credential}_id".to_sym
       params[credential] = Authentication.find(options[cred_sym]).manager_ref if options[cred_sym]
     end
