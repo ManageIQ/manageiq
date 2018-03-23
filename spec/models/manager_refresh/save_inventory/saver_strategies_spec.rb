@@ -171,6 +171,7 @@ describe ManagerRefresh::SaveInventory do
                 )
               )
             )
+
             @data[:container_quota_items] = ::ManagerRefresh::InventoryCollection.new(
               container_quota_items_init_data(inventory_collection_options(options))
             )
@@ -221,10 +222,10 @@ describe ManagerRefresh::SaveInventory do
             @container_quota_items_data_2 = container_quota_items_data(2)
 
             @container_quota_items_attrs_data_1 = container_quota_items_attrs_data(1).merge(
-              :resource => @data[:container_quota_items].lazy_find(container_quota_items_data(1)[:quota_desired])
+              :resource => @data[:container_quota_items].lazy_find(container_quota_items_data(1)[:quota_desired].to_s)
             )
             @container_quota_items_attrs_data_2 = container_quota_items_attrs_data(2).merge(
-              :resource => @data[:container_quota_items].lazy_find(container_quota_items_data(2)[:quota_desired])
+              :resource => @data[:container_quota_items].lazy_find(container_quota_items_data(2)[:quota_desired].to_s)
             )
 
             # Fill InventoryCollections with data
@@ -249,6 +250,7 @@ describe ManagerRefresh::SaveInventory do
             add_data_to_inventory_collection(@data[:container_quota_items_attrs],
                                              @container_quota_items_attrs_data_1,
                                              @container_quota_items_attrs_data_2)
+
             # Assert data before save
             expect(@network_port1.device).to eq @vm1
             expect(@network_port1.name).to eq "network_port_name_1"
