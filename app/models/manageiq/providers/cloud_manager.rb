@@ -85,6 +85,7 @@ module ManageIQ::Providers
         elsif existing_source_tenant = Tenant.descendants_of(tenant_parent).find_by(:name => tenant_params[:name])
           _log.info("CloudTenant #{cloud_tenant.name} has orphaned tenant #{existing_source_tenant.name}")
           cloud_tenant.source_tenant = existing_source_tenant
+          tenant_params[:parent] = tenant_parent
           cloud_tenant.update_source_tenant(tenant_params)
         else
           _log.info("CloudTenant #{cloud_tenant.name} has no tenant")
