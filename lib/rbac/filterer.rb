@@ -307,7 +307,33 @@ module Rbac
     end
 
     def include_references(scope, klass, include_for_find, exp_includes, skip)
-      return scope if skip
+      if skip
+        # If we are in a transaction, we don't want to polute that
+        # transaction with a failed EXPLAIN.  We use a SQL SAVEPOINT (which is
+        # created via `transaction(:requires_new => true)`) to prevent that
+        # from being an issue (happens in tests with transactional fixtures)
+        #
+        # See https://stackoverflow.com/a/31146267/3574689
+        valid_skip = MiqDatabase.transaction(:requires_new => true) do
+          begin
+            ActiveRecord::Base.connection.explain(scope.to_sql)
+          rescue ActiveRecord::StatementInvalid => e
+            unless Rails.env.production?
+              warn "There was an issue with the Rbac filter without references!"
+              warn "Consider trying to fix this edge case in Rbac::Filterer!  Error Below:"
+              warn e.message
+              warn e.backtrace
+            end
+            # returns nil
+            raise ActiveRecord::Rollback
+          end
+        end
+        # If the result of the transaction is non-nil, then the block was
+        # successful and didn't trigger the ActiveRecord::Rollback, so we can
+        # return the scope as is.
+        return scope if valid_skip
+      end
+
       ref_includes = Hash(include_for_find).merge(Hash(exp_includes))
       unless polymorphic_include?(klass, ref_includes)
         scope = scope.references(include_for_find).references(exp_includes)
