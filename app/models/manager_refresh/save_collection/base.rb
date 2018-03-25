@@ -9,11 +9,13 @@ module ManagerRefresh::SaveCollection
         _log.debug("Saving collection #{inventory_collection} of size #{inventory_collection.size} to"\
                    " the database, for the manager: '#{ems.name}'...")
 
-        if inventory_collection.custom_save_block.present?
-          _log.debug("Saving collection #{inventory_collection} using a custom save block")
-          inventory_collection.custom_save_block.call(ems, inventory_collection)
-        else
-          save_inventory(inventory_collection)
+        Benchmark.realtime_block("SaveCollection #{inventory_collection.name}") do
+          if inventory_collection.custom_save_block.present?
+            _log.debug("Saving collection #{inventory_collection} using a custom save block")
+            inventory_collection.custom_save_block.call(ems, inventory_collection)
+          else
+            save_inventory(inventory_collection)
+          end
         end
         _log.debug("Saving collection #{inventory_collection}, for the manager: '#{ems.name}'...Complete")
         inventory_collection.saved = true
