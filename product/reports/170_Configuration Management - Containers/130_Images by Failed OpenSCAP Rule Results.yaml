@@ -22,7 +22,16 @@ headers:
 - Rule Name
 - Result
 - Severity
-conditions:
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - not:
+        "=":
+          field: ContainerImage.openscap_rule_results-result
+          value: pass
+    - IS NOT EMPTY:
+        field: ContainerImage.openscap_rule_results-name
+  context_type:
 order: Ascending
 sortby:
 - name
@@ -46,16 +55,7 @@ col_formats:
 -
 tz:
 time_profile_id:
-display_filter: !ruby/object:MiqExpression
-  exp:
-    and:
-    - not:
-        "=":
-          field: ContainerImage.openscap_rule_results-result
-          value: pass
-    - IS NOT EMPTY:
-        field: ContainerImage.openscap_rule_results-name
-  context_type:
+display_filter:
 col_options: {}
 rpt_options:
   :pdf:
