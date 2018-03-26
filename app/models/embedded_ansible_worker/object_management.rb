@@ -66,11 +66,11 @@ module EmbeddedAnsibleWorker::ObjectManagement
     if project
       update_playbook_project(project)
     else
-      create_playbook_project(connection)
+      project = create_playbook_project(connection)
     end
   ensure
     # we already have 2 copies: one in the gem and one imported into ansible in the project, delete the temporary one
-    clean_consolidated_plugin_directory
+    clean_consolidated_plugin_directory if loop_until_project_updated(connection, project.id)
   end
 
   private
@@ -124,5 +124,20 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
   def create_playbook_project(connection)
     connection.api.projects.create!(PLAYBOOK_PROJECT_ATTRIBUTES.to_json)
+  end
+
+  def loop_until_project_updated(connection, project_id)
+    loop do
+      case connection.api.projects.find(project_id).status
+      when "successful"
+        break true
+      when "new", "pending"
+        # do nothing
+      else
+        # oh no, it failed/errored/etc.
+        break false
+      end
+      sleep 0.5
+    end
   end
 end
