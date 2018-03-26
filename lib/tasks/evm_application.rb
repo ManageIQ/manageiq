@@ -176,15 +176,6 @@ class EvmApplication
     stop
   end
 
-  def self.set_region_file(region_file, new_region)
-    old_region = region_file.exist? ? region_file.read.to_i : nil
-
-    return if new_region == old_region
-
-    _log.info("Changing REGION file from [#{old_region}] to [#{new_region}]. Restart to use the new region.")
-    region_file.write(new_region)
-  end
-
   def self.encryption_key_valid?
     # if we're a new deployment we won't even be able to get the database row
     # and if there is no database row, allow this key to be used

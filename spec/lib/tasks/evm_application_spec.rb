@@ -235,48 +235,6 @@ describe EvmApplication do
     end
   end
 
-  describe ".set_region_file" do
-    let(:region_file) { Pathname.new(Tempfile.new("REGION").path) }
-
-    after do
-      FileUtils.rm_f(region_file)
-    end
-
-    context "when the region file exists" do
-      it "writes the new region if the regions differ" do
-        old_region = 1
-        new_region = 4
-
-        region_file.write(old_region)
-        described_class.set_region_file(region_file, new_region)
-        expect(region_file.read).to eq(new_region.to_s)
-      end
-
-      it "does not write the region if the regions are the same" do
-        old_region = 1
-        new_region = 1
-
-        region_file.write(old_region)
-        expect(region_file).not_to receive(:write)
-
-        described_class.set_region_file(region_file, new_region)
-      end
-    end
-
-    context "when the region file does not exist" do
-      before do
-        FileUtils.rm_f(region_file)
-      end
-
-      it "creates the file with the new region number" do
-        new_region = 4
-
-        described_class.set_region_file(region_file, new_region)
-        expect(region_file.read).to eq(new_region.to_s)
-      end
-    end
-  end
-
   describe ".deployment_status" do
     it "returns new_deployment if the database is not migrated" do
       expect(ActiveRecord::Migrator).to receive(:current_version).and_return(0)
