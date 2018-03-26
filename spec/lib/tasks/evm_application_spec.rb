@@ -199,6 +199,57 @@ describe EvmApplication do
     end
   end
 
+  context ".queue_status" do
+    it "calculates oldest and counts" do
+      tgt_time = 2.hours.ago
+      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => 1.hour.ago)
+      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      MiqQueue.put(:zone        => "zone1",
+                   :class_name  => "X",
+                   :method_name => "x",
+                   :created_on  => 5.hours.ago,
+                   :deliver_on  => 1.hour.from_now)
+      expect(described_class.queue_status).to eq(
+        [
+          {
+            "Zone"   => "zone1",
+            "Queue"  => "generic",
+            "Role"   => nil,
+            "method" => "X.x",
+            "oldest" => tgt_time.strftime("%Y-%m-%d"),
+            "count"  => 3,
+          }
+        ]
+      )
+    end
+
+    it "groups zone together" do
+      tgt_time = 2.hours.ago
+      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      MiqQueue.put(:zone => "zone2", :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      expect(described_class.queue_status).to eq(
+        [
+          {
+            "Zone"   => "zone1",
+            "Queue"  => "generic",
+            "Role"   => nil,
+            "method" => "X.x",
+            "oldest" => tgt_time.strftime("%Y-%m-%d"),
+            "count"  => 1,
+          },
+          {
+            "Zone"   => "zone2",
+            "Queue"  => "generic",
+            "Role"   => nil,
+            "method" => "X.x",
+            "oldest" => tgt_time.strftime("%Y-%m-%d"),
+            "count"  => 1,
+          }
+        ]
+      )
+    end
+  end
+
   context ".update_start" do
     it "was running" do
       expect(FileUtils).to receive(:mkdir_p).once
