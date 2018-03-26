@@ -61,6 +61,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     copy_plugin_ansible_content
 
     commit_git_plugin_content
+    FileUtils.chown_R('awx', 'awx', CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
 
     project = existing_plugin_playbook_project(connection)
     if project
