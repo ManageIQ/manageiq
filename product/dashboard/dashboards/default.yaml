@@ -16,3 +16,4 @@ set_data_by_description:
   - chart_guest_os_information_any_os
   - rss_newest_vms
   - report_top_storage_consumers
+  - chart_server_utilization

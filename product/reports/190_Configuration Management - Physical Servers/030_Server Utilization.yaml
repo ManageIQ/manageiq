@@ -1,0 +1,43 @@
+---
+title: Physical Server Utilization
+order: Ascending
+graph:
+  :type: Pie
+  :count: 10
+  :other: true
+menu_name: Physical Server Utilization
+rpt_group: Custom
+rpt_type: Custom
+priority:
+col_order:
+- id
+- hostname
+- product_name
+timeline:
+file_mtime:
+categories:
+filename:
+db: PhysicalServer
+cols:
+- id
+- hostname
+- product_name
+include:
+  host:
+    columns:
+    - physical_server_id
+template_type: report
+sortby:
+- host.physical_server_id
+headers:
+- ID
+- Hostname
+- Product Name
+conditions: !ruby/object:MiqExpression
+  exp:
+    or:
+      - IS NOT NULL:
+          field: PhysicalServer.host-physical_server_id
+      - IS NULL:
+          field: PhysicalServer.host-physical_server_id
+  context_type:
