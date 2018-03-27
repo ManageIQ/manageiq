@@ -129,6 +129,7 @@ module Rbac
     # scope user_or_group_owned is required on target model
     OWNERSHIP_CLASSES = %w(
       OwnershipMixin
+      MiqRequest
     ).freeze
 
     include Vmdb::Logging
