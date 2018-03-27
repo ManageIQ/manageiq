@@ -10,7 +10,7 @@ describe "VM Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event).once
     @vm.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@vm.retirement_last_warn).to be_nil
-    expect_any_instance_of(@vm.class).to receive(:retire_now).once
+    expect(@vm).to receive(:make_retire_request).once
     @vm.retirement_check
     @vm.reload
     expect(@vm.retirement_last_warn).not_to be_nil

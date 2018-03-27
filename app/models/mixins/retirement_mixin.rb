@@ -10,6 +10,11 @@ module RetirementMixin
   end
 
   module ClassMethods
+    def make_retire_request
+      options = {:task => task, :userid => current_user, :ids => objs, :src_ids => objs}
+      (klass.to_s + "RetireRequest").constantize.make_request(@request_id, options, current_user)
+    end
+
     def retire(ids, options = {})
       ids.each do |id|
         object = find_by(:id => id)
@@ -117,7 +122,7 @@ module RetirementMixin
       end
     end
 
-    retire_now if retirement_due?
+    make_retire_request if retirement_due?
   end
 
   def retire_now(requester = nil)
