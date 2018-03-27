@@ -67,11 +67,12 @@ module EmbeddedAnsibleWorker::ObjectManagement
     if project
       update_playbook_project(project)
     else
-      project = create_playbook_project(connection)
+      create_playbook_project(connection)
     end
-  ensure
-    # we already have 2 copies: one in the gem and one imported into ansible in the project, delete the temporary one
-    clean_consolidated_plugin_directory if loop_until_project_updated(connection, project.id)
+    # Note, we don't remove the temporary directory CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR here because
+    # 1) It shouldn't use too much disk space
+    # 2) There isn't a synchronous way to import the git project into ansible so we'd need to poll ansible
+    # and remove it AFTER it was cloned.
   end
 
   private
@@ -125,20 +126,5 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
   def create_playbook_project(connection)
     connection.api.projects.create!(PLAYBOOK_PROJECT_ATTRIBUTES.to_json)
-  end
-
-  def loop_until_project_updated(connection, project_id)
-    loop do
-      case connection.api.projects.find(project_id).status
-      when "successful"
-        break true
-      when "new", "pending"
-        # do nothing
-      else
-        # oh no, it failed/errored/etc.
-        break false
-      end
-      sleep 0.5
-    end
   end
 end
