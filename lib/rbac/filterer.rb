@@ -41,6 +41,7 @@ module Rbac
       MiddlewareMessaging
       MiddlewareServer
       MiddlewareServerGroup
+      MiqRequest
       NetworkPort
       NetworkRouter
       OrchestrationStack
@@ -351,7 +352,7 @@ module Rbac
       targets.pluck(:id) if targets
     end
 
-    def get_self_service_objects(user, miq_group, klass)
+    def self_service_ownership_scope(user, miq_group, klass)
       return nil if miq_group.nil? || !miq_group.self_service? || !(klass < OwnershipMixin)
 
       # for limited_self_service, use user's resources, not user.current_group's resources
@@ -366,7 +367,7 @@ module Rbac
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       expression = miq_group.try(:entitlement).try(:filter_expression)
       expression.set_tagged_target(klass) if expression
-      u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
+      u_filtered_ids = pluck_ids(self_service_ownership_scope(user, miq_group, klass))
       b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
       m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, expression || user_filters['managed']))
       d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
