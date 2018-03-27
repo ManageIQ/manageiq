@@ -87,9 +87,9 @@ class MiqSnmp
     end
   end
 
-  # IANA assigned Private Enterprise Number 33482 to ManageIQ
+  # IANA assigned Private Enterprise Number 2312 to Red Hat Software
   def self.enterprise_oid_string
-    @@enterprise_oid_string ||= "1.3.6.1.4.1.33482"
+    @@enterprise_oid_string ||= "1.3.6.1.4.1.2312"
   end
 
   def self.enterprise_oid
