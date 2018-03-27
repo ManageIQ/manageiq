@@ -7,6 +7,7 @@ describe(ServiceAnsiblePlaybook) do
   let(:credential_0)   { FactoryGirl.create(:authentication, :manager_ref => '1') }
   let(:credential_1)   { FactoryGirl.create(:authentication, :manager_ref => 'a') }
   let(:credential_2)   { FactoryGirl.create(:authentication, :manager_ref => 'b') }
+  let(:credential_3)   { FactoryGirl.create(:authentication, :manager_ref => '2') }
   let(:decrpyted_val)  { 'my secret' }
   let(:encrypted_val)  { MiqPassword.encrypt(decrpyted_val) }
   let(:encrypted_val2) { MiqPassword.encrypt(decrpyted_val + "new") }
@@ -43,10 +44,11 @@ describe(ServiceAnsiblePlaybook) do
     {
       :config_info => {
         :provision => {
-          :hosts         => "default_host1,default_host2",
-          :credential_id => credential_0.id,
-          :playbook_id   => 10,
-          :extra_vars    => {
+          :hosts               => "default_host1,default_host2",
+          :credential_id       => credential_0.id,
+          :vault_credential_id => credential_3.id,
+          :playbook_id         => 10,
+          :extra_vars          => {
             "var1" => {:default => "default_val1"},
             :var2  => {:default => "default_val2"},
             "var3" => {:default => "default_val3"}
@@ -68,6 +70,7 @@ describe(ServiceAnsiblePlaybook) do
     {
       :provision_job_options => {
         :credential => 1,
+        :vault_credential => 2,
         :inventory  => 2,
         :hosts      => "default_host1,default_host2",
         :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'pswd' => encrypted_val}
