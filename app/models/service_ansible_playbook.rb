@@ -105,8 +105,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     job_options.deep_merge!(parse_dialog_options) unless action == ResourceAction::RETIREMENT
     job_options.deep_merge!(overrides)
 
-    credential_id = job_options.delete(:credential_id)
-    job_options[:credential] = Authentication.find(credential_id).manager_ref unless credential_id.blank?
+    %i(credential vault_credential).each do |cred|
+      cred_sym = "#{cred}_id".to_sym
+      credential_id = job_options.delete(cred_sym)
+      job_options[cred] = Authentication.find(credential_id).manager_ref if credential_id.present?
+    end
 
     hosts = job_options[:hosts]
     job_options[:inventory] = create_inventory_with_hosts(action, hosts).id unless use_default_inventory?(hosts)
