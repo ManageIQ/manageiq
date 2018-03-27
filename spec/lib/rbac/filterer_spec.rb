@@ -125,6 +125,62 @@ describe Rbac::Filterer do
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
+    context 'for MiqRequests' do
+      # MiqRequest for owner group
+      let!(:miq_request_user_owner) { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user) }
+      # User for owner group
+      let(:user_a)                        { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
+
+      # MiqRequests for other group
+      let!(:miq_request_user_a)     { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => other_user) }
+      let!(:miq_request_user_b)     { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => user_b) }
+
+      # other_group is from owner_tenant
+      let(:other_group)                   { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
+      # User for other group
+      let(:user_b)                        { FactoryGirl.create(:user, :miq_groups => [other_group]) }
+
+      context "self service user (User or group owned)" do
+        before do
+          allow(other_group).to receive(:self_service?).and_return(true)
+          allow(owner_group).to receive(:self_service?).and_return(true)
+        end
+
+        context 'users are in same tenant as requester' do
+          it "displays requests of user's of group owner_group" do
+            results = described_class.search(:class => MiqProvisionRequest, :user => user_a).first
+            expect(results).to match_array([miq_request_user_owner])
+          end
+
+          it "displays requests for users of other_user's group (other_group) so also for user_c" do
+            results = described_class.search(:class => MiqProvisionRequest, :user => user_b).first
+            expect(results).to match_array([miq_request_user_a, miq_request_user_b])
+          end
+        end
+      end
+
+      context "limited self service user (only user owned)" do
+        before do
+          allow(other_group).to receive(:limited_self_service?).and_return(true)
+          allow(other_group).to receive(:self_service?).and_return(true)
+          allow(owner_group).to receive(:limited_self_service?).and_return(true)
+          allow(owner_group).to receive(:self_service?).and_return(true)
+        end
+
+        context 'users are in same tenant as requester' do
+          it "displays requests of user's of group owner_group" do
+            results = described_class.search(:class => MiqProvisionRequest, :user => user_a).first
+            expect(results).to be_empty
+          end
+
+          it "displays requests for users of other_user's group (other_group) so also for user_c" do
+            results = described_class.search(:class => MiqProvisionRequest, :user => user_b).first
+            expect(results).to match_array([miq_request_user_b])
+          end
+        end
+      end
+    end
+
     context 'with tags' do
       let(:role)         { FactoryGirl.create(:miq_user_role) }
       let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
