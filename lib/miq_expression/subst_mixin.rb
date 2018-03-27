@@ -71,6 +71,7 @@ module MiqExpression::SubstMixin
         end
         exp[key]["value"] = value # Replace the exp value with the proper qs value
       end
+      exp.delete(:token)
     end
   end
 
