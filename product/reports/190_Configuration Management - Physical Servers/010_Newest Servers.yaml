@@ -1,5 +1,5 @@
 ---
-title: Physical servers added
+title: Recently Discovered Physical Servers
 rpt_group: Custom
 rpt_type: Custom
 priority:
@@ -21,7 +21,7 @@ headers:
 - Power State
 - Product Name
 conditions:
-order: Descending
+order: Ascending
 sortby:
 - hostname
 group:
@@ -51,4 +51,4 @@ rpt_options:
   :pdf:
     :page_size: US-Letter
   :queue_timeout:
-menu_name: Recently Added Physical Servers
+menu_name: Recently Discovered Physical Servers

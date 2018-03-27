@@ -10,8 +10,9 @@ rpt_group: Custom
 rpt_type: Custom
 priority:
 col_order:
-- id
 - hostname
+- health_state
+- power_state
 - product_name
 timeline:
 file_mtime:
@@ -19,8 +20,9 @@ categories:
 filename:
 db: PhysicalServer
 cols:
-- id
 - hostname
+- health_state
+- power_state
 - product_name
 include:
   host:
@@ -29,9 +31,11 @@ include:
 template_type: report
 sortby:
 - host.physical_server_id
+- hostname
 headers:
-- ID
 - Hostname
+- Health State
+- Power State
 - Product Name
 conditions: !ruby/object:MiqExpression
   exp:

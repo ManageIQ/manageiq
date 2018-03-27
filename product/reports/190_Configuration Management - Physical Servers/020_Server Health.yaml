@@ -11,8 +11,9 @@ rpt_group: Custom
 rpt_type: Custom
 priority:
 col_order:
-- health_state
 - hostname
+- health_state
+- power_state
 - product_name
 timeline:
 file_mtime:
@@ -20,14 +21,16 @@ categories:
 filename:
 db: PhysicalServer
 cols:
-- health_state
 - hostname
+- health_state
+- power_state
 - product_name
 template_type: report
 sortby:
 - health_state
 - hostname
 headers:
-- Health
 - Hostname
+- Health State
+- Power State
 - Product Name

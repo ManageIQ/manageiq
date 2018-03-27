@@ -7,7 +7,7 @@ visibility:
   :roles:
   - _ALL_
 user_id:
-resource_name: Recently Added Physical Servers
+resource_name: Recently Discovered Physical Servers
 resource_type: MiqReport
 miq_schedule_options:
   :run_at:
