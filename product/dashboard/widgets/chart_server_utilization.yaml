@@ -1,4 +1,4 @@
-description: chart_server_health
+description: chart_server_utilization
 title: "Physical Server Utilization"
 content_type: chart
 options:
