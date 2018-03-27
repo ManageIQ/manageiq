@@ -30,9 +30,12 @@ class Chargeback
     end
 
     def self.base_rollup_scope
+      # Container and ContainerProject does not have hardware (do we want?)
+      # Vm does not have a container_image
+      # Container does not have custom_attributes
       base_rollup = MetricRollup.includes(
-        :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes,
-                                {:container_image => :custom_attributes}],
+        :resource           => [:tags, :vim_performance_states,
+                                ],
         :parent_host        => :tags,
         :parent_ems_cluster => :tags,
         :parent_storage     => :tags,
