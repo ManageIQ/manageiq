@@ -352,8 +352,12 @@ module Rbac
       targets.pluck(:id) if targets
     end
 
+    def self_service_ownership_scope?(miq_group, klass)
+      miq_group.present? && miq_group.self_service? && klass < OwnershipMixin
+    end
+
     def self_service_ownership_scope(user, miq_group, klass)
-      return nil if miq_group.nil? || !miq_group.self_service? || !(klass < OwnershipMixin)
+      return nil unless self_service_ownership_scope?(miq_group, klass)
 
       # for limited_self_service, use user's resources, not user.current_group's resources
       # for reports (user = nil), still use miq_group
