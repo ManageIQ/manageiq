@@ -59,41 +59,9 @@ class MiqRequest < ApplicationRecord
   scope :with_requester,      ->(id)         { where(:requester_id => User.with_same_userid(id).collect(&:id)) }
 
   MODEL_REQUEST_TYPES = {
-    :Service        => {
-      :MiqProvisionRequest                 => {
-        :template          => N_("VM Provision"),
-        :clone_to_vm       => N_("VM Clone"),
-        :clone_to_template => N_("VM Publish"),
-      },
-      :MiqProvisionConfiguredSystemRequest => {
-        :provision_via_foreman => N_("%{config_mgr_type} Provision") % {:config_mgr_type => ui_lookup(:ui_title => 'foreman')}
-      },
-      :VmReconfigureRequest                => {
-        :vm_reconfigure => N_("VM Reconfigure")
-      },
-      :VmCloudReconfigureRequest           => {
-        :vm_cloud_reconfigure => N_("VM Cloud Reconfigure")
-      },
-      :VmMigrateRequest                    => {
-        :vm_migrate => N_("VM Migrate")
-      },
-      :VmRetireRequest                     => {
-        :vm_retire => N_("VM Retire")
-      },
-      :ServiceRetireRequest                => {
-        :service_retire => N_("Service Retire")
-      },
-      :OrchestrationStackRetireRequest     => {
-        :orchestration_stack_retire => N_("Orchestration Stack Retire")
-      },
-      :ServiceTemplateProvisionRequest     => {
-        :clone_to_service => N_("Service Provision")
-      },
-      :ServiceReconfigureRequest           => {
-        :service_reconfigure => N_("Service Reconfigure")
-      },
-      :PhysicalServerProvisionRequest      => {
-        :provision_physical_server => N_("Physical Server Provision")
+    :Automate       => {
+      :AutomationRequest => {
+        :automation => N_("Automation")
       }
     },
     :Infrastructure => {
@@ -101,10 +69,42 @@ class MiqRequest < ApplicationRecord
         :host_pxe_install => N_("Host Provision")
       },
     },
-    :Automate       => {
-      :AutomationRequest => {
-        :automation => N_("Automation")
-      }
+    :Service        => {
+      :MiqProvisionConfiguredSystemRequest => {
+        :provision_via_foreman => N_("%{config_mgr_type} Provision") % {:config_mgr_type => ui_lookup(:ui_title => 'foreman')}
+      },
+      :MiqProvisionRequest                 => {
+        :template          => N_("VM Provision"),
+        :clone_to_vm       => N_("VM Clone"),
+        :clone_to_template => N_("VM Publish"),
+      },
+      :OrchestrationStackRetireRequest     => {
+        :orchestration_stack_retire => N_("Orchestration Stack Retire")
+      },
+      :PhysicalServerProvisionRequest      => {
+        :provision_physical_server => N_("Physical Server Provision")
+      },
+      :ServiceRetireRequest                => {
+        :service_retire => N_("Service Retire")
+      },
+      :ServiceReconfigureRequest           => {
+        :service_reconfigure => N_("Service Reconfigure")
+      },
+      :ServiceTemplateProvisionRequest     => {
+        :clone_to_service => N_("Service Provision")
+      },
+      :VmCloudReconfigureRequest           => {
+        :vm_cloud_reconfigure => N_("VM Cloud Reconfigure")
+      },
+      :VmMigrateRequest                    => {
+        :vm_migrate => N_("VM Migrate")
+      },
+      :VmReconfigureRequest                => {
+        :vm_reconfigure => N_("VM Reconfigure")
+      },
+      :VmRetireRequest                     => {
+        :vm_retire => N_("VM Retire")
+      },
     },
   }.freeze
 
