@@ -113,7 +113,7 @@ module Vmdb
       $api_log           = create_multicast_logger(path_dir.join("api.log"))
       $miq_ae_logger     = create_multicast_logger(path_dir.join("automation.log"))
       $aws_log           = create_multicast_logger(path_dir.join("aws.log"))
-      $azure_log         = create_multicast_logger(path_dir.join("azure.log"))
+      $azure_log         = create_multicast_logger(path_dir.join("azure.log"), AzureLogger)
       $cn_monitoring_log = create_multicast_logger(path_dir.join("container_monitoring.log"))
       $datawarehouse_log = create_multicast_logger(path_dir.join("datawarehouse.log"))
       $fog_log           = create_multicast_logger(path_dir.join("fog.log"), FogLogger)
