@@ -125,6 +125,11 @@ module Rbac
       'Vm'                     => :descendant_ids
     }
 
+    # Classes inherited from these classes or mixins are allowing ownership feature on the target model
+    OWNERSHIP_CLASSES = %w(
+      OwnershipMixin
+    ).freeze
+
     include Vmdb::Logging
 
     def self.search(*args)
@@ -353,7 +358,8 @@ module Rbac
     end
 
     def self_service_ownership_scope?(miq_group, klass)
-      miq_group.present? && miq_group.self_service? && klass < OwnershipMixin
+      is_ownership_class = OWNERSHIP_CLASSES.any? { |allowed_ownership_klass| klass < allowed_ownership_klass.safe_constantize }
+      miq_group.present? && miq_group.self_service? && is_ownership_class
     end
 
     def self_service_ownership_scope(user, miq_group, klass)
