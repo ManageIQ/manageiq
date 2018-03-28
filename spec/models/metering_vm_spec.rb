@@ -91,6 +91,22 @@ describe MeteringVm do
         expect(subject.beginning_of_resource_existence_in_report_interval).to eq(beginning_of_resource_existence)
         expect(subject.end_of_resource_existence_in_report_interval).to eq(end_of_resource_existence)
       end
+
+      it 'uses datetime from Vm#created_on and Vm#updated_on when vm is disconnected' do
+        vm.update_attributes(:created_on => beginning_of_resource_existence)
+        vm.metric_rollups.each { |mr| mr.update_attributes(:timestamp => beginning_of_resource_existence) }
+
+        Timecop.travel(report_run_time - 5.days - 5.hours)
+
+        vm.disconnect_ems
+
+        Timecop.travel(report_run_time)
+
+        expect(subject.beginning_of_resource_existence_in_report_interval).to eq(beginning_of_resource_existence)
+        expect(subject.end_of_resource_existence_in_report_interval.to_s).to eq(vm.updated_on.to_s)
+        expect(subject.end_of_resource_existence_in_report_interval.to_s).to eq("2012-09-25 19:00:00 UTC")
+        expect(subject.existence_hours_metric).to eq(19 * 24 + 19) # from 2012-09-06 00:00:00 UTC to 2012-09-25 19:00:00 UTC
+      end
     end
 
     context 'count of used hours is different than count of metric rollups' do

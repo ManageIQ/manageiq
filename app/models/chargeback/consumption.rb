@@ -26,7 +26,11 @@ class Chargeback
     end
 
     def resource_end_of_life
-      resource.try(:retires_on)
+      if resource.try(:retires_on)
+        resource.retires_on
+      elsif resource.try(:ems_id).nil?
+        resource.try(:updated_on)
+      end
     end
 
     def consumption_end
