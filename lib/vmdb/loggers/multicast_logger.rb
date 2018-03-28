@@ -4,8 +4,10 @@ module Vmdb::Loggers
 
     def initialize(*loggers)
       require 'set'
-      @loggers = Set.new(loggers)
-      @level   = DEBUG
+      @loggers           = Set.new(loggers)
+      @level             = DEBUG
+      @default_formatter = VMDBLogger::Formatter.new
+      @formatter         = nil
     end
 
     def level=(new_level)
