@@ -2,8 +2,8 @@ module MiqRequestTask::StateMachine
   delegate :my_role, :to => :miq_request
   delegate :my_zone, :to => :source,      :allow_nil => true
 
-  def my_task_id
-    "#{self.class.base_model.name.underscore}_#{id}"
+  def tracking_label_id
+    "r#{miq_request_id}_#{self.class.base_model.name.underscore}_#{id}"
   end
 
   def signal_abort
@@ -56,7 +56,7 @@ module MiqRequestTask::StateMachine
       :args           => args,
       :zone           => my_zone,
       :role           => my_role,
-      :tracking_label => my_task_id,
+      :tracking_label => tracking_label_id,
     )
   end
 
@@ -77,7 +77,7 @@ module MiqRequestTask::StateMachine
       :deliver_on     => 10.seconds.from_now.utc,
       :zone           => my_zone,
       :role           => my_role,
-      :tracking_label => my_task_id,
+      :tracking_label => tracking_label_id,
       :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
   end

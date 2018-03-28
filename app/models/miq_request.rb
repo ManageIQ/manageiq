@@ -167,6 +167,10 @@ class MiqRequest < ApplicationRecord
     self.class.name
   end
 
+  def tracking_label_id
+    "r#{id}_#{self.class.name.underscore}_#{id}"
+  end
+
   def initialize_attributes
     self.approval_state ||= "pending_approval"
     miq_approvals << build_default_approval if miq_approvals.empty?
@@ -426,7 +430,7 @@ class MiqRequest < ApplicationRecord
       :method_name    => "create_request_tasks",
       :zone           => options.fetch(:miq_zone, my_zone),
       :role           => my_role,
-      :tracking_label => "#{self.class.name.underscore}_#{id}",
+      :tracking_label => tracking_label_id,
       :msg_timeout    => 3600,
       :deliver_on     => deliver_on
     )
