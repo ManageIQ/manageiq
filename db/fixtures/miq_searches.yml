@@ -1302,6 +1302,27 @@
     search_type: default
     db: Container
 - attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: PhysicalSwitch-power_state
+          value: "on"
+    search_type: default
+    db: PhysicalSwitch
+- attributes:
+    name: default_Status / Stopped
+    description: Status / Stopped
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: PhysicalSwitch-power_state
+            value: "on"
+    search_type: default
+    db: PhysicalSwitch
+- attributes:
     name: default_Over Sized
     description: Over Sized
     filter: !ruby/object:MiqExpression

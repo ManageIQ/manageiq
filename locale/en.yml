@@ -800,7 +800,7 @@ en:
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
       ManageIQ::Providers::InfraManager::Template:                          Template
       ManageIQ::Providers::NetworkManager:                                  Network Manager
-      ManageIQ::Providers::PhysicalInfraManager:                            Physical Infrastructure Provider 
+      ManageIQ::Providers::PhysicalInfraManager:                            Physical Infrastructure Provider
       ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (OpenStack)
       ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
       ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Red Hat)
@@ -861,6 +861,7 @@ en:
       ManageIQ::Providers::Vmware::InfraManager::Host:                      Host (Vmware)
       ManageIQ::Providers::Vmware::InfraManager::HostEsx:                   Host (Vmware)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalSwitch:    Physical Switch (Lenovo)
       MeteringContainerImage:   Metering for Image
       MeteringContainerProject: Metering for Project
       MeteringVm:               Metering for VM

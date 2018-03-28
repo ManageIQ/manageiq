@@ -49,6 +49,7 @@
 - MiqWorker
 - OrchestrationStack
 - OrchestrationTemplate
+- PhysicalSwitch
 - PhysicalServer
 - PolicyEvent
 - ResourcePool

@@ -66,6 +66,7 @@
   - miq_request
   - miq_template
   - orchestration_stack
+  - physical_switch
   - physical_server
   - physical_infra_topology
   - planning
@@ -133,6 +134,7 @@
   - miq_template_tag
   - miq_template_timeline
   - physical_infra_topology_view
+  - physical_switch_view
   - physical_server_view
   - policy_log
   - policy_simulation
@@ -227,6 +229,7 @@
   - miq_template_snapshot_view
   - miq_template_tag
   - physical_infra_topology_view
+  - physical_switch_view
   - physical_server_view
   - planning
   - policy_log
@@ -296,8 +299,10 @@
   - my_settings_default_views
   - my_settings_time_profiles
   - my_settings_visuals
+  - physical_switch
   - physical_server
   - physical_infra_topology
+  - physical_switch_view
   - physical_server_view
   - provider_foreman_explorer
   - vm_clone
@@ -373,6 +378,7 @@
   - ems_physical_infra_refresh
   - ems_physical_infra_tag
   - ems_physical_infra_view
+  - physical_switch_view
   - physical_server_view
   - physical_infra_topology_view
   - host_new
@@ -585,6 +591,7 @@
   - miq_template_tag
   - miq_template_timeline
   - physical_infra_topology_view
+  - physical_switch_view
   - physical_server_view
   - policy_log
   - policy_simulation
@@ -672,6 +679,7 @@
   - miq_template_tag
   - miq_template_timeline
   - physical_infra_topology_view
+  - physical_switch_view
   - physical_server_view
   - resource_pool_show
   - resource_pool_show_list
@@ -1178,6 +1186,7 @@
   - orchestration_templates_view
   - persistent_volume_view
   - physical_infra_topology_view
+  - physical_switch_view
   - physical_server_view
   - planning
   - policy_log
