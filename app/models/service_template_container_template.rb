@@ -17,7 +17,7 @@ class ServiceTemplateContainerTemplate < ServiceTemplateGeneric
   #       :dialog_id or :dialog
   #       :container_template_id or :container_template
   #
-  def self.create_catalog_item(options)
+  def self.create_catalog_item(options, _auth_user = nil)
     options     = options.merge(:service_type => 'atomic', :prov_type => 'generic_container_template')
     config_info = validate_config_info(options[:config_info])
     enhanced_config = config_info.deep_merge(
@@ -55,7 +55,7 @@ class ServiceTemplateContainerTemplate < ServiceTemplateGeneric
     container_template.try(:ext_management_system)
   end
 
-  def update_catalog_item(options)
+  def update_catalog_item(options, _auth_user = nil)
     config_info = validate_update_config_info(options)
     config_info[:provision][:configuration_template] ||= container_template_from_config_info(config_info) if config_info.key?(:provision)
 
