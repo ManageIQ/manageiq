@@ -83,8 +83,9 @@ module RegistrationSystem
 
     return unless option_values[:proxy_address]
 
-    write_rhsm_config(:proxy_hostname => option_values[:proxy_address].split(':')[0],
-                      :proxy_port     => option_values[:proxy_address].split(':')[1],
+    proxy_uri = option_values[:proxy_address].gsub(/http(|s):\/\//, "")
+    write_rhsm_config(:proxy_hostname => proxy_uri.split(':')[0],
+                      :proxy_port     => proxy_uri.split(':')[1],
                       :proxy_user     => option_values[:proxy_username],
                       :proxy_password => option_values[:proxy_password])
   end
