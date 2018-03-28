@@ -35,6 +35,7 @@ module Rbac
       Host
       LoadBalancer
       MiqCimInstance
+      MiqRequest
       NetworkPort
       NetworkRouter
       OrchestrationTemplate
@@ -117,6 +118,13 @@ module Rbac
       'User'                   => :descendant_ids,
       'Vm'                     => :descendant_ids
     }
+
+    # Classes inherited from these classes or mixins are allowing ownership feature on the target model,
+    # scope user_or_group_owned is required on target model
+    OWNERSHIP_CLASSES = %w(
+      OwnershipMixin
+      MiqRequest
+    ).freeze
 
     include Vmdb::Logging
 
@@ -347,8 +355,13 @@ module Rbac
       targets.pluck(:id) if targets
     end
 
-    def get_self_service_objects(user, miq_group, klass)
-      return nil if miq_group.nil? || !miq_group.self_service? || !(klass < OwnershipMixin)
+    def self_service_ownership_scope?(miq_group, klass)
+      is_ownership_class = OWNERSHIP_CLASSES.any? { |allowed_ownership_klass| klass <= allowed_ownership_klass.safe_constantize }
+      miq_group.present? && miq_group.self_service? && is_ownership_class && klass.respond_to?(:user_or_group_owned)
+    end
+
+    def self_service_ownership_scope(user, miq_group, klass)
+      return nil unless self_service_ownership_scope?(miq_group, klass)
 
       # for limited_self_service, use user's resources, not user.current_group's resources
       # for reports (user = nil), still use miq_group
@@ -360,7 +373,7 @@ module Rbac
 
     def calc_filtered_ids(scope, user_filters, user, miq_group, scope_tenant_filter)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
-      u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
+      u_filtered_ids = pluck_ids(self_service_ownership_scope(user, miq_group, klass))
       b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
       m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, user_filters['managed']))
       d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
