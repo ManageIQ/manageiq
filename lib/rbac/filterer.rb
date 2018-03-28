@@ -360,7 +360,7 @@ module Rbac
     end
 
     def self_service_ownership_scope?(miq_group, klass)
-      is_ownership_class = OWNERSHIP_CLASSES.any? { |allowed_ownership_klass| klass < allowed_ownership_klass.safe_constantize }
+      is_ownership_class = OWNERSHIP_CLASSES.any? { |allowed_ownership_klass| klass <= allowed_ownership_klass.safe_constantize }
       miq_group.present? && miq_group.self_service? && is_ownership_class && klass.respond_to?(:user_or_group_owned)
     end
 
