@@ -195,14 +195,9 @@ describe RegistrationSystem do
       EOT
     end
 
-    let(:rhsm_conf) { Tempfile.new(@spec_name.downcase) }
+    let(:rhsm_conf) { Tempfile.new }
 
     before do
-      @proxy_args = {:registration_http_proxy_server   => "192.0.2.0:myport",
-                     :registration_http_proxy_username => "my_dummy_username",
-                     :registration_http_proxy_password => "my_dummy_password"}
-
-      @spec_name = File.basename(__FILE__).split(".rb").first.freeze
       stub_const("RegistrationSystem::RHSM_CONFIG_FILE", rhsm_conf.path)
       rhsm_conf.write(original_rhsm_conf)
       rhsm_conf.close
@@ -213,10 +208,26 @@ describe RegistrationSystem do
       FileUtils.rm_f("#{rhsm_conf.path}.miq_orig")
     end
 
-    it "will save then update the original config file" do
-      RegistrationSystem.update_rhsm_conf(@proxy_args)
-      expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
-      expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+    context "will save then update the original config file" do
+      let(:params) { {:registration_http_proxy_username => "my_dummy_username", :registration_http_proxy_password => "my_dummy_password"} }
+
+      it "with server:port" do
+        RegistrationSystem.update_rhsm_conf(params.merge(:registration_http_proxy_server => "192.0.2.0:myport"))
+        expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
+        expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+      end
+
+      it "with http://server:port" do
+        RegistrationSystem.update_rhsm_conf(params.merge(:registration_http_proxy_server => "http://192.0.2.0:myport"))
+        expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
+        expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+      end
+
+      it "with https://server:port" do
+        RegistrationSystem.update_rhsm_conf(params.merge(:registration_http_proxy_server => "https://192.0.2.0:myport"))
+        expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
+        expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+      end
     end
 
     it "with no proxy server will not update the rhsm config file" do
