@@ -76,7 +76,7 @@ class Vm < VmOrTemplate
     check = validate_collect_running_processes
     unless check[:message].nil?
       _log.warn(check[:message].to_s)
-      return pl
+      raise check[:message].to_s
     end
 
     begin
