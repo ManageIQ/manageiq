@@ -152,7 +152,6 @@ describe DialogFieldSerializer do
                    "resource_action"         => "serialized resource action",
                    "dialog_field_responders" => dialog_field_responders,
                    "options"                 => {
-                     :category_id          => "123",
                      :category_name        => "best category ever",
                      :category_description => "best category ever",
                      :force_single_value   => true
