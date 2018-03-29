@@ -209,24 +209,18 @@ describe RegistrationSystem do
     end
 
     context "will save then update the original config file" do
-      let(:params) { {:registration_http_proxy_username => "my_dummy_username", :registration_http_proxy_password => "my_dummy_password"} }
+      ["", "http://", "https://"].each do |prefix|
+        params = {
+          :registration_http_proxy_server   => "#{prefix}192.0.2.0:myport",
+          :registration_http_proxy_username => "my_dummy_username",
+          :registration_http_proxy_password => "my_dummy_password"
+        }
 
-      it "with server:port" do
-        RegistrationSystem.update_rhsm_conf(params.merge(:registration_http_proxy_server => "192.0.2.0:myport"))
-        expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
-        expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
-      end
-
-      it "with http://server:port" do
-        RegistrationSystem.update_rhsm_conf(params.merge(:registration_http_proxy_server => "http://192.0.2.0:myport"))
-        expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
-        expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
-      end
-
-      it "with https://server:port" do
-        RegistrationSystem.update_rhsm_conf(params.merge(:registration_http_proxy_server => "https://192.0.2.0:myport"))
-        expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
-        expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+        it "with #{params[:registration_http_proxy_server]}" do
+          RegistrationSystem.update_rhsm_conf(params)
+          expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
+          expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+        end
       end
     end
 
