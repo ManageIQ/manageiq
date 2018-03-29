@@ -38,10 +38,9 @@ describe Condition do
 
     context "expression with <find>" do
       let(:cluster) { FactoryGirl.create(:ems_cluster) }
-      let(:host1) { FactoryGirl.create(:host, :ems_cluster => cluster, :name => "XXX") }
+      let(:host1) { FactoryGirl.create(:host, :ems_cluster => cluster) }
       let(:host2) { FactoryGirl.create(:host, :ems_cluster => cluster) }
       before do
-
         @rp1 = FactoryGirl.create(:resource_pool)
         @rp2 = FactoryGirl.create(:resource_pool)
 
