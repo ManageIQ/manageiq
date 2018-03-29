@@ -87,6 +87,28 @@ describe Vmdb::Settings do
       )
     end
 
+    it "with a change with string keys" do
+      described_class.save!(miq_server, "api" => {"token_ttl" => "1.hour"})
+
+      miq_server.reload
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(
+        :key   => "/api/token_ttl",
+        :value => "1.hour"
+      )
+    end
+
+    it "with a change with mixed keys" do
+      described_class.save!(miq_server, "api" => {:token_ttl => "1.hour"})
+
+      miq_server.reload
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(
+        :key   => "/api/token_ttl",
+        :value => "1.hour"
+      )
+    end
+
     it "with a previous change, now back to the default" do
       default = Settings.api.token_ttl
       miq_server.settings_changes.create!(:key => "/api/token_ttl", :value => "1.hour")
