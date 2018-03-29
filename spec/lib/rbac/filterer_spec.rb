@@ -1821,6 +1821,48 @@ describe Rbac::Filterer do
     end
   end
 
+  describe "#include_references (private)" do
+    subject { described_class.new }
+
+    let(:klass)            { VmOrTemplate }
+    let(:scope)            { klass.all }
+    let(:include_for_find) { { :miq_server => {} } }
+    let(:exp_includes)     { { :host => {} } }
+
+    it "adds include_for_find .references to the scope" do
+      method_args      = [scope, klass, include_for_find, nil]
+      resulting_scope  = subject.send(:include_references, *method_args)
+
+      expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", ""])
+    end
+
+    it "adds exp_includes .references to the scope" do
+      method_args      = [scope, klass, nil, exp_includes]
+      resulting_scope  = subject.send(:include_references, *method_args)
+
+      expect(resulting_scope.references_values).to eq(["", "{:host=>{}}"])
+    end
+
+    it "adds include_for_find and exp_includes .references to the scope" do
+      method_args      = [scope, klass, include_for_find, exp_includes]
+      resulting_scope  = subject.send(:include_references, *method_args)
+
+      expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", "{:host=>{}}"])
+    end
+
+    context "if the include is polymorphic" do
+      let(:klass)            { MetricRollup }
+      let(:include_for_find) { { :resource => {} } }
+
+      it "does not add .references to the scope" do
+        method_args      = [scope, klass, include_for_find, nil]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.references_values).to eq([])
+      end
+    end
+  end
+
   it ".apply_rbac_directly?" do
     expect(described_class.new.send(:apply_rbac_directly?, Vm)).to be_truthy
     expect(described_class.new.send(:apply_rbac_directly?, Rbac)).not_to be
