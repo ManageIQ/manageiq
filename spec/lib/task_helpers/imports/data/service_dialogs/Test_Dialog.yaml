@@ -1,0 +1,117 @@
+---
+- description:
+  buttons: submit,cancel
+  label: Test Dialog
+  dialog_tabs:
+  - description:
+    display:
+    label: New tab
+    display_method:
+    display_method_options:
+    position: 0
+    dialog_groups:
+    - description:
+      display:
+      label: New section
+      display_method:
+      display_method_options:
+      position: 0
+      dialog_fields:
+      - name: test_dropdown
+        description: ''
+        data_type: string
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: true
+        required_method:
+        required_method_options: {}
+        default_value: ''
+        values:
+        - -
+          - "<Choose>"
+        - - 1
+          - One
+        - - 3
+          - Three
+        - - 2
+          - Two
+        values_method:
+        values_method_options: {}
+        options:
+          :sort_by: description
+          :sort_order: ascending
+          :force_multi_value: true
+        label: Test Dropdown
+        position: 0
+        validator_type:
+        validator_rule:
+        reconfigurable: false
+        dynamic: false
+        show_refresh_button: false
+        load_values_on_init: false
+        read_only: false
+        auto_refresh: false
+        trigger_auto_refresh: false
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace:
+          ae_class:
+          ae_instance:
+          ae_message:
+          ae_attributes: {}
+        dialog_field_responders: []
+      - name: option_0_test_drop_2
+        description: ''
+        data_type: string
+        notes:
+        notes_display:
+        display: edit
+        display_method:
+        display_method_options: {}
+        required: true
+        required_method:
+        required_method_options: {}
+        default_value: ''
+        values:
+        - -
+          - "<Choose>"
+        - - '5'
+          - Five
+        - - '4'
+          - Four
+        - - '6'
+          - Six
+        values_method:
+        values_method_options: {}
+        options:
+          :sort_by: description
+          :sort_order: ascending
+          :force_multi_value: true
+        label: Option Dropdown
+        position: 1
+        validator_type:
+        validator_rule:
+        reconfigurable: false
+        dynamic: false
+        show_refresh_button: false
+        load_values_on_init: false
+        read_only: false
+        auto_refresh: false
+        trigger_auto_refresh: false
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action:
+          resource_type: DialogField
+          ae_namespace:
+          ae_class:
+          ae_instance:
+          ae_message:
+          ae_attributes: {}
+        dialog_field_responders: []
