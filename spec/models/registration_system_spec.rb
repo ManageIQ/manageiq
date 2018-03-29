@@ -181,7 +181,7 @@ describe RegistrationSystem do
         ssl_verify_depth = 3
 
         # an http proxy server to use
-        proxy_hostname = 192.0.2.0
+        proxy_hostname = ProxyHostnameValue
 
         # port for http proxy server
         proxy_port = myport
@@ -210,16 +210,18 @@ describe RegistrationSystem do
 
     context "will save then update the original config file" do
       ["", "http://", "https://"].each do |prefix|
-        params = {
-          :registration_http_proxy_server   => "#{prefix}192.0.2.0:myport",
-          :registration_http_proxy_username => "my_dummy_username",
-          :registration_http_proxy_password => "my_dummy_password"
-        }
+        ["proxy.example.com", "192.0.2.0", "[2001:db8::]"].each do |address|
+          params = {
+            :registration_http_proxy_server   => "#{prefix}#{address}:myport",
+            :registration_http_proxy_username => "my_dummy_username",
+            :registration_http_proxy_password => "my_dummy_password"
+          }
 
-        it "with #{params[:registration_http_proxy_server]}" do
-          RegistrationSystem.update_rhsm_conf(params)
-          expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
-          expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+          it "with #{params[:registration_http_proxy_server]}" do
+            RegistrationSystem.update_rhsm_conf(params)
+            expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
+            expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf.sub(/ProxyHostnameValue/, address))
+          end
         end
       end
     end
