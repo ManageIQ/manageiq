@@ -2,8 +2,9 @@
 # Calling order for EmsPhysicalInfra:
 # - ems
 #   - physical_racks
-#   - physical_switches
+#   - physical_chassis
 #   - physical_servers
+#   - physical_switches
 #
 
 module EmsRefresh::SaveInventoryPhysicalInfra
@@ -23,7 +24,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
       _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
-    child_keys = %i(physical_racks physical_switches physical_servers customization_scripts)
+    child_keys = %i(physical_racks physical_chassis physical_servers physical_switches customization_scripts)
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
@@ -61,6 +62,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     child_keys = %i(computer_system asset_detail hosts)
     hashes.each do |h|
       h[:physical_rack_id] = h.delete(:physical_rack).try(:[], :id)
+      h[:physical_chassis_id] = h.delete(:physical_chassis).try(:[], :id)
     end
 
     save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref], child_keys)
@@ -74,6 +76,19 @@ module EmsRefresh::SaveInventoryPhysicalInfra
 
     save_inventory_multi(ems.customization_scripts, hashes, deletes, [:manager_ref])
     store_ids_for_new_records(ems.customization_scripts, hashes, :manager_ref)
+  end
+
+  def save_physical_chassis_inventory(ems, hashes, target = nil)
+    target ||= ems
+    deletes = target == ems ? :use_association : []
+
+    hashes.each do |h|
+      h[:physical_rack_id] = h.delete(:physical_rack).try(:[], :id)
+    end
+
+    child_keys = %i(computer_system asset_detail)
+    save_inventory_multi(ems.physical_chassis, hashes, deletes, [:ems_ref], child_keys)
+    store_ids_for_new_records(ems.physical_chassis, hashes, :ems_ref)
   end
 
   #
