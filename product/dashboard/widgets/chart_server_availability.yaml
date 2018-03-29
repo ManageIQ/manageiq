@@ -1,5 +1,5 @@
-description: chart_server_utilization
-title: "Physical Server Utilization"
+description: chart_server_availability
+title: "Physical Server Availability"
 content_type: chart
 options:
   :timezone_matters: false
@@ -7,7 +7,7 @@ visibility:
   :roles:
   - _ALL_
 user_id:
-resource_name: Physical Server Utilization
+resource_name: Physical Server Availability
 resource_type: MiqReport
 miq_schedule_options:
   :run_at:

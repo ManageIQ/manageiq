@@ -27,6 +27,9 @@ class PhysicalServer < ApplicationRecord
 
   scope :with_hosts, -> { where("physical_servers.id in (select hosts.physical_server_id from hosts)") }
 
+  virtual_column :v_availability, :type => :string
+  virtual_column :v_host_os, :type => :string
+
   def name_with_details
     details % {
       :name => name,
@@ -90,5 +93,13 @@ class PhysicalServer < ApplicationRecord
       raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self)
+  end
+
+  def v_availability
+    host.try(:physical_server_id).nil? ? N_("Available") : N_("In use")
+  end
+
+  def v_host_os
+    host.try(:vmm_product).nil? ? N_("") : host.vmm_product
   end
 end
