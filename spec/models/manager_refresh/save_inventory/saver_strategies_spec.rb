@@ -172,6 +172,13 @@ describe ManagerRefresh::SaveInventory do
               )
             )
 
+            @data[:container_quota_items] = ::ManagerRefresh::InventoryCollection.new(
+              container_quota_items_init_data(inventory_collection_options(options))
+            )
+            @data[:container_quota_items_attrs] = ::ManagerRefresh::InventoryCollection.new(
+              container_quota_items_attrs_init_data(inventory_collection_options(options))
+            )
+
             # Parse data for InventoryCollections
             @network_port_data_1  = network_port_data(1).merge(
               :name   => @data[:vms].lazy_find(vm_data(1)[:ems_ref], :key => :name, :default => "default_name"),
@@ -211,6 +218,16 @@ describe ManagerRefresh::SaveInventory do
             @image_data_2 = image_data(2).merge(:name => "image_changed_name_2")
             @image_data_3 = image_data(3).merge(:name => "image_changed_name_3")
 
+            @container_quota_items_data_1 = container_quota_items_data(1)
+            @container_quota_items_data_2 = container_quota_items_data(2)
+
+            @container_quota_items_attrs_data_1 = container_quota_items_attrs_data(1).merge(
+              :resource => @data[:container_quota_items].lazy_find(container_quota_items_data(1)[:quota_desired].to_s)
+            )
+            @container_quota_items_attrs_data_2 = container_quota_items_attrs_data(2).merge(
+              :resource => @data[:container_quota_items].lazy_find(container_quota_items_data(2)[:quota_desired].to_s)
+            )
+
             # Fill InventoryCollections with data
             add_data_to_inventory_collection(@data[:network_ports],
                                              @network_port_data_1,
@@ -227,6 +244,13 @@ describe ManagerRefresh::SaveInventory do
             add_data_to_inventory_collection(@data[:miq_templates],
                                              @image_data_2,
                                              @image_data_3)
+            add_data_to_inventory_collection(@data[:container_quota_items],
+                                             @container_quota_items_data_1,
+                                             @container_quota_items_data_2)
+            add_data_to_inventory_collection(@data[:container_quota_items_attrs],
+                                             @container_quota_items_attrs_data_1,
+                                             @container_quota_items_attrs_data_2)
+
             # Assert data before save
             expect(@network_port1.device).to eq @vm1
             expect(@network_port1.name).to eq "network_port_name_1"
@@ -252,6 +276,11 @@ describe ManagerRefresh::SaveInventory do
             @network_port12.reload
 
             @image2 = MiqTemplate.find(@image2.id)
+
+            @quota_item_1 = ContainerQuotaItem.find_by(:quota_desired => container_quota_items_data(1)[:quota_desired])
+            @quota_item_2 = ContainerQuotaItem.find_by(:quota_desired => container_quota_items_data(2)[:quota_desired])
+            @quota_attr_1 = CustomAttribute.find_by(:name => container_quota_items_attrs_data(1)[:name])
+            @quota_attr_2 = CustomAttribute.find_by(:name => container_quota_items_attrs_data(2)[:name])
 
             # Check ICs stats
             expect(@data[:vms].created_records).to match_array(record_stats([@vm3, @vm31]))
@@ -391,6 +420,19 @@ describe ManagerRefresh::SaveInventory do
             )
 
             expect(::ManageIQ::Providers::CloudManager::AuthKeyPair.all).to eq([])
+
+            assert_all_records_match_hashes(
+              [CustomAttribute.where(:resource_type => 'ContainerQuotaItem')],
+              {
+                :id          => @quota_attr_1.id,
+                :name        => @quota_attr_1.name,
+                :resource_id => @quota_item_1.id,
+              }, {
+                :id          => @quota_attr_2.id,
+                :name        => @quota_attr_2.name,
+                :resource_id => @quota_item_2.id,
+              }
+            )
           end
         end
       end
