@@ -132,11 +132,8 @@ module Vmdb
     private_class_method :create_loggers
 
     def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
-      logger_instance = logger_class.new(log_file_path).tap do |logger|
-        logger.level = Logger::DEBUG
-      end
-      MulticastLogger.new(logger_instance).tap do |l|
-        l.loggers << $container_log if ENV["CONTAINER"]
+      logger_class.new(log_file_path).tap do |logger|
+        logger.extend(ActiveSupport::Logger.broadcast($container_log)) if ENV["CONTAINER"]
       end
     end
     private_class_method :create_multicast_logger

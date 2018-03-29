@@ -12,16 +12,16 @@ describe Vmdb::Loggers do
 
   shared_examples "has basic logging functionality" do |logger_tested|
     subject       { logger_tested }
-    let(:logger1) { subject.loggers.first }
-    let(:logger2) { subject.loggers.to_a.last }
+    let(:logger1) { subject }
+    let(:logger2) { $container_log }
 
     before do
       allow($container_log.logdev).to receive(:write)
     end
 
     before(:all) do
-      unless logger_tested.loggers.include?($container_log)
-        logger_tested.loggers << $container_log
+      unless ENV['CONTAINER']
+        logger_tested.extend(ActiveSupport::Logger.broadcast($container_log))
       end
     end
 
@@ -140,11 +140,10 @@ describe Vmdb::Loggers do
   end
 
   describe "#create_multicast_logger (private)" do
-    it "defaults the lower level loggers to `DEBUG`" do
+    it "defaults the loggers to the default level (INFO)" do
       log = described_class.send(:create_multicast_logger, log_file)
 
-      expect(log.loggers.first.level).to eq(Logger::DEBUG)
-      expect(log.loggers.to_a.size).to   eq(1)
+      expect(log.level).to eq(Logger::INFO)
     end
 
     it "does not broadcast to $container_log by default" do
@@ -152,7 +151,6 @@ describe Vmdb::Loggers do
       log = described_class.send(:create_multicast_logger, io)
 
       expect(log).to               receive(:add).with(0, nil, "foo").once.and_call_original
-      expect(log.loggers.first).to receive(:add).with(0, nil, "foo").once
       expect($container_log).to    receive(:add).with(0, nil, "foo").never
       log.debug "foo"
     end
@@ -160,11 +158,11 @@ describe Vmdb::Loggers do
     context "in a container environment" do
       around { |example| in_container_env(example) }
 
-      it "sets logger_instance and $container_log to debug" do
+      it "sets logger_instance to INFO and $container_log to DEBUG" do
         log = described_class.send(:create_multicast_logger, log_file)
 
-        expect(log.loggers.first.level).to     eq(Logger::DEBUG)
-        expect(log.loggers.to_a.last.level).to eq(Logger::DEBUG)
+        expect(log.level).to            eq(Logger::INFO)
+        expect($container_log.level).to eq(Logger::DEBUG)
       end
 
       it "broadcasts to $container_log and the base logger" do
@@ -172,7 +170,6 @@ describe Vmdb::Loggers do
         log = described_class.send(:create_multicast_logger, io)
 
         expect(log).to               receive(:add).with(0, nil, "foo").once.and_call_original
-        expect(log.loggers.first).to receive(:add).with(0, nil, "foo").once
         expect($container_log).to    receive(:add).with(0, nil, "foo").once
         log.debug "foo"
       end
@@ -188,8 +185,7 @@ describe Vmdb::Loggers do
       log = described_class.send(:create_multicast_logger, log_file)
       described_class.send(:apply_config_value, {:foo => :info}, log, :foo)
 
-      expect(log.loggers.first.level).to eq(Logger::INFO)
-      expect(log.loggers.to_a.size).to   eq(1)
+      expect(log.level).to eq(Logger::INFO)
     end
 
     context "in a container environment" do
@@ -199,8 +195,8 @@ describe Vmdb::Loggers do
         log = described_class.send(:create_multicast_logger, log_file)
         described_class.send(:apply_config_value, {:foo => :info}, log, :foo)
 
-        expect(log.loggers.first.level).to     eq(Logger::INFO)
-        expect(log.loggers.to_a.last.level).to eq(Logger::DEBUG)
+        expect(log.level).to            eq(Logger::INFO)
+        expect($container_log.level).to eq(Logger::DEBUG)
       end
     end
   end
