@@ -184,7 +184,7 @@ describe RegistrationSystem do
         proxy_hostname = ProxyHostnameValue
 
         # port for http proxy server
-        proxy_port = myport
+        proxy_port = 0
 
         # user name for authenticating to an http proxy, if needed
         proxy_user = my_dummy_username
@@ -212,7 +212,7 @@ describe RegistrationSystem do
       ["", "http://", "https://"].each do |prefix|
         ["proxy.example.com", "192.0.2.0", "[2001:db8::]"].each do |address|
           params = {
-            :registration_http_proxy_server   => "#{prefix}#{address}:myport",
+            :registration_http_proxy_server   => "#{prefix}#{address}:0",
             :registration_http_proxy_username => "my_dummy_username",
             :registration_http_proxy_password => "my_dummy_password"
           }
@@ -234,10 +234,10 @@ describe RegistrationSystem do
     it "with no options will use database valuses" do
       MiqDatabase.seed
       MiqDatabase.first.update_attributes(
-        :registration_http_proxy_server => "192.0.2.0:myport"
+        :registration_http_proxy_server => "192.0.2.0:0"
       )
       RegistrationSystem.update_rhsm_conf
-      expect(File.read(rhsm_conf)).to include("proxy_hostname = 192.0.2.0", "proxy_port = myport")
+      expect(File.read(rhsm_conf)).to include("proxy_hostname = 192.0.2.0", "proxy_port = 0")
     end
   end
 end
