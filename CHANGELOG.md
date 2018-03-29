@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 82 ending 2018-03-26
+
+### Added
+- Add vault credential support to automat playbook method. [(#17192)](https://github.com/ManageIQ/manageiq/pull/17192)
+- Add vault credential support to Ansible playbook service template. [(#17184)](https://github.com/ManageIQ/manageiq/pull/17184)
+- Expose get_assigned_tos as virtual attribute to allow access via the API [(#17182)](https://github.com/ManageIQ/manageiq/pull/17182)
+- Purging of ContainerQuota & ContainerQuotaItem [(#17167)](https://github.com/ManageIQ/manageiq/pull/17167)
+- Make resource groups taggable [(#17148)](https://github.com/ManageIQ/manageiq/pull/17148)
+- Add rates to chargeback report [(#17142)](https://github.com/ManageIQ/manageiq/pull/17142)
+- Support for hidden columns in reports and views [(#17133)](https://github.com/ManageIQ/manageiq/pull/17133)
+- Allow OrchestrationTemplate subclass to customize md5 calculation [(#17126)](https://github.com/ManageIQ/manageiq/pull/17126)
+- Report datetime columns(begining and end of resource's existence) in metering report of VMs [(#17100)](https://github.com/ManageIQ/manageiq/pull/17100)
+- Tower Rhv credential type [(#17044)](https://github.com/ManageIQ/manageiq/pull/17044)
+- Activate miq_task when deliver from miq_queue [(#17015)](https://github.com/ManageIQ/manageiq/pull/17015)
+- Add tasks and models for retire as a request [(#16933)](https://github.com/ManageIQ/manageiq/pull/16933)
+- Keep container quota history by archiving [(#16722)](https://github.com/ManageIQ/manageiq/pull/16722)
+
+### Fixed
+- Fix provider proxy settings fallback [(#17205)](https://github.com/ManageIQ/manageiq/pull/17205)
+- Add case insensitivity when validating uniqueness of name of new group/role [(#17197)](https://github.com/ManageIQ/manageiq/pull/17197)
+- Fixed case of expression in OOTB report. [(#17191)](https://github.com/ManageIQ/manageiq/pull/17191)
+- Fix RefreshWorker dequeue race condition [(#17187)](https://github.com/ManageIQ/manageiq/pull/17187)
+- Bad skipping of assert in production env [(#17173)](https://github.com/ManageIQ/manageiq/pull/17173)
+- Add detail and name to the new update event group [(#17164)](https://github.com/ManageIQ/manageiq/pull/17164)
+- Fix active_provision quota check for infra VM request with invalid vm_template. [(#17158)](https://github.com/ManageIQ/manageiq/pull/17158)
+- Add encryption key validation rake task [(#17149)](https://github.com/ManageIQ/manageiq/pull/17149)
+- Use vm_ems_ref to reconnect events [(#17145)](https://github.com/ManageIQ/manageiq/pull/17145)
+- Stop unbounded growth of targets [(#17144)](https://github.com/ManageIQ/manageiq/pull/17144)
+- Don't define DISALLOWED_SUFFIXES if already defined [(#17125)](https://github.com/ManageIQ/manageiq/pull/17125)
+- Fail Cinder/Swift Ensures if Service not Present [(#17067)](https://github.com/ManageIQ/manageiq/pull/17067)
+- Fix policy_events relationship on VmOrTemplate [(#17036)](https://github.com/ManageIQ/manageiq/pull/17036)
+
 ## Unreleased as of Sprint 81 ending 2018-03-12
 
 ### Added
