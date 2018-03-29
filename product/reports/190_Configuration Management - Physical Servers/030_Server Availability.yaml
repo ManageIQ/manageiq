@@ -28,10 +28,6 @@ cols:
 - power_state
 - v_host_os
 - product_name
-include:
-  host:
-    columns:
-    - physical_server_id
 template_type: report
 sortby:
 - v_availability
