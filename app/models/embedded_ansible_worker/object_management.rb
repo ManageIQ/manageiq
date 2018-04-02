@@ -1,6 +1,8 @@
 module EmbeddedAnsibleWorker::ObjectManagement
   extend ActiveSupport::Concern
 
+  CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR = Pathname.new("/var/lib/awx_consolidated_source").freeze
+
   def ensure_initial_objects(provider, connection)
     ensure_organization(provider, connection)
     ensure_credential(provider, connection)
@@ -55,13 +57,12 @@ module EmbeddedAnsibleWorker::ObjectManagement
     ).id
   end
 
-  CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR = Pathname.new("/var/lib/awx_consolidated_source").freeze
   def ensure_plugin_playbooks_project_seeded(provider, connection)
     clean_consolidated_plugin_directory
     copy_plugin_ansible_content
 
     commit_git_plugin_content
-    FileUtils.chown_R('awx', 'awx', CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
+    chown_playbooks_tempdir
 
     project = find_default_project(connection, provider.default_project)
     if project
@@ -78,20 +79,24 @@ module EmbeddedAnsibleWorker::ObjectManagement
   private
 
   def clean_consolidated_plugin_directory
-    FileUtils.rm_rf(CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
+    FileUtils.rm_rf(self.class.consolidated_plugin_directory)
   end
 
   def copy_plugin_ansible_content
-    FileUtils.mkdir_p(CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
+    FileUtils.mkdir_p(self.class.consolidated_plugin_directory)
 
     # TODO: make this a public api via an attr_reader
     Vmdb::Plugins.instance.instance_variable_get(:@registered_ansible_content).each do |content|
-      FileUtils.cp_r(Dir.glob("#{content.path}/*"), CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
+      FileUtils.cp_r(Dir.glob("#{content.path}/*"), self.class.consolidated_plugin_directory)
     end
   end
 
+  def chown_playbooks_tempdir
+    FileUtils.chown_R('awx', 'awx', self.class.consolidated_plugin_directory)
+  end
+
   def commit_git_plugin_content
-    Dir.chdir(CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR) do
+    Dir.chdir(self.class.consolidated_plugin_directory) do
       require 'rugged'
       repo = Rugged::Repository.init_at(".")
       index = repo.index
@@ -108,13 +113,6 @@ module EmbeddedAnsibleWorker::ObjectManagement
     end
   end
 
-  PLAYBOOK_PROJECT_ATTRIBUTES = {
-      :name                 => "#{I18n.t('product.name')} Default Project".freeze,
-      :scm_type             => "git",
-      :scm_url              => "file://#{CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR}",
-      :scm_update_on_launch => false
-  }.freeze
-
   def find_default_project(connection, project_id)
     return unless project_id
     connection.api.projects.find(project_id)
@@ -123,10 +121,25 @@ module EmbeddedAnsibleWorker::ObjectManagement
   end
 
   def update_playbook_project(project, organization)
-    project.update_attributes!(PLAYBOOK_PROJECT_ATTRIBUTES.merge(:organization => organization))
+    project.update_attributes!(self.class.playbook_project_attributes.merge(:organization => organization))
   end
 
   def create_playbook_project(connection, organization)
-    connection.api.projects.create!(PLAYBOOK_PROJECT_ATTRIBUTES.merge(:organization => organization).to_json)
+    connection.api.projects.create!(self.class.playbook_project_attributes.merge(:organization => organization).to_json)
+  end
+
+  class_methods do
+    def consolidated_plugin_directory
+      CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR
+    end
+
+    def playbook_project_attributes
+      {
+        :name                 => "#{I18n.t('product.name')} Default Project".freeze,
+        :scm_type             => "git".freeze,
+        :scm_url              => "file://#{consolidated_plugin_directory}".freeze,
+        :scm_update_on_launch => false
+      }.freeze
+    end
   end
 end
