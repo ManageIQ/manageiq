@@ -55,11 +55,7 @@ module MiqReport::Formatting
 
     # Use default format for column stil nil
     if format.nil? || format == :_default_
-      expression_col = col_to_expression_col(col)
-      dt = MiqExpression.get_col_type(expression_col)
-      dt = value.class.to_s.downcase.to_sym if dt.nil?
-      dt = dt.to_sym unless dt.nil?
-      format = MiqReport::Formats.default_format_details_for(expression_col, col, dt)
+      format = format_from_miq_expression(col, value)
     else
       format = format.deep_clone # Make sure we don't taint the original
     end
@@ -243,5 +239,20 @@ module MiqReport::Formatting
 
   def format_model_name(val, _options = {})
     ui_lookup(:model => val)
+  end
+
+  private
+
+  def format_from_miq_expression(col, value)
+    @miq_exp_dt_map ||= {}
+    expression_col = col_to_expression_col(col)
+
+    unless @miq_exp_dt_map.key?(col)
+      @miq_exp_dt_map[col] = MiqExpression.get_col_type(expression_col)
+    end
+    dt = @miq_exp_dt_map[col]
+    dt = value.class.to_s.downcase if dt.nil?
+    dt = dt.to_sym unless dt.nil?
+    MiqReport::Formats.default_format_details_for(expression_col, col, dt)
   end
 end
