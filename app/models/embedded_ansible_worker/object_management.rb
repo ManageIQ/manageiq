@@ -108,9 +108,8 @@ module EmbeddedAnsibleWorker::ObjectManagement
     end
   end
 
-  PLUGIN_PLAYBOOK_PROJECT_NAME = "#{I18n.t('product.name')} Default Project".freeze
   PLAYBOOK_PROJECT_ATTRIBUTES = {
-      :name                 => PLUGIN_PLAYBOOK_PROJECT_NAME,
+      :name                 => "#{I18n.t('product.name')} Default Project".freeze,
       :scm_type             => "git",
       :scm_url              => "file://#{CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR}",
       :scm_update_on_launch => false
