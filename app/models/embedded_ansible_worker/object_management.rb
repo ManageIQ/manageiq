@@ -108,7 +108,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     end
   end
 
-  PLUGIN_PLAYBOOK_PROJECT_NAME = "Default ManageIQ Playbook Project".freeze
+  PLUGIN_PLAYBOOK_PROJECT_NAME = "#{I18n.t('product.name')} Default Project".freeze
   PLAYBOOK_PROJECT_ATTRIBUTES = {
       :name                 => PLUGIN_PLAYBOOK_PROJECT_NAME,
       :scm_type             => "git",
