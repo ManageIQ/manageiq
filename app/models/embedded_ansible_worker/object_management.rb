@@ -63,11 +63,11 @@ module EmbeddedAnsibleWorker::ObjectManagement
     commit_git_plugin_content
     FileUtils.chown_R('awx', 'awx', CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR)
 
-    project = existing_plugin_playbook_project(connection)
+    project = find_default_project(connection, provider.default_project)
     if project
       update_playbook_project(project, provider.default_organization)
     else
-      create_playbook_project(connection, provider.default_organization)
+      provider.default_project = create_playbook_project(connection, provider.default_organization).id
     end
     # Note, we don't remove the temporary directory CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR here because
     # 1) It shouldn't use too much disk space
@@ -116,8 +116,11 @@ module EmbeddedAnsibleWorker::ObjectManagement
       :scm_update_on_launch => false
   }.freeze
 
-  def existing_plugin_playbook_project(connection)
-    connection.api.projects.all(:name => PLUGIN_PLAYBOOK_PROJECT_NAME).first
+  def find_default_project(connection, project_id)
+    return unless project_id
+    connection.api.projects.find(project_id)
+  rescue AnsibleTowerClient::ResourceNotFoundError
+    nil
   end
 
   def update_playbook_project(project, organization)
