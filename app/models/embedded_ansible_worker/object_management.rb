@@ -6,7 +6,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     ensure_credential(provider, connection)
     ensure_inventory(provider, connection)
     ensure_host(provider, connection)
-    ensure_plugin_playbooks_project_seeded(connection)
+    ensure_plugin_playbooks_project_seeded(provider, connection)
   end
 
   def remove_demo_data(connection)
@@ -56,7 +56,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
   end
 
   CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR = Pathname.new("/var/lib/awx_consolidated_source").freeze
-  def ensure_plugin_playbooks_project_seeded(connection)
+  def ensure_plugin_playbooks_project_seeded(provider, connection)
     clean_consolidated_plugin_directory
     copy_plugin_ansible_content
 
@@ -65,9 +65,9 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
     project = existing_plugin_playbook_project(connection)
     if project
-      update_playbook_project(project)
+      update_playbook_project(project, provider.default_organization)
     else
-      create_playbook_project(connection)
+      create_playbook_project(connection, provider.default_organization)
     end
     # Note, we don't remove the temporary directory CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR here because
     # 1) It shouldn't use too much disk space
@@ -120,11 +120,11 @@ module EmbeddedAnsibleWorker::ObjectManagement
     connection.api.projects.all(:name => PLUGIN_PLAYBOOK_PROJECT_NAME).first
   end
 
-  def update_playbook_project(project)
-    project.update_attributes!(PLAYBOOK_PROJECT_ATTRIBUTES)
+  def update_playbook_project(project, organization)
+    project.update_attributes!(PLAYBOOK_PROJECT_ATTRIBUTES.merge(:organization => organization))
   end
 
-  def create_playbook_project(connection)
-    connection.api.projects.create!(PLAYBOOK_PROJECT_ATTRIBUTES.to_json)
+  def create_playbook_project(connection, organization)
+    connection.api.projects.create!(PLAYBOOK_PROJECT_ATTRIBUTES.merge(:organization => organization).to_json)
   end
 end
