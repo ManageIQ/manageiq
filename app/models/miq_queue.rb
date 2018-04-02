@@ -390,40 +390,42 @@ class MiqQueue < ApplicationRecord
     find_by(optional_values(default_get_options(options))).try(:destroy)
   end
 
+  def self.deliver_preprocess(class_name, instance_id, args, data, target_id, requester = nil)
+    raise _("class_name cannot be nil") if class_name.nil?
+
+    obj = class_name.constantize
+
+    if instance_id
+      if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
+        obj = requester
+      else
+        obj = obj.find(instance_id)
+      end
+    end
+    args.push(data) if data
+    args.unshift(target_id) if obj.kind_of?(Class) && target_id
+    return obj, args
+  end
+
   def deliver(requester = nil)
     result = nil
     delivered_on
     _log.info("#{MiqQueue.format_short_log_msg(self)}, Delivering...")
 
     begin
-      raise _("class_name cannot be nil") if class_name.nil?
-
-      obj = class_name.constantize
-
-      if instance_id
-        begin
-          if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
-            obj = requester
-          else
-            obj = obj.find(instance_id)
-          end
-        rescue ActiveRecord::RecordNotFound => err
-          _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
-          return STATUS_WARN, nil, nil
-        rescue => err
-          _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
-          return STATUS_ERROR, err.message, nil
-        end
+      begin
+        obj, call_args = self.class.deliver_preprocess(class_name, instance_id, args, data, target_id, requester)
+      rescue ActiveRecord::RecordNotFound => err
+        _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
+        return STATUS_WARN, nil, nil
+      rescue => err
+        _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
+        return STATUS_ERROR, err.message, nil
       end
-
-      data = self.data
-      args.push(data) if data
-      args.unshift(target_id) if obj.kind_of?(Class) && target_id
-
       begin
         status = STATUS_OK
         message = "Message delivered successfully"
-        result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args) }
+        result = User.with_user_group(user_id, group_id) { dispatch_method(obj, call_args) }
       rescue MiqException::MiqQueueRetryLater => err
         unget(err.options)
         message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"

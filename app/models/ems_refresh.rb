@@ -180,7 +180,7 @@ module EmsRefresh
       task_id = if msg && msg.task_id
                   msg.task_id.to_i
                 elsif create_task
-                  task = create_refresh_task(ems, targets)
+                  task = create_refresh_task(ems, targets) # This use case is hard/ugly to fix
                   task.id
                 end
 
