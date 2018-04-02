@@ -106,10 +106,12 @@ module EmsRefresh::SaveInventory
               found = found_dups if found.empty?
             end
           end
-          found = found.first
 
+          type = h[:template] ? "Template" : "Vm"
+
+          found = found.first
           if found.nil?
-            _log.info("#{log_header} Creating Vm [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
+            _log.info("#{log_header} Creating #{type} [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
 
             # Handle the off chance that we are adding an "unknown" Vm to the db
             h[:location] = "unknown" if h[:location].blank?
@@ -120,7 +122,7 @@ module EmsRefresh::SaveInventory
             vms_by_uid_ems[h[:uid_ems]].delete(found)
             h.delete(:type)
 
-            _log.info("#{log_header} Updating Vm [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
+            _log.info("#{log_header} Updating #{type} [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
             found.update_attributes!(h)
             disconnects_index.delete(found)
           end
