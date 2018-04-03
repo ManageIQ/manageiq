@@ -86,7 +86,7 @@ group :amazon, :manageiq_default do
 end
 
 group :ansible, :manageiq_default do
-  gem "ansible_tower_client",           "~>0.12.2",      :require => false
+  gem "ansible_tower_client",           "=0.12.2",   :require => false
 end
 
 group :azure, :manageiq_default do
