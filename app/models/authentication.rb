@@ -1,4 +1,6 @@
 class Authentication < ApplicationRecord
+  acts_as_miq_taggable
+
   include NewWithTypeStiMixin
   def self.new(*args, &block)
     if self == Authentication
