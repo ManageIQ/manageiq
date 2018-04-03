@@ -14,7 +14,7 @@ module Authenticator
     if authenticator
       authenticator.validate_config
     else
-      [:mode, "authentication type, #{config[:mode].inspect}, invalid. Should be one of: #{valid_modes.join(", ")}"]
+      [[:mode, "authentication mode, #{config[:mode].inspect}, is invalid. Should be one of: #{valid_modes.join(", ")}"]]
     end
   end
 
