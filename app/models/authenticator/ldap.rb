@@ -10,7 +10,7 @@ module Authenticator
 
     def self.validate_config(config)
       if config[:ldaphost].blank?
-        [:ldaphost, "ldaphost can't be blank"]
+        [[:ldaphost, "ldaphost can't be blank"]]
       else
         []
       end
