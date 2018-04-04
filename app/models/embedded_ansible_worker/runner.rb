@@ -34,6 +34,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     _log.info("Starting embedded ansible service ...")
     embedded_ansible.start
     _log.info("Finished starting embedded ansible service.")
+    embedded_ansible.set_job_data_retention
   end
 
   def update_embedded_ansible_provider
