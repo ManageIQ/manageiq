@@ -171,6 +171,39 @@ describe EmbeddedAnsible do
       end
     end
 
+    context "with a job cleanup template" do
+      include_context "api connection"
+      let(:data)          { double("ExtraData") }
+      let(:schedule)      { double("Schedule", :save! => true, :extra_data => data) }
+      let(:cleanup_jobs)  { double("SystemJobTemplate", :job_type => "cleanup_jobs", :schedules => [schedule]) }
+      let(:cleanup_facts) { double("SystemJobTemplate", :job_type => "cleanup_facts") }
+
+      before do
+        expect(api).to receive(:system_job_templates).and_return(double("Enumerator", :all => [cleanup_jobs, cleanup_facts]))
+      end
+
+      describe "#set_job_data_retention" do
+        it "sets the retention value in the schedule extra data" do
+          stub_settings(:embedded_ansible => {:job_data_retention_days => 123})
+          expect(data).to receive(:days=).with(123)
+          subject.set_job_data_retention
+        end
+      end
+
+      describe "#run_job_data_retention" do
+        it "runs the cleanup job on demand with the passed value" do
+          expect(cleanup_jobs).to receive(:launch).with("days" => 14)
+          subject.run_job_data_retention(14)
+        end
+
+        it "defaults the days to the setting" do
+          stub_settings(:embedded_ansible => {:job_data_retention_days => 1})
+          expect(cleanup_jobs).to receive(:launch).with("days" => 1)
+          subject.run_job_data_retention
+        end
+      end
+    end
+
     describe "#find_or_create_database_authentication (private)" do
       let(:password)        { "secretpassword" }
       let(:quoted_password) { ActiveRecord::Base.connection.quote(password) }
