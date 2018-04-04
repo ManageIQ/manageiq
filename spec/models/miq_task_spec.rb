@@ -485,6 +485,29 @@ describe MiqTask do
     end
   end
 
+  describe "#task_results" do
+    it "forces UTF-8 encoding" do
+      task = FactoryGirl.create(
+        :miq_task,
+        :binary_blob => BinaryBlob.new(
+          :name      => "task_results",
+          :data_type => "YAML",
+          :binary    => YAML.dump("\xC3\xA4".force_encoding("ASCII-8BIT"))
+        )
+      )
+
+      expect(task.task_results).to eq("ä")
+    end
+  end
+
+  describe "#task_results=" do
+    it "forces UTF-8 encoding" do
+      task = FactoryGirl.create(:miq_task, :task_results => "\xC3\xA4".force_encoding("ASCII-8BIT"))
+
+      expect(task.task_results).to eq("ä")
+    end
+  end
+
   private
 
   def create_test_task(name, status, updated)

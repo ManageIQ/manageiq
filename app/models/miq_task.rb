@@ -233,12 +233,14 @@ class MiqTask < ApplicationRecord
       serializer_name = binary_blob.data_type
       serializer_name = "Marshal" unless serializer_name == "YAML" # YAML or Marshal, for now
       serializer = serializer_name.constantize
-      return serializer.load(binary_blob.binary)
+      result = serializer.load(binary_blob.binary)
+      return result.kind_of?(String) ? result.force_encoding("UTF-8") : result
     end
     nil
   end
 
   def task_results=(value)
+    value = value.force_encoding("UTF-8") if value.kind_of?(String)
     self.binary_blob   = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
     binary_blob.binary = YAML.dump(value)
   end
