@@ -105,6 +105,16 @@ describe EmbeddedAnsible do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    shared_context "api connection" do
+      let(:api_conn) { double("AnsibleAPIConnection") }
+      let(:api) { double("AnsibleAPIResource") }
+
+      before do
+        expect(subject).to receive(:api_connection).and_return(api_conn)
+        expect(api_conn).to receive(:api).and_return(api)
+      end
+    end
+
     describe "#alive?" do
       it "returns false if the service is not configured" do
         expect(subject).to receive(:configured?).and_return false
@@ -118,14 +128,11 @@ describe EmbeddedAnsible do
       end
 
       context "when a connection is attempted" do
-        let(:api_conn) { double("AnsibleAPIConnection") }
-        let(:api) { double("AnsibleAPIResource") }
+        include_context "api connection"
 
         before do
           expect(subject).to receive(:configured?).and_return true
           expect(subject).to receive(:running?).and_return true
-          expect(subject).to receive(:api_connection).and_return(api_conn)
-          expect(api_conn).to receive(:api).and_return(api)
 
           miq_database.set_ansible_admin_authentication(:password => "adminpassword")
         end
