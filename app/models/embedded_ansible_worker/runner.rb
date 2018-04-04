@@ -24,6 +24,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def do_work
     embedded_ansible.start if !embedded_ansible.alive? && !embedded_ansible.running?
     provider.authentication_check if embedded_ansible.alive? && !provider.authentication_status_ok?
+    update_job_data_retention
   end
 
   def before_exit(*_)
@@ -34,7 +35,6 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     _log.info("Starting embedded ansible service ...")
     embedded_ansible.start
     _log.info("Finished starting embedded ansible service.")
-    embedded_ansible.set_job_data_retention
   end
 
   def update_embedded_ansible_provider
@@ -65,6 +65,13 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def message_sync_config(*_args); end
 
   private
+
+  def update_job_data_retention
+    return if @job_data_retention == ::Settings.embedded_ansible.job_data_retention_days
+
+    embedded_ansible.set_job_data_retention
+    @job_data_retention = ::Settings.embedded_ansible.job_data_retention_days
+  end
 
   def provider
     @provider ||= ManageIQ::Providers::EmbeddedAnsible::Provider.first_or_initialize

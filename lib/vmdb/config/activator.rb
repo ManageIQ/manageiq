@@ -40,13 +40,6 @@ module VMDB
       def server(data)
         MiqServer.my_server.config_activated(data) unless MiqServer.my_server.nil? rescue nil
       end
-
-      def embedded_ansible(_data)
-        ea = EmbeddedAnsible.new
-        return unless ea.alive?
-
-        ea.set_job_data_retention
-      end
     end
   end
 end
