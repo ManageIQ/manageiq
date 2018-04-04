@@ -86,6 +86,16 @@ class OrchestrationTemplate < ApplicationRecord
     includes(:stacks).where(:orchestration_stacks => {:orchestration_template_id => nil})
   end
 
+  def tabs
+    [
+      {
+        :title        => "Basic Information",
+        :stack_group  => deployment_options,
+        :param_groups => parameter_groups
+      }
+    ]
+  end
+
   def parameter_groups
     raise NotImplementedError, _("parameter_groups must be implemented in subclass")
   end
