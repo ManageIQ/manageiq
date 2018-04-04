@@ -85,8 +85,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
   def copy_plugin_ansible_content
     FileUtils.mkdir_p(self.class.consolidated_plugin_directory)
 
-    # TODO: make this a public api via an attr_reader
-    Vmdb::Plugins.instance.instance_variable_get(:@registered_ansible_content).each do |content|
+    Vmdb::Plugins.instance.registered_ansible_content.each do |content|
       FileUtils.cp_r(Dir.glob("#{content.path}/*"), self.class.consolidated_plugin_directory)
     end
   end
