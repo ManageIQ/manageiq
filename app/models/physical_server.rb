@@ -17,7 +17,8 @@ class PhysicalServer < ApplicationRecord
   }.freeze
 
   validates :vendor, :inclusion =>{:in => VENDOR_TYPES}
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::PhysicalInfraManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_servers
+  belongs_to :physical_rack, :inverse_of => :physical_servers
 
   has_one :computer_system, :as => :managed_entity, :dependent => :destroy
   has_one :hardware, :through => :computer_system

@@ -1,6 +1,7 @@
 #
 # Calling order for EmsPhysicalInfra:
 # - ems
+#   - physical_racks
 #   - physical_servers
 #
 
@@ -21,10 +22,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
       _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
-    child_keys = [
-      :physical_servers,
-      :customization_scripts
-    ]
+    child_keys = %i(physical_racks physical_servers customization_scripts)
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
@@ -37,17 +35,25 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     ems
   end
 
+  def save_physical_racks_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    deletes = target == ems ? :use_association : []
+
+    save_inventory_multi(ems.physical_racks, hashes, deletes, [:ems_ref])
+    store_ids_for_new_records(ems.physical_racks, hashes, :ems_ref)
+  end
+
   def save_physical_servers_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.physical_servers.reset
-    deletes = if target == ems
-                :use_association
-              else
-                []
-              end
+    deletes = target == ems ? :use_association : []
 
-    child_keys = [:computer_system, :asset_detail, :hosts]
+    child_keys = %i(computer_system asset_detail hosts)
+    hashes.each do |h|
+      h[:physical_rack_id] = h.delete(:physical_rack).try(:[], :id)
+    end
+
     save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref], child_keys)
     store_ids_for_new_records(ems.physical_servers, hashes, :ems_ref)
   end
@@ -55,12 +61,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
   def save_customization_scripts_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.customization_scripts.reset
-    deletes = if target == ems
-                :use_association
-              else
-                []
-              end
+    deletes = target == ems ? :use_association : []
 
     save_inventory_multi(ems.customization_scripts, hashes, deletes, [:manager_ref])
     store_ids_for_new_records(ems.customization_scripts, hashes, :manager_ref)

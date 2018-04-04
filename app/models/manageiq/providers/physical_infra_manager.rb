@@ -2,6 +2,7 @@ module ManageIQ::Providers
   class PhysicalInfraManager < BaseManager
     include SupportsFeatureMixin
 
+    virtual_total :total_physical_racks,      :physical_racks
     virtual_total :total_physical_servers,    :physical_servers
     virtual_column :total_hosts,              :type => :integer
     virtual_column :total_vms,                :type => :integer
