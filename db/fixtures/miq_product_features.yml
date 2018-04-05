@@ -5231,6 +5231,10 @@
         :description: Edit Image Tags
         :feature_type: control
         :identifier: image_tag
+      - :name: Add Image
+        :description: Add Image
+        :feature_type: control
+        :identifier: image_create
     - :name: Modify
       :description: Modify Images
       :feature_type: admin
