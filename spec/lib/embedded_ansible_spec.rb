@@ -105,6 +105,16 @@ describe EmbeddedAnsible do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    shared_context "api connection" do
+      let(:api_conn) { double("AnsibleAPIConnection") }
+      let(:api) { double("AnsibleAPIResource") }
+
+      before do
+        expect(subject).to receive(:api_connection).and_return(api_conn)
+        expect(api_conn).to receive(:api).and_return(api)
+      end
+    end
+
     describe "#alive?" do
       it "returns false if the service is not configured" do
         expect(subject).to receive(:configured?).and_return false
@@ -118,14 +128,11 @@ describe EmbeddedAnsible do
       end
 
       context "when a connection is attempted" do
-        let(:api_conn) { double("AnsibleAPIConnection") }
-        let(:api) { double("AnsibleAPIResource") }
+        include_context "api connection"
 
         before do
           expect(subject).to receive(:configured?).and_return true
           expect(subject).to receive(:running?).and_return true
-          expect(subject).to receive(:api_connection).and_return(api_conn)
-          expect(api_conn).to receive(:api).and_return(api)
 
           miq_database.set_ansible_admin_authentication(:password => "adminpassword")
         end
@@ -160,6 +167,39 @@ describe EmbeddedAnsible do
         it "returns true when no error is raised" do
           expect(api).to receive(:verify_credentials)
           expect(subject.alive?).to be true
+        end
+      end
+    end
+
+    context "with a job cleanup template" do
+      include_context "api connection"
+      let(:data)          { double("ExtraData") }
+      let(:schedule)      { double("Schedule", :save! => true, :extra_data => data) }
+      let(:cleanup_jobs)  { double("SystemJobTemplate", :job_type => "cleanup_jobs", :schedules => [schedule]) }
+      let(:cleanup_facts) { double("SystemJobTemplate", :job_type => "cleanup_facts") }
+
+      before do
+        expect(api).to receive(:system_job_templates).and_return(double("Enumerator", :all => [cleanup_jobs, cleanup_facts]))
+      end
+
+      describe "#set_job_data_retention" do
+        it "sets the retention value in the schedule extra data" do
+          stub_settings(:embedded_ansible => {:job_data_retention_days => 123})
+          expect(data).to receive(:days=).with(123)
+          subject.set_job_data_retention
+        end
+      end
+
+      describe "#run_job_data_retention" do
+        it "runs the cleanup job on demand with the passed value" do
+          expect(cleanup_jobs).to receive(:launch).with("days" => 14)
+          subject.run_job_data_retention(14)
+        end
+
+        it "defaults the days to the setting" do
+          stub_settings(:embedded_ansible => {:job_data_retention_days => 1})
+          expect(cleanup_jobs).to receive(:launch).with("days" => 1)
+          subject.run_job_data_retention
         end
       end
     end

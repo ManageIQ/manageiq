@@ -130,6 +130,10 @@ describe EmbeddedAnsibleWorker::Runner do
     end
 
     context "#do_work" do
+      before do
+        runner.instance_variable_set(:@job_data_retention, ::Settings.embedded_ansible.job_data_retention_days)
+      end
+
       it "starts embedded ansible if it is not alive and not running" do
         allow(embedded_ansible_instance).to receive(:alive?).and_return(false)
         allow(embedded_ansible_instance).to receive(:running?).and_return(false)
@@ -159,6 +163,15 @@ describe EmbeddedAnsibleWorker::Runner do
           allow(runner).to receive(:provider).and_return(provider)
           expect(provider).not_to receive(:authentication_check)
 
+          runner.do_work
+        end
+
+        it "sets the embedded ansible job data retention value when the setting changes" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          allow(runner).to receive(:provider).and_return(provider)
+          stub_settings(:embedded_ansible => {:job_data_retention_days => 30})
+
+          expect(embedded_ansible_instance).to receive(:set_job_data_retention)
           runner.do_work
         end
       end
