@@ -1,11 +1,14 @@
 module ProcessTasksMixin
   extend ActiveSupport::Concern
+  include RetirementMixin
 
   module ClassMethods
     # Processes tasks received from the UI and queues them
     def process_tasks(options)
       raise _("No ids given to process_tasks") if options[:ids].blank?
-      if options[:task] == "refresh_ems" && respond_to?("refresh_ems")
+      if options[:task] == 'retire_now'
+        name.constantize.make_retire_request(*options[:ids])
+      elsif options[:task] == "refresh_ems" && respond_to?("refresh_ems")
         refresh_ems(options[:ids])
         msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
         task_audit_event(:success, options, :message => msg)
