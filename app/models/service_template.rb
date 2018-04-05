@@ -55,6 +55,8 @@ class ServiceTemplate < ApplicationRecord
 
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
 
+  has_many   :miq_requests, :as => :source, :dependent => :nullify
+
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
   virtual_column   :template_valid_error_message, :type => :string
