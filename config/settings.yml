@@ -128,6 +128,7 @@
     :keep_drift_states: 6.months
     :purge_window_size: 10000
 :embedded_ansible:
+  :job_data_retention_days: 120
   :docker:
     :task_image_name: ansible/awx_task
     :task_image_tag: latest
