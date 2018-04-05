@@ -43,9 +43,12 @@ module ManageIQ::Providers
       end
 
       def get_flavors
-        # connection.flavors returns a duplicate flavor for every zone
+        # fog returns a duplicate flavor for every zone
         # so build a unique list of flavors using the flavor id
-        flavors = @connection.flavors.to_a.uniq(&:id)
+        flavors = @connection.list_aggregated_machine_types.items.values.each_with_object([]) do |zone, arr|
+          arr.concat(zone.machine_types) if zone.machine_types
+        end
+        flavors.uniq!(&:id)
         process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
       end
 
@@ -215,12 +218,12 @@ module ManageIQ::Providers
         flavor_uid       = parse_uid_from_url(instance.machine_type)
         flavor           = @data_index.fetch_path(:flavors, flavor_uid)
 
-        # If the flavor isn't found in our index, check if it is a custom flavor
-        # that we have to get directly
-        flavor           = query_and_add_flavor(flavor_uid) if flavor.nil?
-
         zone_uid         = parse_uid_from_url(instance.zone)
         zone             = @data_index.fetch_path(:availability_zones, zone_uid)
+
+        # If the flavor isn't found in our index, check if it is a custom flavor
+        # that we have to get directly
+        flavor           = query_and_add_flavor(flavor_uid, zone_uid) if flavor.nil?
 
         parent_image_uid = parse_instance_parent_image(instance)
         parent_image     = @data_index.fetch_path(:vms, parent_image_uid)
@@ -235,7 +238,7 @@ module ManageIQ::Providers
           :name              => name,
           :description       => instance.description,
           :vendor            => "google",
-          :raw_power_state   => instance.state,
+          :raw_power_state   => instance.status,
           :flavor            => flavor,
           :availability_zone => zone,
           :parent_vm         => parent_image,
@@ -252,7 +255,7 @@ module ManageIQ::Providers
               :display_name => N_("Is VM Preemptible"),
               :description  => N_("Whether or not the VM is 'preemptible'. See"\
                                " https://cloud.google.com/compute/docs/instances/preemptible for more details."),
-              :value        => instance.scheduling["preemptible"].to_s,
+              :value        => instance.scheduling[:preemptible].to_s,
               :read_only    => true
             }
           ]
@@ -267,13 +270,13 @@ module ManageIQ::Providers
       def populate_hardware_hash_with_disks(hardware_disks_array, instance)
         instance.disks.each do |attached_disk|
           # lookup the full disk information from the data_index by source link
-          d = @data_index.fetch_path(:cloud_volumes, attached_disk["source"])
+          d = @data_index.fetch_path(:cloud_volumes, attached_disk[:source])
 
           next if d.nil?
 
           disk_size     = d[:size]
-          disk_name     = attached_disk["deviceName"]
-          disk_location = attached_disk["index"]
+          disk_name     = attached_disk[:device_name]
+          disk_location = attached_disk[:index]
 
           disk = add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
           # Link the disk and the instance together
@@ -290,7 +293,7 @@ module ManageIQ::Providers
         parent_image_uid = nil
 
         instance.disks.each do |disk|
-          parent_image_uid = @disk_to_source_image_id[disk["source"]]
+          parent_image_uid = @disk_to_source_image_id[disk[:source]]
           next if parent_image_uid.nil?
           break
         end
@@ -310,8 +313,8 @@ module ManageIQ::Providers
       end
 
       def parse_compute_metadata(metadata, key)
-        metadata_item = metadata["items"].to_a.detect { |x| x["key"] == key }
-        metadata_item.to_h["value"]
+        metadata_item = metadata[:items].to_a.detect { |x| x[:key] == key }
+        metadata_item.to_h[:value]
       end
 
       def parse_compute_metadata_ssh_keys(metadata)
@@ -350,8 +353,8 @@ module ManageIQ::Providers
         end
       end
 
-      def query_and_add_flavor(flavor_uid)
-        flavor = @connection.flavors.get(flavor_uid)
+      def query_and_add_flavor(flavor_uid, zone_uid)
+        flavor = @connection.get_machine_type(flavor_uid, zone_uid)
         process_collection(flavor.to_miq_a, :flavors) { |f| parse_flavor(f) }
         @data_index.fetch_path(:flavors, flavor_uid)
       end
