@@ -27,11 +27,11 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def task_finished
     # update the status of vm transformation status in the plan
-    vm_resource.update_attributes(:status => status == 'Ok' ? 'Completed' : 'Failed')
+    vm_resource.update_attributes(:status => status == 'Ok' ? ServiceResource::STATUS_COMPLETED : ServiceResource::STATUS_FAILED)
   end
 
   def task_active
-    vm_resource.update_attributes(:status => 'Active')
+    vm_resource.update_attributes(:status => ServiceResource::STATUS_ACTIVE)
   end
 
   private

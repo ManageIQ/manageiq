@@ -62,14 +62,14 @@ describe ServiceTemplateTransformationPlanTask do
     describe 'task_active' do
       it 'sets vm_request status to Started' do
         task.task_active
-        expect(plan.vm_resources.first.status).to eq('Active')
+        expect(plan.vm_resources.first.status).to eq(ServiceResource::STATUS_ACTIVE)
       end
     end
 
     describe 'task_finished' do
       it 'sets vm_request status to Completed' do
         task.task_finished
-        expect(plan.vm_resources.first.status).to eq('Completed')
+        expect(plan.vm_resources.first.status).to eq(ServiceResource::STATUS_COMPLETED)
       end
     end
 
