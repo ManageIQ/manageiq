@@ -28,7 +28,7 @@ describe MiqReport do
       end
 
       it "detects a virtual association (and that it can't be sorted)" do
-        @miq_report.sortby = ["miq_provision_template.name"]
+        @miq_report.sortby = ["parent_resource_pool.name"]
         order = @miq_report.get_order_info
         expect(order).to be_falsy
       end
