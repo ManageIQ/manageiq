@@ -61,6 +61,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   def default_value_included?(values_list)
     if force_multi_value
       return false if default_value.blank?
+      return false if dynamic
       converted_values_list = values_list.collect { |value_pair| value_pair[0].send(value_modifier) }
       converted_default_values = JSON.parse(default_value).collect { |value| value.send(value_modifier) }
       overlap = converted_values_list & converted_default_values
