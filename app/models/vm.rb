@@ -121,6 +121,13 @@ class Vm < VmOrTemplate
     }
   end
 
+  def valid_for_v2v_migration?
+    migrated_status = [ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_APPROVED, ServiceResource::STATUS_ACTIVE, ServiceResource::STATUS_COMPLETED]
+    ServiceResource.where(:resource => self, :status => migrated_status).none? do |resource|
+      resource.service_template.kind_of?(ServiceTemplateTransformationPlan)
+    end
+  end
+
   private
 
   def vnc_support
