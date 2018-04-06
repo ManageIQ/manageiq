@@ -84,9 +84,9 @@ module Vmdb
     end
 
     # Wrap a report html table body with html table tags and headers for the columns
-    def report_build_html_table(report, table_body)
+    def report_build_html_table(report, table_body, breakable = true)
       html = ''
-      html << "<table class='table table-striped table-bordered'>"
+      html << "<table class=\"table table-striped table-bordered #{breakable ? '' : 'non-breakable'}\">"
       html << "<thead>"
       html << "<tr>"
 
