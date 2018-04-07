@@ -43,6 +43,9 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Openstack::InfraManager::RefreshWorker"                 => %i(manageiq_default),
   "ManageIQ::Providers::Openstack::NetworkManager::EventCatcher"                => %i(manageiq_default),
   "ManageIQ::Providers::Openstack::NetworkManager::MetricsCollectorWorker"      => %i(manageiq_default),
+  "ManageIQ::Providers::OracleCloud::CloudManager::EventCatcher"                => %i(manageiq_default),
+  "ManageIQ::Providers::OracleCloud::CloudManager::RefreshWorker"               => %i(manageiq_default),
+  "ManageIQ::Providers::OracleCloud::NetworkManager::RefreshWorker"             => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::EventCatcher"                     => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker"           => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::RefreshWorker"                    => %i(manageiq_default),
@@ -111,6 +114,8 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Redhat::InfraManager::RefreshWorker
   ManageIQ::Providers::Openstack::CloudManager::RefreshWorker
   ManageIQ::Providers::Openstack::NetworkManager::RefreshWorker
+  ManageIQ::Providers::OracleCloud::CloudManager::RefreshWorker
+  ManageIQ::Providers::OracleCloud::NetworkManager::RefreshWorker
   ManageIQ::Providers::Redhat::NetworkManager::RefreshWorker
   ManageIQ::Providers::Openstack::InfraManager::RefreshWorker
   ManageIQ::Providers::StorageManager::CinderManager::RefreshWorker
@@ -130,6 +135,7 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Redhat::InfraManager::EventCatcher
   ManageIQ::Providers::Openstack::CloudManager::EventCatcher
   ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
+  ManageIQ::Providers::OracleCloud::CloudManager::EventCatcher
   ManageIQ::Providers::Redhat::NetworkManager::EventCatcher
   ManageIQ::Providers::Openstack::InfraManager::EventCatcher
   ManageIQ::Providers::Amazon::CloudManager::EventCatcher
