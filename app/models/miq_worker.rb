@@ -347,6 +347,7 @@ class MiqWorker < ApplicationRecord
     # Once that is added this should be replaced.
     DRb::DRbConn.instance_variable_get(:@mutex).synchronize do
       DRb::DRbConn.instance_variable_get(:@pool).each(&:close)
+      DRb::DRbConn.instance_variable_set(:@pool, [])
     end
   end
 
