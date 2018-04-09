@@ -3,16 +3,6 @@ class DialogFieldDropDownList < DialogFieldSortedItem
     !!show_refresh_button
   end
 
-  def force_multi_value
-    return true if options[:force_multi_value].present? &&
-                   options[:force_multi_value] != "null" &&
-                   options[:force_multi_value]
-  end
-
-  def force_multi_value=(setting)
-    options[:force_multi_value] = setting
-  end
-
   def initial_values
     [[nil, "<None>"]]
   end

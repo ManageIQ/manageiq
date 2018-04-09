@@ -10,6 +10,16 @@ class DialogFieldSortedItem < DialogField
     end
   end
 
+  def force_multi_value
+    return true if options[:force_multi_value].present? &&
+                   options[:force_multi_value] != "null" &&
+                   options[:force_multi_value]
+  end
+
+  def force_multi_value=(setting)
+    options[:force_multi_value] = setting
+  end
+
   def sort_by
     options[:sort_by] || :description
   end
