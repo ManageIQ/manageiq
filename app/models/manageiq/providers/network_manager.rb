@@ -86,5 +86,14 @@ module ManageIQ::Providers
     def name
       "#{parent_manager.try(:name)} Network Manager"
     end
+
+    def self.cloud_network_managers
+      # filter out openstack undercloud
+      ids = ::ManageIQ::Providers::Openstack::NetworkManager.joins(:parent_manager).where(:parent_managers_ext_management_systems=>{:type=>'ManageIQ::Providers::Openstack::CloudManager'}).pluck(:id)
+
+      ids += ::ManageIQ::Providers::Redhat::NetworkManager.pluck(:id)
+
+      ::ManageIQ::Providers::NetworkManager.where(:id => ids.uniq)
+    end
   end
 end
