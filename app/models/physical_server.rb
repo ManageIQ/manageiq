@@ -27,8 +27,8 @@ class PhysicalServer < ApplicationRecord
 
   scope :with_hosts, -> { where("physical_servers.id in (select hosts.physical_server_id from hosts)") }
 
-  virtual_column :v_availability, :type => :string
-  virtual_column :v_host_os, :type => :string
+  virtual_column :v_availability, :type => :string, :uses => :host
+  virtual_column :v_host_os, :type => :string, :uses => :host
 
   def name_with_details
     details % {
