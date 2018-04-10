@@ -25,8 +25,16 @@ class Chargeback
       [@start_time, born_at].compact.max
     end
 
+    def resource_end_of_life
+      if resource.try(:retires_on)
+        resource.retires_on
+      elsif resource.try(:ems_id).nil?
+        resource.try(:updated_on)
+      end
+    end
+
     def consumption_end
-      [Time.current, @end_time, resource.try(:retires_on)].compact.min
+      [Time.current, @end_time, resource_end_of_life].compact.min
     end
 
     private
