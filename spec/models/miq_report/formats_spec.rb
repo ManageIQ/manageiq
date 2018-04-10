@@ -45,8 +45,10 @@ describe MiqReport::Formats do
     end
 
     it "can find overrides for specific paths" do
-      actual = described_class.default_format_for_path("PersistentVolume-capacity", :text)
-      expect(actual).to be_nil
+      expect(described_class.default_format_for_path("ContainerVolume-capacity", :text)).to be_nil
+      expect(described_class.default_format_for_path("ContainerVolumeKubernetes-capacity", :text)).to be_nil
+      expect(described_class.default_format_for_path("PersistentVolume-capacity", :text)).to be_nil
+      expect(described_class.default_format_for_path("PersistentVolumeClaim-capacity", :text)).to be_nil
     end
   end
 end
