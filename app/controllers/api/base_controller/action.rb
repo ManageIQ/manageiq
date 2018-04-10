@@ -37,9 +37,9 @@ module Api
           :method_name => method,
           :role        => role,
           :user        => {
-            :user_id   => current_user.id,
-            :group_id  => current_user.current_group.id,
-            :tenant_id => current_user.current_tenant.id
+            :user_id   => User.current_user.id,
+            :group_id  => User.current_user.current_group.id,
+            :tenant_id => User.current_user.current_tenant.id
           }
         }
       end
