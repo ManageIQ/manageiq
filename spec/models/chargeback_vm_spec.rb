@@ -729,6 +729,45 @@ describe ChargebackVm do
           expect(@rate).not_to be_nil
           expect(@rate.id).to eq(@assigned_rate[:cb_rate].id)
         end
+
+        context "selecting based on tagged cloud volumes" do
+          let!(:cloud_volume_sdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'sdd') }
+
+          let(:ssd_size) { 1_234 }
+          let(:ssd_disk) { FactoryGirl.create(:disk, :size => ssd_size, :backing => cloud_volume_sdd) }
+          let(:hardware) { FactoryGirl.create(:hardware, :disks => [ssd_disk]) }
+
+          let(:resource) { FactoryGirl.create(:vm_vmware_cloud, :hardware => hardware, :created_on => month_beginning) }
+
+          let(:consumption) { Chargeback::ConsumptionWithoutRollups.new(resource, nil, nil) }
+
+          let(:storage_chargeback_rate) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
+
+          let(:parent_classification) { FactoryGirl.create(:classification) }
+          let(:classification)        { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
+
+          let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :tag => [classification, "storage"]} }
+
+          subject { Chargeback::RatesCache.new.get(consumption).first }
+
+          it "chooses rate according to cloud_volume\'s tag" do
+            skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
+
+            cloud_volume_sdd.tag_with([classification.tag.name], :ns => '*')
+
+            ChargebackRate.set_assignments(:storage, [rate_assignment_options])
+            expect(subject).to eq(storage_chargeback_rate)
+          end
+
+          it "doesn't choose rate thanks to missing tag on cloud_volume" do
+            skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
+
+            ChargebackRate.set_assignments(:storage, [rate_assignment_options])
+
+            @rate = Chargeback::RatesCache.new.get(consumption).first
+            expect(subject).to be_nil
+          end
+        end
       end
 
       describe '.report_row_key' do

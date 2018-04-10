@@ -29,8 +29,8 @@ class Chargeback
     end
 
     def parents_determining_rate
-      [resource.host, resource.ems_cluster, resource.storage, parent_ems, resource.tenant,
-       MiqEnterprise.my_enterprise].compact
+      [resource.host, resource.ems_cluster, resource.storage, resource.try(:cloud_volumes), parent_ems, resource.tenant,
+       MiqEnterprise.my_enterprise].flatten.compact
     end
 
     def none?(metric)
