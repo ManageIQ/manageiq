@@ -4,9 +4,13 @@ created_on: 2008-08-14 01:54:13.891449 Z
 title: "Online VMs (Powered On)"
 conditions: !ruby/object:MiqExpression 
   exp: 
-    "=": 
-      field: Vm-power_state
-      value: "on"
+    and:
+    - "=":
+        field: Vm-power_state
+        value: "on"
+    - "=":
+        field: Vm-active
+        value: "true"
 updated_on: 2008-08-14 01:54:13.891449 Z
 order: Ascending
 graph: 
