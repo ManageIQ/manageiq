@@ -45,6 +45,10 @@ describe MiqReport::Formats do
     end
 
     it "can find overrides for specific paths" do
+      # The default case:
+      expect(described_class.default_format_for_path("MiqScsiLuns-capacity", :bigint)).to eq(:bytes_human)
+
+      # The overrides:
       expect(described_class.default_format_for_path("ContainerVolume-capacity", :text)).to be_nil
       expect(described_class.default_format_for_path("ContainerVolumeKubernetes-capacity", :text)).to be_nil
       expect(described_class.default_format_for_path("PersistentVolume-capacity", :text)).to be_nil
