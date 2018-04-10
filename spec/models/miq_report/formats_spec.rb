@@ -43,5 +43,10 @@ describe MiqReport::Formats do
         end
       end
     end
+
+    it "can find overrides for specific paths" do
+      actual = described_class.default_format_for_path("PersistentVolume-capacity", :text)
+      expect(actual).to be_nil
+    end
   end
 end

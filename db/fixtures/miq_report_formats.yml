@@ -1,5 +1,8 @@
 ---
 :defaults_and_overrides:
+  :formats_by_path:
+    :PersistentVolume-capacity: null
+
   :formats_by_data_type:
     :integer: :general_number_precision_0
     :decimal: :general_number_precision_0
