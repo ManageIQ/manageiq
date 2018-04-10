@@ -192,7 +192,7 @@ class MiqSchedule < ApplicationRecord
 
   def action_scan(obj, _at)
     sched_action[:options] ||= {}
-    obj.scan
+    obj.scan(userid)
     _log.info("Action [#{name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
   end
 
