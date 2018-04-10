@@ -22,10 +22,6 @@ class MiqReport::Formats
   def self.default_format_for_path(path, datatype)
     column = path.split('-').last.to_sym
     suffix = column.to_s.split('__').last.try(:to_sym)
-    default_format_for(column, suffix, datatype)
-  end
-
-  def self.default_format_for(column, suffix, datatype)
     DEFAULTS_AND_OVERRIDES[:formats_by_suffix][suffix] ||
       DEFAULTS_AND_OVERRIDES[:formats_by_column][column] ||
       DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type(column)] ||
