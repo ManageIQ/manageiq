@@ -398,6 +398,7 @@ class MiqWorker::Runner
   end
 
   def key_store
+    require 'dalli'
     @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
   end
 
