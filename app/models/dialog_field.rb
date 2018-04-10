@@ -91,8 +91,13 @@ class DialogField < ApplicationRecord
     FIELD_CONTROLS
   end
 
+  def initialize_value_context
+    @value = values_from_automate if dynamic && @value.blank?
+  end
+
   def initialize_with_values(dialog_values)
-    @value = value_from_dialog_fields(dialog_values) || default_value
+    # override in subclasses
+    nil
   end
 
   def update_values(_dialog_values)

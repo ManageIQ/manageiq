@@ -5,11 +5,6 @@ class DialogFieldCheckBox < DialogField
     value == "t"
   end
 
-  def value
-    @value = values_from_automate if dynamic && @value.blank?
-    @value
-  end
-
   def initial_values
     false
   end

@@ -17,9 +17,8 @@ class DialogFieldDateControl < DialogField
   end
 
   def value
-    @value = dynamic ? values_from_automate : default_time if @value.blank?
-
-    Date.parse(@value).strftime("%m/%d/%Y")
+    value_to_parse = @value.blank? ? default_time : @value
+    Date.parse(value_to_parse).strftime("%m/%d/%Y")
   end
 
   def normalize_automate_values(automate_hash)

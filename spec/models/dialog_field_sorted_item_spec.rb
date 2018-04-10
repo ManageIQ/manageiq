@@ -1,4 +1,133 @@
 describe DialogFieldSortedItem do
+  describe "#initialize_value_context" do
+    let(:dialog_field) do
+      described_class.new(
+        :name                => "potato_name",
+        :default_value       => default_value,
+        :dynamic             => true,
+        :load_values_on_init => load_values_on_init,
+        :show_refresh_button => show_refresh_button,
+        :values              => [%w(test test), %w(test2 test2)]
+      )
+    end
+    let(:default_value) { "test2" }
+
+    context "when show_refresh_button is true" do
+      let(:show_refresh_button) { true }
+
+      context "when load_values_on_init is true" do
+        let(:load_values_on_init) { true }
+
+        context "when the dialog values match the automate key name" do
+          let(:dialog_values) { {"dialog_potato_name" => "dialog potato value"} }
+
+          it "uses the values given" do
+            dialog_field.initialize_value_context
+            expect(dialog_field.value).to eq("dialog potato value")
+          end
+        end
+
+        context "when the dialog values match the dialog name" do
+          let(:dialog_values) { {"potato_name" => "potato value"} }
+
+          it "uses the values given" do
+            dialog_field.initialize_value_context
+            expect(dialog_field.value).to eq("potato value")
+          end
+        end
+
+        context "when the values from the passed in dialog values do not match either the automate or dialog name" do
+          let(:dialog_values) { {"not_potato_name" => "not potato value"} }
+
+          it "defaults to nil" do
+            dialog_field.initialize_value_context
+            expect(dialog_field.value).to eq(nil)
+          end
+        end
+      end
+
+      context "when load_values_on_init is false" do
+        let(:load_values_on_init) { false }
+        let(:dialog_values) { "potato" }
+
+        it "sets the raw values to the initial values" do
+          dialog_field.initialize_value_context
+          expect(dialog_field.instance_variable_get(:@raw_values)).to eq([[nil, "<None>"]])
+        end
+      end
+    end
+
+    context "when show_refresh_button is false" do
+      let(:show_refresh_button) { false }
+
+      context "when load_values_on_init is true" do
+        let(:load_values_on_init) { true }
+
+        context "when the dialog values match the automate key name" do
+          let(:dialog_values) { {"dialog_potato_name" => "dialog potato value"} }
+
+          it "uses the values given" do
+            dialog_field.initialize_value_context
+            expect(dialog_field.value).to eq("dialog potato value")
+          end
+        end
+
+        context "when the dialog values match the dialog name" do
+          let(:dialog_values) { {"potato_name" => "potato value"} }
+
+          it "uses the values given" do
+            dialog_field.initialize_value_context
+            expect(dialog_field.value).to eq("potato value")
+          end
+        end
+
+        context "when the values from the passed in dialog values do not match either the automate or dialog name" do
+          let(:dialog_values) { {"not_potato_name" => "not potato value"} }
+
+          context "when the default value does not exist in the list of options" do
+            let(:default_value) { "default value" }
+
+            it "defaults to nil" do
+              dialog_field.initialize_value_context
+              expect(dialog_field.value).to eq(nil)
+            end
+          end
+        end
+      end
+
+      context "when load_values_on_init is false" do
+        let(:load_values_on_init) { false }
+
+        context "when the dialog values match the automate key name" do
+          let(:dialog_values) { {"dialog_potato_name" => "dialog potato value"} }
+
+          it "uses the values given" do
+            dialog_field.initialize_value_context
+            expect(dialog_field.value).to eq("dialog potato value")
+          end
+        end
+
+        context "when the dialog values match the dialog name" do
+          let(:dialog_values) { {"potato_name" => "potato value"} }
+
+          it "uses the values given" do
+            dialog_field.initialize_value_context
+            expect(dialog_field.value).to eq("potato value")
+          end
+        end
+
+        context "when the values from the passed in dialog values do not match either the automate or dialog name" do
+          let(:dialog_values) { {"not_potato_name" => "not potato value"} }
+
+          it "defaults to nil" do
+            dialog_field.initialize_value_context
+            expect(dialog_field.value).to eq(nil)
+          end
+        end
+      end
+    end
+  end
+
   describe "#initialize_with_values" do
     let(:dialog_field) do
       described_class.new(

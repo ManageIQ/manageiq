@@ -140,6 +140,47 @@ describe DialogField do
     end
   end
 
+  describe "#initialize_value_context" do
+    let(:field) { described_class.new(:dynamic => dynamic, :value => value) }
+
+    context "when the field is dynamic" do
+      let(:dynamic) { true }
+
+      context "when the value is blank" do
+        let(:value) { "" }
+        let(:automate_value) { "some value from automate" }
+
+        before do
+          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).and_return(automate_value)
+        end
+
+        it "sets the value to the automate value" do
+          field.initialize_value_context
+          expect(field.instance_variable_get(:@value)).to eq("some value from automate")
+        end
+      end
+
+      context "when the value is not blank" do
+        let(:value) { "not blank" }
+
+        it "does not adjust the value" do
+          field.initialize_value_context
+          expect(field.instance_variable_get(:@value)).to eq("not blank")
+        end
+      end
+    end
+
+    context "when the field is not dynamic" do
+      let(:dynamic) { false }
+      let(:value) { "not dynamic" }
+
+      it "does not adjust the value" do
+        field.initialize_value_context
+        expect(field.instance_variable_get(:@value)).to eq("not dynamic")
+      end
+    end
+  end
+
   describe "#automate_output_values" do
     let(:dialog_field) { described_class.new(:data_type => data_type, :value => "123") }
 

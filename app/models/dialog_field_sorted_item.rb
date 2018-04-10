@@ -1,6 +1,14 @@
 class DialogFieldSortedItem < DialogField
   AUTOMATE_VALUE_FIELDS = %w(sort_by sort_order data_type default_value required read_only visible description).freeze
 
+  def initialize_value_context
+    if load_values_on_init?
+      raw_values
+    else
+      @raw_values = initial_values
+    end
+  end
+
   def initialize_with_values(dialog_values)
     if load_values_on_init?
       raw_values
@@ -95,7 +103,7 @@ class DialogFieldSortedItem < DialogField
     data_to_sort
   end
 
-  def determine_selected_default_value
+  def determine_selected_value
     if dynamic? && force_multi_value && !default_value.kind_of?(Array)
       self.default_value = Array.wrap(default_value)
     end
@@ -108,7 +116,7 @@ class DialogFieldSortedItem < DialogField
     reject_extraneous_nil_values unless dynamic?
     @raw_values = sort_data(@raw_values)
     add_nil_option unless dynamic?
-    determine_selected_default_value
+    determine_selected_value
     @raw_values
   end
 
