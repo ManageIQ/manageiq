@@ -155,8 +155,8 @@ module ManageIQ::Providers
         return @vm_cache.fetch_path(zone, instance) if @vm_cache.has_key_path?(zone, instance)
 
         begin
-          @vm_cache.store_path(zone, instance, @connection.get_server(instance, zone)[:body]["id"])
-        rescue Fog::Errors::Error => err
+          @vm_cache.store_path(zone, instance, @connection.get_server(instance, zone).id)
+        rescue Fog::Errors::Error, ::Google::Apis::ClientError => err
           m = "Error during data collection for [#{@ems.name}] id: [#{@ems.id}] when querying link for vm_id: #{err}"
           _log.warn(m)
           _log.warn(err.backtrace.join("\n"))
@@ -181,7 +181,7 @@ module ManageIQ::Providers
 
       def subnetworks
         unless @subnetworks
-          @subnetworks = @connection.subnetworks.all
+          @subnetworks = @connection.list_aggregated_subnetworks.to_h[:items].flat_map { |_, v| v[:subnetworks] }
           # For a backwards compatibility, old GCE networks were created without subnet. It's not possible now, but
           # GCE haven't migrated to new format. We will create a fake subnet for each network without subnets.
           @subnetworks += @connection.networks.select { |x| x.ipv4_range.present? }.map do |x|
@@ -202,18 +202,14 @@ module ManageIQ::Providers
       end
 
       def subnets_by_link(subnet)
-        unless @subnets_by_link
-          @subnets_by_link = subnetworks.each_with_object({}) { |x, subnets| subnets[x.self_link] = x }
-        end
+        @subnets_by_link ||= subnetworks.each_with_object({}) { |x, subnets| subnets[x[:self_link]] = x }
 
         # For legacy GCE networks without subnets, we also try a network link
-        @subnets_by_link[subnet['subnetwork']] || @subnets_by_link[subnet['network']]
+        @subnets_by_link[subnet[:subnetwork]] || @subnets_by_link[subnet[:network]]
       end
 
       def subnets_by_network_link(network_link)
-        unless @subnets_by_network_link
-          @subnets_by_network_link = subnetworks.each_with_object({}) { |x, subnets| (subnets[x.network] ||= []) << x }
-        end
+        @subnets_by_network_link ||= subnetworks.each_with_object({}) { |x, subnets| (subnets[x[:network]] ||= []) << x }
 
         @subnets_by_network_link[network_link]
       end
@@ -222,17 +218,16 @@ module ManageIQ::Providers
         unless @network_ports
           @network_ports = []
           @connection.servers.all.each do |instance|
-            @network_ports += instance.network_interfaces.each { |i| i["device_id"] = instance.id }
+            @network_ports += instance.network_interfaces.each { |i| i[:device_id] = instance.id }
           end
         end
         @network_ports
       end
 
       def floating_ips
-        floating_ips = []
-        network_ports.select { |x| x['accessConfigs'] }.each do |network_port|
-          floating_ips += network_port['accessConfigs'].map do |x|
-            {:fixed_ip => network_port['networkIP'], :external_ip => x['natIP']}
+        floating_ips = network_ports.flat_map do |network_port|
+          network_port[:access_configs].to_a.collect do |access_config|
+            {:fixed_ip => network_port[:network_ip], :external_ip => access_config[:nat_ip]}
           end
         end
 
@@ -287,7 +282,7 @@ module ManageIQ::Providers
         @data[:load_balancer_pool_members] = []
 
         target_pools.each do |tp|
-          lb_pool_members = tp.instances.collect { |m| parse_load_balancer_pool_member(m) }
+          lb_pool_members = tp.instances.to_a.collect { |m| parse_load_balancer_pool_member(m) }
           lb_pool_members.each do |member|
             @data_index.store_path(:load_balancer_pool_members, member[:ems_ref], member)
             @data[:load_balancer_pool_members] << member
@@ -384,7 +379,7 @@ module ManageIQ::Providers
 
       def parse_load_balancer_health_check(target_pool)
         # Target pools aren't required to have health checks
-        return if target_pool.health_checks.nil? || target_pool.health_checks.empty?
+        return if target_pool.health_checks.blank?
 
         # For some reason a target pool has a list of health checks, but the API
         # won't accept more than one. Ignore the rest
@@ -418,6 +413,7 @@ module ManageIQ::Providers
       end
 
       def parse_load_balancer_health_check_members(target_pool)
+        return if target_pool.instances.blank?
         # First attempt to get the health of the instance
         # Due to a bug in fog, there's no way to get the health of an individual
         # member. Instead we have to get the health of the entire target_pool,
@@ -458,7 +454,7 @@ module ManageIQ::Providers
 
         subnets = subnets_by_network_link(network.self_link) || []
         get_cloud_subnets(subnets)
-        cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.id) }
+        cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s[:id]) }
 
         new_result = {
           :ems_ref       => uid,
@@ -474,18 +470,17 @@ module ManageIQ::Providers
       end
 
       def parse_cloud_subnet(subnet)
-        uid    = subnet.id
+        uid    = subnet[:id]
 
-        name   = subnet.name
-        name ||= uid
+        name   = subnet[:name] || uid
 
         new_result = {
           :type    => self.class.cloud_subnet_type,
           :ems_ref => uid,
           :name    => name,
           :status  => "active",
-          :cidr    => subnet.ip_cidr_range,
-          :gateway => subnet.gateway_address,
+          :cidr    => subnet[:ip_cidr_range],
+          :gateway => subnet[:gateway_address],
         }
 
         return uid, new_result
@@ -513,8 +508,8 @@ module ManageIQ::Providers
         source_ip_range = fw.source_ranges.nil? ? "0.0.0.0/0" : fw.source_ranges.first
 
         fw.allowed.each do |fw_allowed|
-          protocol      = fw_allowed["IPProtocol"].upcase
-          allowed_ports = fw_allowed["ports"].to_a.first
+          protocol      = fw_allowed[:ip_protocol].upcase
+          allowed_ports = fw_allowed[:ports].to_a.first
 
           if allowed_ports.nil?
             # The ICMP protocol doesn't have ports so set to -1
@@ -540,12 +535,12 @@ module ManageIQ::Providers
 
       def parse_floating_ip(ip)
         # this parser tracks only non used floating ips
-        address = uid = ip.address
+        uid = ip.address
 
         new_result = {
           :type             => self.class.floating_ip_type,
           :ems_ref          => uid,
-          :address          => address,
+          :address          => uid,
           :fixed_ip_address => nil,
           :network_port     => nil,
           :vm               => nil
@@ -555,12 +550,12 @@ module ManageIQ::Providers
       end
 
       def parse_floating_ip_inferred_from_instance(ip)
-        address = uid = ip[:external_ip]
+        uid = ip[:external_ip]
 
         new_result = {
           :type             => self.class.floating_ip_type,
           :ems_ref          => uid,
-          :address          => address,
+          :address          => uid,
           :fixed_ip_address => ip[:fixed_ip],
           :network_port     => @data_index.fetch_path(:network_ports, ip[:fixed_ip]),
           :vm               => @data_index.fetch_path(:network_ports, ip[:fixed_ip], :device)
@@ -571,26 +566,26 @@ module ManageIQ::Providers
 
       def parse_cloud_subnet_network_port(cloud_subnet_network_port, subnet_id)
         {
-          :address      => cloud_subnet_network_port['networkIP'],
+          :address      => cloud_subnet_network_port[:network_ip],
           :cloud_subnet => @data_index.fetch_path(:cloud_subnets, subnet_id)
         }
       end
 
       def parse_network_port(network_port)
-        uid                        = network_port['networkIP']
+        uid                        = network_port[:network_ip]
         cloud_subnet_network_ports = [
           parse_cloud_subnet_network_port(network_port, subnets_by_link(network_port).try(:id))]
-        device                     = parent_manager_fetch_path(:vms, network_port["device_id"])
+        device                     = parent_manager_fetch_path(:vms, network_port[:device_id])
         security_groups            = [
-          @data_index.fetch_path(:security_groups, parse_uid_from_url(network_port['network']))]
+          @data_index.fetch_path(:security_groups, parse_uid_from_url(network_port[:network]))]
 
         new_result = {
           :type                       => self.class.network_port_type,
-          :name                       => network_port["name"],
+          :name                       => network_port[:name],
           :ems_ref                    => uid,
           :status                     => nil,
           :mac_address                => nil,
-          :device_ref                 => network_port["device_id"],
+          :device_ref                 => network_port[:device_id],
           :device                     => device,
           :cloud_subnet_network_ports => cloud_subnet_network_ports,
           :security_groups            => security_groups,
