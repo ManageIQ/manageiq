@@ -207,7 +207,7 @@ class EmsCluster < ApplicationRecord
     EmsEvent.where(ewc).order("timestamp").to_a
   end
 
-  def scan
+  def scan(_userid = "system")
     MiqQueue.submit_job(
       :service     => "smartstate",
       :affinity    => ext_management_system,
