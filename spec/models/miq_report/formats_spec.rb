@@ -17,7 +17,7 @@ describe MiqReport::Formats do
     end
   end
 
-  describe '.default_format_for' do
+  describe '.default_format_for_path' do
     context 'for chargebacks' do
       let!(:cloud_volume) { FactoryGirl.create(:cloud_volume_openstack) }
 
@@ -29,7 +29,7 @@ describe MiqReport::Formats do
       it 'works' do
         columns.each do |name, datatype|
           name = ChargebackVm.default_column_for_format(name)
-          subj = described_class.default_format_for(name.to_sym, name.to_sym, datatype.first)
+          subj = described_class.default_format_for_path("ChargebackVm-#{name}", datatype.first)
           if name.ends_with?('_cost')
             expect(subj).to eq(:currency_precision_2)
           elsif name.ends_with?('_metric')
