@@ -61,7 +61,6 @@ class Chargeback
                                  resource.allocated_disk_storage
                                end
                              end
-      @value[metric_key]
     end
     alias avg current_value
     alias max current_value
