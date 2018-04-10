@@ -55,7 +55,11 @@ class Chargeback
                              when 'derived_memory_available'
                                resource.hardware.try(:memory_mb)
                              when 'derived_vm_allocated_disk_storage'
-                               resource.allocated_disk_storage
+                               if sub_metric.present?
+                                 resource.cloud_volumes.where(:volume_type => sub_metric).sum(:size) || 0
+                               else
+                                 resource.allocated_disk_storage
+                               end
                              end
       @value[metric_key]
     end
