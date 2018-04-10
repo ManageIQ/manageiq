@@ -1115,6 +1115,7 @@
   :mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
   :mks_version: 2.1.0.0
   :monitor_poll: 5.seconds
+  :monitor_server_roles_timeout: 5.minutes
   :name: EVM
   :prefetch_max_per_worker: 10
   :prefetch_max_per_worker_dequeue: 100

@@ -261,8 +261,12 @@ module MiqServer::RoleManagement
     end
   end
 
+  def monitor_server_roles_timeout
+    ::Settings.server.monitor_server_roles_timeout.to_i_with_method
+  end
+
   def monitor_server_roles
-    MiqRegion.my_region.lock do |region|
+    MiqRegion.my_region.lock(:exclusive, monitor_server_roles_timeout) do |region|
       region.zones.each do |zone|
         synchronize_active_roles(zone.active_miq_servers.includes([:active_roles, :inactive_roles]), ServerRole.zone_scoped_roles)
       end
