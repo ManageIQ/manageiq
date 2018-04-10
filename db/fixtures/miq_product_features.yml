@@ -5871,19 +5871,6 @@
       :description: Display Timelines for Physical Servers
       :feature_type: view
       :identifier: physical_server_timeline
-  - :name: Modify
-    :description: Modify Physical Servers
-    :feature_type: admin
-    :identifier: physical_server_admin
-    :children:
-    - :name: Remove
-      :description: Remove Physical Server(s)
-      :feature_type: admin
-      :identifier: physical_server_delete
-    - :name: Edit
-      :description: Edit a Physical Server
-      :feature_type: admin
-      :identifier: physical_server_edit
   - :name: Operate
     :description: Perform Operations on Physical Servers
     :feature_type: control
