@@ -137,13 +137,13 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(@host.ems_cluster).not_to be nil
 
     expect(@host).to have_attributes(
-      :ipmi_address       => "10.0.1.7",
+      :ipmi_address       => "172.16.0.1",
       :vmm_vendor         => "redhat",
       :vmm_version        => nil,
       :vmm_product        => "rhel (No hypervisor, Host Type is Controller)",
       :power_state        => "on",
       :connection_state   => "connected",
-      :service_tag        => "1fdaea0b-6281-5917-edf6-a61151e93387",
+      :service_tag        => nil,
       :maintenance        => false,
       :maintenance_reason => nil,
     )
@@ -165,17 +165,17 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       #:manufacturer         => "Red Hat",
       #:model                => "KVM",
       #:bios                 => "seabios-1.7.5-11.el7",
-      :memory_mb            => 8192,
+      :memory_mb            => 32768,
       :memory_console       => nil,
-      :disk_capacity        => 79,
-      :cpu_sockets          => 4,
-      :cpu_total_cores      => 4,
+      :disk_capacity        => 29,
+      :cpu_sockets          => 8,
+      :cpu_total_cores      => 8,
       :cpu_cores_per_socket => 1,
       :guest_os             => nil,
       :guest_os_full_name   => nil,
       :cpu_usage            => nil,
       :memory_usage         => nil,
-      :number_of_nics       => 7,
+      :number_of_nics       => 3,
     )
 
     # TODO(tzumainn) Introspection no longer finds disk attributes, may be
