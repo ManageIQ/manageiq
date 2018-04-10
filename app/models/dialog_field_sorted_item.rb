@@ -10,6 +10,16 @@ class DialogFieldSortedItem < DialogField
     end
   end
 
+  def force_multi_value
+    return true if options[:force_multi_value].present? &&
+                   options[:force_multi_value] != "null" &&
+                   options[:force_multi_value]
+  end
+
+  def force_multi_value=(setting)
+    options[:force_multi_value] = setting
+  end
+
   def sort_by
     options[:sort_by] || :description
   end
@@ -96,6 +106,9 @@ class DialogFieldSortedItem < DialogField
   end
 
   def determine_selected_default_value
+    if dynamic? && force_multi_value && !default_value.kind_of?(Array)
+      self.default_value = Array.wrap(default_value)
+    end
     use_first_value_as_default unless default_value_included?(@raw_values)
     self.value ||= default_value.nil? && data_type == "integer" ? nil : default_value.send(value_modifier)
   end
