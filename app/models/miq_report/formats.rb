@@ -19,10 +19,10 @@ class MiqReport::Formats
     end
   end
 
-  def self.default_format_for_path(path, dt)
-    col = path.split('-').last.to_sym
-    sfx = col.to_s.split('__').last.try(:to_sym)
-    default_format_for(col, sfx, dt)
+  def self.default_format_for_path(path, datatype)
+    column = path.split('-').last.to_sym
+    suffix = column.to_s.split('__').last.try(:to_sym)
+    default_format_for(column, suffix, datatype)
   end
 
   def self.default_format_for(column, suffix, datatype)
