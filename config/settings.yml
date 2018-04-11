@@ -969,6 +969,7 @@
 :product:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
+  :transformation: false
 :prototype:
   :queue_type: miq_queue
   :artemis:
