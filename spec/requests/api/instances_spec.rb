@@ -55,10 +55,6 @@ RSpec.describe "Instances API" do
         :message => /#{instance.id}.* terminating/i,
         :href    => instance_url
       )
-      expect(MiqQueue.where(:method_name => "vm_destroy",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "terminates multiple valid Instances" do
@@ -117,10 +113,6 @@ RSpec.describe "Instances API" do
       run_post(instance_url, gen_request(:stop))
 
       expect_single_action_result(:success => true, :message => "stopping", :href => instance_url, :task => true)
-      expect(MiqQueue.where(:method_name => "stop",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "stops multiple valid instances" do
@@ -165,10 +157,6 @@ RSpec.describe "Instances API" do
       run_post(instance_url, gen_request(:start))
 
       expect_single_action_result(:success => true, :message => "starting", :href => instance_url, :task => true)
-      expect(MiqQueue.where(:method_name => "start",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "starts multiple instances" do
@@ -223,10 +211,6 @@ RSpec.describe "Instances API" do
       run_post(instance_url, gen_request(:pause))
 
       expect_single_action_result(:success => true, :message => "pausing", :href => instance_url, :task => true)
-      expect(MiqQueue.where(:method_name => "pause",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "pauses multiple instances" do
@@ -280,10 +264,6 @@ RSpec.describe "Instances API" do
       run_post(instance_url, gen_request(:suspend))
 
       expect_single_action_result(:success => true, :message => "suspending", :href => instance_url, :task => true)
-      expect(MiqQueue.where(:method_name => "suspend",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "suspends multiple instances" do
@@ -338,10 +318,6 @@ RSpec.describe "Instances API" do
       run_post(instance_url, gen_request(:shelve))
 
       expect_single_action_result(:success => true, :message => 'shelving', :href => instance_url)
-      expect(MiqQueue.where(:method_name => "shelve",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "cannot shelve a shelved instance" do
@@ -410,10 +386,6 @@ RSpec.describe "Instances API" do
       run_post(instance_url, gen_request(:reboot_guest))
 
       expect_single_action_result(:success => true, :message => "rebooting", :href => instance_url, :task => true)
-      expect(MiqQueue.where(:method_name => "reboot_guest",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "reboots multiple valid instances" do
@@ -458,10 +430,6 @@ RSpec.describe "Instances API" do
       run_post(instance_url, gen_request(:reset))
 
       expect_single_action_result(:success => true, :message => "resetting", :href => instance_url, :task => true)
-      expect(MiqQueue.where(:method_name => "reset",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "resets multiple valid instances" do

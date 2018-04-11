@@ -272,10 +272,7 @@ describe "Vms API" do
       expect(MiqQueue.where(:class_name  => vm.class.name,
                             :instance_id => vm.id,
                             :method_name => "start",
-                            :zone        => zone.name,
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
+                            :zone        => zone.name).count).to eq(1)
     end
 
     it "starts multiple vms" do
@@ -321,10 +318,6 @@ describe "Vms API" do
       run_post(vm_url, gen_request(:stop))
 
       expect_single_action_result(:success => true, :message => "stopping", :href => vm_url, :task => true)
-      expect(MiqQueue.where(:method_name => "stop",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "stops multiple vms" do
@@ -378,10 +371,6 @@ describe "Vms API" do
       run_post(vm_url, gen_request(:suspend))
 
       expect_single_action_result(:success => true, :message => "suspending", :href => vm_url, :task => true)
-      expect(MiqQueue.where(:method_name => "suspend",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "suspends multiple vms" do
@@ -435,13 +424,6 @@ describe "Vms API" do
       run_post(vm_url, gen_request(:pause))
 
       expect_single_action_result(:success => true, :message => "pausing", :href => vm_url, :task => true)
-      expect(MiqQueue.where(:class_name  => vm.class.name,
-                            :instance_id => vm.id,
-                            :method_name => "pause",
-                            :zone        => zone.name,
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "pauses multiple vms" do
@@ -515,10 +497,6 @@ describe "Vms API" do
       run_post(vm_openstack_url, gen_request(:shelve))
 
       expect_single_action_result(:success => true, :message => "shelving", :href => vm_openstack_url, :task => true)
-      expect(MiqQueue.where(:method_name => "shelve",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "shelve for a VMWare vm is not supported" do
@@ -622,10 +600,6 @@ describe "Vms API" do
       expect_single_action_result(:success => true,
                                   :message => "shelve-offloading",
                                   :href    => vm_openstack_url)
-      expect(MiqQueue.where(:method_name => "shelve_offload",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "shelve_offload for a VMWare vm is not supported" do
@@ -683,10 +657,6 @@ describe "Vms API" do
       run_post(vm_url, gen_request(:delete))
 
       expect_single_action_result(:success => true, :message => "deleting", :href => vm_url, :task => true)
-      expect(MiqQueue.where(:method_name => "destroy",
-                            :user_id     => @user.id,
-                            :group_id    => @user.current_group.id,
-                            :tenant_id   => @user.current_tenant.id).count).to eq(1)
     end
 
     it "deletes a vm via a resource DELETE" do
