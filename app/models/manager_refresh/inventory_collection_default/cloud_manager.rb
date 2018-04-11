@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh::InventoryCollectionDefault
   class << self
     def availability_zones(extra_attributes = {})
@@ -53,6 +55,53 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
           :source,
         ]
       }
+
+      attributes.merge!(extra_attributes)
+    end
+
+    def vm_and_template_taggings(extra_attributes = {})
+      attributes = {
+        :model_class                  => Tagging,
+        :association                  => :vm_and_template_taggings,
+        :manager_ref                  => [:taggable, :tag],
+        :parent_inventory_collections => [:vms, :miq_templates],
+        :inventory_object_attributes  => [
+          :taggable,
+          :tag,
+        ]
+      }
+
+      attributes[:targeted_arel] = lambda do |inventory_collection|
+        manager_uuids = inventory_collection.parent_inventory_collections.collect(&:manager_uuids).map(&:to_a).flatten
+        ems = inventory_collection.parent
+        ems.vm_and_template_taggings.where(
+          'taggable_id' => ems.vms_and_templates.where(:ems_ref => manager_uuids)
+        )
+      end
+
+      attributes[:custom_reconnect_block] = lambda do |inventory_collection, inventory_objects_index, attributes_index|
+        taggable_attributes = %i(taggable_id taggable_type).freeze
+        manager_ref_cols = inventory_collection.manager_ref_to_cols
+
+        attributes_index.values
+          .group_by { |attributes| attributes.slice(*taggable_attributes) }
+          .each do |taggable_ref, attributes_array|
+            next unless (taggable_attributes - taggable_ref.keys).empty?
+
+            tag_ids = attributes_array.map { |attributes| attributes[:tag_id] }.uniq.compact
+            relation = inventory_collection.model_class.where(taggable_ref)
+
+            relation.where.not(:tag_id => tag_ids).in_batches(&:destroy_all)
+
+            relation.where(:tag_id => tag_ids).select(:id, *manager_ref_cols).find_each do |record|
+              index = inventory_collection.object_index_with_keys(manager_ref_cols, record)
+              inventory_object = inventory_objects_index.delete(index)
+              inventory_object.id = record.id
+              attributes_index.delete(index)
+              inventory_collection.store_updated_records(record) if !inventory_collection.check_changed?
+            end
+          end
+      end.freeze
 
       attributes.merge!(extra_attributes)
     end
