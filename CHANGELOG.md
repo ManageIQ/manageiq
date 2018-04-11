@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 83 ending 2018-04-09
+
+### Added
+- Use constant to store ServiceResource status. [(#17256)](https://github.com/ManageIQ/manageiq/pull/17256)
+- Add has_many :miq_requests in ServiceTemplate [(#17242)](https://github.com/ManageIQ/manageiq/pull/17242)
+- Add crud for Template [(#17217)](https://github.com/ManageIQ/manageiq/pull/17217)
+- Add remote console feature for physical servers [(#17213)](https://github.com/ManageIQ/manageiq/pull/17213)
+- Add vault credential to factory and provision_job_options. [(#17207)](https://github.com/ManageIQ/manageiq/pull/17207)
+- Add support for non-binary WebMKS websocket [(#17200)](https://github.com/ManageIQ/manageiq/pull/17200)
+- Seed plugin ansible playbooks [(#17185)](https://github.com/ManageIQ/manageiq/pull/17185)
+- Add image_create to product features [(#17089)](https://github.com/ManageIQ/manageiq/pull/17089)
+- Adding request id to evm log [(#17013)](https://github.com/ManageIQ/manageiq/pull/17013)
+- Adding switches support for physical infra [(#16948)](https://github.com/ManageIQ/manageiq/pull/16948)
+- Add a Physical Rack model [(#16853)](https://github.com/ManageIQ/manageiq/pull/16853)
+
+### Fixed
+- Set DRb conn pool to [] after closing connections [(#17267)](https://github.com/ManageIQ/manageiq/pull/17267)
+- Removed redundant entries from start up drop down. [(#17260)](https://github.com/ManageIQ/manageiq/pull/17260)
+- Force UTF-8 encoding on task results [(#17252)](https://github.com/ManageIQ/manageiq/pull/17252)
+- Give more information on a failed configuration validation. [(#17247)](https://github.com/ManageIQ/manageiq/pull/17247)
+- convert Vm#miq_provision_template to has_one [(#17246)](https://github.com/ManageIQ/manageiq/pull/17246)
+- Fix editing Ansible Credential/Repository for restricted user [(#17244)](https://github.com/ManageIQ/manageiq/pull/17244)
+- Log Vm or Template for Create/Update [(#17240)](https://github.com/ManageIQ/manageiq/pull/17240)
+- Fix update_attributes to take right number of args [(#17235)](https://github.com/ManageIQ/manageiq/pull/17235)
+- Providers discovery without unspecified discovery types (FIX) [(#17229)](https://github.com/ManageIQ/manageiq/pull/17229)
+- Add custom Azure logger [(#17228)](https://github.com/ManageIQ/manageiq/pull/17228)
+- Resolve string handling for "https://" or "http://" in update_rhsm_conf [(#17222)](https://github.com/ManageIQ/manageiq/pull/17222)
+- Change the method signatures for ServiceTemplateContainerTemplate. [(#17221)](https://github.com/ManageIQ/manageiq/pull/17221)
+- Don't ignore errors in Vm#running_processes [(#17220)](https://github.com/ManageIQ/manageiq/pull/17220)
+- Makes http_proxy_uri class method [(#17218)](https://github.com/ManageIQ/manageiq/pull/17218)
+- Fixed error with dialog expression when virtual column involved [(#17215)](https://github.com/ManageIQ/manageiq/pull/17215)
+- Add 'breakable' optional argument to report_build_html_table method [(#17204)](https://github.com/ManageIQ/manageiq/pull/17204)
+- Cache MiqExpression.get_col_type in MiqReport::Formatting [(#17195)](https://github.com/ManageIQ/manageiq/pull/17195)
+- Fix establishing relations of tenants and cloud tenants between different cloud tenant -> tenant sync [(#17190)](https://github.com/ManageIQ/manageiq/pull/17190)
+- Refactor ensure_nondefault method for chargeback rate [(#17188)](https://github.com/ManageIQ/manageiq/pull/17188)
+- Add product files for physical server dashboard widgets [(#17172)](https://github.com/ManageIQ/manageiq/pull/17172)
+- Use handled_list to get Cinder backups for all accessible tenants [(#17157)](https://github.com/ManageIQ/manageiq/pull/17157)
+- Skip query references in Rbac when not needed [(#17141)](https://github.com/ManageIQ/manageiq/pull/17141)
+
 ## Unreleased as of Sprint 82 ending 2018-03-26
 
 ### Added
