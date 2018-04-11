@@ -406,7 +406,7 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
       # The required memory cannot exceed the max configured memory of the VM. Therefore, we'll increase the max
       # memory up to 1TB or to the required limit, to allow a successful update for the VM.
       # Once 'max' memory attribute will be introduced, this code should be replaced with the specified max memory.
-      supports_max = ext_management_system.version_at_least?('4.1')
+      supports_max = ext_management_system.version_higher_than?('4.1')
       max = calculate_max_memory(vm, memory) if supports_max
 
       # If the virtual machine is running we need to update first the configuration that will be used during the

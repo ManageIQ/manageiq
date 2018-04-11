@@ -195,7 +195,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V
 
       context "api version supports max" do
         before do
-          allow(@ems).to receive(:version_at_least?).with('4.1').and_return(true)
+          allow(@ems).to receive(:version_higher_than?).with('4.1').and_return(true)
           @memory_spec = { :memory => memory, :memory_policy => { :guaranteed => 2.gigabyte, :max => max } }
         end
 
@@ -232,7 +232,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies::V
 
       context "api version doesn't support max" do
         it "doesn't pass the max in the request" do
-          allow(@ems).to receive(:version_at_least?).with('4.1').and_return(false)
+          allow(@ems).to receive(:version_higher_than?).with('4.1').and_return(false)
 
           mod_memory_policy = { :guaranteed => 2.gigabyte }
           expect(@vm_service).to receive(:update).with(OvirtSDK4::Vm.new(:memory => 8.gigabytes, :memory_policy => mod_memory_policy))
