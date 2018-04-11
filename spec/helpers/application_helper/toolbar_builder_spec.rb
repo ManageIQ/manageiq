@@ -1691,10 +1691,10 @@ describe ApplicationHelper do
           }
           stub_server_configuration(vmdb_config)
 
-          ems = FactoryGirl.create(:ems_vmware)
-          @record = FactoryGirl.create(:vm_vmware, :ext_management_system => ems, :vendor => 'vmware')
+          host = FactoryGirl.create(:host)
+          @record = FactoryGirl.create(:vm_vmware, :host => host, :vendor => 'vmware')
 
-          allow(ems).to receive_messages(:api_version => '6.5')
+          allow(host).to receive_messages(:vmm_version => '6.5')
           expect(subject).to eq("The web-based VNC console is not available on VMware versions 6.5 and above.")
         end
 
