@@ -26,9 +26,9 @@ describe MiqDisk do
         Camcorder.intercept MiqLargeFile::MiqLargeFileOther, :seek, :read
         Camcorder.intercept MiqLargeFile::MiqLargeFileStat,  :blockdev?
 
-        disk_info = OpenStruct.new(:fileName => image_path('dos2.img'))
+        disk_info = OpenStruct.new(:fileName => image_path('dos_partition.img'))
         disk      = MiqDisk.getDisk(disk_info, "RawDiskProbe")
-        expect(disk.getPartitions.size).to eq(5)
+        expect(disk.getPartitions.size).to eq(2)
       end
     end
 
@@ -37,7 +37,7 @@ describe MiqDisk do
         Camcorder.intercept MiqLargeFile::MiqLargeFileOther, :seek, :read
         Camcorder.intercept MiqLargeFile::MiqLargeFileStat,  :blockdev?
 
-        disk_info = OpenStruct.new(:fileName => image_path('basic.img'))
+        disk_info = OpenStruct.new(:fileName => image_path('no_partition.img'))
         disk      = MiqDisk.getDisk(disk_info, "RawDiskProbe")
         expect(disk.getPartitions).to be_empty
       end
