@@ -340,13 +340,31 @@ describe EmsRefresh do
     end
   end
 
-  context '.queue_merge' do
+  describe '.queue_merge' do
     let(:ems) { FactoryGirl.create(:ems_vmware, :name => "ems_vmware1") }
     let(:vm)  { FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems) }
 
     it 'sends the command to queue' do
       EmsRefresh.queue_merge([vm], ems)
       expect(MiqQueue.count).to eq(1)
+    end
+
+    context "task creation" do
+      before do
+        @miq_task = FactoryGirl.create(:miq_task)
+        allow(EmsRefresh).to receive(:create_refresh_task).and_return(@miq_task)
+      end
+
+      it 'returns id of MiqTask linked to queued item' do
+        task_id = EmsRefresh.queue_merge([vm], ems, true)
+        expect(task_id).to eq @miq_task.id
+      end
+
+      it 'links created task with queued item' do
+        task_id = EmsRefresh.queue_merge([vm], ems)
+        queue_item = MiqQueue.find_by(:method_name => 'refresh', :role => "ems_inventory")
+        expect(queue_item.miq_task_id).to eq task_id
+      end
     end
   end
 end
