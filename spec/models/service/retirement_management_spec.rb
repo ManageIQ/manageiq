@@ -1,4 +1,5 @@
 describe "Service Retirement Management" do
+  let(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => "admin") }
   before do
     @server = EvmSpecHelper.local_miq_server
     @service = FactoryGirl.create(:service)
@@ -61,6 +62,18 @@ describe "Service Retirement Management" do
     @service.retire(options)
     @service.reload
     expect(@service.retirement_warn).to eq(options[:warn])
+  end
+
+  it "with one src_id" do
+    User.current_user = user
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => ['yabadabadoo'] }, User.current_user, true)
+    @service.class.to_s.demodulize.constantize.make_retire_request('yabadabadoo')
+  end
+
+  it "with many src_ids" do
+    User.current_user = user
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [1, 2, 3]}, User.current_user, true)
+    @service.class.to_s.demodulize.constantize.make_retire_request(1, 2, 3)
   end
 
   it "#retire date" do
