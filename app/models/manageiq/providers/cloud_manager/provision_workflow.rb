@@ -1,6 +1,7 @@
 class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtWorkflow
   include_concern "DialogFieldValidation"
   include CloudInitTemplateMixin
+  include SysprepTemplateMixin
 
   def allowed_availability_zones(_options = {})
     source = load_ar_obj(get_source_vm)
@@ -63,6 +64,10 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
     true
   end
 
+  def supports_sysprep?
+    true
+  end
+
   def set_or_default_hardware_field_values(_vm)
   end
 
@@ -76,7 +81,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   end
 
   def allowed_customization_templates(options = {})
-    allowed_cloud_init_customization_templates(options)
+    allowed_cloud_init_customization_templates(options).concat(allowed_sysprep_customization_templates(options))
   end
 
   private
