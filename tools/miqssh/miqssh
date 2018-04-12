@@ -159,9 +159,9 @@ function clean_pssh_out {
 
 if [ $NAME == 'miqtail' ]
 then
-  GREP='grep -e'
+  GREP='grep'
 else
-  GREP='zgrep -e'
+  GREP='zgrep'
 fi
 
 L='L'
@@ -190,6 +190,8 @@ do
 done
 
 shift $((OPTIND-1))
+
+GREP="$GREP -e"
 
 if [[ -z "$TRANSPORT" || -z "$PARALLELISM" ]]
 then
