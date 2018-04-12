@@ -228,6 +228,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue :archived_entities_purge_timer
     end
 
+    every = worker_settings[:notifications_purge_interval]
+    scheduler.schedule_every(every, :first_in => every) do
+      enqueue(:notification_purge_timer)
+    end
+
     # Schedule every 24 hours
     at = worker_settings[:storage_file_collection_time_utc]
     if Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc) < Time.now.utc
