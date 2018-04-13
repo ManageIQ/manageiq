@@ -12,6 +12,7 @@ class ContainerLabelTagMapping < ApplicationRecord
   #
   # All involved tags must also have a Classification.
 
+  TAG_PREFIXES = ['/managed/amazon:', '/managed/kubernetes:'].freeze
   AUTOTAG_PREFIX = "kubernetes".freeze
 
   MAPPABLE_ENTITIES = [
@@ -29,16 +30,7 @@ class ContainerLabelTagMapping < ApplicationRecord
 
   belongs_to :tag
 
-  # Pass the data this returns to map_* methods.
-  def self.cache
-    # {[name, type, value] => [tag_id, ...]}
-    in_my_region.find_each
-                .group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
-                .transform_values { |mappings| mappings.collect(&:tag_id) }
-  end
-
-  # We expect labels to be {:name, :value} hashes
-  # and return {:tag_id} or {:category_tag_id, :entry_name, :entry_description} hashes.
+  require_nested :Mapper
 
   def self.map_labels(cache, type, labels)
     labels.collect_concat { |label| map_label(cache, type, label) }.uniq
@@ -93,6 +85,8 @@ class ContainerLabelTagMapping < ApplicationRecord
     end
   end
 
+  # Checks whether a Tag record is under mapping control.
+  # TODO: expensive.
   def self.controls_tag?(tag)
     return false unless tag.classification.try(:read_only) # never touch user-assignable tags.
     tag_ids = [tag.id, tag.category.tag_id].uniq
@@ -100,8 +94,9 @@ class ContainerLabelTagMapping < ApplicationRecord
   end
 
   # Assign/unassign mapping-controlled tags, preserving user-assigned tags.
-  def self.retag_entity(entity, tag_hashes)
-    mapped_tags = tag_hashes.map { |tag_hash| find_or_create_tag(tag_hash) }
+  # All tag references must have been resolved first by Mapper#find_or_create_tags.
+  def self.retag_entity(entity, tag_references)
+    mapped_tags = Mapper.references_to_tags(tag_references)
     existing_tags = entity.tags
     Tagging.transaction do
       (mapped_tags - existing_tags).each do |tag|
