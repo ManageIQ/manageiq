@@ -315,6 +315,38 @@ describe MiqRequest do
     end
   end
 
+  context '#execute' do
+    shared_examples_for "#calls create_request_tasks with the proper role" do
+      it "runs successfully" do
+        expect(request).to receive(:approved?).and_return(true)
+        expect(MiqQueue.count).to eq(0)
+
+        request.execute
+        expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.first.role).to eq(role)
+      end
+    end
+
+    context 'Service provisioning' do
+      let(:request) { FactoryGirl.create(:service_template_provision_request, :approval_state => 'approved', :requester => fred) }
+      let(:role)    { 'automate' }
+
+      context "uses the automate role" do
+        it_behaves_like "#calls create_request_tasks with the proper role"
+      end
+    end
+
+    context 'VM provisioning' do
+      let(:template) { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
+      let(:request)  { FactoryGirl.build(:miq_provision_request, :requester => fred, :src_vm_id => template.id).tap(&:valid?) }
+      let(:role)     { 'ems_operations' }
+
+      context "uses the ems_operations role" do
+        it_behaves_like "#calls create_request_tasks with the proper role"
+      end
+    end
+  end
+
   context '#post_create_request_tasks' do
     context 'VM provisioning' do
       before do
