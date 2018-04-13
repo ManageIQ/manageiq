@@ -85,4 +85,6 @@ FactoryGirl.define do
 
   factory :orchestration_stack_vmware_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack" do
   end
+
+  factory :orchestration_stack_container, :parent => :orchestration_stack, :class => "ManageIQ::Providers::ContainerManager::OrchestrationStack"
 end
