@@ -60,7 +60,7 @@ gem "jbuilder",                       "~>2.5.0" # For the REST API
 gem "linux_admin",                    "~>1.0.1",       :require => false
 gem "manageiq-api-client",            "~>0.3.0",       :require => false
 gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"
-gem "more_core_extensions",           "~>3.2"
+gem "more_core_extensions",           "~>3.5"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.14.0",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
