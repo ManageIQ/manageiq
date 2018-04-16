@@ -1,10 +1,9 @@
 module RetirementMixin
   extend ActiveSupport::Concern
-
-  RETIRED  = 'retired'
-  RETIRING = 'retiring'
-  ERROR_RETIRING = 'error'
-  RETIREMENT_INITIALIZING = 'initializing'
+  RETIREMENT_ERROR = 'error'.freeze
+  RETIREMENT_INITIALIZING = 'initializing'.freeze
+  RETIREMENT_RETIRED  = 'retired'.freeze
+  RETIREMENT_RETIRING = 'retiring'.freeze
 
   included do
     scope :scheduled_to_retire, -> { where(arel_table[:retires_on].not_eq(nil).or(arel_table[:retired].not_eq(true))) }
@@ -111,7 +110,7 @@ module RetirementMixin
   end
 
   def retirement_check
-    return if retired? || retiring? || retirement_initialized
+    return if retired? || retiring? || retirement_initialized?
 
     if !retirement_warned? && retirement_warning_due?
       begin
@@ -135,7 +134,7 @@ module RetirementMixin
     else
       lock do
         reload
-        if retirement_state == '' || retirement_state == 'error'
+        if error_retiring? || retirement_state.blank?
           update_attributes(:retirement_state => "initializing", :retirement_requester => requester)
           event_name = "request_#{retirement_event_prefix}_retire"
           _log.info("calling #{event_name}")
@@ -180,7 +179,7 @@ module RetirementMixin
     @retirement_base_model_name ||= self.class.base_model.name
   end
 
-  def retirement_initialized
+  def retirement_initialized?
     retirement_state == RETIREMENT_INITIALIZING
   end
 
@@ -220,11 +219,11 @@ module RetirementMixin
   end
 
   def retiring?
-    retirement_state == RETIRING
+    retirement_state == RETIREMENT_RETIRING
   end
 
   def error_retiring?
-    retirement_state == ERROR_RETIRING
+    retirement_state == RETIREMENT_ERROR
   end
 
   private
