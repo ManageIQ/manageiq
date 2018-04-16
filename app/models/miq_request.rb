@@ -101,6 +101,26 @@ class MiqRequest < ApplicationRecord
     model_symbol.to_s.constantize
   end
 
+  def self.user_or_group_owned(user, miq_group)
+    if user && miq_group
+      user_owned(user).or(group_owned(miq_group))
+    elsif user
+      user_owned(user)
+    elsif miq_group
+      group_owned(miq_group)
+    else
+      none
+    end
+  end
+
+  def self.user_owned(user)
+    where(:requester_id => user.id)
+  end
+
+  def self.group_owned(miq_group)
+    where(:requester_id => miq_group.user_ids)
+  end
+
   # Supports old-style requests where specific request was a seperate table connected as a resource
   def resource
     self
