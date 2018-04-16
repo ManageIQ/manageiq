@@ -763,8 +763,6 @@ describe ChargebackVm do
             skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
 
             ChargebackRate.set_assignments(:storage, [rate_assignment_options])
-
-            @rate = Chargeback::RatesCache.new.get(consumption).first
             expect(subject).to be_nil
           end
         end
