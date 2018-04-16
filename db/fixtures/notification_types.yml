@@ -254,6 +254,16 @@
   :expires_in: 24.hours
   :level: :error
   :audience: global
+- :name: cloud_tenant_delete_success
+  :message: 'Deleting Cloud Tenant %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: success
+  :audience: global
+- :name: cloud_tenant_delete_error
+  :message: 'Deleting Cloud Tenant %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: error
+  :audience: global
 - :name: server_registration_error
   :message: 'Registration failed for server %{server_name}'
   :expires_in: 24.hours
