@@ -445,7 +445,9 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def validate_destroy
-    if hardware.provision_state == "active"
+    if archived?
+      {:available => true, :message => nil}
+    elsif hardware.provision_state == "active"
       {:available => false, :message => "Cannot remove #{name} because it is in #{hardware.provision_state} state."}
     else
       {:available => true, :message => nil}
@@ -501,12 +503,17 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     task_status = "Ok"
     _dummy, t = Benchmark.realtime_block(:total_time) do
       begin
-        connection = ext_management_system.openstack_handle.detect_baremetal_service
-        response = connection.delete_node(name)
-
-        if response.status == 204
-          Host.destroy_queue(id)
+        if archived?
+          destroy
           status = "Success"
+        else
+          connection = ext_management_system.openstack_handle.detect_baremetal_service
+          response = connection.delete_node(name)
+
+          if response.status == 204
+            Host.destroy_queue(id)
+            status = "Success"
+          end
         end
       rescue => err
         task_status = "Error"
