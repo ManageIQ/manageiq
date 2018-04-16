@@ -750,19 +750,21 @@ describe ChargebackVm do
 
           subject { Chargeback::RatesCache.new.get(consumption).first }
 
+          before do
+            ChargebackRate.set_assignments(:storage, [rate_assignment_options])
+          end
+
           it "chooses rate according to cloud_volume\'s tag" do
             skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
 
             cloud_volume_sdd.tag_with([classification.tag.name], :ns => '*')
 
-            ChargebackRate.set_assignments(:storage, [rate_assignment_options])
             expect(subject).to eq(storage_chargeback_rate)
           end
 
           it "doesn't choose rate thanks to missing tag on cloud_volume" do
             skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
 
-            ChargebackRate.set_assignments(:storage, [rate_assignment_options])
             expect(subject).to be_nil
           end
         end
