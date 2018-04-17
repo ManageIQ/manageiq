@@ -199,7 +199,7 @@ describe MiqGroup do
     end
 
     it "#provisioned_storage" do
-      expect(miq_group.provisioned_storage).to eq(ram_size.megabyte + disk_size)
+      expect(miq_group.provisioned_storage).to eq(disk_size)
     end
 
     %w(allocated_memory allocated_vcpu allocated_storage provisioned_storage).each do |vcol|

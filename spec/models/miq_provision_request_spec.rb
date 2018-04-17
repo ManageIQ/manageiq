@@ -198,7 +198,7 @@ describe MiqProvisionRequest do
             let(:request) { create_request(@vmware_user1, @vmware_template, {}) }
             let(:quota_method) { :active_provisions }
             let(:counts_hash) do
-              {:count => 12, :memory => 8_589_938_688, :cpu => 32, :storage => 44.gigabytes}
+              {:count => 12, :memory => 8_589_938_688, :cpu => 32, :storage => 40.gigabytes}
             end
             it_behaves_like "check_quota"
 
@@ -212,7 +212,7 @@ describe MiqProvisionRequest do
           context "infra," do
             let(:request) { create_request(@vmware_user1, @vmware_template, {}) }
             let(:counts_hash) do
-              {:count => 8, :memory => 8.gigabytes, :cpu => 16, :storage => 4.gigabytes}
+              {:count => 8, :memory => 8.gigabytes, :cpu => 16, :storage => 0.gigabytes}
             end
 
             context "active_provisions_by_tenant," do
@@ -228,7 +228,7 @@ describe MiqProvisionRequest do
             context "active_provisions_by_owner," do
               let(:quota_method) { :active_provisions_by_owner }
               let(:counts_hash) do
-                {:count => 4, :memory => 4.gigabytes, :cpu => 8, :storage => 2.gigabytes}
+                {:count => 4, :memory => 4.gigabytes, :cpu => 8, :storage => 0.gigabytes}
               end
               it_behaves_like "check_quota"
 
