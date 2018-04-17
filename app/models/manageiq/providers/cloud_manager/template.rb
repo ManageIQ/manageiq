@@ -20,6 +20,10 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
                             ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate))
   end
 
+  def self.class_by_ems(ext_management_system)
+    ext_management_system.class::Template
+  end
+
   def self.create_image_queue(userid, ext_management_system, options = {})
     task_opts = {
       :action => "Creating Cloud Template for user #{userid}",
