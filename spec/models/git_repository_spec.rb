@@ -64,7 +64,10 @@ describe GitRepository do
       it "userid and password is set" do
         repo.update_authentication(:default => {:userid => userid, :password => password})
         expect(GitWorktree).to receive(:new).with(args).and_return(gwt)
+
         repo.refresh
+        expect(repo.default_authentication.userid).to eq(userid)
+        expect(repo.default_authentication.password).to eq(password)
       end
 
       context "self signed certifcate" do

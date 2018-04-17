@@ -104,8 +104,8 @@ class GitRepository < ApplicationRecord
     params = {:path => directory_name}
     params[:certificate_check] = method(:self_signed_cert_cb) if verify_ssl == OpenSSL::SSL::VERIFY_NONE
     if authentications.any?
-      params[:username] = authentications.first.userid
-      params[:password] = authentications.first.password
+      params[:username] = default_authentication.userid
+      params[:password] = default_authentication.password
     end
     params
   end
