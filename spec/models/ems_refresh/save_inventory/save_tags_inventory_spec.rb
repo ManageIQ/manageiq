@@ -1,10 +1,12 @@
 context "save_tags_inventory" do
-  # @return [Tag] for a category linked to a mapping.
-  def mapped_cat(category_name)
+  # @return [Tag] a tag in a category linked to a mapping.
+  def mapped_tag(category_name, tag_name)
     mapping = FactoryGirl.create(:tag_mapping_with_category,
                                  :category_name        => category_name,
                                  :category_description => category_name)
-    mapping.tag.classification
+    category = mapping.tag.category
+    entry = category.add_entry(:name => tag_name, :description => tag_name)
+    category.tag
   end
 
   before(:each) do
@@ -14,50 +16,27 @@ context "save_tags_inventory" do
     @vm   = FactoryGirl.create(:vm, :ext_management_system => @ems)
     @node = FactoryGirl.create(:container_node, :ext_management_system => @ems)
 
-    @cat1 = mapped_cat('amazon:vm:owner')
-    @cat2 = mapped_cat('kubernetes:container_node:stuff')
-    @cat3 = mapped_cat('kubernetes::foo') # All entities
+    @tag1 = mapped_tag('amazon:vm:owner', 'alice')
+    @tag2 = mapped_tag('kubernetes:container_node:stuff', 'jabberwocky')
+    @tag3 = mapped_tag('kubernetes::foo', 'bar') # All entities
   end
 
-  # This is what ContainerLabelTagMapping.map_labels(cache, 'Type', labels) would
+  # This is what ContainerLabelTagMapping::Mapper.map_labels(cache, 'Type', labels) would
   # return in the refresh parser. Note that we don't explicitly test the mapping
   # creation here, the assumption is that these were the generated mappings.
-  #
-  let(:tag1_hash) do
-    {
-      :category_tag_id   => @cat1.tag_id,
-      :entry_name        => 'owner',
-      :entry_description => 'Daniel'
-    }
-  end
-  let(:tag2_hash) do
-    {
-      :category_tag_id   => @cat2.tag_id,
-      :entry_name        => 'stuff',
-      :entry_description => 'Ladas'
-    }
-  end
-  let(:tag3_hash) do
-    {
-      :category_tag_id   => @cat3.tag_id,
-      :entry_name        => 'foo',
-      :entry_description => 'Bronagh'
-    }
-  end
-
   let(:data) do
     {
       :tags => [
-        tag1_hash,
-        tag2_hash,
-        tag3_hash
+        {:tag_id => @tag1.id},
+        {:tag_id => @tag2.id},
+        {:tag_id => @tag3.id},
       ]
     }
   end
   let(:data2) do
     {
       :tags => [
-        tag2_hash
+        instance_double(ManagerRefresh::InventoryObject, :id => @tag2.id),
       ]
     }
   end
