@@ -41,6 +41,14 @@ namespace :evm do
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
+
+    desc 'Exports all tags to individual YAML files'
+    task :tags => :environment do
+      options = TaskHelpers::Exports.parse_options
+      TaskHelpers::Exports::Tags.new.export(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
   end
 
   namespace :import do
@@ -80,6 +88,14 @@ namespace :evm do
     task :roles => :environment do
       options = TaskHelpers::Imports.parse_options
       TaskHelpers::Imports::Roles.new.import(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
+
+    desc 'Imports all tags to individual YAML files'
+    task :tags => :environment do
+      options = TaskHelpers::Imports.parse_options
+      TaskHelpers::Imports::Tags.new.import(options)
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
