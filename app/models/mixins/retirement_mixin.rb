@@ -10,9 +10,9 @@ module RetirementMixin
   end
 
   module ClassMethods
-    def make_retire_request
-      options = {:task => task, :userid => current_user, :ids => objs, :src_ids => objs}
-      (klass.to_s + "RetireRequest").constantize.make_request(@request_id, options, current_user)
+    def make_retire_request(*src_ids)
+      options = {:src_ids => src_ids.presence || id}
+      (name + "RetireRequest").constantize.make_request(nil, options, User.current_user, true)
     end
 
     def retire(ids, options = {})

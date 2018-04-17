@@ -1,4 +1,7 @@
 describe "VM Retirement Management" do
+  let(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => "admin") }
+  let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
+
   before do
     miq_server = EvmSpecHelper.local_miq_server
     @zone = miq_server.zone
@@ -60,6 +63,20 @@ describe "VM Retirement Management" do
     @vm.retire(options)
     @vm.reload
     expect(@vm.retirement_warn).to eq(options[:warn])
+  end
+
+  describe "retire request" do
+    it "with one src_id" do
+      User.current_user = user
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => ['yabadabadoo'] }, User.current_user, true)
+      @vm.class.to_s.demodulize.constantize.make_retire_request('yabadabadoo')
+    end
+
+    it "with many src_ids" do
+      User.current_user = user
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [1, 2, 3]}, User.current_user, true)
+      @vm.class.to_s.demodulize.constantize.make_retire_request(1, 2, 3)
+    end
   end
 
   it "#retire date" do
