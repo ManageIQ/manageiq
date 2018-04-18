@@ -14,7 +14,7 @@ describe 'API configuration (config/api.yml)' do
       let(:miq_product_features) { MiqProductFeature.seed.values.flatten.to_set }
       let(:api_feature_identifiers) do
         collection_settings.each_with_object(Set.new) do |(_, cfg), set|
-          set.add(cfg[:identifier]) if cfg[:identifier]
+          Array(cfg[:identifier]).each { |id| set.add(id) }
           keys = [:collection_actions, :resource_actions, :subcollection_actions, :subresource_actions]
           Array(cfg[:subcollections]).each do |s|
             keys << "#{s}_subcollection_actions" << "#{s}_subresource_actions"
@@ -23,7 +23,7 @@ describe 'API configuration (config/api.yml)' do
             next unless cfg[action_type]
             cfg[action_type].each do |_, method_cfg|
               method_cfg.each do |action_cfg|
-                set.add(action_cfg[:identifier]) if action_cfg[:identifier]
+                Array(action_cfg[:identifier]).each { |id| set.add(id) }
               end
             end
           end
