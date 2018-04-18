@@ -191,6 +191,43 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe "#arel_table" do
+    it "returns the main table when there are no associations" do
+      field = described_class.new(Vm, [], "name")
+      expect(field.arel_table).to eq(Vm.arel_table)
+    end
+
+    it "returns the table of the target association without an alias" do
+      field = described_class.new(Vm, ["guest_applications"], "name")
+      expect(field.arel_table).to eq(GuestApplication.arel_table)
+      expect(field.arel_table.name).to eq(GuestApplication.arel_table.name)
+    end
+
+    it "returns the table of the target association with an alias if needed" do
+      field = described_class.new(Vm, ["miq_provision_template"], "name")
+      expect(field.arel_table.table_name).to eq(Vm.arel_table.table_name)
+      expect(field.arel_table.name).not_to eq(Vm.arel_table.name)
+    end
+  end
+
+  describe "#arel_attribute" do
+    it "returns the main table when there are no associations" do
+      field = described_class.new(Vm, [], "name")
+      expect(field.arel_attribute).to eq(Vm.arel_attribute("name"))
+    end
+
+    it "returns the table of the target association without an alias" do
+      field = described_class.new(Vm, ["guest_applications"], "name")
+      expect(field.arel_attribute).to eq(GuestApplication.arel_attribute("name"))
+    end
+
+    it "returns the table of the target association with an alias if needed" do
+      field = described_class.new(Vm, ["miq_provision_template"], "name")
+      expect(field.arel_attribute.name).to eq("name")
+      expect(field.arel_attribute.relation.name).to include("miq_provision_template")
+    end
+  end
+
   describe "#plural?" do
     it "returns false if the column is on a 'belongs_to' association" do
       field = described_class.new(Vm, ["storage"], "region_description")

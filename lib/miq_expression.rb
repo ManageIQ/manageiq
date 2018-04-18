@@ -1664,38 +1664,48 @@ class MiqExpression
   def to_arel(exp, tz)
     operator = exp.keys.first
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
-    if(exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"]))
-      parsed_value = Field.parse(exp[operator]["value"]).arel_attribute
+    arel_attribute = field&.arel_attribute
+    if exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"])
+      field_value = Field.parse(exp[operator]["value"])
+      parsed_value = field_value.arel_attribute
     elsif exp[operator].kind_of?(Hash)
       parsed_value = exp[operator]["value"]
     end
     case operator.downcase
     when "equal", "="
-      field.eq(parsed_value)
+      arel_attribute.eq(parsed_value)
     when ">"
-      field.gt(parsed_value)
+      arel_attribute.gt(parsed_value)
     when "after"
       value = RelativeDatetime.normalize(parsed_value, tz, "end", field.date?)
-      field.gt(value)
+      arel_attribute.gt(value)
     when ">="
-      field.gteq(parsed_value)
+      arel_attribute.gteq(parsed_value)
     when "<"
-      field.lt(parsed_value)
+      arel_attribute.lt(parsed_value)
     when "before"
       value = RelativeDatetime.normalize(parsed_value, tz, "beginning", field.date?)
-      field.lt(value)
+      arel_attribute.lt(value)
     when "<="
-      field.lteq(parsed_value)
+      arel_attribute.lteq(parsed_value)
     when "!="
-      field.not_eq(parsed_value)
+      arel_attribute.not_eq(parsed_value)
     when "like", "includes"
-      field.matches("%#{parsed_value}%")
+      escape = nil
+      case_sensitive = true
+      arel_attribute.matches("%#{parsed_value}%", escape, case_sensitive)
     when "starts with"
-      field.matches("#{parsed_value}%")
+      escape = nil
+      case_sensitive = true
+      arel_attribute.matches("#{parsed_value}%", escape, case_sensitive)
     when "ends with"
-      field.matches("%#{parsed_value}")
+      escape = nil
+      case_sensitive = true
+      arel_attribute.matches("%#{parsed_value}", escape, case_sensitive)
     when "not like"
-      field.does_not_match("%#{parsed_value}%")
+      escape = nil
+      case_sensitive = true
+      arel_attribute.does_not_match("%#{parsed_value}%", escape, case_sensitive)
     when "and"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
@@ -1716,24 +1726,31 @@ class MiqExpression
     when "not", "!"
       Arel::Nodes::Not.new(to_arel(exp[operator], tz))
     when "is null"
-      field.eq(nil)
+      arel_attribute.eq(nil)
     when "is not null"
-      field.not_eq(nil)
+      arel_attribute.not_eq(nil)
     when "is empty"
-      arel = field.eq(nil)
-      arel = arel.or(field.eq("")) if field.string?
+      arel = arel_attribute.eq(nil)
+      arel = arel.or(arel_attribute.eq("")) if field.string?
       arel
     when "is not empty"
-      arel = field.not_eq(nil)
-      arel = arel.and(field.not_eq("")) if field.string?
+      arel = arel_attribute.not_eq(nil)
+      arel = arel.and(arel_attribute.not_eq("")) if field.string?
       arel
     when "contains"
       # Only support for tags of the main model
       if exp[operator].key?("tag")
         tag = Tag.parse(exp[operator]["tag"])
-        tag.contains(parsed_value)
+        ids = tag.model.find_tagged_with(:any => parsed_value, :ns => tag.namespace).pluck(:id)
+        tag.model.arel_attribute(:id).in(ids)
       else
-        field.contains(parsed_value)
+        raise unless field.associations.one?
+        reflection = field.reflections.first
+        arel = arel_attribute.eq(parsed_value)
+        arel = arel.and(Arel::Nodes::SqlLiteral.new(extract_where_values(reflection.klass, reflection.scope))) if reflection.scope
+        field.model.arel_attribute(:id).in(
+          field.arel_table.where(arel).project(field.arel_table[reflection.foreign_key]).distinct
+        )
       end
     when "is"
       value = parsed_value
@@ -1741,17 +1758,37 @@ class MiqExpression
       end_val = RelativeDatetime.normalize(value, tz, "end", field.date?)
 
       if !field.date? || RelativeDatetime.relative?(value)
-        field.between(start_val..end_val)
+        arel_attribute.between(start_val..end_val)
       else
-        field.eq(start_val)
+        arel_attribute.eq(start_val)
       end
     when "from"
       start_val, end_val = parsed_value
       start_val = RelativeDatetime.normalize(start_val, tz, "beginning", field.date?)
       end_val   = RelativeDatetime.normalize(end_val, tz, "end", field.date?)
-      field.between(start_val..end_val)
+      arel_attribute.between(start_val..end_val)
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
+    end
+  end
+
+  def extract_where_values(klass, scope)
+    relation = ActiveRecord::Relation.new klass, klass.arel_table, klass.predicate_builder
+    relation = relation.instance_eval(&scope)
+
+    begin
+      # This is basically ActiveRecord::Relation#to_sql, only using our
+      # custom visitor instance
+
+      connection = klass.connection
+      visitor    = WhereExtractionVisitor.new connection
+
+      arel  = relation.arel
+      binds = relation.bound_attributes
+      binds = connection.prepare_binds_for_database(binds)
+      binds.map! { |value| connection.quote(value) }
+      collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
+      collect.substitute_binds(binds).join
     end
   end
 
