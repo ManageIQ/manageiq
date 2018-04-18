@@ -215,12 +215,14 @@ module ManagerRefresh
         public_send(:[]=, data_key.to_s.delete("=").to_sym, value)
       end
     end
+    private_class_method :define_data_writer
 
     def self.define_data_reader(data_key)
       define_method(data_key) do
         public_send(:[], data_key)
       end
     end
+    private_class_method :define_data_reader
 
     # Return true passed key representing a getter is an association
     #
