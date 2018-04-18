@@ -149,9 +149,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :v_owning_blue_folder_path,            :type => :string,     :uses => :all_relationships
   virtual_column :v_datastore_path,                     :type => :string,     :uses => :storage
   virtual_column :thin_provisioned,                     :type => :boolean,    :uses => {:hardware => :disks}
-  virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
-  virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
-  virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
+  virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_disk_storage]
   virtual_delegate :ram_size_in_bytes,                  :to => :hardware, :allow_nil => true, :default => 0
   virtual_delegate :mem_cpu,                            :to => "hardware.memory_mb", :allow_nil => true, :default => 0
   virtual_delegate :ram_size,                           :to => "hardware.memory_mb", :allow_nil => true, :default => 0
@@ -1497,17 +1495,13 @@ class VmOrTemplate < ApplicationRecord
                    :to => :hardware, :allow_nil => true, :uses => {:hardware => :disks}
 
   virtual_delegate :provisioned_storage, :to => :hardware, :allow_nil => true, :default => 0
-
-  def used_storage
-    used_disk_storage.to_i
-  end
-
-  def used_storage_by_state
-    used_disk_storage.to_i
-  end
+  virtual_delegate :used_storage,
+                   :to => "hardware.used_disk_storage", :allow_nil => true, :default => 0, :uses => {:hardware => :disks}
+  virtual_delegate :used_storage_by_state,
+                   :to => "hardware.used_disk_storage", :allow_nil => true, :default => 0, :uses => {:hardware => :disks}
 
   def uncommitted_storage
-    provisioned_storage.to_i - used_storage_by_state.to_i
+    provisioned_storage.to_i - used_disk_storage.to_i
   end
 
   def thin_provisioned

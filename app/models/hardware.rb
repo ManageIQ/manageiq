@@ -29,6 +29,7 @@ class Hardware < ApplicationRecord
 
   virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
   virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
+  virtual_aggregate :provisioned_storage,    :disks, :sum, :size
 
   def ipaddresses
     @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
@@ -127,36 +128,6 @@ class Hardware < ApplicationRecord
     t.grouping(Arel::Nodes::Division.new(
       Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
       t[:disk_capacity]) * -100 + 100)
-  end)
-
-  def provisioned_storage
-    if has_attribute?("provisioned_storage")
-      self["provisioned_storage"]
-    else
-      allocated_disk_storage.to_i
-    end
-  end
-
-  # added casts because we were overflowing integers
-  # resulting sql:
-  # (
-  #   (COALESCE(
-  #     ((SELECT SUM("disks"."size")
-  #       FROM "disks"
-  #       WHERE "hardwares"."id" = "disks"."hardware_id")),
-  #     0
-  #   )) + (COALESCE(
-  #     (CAST("hardwares"."memory_mb" AS bigint)),
-  #     0
-  #   )) * 1048576
-  # )
-  virtual_attribute :provisioned_storage, :integer, :arel => (lambda do |t|
-    t.grouping(
-      t.grouping(Arel::Nodes::NamedFunction.new('COALESCE', [arel_attribute(:allocated_disk_storage), 0])) +
-      t.grouping(Arel::Nodes::NamedFunction.new(
-                   'COALESCE', [t.grouping(Arel::Nodes::NamedFunction.new('CAST', [t[:memory_mb].as("bigint")])), 0]
-      )) * 1.megabyte
-    )
   end)
 
   def connect_lans(lans)

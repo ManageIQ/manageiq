@@ -215,7 +215,7 @@ describe Hardware do
 
       it "calculates in the database" do
         hardware
-        expect(virtual_column_sql_value(Hardware, "provisioned_storage")).to eq(0)
+        expect(virtual_column_sql_value(Hardware, "provisioned_storage")).to be_nil
       end
     end
 
