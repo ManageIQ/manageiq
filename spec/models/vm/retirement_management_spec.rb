@@ -29,6 +29,25 @@ describe "VM Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event).once
 
     @vm.retire_now
+    expect(@vm.retirement_state).to eq('initializing')
+  end
+
+  it "#retire_now when called more than once" do
+    expect(MiqEvent).to receive(:raise_evm_event).once
+    3.times { @vm.retire_now }
+    expect(@vm.retirement_state).to eq('initializing')
+  end
+
+  it "#retire_now not called when already retiring" do
+    @vm.update_attributes(:retirement_state => 'retiring')
+    expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
+    @vm.retire_now
+  end
+
+  it "#retire_now not called when already retired" do
+    @vm.update_attributes(:retirement_state => 'retired')
+    expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
+    @vm.retire_now
   end
 
   it "#retire_now with userid" do
