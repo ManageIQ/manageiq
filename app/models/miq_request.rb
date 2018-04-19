@@ -429,7 +429,7 @@ class MiqRequest < ApplicationRecord
       :instance_id    => id,
       :method_name    => "create_request_tasks",
       :zone           => options.fetch(:miq_zone, my_zone),
-      :role           => my_role,
+      :role           => kind_of?(ServiceTemplateProvisionRequest) ? 'automate' : my_role,
       :tracking_label => tracking_label_id,
       :msg_timeout    => 3600,
       :deliver_on     => deliver_on
