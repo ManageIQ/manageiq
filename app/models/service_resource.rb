@@ -15,28 +15,11 @@ class ServiceResource < ApplicationRecord
   default_value_for :scaling_max, -1
   default_value_for :provision_index, 0
 
-  virtual_column :resource_name,        :type => :string
-  virtual_column :resource_description, :type => :string
+  virtual_delegate :name, :description, :to => :resource, :allow_nil => true, :parent => true, :default => ""
 
   def readonly?
     return true if super
 
     service_template.try(:readonly?)
-  end
-
-  def resource_name
-    virtual_column_resource_value(:name).to_s
-  end
-
-  def resource_description
-    virtual_column_resource_value(:description).to_s
-  end
-
-  private
-
-  def virtual_column_resource_value(key)
-    return "" if resource.nil?
-    return "" unless resource.respond_to?(key)
-    resource.send(key)
   end
 end

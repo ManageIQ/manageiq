@@ -270,7 +270,7 @@ describe ServiceTemplate do
         svc_template = FactoryGirl.create(:service_template, :name => 'Svc A')
         options = {:dialog => {}}
         options[:initiator] = initiator if initiator
-        svc_task = instance_double("service_task", :options => options)
+        svc_task = FactoryGirl.create!(:service_task, :options => options)
         svc = svc_template.create_service(svc_task, nil)
 
         expect(svc.initiator).to eq(match)
