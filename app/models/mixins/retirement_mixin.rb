@@ -1,9 +1,9 @@
 module RetirementMixin
   extend ActiveSupport::Concern
-
-  RETIRED  = 'retired'
-  RETIRING = 'retiring'
-  ERROR_RETIRING = 'error'
+  RETIREMENT_ERROR = 'error'.freeze
+  RETIREMENT_INITIALIZING = 'initializing'.freeze
+  RETIREMENT_RETIRED  = 'retired'.freeze
+  RETIREMENT_RETIRING = 'retiring'.freeze
 
   module ClassMethods
     def retire(ids, options = {})
@@ -98,7 +98,7 @@ module RetirementMixin
   end
 
   def retirement_check
-    return if self.retired?
+    return if retired? || retiring? || retirement_initialized?
 
     if !retirement_warned? && retirement_warning_due?
       begin
@@ -117,14 +117,23 @@ module RetirementMixin
     if retired
       return if retired_validated?
       _log.info("#{retirement_object_title}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], was previously retired, but currently #{retired_invalid_reason}")
+    elsif retiring?
+      _log.info("#{retirement_object_title}: [#{name}] retirement in progress")
     else
-      update_attributes(:retirement_requester => requester)
-      event_name = "request_#{retirement_event_prefix}_retire"
-      _log.info("calling #{event_name}")
-      begin
-        raise_retirement_event(event_name, requester)
-      rescue => err
-        _log.log_backtrace(err)
+      lock do
+        reload
+        if error_retiring? || retirement_state.blank?
+          update_attributes(:retirement_state => "initializing", :retirement_requester => requester)
+          event_name = "request_#{retirement_event_prefix}_retire"
+          _log.info("calling #{event_name}")
+          begin
+            raise_retirement_event(event_name, requester)
+          rescue => err
+            _log.log_backtrace(err)
+          end
+        else
+          _log.info("#{retirement_object_title}: retirement for [#{name}] got updated while waiting to be unlocked and is now #{retirement_state}")
+        end
       end
     end
   end
@@ -140,7 +149,7 @@ module RetirementMixin
   end
 
   def start_retirement
-    return if self.retired?
+    return if retired? || retiring?
     $log.info("Starting Retirement for [#{name}]")
     update_attributes(:retirement_state => "retiring")
   end
@@ -155,6 +164,10 @@ module RetirementMixin
 
   def retirement_base_model_name
     @retirement_base_model_name ||= self.class.base_model.name
+  end
+
+  def retirement_initialized?
+    retirement_state == RETIREMENT_INITIALIZING
   end
 
   def retirement_object_title
@@ -190,11 +203,11 @@ module RetirementMixin
   end
 
   def retiring?
-    retirement_state == RETIRING
+    retirement_state == RETIREMENT_RETIRING
   end
 
   def error_retiring?
-    retirement_state == ERROR_RETIRING
+    retirement_state == RETIREMENT_ERROR
   end
 
   private
