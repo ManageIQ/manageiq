@@ -37,7 +37,7 @@ describe "Service Dialogs API" do
     it "allows read of service dialogs with the service catalog provision role" do
       api_basic_authorize("svc_catalog_provision")
 
-      get api_service_dialogs_url
+      run_get service_dialogs_url
 
       expect(response).to have_http_status(:ok)
     end
@@ -45,7 +45,7 @@ describe "Service Dialogs API" do
     it "allows read of a single service dialog with the service catalog provision role" do
       api_basic_authorize("svc_catalog_provision")
 
-      get api_service_dialog_url(nil, dialog1)
+      run_get service_dialogs_url(dialog1.id)
 
       expect(response).to have_http_status(:ok)
     end
