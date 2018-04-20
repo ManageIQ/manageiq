@@ -51,9 +51,9 @@ describe Rbac::Filterer do
 
   describe '.combine_filtered_ids' do
     # Algorithm (from Rbac::Filterer.combine_filtered_ids):
-    # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            d_union_b_and_m  = d_filtered_ids UNION b_intersection_m
-    #            filter           = d_union_b_and_m INTERSECTION tenant_filter_ids INTERSECTION u_filtered_ids
+    # b_intersection_m        = (belongsto_filtered_ids INTERSECTION managed_filtered_ids)
+    # u_union_d_union_b_and_m = user_filtered_ids UNION descendant_filtered_ids UNION belongsto_filtered_ids
+    # filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
 
     def combine_filtered_ids(user_filtered_ids, belongsto_filtered_ids, managed_filtered_ids, descendant_filtered_ids, tenant_filter_ids)
       Rbac::Filterer.new.send(:combine_filtered_ids, user_filtered_ids, belongsto_filtered_ids, managed_filtered_ids, descendant_filtered_ids, tenant_filter_ids)
@@ -88,15 +88,15 @@ describe Rbac::Filterer do
     end
 
     it 'user filter, belongs to and managed filters(self service user, Host & Cluster filter and tags)' do
-      expect(combine_filtered_ids([1], [2, 3], [3, 4], nil, nil)).to be_empty
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], nil, nil)).to match_array([1, 3])
     end
 
     it 'user filter, belongs to, managed filters and descendants filter(self service user, Host & Cluster filter and tags)' do
-      expect(combine_filtered_ids([1, 5, 6], [2, 3], [3, 4], [5, 6], nil)).to match_array([5, 6])
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], [5, 6], nil)).to match_array([1, 3, 5, 6])
     end
 
     it 'user filter, belongs to managed filters, descendants filter and tenant filter(self service user, Host & Cluster filter and tags)' do
-      expect(combine_filtered_ids([1, 6], [2, 3], [3, 4], [5, 6], [1, 6])).to match_array([6])
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], [5, 6], [1, 6])).to match_array([1, 6])
     end
 
     it 'belongs to managed filters, descendants filter and tenant filter(self service user, Host & Cluster filter and tags)' do
