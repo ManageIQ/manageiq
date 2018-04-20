@@ -692,6 +692,40 @@ describe AuthenticationMixin do
           expect(@host.auth_user_pwd(:default)).to eq([@orig_ems_user, ''])
         end
       end
+
+      context "#change_password" do
+        let(:current_password) { "current_pass" }
+        let(:new_password) { "new_pass" }
+        let(:confirm_password) { "new_pass" }
+
+        it "should fail if some param is blank" do
+          current_password = ""
+          allow(@ems).to receive(:supports?).with(:change_password) { true }
+
+          expect { @ems.change_password(current_password, new_password, confirm_password) }
+            .to raise_error(MiqException::Error, "Please, fill the current_password, new_password and confirm_password fields.")
+        end
+
+        it "should fail if the confirm password is not equal to new password" do
+          confirm_password = "different_pass"
+          allow(@ems).to receive(:supports?).with(:change_password) { true }
+
+          expect { @ems.change_password(current_password, new_password, confirm_password) }
+            .to raise_error(MiqException::Error, "Confirm password did not match.")
+        end
+
+        it "should fail if the provider doesn't support this operation" do
+          expect { @ems.change_password(current_password, new_password, confirm_password) }
+            .to raise_error(MiqException::Error, "Change Password is not supported for #{@ems.class.description} provider")
+        end
+
+        it "should update the provider password" do
+          allow(@ems).to receive(:raw_change_password) { true }
+          allow(@ems).to receive(:supports?).with(:change_password) { true }
+
+          expect(@ems.change_password(current_password, new_password, confirm_password)).to be_truthy
+        end
+      end
     end
   end
 end

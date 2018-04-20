@@ -61,17 +61,4 @@ describe ManageIQ::Providers::PhysicalInfraManager do
                             :hostname => "0.0.0.0")
     expect { ps.console_url }.to raise_error(MiqException::Error)
   end
-
-  context "#change_password" do
-    it "should update the provider password" do
-      pim = FactoryGirl.create(:generic_physical_infra,
-                               :name     => "LXCA",
-                               :hostname => "0.0.0.0")
-      allow(pim).to receive(:raw_change_password) { true }
-
-      current_password = "current_pass"
-      new_password = "new_pass"
-      expect(pim.change_password(current_password, new_password)).to be_truthy
-    end
-  end
 end

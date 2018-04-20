@@ -341,6 +341,54 @@ module AuthenticationMixin
     authentication_type(default_authentication_type)
   end
 
+  # Changes the password of userId on provider client and database.
+  #
+  # @param [current_password] password currently used for connected userId in provider client
+  # @param [new_password]     password that will replace the current one
+  # @param [confirm_password] must confirm the value of the `new_password`
+  #
+  # @return [Boolean] true if the routine is executed successfully
+  #
+  def change_password(current_password, new_password, confirm_password, auth_type = :default)
+    raise MiqException::Error, _("Change Password is not supported for #{self.class.description} provider") unless supports?(:change_password)
+    if change_password_params_valid?(current_password, new_password, confirm_password)
+      raw_change_password(current_password, new_password)
+      update_authentication(auth_type => {:userid => authentication_userid, :password => new_password})
+    end
+
+    true
+  end
+
+  def change_password_queue(userid, current_password, new_password, auth_type = :default)
+    task_opts = {
+      :action => "Changing the password for Physical Provider named '#{name}'",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'change_password',
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [current_password, new_password, auth_type]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  # This method must provide a way to change password on provider client.
+  #
+  # @param [_current_password]   password currently used for connected userId in provider client
+  # @param [_new_password]       password that will replace the current one
+  #
+  # @return [Boolean]            true if the password was changed successfully
+  #
+  # @raise [MiqException::Error] containing the error message if was not changed successfully
+  def raw_change_password(_current_password, _new_password)
+    raise NotImplementedError, _("must be implemented in subclass.")
+  end
+
   private
 
   def authentication_check_no_validation(type, options)
@@ -391,5 +439,22 @@ module AuthenticationMixin
     a = authentication_type(type)
     authentications.destroy(a) unless a.nil?
     a
+  end
+
+  #
+  # Verifies if the change password params are valid
+  #
+  # @raise [MiqException::Error] if some required data is missing
+  #                              if new_password and confirm_password are differents
+  #
+  # @return [Boolean] true if the params are fine
+  #
+  def change_password_params_valid?(current_password, new_password, confirm_password)
+    if current_password.blank? || new_password.blank? || confirm_password.blank?
+      raise MiqException::Error, _("Please, fill the current_password, new_password and confirm_password fields.")
+    end
+    raise MiqException::Error, _("Confirm password did not match.") unless new_password.eql?(confirm_password)
+
+    true
   end
 end
