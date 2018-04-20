@@ -2,27 +2,27 @@ class ServiceTemplate < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
   GENERIC_ITEM_SUBTYPES = {
-    "custom"          => _("Custom"),
-    "vm"              => _("Virtual Machine"),
-    "playbook"        => _("Playbook"),
-    "hosted_database" => _("Hosted Database"),
-    "load_balancer"   => _("Load Balancer"),
-    "storage"         => _("Storage")
+    "custom"          => N_("Custom"),
+    "vm"              => N_("Virtual Machine"),
+    "playbook"        => N_("Playbook"),
+    "hosted_database" => N_("Hosted Database"),
+    "load_balancer"   => N_("Load Balancer"),
+    "storage"         => N_("Storage")
   }.freeze
 
   CATALOG_ITEM_TYPES = {
-    "amazon"                     => _("Amazon"),
-    "azure"                      => _("Azure"),
-    "generic"                    => _("Generic"),
-    "generic_orchestration"      => _("Orchestration"),
-    "generic_ansible_playbook"   => _("Ansible Playbook"),
-    "generic_ansible_tower"      => _("Ansible Tower"),
-    "generic_container_template" => _("OpenShift Template"),
-    "google"                     => _("Google"),
-    "microsoft"                  => _("SCVMM"),
-    "openstack"                  => _("OpenStack"),
-    "redhat"                     => _("Red Hat Virtualization"),
-    "vmware"                     => _("VMware")
+    "amazon"                     => N_("Amazon"),
+    "azure"                      => N_("Azure"),
+    "generic"                    => N_("Generic"),
+    "generic_orchestration"      => N_("Orchestration"),
+    "generic_ansible_playbook"   => N_("Ansible Playbook"),
+    "generic_ansible_tower"      => N_("Ansible Tower"),
+    "generic_container_template" => N_("OpenShift Template"),
+    "google"                     => N_("Google"),
+    "microsoft"                  => N_("SCVMM"),
+    "openstack"                  => N_("OpenStack"),
+    "redhat"                     => N_("Red Hat Virtualization"),
+    "vmware"                     => N_("VMware")
   }.freeze
 
   RESOURCE_ACTION_UPDATE_ATTRS = [:dialog,
