@@ -431,9 +431,9 @@ module Rbac
     end
 
     #
-    # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            d_union_b_and_m  = d_filtered_ids UNION b_intersection_m
-    #            filter           = d_union_b_and_m INTERSECTION tenant_filter_ids INTERSECTION u_filtered_ids
+    # Algorithm: b_intersection_m        = (b_filtered_ids INTERSECTION m_filtered_ids)
+    #            u_union_d_union_b_and_m = u_filtered_ids UNION d_filtered_ids UNION b_intersection_m
+    #            filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
     #
     # a nil as input for any field means it DOES NOT apply the operation(INTERSECTION, UNION)
     # a nil as output means there is not filter
@@ -447,13 +447,13 @@ module Rbac
     # @return [Array<Integer>] target ids for filter
 
     def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
-      intersection = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:&) }
-      union        = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:|) }
+      intersection = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:&) }
+      union        = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:|) }
 
-      b_intersection_m         = intersection.call(b_filtered_ids, m_filtered_ids)
-      d_union_b_intersection_m = union.call(d_filtered_ids, b_intersection_m)
+      b_intersection_m                 = intersection.call(b_filtered_ids, m_filtered_ids)
+      u_union_d_union_b_intersection_m = union.call(u_filtered_ids, d_filtered_ids, b_intersection_m)
 
-      intersection.call(d_union_b_intersection_m, tenant_filter_ids, u_filtered_ids)
+      intersection.call(u_union_d_union_b_intersection_m, tenant_filter_ids)
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
