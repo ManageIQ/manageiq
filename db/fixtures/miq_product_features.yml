@@ -5848,6 +5848,35 @@
       :feature_type: admin
       :identifier: ems_physical_infra_new
 
+# Physical Chassis
+- :name: Physical Chassis
+  :description: Everything under Physical Chassis
+  :feature_type: node
+  :identifier: physical_chassis
+  :children:
+  - :name: View
+    :description: View Physical Chassis
+    :feature_type: view
+    :identifier: physical_chassis_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Chassis
+      :feature_type: view
+      :identifier: physical_chassis_show_list
+    - :name: Show
+      :description: Display Individual Physical Chassis
+      :feature_type: view
+      :identifier: physical_chassis_show
+  - :name: Operate
+    :description: Perform Operations on Physical Chassis
+    :feature_type: control
+    :identifier: physical_chassis_control
+    :children:
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Physical Chassis
+      :feature_type: control
+      :identifier: physical_chassis_refresh
+
 # Physical Servers
 - :name: Physical Servers
   :description: Everything under Physical Servers
