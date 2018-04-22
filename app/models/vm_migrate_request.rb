@@ -12,7 +12,7 @@ class VmMigrateRequest < MiqRequest
     vm.nil? ? super : vm.my_zone
   end
 
-  def my_role
+  def my_role(_action = nil)
     'ems_operations'
   end
 end

@@ -69,7 +69,7 @@ class MiqProvisionRequest < MiqRequest
     update_attributes(:description => miq_request_tasks.reload.first.description)
   end
 
-  def my_role
+  def my_role(_action = nil)
     'ems_operations'
   end
 
