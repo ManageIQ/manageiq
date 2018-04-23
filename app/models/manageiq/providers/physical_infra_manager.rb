@@ -51,50 +51,5 @@ module ManageIQ::Providers
     def console_url
       raise MiqException::Error, _("Console not supported")
     end
-
-    supports :change_password
-
-    # Changes the password of userId on provider client and database.
-    #
-    # @param [current_password] password currently used for connected userId in provider client
-    # @param [new_password]     password that will replace the current one
-    #
-    # @return [Boolean] true if the password was changed successfully
-    def change_password(current_password, new_password, auth_type = :default)
-      raw_change_password(current_password, new_password)
-      update_authentication(auth_type => {:userid => authentication_userid, :password => new_password})
-
-      true
-    end
-
-    def change_password_queue(userid, current_password, new_password, auth_type = :default)
-      task_opts = {
-        :action => "Changing the password for Physical Provider named '#{name}'",
-        :userid => userid
-      }
-
-      queue_opts = {
-        :class_name  => self.class.name,
-        :instance_id => id,
-        :method_name => 'change_password',
-        :role        => 'ems_operations',
-        :zone        => my_zone,
-        :args        => [current_password, new_password, auth_type]
-      }
-
-      MiqTask.generic_action_with_callback(task_opts, queue_opts)
-    end
-
-    # This method must provide a way to change password on provider client.
-    #
-    # @param [_current_password]   password currently used for connected userId in provider client
-    # @param [_new_password]       password that will replace the current one
-    #
-    # @return [Boolean]            true if the password was changed successfully
-    #
-    # @raise [MiqException::Error] containing the error message if was not changed successfully
-    def raw_change_password(_current_password, _new_password)
-      raise NotImplementedError, _("must be implemented in subclass")
-    end
   end
 end
