@@ -735,7 +735,6 @@ en:
       GenericObject:            Generic Object
       GenericObjectDefinition:  Generic Object Class
       GuestApplication:         Guest Application
-      GuestDevice:              Network Device
       Host:                     Host / Node
       HostPerformance:          Performance - Host
       IsoDatastore:             ISO Datastore
