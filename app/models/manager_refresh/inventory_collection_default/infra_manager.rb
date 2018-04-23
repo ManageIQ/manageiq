@@ -22,6 +22,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::Network,
         :manager_ref                 => %i(hardware ipaddress),
         :association                 => :host_networks,
+        :parent_inventory_collections => [:hosts],
         :inventory_object_attributes => %i(
           description
           hostname
@@ -60,6 +61,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::Hardware,
         :manager_ref                 => [:host],
         :association                 => :host_hardwares,
+        :parent_inventory_collections => [:hosts],
         :inventory_object_attributes => %i(
           annotation
           cpu_cores_per_socket
@@ -122,6 +124,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::OperatingSystem,
         :manager_ref                 => [:host],
         :association                 => :host_operating_systems,
+        :parent_inventory_collections => [:hosts],
         :inventory_object_attributes => %i(
           name
           product_name
@@ -346,6 +349,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::HostStorage,
         :manager_ref                 => %i(host storage),
         :association                 => :host_storages,
+        :parent_inventory_collections => [:hosts],
         :inventory_object_attributes => %i(
           ems_ref
           read_only
@@ -362,6 +366,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::HostSwitch,
         :manager_ref                 => %i(host switch),
         :association                 => :host_switches,
+        :parent_inventory_collections => [:hosts],
         :inventory_object_attributes => %i(
           host
           switch
