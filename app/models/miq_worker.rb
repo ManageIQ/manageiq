@@ -321,6 +321,7 @@ class MiqWorker < ApplicationRecord
     DRb.stop_service
     close_drb_pool_connections
     renice(Process.pid)
+    CodeCoverage.run_hook
   end
 
   # When we fork, the children inherits the parent's file descriptors
