@@ -1077,7 +1077,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
             elsif src[:host_id]
               selected_host(src)
             else
-              load_ar_obj(allowed_hosts)
+              allowed_hosts.group_by(&:evm_object_class).flat_map do |type, objs|
+                type.to_s.camelize.constantize.where(:id => objs.map(&:id)).to_a
+              end
             end
     Rbac.filtered(hosts, :class => Host, :user => @requester)
   end
