@@ -70,7 +70,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def trigger_automate_value_updates
-    values_from_automate
+    @value = values_from_automate
   end
 
   private

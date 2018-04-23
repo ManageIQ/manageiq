@@ -91,6 +91,10 @@ class DialogField < ApplicationRecord
     FIELD_CONTROLS
   end
 
+  def extract_dynamic_values
+    value
+  end
+
   def initialize_value_context
     @value = values_from_automate if dynamic && @value.blank?
   end
@@ -127,6 +131,7 @@ class DialogField < ApplicationRecord
   end
 
   def update_and_serialize_values
+    trigger_automate_value_updates
     DialogFieldSerializer.serialize(self)
   end
 

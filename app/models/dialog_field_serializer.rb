@@ -17,8 +17,8 @@ class DialogFieldSerializer < Serializer
     }
 
     if dialog_field.dynamic?
-      dynamic_values = dialog_field.trigger_automate_value_updates
-      extra_attributes["values"] = dynamic_values
+      # dynamic_values = dialog_field.trigger_automate_value_updates
+      extra_attributes["values"] = dialog_field.extract_dynamic_values
     end
 
     if dialog_field.type == "DialogFieldTagControl"

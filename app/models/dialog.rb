@@ -88,9 +88,19 @@ class Dialog < ApplicationRecord
     result
   end
 
-  def init_fields_with_values(values)
+  def load_values_into_fields(values)
+    dialog_field_hash.each do |_key, field|
+      field.dialog = self
+      field.value = values[field.automate_key_name] || values[field.name]
+    end
+  end
+
+  def initialize_value_context(values)
     dialog_field_hash.each do |key, field|
       field.dialog = self
+    end
+
+    dialog_field_hash.each do |_key, field|
       field.initialize_value_context
     end
   end

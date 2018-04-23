@@ -44,6 +44,10 @@ class DialogFieldSortedItem < DialogField
     raw_values
   end
 
+  def extract_dynamic_values
+    @raw_values
+  end
+
   def get_default_value
     trigger_automate_value_updates
     default_value
