@@ -724,8 +724,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     version = args.first.to_f
     return from_ws_ver_1_0(*args) if version == 1.0
 
-    # Move optional arguments into the MiqHashStruct object
-    prov_options = MiqHashStruct.new(
+    # Move optional arguments into the OpenStruct object
+    prov_options = OpenStruct.new(
       :values                => args[6],
       :ems_custom_attributes => args[7],
       :miq_custom_attributes => args[8],
@@ -938,7 +938,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def self.from_ws_ver_1_x(version, user, template_fields, vm_fields, requester, tags, options)
-    options = MiqHashStruct.new if options.nil?
+    options = OpenStruct.new if options.nil?
     _log.warn("Web-service provisioning starting with interface version <#{version}> by requester <#{user.userid}>")
 
     init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type]), :initial_pass => true}
@@ -1045,11 +1045,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
                  :v_total_snapshots      => vm_or_template.v_total_snapshots,
                  :evm_object_class       => :Vm}
     data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.respond_to?(:cloud_tenant)
-    hash_struct = MiqHashStruct.new(data_hash)
-    hash_struct.operating_system = MiqHashStruct.new(
+    hash_struct = OpenStruct.new(data_hash)
+    hash_struct.operating_system = OpenStruct.new(
       :product_name => vm_or_template.operating_system.product_name
     ) if vm_or_template.operating_system
-    hash_struct.ext_management_system = MiqHashStruct.new(
+    hash_struct.ext_management_system = OpenStruct.new(
       :name => vm_or_template.ext_management_system.name
     ) if vm_or_template.ext_management_system
     if options[:include_datacenter] == true

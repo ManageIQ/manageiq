@@ -207,15 +207,15 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def self.from_ws(*args)
-    # Move optional arguments into the MiqHashStruct object
+    # Move optional arguments into the OpenStruct object
     prov_args = args[0, 6]
-    prov_options = MiqHashStruct.new(:values => args[6], :ems_custom_attributes => args[7], :miq_custom_attributes => args[8])
+    prov_options = OpenStruct.new(:values => args[6], :ems_custom_attributes => args[7], :miq_custom_attributes => args[8])
     prov_args << prov_options
     MiqHostProvisionWorkflow.from_ws_ver_1_x(*prov_args)
   end
 
   def self.from_ws_ver_1_x(version, user, template_fields, vm_fields, requester, tags, options)
-    options = MiqHashStruct.new if options.nil?
+    options = OpenStruct.new if options.nil?
     _log.warn("Web-service host provisioning starting with interface version <#{version}> by requester <#{user.userid}>")
 
     init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type])}

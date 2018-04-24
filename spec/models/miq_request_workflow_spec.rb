@@ -625,7 +625,7 @@ describe MiqRequestWorkflow do
     let(:storage) { FactoryGirl.create(:storage) }
 
     it 'filters out storage_clusters not in same ems' do
-      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => MiqHashStruct.new(:id => ems.id))
+      allow(workflow).to receive(:get_source_and_targets).and_return(:ems => OpenStruct.new(:id => ems.id))
       storage_cluster1 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1', :ems_id => ems.id)
       storage_cluster2 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster2', :ems_id => ems.id + 1)
       storage_cluster1.add_child(storage)

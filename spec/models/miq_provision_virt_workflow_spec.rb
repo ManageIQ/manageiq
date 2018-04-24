@@ -262,7 +262,7 @@ describe MiqProvisionVirtWorkflow do
       host1  = FactoryGirl.create(:host_vmware, :ems_id => ems.id)
       src_vm = FactoryGirl.create(:vm_vmware, :host => host1, :ems_id => ems.id)
       allow(workflow).to receive(:source_vm_rbac_filter).and_return([src_vm])
-      expect(workflow.ws_find_template_or_vm("", "VMWARE", "asdf-adsf", "asdfadfasdf")).to be_a(MiqHashStruct)
+      expect(workflow.ws_find_template_or_vm("", "VMWARE", "asdf-adsf", "asdfadfasdf")).to be_a(OpenStruct)
     end
   end
 
