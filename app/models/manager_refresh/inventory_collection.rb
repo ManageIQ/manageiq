@@ -68,8 +68,8 @@ module ManagerRefresh
     # @return [Set] A set of InventoryCollection objects that depends on this InventoryCollection object.
     attr_accessor :dependees
 
-    # @return [Array<Symbol>] names of InventoryCollection objects or InventoryCollection objects.
-    #         If symbols are used, those will be transformed to InventoryCollection objects by the Scanner.
+    # @return [Array<Symbol>] @see #parent_inventory_collections documentation of InventoryCollection.new kwargs
+    #   parameters
     attr_accessor :parent_inventory_collections
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
@@ -320,10 +320,44 @@ module ManagerRefresh
     #          the old data.
     #        - :concurrent_safe_batch => Same as :concurrent_safe, but the upsert/update queries are executed as
     #          batched SQL queries, instead of sending 1 query per record.
-    # @param parent_inventory_collections [Array] Array of symbols having a name of the
-    #        ManagerRefresh::InventoryCollection objects, that serve as parents to this InventoryCollection. Then this
-    #        InventoryCollection completeness will be encapsulated by the parent_inventory_collections :manager_uuids
-    #        instead of this InventoryCollection :manager_uuids.
+    # @param parent_inventory_collections [Array] Array of symbols having a name pointing to the
+    #        ManagerRefresh::InventoryCollection objects, that serve as parents to this InventoryCollection. There are
+    #        several scenarios to consider, when deciding if InventoryCollection has parent collections, see the example.
+    #
+    #        Example:
+    #          taking inventory collections :vms and :disks (local disks), if we write that:
+    #          inventory_collection = InventoryCollection.new({
+    #                       :model_class                 => ::Disk,
+    #                       :association                 => :disks,
+    #                       :manager_ref                 => [:vm, :location]
+    #                       :parent_inventory_collection => [:vms],
+    #                     })
+    #
+    #          Then the decision for having :parent_inventory_collection => [:vms] was probably driven by these
+    #          points:
+    #          1. We can get list of all disks only by doing SQL query through the parent object (so there will be join
+    #             from vms to disks table).
+    #          2. There is no API query for getting all disks from the provider API, we get them inside VM data, or as
+    #             a Vm subquery
+    #          3. Part of the manager_ref of the IC is the VM object (foreign key), so the disk's location is unique
+    #             only under 1 Vm. (In current models, this modeled going through Hardware model)
+    #          4. In targeted refresh, we always expect that each Vm will be saved with all its disks.
+    #
+    #          Then having the above points, adding :parent_inventory_collection => [:vms], will bring these
+    #          implications:
+    #          1. By archiving/deleting Vm, we can no longer see the disk, because those were owned by the Vm. Any
+    #             archival/deletion of the Disk model, must be then done by cascade delete/hooks logic.
+    #          2. Having Vm as a parent ensures we always process it first. So e.g. when providing no Vms for saving
+    #             we would have no graph dependency (no data --> no edges --> no dependencies) and Disk could be
+    #             archived/removed before the Vm, while we always want to archive the VM first.
+    #          3. For targeted refresh, we always expect that all disks are saved with a VM. So for targeting :disks,
+    #             we are not using #manager_uuids attribute, since the scope is "all disks of all targeted VMs", so we
+    #             always use #manager_uuids of the parent. (that is why :parent_inventory_collections and
+    #             :manager_uuids are mutually exclusive attributes)
+    #          4. For automatically building the #targeted_arel query, we need the parent to know what is the root node.
+    #             While this information can be introspected from the data, it creates a scope for create&update&delete,
+    #             which means it has to work with no data provided (causing delete all). So with no data we cannot
+    #             introspect anything.
     # @param manager_uuids [Array|Proc] Array of manager_uuids of the InventoryObjects we want to create/update/delete. Using
     #        this attribute, the db_collection_for_comparison will be automatically limited by the manager_uuids, in a
     #        case of a simple relation. In a case of a complex relation, we can leverage :manager_uuids in a
