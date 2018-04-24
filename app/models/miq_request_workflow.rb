@@ -842,8 +842,12 @@ class MiqRequestWorkflow
 
   def load_ems_node(item, log_header)
     @ems_xml_nodes ||= {}
-    klass_name = item.kind_of?(MiqHashStruct) ? item.evm_object_class : item.class.base_class.name
-    node = @ems_xml_nodes["#{klass_name}_#{item.id}"]
+    klass_name = if item.kind_of?(MiqHashStruct)
+                   Object.const_get(item.evm_object_class)
+                 else
+                   item.class.base_class
+                 end
+    node = @ems_xml_nodes[klass_name][item.id]
     $log.error("#{log_header} Resource <#{klass_name}_#{item.id} - #{item.name}> not found in cached resource tree.") if node.nil?
     node
   end
@@ -957,7 +961,8 @@ class MiqRequestWorkflow
 
   def convert_to_xml(xml, result)
     result.each do |obj, children|
-      @ems_xml_nodes["#{obj.class.base_class}_#{obj.id}"] = node = xml.add_element(obj.class.base_class.name, :object => ci_to_hash_struct(obj))
+      @ems_xml_nodes[obj.class.base_class] ||= {}
+      @ems_xml_nodes[obj.class.base_class][obj.id] = node = xml.add_element(obj.class.base_class.name, :object => ci_to_hash_struct(obj))
       convert_to_xml(node, children)
     end
   end
