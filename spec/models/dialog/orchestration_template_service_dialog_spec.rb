@@ -1,11 +1,22 @@
 describe Dialog::OrchestrationTemplateServiceDialog do
+  before(:each) do
+    Rails.cache.clear
+  end
+
   let(:orchestration_template) do
     FactoryGirl.create(:orchestration_template).tap do |template|
       allow(template).to receive(:parameter_groups).and_return(param_groups)
     end
   end
+  let(:orchestration_template_tabs) do
+    FactoryGirl.create(:orchestration_template).tap do |template|
+      allow(template).to receive(:parameter_groups_tabbed).and_return(param_groups_tabbed)
+    end
+  end
   let(:param_groups) { create_parameters(param_options) }
+  let(:param_groups_tabbed) { create_parameter_groups_tabbed }
   let(:dialog) { described_class.create_dialog("test", orchestration_template) }
+  let(:dialog_tabbed) { described_class.create_dialog("test_tabbed", orchestration_template_tabs) }
 
   describe ".create_dialog" do
     let(:param_groups) { [] }
@@ -17,7 +28,53 @@ describe Dialog::OrchestrationTemplateServiceDialog do
       )
 
       tabs = dialog.dialog_tabs
-      assert_tab_attributes(tabs[0])
+      assert_tab_attributes(tabs[0], :label => "Basic Information", :display => "edit")
+    end
+  end
+
+  describe ".create_dialog_tabbed" do
+    it "creates a dialog with tabs from a template" do
+      expect(dialog_tabbed).not_to be_nil
+      tabs = dialog_tabbed.dialog_tabs
+
+      expect(tabs).not_to be_nil
+      expect(tabs.length).to be 3
+
+      assert_tab_attributes(tabs[0], :label => "Basic Information", :display => "edit")
+      assert_tab_attributes(tabs[1], :label => "Networks", :display => "edit")
+      assert_tab_attributes(tabs[2], :label => "VMs", :display => "edit")
+
+      expect(tabs[0].dialog_groups.length).to be 2
+      expect(tabs[1].dialog_groups.length).to be 1
+      expect(tabs[2].dialog_groups.length).to be 1
+
+      expect(tabs[0].dialog_groups[0].dialog_fields.length).to be 4
+      expect(tabs[0].dialog_groups[1].dialog_fields.length).to be 1
+      expect(tabs[1].dialog_groups[0].dialog_fields.length).to be 1
+      expect(tabs[2].dialog_groups[0].dialog_fields.length).to be 1
+
+      assert_stack_group(tabs[0].dialog_groups[0])
+
+      assert_field(tabs[0].dialog_groups[1].dialog_fields[0],
+                   DialogFieldCheckBox,
+                   :name          => 'param_deploy',
+                   :label         => 'Deploy vApp',
+                   :data_type     => 'boolean',
+                   :default_value => "t")
+
+      assert_field(tabs[1].dialog_groups[0].dialog_fields[0],
+                   DialogFieldTextBox,
+                   :name      => 'param_parent-0',
+                   :label     => 'Parent Network',
+                   :data_type => 'string',)
+
+      assert_field(tabs[2].dialog_groups[0].dialog_fields[0],
+                   DialogFieldTextBox,
+                   :name          => 'param_instance_name-0',
+                   :label         => 'Instance name',
+                   :data_type     => 'string',
+                   :required      => true,
+                   :default_value => 'default_name')
     end
   end
 
@@ -99,7 +156,7 @@ describe Dialog::OrchestrationTemplateServiceDialog do
   end
 
   def assert_stack_tab(tab)
-    assert_tab_attributes(tab)
+    assert_tab_attributes(tab, :label => "Basic Information", :display => "edit")
 
     groups = tab.dialog_groups
     expect(groups.size).to eq(3)
@@ -107,11 +164,8 @@ describe Dialog::OrchestrationTemplateServiceDialog do
     assert_stack_group(groups[0])
   end
 
-  def assert_tab_attributes(tab)
-    expect(tab).to have_attributes(
-      :label   => "Basic Information",
-      :display => "edit"
-    )
+  def assert_tab_attributes(tab, attributes)
+    expect(tab).to have_attributes(attributes)
   end
 
   def assert_stack_group(group)
@@ -124,7 +178,7 @@ describe Dialog::OrchestrationTemplateServiceDialog do
     expect(fields.size).to eq(4)
 
     expect(fields[0].resource_action.fqname).to eq("/Cloud/Orchestration/Operations/Methods/Available_Tenants")
-    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name", :dynamic => true, :reconfigurable => false)
+    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name", :dynamic => true, :reconfigurable => nil)
     assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",  :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$', :reconfigurable => false)
   end
 
@@ -147,5 +201,98 @@ describe Dialog::OrchestrationTemplateServiceDialog do
   def create_parameters(options)
     options.reverse_merge!(:name => 'user', :label => 'User Parameter', :data_type => 'string', :required => true)
     [OrchestrationTemplate::OrchestrationParameterGroup.new(:label => 'group', :parameters => [OrchestrationTemplate::OrchestrationParameter.new(options)])]
+  end
+
+  def create_parameter_groups_tabbed
+    [
+      {
+        :title       => "Basic Information",
+        :stack_group => [
+          OrchestrationTemplate::OrchestrationParameter.new(
+            :name           => "tenant_name",
+            :label          => "Tenant",
+            :data_type      => "string",
+            :description    => "Tenant where the stack will be deployed",
+            :required       => true,
+            :reconfigurable => false,
+            :constraints    => [
+              OrchestrationTemplate::OrchestrationParameterAllowedDynamic.new(
+                :fqname => "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
+              )
+            ]
+          ),
+          OrchestrationTemplate::OrchestrationParameter.new(
+            :name           => "stack_name",
+            :label          => "Stack Name",
+            :data_type      => "string",
+            :description    => "Name of the stack",
+            :required       => true,
+            :reconfigurable => false,
+            :constraints    => [
+              OrchestrationTemplate::OrchestrationParameterPattern.new(
+                :pattern => '^[A-Za-z][A-Za-z0-9\-]*$'
+              )
+            ]
+          ),
+          OrchestrationTemplate::OrchestrationParameter.new(
+            :name           => "availability_zone",
+            :label          => "Availability zone",
+            :data_type      => "string",
+            :description    => "Availability zone where the stack will be deployed",
+            :reconfigurable => false,
+          ),
+          OrchestrationTemplate::OrchestrationParameter.new(
+            :name           => 'stack_template',
+            :label          => 'vApp Template',
+            :description    => 'vApp Template that this Service bases on',
+            :data_type      => 'string',
+            :required       => true,
+            :reconfigurable => false
+          )
+        ],
+        :param_group => [OrchestrationTemplate::OrchestrationParameterGroup.new(
+          :label      => 'vApp Parameters',
+          :parameters => [
+            OrchestrationTemplate::OrchestrationParameter.new(
+              :name          => 'deploy',
+              :label         => 'Deploy vApp',
+              :data_type     => 'boolean',
+              :default_value => true,
+              :constraints   => [
+                OrchestrationTemplate::OrchestrationParameterBoolean.new
+              ]
+            )
+          ],
+        )]
+      },
+      {
+        :title       => "Networks",
+        :param_group => [OrchestrationTemplate::OrchestrationParameterGroup.new(
+          :label      => 'tab2_group',
+          :parameters => [
+            OrchestrationTemplate::OrchestrationParameter.new(
+              :name      => 'parent-0',
+              :label     => 'Parent Network',
+              :data_type => 'string',
+            )
+          ]
+        )]
+      },
+      {
+        :title       => "VMs",
+        :param_group => [OrchestrationTemplate::OrchestrationParameterGroup.new(
+          :label      => 'tab3_group',
+          :parameters => [
+            OrchestrationTemplate::OrchestrationParameter.new(
+              :name          => 'instance_name-0',
+              :label         => 'Instance name',
+              :data_type     => 'string',
+              :required      => true,
+              :default_value => 'default_name'
+            )
+          ]
+        )]
+      }
+    ]
   end
 end
