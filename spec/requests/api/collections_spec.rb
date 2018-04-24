@@ -121,7 +121,7 @@ describe "Rest API Collections" do
 
     it "query Groups" do
       expect(Tenant.exists?).to be_truthy
-      FactoryGirl.create(:miq_group)
+      @user.miq_groups << FactoryGirl.create(:miq_group)
       api_basic_authorize collection_action_identifier(:groups, :read, :get)
       run_get groups_url, :expand => 'resources'
       expect_query_result(:groups, MiqGroup.non_tenant_groups.count, MiqGroup.count)
@@ -265,7 +265,8 @@ describe "Rest API Collections" do
     end
 
     it "query Users" do
-      FactoryGirl.create(:user)
+      user = FactoryGirl.create(:user)
+      user.miq_groups << @user.current_group
       test_collection_query(:users, users_url, User)
     end
 
@@ -410,6 +411,7 @@ describe "Rest API Collections" do
 
     it "bulk query Groups" do
       group = FactoryGirl.create(:miq_group)
+      @user.miq_groups << group
       test_collection_bulk_query(:groups, groups_url, MiqGroup, group.id)
     end
 

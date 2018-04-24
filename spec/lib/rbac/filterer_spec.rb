@@ -76,6 +76,30 @@ describe Rbac::Filterer do
       end
     end
 
+    context 'with tags' do
+      let(:role)         { FactoryGirl.create(:miq_user_role) }
+      let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+      let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+
+      before do
+        tagged_group.entitlement = Entitlement.new
+        tagged_group.entitlement.set_belongsto_filters([])
+        tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+        tagged_group.save!
+      end
+      
+      context "searching for tenants" do
+        before do
+          owner_tenant.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'list tagged tenants' do
+          results = described_class.search(:class => Tenant, :user => user).first
+          expect(results).to match_array [owner_tenant]
+        end
+      end
+    end
+
     context 'with virtual custom attributes' do
       let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
       let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
@@ -628,13 +652,14 @@ describe Rbac::Filterer do
         end
       end
 
-      it "returns all users" do
+      it "returns users from current user's groups" do
+        other_user.miq_groups << group
         get_rbac_results_for_and_expect_objects(User, [user, other_user])
       end
 
-      it "returns all groups" do
+      it "returns user's groups" do
         _expected_groups = [group, other_group] # this will create more groups than 2
-        get_rbac_results_for_and_expect_objects(MiqGroup, MiqGroup.all)
+        get_rbac_results_for_and_expect_objects(MiqGroup, user.miq_groups)
       end
 
       context "with self-service user" do
@@ -1567,8 +1592,10 @@ describe Rbac::Filterer do
     end
 
     context "with group's VMs" do
+      let(:group_user) { FactoryGirl.create(:user, :miq_groups => [group2, group]) }
+      let(:group2) { FactoryGirl.create(:miq_group, :role => 'support') }
+
       before(:each) do
-        group2 = FactoryGirl.create(:miq_group, :role => 'support')
         4.times do |i|
           FactoryGirl.create(:vm_vmware,
                              :name             => "Test VM #{i}",
@@ -1585,12 +1612,12 @@ describe Rbac::Filterer do
             value: connected
             field: MiqGroup.vms-connection_state
         '
-        results, attrs = described_class.search(:class          => "MiqGroup",
-                                                :filter         => filter,
-                                                :miq_group      => group)
 
-        expect(results.length).to eq(2)
-        expect(attrs[:auth_count]).to eq(2)
+        User.with_user(group_user) do
+          results, attrs = described_class.search(:class => "MiqGroup", :filter => filter, :miq_group => group)
+          expect(results.length).to eq(2)
+          expect(attrs[:auth_count]).to eq(2)
+        end
       end
 
       it "when filtering on a virtual column (FB15509)" do
@@ -1601,11 +1628,11 @@ describe Rbac::Filterer do
             value: false
             field: MiqGroup.vms-disconnected
         '
-        results, attrs = described_class.search(:class          => "MiqGroup",
-                                                :filter         => filter,
-                                                :miq_group      => group)
-        expect(results.length).to eq(2)
-        expect(attrs[:auth_count]).to eq(2)
+        User.with_user(group_user) do
+          results, attrs = described_class.search(:class => "MiqGroup", :filter => filter, :miq_group => group)
+          expect(results.length).to eq(2)
+          expect(attrs[:auth_count]).to eq(2)
+        end
       end
     end
 
