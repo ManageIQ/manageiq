@@ -13,6 +13,7 @@ module Rbac
       CloudVolume
       ConfigurationProfile
       ConfigurationScriptBase
+      ConfigurationScriptSource
       ConfiguredSystem
       Container
       ContainerBuild
@@ -40,6 +41,7 @@ module Rbac
       MiddlewareMessaging
       MiddlewareServer
       MiddlewareServerGroup
+      MiqRequest
       NetworkPort
       NetworkRouter
       OrchestrationStack
@@ -52,7 +54,7 @@ module Rbac
       VmOrTemplate
     )
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User)
+    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User Tenant)
 
     NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
       CloudNetwork
@@ -122,6 +124,13 @@ module Rbac
       'User'                   => :descendant_ids,
       'Vm'                     => :descendant_ids
     }
+
+    # Classes inherited from these classes or mixins are allowing ownership feature on the target model,
+    # scope user_or_group_owned is required on target model
+    OWNERSHIP_CLASSES = %w(
+      OwnershipMixin
+      MiqRequest
+    ).freeze
 
     include Vmdb::Logging
 
@@ -239,6 +248,7 @@ module Rbac
 
       exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
+      skip_references            = skip_references?(options, attrs)
 
       # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
       # if you note, the limits are put back into scope a few lines down from here
@@ -248,7 +258,7 @@ module Rbac
               .includes(include_for_find).includes(exp_includes)
               .order(order)
 
-      scope = include_references(scope, klass, include_for_find, exp_includes)
+      scope = include_references(scope, klass, include_for_find, exp_includes, skip_references)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
       targets = scope
 
@@ -282,7 +292,48 @@ module Rbac
       klass.respond_to?(:finder_needs_type_condition?) ? klass.finder_needs_type_condition? : false
     end
 
-    def include_references(scope, klass, include_for_find, exp_includes)
+    # This is a very primitive way of determining whether we want to skip
+    # adding references to the query.
+    #
+    # For now, basically it checks if the caller has not provided :extra_cols,
+    # or if the MiqExpression can't apply the limit in SQL.  If both of those
+    # are true, then we don't add `.references` to the scope.
+    #
+    # If still invalid, there is an EXPLAIN check in #include_references that
+    # will make sure the query is valid and if not, will include the references
+    # as done previously.
+    def skip_references?(options, attrs)
+      options[:extra_cols].blank? && !attrs[:apply_limit_in_sql]
+    end
+
+    def include_references(scope, klass, include_for_find, exp_includes, skip)
+      if skip
+        # If we are in a transaction, we don't want to polute that
+        # transaction with a failed EXPLAIN.  We use a SQL SAVEPOINT (which is
+        # created via `transaction(:requires_new => true)`) to prevent that
+        # from being an issue (happens in tests with transactional fixtures)
+        #
+        # See https://stackoverflow.com/a/31146267/3574689
+        valid_skip = MiqDatabase.transaction(:requires_new => true) do
+          begin
+            ActiveRecord::Base.connection.explain(scope.to_sql)
+          rescue ActiveRecord::StatementInvalid => e
+            unless Rails.env.production?
+              warn "There was an issue with the Rbac filter without references!"
+              warn "Consider trying to fix this edge case in Rbac::Filterer!  Error Below:"
+              warn e.message
+              warn e.backtrace
+            end
+            # returns nil
+            raise ActiveRecord::Rollback
+          end
+        end
+        # If the result of the transaction is non-nil, then the block was
+        # successful and didn't trigger the ActiveRecord::Rollback, so we can
+        # return the scope as is.
+        return scope if valid_skip
+      end
+
       ref_includes = Hash(include_for_find).merge(Hash(exp_includes))
       unless polymorphic_include?(klass, ref_includes)
         scope = scope.references(include_for_find).references(exp_includes)
@@ -350,8 +401,13 @@ module Rbac
       targets.pluck(:id) if targets
     end
 
-    def get_self_service_objects(user, miq_group, klass)
-      return nil if miq_group.nil? || !miq_group.self_service? || !(klass < OwnershipMixin)
+    def self_service_ownership_scope?(miq_group, klass)
+      is_ownership_class = OWNERSHIP_CLASSES.any? { |allowed_ownership_klass| klass <= allowed_ownership_klass.safe_constantize }
+      miq_group.present? && miq_group.self_service? && is_ownership_class && klass.respond_to?(:user_or_group_owned)
+    end
+
+    def self_service_ownership_scope(user, miq_group, klass)
+      return nil unless self_service_ownership_scope?(miq_group, klass)
 
       # for limited_self_service, use user's resources, not user.current_group's resources
       # for reports (user = nil), still use miq_group
@@ -365,7 +421,7 @@ module Rbac
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       expression = miq_group.try(:entitlement).try(:filter_expression)
       expression.set_tagged_target(klass) if expression
-      u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
+      u_filtered_ids = pluck_ids(self_service_ownership_scope(user, miq_group, klass))
       b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
       m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, expression || user_filters['managed']))
       d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
@@ -375,9 +431,9 @@ module Rbac
     end
 
     #
-    # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            d_union_b_and_m  = d_filtered_ids UNION b_intersection_m
-    #            filter           = d_union_b_and_m INTERSECTION tenant_filter_ids INTERSECTION u_filtered_ids
+    # Algorithm: b_intersection_m        = (b_filtered_ids INTERSECTION m_filtered_ids)
+    #            u_union_d_union_b_and_m = u_filtered_ids UNION d_filtered_ids UNION b_intersection_m
+    #            filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
     #
     # a nil as input for any field means it DOES NOT apply the operation(INTERSECTION, UNION)
     # a nil as output means there is not filter
@@ -391,13 +447,13 @@ module Rbac
     # @return [Array<Integer>] target ids for filter
 
     def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
-      intersection = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:&) }
-      union        = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:|) }
+      intersection = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:&) }
+      union        = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:|) }
 
-      b_intersection_m         = intersection.call(b_filtered_ids, m_filtered_ids)
-      d_union_b_intersection_m = union.call(d_filtered_ids, b_intersection_m)
+      b_intersection_m                 = intersection.call(b_filtered_ids, m_filtered_ids)
+      u_union_d_union_b_intersection_m = union.call(u_filtered_ids, d_filtered_ids, b_intersection_m)
 
-      intersection.call(d_union_b_intersection_m, tenant_filter_ids, u_filtered_ids)
+      intersection.call(u_union_d_union_b_intersection_m, tenant_filter_ids)
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
@@ -463,6 +519,7 @@ module Rbac
 
         if MiqUserRole != klass
           filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
+          scope = scope.with_current_user_groups(user)
         end
 
         scope_by_ids(scope, filtered_ids)
@@ -498,6 +555,9 @@ module Rbac
         scope_by_parent_ids(associated_class, scope, filtered_ids)
       elsif [MiqUserRole, MiqGroup, User].include?(klass)
         scope_for_user_role_group(klass, scope, miq_group, user, rbac_filters['managed'])
+      elsif klass == Tenant
+        filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, rbac_filters['managed']))
+        scope_by_ids(scope, filtered_ids)
       else
         scope
       end

@@ -40,7 +40,7 @@ describe MiqUserRole do
   end
 
   context "testing allows methods" do
-    before(:each) do
+    before do
       EvmSpecHelper.seed_specific_product_features(%w(
         dashboard_add
         dashboard_view

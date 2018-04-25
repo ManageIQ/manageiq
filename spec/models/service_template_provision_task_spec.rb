@@ -1,6 +1,6 @@
 describe ServiceTemplateProvisionTask do
   context "with multiple tasks" do
-    before(:each) do
+    before do
       @admin = FactoryGirl.create(:user_with_group)
 
       @request = FactoryGirl.create(:service_template_provision_request,
@@ -24,6 +24,8 @@ describe ServiceTemplateProvisionTask do
       @task_2.miq_request_tasks  = [@task_2_1]
       @task_3.miq_request_task   =  @task_0
     end
+
+    let(:tracking_label) { "r#{@request.id}_service_template_provision_task_#{@task_0.id}" }
 
     def create_stp(description, state = 'pending', prov_index = nil, scaling_max = nil)
       if prov_index && scaling_max
@@ -100,7 +102,8 @@ describe ServiceTemplateProvisionTask do
           :args           => [automate_args],
           :role           => 'automate',
           :zone           => 'special',
-          :tracking_label => "service_template_provision_task_#{@task_0.id}")
+          :tracking_label => tracking_label
+        )
         @task_0.deliver_to_automate
       end
 
@@ -126,7 +129,7 @@ describe ServiceTemplateProvisionTask do
           :method_name    => 'execute',
           :role           => 'ems_operations',
           :zone           => 'a_zone',
-          :tracking_label => "service_template_provision_task_#{@task_0.id}",
+          :tracking_label => tracking_label,
           :deliver_on     => nil,
           :miq_callback   => miq_callback)
         @task_0.execute_queue
@@ -219,7 +222,7 @@ describe ServiceTemplateProvisionTask do
     end
 
     context "with a service" do
-      before(:each) do
+      before do
         @service = FactoryGirl.create(:service, :name => 'Test Service')
       end
 

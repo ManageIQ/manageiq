@@ -1,7 +1,9 @@
 class MeteringVm < ChargebackVm
   set_columns_hash(
-    :metering_used_metric   => :integer,
-    :existence_hours_metric => :integer
+    :metering_used_metric                               => :integer,
+    :existence_hours_metric                             => :integer,
+    :beginning_of_resource_existence_in_report_interval => :datetime,
+    :end_of_resource_existence_in_report_interval       => :datetime
   )
 
   include Metering
@@ -11,6 +13,7 @@ class MeteringVm < ChargebackVm
       "cpu_allocated_metric"     => {:grouping => [:total]},
       "cpu_used_metric"          => {:grouping => [:total]},
       "disk_io_used_metric"      => {:grouping => [:total]},
+      "existence_hours_metric"   => {:grouping => [:total]},
       "fixed_compute_metric"     => {:grouping => [:total]},
       "memory_allocated_metric"  => {:grouping => [:total]},
       "memory_used_metric"       => {:grouping => [:total]},

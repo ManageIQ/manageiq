@@ -106,6 +106,10 @@ FactoryGirl.define do
           :parent => :automation_manager_authentication,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential"
 
+  factory :ansible_vault_credential,
+          :parent => :automation_manager_authentication,
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::VaultCredential"
+
   factory :ansible_network_credential,
           :parent => :automation_manager_authentication,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential"
@@ -121,6 +125,10 @@ FactoryGirl.define do
   factory :embedded_ansible_machine_credential,
           :parent => :automation_manager_authentication,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential"
+
+  factory :embedded_ansible_vault_credential,
+          :parent => :automation_manager_authentication,
+          :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential"
 
   factory :embedded_ansible_scm_credential,
           :parent => :automation_manager_authentication,

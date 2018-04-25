@@ -21,6 +21,7 @@ class MiqTask < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy
   has_one :miq_report_result
   has_one :job, :dependent => :destroy
+  has_one :miq_queue
 
   belongs_to :miq_server
 
@@ -233,12 +234,14 @@ class MiqTask < ApplicationRecord
       serializer_name = binary_blob.data_type
       serializer_name = "Marshal" unless serializer_name == "YAML" # YAML or Marshal, for now
       serializer = serializer_name.constantize
-      return serializer.load(binary_blob.binary)
+      result = serializer.load(binary_blob.binary)
+      return result.kind_of?(String) ? result.force_encoding("UTF-8") : result
     end
     nil
   end
 
   def task_results=(value)
+    value = value.force_encoding("UTF-8") if value.kind_of?(String)
     self.binary_blob   = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
     binary_blob.binary = YAML.dump(value)
   end
@@ -271,6 +274,7 @@ class MiqTask < ApplicationRecord
 
     # Set the callback for this task to set the status based on the results of the actions
     queue_options[:miq_callback] = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback, :args => ['Finished']}
+    queue_options[:miq_task_id] = task.id
     method_opts = queue_options[:args].first
     method_opts[:task_id] = task.id if method_opts.kind_of?(Hash)
     MiqQueue.put(queue_options)

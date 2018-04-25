@@ -29,20 +29,20 @@ gem "bcrypt",                         "~> 3.1.10",     :require => false
 gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.6.0",       :require => false
-gem "dalli",                          "~>2.7.4",       :require => false
+gem "dalli",                          "=2.7.6",        :require => false
 gem "default_value_for",              "~>3.0.3"
 gem "docker-api",                     "~>1.33.6",      :require => false
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.3.0"
-gem "hamlit",                         "~>2.7.0"
+gem "hamlit",                         "~>2.8.5"
 gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
-gem "kubeclient",                     "~>2.4.0",       :require => false # For scaling pods at runtime
-gem "linux_admin",                    "~>1.2.0",       :require => false
+gem "kubeclient",                     "~>2.4",         :require => false # For scaling pods at runtime
+gem "linux_admin",                    "~>1.2.1",       :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
-gem "manageiq-api-client",            "~>0.1.0",       :require => false
+gem "manageiq-api-client",            "~>0.3.0",       :require => false
 gem "manageiq-messaging",                              :require => false, :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>2.6.1",       :path => File.expand_path("mime-types-redirector", __dir__)
@@ -54,7 +54,7 @@ gem "openscap",                       "~>0.4.3",       :require => false
 gem "pg",                             "~>0.18.2",      :require => false
 gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>5.0.2"
+gem "rails",                          "~>5.0.6"
 gem "rails-i18n",                     "~>5.x"
 gem "rake",                           ">=11.0",        :require => false
 gem "rest-client",                    "~>2.0.0",       :require => false
@@ -86,7 +86,7 @@ group :amazon, :manageiq_default do
 end
 
 group :ansible, :manageiq_default do
-  gem "ansible_tower_client",           "~>0.12.2",      :require => false
+  gem "ansible_tower_client",           "~>0.13.0",      :require => false
 end
 
 group :azure, :manageiq_default do
@@ -119,7 +119,7 @@ group :nuage, :manageiq_default do
 end
 
 group :qpid_proton, :optional => true do
-  gem "qpid_proton",                    "~>0.19.0",      :require => false
+  gem "qpid_proton",                    "~>0.22.0",      :require => false
 end
 
 group :openshift, :manageiq_default do
@@ -182,7 +182,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.2.8",       :require => false
+  gem "manageiq-smartstate",            "~>0.2.10",       :require => false
 end
 
 group :consumption, :manageiq_default do
@@ -194,6 +194,10 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-ui-classic"
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
+end
+
+group :v2v, :ui_dependencies do
+  gem "miq_v2v_ui", :git => "https://github.com/priley86/miq_v2v_ui_plugin.git", :branch => "master"
 end
 
 group :web_server, :manageiq_default do
@@ -214,7 +218,6 @@ end
 unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
-    gem "graphiql-rails",   "~>1.4"
     gem "haml_lint",        "~>0.20.0", :require => false
     gem "rubocop",          "~>0.52.1", :require => false
     # ruby_parser is required for i18n string extraction

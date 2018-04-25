@@ -4,7 +4,7 @@ describe MiqHostProvisionRequest do
   end
 
   context "with a valid userid and host," do
-    before(:each) do
+    before do
       @user = FactoryGirl.create(:user, :role => "admin")
       # approver is also an admin
       @approver = FactoryGirl.create(:user_miq_request_approver, :miq_groups => @user.miq_groups)
@@ -35,7 +35,7 @@ describe MiqHostProvisionRequest do
     end
 
     context "when calling call_automate_event_queue" do
-      before(:each) do
+      before do
         EvmSpecHelper.local_miq_server(:zone => Zone.seed)
         @pr.miq_request.call_automate_event_queue("request_created")
       end
@@ -52,7 +52,7 @@ describe MiqHostProvisionRequest do
     end
 
     context "after MiqRequest is deleted," do
-      before(:each) do
+      before do
         @pr.miq_request.destroy
       end
 

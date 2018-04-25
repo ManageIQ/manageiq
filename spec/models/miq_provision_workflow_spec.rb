@@ -20,7 +20,7 @@ describe MiqProvisionWorkflow do
       end
 
       context "With a Valid Template," do
-        before(:each) do
+        before do
           @ems         = FactoryGirl.create(:ems_vmware, :name => "Test EMS", :zone => server.zone)
           @host        = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host", :state => 'on',
                                             :ext_management_system => @ems)

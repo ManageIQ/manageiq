@@ -39,7 +39,7 @@ describe Authenticator::Ldap do
     end
   end
 
-  before(:each) do
+  before do
     # If anything goes looking for the currently configured
     # Authenticator during any of these tests, we'd really rather they
     # found the one we're working on.
@@ -52,7 +52,7 @@ describe Authenticator::Ldap do
     allow(User).to receive(:authenticator).and_return(subject)
   end
 
-  before(:each) do
+  before do
     FactoryGirl.create(:miq_group, :description => 'wibble')
     FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
   end
@@ -111,7 +111,7 @@ describe Authenticator::Ldap do
     }
   end
 
-  before(:each) do
+  before do
     allow(MiqLdap).to receive(:new) { FakeLdap.new(user_data) }
     allow(MiqLdap).to receive(:using_ldap?) { true }
   end
@@ -233,7 +233,7 @@ describe Authenticator::Ldap do
 
       context "using external authorization" do
         let(:config) { super().merge(:ldap_role => true) }
-        before(:each) { allow(subject).to receive(:authorize_queue?).and_return(false) }
+        before { allow(subject).to receive(:authorize_queue?).and_return(false) }
 
         context "with an LDAP user" do
           before { allow(subject).to receive(:run_task) }
@@ -397,7 +397,7 @@ describe Authenticator::Ldap do
 
       context "using external authorization" do
         let(:config) { super().merge(:ldap_role => true) }
-        before(:each) { allow(subject).to receive(:authorize_queue?).and_return(false) }
+        before { allow(subject).to receive(:authorize_queue?).and_return(false) }
 
         it "enqueues an authorize task" do
           expect(subject).to receive(:authorize_queue).and_return(123)

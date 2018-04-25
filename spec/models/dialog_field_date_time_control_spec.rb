@@ -5,7 +5,7 @@ describe DialogFieldDateTimeControl do
     end
 
     context "with UTC timezone" do
-      before(:each) do
+      before do
         allow(user).to receive(:get_timezone).and_return("UTC")
       end
 
@@ -26,7 +26,7 @@ describe DialogFieldDateTimeControl do
     end
 
     context "with HST timezone" do
-      before(:each) do
+      before do
         allow(user).to receive(:get_timezone).and_return("HST")
       end
 

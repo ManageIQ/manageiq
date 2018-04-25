@@ -110,7 +110,7 @@ describe EmsRefresh::SaveInventoryInfra do
   end
 
   context ".save_hosts_inventory" do
-    before(:each) do
+    before do
       @zone   = FactoryGirl.create(:zone)
       @ems    = FactoryGirl.create(:ems_vmware, :zone => @zone)
     end

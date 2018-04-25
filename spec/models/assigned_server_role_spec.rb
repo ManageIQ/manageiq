@@ -1,6 +1,6 @@
 describe AssignedServerRole do
   context "and Server Role seeded for 1 Region/Zone" do
-    before(:each) do
+    before do
       @miq_server = EvmSpecHelper.local_miq_server
     end
 
@@ -76,7 +76,7 @@ describe AssignedServerRole do
   end
 
   context "and Server Roles seeded for 1 Region and 2 Zones" do
-    before(:each) do
+    before do
       @miq_region = FactoryGirl.create(:miq_region, :region => 1)
       allow(MiqRegion).to receive(:my_region).and_return(@miq_region)
 

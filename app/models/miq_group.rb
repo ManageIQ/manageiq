@@ -21,7 +21,7 @@ class MiqGroup < ApplicationRecord
 
   delegate :self_service?, :limited_self_service?, :disallowed_roles, :to => :miq_user_role, :allow_nil => true
 
-  validates :description, :presence => true, :unique_within_region => true
+  validates :description, :presence => true, :unique_within_region => { :match_case => false }
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
   after_destroy :reset_current_group_for_users
@@ -251,8 +251,8 @@ class MiqGroup < ApplicationRecord
     in_my_region.non_tenant_groups
   end
 
-  def self.with_current_user_groups
-    current_user = User.current_user
+  def self.with_current_user_groups(user = nil)
+    current_user = user || User.current_user
     current_user.admin_user? ? all : where(:id => current_user.miq_group_ids)
   end
 

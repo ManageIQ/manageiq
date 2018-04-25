@@ -62,6 +62,23 @@ describe MeteringContainerProject do
       expect(subject.metering_used_metric).to eq(count_of_metric_rollup)
       expect(subject.existence_hours_metric).to eq(month_beginning.end_of_month.day * 24)
       expect(subject.net_io_used_metric).to eq(net_usage_rate_average * count_of_metric_rollup)
+      expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
+      expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
     end
+  end
+
+  let(:report_col_options) do
+    {
+      "cpu_cores_used_metric"  => {:grouping => [:total]},
+      "existence_hours_metric" => {:grouping => [:total]},
+      "fixed_compute_metric"   => {:grouping => [:total]},
+      "memory_used_metric"     => {:grouping => [:total]},
+      "metering_used_metric"   => {:grouping => [:total]},
+      "net_io_used_metric"     => {:grouping => [:total]},
+    }
+  end
+
+  it 'sets grouping settings for all related columns' do
+    expect(described_class.report_col_options).to eq(report_col_options)
   end
 end

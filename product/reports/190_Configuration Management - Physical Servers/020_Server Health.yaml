@@ -1,0 +1,36 @@
+---
+title: Physical Server Health
+conditions:
+order: Ascending
+graph:
+  :type: Pie
+  :count: 10
+  :other: true
+menu_name: Physical Server Health
+rpt_group: Custom
+rpt_type: Custom
+priority:
+col_order:
+- hostname
+- health_state
+- power_state
+- product_name
+timeline:
+file_mtime:
+categories:
+filename:
+db: PhysicalServer
+cols:
+- hostname
+- health_state
+- power_state
+- product_name
+template_type: report
+sortby:
+- health_state
+- hostname
+headers:
+- Hostname
+- Health State
+- Power State
+- Product Name

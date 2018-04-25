@@ -23,6 +23,10 @@ module ManageIQ::Providers::EmbeddedAnsible::Provider::DefaultAnsibleObjects
     get_default_ansible_object("host")
   end
 
+  def default_project
+    get_default_ansible_object("project")
+  end
+
   def default_organization=(org)
     set_default_ansible_object("organization", org)
   end
@@ -37,6 +41,10 @@ module ManageIQ::Providers::EmbeddedAnsible::Provider::DefaultAnsibleObjects
 
   def default_host=(host)
     set_default_ansible_object("host", host)
+  end
+
+  def default_project=(project)
+    set_default_ansible_object("project", project)
   end
 
   def delete_ansible_object(name)

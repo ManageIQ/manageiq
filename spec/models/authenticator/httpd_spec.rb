@@ -12,7 +12,7 @@ describe Authenticator::Httpd do
     ActionDispatch::Request.new(Rack::MockRequest.env_for("/", env))
   end
 
-  before(:each) do
+  before do
     # If anything goes looking for the currently configured
     # Authenticator during any of these tests, we'd really rather they
     # found the one we're working on.
@@ -25,7 +25,7 @@ describe Authenticator::Httpd do
     allow(User).to receive(:authenticator).and_return(subject)
   end
 
-  before(:each) do
+  before do
     FactoryGirl.create(:miq_group, :description => 'wibble')
     FactoryGirl.create(:miq_group, :description => 'wobble')
 

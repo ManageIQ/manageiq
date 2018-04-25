@@ -3,20 +3,17 @@ module ManagerRefresh
     class TopologicalSort
       attr_reader :graph
 
+      # @param graph [ManagerRefresh::Graph] graph object we want to sort
       def initialize(graph)
         @graph = graph
       end
 
-      def topological_sort
-        make_topological_sort(graph.nodes, graph.edges)
-      end
-
-      private
-
-      def make_topological_sort(original_nodes, edges)
         ################################################################################################################
         # Topological sort of the graph of the DTO collections to find the right order of saving DTO collections and
         # identify what DTO collections can be saved in parallel.
+        # Does not mutate graph.
+        #
+        # @return [Array<Array>] Array of arrays(layers) of InventoryCollection objects
         ################################################################################################################
         # The expected input here is the directed acyclic Graph G (inventory_collections), consisting of Vertices(Nodes) V and
         # Edges E:
@@ -35,8 +32,9 @@ module ManagerRefresh
         # Then each Si can have their Vertices(DTO collections) processed in parallel. This algorithm cannot
         # identify independent sub-graphs inside of the layers Si, so we can make the processing even more effective.
         ################################################################################################################
-
-        nodes          = original_nodes.dup
+      def topological_sort
+        nodes          = graph.nodes.dup
+        edges          = graph.edges
         sets           = []
         i              = 0
         sets[0], nodes = nodes.partition { |v| !edges.detect { |e| e.second == v } }
@@ -46,14 +44,16 @@ module ManagerRefresh
           i         += 1
           max_depth -= 1
           if max_depth <= 0
-            raise "Max depth reached while doing topological sort of nodes #{original_nodes} and edges #{edges}, your "\
-                  "graph probably contains a cycle"
+            message = "Max depth reached while doing topological sort, your graph probably contains a cycle"
+            $log.error("#{message}:\n#{graph.to_graphviz}")
+            raise "#{message} (see log)"
           end
 
           set, nodes = nodes.partition { |v| edges.select { |e| e.second == v }.all? { |e| sets.flatten.include?(e.first) } }
           if set.blank?
-            raise "Blank dependency set while doing topological sort of nodes #{original_nodes} and edges #{edges}, "\
-                  "your graph probably contains a cycle"
+            message = "Blank dependency set while doing topological sort, your graph probably contains a cycle"
+            $log.error("#{message}:\n#{graph.to_graphviz}")
+            raise "#{message} (see log)"
           end
 
           sets[i] = set

@@ -5,6 +5,8 @@ module ManagerRefresh
         class Base
           include Vmdb::Logging
 
+          # @param inventory_collection [ManagerRefresh::InventoryCollection] InventoryCollection owning the index
+          # @param index_name
           def initialize(inventory_collection, index_name, attribute_names, *_args)
             @index = {}
 
@@ -17,10 +19,15 @@ module ManagerRefresh
 
           delegate :keys, :to => :index
 
+          # Indexes passed InventoryObject
+          #
+          # @param inventory_object [ManagerRefresh::InventoryObject] InventoryObject we want to index
+          # @return [ManagerRefresh::InventoryObject] InventoryObject object
           def store_index_for(inventory_object)
             index[build_stringified_reference(inventory_object.data, attribute_names)] = inventory_object
           end
 
+          # Rebuilds the indexes for all InventoryObject objects
           def reindex!
             self.index = {}
             data.each do |inventory_object|
@@ -45,6 +52,7 @@ module ManagerRefresh
 
           delegate :build_stringified_reference, :data, :model_class, :custom_save_block, :to => :inventory_collection
 
+          # Asserts that InventoryCollection model has attributes specified for index
           def assert_attribute_names!
             # Skip for manually defined nodes
             return if model_class.nil?

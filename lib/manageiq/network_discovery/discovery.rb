@@ -29,6 +29,7 @@ module ManageIQ
         end
 
         if ping
+          raise ArgumentError, "must pass discover_types" if ost.discover_types.blank?
           # Trigger probes
           ost.discover_types.each do |type|
             next unless PROVIDERS_BY_TYPE.include?(type)

@@ -68,6 +68,14 @@ describe MiqServer, "::ConfigurationManagement" do
 
         expect(miq_server.reload.zone).to eq(zone)
       end
+
+      it "does not overwrite the servers zone_id if the config value is invalid" do
+        _guid, miq_server, zone = EvmSpecHelper.local_guid_miq_server_zone
+
+        miq_server.send(:immediately_reload_settings)
+
+        expect(MiqServer.my_server.zone).to eq(zone)
+      end
     end
   end
 end

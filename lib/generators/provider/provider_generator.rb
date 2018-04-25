@@ -32,6 +32,7 @@ class ProviderGenerator < Rails::Generators::NamedBase
     template ".rubocop_cc.yml"
     template ".rubocop_local.yml"
     template ".travis.yml"
+    template ".yamllint"
     template "Gemfile"
     template "LICENSE.txt"
     template "manageiq-providers-%provider_name%.gemspec"

@@ -18,12 +18,12 @@ describe JobProxyDispatcher do
 
   let(:dispatcher) { JobProxyDispatcher.new }
 
-  before(:each) do
+  before do
     @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server")
   end
 
   context "With a default zone, server, with hosts with a miq_proxy, vmware vms on storages" do
-    before(:each) do
+    before do
       (NUM_SERVERS - 1).times do |i|
         FactoryGirl.create(:miq_server, :zone => @server.zone, :name => "test_server_#{i}")
       end
@@ -62,7 +62,7 @@ describe JobProxyDispatcher do
         end
 
         context "with a vm without a storage" do
-          before(:each) do
+          before do
             # Test a vm without a storage (ie, removed from VC but retained in the VMDB)
             allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
@@ -78,7 +78,7 @@ describe JobProxyDispatcher do
         end
 
         context "with a Microsoft vm without a storage" do
-          before(:each) do
+          before do
             # Test a Microsoft vm without a storage
             allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
@@ -94,7 +94,7 @@ describe JobProxyDispatcher do
         end
 
         context "with a Microsoft vm with a Microsoft storage" do
-          before(:each) do
+          before do
             # Test a Microsoft vm without a storage
             allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
@@ -110,7 +110,7 @@ describe JobProxyDispatcher do
         end
 
         context "with a Microsoft vm with an invalid storage" do
-          before(:each) do
+          before do
             # Test a Microsoft vm without a storage
             allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
             @vm = @vms.first
@@ -128,7 +128,7 @@ describe JobProxyDispatcher do
       end
 
       context "with jobs, a default smartproxy for repo scanning" do
-        before(:each) do
+        before do
           allow(MiqVimBrokerWorker).to receive(:available?).and_return(true)
           @repo_proxy = @proxies.last
           if @repo_proxy
@@ -173,7 +173,7 @@ describe JobProxyDispatcher do
 
     context "with container and vms jobs" do
       let (:container_image_classes) { ContainerImage.descendants.collect(&:name).append('ContainerImage') }
-      before(:each) do
+      before do
         @jobs = (@vms + @repo_vms).collect(&:raw_scan)
         User.current_user = FactoryGirl.create(:user)
         @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img.class, img.id) }
@@ -278,7 +278,7 @@ describe JobProxyDispatcher do
 
   context "limiting number of smart state analysis running on one server" do
     let(:job) { Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 1") }
-    before(:each) do
+    before do
       Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 2")
          .update_attributes(:dispatch_status => "active")
       Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 3")
@@ -329,7 +329,7 @@ describe JobProxyDispatcher do
     let(:ems_id) { 1 }
     let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
 
-    before(:each) do
+    before do
       dispatcher.instance_variable_set(:@zone, @server.my_zone)
       dispatcher.instance_variable_set(:@active_container_scans_by_zone_and_ems, @server.my_zone => {ems_id => 0})
     end

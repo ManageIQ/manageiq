@@ -1,7 +1,7 @@
 describe VmdbDatabase do
   context "::MetricCapture" do
     context "#capture_database_metrics" do
-      before(:each) do
+      before do
         MiqDatabase.seed
         described_class.seed_self
         @db = described_class.my_database
@@ -38,7 +38,7 @@ describe VmdbDatabase do
       end
 
       context "when database is not local" do
-        before(:each) do
+        before do
           allow(EvmDatabase).to receive(:local?).and_return(false)
         end
 

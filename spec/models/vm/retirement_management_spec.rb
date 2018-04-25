@@ -1,5 +1,8 @@
 describe "VM Retirement Management" do
-  before(:each) do
+  let(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => "admin") }
+  let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
+
+  before do
     miq_server = EvmSpecHelper.local_miq_server
     @zone = miq_server.zone
     @ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
@@ -10,7 +13,7 @@ describe "VM Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event).once
     @vm.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@vm.retirement_last_warn).to be_nil
-    expect_any_instance_of(@vm.class).to receive(:retire_now).once
+    expect(@vm).to receive(:make_retire_request).once
     @vm.retirement_check
     @vm.reload
     expect(@vm.retirement_last_warn).not_to be_nil
@@ -28,6 +31,25 @@ describe "VM Retirement Management" do
   it "#retire_now" do
     expect(MiqEvent).to receive(:raise_evm_event).once
 
+    @vm.retire_now
+    expect(@vm.retirement_state).to eq('initializing')
+  end
+
+  it "#retire_now when called more than once" do
+    expect(MiqEvent).to receive(:raise_evm_event).once
+    3.times { @vm.retire_now }
+    expect(@vm.retirement_state).to eq('initializing')
+  end
+
+  it "#retire_now not called when already retiring" do
+    @vm.update_attributes(:retirement_state => 'retiring')
+    expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
+    @vm.retire_now
+  end
+
+  it "#retire_now not called when already retired" do
+    @vm.update_attributes(:retirement_state => 'retired')
+    expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
     @vm.retire_now
   end
 
@@ -60,6 +82,20 @@ describe "VM Retirement Management" do
     @vm.retire(options)
     @vm.reload
     expect(@vm.retirement_warn).to eq(options[:warn])
+  end
+
+  describe "retire request" do
+    it "with one src_id" do
+      User.current_user = user
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => ['yabadabadoo'] }, User.current_user, true)
+      @vm.class.to_s.demodulize.constantize.make_retire_request('yabadabadoo')
+    end
+
+    it "with many src_ids" do
+      User.current_user = user
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [1, 2, 3]}, User.current_user, true)
+      @vm.class.to_s.demodulize.constantize.make_retire_request(1, 2, 3)
+    end
   end
 
   it "#retire date" do
@@ -132,7 +168,7 @@ describe "VM Retirement Management" do
     expect(vm.retirement_due?).to be_truthy
   end
 
-  it "#raise_retirement_event" do
+  it "#raise_retirement_event without current user" do
     event_name = 'foo'
     event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
                   :retirement_initiator => "system"}
@@ -141,6 +177,19 @@ describe "VM Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
 
     @vm.raise_retirement_event(event_name)
+  end
+
+  it "#raise_retirement_event with current user" do
+    user = FactoryGirl.create(:user_with_group, :userid => 'freddy')
+    event_name = 'foo'
+    event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
+                  :retirement_initiator => "user", :userid => 'freddy'}
+    options = {:zone => @vm.my_zone}
+
+    User.with_user(user) do
+      expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
+      @vm.raise_retirement_event(event_name)
+    end
   end
 
   it "#raise_audit_event" do

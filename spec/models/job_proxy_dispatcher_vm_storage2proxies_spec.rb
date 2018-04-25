@@ -2,26 +2,26 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
   include Spec::Support::JobProxyDispatcherHelper
 
   context "two vix disk enabled servers," do
-    before(:each) do
+    before do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
     context "hosts with proxy and vmware vms," do
-      before(:each) do
+      before do
         @hosts, @proxies, @storages, @vms = build_entities
         @vm = @vms.first
       end
 
       context "the vm having a repository host," do
-        before(:each) do
+        before do
           @repo_host = @hosts.last
           allow(@vm).to receive_messages(:myhost => @repo_host)
         end
 
         context "removing proxy from a host" do
-          before(:each) do
+          before do
             @host = @hosts.first
             @host.save
             @repo_host.save
@@ -38,7 +38,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
         end
 
         context "vm's storage having no hosts," do
-          before(:each) do
+          before do
             store = @vm.storage
             store.hosts = []
             store.save
@@ -50,7 +50,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
           end
 
           context "'smartproxy' server and roles deactivated" do
-            before(:each) do
+            before do
               FactoryGirl.create(:server_role, :name => "smartproxy", :max_concurrent => 0)
 
               @server1.deactivate_all_roles
@@ -76,13 +76,13 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
           end
 
           context "with server proxies active," do
-            before(:each) do
+            before do
               allow_any_instance_of(MiqServer).to receive_messages(:is_proxy_active? => true)
               allow(@vm).to receive(:my_zone).and_return(@server1.zone.name)
             end
 
             context "a vm template and invalid VC authentication" do
-              before(:each) do
+              before do
                 allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:missing_credentials? => true)
                 allow(@vm).to receive_messages(:template? => true)
                 @ems1 = FactoryGirl.create(:ems_vmware, :name => "Ems1")
@@ -95,7 +95,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
             end
 
             context "a vm and invalid host authentication" do
-              before(:each) do
+              before do
                 allow_any_instance_of(Host).to receive_messages(:missing_credentials? => true)
                 allow(@vm).to receive_messages(:template? => false)
               end

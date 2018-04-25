@@ -1,12 +1,16 @@
 module ManagerRefresh
   class InventoryCollection
     class Graph < ::ManagerRefresh::Graph
+      # @param nodes [Array<ManagerRefresh::InventoryCollection>] List of Inventory collection nodes
       def initialize(nodes)
         super(nodes)
 
         assert_inventory_collections(nodes)
       end
 
+      # Turns the graph into DAG (Directed Acyclic Graph)
+      #
+      # @return [ManagerRefresh::InventoryCollection::Graph] Graph object modified into DAG
       def build_directed_acyclic_graph!
         ################################################################################################################
         ## Description of an algorithm for building DAG
@@ -55,6 +59,11 @@ module ManagerRefresh
 
       private
 
+      # Sort the nodes putting child nodes as last. Child nodes are InventoryCollection objects having
+      # :parent_inventory_collections definition.
+      #
+      # @param nodes [Array<ManagerRefresh::InventoryCollection>] List of Inventory collection nodes
+      # @return [Array<ManagerRefresh::InventoryCollection>] Sorted list of Inventory collection nodes
       def sort_nodes(nodes)
         # Separate to root nodes and child nodes, where child nodes are determined by having parent_inventory_collections
         root_nodes, child_nodes = nodes.partition { |node| node.parent_inventory_collections.blank? }
@@ -63,6 +72,9 @@ module ManagerRefresh
         root_nodes + child_nodes
       end
 
+      # Asserts all nodes are of class ::ManagerRefresh::InventoryCollection
+      #
+      # @param inventory_collections [Array<ManagerRefresh::InventoryCollection>] List of Inventory collection nodes
       def assert_inventory_collections(inventory_collections)
         inventory_collections.each do |inventory_collection|
           unless inventory_collection.kind_of?(::ManagerRefresh::InventoryCollection)
@@ -71,6 +83,11 @@ module ManagerRefresh
         end
       end
 
+      # Converts the graph into DAG
+      #
+      # @param nodes [Array<ManagerRefresh::InventoryCollection>] List of Inventory collection nodes
+      # @param feedback_edge_set [Array<Array>] Is a set of edges that are causing a cycle in the graph
+      # @return [ManagerRefresh::InventoryCollection::Graph] Graph object modified into DAG
       def convert_to_dag!(nodes, feedback_edge_set)
         new_nodes = []
         inventory_collection_transformations = {}
@@ -121,6 +138,10 @@ module ManagerRefresh
         construct_graph!(all_nodes)
       end
 
+      # Build edges by introspecting the passed array of InventoryCollection objects
+      #
+      # @param inventory_collections [Array<ManagerRefresh::InventoryCollection>] List of Inventory collection nodes
+      # @return [Array<Array>] Nested array representing edges
       def build_edges(inventory_collections)
         edges            = []
         transitive_edges = []

@@ -42,7 +42,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :non_clustered_hosts, -> { non_clustered }, :class_name => "Host", :foreign_key => "ems_id"
   has_many :clustered_hosts, -> { clustered }, :class_name => "Host", :foreign_key => "ems_id"
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify,
-           :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
+           :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :operating_systems, :through => :vms_and_templates
@@ -64,6 +64,9 @@ class ExtManagementSystem < ApplicationRecord
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :storage_profiles,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :physical_racks,      :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :physical_switches,   :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :physical_chassis,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :physical_servers,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :customization_scripts, :foreign_key => "manager_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
@@ -199,6 +202,8 @@ class ExtManagementSystem < ApplicationRecord
                               [ManageIQ::Providers::Microsoft::InfraManager, 'SCVMM']
                             elsif ost.hypervisor.include?(:rhevm)
                               [ManageIQ::Providers::Redhat::InfraManager, 'RHEV-M']
+                            elsif ost.hypervisor.include?(:openstack_infra)
+                              [ManageIQ::Providers::Openstack::InfraManager, 'OpenStack Director']
                             else
                               [ManageIQ::Providers::Vmware::InfraManager, 'Virtual Center']
                             end
@@ -428,7 +433,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def self.ems_infra_discovery_types
-    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
+    @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm openstack_infra)
   end
 
   def self.ems_physical_infra_discovery_types
@@ -685,14 +690,18 @@ class ExtManagementSystem < ApplicationRecord
              [
                ems.region_id, ems.zone.name, ems.class.short_token, ems.name,
                ems.total_clusters, ems.total_hosts, ems.total_vms, ems.total_storages,
-               ems.try(:containers).try(:count)
+               ems.try(:containers).try(:count),
+               ems.try(:container_groups).try(:count),
+               ems.try(:container_images).try(:count),
+               ems.try(:container_nodes).try(:count),
+               ems.try(:container_projects).try(:count),
              ]
            end
     return if data.empty?
     data = data.sort_by { |e| [e[0], e[1], e[2], e[3]] }
     # remove 0's (except for the region)
     data = data.map { |row| row.each_with_index.map { |col, i| i.positive? && col.to_s == "0" ? nil : col } }
-    data.unshift(%w(region zone kind ems clusters hosts vms storages containers))
+    data.unshift(%w(region zone kind ems clusters hosts vms storages containers groups images nodes projects))
     # remove columns where all values (except for the header) are blank
     data.first.dup.each do |col_header|
       col = data.first.index(col_header)

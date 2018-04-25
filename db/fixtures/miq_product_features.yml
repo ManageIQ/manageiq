@@ -4552,6 +4552,10 @@
         :description: Display Lists of Containers
         :feature_type: view
         :identifier: container_show_list
+      - :name: Show
+        :description: Display Individual Containers
+        :feature_type: view
+        :identifier: container_show
       - :name: Timeline
         :description: Display Timelines for Containers
         :feature_type: view
@@ -4742,6 +4746,10 @@
         :description: Ansible Repositories Refresh
         :feature_type: control
         :identifier: embedded_configuration_script_source_refresh
+      - :name: Edit Tags
+        :description: Edit Tags for the selected Ansible Repositories
+        :feature_type: control
+        :identifier: ansible_repository_tag
   - :name: Playbooks
     :description: Everything under Playbooks
     :feature_type: node
@@ -4768,6 +4776,10 @@
         :description: Ansible Playbooks Refresh
         :feature_type: control
         :identifier: embedded_configuration_script_payload_refresh
+      - :name: Edit Tags
+        :description: Edit Tags for the selected Ansible Playbooks
+        :feature_type: control
+        :identifier: embedded_configuration_script_payload_tag
 
   - :name: Credentials
     :description: Everything under Credentials
@@ -4799,6 +4811,10 @@
         :description: Ansible Credentials Refresh
         :feature_type: control
         :identifier: embedded_automation_manager_credentials_refresh
+      - :name: Edit Tags
+        :description: Edit Tags for the selected Ansible Credentials
+        :feature_type: control
+        :identifier: ansible_credential_tag
 
 # Automation Manager
 - :name: Ansible Tower
@@ -5215,6 +5231,10 @@
         :description: Edit Image Tags
         :feature_type: control
         :identifier: image_tag
+      - :name: Add Image
+        :description: Add Image
+        :feature_type: control
+        :identifier: image_create
     - :name: Modify
       :description: Modify Images
       :feature_type: admin
@@ -5929,7 +5949,10 @@
       :description: Provision Physical Server
       :feature_type: control
       :identifier: physical_server_provision
-
+    - :name: Physical Server Remote Console
+      :description: Access Physical Server Remote Console
+      :feature_type: control
+      :identifier: physical_server_remote_console
 # Firmwares
 - :name: Firmwares
   :description: Everything under Firmware

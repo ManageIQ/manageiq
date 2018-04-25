@@ -17,14 +17,20 @@ class PhysicalServer < ApplicationRecord
   }.freeze
 
   validates :vendor, :inclusion =>{:in => VENDOR_TYPES}
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::PhysicalInfraManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_servers
+  belongs_to :physical_rack, :foreign_key => :physical_rack_id, :inverse_of => :physical_servers
+  belongs_to :physical_chassis, :foreign_key => :physical_chassis_id, :inverse_of => :physical_servers
 
   has_one :computer_system, :as => :managed_entity, :dependent => :destroy
   has_one :hardware, :through => :computer_system
   has_one :host, :inverse_of => :physical_server
   has_one :asset_detail, :as => :resource, :dependent => :destroy
+  has_many :guest_devices, :through => :hardware
 
   scope :with_hosts, -> { where("physical_servers.id in (select hosts.physical_server_id from hosts)") }
+
+  virtual_column :v_availability, :type => :string, :uses => :host
+  virtual_column :v_host_os, :type => :string, :uses => :host
 
   def name_with_details
     details % {
@@ -89,5 +95,13 @@ class PhysicalServer < ApplicationRecord
       raise _("Provider failed last authentication check")
     end
     EmsRefresh.queue_refresh(self)
+  end
+
+  def v_availability
+    host.try(:physical_server_id).nil? ? N_("Available") : N_("In use")
+  end
+
+  def v_host_os
+    host.try(:vmm_product).nil? ? N_("") : host.vmm_product
   end
 end

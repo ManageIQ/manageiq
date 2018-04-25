@@ -79,7 +79,7 @@ describe ExtManagementSystem do
   end
 
   it ".ems_infra_discovery_types" do
-    expected_types = %w(scvmm rhevm virtualcenter)
+    expected_types = %w(scvmm rhevm virtualcenter openstack_infra)
 
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
   end
@@ -239,7 +239,7 @@ describe ExtManagementSystem do
   end
 
   context "with two small envs" do
-    before(:each) do
+    before do
       @zone1 = FactoryGirl.create(:small_environment)
       @zone2 = FactoryGirl.create(:small_environment)
     end
@@ -260,7 +260,7 @@ describe ExtManagementSystem do
   end
 
   context "with virtual totals" do
-    before(:each) do
+    before do
       @ems = FactoryGirl.create(:ems_vmware)
       2.times do
         FactoryGirl.create(:vm_vmware,

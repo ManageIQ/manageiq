@@ -7,6 +7,8 @@ module Service::RetirementManagement
   end
 
   def retire_service_resources
+    # TODO: delete me per https://github.com/ManageIQ/manageiq/pull/16933#discussion_r175805070
+    return
     direct_service_children.each(&:retire_service_resources)
 
     service_resources.each do |sr|

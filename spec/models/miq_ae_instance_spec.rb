@@ -1,6 +1,6 @@
 describe MiqAeInstance do
   context "legacy tests" do
-    before(:each) do
+    before do
       @user = FactoryGirl.create(:user_with_group)
       @c1 = MiqAeClass.create(:namespace => "TEST", :name => "instance_test")
       @fname1 = "field1"

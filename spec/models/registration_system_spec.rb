@@ -1,30 +1,30 @@
 require "tempfile"
 
 describe RegistrationSystem do
+  let(:creds) { {:userid => "SomeUser", :password => "SomePass"} }
+  let(:proxy_creds) { {:userid => "bob", :password => "pass"} }
   before do
     EvmSpecHelper.create_guid_miq_server_zone
-    @creds       = {:userid => "SomeUser", :password => "SomePass"}
-    @proxy_creds = {:userid => "bob", :password => "pass"}
   end
 
   context ".available_organizations_queue" do
     it "does not modify original arguments" do
-      cloned_creds = @creds.clone
-      RegistrationSystem.available_organizations_queue(@creds)
-      expect(@creds).to eq(cloned_creds)
+      cloned_creds = creds.clone
+      RegistrationSystem.available_organizations_queue(creds)
+      expect(creds).to eq(cloned_creds)
     end
 
     it "validate that a task was created" do
-      expect(MiqTask.find(RegistrationSystem.available_organizations_queue(@creds))).to be_truthy
+      expect(MiqTask.find(RegistrationSystem.available_organizations_queue(creds))).to be_truthy
     end
 
     it "validate that one queue item was created for this task" do
-      RegistrationSystem.available_organizations_queue(@creds)
+      RegistrationSystem.available_organizations_queue(creds)
       expect(MiqQueue.count).to eq(1)
     end
 
     it "validate that the queue item was created with proper args" do
-      task = RegistrationSystem.available_organizations_queue(@creds)
+      task = RegistrationSystem.available_organizations_queue(creds)
       expect(MiqQueue.first.args).to eq([
         {:userid => "SomeUser", :password => "v2:{mJENsyNNOBzjMgTsS0+iRg==}", :task_id => task}
       ])
@@ -34,18 +34,18 @@ describe RegistrationSystem do
   context ".available_organizations" do
     it "with valid credentials" do
       expect_any_instance_of(LinuxAdmin::SubscriptionManager).to receive(:organizations).once.with(:username => "SomeUser", :password => "SomePass").and_return("SomeOrg" => {:name => "SomeOrg", :key => "1234567"}, "SomeOrg2" => {:name => "SomeOrg2", :key => "12345672"})
-      expect(RegistrationSystem.available_organizations(@creds)).to eq("SomeOrg" => "1234567", "SomeOrg2" => "12345672")
+      expect(RegistrationSystem.available_organizations(creds)).to eq("SomeOrg" => "1234567", "SomeOrg2" => "12345672")
     end
 
     it "with invalid credentials" do
       expect_any_instance_of(LinuxAdmin::SubscriptionManager).to receive(:organizations).once.and_raise(LinuxAdmin::CredentialError, "Invalid username or password")
-      expect { RegistrationSystem.available_organizations(@creds) }.to raise_error(LinuxAdmin::CredentialError)
+      expect { RegistrationSystem.available_organizations(creds) }.to raise_error(LinuxAdmin::CredentialError)
     end
 
     it "with no options" do
       MiqDatabase.seed
-      MiqDatabase.first.update_authentication(:registration => @creds)
-      MiqDatabase.first.update_authentication(:registration_http_proxy => @proxy_creds)
+      MiqDatabase.first.update_authentication(:registration => creds)
+      MiqDatabase.first.update_authentication(:registration_http_proxy => proxy_creds)
       MiqDatabase.first.update_attributes(
         :registration_server            => "http://abc.net",
         :registration_http_proxy_server => "1.1.1.1"
@@ -57,22 +57,22 @@ describe RegistrationSystem do
 
   context ".verify_credentials_queue" do
     it "does not modify original arguments" do
-      cloned_creds = @creds.clone
-      RegistrationSystem.verify_credentials_queue(@creds)
-      expect(@creds).to eq(cloned_creds)
+      cloned_creds = creds.clone
+      RegistrationSystem.verify_credentials_queue(creds)
+      expect(creds).to eq(cloned_creds)
     end
 
     it "validate that a task was created" do
-      expect(MiqTask.find(RegistrationSystem.verify_credentials_queue(@creds))).to be_truthy
+      expect(MiqTask.find(RegistrationSystem.verify_credentials_queue(creds))).to be_truthy
     end
 
     it "validate that one queue item was created for this task" do
-      RegistrationSystem.verify_credentials_queue(@creds)
+      RegistrationSystem.verify_credentials_queue(creds)
       expect(MiqQueue.count).to eq(1)
     end
 
     it "validate that the queue item was created with proper args" do
-      task = RegistrationSystem.verify_credentials_queue(@creds)
+      task = RegistrationSystem.verify_credentials_queue(creds)
       expect(MiqQueue.first.args).to eq([
         {:userid => "SomeUser", :password => "v2:{mJENsyNNOBzjMgTsS0+iRg==}", :task_id => task}
       ])
@@ -82,23 +82,23 @@ describe RegistrationSystem do
   context ".verify_credentials" do
     it "with valid credentials" do
       expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.with(:username => "SomeUser", :password => "SomePass").and_return(true)
-      expect(RegistrationSystem.verify_credentials(@creds)).to be_truthy
+      expect(RegistrationSystem.verify_credentials(creds)).to be_truthy
     end
 
     it "with invalid credentials" do
       expect(LinuxAdmin::RegistrationSystem).to receive(:validate_credentials).once.and_raise(LinuxAdmin::CredentialError, "Invalid username or password")
-      expect(RegistrationSystem.verify_credentials(@creds)).to be_falsey
+      expect(RegistrationSystem.verify_credentials(creds)).to be_falsey
     end
 
     it "should rescue NotImplementedError" do
       allow_any_instance_of(LinuxAdmin::Rhn).to receive_messages(:registered? => true)
-      expect(RegistrationSystem.verify_credentials(@creds)).to be_falsey
+      expect(RegistrationSystem.verify_credentials(creds)).to be_falsey
     end
 
     it "with no options" do
       MiqDatabase.seed
-      MiqDatabase.first.update_authentication(:registration => @creds)
-      MiqDatabase.first.update_authentication(:registration_http_proxy => @proxy_creds)
+      MiqDatabase.first.update_authentication(:registration => creds)
+      MiqDatabase.first.update_authentication(:registration_http_proxy => proxy_creds)
       MiqDatabase.first.update_attributes(
         :registration_server            => "http://abc.net",
         :registration_http_proxy_server => "1.1.1.1"
@@ -181,10 +181,10 @@ describe RegistrationSystem do
         ssl_verify_depth = 3
 
         # an http proxy server to use
-        proxy_hostname = 192.0.2.0
+        proxy_hostname = ProxyHostnameValue
 
         # port for http proxy server
-        proxy_port = myport
+        proxy_port = 0
 
         # user name for authenticating to an http proxy, if needed
         proxy_user = my_dummy_username
@@ -195,14 +195,9 @@ describe RegistrationSystem do
       EOT
     end
 
-    let(:rhsm_conf) { Tempfile.new(@spec_name.downcase) }
+    let(:rhsm_conf) { Tempfile.new }
 
     before do
-      @proxy_args = {:registration_http_proxy_server   => "192.0.2.0:myport",
-                     :registration_http_proxy_username => "my_dummy_username",
-                     :registration_http_proxy_password => "my_dummy_password"}
-
-      @spec_name = File.basename(__FILE__).split(".rb").first.freeze
       stub_const("RegistrationSystem::RHSM_CONFIG_FILE", rhsm_conf.path)
       rhsm_conf.write(original_rhsm_conf)
       rhsm_conf.close
@@ -213,10 +208,22 @@ describe RegistrationSystem do
       FileUtils.rm_f("#{rhsm_conf.path}.miq_orig")
     end
 
-    it "will save then update the original config file" do
-      RegistrationSystem.update_rhsm_conf(@proxy_args)
-      expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
-      expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+    context "will save then update the original config file" do
+      ["", "http://", "https://"].each do |prefix|
+        ["proxy.example.com", "192.0.2.0", "[2001:db8::]"].each do |address|
+          params = {
+            :registration_http_proxy_server   => "#{prefix}#{address}:0",
+            :registration_http_proxy_username => "my_dummy_username",
+            :registration_http_proxy_password => "my_dummy_password"
+          }
+
+          it "with #{params[:registration_http_proxy_server]}" do
+            RegistrationSystem.update_rhsm_conf(params)
+            expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
+            expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf.sub(/ProxyHostnameValue/, address))
+          end
+        end
+      end
     end
 
     it "with no proxy server will not update the rhsm config file" do
@@ -227,10 +234,10 @@ describe RegistrationSystem do
     it "with no options will use database valuses" do
       MiqDatabase.seed
       MiqDatabase.first.update_attributes(
-        :registration_http_proxy_server => "192.0.2.0:myport"
+        :registration_http_proxy_server => "192.0.2.0:0"
       )
       RegistrationSystem.update_rhsm_conf
-      expect(File.read(rhsm_conf)).to include("proxy_hostname = 192.0.2.0", "proxy_port = myport")
+      expect(File.read(rhsm_conf)).to include("proxy_hostname = 192.0.2.0", "proxy_port = 0")
     end
   end
 end

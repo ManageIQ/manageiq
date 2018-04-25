@@ -11,13 +11,14 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     service_resources.find_by(:resource_type => 'TransformationMapping').resource
   end
 
-  def vm_requests
+  def vm_resources
     service_resources.where(:resource_type => 'VmOrTemplate')
   end
 
   def validate_order
     true
   end
+  alias orderable? validate_order
 
   def self.default_provisioning_entry_point(_service_type)
     '/Transformation/StateMachines/VMTransformation/Transformation'
@@ -50,7 +51,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     transaction do
       create_from_options(options.merge(default_options)).tap do |service_template|
         service_template.add_resource(enhanced_config_info[:transformation_mapping])
-        enhanced_config_info[:vms].each { |vm| service_template.add_resource(vm, :status => 'Queued') }
+        enhanced_config_info[:vms].each { |vm| service_template.add_resource(vm, :status => ServiceResource::STATUS_QUEUED) }
         service_template.create_resource_actions(enhanced_config_info)
       end
     end

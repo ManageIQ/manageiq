@@ -108,21 +108,22 @@ namespace :evm do
     task :region do
       require 'trollop'
       opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-        opt :region, "Region number", :type => :integer, :required => true
+        opt :region, "Region number", :type => :integer, :required => ENV["REGION"].blank?
       end
 
       Dir.chdir(Rails.root)
       begin
         #TODO: Raise an error if region is not valid
-        region = opts[:region]
+        ENV["REGION"] = opts[:region].to_s if opts[:region]
+        region = ENV["REGION"]
 
         region_file = Rails.root.join("REGION")
-        puts "Writing region: #{region} in #{region_file}..."
+        if File.exist?(region_file)
+          old_region = File.read(region_file)
+          File.delete(region_file)
+        end
 
-        old_region = File.exist?(region_file) ? File.read(region_file) : 0
-        File.write(region_file, region)
-
-        puts "Resetting #{Rails.env} database..."
+        puts "Resetting #{Rails.env} database to region #{region}..."
         ENV['VERBOSE'] = 'false' # Do not flood the output with migration details
         Rake::Task['evm:db:reset'].invoke
 
@@ -194,7 +195,7 @@ namespace :evm do
 
     namespace :restore do
       desc 'Restore the local ManageIQ EVM Database (VMDB) from a local backup file'
-      task :local do
+      task :local => :environment do
         require 'trollop'
         opts = Trollop.options(EvmRakeHelper.extract_command_options) do
           opt :local_file, "Destination file", :type => :string, :required => true
@@ -215,7 +216,7 @@ namespace :evm do
       end
 
       desc 'Restore the local ManageIQ EVM Database (VMDB) from a remote backup file'
-      task :remote do
+      task :remote => :environment do
         require 'trollop'
         opts = Trollop.options(EvmRakeHelper.extract_command_options) do
           opt :uri,              "Destination depot URI",       :type => :string, :required => true

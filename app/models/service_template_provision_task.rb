@@ -98,7 +98,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       :instance_id    => id,
       :method_name    => "do_post_provision",
       :deliver_on     => 1.minutes.from_now.utc,
-      :tracking_label => "#{self.class.name.underscore}_#{id}",
+      :tracking_label => tracking_label_id,
       :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )
   end
@@ -150,7 +150,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         :args           => [args],
         :role           => 'automate',
         :zone           => options.fetch(:miq_zone, zone),
-        :tracking_label => "#{self.class.name.underscore}_#{id}"
+        :tracking_label => tracking_label_id
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
@@ -201,7 +201,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   def update_and_notify_parent(*args)
     prev_state = state
     super
-    task_finished if state == "finished" && prev_state != "finished"
+    try("task_#{state}") if prev_state != state
   end
 
   def task_finished

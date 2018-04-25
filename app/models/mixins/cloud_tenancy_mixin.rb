@@ -1,6 +1,11 @@
 module CloudTenancyMixin
   extend ActiveSupport::Concern
 
+  QUERY_REFERENCES = {
+    :cloud_tenant          => "source_tenant",
+    :ext_management_system => {}
+  }.freeze
+
   module ClassMethods
     include TenancyCommonMixin
 
@@ -13,7 +18,8 @@ module CloudTenancyMixin
     end
 
     def tenant_joins_clause(scope)
-      scope.includes(:cloud_tenant => "source_tenant").includes(:ext_management_system)
+      scope.includes(QUERY_REFERENCES)
+           .references(QUERY_REFERENCES) # needed for the where to work
     end
   end
 end

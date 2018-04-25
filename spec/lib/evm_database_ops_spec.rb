@@ -1,7 +1,7 @@
 require 'util/runcmd'
 describe EvmDatabaseOps do
   context "#backup" do
-    before(:each) do
+    before do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
       allow(MiqSmbSession).to receive(:runcmd)
@@ -47,7 +47,7 @@ describe EvmDatabaseOps do
   end
 
   context "#restore" do
-    before(:each) do
+    before do
       @connect_opts = {:username => 'blah', :password => 'blahblah'}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
       allow(MiqSmbSession).to receive(:runcmd)
@@ -55,6 +55,7 @@ describe EvmDatabaseOps do
       allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
       allow(PostgresAdmin).to receive(:runcmd_with_logging)
       allow(PostgresAdmin).to receive(:pg_dump_file?).and_return(true)
+      allow(PostgresAdmin).to receive(:base_backup_file?).and_return(false)
     end
 
     it "from local backup" do

@@ -2,11 +2,13 @@ module Vmdb
   class Plugins
     include Singleton
 
+    attr_reader :registered_ansible_content
     attr_reader :registered_automate_domains
 
     def initialize
       @registered_automate_domains = []
       @registered_provider_plugin_map = {}
+      @registered_ansible_content = []
       @vmdb_plugins = []
     end
 
@@ -27,6 +29,7 @@ module Vmdb
       @vmdb_plugins << engine
 
       register_automate_domains(engine)
+      register_ansible_content(engine)
       register_provider_plugin(engine)
 
       # make sure STI models are recognized
@@ -54,9 +57,21 @@ module Vmdb
       end
     end
 
+    def registered_content_directories(engine, subfolder)
+      Dir.glob(engine.root.join("content", subfolder, "*")).each do |content_directory|
+        yield content_directory
+      end
+    end
+
     def register_automate_domains(engine)
-      Dir.glob(engine.root.join("content", "automate", "*")).each do |domain_directory|
+      registered_content_directories(engine, "automate") do |domain_directory|
         @registered_automate_domains << AutomateDomain.new(domain_directory)
+      end
+    end
+
+    def register_ansible_content(engine)
+      registered_content_directories(engine, "ansible") do |content_directory|
+        @registered_ansible_content << AnsibleContent.new(content_directory)
       end
     end
   end

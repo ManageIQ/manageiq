@@ -1,7 +1,7 @@
 describe RssFeed do
   Y_DIR = File.expand_path(File.join(File.dirname(__FILE__), "data"))
 
-  before(:each) { Kernel.silence_warnings { RssFeed.const_set(:YML_DIR, Y_DIR) } }
+  before { Kernel.silence_warnings { RssFeed.const_set(:YML_DIR, Y_DIR) } }
 
   context "with vms" do
     before do
@@ -49,7 +49,7 @@ describe RssFeed do
   end
 
   context "with 2 hosts" do
-    before(:each) do
+    before do
       @host1 = FactoryGirl.create(:host,           :created_on => Time.utc(2013, 1, 1, 0, 0, 0))
       @host2 = FactoryGirl.create(:host_microsoft, :created_on => @host1.created_on + 1.second)
     end
@@ -88,7 +88,7 @@ EOXML
   end
 
   context ".sync_from_yml_dir" do
-    before(:each) do
+    before do
       RssFeed.seed
     end
 
@@ -116,7 +116,7 @@ EOXML
   include_examples(".seed called multiple times", 2)
 
   context ".sync_from_yml_file" do
-    before(:each) { @name = "newest_hosts" }
+    before { @name = "newest_hosts" }
 
     it "when the model does not exist" do
       described_class.sync_from_yml_file(@name)

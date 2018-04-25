@@ -15,6 +15,7 @@ describe ServiceTemplateTransformationPlanTask do
   context 'populated request and task' do
     let(:src) { FactoryGirl.create(:ems_cluster) }
     let(:dst) { FactoryGirl.create(:ems_cluster) }
+    let(:vm)  { FactoryGirl.create(:vm_or_template) }
     let(:mapping) do
       FactoryGirl.create(
         :transformation_mapping,
@@ -28,7 +29,7 @@ describe ServiceTemplateTransformationPlanTask do
         :description => 'a description',
         :config_info => {
           :transformation_mapping_id => mapping.id,
-          :vm_ids                    => [FactoryGirl.create(:vm_or_template).id],
+          :vm_ids                    => [vm.id],
         }
       }
     end
@@ -36,7 +37,7 @@ describe ServiceTemplateTransformationPlanTask do
     let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
 
     let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
-    let(:task) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan') }
+    let(:task) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => vm) }
 
     describe '#resource_action' do
       it 'has a resource action points to the entry point for transformation' do
@@ -55,6 +56,30 @@ describe ServiceTemplateTransformationPlanTask do
       it 'saves the progress in options' do
         task.update_transformation_progress(:vm_percent => '80')
         expect(task.options[:progress]).to eq(:vm_percent => '80')
+      end
+    end
+
+    describe 'task_active' do
+      it 'sets vm_request status to Started' do
+        task.task_active
+        expect(plan.vm_resources.first.status).to eq(ServiceResource::STATUS_ACTIVE)
+      end
+    end
+
+    describe 'task_finished' do
+      it 'sets vm_request status to Completed' do
+        task.task_finished
+        expect(plan.vm_resources.first.status).to eq(ServiceResource::STATUS_COMPLETED)
+      end
+    end
+
+    describe '.get_description' do
+      it 'describes a task' do
+        expect(described_class.get_description(task)).to include("Transforming VM")
+      end
+
+      it 'describes a request' do
+        expect(described_class.get_description(request)).to eq(plan.name)
       end
     end
   end

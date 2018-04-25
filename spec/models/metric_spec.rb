@@ -1,5 +1,5 @@
 describe Metric do
-  before(:each) do
+  before do
     MiqRegion.seed
 
     _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -11,7 +11,7 @@ describe Metric do
     end
 
     context "with enabled and disabled targets" do
-      before(:each) do
+      before do
         storages = []
         2.times { storages << FactoryGirl.create(:storage_target_vmware) }
 
@@ -46,7 +46,7 @@ describe Metric do
       end
 
       context "executing perf_capture_timer" do
-        before(:each) do
+        before do
           stub_settings_merge(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer
         end
@@ -68,7 +68,7 @@ describe Metric do
         end
 
         context "executing capture_targets for realtime targets with parent objects" do
-          before(:each) do
+          before do
             @expected_targets = Metric::Targets.capture_targets
           end
 
@@ -171,7 +171,7 @@ describe Metric do
       end
 
       context "executing perf_capture_gap" do
-        before(:each) do
+        before do
           t = Time.now.utc
           Metric::Capture.perf_capture_gap(t - 7.days, t - 5.days)
         end
@@ -189,7 +189,7 @@ describe Metric do
       end
 
       context "executing perf_capture_realtime_now" do
-        before(:each) do
+        before do
           @vm = Vm.first
           @vm.perf_capture_realtime_now
         end
@@ -204,7 +204,7 @@ describe Metric do
         end
 
         context "with an existing queue item at a lower priority" do
-          before(:each) do
+          before do
             MiqQueue.first.update_attribute(:priority, MiqQueue::NORMAL_PRIORITY)
             @vm.perf_capture_realtime_now
           end
@@ -220,7 +220,7 @@ describe Metric do
         end
 
         context "with an existing queue item at a higher priority" do
-          before(:each) do
+          before do
             MiqQueue.first.update_attribute(:priority, MiqQueue::MAX_PRIORITY)
             @vm.perf_capture_realtime_now
           end
@@ -238,12 +238,12 @@ describe Metric do
     end
 
     context "with a vm" do
-      before(:each) do
+      before do
         @vm = FactoryGirl.create(:vm_perf, :ext_management_system => @ems_vmware)
       end
 
       context "queueing up realtime rollups to parent" do
-        before(:each) do
+        before do
           MiqQueue.delete_all
           @vm.perf_rollup_to_parents("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
         end
@@ -255,7 +255,7 @@ describe Metric do
         end
 
         context "twice" do
-          before(:each) do
+          before do
             @vm.perf_rollup_to_parents("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
           end
 
@@ -268,7 +268,7 @@ describe Metric do
       end
 
       context "executing perf_capture_now?" do
-        before(:each) do
+        before do
           stub_settings(:performance => {:capture_threshold => {:vm => 10}, :capture_threshold_with_alerts => {:vm => 2}})
         end
 
@@ -301,7 +301,7 @@ describe Metric do
     end
 
     context "with a small environment and time_profile" do
-      before(:each) do
+      before do
         @vm1 = FactoryGirl.create(:vm_vmware)
         @vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 4096))
         @host1 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
@@ -317,7 +317,7 @@ describe Metric do
       end
 
       context "with Vm realtime performances" do
-        before(:each) do
+        before do
           cases = [
             "2010-04-14T20:52:30Z", 100.0,
             "2010-04-14T21:51:10Z", 1.0,
@@ -343,7 +343,7 @@ describe Metric do
         end
 
         context "calling perf_rollup to hourly on the Vm" do
-          before(:each) do
+          before do
             @vm1.perf_rollup("2010-04-14T21:00:00Z", 'hourly')
           end
 
@@ -371,7 +371,7 @@ describe Metric do
       end
 
       context "with Vm hourly performances" do
-        before(:each) do
+        before do
           cases = [
             "2010-04-13T21:00:00Z", 100.0,
             "2010-04-14T18:00:00Z", 1.0,
@@ -411,7 +411,7 @@ describe Metric do
         end
 
         context "calling perf_rollup to daily on the Vm" do
-          before(:each) do
+          before do
             @vm1.perf_rollup("2010-04-14T00:00:00Z", 'daily', @time_profile.id)
           end
 
@@ -447,7 +447,7 @@ describe Metric do
         end
 
         context "calling perf_rollup_range to daily on the Vm" do
-          before(:each) do
+          before do
             @vm1.perf_rollup_range("2010-04-13T00:00:00Z", "2010-04-15T00:00:00Z", 'daily', @time_profile.id)
           end
 
@@ -460,7 +460,7 @@ describe Metric do
         end
 
         context "with Vm daily performances" do
-          before(:each) do
+          before do
             @perf = FactoryGirl.create(:metric_rollup_vm_daily,
                                        :timestamp    => "2010-04-14T00:00:00Z",
                                        :time_profile => @time_profile
@@ -489,7 +489,7 @@ describe Metric do
         end
 
         context "and Host realtime performances" do
-          before(:each) do
+          before do
             cases = [
               "2010-04-14T20:52:40Z", 100.0,
               "2010-04-14T21:51:20Z", 2.0,
@@ -528,7 +528,7 @@ describe Metric do
           end
 
           context "calling perf_rollup to hourly on the Host" do
-            before(:each) do
+            before do
               @host1.perf_rollup("2010-04-14T21:00:00Z", 'hourly')
             end
 
@@ -551,7 +551,7 @@ describe Metric do
           end
 
           context "calling perf_rollup_range to realtime on the parent Cluster" do
-            before(:each) do
+            before do
               @ems_cluster.perf_rollup_range("2010-04-14T21:51:20Z", "2010-04-14T21:52:40Z", 'realtime')
             end
 
@@ -582,7 +582,7 @@ describe Metric do
           end
 
           context "executing perf_rollup_gap_queue" do
-            before(:each) do
+            before do
               @args = [2.days.ago.utc, Time.now.utc, 'daily', @time_profile.id]
               Metric::Rollup.perf_rollup_gap_queue(*@args)
             end
@@ -603,7 +603,7 @@ describe Metric do
           end
 
           context "executing perf_rollup_gap" do
-            before(:each) do
+            before do
               @args = [2.days.ago.utc, Time.now.utc, 'daily', @time_profile.id]
               Metric::Rollup.perf_rollup_gap(*@args)
             end
@@ -693,7 +693,7 @@ describe Metric do
     end
 
     context "with a full rollup chain and time profile" do
-      before(:each) do
+      before do
         @host = FactoryGirl.create(:host, :ext_management_system => @ems_vmware)
         @vm = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems_vmware, :host => @host)
         @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems_vmware)
@@ -996,7 +996,7 @@ describe Metric do
     end
 
     context "with enabled and disabled targets" do
-      before(:each) do
+      before do
         @availability_zone = FactoryGirl.create(:availability_zone_target)
         @ems_openstack.availability_zones << @availability_zone
         @vms_in_az = []
@@ -1018,7 +1018,7 @@ describe Metric do
       end
 
       context "executing perf_capture_timer" do
-        before(:each) do
+        before do
           stub_settings(:performance => {:history => {:initial_capture_days => 7}})
           Metric::Capture.perf_capture_timer
         end
@@ -1034,12 +1034,12 @@ describe Metric do
     end
 
     context "with a vm" do
-      before(:each) do
+      before do
         @vm = FactoryGirl.create(:vm_perf_openstack, :ext_management_system => @ems_openstack)
       end
 
       context "queueing up realtime rollups to parent" do
-        before(:each) do
+        before do
           MiqQueue.delete_all
           @vm.perf_rollup_to_parents("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
         end
@@ -1051,7 +1051,7 @@ describe Metric do
         end
 
         context "twice" do
-          before(:each) do
+          before do
             @vm.perf_rollup_to_parents("realtime", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
           end
 
@@ -1065,7 +1065,7 @@ describe Metric do
     end
 
     context "with a full rollup chain and time profile" do
-      before(:each) do
+      before do
         @availability_zone = FactoryGirl.create(:availability_zone, :ext_management_system => @ems_openstack)
         @vm = FactoryGirl.create(:vm_openstack, :ext_management_system => @ems_openstack, :availability_zone => @availability_zone)
 
@@ -1178,6 +1178,34 @@ describe Metric do
       #
       expect(ems_rollup.cpu_usage_rate_average).to eq(70.0)
       expect(ems_rollup.v_derived_cpu_total_cores_used).to eq(7.0)
+    end
+  end
+
+  context "#reindex_table_name" do
+    it "defaults to 1 hour from now" do
+      Timecop.freeze("2017-01-30T09:20UTC") do
+        expect(Metric.reindex_table_name).to eq("metrics_10")
+      end
+    end
+
+    it "pads table to 2 digits" do
+      Timecop.freeze("2017-01-30T03:20UTC") do
+        expect(Metric.reindex_table_name).to eq("metrics_04")
+      end
+    end
+
+    it "provides hour wrap around" do
+      Timecop.freeze("2017-01-30T23:20UTC") do
+        expect(Metric.reindex_table_name).to eq("metrics_00")
+      end
+    end
+
+    it "allows time to be passed in" do
+      expect(Metric.reindex_table_name(Time.parse("2017-01-30T23:20Z").utc)).to eq("metrics_23")
+    end
+
+    it "allows hour integer to be passed in" do
+      expect(Metric.reindex_table_name(23)).to eq("metrics_23")
     end
   end
 

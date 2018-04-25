@@ -4,6 +4,7 @@ class Hardware < ApplicationRecord
   belongs_to  :miq_template,  :foreign_key => :vm_or_template_id
   belongs_to  :host
   belongs_to  :computer_system
+  belongs_to  :physical_switch, :foreign_key => :switch_id, :inverse_of => :hardware
 
   has_many    :networks, :dependent => :destroy
   has_many    :firmwares, :as => :resource, :dependent => :destroy

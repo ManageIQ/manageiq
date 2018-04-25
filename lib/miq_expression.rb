@@ -439,45 +439,31 @@ class MiqExpression
 
   def self.get_col_info(field, options = {})
     result ||= {:data_type => nil, :virtual_reflection => false, :virtual_column => false, :sql_support => true, :excluded_by_preprocess_options => false, :tag => false, :include => {}}
-    col = field.split("-").last if field.include?("-")
-    parts = field.split("-").first.split(".")
-    model = parts.shift
 
-    if model.downcase == "managed" || parts.last == "managed"
-      result[:data_type] = :string
-      result[:tag] = true
+    f = parse_field_or_tag(field)
+    unless f.kind_of?(MiqExpression::Field)
+      result[:sql_support] = true
+      result[:data_type] = f.column_type
+      result[:tag] = true if f.kind_of?(MiqExpression::Tag)
       return result
     end
-    model = model_class(model)
-    cur_incl = result[:include]
 
-    parts.each do |assoc|
-      assoc = assoc.to_sym
-      ref = model.reflection_with_virtual(assoc)
-      result[:virtual_reflection] = true if model.virtual_reflection?(assoc)
+    f.collect_reflections.map(&:name).inject(result[:include]) { |a, p| a[p] ||= {} }
+    result[:virtual_reflection] = !f.reflection_supported_by_sql?
 
-      unless ref
-        result[:virtual_reflection] = true
-        result[:sql_support] = false
-        result[:virtual_column] = true
-        return result
-      end
-
-      unless result[:virtual_reflection]
-        cur_incl[assoc] ||= {}
-        cur_incl = cur_incl[assoc]
-      end
-
-      model = ref.klass
-    end
-    if col
-      f = Field.new(model, [], col)
+    if f.column
       result[:data_type] = f.column_type
       result[:format_sub_type] = f.sub_type
-      result[:virtual_column] = model.virtual_attribute?(col.to_s)
-      result[:sql_support] = !result[:virtual_reflection] && model.attribute_supported_by_sql?(col.to_s)
+      result[:virtual_column] = f.virtual_attribute?
+      result[:sql_support] = f.attribute_supported_by_sql?
       result[:excluded_by_preprocess_options] = exclude_col_by_preprocess_options?(f, options)
     end
+    result
+  rescue ArgumentError
+    # not thrilled with these values. but making tests pass for now
+    result[:virtual_reflection] = true
+    result[:sql_support] = false
+    result[:virtual_column] = true
     result
   end
 
@@ -933,6 +919,7 @@ class MiqExpression
       model.constantize.try(:refresh_dynamic_metric_columns)
       md = model_details(model, :include_model => false, :include_tags => true).select do |c|
         allowed_suffixes = ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES
+        allowed_suffixes += ReportController::Reports::Editor::METERING_VM_ALLOWED_FIELD_SUFFIXES if model.starts_with?('Metering')
         c.last.ends_with?(*allowed_suffixes)
       end
       td = if TAG_CLASSES.include?(cb_model)
@@ -1323,10 +1310,10 @@ class MiqExpression
   def to_arel(exp, tz)
     operator = exp.keys.first
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
-    arel_attribute = field && field.target.arel_attribute(field.column)
+    arel_attribute = field&.arel_attribute
     if exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"])
       field_value = Field.parse(exp[operator]["value"])
-      parsed_value = field_value.target.arel_attribute(field_value.column)
+      parsed_value = field_value.arel_attribute
     elsif exp[operator].kind_of?(Hash)
       parsed_value = exp[operator]["value"]
     end
@@ -1408,7 +1395,7 @@ class MiqExpression
         arel = arel_attribute.eq(parsed_value)
         arel = arel.and(Arel::Nodes::SqlLiteral.new(extract_where_values(reflection.klass, reflection.scope))) if reflection.scope
         field.model.arel_attribute(:id).in(
-          field.target.arel_table.where(arel).project(field.target.arel_table[reflection.foreign_key]).distinct
+          field.arel_table.where(arel).project(field.arel_table[reflection.foreign_key]).distinct
         )
       end
     when "is"

@@ -222,8 +222,13 @@ class EmsEvent < EventStream
 
   private
 
+  def self.event_allowed_ems_ref_keys
+    %w(vm_ems_ref dest_vm_ems_ref)
+  end
+  private_class_method :event_allowed_ems_ref_keys
+
   def self.create_event(event)
-    event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") }
+    event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") && !event_allowed_ems_ref_keys.include?(k.to_s) }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
       :event_type  => event[:event_type],
@@ -270,6 +275,7 @@ class EmsEvent < EventStream
         :host_id           => source_event.host_id,
         :vm_name           => source_event.vm_name,
         :vm_location       => source_event.vm_location,
+        :vm_ems_ref        => source_event.vm_ems_ref,
         :vm_or_template_id => source_event.vm_or_template_id
       }
       new_event[:username] = event.username unless event.username.blank?
@@ -284,6 +290,7 @@ class EmsEvent < EventStream
           :dest_host_id           => dest_event.host_id,
           :dest_vm_name           => dest_event.send("#{dest_key}vm_name"),
           :dest_vm_location       => dest_event.send("#{dest_key}vm_location"),
+          :dest_vm_ems_ref        => dest_event.send("#{dest_key}vm_ems_ref"),
           :dest_vm_or_template_id => dest_event.send("#{dest_key}vm_or_template_id")
         )
       end

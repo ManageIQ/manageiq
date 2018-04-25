@@ -1,6 +1,6 @@
 describe "MiqWorker Monitor" do
   context "After Setup," do
-    before(:each) do
+    before do
       allow(MiqWorker).to receive(:nice_increment).and_return("+10")
       allow_any_instance_of(MiqServer).to receive(:get_time_threshold).and_return(120)
       allow_any_instance_of(MiqServer).to receive(:get_memory_threshold).and_return(100.megabytes)
@@ -10,7 +10,7 @@ describe "MiqWorker Monitor" do
     end
 
     context "A worker" do
-      before(:each) do
+      before do
         @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
       end
 
@@ -73,7 +73,7 @@ describe "MiqWorker Monitor" do
       end
 
       context "with 1 message" do
-        before(:each) do
+        before do
           @message = FactoryGirl.create(:miq_queue, :state => 'dequeue', :handler => @worker)
         end
 
@@ -84,7 +84,7 @@ describe "MiqWorker Monitor" do
       end
 
       context "with multiple messages" do
-        before(:each) do
+        before do
           @messages = []
           @actives  = []
 
@@ -148,7 +148,7 @@ describe "MiqWorker Monitor" do
 
     context "A WorkerMonitor" do
       context "with active messages without worker" do
-        before(:each) do
+        before do
           @actives = []
           @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes)
           @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 5.minutes)
@@ -168,7 +168,7 @@ describe "MiqWorker Monitor" do
       end
 
       context "with expired active messages assigned to workers from multiple" do
-        before(:each) do
+        before do
           @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server.zone)
           @worker1 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
           @worker2 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server2.id)
@@ -203,7 +203,7 @@ describe "MiqWorker Monitor" do
       end
 
       context "with vanilla generic worker" do
-        before(:each) do
+        before do
           @worker1 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => 42, :type => 'MiqGenericWorker')
           allow_any_instance_of(MiqServer).to receive(:get_time_threshold).and_return(2.minutes)
           allow_any_instance_of(MiqServer).to receive(:get_memory_threshold).and_return(500.megabytes)
@@ -214,7 +214,7 @@ describe "MiqWorker Monitor" do
 
         context "when worker exits" do
           context "because it exited" do
-            before(:each) do
+            before do
               @worker1.update_attributes(:status => MiqWorker::STATUS_STOPPED)
             end
 
@@ -226,7 +226,7 @@ describe "MiqWorker Monitor" do
           end
 
           context "because it aborted" do
-            before(:each) do
+            before do
               @worker1.update_attributes(:status => MiqWorker::STATUS_ABORTED)
             end
 
@@ -238,7 +238,7 @@ describe "MiqWorker Monitor" do
           end
 
           context "because it was killed" do
-            before(:each) do
+            before do
               @worker1.update_attributes(:status => MiqWorker::STATUS_KILLED)
             end
 
@@ -251,7 +251,7 @@ describe "MiqWorker Monitor" do
         end
 
         context "when worker queues up message for server" do
-          before(:each) do
+          before do
             @ems_id = 7
             @worker1.send_message_to_worker_monitor('reconnect_ems', @ems_id.to_s)
           end
@@ -269,7 +269,7 @@ describe "MiqWorker Monitor" do
         end
 
         context "when server has a single non-sync message" do
-          before(:each) do
+          before do
             @miq_server.message_for_worker(@worker1.id, "foo")
           end
 
@@ -279,7 +279,7 @@ describe "MiqWorker Monitor" do
         end
 
         context "when server has a single sync_config message" do
-          before(:each) do
+          before do
             @miq_server.message_for_worker(@worker1.id, "sync_config")
           end
 
@@ -289,7 +289,7 @@ describe "MiqWorker Monitor" do
         end
 
         context "when server has a single reconnect_ems message with a parameter" do
-          before(:each) do
+          before do
             @ems_id = 7
             @miq_server.message_for_worker(@worker1.id, 'reconnect_ems', @ems_id.to_s)
           end
@@ -299,7 +299,7 @@ describe "MiqWorker Monitor" do
           end
 
           context "and an exit message" do
-            before(:each) do
+            before do
               @miq_server.message_for_worker(@worker1.id, 'exit')
             end
 
@@ -326,7 +326,7 @@ describe "MiqWorker Monitor" do
         let(:worker) { FactoryGirl.create(:miq_worker, :miq_server_id => server.id, :pid => 42) }
         let(:server) { @miq_server }
 
-        before(:each) do
+        before do
           allow(server).to receive(:get_time_threshold).and_return(2.minutes)
           allow(server).to receive(:get_memory_threshold).and_return(500.megabytes)
           allow(server).to receive(:get_restart_interval).and_return(0.hours)

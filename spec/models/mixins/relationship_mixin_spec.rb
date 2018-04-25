@@ -9,6 +9,12 @@ describe RelationshipMixin do
   # host with no tree
   let(:host) { FactoryGirl.create(:host) }
 
+  describe "#remove_children" do
+    it "handles [nil]" do
+      expect { vms[3].remove_children(nil) }.to_not raise_error
+    end
+  end
+
   context "tree with relationship" do
     it "#with_relationship_type and #relationship_type" do
       expect(vms[0].relationship_type).not_to eq(test_rel_type)
@@ -52,7 +58,7 @@ describe RelationshipMixin do
     # than one associated tree node.
 
     context "#set_child on a new parent object" do
-      before(:each) { @parent = FactoryGirl.create(:vm_vmware) }
+      before { @parent = FactoryGirl.create(:vm_vmware) }
 
       it "with a second new object will link a new tree node for the parent to a new tree node for the child" do
         child = FactoryGirl.create(:vm_vmware)
@@ -96,7 +102,7 @@ describe RelationshipMixin do
     end
 
     context "#set_parent on a new child object" do
-      before(:each) { @child = FactoryGirl.create(:vm_vmware) }
+      before { @child = FactoryGirl.create(:vm_vmware) }
 
       it "with a second new object will link a new tree node for the parent to a new tree node for the child" do
         parent = FactoryGirl.create(:vm_vmware)
@@ -140,7 +146,7 @@ describe RelationshipMixin do
     end
 
     context "with a new parent object, #replace_parent" do
-      before(:each) { @parent = FactoryGirl.create(:vm_vmware) }
+      before { @parent = FactoryGirl.create(:vm_vmware) }
 
       it "on a second new object will link a new tree node for the parent to a new tree node for the child and be the only parent for the child" do
         child = FactoryGirl.create(:vm_vmware)
@@ -319,7 +325,7 @@ describe RelationshipMixin do
   end
 
   context ".alias_with_relationship_type" do
-    before(:each) do
+    before do
       @ws = FactoryGirl.create(:miq_widget_set)
       @w1 = FactoryGirl.create(:miq_widget)
       @w2 = FactoryGirl.create(:miq_widget)

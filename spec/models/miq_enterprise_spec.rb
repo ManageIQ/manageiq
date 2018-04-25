@@ -30,7 +30,7 @@ describe MiqEnterprise do
   end
 
   context "with some existing records" do
-    before(:each) do
+    before do
       @ems  = FactoryGirl.create(:ems_vmware)
     end
 

@@ -8,6 +8,8 @@ module Vmdb
   class Settings
     extend Vmdb::SettingsWalker::ClassMethods
 
+    class ConfigurationInvalid < StandardError; end
+
     PASSWORD_FIELDS = Vmdb::SettingsWalker::PASSWORD_FIELDS
     DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
 
@@ -37,17 +39,28 @@ module Vmdb
       VMDB::Config::Activator.new(::Settings).activate
     end
 
-    def self.validate
-      VMDB::Config::Validator.new(::Settings).validate
+    def self.validator(settings = ::Settings)
+      VMDB::Config::Validator.new(settings)
+    end
+    private_class_method :validator
+
+    def self.validate(settings = ::Settings)
+      validator(settings).validate
     end
 
     def self.valid?
-      validate.first
+      validator.valid?
     end
 
     def self.save!(resource, hash)
       new_settings = build_without_local(resource).load!.merge!(hash).to_hash
-      raise "configuration invalid" unless VMDB::Config::Validator.new(new_settings).valid?
+
+      valid, errors = validate(new_settings)
+      unless valid
+        message = errors.map { |k, v| "#{k}: #{v}" }.join("; ")
+        raise ConfigurationInvalid, message
+      end
+
       hash_for_parent = parent_settings_without_local(resource).load!.to_hash
       diff = HashDiffer.diff(hash_for_parent, new_settings)
       encrypt_passwords!(diff)

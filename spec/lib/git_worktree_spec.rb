@@ -275,6 +275,25 @@ describe GitWorktree do
     end
   end
 
+  describe "git branches with no master" do
+    let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/no_master.git") }
+    let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
+
+    describe "#branches" do
+      it "all branches" do
+        expect(test_repo.branches).to match_array(%w(branch1 branch2))
+      end
+    end
+
+    describe "#file_list" do
+      it "get list of files in a branch" do
+        test_repo.branch = 'branch2'
+
+        expect(test_repo.file_list).to match_array(%w(file1 file2 file3 file4))
+      end
+    end
+  end
+
   describe 'git tags' do
     let(:git_repo_path) { Rails.root.join("spec/fixtures/git_repos/branch_and_tag.git") }
     let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
@@ -301,6 +320,18 @@ describe GitWorktree do
     describe "#tag" do
       it "non existent tag" do
         expect { test_repo.tag = 'nada' }.to raise_exception(GitWorktreeException::TagMissing)
+      end
+    end
+  end
+
+  describe 'credentials_cb' do
+    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
+    let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
+
+    describe "#credentials_cb" do
+      it "call the credentials callback" do
+        expect(test_repo.credentials_cb("url", nil, nil).class).to eq(Rugged::Credentials::UserPassword)
+        expect { test_repo.credentials_cb("url", nil, nil) }.to raise_exception(GitWorktreeException::InvalidCredentials)
       end
     end
   end

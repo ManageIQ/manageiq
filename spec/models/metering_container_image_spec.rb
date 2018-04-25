@@ -4,6 +4,7 @@ describe MeteringContainerImage do
   let(:hourly_rate)       { 0.01 }
   let(:count_hourly_rate) { 1.00 }
   let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
+  let(:options) { base_options }
   let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
   let(:report_run_time) { month_end }
   let(:month_beginning) { ts.beginning_of_month.utc }
@@ -57,6 +58,25 @@ describe MeteringContainerImage do
       expect(subject.memory_allocated_metric).to eq(@container.limit_memory_bytes / 1.megabytes)
       expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_cpu_cores)
       expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_memory_bytes / 1.megabytes)
+      expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
+      expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
     end
+  end
+
+  let(:report_col_options) do
+    {
+      "cpu_cores_allocated_metric" => {:grouping => [:total]},
+      "cpu_cores_used_metric"      => {:grouping => [:total]},
+      "existence_hours_metric"     => {:grouping => [:total]},
+      "fixed_compute_metric"       => {:grouping => [:total]},
+      "memory_allocated_metric"    => {:grouping => [:total]},
+      "memory_used_metric"         => {:grouping => [:total]},
+      "metering_used_metric"       => {:grouping => [:total]},
+      "net_io_used_metric"         => {:grouping => [:total]},
+    }
+  end
+
+  it 'sets grouping settings for all related columns' do
+    expect(described_class.report_col_options).to eq(report_col_options)
   end
 end

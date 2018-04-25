@@ -83,6 +83,7 @@
   - vm_cloud_explorer
   - vm_infra_explorer
   - sui_services
+  - sui_notifications
 
 - :name: EvmRole-approver
   :read_only: true
@@ -172,6 +173,7 @@
   - sui_vm_web_console
   - sui_vm_tags
   - sui_orders_view
+  - sui_notifications
 
 - :name: EvmRole-auditor
   :read_only: true
@@ -269,6 +271,7 @@
   - sui_vm_console
   - sui_vm_web_console
   - sui_vm_tags
+  - sui_notifications
 
 - :name: EvmRole-desktop
   :read_only: true
@@ -333,6 +336,7 @@
   - sui_vm_suspend
   - sui_orders_view
   - sui_orders_operations
+  - sui_notifications
 
 - :name: EvmRole-operator
   :read_only: true
@@ -451,6 +455,7 @@
   - sui_vm_start
   - sui_vm_stop
   - sui_vm_suspend
+  - sui_notifications
 
 - :name: EvmRole-security
   :read_only: true
@@ -533,6 +538,7 @@
   - sui_vm_snapshot_create
   - sui_vm_snapshot_delete
   - sui_vm_tags
+  - sui_notifications
 
 - :name: EvmRole-support
   :read_only: true
@@ -617,6 +623,7 @@
   - sui_vm_console
   - sui_vm_web_console
   - sui_vm_tags
+  - sui_notifications
 
 - :name: EvmRole-user
   :read_only: true
@@ -701,6 +708,7 @@
   - sui_vm_tags
   - sui_orders_view
   - sui_orders_operations
+  - sui_notifications
 
 - :name: EvmRole-user_limited_self_service
   :read_only: true
@@ -877,6 +885,7 @@
   - sui_vm_suspend
   - sui_orders_view
   - sui_orders_operations
+  - sui_notifications
 
 - :name: EvmRole-tenant_administrator
   :read_only: true
@@ -940,6 +949,7 @@
   - vm_cloud_explorer
   - vm_infra_explorer
   - sui_services
+  - sui_notifications
 
 - :name: EvmRole-tenant_quota_administrator
   :read_only: true
@@ -994,6 +1004,7 @@
   - vm_cloud_explorer
   - vm_infra_explorer
   - sui_services
+  - sui_notifications
 
 - :name: EvmRole-consumption_administrator
   :read_only: true
@@ -1193,3 +1204,4 @@
   - vm_view
   - sui_services_view
   - sui_orders_view
+  - sui_notifications

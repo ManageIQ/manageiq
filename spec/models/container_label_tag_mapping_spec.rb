@@ -42,7 +42,7 @@ describe ContainerLabelTagMapping do
   end
 
   context "with 2 mappings for same label" do
-    before(:each) do
+    before do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
     end
@@ -54,7 +54,7 @@ describe ContainerLabelTagMapping do
   end
 
   context "with any-value and specific-value mappings" do
-    before(:each) do
+    before do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag2)
@@ -151,7 +151,7 @@ describe ContainerLabelTagMapping do
   end
 
   context "with 2 any-value mappings onto same category" do
-    before(:each) do
+    before do
       FactoryGirl.create(:container_label_tag_mapping, :label_name => 'name1', :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_name => 'name2', :tag => cat_tag)
     end
@@ -183,7 +183,7 @@ describe ContainerLabelTagMapping do
   # seemed the simplest well-defined behavior...
 
   context "with any-type and specific-type mappings" do
-    before(:each) do
+    before do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
     end
@@ -198,7 +198,7 @@ describe ContainerLabelTagMapping do
   end
 
   context "any-type specific-value vs specific-type any-value" do
-    before(:each) do
+    before do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
     end
@@ -217,7 +217,7 @@ describe ContainerLabelTagMapping do
       instance_double(ManagerRefresh::InventoryObject, :id => tag.id)
     end
 
-    before(:each) do
+    before do
       # For tag1, tag2 to be controlled by the mapping, though current implementation doesn't care.
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
       tag1

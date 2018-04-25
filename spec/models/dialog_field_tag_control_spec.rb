@@ -8,7 +8,7 @@ describe DialogFieldTagControl do
   end
 
   context "dialog field tag control without options hash" do
-    before(:each) do
+    before do
       @df = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category')
     end
 
@@ -62,7 +62,7 @@ describe DialogFieldTagControl do
   end
 
   context "dialog field tag control with with options hash and category" do
-    before(:each) do
+    before do
       @df = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
             :options => {:force_single_value => true, :category_id => 1, :category_name => 'category', :category_description => 'description'}
                               )
@@ -86,7 +86,7 @@ describe DialogFieldTagControl do
   end
 
   context "dialog field with tag control hash and tag categories" do
-    before(:each) do
+    before do
       @cat = FactoryGirl.create(:classification, :description => "Auto Approve - Max CPU", :name => "prov_max_cpu", :single_value => 1)
       @df  = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
             :options => {:category_id => @cat.id, :category_name => 'category', :category_description => 'description'}
@@ -106,7 +106,7 @@ describe DialogFieldTagControl do
   end
 
   context "dialog field tag control and Classification seeded" do
-    before(:each) do
+    before do
       cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
       add_entry(cat, :name => "dev",  :description => "Development")
       add_entry(cat, :name => "test", :description => "Test")
@@ -127,7 +127,7 @@ describe DialogFieldTagControl do
     end
 
     context "with dialog field tag control without options hash" do
-      before(:each) do
+      before do
         @df  = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag', :name => 'test tag', :options => {:force_single_select => true})
       end
 

@@ -115,10 +115,6 @@ module VmOrTemplate::Operations
     validate_vm_control_power_state(true)
   end
 
-  def validate_vm_control_not_powered_on
-    validate_vm_control_power_state(false)
-  end
-
   def validate_vm_control_power_state(check_powered_on)
     unless supports_control?
       return {:available => false, :message => unsupported_reason(:control)}

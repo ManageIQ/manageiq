@@ -128,6 +128,7 @@
     :keep_drift_states: 6.months
     :purge_window_size: 10000
 :embedded_ansible:
+  :job_data_retention_days: 120
   :docker:
     :task_image_name: ansible/awx_task
     :task_image_tag: latest
@@ -781,6 +782,9 @@
       - USER_UPDATE_STORAGE_POOL_FAILED
       :detail: []
       :name: Storage
+    :update:
+      :detail: []
+      :name: Update
   :task_final_events:
     :ClusterCreatedEvent:
     - CreateClusterEx
@@ -905,16 +909,22 @@
     :ping_depot_timeout: 20
   :level: info
   :level_rails: info
+  :level_api: info
+  :level_automation: info
+  :level_cn_monitoring: info
+  :level_fog: info
   :level_lenovo: info
   :level_mw: info
-  :level_cn_monitoring: info
-  :level_api: info
-  :level_fog: info
+  :level_nuage: info
+  :level_policy: info
   :level_scvmm: info
+  :level_vcloud: info
   :level_vim: warn
   :level_websocket: info
-  :level_vcloud: info
-  :level_nuage: info
+:notifications:
+  :history:
+    :purge_window_size: 1000
+    :keep_notifications: 1.week
 :ntp:
   :server:
   - 0.pool.ntp.org
@@ -958,10 +968,12 @@
 :container_entities:
   :history:
     :keep_archived_entities: 6.months
+    :keep_archived_quotas: 6.months
     :purge_window_size: 1000
 :product:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
+  :transformation: true
 :prototype:
   :queue_type: miq_queue
   :artemis:
@@ -998,7 +1010,7 @@
   :mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
   :mks_version: 2.1.0.0
   :monitor_poll: 5.seconds
-  :name: EVM
+  :monitor_server_roles_timeout: 5.minutes
   :prefetch_max_per_worker: 10
   :prefetch_max_per_worker_dequeue: 100
   :prefetch_min_per_worker_dequeue: 10
@@ -1029,7 +1041,6 @@
       :value: 60
     :sync_interval: 30.minutes
     :wait_for_started_timeout: 10.minutes
-  :zone: default
 :session:
   :interval: 60
   :memcache_server: 127.0.0.1:11211
@@ -1045,7 +1056,6 @@
   :host: localhost
   :password: ''
   :port: '25'
-  :recipient_address_byte_limit: 100
   :user_name: evmadmin
 :snapshots:
   :create_free_percent: 100
@@ -1172,6 +1182,7 @@
           :poll_method: :normal
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
+          :dequeue_method: :sql
         :ems_refresh_worker_ansible_tower_automation: {}
         :ems_refresh_worker_embedded_ansible_automation: {}
         :ems_refresh_worker_foreman_configuration: {}
@@ -1222,6 +1233,7 @@
       :log_database_statistics_interval: 1.days
       :memory_threshold: 500.megabytes
       :nice_delta: 3
+      :notifications_purge_interval: 1.day
       :orchestration_stack_retired_interval: 10.minutes
       :performance_collection_interval: 3.minutes
       :performance_collection_start_delay: 5.minutes

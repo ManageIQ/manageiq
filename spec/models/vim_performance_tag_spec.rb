@@ -1,5 +1,5 @@
 describe VimPerformanceTag do
-  before(:each) do
+  before do
     @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
 
@@ -8,7 +8,7 @@ describe VimPerformanceTag do
   end
 
   context "with a small environment and tagged VMs" do
-    before(:each) do
+    before do
       @prod = "environment/prod"
       @dev  = "environment/dev"
       @test = "environment/test"
@@ -24,7 +24,7 @@ describe VimPerformanceTag do
     end
 
     context "with Vm hourly performances" do
-      before(:each) do
+      before do
         case_sets = {
           :host => {
             "2010-04-13T21:00:00Z" => 1100.0,

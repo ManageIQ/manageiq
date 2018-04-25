@@ -57,7 +57,6 @@ class VimPerformanceTag < MetricRollup
   def self.build_tag_value_recs(rec, options)
     tvrecs = VimPerformanceTagValue.build_for_association(rec,
                                                           options[:cat_model].pluralize.underscore,
-                                                          :save     => false,
                                                           :category => options[:category])
     tvrecs = tvrecs.select { |r| r.category == options[:category] }
 

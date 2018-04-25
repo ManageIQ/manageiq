@@ -15,7 +15,7 @@ describe ManageIQ do
   end
 
   describe ".env" do
-    before(:each) do
+    before do
       ManageIQ.instance_variable_set(:@_env, nil)
     end
 
@@ -45,7 +45,7 @@ describe ManageIQ do
   end
 
   describe ".root" do
-    before(:each) do
+    before do
       ManageIQ.instance_variable_set(:@_root, nil)
     end
 

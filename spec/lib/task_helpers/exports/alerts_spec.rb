@@ -28,12 +28,12 @@ describe TaskHelpers::Exports::Alerts do
     }
   end
 
-  before(:each) do
+  before do
     FactoryGirl.create(:miq_alert, alert_create_attrs)
     @export_dir = Dir.mktmpdir('miq_exp_dir')
   end
 
-  after(:each) do
+  after do
     FileUtils.remove_entry(@export_dir)
   end
 

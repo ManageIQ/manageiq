@@ -442,7 +442,7 @@ describe Service do
 
     describe "#chargeback_report_name" do
       it "creates chargeback report's name" do
-        expect(@service.chargeback_report_name).to eq "Chargeback-Vm-Monthly-Test_Service_1"
+        expect(@service.chargeback_report_name).to eq "Chargeback-Vm-Monthly-Test_Service_1-#{@service.id}"
       end
     end
 
@@ -453,7 +453,7 @@ describe Service do
                                   :method_name => "generate_chargeback_report",
                                   :args        => {:report_source => "Test Run"})
         end
-        @service.queue_chargeback_report_generation(:report_source => "Test Run")
+        expect(@service.queue_chargeback_report_generation(:report_source => "Test Run")).to be_kind_of(MiqTask)
       end
     end
 

@@ -372,11 +372,11 @@ class Service < ApplicationRecord
   end
 
   def chargeback_report_name
-    "Chargeback-Vm-Monthly-#{name}"
+    "Chargeback-Vm-Monthly-#{name}-#{id}"
   end
 
   def generate_chargeback_report(options = {})
-    _log.info("Generation of chargeback report for service #{name} started...")
+    _log.info("Generation of chargeback report for service #{name} with #{id} started...")
     MiqReportResult.where(:name => chargeback_report_name).destroy_all
     report = MiqReport.new(chargeback_yaml)
     options[:report_sync] = true
@@ -392,14 +392,23 @@ class Service < ApplicationRecord
   end
 
   def queue_chargeback_report_generation(options = {})
+    task = MiqTask.create(
+      :name    => "Generating chargeback report with id: #{id}",
+      :state   => MiqTask::STATE_QUEUED,
+      :status  => MiqTask::STATUS_OK,
+      :message => "Queueing Chargeback of #{self.class.name} with id: #{id}"
+    )
+
     MiqQueue.submit_job(
       :service     => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
+      :task_id     => task.id,
       :method_name => "generate_chargeback_report",
       :args        => options
     )
     _log.info("Added to queue: generate_chargeback_report for service #{name}")
+    task
   end
 
   #

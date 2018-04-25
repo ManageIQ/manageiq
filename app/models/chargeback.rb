@@ -11,6 +11,21 @@ class Chargeback < ActsAsArModel
     :fixed_compute_metric => :integer,
   )
 
+  def self.dynamic_rate_columns
+    @chargeable_fields = {}
+    @chargeable_fields[self.class] ||=
+      begin
+        ChargeableField.all.each_with_object({}) do |chargeable_field, result|
+          next unless report_col_options.keys.include?("#{chargeable_field.rate_name}_cost")
+          result["#{chargeable_field.rate_name}_rate"] = :string
+        end
+      end
+  end
+
+  def self.refresh_dynamic_metric_columns
+    set_columns_hash(dynamic_rate_columns)
+  end
+
   def self.build_results_for_report_chargeback(options)
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
@@ -140,7 +155,7 @@ class Chargeback < ActsAsArModel
       rate.rate_details_relevant_to(relevant_fields).each do |r|
         r.charge(relevant_fields, consumption, @options).each do |field, value|
           next unless self.class.attribute_names.include?(field)
-          self[field] = (self[field] || 0) + value
+          self[field] = self[field].kind_of?(Numeric) ? (self[field] || 0) + value : value
         end
       end
     end

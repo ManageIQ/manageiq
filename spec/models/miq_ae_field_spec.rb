@@ -40,7 +40,7 @@ describe MiqAeField do
   end
 
   context "legacy tests" do
-    before(:each) do
+    before do
       @c1 = MiqAeClass.create(:namespace => "TEST", :name => "fields_test")
       @user = FactoryGirl.create(:user_with_group)
     end

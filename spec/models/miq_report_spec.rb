@@ -20,7 +20,6 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
       :rpt_group => "Custom",
       :rpt_type  => "Custom",
       :db        => base_report == "Host" ? "Host" : "ManageIQ::Providers::InfraManager::Vm",
-      :cols      => %w(name),
       :include   => {custom_attributes_field.to_s => {"columns" => %w(name value)}},
       :col_order => %w(miq_custom_attributes.name miq_custom_attributes.value name),
       :headers   => ["EVM Custom Attribute Name", "EVM Custom Attribute Value", "Name"],
@@ -76,7 +75,6 @@ describe MiqReport do
         :rpt_type => "Custom", :db => "Vm", :cols => %w(name),
         :conditions => MiqExpression.new("=" => {"regkey" => "HKLM\\SOFTWARE\\WindowsFirewall",
                                                  "regval" => "EnableFirewall", "value" => "0"}),
-        :include   => {"registry_items" => {"columns" => %w(data name value_name)}},
         :col_order => %w(name registry_items.data registry_items.name registry_items.value_name),
         :headers   => ["Name", "Registry Data", "Registry Name", "Registry Value Name"],
         :order     => "Ascending")
@@ -609,8 +607,6 @@ describe MiqReport do
         :rpt_group     => "Custom",
         :rpt_type      => "Custom",
         :db            => "MiqTemplate",
-        :cols          => [],
-        :include       => {"miq_provision_vms" => {"columns" => ["name"]}},
         :col_order     => ["miq_provision_vms.name"],
         :headers       => ["Name"],
         :template_type => "report",
@@ -630,7 +626,6 @@ describe MiqReport do
         :name     => "All Departments with Performance", :title => "All Departments with Performance for last week",
       :db         => "VmPerformance",
       :cols       => %w(resource_name max_cpu_usage_rate_average cpu_usage_rate_average),
-      :include    => {"vm" => {"columns" => ["v_annotation"]}, "host" => {"columns" => ["name"]}},
       :col_order  => ["ems_cluster.name", "vm.v_annotation", "host.name"],
       :headers    => ["Cluster", "VM Annotations - Notes", "Host Name"],
       :order      => "Ascending",
@@ -692,13 +687,12 @@ describe MiqReport do
       end
 
       let(:report) do
-        include = {"tenant_quotas" => {"columns" => %w(name total used allocated available)}}
         cols = ["name", "tenant_quotas.name", "tenant_quotas.total", "tenant_quotas.used", "tenant_quotas.allocated",
                 "tenant_quotas.available"]
         headers = ["Tenant Name", "Quota Name", "Total Quota", "Total Quota", "In Use", "Allocated", "Available"]
 
         FactoryGirl.create(:miq_report, :title => "Tenant Quotas", :order => 'Ascending', :rpt_group => "Custom",
-                           :priority => 231, :rpt_type => 'Custom', :db => 'Tenant', :include => include, :cols => cols,
+                           :priority => 231, :rpt_type => 'Custom', :db => 'Tenant',
                            :col_order => cols, :template_type => "report", :headers => headers,
                            :conditions => skip_condition, :sortby => ["tenant_quotas.name"])
       end
@@ -850,6 +844,26 @@ describe MiqReport do
       )
       report.cols << "name2"
       expect(report.cols).to eq(%w(name name2))
+    end
+  end
+
+  describe "#column_is_hidden?" do
+    let(:report) do
+      MiqReport.new(
+        :name        => "VMs",
+        :title       => "Virtual Machines",
+        :db          => "Vm",
+        :cols        => %w(name guid hostname ems_ref vendor),
+        :col_order   => %w(name hostname vendor guid emf_ref),
+        :headers     => %w(Name Host Vendor Guid EMS),
+        :col_options => {"guid" => {:hidden => true}, "ems_ref" => {:hidden => true}}
+      )
+    end
+
+    it "detects hidden columns defined in #col_options" do
+      expect(report.column_is_hidden?(:guid)).to be_truthy
+      expect(report.column_is_hidden?(:ems_ref)).to be_truthy
+      expect(report.column_is_hidden?(:vendor)).to be_falsey
     end
   end
 

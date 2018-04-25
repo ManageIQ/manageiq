@@ -95,6 +95,10 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "EventStream", :method_name => "purge_timer", :zone => nil)
   end
 
+  def notification_purge_timer
+    queue_work(:class_name => "Notification", :method_name => "purge_timer", :zone => nil)
+  end
+
   def policy_event_purge_timer
     queue_work(:class_name => "PolicyEvent", :method_name => "purge_timer", :zone => nil)
   end
@@ -109,6 +113,8 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "ContainerGroup", :method_name => "purge_timer", :zone => nil)
     queue_work(:class_name => "ContainerImage", :method_name => "purge_timer", :zone => nil)
     queue_work(:class_name => "ContainerProject", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerQuota", :method_name => "purge_timer", :zone => nil)
+    queue_work(:class_name => "ContainerQuotaItem", :method_name => "purge_timer", :zone => nil)
   end
 
   def binary_blob_purge_timer

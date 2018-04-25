@@ -1,5 +1,5 @@
 describe GenericMailer do
-  before(:each) do
+  before do
     @miq_server = EvmSpecHelper.local_miq_server
     @args = {
       :to      => "you@bedrock.gov",

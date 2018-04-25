@@ -2,7 +2,7 @@ describe Zone do
   include_examples ".seed called multiple times"
 
   context "with two small envs" do
-    before(:each) do
+    before do
       @zone1 = FactoryGirl.create(:small_environment)
       @host1 = @zone1.ext_management_systems.first.hosts.first
       @zone1.reload
@@ -147,7 +147,7 @@ describe Zone do
 
   context "ConfigurationManagementMixin" do
     describe "#remote_cockpit_ws_miq_server" do
-      before(:each) do
+      before do
         @csv = <<-CSV.gsub(/^\s+/, "")
           name,description,max_concurrent,external_failover,role_scope
           cockpit_ws,Cockpit,1,false,zone
@@ -189,6 +189,16 @@ describe Zone do
           :server_guid => server_1.guid,
         ).count
       ).to eq(1)
+    end
+  end
+
+  context "validate multi region" do
+    let!(:other_region_id)         { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let!(:default_in_other_region) { described_class.create(:name => "default", :description => "Default Zone", :id => other_region_id) }
+    let!(:default_in_my_region)    { described_class.create(:name => "default", :description => "Default Zone") }
+
+    it ".default_zone returns a zone in the current region" do
+      expect(described_class.default_zone).to eq(default_in_my_region)
     end
   end
 end

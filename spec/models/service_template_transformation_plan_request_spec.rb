@@ -1,7 +1,7 @@
 describe ServiceTemplateTransformationPlanRequest do
   let(:vms) { Array.new(3) { FactoryGirl.create(:vm_or_template) } }
   let(:vm_requests) do
-    %w(Queued Failed Approved).zip(vms).collect do |status, vm|
+    [ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_FAILED, ServiceResource::STATUS_APPROVED].zip(vms).collect do |status, vm|
       ServiceResource.new(:resource => vm, :status => status)
     end
   end
@@ -10,7 +10,7 @@ describe ServiceTemplateTransformationPlanRequest do
 
   describe '#requested_task_idx' do
     it 'selects approved vm requests' do
-      expect(request.requested_task_idx.first).to have_attributes(:resource => vms[2], :status => 'Approved')
+      expect(request.requested_task_idx.first).to have_attributes(:resource => vms[2], :status => ServiceResource::STATUS_APPROVED)
     end
   end
 
@@ -35,7 +35,7 @@ describe ServiceTemplateTransformationPlanRequest do
   describe '#approve_vm' do
     it 'turns the status to Approved' do
       request.approve_vm(vms[0].id)
-      expect(ServiceResource.find_by(:resource => vms[0]).status).to eq('Approved')
+      expect(ServiceResource.find_by(:resource => vms[0]).status).to eq(ServiceResource::STATUS_APPROVED)
     end
   end
 end

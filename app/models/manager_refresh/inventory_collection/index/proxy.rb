@@ -6,6 +6,8 @@ module ManagerRefresh
 
         attr_reader :skeletal_primary_index
 
+        # @param inventory_collection [ManagerRefresh::InventoryCollection] InventoryCollection object owning the proxy
+        # @param secondary_refs [Hash] Secondary_refs in format {:name_of_the_ref => [:attribute1, :attribute2]}
         def initialize(inventory_collection, secondary_refs = {})
           @inventory_collection = inventory_collection
 
@@ -39,6 +41,10 @@ module ManagerRefresh
           )
         end
 
+        # Builds primary index for passed InventoryObject
+        #
+        # @param inventory_object [ManagerRefresh::InventoryObject] InventoryObject we want to index
+        # @return [ManagerRefresh::InventoryObject] Passed InventoryObject
         def build_primary_index_for(inventory_object)
           # Building the object, we need to provide all keys of a primary index
           assert_index(inventory_object.data, primary_index_ref)
@@ -67,7 +73,7 @@ module ManagerRefresh
           # TODO(lsmola) lazy_find will support only hash, then we can remove the _by variant
           # TODO(lsmola) this method should return lazy too, the rest of the finders should be deprecated
           return if reference.nil?
-          return unless assert_index(reference, ref)
+          assert_index(reference, ref)
 
           reference = inventory_collection.build_reference(reference, ref)
 
@@ -97,7 +103,7 @@ module ManagerRefresh
           # access the data
           # TODO(lsmola) lazy_find will support only hash, then we can remove the _by variant
           return if manager_uuid.nil?
-          return unless assert_index(manager_uuid, ref)
+          assert_index(manager_uuid, ref)
 
           ::ManagerRefresh::InventoryObjectLazy.new(inventory_collection,
                                                     manager_uuid,
@@ -197,8 +203,6 @@ module ManagerRefresh
             # Assert the that possible relation is nil or InventoryObject or InventoryObjectlazy class
             assert_relation_keys({named_ref(ref).first => manager_uuid}, ref)
           end
-
-          true
         rescue => e
           _log.error("Error when asserting index: #{manager_uuid}, with ref: #{ref} of: #{inventory_collection}")
           raise e

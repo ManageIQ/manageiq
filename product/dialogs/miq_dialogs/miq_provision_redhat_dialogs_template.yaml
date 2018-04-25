@@ -439,7 +439,7 @@
               :dvs: true
               :vlans: true
             :method: :allowed_vlans
-          :description: Network
+          :description: Virtual NIC Profile ID
           :required: true
           :display: :edit
           :default: <Template>

@@ -57,7 +57,7 @@ describe VmdbTableEvm do
   end
 
   context "#seed_texts" do
-    before(:each) do
+    before do
       @db = VmdbDatabase.seed_self
       @evm_table = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => 'foo')
     end

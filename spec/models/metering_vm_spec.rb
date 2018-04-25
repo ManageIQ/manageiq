@@ -76,6 +76,37 @@ describe MeteringVm do
       expect(subject.net_io_used_metric).to eq(net_usage_rate_average * count_of_metric_rollup)
       expect(subject.storage_allocated_metric).to eq(derived_vm_allocated_disk_storage)
       expect(subject.storage_used_metric).to eq(derived_vm_used_disk_storage * count_of_metric_rollup)
+      expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
+      expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
+    end
+
+    context "vm started later then beginning of report interval and it was retired earlier then end of report interval " do
+      let(:beginning_of_resource_existence) { month_beginning + 5.days }
+      let(:end_of_resource_existence)       { month_beginning + 20.days }
+
+      it 'uses datetime from Vm#created_on and Vm#retires_on' do
+        vm.update_attributes(:created_on => beginning_of_resource_existence, :retires_on => end_of_resource_existence)
+        vm.metric_rollups.each { |mr| mr.update_attributes(:timestamp => beginning_of_resource_existence) }
+
+        expect(subject.beginning_of_resource_existence_in_report_interval).to eq(beginning_of_resource_existence)
+        expect(subject.end_of_resource_existence_in_report_interval).to eq(end_of_resource_existence)
+      end
+
+      it 'uses datetime from Vm#created_on and Vm#updated_on when vm is disconnected' do
+        vm.update_attributes(:created_on => beginning_of_resource_existence)
+        vm.metric_rollups.each { |mr| mr.update_attributes(:timestamp => beginning_of_resource_existence) }
+
+        Timecop.travel(report_run_time - 5.days - 5.hours)
+
+        vm.disconnect_ems
+
+        Timecop.travel(report_run_time)
+
+        expect(subject.beginning_of_resource_existence_in_report_interval).to eq(beginning_of_resource_existence)
+        expect(subject.end_of_resource_existence_in_report_interval.to_s).to eq(vm.updated_on.to_s)
+        expect(subject.end_of_resource_existence_in_report_interval.to_s).to eq("2012-09-25 19:00:00 UTC")
+        expect(subject.existence_hours_metric).to eq(19 * 24 + 19) # from 2012-09-06 00:00:00 UTC to 2012-09-25 19:00:00 UTC
+      end
     end
 
     context 'count of used hours is different than count of metric rollups' do
@@ -127,10 +158,32 @@ describe MeteringVm do
        metering_used_metric
        existence_hours_metric
        tenant_name
+       beginning_of_resource_existence_in_report_interval
+       end_of_resource_existence_in_report_interval
   )
   end
 
   it 'lists proper attributes' do
     expect(described_class.attribute_names).to match_array(allowed_attributes)
+  end
+
+  let(:report_col_options) do
+    {
+      "cpu_allocated_metric"     => {:grouping => [:total]},
+      "cpu_used_metric"          => {:grouping => [:total]},
+      "disk_io_used_metric"      => {:grouping => [:total]},
+      "existence_hours_metric"   => {:grouping => [:total]},
+      "fixed_compute_metric"     => {:grouping => [:total]},
+      "memory_allocated_metric"  => {:grouping => [:total]},
+      "memory_used_metric"       => {:grouping => [:total]},
+      "metering_used_metric"     => {:grouping => [:total]},
+      "net_io_used_metric"       => {:grouping => [:total]},
+      "storage_allocated_metric" => {:grouping => [:total]},
+      "storage_used_metric"      => {:grouping => [:total]},
+    }
+  end
+
+  it 'sets grouping settings for all related columns' do
+    expect(described_class.report_col_options).to eq(report_col_options)
   end
 end

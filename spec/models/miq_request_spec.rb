@@ -7,18 +7,21 @@ describe MiqRequest do
   context "CONSTANTS" do
     it "REQUEST_TYPES" do
       expected_request_types = {
-        :MiqProvisionRequest                      => {:template                  => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
-        :MiqProvisionRequestTemplate              => {:template                  => "VM Provision Template"},
-        :MiqHostProvisionRequest                  => {:host_pxe_install          => "Host Provision"},
-        :MiqProvisionConfiguredSystemRequest      => {:provision_via_foreman     => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
-        :VmReconfigureRequest                     => {:vm_reconfigure            => "VM Reconfigure"},
-        :VmCloudReconfigureRequest                => {:vm_cloud_reconfigure      => "VM Cloud Reconfigure"},
-        :VmMigrateRequest                         => {:vm_migrate                => "VM Migrate"},
-        :AutomationRequest                        => {:automation                => "Automation"},
-        :ServiceTemplateProvisionRequest          => {:clone_to_service          => "Service Provision"},
-        :ServiceReconfigureRequest                => {:service_reconfigure       => "Service Reconfigure"},
-        :PhysicalServerProvisionRequest           => {:provision_physical_server => "Physical Server Provision"},
-        :ServiceTemplateTransformationPlanRequest => {:transformation_plan       => "Transformation Plan"}
+        :MiqProvisionRequest                      => {:template                   => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
+        :MiqProvisionRequestTemplate              => {:template                   => "VM Provision Template"},
+        :MiqHostProvisionRequest                  => {:host_pxe_install           => "Host Provision"},
+        :MiqProvisionConfiguredSystemRequest      => {:provision_via_foreman      => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
+        :VmReconfigureRequest                     => {:vm_reconfigure             => "VM Reconfigure"},
+        :VmCloudReconfigureRequest                => {:vm_cloud_reconfigure       => "VM Cloud Reconfigure"},
+        :VmMigrateRequest                         => {:vm_migrate                 => "VM Migrate"},
+        :VmRetireRequest                          => {:vm_retire                  => "VM Retire"},
+        :ServiceRetireRequest                     => {:service_retire             => "Service Retire"},
+        :OrchestrationStackRetireRequest          => {:orchestration_stack_retire => "Orchestration Stack Retire"},
+        :AutomationRequest                        => {:automation                 => "Automation"},
+        :ServiceTemplateProvisionRequest          => {:clone_to_service           => "Service Provision"},
+        :ServiceReconfigureRequest                => {:service_reconfigure        => "Service Reconfigure"},
+        :PhysicalServerProvisionRequest           => {:provision_physical_server  => "Physical Server Provision"},
+        :ServiceTemplateTransformationPlanRequest => {:transformation_plan        => "Transformation Plan"}
       }
 
       expect(described_class::REQUEST_TYPES).to eq(expected_request_types)
@@ -248,6 +251,49 @@ describe MiqRequest do
 
           request.deny(fred, reason)
         end
+
+        describe ".with_reason_like" do
+          let(:reason) { %w(abcd abcde cde) }
+          subject { described_class.with_reason_like(pattern).count }
+
+          before { request.miq_approvals = approvals }
+
+          ["ab*", "*bc*", "*de"].each do |pattern|
+            context "'#{pattern}'" do
+              let(:pattern) { pattern }
+              it { is_expected.to eq(2) }
+            end
+          end
+
+          context "integrates well with .created_recently" do
+            # when joined with MiqApprovals, there are two `created_on` columns
+            let(:pattern) { "*c*" }
+            subject { described_class.with_reason_like(pattern).created_recently(days_ago).distinct.count }
+
+            before do
+              FactoryGirl.create(:vm_migrate_request, :requester => fred, :created_on => 10.days.ago, :miq_approvals => approvals)
+              FactoryGirl.create(:vm_migrate_request, :requester => fred, :created_on => 14.days.ago, :miq_approvals => approvals)
+              FactoryGirl.create(:vm_migrate_request, :requester => fred, :created_on => 3.days.ago,  :miq_approvals => approvals)
+            end
+
+            {
+              7  => 2,
+              11 => 3,
+              15 => 4
+            }.each do |days, count|
+              context "filtering #{days} ago" do
+                let(:days_ago) { days }
+                it { is_expected.to eq(count) }
+              end
+            end
+          end
+
+          def approvals
+            reason.collect do |r|
+              FactoryGirl.create(:miq_approval, :approver => fred, :reason => r, :stamper => barney, :stamped_on => Time.now.utc)
+            end
+          end
+        end
       end
     end
 
@@ -266,6 +312,38 @@ describe MiqRequest do
       expect(provision_request.status).to         eq('Denied')
       expect(provision_request.request_state).to  eq('finished')
       expect(provision_request.approval_state).to eq('denied')
+    end
+  end
+
+  context '#execute' do
+    shared_examples_for "#calls create_request_tasks with the proper role" do
+      it "runs successfully" do
+        expect(request).to receive(:approved?).and_return(true)
+        expect(MiqQueue.count).to eq(0)
+
+        request.execute
+        expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.first.role).to eq(role)
+      end
+    end
+
+    context 'Service provisioning' do
+      let(:request) { FactoryGirl.create(:service_template_provision_request, :approval_state => 'approved', :requester => fred) }
+      let(:role)    { 'automate' }
+
+      context "uses the automate role" do
+        it_behaves_like "#calls create_request_tasks with the proper role"
+      end
+    end
+
+    context 'VM provisioning' do
+      let(:template) { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
+      let(:request)  { FactoryGirl.build(:miq_provision_request, :requester => fred, :src_vm_id => template.id).tap(&:valid?) }
+      let(:role)     { 'ems_operations' }
+
+      context "uses the ems_operations role" do
+        it_behaves_like "#calls create_request_tasks with the proper role"
+      end
     end
   end
 
@@ -313,6 +391,12 @@ describe MiqRequest do
         expect(request.attributes.keys & removable_keys).to match_array removable_keys
         cleaned_attribs = request.send(:clean_up_keys_for_request_task)
         expect(cleaned_attribs).to_not match_array(removable_keys)
+      end
+
+      it '#clean_up_keys_for_request_task removes options user_message' do
+        request.update_attributes!(:options => {:user_message => 'doesntmatter'})
+        cleaned_attribs = request.send(:clean_up_keys_for_request_task)
+        expect(cleaned_attribs["options"]).to_not include(:user_message)
       end
     end
 

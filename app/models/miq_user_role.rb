@@ -9,8 +9,7 @@ class MiqUserRole < ApplicationRecord
 
   virtual_column :vm_restriction,                   :type => :string
 
-  validates_presence_of   :name
-  validates_uniqueness_of :name
+  validates :name, :presence => true, :uniqueness => { :case_sensitive => false }
 
   serialize :settings
 
@@ -27,7 +26,7 @@ class MiqUserRole < ApplicationRecord
   }
 
   def feature_identifiers
-    miq_product_features.pluck(:identifier)
+    @feature_identifiers ||= miq_product_features.pluck(:identifier)
   end
 
   # @param identifier [String] Product feature identifier to check if this role allows access to it

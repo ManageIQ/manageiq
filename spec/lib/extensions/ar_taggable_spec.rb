@@ -1,5 +1,5 @@
 describe ActsAsTaggable do
-  before(:each) do
+  before do
     @host1 = FactoryGirl.create(:host, :name => "HOST1")
     @host1.tag_with("red blue yellow", :ns => "/test", :cat => "tags")
     @host2 = FactoryGirl.create(:host, :name => "HOST2")

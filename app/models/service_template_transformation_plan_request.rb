@@ -1,18 +1,18 @@
 class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   TASK_DESCRIPTION = 'VM Transformations'.freeze
 
-  delegate :transformation_mapping, :vm_requests, :to => :source
+  delegate :transformation_mapping, :vm_resources, :to => :source
 
   def requested_task_idx
-    vm_requests.where(:status => 'Approved')
+    vm_resources.where(:status => ServiceResource::STATUS_APPROVED)
   end
 
-  def customize_request_task_attributes(req_task_attrs, vm_request)
-    req_task_attrs[:source] = vm_request.resource
+  def customize_request_task_attributes(req_task_attrs, vm_resource)
+    req_task_attrs[:source] = vm_resource.resource
   end
 
   def source_vms
-    vm_requests.where(:status => %w(Queued Failed)).pluck(:resource_id)
+    vm_resources.where(:status => [ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_FAILED]).pluck(:resource_id)
   end
 
   def validate_vm(_vm_id)
@@ -21,6 +21,6 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def approve_vm(vm_id)
-    vm_requests.find_by(:resource_id => vm_id).update_attributes!(:status => 'Approved')
+    vm_resources.find_by(:resource_id => vm_id).update_attributes!(:status => ServiceResource::STATUS_APPROVED)
   end
 end

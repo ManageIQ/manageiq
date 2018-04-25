@@ -1,15 +1,15 @@
 describe MiqWidget do
   describe '.seed' do
     before { [MiqReport, RssFeed].each(&:seed) }
-    include_examples(".seed called multiple times", 21)
+    include_examples(".seed called multiple times", 24)
   end
 
-  before(:each) do
+  before do
     EvmSpecHelper.local_miq_server
   end
 
   context "setup" do
-    before(:each) do
+    before do
       MiqReport.seed_report("Vendor and Guest OS")
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
@@ -55,7 +55,7 @@ describe MiqWidget do
     end
 
     context "#queue_generate_content_for_users_or_group" do
-      before(:each) do
+      before do
         @widget = @widget_report_vendor_and_guest_os
         @queue_conditions = {
           :method_name => "generate_content",
@@ -229,7 +229,7 @@ describe MiqWidget do
   end
 
   context "#queue_generate_content" do
-    before(:each) do
+    before do
       MiqReport.seed_report("Top CPU Consumers weekly")
 
       role1 = FactoryGirl.create(:miq_user_role, :name => 'EvmRole-support')

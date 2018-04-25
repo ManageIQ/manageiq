@@ -2,7 +2,7 @@ require 'bcrypt'
 
 describe "User Password" do
   context "With admin user" do
-    before(:each) do
+    before do
       EvmSpecHelper.create_guid_miq_server_zone
 
       @old = 'smartvm'
@@ -15,7 +15,7 @@ describe "User Password" do
     end
 
     context "call change_password" do
-      before(:each) do
+      before do
         @new = 'Zug-drep5s'
         @admin.change_password(@old, @new)
       end
@@ -26,7 +26,7 @@ describe "User Password" do
     end
 
     context "call password=" do
-      before(:each) do
+      before do
         @new = 'Zug-drep5s'
         @admin.password = @new
         @admin.save!

@@ -39,7 +39,7 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
     end
 
     context "With a zone, server, ems, hosts, vmware vms" do
-      before(:each) do
+      before do
         server = EvmSpecHelper.local_miq_server(:is_master => true, :name => "test_server_main_server")
         (NUM_OF_SERVERS - 1).times do |i|
           FactoryGirl.create(:miq_server, :zone => server.zone, :name => "test_server_#{i}")
@@ -61,7 +61,7 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
       end
 
       context "and a scan job for each vm" do
-        before(:each) do
+        before do
           allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
 
           @jobs = @vms.collect(&:raw_scan)
@@ -100,7 +100,7 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
         end
 
         context "and embedded scans on hosts" do
-          before(:each) do
+          before do
             allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:scan_via_ems?).and_return(false)
           end
 

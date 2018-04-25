@@ -1,7 +1,5 @@
-class VimPerformanceTagValue < ApplicationRecord
-  belongs_to :metric, :polymorphic => true
-
-  serialize :assoc_ids
+class VimPerformanceTagValue
+  attr_accessor :tag_name, :association_type, :category, :column_name, :value, :assoc_ids
 
   TAG_SEP = "|"
   TAG_COLS = {
@@ -42,13 +40,17 @@ class VimPerformanceTagValue < ApplicationRecord
     "Service"             => [:vms]
   }
 
-  def self.build_from_performance_record(parent_perf, options = {:save => true})
+  def initialize(options = {})
+    options.each { |k, v| public_send("#{k}=", v) }
+  end
+
+  def self.build_from_performance_record(parent_perf, options = {})
     RESOURCE_TYPE_TO_ASSOCIATIONS[parent_perf.resource_type].collect { |assoc| build_for_association(parent_perf, assoc, options) }.flatten
   end
 
   cache_with_timeout(:eligible_categories, 5.minutes) { Classification.category_names_for_perf_by_tag }
 
-  def self.build_for_association(parent_perf, assoc, options = {:save => true})
+  def self.build_for_association(parent_perf, assoc, options = {})
     eligible_cats = eligible_categories
     return [] if eligible_cats.empty?
 
@@ -116,19 +118,8 @@ class VimPerformanceTagValue < ApplicationRecord
       }
       attr = col == 'assoc_ids' ? :assoc_ids : :value
       new_rec[attr] = result[key]
-      if options[:save]
-        parent_perf_tag_value_recs = parent_perf.vim_performance_tag_values.inject({}) do |h, tv|
-          h.store_path(tv.association_type, tv.category, tv.tag_name, tv.column_name, tv)
-          h
-        end
 
-        tag_value_rec   = parent_perf_tag_value_recs.fetch_path(association_type, category, tag_name, col)
-        tag_value_rec ||= parent_perf_tag_value_recs.store_path(association_type, category, tag_name, col, parent_perf.vim_performance_tag_values.build)
-        tag_value_rec.update_attributes(new_rec)
-      else
-        tag_value_rec = new(new_rec)
-      end
-      a << tag_value_rec
+      a << new(new_rec)
     end
   end
 

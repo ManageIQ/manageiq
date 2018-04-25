@@ -48,7 +48,7 @@ class ChargeableField < ApplicationRecord
   def measure(consumption, options, sub_metric = nil)
     return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?
-    return 0 if options.method_for_allocated_metrics != :current_value && consumption.none?(metric)
+    return 0 if options.method_for_allocated_metrics != :current_value && consumption.none?(metric, sub_metric)
     return consumption.send(options.method_for_allocated_metrics, metric, sub_metric) if allocated?
     return consumption.avg(metric) if used?
   end
@@ -60,6 +60,10 @@ class ChargeableField < ApplicationRecord
   def adjustment_to(target_unit)
     # return multiplicator, that would bring UNITS[metric] to target_unit
     UNITS[metric] ? detail_measure.adjust(target_unit, UNITS[metric]) : 1
+  end
+
+  def rate_key(sub_metric = nil)
+    "#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}rate" # rate value (e.g. Storage [Used|Allocated|Fixed] Rate)
   end
 
   def metric_key(sub_metric = nil)
@@ -77,11 +81,11 @@ class ChargeableField < ApplicationRecord
     group == 'metering' && source == 'used'
   end
 
-  private
-
   def rate_name
     "#{group}_#{source}"
   end
+
+  private
 
   def used?
     source == 'used'

@@ -19,6 +19,7 @@ require 'digest'
 #
 class MiqQueue < ApplicationRecord
   belongs_to :handler, :polymorphic => true
+  belongs_to :miq_task
 
   attr_accessor :last_exception
 
@@ -446,6 +447,7 @@ class MiqQueue < ApplicationRecord
 
   def dispatch_method(obj, args)
     Timeout.timeout(msg_timeout) do
+      args = activate_miq_task(args)
       obj.send(method_name, *args)
     end
   end
@@ -524,7 +526,7 @@ class MiqQueue < ApplicationRecord
   end
 
   def self.format_full_log_msg(msg)
-    "Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{MiqPassword.sanitize_string(msg.args.inspect)}"
+    "Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], MiqTask id: [#{msg.miq_task_id}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{MiqPassword.sanitize_string(msg.args.inspect)}"
   end
 
   def self.format_short_log_msg(msg)
@@ -540,6 +542,13 @@ class MiqQueue < ApplicationRecord
   end
 
   private
+
+  def activate_miq_task(args)
+    MiqTask.update_status(miq_task_id, MiqTask::STATE_ACTIVE, MiqTask::STATUS_OK, "Task starting") if miq_task_id
+    params = args.first
+    params[:miq_task_id] = miq_task_id if params.kind_of?(Hash)
+    args
+  end
 
   # default values for get operations
   def self.default_get_options(options)

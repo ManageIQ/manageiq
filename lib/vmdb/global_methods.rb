@@ -84,15 +84,18 @@ module Vmdb
     end
 
     # Wrap a report html table body with html table tags and headers for the columns
-    def report_build_html_table(report, table_body)
+    def report_build_html_table(report, table_body, breakable = true)
       html = ''
-      html << "<table class='table table-striped table-bordered'>"
+      html << "<table class=\"table table-striped table-bordered #{breakable ? '' : 'non-breakable'}\">"
       html << "<thead>"
       html << "<tr>"
 
       # table headings
       unless report.headers.nil?
-        report.headers.each do |h|
+        report.headers.each_with_index do |h, i|
+          col = report.col_order[i]
+          next if report.column_is_hidden?(col)
+
           html << "<th>" << CGI.escapeHTML(_(h.to_s)) << "</th>"
         end
         html << "</tr>"
