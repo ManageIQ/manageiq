@@ -25,24 +25,22 @@ describe DialogFieldDateControl do
     context "when the value is blank" do
       let(:value) { "" }
 
+      before do
+        allow(described_class).to receive(:server_timezone).and_return("UTC")
+      end
+
       context "when the field is dynamic" do
         let(:dynamic) { true }
 
-        before do
-          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("2015-01-02")
-        end
-
-        it "returns the values from the value processor" do
-          expect(dialog_field.value).to eq("01/02/2015")
+        it "returns tomorrow's date" do
+          Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do
+            expect(dialog_field.value).to eq("01/03/2015")
+          end
         end
       end
 
       context "when the field is not dynamic" do
         let(:dynamic) { false }
-
-        before do
-          allow(described_class).to receive(:server_timezone).and_return("UTC")
-        end
 
         it "returns tomorrow's date" do
           Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do

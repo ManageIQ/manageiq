@@ -87,6 +87,11 @@ class DialogFieldSortedItem < DialogField
     {:refreshed_values => refreshed_values, :checked_value => @value, :read_only => read_only?, :visible => visible?}
   end
 
+  def force_multi_value
+    # override in subclasses
+    nil
+  end
+
   private
 
   def add_nil_option

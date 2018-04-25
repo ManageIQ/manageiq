@@ -89,20 +89,18 @@ class Dialog < ApplicationRecord
   end
 
   def load_values_into_fields(values)
-    dialog_field_hash.each do |_key, field|
+    dialog_field_hash.each_value do |field|
       field.dialog = self
       field.value = values[field.automate_key_name] || values[field.name]
     end
   end
 
-  def initialize_value_context(values)
-    dialog_field_hash.each do |key, field|
+  def initialize_value_context(_values)
+    dialog_field_hash.each_value do |field|
       field.dialog = self
     end
 
-    dialog_field_hash.each do |_key, field|
-      field.initialize_value_context
-    end
+    dialog_field_hash.each_value(&:initialize_value_context)
   end
 
   def init_fields_with_values_for_request(values)

@@ -104,40 +104,6 @@ describe DialogField do
         end
       end
     end
-
-    describe "#initialize_with_values" do
-      it "uses #automate_key_name for extracting initial dialog values" do
-        dialog_value = "dummy dialog value"
-        df.initialize_with_values(df.automate_key_name => dialog_value)
-        expect(df.value).to eq(dialog_value)
-      end
-
-      it "initializes to nil with no initial value and no default value" do
-        initial_dialog_values = {}
-        df.initialize_with_values(initial_dialog_values)
-        expect(df.value).to be_nil
-      end
-
-      it "initializes to the default value with no initial value and a default value" do
-        initial_dialog_values = {}
-        df.default_value = "default_test"
-        df.initialize_with_values(initial_dialog_values)
-        expect(df.value).to eq("default_test")
-      end
-
-      it "initializes to the dialog value with a dialog value and no default value" do
-        initial_dialog_values = {df.automate_key_name => "test"}
-        df.initialize_with_values(initial_dialog_values)
-        expect(df.value).to eq("test")
-      end
-
-      it "initializes to the dialog value with a dialog value and a default value" do
-        initial_dialog_values = {df.automate_key_name => "test"}
-        df.default_value = "default_test"
-        df.initialize_with_values(initial_dialog_values)
-        expect(df.value).to eq("test")
-      end
-    end
   end
 
   describe "#initialize_value_context" do
@@ -206,10 +172,14 @@ describe DialogField do
 
     before do
       allow(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
+        "automate values"
+      )
     end
 
-    it "serializes the dialog field" do
-      expect(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
+    it "triggers an automate value update and then serializes the field" do
+      expect(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).ordered
+      expect(DialogFieldSerializer).to receive(:serialize).with(dialog_field).ordered
       dialog_field.update_and_serialize_values
     end
   end

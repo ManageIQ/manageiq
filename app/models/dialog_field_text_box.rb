@@ -69,10 +69,6 @@ class DialogFieldTextBox < DialogField
     {:text => @value, :read_only => read_only?, :visible => visible?}
   end
 
-  def trigger_automate_value_updates
-    @value = values_from_automate
-  end
-
   private
 
   def convert_value_to_type

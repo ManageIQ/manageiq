@@ -135,6 +135,10 @@ class DialogField < ApplicationRecord
     DialogFieldSerializer.serialize(self)
   end
 
+  def trigger_automate_value_updates
+    @value = values_from_automate
+  end
+
   def update_dialog_field_responders(id_list)
     dialog_field_responders.destroy_all
 
