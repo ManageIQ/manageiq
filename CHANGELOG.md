@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 84 ending 2018-04-23
+
+### Added
+- Initialize MiqQueue.miq_task_id column when queuing metric capture task [(#17301)](https://github.com/ManageIQ/manageiq/pull/17301)
+- Add .yamllint config to provider generators [(#17281)](https://github.com/ManageIQ/manageiq/pull/17281)
+- Add `:transformation` under product and set it to `true` by default [(#17270)](https://github.com/ManageIQ/manageiq/pull/17270)
+- Add association of service_templates to TransformationMapping. [(#17266)](https://github.com/ManageIQ/manageiq/pull/17266)
+- Add timeout knob for monitoring server roles [(#17265)](https://github.com/ManageIQ/manageiq/pull/17265)
+- Save Physical Chassis [(#17236)](https://github.com/ManageIQ/manageiq/pull/17236)
+- Add child retirement task methods [(#17234)](https://github.com/ManageIQ/manageiq/pull/17234)
+- Azure labeling and tagging support [(#17212)](https://github.com/ManageIQ/manageiq/pull/17212)
+- Add delete notification types for Tenant [(#17011)](https://github.com/ManageIQ/manageiq/pull/17011)
+- Add InventoryObject interface automatically [(#17010)](https://github.com/ManageIQ/manageiq/pull/17010)
+- Add support for exporting and importing tags [(#16983)](https://github.com/ManageIQ/manageiq/pull/16983)
+
+### Fixed
+- Fix infra inventory collections for targeted refresh [(#17324)](https://github.com/ManageIQ/manageiq/pull/17324)
+- Check for the existence of credentials. [(#17313)](https://github.com/ManageIQ/manageiq/pull/17313)
+- Fixes for create action in Template model [(#17308)](https://github.com/ManageIQ/manageiq/pull/17308)
+- Changing the description of the 'vlan' field in provision/network [(#17306)](https://github.com/ManageIQ/manageiq/pull/17306)
+- Add method retire_now to container OrchestrationStack. [(#17298)](https://github.com/ManageIQ/manageiq/pull/17298)
+- Change the role for Service provisioning create_request_tasks MiqQueue.put. [(#17297)](https://github.com/ManageIQ/manageiq/pull/17297)
+- Add lock to retire_now start [(#17280)](https://github.com/ManageIQ/manageiq/pull/17280)
+- Don't format PersistentVolume-capacity as bytes [(#17278)](https://github.com/ManageIQ/manageiq/pull/17278)
+- Forcing default_value to an array if the dynamic dropdown is multiselect [(#17272)](https://github.com/ManageIQ/manageiq/pull/17272)
+- Require dalli before using it [(#17269)](https://github.com/ManageIQ/manageiq/pull/17269)
+- Adding scan action with userid to container_image [(#17264)](https://github.com/ManageIQ/manageiq/pull/17264)
+- Fix call to process_tasks to run the right thing [(#17255)](https://github.com/ManageIQ/manageiq/pull/17255)
+- Handle non-existant tag category id when importing a service dialog [(#17237)](https://github.com/ManageIQ/manageiq/pull/17237)
+- Filter out archived and orphaned VMs in 'Running VMs' filter [(#17183)](https://github.com/ManageIQ/manageiq/pull/17183)
+- Do not show archived and orphaned VMs on report 'Online VMs (Powered On)' [(#17178)](https://github.com/ManageIQ/manageiq/pull/17178)
+- Use credential callback to set credentials [(#14889)](https://github.com/ManageIQ/manageiq/pull/14889)
+
 ## Unreleased as of Sprint 83 ending 2018-04-09
 
 ### Added
