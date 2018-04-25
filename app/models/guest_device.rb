@@ -20,4 +20,8 @@ class GuestDevice < ApplicationRecord
   def self.with_ethernet_type
     where(:device_type => "ethernet")
   end
+
+  def self.with_storage_type
+    where(:device_type => "storage")
+  end
 end
