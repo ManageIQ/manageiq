@@ -20,15 +20,6 @@ describe DialogFieldTextBox do
       @df.protected = true
       expect(@df).to be_protected
     end
-
-    describe "#initialize_with_values" do
-      it "decrypts protected automate dialog values" do
-        password = "test"
-        @df.protected = true
-        @df.initialize_with_values(@df.automate_key_name => MiqPassword.encrypt(password))
-        expect(@df.value).to eq(password)
-      end
-    end
   end
 
   context "dialog field text box without protected field" do
@@ -176,92 +167,43 @@ describe DialogFieldTextBox do
   end
 
   describe "#value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value, :data_type => data_type) }
+    let(:dialog_field) { described_class.new(:value => value, :data_type => data_type) }
 
-    context "when the dialog field is dynamic" do
-      let(:dynamic) { true }
+    context "when the value is nil" do
+      let(:value) { nil }
 
-      context "when the dialog field has a value already" do
-        let(:value) { "test" }
+      context "when the data_type is integer" do
+        let(:data_type) { "integer" }
 
-        context "when the data type is integer" do
-          let(:data_type) { "integer" }
-
-          it "converts the data into an integer" do
-            expect(dialog_field.value).to eq(0)
-          end
-        end
-
-        context "when the data type is string" do
-          let(:data_type) { "string" }
-
-          it "returns the current value" do
-            expect(dialog_field.value).to eq("test")
-          end
+        it "returns nil" do
+          expect(dialog_field.value).to be_nil
         end
       end
 
-      context "when the dialog field does not have a value" do
-        let(:value) { "" }
+      context "when the data_type is string" do
+        let(:data_type) { "string" }
 
-        before do
-          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("processor")
-        end
-
-        context "when the data type is an integer" do
-          let(:data_type) { "integer" }
-
-          it "converts the data into an integer" do
-            expect(dialog_field.value).to eq(0)
-          end
-        end
-
-        context "when the data type is a string" do
-          let(:data_type) { "string" }
-
-          it "returns the values from the value processor" do
-            expect(dialog_field.value).to eq("processor")
-          end
+        it "returns nil" do
+          expect(dialog_field.value).to be_nil
         end
       end
     end
 
-    context "when the dialog field is not dynamic" do
-      let(:dynamic) { false }
+    context "when the value is not nil" do
+      let(:value) { "test" }
 
-      context "when the data type is integer" do
+      context "when the data_type is integer" do
         let(:data_type) { "integer" }
 
-        context "when the value is nil" do
-          let(:value) { nil }
-
-          it "returns nil" do
-            expect(dialog_field.value).to eq(nil)
-          end
-        end
-
-        context "when the value is not nil" do
-          let(:value) { "test" }
-
-          it "converts the data into an integer" do
-            expect(dialog_field.value).to eq(0)
-          end
-        end
-
-        context "when there is no value" do
-          let(:value) { nil }
-
-          it "does not convert nil value to zero" do
-            expect(dialog_field.value).to be_nil
-          end
+        it "returns an integer converted value" do
+          expect(dialog_field.value).to eq(0)
         end
       end
 
-      context "when the data type is string" do
+      context "when the data_type is string" do
         let(:data_type) { "string" }
-        let(:value) { "test" }
 
-        it "returns the current value" do
+        it "returns the string" do
           expect(dialog_field.value).to eq("test")
         end
       end
