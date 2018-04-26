@@ -31,14 +31,6 @@ describe ResourceActionWorkflow do
       expect(@wf.dialog.id).to eq(@dialog.id)
     end
 
-    it "load default_value" do
-      @dialog_field.update_attribute(:default_value, "testing default")
-      @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
-      expect(@wf.value(@dialog_field.name)).to eq("testing default")
-      df = @wf.dialog_field(@dialog_field.name)
-      expect(df.value).to eq("testing default")
-    end
-
     it "field_name_exists?" do
       expect(@dialog.field_name_exist?('field_1')).to  be_truthy
       expect(@dialog.field_name_exist?('field_11')).to be_falsey
@@ -121,17 +113,17 @@ describe ResourceActionWorkflow do
     let(:resource_action) { instance_double("ResourceAction", :id => 123, :dialog => dialog) }
     let(:dialog) { instance_double("Dialog", :id => 321) }
     let(:values) { "the values" }
-    let(:options) { {:display_view_only => display_view_only} }
 
     before do
       allow(ResourceAction).to receive(:find).and_return(resource_action)
-      allow(dialog).to receive(:init_fields_with_values).with(values)
+      allow(dialog).to receive(:load_values_into_fields).with(values)
+      allow(dialog).to receive(:initialize_value_context).with(values)
       allow(dialog).to receive(:init_fields_with_values_for_request).with(values)
       allow(dialog).to receive(:target_resource=)
     end
 
     context "when the options set display_view_only to true" do
-      let(:display_view_only) { true }
+      let(:options) { {:display_view_only => true} }
 
       it "calls init_fields_with_values_for_request" do
         expect(dialog).to receive(:init_fields_with_values_for_request).with(values)
@@ -139,11 +131,20 @@ describe ResourceActionWorkflow do
       end
     end
 
-    context "when the options set display_view_only to false" do
-      let(:display_view_only) { false }
+    context "when the options are set to a refresh request" do
+      let(:options) { {:refresh => true} }
 
-      it "calls init_fields_with_values" do
-        expect(dialog).to receive(:init_fields_with_values).with(values)
+      it "loads the values into fields" do
+        expect(dialog).to receive(:load_values_into_fields).with(values)
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
+      end
+    end
+
+    context "when neither display_view_only nor refresh are true" do
+      let(:options) { {} }
+
+      it "initializes the value context" do
+        expect(dialog).to receive(:initialize_value_context).with(values)
         ResourceActionWorkflow.new(values, nil, resource_action, options)
       end
     end

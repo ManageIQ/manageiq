@@ -7,9 +7,8 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
   end
 
   def value
-    @value = dynamic ? values_from_automate : default_time if @value.blank?
-
-    Time.parse(@value).strftime("%m/%d/%Y %H:%M")
+    value_to_parse = @value.presence || default_time
+    Time.zone.parse(value_to_parse).strftime("%m/%d/%Y %H:%M")
   end
 
   def refresh_json_value
