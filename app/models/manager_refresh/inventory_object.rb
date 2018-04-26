@@ -153,16 +153,23 @@ module ManagerRefresh
     end
 
     # Adds setters and getters based on :inventory_object_attributes kwarg passed into InventoryCollection
+    # Methods already defined should not be redefined (causes unexpected behaviour)
     #
     # @param inventory_object_attributes [Array<Symbol>]
     def self.add_attributes(inventory_object_attributes)
+      defined_methods = ManagerRefresh::InventoryObject.instance_methods(false)
+
       inventory_object_attributes.each do |attr|
-        define_method("#{attr}=") do |value|
-          data[attr] = value
+        unless defined_methods.include?("#{attr}=".to_sym)
+          define_method("#{attr}=") do |value|
+            data[attr] = value
+          end
         end
 
-        define_method(attr) do
-          data[attr]
+        unless defined_methods.include?(attr.to_sym)
+          define_method(attr) do
+            data[attr]
+          end
         end
       end
     end
