@@ -13,7 +13,7 @@ module ManagerRefresh
     def self.parser_class_for(klass)
       provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
       "#{provider_module}::Inventory::Parser::#{klass.name.demodulize}".safe_constantize
-    rescue ManageIQ::Providers::Inflector::ObjectNotNamespacedError => _err
+    rescue LoadError, ManageIQ::Providers::Inflector::ObjectNotNamespacedError => _err
       nil
     end
 
@@ -24,7 +24,7 @@ module ManagerRefresh
     def self.persister_class_for(klass)
       provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
       "#{provider_module}::Inventory::Persister::#{klass.name.demodulize}".safe_constantize
-    rescue ManageIQ::Providers::Inflector::ObjectNotNamespacedError => _err
+    rescue LoadError, ManageIQ::Providers::Inflector::ObjectNotNamespacedError => _err
       nil
     end
 
