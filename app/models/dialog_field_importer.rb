@@ -42,8 +42,8 @@ class DialogFieldImporter
 
   def find_category(opts)
     if opts[:category_id]
-      cat = Category.find_by(:id => opts[:category_id])
-      return cat if cat.try(:name) == opts[:category_name]
+      category = Category.find_by(:id => opts[:category_id])
+      return category if category.try(:name) == opts[:category_name] || category.try(:description) == opts[:category_description]
     end
     Category.find_by_name(opts[:category_name])
   end

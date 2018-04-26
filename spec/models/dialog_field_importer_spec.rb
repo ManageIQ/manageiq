@@ -189,9 +189,9 @@ describe DialogFieldImporter do
             context "when the category_description matches the existing category" do
               let(:category_description) { @existing_category.description }
 
-              it "returns nil" do
+              it "returns matching category" do
                 dialog_field_importer.import_field(dialog_field)
-                expect(DialogFieldTagControl.first.category).to eq(nil)
+                expect(DialogFieldTagControl.first.category).to eq(@existing_category.id.to_s)
               end
             end
 
