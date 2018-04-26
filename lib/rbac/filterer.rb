@@ -573,16 +573,18 @@ module Rbac
       miq_group_id ||= miq_group.try!(:id)
       return [user, user.current_group] if user && user.current_group_id.to_s == miq_group_id.to_s
 
+      found_group = user.try(:current_group)
       if user
         if miq_group_id && (detected_group = user.miq_groups.detect { |g| g.id.to_s == miq_group_id.to_s })
           user.current_group = detected_group
+          found_group = detected_group
         elsif miq_group_id && user.super_admin_user?
-          user.current_group = miq_group || MiqGroup.find_by(:id => miq_group_id)
+          found_group = miq_group || MiqGroup.find_by(:id => miq_group_id)
         end
       else
-        miq_group ||= miq_group_id && MiqGroup.find_by(:id => miq_group_id)
+        found_group = miq_group || (miq_group_id && MiqGroup.find_by(:id => miq_group_id))
       end
-      [user, user.try(:current_group) || miq_group]
+      [user, found_group]
     end
 
     # for reports, user is currently nil, so use the group filter
