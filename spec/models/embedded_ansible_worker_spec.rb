@@ -41,6 +41,17 @@ describe EmbeddedAnsibleWorker do
 
         subject.ensure_initial_objects(provider, api_connection)
       end
+
+      it "skips playbook seeding for containers" do
+        allow(MiqEnvironment::Command).to receive(:is_container?).and_return(true)
+        expect(org_collection).to receive(:create!).and_return(org_resource)
+        expect(cred_collection).to receive(:create!).and_return(cred_resource)
+        expect(inv_collection).to receive(:create!).and_return(inv_resource)
+        expect(host_collection).to receive(:create!).and_return(host_resource)
+        expect(subject).to receive(:ensure_plugin_playbooks_project_seeded).never
+
+        subject.ensure_initial_objects(provider, api_connection)
+      end
     end
 
     describe "#remove_demo_data" do
