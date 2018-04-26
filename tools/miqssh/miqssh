@@ -276,11 +276,14 @@ then
     echo "Not enough arguments!"
     usage
   fi
-elif [[ "$2" == "list" && $# -lt 2 ]]
+elif [ "$1" == "list" ]
 then
-  echo
-  echo "Not enough arguments!"
-  usage
+  if [ $# -ne 1 ]
+  then
+    echo
+    echo "Wrong number of arguments!"
+    usage
+  fi
 elif [[ $NAME == 'miqgrep' || $NAME == "miqtail" ]]
 then
   if [[ $# -ne 1 && $# -ne 2 ]]
