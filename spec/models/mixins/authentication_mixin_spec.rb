@@ -703,15 +703,7 @@ describe AuthenticationMixin do
           allow(@ems).to receive(:supports?).with(:change_password) { true }
 
           expect { @ems.change_password(current_password, new_password, confirm_password) }
-            .to raise_error(MiqException::Error, "Please, fill the current_password, new_password and confirm_password fields.")
-        end
-
-        it "should fail if the confirm password is not equal to new password" do
-          confirm_password = "different_pass"
-          allow(@ems).to receive(:supports?).with(:change_password) { true }
-
-          expect { @ems.change_password(current_password, new_password, confirm_password) }
-            .to raise_error(MiqException::Error, "Confirm password did not match.")
+            .to raise_error(MiqException::Error, "Please, fill the current_password and new_password fields.")
         end
 
         it "should fail if the provider doesn't support this operation" do
