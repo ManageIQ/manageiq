@@ -345,13 +345,12 @@ module AuthenticationMixin
   #
   # @param [current_password] password currently used for connected userId in provider client
   # @param [new_password]     password that will replace the current one
-  # @param [confirm_password] must confirm the value of the `new_password`
   #
   # @return [Boolean] true if the routine is executed successfully
   #
-  def change_password(current_password, new_password, confirm_password, auth_type = :default)
+  def change_password(current_password, new_password, auth_type = :default)
     raise MiqException::Error, _("Change Password is not supported for #{self.class.description} provider") unless supports?(:change_password)
-    if change_password_params_valid?(current_password, new_password, confirm_password)
+    if change_password_params_valid?(current_password, new_password)
       raw_change_password(current_password, new_password)
       update_authentication(auth_type => {:userid => authentication_userid, :password => new_password})
     end
@@ -445,16 +444,12 @@ module AuthenticationMixin
   # Verifies if the change password params are valid
   #
   # @raise [MiqException::Error] if some required data is missing
-  #                              if new_password and confirm_password are differents
   #
   # @return [Boolean] true if the params are fine
   #
-  def change_password_params_valid?(current_password, new_password, confirm_password)
-    if current_password.blank? || new_password.blank? || confirm_password.blank?
-      raise MiqException::Error, _("Please, fill the current_password, new_password and confirm_password fields.")
-    end
-    raise MiqException::Error, _("Confirm password did not match.") unless new_password.eql?(confirm_password)
+  def change_password_params_valid?(current_password, new_password)
+    return true unless current_password.blank? || new_password.blank?
 
-    true
+    raise MiqException::Error, _("Please, fill the current_password and new_password fields.")
   end
 end
