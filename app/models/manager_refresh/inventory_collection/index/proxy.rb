@@ -177,6 +177,10 @@ module ManagerRefresh
           end
         end
 
+        def assert_index_exists(ref)
+          raise "Index :#{ref} doesn't exist on #{inventory_collection}" if named_ref(ref).nil?
+        end
+
         def assert_index(manager_uuid, ref)
           # TODO(lsmola) do we need some production logging too? Maybe the refresh log level could drive this
           # Let' do this really slick development and test env, but disable for production, since the checks are pretty
@@ -186,6 +190,9 @@ module ManagerRefresh
           if manager_uuid.kind_of?(ManagerRefresh::InventoryCollection::Reference)
             # ManagerRefresh::InventoryCollection::Reference has been already asserted, skip
           elsif manager_uuid.kind_of?(Hash)
+            # Test te index exists
+            assert_index_exists(ref)
+
             # Test we are sending all keys required for the index
             unless required_index_keys_present?(manager_uuid.keys, ref)
               raise "Finder has missing keys for index :#{ref}, missing indexes are: #{missing_keys(manager_uuid.keys, ref)}"
@@ -193,6 +200,9 @@ module ManagerRefresh
             # Test that keys, that are relations, are nil or InventoryObject or InventoryObjectlazy class
             assert_relation_keys(manager_uuid, ref)
           else
+            # Test te index exists
+            assert_index_exists(ref)
+
             # Check that other value (possibly String or Integer)) has no composite index
             if named_ref(ref).size > 1
               right_format = "collection.find(#{named_ref(ref).map { |x| ":#{x} => 'X'" }.join(", ")}"
