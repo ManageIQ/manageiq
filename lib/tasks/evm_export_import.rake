@@ -1,4 +1,9 @@
-# Rake script to export and import Alerts and AlertSets (Alert Profiles)
+# Rake script to export and import
+#   * Alerts and AlertSets (Alert Profiles)
+#   * Policies and PolicySets (Policy Profiles)
+#   * Roles
+#   * Tags
+#   * Service Dialogs
 
 namespace :evm do
   namespace :export do
@@ -49,6 +54,14 @@ namespace :evm do
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
+
+    desc 'Exports all service dialogs to individual YAML files'
+    task :service_dialogs => :environment do
+      options = TaskHelpers::Exports.parse_options
+      TaskHelpers::Exports::ServiceDialogs.new.export(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
   end
 
   namespace :import do
@@ -96,6 +109,14 @@ namespace :evm do
     task :tags => :environment do
       options = TaskHelpers::Imports.parse_options
       TaskHelpers::Imports::Tags.new.import(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
+
+    desc 'Imports all service dialogs from individual YAML files'
+    task :service_dialogs => :environment do
+      options = TaskHelpers::Imports.parse_options
+      TaskHelpers::Imports::ServiceDialogs.new.import(options)
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
