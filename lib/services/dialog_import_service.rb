@@ -144,16 +144,15 @@ class DialogImportService
       dialog.except!(:blueprint_id, 'blueprint_id') # blueprint_id might appear in some old dialogs, but no longer exists
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
       dialog['id'] = new_or_existing_dialog.id
-      associations_to_be_created = build_association_list(dialog)
+      new_associations = build_association_list(dialog)
       new_or_existing_dialog.update_attributes(
         dialog.merge(
           "dialog_tabs"      => build_dialog_tabs(dialog),
           "resource_actions" => build_resource_actions(dialog)
         )
       )
-      old_associations = build_old_association_list(new_or_existing_dialog.dialog_fields).flatten
-      association_list = (associations_to_be_created + old_associations).reject(&:blank?)
-      build_associations(new_or_existing_dialog, association_list)
+      association_list = new_associations.reject(&:blank?).present? ? new_associations : build_old_association_list(new_or_existing_dialog.dialog_fields).flatten
+      build_associations(new_or_existing_dialog, association_list.reject(&:blank?))
     end
   rescue DialogFieldImporter::InvalidDialogFieldTypeError
     raise
