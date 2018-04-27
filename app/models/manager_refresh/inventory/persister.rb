@@ -36,27 +36,13 @@ class ManagerRefresh::Inventory::Persister
   # @param json_data [String] input JSON data
   # @return [ManagerRefresh::Inventory::Persister] Persister object loaded from a passed JSON
   def self.from_json(json_data)
-    from_raw_data(JSON.parse(json_data))
+    from_hash(JSON.parse(json_data))
   end
 
   # Returns serialized Persisted object to JSON
   # @return [String] serialized Persisted object to JSON
   def to_json
-    JSON.dump(to_raw_data)
-  end
-
-  # Returns Persister object loaded from a passed YAML
-  #
-  # @param json_data [String] input JSON data
-  # @return [ManagerRefresh::Inventory::Persister] Persister object loaded from a passed YAML
-  def self.from_yaml(yaml_data)
-    from_raw_data(YAML.safe_load(yaml_data))
-  end
-
-  # Returns serialized Persisted object to YAML
-  # @return [String] serialized Persisted object to YAML
-  def to_yaml
-    YAML.dump(to_raw_data)
+    JSON.dump(to_hash)
   end
 
   # Creates method on class that lazy initializes an InventoryCollection
@@ -186,16 +172,11 @@ class ManagerRefresh::Inventory::Persister
   end
 
   # @return [Hash] entire Persister object serialized to hash
-  def to_raw_data
-    collections_data = collections.map do |key, collection|
-      next if collection.data.blank? && collection.manager_uuids.blank? && collection.all_manager_uuids.nil?
+  def to_hash
+    collections_data = collections.map do |_, collection|
+      next if collection.data.blank? && collection.targeted_scope.blank? && collection.all_manager_uuids.nil?
 
-      {
-        :name              => key,
-        :manager_uuids     => collection.manager_uuids,
-        :all_manager_uuids => collection.all_manager_uuids,
-        :data              => collection.to_raw_data
-      }
+      collection.to_hash
     end.compact
 
     {
@@ -212,27 +193,24 @@ class ManagerRefresh::Inventory::Persister
     #
     # @param persister_data [Hash] serialized Persister object in hash
     # @return [ManagerRefresh::Inventory::Persister] Persister object built from serialized data
-    def from_raw_data(persister_data)
-      persister_data.transform_keys!(&:to_s)
-
+    def from_hash(persister_data)
       # Extract the specific Persister class
       persister_class = persister_data['class'].constantize
       unless persister_class < ManagerRefresh::Inventory::Persister
         raise "Persister class must inherit from a ManagerRefresh::Inventory::Persister"
       end
 
-      # TODO(lsmola) do we need a target in this case?
-      # Load the Persister object and fill the InventoryCollections with the data
-      persister = persister_class.new(ManageIQ::Providers::BaseManager.find(persister_data['ems_id']))
-      persister_data['collections'].each do |collection|
-        collection.transform_keys!(&:to_s)
+      ems = ManageIQ::Providers::BaseManager.find(persister_data['ems_id'])
+      persister = persister_class.new(
+        ems,
+        ManagerRefresh::TargetCollection.new(:manager => ems) # TODO(lsmola) we need to pass serialized targeted scope here
+      )
 
+      persister_data['collections'].each do |collection|
         inventory_collection = persister.collections[collection['name'].try(:to_sym)]
         raise "Unrecognized InventoryCollection name: #{inventory_collection}" if inventory_collection.blank?
 
-        inventory_collection.manager_uuids.merge(collection['manager_uuids'] || [])
-        inventory_collection.all_manager_uuids = collection['all_manager_uuids']
-        inventory_collection.from_raw_data(collection['data'], persister.collections)
+        inventory_collection.from_hash(collection, persister.collections)
       end
       persister
     end
