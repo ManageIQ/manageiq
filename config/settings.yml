@@ -1047,6 +1047,8 @@
   :memcache_server_opts: "-l 127.0.0.1 -I 1M"
   :show_login_info: true
   :timeout: 3600
+  :log_threshold: 100.kilobytes
+  :element_threshold: 10.kilobytes
 :smartproxy_deploy:
   :queue_timeout: 30.minutes
 :smtp:
