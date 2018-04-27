@@ -1,8 +1,7 @@
 module ManagerRefresh
   class InventoryCollection
     class Builder
-      class MissingModelClassError < StandardError
-      end
+      class MissingModelClassError < StandardError; end
 
       require_nested :CloudManager
       require_nested :NetworkManager
@@ -20,7 +19,7 @@ module ManagerRefresh
       #     - @see method auto_model_class
       #   :without_model_class
       #     - if false and no model_class derived or specified, throws exception
-      #   :adv_settings
+      #   :adv_settings_enabled
       #     - values from Advanced settings (doesn't overwrite values specified in code)
       #     - see persister options() method
       def self.default_options
@@ -28,7 +27,7 @@ module ManagerRefresh
           :auto_object_attributes => true,
           :auto_model_class       => true,
           :without_model_class    => false,
-          :adv_settings           => true
+          :adv_settings_enabled   => true
         }
       end
 
@@ -38,9 +37,13 @@ module ManagerRefresh
       #        (optional) method with this name also used for concrete inventory collection specific properties
       # @param persister_class [Class] used for "guessing" model_class
       # @param options [Hash]
-      def self.prepare_data(name, persister_class, options = default_options, &block)
+      def self.prepare_data(name, persister_class, options = {})
+        options = default_options.merge(options)
         builder = new(name, persister_class, options)
-        builder.construct_data(&block)
+        builder.construct_data
+
+        yield(builder) if block_given?
+
         builder
       end
 
@@ -66,12 +69,10 @@ module ManagerRefresh
         add_properties(:association => @name)
         add_properties(:model_class => auto_model_class) if @options[:auto_model_class]
 
-        add_properties(@adv_settings, :missing)
+        add_properties(@adv_settings, :missing) if @options[:adv_settings_enabled]
         add_properties(@shared_properties, :missing)
 
         send(@name.to_sym) if respond_to?(@name.to_sym)
-
-        yield(self) if block_given?
 
         add_inventory_attributes(auto_object_attributes) if @options[:auto_object_attributes]
       end
@@ -123,7 +124,7 @@ module ManagerRefresh
       end
 
       # Clears all inventory object attributes
-      def clear_attributes!
+      def clear_inventory_attributes!
         @inventory_object_attributes = []
       end
 
@@ -198,12 +199,17 @@ module ManagerRefresh
       #
       # @return [Class | nil] when class doesn't exist, returns nil
       def auto_model_class
-        # a) Provider specific class
-        provider_module = ManageIQ::Providers::Inflector.provider_module(@persister_class).name
-        manager_module = self.class.name.split('::').last
+        model_class = begin
+          # a) Provider specific class
+          provider_module = ManageIQ::Providers::Inflector.provider_module(@persister_class).name
+          manager_module = self.class.name.split('::').last
 
-        class_name = "#{provider_module}::#{manager_module}::#{@name.to_s.classify}"
-        model_class = class_name.safe_constantize
+          class_name = "#{provider_module}::#{manager_module}::#{@name.to_s.classify}"
+          class_name.safe_constantize
+        rescue ::ManageIQ::Providers::Inflector::ObjectNotNamespacedError
+          nil
+        end
+
         if model_class
           model_class
         else
