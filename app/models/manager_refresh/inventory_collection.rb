@@ -86,13 +86,12 @@ module ManagerRefresh
              :each,
              :find_or_build,
              :find_or_build_by,
-             :from_raw_data,
-             :from_raw_value,
+             :from_hash,
              :index_proxy,
              :push,
              :size,
              :to_a,
-             :to_raw_data,
+             :to_hash,
              :to => :data_storage
 
     delegate :add_reference,

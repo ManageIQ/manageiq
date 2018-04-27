@@ -22,15 +22,6 @@ module ManagerRefresh
       reference.stringified_reference
     end
 
-    # @return [Hash] serialized InventoryObject into Lazy format
-    def to_raw_lazy_relation
-      {
-        :type                      => "ManagerRefresh::InventoryObjectLazy",
-        :inventory_collection_name => inventory_collection.name,
-        :ems_ref                   => manager_uuid,
-      }
-    end
-
     # @return [ManagerRefresh::InventoryObject] returns self
     def load
       self

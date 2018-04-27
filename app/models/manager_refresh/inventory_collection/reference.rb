@@ -26,20 +26,6 @@ module ManagerRefresh
         ref == :manager_ref
       end
 
-      # Returns serialized self into Hash
-      #
-      # @return [Hash] Serialized self into Hash
-      def to_hash
-      end
-
-      class << self
-        # Returns reference object built from serialized Hash
-        #
-        # @return [ManagerRefresh::InventoryCollection::Reference] Reference object built from serialized Hash
-        def from_hash
-        end
-      end
-
       class << self
         # Builds string uuid from passed Hash and keys
         #
