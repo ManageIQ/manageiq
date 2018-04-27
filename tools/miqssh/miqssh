@@ -503,9 +503,9 @@ then
       "miqgrep")
         if [ -n "$PATTERN" ]
         then
-          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE
+          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE | perl -ne "print if /^\S+\s\|\s\S+\s\|\src=\d+\s>>\s*$|^\S+\s\|\s\S+\s=>\s\{\s*$/"
         else
-          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE
+          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE | perl -ne "print if /\|\src=\d+\s>>/"
         fi ;;
     esac
 
