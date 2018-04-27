@@ -452,7 +452,7 @@ describe ManagerRefresh::SaveInventory do
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
-              :attributes_whitelist => [:uid_ems, :vendor, :ext_management_system]
+              :attributes_whitelist => [:uid_ems, :vendor, :ext_management_system, :ems_id]
             )
 
             # Fill the InventoryCollections with data, that have a modified name, new VM and a missing VM
@@ -493,7 +493,7 @@ describe ManagerRefresh::SaveInventory do
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
-              :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor, :ext_management_system],
+              :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor, :ems_id, :ext_management_system],
               :attributes_blacklist => [:name, :ems_ref, :raw_power_state]
             )
 
