@@ -43,7 +43,10 @@ end
 
 # Method to list the servers belonging to the specified group.
 def list_servers(data, group)
-  puts data[group.to_sym].join(" ")
+  groups = group.split(',')
+  servers = []
+  groups.each { |g| servers.push(data[g.to_sym]) }
+  puts servers.uniq.sort.join(" ")
 end
 
 file = ARGV[0]

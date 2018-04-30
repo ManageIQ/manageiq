@@ -44,7 +44,7 @@ groups=$($miqhosts_cmd $miqhosts_file list_groups)
 function usage_common {
   echo "DESCRIPTION: $2"
   echo
-  echo "USAGE: $NAME [-g group] [-s] $1"
+  echo "USAGE: $NAME [-g group1[,groupN]] [-s] $1"
   echo
   shift 2
   echo "DETAILS:"
@@ -362,29 +362,19 @@ then
   exit 1
 fi
 
-group_good=false
-
-for i in $groups
-do
-  if [ "$i" == "$group" ]
-  then
-    group_good=true
-  fi
-done
-
-if [ "$group_good" != "true" ]
-then
-  echo
-  echo "Group $group not found in $miqhosts_file"
-  usage
-fi
-
 if [[ "$QUIET" != 'true' && "$TRANSPORT" != 'pssh' && "$TRANSPORT" != 'ansible' || ( $NAME == 'miqgrep' && $REQUEST == 'true' ) ]]
 then
   echo
 fi
 
 SERVERS=$($miqhosts_cmd $miqhosts_file list_servers $group)
+
+if [ -z "$SERVERS" ]
+then
+  echo
+  echo "No servers found matching group(s) $group in $miqhosts_file"
+  usage
+fi
 
 if [ "$1" == "list" ]
 then
@@ -395,7 +385,7 @@ then
   for i in $SERVERS
   do
     echo $i
-  done
+  done | sort
   exit
 fi
 
