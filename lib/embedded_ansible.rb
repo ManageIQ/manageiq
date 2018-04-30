@@ -94,7 +94,7 @@ class EmbeddedAnsible
 
   def self.run_setup_script(exclude_tags)
     json_extra_vars = {
-      :awx_install_memcached_bind => MiqMemcached.server_address,
+      :awx_install_memcached_bind => ::Settings.session.memcache_server,
       :minimum_var_space          => 0,
       :http_port                  => HTTP_PORT,
       :https_port                 => HTTPS_PORT,

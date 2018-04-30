@@ -128,7 +128,7 @@ describe EmbeddedAnsible do
     let(:miq_database) { MiqDatabase.first }
     let(:extra_vars) do
       {
-        :awx_install_memcached_bind => MiqMemcached.server_address,
+        :awx_install_memcached_bind => ::Settings.session.memcache_server,
         :minimum_var_space          => 0,
         :http_port                  => described_class::HTTP_PORT,
         :https_port                 => described_class::HTTPS_PORT,
