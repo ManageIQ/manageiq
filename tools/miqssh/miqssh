@@ -477,7 +477,7 @@ then
     case $NAME in
       "miqssh") pssh -t 0 -i $HOSTS $ARGS ;;
       "miqscp") pscp.pssh -t 0 $HOSTS $1 $2 ;;
-      "miqcollect") pslurp -t 0 $HOSTS -L $2 $1 . ;;
+      "miqcollect") pslurp -t 0 $HOSTS -L $2 "$1" . ;;
       "miqgrep") pssh -t 0 $HOSTS -o $PSSH_OUTDIR "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" ;;
     esac
 
