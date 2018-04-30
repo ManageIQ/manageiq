@@ -193,6 +193,19 @@ shift $((OPTIND-1))
 
 GREP="$GREP -e"
 
+if [[ "$TRANSPORT" == 'ansible' && $NAME == 'miqcollect' ]]
+then
+  wildcards=( '*' '.' '?' '|' ']' '[' ) 
+  for wildcard in "${wildcards[@]}"
+  do
+    if [[ $1 == *"${wildcard}"* ]]
+    then
+      echo "*** Switching TRANSPORT to ssh due to wild card in source file name ***"
+      TRANSPORT=ssh
+    fi
+  done
+fi
+
 if [[ -z "$TRANSPORT" || -z "$PARALLELISM" ]]
 then
   echo "TRANSPORT and/or PARALLELISM not specified, see $DIR/.config."
