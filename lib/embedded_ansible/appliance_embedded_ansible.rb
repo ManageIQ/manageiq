@@ -81,10 +81,11 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
 
   def run_setup_script(exclude_tags)
     json_extra_vars = {
-      :minimum_var_space  => 0,
-      :http_port          => HTTP_PORT,
-      :https_port         => HTTPS_PORT,
-      :tower_package_name => "ansible-tower-server"
+      :awx_install_memcached_bind => MiqMemcached.server_address,
+      :minimum_var_space          => 0,
+      :http_port                  => HTTP_PORT,
+      :https_port                 => HTTPS_PORT,
+      :tower_package_name         => "ansible-tower-server"
     }.to_json
 
     with_inventory_file do |inventory_file_path|
