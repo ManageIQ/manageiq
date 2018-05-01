@@ -2,8 +2,8 @@ describe MiqCockpitWsWorker::Authenticator do
   describe '#authenticate_for_host' do
     before(:each) do
       @auth = MiqCockpitWsWorker::Authenticator
-      @user = FactoryGirl.create(:user, :userid => 1)
-      @token = Api::Environment.user_token_service.generate_token(1, "api")
+      @user = FactoryGirl.create(:user, :userid => "admin")
+      @token = Api::UserTokenService.new.generate_token(@user.userid, 'api')
     end
 
     context "when using bad token" do
