@@ -2151,6 +2151,14 @@ describe Rbac::Filterer do
         _, group = filter.send(:lookup_user_group, admin, nil, nil, random_group.id)
         expect(group).to eq(random_group)
       end
+
+      it "does not update user.current_group if user is super admin" do
+        admin = FactoryGirl.create(:user_admin)
+        admin_group = admin.current_group
+        random_group = FactoryGirl.create(:miq_group)
+        filter.send(:lookup_user_group, admin, nil, nil, random_group.id)
+        expect(admin.current_group).to eq(admin_group)
+      end
     end
 
     context "user" do
