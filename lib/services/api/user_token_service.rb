@@ -26,6 +26,7 @@ module Api
     end
 
     def generate_token(userid, requester_type)
+      userid = userid.downcase
       validate_userid(userid)
       validate_requester_type(requester_type)
 
