@@ -17,4 +17,20 @@ describe CustomAttribute do
     expected = RUBY_VERSION >= "2.4.0" ? :integer : :fixnum
     expect(int_custom_attribute.value_type).to eq(expected)
   end
+
+  context "must have a valid name" do
+    let(:invalid_everywhere) { [":", " ", "-"] }
+    let(:valid_everywhere)   { ["a", "_", "á"] }
+    let(:valid_subsequent)   { ["1", "$"] }
+
+    it "has a valid starting character" do
+      valid_everywhere.each { |char| expect(CustomAttribute.new(:name => "#{char}zzzzz")).to be_valid }
+      (invalid_everywhere + valid_subsequent).each { |char| expect(CustomAttribute.new(:name => "#{char}zzzzz")).not_to be_valid }
+    end
+
+    it "has a valid subsequent characters" do
+      (valid_everywhere + valid_subsequent).each { |char| expect(CustomAttribute.new(:name => "a#{char}")).to be_valid }
+      invalid_everywhere.each { |char| expect(CustomAttribute.new(:name => "a#{char}")).not_to be_valid }
+    end
+  end
 end
