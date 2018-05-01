@@ -1265,6 +1265,7 @@
       :vim_broker_update_interval: 0.seconds
       :vim_broker_max_wait: 60
       :vim_broker_max_objects: 250
+      :vim_broker_load_limit: 50.megabytes
     :web_service_worker:
       :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
