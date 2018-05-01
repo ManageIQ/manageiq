@@ -458,7 +458,7 @@ then
 fi
 
 ARGS=$*
-ARGS=$(echo $ARGS | sed 's/*/\\*/g')
+#ARGS=$(echo $ARGS | sed 's/*/\\*/g')
 
 if [ $NAME != 'miqtail' ]
 then
