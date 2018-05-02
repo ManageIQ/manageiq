@@ -638,6 +638,7 @@ describe Metric do
         before do
           Timecop.travel(Time.parse("2010-05-01T00:00:00Z"))
           cases = [
+            "2010-04-01T00:00:00Z",  9.14, 32.85,
             "2010-04-13T21:00:00Z",  9.14, 32.85,
             "2010-04-14T18:00:00Z", 10.23, 28.76,
             "2010-04-14T19:00:00Z", 18.92, 39.11,
@@ -669,8 +670,8 @@ describe Metric do
         it "should calculate the correct normal operating range values" do
           @vm1.generate_vim_performance_operating_range(@time_profile)
 
-          expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.692)
-          expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.085)
+          expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.124)
+          expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.056)
         end
 
         it "should calculate the correct right-size values" do

@@ -751,6 +751,7 @@ describe VmOrTemplate do
       tp_id = TimeProfile.seed.id
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
+                         :timestamp       => 1.day.ago,
                          :time_profile_id => tp_id,
                          :resource_id     => vm.id,
                          :min_max         => {
@@ -760,6 +761,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :cpu_usagemhz_rate_average => 10.0,
+                         :timestamp                 => 1.day.ago,
                          :time_profile_id           => tp_id,
                          :resource_id               => vm.id,
                          :min_max                   => {
@@ -768,6 +770,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :cpu_usagemhz_rate_average => 100.0,
+                         :timestamp                 => 1.day.ago,
                          :time_profile_id           => tp_id,
                          :resource_id               => vm.id,
                          :min_max                   => {
@@ -798,6 +801,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :time_profile_id => tp_id,
+                         :timestamp       => 1.day.ago,
                          :resource_id     => vm.id,
                          :min_max         => {
                            :abs_max_derived_memory_used_value => 100.00
@@ -805,6 +809,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :derived_memory_used => 10.0,
+                         :timestamp           => 1.day.ago,
                          :time_profile_id     => tp_id,
                          :resource_id         => vm.id,
                          :min_max             => {
@@ -813,6 +818,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :derived_memory_used => 1000.0,
+                         :timestamp           => 1.day.ago,
                          :time_profile_id     => tp_id,
                          :resource_id         => vm.id,
                          :min_max             => {
