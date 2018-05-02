@@ -6,26 +6,20 @@ describe ManagerRefresh::InventoryCollection::Builder do
     @ems  = FactoryGirl.create(:ems_cloud,
                                :zone            => @zone,
                                :network_manager => FactoryGirl.create(:ems_network, :zone => @zone))
+    @persister = create_persister
   end
 
   def create_persister
     TestPersister.new(@ems, ManagerRefresh::TargetCollection.new(:manager => @ems))
   end
 
-  let(:persister_class) { ::ManagerRefresh::Inventory::Persister }
-
-  let(:persister) { create_persister }
-
   let(:adv_settings) { {:strategy => :local_db_find_missing_references, :saver_strategy => :concurrent_safe_batch} }
 
-  def cloud
-    ::ManagerRefresh::InventoryCollection::Builder::CloudManager
-  end
+  let(:cloud) { ::ManagerRefresh::InventoryCollection::Builder::CloudManager }
 
-  before :each do
-  end
+  let(:persister_class) { ::ManagerRefresh::Inventory::Persister }
 
-  # association
+  # --- association ---
 
   it 'assigns association automatically to InventoryCollection' do
     ic = cloud.prepare_data(:vms, persister_class).to_inventory_collection
@@ -33,7 +27,7 @@ describe ManagerRefresh::InventoryCollection::Builder do
     expect(ic.association).to eq :vms
   end
 
-  # model_class
+  # --- model_class ---
 
   # TODO: move to amazon spec
   it "derives existing model_class from persister's class" do
@@ -46,11 +40,11 @@ describe ManagerRefresh::InventoryCollection::Builder do
   end
 
   it "replaces derived model_class if model_class defined manually" do
-    data = cloud.prepare_data(:xxx, persister_class) do |builder|
-      builder.add_properties(:model_class => ::Vm)
+    data = cloud.prepare_data(:vms, persister_class) do |builder|
+      builder.add_properties(:model_class => ::MiqTemplate)
     end.to_hash
 
-    expect(data[:model_class]).to eq ::Vm
+    expect(data[:model_class]).to eq ::MiqTemplate
   end
 
   it "doesn't try to derive model_class when disabled" do
@@ -65,7 +59,7 @@ describe ManagerRefresh::InventoryCollection::Builder do
     expect { builder.to_inventory_collection }.to raise_error(::ManagerRefresh::InventoryCollection::Builder::MissingModelClassError)
   end
 
-  # Adv settings
+  # --- adv. settings (TODO: link to gui)---
 
   it 'works without Advanced settings' do
     builder = cloud.prepare_data(:vms, persister_class, :adv_settings_enabled => false)
@@ -90,7 +84,7 @@ describe ManagerRefresh::InventoryCollection::Builder do
     expect(data[:saver_strategy]).to eq :default
   end
 
-  # Shared properties
+  # --- shared properties ---
 
   it 'applies shared properties' do
     data = cloud.prepare_data(:tmp, persister_class, :shared_properties => {:uuid => 1}).to_hash
@@ -106,7 +100,7 @@ describe ManagerRefresh::InventoryCollection::Builder do
     expect(data[:uuid]).to eq 2
   end
 
-  # Properties
+  # --- properties ---
 
   it 'adds properties with add_properties repeatedly' do
     data = cloud.prepare_data(:tmp, persister_class) do |builder|
@@ -128,10 +122,10 @@ describe ManagerRefresh::InventoryCollection::Builder do
     expect(data[:param]).to eq 2
   end
 
-  it "doesn't override properties in :missing mode" do
+  it "doesn't override properties in :if_missing mode" do
     data = cloud.prepare_data(:tmp, persister_class) do |builder|
       builder.add_properties(:param => 1)
-      builder.add_properties({:param => 2}, :missing)
+      builder.add_properties({:param => 2}, :if_missing)
     end.to_hash
 
     expect(data[:param]).to eq 1
@@ -145,7 +139,7 @@ describe ManagerRefresh::InventoryCollection::Builder do
     expect(data[:some_tmp_param]).to eq :some_value
   end
 
-  # Builder params
+  # --- builder params ---
 
   it 'adds builder_params repeatedly' do
     data = cloud.prepare_data(:tmp, persister_class) do |builder|
@@ -160,14 +154,14 @@ describe ManagerRefresh::InventoryCollection::Builder do
     bldr = cloud.prepare_data(:tmp, persister_class) do |builder|
       builder.add_builder_params(:ems_id => ->(persister) { persister.manager.id })
     end
-    bldr.transform_builder_params(persister)
+    bldr.evaluate_lambdas!(@persister)
 
     data = bldr.to_hash
 
-    expect(data[:builder_params][:ems_id]).to eq(persister.manager.id)
+    expect(data[:builder_params][:ems_id]).to eq(@persister.manager.id)
   end
 
-  # Inventory object attributes
+  # --- inventory object attributes ---
 
   it 'derives inventory object attributes automatically' do
     data = cloud.prepare_data(:vms, persister_class).to_hash

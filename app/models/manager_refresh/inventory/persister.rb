@@ -125,10 +125,11 @@ class ManagerRefresh::Inventory::Persister
 
   # Interface for creating InventoryCollection under @collections
   #
-  # @param builder_class [ManagerRefresh::InventoryCollection::Builder]
-  # @param collection_name [Symbol] used as InventoryCollection:association
-  # @param extra_properties [Hash] props from InventoryCollection.initialize list
-  #         - overwrites all previous settings
+  # @param builder_class    [ManagerRefresh::InventoryCollection::Builder] or subclasses
+  # @param collection_name  [Symbol] used as InventoryCollection:association
+  # @param extra_properties [Hash]   props from InventoryCollection.initialize list
+  #         - adds/overwrites properties added by builder
+  #
   # @param settings [Hash] builder settings
   #         - @see ManagerRefresh::InventoryCollection::Builder.default_options
   #         - @see make_builder_settings()
@@ -139,6 +140,9 @@ class ManagerRefresh::Inventory::Persister
   #       :strategy => :local_db_cache_all,
   #     )
   #   )
+  #
+  # @see ManagerRefresh::InventoryCollection::Builder
+  #
   def add_collection(builder_class, collection_name, extra_properties = {}, settings = {}, &block)
     builder = builder_class.prepare_data(collection_name,
                                          self.class,
@@ -146,9 +150,9 @@ class ManagerRefresh::Inventory::Persister
                                          &block)
 
     builder.add_properties(extra_properties) if extra_properties.present?
-    builder.add_properties({:parent => manager}, :missing) if manager.present?
+    builder.add_properties({:parent => manager}, :if_missing) if manager.present?
 
-    builder.transform_builder_params(self)
+    builder.evaluate_lambdas!(self)
 
     collections[collection_name] = builder.to_inventory_collection
   end

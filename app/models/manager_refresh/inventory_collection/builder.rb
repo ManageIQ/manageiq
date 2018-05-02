@@ -1,5 +1,6 @@
 module ManagerRefresh
   class InventoryCollection
+    # @see test in /spec/models/manager_refresh/inventory_collection/builder_spec.rb
     class Builder
       class MissingModelClassError < StandardError; end
 
@@ -69,8 +70,8 @@ module ManagerRefresh
         add_properties(:association => @name)
         add_properties(:model_class => auto_model_class) if @options[:auto_model_class]
 
-        add_properties(@adv_settings, :missing) if @options[:adv_settings_enabled]
-        add_properties(@shared_properties, :missing)
+        add_properties(@adv_settings, :if_missing) if @options[:adv_settings_enabled]
+        add_properties(@shared_properties, :if_missing)
 
         send(@name.to_sym) if respond_to?(@name.to_sym)
 
@@ -87,8 +88,10 @@ module ManagerRefresh
       end
 
       #
-      # Missing method *add_some_property(value)* converted to:
-      # add_properties(:some_property => value)
+      # Missing method
+      #   - add_some_property(value)
+      # converted to:
+      #   - add_properties(:some_property => value)
       #
       def method_missing(method_name, *arguments, &block)
         if method_name.to_s.starts_with?('add_')
@@ -108,7 +111,7 @@ module ManagerRefresh
       # @see ManagerRefresh::InventoryCollection.initialize for list of properties
       #
       # @param props [Hash]
-      # @param mode [Symbol] :overwrite | :missing
+      # @param mode [Symbol] :overwrite | :if_missing
       def add_properties(props = {}, mode = :overwrite)
         @properties = merge_hashes(@properties, props, mode)
       end
@@ -133,17 +136,9 @@ module ManagerRefresh
         @builder_params = merge_hashes(@builder_params, params, mode)
       end
 
-      # Evaluates lambda blocks in @builder_params
-      def transform_builder_params(persister)
-        if @builder_params
-          @builder_params = @builder_params.transform_values do |value|
-            if value.respond_to?(:call)
-              value.call(persister)
-            else
-              value
-            end
-          end
-        end
+      # Evaluates lambda blocks
+      def evaluate_lambdas!(persister)
+        evaluate_builder_params_lambdas!(persister)
       end
 
       # Adds key/values to dependency_attributes (part of @properties)
@@ -166,7 +161,7 @@ module ManagerRefresh
       # - a) all keys from dest (overwrite mode)
       # - b) missing keys (missing mode)
       #
-      # @param mode [Symbol] :overwrite | :missing
+      # @param mode [Symbol] :overwrite | :if_missing
       def merge_hashes(source, dest, mode)
         return source if source.nil? || dest.nil?
 
@@ -227,6 +222,19 @@ module ManagerRefresh
 
         (@properties[:model_class].new.methods - ApplicationRecord.methods).grep(/^[\w]+?\=$/).collect do |setter|
           setter.to_s[0..setter.length - 2].to_sym
+        end
+      end
+
+      # Evaluates lambda blocks in @builder_params
+      def evaluate_builder_params_lambdas!(persister)
+        if @builder_params
+          @builder_params = @builder_params.transform_values do |value|
+            if value.respond_to?(:call)
+              value.call(persister)
+            else
+              value
+            end
+          end
         end
       end
     end
