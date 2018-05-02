@@ -7,7 +7,7 @@ describe ManagerRefresh::Inventory::Persister do
   include TargetedRefreshSpecHelper
 
   ######################################################################################################################
-  # Spec scenarios testing Perister can serialize/deserialize, with having complex nested lazy_find links
+  # Spec scenarios testing Persister can serialize/deserialize, with having complex nested lazy_find links
   ######################################################################################################################
   #
   before :each do
@@ -19,8 +19,6 @@ describe ManagerRefresh::Inventory::Persister do
     allow(@ems.class).to receive(:ems_type).and_return(:mock)
     allow(Settings.ems_refresh).to receive(:mock).and_return({})
   end
-
-  let(:persister) { create_persister }
 
   it "tests we can serialize inventory object with nested lazy references" do
     persister = create_persister
