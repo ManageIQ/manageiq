@@ -12,7 +12,7 @@ module RetirementMixin
   module ClassMethods
     def make_retire_request(*src_ids)
       options = {:src_ids => src_ids.presence || id}
-      (name + "RetireRequest").constantize.make_request(nil, options, User.current_user, true)
+      (name.demodulize + "RetireRequest").constantize.make_request(nil, options, User.current_user, true)
     end
 
     def retire(ids, options = {})
@@ -122,7 +122,7 @@ module RetirementMixin
       end
     end
 
-    make_retire_request if retirement_due?
+    self.class.make_retire_request(self.id) if retirement_due?
   end
 
   def retire_now(requester = nil)
