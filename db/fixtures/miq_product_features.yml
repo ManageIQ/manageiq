@@ -5848,6 +5848,35 @@
       :feature_type: admin
       :identifier: ems_physical_infra_new
 
+# Physical Switches
+- :name: Physical Switches
+  :description: Everything under Physical Switches
+  :feature_type: node
+  :identifier: physical_switch
+  :children:
+  - :name: View
+    :description: View Physical Switch
+    :feature_type: view
+    :identifier: physical_switch_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Switches
+      :feature_type: view
+      :identifier: physical_switch_show_list
+    - :name: Show
+      :description: Display Individual Physical Switch
+      :feature_type: view
+      :identifier: physical_switch_show
+  - :name: Operate
+    :description: Perform Operations on Physical Switches
+    :feature_type: control
+    :identifier: physical_switch_control
+    :children:
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Physical Switches / Nodes
+      :feature_type: control
+      :identifier: physical_switch_refresh
+
 # Physical Servers
 - :name: Physical Servers
   :description: Everything under Physical Servers
