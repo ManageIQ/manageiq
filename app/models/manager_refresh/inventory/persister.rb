@@ -117,6 +117,10 @@ class ManagerRefresh::Inventory::Persister
     # can be implemented in a subclass
   end
 
+  def targeted?
+    false
+  end
+
   # @return [Hash] kwargs shared for all InventoryCollection objects
   def shared_options
     # can be implemented in a subclass
@@ -150,6 +154,9 @@ class ManagerRefresh::Inventory::Persister
                                          &block)
 
     builder.add_properties(extra_properties) if extra_properties.present?
+
+    builder.add_properties({:manager_uuids => references(collection_name)}, :if_missing) if targeted?
+
     builder.add_properties({:parent => manager}, :if_missing) if manager.present?
 
     builder.evaluate_lambdas!(self)
@@ -228,6 +235,14 @@ class ManagerRefresh::Inventory::Persister
       :class       => self.class.name,
       :collections => collections_data
     }
+  end
+
+  def references(collection)
+    target.manager_refs_by_association.try(:[], collection).try(:[], :ems_ref).try(:to_a) || []
+  end
+
+  def name_references(collection)
+    target.manager_refs_by_association.try(:[], collection).try(:[], :name).try(:to_a) || []
   end
 
   class << self
