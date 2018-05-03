@@ -155,6 +155,17 @@ module ManagerRefresh
         )
       end
 
+      # Adds parent to InventoryCollection if not set before
+      def add_parent_if_missing(manager, targeted)
+        if manager.present?
+          if targeted && self.class.to_s.split('::').last.starts_with?('Network')
+            add_properties({:parent => manager.network_manager}, :if_missing)
+          else
+            add_properties({:parent => manager}, :if_missing)
+          end
+        end
+      end
+
       protected
 
       # Extends source hash with

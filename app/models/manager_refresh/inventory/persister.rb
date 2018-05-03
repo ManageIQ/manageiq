@@ -157,7 +157,7 @@ class ManagerRefresh::Inventory::Persister
 
     builder.add_properties({:manager_uuids => references(collection_name)}, :if_missing) if targeted?
 
-    builder.add_properties({:parent => manager}, :if_missing) if manager.present?
+    builder.add_parent_if_missing(manager, targeted?) if manager.present?
 
     builder.evaluate_lambdas!(self)
 

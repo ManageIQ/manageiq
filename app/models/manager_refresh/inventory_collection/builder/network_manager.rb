@@ -4,7 +4,7 @@ module ManagerRefresh
       class NetworkManager < ::ManagerRefresh::InventoryCollection::Builder
         def cloud_subnet_network_ports
           add_properties(
-            :model_class                  => ::CloudSubnetNetworkPort,
+            # :model_class                  => ::CloudSubnetNetworkPort,
             :manager_ref                  => %i(address cloud_subnet network_port),
             :parent_inventory_collections => %i(vms network_ports load_balancers)
           )
