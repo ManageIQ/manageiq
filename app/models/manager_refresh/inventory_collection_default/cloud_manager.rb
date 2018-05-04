@@ -176,59 +176,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
     end
 
     def vm_and_miq_template_ancestry(extra_attributes = {})
-      vm_and_miq_template_ancestry_save_block = lambda do |_ems, inventory_collection|
-        vms_inventory_collection           = inventory_collection.dependency_attributes[:vms].try(:first)
-        miq_templates_inventory_collection = inventory_collection.dependency_attributes[:miq_templates].try(:first)
-
-        return if vms_inventory_collection.blank? || miq_templates_inventory_collection.blank?
-
-        # Fetch IDs of all vms and genealogy_parents, only if genealogy_parent is present
-        vms_genealogy_parents = vms_inventory_collection.data.each_with_object({}) do |x, obj|
-          unless x.data[:genealogy_parent].nil?
-            genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
-            obj[x.id]           = genealogy_parent_id if genealogy_parent_id
-          end
-        end
-
-        miq_template_genealogy_parents = miq_templates_inventory_collection.data.each_with_object({}) do |x, obj|
-          unless x.data[:genealogy_parent].nil?
-            genealogy_parent_id = x.data[:genealogy_parent].load.try(:id)
-            obj[x.id]           = genealogy_parent_id if genealogy_parent_id
-          end
-        end
-
-        ActiveRecord::Base.transaction do
-          # associate parent templates to child instances
-          parent_miq_templates = miq_templates_inventory_collection.model_class
-                                                                   .select([:id])
-                                                                   .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
-          vms_inventory_collection.model_class
-                                  .select([:id])
-                                  .where(:id => vms_genealogy_parents.keys).find_each do |vm|
-            parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
-            vm.with_relationship_type('genealogy') { vm.parent = parent }
-          end
-        end
-
-        ActiveRecord::Base.transaction do
-          # associate parent instances to child templates
-          parent_vms = vms_inventory_collection.model_class
-                                               .select([:id])
-                                               .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
-          miq_templates_inventory_collection.model_class
-                                            .select([:id])
-                                            .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
-            parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
-            miq_template.with_relationship_type('genealogy') { miq_template.parent = parent }
-          end
-        end
-      end
-
-      attributes = {
-        :association       => :vm_and_miq_template_ancestry,
-        :custom_save_block => vm_and_miq_template_ancestry_save_block,
-      }
-      attributes.merge!(extra_attributes)
+      relationships(:genealogy_parent, :genealogy, nil, :vm_and_miq_template_ancestry, extra_attributes)
     end
   end
 end
