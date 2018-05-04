@@ -220,4 +220,12 @@ describe Zone do
       end
     end
   end
+
+  it "removes queued items on destroy" do
+    zone = FactoryGirl.create(:zone)
+    FactoryGirl.create(:miq_queue, :zone => zone.name)
+    expect(MiqQueue.where(:zone => zone.name).count).to eq(1)
+    zone.destroy!
+    expect(MiqQueue.where(:zone => zone.name).count).to eq(0)
+  end
 end
