@@ -193,7 +193,7 @@ module ManagerRefresh
           )
         end
 
-        private
+        protected
 
         def shared_builder_params
           add_builder_params(:ems_id => default_ems_id)
@@ -201,6 +201,11 @@ module ManagerRefresh
 
         def default_ems_id
           ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id }
+        end
+
+        # InventoryCollection definitions for NetworkManager?
+        def network_manager_collections?
+          true
         end
       end
     end

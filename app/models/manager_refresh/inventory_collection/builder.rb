@@ -158,7 +158,7 @@ module ManagerRefresh
       # Adds parent to InventoryCollection if not set before
       def add_parent_if_missing(manager, targeted)
         if manager.present?
-          if targeted && self.class.to_s.split('::').last.starts_with?('Network')
+          if targeted && network_manager_collections? && manager.respond_to?(:network_manager)
             add_properties({:parent => manager.network_manager}, :if_missing)
           else
             add_properties({:parent => manager}, :if_missing)
@@ -247,6 +247,11 @@ module ManagerRefresh
             end
           end
         end
+      end
+
+      # InventoryCollection definitions for NetworkManager?
+      def network_manager_collections?
+        false
       end
     end
   end
