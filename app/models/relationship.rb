@@ -76,10 +76,15 @@ class Relationship < ApplicationRecord
   #
 
   def self.flatten_arranged_rels(relationships)
-    relationships.each_with_object([]) do |(rel, children), a|
-      a << rel
-      a.concat(flatten_arranged_rels(children))
+    result             = relationships.keys
+    remaining_children = relationships.values
+    until remaining_children.empty?
+      remaining_children.pop.each do |rel, kids|
+        result << rel
+        remaining_children << kids
+      end
     end
+    result
   end
 
   def self.arranged_rels_to_resources(relationships, initial = true)
