@@ -22,6 +22,11 @@ class ManageIQ::Providers::ContainerManager::OrchestrationStack < ::Orchestratio
     "#{name}::Status".constantize
   end
 
+  def retire_now(requester = nil)
+    update_attributes(:retirement_requester => requester)
+    finish_retirement
+  end
+
   def raw_status
     failed = resources.any? { |obj| obj.resource_status == 'failed' }
     if failed

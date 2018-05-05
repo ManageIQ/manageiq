@@ -73,7 +73,7 @@ describe Vmdb::Settings do
     it "does not allow invalid configuration values" do
       expect do
         described_class.save!(miq_server, :authentication => {:mode => "stuff"})
-      end.to raise_error(RuntimeError, "configuration invalid")
+      end.to raise_error(described_class::ConfigurationInvalid)
     end
 
     it "with a change" do

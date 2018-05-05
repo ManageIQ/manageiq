@@ -53,7 +53,7 @@ class MiqHostProvisionRequest < MiqRequest
     options[:src_host_ids].collect { |id_str| Host.find_by(:id => id_str.to_i) }.compact
   end
 
-  def my_role
+  def my_role(_action = nil)
     'ems_operations'
   end
 

@@ -132,6 +132,10 @@ class ChargebackRate < ApplicationRecord
     get_assigned_tos[:tags].present?
   end
 
+  def default?
+    super || description == 'Default Container Image Rate'
+  end
+
   ###########################################################
 
   private
@@ -150,7 +154,7 @@ class ChargebackRate < ApplicationRecord
   end
 
   def ensure_nondefault
-    if default? || description == 'Default Container Image Rate'
+    if default?
       errors.add(:rate, "default rate cannot be deleted")
       throw :abort
     end

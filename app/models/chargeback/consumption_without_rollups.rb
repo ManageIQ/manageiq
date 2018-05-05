@@ -29,12 +29,12 @@ class Chargeback
     end
 
     def parents_determining_rate
-      [resource.host, resource.ems_cluster, resource.storage, parent_ems, resource.tenant,
-       MiqEnterprise.my_enterprise].compact
+      [resource.host, resource.ems_cluster, resource.storage, resource.try(:cloud_volumes), parent_ems, resource.tenant,
+       MiqEnterprise.my_enterprise].flatten.compact
     end
 
-    def none?(metric)
-      current_value(metric).nil?
+    def none?(metric, sub_metric = nil)
+      current_value(metric, sub_metric).nil?
     end
 
     def chargeback_fields_present
@@ -45,18 +45,22 @@ class Chargeback
       0 # we don't count used hours in metering report
     end
 
-    def current_value(metric, _sub_metric = nil)
+    def current_value(metric, sub_metric = nil)
       # Return the last seen allocation for charging purposes.
       @value ||= {}
-      @value[metric] ||= case metric
-                         when 'derived_vm_numvcpus' # Allocated CPU count
-                           resource.hardware.try(:cpu_total_cores)
-                         when 'derived_memory_available'
-                           resource.hardware.try(:memory_mb)
-                         when 'derived_vm_allocated_disk_storage'
-                           resource.allocated_disk_storage
-                         end
-      @value[metric]
+      metric_key = "#{metric}#{sub_metric}"
+      @value[metric_key] ||= case metric
+                             when 'derived_vm_numvcpus' # Allocated CPU count
+                               resource.hardware.try(:cpu_total_cores)
+                             when 'derived_memory_available'
+                               resource.hardware.try(:memory_mb)
+                             when 'derived_vm_allocated_disk_storage'
+                               if sub_metric.present?
+                                 resource.cloud_volumes.where(:volume_type => sub_metric).sum(:size) || 0
+                               else
+                                 resource.allocated_disk_storage
+                               end
+                             end
     end
     alias avg current_value
     alias max current_value

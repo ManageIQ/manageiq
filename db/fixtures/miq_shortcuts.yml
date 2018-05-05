@@ -24,11 +24,6 @@
   :url: /alert/show_list
   :rbac_feature_name: rss
   :startup: true
-- :name: consumption
-  :description: Consumption / Dashboard
-  :url: /consumption/show
-  :rbac_feature_name: consumption
-  :startup: true
 - :name: services
   :description: Services / My Services
   :url: /service/explorer
@@ -303,11 +298,6 @@
   :description: Networks / Topology
   :url: /network_topology
   :rbac_feature_name: network_topology_view
-  :startup: true
-- :name: ems_datawarehouse
-  :description: Datawarehouse / Providers
-  :url: /ems_datawarehouse
-  :rbac_feature_name: ems_datawarehouse_show_list
   :startup: true
 - :name: ems_block_storage
   :description: Storage / Block Storage / Managers

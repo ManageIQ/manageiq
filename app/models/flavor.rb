@@ -44,7 +44,8 @@ class Flavor < ApplicationRecord
   end
 
   def self.tenant_joins_clause(scope)
-    scope.includes(:cloud_tenants => "source_tenant").includes(:ext_management_system)
+    scope.includes(:cloud_tenants => "source_tenant", :ext_management_system => {})
+         .references(:cloud_tenants => "source_tenant", :ext_management_system => {})
   end
 
   def self.create_flavor_queue(userid, ext_management_system, options = {})

@@ -5,7 +5,6 @@ class MiqRetireTask < MiqRequestTask
 
   def self.get_description(req_obj)
     name = if req_obj.source.nil?
-             # Single source has not been selected yet
              if req_obj.options[:src_ids].length == 1
                m = model_being_retired.find_by(:id => req_obj.options[:src_ids].first)
                m.nil? ? "" : m.name
@@ -14,7 +13,7 @@ class MiqRetireTask < MiqRequestTask
              end
            else
              req_obj.source.name
-          end
+           end
 
     new_settings = []
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
@@ -44,7 +43,7 @@ class MiqRetireTask < MiqRequestTask
         :args           => [args],
         :role           => 'automate',
         :zone           => options.fetch(:miq_zone, zone),
-        :tracking_label => my_task_id,
+        :tracking_label => tracking_label_id,
       )
       update_and_notify_parent(:state => "pending", :status => "Ok", :message => "Automation Starting")
     else
@@ -53,7 +52,7 @@ class MiqRetireTask < MiqRequestTask
   end
 
   def after_request_task_create
-    update_attributes(:description, get_description)
+    update_attributes(:description => get_description)
   end
 
   def after_ae_delivery(ae_result)

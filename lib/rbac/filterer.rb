@@ -248,6 +248,7 @@ module Rbac
 
       exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
+      skip_references            = skip_references?(options, attrs)
 
       # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
       # if you note, the limits are put back into scope a few lines down from here
@@ -257,7 +258,7 @@ module Rbac
               .includes(include_for_find).includes(exp_includes)
               .order(order)
 
-      scope = include_references(scope, klass, include_for_find, exp_includes)
+      scope = include_references(scope, klass, include_for_find, exp_includes, skip_references)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
       targets = scope
 
@@ -291,7 +292,48 @@ module Rbac
       klass.respond_to?(:finder_needs_type_condition?) ? klass.finder_needs_type_condition? : false
     end
 
-    def include_references(scope, klass, include_for_find, exp_includes)
+    # This is a very primitive way of determining whether we want to skip
+    # adding references to the query.
+    #
+    # For now, basically it checks if the caller has not provided :extra_cols,
+    # or if the MiqExpression can't apply the limit in SQL.  If both of those
+    # are true, then we don't add `.references` to the scope.
+    #
+    # If still invalid, there is an EXPLAIN check in #include_references that
+    # will make sure the query is valid and if not, will include the references
+    # as done previously.
+    def skip_references?(options, attrs)
+      options[:extra_cols].blank? && !attrs[:apply_limit_in_sql]
+    end
+
+    def include_references(scope, klass, include_for_find, exp_includes, skip)
+      if skip
+        # If we are in a transaction, we don't want to polute that
+        # transaction with a failed EXPLAIN.  We use a SQL SAVEPOINT (which is
+        # created via `transaction(:requires_new => true)`) to prevent that
+        # from being an issue (happens in tests with transactional fixtures)
+        #
+        # See https://stackoverflow.com/a/31146267/3574689
+        valid_skip = MiqDatabase.transaction(:requires_new => true) do
+          begin
+            ActiveRecord::Base.connection.explain(scope.to_sql)
+          rescue ActiveRecord::StatementInvalid => e
+            unless Rails.env.production?
+              warn "There was an issue with the Rbac filter without references!"
+              warn "Consider trying to fix this edge case in Rbac::Filterer!  Error Below:"
+              warn e.message
+              warn e.backtrace
+            end
+            # returns nil
+            raise ActiveRecord::Rollback
+          end
+        end
+        # If the result of the transaction is non-nil, then the block was
+        # successful and didn't trigger the ActiveRecord::Rollback, so we can
+        # return the scope as is.
+        return scope if valid_skip
+      end
+
       ref_includes = Hash(include_for_find).merge(Hash(exp_includes))
       unless polymorphic_include?(klass, ref_includes)
         scope = scope.references(include_for_find).references(exp_includes)
@@ -389,9 +431,9 @@ module Rbac
     end
 
     #
-    # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            d_union_b_and_m  = d_filtered_ids UNION b_intersection_m
-    #            filter           = d_union_b_and_m INTERSECTION tenant_filter_ids INTERSECTION u_filtered_ids
+    # Algorithm: b_intersection_m        = (b_filtered_ids INTERSECTION m_filtered_ids)
+    #            u_union_d_union_b_and_m = u_filtered_ids UNION d_filtered_ids UNION b_intersection_m
+    #            filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
     #
     # a nil as input for any field means it DOES NOT apply the operation(INTERSECTION, UNION)
     # a nil as output means there is not filter
@@ -405,13 +447,13 @@ module Rbac
     # @return [Array<Integer>] target ids for filter
 
     def combine_filtered_ids(u_filtered_ids, b_filtered_ids, m_filtered_ids, d_filtered_ids, tenant_filter_ids)
-      intersection = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:&) }
-      union        = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:|) }
+      intersection = ->(operand1, operand2) { [operand1, operand2].compact.reduce(&:&) }
+      union        = ->(operand1, operand2, operand3 = nil) { [operand1, operand2, operand3].compact.reduce(&:|) }
 
-      b_intersection_m         = intersection.call(b_filtered_ids, m_filtered_ids)
-      d_union_b_intersection_m = union.call(d_filtered_ids, b_intersection_m)
+      b_intersection_m                 = intersection.call(b_filtered_ids, m_filtered_ids)
+      u_union_d_union_b_intersection_m = union.call(u_filtered_ids, d_filtered_ids, b_intersection_m)
 
-      intersection.call(d_union_b_intersection_m, tenant_filter_ids, u_filtered_ids)
+      intersection.call(u_union_d_union_b_intersection_m, tenant_filter_ids)
     end
 
     # @param parent_class [Class] Class of parent (e.g. Host)
@@ -531,16 +573,18 @@ module Rbac
       miq_group_id ||= miq_group.try!(:id)
       return [user, user.current_group] if user && user.current_group_id.to_s == miq_group_id.to_s
 
-      if user
-        if miq_group_id && (detected_group = user.miq_groups.detect { |g| g.id.to_s == miq_group_id.to_s })
-          user.current_group = detected_group
-        elsif miq_group_id && user.super_admin_user?
-          user.current_group = miq_group || MiqGroup.find_by(:id => miq_group_id)
-        end
-      else
-        miq_group ||= miq_group_id && MiqGroup.find_by(:id => miq_group_id)
-      end
-      [user, user.try(:current_group) || miq_group]
+      group = if user
+                if miq_group_id && (detected_group = user.miq_groups.detect { |g| g.id.to_s == miq_group_id.to_s })
+                  user.current_group = detected_group
+                elsif miq_group_id && user.super_admin_user?
+                  miq_group || MiqGroup.find_by(:id => miq_group_id)
+                else
+                  user.try(:current_group)
+                end
+              else
+                miq_group || (miq_group_id && MiqGroup.find_by(:id => miq_group_id))
+              end
+      [user, group]
     end
 
     # for reports, user is currently nil, so use the group filter

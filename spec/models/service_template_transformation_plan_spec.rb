@@ -38,7 +38,7 @@ describe ServiceTemplateTransformationPlan do
       expect(service_template.name).to eq('Transformation Plan')
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
-      expect(service_template.vm_resources.collect(&:status)).to eq(%w(Queued Queued))
+      expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',

@@ -321,6 +321,7 @@ class MiqWorker < ApplicationRecord
     DRb.stop_service
     close_drb_pool_connections
     renice(Process.pid)
+    CodeCoverage.run_hook
   end
 
   # When we fork, the children inherits the parent's file descriptors
@@ -350,6 +351,7 @@ class MiqWorker < ApplicationRecord
     # Once that is added this should be replaced.
     DRb::DRbConn.instance_variable_get(:@mutex).synchronize do
       DRb::DRbConn.instance_variable_get(:@pool).each(&:close)
+      DRb::DRbConn.instance_variable_set(:@pool, [])
     end
   end
 

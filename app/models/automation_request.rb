@@ -70,7 +70,7 @@ class AutomationRequest < MiqRequest
   def customize_request_task_attributes(_req_task_attrs, _idx)
   end
 
-  def my_role
+  def my_role(_action = nil)
     'automate'
   end
 

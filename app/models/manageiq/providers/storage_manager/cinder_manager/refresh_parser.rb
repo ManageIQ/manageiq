@@ -53,7 +53,8 @@ module ManageIQ::Providers
     end
 
     def get_backups
-      process_collection(@cinder_service&.list_backups_detailed.body["backups"],
+      process_collection(@cinder_service.handled_list(:list_backups_detailed,
+                                                      :__request_body_index => "backups"),
                          :cloud_volume_backups) { |backup| parse_backup(backup) }
     end
 

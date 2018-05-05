@@ -323,4 +323,16 @@ describe GitWorktree do
       end
     end
   end
+
+  describe 'credentials_cb' do
+    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
+    let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s) }
+
+    describe "#credentials_cb" do
+      it "call the credentials callback" do
+        expect(test_repo.credentials_cb("url", nil, nil).class).to eq(Rugged::Credentials::UserPassword)
+        expect { test_repo.credentials_cb("url", nil, nil) }.to raise_exception(GitWorktreeException::InvalidCredentials)
+      end
+    end
+  end
 end

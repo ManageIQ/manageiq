@@ -36,7 +36,7 @@ gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.3.0"
-gem "hamlit",                         "~>2.7.0"
+gem "hamlit",                         "~>2.8.5"
 gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "kubeclient",                     "~>2.4",         :require => false # For scaling pods at runtime
@@ -86,7 +86,7 @@ group :amazon, :manageiq_default do
 end
 
 group :ansible, :manageiq_default do
-  gem "ansible_tower_client",           "~>0.12.2",      :require => false
+  gem "ansible_tower_client",           "~>0.13.0",      :require => false
 end
 
 group :azure, :manageiq_default do
@@ -119,7 +119,7 @@ group :nuage, :manageiq_default do
 end
 
 group :qpid_proton, :optional => true do
-  gem "qpid_proton",                    "~>0.19.0",      :require => false
+  gem "qpid_proton",                    "~>0.22.0",      :require => false
 end
 
 group :openshift, :manageiq_default do
@@ -197,7 +197,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 end
 
 group :v2v, :ui_dependencies do
-  gem "miq_v2v_ui", :git => "https://github.com/priley86/miq_v2v_ui_plugin.git", :branch => "master"
+  gem "miq_v2v_ui", :git => "https://github.com/priley86/miq_v2v_ui_plugin.git", :branch => "alpha"
 end
 
 group :web_server, :manageiq_default do

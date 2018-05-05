@@ -206,6 +206,49 @@ describe ChargebackVm do
             fields = described_class.attribute_names
             expect(fields).not_to include(cloud_volume_hdd_field)
           end
+
+          context 'without including metrics' do
+            let(:ssd_volume_type) { 'ssd' }
+            let(:ssd_size_1) { 1_234 }
+            let!(:cloud_volume_1) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => ssd_volume_type, :size => ssd_size_1) }
+
+            let(:ssd_disk_1) { FactoryGirl.create(:disk, :size => ssd_size_1, :backing => cloud_volume_1) }
+
+            let(:ssd_size_2) { 4_234 }
+            let!(:cloud_volume_2) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => ssd_volume_type, :size => ssd_size_2) }
+
+            let(:ssd_disk_2) { FactoryGirl.create(:disk, :size => ssd_size_2, :backing => cloud_volume_2) }
+
+            let(:hardware) { FactoryGirl.create(:hardware, :disks => [ssd_disk_1, ssd_disk_2]) }
+
+            let(:resource) { FactoryGirl.create(:vm_vmware_cloud, :hardware => hardware, :created_on => month_beginning) }
+
+            let(:storage_chargeback_rate) { FactoryGirl.create(:chargeback_rate, :detail_params => detail_params, :rate_type => "Storage") }
+
+            let(:parent_classification) { FactoryGirl.create(:classification) }
+            let(:classification)        { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
+
+            let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :object => MiqEnterprise.first } }
+            let(:options) { base_options.merge(:interval => 'daily', :tag => nil, :entity_id => resource.id, :include_metrics => false) }
+
+            before do
+              # create rate detail for cloud volume
+              allocated_storage_rate_detail = storage_chargeback_rate.chargeback_rate_details.detect { |x| x.chargeable_field.metric == 'derived_vm_allocated_disk_storage' }
+              new_rate_detail = allocated_storage_rate_detail.dup
+              new_rate_detail.sub_metric = ssd_volume_type
+              new_rate_detail.chargeback_tiers = allocated_storage_rate_detail.chargeback_tiers.map(&:dup)
+              new_rate_detail.save
+              storage_chargeback_rate.chargeback_rate_details << new_rate_detail
+              storage_chargeback_rate.save
+
+              ChargebackRate.set_assignments(:storage, [rate_assignment_options])
+            end
+
+            it 'reports sub metric and costs' do
+              skip('this case needs to be fixed in new chargeback') if Settings.new_chargeback
+              expect(subject.storage_allocated_ssd_metric).to eq(ssd_size_1 + ssd_size_2)
+            end
+          end
         end
 
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
@@ -728,6 +771,45 @@ describe ChargebackVm do
         it "return tenant chargeback detail rate" do
           expect(@rate).not_to be_nil
           expect(@rate.id).to eq(@assigned_rate[:cb_rate].id)
+        end
+
+        context "selecting based on tagged cloud volumes" do
+          let!(:cloud_volume_sdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'sdd') }
+
+          let(:ssd_size) { 1_234 }
+          let(:ssd_disk) { FactoryGirl.create(:disk, :size => ssd_size, :backing => cloud_volume_sdd) }
+          let(:hardware) { FactoryGirl.create(:hardware, :disks => [ssd_disk]) }
+
+          let(:resource) { FactoryGirl.create(:vm_vmware_cloud, :hardware => hardware, :created_on => month_beginning) }
+
+          let(:consumption) { Chargeback::ConsumptionWithoutRollups.new(resource, nil, nil) }
+
+          let(:storage_chargeback_rate) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
+
+          let(:parent_classification) { FactoryGirl.create(:classification) }
+          let(:classification)        { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
+
+          let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :tag => [classification, "storage"]} }
+
+          subject { Chargeback::RatesCache.new.get(consumption).first }
+
+          it "chooses rate according to cloud_volume\'s tag" do
+            skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
+
+            cloud_volume_sdd.tag_with([classification.tag.name], :ns => '*')
+
+            ChargebackRate.set_assignments(:storage, [rate_assignment_options])
+            expect(subject).to eq(storage_chargeback_rate)
+          end
+
+          it "doesn't choose rate thanks to missing tag on cloud_volume" do
+            skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
+
+            ChargebackRate.set_assignments(:storage, [rate_assignment_options])
+
+            @rate = Chargeback::RatesCache.new.get(consumption).first
+            expect(subject).to be_nil
+          end
         end
       end
 

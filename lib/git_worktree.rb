@@ -19,6 +19,7 @@ class GitWorktree
     @remote_name   = 'origin'
     @cred          = Rugged::Credentials::UserPassword.new(:username => @username,
                                                            :password => @password)
+    @credentials_set = false
     @base_name = File.basename(@path)
     @certificate_check_cb = options[:certificate_check]
     process_repo(options)
@@ -166,6 +167,12 @@ class GitWorktree
     current_index.remove_dir(old_dir)
   end
 
+  def credentials_cb(url, _username, _types)
+    raise GitWorktreeException::InvalidCredentials, "Invalid credentials for URL #{url}" if @credentials_set
+    @credentials_set = true
+    @cred
+  end
+
   private
 
   def current_branch
@@ -187,7 +194,8 @@ class GitWorktree
   end
 
   def fetch
-    options = {:credentials => @cred, :certificate_check => @certificate_check_cb}
+    @credentials_set = false
+    options = {:credentials => method(:credentials_cb), :certificate_check => @certificate_check_cb}
     @repo.fetch(@remote_name, options)
   end
 
@@ -201,7 +209,8 @@ class GitWorktree
       @saved_cid = @repo.ref(local_ref).target.oid
       merge(commit, rebase)
       rebase = true
-      @repo.push(@remote_name, [local_ref], :credentials => @cred)
+      @credentials_set = false
+      @repo.push(@remote_name, [local_ref], :credentials => method(:credentials_cb))
     end
   end
 
@@ -254,7 +263,8 @@ class GitWorktree
   end
 
   def clone(url)
-    options = {:credentials => @cred, :bare => true, :remote => @remote_name, :certificate_check => @certificate_check_cb}
+    @credentials_set = false
+    options = {:credentials => method(:credentials_cb), :bare => true, :remote => @remote_name, :certificate_check => @certificate_check_cb}
     @repo = Rugged::Repository.clone_at(url, @path, options)
   end
 

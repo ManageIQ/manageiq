@@ -7,6 +7,10 @@ class DialogFieldRadioButton < DialogFieldSortedItem
     [[nil, "<None>"]]
   end
 
+  def force_multi_value
+    false
+  end
+
   private
 
   def raw_values

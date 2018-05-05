@@ -108,6 +108,7 @@ module SupportsFeatureMixin
     :reconfigure_disks                   => 'Reconfigure Virtual Machines Disks',
     :reconfigure_disksize                => 'Reconfigure Virtual Machines Disk Size',
     :reconfigure_network_adapters        => 'Reconfigure Network Adapters',
+    :reconfigure_cdroms                  => 'Reconfigure Virtual Machines CD/DVDs',
     :refresh_network_interfaces          => 'Refresh Network Interfaces for a Host',
     :refresh_new_target                  => 'Refresh non-existing record',
     :regions                             => 'Regions of a Provider',
@@ -137,6 +138,7 @@ module SupportsFeatureMixin
     :block_storage                       => 'Block Storage',
     :object_storage                      => 'Object Storage',
     :vm_import                           => 'VM Import',
+    :change_password                     => 'Change Password'
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.

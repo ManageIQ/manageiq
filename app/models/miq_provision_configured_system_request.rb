@@ -21,7 +21,7 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
     src_configured_systems.first.my_zone
   end
 
-  def my_role
+  def my_role(_action = nil)
     'ems_operations'
   end
 

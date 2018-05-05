@@ -31,7 +31,7 @@ module VMDB
               _log.debug("  Invalid: #{errors}")
               errors.each do |e|
                 key, msg = e
-                @errors[[k, key].join("_")] = msg
+                @errors[[k, key].join("-")] = msg
               end
               valid = false
             end

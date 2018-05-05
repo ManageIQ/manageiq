@@ -1,4 +1,5 @@
 describe "Service Retirement Management" do
+  let(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => "admin") }
   before do
     @server = EvmSpecHelper.local_miq_server
     @service = FactoryGirl.create(:service)
@@ -27,7 +28,26 @@ describe "Service Retirement Management" do
     expect(@service.retirement_state).to be_nil
     expect(MiqEvent).to receive(:raise_evm_event).once
     @service.retire_now
-    @service.reload
+    expect(@service.retirement_state).to eq('initializing')
+  end
+
+  it "#retire_now when called more than once" do
+    expect(@service.retirement_state).to be_nil
+    expect(MiqEvent).to receive(:raise_evm_event).once
+    3.times { @service.retire_now }
+    expect(@service.retirement_state).to eq('initializing')
+  end
+
+  it "#retire_now not called when already retiring" do
+    @service.update_attributes(:retirement_state => 'retiring')
+    expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
+    @service.retire_now
+  end
+
+  it "#retire_now not called when already retired" do
+    @service.update_attributes(:retirement_state => 'retired')
+    expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
+    @service.retire_now
   end
 
   it "#retire_now with userid" do
@@ -39,7 +59,6 @@ describe "Service Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {}).once
 
     @service.retire_now('freddy')
-    @service.reload
   end
 
   it "#retire_now without userid" do
@@ -51,7 +70,6 @@ describe "Service Retirement Management" do
     expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {}).once
 
     @service.retire_now
-    @service.reload
   end
 
   it "#retire warn" do
@@ -61,6 +79,18 @@ describe "Service Retirement Management" do
     @service.retire(options)
     @service.reload
     expect(@service.retirement_warn).to eq(options[:warn])
+  end
+
+  it "with one src_id" do
+    User.current_user = user
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => ['yabadabadoo'] }, User.current_user, true)
+    @service.class.to_s.demodulize.constantize.make_retire_request('yabadabadoo')
+  end
+
+  it "with many src_ids" do
+    User.current_user = user
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [1, 2, 3]}, User.current_user, true)
+    @service.class.to_s.demodulize.constantize.make_retire_request(1, 2, 3)
   end
 
   it "#retire date" do

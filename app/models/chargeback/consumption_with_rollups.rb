@@ -62,8 +62,8 @@ class Chargeback
       end
     end
 
-    def none?(metric)
-      values(metric).empty?
+    def none?(metric, sub_metric)
+      values(metric, sub_metric).empty?
     end
 
     def chargeback_fields_present

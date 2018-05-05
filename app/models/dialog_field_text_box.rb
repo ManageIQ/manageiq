@@ -2,7 +2,6 @@ class DialogFieldTextBox < DialogField
   AUTOMATE_VALUE_FIELDS = %w(data_type protected required validator_rule validator_type read_only visible description).freeze
 
   def value
-    @value = values_from_automate if dynamic && @value.blank?
     return nil if @value.nil?
     convert_value_to_type
   end
@@ -68,10 +67,6 @@ class DialogFieldTextBox < DialogField
     @value = values_from_automate
 
     {:text => @value, :read_only => read_only?, :visible => visible?}
-  end
-
-  def trigger_automate_value_updates
-    values_from_automate
   end
 
   private

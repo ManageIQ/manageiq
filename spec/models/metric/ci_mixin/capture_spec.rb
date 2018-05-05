@@ -355,6 +355,13 @@ describe Metric::CiMixin::Capture do
         verify_perf_capture_queue(last_perf_capture_on, 11)
       end
     end
+
+    it "links supplied miq_task with queued item which allow to initialize MiqTask#started_on attribute" do
+      MiqQueue.delete_all
+      task = FactoryGirl.create(:miq_task)
+      vm.perf_capture_queue("realtime", :task_id => task.id)
+      expect(MiqQueue.first.miq_task_id).to eq task.id
+    end
   end
 
   describe "#perf_capture_queue('historical')" do

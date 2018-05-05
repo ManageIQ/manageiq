@@ -17,9 +17,8 @@ class DialogFieldDateControl < DialogField
   end
 
   def value
-    @value = dynamic ? values_from_automate : default_time if @value.blank?
-
-    Date.parse(@value).strftime("%m/%d/%Y")
+    value_to_parse = @value.presence || default_time
+    Date.parse(value_to_parse).strftime("%m/%d/%Y")
   end
 
   def normalize_automate_values(automate_hash)
@@ -43,10 +42,6 @@ class DialogFieldDateControl < DialogField
     @value = values_from_automate
 
     {:date => Date.parse(@value).strftime("%m/%d/%Y"), :read_only => read_only?, :visible => visible?}
-  end
-
-  def trigger_automate_value_updates
-    values_from_automate
   end
 
   private

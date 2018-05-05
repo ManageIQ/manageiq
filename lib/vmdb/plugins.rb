@@ -2,6 +2,7 @@ module Vmdb
   class Plugins
     include Singleton
 
+    attr_reader :registered_ansible_content
     attr_reader :registered_automate_domains
 
     def initialize

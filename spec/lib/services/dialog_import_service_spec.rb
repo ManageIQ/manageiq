@@ -186,15 +186,39 @@ describe DialogImportService do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
       end
 
-      it "sets associations" do
+      it "sets only new associations when both new and old style exist" do
         expect do
           dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
-        end.to change(DialogFieldAssociation, :count).by(2)
+        end.to change(DialogFieldAssociation, :count).by(1)
 
-        expect(DialogField.find(DialogFieldAssociation.last.respond_id).name).to eq("df_with_old_responder")
-        expect(DialogField.find(DialogFieldAssociation.last.trigger_id).name).to eq("df_with_old_trigger")
         expect(DialogField.find(DialogFieldAssociation.first.trigger_id).name).to eq("dialog_field_2")
         expect(DialogField.find(DialogFieldAssociation.first.respond_id).name).to eq("dialog_field")
+      end
+    end
+  end
+
+  describe "association creation" do
+    context "with only old defunct associations present" do
+      before do
+        fields = []
+        built_dialog_field3 = DialogField.create(:name => "df_with_old_trigger", :trigger_auto_refresh => true, :position => 0)
+        built_dialog_field4 = DialogField.create(:name => "df_with_old_responder", :auto_refresh => true, :position => 1)
+        fields << built_dialog_field3
+        fields << built_dialog_field4
+        allow(dialog_field_importer).to receive(:import_field).and_return(built_dialog_field3, built_dialog_field4)
+        group = [{"label" => "New Box", "dialog_fields" => fields, :position => 1}]
+        tab = [{"label" => "New Tab", "dialog_groups" => group, :position => 2}]
+        dialog = [{"label" => "Test", "dialog_tabs" => tab}]
+        allow(YAML).to receive(:load_file).with("filename").and_return(dialog)
+      end
+
+      it "sets only old associations when only old style exists" do
+        expect do
+          dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
+        end.to change(DialogFieldAssociation, :count).by(1)
+
+        expect(DialogField.find(DialogFieldAssociation.first.trigger_id).name).to eq("df_with_old_trigger")
+        expect(DialogField.find(DialogFieldAssociation.first.respond_id).name).to eq("df_with_old_responder")
       end
     end
   end

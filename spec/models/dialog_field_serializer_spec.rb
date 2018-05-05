@@ -51,7 +51,7 @@ describe DialogFieldSerializer do
       let(:dynamic) { true }
 
       before do
-        allow(dialog_field).to receive(:trigger_automate_value_updates).and_return("dynamic values")
+        allow(dialog_field).to receive(:extract_dynamic_values).and_return("dynamic values")
       end
 
       context 'when wanting the excluded set of attributes' do

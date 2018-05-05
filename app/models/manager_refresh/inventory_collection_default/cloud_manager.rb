@@ -131,6 +131,17 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
       attributes.merge!(extra_attributes)
     end
 
+    def snapshots(extra_attributes = {})
+      attributes = {
+        :model_class                  => ::Snapshot,
+        :association                  => :snapshots,
+        :manager_ref                  => [:vm_or_template, :ems_ref],
+        :parent_inventory_collections => [:vms, :miq_templates],
+      }
+
+      attributes.merge!(extra_attributes)
+    end
+
     def orchestration_stack_ancestry(extra_attributes = {})
       orchestration_stack_ancestry_save_block = lambda do |_ems, inventory_collection|
         stacks_inventory_collection = inventory_collection.dependency_attributes[:orchestration_stacks].try(:first)

@@ -31,5 +31,21 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
         .to receive(:raw_create_in_provider).with(instance_of(manager.class), option_matcher)
       subject.raw_create_job_template(options)
     end
+
+    it 'works with empty credential id' do
+      options = {:inventory => 'inv', :extra_vars => {'a' => 'x'}, :credential_id => ''}
+      option_matcher = hash_including(
+        :inventory  => 'inv',
+        :extra_vars => '{"a":"x"}',
+        :playbook   => subject.name,
+        :project    => 'mref'
+      )
+
+      allow(subject).to receive(:configuration_script_source).and_return(double(:manager_ref => 'mref'))
+      expect(SecureRandom).to receive(:uuid).and_return('random-uuid')
+      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
+        .to receive(:raw_create_in_provider).with(instance_of(manager.class), option_matcher)
+      subject.raw_create_job_template(options)
+    end
   end
 end
