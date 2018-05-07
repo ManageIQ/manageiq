@@ -30,6 +30,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     vm_resource.update_attributes(:status => status == 'Ok' ? ServiceResource::STATUS_COMPLETED : ServiceResource::STATUS_FAILED)
   end
 
+  def mark_vm_migrated
+    source.tag_with("migrated", :ns => "/managed", :cat => "transformation_status")
+  end
+
   def task_active
     vm_resource.update_attributes(:status => ServiceResource::STATUS_ACTIVE)
   end

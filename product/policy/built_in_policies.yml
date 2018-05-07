@@ -42,6 +42,19 @@
   :modifier: deny
   :mode: control
   :action: vm_suspend
+- :name: Prevent Transformed VM from Starting
+  :description: Prevent Transformed VM from starting
+  :towhat: Vm
+  :event: request_vm_start
+  :applies_to?: true
+  :active: true
+  :condition:
+    "CONTAINS":
+      tag: Vm.managed-transformation_status
+      value: migrated
+  :modifier: deny
+  :mode: control
+  :action: prevent
 - :name: Stop Retired VM
   :description: Stop Retired VM
   :towhat: Vm

@@ -171,5 +171,12 @@ describe ServiceTemplateTransformationPlanTask do
         expect(task.transformation_log).to eq(msg)
       end
     end
+
+    describe '#mark_vm_migrated' do
+      it 'should tag VM as migrated' do
+        task.mark_vm_migrated
+        expect(vm).to be_is_tagged_with("migrated", :ns => "/managed", :cat => "transformation_status")
+      end
+    end
   end
 end
