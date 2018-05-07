@@ -156,6 +156,23 @@ describe MiqServer do
       end
     end
 
+    context "validate_is_deleteable before destroying" do
+      it "prevents deleting the current server" do
+        allow(@miq_server).to receive(:is_local?).and_return(true)
+        @miq_server.destroy
+
+        expect(@miq_server.errors.full_messages.first).to match(/current/)
+      end
+
+      it "prevents deleting recently active server" do
+        allow(@miq_server).to receive(:is_local?).and_return(false)
+        @miq_server.last_heartbeat = 2.minutes.ago.utc
+        @miq_server.destroy
+
+        expect(@miq_server.errors.full_messages.first).to match(/recently/)
+      end
+    end
+
     context "#ntp_reload_queue" do
       let(:queue_cond) { {:method_name => 'ntp_reload', :class_name => 'MiqServer', :instance_id => @miq_server.id, :server_guid => @miq_server.guid, :zone => @miq_server.zone.name} }
       let(:message)    { MiqQueue.where(queue_cond).first }
