@@ -30,8 +30,10 @@ class ServiceRetireTask < MiqRetireTask
   end
 
   def create_retire_subtasks(parent_service)
+    parent_service.direct_service_children.each { |child| create_retire_subtasks(child) }
     parent_service.service_resources.collect do |svc_rsc|
       next unless svc_rsc.resource.present? && svc_rsc.resource.respond_to?(:retire_now)
+      next if svc_rsc.resource.type.blank?
       next if svc_rsc.resource_type == "ServiceTemplate" &&
               !self.class.include_service_template?(self,
                                                     svc_rsc.resource.id,
