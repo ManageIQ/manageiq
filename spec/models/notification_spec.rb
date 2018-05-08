@@ -96,4 +96,22 @@ describe Notification, :type => :model do
       )
     end
   end
+
+  describe "#seen_by_all_recipients?" do
+    let(:notification) { FactoryGirl.create(:notification, :initiator => user) }
+
+    it "is false if a user has not seen the notification" do
+      expect(notification.seen_by_all_recipients?).to be_falsey
+    end
+
+    it "is true when all recipients have seen the notification" do
+      notification.notification_recipients.each { |r| r.update_attributes(:seen => true) }
+      expect(notification.seen_by_all_recipients?).to be_truthy
+    end
+
+    it "is true when there are no recipients" do
+      notification.notification_recipients.destroy_all
+      expect(notification.seen_by_all_recipients?).to be_truthy
+    end
+  end
 end

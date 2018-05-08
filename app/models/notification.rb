@@ -35,6 +35,10 @@ class Notification < ApplicationRecord
     }
   end
 
+  def seen_by_all_recipients?
+    notification_recipients.unseen.empty?
+  end
+
   private
 
   def emit_message
