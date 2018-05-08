@@ -21,37 +21,8 @@ describe EmbeddedAnsibleWorker::Runner do
     }
 
     context "#do_before_work_loop" do
-      let(:start_notification_id) { NotificationType.find_by(:name => "role_activate_start").id }
-      let(:success_notification_id) { NotificationType.find_by(:name => "role_activate_success").id }
-
-      before do
-        ServerRole.seed
-        NotificationType.seed
-      end
-
-      it "creates a notification to inform the user that the service has started" do
-        expect(runner).to receive(:setup_ansible)
-        expect(runner).to receive(:update_embedded_ansible_provider)
-
-        runner.do_before_work_loop
-
-        note = Notification.find_by(:notification_type_id => success_notification_id)
-        expect(note.options[:role_name]).to eq("Embedded Ansible")
-        expect(note.options.keys).to include(:server_name)
-      end
-
-      it "creates a notification to inform the user that the role has been assigned" do
-        expect(runner).to receive(:setup_ansible)
-        expect(runner).to receive(:update_embedded_ansible_provider)
-
-        runner.do_before_work_loop
-
-        note = Notification.find_by(:notification_type_id => start_notification_id)
-        expect(note.options[:role_name]).to eq("Embedded Ansible")
-        expect(note.options.keys).to include(:server_name)
-      end
-
       it "exits on exceptions" do
+        allow(runner).to receive(:raise_role_notification)
         expect(runner).to receive(:setup_ansible)
         expect(runner).to receive(:update_embedded_ansible_provider).and_raise(StandardError)
         expect(runner).to receive(:do_exit)
@@ -168,6 +139,62 @@ describe EmbeddedAnsibleWorker::Runner do
           expect(embedded_ansible_instance).to receive(:set_job_data_retention)
           runner.do_work
         end
+      end
+    end
+
+    context "#raise_role_notification (private)" do
+      let(:start_notification_id) { NotificationType.find_by(:name => "role_activate_start").id }
+      let(:success_notification_id) { NotificationType.find_by(:name => "role_activate_success").id }
+
+      before do
+        ServerRole.seed
+        NotificationType.seed
+        FactoryGirl.create(:user_admin)
+      end
+
+      it "creates a notification to inform the user that the service has started" do
+        runner.send(:raise_role_notification, :role_activate_start)
+
+        note = Notification.find_by(:notification_type_id => start_notification_id)
+        expect(note.options[:role_name]).to eq("Embedded Ansible")
+        expect(note.options.keys).to include(:server_name)
+      end
+
+      it "creates a notification to inform the user that the role has been assigned" do
+        runner.send(:raise_role_notification, :role_activate_success)
+
+        note = Notification.find_by(:notification_type_id => success_notification_id)
+        expect(note.options[:role_name]).to eq("Embedded Ansible")
+        expect(note.options.keys).to include(:server_name)
+      end
+
+      it "doesn't create additional notifications if an unread one exists" do
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(1)
+
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(1)
+      end
+
+      it "creates a new notification if the existing one was read" do
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(1)
+
+        Notification.first.notification_recipients.each { |r| r.update_attributes(:seen => true) }
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(2)
+      end
+
+      it "creates a new notification if there is one for a different role" do
+        Notification.create(:type => :role_activate_start, :options => {:role_name => "someotherrole", :server_name => miq_server.name})
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(2)
+      end
+
+      it "creates a new notification if there is one for a different server" do
+        Notification.create(:type => :role_activate_start, :options => {:role_name => "Embedded Ansible", :server_name => "#{miq_server.name}somenonsense"})
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(2)
       end
     end
   end
