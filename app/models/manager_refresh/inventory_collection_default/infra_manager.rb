@@ -158,7 +158,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::EmsFolder,
         :association                 => :ems_folders,
         :manager_ref                 => [:uid_ems],
-        :attributes_blacklist        => [:ems_children],
+        :attributes_blacklist        => %i(ems_children parent),
         :inventory_object_attributes => %i(
           ems_ref
           name
@@ -178,6 +178,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
       attributes = {
         :model_class                 => ::Datacenter,
         :association                 => :datacenters,
+        :attributes_blaklist         => %i(parent),
         :inventory_object_attributes => %i(
           name
           type
@@ -199,7 +200,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::ResourcePool,
         :association                 => :resource_pools,
         :manager_ref                 => [:uid_ems],
-        :attributes_blacklist        => [:ems_children],
+        :attributes_blacklist        => %i(ems_children parent),
         :inventory_object_attributes => %i(
           ems_ref
           name
@@ -218,7 +219,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
       attributes = {
         :model_class                 => ::EmsCluster,
         :association                 => :ems_clusters,
-        :attributes_blacklist        => %i(ems_children datacenter_id),
+        :attributes_blacklist        => %i(ems_children datacenter_id parent),
         :inventory_object_attributes => %i(
           ems_ref
           ems_ref_obj
@@ -241,6 +242,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :association                 => :storages,
         :complete                    => false,
         :arel                        => Storage,
+        :attributes_blacklist        => %i(parent),
         :inventory_object_attributes => %i(
           ems_ref
           ems_ref_obj
@@ -263,6 +265,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
       attributes = {
         :model_class                 => ::Host,
         :association                 => :hosts,
+        :attributes_blacklist        => %i(parent),
         :inventory_object_attributes => %i(
           type
           ems_ref
@@ -381,6 +384,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::Switch,
         :manager_ref                 => [:uid_ems],
         :association                 => :switches,
+        :attributes_blacklist        => %i(parent),
         :inventory_object_attributes => %i(
           uid_ems
           name
