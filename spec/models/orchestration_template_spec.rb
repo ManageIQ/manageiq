@@ -309,6 +309,22 @@ describe OrchestrationTemplate do
     end
   end
 
+  describe ".tabs" do
+    it do
+      expect(subject).to receive(:deployment_options).and_return('deployment-options')
+      expect(subject).to receive(:parameter_groups).and_return('parameter-groups')
+      expect(subject.tabs).to eq(
+        [
+          {
+            :title        => 'Basic Information',
+            :stack_group  => 'deployment-options',
+            :param_groups => 'parameter-groups'
+          }
+        ]
+      )
+    end
+  end
+
   def assert_deployment_option(option, name, constraint_type, required)
     expect(option.name).to eq(name)
     expect(option.required?).to eq(required)
