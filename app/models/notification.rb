@@ -16,6 +16,8 @@ class Notification < ApplicationRecord
   serialize :options, Hash
   default_value_for(:options) { Hash.new }
 
+  scope :of_type, ->(notification_type) { joins(:notification_type).where(:notification_types => {:name => notification_type}) }
+
   def type=(typ)
     self.notification_type = NotificationType.find_by!(:name => typ)
   end
@@ -33,6 +35,10 @@ class Notification < ApplicationRecord
       :text       => notification_type.message,
       :bindings   => text_bindings
     }
+  end
+
+  def seen_by_all_recipients?
+    notification_recipients.unseen.empty?
   end
 
   private
