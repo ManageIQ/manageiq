@@ -6,10 +6,11 @@ describe FixAuth::Cli do
   describe "#parse" do
     it "should assign defaults" do
       opts = described_class.new.parse([], {})
-             .options.slice(:hostname, :username, :password, :hardcode, :database)
+             .options.slice(:hostname, :port, :username, :password, :hardcode, :database)
       expect(opts).to eq(
         :username => "root",
-        :database => "vmdb_production")
+        :database => "vmdb_production",
+        :port     => 5432)
     end
 
     it "should pickup env variables" do

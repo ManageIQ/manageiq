@@ -43,6 +43,7 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Openstack::InfraManager::RefreshWorker"                 => %i(manageiq_default),
   "ManageIQ::Providers::Openstack::NetworkManager::EventCatcher"                => %i(manageiq_default),
   "ManageIQ::Providers::Openstack::NetworkManager::MetricsCollectorWorker"      => %i(manageiq_default),
+  "ManageIQ::Providers::Openstack::StorageManager::CinderManager::EventCatcher" => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::EventCatcher"                     => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker"           => %i(manageiq_default),
   "ManageIQ::Providers::Redhat::InfraManager::RefreshWorker"                    => %i(manageiq_default),
@@ -130,6 +131,7 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Redhat::InfraManager::EventCatcher
   ManageIQ::Providers::Openstack::CloudManager::EventCatcher
   ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
+  ManageIQ::Providers::Openstack::StorageManager::CinderManager::EventCatcher
   ManageIQ::Providers::Redhat::NetworkManager::EventCatcher
   ManageIQ::Providers::Openstack::InfraManager::EventCatcher
   ManageIQ::Providers::Amazon::CloudManager::EventCatcher

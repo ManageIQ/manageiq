@@ -6,11 +6,11 @@ class Dialog
 
     def create_dialog(name, template)
       Dialog.new(:name => name, :buttons => "submit,cancel").tap do |dialog|
-        tab = dialog.dialog_tabs.build(:display => "edit", :label => "Basic Information", :position => 0)
-        add_stack_group(template.deployment_options, tab, 0)
-
-        template.parameter_groups.each_with_index do |parameter_group, index|
-          add_parameter_group(parameter_group, tab, index + 1)
+        template.tabs.each_with_index do |data, idx|
+          tab    = dialog.dialog_tabs.build(:display => "edit", :label => data[:title], :position => idx)
+          offset = data[:stack_group] ? 1 : 0
+          add_stack_group(data[:stack_group], tab, 0) if data[:stack_group]
+          Array(data[:param_groups]).each_with_index { |group, i| add_parameter_group(group, tab, i + offset) }
         end
         dialog.save!
       end

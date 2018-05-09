@@ -1,5 +1,3 @@
-require 'xclarity_client'
-
 describe ManageIQ::Providers::PhysicalInfraManager do
   before :all do
     @auth = { :user => 'admin', :pass => 'smartvm', :host => 'localhost', :port => '3000' }

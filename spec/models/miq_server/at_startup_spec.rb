@@ -14,6 +14,14 @@ describe MiqServer, "::AtStartup" do
         msg.reload
         expect(msg.state).to eq(MiqQueue::STATE_ERROR)
       end
+
+      it "deletes shutdown_and_exit messages" do
+        worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
+        FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => worker,
+                           :method_name => "shutdown_and_exit")
+        described_class.clean_dequeued_messages
+        expect(MiqQueue.count).to eq 0
+      end
     end
 
     context "where worker on other server has a message in dequeue" do

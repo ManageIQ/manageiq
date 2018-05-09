@@ -8,7 +8,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     ensure_credential(provider, connection)
     ensure_inventory(provider, connection)
     ensure_host(provider, connection)
-    ensure_plugin_playbooks_project_seeded(provider, connection)
+    ensure_plugin_playbooks_project_seeded(provider, connection) unless MiqEnvironment::Command.is_container?
   end
 
   def remove_demo_data(connection)

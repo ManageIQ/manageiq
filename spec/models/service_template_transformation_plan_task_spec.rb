@@ -82,5 +82,94 @@ describe ServiceTemplateTransformationPlanTask do
         expect(described_class.get_description(request)).to eq(plan.name)
       end
     end
+
+    describe '#transformation_log_queue' do
+      let(:host_id) { 22 }
+
+      before do
+        task.options[:transformation_host_id] = host_id
+        task.save!
+      end
+
+      context 'when conversion host exists' do
+        before do
+          FactoryGirl.create(:host, :id => host_id, :ext_management_system => FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone)))
+
+          allow(described_class).to receive(:find).and_return(task)
+
+          allow(MiqTask).to receive(:wait_for_taskid) do
+            request = MiqQueue.find_by(:class_name => described_class.name)
+            request.update_attributes(:state => MiqQueue::STATE_DEQUEUE)
+            request.delivered(*request.deliver)
+          end
+        end
+
+        it 'gets the transformation log from conversion host' do
+          expect(task).to receive(:transformation_log).and_return('transformation migration log content')
+          taskid = task.transformation_log_queue('user')
+          MiqTask.wait_for_taskid(taskid)
+          expect(MiqTask.find(taskid)).to have_attributes(
+            :task_results => 'transformation migration log content',
+            :status       => 'Ok'
+          )
+        end
+
+        it 'returns the error message' do
+          msg = 'Failed to get transformation migration log for some reason'
+          expect(task).to receive(:transformation_log).and_raise(msg)
+          taskid = task.transformation_log_queue('user')
+          MiqTask.wait_for_taskid(taskid)
+          expect(MiqTask.find(taskid).message).to include(msg)
+          expect(MiqTask.find(taskid).status).to eq('Error')
+        end
+      end
+
+      context 'when conversion host does not exist' do
+        it 'returns an error message' do
+          taskid = task.transformation_log_queue('user')
+          expect(MiqTask.find(taskid)).to have_attributes(
+            :message => "Conversion host was not found: ID [#{host_id}]. Cannot queue the download of transformation log.",
+            :status  => 'Error'
+          )
+        end
+      end
+    end
+
+    describe '#transformation_log' do
+      let(:host) { FactoryGirl.create(:host, :id => 9) }
+
+      before do
+        EvmSpecHelper.create_guid_miq_server_zone
+        task.options[:transformation_host_id] = host.id
+        task.options.store_path(:virtv2v_wrapper, "v2v_log", "/path/to/log.file")
+        task.save!
+
+        host.update_authentication(:default => {:userid => 'root', :password => 'v2v'})
+        allow(described_class).to receive(:find).and_return(task)
+
+        require 'net/scp'
+      end
+
+      it 'requires host credential' do
+        host.update_authentication(:default => {:userid => 'root', :password => ''})
+        expect { task.transformation_log }.to raise_error(MiqException::Error)
+      end
+
+      it 'requires transformation log location in options' do
+        task.options.store_path(:virtv2v_wrapper, "v2v_log", "")
+        expect { task.transformation_log }.to raise_error(MiqException::Error)
+      end
+
+      it 'catches errors from net/scp' do
+        expect(Net::SCP).to receive(:download!).and_raise('something is wrong')
+        expect { task.transformation_log }.to raise_error(RuntimeError)
+      end
+
+      it 'gets the transformation log content' do
+        msg = 'my transformation migration log'
+        expect(Net::SCP).to receive(:download!).and_return(msg)
+        expect(task.transformation_log).to eq(msg)
+      end
+    end
   end
 end

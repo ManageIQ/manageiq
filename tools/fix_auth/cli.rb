@@ -13,6 +13,7 @@ module FixAuth
         opt :verbose,  "Verbose",           :short => "v"
         opt :dry_run,  "Dry Run",           :short => "d"
         opt :hostname, "Database Hostname", :type => :string,  :short => "h", :default => env['PGHOST']
+        opt :port,     "Database Port",     :type => :integer, :default => 5432
         opt :username, "Database Username", :type => :string,  :short => "U", :default => (env['PGUSER'] || "root")
         opt :password, "Database Password", :type => :string,  :short => "p", :default => env['PGPASSWORD']
         opt :hardcode, "Password to use for all passwords",     :type => :string, :short => "P"

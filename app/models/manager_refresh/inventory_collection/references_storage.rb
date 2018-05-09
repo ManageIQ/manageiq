@@ -1,7 +1,7 @@
 module ManagerRefresh
   class InventoryCollection
     class ReferencesStorage
-      # @return [Set] A set of InventoryObjects manager_uuids, which tells us which InventoryObjects were
+      # @return [Hash] A set of InventoryObjects manager_uuids, which tells us which InventoryObjects were
       #         referenced by other InventoryObjects using a lazy_find.
       attr_reader :references
 

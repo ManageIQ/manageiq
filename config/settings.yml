@@ -913,7 +913,6 @@
   :level_automation: info
   :level_cn_monitoring: info
   :level_fog: info
-  :level_lenovo: info
   :level_mw: info
   :level_nuage: info
   :level_policy: info
@@ -1047,6 +1046,8 @@
   :memcache_server_opts: "-l 127.0.0.1 -I 1M"
   :show_login_info: true
   :timeout: 3600
+  :log_threshold: 100.kilobytes
+  :element_threshold: 10.kilobytes
 :smartproxy_deploy:
   :queue_timeout: 30.minutes
 :smtp:
@@ -1149,8 +1150,6 @@
         :poll: 20.seconds
       :event_catcher_google:
         :poll: 15.seconds
-      :event_catcher_lenovo:
-        :poll: 15.seconds
       :event_catcher_cinder:
         :poll: 10.seconds
       :event_catcher_swift:
@@ -1189,7 +1188,6 @@
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
         :ems_refresh_worker_google_network: {}
-        :ems_refresh_worker_lenovo_physical_infra: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_nuage_network: {}
         :ems_refresh_worker_cinder: {}
