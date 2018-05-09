@@ -542,13 +542,15 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @domains ||= begin
       domains = {}
       if @values[:forced_sysprep_domain_name].blank?
-        Host.all.each do |host|
-          domain = host.domain.to_s.downcase
-          next if domain.blank? || domains.key?(domain)
-          # Filter by host platform or is proxy is active
+        includes = [:operating_system, :hardware] if options[:platform]
+        Host.all_unique_downcased_domains(includes).each do |host|
+          # Filter by host platform
+          # FIXME:  Does this even make sense?  The domain could be applied to
+          # hosts with multiple different opperating systems, right?  And only
+          # the first one pulled in will be what is filtered?
           next unless options[:platform].nil? || options[:platform].include?(host.platform)
-          next unless options[:active_proxy].nil? || host.is_proxy_active? == options[:active_proxy]
-          domains[domain] = domain
+
+          domains[host.attributes["domain"]] = host.attributes["domain"]
         end
       else
         @values[:forced_sysprep_domain_name].to_miq_a.each { |d| domains[d] = d }
