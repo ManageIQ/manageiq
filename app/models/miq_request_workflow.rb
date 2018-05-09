@@ -1041,7 +1041,7 @@ class MiqRequestWorkflow
     return [] if hosts_ids.blank?
 
     # Remove any hosts that are no longer in the list
-    all_hosts = load_ar_obj(src[:ems]).hosts.find_all { |h| hosts_ids.include?(h.id) }
+    all_hosts = load_ar_obj(src[:ems]).hosts.where(:id => hosts_ids)
     allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
     _log.info("allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds")
     rails_logger('allowed_hosts_obj', 1)
