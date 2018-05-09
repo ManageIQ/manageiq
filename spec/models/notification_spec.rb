@@ -4,6 +4,23 @@ describe Notification, :type => :model do
   let(:tenant) { FactoryGirl.create(:tenant) }
   let!(:user) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
 
+  describe '.of_type' do
+    it "only returns notification of the given type" do
+      types = NotificationType.all
+      type_name_one   = types[0].name
+      type_name_two   = types[1].name
+      type_name_three = types[2].name
+
+      Notification.create(:type => type_name_one, :initiator => user)
+      Notification.create(:type => type_name_one, :initiator => user)
+      Notification.create(:type => type_name_two, :initiator => user)
+
+      expect(Notification.of_type(type_name_one).count).to eq(2)
+      expect(Notification.of_type(type_name_two).count).to eq(1)
+      expect(Notification.of_type(type_name_three).count).to eq(0)
+    end
+  end
+
   describe '.emit' do
     context 'successful' do
       let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
