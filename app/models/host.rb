@@ -194,6 +194,17 @@ class Host < ApplicationRecord
     where(:failover => true)
   end
 
+  def self.all_unique_downcased_domains(includes = nil)
+    select_rows = select("lower(regexp_replace(split_part(hostname, ',', 1), '[^\.]*\.', '')) as domain")
+                    .select(:id).to_sql
+                    .sub!("SELECT", "DISTINCT ON (domain)")
+                    .sub!(/ FROM.*$/, '')
+
+    query = select(select_rows).where.not(:hostname => nil)
+    query = query.includes(includes) if includes
+    query
+  end
+
   def authentication_check_role
     'smartstate'
   end
