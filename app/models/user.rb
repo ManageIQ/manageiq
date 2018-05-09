@@ -32,7 +32,7 @@ class User < ApplicationRecord
 
   delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
              :to => :current_group, :allow_nil => true
-  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?, :disallowed_roles,
+  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?,
              :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid
@@ -50,8 +50,8 @@ class User < ApplicationRecord
 
   scope :with_same_userid, ->(id) { where(:userid => User.find(id).userid) }
 
-  def self.with_allowed_roles_for(user_or_group)
-    includes(:miq_groups => :miq_user_role).where.not(:miq_user_roles => {:name => user_or_group.disallowed_roles})
+  def self.with_roles_excluding(disallowed_roles)
+    includes(:miq_groups => :miq_user_role).where.not(:miq_user_roles => {:name => disallowed_roles})
   end
 
   def self.scope_by_tenant?

@@ -76,13 +76,6 @@ module Rbac
       VmOrTemplate
     ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
-    # key: MiqUserRole#name - user's role
-    # value:
-    #   array - disallowed roles for the user's role
-    DISALLOWED_ROLES_FOR_USER_ROLE = {
-      'EvmRole-tenant_administrator' => %w(EvmRole-super_administrator EvmRole-administrator)
-    }.freeze
-
     # key: descendant::klass
     # value:
     #   if it is a symbol/method_name:
@@ -164,7 +157,7 @@ module Rbac
     # @option options :where_clause  []
     # @option options :sub_filter
     # @option options :include_for_find [Array<Symbol>]
-    # @option options :filter
+    # @option options :filter       [MiqExpression] (optional)
 
     # @option options :user         [User]     (default: current_user)
     # @option options :userid       [String]   User#userid (not user_id)
@@ -521,8 +514,8 @@ module Rbac
       if user_or_group.try!(:self_service?) && MiqUserRole != klass
         scope.where(:id => klass == User ? user.id : miq_group.id)
       else
-        if user_or_group.disallowed_roles
-          scope = scope.with_allowed_roles_for(user_or_group)
+        if user_or_group.miq_user_role_name == 'EvmRole-tenant_administrator'
+          scope = scope.with_roles_excluding(%w(EvmRole-super_administrator EvmRole-administrator))
         end
 
         if MiqUserRole != klass

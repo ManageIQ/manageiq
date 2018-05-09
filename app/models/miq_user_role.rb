@@ -64,12 +64,8 @@ class MiqUserRole < ApplicationRecord
     (settings || {}).fetch_path(:restrictions, :vms) == :user
   end
 
-  def disallowed_roles
-    !super_admin_user? && Rbac::Filterer::DISALLOWED_ROLES_FOR_USER_ROLE[name]
-  end
-
-  def self.with_allowed_roles_for(user_or_group)
-    where.not(:name => user_or_group.disallowed_roles)
+  def self.with_roles_excluding(disallowed_roles)
+    where.not(:name => disallowed_roles)
   end
 
   def self.seed
