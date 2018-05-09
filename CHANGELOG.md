@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 85 ending 2018-05-07
+
+### Added
+- Add a memcached bind address for tower [(#17366)](https://github.com/ManageIQ/manageiq/pull/17366)
+- Add support for reconfigure cdroms [(#17365)](https://github.com/ManageIQ/manageiq/pull/17365)
+- Enhance persister serialization [(#17361)](https://github.com/ManageIQ/manageiq/pull/17361)
+- Removing confirm_password field from change_password routine [(#17345)](https://github.com/ManageIQ/manageiq/pull/17345)
+- Add logging and update upgrade_message for successful registration [(#17340)](https://github.com/ManageIQ/manageiq/pull/17340)
+- Add reporting session threshold options in settings [(#17334)](https://github.com/ManageIQ/manageiq/pull/17334)
+- Add methods to extract v2v log from conversion host. [(#17333)](https://github.com/ManageIQ/manageiq/pull/17333)
+- GuestDevice model updates for support of storage devices [(#17332)](https://github.com/ManageIQ/manageiq/pull/17332)
+- Add call for bundled service children retirement [(#17317)](https://github.com/ManageIQ/manageiq/pull/17317)
+- Add support for exporting an importing service dialogs [(#17241)](https://github.com/ManageIQ/manageiq/pull/17241)
+- Adding roles filters and configurations for Physical Switches support [(#17216)](https://github.com/ManageIQ/manageiq/pull/17216)
+- Add TransformationMapping#validate_vms method [(#17177)](https://github.com/ManageIQ/manageiq/pull/17177)
+
+### Fixed
+- Delete dequeued shutdown_and_exit messages from MiqQueue on server start [(#17370)](https://github.com/ManageIQ/manageiq/pull/17370)
+- Change dialog import to only use auto_refresh if new triggers are blank [(#17363)](https://github.com/ManageIQ/manageiq/pull/17363)
+- Clean up queued items on Zone#destroy [(#17374)](https://github.com/ManageIQ/manageiq/pull/17374)
+- Memoize_log.prefix calls [(#17355)](https://github.com/ManageIQ/manageiq/pull/17355)
+- Add Openstack Cinder EventCatcher worker [(#17351)](https://github.com/ManageIQ/manageiq/pull/17351)
+- Add an entry for guest device to en.yml [(#17350)](https://github.com/ManageIQ/manageiq/pull/17350)
+- Do not change current_group for super admin user when executing Rbac#lookup_user_group [(#17347)](https://github.com/ManageIQ/manageiq/pull/17347)
+- Fix the issue of defined analyisis profile missed in vm scanning. [(#17331)](https://github.com/ManageIQ/manageiq/pull/17331)
+- Dialog field loading/refresh refactor to fix automate delays [(#17329)](https://github.com/ManageIQ/manageiq/pull/17329)
+- Renamed method to delete cloud object store for consistency reasons [(#17143)](https://github.com/ManageIQ/manageiq/pull/17143)
+
 ## Unreleased as of Sprint 84 ending 2018-04-23
 
 ### Added
