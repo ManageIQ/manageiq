@@ -164,7 +164,7 @@ module Rbac
     # @option options :where_clause  []
     # @option options :sub_filter
     # @option options :include_for_find [Array<Symbol>]
-    # @option options :filter
+    # @option options :filter       [MiqExpression] (optional)
 
     # @option options :user         [User]     (default: current_user)
     # @option options :userid       [String]   User#userid (not user_id)
@@ -513,8 +513,10 @@ module Rbac
       if user_or_group.try!(:self_service?) && MiqUserRole != klass
         scope.where(:id => klass == User ? user.id : miq_group.id)
       else
-        if user_or_group.disallowed_roles
-          scope = scope.with_allowed_roles_for(user_or_group)
+        if user_or_group&.miq_user_role &&
+           !user_or_group.miq_user_role.super_admin_user? &&
+           (disallowed_roles = DISALLOWED_ROLES_FOR_USER_ROLE[user_or_group.miq_user_role_name])
+          scope = scope.with_roles_excluding(disallowed_roles)
         end
 
         if MiqUserRole != klass
