@@ -17,6 +17,8 @@ describe ManagerRefresh::InventoryCollection::Builder do
 
   let(:cloud) { ::ManagerRefresh::InventoryCollection::Builder::CloudManager }
 
+  let(:network) { ::ManagerRefresh::InventoryCollection::Builder::NetworkManager }
+
   let(:persister_class) { ::ManagerRefresh::Inventory::Persister }
 
   # --- association ---
@@ -145,9 +147,11 @@ describe ManagerRefresh::InventoryCollection::Builder do
     data = cloud.prepare_data(:tmp, persister_class) do |builder|
       builder.add_builder_params(:ems_id => 10)
       builder.add_builder_params(:ems_id => 20)
+      builder.add_builder_params(:tmp_id => 30)
     end.to_hash
 
     expect(data[:builder_params][:ems_id]).to eq 20
+    expect(data[:builder_params][:tmp_id]).to eq 30
   end
 
   it 'transforms lambdas in builder_params' do
@@ -199,5 +203,56 @@ describe ManagerRefresh::InventoryCollection::Builder do
     end.to_hash
 
     expect(data[:inventory_object_attributes]).to be_empty
+  end
+
+  # --- parent ---
+
+  it 'assigns parent to ems automatically if not set' do
+    builder = cloud.prepare_data(:tmp, persister_class)
+    builder.add_parent_if_missing(@ems)
+    data = builder.to_hash
+
+    expect(data[:parent].id).to eq(@ems.id)
+  end
+
+  it 'does not auto-assign parent if set' do
+    builder = cloud.prepare_data(:tmp, persister_class) do |bld|
+      bld.add_properties(:parent => 'some_parent')
+    end
+    builder.add_parent_if_missing(@ems)
+    data = builder.to_hash
+
+    expect(data[:parent]).to eq('some_parent')
+  end
+
+  it 'does not auto-assign parent if switched off' do
+    builder = cloud.prepare_data(:tmp, persister_class, :auto_missing_parent => false)
+    builder.add_parent_if_missing(@ems)
+
+    data = builder.to_hash
+
+    expect(data[:parent]).to be_nil
+  end
+
+  context 'creating network inv. collections' do
+    it "assigns EMS's network manager as parent when targeted refresh" do
+      builder = network.prepare_data(:tmp, persister_class)
+      builder.add_parent_if_missing(@ems, true)
+      data = builder.to_hash
+
+      expect(data[:parent].id).to eq(@ems.network_manager.id)
+    end
+
+    it "assigns EMS instead of its network manager as parent if EMS does not respond to network_manager" do
+      ems_network = FactoryGirl.create(:ems_nuage_network,
+                                       :zone => @zone)
+      expect(ems_network.respond_to?(:network_manager)).to be_falsy
+
+      builder = network.prepare_data(:tmp, persister_class)
+      builder.add_parent_if_missing(ems_network)
+      data = builder.to_hash
+
+      expect(data[:parent].id).to eq(ems_network.id)
+    end
   end
 end

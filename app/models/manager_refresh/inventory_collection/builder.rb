@@ -12,23 +12,33 @@ module ManagerRefresh
       include ::ManagerRefresh::InventoryCollection::Builder::Shared
 
       # Default options for builder
-      #   :auto_object_attributes
-      #     - auto creates inventory_object_attributes from target model_class setters
-      #     - attributes used in InventoryObject.add_attributes
+      #   :adv_settings
+      #     - values from Advanced settings (doesn't overwrite values specified in code)
+      #     - @see method ManagerRefresh::Inventory::Persister.options()
+      #   :adv_settings_enabled
+      #     - enable/disable this properties
+      #   :auto_missing_parent
+      #     - auto assigns parent if this property is missing
+      #     - @see method add_parent_if_missing()
       #   :auto_model_class
       #     - tries to set model_class from persister class
       #     - @see method auto_model_class
+      #   :auto_object_attributes
+      #     - auto creates inventory_object_attributes from target model_class setters
+      #     - attributes used in InventoryObject.add_attributes
+      #   :shared_properties
+      #     - any properties applied if missing (not explicitly specified)
       #   :without_model_class
       #     - if false and no model_class derived or specified, throws exception
-      #   :adv_settings_enabled
-      #     - values from Advanced settings (doesn't overwrite values specified in code)
-      #     - see persister options() method
       def self.default_options
         {
-          :auto_object_attributes => true,
+          :adv_settings           => {},
+          :adv_settings_enabled   => true,
+          :auto_missing_parent    => true,
           :auto_model_class       => true,
+          :auto_object_attributes => true,
+          :shared_properties      => {},
           :without_model_class    => false,
-          :adv_settings_enabled   => true
         }
       end
 
@@ -156,7 +166,10 @@ module ManagerRefresh
       end
 
       # Adds parent to InventoryCollection if not set before
-      def add_parent_if_missing(manager, targeted)
+      # Can be disabled by :auto_missing_parent => false
+      def add_parent_if_missing(manager, targeted = false)
+        return unless @options[:auto_missing_parent]
+
         if manager.present?
           if targeted && network_manager_collections? && manager.respond_to?(:network_manager)
             add_properties({:parent => manager.network_manager}, :if_missing)
