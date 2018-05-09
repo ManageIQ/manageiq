@@ -116,21 +116,40 @@ describe DialogFieldSerializer do
       let(:dynamic) { false }
       let(:category) { double("Category", :name => "best category ever", :description => "best category ever") }
 
-      before do
-        allow(Category).to receive(:find_by).with(:id => "123").and_return(category)
-        allow(dialog_field).to receive(:values).and_return("values")
+      context "with category" do
+        before do
+          allow(Category).to receive(:find_by).with(:id => "123").and_return(category)
+          allow(dialog_field).to receive(:values).and_return("values")
+        end
+
+        it "serializes the category name and description" do
+          expect(dialog_field_serializer.serialize(dialog_field))
+            .to eq(expected_serialized_values.merge(
+                     "resource_action" => "serialized resource action",
+                     "options"         => {
+                       :category_id          => "123",
+                       :category_name        => "best category ever",
+                       :category_description => "best category ever"
+                     }
+            ))
+        end
       end
 
-      it "serializes the category name and description" do
-        expect(dialog_field_serializer.serialize(dialog_field))
-          .to eq(expected_serialized_values.merge(
-                   "resource_action" => "serialized resource action",
-                   "options"         => {
-                     :category_id          => "123",
-                     :category_name        => "best category ever",
-                     :category_description => "best category ever"
-                   }
-          ))
+      context "without category" do
+        before do
+          allow(Category).to receive(:find_by).with(:id => "123").and_return(nil)
+          allow(dialog_field).to receive(:values).and_return("values")
+        end
+
+        it "serializes the category name" do
+          expect(dialog_field_serializer.serialize(dialog_field))
+            .to eq(expected_serialized_values.merge(
+                     "resource_action" => "serialized resource action",
+                     "options"         => {
+                       :category_id => "123",
+                     }
+            ))
+        end
       end
     end
   end
