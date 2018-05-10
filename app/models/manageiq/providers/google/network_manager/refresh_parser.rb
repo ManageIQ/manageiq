@@ -406,7 +406,7 @@ module ManageIQ::Providers
             :healthy_threshold                  => health_check.healthy_threshold,
             :load_balancer                      => load_balancer,
             :load_balancer_listener             => load_balancer_listener,
-            :load_balancer_health_check_members => parse_load_balancer_health_check_members(target_pool)
+            :load_balancer_health_check_members => parse_load_balancer_health_check_members(target_pool) || []
           }
           [uid, new_result]
         end
@@ -574,10 +574,12 @@ module ManageIQ::Providers
       def parse_network_port(network_port)
         uid                        = network_port[:network_ip]
         cloud_subnet_network_ports = [
-          parse_cloud_subnet_network_port(network_port, subnets_by_link(network_port).try(:id))]
+          parse_cloud_subnet_network_port(network_port, subnets_by_link(network_port).try(:[], :id))
+        ]
         device                     = parent_manager_fetch_path(:vms, network_port[:device_id])
         security_groups            = [
-          @data_index.fetch_path(:security_groups, parse_uid_from_url(network_port[:network]))]
+          @data_index.fetch_path(:security_groups, parse_uid_from_url(network_port[:network]))
+        ]
 
         new_result = {
           :type                       => self.class.network_port_type,

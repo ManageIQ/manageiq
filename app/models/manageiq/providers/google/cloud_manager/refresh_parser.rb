@@ -131,7 +131,7 @@ module ManageIQ::Providers
         zone_id = parse_uid_from_url(volume.zone)
 
         new_result = {
-          :ems_ref           => volume.id,
+          :ems_ref           => volume.id.to_s,
           :name              => volume.name,
           :status            => volume.status,
           :creation_time     => volume.creation_timestamp,
@@ -152,7 +152,7 @@ module ManageIQ::Providers
 
       def parse_snapshot(snapshot)
         new_result = {
-          :ems_ref       => snapshot.id,
+          :ems_ref       => snapshot.id.to_s,
           :type          => "ManageIQ::Providers::Google::CloudManager::CloudVolumeSnapshot",
           :name          => snapshot.name,
           :status        => snapshot.status,
@@ -166,7 +166,7 @@ module ManageIQ::Providers
       end
 
       def parse_storage_as_template(storage)
-        uid    = storage.id
+        uid    = storage.id.to_s
         name   = storage.name
         name ||= uid
         type   = ManageIQ::Providers::Google::CloudManager::Template.name
@@ -211,7 +211,7 @@ module ManageIQ::Providers
       end
 
       def parse_instance(instance)
-        uid    = instance.id
+        uid    = instance.id.to_s
         name   = instance.name
         name ||= uid
 
