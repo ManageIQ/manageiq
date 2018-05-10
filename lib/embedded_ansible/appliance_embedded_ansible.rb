@@ -72,12 +72,7 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   end
 
   def create_local_playbook_repo
-    FileUtils.rm_rf(playbook_repo_path)
-    FileUtils.mkdir_p(playbook_repo_path)
-
-    Vmdb::Plugins.instance.registered_ansible_content.each do |content|
-      FileUtils.cp_r(Dir.glob("#{content.path}/*"), playbook_repo_path)
-    end
+    self.class.consolidate_plugin_playbooks(playbook_repo_path)
 
     Dir.chdir(playbook_repo_path) do
       require 'rugged'
