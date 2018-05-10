@@ -98,7 +98,7 @@ module ManagerRefresh
             hash_to_lazy_relation(value, available_inventory_collections, depth)
           elsif value.kind_of?(Array) && value.first.kind_of?(Hash) && value.first['type'] == "ManagerRefresh::InventoryObjectLazy"
             # TODO(lsmola) do we need to compact it sooner? What if first element is nil? On the other hand, we want to
-            # deprecate Vmthis HABTM assignment because it's not effective
+            # deprecate this Vm HABTM assignment because it's not effective
             value.compact.map { |x| hash_to_lazy_relation(x, available_inventory_collections, depth) }
           else
             value
