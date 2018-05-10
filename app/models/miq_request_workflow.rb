@@ -835,7 +835,8 @@ class MiqRequestWorkflow
   def find_classes_under_ci(item, klass)
     results = []
     return results if item.nil?
-    node = load_ems_node(item, _log.prefix)
+    @_find_classes_under_ci_prefix ||= _log.prefix
+    node = load_ems_node(item, @_find_classes_under_ci_prefix)
     each_ems_metadata(node.attributes[:object], klass) { |ci| results << ci } unless node.nil?
     results
   end
@@ -865,7 +866,8 @@ class MiqRequestWorkflow
     end
 
     # Process child folders
-    node = load_ems_node(folder, _log.prefix)
+    @_get_ems_folders_prefix ||= _log.prefix
+    node = load_ems_node(folder, @_get_ems_folders_prefix)
     node.children.each { |child| get_ems_folders(child.attributes[:object], dh, full_path) } unless node.nil?
 
     dh
@@ -905,7 +907,8 @@ class MiqRequestWorkflow
 
   def find_class_above_ci(item, klass, _ems_src = nil, datacenter = false)
     result = nil
-    node = load_ems_node(item, _log.prefix)
+    @_find_class_above_ci_prefix ||= _log.prefix
+    node = load_ems_node(item, @_find_class_above_ci_prefix)
     klass_name = klass.name.to_sym
     # Walk the xml document parents to find the requested class
     while node.kind_of?(XmlHash::Element)
@@ -926,7 +929,8 @@ class MiqRequestWorkflow
       ems_xml = get_ems_metadata_tree(src)
       ems_node = ems_xml.try(:root)
     else
-      ems_node = load_ems_node(ems_ci, _log.prefix)
+      @_each_ems_metadata_prefix ||= _log.prefix
+      ems_node = load_ems_node(ems_ci, @_each_ems_metadata_prefix)
     end
     klass_name = klass.name.to_sym unless klass.nil?
     unless ems_node.nil?
@@ -1030,7 +1034,8 @@ class MiqRequestWorkflow
     hosts_ids = find_all_ems_of_type(Host).collect(&:id)
     hosts_ids &= load_ar_obj(src[:storage]).hosts.collect(&:id) unless src[:storage].nil?
     if datacenter
-      dc_node = load_ems_node(datacenter, _log.prefix)
+      @_allowed_hosts_obj_prefix ||= _log.prefix
+      dc_node = load_ems_node(datacenter, @_allowed_hosts_obj_prefix)
       hosts_ids &= find_hosts_under_ci(dc_node.attributes[:object]).collect(&:id)
     end
     return [] if hosts_ids.blank?

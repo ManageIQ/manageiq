@@ -2,10 +2,12 @@ describe Dialog::OrchestrationTemplateServiceDialog do
   let(:orchestration_template) do
     FactoryGirl.create(:orchestration_template).tap do |template|
       allow(template).to receive(:parameter_groups).and_return(param_groups)
+      allow(template).to receive(:tabs).and_return(tabs) if tabs.count > 0
     end
   end
   let(:param_groups) { create_parameters(param_options) }
-  let(:dialog) { described_class.create_dialog("test", orchestration_template) }
+  let(:dialog)       { described_class.create_dialog("test", orchestration_template) }
+  let(:tabs)         { [] }
 
   describe ".create_dialog" do
     let(:param_groups) { [] }
@@ -17,7 +19,160 @@ describe Dialog::OrchestrationTemplateServiceDialog do
       )
 
       tabs = dialog.dialog_tabs
-      assert_tab_attributes(tabs[0])
+      assert_tab_attributes(tabs[0], :label => "Basic Information", :display => "edit")
+    end
+
+    context "with custom tabs" do
+      let(:dialog_tabs) { dialog.dialog_tabs }
+      let(:first_tab)   { dialog_tabs.first }
+      let(:first_group) { first_tab.dialog_groups.first }
+      let(:second_tab)  { dialog_tabs.second }
+
+      describe 'tab with stack group' do
+        let(:tabs) do
+          [
+            {
+              :title       => 'Tab 1',
+              :stack_group => [
+                template_param(:label => 'Param 1'),
+                template_param(:label => 'Param 2')
+              ]
+            }
+          ]
+        end
+
+        it do
+          expect(dialog_tabs.size).to eq(1)
+          assert_tab_attributes(first_tab, :label => 'Tab 1', :display => 'edit')
+          assert_group(first_group, 'Options', ['Param 1', 'Param 2'])
+        end
+      end
+
+      describe 'tab with param group' do
+        let(:tabs) do
+          [
+            {
+              :title        => 'Tab 1',
+              :param_groups => [
+                OrchestrationTemplate::OrchestrationParameterGroup.new(
+                  :label      => 'Parameter Group 1',
+                  :parameters => [
+                    template_param(:label => 'Param 1'),
+                    template_param(:label => 'Param 2')
+                  ],
+                )
+              ]
+            },
+          ]
+        end
+
+        it do
+          expect(dialog_tabs.size).to eq(1)
+          assert_tab_attributes(first_tab, :label => 'Tab 1', :display => 'edit')
+          assert_group(first_group, 'Parameter Group 1', ['Param 1', 'Param 2'])
+        end
+      end
+
+      describe 'tab with two param groups' do
+        let(:tabs) do
+          [
+            {
+              :title        => 'Tab 1',
+              :param_groups => [
+                OrchestrationTemplate::OrchestrationParameterGroup.new(
+                  :label      => 'Parameter Group 1',
+                  :parameters => [
+                    template_param(:label => 'Param 1'),
+                    template_param(:label => 'Param 2')
+                  ],
+                ),
+                OrchestrationTemplate::OrchestrationParameterGroup.new(
+                  :label      => 'Parameter Group 2',
+                  :parameters => [
+                    template_param(:label => 'Param 3'),
+                    template_param(:label => 'Param 4')
+                  ],
+                )
+              ]
+            },
+          ]
+        end
+
+        it do
+          expect(dialog_tabs.size).to eq(1)
+          assert_group(first_group, 'Parameter Group 1', ['Param 1', 'Param 2'])
+          assert_group(first_tab.dialog_groups[1], 'Parameter Group 2', ['Param 3', 'Param 4'])
+        end
+      end
+
+      describe 'tab with stack group and param group' do
+        let(:tabs) do
+          [
+            {
+              :title        => 'Tab 1',
+              :stack_group  => [
+                template_param(:label => 'Param 1'),
+                template_param(:label => 'Param 2')
+              ],
+              :param_groups => [
+                OrchestrationTemplate::OrchestrationParameterGroup.new(
+                  :label      => 'Parameter Group 1',
+                  :parameters => [
+                    template_param(:label => 'Param 3'),
+                    template_param(:label => 'Param 4')
+                  ],
+                )
+              ]
+            },
+          ]
+        end
+
+        it do
+          expect(dialog_tabs.size).to eq(1)
+          assert_tab_attributes(first_tab, :label => 'Tab 1', :display => 'edit')
+          assert_group(first_group, 'Options', ['Param 1', 'Param 2'])
+          assert_group(first_tab.dialog_groups[1], 'Parameter Group 1', ['Param 3', 'Param 4'])
+        end
+      end
+
+      describe 'two tabs' do
+        let(:tabs) do
+          [
+            {
+              :title        => 'Tab 1',
+              :param_groups => [
+                OrchestrationTemplate::OrchestrationParameterGroup.new(
+                  :label      => 'Parameter Group 1',
+                  :parameters => [
+                    template_param(:label => 'Param 1'),
+                    template_param(:label => 'Param 2')
+                  ],
+                )
+              ]
+            },
+            {
+              :title        => 'Tab 2',
+              :param_groups => [
+                OrchestrationTemplate::OrchestrationParameterGroup.new(
+                  :label      => 'Parameter Group 2',
+                  :parameters => [
+                    template_param(:label => 'Param 3'),
+                    template_param(:label => 'Param 4')
+                  ],
+                )
+              ]
+            },
+          ]
+        end
+
+        it do
+          expect(dialog_tabs.size).to eq(2)
+          assert_tab_attributes(first_tab, :label => 'Tab 1', :display => 'edit')
+          assert_group(first_group, 'Parameter Group 1', ['Param 1', 'Param 2'])
+          assert_tab_attributes(second_tab, :label => 'Tab 2', :display => 'edit')
+          assert_group(second_tab.dialog_groups.first, 'Parameter Group 2', ['Param 3', 'Param 4'])
+        end
+      end
     end
   end
 
@@ -99,7 +254,7 @@ describe Dialog::OrchestrationTemplateServiceDialog do
   end
 
   def assert_stack_tab(tab)
-    assert_tab_attributes(tab)
+    assert_tab_attributes(tab, :label => "Basic Information", :display => "edit")
 
     groups = tab.dialog_groups
     expect(groups.size).to eq(3)
@@ -107,11 +262,8 @@ describe Dialog::OrchestrationTemplateServiceDialog do
     assert_stack_group(groups[0])
   end
 
-  def assert_tab_attributes(tab)
-    expect(tab).to have_attributes(
-      :label   => "Basic Information",
-      :display => "edit"
-    )
+  def assert_tab_attributes(tab, attributes)
+    expect(tab).to have_attributes(attributes)
   end
 
   def assert_stack_group(group)
@@ -124,13 +276,18 @@ describe Dialog::OrchestrationTemplateServiceDialog do
     expect(fields.size).to eq(4)
 
     expect(fields[0].resource_action.fqname).to eq("/Cloud/Orchestration/Operations/Methods/Available_Tenants")
-    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name", :dynamic => true, :reconfigurable => false)
+    assert_field(fields[0], DialogFieldDropDownList, :name => "tenant_name", :dynamic => true, :reconfigurable => nil)
     assert_field(fields[1], DialogFieldTextBox,      :name => "stack_name",  :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$', :reconfigurable => false)
   end
 
   def assert_field(field, clss, attributes)
     expect(field).to be_kind_of clss
     expect(field).to have_attributes(attributes)
+  end
+
+  def assert_group(group, group_label, names)
+    expect(group.label).to eq(group_label)
+    expect(group.dialog_fields.map(&:label)).to eq(names)
   end
 
   def test_field(dialog)
@@ -147,5 +304,11 @@ describe Dialog::OrchestrationTemplateServiceDialog do
   def create_parameters(options)
     options.reverse_merge!(:name => 'user', :label => 'User Parameter', :data_type => 'string', :required => true)
     [OrchestrationTemplate::OrchestrationParameterGroup.new(:label => 'group', :parameters => [OrchestrationTemplate::OrchestrationParameter.new(options)])]
+  end
+
+  def template_param(options)
+    options[:name]      ||= SecureRandom.hex
+    options[:data_type] ||= 'string'
+    OrchestrationTemplate::OrchestrationParameter.new(options)
   end
 end

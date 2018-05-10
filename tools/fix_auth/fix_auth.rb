@@ -22,7 +22,7 @@ module FixAuth
 
     def db_attributes(database)
       options.slice(:adapter, :encoding, :username, :password)
-        .merge(:host => options[:hostname], :database => database).delete_if { |_k, v| v.blank? }
+             .merge(:host => options[:hostname], :port => options[:port], :database => database).delete_if { |_k, v| v.blank? }
     end
 
     def run_options

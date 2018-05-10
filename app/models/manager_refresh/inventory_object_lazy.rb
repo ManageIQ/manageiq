@@ -37,17 +37,6 @@ module ManagerRefresh
       "InventoryObjectLazy:('#{self}', #{inventory_collection}#{suffix})"
     end
 
-    # @return [Hash] serialized InventoryObjectLazy
-    def to_raw_lazy_relation
-      {
-        :type                      => "ManagerRefresh::InventoryObjectLazy",
-        :inventory_collection_name => inventory_collection.name,
-        :reference                 => reference.to_hash,
-        :key                       => key,
-        :default                   => default,
-      }
-    end
-
     # @return [ManagerRefresh::InventoryObject, Object] ManagerRefresh::InventoryObject instance or an attribute
     #         on key
     def load

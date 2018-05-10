@@ -97,7 +97,12 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
       :role_name   => ServerRole.find_by(:name => worker.class.required_roles.first).description,
       :server_name => MiqServer.my_server.name
     }
-    Notification.create(:type => notification_type, :options => notification_options)
+
+    # Create the notification only if there are no existing ones for embedded ansible which are unseen
+    Notification.create(:type => notification_type, :options => notification_options) if Notification.of_type(notification_type).none? do |n|
+      correct_notification = n.options == notification_options
+      correct_notification && !n.seen_by_all_recipients?
+    end
   end
 
   def embedded_ansible

@@ -81,7 +81,6 @@ class ContainerNode < ApplicationRecord
   end
 
   def cockpit_url
-    URI::HTTP.build(:host => kubernetes_hostname, :port => 9090)
     address = kubernetes_hostname || name
     MiqCockpit::WS.url(cockpit_server, cockpit_worker, address)
   end

@@ -4,6 +4,23 @@ describe Notification, :type => :model do
   let(:tenant) { FactoryGirl.create(:tenant) }
   let!(:user) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
 
+  describe '.of_type' do
+    it "only returns notification of the given type" do
+      types = NotificationType.all
+      type_name_one   = types[0].name
+      type_name_two   = types[1].name
+      type_name_three = types[2].name
+
+      Notification.create(:type => type_name_one, :initiator => user)
+      Notification.create(:type => type_name_one, :initiator => user)
+      Notification.create(:type => type_name_two, :initiator => user)
+
+      expect(Notification.of_type(type_name_one).count).to eq(2)
+      expect(Notification.of_type(type_name_two).count).to eq(1)
+      expect(Notification.of_type(type_name_three).count).to eq(0)
+    end
+  end
+
   describe '.emit' do
     context 'successful' do
       let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
@@ -94,6 +111,24 @@ describe Notification, :type => :model do
                                         :extra     => a_hash_including(:text => 'information')
                                        )
       )
+    end
+  end
+
+  describe "#seen_by_all_recipients?" do
+    let(:notification) { FactoryGirl.create(:notification, :initiator => user) }
+
+    it "is false if a user has not seen the notification" do
+      expect(notification.seen_by_all_recipients?).to be_falsey
+    end
+
+    it "is true when all recipients have seen the notification" do
+      notification.notification_recipients.each { |r| r.update_attributes(:seen => true) }
+      expect(notification.seen_by_all_recipients?).to be_truthy
+    end
+
+    it "is true when there are no recipients" do
+      notification.notification_recipients.destroy_all
+      expect(notification.seen_by_all_recipients?).to be_truthy
     end
   end
 end
