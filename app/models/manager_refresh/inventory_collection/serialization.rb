@@ -115,12 +115,10 @@ module ManagerRefresh
         raise "Nested lazy_relation of #{inventory_collection} is too deep, left processing: #{data}" if depth > 20
 
         data.transform_values do |value|
-          if inventory_object_lazy?(value)
+          if inventory_object_lazy?(value) || inventory_object?(value)
             lazy_relation_to_hash(value, depth)
           elsif value.kind_of?(Array) && (inventory_object_lazy?(value.compact.first) || inventory_object?(value.compact.first))
             value.compact.map { |x| lazy_relation_to_hash(x, depth) }
-          elsif inventory_object?(value)
-            lazy_relation_to_hash(value, depth)
           else
             value
           end
