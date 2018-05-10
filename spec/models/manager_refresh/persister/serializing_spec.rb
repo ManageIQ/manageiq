@@ -32,11 +32,13 @@ describe ManagerRefresh::Inventory::Persister do
       :hardware       => 3,
       :miq_template   => 1,
       :network        => 2,
-      :vm             => 2,
-      :vm_or_template => 3
+      :vm             => 4,
+      :vm_or_template => 5
     }
+    # 1 Vm will be disconnected
+    ems_counts = counts.dup.merge(:vm => 4, :vm_or_template => 4)
 
-    assert_counts(counts)
+    assert_counts(counts, ems_counts)
 
     vm = Vm.find_by(:ems_ref => "vm_ems_ref_1")
     expect(vm.location).to eq("host_10_10_10_1.com")
@@ -56,9 +58,16 @@ describe ManagerRefresh::Inventory::Persister do
     # we try to evaluate the lazy object. We should be able to do that.
     expect(vm.hardware.model).to eq(nil)
     expect(vm.hardware.manufacturer).to eq(nil)
+
+    expect(Vm.find_by(:ems_ref => "vm_ems_ref_20").ems_id).to be_nil
+    expect(Vm.find_by(:ems_ref => "vm_ems_ref_21").ems_id).not_to be_nil
   end
 
   def populate_test_data(persister)
+    # Add some data into the DB
+    FactoryGirl.create(:vm, vm_data(20))
+    FactoryGirl.create(:vm, vm_data(21))
+
     @image_data_1          = image_data(1)
     @image_hardware_data_1 = image_hardware_data(1).merge(
       :guest_os       => "linux_generic_1",
@@ -118,5 +127,8 @@ describe ManagerRefresh::Inventory::Persister do
     hardware = persister.hardwares.build(hardware_data(2).merge(:vm_or_template => vm))
     persister.networks.build(public_network_data(2).merge(:hardware => hardware))
     persister.disks.build(disk_data(2).merge(:hardware => hardware))
+
+    # Add some targeted_scope
+    persister.vms.targeted_scope << vm_data(20)[:ems_ref]
   end
 end
