@@ -57,8 +57,8 @@ module VMDB
     end
 
     # NOTE: Used by Configuration -> Advanced
-    def self.get_file
-      Vmdb::Settings.encrypt_passwords!(::Settings.to_hash).to_yaml
+    def self.get_file(resource = MiqServer.my_server)
+      Vmdb::Settings.encrypt_passwords!(resource.settings_for_resource.to_hash).to_yaml
     end
 
     # NOTE: Used by Configuration -> Advanced
