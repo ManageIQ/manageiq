@@ -1,8 +1,6 @@
 module EmbeddedAnsibleWorker::ObjectManagement
   extend ActiveSupport::Concern
 
-  CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR = Pathname.new("/var/lib/awx_consolidated_source").freeze
-
   def ensure_initial_objects(provider, connection)
     ensure_organization(provider, connection)
     ensure_credential(provider, connection)
@@ -58,11 +56,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
   end
 
   def ensure_plugin_playbooks_project_seeded(provider, connection)
-    clean_consolidated_plugin_directory
-    copy_plugin_ansible_content
-
-    commit_git_plugin_content
-    chown_playbooks_tempdir
+    EmbeddedAnsible.new.create_local_playbook_repo
 
     project = find_default_project(connection, provider.default_project)
     if project
@@ -77,40 +71,6 @@ module EmbeddedAnsibleWorker::ObjectManagement
   end
 
   private
-
-  def clean_consolidated_plugin_directory
-    FileUtils.rm_rf(self.class.consolidated_plugin_directory)
-  end
-
-  def copy_plugin_ansible_content
-    FileUtils.mkdir_p(self.class.consolidated_plugin_directory)
-
-    Vmdb::Plugins.instance.registered_ansible_content.each do |content|
-      FileUtils.cp_r(Dir.glob("#{content.path}/*"), self.class.consolidated_plugin_directory)
-    end
-  end
-
-  def chown_playbooks_tempdir
-    FileUtils.chown_R('awx', 'awx', self.class.consolidated_plugin_directory)
-  end
-
-  def commit_git_plugin_content
-    Dir.chdir(self.class.consolidated_plugin_directory) do
-      require 'rugged'
-      repo = Rugged::Repository.init_at(".")
-      index = repo.index
-      index.add_all("*")
-      index.write
-
-      options              = {}
-      options[:tree]       = index.write_tree(repo)
-      options[:author]     = options[:committer] = { :email => "system@localhost", :name => "System", :time => Time.now.utc }
-      options[:message]    = "Initial Commit"
-      options[:parents]    = []
-      options[:update_ref] = 'HEAD'
-      Rugged::Commit.create(repo, options)
-    end
-  end
 
   def find_default_project(connection, project_id)
     return unless project_id
@@ -129,7 +89,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
   class_methods do
     def consolidated_plugin_directory
-      CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR
+      EmbeddedAnsible.new.playbook_repo_path
     end
 
     def playbook_project_attributes

@@ -148,7 +148,7 @@ describe EmbeddedAnsibleWorker do
     end
 
     describe "#ensure_plugin_playbooks_project_seeded" do
-      let!(:tmp_dir) { Pathname.new(Dir.mktmpdir("consolidated_ansible_playbooks")) }
+      let(:tmp_dir) { "some/temp/directory" }
       let!(:expected_attributes) do
         {
           :name                 => "ManageIQ Default Project",
@@ -161,12 +161,8 @@ describe EmbeddedAnsibleWorker do
 
       before do
         provider.default_organization = 42
-        allow(EmbeddedAnsibleWorker).to receive(:consolidated_plugin_directory).and_return(tmp_dir)
-        allow(subject).to receive(:chown_playbooks_tempdir)
-      end
-
-      after do
-        FileUtils.rm_rf(tmp_dir)
+        ea = double("EmbeddedAnsible", :create_local_playbook_repo => "", :playbook_repo_path => tmp_dir)
+        allow(EmbeddedAnsible).to receive(:new).and_return(ea)
       end
 
       it "creates a git project as the provider's default project" do
@@ -175,7 +171,6 @@ describe EmbeddedAnsibleWorker do
           .and_return(double(:id => 1234))
 
         subject.ensure_plugin_playbooks_project_seeded(provider, api_connection)
-        expect(Dir.exist?(tmp_dir.join(".git"))).to be_truthy
         expect(provider.default_project).to eq(1234)
       end
 
