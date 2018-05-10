@@ -114,6 +114,10 @@ module ManagerRefresh
           all_refs[ref]
         end
 
+        def primary_index_ref
+          :manager_ref
+        end
+
         private
 
         delegate :association_to_foreign_key_mapping,
@@ -144,10 +148,6 @@ module ManagerRefresh
 
         def local_db_index_find(reference)
           local_db_index(reference.ref).find(reference)
-        end
-
-        def primary_index_ref
-          :manager_ref
         end
 
         def data_index(name)

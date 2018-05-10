@@ -174,7 +174,7 @@ class ManagerRefresh::Inventory::Persister
   # @return [Hash] entire Persister object serialized to hash
   def to_hash
     collections_data = collections.map do |_, collection|
-      next if collection.data.blank? && collection.targeted_scope.blank? && collection.all_manager_uuids.nil?
+      next if collection.data.blank? && collection.targeted_scope.primary_references.blank? && collection.all_manager_uuids.nil?
 
       collection.to_hash
     end.compact
