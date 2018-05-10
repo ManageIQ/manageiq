@@ -50,7 +50,15 @@ module FixAuth
       raise Errno::EEXIST, e.message
     end
 
+    def print_dry_run_warning
+      method = caller_locations.first.label
+      # Move this message up to `run` if the other methods add dry-run support
+      puts "** #{method} is executing in dry-run mode, and no actual changes will be made **" if options[:dry_run]
+    end
+
     def fix_database_passwords
+      print_dry_run_warning
+
       begin
         # in specs, this is already setup
         ActiveRecord::Base.connection_config
@@ -65,6 +73,7 @@ module FixAuth
     end
 
     def fix_database_yml
+      print_dry_run_warning
       FixDatabaseYml.file_name = "#{options[:root]}/config/database.yml"
       FixDatabaseYml.run({:hardcode => options[:password]}.merge(run_options))
     end
