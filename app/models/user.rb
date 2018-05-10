@@ -285,9 +285,9 @@ class User < ApplicationRecord
     Thread.current[:user] ||= find_by_userid(current_userid)
   end
 
-  def self.with_current_user_groups(user = nil)
-    user ||= current_user
-    user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => user.miq_group_ids})
+  # parallel to MiqGroup.with_groups - only show users with these groups
+  def self.with_groups(miq_group_ids)
+    includes(:miq_groups).where(:miq_groups => {:id => miq_group_ids})
   end
 
   def self.missing_user_features(db_user)

@@ -520,7 +520,8 @@ module Rbac
 
         if MiqUserRole != klass
           filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
-          scope = scope.with_current_user_groups(user)
+          # Non admins can only see their own groups
+          scope = scope.with_groups(user.miq_group_ids) unless user_or_group.miq_user_role&.admin_user?
         end
 
         scope_by_ids(scope, filtered_ids)

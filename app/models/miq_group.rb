@@ -247,9 +247,9 @@ class MiqGroup < ApplicationRecord
     in_my_region.non_tenant_groups
   end
 
-  def self.with_current_user_groups(user = nil)
-    current_user = user || User.current_user
-    current_user.admin_user? ? all : where(:id => current_user.miq_group_ids)
+  # parallel to User.with_groups - only show these groups
+  def self.with_groups(miq_group_ids)
+    where(:id => miq_group_ids)
   end
 
   def single_group_users?
