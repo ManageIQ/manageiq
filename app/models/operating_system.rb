@@ -12,7 +12,7 @@ class OperatingSystem < ApplicationRecord
 
   @@os_map = [
     ["windows_generic", %w(winnetenterprise w2k3 win2k3 server2003 winnetstandard servernt)],
-    ["windows_generic", %w(winxppro winxp xp)],
+    ["windows_generic", %w(winxppro winxp)],
     ["windows_generic", %w(vista longhorn)],
     ["windows_generic", %w(win2k win2000)],
     ["windows_generic", %w(microsoft windows winnt)],
