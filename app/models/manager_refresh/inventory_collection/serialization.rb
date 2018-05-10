@@ -24,12 +24,13 @@ module ManagerRefresh
       # @param available_inventory_collections [Array<ManagerRefresh::InventoryCollection>] List of available
       #        InventoryCollection objects
       def from_hash(inventory_objects_data, available_inventory_collections)
+        targeted_scope.merge!(inventory_objects_data["manager_uuids"])
+
         inventory_objects_data['data'].each do |inventory_object_data|
           build(hash_to_data(inventory_object_data, available_inventory_collections).symbolize_keys!)
         end
 
-        # TODO(lsmola) we need to remodel the targeted scope, to be able to serialize targeted InventoryCollections
-        # self.targeted_scope.merge!(inventory_objects_data['manager_uuids'] || [])
+        # TODO(lsmola) add support for all_manager_uuids serialization
         # self.all_manager_uuids = inventory_objects_data['all_manager_uuids']
       end
 
