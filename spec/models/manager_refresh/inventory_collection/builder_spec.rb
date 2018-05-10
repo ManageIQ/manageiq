@@ -174,7 +174,7 @@ describe ManagerRefresh::InventoryCollection::Builder do
   end
 
   it "doesn't derive inventory_object_attributes automatically when disabled" do
-    data = cloud.prepare_data(:vms, persister_class, :auto_object_attributes => false).to_hash
+    data = cloud.prepare_data(:vms, persister_class, :auto_inventory_attributes => false).to_hash
 
     expect(data[:inventory_object_attributes]).to be_empty
   end

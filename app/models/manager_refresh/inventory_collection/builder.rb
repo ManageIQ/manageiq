@@ -23,7 +23,7 @@ module ManagerRefresh
       #   :auto_model_class
       #     - tries to set model_class from persister class
       #     - @see method auto_model_class
-      #   :auto_object_attributes
+      #   :auto_inventory_attributes
       #     - auto creates inventory_object_attributes from target model_class setters
       #     - attributes used in InventoryObject.add_attributes
       #   :shared_properties
@@ -32,13 +32,13 @@ module ManagerRefresh
       #     - if false and no model_class derived or specified, throws exception
       def self.default_options
         {
-          :adv_settings           => {},
-          :adv_settings_enabled   => true,
-          :auto_missing_parent    => true,
-          :auto_model_class       => true,
-          :auto_object_attributes => true,
-          :shared_properties      => {},
-          :without_model_class    => false,
+          :adv_settings              => {},
+          :adv_settings_enabled      => true,
+          :auto_missing_parent       => true,
+          :auto_model_class          => true,
+          :auto_inventory_attributes => true,
+          :shared_properties         => {},
+          :without_model_class       => false,
         }
       end
 
@@ -85,7 +85,7 @@ module ManagerRefresh
 
         send(@name.to_sym) if respond_to?(@name.to_sym)
 
-        add_inventory_attributes(auto_object_attributes) if @options[:auto_object_attributes]
+        add_inventory_attributes(auto_inventory_attributes) if @options[:auto_inventory_attributes]
       end
 
       # Creates InventoryCollection
@@ -239,9 +239,9 @@ module ManagerRefresh
 
       # Inventory object attributes are derived from setters
       #
-      # Can be disabled by options :auto_object_attributes => false
+      # Can be disabled by options :auto_inventory_attributes => false
       #   - attributes can be manually set via method add_inventory_attributes()
-      def auto_object_attributes
+      def auto_inventory_attributes
         return if @properties[:model_class].nil?
 
         (@properties[:model_class].new.methods - ApplicationRecord.methods).grep(/^[\w]+?\=$/).collect do |setter|
