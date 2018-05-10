@@ -171,7 +171,7 @@ class User < ApplicationRecord
   end
 
   def self.authorize_user(userid)
-    return if userid.blank? || admin?(userid)
+    return if userid.blank? || userid == "admin".freeze
     authenticator(userid).authorize_user(userid)
   end
 
@@ -211,14 +211,6 @@ class User < ApplicationRecord
     raise _("The user's current group cannot be changed because the user does not belong to any other group") if user_groups.empty?
     self.current_group = MiqGroup.find_by(:id => user_groups.first)
     save!
-  end
-
-  def admin?
-    self.class.admin?(userid)
-  end
-
-  def self.admin?(userid)
-    userid == "admin"
   end
 
   def subscribed_widget_sets
