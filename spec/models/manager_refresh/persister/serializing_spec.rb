@@ -51,13 +51,8 @@ describe ManagerRefresh::Inventory::Persister do
     expect(vm2.hardware.networks.first.ipaddress).to eq("10.10.10.2")
     expect(vm2.hardware.disks.first.device_name).to eq("disk_name_2")
 
-    # TODO(lsmola) interestingly persister.hardwares.lazy_find({:vm_or_template => lazy_find_image_sec}) will not work
-    # because we build the reference only from the passed data. To make it work, we would have to do internally
-    # persister.hardwares.lazy_find({:vm_or_template => lazy_find_image_sec.load}), which will allow the nested lazy
-    # find to reach its :manager_ref data. That would mean the stringified reference would have to be build when
-    # we try to evaluate the lazy object. We should be able to do that.
-    expect(vm.hardware.model).to eq(nil)
-    expect(vm.hardware.manufacturer).to eq(nil)
+    expect(vm.hardware.model).to eq("test1")
+    expect(vm.hardware.manufacturer).to eq("test2")
 
     expect(Vm.find_by(:ems_ref => "vm_ems_ref_20").ems_id).to be_nil
     expect(Vm.find_by(:ems_ref => "vm_ems_ref_21").ems_id).not_to be_nil
