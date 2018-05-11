@@ -159,10 +159,6 @@ module MiqServer::LogManagement
       save
 
       log_prefix = "Task: [#{task.id}]"
-      msg = "Posting logs for: #{resource}"
-      _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
-
       msg = "Zipping and posting current logs and configs on #{resource}"
       _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
