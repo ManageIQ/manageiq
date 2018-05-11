@@ -40,14 +40,10 @@ module MiqServer::LogManagement
         logfile = LogFile.historical_logfile
       end
 
-      msg = "Creating historical Logfile for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
-      task.update_status("Active", "Ok", msg)
-      _log.info(msg)
-
       begin
         log_files << logfile
         save
-        msg = "Zipping and posting historical logs and configs on #{resource}"
+        msg = "Zipping and posting historical logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
         task.update_status("Active", "Ok", msg)
         _log.info(msg)
 
@@ -160,7 +156,7 @@ module MiqServer::LogManagement
       save
 
       log_prefix = "Task: [#{task.id}]"
-      msg = "Zipping and posting current logs and configs on #{resource}"
+      msg = "Zipping and posting current logs and configs for #{resource}"
       _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
