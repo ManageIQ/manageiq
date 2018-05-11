@@ -383,6 +383,7 @@
   - ems_physical_infra_refresh
   - ems_physical_infra_tag
   - ems_physical_infra_view
+  - physical_rack_control
   - physical_rack_view
   - physical_switch_view
   - physical_server_view

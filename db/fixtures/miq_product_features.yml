@@ -5867,6 +5867,15 @@
       :description: Display Individual Physical Rack
       :feature_type: view
       :identifier: physical_rack_show
+  - :name: Operate
+    :description: Perform Operations on Physical Racks
+    :feature_type: control
+    :identifier: physical_rack_control
+    :children:
+    - :name: Refresh
+      :description: Refresh relationships and power states for all items related to Physical Rack
+      :feature_type: control
+      :identifier: physical_rack_refresh
 
 # Physical Chassis
 - :name: Physical Chassis
