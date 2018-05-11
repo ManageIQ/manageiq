@@ -176,9 +176,15 @@ module Api
         options[:offset], options[:limit] = expand_paginate_params if paginate_params?
         options[:filter] = miq_expression if miq_expression
 
-        res = Rbac.filtered(res, options)
+        res = rbac_filtered(res, options)
         preload_for_expansion!(res, type)
         res
+      end
+
+      # FIXME:  Makes it so it can be overridden in subclasses.  So basically,
+      # this is a HACK.  Should try and make this so it can be re-used.
+      def rbac_filtered(res, options)
+        Rbac.filtered(res, options)
       end
 
       def preload_for_expansion!(resources, type)

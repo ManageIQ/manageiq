@@ -162,5 +162,13 @@ module Api
       msg = valid ? "" : "Action #{action} is not available for #{service_ident(svc)}"
       action_result(valid, msg)
     end
+
+    def rbac_filtered(res, options)
+      klass = collection_class(@req.subcollection ? @req.subcollection.to_sym : @req.collection.to_sym)
+      options[:extra_cols] = virtual_attributes_list(klass.new).select do |col|
+                               klass.attribute_supported_by_sql?(col)
+                             end
+      super(res, options)
+    end
   end
 end

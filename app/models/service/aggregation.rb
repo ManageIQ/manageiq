@@ -168,8 +168,11 @@ module Service::Aggregation
     def base_service_aggregation_join(arel, services_tbl, options = {})
       arel.join(service_resources_tbl).on(service_resources_tbl[:service_id].eq(services_tbl[:id])
                                   .and(service_resources_tbl[:resource_type].eq(vm_or_template_type)))
-          .join(vms_tbl).on(vm_join_clause(options))
-          .join(hardwares_tbl).on(hardwares_tbl[:vm_or_template_id].eq(vms_tbl[:id]))
+          .join(vms_tbl).on(vm_join_clause(options)).tap do |arel_query|
+            unless options[:skip_hardware]
+              arel_query.join(hardwares_tbl).on(hardwares_tbl[:vm_or_template_id].eq(vms_tbl[:id]))
+            end
+          end
     end
 
     # Generates the following SQL conditional to be used in
