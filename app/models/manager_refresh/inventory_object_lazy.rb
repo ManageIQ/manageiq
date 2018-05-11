@@ -73,6 +73,8 @@ module ManagerRefresh
     end
 
     def transform_nested_secondary_indexes!(depth = 0)
+      raise "Nested references are too deep!" if depth > 20
+
       keys.each do |x|
         attr = full_reference[x]
         next unless attr.kind_of?(ManagerRefresh::InventoryObjectLazy)
