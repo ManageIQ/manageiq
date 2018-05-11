@@ -148,10 +148,11 @@ module MiqServer::LogManagement
   end
 
   def post_current_logs(taskid, log_depot)
-    resource = who_am_i
-    task = MiqTask.find(taskid)
-
     delete_old_requested_logs
+
+    task = MiqTask.find(taskid)
+    resource = who_am_i
+
     logfile = LogFile.current_logfile
     logfile.update_attributes(:miq_task_id => taskid)
     begin
