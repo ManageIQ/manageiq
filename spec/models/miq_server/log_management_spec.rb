@@ -149,6 +149,64 @@ describe MiqServer do
     describe "#post_historical_logs" do
       context "Server" do
         include_examples "post_[type_of_log]_logs", "MiqServer", :historical
+
+        context "new tests" do
+          let(:task)                      { FactoryGirl.create(:miq_task) }
+          let(:compressed_log_patterns)   { [Rails.root.join("log/evm*.log.gz").to_s] }
+          let(:current_log_patterns)      { [Rails.root.join("log/evm.log").to_s] }
+          let(:compressed_evm_log)        { Rails.root.join("evm.log-20180319.gz").to_s}
+          let(:log_start)                 { Time.parse("2018-05-11 11:33:12 UTC") }
+          let(:log_end)                   { Time.parse("2018-05-11 15:34:16 UTC") }
+          let(:daily_log)                 { Rails.root.join("data", "user", "system", "evm_server_daily.zip").to_s}
+          let(:log_depot)                 { FactoryGirl.create(:file_depot) }
+          before do
+            require 'vmdb/util'
+            allow(VMDB::Util).to receive(:compressed_log_patterns).and_return(compressed_log_patterns)
+            allow(VMDB::Util).to receive(:get_evm_log_for_date).and_return(compressed_evm_log)
+            allow(VMDB::Util).to receive(:get_log_start_end_times).and_return([log_start, log_end])
+            allow(VMDB::Util).to receive(:zip_logs).and_return(daily_log)
+            allow_any_instance_of(LogFile).to receive(:upload)
+          end
+
+          it "no prior historical logfile" do
+            @miq_server.post_historical_logs(task.id, log_depot)
+            expect(@miq_server.reload.log_files.first).to have_attributes(
+              :file_depot         => log_depot,
+              :local_file         => daily_log,
+              :logging_started_on => log_start,
+              :logging_ended_on   => log_end,
+              :name               => "Archived #{@miq_server.name} logs 20180511_113312 20180511_153416 ",
+              :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} 20180511_113312 20180511_153416",
+              :miq_task_id        => task.id
+            )
+
+            expect(task.reload).to have_attributes(
+             :message => "Historical log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} for evm.log are posted",
+             :state   => "Active",
+             :status  => "Ok",
+            )
+          end
+
+          it "no prior current logfile" do
+            allow(@miq_server).to receive(:current_log_patterns).and_return(current_log_patterns)
+            @miq_server.post_current_logs(task.id, log_depot)
+            expect(@miq_server.reload.log_files.first).to have_attributes(
+              :file_depot         => log_depot,
+              :local_file         => daily_log,
+              :logging_started_on => log_start,
+              :logging_ended_on   => log_end,
+              :name               => "Requested #{@miq_server.name} logs 20180511_113312 20180511_153416 ",
+              :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} 20180511_113312 20180511_153416",
+              :miq_task_id        => task.id
+            )
+
+            expect(task.reload).to have_attributes(
+             :message => "Current log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} are posted",
+             :state   => "Active",
+             :status  => "Ok",
+            )
+          end
+        end
       end
 
       context "Zone" do
