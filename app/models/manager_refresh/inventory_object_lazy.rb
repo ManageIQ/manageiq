@@ -4,7 +4,7 @@ module ManagerRefresh
 
     attr_reader :reference, :inventory_collection, :key, :default
 
-    delegate :primary?, :stringified_reference, :ref, :[], :to => :reference
+    delegate :stringified_reference, :ref, :[], :to => :reference
 
     # @param inventory_collection [ManagerRefresh::InventoryCollection] InventoryCollection object owning the
     #        InventoryObject
@@ -40,6 +40,8 @@ module ManagerRefresh
     # @return [ManagerRefresh::InventoryObject, Object] ManagerRefresh::InventoryObject instance or an attribute
     #         on key
     def load
+      transform_nested_secondary_indexes! if nested_secondary_index?
+
       key ? load_object_with_key : load_object
     end
 
@@ -70,10 +72,29 @@ module ManagerRefresh
         !inventory_collection.association_to_foreign_key_mapping[key].nil?
     end
 
+    def transform_nested_secondary_indexes!(depth = 0)
+      keys.each do |x|
+        attr = full_reference[x]
+        next unless attr.kind_of?(ManagerRefresh::InventoryObjectLazy)
+        next if attr.primary?
+
+        if attr.nested_secondary_index?
+          attr.transform_nested_secondary_indexes!(depth + 1)
+        end
+
+        full_reference[x] = full_reference[x].load
+      end
+
+      # Rebuild the reference to get the right value
+      self.reference = inventory_collection.build_reference(full_reference, ref)
+    end
+
     private
 
     delegate :parallel_safe?, :saved?, :saver_strategy, :skeletal_primary_index, :targeted?, :to => :inventory_collection
-    delegate :full_reference, :keys, :primary?, :to => :reference
+    delegate :nested_secondary_index?, :primary?, :full_reference, :keys, :primary?, :to => :reference
+
+    attr_writer :reference
 
     # Instead of loading the reference from the DB, we'll add the skeletal InventoryObject (having manager_ref and
     # info from the builder_params) to the correct InventoryCollection. Which will either be found in the DB or

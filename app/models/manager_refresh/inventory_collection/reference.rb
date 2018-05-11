@@ -31,6 +31,10 @@ module ManagerRefresh
         ref == :manager_ref && !nested_secondary_index
       end
 
+      def nested_secondary_index?
+        nested_secondary_index
+      end
+
       class << self
         # Builds string uuid from passed Hash and keys
         #
