@@ -11,14 +11,18 @@ module FixAuth
         column_names & password_columns
       end
 
-      def contenders
-        where(selection_criteria)
+      def select_columns
+        [:id] + available_columns
       end
 
-      # bring back anything with a password column that is not nil or blank
+      def contenders
+        where(selection_criteria).select(select_columns)
+      end
+
+      # bring back anything with a password column that has a non blank v1 or v2 password in it
       def selection_criteria
         available_columns.collect do |column|
-          "(COALESCE(#{column},'') <> '')"
+          "(#{column} like '%v2:{%')"
         end.join(" OR ")
       end
 
@@ -81,16 +85,32 @@ module FixAuth
       def run(options = {})
         return if available_columns.empty?
         puts "fixing #{table_name}.#{available_columns.join(", ")}" unless options[:silent]
+        processed = 0
+        errors = 0
         contenders.each do |r|
-          fix_passwords(r, options)
-          if options[:verbose]
-            display_record(r)
-            available_columns.each do |column|
-              display_column(r, column, options)
+          begin
+            fix_passwords(r, options)
+            if options[:verbose]
+              display_record(r)
+              available_columns.each do |column|
+                display_column(r, column, options)
+              end
+            end
+            r.save! if !options[:dry_run] && r.changed?
+            processed += 1
+          rescue ArgumentError # undefined class/module
+            errors += 1
+            unless options[:allow_failures]
+              STDERR.puts "unable to fix #{r.class.table_name}:#{r.id}" unless options[:silent]
+              raise
             end
           end
-          r.save! unless options[:dry_run]
+          if !options[:silent] && (errors + processed) % 10_000 == 0
+            puts "processed #{processed} with #{errors} errors"
+          end
         end
+        puts "#{options[:dry_run] ? "viewed" : "processed"} #{processed} records" unless options[:silent]
+        puts "found #{errors} errors" if errors > 0 && !options[:silent]
       end
 
       def clean_up
