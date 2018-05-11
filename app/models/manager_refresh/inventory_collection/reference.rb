@@ -16,14 +16,19 @@ module ManagerRefresh
         @ref            = ref
         @keys           = keys
 
+        @nested_secondary_index = keys.select { |key| full_reference[key].kind_of?(ManagerRefresh::InventoryObjectLazy) }.any? do |key|
+          !full_reference[key].primary?
+        end
+
         @stringified_reference = self.class.build_stringified_reference(full_reference, keys)
       end
 
-      # Return true if reference is to primary index, false otherwise.
+      # Return true if reference is to primary index, false otherwise. Reference is primary, only if all the nested
+      # references are primary.
       #
       # @return [Boolean] true if reference is to primary index, false otherwise
       def primary?
-        ref == :manager_ref
+        ref == :manager_ref && !nested_secondary_index
       end
 
       class << self
@@ -57,13 +62,17 @@ module ManagerRefresh
 
         # Returns joiner for string UIID
         #
-        # @return [String] Joiner for stirng UIID
+        # @return [String] Joiner for string UIID
         def stringify_joiner
           "__"
         end
       end
 
       private
+
+      # @return Returns true if reference has nested references that are not pointing to primary index, but to
+      #         secondary indexes.
+      attr_reader :nested_secondary_index
 
       # Returns original Hash, or build hash out of passed string
       #
