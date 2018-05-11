@@ -4,7 +4,7 @@ module ManagerRefresh
 
     attr_reader :reference, :inventory_collection, :key, :default
 
-    delegate :stringified_reference, :ref, :[], :to => :reference
+    delegate :primary?, :stringified_reference, :ref, :[], :to => :reference
 
     # @param inventory_collection [ManagerRefresh::InventoryCollection] InventoryCollection object owning the
     #        InventoryObject

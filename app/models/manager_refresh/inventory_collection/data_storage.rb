@@ -17,7 +17,8 @@ module ManagerRefresh
                :skeletal_primary_index,
                :to => :index_proxy
 
-      delegate :builder_params,
+      delegate :association_to_foreign_key_mapping,
+               :builder_params,
                :inventory_object?,
                :inventory_object_lazy?,
                :manager_ref,
@@ -133,12 +134,26 @@ module ManagerRefresh
       def primary_index_scan(hash)
         hash = enrich_data(hash)
 
-        if manager_ref.any? { |x| !hash.key?(x) }
-          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
-        end
+        assert_all_keys_present(hash)
+        assert_only_primary_index(hash)
 
         uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
         return hash, uuid, primary_index.find(uuid)
+      end
+
+      def assert_all_keys_present(hash)
+        if manager_ref.any? { |x| !hash.key?(x) }
+          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
+        end
+      end
+
+      def assert_only_primary_index(data)
+        named_ref.each do |key|
+          if data[key].kind_of?(ManagerRefresh::InventoryObjectLazy) && !data[key].primary?
+            raise "Wrong index for key :#{key}, all references under this index must point to default :ref called"\
+                  " :manager_ref. Any other :ref is not valid. This applies also to nested lazy links."
+          end
+        end
       end
 
       # Returns new hash enriched by (see ManagerRefresh::InventoryCollection#builder_params) hash

@@ -47,6 +47,7 @@ module ManagerRefresh
         # @return [ManagerRefresh::InventoryObject] Passed InventoryObject
         def build_primary_index_for(inventory_object)
           # Building the object, we need to provide all keys of a primary index
+
           assert_index(inventory_object.data, primary_index_ref)
           primary_index.store_index_for(inventory_object)
         end
