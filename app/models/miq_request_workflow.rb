@@ -1195,7 +1195,7 @@ class MiqRequestWorkflow
       result = find_datacenter_for_ci(h)
       rails_logger("host_to_folder for host #{h.name}", 1)
       result
-    end.compact
+    end.compact.uniq
     datacenters.each_with_object({}) do |dc, folders|
       rails_logger("host_to_folder for dc #{dc.name}", 0)
       folders.merge!(get_ems_folders(dc))
