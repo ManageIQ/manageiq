@@ -159,6 +159,7 @@ module MiqServer::LogManagement
     resource = who_am_i
 
     evm = VMDB::Util.get_evm_log_for_date("log/*.log")
+    return if evm.nil?
 
     log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
 
