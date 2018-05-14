@@ -27,10 +27,8 @@ module MiqServer::LogManagement
       date = File.basename(pattern).gsub!(/\*|\.gz/, "")
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       date_string ||= date
-      name = "Archived #{self.name} logs #{date_string} "
-      desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
 
-      cond = {:historical => true, :name => name, :state => 'available'}
+      cond = {:historical => true, :name => logfile_name("Archived", date_string), :state => 'available'}
       cond[:logging_started_on] = log_start unless log_start.nil?
       cond[:logging_ended_on] = log_end unless log_end.nil?
       logfile = log_files.find_by(cond)
@@ -57,8 +55,8 @@ module MiqServer::LogManagement
           :local_file         => local_file,
           :logging_started_on => log_start,
           :logging_ended_on   => log_end,
-          :name               => name,
-          :description        => desc,
+          :name               => logfile_name("Archived", date_string),
+          :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
           :miq_task           => task
         )
 
@@ -75,6 +73,10 @@ module MiqServer::LogManagement
 
       # TODO: If the gz has been posted and the gz is more than X days old, delete it
     end
+  end
+
+  def logfile_name(category, date_string)
+    "#{category} #{self.name} logs #{date_string} "
   end
 
   def archive_log_patterns(pattern)
@@ -161,8 +163,6 @@ module MiqServer::LogManagement
     log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
 
     date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
-    name = "Requested #{self.name} logs #{date_string} "
-    desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
 
     logfile = LogFile.current_logfile
     log_files << logfile
@@ -180,8 +180,8 @@ module MiqServer::LogManagement
         :local_file         => local_file,
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,
-        :name               => name,
-        :description        => desc,
+        :name               => logfile_name("Requested", date_string),
+        :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
         :miq_task           => task
       )
 
