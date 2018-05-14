@@ -60,7 +60,7 @@ module MiqServer::LogManagement
           :logging_ended_on   => log_end,
           :name               => name,
           :description        => desc,
-          :miq_task_id        => task.id
+          :miq_task           => task
         )
 
         logfile.upload
@@ -160,7 +160,6 @@ module MiqServer::LogManagement
       desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
 
       logfile = LogFile.current_logfile
-      logfile.update_attributes(:miq_task_id => taskid)
       log_files << logfile
       save
 
@@ -177,6 +176,7 @@ module MiqServer::LogManagement
         :logging_ended_on   => log_end,
         :name               => name,
         :description        => desc,
+        :miq_task           => task
       )
 
       logfile.upload
