@@ -24,6 +24,15 @@ module Ancestry
       @_ancestor_ids ||= parse_ancestry_column(read_attribute(ancestry_base_class.ancestry_column))
     end
 
+    def depth
+      @_depth ||= if @_ancestor_ids
+                    @_ancestor_ids.size
+                  else
+                    col = read_attribute(ancestry_base_class.ancestry_column)
+                    col ? col.count(ANCESTRY_DELIMITER) + 1 : 0
+                  end
+    end
+
     STRING_BASED_KEYS = %i[string uuid text].freeze
     def cast_primary_key(key)
       if STRING_BASED_KEYS.include?(primary_key_type)
@@ -35,6 +44,7 @@ module Ancestry
 
     def clear_memoized_instance_variables
       @_ancestor_ids = nil
+      @_depth        = nil
     end
   end
 end
