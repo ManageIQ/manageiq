@@ -14,8 +14,10 @@ module Ancestry
   module InstanceMethods
     prepend AncestryInstanceMethodsPatch
 
+    ANCESTRY_DELIMITER = '/'.freeze
+
     def parse_ancestry_column(obj)
-      obj.to_s.split('/').map! { |id| cast_primary_key(id) }
+      obj.to_s.split(ANCESTRY_DELIMITER).map! { |id| cast_primary_key(id) }
     end
 
     def ancestor_ids
