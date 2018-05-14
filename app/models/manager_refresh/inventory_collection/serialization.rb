@@ -24,12 +24,13 @@ module ManagerRefresh
       # @param available_inventory_collections [Array<ManagerRefresh::InventoryCollection>] List of available
       #        InventoryCollection objects
       def from_hash(inventory_objects_data, available_inventory_collections)
+        targeted_scope.merge!(inventory_objects_data["manager_uuids"].map(&:symbolize_keys!))
+
         inventory_objects_data['data'].each do |inventory_object_data|
           build(hash_to_data(inventory_object_data, available_inventory_collections).symbolize_keys!)
         end
 
-        # TODO(lsmola) we need to remodel the targeted scope, to be able to serialize targeted InventoryCollections
-        # self.targeted_scope.merge!(inventory_objects_data['manager_uuids'] || [])
+        # TODO(lsmola) add support for all_manager_uuids serialization
         # self.all_manager_uuids = inventory_objects_data['all_manager_uuids']
       end
 
@@ -39,7 +40,8 @@ module ManagerRefresh
       def to_hash
         {
           :name              => name,
-          :manager_uuids     => targeted_scope.values.map { |x| data_to_hash(x) },
+          # TODO(lsmola) we do not support nested references here, should we?
+          :manager_uuids     => targeted_scope.primary_references.values.map(&:full_reference),
           :all_manager_uuids => all_manager_uuids,
           :data              => data.map { |x| data_to_hash(x.data) }
         }
@@ -97,7 +99,7 @@ module ManagerRefresh
             hash_to_lazy_relation(value, available_inventory_collections, depth)
           elsif value.kind_of?(Array) && value.first.kind_of?(Hash) && value.first['type'] == "ManagerRefresh::InventoryObjectLazy"
             # TODO(lsmola) do we need to compact it sooner? What if first element is nil? On the other hand, we want to
-            # deprecate Vmthis HABTM assignment because it's not effective
+            # deprecate this Vm HABTM assignment because it's not effective
             value.compact.map { |x| hash_to_lazy_relation(x, available_inventory_collections, depth) }
           else
             value
@@ -114,12 +116,10 @@ module ManagerRefresh
         raise "Nested lazy_relation of #{inventory_collection} is too deep, left processing: #{data}" if depth > 20
 
         data.transform_values do |value|
-          if inventory_object_lazy?(value)
+          if inventory_object_lazy?(value) || inventory_object?(value)
             lazy_relation_to_hash(value, depth)
           elsif value.kind_of?(Array) && (inventory_object_lazy?(value.compact.first) || inventory_object?(value.compact.first))
             value.compact.map { |x| lazy_relation_to_hash(x, depth) }
-          elsif inventory_object?(value)
-            lazy_relation_to_hash(value, depth)
           else
             value
           end

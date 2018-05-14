@@ -44,10 +44,13 @@ module TargetedRefreshSpecHelper
     }
   end
 
-  def assert_counts(expected_table_counts)
+  def assert_counts(expected_table_counts, expected_ems_table_counts = nil)
     expected_counts = base_inventory_counts.merge(expected_table_counts)
+    expected_ems_table_counts ||= expected_counts
+    expected_ems_counts = base_inventory_counts.merge(expected_ems_table_counts)
+
     assert_table_counts(expected_counts)
-    assert_ems(expected_counts)
+    assert_ems(expected_ems_counts)
   end
 
   def assert_table_counts(expected_table_counts)

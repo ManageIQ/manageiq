@@ -432,12 +432,6 @@ module ManagerRefresh
       @manager_ref_allowed_nil = manager_ref_allowed_nil || []
 
       # Targeted mode related attributes
-      # TODO(lsmola) Get rid of string references and enforce ManagerRefresh::InventoryCollection::Reference object here
-      @targeted_scope = manager_uuids.each_with_object({}) do |reference, obj|
-        reference_key      = reference.respond_to?(:stringified_reference) ? reference.stringified_reference : reference
-        reference_value    = reference.respond_to?(:stringified_reference) ? reference : nil
-        obj[reference_key] = reference_value
-      end
       # TODO(lsmola) Should we refactor this to use references too?
       @all_manager_uuids            = all_manager_uuids
       @parent_inventory_collections = parent_inventory_collections
@@ -454,6 +448,7 @@ module ManagerRefresh
 
       @data_storage = ::ManagerRefresh::InventoryCollection::DataStorage.new(self, secondary_refs)
       @references_storage = ::ManagerRefresh::InventoryCollection::ReferencesStorage.new(index_proxy)
+      @targeted_scope = ::ManagerRefresh::InventoryCollection::ReferencesStorage.new(index_proxy).merge!(manager_uuids)
 
       @created_records = []
       @updated_records = []
@@ -611,12 +606,12 @@ module ManagerRefresh
     def noop?
       # If this InventoryCollection doesn't do anything. it can easily happen for targeted/batched strategies.
       if targeted?
-        if parent_inventory_collections.nil? && targeted_scope.blank? &&
+        if parent_inventory_collections.nil? && targeted_scope.primary_references.blank? &&
            all_manager_uuids.nil? && parent_inventory_collections.blank? && custom_save_block.nil? &&
            skeletal_primary_index.blank?
           # It's a noop Parent targeted InventoryCollection
           true
-        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.targeted_scope.blank? } &&
+        elsif !parent_inventory_collections.nil? && parent_inventory_collections.all? { |x| x.targeted_scope.primary_references.blank? } &&
               skeletal_primary_index.blank?
           # It's a noop Child targeted InventoryCollection
           true
@@ -863,7 +858,7 @@ module ManagerRefresh
       # TODO(lsmola) LEGACY: this is still being used by :targetel_arel definitions and it expects array of strings
       raise "This works only for :manager_ref size 1" if manager_ref.size > 1
       key = manager_ref.first
-      transform_references_to_hashes(targeted_scope).map { |x| x[key] }
+      transform_references_to_hashes(targeted_scope.primary_references).map { |x| x[key] }
     end
 
     # Builds a multiselection conditions like (table1.a = a1 AND table2.b = b1) OR (table1.a = a2 AND table2.b = b2)
@@ -886,7 +881,7 @@ module ManagerRefresh
         elsif parent_inventory_collections.present?
           targeted_arel_default
         else
-          targeted_iterator_for(targeted_scope)
+          targeted_iterator_for(targeted_scope.primary_references)
         end
       else
         full_collection_for_comparison
@@ -902,21 +897,22 @@ module ManagerRefresh
               ":targeted_arel manually, or separate [#{self}] into 2 InventoryCollection objects."
       end
       parent_collection = parent_inventory_collections.first
-      references        = parent_inventory_collections.collect(&:targeted_scope).reduce({}, :merge!)
+      references        = parent_inventory_collections.map { |x| x.targeted_scope.primary_references }.reduce({}, :merge!)
 
       parent_collection.targeted_iterator_for(references, full_collection_for_comparison)
     end
 
     # Gets targeted references and transforms them into list of hashes
     #
-    # @param references [Hash{String => ManagerRefresh::InventoryCollection::Reference}] passed references
+    # @param references [Array, ManagerRefresh::Inventorycollection::TargetedScope] passed references
     # @return [Array<Hash>] References transformed into the array of hashes
     def transform_references_to_hashes(references)
-      # TODO(lsmola) remove when we ensure only ManagerRefresh::InventoryCollection::Reference is in targeted_scope
-      string_references, references = references.partition { |_key, value| value.nil? }
-
-      hash_references = references.map { |x| x.second.full_reference }
-      hash_references.concat(extract_references(string_references.map(&:first)))
+      if references.kind_of?(Array)
+        # Sliced ManagerRefresh::Inventorycollection::TargetedScope
+        references.map { |x| x.second.full_reference }
+      else
+        references.values.map(&:full_reference)
+      end
     end
 
     # Builds a multiselection conditions like (table1.a = a1 AND table2.b = b1) OR (table1.a = a2 AND table2.b = b2)
@@ -930,7 +926,7 @@ module ManagerRefresh
 
     # Returns iterator for the passed references and a query
     #
-    # @param references [Hash{String => ManagerRefresh::InventoryCollection::Reference}] assed references
+    # @param references [Hash{String => ManagerRefresh::InventoryCollection::Reference}] Passed references
     # @param query [ActiveRecord::Relation] relation that can fetch all data of this InventoryCollection from the DB
     # @return [ManagerRefresh::ApplicationRecordIterator] Iterator for the references and query
     def targeted_iterator_for(references, query = nil)
@@ -939,29 +935,6 @@ module ManagerRefresh
         :manager_uuids_set    => references,
         :query                => query
       )
-    end
-
-    # Extracting references to a relation friendly format
-    #
-    # @param new_references [Array<String>] array of index_values of the InventoryObjects
-    # @return [Array<Hash>] extracted references
-    def extract_references(new_references = [])
-      # TODO(lsmola) Remove this when we allow only ManagerRefresh::InventoryCollection::Reference, decoding/encoding
-      # from string is ugly
-      hash_uuids_by_ref = []
-
-      new_references.each do |index_value|
-        next if index_value.nil?
-        # TODO(lsmola) no need when hashes are the original hashes
-        uuids = index_value.split("__")
-
-        reference = {}
-        manager_ref.each_with_index do |ref, uuid_value|
-          reference[ref] = uuids[uuid_value]
-        end
-        hash_uuids_by_ref << reference
-      end
-      hash_uuids_by_ref
     end
 
     # Builds an ActiveRecord::Relation that can fetch all the references from the DB

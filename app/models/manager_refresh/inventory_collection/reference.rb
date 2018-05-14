@@ -74,7 +74,7 @@ module ManagerRefresh
         if data.kind_of?(Hash)
           data
         else
-          # assert_index makes sure that only keys of size 1 can go here
+          raise "Please provide Hash as a reference, :manager_ref count includes more than 1 attribute. keys: #{keys}, data: #{data}" if keys.size > 1
           {keys.first => data}
         end
       end
