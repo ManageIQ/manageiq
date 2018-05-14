@@ -48,11 +48,7 @@ module MiqServer::LogManagement
         task.update_status("Active", "Ok", msg)
         _log.info(msg)
 
-        patterns = [pattern]
-        cfg_pattern = ::Settings.log.collection.archive.pattern
-        patterns += cfg_pattern if cfg_pattern.kind_of?(Array)
-
-        local_file = VMDB::Util.zip_logs("evm_server_daily.zip", patterns, "admin")
+        local_file = VMDB::Util.zip_logs("evm_server_daily.zip", archive_log_patterns(pattern), "admin")
 
         logfile.update_attributes(
           :file_depot         => log_depot,
@@ -77,6 +73,13 @@ module MiqServer::LogManagement
 
       # TODO: If the gz has been posted and the gz is more than X days old, delete it
     end
+  end
+
+  def archive_log_patterns(pattern)
+    patterns = [pattern]
+    cfg_pattern = ::Settings.log.collection.archive.pattern
+    patterns += cfg_pattern if cfg_pattern.kind_of?(Array)
+    patterns
   end
 
   def _post_my_logs(options)
