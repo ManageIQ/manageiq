@@ -43,9 +43,10 @@ module MiqServer::LogManagement
 
       log_files << logfile
       save
+
       msg = "Zipping and posting historical logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
-      task.update_status("Active", "Ok", msg)
       _log.info(msg)
+      task.update_status("Active", "Ok", msg)
 
       begin
         local_file = VMDB::Util.zip_logs("evm_server_daily.zip", archive_log_patterns(pattern), "admin")
