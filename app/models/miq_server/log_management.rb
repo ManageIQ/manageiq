@@ -64,8 +64,8 @@ module MiqServer::LogManagement
 
         logfile.upload
       rescue StandardError, Timeout::Error => err
-        logfile.update_attributes(:state => "error")
         _log.error("#{log_prefix} Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
+        logfile.update_attributes(:state => "error")
         raise
       end
 
