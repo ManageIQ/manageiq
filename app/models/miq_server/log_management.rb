@@ -147,27 +147,28 @@ module MiqServer::LogManagement
     delete_old_requested_logs
 
     task = MiqTask.find(taskid)
+    log_prefix = "Task: [#{task.id}]"
     resource = who_am_i
 
-    logfile = LogFile.current_logfile
-    logfile.update_attributes(:miq_task_id => taskid)
     begin
-      log_files << logfile
-      save
-
-      log_prefix = "Task: [#{task.id}]"
-      msg = "Zipping and posting current logs and configs for #{resource}"
-      _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
-
-      local_file = VMDB::Util.zip_logs("evm.zip", current_log_patterns, "system")
-
       evm = VMDB::Util.get_evm_log_for_date("log/*.log")
+
       log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
 
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       name = "Requested #{self.name} logs #{date_string} "
       desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
+
+      logfile = LogFile.current_logfile
+      logfile.update_attributes(:miq_task_id => taskid)
+      log_files << logfile
+      save
+
+      msg = "Zipping and posting current logs and configs for #{resource}"
+      _log.info("#{log_prefix} #{msg}")
+      task.update_status("Active", "Ok", msg)
+
+      local_file = VMDB::Util.zip_logs("evm.zip", current_log_patterns, "system")
 
       logfile.update_attributes(
         :file_depot         => log_depot,
