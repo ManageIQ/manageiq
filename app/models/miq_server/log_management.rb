@@ -14,6 +14,7 @@ module MiqServer::LogManagement
 
   def post_historical_logs(taskid, log_depot)
     task = MiqTask.find(taskid)
+    log_prefix = "Task: [#{task.id}]"
     resource = who_am_i
 
     # Post all compressed logs for a specific date + configs, creating a new row per day
@@ -35,7 +36,7 @@ module MiqServer::LogManagement
       logfile = log_files.find_by(cond)
 
       if logfile && logfile.log_uri.nil?
-        _log.info("Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
+        _log.info("#{log_prefix} Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
       else
         logfile = LogFile.historical_logfile
@@ -45,7 +46,7 @@ module MiqServer::LogManagement
       save
 
       msg = "Zipping and posting historical logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
-      _log.info(msg)
+      _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
       begin
@@ -64,13 +65,13 @@ module MiqServer::LogManagement
         logfile.upload
       rescue StandardError, Timeout::Error => err
         logfile.update_attributes(:state => "error")
-        _log.error("Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
+        _log.error("#{log_prefix} Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
         raise
       end
 
       msg = "Historical log files from #{resource} for #{date} are posted"
       task.update_status("Active", "Ok", msg)
-      _log.info(msg)
+      _log.info("#{log_prefix} #{msg}")
 
       # TODO: If the gz has been posted and the gz is more than X days old, delete it
     end
