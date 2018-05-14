@@ -29,7 +29,7 @@ module MiqServer::LogManagement
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       date_string ||= date
 
-      msg = "Zipping and posting #{log_type.downcase} logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
+      msg = "Zipping and posting #{log_type.downcase} logs for [#{resource}] from: [#{log_start}] to [#{log_end}]"
       _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
@@ -166,7 +166,7 @@ module MiqServer::LogManagement
     log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
     date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
 
-    msg = "Zipping and posting #{log_type.downcase} logs and configs for #{resource}"
+    msg = "Zipping and posting #{log_type.downcase} logs for [#{resource}] from: [#{log_start}] to [#{log_end}]"
     _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
 
