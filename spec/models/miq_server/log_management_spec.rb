@@ -181,7 +181,7 @@ describe MiqServer do
             )
 
             expect(task.reload).to have_attributes(
-             :message => "Historical log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} for evm.log are posted",
+             :message => "Archived log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} for evm.log are posted",
              :state   => "Active",
              :status  => "Ok",
             )

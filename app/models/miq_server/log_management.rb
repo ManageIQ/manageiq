@@ -16,6 +16,7 @@ module MiqServer::LogManagement
     task = MiqTask.find(taskid)
     log_prefix = "Task: [#{task.id}]"
     resource = who_am_i
+    log_type = "Archived"
 
     # Post all compressed logs for a specific date + configs, creating a new row per day
     VMDB::Util.compressed_log_patterns.each do |pattern|
@@ -28,13 +29,13 @@ module MiqServer::LogManagement
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       date_string ||= date
 
-      cond = {:historical => true, :name => logfile_name("Archived", date_string), :state => 'available'}
+      cond = {:historical => true, :name => logfile_name(log_type, date_string), :state => 'available'}
       cond[:logging_started_on] = log_start unless log_start.nil?
       cond[:logging_ended_on] = log_end unless log_end.nil?
       logfile = log_files.find_by(cond)
 
       if logfile && logfile.log_uri.nil?
-        _log.info("#{log_prefix} Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
+        _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
       else
         logfile = LogFile.historical_logfile
@@ -43,7 +44,7 @@ module MiqServer::LogManagement
       log_files << logfile
       save
 
-      msg = "Zipping and posting historical logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
+      msg = "Zipping and posting #{log_type.downcase} logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
       _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
@@ -55,19 +56,19 @@ module MiqServer::LogManagement
           :local_file         => local_file,
           :logging_started_on => log_start,
           :logging_ended_on   => log_end,
-          :name               => logfile_name("Archived", date_string),
+          :name               => logfile_name(log_type, date_string),
           :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
           :miq_task           => task
         )
 
         logfile.upload
       rescue StandardError, Timeout::Error => err
-        _log.error("#{log_prefix} Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
+        _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
         logfile.update_attributes(:state => "error")
         raise
       end
 
-      msg = "Historical log files from #{resource} for #{date} are posted"
+      msg = "#{log_type} log files from #{resource} for #{date} are posted"
       _log.info("#{log_prefix} #{msg}")
       task.update_status("Active", "Ok", msg)
 
@@ -157,6 +158,7 @@ module MiqServer::LogManagement
     task = MiqTask.find(taskid)
     log_prefix = "Task: [#{task.id}]"
     resource = who_am_i
+    log_type = "Current"
 
     evm = VMDB::Util.get_evm_log_for_date("log/*.log")
     return if evm.nil?
@@ -169,7 +171,7 @@ module MiqServer::LogManagement
     log_files << logfile
     save
 
-    msg = "Zipping and posting current logs and configs for #{resource}"
+    msg = "Zipping and posting #{log_type.downcase} logs and configs for #{resource}"
     _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
 
@@ -188,11 +190,11 @@ module MiqServer::LogManagement
 
       logfile.upload
     rescue StandardError, Timeout::Error => err
-      _log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
+      _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
       logfile.update_attributes(:state => "error")
       raise
     end
-    msg = "Current log files from #{resource} are posted"
+    msg = "#{log_type} log files from #{resource} are posted"
     _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
   end
