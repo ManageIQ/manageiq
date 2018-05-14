@@ -20,29 +20,14 @@ module MiqServer::LogManagement
 
     # Post all compressed logs for a specific date + configs, creating a new row per day
     VMDB::Util.compressed_log_patterns.each do |pattern|
+      date = File.basename(pattern).gsub!(/\*|\.gz/, "")
       evm = VMDB::Util.get_evm_log_for_date(pattern)
       next if evm.nil?
 
       log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
 
-      date = File.basename(pattern).gsub!(/\*|\.gz/, "")
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       date_string ||= date
-
-      cond = {:historical => true, :name => logfile_name(log_type, date_string), :state => 'available'}
-      cond[:logging_started_on] = log_start unless log_start.nil?
-      cond[:logging_ended_on] = log_end unless log_end.nil?
-      logfile = log_files.find_by(cond)
-
-      if logfile && logfile.log_uri.nil?
-        _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
-        next
-      else
-        logfile = LogFile.historical_logfile
-      end
-
-      log_files << logfile
-      save
 
       msg = "Zipping and posting #{log_type.downcase} logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
       _log.info("#{log_prefix} #{msg}")
@@ -50,6 +35,21 @@ module MiqServer::LogManagement
 
       begin
         local_file = VMDB::Util.zip_logs("evm_server_daily.zip", archive_log_patterns(pattern), "admin")
+
+        cond = {:historical => true, :name => logfile_name(log_type, date_string), :state => 'available'}
+        cond[:logging_started_on] = log_start unless log_start.nil?
+        cond[:logging_ended_on] = log_end unless log_end.nil?
+        logfile = log_files.find_by(cond)
+
+        if logfile && logfile.log_uri.nil?
+          _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
+          next
+        else
+          logfile = LogFile.historical_logfile
+        end
+
+        log_files << logfile
+        save
 
         logfile.update_attributes(
           :file_depot         => log_depot,
@@ -164,12 +164,7 @@ module MiqServer::LogManagement
     return if evm.nil?
 
     log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
-
     date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
-
-    logfile = LogFile.current_logfile
-    log_files << logfile
-    save
 
     msg = "Zipping and posting #{log_type.downcase} logs and configs for #{resource}"
     _log.info("#{log_prefix} #{msg}")
@@ -177,6 +172,10 @@ module MiqServer::LogManagement
 
     begin
       local_file = VMDB::Util.zip_logs("evm.zip", current_log_patterns, "system")
+
+      logfile = LogFile.current_logfile
+      log_files << logfile
+      save
 
       logfile.update_attributes(
         :file_depot         => log_depot,
