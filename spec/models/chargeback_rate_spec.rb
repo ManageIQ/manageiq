@@ -1,4 +1,16 @@
 describe ChargebackRate do
+  describe "#rate_details_relevant_to" do
+    let(:count_hourly_variable_tier_rate) { {:variable_rate => '10'} }
+
+    let!(:chargeback_rate) do
+      FactoryGirl.create(:chargeback_rate, :detail_params => {:chargeback_rate_detail_cpu_cores_allocated => {:tiers => [count_hourly_variable_tier_rate]}})
+    end
+
+    it "skips cpu_cores_allocated column" do
+      expect(chargeback_rate.rate_details_relevant_to(['total_cost'].to_set, ChargebackVm.attribute_names)).to be_empty
+    end
+  end
+
   context ".validate_rate_type" do
     it "handles valid types" do
       [:compute, :storage, 'compute', 'storage', 'Compute', 'Storage'].each do |type|
