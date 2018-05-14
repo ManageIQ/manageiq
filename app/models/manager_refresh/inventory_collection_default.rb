@@ -14,6 +14,9 @@ class ManagerRefresh::InventoryCollectionDefault
         inventory_object = inventory_objects_index.delete(index)
         hash             = attributes_index.delete(index)
 
+        # Skip if hash is blank, which can happen when having several archived entities with the same ref
+        next unless hash
+
         record.assign_attributes(hash.except(:id, :type))
         if !inventory_collection.check_changed? || record.changed?
           record.save!
