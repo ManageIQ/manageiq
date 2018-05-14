@@ -70,8 +70,8 @@ module MiqServer::LogManagement
       end
 
       msg = "Historical log files from #{resource} for #{date} are posted"
-      task.update_status("Active", "Ok", msg)
       _log.info("#{log_prefix} #{msg}")
+      task.update_status("Active", "Ok", msg)
 
       # TODO: If the gz has been posted and the gz is more than X days old, delete it
     end
