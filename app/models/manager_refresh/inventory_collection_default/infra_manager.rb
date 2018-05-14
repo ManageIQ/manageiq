@@ -382,6 +382,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :manager_ref                 => %i(host uid_ems),
         :association                 => :host_virtual_switches,
         :inventory_object_attributes => %i(
+          host
           uid_ems
           name
           lans
