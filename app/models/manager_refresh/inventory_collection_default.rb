@@ -6,7 +6,7 @@ class ManagerRefresh::InventoryCollectionDefault
 
     inventory_objects_index.each_slice(100) do |batch|
       batch_refs = batch.map(&:first)
-      relation.where(inventory_collection.manager_ref.first => batch_refs).each do |record|
+      relation.where(inventory_collection.manager_ref.first => batch_refs).order(:id => :asc).each do |record|
         index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
 
         # We need to delete the record from the inventory_objects_index
