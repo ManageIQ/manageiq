@@ -105,7 +105,7 @@ describe Authenticator::Ldap do
     FactoryGirl.create(
       :miq_group,
       :description   => "EvmGroup-super_administrator",
-      :miq_user_role => FactoryGirl.create(:miq_user_role, :name => "EvmRole-super_administrator")
+      :miq_user_role => FactoryGirl.create(:miq_user_role, :role => "super_administrator")
     )
   end
 

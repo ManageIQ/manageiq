@@ -882,11 +882,11 @@ describe Rbac::Filterer do
         end
 
         let!(:super_administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::SUPER_ADMIN_ROLE_NAME)
+          FactoryGirl.create(:miq_user_role, :role => "super_administrator")
         end
 
         let!(:administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::ADMIN_ROLE_NAME)
+          FactoryGirl.create(:miq_user_role, :role => "administrator")
         end
 
         let(:group) do
