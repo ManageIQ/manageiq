@@ -13,8 +13,7 @@ module Spec
       end
 
       # TODO: Stub specific features, document use
-      def stub_user(features:)
-        user = FactoryGirl.build(:user_with_group)
+      def stub_user(features:, user: FactoryGirl.build(:user_with_group))
         allow(controller).to receive(:current_user).and_return(user)
         allow(User).to receive(:current_user).and_return(user)
         allow(User).to receive(:server_timezone).and_return("UTC")
@@ -35,6 +34,10 @@ module Spec
 
         login_as user
         user
+      end
+
+      def stub_admin
+        stub_user(:features => :all, :user => FactoryGirl.create(:user_admin))
       end
     end
 
