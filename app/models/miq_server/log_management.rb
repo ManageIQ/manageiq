@@ -41,13 +41,13 @@ module MiqServer::LogManagement
         logfile = LogFile.historical_logfile
       end
 
-      begin
-        log_files << logfile
-        save
-        msg = "Zipping and posting historical logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
-        task.update_status("Active", "Ok", msg)
-        _log.info(msg)
+      log_files << logfile
+      save
+      msg = "Zipping and posting historical logs for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
+      task.update_status("Active", "Ok", msg)
+      _log.info(msg)
 
+      begin
         local_file = VMDB::Util.zip_logs("evm_server_daily.zip", archive_log_patterns(pattern), "admin")
 
         logfile.update_attributes(
@@ -154,23 +154,23 @@ module MiqServer::LogManagement
     log_prefix = "Task: [#{task.id}]"
     resource = who_am_i
 
+    evm = VMDB::Util.get_evm_log_for_date("log/*.log")
+
+    log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
+
+    date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
+    name = "Requested #{self.name} logs #{date_string} "
+    desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
+
+    logfile = LogFile.current_logfile
+    log_files << logfile
+    save
+
+    msg = "Zipping and posting current logs and configs for #{resource}"
+    _log.info("#{log_prefix} #{msg}")
+    task.update_status("Active", "Ok", msg)
+
     begin
-      evm = VMDB::Util.get_evm_log_for_date("log/*.log")
-
-      log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
-
-      date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
-      name = "Requested #{self.name} logs #{date_string} "
-      desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
-
-      logfile = LogFile.current_logfile
-      log_files << logfile
-      save
-
-      msg = "Zipping and posting current logs and configs for #{resource}"
-      _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
-
       local_file = VMDB::Util.zip_logs("evm.zip", current_log_patterns, "system")
 
       logfile.update_attributes(
