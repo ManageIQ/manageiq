@@ -24,6 +24,23 @@ module Ancestry
       @_ancestor_ids ||= parse_ancestry_column(read_attribute(ancestry_base_class.ancestry_column))
     end
 
+    def parent_id
+      return @_parent_id if defined?(@_parent_id)
+      @_parent_id = if @_ancestor_ids
+                      @_ancestor_ids.empty? ? nil : @_ancestor_ids.last
+                    else
+                      col = read_attribute(ancestry_base_class.ancestry_column)
+                      # Specifically not using `.blank?` here because it is
+                      # slower than doing the below.
+                      if col.nil? || col.empty? # rubocop:disable Rails/Blank
+                        nil
+                      else
+                        rindex = col.rindex(ANCESTRY_DELIMITER)
+                        cast_primary_key(rindex ? col[rindex + 1, col.length] : col)
+                      end
+                    end
+    end
+
     def depth
       @_depth ||= if @_ancestor_ids
                     @_ancestor_ids.size
@@ -45,6 +62,9 @@ module Ancestry
     def clear_memoized_instance_variables
       @_ancestor_ids = nil
       @_depth        = nil
+
+      # can't assign to `nil` since `nil` could be a valid result
+      remove_instance_variable(:@_parent_id) if defined?(@_parent_id)
     end
   end
 end
