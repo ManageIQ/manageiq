@@ -188,6 +188,17 @@ describe ChargebackVm do
         expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
       end
 
+      context "only memory_cost instead of all report columns" do
+        let(:options) { base_options.merge(:interval => 'daily', :report_cols => %w(memory_cost)) }
+
+        it "brings in relevant fields needed for calculation" do
+          memory_allocated_cost = memory_available * hourly_rate * hours_in_day
+          used_metric = used_average_for(:derived_memory_used, hours_in_day, @vm1)
+          memory_used_cost = used_metric * hourly_rate * hours_in_day
+          expect(subject.memory_cost).to eq(memory_allocated_cost + memory_used_cost)
+        end
+      end
+
       context "fixed rates" do
         let(:hourly_fixed_rate) { 10.0 }
 

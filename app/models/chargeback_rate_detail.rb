@@ -25,7 +25,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   def charge(relevant_fields, consumption)
     result = {}
-    if (relevant_fields & [metric_key, cost_keys[0]]).present?
+    if (relevant_fields & ([metric_key] + cost_keys)).present?
       metric_value, cost = metric_and_cost_by(consumption)
       if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
