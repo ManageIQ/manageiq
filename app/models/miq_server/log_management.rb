@@ -22,8 +22,8 @@ module MiqServer::LogManagement
       next if evm.nil?
 
       log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
-      date = File.basename(pattern).gsub!(/\*|\.gz/, "")
 
+      date = File.basename(pattern).gsub!(/\*|\.gz/, "")
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       date_string ||= date
       name = "Archived #{self.name} logs #{date_string} "
@@ -33,6 +33,7 @@ module MiqServer::LogManagement
       cond[:logging_started_on] = log_start unless log_start.nil?
       cond[:logging_ended_on] = log_end unless log_end.nil?
       logfile = log_files.find_by(cond)
+
       if logfile && logfile.log_uri.nil?
         _log.info("Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
