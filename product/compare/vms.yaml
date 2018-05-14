@@ -12,7 +12,6 @@ cols:
 - name
 - vendor
 - location
-- last_scan_on
 - retires_on
 - boot_time
 - tools_status
@@ -199,7 +198,6 @@ col_order:
 - name
 - vendor
 - location
-- last_scan_on
 - retires_on
 - boot_time
 - tools_status
@@ -300,7 +298,6 @@ headers:
 - Name
 - Vendor
 - Location
-- Last Analysis
 - Retires On
 - Boot Time
 - VMware Tools Status
