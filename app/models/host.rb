@@ -47,6 +47,9 @@ class Host < ApplicationRecord
   has_many                  :miq_templates, :inverse_of => :host
   has_many                  :host_storages, :dependent => :destroy
   has_many                  :storages, :through => :host_storages
+  has_many                  :host_virtual_switches, -> { where.not(:shared => true) },
+                                                    :dependent  => :destroy,
+                                                    :class_name => "Switch"
   has_many                  :host_switches, :dependent => :destroy
   has_many                  :switches, :through => :host_switches
   has_many                  :lans,     :through => :switches
