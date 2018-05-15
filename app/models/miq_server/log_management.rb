@@ -35,7 +35,7 @@ module MiqServer::LogManagement
       end
 
       logfile.update(:file_depot => log_depot, :miq_task   => task)
-      post_one_log_pattern(pattern, logfile, log_type, archive_log_patterns(pattern))
+      post_one_log_pattern(pattern, logfile, log_type)
     end
   end
 
@@ -49,6 +49,15 @@ module MiqServer::LogManagement
     cfg_pattern = ::Settings.log.collection.archive.pattern
     patterns += cfg_pattern if cfg_pattern.kind_of?(Array)
     patterns
+  end
+
+  def log_patterns(log_type, base_pattern = nil)
+    case log_type.to_s.downcase
+    when "archived"
+      archive_log_patterns(base_pattern)
+    when "current"
+      current_log_patterns
+    end
   end
 
   def _post_my_logs(options)
@@ -123,7 +132,7 @@ module MiqServer::LogManagement
     VMDB::Util.get_log_start_end_times(evm)
   end
 
-  def post_one_log_pattern(pattern, logfile, log_type, glob_patterns)
+  def post_one_log_pattern(pattern, logfile, log_type)
     task = logfile.miq_task
     log_prefix = "Task: [#{task.id}]"
 
@@ -135,7 +144,7 @@ module MiqServer::LogManagement
     task.update_status("Active", "Ok", msg)
 
     begin
-      local_file = VMDB::Util.zip_logs("evm.zip", glob_patterns, "system")
+      local_file = VMDB::Util.zip_logs("evm.zip", log_patterns(log_type, pattern), "system")
       self.log_files << logfile
       save
 
@@ -164,7 +173,7 @@ module MiqServer::LogManagement
 
     logfile = LogFile.current_logfile
     logfile.update(:file_depot => log_depot, :miq_task   => MiqTask.find(taskid))
-    post_one_log_pattern("log/*.log", logfile, "Current", current_log_patterns)
+    post_one_log_pattern("log/*.log", logfile, "Current")
   end
 
   def delete_old_requested_logs
