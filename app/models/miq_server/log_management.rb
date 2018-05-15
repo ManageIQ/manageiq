@@ -139,7 +139,6 @@ module MiqServer::LogManagement
     begin
       local_file = VMDB::Util.zip_logs("evm.zip", log_patterns(log_type, pattern), "system")
       self.log_files << logfile
-      save
 
       logfile.update_attributes(
         :local_file         => local_file,
