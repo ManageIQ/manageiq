@@ -2,7 +2,7 @@ module ManagerRefresh
   class InventoryObjectLazy
     include Vmdb::Logging
 
-    attr_reader :reference, :inventory_collection, :key, :default
+    attr_reader :reference, :inventory_collection, :key, :default, :transform_nested_lazy_finds
 
     delegate :stringified_reference, :ref, :[], :to => :reference
 
@@ -12,11 +12,16 @@ module ManagerRefresh
     # @param ref [Symbol] reference name
     # @param key [Symbol] key name, will be used to fetch attribute from resolved InventoryObject
     # @param default [Object] a default value used if the :key will resolve to nil
-    def initialize(inventory_collection, index_data, ref: :manager_ref, key: nil, default: nil)
+    # @param transform_nested_lazy_finds [Boolean] True if we want to convert all lazy objects in InventoryObject
+    #        objects and reset the Reference. TODO(lsmola) we should be able to do this automatically, then we can
+    #        remove this option
+    def initialize(inventory_collection, index_data, ref: :manager_ref, key: nil, default: nil, transform_nested_lazy_finds: false)
       @inventory_collection = inventory_collection
       @reference            = inventory_collection.build_reference(index_data, ref)
       @key                  = key
       @default              = default
+
+      @transform_nested_lazy_finds = transform_nested_lazy_finds
 
       # We do not support skeletal pre-create for :key, since :key will not be available, we want to use local_db_find
       # instead.
@@ -40,7 +45,7 @@ module ManagerRefresh
     # @return [ManagerRefresh::InventoryObject, Object] ManagerRefresh::InventoryObject instance or an attribute
     #         on key
     def load
-      transform_nested_secondary_indexes! if nested_secondary_index?
+      transform_nested_secondary_indexes! if transform_nested_lazy_finds && nested_secondary_index?
 
       key ? load_object_with_key : load_object
     end

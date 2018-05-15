@@ -99,7 +99,7 @@ module ManagerRefresh
           lazy_find(manager_uuid_hash, :ref => ref, :key => key, :default => default)
         end
 
-        def lazy_find(manager_uuid, ref: primary_index_ref, key: nil, default: nil)
+        def lazy_find(manager_uuid, ref: primary_index_ref, key: nil, default: nil, transform_nested_lazy_finds: false)
           # TODO(lsmola) also, it should be enough to have only 1 find method, everything can be lazy, until we try to
           # access the data
           # TODO(lsmola) lazy_find will support only hash, then we can remove the _by variant
@@ -108,7 +108,10 @@ module ManagerRefresh
 
           ::ManagerRefresh::InventoryObjectLazy.new(inventory_collection,
                                                     manager_uuid,
-                                                    :ref => ref, :key => key, :default => default)
+                                                    :ref                         => ref,
+                                                    :key                         => key,
+                                                    :default                     => default,
+                                                    :transform_nested_lazy_finds => transform_nested_lazy_finds)
         end
 
         def named_ref(ref = primary_index_ref)
