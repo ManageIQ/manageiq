@@ -82,7 +82,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :load_balancer_listener            => 4,
       :load_balancer_pool                => 3,
       :load_balancer_listener_pool       => 4,
-      :load_balancer_pool_member         => 4,
+      :load_balancer_pool_member         => 3,
       :load_balancer_pool_member_pool    => 4,
       :miq_template                      => 1631,
       :network                           => 0,

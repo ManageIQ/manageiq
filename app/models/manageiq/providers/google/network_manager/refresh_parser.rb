@@ -282,12 +282,17 @@ module ManageIQ::Providers
         @data[:load_balancer_pool_members] = []
 
         target_pools.each do |tp|
-          lb_pool_members = tp.instances.to_a.collect { |m| parse_load_balancer_pool_member(m) }
+          lb_pool_members = tp.instances.to_a.collect do |m|
+            @data_index.fetch_path(:load_balancer_pool_members, Digest::MD5.base64digest(m)) || parse_load_balancer_pool_member(m)
+          end
+
           lb_pool_members.each do |member|
+            next if @data_index.fetch_path(:load_balancer_pool_members, member[:ems_ref])
             @data_index.store_path(:load_balancer_pool_members, member[:ems_ref], member)
             @data[:load_balancer_pool_members] << member
           end
-          lb_pool = @data_index.fetch_path(:load_balancer_pools, tp.id)
+
+          lb_pool = @data_index.fetch_path(:load_balancer_pools, tp.id.to_s)
           lb_pool[:load_balancer_pool_member_pools] = lb_pool_members.collect do |member|
             {:load_balancer_pool_member => member}
           end
@@ -313,7 +318,7 @@ module ManageIQ::Providers
       end
 
       def parse_load_balancer(forwarding_rule)
-        uid = forwarding_rule.id
+        uid = forwarding_rule.id.to_s
 
         new_result = {
           :type    => ManageIQ::Providers::Google::NetworkManager::LoadBalancer.name,
@@ -325,7 +330,7 @@ module ManageIQ::Providers
       end
 
       def parse_load_balancer_pool(target_pool)
-        uid = target_pool.id
+        uid = target_pool.id.to_s
 
         new_result = {
           :type    => ManageIQ::Providers::Google::NetworkManager::LoadBalancerPool.name,
@@ -348,7 +353,7 @@ module ManageIQ::Providers
       end
 
       def parse_load_balancer_listener(forwarding_rule)
-        uid = forwarding_rule.id
+        uid = forwarding_rule.id.to_s
 
         # Only TCP/UDP/SCTP forwarding rules have ports
         has_ports = %w(TCP UDP SCTP).include?(forwarding_rule.ip_protocol)
@@ -361,7 +366,7 @@ module ManageIQ::Providers
           :instance_protocol            => forwarding_rule.ip_protocol,
           :load_balancer_port_range     => (self.class.parse_port_range(forwarding_rule.port_range) if has_ports),
           :instance_port_range          => (self.class.parse_port_range(forwarding_rule.port_range) if has_ports),
-          :load_balancer                => @data_index.fetch_path(:load_balancers, forwarding_rule.id),
+          :load_balancer                => @data_index.fetch_path(:load_balancers, forwarding_rule.id.to_s),
           :load_balancer_listener_pools => [
             {:load_balancer_pool        => @target_pool_index[forwarding_rule.target]}
           ]
@@ -450,11 +455,11 @@ module ManageIQ::Providers
       end
 
       def parse_cloud_network(network)
-        uid = network.id
+        uid = network.id.to_s
 
         subnets = subnets_by_network_link(network.self_link) || []
         get_cloud_subnets(subnets)
-        cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s[:id]) }
+        cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s[:id].to_s) }
 
         new_result = {
           :ems_ref       => uid,
@@ -470,7 +475,7 @@ module ManageIQ::Providers
       end
 
       def parse_cloud_subnet(subnet)
-        uid    = subnet[:id]
+        uid    = subnet[:id].to_s
 
         name   = subnet[:name] || uid
 
@@ -567,7 +572,7 @@ module ManageIQ::Providers
       def parse_cloud_subnet_network_port(cloud_subnet_network_port, subnet_id)
         {
           :address      => cloud_subnet_network_port[:network_ip],
-          :cloud_subnet => @data_index.fetch_path(:cloud_subnets, subnet_id)
+          :cloud_subnet => @data_index.fetch_path(:cloud_subnets, subnet_id.to_s)
         }
       end
 
@@ -576,7 +581,7 @@ module ManageIQ::Providers
         cloud_subnet_network_ports = [
           parse_cloud_subnet_network_port(network_port, subnets_by_link(network_port).try(:[], :id))
         ]
-        device                     = parent_manager_fetch_path(:vms, network_port[:device_id])
+        device                     = parent_manager_fetch_path(:vms, network_port[:device_id].to_s)
         security_groups            = [
           @data_index.fetch_path(:security_groups, parse_uid_from_url(network_port[:network]))
         ]
@@ -587,7 +592,7 @@ module ManageIQ::Providers
           :ems_ref                    => uid,
           :status                     => nil,
           :mac_address                => nil,
-          :device_ref                 => network_port[:device_id],
+          :device_ref                 => network_port[:device_id].to_s,
           :device                     => device,
           :cloud_subnet_network_ports => cloud_subnet_network_ports,
           :security_groups            => security_groups,
