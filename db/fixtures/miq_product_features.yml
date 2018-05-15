@@ -1598,6 +1598,11 @@
     :description: Edit Report Menus Accordion
     :feature_type: node
     :identifier: miq_report_menu_editor
+# Special Admin Functionality
+  - :name: Admin
+    :description: Special Admin Functionality
+    :feature_type: admin
+    :identifier: miq_report_superadmin
   - :name: Import / Export
     :description: Import / Export Accordion
     :feature_type: node

@@ -60,8 +60,10 @@ class MiqGroup < ApplicationRecord
     super(indifferent_settings)
   end
 
-  def self.with_roles_excluding(disallowed_roles)
-    includes(:miq_user_role).where.not(:miq_user_roles => {:name => disallowed_roles})
+  def self.with_roles_excluding(identifier)
+    where.not(:id => MiqGroup.joins(:miq_product_features)
+                             .where(:miq_product_features => {:identifier => identifier})
+                             .select(:id))
   end
 
   def self.next_sequence

@@ -25,7 +25,8 @@ class User < ApplicationRecord
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
   scope      :superadmins, lambda {
-    joins(:miq_groups => :miq_user_role).where(:miq_user_roles => {:name => MiqUserRole::SUPER_ADMIN_ROLE_NAME })
+    joins(:miq_groups => {:miq_user_role => :miq_product_features})
+      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE })
   }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
@@ -50,8 +51,10 @@ class User < ApplicationRecord
 
   scope :with_same_userid, ->(id) { where(:userid => User.find(id).userid) }
 
-  def self.with_roles_excluding(disallowed_roles)
-    includes(:miq_groups => :miq_user_role).where.not(:miq_user_roles => {:name => disallowed_roles})
+  def self.with_roles_excluding(identifier)
+    where.not(:id => User.joins(:miq_groups => :miq_product_features)
+                             .where(:miq_product_features => {:identifier => identifier})
+                             .select(:id))
   end
 
   def self.scope_by_tenant?

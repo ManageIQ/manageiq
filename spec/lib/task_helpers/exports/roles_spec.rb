@@ -10,7 +10,7 @@ describe TaskHelpers::Exports::Roles do
     [{"name"                => "EvmRole-super_administrator",
       "read_only"           => true,
       "settings"            => nil,
-      "feature_identifiers" => []}]
+      "feature_identifiers" => ["everything"]}]
   end
 
   let(:export_dir) do
