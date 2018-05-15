@@ -15,7 +15,6 @@ module MiqServer::LogManagement
   def post_historical_logs(taskid, log_depot)
     task = MiqTask.find(taskid)
     log_prefix = "Task: [#{task.id}]"
-    resource = who_am_i
     log_type = "Archived"
 
     # Post all compressed logs for a specific date + configs, creating a new row per day
@@ -29,7 +28,7 @@ module MiqServer::LogManagement
       logfile = log_files.find_by(cond)
 
       if logfile && logfile.log_uri.nil?
-        _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{resource}] with contents from: [#{log_start}] to: [#{log_end}]")
+        _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{who_am_i}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
       else
         logfile = LogFile.historical_logfile
@@ -125,12 +124,11 @@ module MiqServer::LogManagement
 
   def post_one_log_pattern(pattern, task, logfile, log_type, glob_patterns, log_depot)
     log_prefix = "Task: [#{task.id}]"
-    resource = who_am_i
 
     log_start, log_end = log_start_and_end_for_pattern(pattern)
     date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
 
-    msg = "Zipping and posting #{log_type.downcase} logs for [#{resource}] from: [#{log_start}] to [#{log_end}]"
+    msg = "Zipping and posting #{log_type.downcase} logs for [#{who_am_i}] from: [#{log_start}] to [#{log_end}]"
     _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
 
@@ -152,11 +150,11 @@ module MiqServer::LogManagement
       logfile.upload
 
     rescue StandardError, Timeout::Error => err
-      _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
+      _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{who_am_i} due to error: [#{err.class.name}] [#{err}]")
       logfile.update_attributes(:state => "error")
       raise
     end
-    msg = "#{log_type} log files from #{resource} are posted"
+    msg = "#{log_type} log files from #{who_am_i} are posted"
     _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
   end
@@ -164,11 +162,7 @@ module MiqServer::LogManagement
   def post_current_logs(taskid, log_depot)
     delete_old_requested_logs
 
-    task = MiqTask.find(taskid)
-    log_prefix = "Task: [#{task.id}]"
-    resource = who_am_i
-    log_type = "Current"
-    post_one_log_pattern("log/*.log", task, LogFile.current_logfile, log_type, current_log_patterns, log_depot)
+    post_one_log_pattern("log/*.log", MiqTask.find(taskid), LogFile.current_logfile, "Current", current_log_patterns, log_depot)
   end
 
   def delete_old_requested_logs
