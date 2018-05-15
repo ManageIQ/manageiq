@@ -20,63 +20,27 @@ module MiqServer::LogManagement
 
     # Post all compressed logs for a specific date + configs, creating a new row per day
     VMDB::Util.compressed_log_patterns.each do |pattern|
-      date = File.basename(pattern).gsub!(/\*|\.gz/, "")
-      evm = VMDB::Util.get_evm_log_for_date(pattern)
-      next if evm.nil?
-
-      log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
-
+      log_start, log_end = log_start_and_end_for_pattern(pattern)
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
-      date_string ||= date
 
-      msg = "Zipping and posting #{log_type.downcase} logs for [#{resource}] from: [#{log_start}] to [#{log_end}]"
-      _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
+      cond = {:historical => true, :name => logfile_name(log_type, date_string), :state => 'available'}
+      cond[:logging_started_on] = log_start unless log_start.nil?
+      cond[:logging_ended_on] = log_end unless log_end.nil?
+      logfile = log_files.find_by(cond)
 
-      begin
-        local_file = VMDB::Util.zip_logs("evm_server_daily.zip", archive_log_patterns(pattern), "admin")
-
-        cond = {:historical => true, :name => logfile_name(log_type, date_string), :state => 'available'}
-        cond[:logging_started_on] = log_start unless log_start.nil?
-        cond[:logging_ended_on] = log_end unless log_end.nil?
-        logfile = log_files.find_by(cond)
-
-        if logfile && logfile.log_uri.nil?
-          _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
-          next
-        else
-          logfile = LogFile.historical_logfile
-        end
-
-        log_files << logfile
-        save
-
-        logfile.update_attributes(
-          :file_depot         => log_depot,
-          :local_file         => local_file,
-          :logging_started_on => log_start,
-          :logging_ended_on   => log_end,
-          :name               => logfile_name(log_type, date_string),
-          :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
-          :miq_task           => task
-        )
-
-        logfile.upload
-      rescue StandardError, Timeout::Error => err
-        _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
-        logfile.update_attributes(:state => "error")
-        raise
+      if logfile && logfile.log_uri.nil?
+        _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{resource}] with contents from: [#{log_start}] to: [#{log_end}]")
+        next
+      else
+        logfile = LogFile.historical_logfile
       end
 
-      msg = "#{log_type} log files from #{resource} for #{date} are posted"
-      _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
-
-      # TODO: If the gz has been posted and the gz is more than X days old, delete it
+      post_one_log_pattern(pattern, task, logfile, log_type, archive_log_patterns(pattern), log_depot)
     end
   end
 
   def logfile_name(category, date_string)
+    category = "Requested" if category == "Current"
     "#{category} #{self.name} logs #{date_string} "
   end
 
@@ -152,18 +116,18 @@ module MiqServer::LogManagement
     [pg_data.join("*.conf"), pg_data.join("pg_log/*")]
   end
 
-  def post_current_logs(taskid, log_depot)
-    delete_old_requested_logs
-
-    task = MiqTask.find(taskid)
-    log_prefix = "Task: [#{task.id}]"
-    resource = who_am_i
-    log_type = "Current"
-
-    evm = VMDB::Util.get_evm_log_for_date("log/*.log")
+  def log_start_and_end_for_pattern(pattern)
+    evm = VMDB::Util.get_evm_log_for_date(pattern)
     return if evm.nil?
 
-    log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
+    VMDB::Util.get_log_start_end_times(evm)
+  end
+
+  def post_one_log_pattern(pattern, task, logfile, log_type, glob_patterns, log_depot)
+    log_prefix = "Task: [#{task.id}]"
+    resource = who_am_i
+
+    log_start, log_end = log_start_and_end_for_pattern(pattern)
     date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
 
     msg = "Zipping and posting #{log_type.downcase} logs for [#{resource}] from: [#{log_start}] to [#{log_end}]"
@@ -171,9 +135,7 @@ module MiqServer::LogManagement
     task.update_status("Active", "Ok", msg)
 
     begin
-      local_file = VMDB::Util.zip_logs("evm.zip", current_log_patterns, "system")
-
-      logfile = LogFile.current_logfile
+      local_file = VMDB::Util.zip_logs("evm.zip", glob_patterns, "system")
       log_files << logfile
       save
 
@@ -182,12 +144,13 @@ module MiqServer::LogManagement
         :local_file         => local_file,
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,
-        :name               => logfile_name("Requested", date_string),
+        :name               => logfile_name(log_type, date_string),
         :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
         :miq_task           => task
       )
 
       logfile.upload
+
     rescue StandardError, Timeout::Error => err
       _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
       logfile.update_attributes(:state => "error")
@@ -196,6 +159,16 @@ module MiqServer::LogManagement
     msg = "#{log_type} log files from #{resource} are posted"
     _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
+  end
+
+  def post_current_logs(taskid, log_depot)
+    delete_old_requested_logs
+
+    task = MiqTask.find(taskid)
+    log_prefix = "Task: [#{task.id}]"
+    resource = who_am_i
+    log_type = "Current"
+    post_one_log_pattern("log/*.log", task, LogFile.current_logfile, log_type, current_log_patterns, log_depot)
   end
 
   def delete_old_requested_logs
