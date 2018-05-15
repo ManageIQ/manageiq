@@ -44,17 +44,10 @@ module MiqServer::LogManagement
     "#{category} #{self.name} logs #{date_string} "
   end
 
-  def archive_log_patterns(pattern)
-    patterns = [pattern]
-    cfg_pattern = ::Settings.log.collection.archive.pattern
-    patterns += cfg_pattern if cfg_pattern.kind_of?(Array)
-    patterns
-  end
-
   def log_patterns(log_type, base_pattern = nil)
     case log_type.to_s.downcase
     when "archived"
-      archive_log_patterns(base_pattern)
+      Array(::Settings.log.collection.archive.pattern).unshift(base_pattern)
     when "current"
       current_log_patterns
     end
