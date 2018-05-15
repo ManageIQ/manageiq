@@ -12,6 +12,7 @@ FactoryGirl.define do
     name { |ur| ur.role ? "EvmRole-#{ur.role}" : generate(:miq_user_role_name) }
 
     after(:build) do |user, evaluator|
+      e_features = evaluator.features
       if evaluator.role.present?
         @system_roles ||= YAML.load_file(MiqUserRole::FIXTURE_YAML)
         seeded_role = @system_roles.detect { |role| role[:name] == "EvmRole-#{evaluator.role}" }
@@ -20,10 +21,18 @@ FactoryGirl.define do
           user.read_only = seeded_role[:read_only]
           user.settings = seeded_role[:settings]
         end
+        if e_features.blank?
+          # admins now using a feature instead of a roll
+          if evaluator.role == "super_administrator"
+            e_features = MiqProductFeature::SUPER_ADMIN_FEATURE
+          elsif evaluator.role == "administrator"
+            e_features = MiqProductFeature::ADMIN_FEATURE
+          end
+        end
       end
 
-      if evaluator.features.present?
-        user.miq_product_features = Array.wrap(evaluator.features).map do |f|
+      if e_features.present?
+        user.miq_product_features = Array.wrap(e_features).map do |f|
           if f.kind_of?(MiqProductFeature) # TODO: remove class reference
             f
           else

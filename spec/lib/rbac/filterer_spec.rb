@@ -919,8 +919,12 @@ describe Rbac::Filterer do
       end
 
       context 'with EvmRole-tenant_administrator' do
+        let(:rbac_tenant) do
+          FactoryGirl.create(:miq_product_feature, :identifier => MiqProductFeature::TENANT_ADMIN_FEATURE)
+        end
+
         let(:tenant_administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME, :miq_product_features => [rbac_tenant])
         end
 
         let!(:super_administrator_user_role) do

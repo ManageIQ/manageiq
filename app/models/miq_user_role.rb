@@ -1,6 +1,4 @@
 class MiqUserRole < ApplicationRecord
-  SUPER_ADMIN_ROLE_NAME    = "EvmRole-super_administrator".freeze
-  ADMIN_ROLE_NAME          = "EvmRole-administrator".freeze
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator".freeze
 
   has_many                :entitlements, :dependent => :restrict_with_exception
@@ -65,8 +63,10 @@ class MiqUserRole < ApplicationRecord
     (settings || {}).fetch_path(:restrictions, :vms) == :user
   end
 
-  def self.with_roles_excluding(disallowed_roles)
-    where.not(:name => disallowed_roles)
+  def self.with_roles_excluding(identifier)
+    where.not(:id => MiqUserRole.joins(:miq_product_features)
+                                .where(:miq_product_features => {:identifier => identifier})
+                                .select(:id))
   end
 
   def self.seed
@@ -101,15 +101,15 @@ class MiqUserRole < ApplicationRecord
   end
 
   def super_admin_user?
-    name == SUPER_ADMIN_ROLE_NAME
+    allows?(:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE)
   end
 
   def admin_user?
-    name == SUPER_ADMIN_ROLE_NAME || name == ADMIN_ROLE_NAME
+    allows_any?(:identifiers => [MiqProductFeature::SUPER_ADMIN_FEATURE, MiqProductFeature::ADMIN_FEATURE])
   end
 
   def tenant_admin_user?
-    name == SUPER_ADMIN_ROLE_NAME || name == ADMIN_ROLE_NAME || name == DEFAULT_TENANT_ROLE_NAME
+    allows_any?(:identifiers => [MiqProductFeature::SUPER_ADMIN_FEATURE, MiqProductFeature::ADMIN_FEATURE, MiqProductFeature::TENANT_ADMIN_FEATURE])
   end
 
   def self.default_tenant_role

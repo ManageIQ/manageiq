@@ -172,6 +172,8 @@ describe MiqUserRole do
     expect(MiqUserRole.count).to eq(1)
   end
 
+  let(:tenant_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::TENANT_ADMIN_FEATURE) }
+
   describe "#super_admin_user?" do
     it "detects super admin" do
       expect(FactoryGirl.create(:miq_user_role, :role => "super_administrator")).to be_super_admin_user
@@ -202,7 +204,7 @@ describe MiqUserRole do
 
   describe "#tenant_admin" do
     it "detects tenant_admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "tenant_administrator")).to be_tenant_admin_user
+      expect(tenant_admin_role).to be_tenant_admin_user
     end
 
     it "detects admin" do
