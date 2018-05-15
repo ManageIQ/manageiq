@@ -136,7 +136,7 @@ module MiqServer::LogManagement
 
     begin
       local_file = VMDB::Util.zip_logs("evm.zip", glob_patterns, "system")
-      log_files << logfile
+      self.log_files << logfile
       save
 
       logfile.update_attributes(
