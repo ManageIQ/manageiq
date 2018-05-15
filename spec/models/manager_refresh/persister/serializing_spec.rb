@@ -77,6 +77,20 @@ describe ManagerRefresh::Inventory::Persister do
     lazy_find_image_sec1 = persister.miq_templates.lazy_find(
       {:name => image_data(1)[:name], :uid_ems => image_data(1)[:uid_ems]}, {:ref => :by_uid_ems_and_name}
     )
+    # TODO(lsmola) we build :hardwares with vm_or_template => persister.miq_templates.lazy_find(:ems_ref => image_data(1)[:ems_ref])
+    # so it's indexed by vm ems_ref. Then we try to fetch it with lazy_find_image_sec2, which uses a by_uid_ems_and_name.
+    # So we can convert that to ems_ref, but what if we would build the :hardware with by_uid_ems_and_name? We do this
+    # in k8s provider
+    #
+    # We will need to store in hardware IC what it was build with, then we will know what we can convert it to? And hopefully
+    # we will not build the hardware with different :keys? But we might be actually doing it and I think it's fine for
+    # creating? But it sucks for lazy_find, maybe we will just forbid it?
+    #
+    # Or we will store what attributes were used to build hardware, then we can try to find it based on all of them?
+    # Then we would also transform the current lazy_object on find? But it would not work with current recursion.
+    #
+    # And we need more focus on having e.g. hardware, using vm with different refs, since we can then have duplicates.
+    # On saving, those duplicates will be eliminated, but if anything pointed to the duplicate, it will not get it's id.
     lazy_find_image_sec2 = persister.miq_templates.lazy_find(
       {:name => image_data(1)[:name], :uid_ems => image_data(1)[:uid_ems]}, {:ref => :by_uid_ems_and_name, :key => :vendor}
     )
@@ -96,8 +110,10 @@ describe ManagerRefresh::Inventory::Persister do
 
     @hardware_data_1 = hardware_data(1).merge(
       :guest_os           => persister.hardwares.lazy_find({:vm_or_template => lazy_find_image}, {:key => :guest_os}),
-      :model              => persister.hardwares.lazy_find({:vm_or_template => lazy_find_image_sec}, {:key => :model}),
-      :manufacturer       => persister.hardwares.lazy_find({:vm_or_template => lazy_find_image_sec1}, {:key => :manufacturer}),
+      :model              => persister.hardwares.lazy_find({:vm_or_template => lazy_find_image_sec},
+                                                           {:key => :model, :transform_nested_lazy_finds => true}),
+      :manufacturer       => persister.hardwares.lazy_find({:vm_or_template => lazy_find_image_sec1},
+                                                           {:key => :manufacturer, :transform_nested_lazy_finds => true}),
       :guest_os_full_name => lazy_find_image_sec2,
       :vm_or_template     => persister.vms.lazy_find(:ems_ref => vm_data(1)[:ems_ref])
     )
