@@ -165,7 +165,11 @@ describe MiqServer do
             allow(VMDB::Util).to receive(:get_evm_log_for_date).and_return(compressed_evm_log)
             allow(VMDB::Util).to receive(:get_log_start_end_times).and_return([log_start, log_end])
             allow(VMDB::Util).to receive(:zip_logs).and_return(daily_log)
-            allow_any_instance_of(LogFile).to receive(:upload)
+            %w{historical_logfile current_logfile}.each do |kind|
+              logfile = FactoryGirl.create(:log_file, :historical => kind == "historical_logfile")
+              allow(logfile).to receive(:upload)
+              allow(LogFile).to receive(kind).and_return(logfile)
+            end
           end
 
           it "no prior historical logfile" do
