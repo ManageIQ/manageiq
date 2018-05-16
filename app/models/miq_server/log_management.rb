@@ -15,14 +15,14 @@ module MiqServer::LogManagement
   def post_historical_logs(taskid, log_depot)
     task = MiqTask.find(taskid)
     log_prefix = "Task: [#{task.id}]"
-    log_type = "Archived"
+    log_type = "Archive"
 
     # Post all compressed logs for a specific date + configs, creating a new row per day
     VMDB::Util.compressed_log_patterns.each do |pattern|
       log_start, log_end = log_start_and_end_for_pattern(pattern)
-      date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
+      date_string = "#{format_log_time(log_start)}_#{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
 
-      cond = {:historical => true, :name => logfile_name(log_type, date_string), :state => 'available'}
+      cond = {:historical => true, :name => LogFile.logfile_name(self, log_type, date_string), :state => 'available'}
       cond[:logging_started_on] = log_start unless log_start.nil?
       cond[:logging_ended_on] = log_end unless log_end.nil?
       logfile = log_files.find_by(cond)
@@ -39,14 +39,9 @@ module MiqServer::LogManagement
     end
   end
 
-  def logfile_name(category, date_string)
-    category = "Requested" if category == "Current"
-    "#{category} #{self.name} logs #{date_string} "
-  end
-
   def log_patterns(log_type, base_pattern = nil)
     case log_type.to_s.downcase
-    when "archived"
+    when "archive"
       Array(::Settings.log.collection.archive.pattern).unshift(base_pattern)
     when "current"
       current_log_patterns
@@ -144,7 +139,7 @@ module MiqServer::LogManagement
         :local_file         => local_file,
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,
-        :name               => logfile_name(log_type, date_string),
+        :name               => LogFile.logfile_name(self, log_type, date_string),
         :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
       )
 
