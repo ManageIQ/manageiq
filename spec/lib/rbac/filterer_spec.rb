@@ -332,7 +332,9 @@ describe Rbac::Filterer do
     context "with non-sql filter" do
       subject { described_class.new }
 
-      let(:expression)        { MiqExpression.new("=" => {"field" => "Vm-vendor_display", "value" => "VMware"}) }
+      let(:nonsql_expression) { {"=" => {"field" => "Vm-vendor_display", "value" => "VMware"}} }
+      let(:raw_expression)    { nonsql_expression }
+      let(:expression)        { MiqExpression.new(raw_expression) }
       let(:search_attributes) { { :class => "Vm", :filter => expression } }
       let(:results)           { subject.search(search_attributes).first }
 
@@ -346,6 +348,23 @@ describe Rbac::Filterer do
       it "does not add references without includes" do
         expect(subject).to receive(:include_references).with(anything, Vm, nil, nil, true).and_call_original
         results
+      end
+
+      context "with a partial non-sql filter" do
+        let(:sql_expression) { { "IS EMPTY" => { "field" => "Vm.host-name" } } }
+        let(:raw_expression) { { "AND" => [nonsql_expression, sql_expression] } }
+
+        it "finds the Vms" do
+          expect(results.to_a).to match_array [owned_vm, other_vm]
+          expect(results.count).to eq 2
+        end
+
+        it "includes references" do
+          expect(subject).to receive(:include_references).with(anything, ::Vm, nil, {:host => {}}, false)
+                                                         .and_call_original
+          expect(subject).to receive(:warn).never
+          results
+        end
       end
 
       context "with :include_for_find" do
@@ -370,6 +389,18 @@ describe Rbac::Filterer do
             expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, true).and_call_original
             expect(subject).to receive(:warn).exactly(4).times
             results
+          end
+
+          context "and targets is a NullRelation scope" do
+            let(:targets)     { Vm.none }
+            let(:null_search) { search_with_where.merge(:targets => targets) }
+            let(:results)     { subject.search(null_search).first }
+
+            it "will not try to skip references" do
+              expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, false).and_call_original
+              expect(subject).to receive(:warn).never
+              results
+            end
           end
         end
       end
