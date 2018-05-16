@@ -248,7 +248,7 @@ module Rbac
 
       exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
-      skip_references            = skip_references?(scope, options, attrs)
+      skip_references            = skip_references?(scope, options, attrs, exp_sql, exp_includes)
 
       # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
       # if you note, the limits are put back into scope a few lines down from here
@@ -308,9 +308,10 @@ module Rbac
     # If still invalid, there is an EXPLAIN check in #include_references that
     # will make sure the query is valid and if not, will include the references
     # as done previously.
-    def skip_references?(scope, options, attrs)
+    def skip_references?(scope, options, attrs, exp_sql, exp_includes)
       return false if scope.singleton_class.included_modules.include?(ActiveRecord::NullRelation)
-      options[:extra_cols].blank? && !attrs[:apply_limit_in_sql]
+      options[:extra_cols].blank? &&
+        (!attrs[:apply_limit_in_sql] && (exp_sql.nil? || exp_includes.nil?))
     end
 
     def include_references(scope, klass, include_for_find, exp_includes, skip)
