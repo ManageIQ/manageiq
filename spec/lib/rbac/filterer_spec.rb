@@ -371,6 +371,18 @@ describe Rbac::Filterer do
             expect(subject).to receive(:warn).exactly(4).times
             results
           end
+
+          context "and targets is a NullRelation scope" do
+            let(:targets)     { Vm.none }
+            let(:null_search) { search_with_where.merge(:targets => targets) }
+            let(:results)     { subject.search(null_search).first }
+
+            it "will not try to skip references" do
+              expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, false).and_call_original
+              expect(subject).to receive(:warn).never
+              results
+            end
+          end
         end
       end
     end
