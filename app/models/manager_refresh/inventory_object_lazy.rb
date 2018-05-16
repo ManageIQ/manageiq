@@ -2,7 +2,7 @@ module ManagerRefresh
   class InventoryObjectLazy
     include Vmdb::Logging
 
-    attr_reader :reference, :inventory_collection, :key, :default
+    attr_reader :reference, :inventory_collection, :key, :default, :transform_nested_lazy_finds
 
     delegate :stringified_reference, :ref, :[], :to => :reference
 
@@ -12,11 +12,16 @@ module ManagerRefresh
     # @param ref [Symbol] reference name
     # @param key [Symbol] key name, will be used to fetch attribute from resolved InventoryObject
     # @param default [Object] a default value used if the :key will resolve to nil
-    def initialize(inventory_collection, index_data, ref: :manager_ref, key: nil, default: nil)
+    # @param transform_nested_lazy_finds [Boolean] True if we want to convert all lazy objects in InventoryObject
+    #        objects and reset the Reference. TODO(lsmola) we should be able to do this automatically, then we can
+    #        remove this option
+    def initialize(inventory_collection, index_data, ref: :manager_ref, key: nil, default: nil, transform_nested_lazy_finds: false)
       @inventory_collection = inventory_collection
       @reference            = inventory_collection.build_reference(index_data, ref)
       @key                  = key
       @default              = default
+
+      @transform_nested_lazy_finds = transform_nested_lazy_finds
 
       # We do not support skeletal pre-create for :key, since :key will not be available, we want to use local_db_find
       # instead.
@@ -40,6 +45,8 @@ module ManagerRefresh
     # @return [ManagerRefresh::InventoryObject, Object] ManagerRefresh::InventoryObject instance or an attribute
     #         on key
     def load
+      transform_nested_secondary_indexes! if transform_nested_lazy_finds && nested_secondary_index?
+
       key ? load_object_with_key : load_object
     end
 
@@ -70,10 +77,31 @@ module ManagerRefresh
         !inventory_collection.association_to_foreign_key_mapping[key].nil?
     end
 
+    def transform_nested_secondary_indexes!(depth = 0)
+      raise "Nested references are too deep!" if depth > 20
+
+      keys.each do |x|
+        attr = full_reference[x]
+        next unless attr.kind_of?(ManagerRefresh::InventoryObjectLazy)
+        next if attr.primary?
+
+        if attr.nested_secondary_index?
+          attr.transform_nested_secondary_indexes!(depth + 1)
+        end
+
+        full_reference[x] = full_reference[x].load
+      end
+
+      # Rebuild the reference to get the right value
+      self.reference = inventory_collection.build_reference(full_reference, ref)
+    end
+
     private
 
     delegate :parallel_safe?, :saved?, :saver_strategy, :skeletal_primary_index, :targeted?, :to => :inventory_collection
-    delegate :full_reference, :keys, :primary?, :to => :reference
+    delegate :nested_secondary_index?, :primary?, :full_reference, :keys, :primary?, :to => :reference
+
+    attr_writer :reference
 
     # Instead of loading the reference from the DB, we'll add the skeletal InventoryObject (having manager_ref and
     # info from the builder_params) to the correct InventoryCollection. Which will either be found in the DB or

@@ -56,12 +56,13 @@ module ManagerRefresh
       # @return [Hash] Serialized ManagerRefresh::InventoryObjectLazy
       def lazy_relation_to_hash(value, depth = 0)
         {
-          :type                      => "ManagerRefresh::InventoryObjectLazy",
-          :inventory_collection_name => value.inventory_collection.name,
-          :reference                 => data_to_hash(value.reference.full_reference, depth + 1),
-          :ref                       => value.reference.ref,
-          :key                       => value.try(:key),
-          :default                   => value.try(:default),
+          :type                        => "ManagerRefresh::InventoryObjectLazy",
+          :inventory_collection_name   => value.inventory_collection.name,
+          :reference                   => data_to_hash(value.reference.full_reference, depth + 1),
+          :ref                         => value.reference.ref,
+          :key                         => value.try(:key),
+          :default                     => value.try(:default),
+          :transform_nested_lazy_finds => value.try(:transform_nested_lazy_finds)
         }
       end
 
@@ -78,9 +79,10 @@ module ManagerRefresh
 
         inventory_collection.lazy_find(
           hash_to_data(value['reference'], available_inventory_collections, depth + 1).symbolize_keys!,
-          :ref     => value['ref'].try(:to_sym),
-          :key     => value['key'].try(:to_sym),
-          :default => value['default']
+          :ref                         => value['ref'].try(:to_sym),
+          :key                         => value['key'].try(:to_sym),
+          :default                     => value['default'],
+          :transform_nested_lazy_finds => value['transform_nested_lazy_finds']
         )
       end
 

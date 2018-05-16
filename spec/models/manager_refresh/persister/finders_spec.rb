@@ -148,4 +148,31 @@ describe ManagerRefresh::Inventory::Persister do
   it "checks find_or_build_by finds existing inventory object instead of duplicating" do
     expect(persister.vms.find_or_build_by(vm_data(1)).object_id).to eq(persister.vms.find_or_build_by(vm_data(1)).object_id)
   end
+
+  it "raises exception unless only primary index is used in nested lazy_find when building" do
+    name = vm_data(1)[:name]
+    vm_lazy = persister.vms.lazy_find({:name => name}, :ref => :by_name)
+
+    persister.vms.build(vm_data(1))
+
+    expected_error = "Wrong index for key :vm_or_template, all references under this index must point to default :ref"\
+                     " called :manager_ref. Any other :ref is not valid. This applies also to nested lazy links."
+    expect do
+      persister.hardwares.build(hardware_data(1, :vm_or_template => vm_lazy))
+    end.to(raise_error(expected_error))
+  end
+
+  it "raises exception unless only primary index is used in deep nested lazy_find when building" do
+    name = vm_data(1)[:name]
+    vm_lazy = persister.vms.lazy_find({:name => name}, :ref => :by_name)
+    hardware_lazy = persister.hardwares.lazy_find(:vm_or_template => vm_lazy)
+
+    persister.vms.build(vm_data(1))
+
+    expected_error = "Wrong index for key :hardware, all references under this index must point to default :ref called"\
+                     " :manager_ref. Any other :ref is not valid. This applies also to nested lazy links."
+    expect do
+      persister.disks.build(disk_data(1, :hardware => hardware_lazy))
+    end.to(raise_error(expected_error))
+  end
 end
