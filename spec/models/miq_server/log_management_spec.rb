@@ -152,12 +152,12 @@ describe MiqServer do
 
         context "new tests" do
           let(:task)                      { FactoryGirl.create(:miq_task) }
-          let(:compressed_log_patterns)   { [Rails.root.join("log/evm*.log.gz").to_s] }
-          let(:current_log_patterns)      { [Rails.root.join("log/evm.log").to_s] }
-          let(:compressed_evm_log)        { Rails.root.join("evm.log-20180319.gz").to_s}
-          let(:log_start)                 { Time.parse("2018-05-11 11:33:12 UTC") }
-          let(:log_end)                   { Time.parse("2018-05-11 15:34:16 UTC") }
-          let(:daily_log)                 { Rails.root.join("data", "user", "system", "evm_server_daily.zip").to_s}
+          let(:compressed_log_patterns)   { [Rails.root.join("log", "evm*.log.gz").to_s] }
+          let(:current_log_patterns)      { [Rails.root.join("log", "evm.log").to_s] }
+          let(:compressed_evm_log)        { Rails.root.join("evm.log-20180319.gz").to_s }
+          let(:log_start)                 { Time.zone.parse("2018-05-11 11:33:12 UTC") }
+          let(:log_end)                   { Time.zone.parse("2018-05-11 15:34:16 UTC") }
+          let(:daily_log)                 { Rails.root.join("data", "user", "system", "evm_server_daily.zip").to_s }
           let(:log_depot)                 { FactoryGirl.create(:file_depot) }
           let!(:region)                   { MiqRegion.seed }
           let(:zone)                      { @miq_server.zone }
@@ -167,63 +167,46 @@ describe MiqServer do
             allow(VMDB::Util).to receive(:get_evm_log_for_date).and_return(compressed_evm_log)
             allow(VMDB::Util).to receive(:get_log_start_end_times).and_return([log_start, log_end])
             allow(VMDB::Util).to receive(:zip_logs).and_return(daily_log)
-            %w{historical_logfile current_logfile}.each do |kind|
+            allow(@miq_server).to receive(:current_log_patterns).and_return(current_log_patterns)
+            allow(@miq_server).to receive(:backup_automate_dialogs)
+            allow(@miq_server).to receive(:backup_automate_models)
+            %w(historical_logfile current_logfile).each do |kind|
               logfile = FactoryGirl.create(:log_file, :historical => kind == "historical_logfile")
               allow(logfile).to receive(:upload)
               allow(LogFile).to receive(kind).and_return(logfile)
             end
           end
 
-          it "no prior historical logfile" do
-            @miq_server.post_historical_logs(task.id, log_depot)
-            logfile = @miq_server.reload.log_files.first
-            expected_name = ["Archive", "region", region.region, zone.name, zone.id, @miq_server.name, @miq_server.id, "20180511_113312 20180511_153416"].join(" ")
-            expect(logfile).to have_attributes(
-              :file_depot         => log_depot,
-              :local_file         => daily_log,
-              :logging_started_on => log_start,
-              :logging_ended_on   => log_end,
-              :name               => expected_name,
-              :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} 20180511_113312 20180511_153416",
-              :miq_task_id        => task.id
-            )
+          %w(
+            Archive post_historical_logs
+            Current post_current_logs
+            Models post_automate_models
+            Dialogs post_automate_dialogs
+          ).each_slice(2) do |name, method|
+            it "##{method}" do
+              @miq_server.send(method, task.id, log_depot)
+              logfile = @miq_server.reload.log_files.first
+              expected_name = [name, "region", region.region, zone.name, zone.id, @miq_server.name, @miq_server.id, "20180511_113312 20180511_153416"].join(" ")
+              expect(logfile).to have_attributes(
+                :file_depot         => log_depot,
+                :local_file         => daily_log,
+                :logging_started_on => log_start,
+                :logging_ended_on   => log_end,
+                :name               => expected_name,
+                :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} 20180511_113312 20180511_153416",
+                :miq_task_id        => task.id
+              )
 
-            expected_filename = "Archive_region_#{region.region}_#{zone.name}_#{zone.id}_#{@miq_server.name}_#{@miq_server.id}_20180511_113312_20180511_153416.zip"
-            expected_filename.gsub!(/\s+/, "_")
-            expect(logfile.destination_file_name).to eq(expected_filename)
+              expected_filename = "#{name}_region_#{region.region}_#{zone.name}_#{zone.id}_#{@miq_server.name}_#{@miq_server.id}_20180511_113312_20180511_153416.zip"
+              expected_filename.gsub!(/\s+/, "_")
+              expect(logfile.destination_file_name).to eq(expected_filename)
 
-            expect(task.reload).to have_attributes(
-             :message => "Archive log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} are posted",
-             :state   => "Active",
-             :status  => "Ok",
-            )
-
-          end
-
-          it "no prior current logfile" do
-            allow(@miq_server).to receive(:current_log_patterns).and_return(current_log_patterns)
-            @miq_server.post_current_logs(task.id, log_depot)
-            logfile = @miq_server.reload.log_files.first
-            expected_name = ["Current", "region", region.region, zone.name, zone.id, @miq_server.name, @miq_server.id, "20180511_113312 20180511_153416"].join(" ")
-            expect(logfile).to have_attributes(
-              :file_depot         => log_depot,
-              :local_file         => daily_log,
-              :logging_started_on => log_start,
-              :logging_ended_on   => log_end,
-              :name               => expected_name,
-              :description        => "Logs for Zone #{@miq_server.zone.name} Server #{@miq_server.name} 20180511_113312 20180511_153416",
-              :miq_task_id        => task.id
-            )
-
-            expected_filename = "Current_region_#{region.region}_#{zone.name}_#{zone.id}_#{@miq_server.name}_#{@miq_server.id}_20180511_113312_20180511_153416.zip"
-            expected_filename.gsub!(/\s+/, "_")
-            expect(logfile.destination_file_name).to eq(expected_filename)
-
-            expect(task.reload).to have_attributes(
-             :message => "Current log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} are posted",
-             :state   => "Active",
-             :status  => "Ok",
-            )
+              expect(task.reload).to have_attributes(
+                :message => "#{name} log files from #{@miq_server.name} #{@miq_server.zone.name} MiqServer #{@miq_server.id} are posted",
+                :state   => "Active",
+                :status  => "Ok",
+              )
+            end
           end
         end
       end

@@ -34,7 +34,7 @@ module MiqServer::LogManagement
         logfile = LogFile.historical_logfile
       end
 
-      logfile.update(:file_depot => log_depot, :miq_task   => task)
+      logfile.update(:file_depot => log_depot, :miq_task => task)
       post_one_log_pattern(pattern, logfile, log_type)
     end
   end
@@ -45,6 +45,8 @@ module MiqServer::LogManagement
       Array(::Settings.log.collection.archive.pattern).unshift(base_pattern)
     when "current"
       current_log_patterns
+    else
+      [base_pattern]
     end
   end
 
@@ -82,6 +84,11 @@ module MiqServer::LogManagement
     last_log.try(:miq_task).try!(:message)
   end
 
+  def include_automate_models_and_dialogs?(value)
+    return value unless value.nil?
+    Settings.log.collection.include_automate_models_and_dialogs
+  end
+
   def post_logs(options)
     taskid = options[:taskid]
     task = MiqTask.find(taskid)
@@ -90,6 +97,11 @@ module MiqServer::LogManagement
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
     raise _("Log depot settings not configured") unless context_log_depot
     context_log_depot.update_attributes(:support_case => options[:support_case].presence)
+
+    if include_automate_models_and_dialogs?(options[:include_automate_models_and_dialogs])
+      post_automate_models(taskid, context_log_depot)
+      post_automate_dialogs(taskid, context_log_depot)
+    end
 
     post_historical_logs(taskid, context_log_depot) unless options[:only_current]
     post_current_logs(taskid, context_log_depot)
@@ -132,7 +144,7 @@ module MiqServer::LogManagement
     task.update_status("Active", "Ok", msg)
 
     begin
-      local_file = VMDB::Util.zip_logs("evm.zip", log_patterns(log_type, pattern), "system")
+      local_file = VMDB::Util.zip_logs(log_type.to_s.downcase.concat(".zip"), log_patterns(log_type, pattern), "system")
       self.log_files << logfile
 
       logfile.update_attributes(
@@ -144,22 +156,58 @@ module MiqServer::LogManagement
       )
 
       logfile.upload
-
     rescue StandardError, Timeout::Error => err
       _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{who_am_i} due to error: [#{err.class.name}] [#{err}]")
       logfile.update_attributes(:state => "error")
       raise
+    ensure
+      FileUtils.rm_f(local_file) if local_file && File.exist?(local_file)
     end
     msg = "#{log_type} log files from #{who_am_i} are posted"
     _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
   end
 
+  def post_automate_models(taskid, log_depot)
+    domain_zip = Rails.root.join("log", "domain.zip")
+    backup_automate_models(domain_zip)
+
+    logfile = LogFile.historical_logfile
+    logfile.update(:file_depot => log_depot, :miq_task => MiqTask.find(taskid))
+    post_one_log_pattern(domain_zip, logfile, "Models")
+  ensure
+    FileUtils.rm_rf(domain_zip)
+  end
+
+  def backup_automate_models(domain_zip)
+    Dir.chdir(Rails.root) do
+      MiqAeDatastore.backup('zip_file' => domain_zip, 'overwrite' => false)
+    end
+  end
+
+  def post_automate_dialogs(taskid, log_depot)
+    dialog_directory = Rails.root.join("log", "service_dialogs")
+    FileUtils.mkdir_p(dialog_directory)
+    backup_automate_dialogs(dialog_directory)
+
+    logfile = LogFile.historical_logfile
+    logfile.update(:file_depot => log_depot, :miq_task => MiqTask.find(taskid))
+    post_one_log_pattern(dialog_directory.join("*"), logfile, "Dialogs")
+  ensure
+    FileUtils.rm_rf(dialog_directory)
+  end
+
+  def backup_automate_dialogs(dialog_directory)
+    Dir.chdir(Rails.root) do
+      TaskHelpers::Exports::ServiceDialogs.new.export(:keep_spaces => false, :directory => dialog_directory)
+    end
+  end
+
   def post_current_logs(taskid, log_depot)
     delete_old_requested_logs
 
     logfile = LogFile.current_logfile
-    logfile.update(:file_depot => log_depot, :miq_task   => MiqTask.find(taskid))
+    logfile.update(:file_depot => log_depot, :miq_task => MiqTask.find(taskid))
     post_one_log_pattern("log/*.log", logfile, "Current")
   end
 
