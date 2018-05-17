@@ -80,25 +80,25 @@ class ChargebackVm < Chargeback
     build_results_for_report_chargeback(options)
   end
 
-  def self.where_clause(records, options)
+  def self.where_clause(records, options, region)
     scope = records.where(:resource_type => "VmOrTemplate")
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
       scope.for_tag_names(options[:tag].split("/")[2..-1])
     else
-      scope.where(:resource => vms)
+      scope.where(:resource => vms(region))
     end
   end
 
-  def self.extra_resources_without_rollups
+  def self.extra_resources_without_rollups(region)
     # support hyper-v for which we do not collect metrics yet (also when we are including metrics in calculations)
-    scope = @options.include_metrics? ? ManageIQ::Providers::Microsoft::InfraManager::Vm : vms
+    scope = @options.include_metrics? ? ManageIQ::Providers::Microsoft::InfraManager::Vm : vms(region)
     scope = scope.eager_load(:hardware, :taggings, :tags, :host, :ems_cluster, :storage, :ext_management_system,
                              :tenant)
 
     if @options[:tag] && (@report_user.nil? || !@report_user.self_service?)
       scope.find_tagged_with(:any => @options[:tag], :ns => '*')
     else
-      scope.where(:id => vms)
+      scope.where(:id => vms(region))
     end
   end
 
@@ -143,13 +143,14 @@ class ChargebackVm < Chargeback
     }.merge(sub_metric_columns)
   end
 
-  def self.vm_owner(consumption)
-    @vm_owners ||= vms.each_with_object({}) { |vm, res| res[vm.id] = vm.evm_owner_name }
+  def self.vm_owner(consumption, region)
+    @vm_owners ||= vms(region).each_with_object({}) { |vm, res| res[vm.id] = vm.evm_owner_name }
     @vm_owners[consumption.resource_id] ||= consumption.resource.try(:evm_owner_name)
   end
 
-  def self.vms
-    @vms ||=
+  def self.vms(region)
+    @vms ||= {}
+    @vms[region] ||=
       begin
         # Find Vms by user or by tag
         if @options[:entity_id]
@@ -167,6 +168,7 @@ class ChargebackVm < Chargeback
           vms
         elsif @options[:tenant_id]
           tenant = Tenant.find(@options[:tenant_id])
+          tenant = Tenant.in_region(region).find_by(:name => tenant.name)
           if tenant.nil?
             _log.error("Unable to find tenant '#{@options[:tenant_id]}'. Calculating chargeback costs aborted.")
             raise MiqException::Error, "Unable to find tenant '#{@options[:tenant_id]}'"
@@ -187,12 +189,12 @@ class ChargebackVm < Chargeback
 
   private
 
-  def init_extra_fields(consumption)
+  def init_extra_fields(consumption, region)
     self.vm_id         = consumption.resource_id
     self.vm_name       = consumption.resource_name
     self.vm_uid        = consumption.resource.try(:ems_ref)
     self.vm_guid       = consumption.resource.try(:guid)
-    self.owner_name    = self.class.vm_owner(consumption)
+    self.owner_name    = self.class.vm_owner(consumption, region)
     self.provider_name = consumption.parent_ems.try(:name)
     self.provider_uid  = consumption.parent_ems.try(:guid)
   end

@@ -856,7 +856,7 @@ describe ChargebackVm do
           {'vm_name' => @vm1.name, 'owner_name' => admin.name, 'vm_uid' => 'ems_ref', 'vm_guid' => @vm1.guid,
            'vm_id' => @vm1.id}
         end
-        subject { ChargebackVm.new(report_options, consumption).attributes }
+        subject { ChargebackVm.new(report_options, consumption, MiqRegion.my_region_number).attributes }
 
         before do
           ChargebackVm.instance_variable_set(:@vm_owners, vm_owners)
@@ -932,6 +932,116 @@ describe ChargebackVm do
         end
 
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
+
+        context "with global and remote regions" do
+          let(:options_tenant)  { base_options.merge(:interval => 'monthly', :tenant_id => tenant_1.id).tap { |t| t.delete(:tag) } }
+          let(:vm_global)       { FactoryGirl.create(:vm_vmware) }
+          let!(:region_1) { FactoryGirl.create(:miq_region) }
+
+          def region_id_for(klass, region)
+            klass.id_in_region(klass.count + 1_000_000, region)
+          end
+
+          def find_result_by_vm_name_and_region(chargeback_result, vm_name, region)
+            first_region_id, last_region_id = MiqRegion.region_to_array(region)
+
+            chargeback_result.detect do |result|
+              result.vm_name == vm_name && result.vm_id.between?(first_region_id, last_region_id)
+            end
+          end
+
+          let(:tenant_name_1) { "T1" }
+          let(:tenant_name_2) { "T2" }
+          let(:tenant_name_3) { "T3" }
+
+          let(:vm_name_1) { "VM 1 T1" }
+
+          # BUILD tenants and VMs structure for default region
+          #
+          # T1(vm_1, vm_2) ->
+          #   T2(vm_1, vm_2)
+          #   T3(vm_1, vm_2)
+          let!(:tenant_1) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant, :name => tenant_name_1, :description => tenant_name_1) }
+          let(:vm_1_t_1) { FactoryGirl.create(:vm_vmware, :tenant => tenant_1, :name => vm_name_1) }
+          let(:vm_2_t_1) { FactoryGirl.create(:vm_vmware, :tenant => tenant_1) }
+
+          let(:tenant_2) { FactoryGirl.create(:tenant, :name => tenant_name_2, :parent => tenant_1, :description => tenant_name_2) }
+          let(:vm_1_t_2) { FactoryGirl.create(:vm_vmware, :tenant => tenant_2) }
+          let(:vm_2_t_2) { FactoryGirl.create(:vm_vmware, :tenant => tenant_2) }
+
+          let(:tenant_3) { FactoryGirl.create(:tenant, :name => tenant_name_3, :parent => tenant_1, :description => tenant_name_3) }
+          let(:vm_1_t_3) { FactoryGirl.create(:vm_vmware, :tenant => tenant_3) }
+          let(:vm_2_t_3) { FactoryGirl.create(:vm_vmware, :tenant => tenant_3) }
+
+          # BUILD tenants and VMs structure for region_1
+          #
+          # T1(vm_1, vm_2) ->
+          #   T2(vm_1, vm_2)
+          #   T3(vm_1, vm_2)
+          #
+          let!(:root_tenant_region_1) do
+            tenant = FactoryGirl.create(:tenant, :id => region_id_for(Tenant, region_1.region))
+            tenant.parent = nil
+            tenant.save(:validate => false) # skip validate to set parent = nil
+            tenant
+          end
+
+          let!(:tenant_1_region_1) { FactoryGirl.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_1, :parent => root_tenant_region_1, :description => tenant_name_1) }
+          let(:vm_1_region_1_t_1) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1, :name => vm_name_1) }
+          let(:vm_2_region_1_t_1) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
+
+          let!(:tenant_2_region_1) { FactoryGirl.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_2, :parent => tenant_1_region_1, :description => tenant_name_2) }
+          let(:vm_1_region_1_t_2) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
+          let(:vm_2_region_1_t_2) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
+
+          let!(:tenant_3_region_1) { FactoryGirl.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_3, :parent => tenant_1_region_1, :description => tenant_name_3) }
+          let(:vm_1_region_1_t_3) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_3_region_1) }
+          let(:vm_2_region_1_t_3) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_3_region_1) }
+
+          before do
+            # default region
+            add_metric_rollups_for(vm_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
+            add_metric_rollups_for(vm_2_t_1, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
+            add_metric_rollups_for(vm_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
+            add_metric_rollups_for(vm_2_t_2, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
+            add_metric_rollups_for(vm_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
+            add_metric_rollups_for(vm_2_t_3, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
+
+            # region 1
+            add_metric_rollups_for(vm_1_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
+            add_metric_rollups_for(vm_2_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
+            add_metric_rollups_for(vm_1_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
+            add_metric_rollups_for(vm_2_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
+            add_metric_rollups_for(vm_1_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
+            add_metric_rollups_for(vm_2_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
+          end
+
+          subject! { ChargebackVm.build_results_for_report_ChargebackVm(options_tenant).first }
+
+          it "report from all regions and only for tenant_1" do
+            # report only VMs from tenant 1
+            vm_ids = subject.map(&:vm_id)
+            vm_ids_from_tenant = [tenant_1, tenant_1_region_1].map { |t| t.subtree.map(&:vms).map(&:ids) }.flatten
+            expect(vm_ids).to match_array(vm_ids_from_tenant)
+
+            # default region subject
+            default_region_chargeback = find_result_by_vm_name_and_region(subject, vm_name_1, MiqRegion.my_region_number)
+            used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, vm_1_t_1)
+            expect(default_region_chargeback.cpu_used_metric).to be_within(0.01).of(used_metric)
+            expect(default_region_chargeback.cpu_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
+            expect(default_region_chargeback.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
+            expect(default_region_chargeback.cpu_allocated_metric).to eq(cpu_count)
+
+            # region 1
+            region_1_chargeback = find_result_by_vm_name_and_region(subject, vm_name_1, region_1.region)
+            used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, vm_1_region_1_t_1)
+            expect(region_1_chargeback.cpu_used_metric).to be_within(0.01).of(used_metric)
+            expect(region_1_chargeback.cpu_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
+            expect(region_1_chargeback.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
+
+            expect(region_1_chargeback.vm_id).to eq(vm_1_region_1_t_1.id)
+          end
+        end
 
         it "cpu" do
           expect(subject.cpu_allocated_metric).to eq(cpu_count)
