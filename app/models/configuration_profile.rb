@@ -70,7 +70,7 @@ class ConfigurationProfile < ApplicationRecord
   alias_method :configuration_manager, :manager
 
   def total_configured_systems
-    Rbac.filtered(configured_systems, :match_via_descendants => ConfiguredSystem).count
+    Rbac.filtered(configured_systems).count
   end
 
   def image_name
