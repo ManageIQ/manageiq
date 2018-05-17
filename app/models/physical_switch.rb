@@ -6,6 +6,10 @@ class PhysicalSwitch < Switch
   has_one :hardware, :dependent => :destroy, :foreign_key => :switch_id, :inverse_of => :physical_switch
   has_many :physical_network_ports, :dependent => :destroy, :foreign_key => :switch_id
 
+  def self.base_model
+    PhysicalSwitch
+  end
+
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
