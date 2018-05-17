@@ -56,6 +56,8 @@ describe EvmDatabaseOps do
       allow(PostgresAdmin).to receive(:runcmd_with_logging)
       allow(PostgresAdmin).to receive(:pg_dump_file?).and_return(true)
       allow(PostgresAdmin).to receive(:base_backup_file?).and_return(false)
+
+      allow(VmdbDatabaseConnection).to receive(:count).and_return(1)
     end
 
     it "from local backup" do
