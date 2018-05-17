@@ -11,6 +11,7 @@ FactoryGirl.define do
           :parent => :configuration_script_payload
 
   factory :configuration_script, :class => "ConfigurationScript", :parent => :configuration_script_base
+  factory :configuration_workflow, :class => "ConfigurationWorkflow", :parent => :configuration_script_base
   factory :ansible_configuration_script,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript",
           :parent => :configuration_script

@@ -33,6 +33,16 @@ module ManagerRefresh::Inventory::AutomationManager
       }.merge(options))
     end
 
+    def has_automation_manager_configuration_workflows(options = {})
+      has_configuration_workflows({
+        :model_class    => provider_module::AutomationManager::ConfigurationWorkflow,
+        :association    => :configuration_workflows,
+        :builder_params => {
+          :manager => ->(persister) { persister.manager }
+        },
+      }.merge(options))
+    end
+
     def has_automation_manager_configured_systems(options = {})
       has_configured_systems({
         :model_class    => provider_module::AutomationManager::ConfiguredSystem,
