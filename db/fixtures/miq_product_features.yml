@@ -5848,6 +5848,26 @@
       :feature_type: admin
       :identifier: ems_physical_infra_new
 
+# Physical Racks
+- :name: Physical Racks
+  :description: Everything under Physical Racks
+  :feature_type: node
+  :identifier: physical_rack
+  :children:
+  - :name: View
+    :description: View Physical Rack
+    :feature_type: view
+    :identifier: physical_rack_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Racks
+      :feature_type: view
+      :identifier: physical_rack_show_list
+    - :name: Show
+      :description: Display Individual Physical Rack
+      :feature_type: view
+      :identifier: physical_rack_show
+
 # Physical Chassis
 - :name: Physical Chassis
   :description: Everything under Physical Chassis
