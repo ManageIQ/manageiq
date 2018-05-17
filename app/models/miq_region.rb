@@ -220,6 +220,10 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ui_url(contact_with = :hostname)
+    svr = remote_ui_miq_server
+    remote_ui_url_override = svr.settings_for_resource.ui.url if svr
+    return remote_ui_url_override if remote_ui_url_override
+
     hostname = send("remote_ui_#{contact_with}")
     hostname && "https://#{hostname}"
   end
