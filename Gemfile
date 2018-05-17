@@ -118,6 +118,10 @@ group :nuage, :manageiq_default do
   manageiq_plugin "manageiq-providers-nuage"
 end
 
+group :redfish, :manageiq_default do
+  manageiq_plugin "manageiq-providers-redfish"
+end
+
 group :qpid_proton, :optional => true do
   gem "qpid_proton",                    "~>0.22.0",      :require => false
 end
