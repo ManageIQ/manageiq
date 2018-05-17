@@ -2,12 +2,50 @@ describe VMDB::Config do
   let(:password) { "pa$$w0rd" }
   let(:enc_pass) { MiqPassword.encrypt(password) }
 
-  it ".get_file" do
-    stub_settings(:http_proxy => {:default => {:host => "proxy.example.com", :user => "user", :password => password, :port => 80}})
+  describe ".get_file" do
+    it "for current server" do
+      _guid, server, _zone = EvmSpecHelper.local_guid_miq_server_zone
+      Vmdb::Settings.save!(
+        server,
+        :http_proxy => {
+          :default => {
+            :host     => "proxy.example.com",
+            :user     => "user",
+            :password => password,
+            :port     => 80
+          }
+        }
+      )
+      server.reload
+      yaml = VMDB::Config.get_file
+      yaml = YAML.load(yaml)
+      expect(yaml.fetch_path(:http_proxy, :default, :host)).to eq "proxy.example.com"
+      expect(yaml.fetch_path(:http_proxy, :default, :user)).to eq "user"
+      expect(yaml.fetch_path(:http_proxy, :default, :port)).to eq 80
+      expect(yaml.fetch_path(:http_proxy, :default, :password)).to be_encrypted
+    end
 
-    expect(VMDB::Config.get_file).to eq(
-      "---\n:http_proxy:\n  :default:\n    :host: proxy.example.com\n    :user: user\n    :password: #{enc_pass}\n    :port: 80\n"
-    )
+    it "for specified resource" do
+      resource = FactoryGirl.create(:miq_server)
+      Vmdb::Settings.save!(
+        resource,
+        :http_proxy => {
+          :default => {
+            :host     => "proxy.example.com",
+            :user     => "user",
+            :password => password,
+            :port     => 80
+          }
+        }
+      )
+      resource.reload
+      yaml = VMDB::Config.get_file(resource)
+      yaml = YAML.load(yaml)
+      expect(yaml.fetch_path(:http_proxy, :default, :host)).to eq "proxy.example.com"
+      expect(yaml.fetch_path(:http_proxy, :default, :user)).to eq "user"
+      expect(yaml.fetch_path(:http_proxy, :default, :port)).to eq 80
+      expect(yaml.fetch_path(:http_proxy, :default, :password)).to be_encrypted
+    end
   end
 
   context ".save_file" do
