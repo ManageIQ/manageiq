@@ -1089,6 +1089,7 @@
   :active_task_timeout: 6.hours
 :ui:
   :mark_translated_strings: false
+  :url:
 :vim_performance_states:
   :history:
     :purge_window_size: 1000
