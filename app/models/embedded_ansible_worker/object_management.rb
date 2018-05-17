@@ -6,7 +6,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     ensure_credential(provider, connection)
     ensure_inventory(provider, connection)
     ensure_host(provider, connection)
-    ensure_plugin_playbooks_project_seeded(provider, connection) unless MiqEnvironment::Command.is_container?
+    ensure_plugin_playbooks_project_seeded(provider, connection)
   end
 
   def remove_demo_data(connection)
@@ -56,7 +56,10 @@ module EmbeddedAnsibleWorker::ObjectManagement
   end
 
   def ensure_plugin_playbooks_project_seeded(provider, connection)
-    EmbeddedAnsible.new.create_local_playbook_repo
+    ea = EmbeddedAnsible.new
+    return unless ea.respond_to?(:create_local_playbook_repo)
+
+    ea.create_local_playbook_repo
 
     project = find_default_project(connection, provider.default_project)
     if project
