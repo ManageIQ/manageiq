@@ -1750,11 +1750,19 @@ class Host < ApplicationRecord
   end
 
   def writable_storages
-    storages.where(:host_storages => {:read_only => [false, nil]})
+    if host_storages.loaded? && host_storages.all? { |hs| hs.association(:storage).loaded? }
+      host_storages.reject(&:read_only).map(&:storage)
+    else
+      storages.where(:host_storages => {:read_only => [false, nil]})
+    end
   end
 
   def read_only_storages
-    storages.where(:host_storages => {:read_only => true})
+    if host_storages.loaded? && host_storages.all? { |hs| hs.association(:storage).loaded? }
+      host_storages.select(&:read_only).map(&:storage)
+    else
+      storages.where(:host_storages => {:read_only => true})
+    end
   end
 
   def archived?

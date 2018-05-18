@@ -1055,7 +1055,7 @@ class MiqRequestWorkflow
 
     rails_logger('allowed_storages', 0)
     st = Time.now
-    MiqPreloader.preload(hosts, :storages)
+    MiqPreloader.preload(hosts, :storages => {}, :host_storages => :storage)
 
     storages = hosts.each_with_object({}) do |host, hash|
       host.writable_storages.each { |s| hash[s.id] = s }
