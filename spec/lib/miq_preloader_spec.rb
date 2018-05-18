@@ -112,4 +112,63 @@ describe MiqPreloader do
       MiqPreloader.preload_and_scope(*args)
     end
   end
+
+  describe ".polymorphic_preload_for_child_classes" do
+    it "preloads polymorphic relationships that are defined" do
+      ems         = FactoryGirl.create(:ems_infra)
+      clusters    = FactoryGirl.create_list(:ems_cluster, 2,
+                                            :ext_management_system => ems)
+      host_group1 = FactoryGirl.create_list(:host, 2,
+                                            :ext_management_system => ems,
+                                            :ems_cluster           => clusters.first)
+      host_group2 = FactoryGirl.create_list(:host, 2,
+                                            :ext_management_system => ems,
+                                            :ems_cluster           => clusters.last)
+
+      ems_rel      = ems.init_relationship
+      cluster_rels = clusters.map { |cluster| cluster.init_relationship(ems_rel) }
+      host_rels1   = host_group1.map { |host| [host, host.init_relationship(cluster_rels.first)] }
+      host_rels2   = host_group2.map { |host| [host, host.init_relationship(cluster_rels.last)] }
+
+      (host_rels1 + host_rels2).each do |(host, host_rel)|
+        FactoryGirl.create_list(:vm, 2, :ext_management_system => ems, :host => host).each do |vm|
+          vm.init_relationship(host_rel)
+        end
+      end
+
+      tree    = ExtManagementSystem.last.fulltree_rels_arranged(:except_type => "VmOrTemplate")
+      records = Relationship.flatten_arranged_rels(tree)
+
+      hosts_scope   = Host.select(Host.arel_table[Arel.star], :v_total_vms)
+      class_loaders = { EmsCluster => [:hosts, hosts_scope], Host => hosts_scope }
+
+      # 4 queries are expected here:
+      #
+      # - 1 for ExtManagementSystem (root)
+      # - 1 for EmsClusters in the tree
+      # - 1 for Hosts in the tree
+      # - 1 for Hosts from relation in EmsClusters
+      #
+      # Since all the hosts in this case are also part of the tree, there are
+      # "duplicate hosts loaded", but that was the nature of this prior to the
+      # change anyway, so this is not new.  This does make it soe that any
+      # hosts accessed through a EmsCluster are preloaded, however, instead of
+      # an N+1.
+      #
+      # In some cases, a ems_metatdata tree might not include all of the
+      # hosts of a EMS, but some still exist as part of the cluster.  This also
+      # makes sure both cases are covered, and the minimal amount of queries
+      # are still executed.
+      #
+      # rubocop:disable Style/BlockDelimiters
+      expect {
+        MiqPreloader.polymorphic_preload_for_child_classes(records, :resource, class_loaders)
+        records.select   { |rel|  rel.resource if rel.resource_type == "Host" }
+               .each     { |rel|  rel.resource.v_total_vms }
+        records.select   { |rel|  rel.resource if rel.resource_type == "EmsCluster" }
+               .flat_map { |rel|  rel.resource.hosts }.each(&:v_total_vms)
+      }.to match_query_limit_of(4)
+      # rubocop:enable Style/BlockDelimiters
+    end
+  end
 end
