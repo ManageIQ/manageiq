@@ -8,48 +8,6 @@ module MiqServer::LogManagement
     has_many   :log_files, :dependent => :destroy, :as => :resource
   end
 
-  def format_log_time(time)
-    time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
-  end
-
-  def post_historical_logs(taskid, log_depot)
-    task = MiqTask.find(taskid)
-    log_prefix = "Task: [#{task.id}]"
-    log_type = "Archive"
-
-    # Post all compressed logs for a specific date + configs, creating a new row per day
-    VMDB::Util.compressed_log_patterns.each do |pattern|
-      log_start, log_end = log_start_and_end_for_pattern(pattern)
-      date_string = "#{format_log_time(log_start)}_#{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
-
-      cond = {:historical => true, :name => LogFile.logfile_name(self, log_type, date_string), :state => 'available'}
-      cond[:logging_started_on] = log_start unless log_start.nil?
-      cond[:logging_ended_on] = log_end unless log_end.nil?
-      logfile = log_files.find_by(cond)
-
-      if logfile && logfile.log_uri.nil?
-        _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{who_am_i}] with contents from: [#{log_start}] to: [#{log_end}]")
-        next
-      else
-        logfile = LogFile.historical_logfile
-      end
-
-      logfile.update(:file_depot => log_depot, :miq_task => task)
-      post_one_log_pattern(pattern, logfile, log_type)
-    end
-  end
-
-  def log_patterns(log_type, base_pattern = nil)
-    case log_type.to_s.downcase
-    when "archive"
-      Array(::Settings.log.collection.archive.pattern).unshift(base_pattern)
-    when "current"
-      current_log_patterns
-    else
-      [base_pattern]
-    end
-  end
-
   def _post_my_logs(options)
     # Make the request to the MiqServer whose logs are needed
     MiqQueue.create_with(
@@ -132,6 +90,21 @@ module MiqServer::LogManagement
     VMDB::Util.get_log_start_end_times(evm)
   end
 
+  def format_log_time(time)
+    time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
+  end
+
+  def log_patterns(log_type, base_pattern = nil)
+    case log_type.to_s.downcase
+    when "archive"
+      Array(::Settings.log.collection.archive.pattern).unshift(base_pattern)
+    when "current"
+      current_log_patterns
+    else
+      [base_pattern]
+    end
+  end
+
   def post_one_log_pattern(pattern, logfile, log_type)
     task = logfile.miq_task
     log_prefix = "Task: [#{task.id}]"
@@ -200,6 +173,33 @@ module MiqServer::LogManagement
   def backup_automate_dialogs(dialog_directory)
     Dir.chdir(Rails.root) do
       TaskHelpers::Exports::ServiceDialogs.new.export(:keep_spaces => false, :directory => dialog_directory)
+    end
+  end
+
+  def post_historical_logs(taskid, log_depot)
+    task = MiqTask.find(taskid)
+    log_prefix = "Task: [#{task.id}]"
+    log_type = "Archive"
+
+    # Post all compressed logs for a specific date + configs, creating a new row per day
+    VMDB::Util.compressed_log_patterns.each do |pattern|
+      log_start, log_end = log_start_and_end_for_pattern(pattern)
+      date_string = "#{format_log_time(log_start)}_#{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
+
+      cond = {:historical => true, :name => LogFile.logfile_name(self, log_type, date_string), :state => 'available'}
+      cond[:logging_started_on] = log_start unless log_start.nil?
+      cond[:logging_ended_on] = log_end unless log_end.nil?
+      logfile = log_files.find_by(cond)
+
+      if logfile && logfile.log_uri.nil?
+        _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{who_am_i}] with contents from: [#{log_start}] to: [#{log_end}]")
+        next
+      else
+        logfile = LogFile.historical_logfile
+      end
+
+      logfile.update(:file_depot => log_depot, :miq_task => task)
+      post_one_log_pattern(pattern, logfile, log_type)
     end
   end
 
