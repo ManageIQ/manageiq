@@ -10,7 +10,7 @@ describe ManagerRefresh::Inventory::Persister do
   # Spec scenarios testing Persister can serialize/deserialize, with having complex nested lazy_find links
   ######################################################################################################################
   #
-  before :each do
+  before do
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_cloud,
                                :zone            => @zone,

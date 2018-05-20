@@ -6,7 +6,7 @@ describe Metric do
   end
 
   context "as vmware" do
-    before :each do
+    before do
       @ems_vmware = FactoryGirl.create(:ems_vmware, :zone => @zone)
     end
 
@@ -991,7 +991,7 @@ describe Metric do
   end
 
   context "as openstack" do
-    before :each do
+    before do
       @ems_openstack = FactoryGirl.create(:ems_openstack, :zone => @zone)
     end
 

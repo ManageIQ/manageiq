@@ -123,7 +123,7 @@ describe RollupRadarMixin do
       sett
     end
 
-    before(:each) do
+    before do
       add_metrics([container_a, container_b])
     end
 
@@ -177,7 +177,7 @@ describe RollupRadarMixin do
       sett
     end
 
-    before(:each) do
+    before do
       add_metrics([container_a, container_b])
     end
 
@@ -276,7 +276,7 @@ describe RollupRadarMixin do
                          :section => 'docker_labels')
     end
 
-    before(:each) do
+    before do
       add_metrics([container_a, container_b])
     end
 
@@ -298,7 +298,7 @@ describe RollupRadarMixin do
     end
   end
 
-  after(:each) do
+  after do
     Timecop.return
   end
 end

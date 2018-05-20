@@ -18,7 +18,7 @@ describe ManagerRefresh::SaveInventory do
   [{:inventory_object_saving_strategy => nil},
    {:inventory_object_saving_strategy => :recursive},].each do |inventory_object_settings|
     context "with settings #{inventory_object_settings}" do
-      before :each do
+      before do
         @zone = FactoryGirl.create(:zone)
         @ems  = FactoryGirl.create(:ems_cloud, :zone => @zone)
 
@@ -99,14 +99,14 @@ describe ManagerRefresh::SaveInventory do
       end
 
       context 'with existing Vms in the DB' do
-        before :each do
+        before do
           # Fill DB with test Vms
           @vm1 = FactoryGirl.create(:vm_cloud, vm_data(1).merge(:ext_management_system => @ems))
           @vm2 = FactoryGirl.create(:vm_cloud, vm_data(2).merge(:ext_management_system => @ems))
         end
 
         context 'with VM InventoryCollection with default settings' do
-          before :each do
+          before do
             # Initialize the InventoryCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
@@ -237,7 +237,7 @@ describe ManagerRefresh::SaveInventory do
         end
 
         context 'with VM InventoryCollection with :delete_method => :disconnect_inv' do
-          before :each do
+          before do
             # Initialize the InventoryCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
@@ -529,7 +529,7 @@ describe ManagerRefresh::SaveInventory do
         end
 
         context 'with VM InventoryCollection with :complete => false' do
-          before :each do
+          before do
             # Initialize the InventoryCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::InventoryCollection.new(

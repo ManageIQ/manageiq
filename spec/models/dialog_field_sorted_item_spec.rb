@@ -146,7 +146,7 @@ describe DialogFieldSortedItem do
     let(:default_value) { "test2" }
 
     context "when show_refresh_button is true" do
-      before(:each) do
+      before do
         allow(dialog_field).to receive(:force_multi_value).and_return(false)
       end
       let(:show_refresh_button) { true }
@@ -195,7 +195,7 @@ describe DialogFieldSortedItem do
 
     context "when show_refresh_button is false" do
       let(:show_refresh_button) { false }
-      before(:each) do
+      before do
         allow(dialog_field).to receive(:force_multi_value).and_return(false)
       end
 

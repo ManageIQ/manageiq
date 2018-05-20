@@ -10,7 +10,7 @@ describe ManagerRefresh::Inventory::Persister do
   # Spec scenarios for asserts giving hints to developers
   ######################################################################################################################
   #
-  before :each do
+  before do
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_cloud,
                                :zone            => @zone,

@@ -279,7 +279,7 @@ describe ManagerRefresh::SaveInventory do
   [{:inventory_object_saving_strategy => nil},
    {:inventory_object_saving_strategy => :recursive},].each do |inventory_object_settings|
     context "with settings #{inventory_object_settings}" do
-      before :each do
+      before do
         @zone        = FactoryGirl.create(:zone)
         @ems         = FactoryGirl.create(:ems_cloud, :zone => @zone)
         @ems_network = FactoryGirl.create(:ems_network, :zone => @zone, :parent_manager => @ems)
@@ -289,7 +289,7 @@ describe ManagerRefresh::SaveInventory do
       end
 
       context 'with empty DB' do
-        before :each do
+        before do
           initialize_inventory_collections
         end
 
@@ -359,7 +359,7 @@ describe ManagerRefresh::SaveInventory do
       end
 
       context 'with empty DB and reversed InventoryCollections' do
-        before :each do
+        before do
           initialize_inventory_collections_reversed
         end
 

@@ -1,5 +1,5 @@
 describe MiqReportResult do
-  before :each do
+  before do
     EvmSpecHelper.local_miq_server
 
     @user1 = FactoryGirl.create(:user_with_group)
@@ -28,7 +28,7 @@ describe MiqReportResult do
   end
 
   context "report result created by User 1 with current group 1" do
-    before :each do
+    before do
       @report_1 = FactoryGirl.create(:miq_report)
       group_1 = FactoryGirl.create(:miq_group)
       group_2 = FactoryGirl.create(:miq_group)

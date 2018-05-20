@@ -97,7 +97,7 @@ describe Metric::CiMixin::Capture do
 
     ["miq_postgres", "miq_postgres_legacy"].each do |postgre_adapter|
       context "with adapter #{postgre_adapter}" do
-        before :each do
+        before do
           mock_adapter(postgre_adapter)
         end
 

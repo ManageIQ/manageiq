@@ -173,7 +173,7 @@ describe Tag do
     let(:filters)         { [["/managed/prov_max_memory/test"], ["/managed/my_name/test"]] }
     let(:tag)             { FactoryGirl.create(:tag, :name => "/managed/my_name/test") }
 
-    before :each do
+    before do
       miq_group.entitlement.set_managed_filters(filters)
       other_miq_group.entitlement.set_managed_filters(filters)
       [miq_group, other_miq_group].each(&:save)

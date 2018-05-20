@@ -18,7 +18,7 @@ describe MiqRegion do
     end
 
     context "with cloud and infra EMSes" do
-      before :each do
+      before do
         _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
         ems_vmware = FactoryGirl.create(:ems_vmware, :zone => zone)
         ems_openstack = FactoryGirl.create(:ems_openstack, :zone => zone)

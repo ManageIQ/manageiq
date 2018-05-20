@@ -1,5 +1,5 @@
 describe VmdbDatabase do
-  before :each do
+  before do
     @db    = FactoryGirl.create(:vmdb_database)
     @table = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts')
     @text  = FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :name => 'accounts', :parent_id => @table.id)
@@ -85,7 +85,7 @@ describe VmdbDatabase do
   end
 
   context "#top_tables_by" do
-    before :each do
+    before do
       @table_1 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts1')
       @table_2 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts2')
       @table_3 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts3')

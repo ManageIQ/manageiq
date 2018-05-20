@@ -129,7 +129,7 @@ describe VmdbTableEvm do
   end
 
   context "#rollup_metrics" do
-    before :each do
+    before do
       db = VmdbDatabase.seed_self
       @evm_table = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => db, :name => 'accounts')
 
