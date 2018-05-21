@@ -14,7 +14,4 @@ describe ChargebackRateDetailCurrency do
   it "is invalid without a symbol" do
     expect(FactoryGirl.build(:chargeback_rate_detail_currency, :symbol => nil)).not_to be_valid
   end
-  it "is invalid without a unicode_hex" do
-    expect(FactoryGirl.build(:chargeback_rate_detail_currency, :unicode_hex => nil)).not_to be_valid
-  end
 end
