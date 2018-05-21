@@ -59,4 +59,26 @@ class ServiceRetireTask < MiqRetireTask
       new_task
     end.compact!
   end
+
+  def retry_retiring?
+    state == 'error' || state.blank? || state == "pending"
+  end
+
+  def lock_retirement
+    lock do
+      reload
+      if retry_retiring?
+        update_attributes(:state => "initializing")
+        parent_svc = Service.find_by(:id => options[:src_ids])
+        _log.info("- creating service tasks for service <#{self.class.name}:#{id}>")
+        begin
+          create_retire_subtasks(parent_svc)
+        rescue => err
+          _log.log_backtrace(err)
+        end
+      else
+        _log.info("#{request_type}: retirement for [#{type}, #{id}] got updated while waiting to be unlocked and is now #{state}")
+      end
+    end
+  end
 end

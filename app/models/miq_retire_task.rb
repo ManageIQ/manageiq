@@ -53,6 +53,7 @@ class MiqRetireTask < MiqRequestTask
 
   def after_request_task_create
     update_attributes(:description => get_description)
+    lock_retirement
   end
 
   def after_ae_delivery(ae_result)
@@ -82,6 +83,28 @@ class MiqRetireTask < MiqRequestTask
     miq_request.miq_request_tasks.each do |s|
       if s.state == 'pending'
         s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.") unless id == s.id
+      end
+    end
+  end
+
+  def retry_retiring?
+    state == 'error' || state.blank? || state == "pending"
+  end
+
+  def lock_retirement
+    lock do
+      reload
+      if retry_retiring?
+        update_attributes(:state => "initializing")
+        parent_svc = model_being_retired.find_by(:id => options[:src_ids])
+        _log.info("- creating #{model_being_retired} tasks for #{model_being_retired} <#{self.class.name}:#{id}>")
+        begin
+          create_retire_subtasks(parent_svc)
+        rescue => err
+          _log.log_backtrace(err)
+        end
+      else
+        _log.info("#{request_type}: retirement for [#{type}, #{id}] got updated while waiting to be unlocked and is now #{state}")
       end
     end
   end
