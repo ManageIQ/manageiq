@@ -14,71 +14,42 @@ module MiqServer::LogManagement
 
   def post_historical_logs(taskid, log_depot)
     task = MiqTask.find(taskid)
-    resource = who_am_i
+    log_prefix = "Task: [#{task.id}]"
+    log_type = "Archived"
 
     # Post all compressed logs for a specific date + configs, creating a new row per day
     VMDB::Util.compressed_log_patterns.each do |pattern|
-      evm = VMDB::Util.get_evm_log_for_date(pattern)
-      next if evm.nil?
-
-      log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
-      date = File.basename(pattern).gsub!(/\*|\.gz/, "")
-
+      log_start, log_end = log_start_and_end_for_pattern(pattern)
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
-      date_string ||= date
-      name = "Archived #{self.name} logs #{date_string} "
-      desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
 
-      cond = {:historical => true, :name => name, :state => 'available'}
+      cond = {:historical => true, :name => logfile_name(log_type, date_string), :state => 'available'}
       cond[:logging_started_on] = log_start unless log_start.nil?
       cond[:logging_ended_on] = log_end unless log_end.nil?
       logfile = log_files.find_by(cond)
+
       if logfile && logfile.log_uri.nil?
-        _log.info("Historical logfile already exists with id: [#{logfile.id}] for [#{resource}] dated: [#{date}] with contents from: [#{log_start}] to: [#{log_end}]")
+        _log.info("#{log_prefix} #{log_type} logfile already exists with id: [#{logfile.id}] for [#{who_am_i}] with contents from: [#{log_start}] to: [#{log_end}]")
         next
       else
         logfile = LogFile.historical_logfile
       end
 
-      msg = "Creating historical Logfile for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
-      task.update_status("Active", "Ok", msg)
-      _log.info(msg)
+      logfile.update(:file_depot => log_depot, :miq_task   => task)
+      post_one_log_pattern(pattern, logfile, log_type)
+    end
+  end
 
-      begin
-        log_files << logfile
-        save
-        msg = "Zipping and posting historical logs and configs on #{resource}"
-        task.update_status("Active", "Ok", msg)
-        _log.info(msg)
+  def logfile_name(category, date_string)
+    category = "Requested" if category == "Current"
+    "#{category} #{self.name} logs #{date_string} "
+  end
 
-        patterns = [pattern]
-        cfg_pattern = ::Settings.log.collection.archive.pattern
-        patterns += cfg_pattern if cfg_pattern.kind_of?(Array)
-
-        local_file = VMDB::Util.zip_logs("evm_server_daily.zip", patterns, "admin")
-
-        logfile.update_attributes(
-          :file_depot         => log_depot,
-          :local_file         => local_file,
-          :logging_started_on => log_start,
-          :logging_ended_on   => log_end,
-          :name               => name,
-          :description        => desc,
-          :miq_task_id        => task.id
-        )
-
-        logfile.upload
-      rescue StandardError, Timeout::Error => err
-        logfile.update_attributes(:state => "error")
-        _log.error("Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
-        raise
-      end
-
-      msg = "Historical log files from #{resource} for #{date} are posted"
-      task.update_status("Active", "Ok", msg)
-      _log.info(msg)
-
-      # TODO: If the gz has been posted and the gz is more than X days old, delete it
+  def log_patterns(log_type, base_pattern = nil)
+    case log_type.to_s.downcase
+    when "archived"
+      Array(::Settings.log.collection.archive.pattern).unshift(base_pattern)
+    when "current"
+      current_log_patterns
     end
   end
 
@@ -147,53 +118,54 @@ module MiqServer::LogManagement
     [pg_data.join("*.conf"), pg_data.join("pg_log/*")]
   end
 
-  def post_current_logs(taskid, log_depot)
-    resource = who_am_i
-    task = MiqTask.find(taskid)
+  def log_start_and_end_for_pattern(pattern)
+    evm = VMDB::Util.get_evm_log_for_date(pattern)
+    return if evm.nil?
 
-    delete_old_requested_logs
-    logfile = LogFile.current_logfile
-    logfile.update_attributes(:miq_task_id => taskid)
+    VMDB::Util.get_log_start_end_times(evm)
+  end
+
+  def post_one_log_pattern(pattern, logfile, log_type)
+    task = logfile.miq_task
+    log_prefix = "Task: [#{task.id}]"
+
+    log_start, log_end = log_start_and_end_for_pattern(pattern)
+    date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
+
+    msg = "Zipping and posting #{log_type.downcase} logs for [#{who_am_i}] from: [#{log_start}] to [#{log_end}]"
+    _log.info("#{log_prefix} #{msg}")
+    task.update_status("Active", "Ok", msg)
+
     begin
-      log_files << logfile
-      save
-
-      log_prefix = "Task: [#{task.id}]"
-      msg = "Posting logs for: #{resource}"
-      _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
-
-      msg = "Zipping and posting current logs and configs on #{resource}"
-      _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
-
-      local_file = VMDB::Util.zip_logs("evm.zip", current_log_patterns, "system")
-
-      evm = VMDB::Util.get_evm_log_for_date("log/*.log")
-      log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
-
-      date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
-      name = "Requested #{self.name} logs #{date_string} "
-      desc = "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}"
+      local_file = VMDB::Util.zip_logs("evm.zip", log_patterns(log_type, pattern), "system")
+      self.log_files << logfile
 
       logfile.update_attributes(
-        :file_depot         => log_depot,
         :local_file         => local_file,
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,
-        :name               => name,
-        :description        => desc,
+        :name               => logfile_name(log_type, date_string),
+        :description        => "Logs for Zone #{zone.name rescue nil} Server #{self.name} #{date_string}",
       )
 
       logfile.upload
+
     rescue StandardError, Timeout::Error => err
-      _log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
+      _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{who_am_i} due to error: [#{err.class.name}] [#{err}]")
       logfile.update_attributes(:state => "error")
       raise
     end
-    msg = "Current log files from #{resource} are posted"
+    msg = "#{log_type} log files from #{who_am_i} are posted"
     _log.info("#{log_prefix} #{msg}")
     task.update_status("Active", "Ok", msg)
+  end
+
+  def post_current_logs(taskid, log_depot)
+    delete_old_requested_logs
+
+    logfile = LogFile.current_logfile
+    logfile.update(:file_depot => log_depot, :miq_task   => MiqTask.find(taskid))
+    post_one_log_pattern("log/*.log", logfile, "Current")
   end
 
   def delete_old_requested_logs
