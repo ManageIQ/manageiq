@@ -177,7 +177,7 @@ def launch_ssh_with_authorize_cmd(ssh_command, host, user, password, key)
   host = "#{user}@#{host}"
 
   auth_data = 'Basic ' + Base64.encode64("#{user}:#{password}").chomp unless password.nil?
-  auth_data = "host-key #{key}" unless key.nil?
+  auth_data = "private-key #{key}" unless key.nil?
   send_auth_command(nil, auth_data, nil)
   exec(env, ssh_command, host, 0 => $stdin, 1 => $stdout, 2 => $stderr)
 end
