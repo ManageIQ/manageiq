@@ -942,7 +942,15 @@ class MiqRequestWorkflow
     @ems_metadata_tree ||= begin
       return if src[:ems].nil?
       st = Time.zone.now
-      result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
+      hosts_scope   = Host.select(Host.arel_table[Arel.star], :v_total_vms)
+      fulltree_opts = {
+        :except_type               => "VmOrTemplate",
+        :class_specific_preloaders => {
+          EmsCluster => [:hosts, hosts_scope],
+          Host       => hosts_scope
+        }
+      }
+      result = load_ar_obj(src[:ems]).fulltree_arranged(fulltree_opts)
       ems_metadata_tree_add_hosts_under_clusters!(result)
       @ems_xml_nodes = {}
       xml = MiqXml.newDoc(:xmlhash)
