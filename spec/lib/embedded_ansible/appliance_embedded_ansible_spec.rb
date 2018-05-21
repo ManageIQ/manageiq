@@ -304,6 +304,20 @@ describe ApplianceEmbeddedAnsible do
     end
   end
 
+  describe "#create_local_playbook_repo" do
+    let!(:tmp_dir) { Pathname.new(Dir.mktmpdir("consolidated_ansible_playbooks")) }
+
+    before do
+      allow(subject).to receive(:playbook_repo_path).and_return(tmp_dir)
+    end
+
+    it "creates a git project containing the plugin playbooks" do
+      expect(FileUtils).to receive(:chown_R).with("awx", "awx", tmp_dir)
+      subject.create_local_playbook_repo
+      expect(Dir.exist?(tmp_dir.join(".git"))).to be_truthy
+    end
+  end
+
   describe "#update_proxy_settings (private)" do
     let(:file_content) do
       <<-EOF

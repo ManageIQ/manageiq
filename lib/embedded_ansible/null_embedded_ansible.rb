@@ -27,6 +27,14 @@ class NullEmbeddedAnsible < EmbeddedAnsible
     raise NotImplementedError, message
   end
 
+  def create_local_playbook_repo
+    raise NotImplementedError, message
+  end
+
+  def playbook_repo_path
+    raise NotImplementedError, message
+  end
+
   private
 
   def message
