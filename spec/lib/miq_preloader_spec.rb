@@ -114,29 +114,12 @@ describe MiqPreloader do
   end
 
   describe ".polymorphic_preload_for_child_classes" do
+    include_context "simple ems_metadata tree" do
+      before { init_full_tree }
+    end
+
     it "preloads polymorphic relationships that are defined" do
-      ems         = FactoryGirl.create(:ems_infra)
-      clusters    = FactoryGirl.create_list(:ems_cluster, 2,
-                                            :ext_management_system => ems)
-      host_group1 = FactoryGirl.create_list(:host, 2,
-                                            :ext_management_system => ems,
-                                            :ems_cluster           => clusters.first)
-      host_group2 = FactoryGirl.create_list(:host, 2,
-                                            :ext_management_system => ems,
-                                            :ems_cluster           => clusters.last)
-
-      ems_rel      = ems.init_relationship
-      cluster_rels = clusters.map { |cluster| cluster.init_relationship(ems_rel) }
-      host_rels1   = host_group1.map { |host| [host, host.init_relationship(cluster_rels.first)] }
-      host_rels2   = host_group2.map { |host| [host, host.init_relationship(cluster_rels.last)] }
-
-      (host_rels1 + host_rels2).each do |(host, host_rel)|
-        FactoryGirl.create_list(:vm, 2, :ext_management_system => ems, :host => host).each do |vm|
-          vm.init_relationship(host_rel)
-        end
-      end
-
-      tree    = ExtManagementSystem.last.fulltree_rels_arranged(:except_type => "VmOrTemplate")
+      tree    = ems.fulltree_rels_arranged(:except_type => "VmOrTemplate")
       records = Relationship.flatten_arranged_rels(tree)
 
       hosts_scope   = Host.select(Host.arel_table[Arel.star], :v_total_vms)
