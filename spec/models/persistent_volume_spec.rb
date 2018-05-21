@@ -41,15 +41,15 @@ describe PersistentVolume do
     expect(persistent_volume.container_groups.count).to eq(1)
   end
 
-  describe "#storage" do
-    let(:storage) { 123_456_789 }
+  describe "#storage_capacity" do
+    let(:storage_size) { 123_456_789 }
 
     it "returns value for :storage key in Hash column :capacity" do
       persistent_volume = FactoryGirl.create(
         :persistent_volume,
-        :capacity => {:storage => storage, :foo => "something"}
+        :capacity => {:storage => storage_size, :foo => "something"}
       )
-      expect(persistent_volume.storage).to eq storage
+      expect(persistent_volume.storage_capacity).to eq storage_size
     end
 
     it "returns nil if there is no :storage key in Hash column :capacity" do
@@ -57,7 +57,7 @@ describe PersistentVolume do
         :persistent_volume,
         :capacity => {:foo => "something"}
       )
-      expect(persistent_volume.storage).to be nil
+      expect(persistent_volume.storage_capacity).to be nil
     end
   end
 end
