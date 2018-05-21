@@ -4,6 +4,7 @@ describe DialogFieldSerializer do
 
   describe "#serialize" do
     let(:dialog_field) { DialogFieldTextBox.new(expected_serialized_values.merge(:resource_action => resource_action, :dialog_field_responders => dialog_field_responders)) }
+    let(:dialog_field_with_values) { DialogFieldTextBox.new(expected_serialized_values.merge(:resource_action => resource_action, :dialog_field_responders => dialog_field_responders, :values => "drew")) }
     let(:type) { "DialogFieldTextBox" }
     let(:resource_action) { ResourceAction.new }
     let(:dialog_field_responders) { [] }
@@ -79,6 +80,18 @@ describe DialogFieldSerializer do
                           'values'                  => 'dynamic values'
             ))
         end
+      end
+
+      let(:all_attributes) { true }
+
+      it 'does not call values' do
+        expect(dialog_field_serializer.serialize(dialog_field_with_values, all_attributes))
+          .to include(expected_serialized_values.merge(
+                        'id'                      => dialog_field.id,
+                        'resource_action'         => 'serialized resource action',
+                        'dialog_field_responders' => [],
+                        'values'                  => nil
+          ))
       end
     end
 
