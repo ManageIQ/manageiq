@@ -53,7 +53,7 @@ module VMDB
     end
 
     def save(resource = MiqServer.my_server)
-      resource.set_config(config)
+      resource.add_settings_for_resource(config)
     end
 
     # NOTE: Used by Configuration -> Advanced
