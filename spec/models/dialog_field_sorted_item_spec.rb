@@ -299,29 +299,6 @@ describe DialogFieldSortedItem do
         end
       end
 
-      context "when the force_multi_value is set to true" do
-        let(:default_value) { "abc" }
-        before do
-          allow(dialog_field).to receive(:force_multi_value).and_return(true)
-          # FIXME (rblanco): this is a workaround for the tested class being
-          # DialogFieldSortedItem and not DialogFieldDropDownList as it is
-          # in real usecase
-          #
-          # The test should be moved to dialog_field_drop_down_list_spec.rb, as
-          # https://github.com/ManageIQ/manageiq/pull/17272#discussion_r180468970
-          # says.
-          allow(dialog_field).to receive(:default_value_included?).and_return(true)
-        end
-
-        it "sets the default_value" do
-          dialog_field.values
-          # while reproducing the BZ, the method
-          # `determine_selected_default_value` is called twice,
-          # not just once - could be a difference here
-          expect(dialog_field.default_value).to eq("[\"abc\"]")
-        end
-      end
-
       context "when the default_value is included in the list of returned values" do
         before do
           allow(dialog_field).to receive(:force_multi_value).and_return(false)

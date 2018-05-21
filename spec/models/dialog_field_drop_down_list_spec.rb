@@ -303,11 +303,63 @@ describe DialogFieldDropDownList do
 
           context "when the values returned contain a nil" do
             before do
-              allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return([[nil, "Choose something!"]])
+              allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
+                [[nil, "Choose something!"], %w(1 one), %w(2 two), %w(abc def)]
+              )
+            end
+
+            context "when it is a multiselect" do
+              before do
+                dialog_field.force_multi_value = true
+              end
+
+              context "when the default value is included" do
+                before do
+                  dialog_field.default_value = "[\"1\"]"
+                end
+
+                it "keeps the default" do
+                  dialog_field.values
+                  expect(dialog_field.default_value).to eq("[\"1\"]")
+                end
+              end
+
+              context "when the default value is included but is not an array" do
+                before do
+                  dialog_field.default_value = "1"
+                end
+
+                it "keeps the default" do
+                  dialog_field.values
+                  expect(dialog_field.default_value).to eq("[\"1\"]")
+                end
+              end
+
+              context "when the default value is included but is not valid json" do
+                before do
+                  dialog_field.default_value = "abc"
+                end
+
+                it "keeps the default" do
+                  dialog_field.values
+                  expect(dialog_field.default_value).to eq("[\"abc\"]")
+                end
+              end
+
+              context "when the default value is not included" do
+                before do
+                  dialog_field.default_value = "[\"3\"]"
+                end
+
+                it "selects nothing" do
+                  dialog_field.values
+                  expect(dialog_field.default_value).to eq("[]")
+                end
+              end
             end
 
             it "returns the values from automate" do
-              expect(dialog_field.values).to eq([[nil, "Choose something!"]])
+              expect(dialog_field.values).to eq([[nil, "Choose something!"], %w(1 one), %w(2 two), %w(abc def)])
             end
           end
         end
