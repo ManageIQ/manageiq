@@ -35,9 +35,13 @@ class ChargebackRate < ApplicationRecord
     super(klass)
   end
 
-  def rate_details_relevant_to(report_cols)
-    # we can memoize, as we get the same report_cols thrrough the life of the object
-    @relevant ||= chargeback_rate_details.select { |r| r.affects_report_fields(report_cols) }
+  def rate_details_relevant_to(report_cols, allowed_cols)
+    # we can memoize, as we get the same report_cols through the life of the object
+    @relevant ||= begin
+      chargeback_rate_details.select do |r|
+        r.affects_report_fields(report_cols) && allowed_cols.include?(r.metric_column_key)
+      end
+    end
   end
 
   def self.validate_rate_type(type)

@@ -70,6 +70,13 @@ class ChargeableField < ApplicationRecord
     "#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
+  # Fixed metric has _1 or _2 in name but column
+  # fixed_compute_metric is used in report and calculations
+  # TODO: remove and unify with metric_key
+  def metric_column_key
+    fixed? ? metric_key.gsub(/\_1|\_2/, '') : metric_key
+  end
+
   def cost_keys(sub_metric = nil)
     keys = ["#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}cost", # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
             'total_cost']
