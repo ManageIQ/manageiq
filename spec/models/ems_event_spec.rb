@@ -69,7 +69,7 @@ describe EmsEvent do
 
   context "with availability zones" do
     let(:vm) { FactoryGirl.create(:vm_openstack, :ems_ref => "vm1") }
-    before :each do
+    before do
       @zone = FactoryGirl.create(:small_environment)
       @ems  = @zone.ext_management_systems.first
       @availability_zone = FactoryGirl.create(:availability_zone_openstack, :ems_ref => "az1")
@@ -78,7 +78,7 @@ describe EmsEvent do
     context ".process_availability_zone_in_event!" do
       let(:event_hash) { { :vm_or_template_id => vm.id } }
       context "when the event has an availability zone" do
-        before :each do
+        before do
           event_hash[:availability_zone_ems_ref] = @availability_zone.ems_ref
         end
 
@@ -90,7 +90,7 @@ describe EmsEvent do
 
       context "when the event has no availability zone" do
         context "and the VM has an availability zone" do
-          before :each do
+          before do
             vm.availability_zone_id = @availability_zone.id
             vm.save
           end
@@ -160,7 +160,7 @@ describe EmsEvent do
     end
 
     context ".add" do
-      before :each do
+      before do
         @event_hash = {
           :event_type  => "event_with_availability_zone",
           :target_type => vm.class.name,

@@ -277,7 +277,7 @@ describe User do
   end
 
   context "Testing active VM aggregation" do
-    before :each do
+    before do
       @ram_size = 1024
       @disk_size = 1_000_000
       @num_cpu = 2

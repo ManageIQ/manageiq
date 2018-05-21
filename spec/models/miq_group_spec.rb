@@ -150,7 +150,7 @@ describe MiqGroup do
     let(:num_cpu) { 2 }
     let(:ems) { FactoryGirl.create(:ems_vmware, :name => "test_vcenter") }
     let(:storage) { FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS") }
-    before :each do
+    before do
       @hw1 = FactoryGirl.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
       @hw2 = FactoryGirl.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)
       @hw3 = FactoryGirl.create(:hardware, :cpu_total_cores => num_cpu, :memory_mb => ram_size)

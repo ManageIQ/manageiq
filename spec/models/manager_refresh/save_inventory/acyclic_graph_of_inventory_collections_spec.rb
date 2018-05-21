@@ -68,7 +68,7 @@ describe ManagerRefresh::SaveInventory do
   [{:inventory_object_saving_strategy => nil},
    {:inventory_object_saving_strategy => :recursive},].each do |inventory_object_settings|
     context "with settings #{inventory_object_settings}" do
-      before :each do
+      before do
         @zone = FactoryGirl.create(:zone)
         @ems  = FactoryGirl.create(:ems_cloud, :zone => @zone)
 
@@ -77,7 +77,7 @@ describe ManagerRefresh::SaveInventory do
       end
 
       context 'with empty DB' do
-        before :each do
+        before do
           initialize_data_and_inventory_collections
         end
 
@@ -586,7 +586,7 @@ describe ManagerRefresh::SaveInventory do
       end
 
       context "lazy_find vs find" do
-        before :each do
+        before do
           # Initialize the InventoryCollections
           @data             = {}
           @data[:vms]       = ::ManagerRefresh::InventoryCollection.new(
@@ -663,7 +663,7 @@ describe ManagerRefresh::SaveInventory do
       end
 
       context "assert_referential_integrity" do
-        before :each do
+        before do
           # Initialize the InventoryCollections
           @data             = {}
           @data[:vms]       = ::ManagerRefresh::InventoryCollection.new(

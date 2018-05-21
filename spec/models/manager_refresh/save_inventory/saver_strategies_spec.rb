@@ -21,7 +21,7 @@ describe ManagerRefresh::SaveInventory do
         {:saver_strategy => :batch, :use_ar_object => false},
       ].each do |options|
         context "with options #{options}" do
-          before :each do
+          before do
             @zone = FactoryGirl.create(:zone)
             @ems  = FactoryGirl.create(:ems_cloud,
                                        :zone            => @zone,
@@ -31,7 +31,7 @@ describe ManagerRefresh::SaveInventory do
             allow(Settings.ems_refresh).to receive(:mock).and_return(inventory_object_settings)
           end
 
-          before :each do
+          before do
             @image1 = FactoryGirl.create(:miq_template, image_data(1))
             @image2 = FactoryGirl.create(:miq_template, image_data(2))
             @image3 = FactoryGirl.create(:miq_template, image_data(3))

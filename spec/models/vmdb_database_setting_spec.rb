@@ -1,5 +1,5 @@
 describe VmdbDatabaseSetting do
-  before :each do
+  before do
     @db = FactoryGirl.create(:vmdb_database)
   end
 

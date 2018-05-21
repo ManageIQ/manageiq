@@ -32,7 +32,7 @@ describe VmdbIndex do
   end
 
   context "#rollup_metrics" do
-    before :each do
+    before do
       db = VmdbDatabase.seed_self
       @evm_table  = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => db,         :name => 'accounts')
       @evm_index  = FactoryGirl.create(:vmdb_index,     :vmdb_table    => @evm_table, :name => "accounts_pkey")

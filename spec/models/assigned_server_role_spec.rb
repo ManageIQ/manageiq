@@ -5,7 +5,7 @@ describe AssignedServerRole do
     end
 
     context "Server Role" do
-      before (:each) do
+      before do
         @server_role = FactoryGirl.create(
           :server_role,
           :name              => "smartproxy",

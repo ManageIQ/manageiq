@@ -37,7 +37,7 @@ describe Zone do
   end
 
   context "when dealing with clouds" do
-    before :each do
+    before do
       _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 

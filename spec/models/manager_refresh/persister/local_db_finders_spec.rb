@@ -12,7 +12,7 @@ describe ManagerRefresh::Inventory::Persister do
   # Spec scenarios for making sure the local db index is able to build complex queries using references
   ######################################################################################################################
   #
-  before :each do
+  before do
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_cloud,
                                :zone            => @zone,
@@ -22,7 +22,7 @@ describe ManagerRefresh::Inventory::Persister do
     allow(Settings.ems_refresh).to receive(:mock).and_return({})
   end
 
-  before :each do
+  before do
     initialize_mocked_records
   end
 

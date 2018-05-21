@@ -295,7 +295,7 @@ describe EmsCloud do
           FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3)
         end
 
-        before(:each) do
+        before do
           vm_1.cloud_tenant.update_attributes!(:parent => ct_3, :ext_management_system => ems_cloud, :name => ct_name_1)
           vm_2.cloud_tenant.update_attributes!(:ext_management_system => ems_cloud, :name => ct_name_2)
         end
