@@ -515,7 +515,8 @@ module RelationshipMixin
 
   # Returns the records in the tree from the root arranged in a tree
   def fulltree_arranged(*args)
-    Relationship.arranged_rels_to_resources(fulltree_rels_arranged(*args))
+    class_specific_preloaders = args.last.delete(:class_specific_preloaders) if args.last.kind_of?(Hash)
+    Relationship.arranged_rels_to_resources(fulltree_rels_arranged(*args), true, class_specific_preloaders)
   end
 
   # Returns a list of all unique child types

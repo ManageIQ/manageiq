@@ -747,6 +747,64 @@ describe RelationshipMixin do
         }
       )
     end
+
+    context "with a EMS based tree" do
+      # Note:  This shared_context overwrites the `let(:vms)` at the top of
+      # this file.
+      include_context "simple ems_metadata tree" do
+        before { init_full_tree }
+      end
+
+      it "builds the tree normally" do
+        nodes = ems.fulltree_arranged
+        expect(nodes).to eq(
+          ems => {
+            clusters[0] => {
+              hosts[0] => {
+                vms[0] => {},
+                vms[1] => {}
+              },
+              hosts[1] => {
+                vms[2] => {},
+                vms[3] => {}
+              }
+            },
+            clusters[1] => {
+              hosts[2] => {
+                vms[4] => {},
+                vms[5] => {}
+              },
+              hosts[3] => {
+                vms[6] => {},
+                vms[7] => {}
+              }
+            }
+          }
+        )
+      end
+
+      it "can preload certain relationships to avoid N+1s" do
+        hosts_scope   = Host.select(Host.arel_table[Arel.star], :v_total_vms)
+        fulltree_opts = {
+          :except_type               => "VmOrTemplate",
+          :class_specific_preloaders => {
+            EmsCluster => [:hosts, hosts_scope],
+            Host       => hosts_scope
+          }
+        }
+        tree = ems.fulltree_arranged(fulltree_opts)
+
+        # rubocop:disable Style/BlockDelimiters
+        expect {
+          # get the v_total_vms through the EmsCluster records
+          tree.values.first.keys.flat_map(&:hosts).each(&:v_total_vms)
+
+          # get the v_total_vms through the Host records in the tree
+          tree.values.first.values.flat_map(&:keys).each(&:v_total_vms)
+        }.to match_query_limit_of(0)
+        # rubocop:enable Style/BlockDelimiters
+      end
+    end
   end
 
   describe "#fulltree_ids_arranged" do

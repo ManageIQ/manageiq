@@ -82,8 +82,11 @@ class Relationship < ApplicationRecord
     end
   end
 
-  def self.arranged_rels_to_resources(relationships, initial = true)
-    MiqPreloader.preload(flatten_arranged_rels(relationships), :resource) if initial
+  def self.arranged_rels_to_resources(relationships, initial = true, class_specific_preloaders = nil)
+    if initial
+      record_set = flatten_arranged_rels(relationships)
+      MiqPreloader.polymorphic_preload_for_child_classes(record_set, :resource, class_specific_preloaders)
+    end
 
     relationships.each_with_object({}) do |(rel, children), h|
       h[rel.resource] = arranged_rels_to_resources(children, false)
