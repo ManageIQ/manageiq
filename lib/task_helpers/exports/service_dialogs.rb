@@ -4,6 +4,7 @@ module TaskHelpers
       def export(options = {})
         export_dir = options[:directory]
 
+        User.current_user = User.where(:userid => 'admin').first
         dialogs = DialogSerializer.new.serialize(Dialog.order(:id).all)
 
         dialogs.each do |dialog|
