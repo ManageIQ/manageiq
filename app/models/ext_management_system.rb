@@ -72,6 +72,7 @@ class ExtManagementSystem < ApplicationRecord
   has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   belongs_to :zone
+  belongs_to :backup_zone, :class_name => "Zone", :inverse_of => :paused_ext_management_systems # used for maintenance mode
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
@@ -188,6 +189,43 @@ class ExtManagementSystem < ApplicationRecord
   alias_attribute :to_s, :name
 
   default_value_for :enabled, true
+
+  after_save :change_maintenance_for_child_managers, :if => proc { |ems| ems.changed_attributes.include?('enabled') }
+
+  def disable!
+    _log.info("Disabling EMS [#{name}] id [#{id}].")
+    update!(:enabled => false)
+    _log.info("Disabling EMS [#{name}] id [#{id}] successful.")
+  end
+
+  def enable!
+    _log.info("Enabling EMS [#{name}] id [#{id}].")
+    update!(:enabled => true)
+    _log.info("Enabling EMS [#{name}] id [#{id}] successful.")
+  end
+
+  # Move ems to maintenance zone and backup current one
+  # @param orig_zone [Zone] children original zones can be replaced in provider-specific callbacks
+  def pause!(orig_zone = nil)
+    _log.info("Pausing EMS [#{name}] id [#{id}].")
+    update!(
+      :backup_zone => orig_zone || zone,
+      :zone        => Zone.maintenance_zone,
+      :enabled     => false
+    )
+    _log.info("Pausing EMS [#{name}] id [#{id}] successful.")
+  end
+
+  # Move ems to original zone, reschedule task/jobs/.. collected during maintenance
+  def resume!
+    _log.info("Resuming EMS [#{name}] id [#{id}].")
+    update!(
+      :backup_zone => nil,
+      :zone        => backup_zone || Zone.default_zone,
+      :enabled     => true
+    )
+    _log.info("Resuming EMS [#{name}] id [#{id}] successful.")
+  end
 
   def self.with_ipaddress(ipaddress)
     joins(:endpoints).where(:endpoints => {:ipaddress => ipaddress})
@@ -456,16 +494,6 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.ems_physical_infra_discovery_types
     @ems_physical_infra_discovery_types ||= %w(lenovo_ph_infra)
-  end
-
-  def disable!
-    _log.info("Disabling EMS [#{name}] id [#{id}].")
-    update!(:enabled => false)
-  end
-
-  def enable!
-    _log.info("Enabling EMS [#{name}] id [#{id}].")
-    update!(:enabled => true)
   end
 
   # override destroy_queue from AsyncDeleteMixin
@@ -752,6 +780,17 @@ class ExtManagementSystem < ApplicationRecord
 
   private
 
+  # Child managers went to/from maintenance mode with parent
+  def change_maintenance_for_child_managers
+    child_managers.each do |child_ems|
+      if enabled?
+        child_ems.resume!
+      else
+        child_ems.pause!(backup_zone)
+      end
+    end
+  end
+
   def build_connection(options = {})
     build_endpoint_by_role(options[:endpoint])
     build_authentication_by_role(options[:authentication])
@@ -772,7 +811,7 @@ class ExtManagementSystem < ApplicationRecord
     role = options.delete(:role)
     creds = {}
     creds[role] = options
-    update_authentication(creds,options)
+    update_authentication(creds, options)
   end
 
   def clear_association_cache

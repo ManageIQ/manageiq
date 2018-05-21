@@ -8,6 +8,7 @@ class Zone < ApplicationRecord
 
   has_many :miq_servers
   has_many :ext_management_systems
+  has_many :paused_ext_management_systems, :class_name => 'ExtManagementSystem', :inverse_of => :backup_zone
   has_many :container_managers, :class_name => "ManageIQ::Providers::ContainerManager"
   has_many :miq_schedules, :dependent => :destroy
   has_many :providers
@@ -36,6 +37,8 @@ class Zone < ApplicationRecord
   include AggregationMixin
   include ConfigurationManagementMixin
 
+  scope :visible, -> { where(:visible => true) }
+
   def active_miq_servers
     MiqServer.active_miq_servers.where(:zone_id => id)
   end
@@ -49,6 +52,9 @@ class Zone < ApplicationRecord
   end
 
   def self.seed
+    create_with(:description => "Maintenance Zone", :visible => false).find_or_create_by!(:name => 'maintenance') do |_z|
+      _log.info("Creating maintenance zone...")
+    end
     create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
       _log.info("Creating default zone...")
     end
@@ -76,6 +82,11 @@ class Zone < ApplicationRecord
 
   def self.default_zone
     in_my_region.find_by(:name => "default")
+  end
+
+  # Zone for suspended providers (no servers in it), not visible by default
+  def self.maintenance_zone
+    unscoped.in_my_region.find_by(:name => "maintenance")
   end
 
   def remote_cockpit_ws_miq_server
@@ -209,6 +220,7 @@ class Zone < ApplicationRecord
 
   def check_zone_in_use_on_destroy
     raise _("cannot delete default zone") if name == "default"
+    raise _("cannot delete maintenance zone") if name == "maintenance"
     raise _("zone name '%{name}' is used by a server") % {:name => name} unless miq_servers.blank?
   end
 end

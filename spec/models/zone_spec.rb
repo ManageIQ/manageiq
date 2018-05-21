@@ -1,5 +1,5 @@
 describe Zone do
-  include_examples ".seed called multiple times"
+  include_examples ".seed called multiple times", 2
 
   context "with two small envs" do
     before do
