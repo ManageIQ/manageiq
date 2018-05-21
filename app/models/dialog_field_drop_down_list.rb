@@ -58,6 +58,20 @@ class DialogFieldDropDownList < DialogFieldSortedItem
 
   private
 
+  def determine_selected_value
+    coerce_default_value_into_proper_format if dynamic? && force_multi_value
+
+    super
+  end
+
+  def use_first_value_as_default
+    self.default_value = if force_multi_value
+                           [].to_json
+                         else
+                           sort_data(@raw_values).first.try(:first)
+                         end
+  end
+
   def default_value_included?(values_list)
     if force_multi_value
       return false if default_value.blank?
@@ -68,5 +82,13 @@ class DialogFieldDropDownList < DialogFieldSortedItem
     else
       super(values_list)
     end
+  end
+
+  def coerce_default_value_into_proper_format
+    unless JSON.parse(default_value).kind_of?(Array)
+      self.default_value = Array.wrap(default_value).to_json
+    end
+  rescue JSON::ParserError
+    self.default_value = Array.wrap(default_value).to_json
   end
 end
