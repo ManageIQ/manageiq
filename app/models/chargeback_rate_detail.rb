@@ -94,7 +94,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   def charge(relevant_fields, consumption, options)
     result = {}
-    if (relevant_fields & [metric_key]).present? || ((cost_keys.to_set & report_cols).present? && !gratis?)
+    if affects_report_fields(relevant_fields)
       metric_value, cost = metric_and_cost_by(consumption, options)
       if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
