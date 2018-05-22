@@ -67,9 +67,11 @@ describe MiqProvisionVirtWorkflow do
 
   context 'network selection' do
     before do
-      @ems    = FactoryGirl.create(:ems_vmware)
-      @host1  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-      @src_vm = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
+      @ems      = FactoryGirl.create(:ems_vmware)
+      @host1    = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
+      @host2    = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
+      @src_vm   = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
+      @other_vm = FactoryGirl.create(:vm_vmware, :host => @host2, :ems_id => @ems.id)
       allow(Rbac).to receive(:search) do |hash|
         [Array.wrap(hash[:targets])]
       end
@@ -84,24 +86,30 @@ describe MiqProvisionVirtWorkflow do
         s11 = FactoryGirl.create(:switch, :name => "A")
         s12 = FactoryGirl.create(:switch, :name => "B")
         s13 = FactoryGirl.create(:switch, :name => "C")
-        @src_vm.host.switches = [s11, s12, s13]
+        s14 = FactoryGirl.create(:switch, :name => "D")
+        @src_vm.host.switches   = [s11, s12, s13]
+        @other_vm.host.switches = [s14]
         @lan11 = FactoryGirl.create(:lan, :name => "lan_A", :switch_id => s11.id)
         @lan12 = FactoryGirl.create(:lan, :name => "lan_B", :switch_id => s12.id)
         @lan13 = FactoryGirl.create(:lan, :name => "lan_C", :switch_id => s13.id)
+        @lan14 = FactoryGirl.create(:lan, :name => "lan_D", :switch_id => s14.id)
       end
 
       it '#allowed_vlans' do
-        allow(workflow).to receive(:allowed_hosts).with(no_args).and_return([workflow.host_to_hash_struct(@host1)])
+        allowed_hosts = [
+          workflow.host_to_hash_struct(@host1),
+          workflow.host_to_hash_struct(@host2)
+        ]
+        allow(workflow).to receive(:allowed_hosts).with(no_args).and_return(allowed_hosts)
         vlans = workflow.allowed_vlans(:vlans => true, :dvs => false)
-        lan_keys = [@lan11.name, @lan13.name, @lan12.name]
+        lan_keys = [@lan11.name, @lan13.name, @lan12.name, @lan14.name]
         expect(vlans.keys).to match_array(lan_keys)
         expect(vlans.values).to match_array(lan_keys)
       end
 
       it '#load_hosts_vlans' do
-        hosts = [@host1]
-        MiqPreloader.preload(hosts, :lans => :switches)
-        expect { workflow.load_hosts_vlans(hosts, {}) }.not_to exceed_query_limit(0)
+        hosts = [@host1, @host2]
+        expect { workflow.load_hosts_vlans(hosts, {}) }.not_to exceed_query_limit(1)
       end
     end
   end
