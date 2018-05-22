@@ -876,6 +876,9 @@ class MiqExpression
 
   def self.tag_details(path, opts)
     result = []
+    if opts[:clear_classifications]
+      @classifications = nil
+    end
     @classifications ||= categories
     @classifications.each do |name, cat|
       prefix = path.nil? ? "managed" : [path, "managed"].join(".")
