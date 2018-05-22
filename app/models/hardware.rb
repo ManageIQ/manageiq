@@ -17,15 +17,17 @@ class Hardware < ApplicationRecord
   has_many    :partitions, :dependent => :destroy
   has_many    :volumes, :dependent => :destroy
 
-  has_many    :guest_devices, :dependent => :destroy
-  has_many    :storage_adapters, -> { where("device_type = 'storage'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :nics, -> { where("device_type = 'ethernet'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :guest_devices,    :dependent => :destroy
+  has_many    :storage_adapters, :foreign_key => :hardware_id
+  has_many    :network_adapters, :foreign_key => :hardware_id
   has_many    :ports, -> { where("device_type != 'storage'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
   has_many    :physical_ports, -> { where("device_type = 'physical_port'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
 
+  alias_attribute :nics, :network_adapters
+
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
-  virtual_column :mac_addresses, :type => :string_set, :uses => :nics
+  virtual_column :mac_addresses, :type => :string_set, :uses => :network_adapters
 
   virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
   virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
@@ -39,7 +41,7 @@ class Hardware < ApplicationRecord
   end
 
   def mac_addresses
-    @mac_addresses ||= nics.collect(&:address).compact.uniq
+    @mac_addresses ||= network_adapters.collect(&:address).compact.uniq
   end
 
   def ram_size_in_bytes
@@ -89,7 +91,7 @@ class Hardware < ApplicationRecord
     Disk.delete(deletes[:disk].transpose[0])
 
     # Count the count of ethernet devices
-    parent.hardware.number_of_nics = parent.hardware.nics.length
+    parent.hardware.number_of_nics = parent.hardware.network_adapters.length
 
     parent.hardware.save
   end
@@ -161,7 +163,7 @@ class Hardware < ApplicationRecord
 
   def connect_lans(lans)
     return if lans.blank?
-    nics.each do |n|
+    network_adapters.each do |n|
       # TODO: Use a different field here
       #   model is temporarily being used here to transfer the name of the
       #   lan to which this nic is connected.  If model ends up being an
@@ -173,7 +175,7 @@ class Hardware < ApplicationRecord
   end
 
   def disconnect_lans
-    nics.each do |n|
+    network_adapters.each do |n|
       n.lan = nil
       n.save
     end
