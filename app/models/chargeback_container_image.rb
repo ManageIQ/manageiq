@@ -83,8 +83,8 @@ class ChargebackContainerImage < Chargeback
     @data_index.fetch_path(:container_project, :by_container_id, consumption.resource_id) || @unknown_project
   end
 
-  def self.where_clause(records, _options)
-    records.where(:resource_type => Container.name, :resource_id => @containers.pluck(:id))
+  def self.where_clause(records, _options, region)
+    records.where(:resource_type => Container.name, :resource_id => @containers.in_region(region).pluck(:id))
   end
 
   def self.report_static_cols
@@ -115,7 +115,7 @@ class ChargebackContainerImage < Chargeback
 
   private
 
-  def init_extra_fields(consumption)
+  def init_extra_fields(consumption, _region)
     self.project_name  = self.class.project(consumption).name
     self.image_name    = self.class.image(consumption).try(:full_name)
     self.project_uid   = self.class.project(consumption).ems_ref

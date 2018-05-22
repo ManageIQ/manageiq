@@ -46,8 +46,8 @@ class ChargebackContainerProject < Chargeback
     @projects = nil
   end
 
-  def self.where_clause(records, _options)
-    records.where(:resource_type => ContainerProject.name, :resource_id => @projects.select(:id))
+  def self.where_clause(records, _options, region)
+    records.where(:resource_type => ContainerProject.name, :resource_id => @projects.in_region(region).select(:id))
   end
 
   def self.report_static_cols
@@ -74,7 +74,7 @@ class ChargebackContainerProject < Chargeback
 
   private
 
-  def init_extra_fields(consumption)
+  def init_extra_fields(consumption, _region)
     self.project_name  = consumption.resource_name
     self.project_uid   = consumption.resource.ems_ref
     self.provider_name = consumption.parent_ems.try(:name)

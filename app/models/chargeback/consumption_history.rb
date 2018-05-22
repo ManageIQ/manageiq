@@ -1,11 +1,11 @@
 class Chargeback
   class ConsumptionHistory
-    def self.for_report(cb_class, options)
-      base_rollup = base_rollup_scope
+    def self.for_report(cb_class, options, region)
+      base_rollup = base_rollup_scope.in_region(region)
       timerange = options.report_time_range
       interval_duration = options.duration_of_report_step
 
-      extra_resources = cb_class.try(:extra_resources_without_rollups) || []
+      extra_resources = cb_class.try(:extra_resources_without_rollups, region) || []
       timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
         extra_resources.each do |resource|
           consumption = ConsumptionWithoutRollups.new(resource, query_start_time, query_end_time)
@@ -15,7 +15,7 @@ class Chargeback
         next unless options.include_metrics?
 
         records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => 'hourly')
-        records = cb_class.where_clause(records, options)
+        records = cb_class.where_clause(records, options, region)
         records = Metric::Helper.remove_duplicate_timestamps(records)
         next if records.empty?
         _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
