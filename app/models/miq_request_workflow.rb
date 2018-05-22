@@ -860,19 +860,25 @@ class MiqRequestWorkflow
   end
 
   def get_ems_folders(folder, dh = {}, full_path = "")
+    path = full_path
     if folder.evm_object_class == :EmsFolder
       if folder.hidden
         return dh if folder.name != 'vm'
       else
-        full_path += full_path.blank? ? folder.name.to_s : " / #{folder.name}"
-        dh[folder.id] = full_path unless folder.type == "Datacenter"
+        path = full_path.dup
+        if path.blank?
+          path << folder.name.to_s
+        else
+          path << " / ".freeze << folder.name
+        end
+        dh[folder.id] = path unless folder.type == "Datacenter".freeze
       end
     end
 
     # Process child folders
     @_get_ems_folders_prefix ||= _log.prefix
     node = load_ems_node(folder, @_get_ems_folders_prefix)
-    node.children.each { |child| get_ems_folders(child.attributes[:object], dh, full_path) } unless node.nil?
+    node.children.each { |child| get_ems_folders(child.attributes[:object], dh, path) } unless node.nil?
 
     dh
   end
