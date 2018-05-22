@@ -2,12 +2,18 @@ module ManageIQ::Providers
   class PhysicalInfraManager < BaseManager
     include SupportsFeatureMixin
 
-    virtual_total :total_physical_racks,      :physical_racks
-    virtual_total :total_physical_switches,   :physical_switches
-    virtual_total :total_physical_chassis,    :physical_chassis
-    virtual_total :total_physical_servers,    :physical_servers
-    virtual_column :total_hosts,              :type => :integer
-    virtual_column :total_vms,                :type => :integer
+    has_many :physical_chassis,  :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+    has_many :physical_racks,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+    has_many :physical_servers,  :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+    has_many :physical_switches, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+
+    virtual_total :total_physical_chassis,  :physical_chassis
+    virtual_total :total_physical_racks,    :physical_racks
+    virtual_total :total_physical_servers,  :physical_servers
+    virtual_total :total_physical_switches, :physical_switches
+
+    virtual_column :total_hosts, :type => :integer
+    virtual_column :total_vms,   :type => :integer
 
     class << model_name
       define_method(:route_key) { "ems_physical_infras" }
