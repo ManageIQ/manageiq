@@ -1,7 +1,7 @@
 require 'time'
 
 class Snapshot < ApplicationRecord
-  acts_as_tree
+  acts_as_tree :dependent => :nullify
 
   belongs_to :vm_or_template
 
