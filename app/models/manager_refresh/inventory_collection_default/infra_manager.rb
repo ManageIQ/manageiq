@@ -381,6 +381,7 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
         :model_class                 => ::Switch,
         :manager_ref                 => [:uid_ems],
         :association                 => :switches,
+        :secondary_refs              => {:by_switch_uuid => [:switch_uuid]},
         :inventory_object_attributes => %i(
           uid_ems
           name
