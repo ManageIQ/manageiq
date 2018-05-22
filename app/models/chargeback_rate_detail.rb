@@ -92,7 +92,7 @@ class ChargebackRateDetail < ApplicationRecord
     "#{hourly_fixed_rate}/#{hourly_variable_rate}"
   end
 
-  def charge(relevant_fields, consumption, options)
+  def charge(consumption, options)
     result = {}
 
     metric_value, cost = metric_and_cost_by(consumption, options)
