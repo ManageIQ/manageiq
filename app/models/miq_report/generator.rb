@@ -285,10 +285,6 @@ module MiqReport::Generator
       # TODO: add once only_cols is fixed
       # targets = targets.select(only_cols)
       where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
-      ## add in virtual attributes that can be calculated from sql
-      va_sql_cols = cols.select do |col|
-        db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
-      end
       rbac_opts = options.merge(
         :targets          => targets,
         :filter           => conditions,
@@ -297,6 +293,7 @@ module MiqReport::Generator
         :skip_counts      => true,
       )
 
+      ## add in virtual attributes that can be calculated from sql
       rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.nil? || va_sql_cols.empty?
 
       results, attrs = Rbac.search(rbac_opts)

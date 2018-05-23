@@ -232,4 +232,12 @@ class MiqReport < ApplicationRecord
     column_index = col_order.index { |col| col.include?(chart_column) }
     headers[column_index]
   end
+
+  private
+
+  def va_sql_cols
+    @va_sql_cols ||= cols.select do |col|
+      db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
+    end
+  end
 end
