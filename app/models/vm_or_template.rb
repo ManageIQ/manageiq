@@ -156,7 +156,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_delegate :mem_cpu,                            :to => "hardware.memory_mb", :allow_nil => true, :default => 0
   virtual_delegate :ram_size,                           :to => "hardware.memory_mb", :allow_nil => true, :default => 0
   virtual_column :ipaddresses,                          :type => :string_set, :uses => {:hardware => :ipaddresses}
-  virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
   virtual_column :memory_exceeds_current_host_headroom, :type => :string,     :uses => [:mem_cpu, {:host => [:hardware, :ext_management_system]}]
   virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
@@ -1564,7 +1563,11 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def hostnames
-    hardware.nil? ? [] : hardware.hostnames
+    if hardware.nil?
+      [hostname]
+    else
+      hardware.hostnames.empty? ? [hostname] : hardware.hostnames
+    end
   end
 
   def mac_addresses
