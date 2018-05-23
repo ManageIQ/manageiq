@@ -20,6 +20,7 @@ class Hardware < ApplicationRecord
   has_many    :guest_devices,    :dependent => :destroy
   has_many    :storage_adapters, :foreign_key => :hardware_id
   has_many    :network_adapters, :foreign_key => :hardware_id
+  has_many    :controllers,      :foreign_key => :hardware_id
   has_many    :ports, -> { where("device_type != 'storage'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
   has_many    :physical_ports, -> { where("device_type = 'physical_port'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
 

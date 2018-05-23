@@ -220,7 +220,7 @@ module EmsRefresh::SaveInventory
 
   def save_hardware_inventory(parent, hash)
     return if hash.nil?
-    save_inventory_single(:hardware, parent, hash, [:disks, :guest_devices, :networks, :firmwares])
+    save_inventory_single(:hardware, parent, hash, [:guest_devices, :disks, :networks, :firmwares])
     parent.save!
   end
 
@@ -272,9 +272,10 @@ module EmsRefresh::SaveInventory
       h[:storage_id]         = h.fetch_path(:storage, :id)
       h[:backing_id]         = h.fetch_path(:backing, :id)
       h[:storage_profile_id] = h.fetch_path(:storage_profile, :id)
+      h[:controller_id]      = h.fetch_path(:controller, :id)
     end
 
-    save_inventory_multi(hardware.disks, hashes, :use_association, [:controller_type, :location], nil, [:storage, :backing, :storage_profile])
+    save_inventory_multi(hardware.disks, hashes, :use_association, [:controller_type, :location], nil, [:storage, :backing, :storage_profile, :controller])
   end
 
   def save_network_inventory(guest_device, hash)
