@@ -1,0 +1,2 @@
+class NetworkAdapter < GuestDevice
+end

@@ -3,6 +3,7 @@ class Disk < ApplicationRecord
   belongs_to :storage
   belongs_to :storage_profile
   belongs_to :backing, :polymorphic => true
+  belongs_to :controller
   has_many :partitions
   virtual_column :allocated_space,             :type => :integer, :uses => :partitions
   virtual_column :allocated_space_percent,     :type => :float,   :uses => :allocated_space
