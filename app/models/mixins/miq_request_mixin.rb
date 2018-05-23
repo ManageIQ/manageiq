@@ -169,4 +169,10 @@ module MiqRequestMixin
     dialog = ResourceActionWorkflow.new(values, get_user, ra, {}).dialog
     DialogSerializer.new.serialize(Array[dialog]).first
   end
+
+  def mark_execution_servers
+    options[:executed_on_servers] ||= []
+    options[:executed_on_servers] << MiqServer.my_server.id
+    update_attributes(:options => options)
+  end
 end

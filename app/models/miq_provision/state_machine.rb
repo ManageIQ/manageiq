@@ -121,6 +121,7 @@ module MiqProvision::StateMachine
   end
 
   def finish
+    mark_execution_servers
     if status != 'Error'
       number_of_vms = get_option(:number_of_vms).to_i
       pass = get_option(:pass)
