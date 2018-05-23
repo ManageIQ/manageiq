@@ -233,5 +233,23 @@ describe ServiceTemplateProvisionTask do
         @task_1_2.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       end
     end
+
+    describe "#mark_execution_servers" do
+      let(:server) { FactoryGirl.create(:miq_server) }
+      before { allow(MiqServer).to receive(:my_server).and_return(server) }
+
+      it "with new server id" do
+        @task_0.mark_execution_servers
+        expect(@task_0.options[:executed_on_servers]).to eq([server.id])
+      end
+
+      it "with existing server id" do
+        @task_0.options[:executed_on_servers] = [server.id]
+        @task_0.save!
+
+        @task_0.mark_execution_servers
+        expect(@task_0.options[:executed_on_servers]).to eq([server.id, server.id])
+      end
+    end
   end
 end
