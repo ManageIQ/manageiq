@@ -888,6 +888,7 @@
     :scheme:
 :log:
   :collection:
+    :include_automate_models_and_dialogs: true
     :archive:
       :pattern:
     :current:
