@@ -198,7 +198,9 @@ module VirtualDelegates
         if to_ref.macro == :has_one
           lambda do |t|
             src_model_id = arel_attribute(to_ref.association_primary_key, t)
-            VirtualDelegates.select_from_alias(to_ref, col, to_ref.foreign_key, src_model_id)
+            VirtualDelegates.select_from_alias(to_ref, col, to_ref.foreign_key, src_model_id) do |arel|
+              arel.limit = 1
+            end
           end
         elsif to_ref.macro == :belongs_to
           lambda do |t|
@@ -287,10 +289,22 @@ module VirtualDelegates
   #
 
   def self.select_from_alias(to_ref, col, to_model_col_name, src_model_id)
-    to_table = select_from_alias_table(to_ref.klass, src_model_id.relation)
+    query = if to_ref.scope
+              to_ref.klass.instance_exec(nil, &to_ref.scope)
+            else
+              to_ref.klass.all
+            end
+
+    to_table    = select_from_alias_table(to_ref.klass, src_model_id.relation)
     to_model_id = to_ref.klass.arel_attribute(to_model_col_name, to_table)
-    to_column = to_ref.klass.arel_attribute(col, to_table)
-    Arel.sql("(#{to_table.project(to_column).where(to_model_id.eq(src_model_id)).to_sql})")
+    to_column   = to_ref.klass.arel_attribute(col, to_table)
+    arel        = query.select(to_column).arel
+                       .from(to_table)
+                       .where(to_model_id.eq(src_model_id))
+
+    yield arel if block_given?
+
+    Arel.sql("(#{arel.to_sql})")
   end
 
   # determine table reference to use for a sub query
