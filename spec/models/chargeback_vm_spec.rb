@@ -905,19 +905,24 @@ describe ChargebackVm do
           FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
                              :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                              :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
-                             :resource => @vm1)
+                             :resource => @vm)
         end
         let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
 
         before do
           @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
           ChargebackRate.set_assignments(:storage, [rate_assignment_options_1, rate_assignment_options_2])
+          @vm = FactoryGirl.create(:vm_vmware, :name => "test_vm_1", :evm_owner => admin, :ems_ref => "ems_ref", :created_on => month_beginning)
         end
 
         it "return only one chargeback rate according to tag name of Vm" do
+          skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
+
           [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
             metric_rollup.tag_names = rate_assignment[:tag].first.tag.send(:name_path)
-            uniq_rates = chargeback_vm.get(consumption)
+            @vm.tag_with(["/managed/#{metric_rollup.tag_names}"], :ns => '*')
+            @vm.reload
+            uniq_rates = Chargeback::RatesCache.new.get(consumption)
             consumption.instance_variable_set(:@tag_names, nil)
             consumption.instance_variable_set(:@hash_features_affecting_rate, nil)
             expect([rate_assignment[:cb_rate]]).to match_array(uniq_rates)

@@ -6,6 +6,8 @@ class Chargeback
 
     attr_accessor :start_time, :end_time
 
+    TAG_PREFIX = '/managed/'.freeze
+
     def initialize(metric_rollup_records, start_time, end_time)
       super(start_time, end_time)
       @rollups = metric_rollup_records
@@ -22,7 +24,11 @@ class Chargeback
 
     def tag_names
       @tag_names ||= @rollups.inject([]) do |memo, rollup|
-        memo |= rollup.tag_names.split('|') if rollup.tag_names.present?
+        resource = rollup.resource
+        tag_names = []
+        tag_names |= resource.tags.collect(&:name).map { |x| x.gsub(TAG_PREFIX, "") } if resource
+        tag_names |= rollup.tag_names.split('|') if rollup.tag_names.present?
+        memo |= tag_names if tag_names.present?
         memo
       end
     end
