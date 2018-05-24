@@ -44,7 +44,7 @@ module MiqReport::ImportExport
         # if report exists
         if options[:overwrite]
           # if report exists delete and create new
-          if user.admin_user? || user.current_group_id == rep.miq_group_id
+          if user.report_admin_user? || user.current_group_id == rep.miq_group_id
             msg = "Overwriting Report: [#{report["name"]}]"
             rep.attributes = report
             result = {:message => "Replaced Report: [#{report["name"]}]", :level => :info, :status => :update}

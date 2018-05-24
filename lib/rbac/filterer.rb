@@ -507,8 +507,8 @@ module Rbac
         scope.where(:id => klass == User ? user.id : miq_group.id)
       else
         # hide creating admin group / roles from tenant administrators
-        if user_or_group.miq_user_role&.tenant_admin_user?
-          scope = scope.with_roles_excluding([MiqProductFeature::SUPER_ADMIN_FEATURE, MiqProductFeature::ADMIN_FEATURE])
+        unless user_or_group.miq_user_role&.super_admin_user?
+          scope = scope.with_roles_excluding(MiqProductFeature::SUPER_ADMIN_FEATURE)
         end
 
         if MiqUserRole != klass

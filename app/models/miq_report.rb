@@ -55,7 +55,7 @@ class MiqReport < ApplicationRecord
   IMPORT_CLASS_NAMES = %w(MiqReport).freeze
 
   scope :for_user, lambda { |user|
-    if user.admin_user?
+    if user.report_admin_user?
       all
     else
       where(

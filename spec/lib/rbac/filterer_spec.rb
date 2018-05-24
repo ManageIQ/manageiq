@@ -951,7 +951,7 @@ describe Rbac::Filterer do
 
         it 'can see all roles except for EvmRole-super_administrator' do
           expect(MiqUserRole.count).to eq(4)
-          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, user_role])
+          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, administrator_user_role, user_role])
         end
 
         it 'can see all groups except for group with roles EvmRole-super_administrator amd EvmRole-administrator' do
