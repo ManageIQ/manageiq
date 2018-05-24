@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 86 ending 2018-05-21
+
+### Added
+- Add more currencies to chargeback [(#17456)](https://github.com/ManageIQ/manageiq/pull/17456)
+- Report chargeback from all regions [(#17453)](https://github.com/ManageIQ/manageiq/pull/17453)
+- Read ui url from settings file for dev environment [(#17435)](https://github.com/ManageIQ/manageiq/pull/17435)
+- Added export/import of SmartState Analysis Profiles [(#17427)](https://github.com/ManageIQ/manageiq/pull/17427)
+- Nested lazy find with secondary ref [(#17425)](https://github.com/ManageIQ/manageiq/pull/17425)
+- Add uniq on datacenters in #host_to_folder [(#17422)](https://github.com/ManageIQ/manageiq/pull/17422)
+- Add methods to process the refesh action for a PhysicalSwitch [(#17409)](https://github.com/ManageIQ/manageiq/pull/17409)
+- Targeted scope serialization [(#17408)](https://github.com/ManageIQ/manageiq/pull/17408)
+- Expose plugin ansible content consolidation as a rake task [(#17407)](https://github.com/ManageIQ/manageiq/pull/17407)
+- Changed get_file method to receive a resource as parameter. [(#17406)](https://github.com/ManageIQ/manageiq/pull/17406)
+- Introduce support for multi-tab orchestration dialogs [(#17342)](https://github.com/ManageIQ/manageiq/pull/17342)
+- Adjusting ManageIQ core to enable PhysicalChassis API endpoint [(#17320)](https://github.com/ManageIQ/manageiq/pull/17320)
+- Config file to represent Rack in the UI [(#17078)](https://github.com/ManageIQ/manageiq/pull/17078)
+
+### Fixed
+- Adjust how default_value is calculated for multi-select drop downs [(#17449)](https://github.com/ManageIQ/manageiq/pull/17449)
+- Removes last call to automate from dialog_field serializer [(#17436)](https://github.com/ManageIQ/manageiq/pull/17436)
+- Fixes to Rbac::Filterer#skip_references [(#17429)](https://github.com/ManageIQ/manageiq/pull/17429)
+- Always reconnect the oldest entity [(#17421)](https://github.com/ManageIQ/manageiq/pull/17421)
+- Skip Vm reconnect if already reconnected [(#17417)](https://github.com/ManageIQ/manageiq/pull/17417)
+- Filter relevant fields also according to chargeback class in Chargeback [(#17414)](https://github.com/ManageIQ/manageiq/pull/17414)
+- Renamed method to delete container object store for consistency reasons [(#17399)](https://github.com/ManageIQ/manageiq/pull/17399)
+- Deduplicate embedded ansible notifications [(#17394)](https://github.com/ManageIQ/manageiq/pull/17394)
+
 ## Unreleased as of Sprint 85 ending 2018-05-07
 
 ### Added
