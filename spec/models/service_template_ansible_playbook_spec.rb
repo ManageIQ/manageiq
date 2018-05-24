@@ -1,4 +1,6 @@
 describe ServiceTemplateAnsiblePlaybook do
+  let(:zone_name) { "Bedrock" }
+  let(:zone) { FactoryGirl.create(:zone, :name => zone_name) }
   let(:user)     { FactoryGirl.create(:user_with_group) }
   let(:auth_one) { FactoryGirl.create(:authentication, :manager_ref => 6) }
   let(:auth_two) { FactoryGirl.create(:authentication, :manager_ref => 10) }
@@ -8,7 +10,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
   let(:service_template_catalog) { FactoryGirl.create(:service_template_catalog) }
   let(:provider) { FactoryGirl.create(:provider_embedded_ansible, :default_inventory => 1) }
-  let(:ems)      { FactoryGirl.create(:automation_manager_ansible_tower, :provider => provider) }
+  let(:ems)      { FactoryGirl.create(:automation_manager_ansible_tower, :provider => provider, :zone => zone) }
 
   let(:playbook) do
     FactoryGirl.create(:embedded_playbook,
@@ -310,6 +312,11 @@ describe ServiceTemplateAnsiblePlaybook do
       adjust_resource_actions(service_template, job_template.id, :last)
       service_template.services << service
       expect(service_template.retirement_potential?).to be_truthy
+    end
+
+    it '#my_zone' do
+      service_template = prebuild_service_template(:job_template => false)
+      expect(service_template.my_zone).to eq(zone_name)
     end
 
     def adjust_resource_actions(service_template, item, list_name = :first)

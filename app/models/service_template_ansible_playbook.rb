@@ -131,6 +131,10 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
   private_class_method :validate_config_info
 
+  def my_zone
+    playbook_id = options[:config_info][:provision][:playbook_id]
+    ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook.find(playbook_id).manager.my_zone
+  end
 
   def job_template(action)
     resource_actions.find_by(:action => action.capitalize).try(:configuration_template)
