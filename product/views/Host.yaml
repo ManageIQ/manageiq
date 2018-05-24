@@ -38,7 +38,6 @@ include:
 # Included tables and columns for query performance
 include_for_find:
   :ext_management_system: {}
-  :compliances: {}
   :tags: {}
 
 # Order of columns (from all tables)
