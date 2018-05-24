@@ -1,6 +1,8 @@
 class MiqProductFeature < ApplicationRecord
   SUPER_ADMIN_FEATURE = "everything".freeze
-  ADMIN_FEATURE       = "miq_report_superadmin".freeze
+  REPORT_ADMIN_FEATURE  = "miq_report_superadmin".freeze
+  REQUEST_ADMIN_FEATURE = "miq_request_superadmin".freeze
+  ADMIN_FEATURE = REPORT_ADMIN_FEATURE
   acts_as_tree
 
   has_and_belongs_to_many :miq_user_roles, :join_table => :miq_roles_features

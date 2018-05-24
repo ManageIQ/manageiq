@@ -897,7 +897,7 @@ describe Rbac::Filterer do
 
         it 'can see all roles expect to EvmRole-super_administrator' do
           expect(MiqUserRole.count).to eq(3)
-          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role])
+          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, administrator_user_role])
         end
 
         it 'can see all groups expect to group with role EvmRole-super_administrator' do
