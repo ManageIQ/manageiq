@@ -5,9 +5,11 @@ module ManagerRefresh
       class MissingModelClassError < StandardError; end
 
       require_nested :CloudManager
+      require_nested :InfraManager
+      require_nested :AutomationManager
       require_nested :NetworkManager
       require_nested :StorageManager
-      require_nested :InfraManager
+      require_nested :List
 
       include ::ManagerRefresh::InventoryCollection::Builder::Shared
 
