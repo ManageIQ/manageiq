@@ -50,6 +50,7 @@
 - OrchestrationStack
 - OrchestrationTemplate
 - PhysicalRack
+- PhysicalChassis
 - PhysicalSwitch
 - PhysicalServer
 - PolicyEvent
