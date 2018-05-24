@@ -5,11 +5,33 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
   let(:ems) { FactoryGirl.create(:ems_cloud) }
   let(:network_manager) { FactoryGirl.create(:ems_network, :parent_ems_id => ems.id) }
   let(:template) { FactoryGirl.create(:miq_template, :name => "template", :ext_management_system => ems) }
+  let(:cloud_init_template) { FactoryGirl.create(:customization_template_cloud_init) }
   let(:workflow) do
     stub_dialog
     allow(User).to receive_messages(:server_timezone => "UTC")
     allow_any_instance_of(described_class).to receive(:update_field_visibility)
-    described_class.new({:src_vm_id => template.id}, admin.userid)
+    described_class.new({:src_vm_id => template.id, :customization_template_id => cloud_init_template.id}, admin.userid)
+  end
+
+  context "with allowed customization templates" do
+    it "#allowed_customization_templates" do
+      expect(workflow.allowed_customization_templates.first).to be_a(MiqHashStruct)
+    end
+
+    it "should retrieve cloud-init templates when cloning" do
+      options = {'key' => 'value' }
+      allow(workflow).to receive(:supports_native_clone?).and_return(true)
+
+      result = workflow.allowed_customization_templates(options)
+      customization_template = workflow.instance_variable_get(:@values)[:customization_template_script]
+      template_hash = result.first.instance_variable_get(:@hash)
+
+      expect(customization_template).to eq cloud_init_template.script
+      expect(template_hash).to be_a(Hash)
+      %i(id name description).each do |attr|
+        expect(template_hash[attr]).to eq cloud_init_template.send(attr)
+      end
+    end
   end
 
   context "with empty relationships" do
