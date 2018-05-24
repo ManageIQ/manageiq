@@ -28,7 +28,6 @@ cols:
 - storage_allocated_cost
 - storage_used_metric
 - storage_used_cost
-- storage_metric
 - storage_cost
 - total_cost
 
@@ -58,7 +57,6 @@ col_order:
 - storage_allocated_cost
 - storage_used_metric
 - storage_used_cost
-- storage_metric
 - storage_cost
 - total_cost
 
@@ -88,7 +86,6 @@ headers:
 - Storage Allocated Cost
 - Storage Used
 - Storage Used Cost
-- Storage Total
 - Storage Total Cost
 - Total Cost
 
@@ -185,9 +182,6 @@ col_options:
     :grouping:
     - :total
   storage_cost:
-    :grouping:
-    - :total
-  storage_metric:
     :grouping:
     - :total
   storage_used_cost:
