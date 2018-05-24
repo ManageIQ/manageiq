@@ -627,6 +627,21 @@ describe ChargebackVm do
 
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
+        context "when MetricRollup#tag_names are not considered" do
+          before do
+            # report filter is set to different tag
+            @vm1.metric_rollups.each { |mr| mr.update(:tag_names => 'registered/no|folder_path_yellow/datacenters') }
+          end
+
+          it "cpu" do
+            expect(subject.cpu_allocated_metric).to eq(cpu_count)
+            used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, @vm1)
+            expect(subject.cpu_used_metric).to be_within(0.01).of(used_metric)
+            expect(subject.cpu_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
+            expect(subject.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
+          end
+        end
+
         context "chargeback rate contains rate unrelated to chargeback vm" do
           let!(:chargeback_rate) do
             FactoryGirl.create(:chargeback_rate, :detail_params => detail_params.merge(:chargeback_rate_detail_cpu_cores_allocated => {:tiers => [count_hourly_variable_tier_rate]}))

@@ -26,7 +26,10 @@ module Metric::ChargebackHelper
       end
     end
 
-    "#{image_tag_name}#{tag_names}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
+    current_tag_names = resource ? resource.tags.collect(&:name).map { |x| x.gsub("/managed/", "") } : []
+    rollup_tag_names = tag_names ? tag_names.split("|") : []
+
+    "#{image_tag_name}#{(current_tag_names | rollup_tag_names).join("|")}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
   end
 
   def resource_parents
