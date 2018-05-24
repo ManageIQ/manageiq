@@ -138,7 +138,8 @@ module SupportsFeatureMixin
     :block_storage                       => 'Block Storage',
     :object_storage                      => 'Object Storage',
     :vm_import                           => 'VM Import',
-    :change_password                     => 'Change Password'
+    :change_password                     => 'Change Password',
+    :configure_events                    => 'Configure Events'
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
