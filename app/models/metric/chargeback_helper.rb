@@ -26,7 +26,7 @@ module Metric::ChargebackHelper
       end
     end
 
-    "#{image_tag_name}#{(resource_current_tag_names | resource_tag_names).join("|")}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
+    "#{image_tag_name}#{all_tag_names.join("|")}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
   end
 
   def resource_parents
@@ -54,5 +54,9 @@ module Metric::ChargebackHelper
 
   def resource_tag_names
     tag_names ? tag_names.split("|") : []
+  end
+
+  def all_tag_names
+    resource_current_tag_names | resource_tag_names
   end
 end

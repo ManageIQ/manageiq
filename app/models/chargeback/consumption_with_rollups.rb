@@ -22,8 +22,7 @@ class Chargeback
 
     def tag_names
       @tag_names ||= @rollups.inject([]) do |memo, rollup|
-        tag_names = rollup.resource_current_tag_names | rollup.resource_tag_names
-        memo |= tag_names if tag_names.present?
+        memo |= rollup.all_tag_names
         memo
       end
     end
