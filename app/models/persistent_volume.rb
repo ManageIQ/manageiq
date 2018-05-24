@@ -10,6 +10,6 @@ class PersistentVolume < ContainerVolume
   virtual_column :storage_capacity, :type => :integer
 
   def storage_capacity
-    capacity[:storage] if capacity
+    capacity[:storage]
   end
 end

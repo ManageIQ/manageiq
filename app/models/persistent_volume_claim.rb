@@ -13,6 +13,6 @@ class PersistentVolumeClaim < ApplicationRecord
   end
 
   def storage_capacity
-    capacity[:storage] if capacity
+    capacity[:storage]
   end
 end
