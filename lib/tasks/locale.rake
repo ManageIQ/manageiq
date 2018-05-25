@@ -142,9 +142,10 @@ namespace :locale do
     Rake::Task['locale:store_dictionary_strings'].invoke
     Rake::Task['locale:run_store_model_attributes'].invoke
     Rake::Task['locale:extract_yaml_strings'].invoke(Rails.root)
+    Rake::Task['locale:model_display_names'].invoke
     Rake::Task['gettext:find'].invoke
 
-    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
+    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/model_display_names.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
       File.unlink(file)
     end
   end
