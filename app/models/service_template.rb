@@ -63,6 +63,7 @@ class ServiceTemplate < ApplicationRecord
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
 
   has_many   :miq_requests, :as => :source, :dependent => :nullify
+  has_many   :active_requests, -> { where(:request_state => %w(active queued)) }, :as => :source, :class_name => "MiqRequest"
 
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
