@@ -627,6 +627,21 @@ describe ChargebackVm do
 
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
+        context "when MetricRollup#tag_names are not considered" do
+          before do
+            # report filter is set to different tag
+            @vm1.metric_rollups.each { |mr| mr.update(:tag_names => 'registered/no|folder_path_yellow/datacenters') }
+          end
+
+          it "cpu" do
+            expect(subject.cpu_allocated_metric).to eq(cpu_count)
+            used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, @vm1)
+            expect(subject.cpu_used_metric).to be_within(0.01).of(used_metric)
+            expect(subject.cpu_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
+            expect(subject.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
+          end
+        end
+
         context "chargeback rate contains rate unrelated to chargeback vm" do
           let!(:chargeback_rate) do
             FactoryGirl.create(:chargeback_rate, :detail_params => detail_params.merge(:chargeback_rate_detail_cpu_cores_allocated => {:tiers => [count_hourly_variable_tier_rate]}))
@@ -905,19 +920,24 @@ describe ChargebackVm do
           FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
                              :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                              :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
-                             :resource => @vm1)
+                             :resource => @vm)
         end
         let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
 
         before do
           @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
           ChargebackRate.set_assignments(:storage, [rate_assignment_options_1, rate_assignment_options_2])
+          @vm = FactoryGirl.create(:vm_vmware, :name => "test_vm_1", :evm_owner => admin, :ems_ref => "ems_ref", :created_on => month_beginning)
         end
 
         it "return only one chargeback rate according to tag name of Vm" do
+          skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
+
           [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
             metric_rollup.tag_names = rate_assignment[:tag].first.tag.send(:name_path)
-            uniq_rates = chargeback_vm.get(consumption)
+            @vm.tag_with(["/managed/#{metric_rollup.tag_names}"], :ns => '*')
+            @vm.reload
+            uniq_rates = Chargeback::RatesCache.new.get(consumption)
             consumption.instance_variable_set(:@tag_names, nil)
             consumption.instance_variable_set(:@hash_features_affecting_rate, nil)
             expect([rate_assignment[:cb_rate]]).to match_array(uniq_rates)

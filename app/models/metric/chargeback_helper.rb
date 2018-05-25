@@ -26,7 +26,7 @@ module Metric::ChargebackHelper
       end
     end
 
-    "#{image_tag_name}#{tag_names}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
+    "#{image_tag_name}#{all_tag_names.join("|")}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
   end
 
   def resource_parents
@@ -46,5 +46,17 @@ module Metric::ChargebackHelper
     when Container.name
       [parent_ems].compact
     end
+  end
+
+  def resource_current_tag_names
+    resource ? resource.tags.collect(&:name).map { |x| x.gsub("/managed/", "") } : []
+  end
+
+  def resource_tag_names
+    tag_names ? tag_names.split("|") : []
+  end
+
+  def all_tag_names
+    resource_current_tag_names | resource_tag_names
   end
 end
