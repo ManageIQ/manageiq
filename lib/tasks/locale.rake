@@ -215,4 +215,15 @@ namespace :locale do
     Rake::Task['gettext:po_to_json'].invoke
     system "rm -rf #{combined_dir}"
   end
+
+  desc "Create display names for models"
+  task "model_display_names" => :environment do
+    f = File.open(Rails.root.join("config/model_display_names.rb"), "w+")
+    Rails.application.eager_load!
+    ApplicationRecord.descendants.sort_by(&:display_name).collect do |model|
+      next if model.model_name.singular.titleize != model.display_name || model.display_name.start_with?('ManageIQ')
+      f.puts "n_('#{model.display_name}', '#{model.display_name 2}', n)"
+    end
+    f.close
+  end
 end
