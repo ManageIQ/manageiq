@@ -37,6 +37,7 @@ class ServiceTemplate < ApplicationRecord
   include OwnershipMixin
   include NewWithTypeStiMixin
   include TenancyMixin
+  include ArchivedMixin
   include_concern 'Filter'
 
   belongs_to :tenant
