@@ -22,7 +22,7 @@ class Chargeback
 
     def tag_names
       @tag_names ||= @rollups.inject([]) do |memo, rollup|
-        memo |= rollup.tag_names.split('|') if rollup.tag_names.present?
+        memo |= rollup.all_tag_names
         memo
       end
     end
