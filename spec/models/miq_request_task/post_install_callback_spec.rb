@@ -1,5 +1,5 @@
 describe MiqRequestTask::PostInstallCallback do
-  let(:miq_request) { FactoryGirl.build(:miq_host_provision_request, :requester => user) }
+  let(:miq_request) { FactoryGirl.build(:miq_provision_request, :requester => user) }
   let(:task)        { FactoryGirl.create(:miq_request_task, :miq_request => miq_request) }
   let(:user)        { FactoryGirl.build(:user) }
 

@@ -7,7 +7,6 @@ describe MiqRequest do
       expected_request_types = {
         :MiqProvisionRequest                      => {:template                   => "VM Provision", :clone_to_vm => "VM Clone", :clone_to_template => "VM Publish"},
         :MiqProvisionRequestTemplate              => {:template                   => "VM Provision Template"},
-        :MiqHostProvisionRequest                  => {:host_pxe_install           => "Host Provision"},
         :MiqProvisionConfiguredSystemRequest      => {:provision_via_foreman      => "#{ui_lookup(:ui_title => 'foreman')} Provision"},
         :VmReconfigureRequest                     => {:vm_reconfigure             => "VM Reconfigure"},
         :VmCloudReconfigureRequest                => {:vm_cloud_reconfigure       => "VM Cloud Reconfigure"},
@@ -28,7 +27,7 @@ describe MiqRequest do
 
   context "A new request" do
     let(:event_name)   { "hello" }
-    let(:host_request) { FactoryGirl.build(:miq_host_provision_request, :options => {:src_host_ids => [1]}) }
+    let(:miq_request) { FactoryGirl.build(:automation_request, :options => {:src_ids => [1]}) }
     let(:request)      { FactoryGirl.create(:vm_migrate_request, :requester => fred) }
     let(:ems)          { FactoryGirl.create(:ems_vmware) }
     let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
@@ -42,24 +41,24 @@ describe MiqRequest do
 
     context "#set_description" do
       it "should set a description when nil" do
-        expect(host_request.description).to be_nil
-        expect(host_request).to receive(:update_attributes).with(:description => "PXE install on [] from image []")
+        expect(miq_request.description).to be_nil
+        expect(miq_request).to receive(:update_attributes).with(:description => "Automation Task")
 
-        host_request.set_description
+        miq_request.set_description
       end
 
       it "should not set description when one exists" do
-        host_request.description = "test description"
-        host_request.set_description
+        miq_request.description = "test description"
+        miq_request.set_description
 
-        expect(host_request.description).to eq("test description")
+        expect(miq_request.description).to eq("test description")
       end
 
       it "should set description when :force => true" do
-        host_request.description = "test description"
-        expect(host_request).to receive(:update_attributes).with(:description => "PXE install on [] from image []")
+        miq_request.description = "test description"
+        expect(miq_request).to receive(:update_attributes).with(:description => "Automation Task")
 
-        host_request.set_description(true)
+        miq_request.set_description(true)
       end
     end
 

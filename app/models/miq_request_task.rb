@@ -94,8 +94,6 @@ class MiqRequestTask < ApplicationRecord
   def self.request_class
     if self <= MiqProvision
       MiqProvisionRequest
-    elsif self <= MiqHostProvision
-      MiqHostProvisionRequest
     else
       name.underscore.gsub(/_task$/, "_request").camelize.constantize
     end

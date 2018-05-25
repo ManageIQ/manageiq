@@ -1,9 +1,4 @@
 ---
-- :name: host_provisioned
-  :message: Host %{subject} has been provisioned.
-  :expires_in: 7.days
-  :level: :success
-  :audience: tenant
 - :name: automate_service_provisioned
   :message: Service %{subject} has been provisioned.
   :expires_in: 7.days

@@ -7,9 +7,6 @@ FactoryGirl.define do
   factory :miq_provision_task, :parent => :miq_request_task,   :class => "MiqProvisionTask"
   factory :miq_provision,      :parent => :miq_provision_task, :class => "MiqProvision"
 
-  # Bare Metal
-  factory :miq_host_provision, :parent => :miq_request_task, :class => "MiqHostProvision"
-
   # Infra
   factory :miq_provision_microsoft,      :parent => :miq_provision,        :class => "ManageIQ::Providers::Microsoft::InfraManager::Provision"
   factory :miq_provision_redhat,         :parent => :miq_provision,        :class => "ManageIQ::Providers::Redhat::InfraManager::Provision"
