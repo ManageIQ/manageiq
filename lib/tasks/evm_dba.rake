@@ -199,11 +199,12 @@ namespace :evm do
       task :local do
         require 'trollop'
         opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-          opt :local_file, "Destination file", :type => :string, :required => true
-          opt :username,   "Username",         :type => :string
-          opt :password,   "Password",         :type => :string
-          opt :hostname,   "Hostname",         :type => :string
-          opt :dbname,     "Database name",    :type => :string
+          opt :local_file,           "Destination file",       :type => :string, :required => true
+          opt :username,             "Username",               :type => :string
+          opt :password,             "Password",               :type => :string
+          opt :hostname,             "Hostname",               :type => :string
+          opt :dbname,               "Database name",          :type => :string
+          opt :"exclude-table-data", "Tables to exclude data", :type => :strings
         end
 
         opts.delete_if { |_, v| v.nil? }
@@ -216,18 +217,19 @@ namespace :evm do
       task :remote do
         require 'trollop'
         opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-          opt :uri,              "Destination depot URI",       :type => :string, :required => true
-          opt :uri_username,     "Destination depot username",  :type => :string
-          opt :uri_password,     "Destination depot password",  :type => :string
-          opt :remote_file_name, "Destination depot filename",  :type => :string
-          opt :username,         "Username",                    :type => :string
-          opt :password,         "Password",                    :type => :string
-          opt :hostname,         "Hostname",                    :type => :string
-          opt :dbname,           "Database name",               :type => :string
+          opt :uri,                  "Destination depot URI",      :type => :string, :required => true
+          opt :uri_username,         "Destination depot username", :type => :string
+          opt :uri_password,         "Destination depot password", :type => :string
+          opt :remote_file_name,     "Destination depot filename", :type => :string
+          opt :username,             "Username",                   :type => :string
+          opt :password,             "Password",                   :type => :string
+          opt :hostname,             "Hostname",                   :type => :string
+          opt :dbname,               "Database name",              :type => :string
+          opt :"exclude-table-data", "Tables to exclude data",     :type => :strings
         end
 
         db_opts = {}
-        [:dbname, :username, :password, :hostname].each { |k| db_opts[k] = opts[k] if opts[k] }
+        [:dbname, :username, :password, :hostname, :"exclude-table-data"].each { |k| db_opts[k] = opts[k] if opts[k] }
 
         connect_opts = {}
         [:uri, :uri_username, :uri_password, :remote_file_name].each { |k| connect_opts[k] = opts[k] if opts[k] }
