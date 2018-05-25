@@ -94,7 +94,14 @@ class Zone < ApplicationRecord
   end
 
   def synchronize_logs(*args)
-    active_miq_servers.each { |s| s.synchronize_logs(*args) }
+    options = args.extract_options!
+    enabled = Settings.log.collection.include_automate_models_and_dialogs
+
+    active_miq_servers.each_with_index do |s, index|
+      # If enabled, export the automate domains and dialogs on the first active server
+      include_models_and_dialogs = enabled ? index.zero? : false
+      s.synchronize_logs(*args, options.merge(:include_automate_models_and_dialogs => include_models_and_dialogs))
+    end
   end
 
   def last_log_sync_on
