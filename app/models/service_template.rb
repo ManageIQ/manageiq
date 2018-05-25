@@ -37,7 +37,14 @@ class ServiceTemplate < ApplicationRecord
   include OwnershipMixin
   include NewWithTypeStiMixin
   include TenancyMixin
+  include ArchivedMixin
   include_concern 'Filter'
+
+  include ReservedMixin
+  reserve_attribute :deleted_on, :datetime
+
+  scope :archived, -> { includes(:reserved_rec).reject { |st| st.deleted_on.nil? } }
+  scope :active,   -> { includes(:reserved_rec).select { |st| st.deleted_on.nil? } }
 
   belongs_to :tenant
   # # These relationships are used to specify children spawned from a parent service
