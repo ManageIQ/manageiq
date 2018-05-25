@@ -231,7 +231,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :description => "1 vCPU, 3.75 GB RAM",
       :enabled     => true,
       :cpus        => 1,
-      :memory      => 4026531840
+      :memory      => 4_026_531_840
     )
 
     expect(flavor.ext_management_system).to eq(@ems)

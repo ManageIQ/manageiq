@@ -1,17 +1,18 @@
 describe ManageIQ::Providers::Google::CloudManager::EventCatcher::Stream do
   require 'fog/google'
 
-  let(:ems) { FactoryGirl.create(:ems_google_with_project) }
-  let(:subscription) { Fog::Google::Pubsub::Subscription.new }
+  let(:ems)               { FactoryGirl.create(:ems_google_with_project) }
+  let(:subscription)      { Fog::Google::Pubsub::Subscription.new }
   let(:pubsub_connection) { ems.connect(:service => 'pubsub') }
-  let(:stream) { described_class.new(ems) }
+  let(:stream)            { described_class.new(ems) }
   let(:subscription_name) { "projects/GOOGLE_PROJECT/subscriptions/manageiq-eventcatcher-#{ems.guid}" }
 
   before(:all) { Fog.mock! }
+  after(:all)  { Fog.unmock! }
 
   describe '#events' do
     before do
-      allow(ems).to receive(:with_provider_connection).and_yield(pubsub_connection)
+      allow(ems).to    receive(:with_provider_connection).and_yield(pubsub_connection)
       allow(stream).to receive(:get_or_create_subscription).and_return(true)
       allow(stream).to receive(:pull_subscription).and_return([])
     end
@@ -41,6 +42,7 @@ describe ManageIQ::Providers::Google::CloudManager::EventCatcher::Stream do
 
     context "when no subscription is available" do
       before(:all) { RSpec::Mocks.configuration.allow_message_expectations_on_nil = true }
+      after(:all) { RSpec::Mocks.configuration.allow_message_expectations_on_nil = false }
       before do
         allow(stub_subscriptions).to receive(:get).and_return(nil)
         allow(stub_subscriptions).to receive(:create).and_return(subscription)
@@ -66,6 +68,7 @@ describe ManageIQ::Providers::Google::CloudManager::EventCatcher::Stream do
 
   describe '#pull_subscription' do
     require "google/apis/pubsub_#{Fog::Google::Pubsub::GOOGLE_PUBSUB_API_VERSION}"
+
     let(:messages) { [] }
     let(:response) { Google::Apis::PubsubV1::PullResponse.new(:received_messages => messages) }
     subject { stream.send(:pull_subscription, pubsub_connection) }

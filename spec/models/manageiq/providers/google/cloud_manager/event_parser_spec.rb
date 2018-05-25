@@ -1,7 +1,5 @@
 describe ManageIQ::Providers::Google::CloudManager::EventParser do
   describe '.event_to_hash' do
-    let(:event_name) { 'default_event' }
-
     shared_examples 'parses_event' do |event_type|
       let(:event_json) { read_event(event_type) }
       subject { described_class.event_to_hash(event_json, nil) }
