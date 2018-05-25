@@ -159,6 +159,11 @@ class ServiceTemplate < ApplicationRecord
     super
   end
 
+  def archive
+    raise _("Cannot archive while in use") unless active_requests.empty?
+    archive!
+  end
+
   def request_class
     ServiceTemplateProvisionRequest
   end
