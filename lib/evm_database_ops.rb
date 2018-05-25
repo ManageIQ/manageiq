@@ -5,7 +5,8 @@ require 'mount/miq_generic_mount_session'
 
 class EvmDatabaseOps
   include Vmdb::Logging
-  BACKUP_TMP_FILE = "/tmp/miq_backup"
+  BACKUP_TMP_FILE = "/tmp/miq_backup".freeze
+  DUMP_TMP_FILE   = "/tmp/miq_pg_dump".freeze
 
   DEFAULT_OPTS = {:dbname => 'vmdb_production'}
 
@@ -60,6 +61,21 @@ class EvmDatabaseOps
     uri
   end
 
+  def self.dump(db_opts, connect_opts = {})
+    # db_opts and connect_opts similar to .backup
+
+    uri = with_mount_session(:dump, db_opts, connect_opts) do |database_opts|
+      # For database dumps, this isn't going to be as accurate (since the dump
+      # size will probably be larger than the calculated BD size), but it still
+      # won't hurt to do as a generic way to get a rough idea if we have enough
+      # disk space or the appliance for the task.
+      validate_free_space(database_opts)
+      PostgresAdmin.backup(database_opts)
+    end
+    _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been dumped up to file: [#{uri}]")
+    uri
+  end
+
   def self.restore(db_opts, connect_opts = {})
     # db_opts:
     #  :local_file => "/tmp/backup_1",          - Restore from this local file
@@ -94,8 +110,9 @@ class EvmDatabaseOps
         uri = connect_opts[:uri]
         connect_opts[:uri] = File.dirname(connect_opts[:uri])
       else
-        connect_opts[:remote_file_name] ||= File.basename(backup_file_name)
-        uri = File.join(connect_opts[:uri], "db_backup", connect_opts[:remote_file_name])
+        connect_opts[:remote_file_name] ||= File.basename(backup_file_name(action))
+        backup_folder = action == :dump ? "db_dump" : "db_backup"
+        uri = File.join(connect_opts[:uri], backup_folder, connect_opts[:remote_file_name])
       end
 
       session = MiqGenericMountSession.new_session(connect_opts)
@@ -168,9 +185,9 @@ class EvmDatabaseOps
     local_file
   end
 
-  def self.backup_file_name
+  def self.backup_file_name(action = :backup)
     time_suffix  = Time.now.utc.strftime("%Y%m%d_%H%M%S")
-    "#{BACKUP_TMP_FILE}_#{time_suffix}"
+    "#{action == :backup ? BACKUP_TMP_FILE : DUMP_TMP_FILE}_#{time_suffix}"
   end
   private_class_method :backup_file_name
 end
