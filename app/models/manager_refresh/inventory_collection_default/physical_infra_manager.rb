@@ -11,5 +11,16 @@ class ManagerRefresh::InventoryCollectionDefault::PhysicalInfraManager < Manager
 
       attributes.merge!(extra_attributes)
     end
+
+    def physical_server_details(extra_attributes = {})
+      attributes = {
+        :model_class                  => ::AssetDetail,
+        :association                  => :physical_server_details,
+        :manager_ref                  => [:resource],
+        :parent_inventory_collections => [:physical_servers],
+      }
+
+      attributes.merge!(extra_attributes)
+    end
   end
 end
