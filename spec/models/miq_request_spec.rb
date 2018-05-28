@@ -553,4 +553,16 @@ describe MiqRequest do
       expect(request.options[:abc]).to eq(1)
     end
   end
+
+  context "retire request source classes" do
+    let(:vm_retire_request)      { FactoryGirl.create(:vm_retire_request, :requester => fred) }
+    let(:service_retire_request) { FactoryGirl.create(:service_retire_request, :requester => fred) }
+    let(:orch_stack_request)     { FactoryGirl.create(:orchestration_stack_retire_request, :requester => fred) }
+
+    it "gets the right source class names" do
+      expect(vm_retire_request.class::SOURCE_CLASS_NAME).to eq('Vm')
+      expect(service_retire_request.class::SOURCE_CLASS_NAME).to eq('Service')
+      expect(orch_stack_request.class::SOURCE_CLASS_NAME).to eq('OrchestrationStack')
+    end
+  end
 end
