@@ -49,7 +49,7 @@ describe VMDB::Config do
   end
 
   context ".save_file" do
-    it "normal" do
+    it "saves server config" do
       resource = FactoryGirl.create(:miq_server)
       MiqRegion.seed
       data = {}
@@ -59,6 +59,33 @@ describe VMDB::Config do
       expect(VMDB::Config.save_file(data, resource)).to be true
       expect(SettingsChange.count).to eq(1)
       expect(SettingsChange.first).to have_attributes(:key => '/api/token_ttl', :value => "1.day")
+      expect(SettingsChange.first.resource).to eq(resource)
+    end
+
+    it "saves zone config" do
+      resource = FactoryGirl.create(:zone)
+      MiqRegion.seed
+      data = {}
+      data.store_path(:api, :token_ttl, "1.day")
+      data = data.to_yaml
+
+      expect(VMDB::Config.save_file(data, resource)).to be true
+      expect(SettingsChange.count).to eq(1)
+      expect(SettingsChange.first).to have_attributes(:key => '/api/token_ttl', :value => "1.day")
+      expect(SettingsChange.first.resource).to eq(resource)
+    end
+
+    it "saves region config" do
+      resource = FactoryGirl.create(:miq_region)
+      MiqRegion.seed
+      data = {}
+      data.store_path(:api, :token_ttl, "1.day")
+      data = data.to_yaml
+
+      expect(VMDB::Config.save_file(data, resource)).to be true
+      expect(SettingsChange.count).to eq(1)
+      expect(SettingsChange.first).to have_attributes(:key => '/api/token_ttl', :value => "1.day")
+      expect(SettingsChange.first.resource).to eq(resource)
     end
 
     it "catches syntax errors" do
