@@ -8,7 +8,15 @@ module Vmdb
   class Settings
     extend Vmdb::SettingsWalker::ClassMethods
 
-    class ConfigurationInvalid < StandardError; end
+    class ConfigurationInvalid < StandardError
+      attr_accessor :errors
+
+      def initialize(errors)
+        @errors = errors
+        message = errors.map { |k, v| "#{k}: #{v}" }.join("; ")
+        super(message)
+      end
+    end
 
     PASSWORD_FIELDS = Vmdb::SettingsWalker::PASSWORD_FIELDS
     DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
@@ -56,16 +64,25 @@ module Vmdb
       new_settings = build_without_local(resource).load!.merge!(hash).to_hash
 
       valid, errors = validate(new_settings)
-      unless valid
-        message = errors.map { |k, v| "#{k}: #{v}" }.join("; ")
-        raise ConfigurationInvalid, message
-      end
+      raise ConfigurationInvalid.new(errors) unless valid # rubocop:disable Style/RaiseArgs
 
       hash_for_parent = parent_settings_without_local(resource).load!.to_hash
       diff = HashDiffer.diff(hash_for_parent, new_settings)
       encrypt_passwords!(diff)
       deltas = HashDiffer.diff_to_deltas(diff)
       apply_settings_changes(resource, deltas)
+    end
+
+    def self.save_yaml!(resource, contents)
+      require 'yaml'
+      hash =
+        begin
+          decrypt_passwords!(YAML.load(contents))
+        rescue => err
+          raise ConfigurationInvalid.new(:contents => "File contents are malformed: #{err.message.inspect}")
+        end
+
+      save!(resource, hash)
     end
 
     def self.destroy!(resource, keys)
@@ -76,6 +93,11 @@ module Vmdb
 
     def self.for_resource(resource)
       build(resource).load!
+    end
+
+    def self.for_resource_yaml(resource)
+      require 'yaml'
+      encrypt_passwords!(for_resource(resource).to_hash).to_yaml
     end
 
     def self.template_settings

@@ -267,6 +267,62 @@ describe Vmdb::Settings do
     end
   end
 
+  describe "save_yaml!" do
+    let(:miq_server) { FactoryGirl.create(:miq_server) }
+
+    it "saves the settings" do
+      data = {:api => {:token_ttl => "1.day"}}.to_yaml
+      described_class.save_yaml!(miq_server, data)
+
+      miq_server.reload
+
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/api/token_ttl",
+                                                                   :value => "1.day")
+    end
+
+    it "handles incoming unencrypted values" do
+      password  = "pa$$word"
+      encrypted = MiqPassword.encrypt(password)
+
+      data = {:authentication => {:bind_pwd => password}}.to_yaml
+      described_class.save_yaml!(miq_server, data)
+
+      miq_server.reload
+
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/authentication/bind_pwd",
+                                                                   :value => encrypted)
+    end
+
+    it "handles incoming encrypted values" do
+      password  = "pa$$word"
+      encrypted = MiqPassword.encrypt(password)
+
+      data = {:authentication => {:bind_pwd => encrypted}}.to_yaml
+      described_class.save_yaml!(miq_server, data)
+
+      miq_server.reload
+
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/authentication/bind_pwd",
+                                                                   :value => encrypted)
+    end
+
+    {
+      "syntax"     => "--- -", # invalid YAML
+      "non-syntax" => "xxx"    # valid YAML, but invalid config
+    }.each do |type, contents|
+      it "catches #{type} errors" do
+        expect { described_class.save_yaml!(miq_server, contents) }.to raise_error(described_class::ConfigurationInvalid) do |err|
+          expect(err.errors.size).to eq 1
+          expect(err.errors[:contents]).to start_with("File contents are malformed")
+          expect(err.message).to include("contents: File contents are malformed")
+        end
+      end
+    end
+  end
+
   shared_examples_for "password handling" do
     subject do
       described_class.send(method, Settings)
@@ -394,6 +450,33 @@ describe Vmdb::Settings do
 
       settings = Vmdb::Settings.for_resource(MiqServer.new(:zone => server.zone))
       expect(settings.api.token_ttl).to eq "4.hour"
+    end
+  end
+
+  describe ".for_resource_yaml" do
+    it "fetches the yaml with changes" do
+      miq_server = FactoryGirl.create(:miq_server)
+      described_class.save!(miq_server, :api => {:token_ttl => "1.day"})
+
+      yaml = described_class.for_resource_yaml(miq_server)
+      expect(yaml).to_not include("Config::Options")
+
+      hash = YAML.load(yaml)
+      expect(hash).to be_kind_of Hash
+      expect(hash.fetch_path(:api, :token_ttl)).to eq "1.day"
+    end
+
+    it "ensures passwords are encrypted" do
+      password  = "pa$$word"
+      encrypted = MiqPassword.encrypt(password)
+
+      miq_server = FactoryGirl.create(:miq_server)
+      described_class.save!(miq_server, :authentication => {:bind_pwd => password})
+
+      yaml = described_class.for_resource_yaml(miq_server)
+
+      hash = YAML.load(yaml)
+      expect(hash.fetch_path(:authentication, :bind_pwd)).to eq encrypted
     end
   end
 

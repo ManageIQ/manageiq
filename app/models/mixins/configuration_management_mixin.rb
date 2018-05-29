@@ -9,8 +9,17 @@ module ConfigurationManagementMixin
     Vmdb::Settings.for_resource(self)
   end
 
+  def settings_for_resource_yaml
+    Vmdb::Settings.for_resource_yaml(self)
+  end
+
   def add_settings_for_resource(settings)
     Vmdb::Settings.save!(self, settings)
+    immediately_reload_settings
+  end
+
+  def add_settings_for_resource_yaml(contents)
+    Vmdb::Settings.save_yaml!(self, contents)
     immediately_reload_settings
   end
 
