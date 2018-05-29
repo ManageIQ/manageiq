@@ -33,6 +33,6 @@ class ManageIQ::Providers::AutomationManager < ManageIQ::Providers::BaseManager
   end
 
   def total_configured_systems
-    Rbac.filtered(configured_systems, :match_via_descendants => ConfiguredSystem).count
+    Rbac.filtered(configured_systems).count
   end
 end
