@@ -32,6 +32,24 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     end
   end
 
+  describe '#current_job_timeout' do
+    context 'timeout set in options' do
+      let(:options) { {:execution_ttl => 50} }
+
+      it 'uses customized timeout value' do
+        expect(subject.current_job_timeout).to eq(3000)
+      end
+    end
+
+    context 'timeout not set in options' do
+      let(:options) { {} }
+
+      it 'uses default timeout value' do
+        expect(subject.current_job_timeout).to eq(described_class::DEFAULT_EXECUTION_TTL * 60)
+      end
+    end
+  end
+
   describe '#create_inventory' do
     context 'hosts are given' do
       # Use string key to also test the indifferent accessibility
