@@ -876,7 +876,7 @@ class MiqExpression
 
   def self.tag_details(path, opts)
     result = []
-    if opts[:clear_classifications]
+    if opts[:no_cache]
       @classifications = nil
     end
     @classifications ||= categories
