@@ -92,18 +92,18 @@ class ChargebackRateDetail < ApplicationRecord
     "#{hourly_fixed_rate}/#{hourly_variable_rate}"
   end
 
-  def charge(relevant_fields, consumption, options)
+  def charge(consumption, options)
     result = {}
-    if (relevant_fields & ([metric_key] + cost_keys)).present?
-      metric_value, cost = metric_and_cost_by(consumption, options)
-      if !consumption.chargeback_fields_present && chargeable_field.fixed?
-        cost = 0
-      end
 
-      result[rate_key(sub_metric)] = rate_values(consumption, options)
-      result[metric_key(sub_metric)] = metric_value
-      cost_keys(sub_metric).each { |field| result[field] = cost }
+    metric_value, cost = metric_and_cost_by(consumption, options)
+    if !consumption.chargeback_fields_present && chargeable_field.fixed?
+      cost = 0
     end
+
+    result[rate_key(sub_metric)] = rate_values(consumption, options)
+    result[metric_key(sub_metric)] = metric_value
+    cost_keys(sub_metric).each { |field| result[field] = cost }
+
     result
   end
 
