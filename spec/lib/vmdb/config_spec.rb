@@ -49,8 +49,9 @@ describe VMDB::Config do
   end
 
   context ".save_file" do
+    let!(:resource) { FactoryGirl.create(:miq_server) }
+
     it "normal" do
-      resource = FactoryGirl.create(:miq_server)
       MiqRegion.seed
       data = {}
       data.store_path(:api, :token_ttl, "1.day")
@@ -62,7 +63,7 @@ describe VMDB::Config do
     end
 
     it "catches syntax errors" do
-      errors = VMDB::Config.save_file("xxx")
+      errors = VMDB::Config.save_file("xxx", resource)
       expect(errors.length).to eq(1)
       expect(errors.first[0]).to eq(:contents)
       expect(errors.first[1]).to start_with("File contents are malformed")
