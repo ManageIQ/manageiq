@@ -26,7 +26,7 @@ module FixAuth
     end
 
     def run_options
-      options.slice(:verbose, :dry_run, :hardcode, :invalid)
+      options.slice(:verbose, :dry_run, :hardcode, :invalid, :allow_failures)
     end
 
     def database
@@ -35,7 +35,7 @@ module FixAuth
 
     def models
       [FixAuthentication, FixMiqDatabase, FixMiqAeValue, FixMiqAeField,
-       FixMiqRequest, FixMiqRequestTask, FixSettingsChange]
+       FixSettingsChange, FixMiqRequest, FixMiqRequestTask]
     end
 
     def generate_password
@@ -69,6 +69,10 @@ module FixAuth
       FixDatabaseYml.run({:hardcode => options[:password]}.merge(run_options))
     end
 
+    def load_rails
+      require File.expand_path("../../../config/application.rb", __FILE__)
+    end
+
     def set_passwords
       MiqPassword.key_root = cert_dir if cert_dir
       MiqPassword.add_legacy_key("v0_key", :v0)
@@ -83,6 +87,7 @@ module FixAuth
 
       generate_password if options[:key]
       fix_database_yml if options[:databaseyml]
+      load_rails if options[:allow_failures]
       fix_database_passwords if options[:db]
     end
   end

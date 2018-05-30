@@ -11,10 +11,8 @@ describe FixAuth::AuthModel do
   let(:enc_v1)  { MiqPassword.new.encrypt(pass, "v1", v1_key) }
   let(:enc_v2)  { MiqPassword.new.encrypt(pass) }
   let(:bad_v2)  { "v2:{5555555555555555555555==}" }
-  let(:enc_leg) { v0_key.encrypt64(pass) }
 
   before do
-    MiqPassword.add_legacy_key(v0_key, :v0)
     MiqPassword.add_legacy_key(v1_key, :v1)
   end
 
@@ -24,13 +22,12 @@ describe FixAuth::AuthModel do
 
   context "#authentications" do
     subject { FixAuth::FixAuthentication }
-    let(:contenders) { subject.contenders.collect(&:name) }
+    let(:contenders) { subject.contenders.select(:name).collect(&:name) }
     let(:v1_v2)  { subject.create(:name => "v2_v1", :password => enc_v2, :auth_key => enc_v1) }
     let(:v2_v1)  { subject.create(:name => "v1_v2", :password => enc_v1, :auth_key => enc_v2) }
     let(:v1)     { subject.create(:name => "v1", :password => enc_v1) }
     let(:v2)     { subject.create(:name => "v2", :password => enc_v2) }
     let(:badv2)  { subject.create(:name => "badv2", :password => bad_v2) }
-    let(:leg)    { subject.create(:name => "lg", :password => enc_leg) }
     let(:nls)    { subject.create(:name => "nls") }
     let(:not_c)  { subject.create(:name => "notc", :password => "nope") }
 
@@ -48,8 +45,7 @@ describe FixAuth::AuthModel do
     end
 
     it "should build selection criteria (non selects)" do
-      expect(subject.selection_criteria).to match(/OR/)
-      expect(subject.selection_criteria).to match(/password.*<>.*''.*OR.*auth_key.*<>.*''/)
+      expect(subject.selection_criteria).to match(/password.*OR.*auth_key/)
     end
 
     it "should not find empty records" do
@@ -58,8 +54,8 @@ describe FixAuth::AuthModel do
     end
 
     it "should find records with encrypted passwords" do
-      [v1, v2, leg, nls].each(&:save!)
-      expect(contenders).to include(v1.name, leg.name, v2.name)
+      [v2, nls].each(&:save!)
+      expect(contenders).to include(v2.name)
       expect(contenders).not_to include(nls.name)
     end
 
@@ -73,14 +69,6 @@ describe FixAuth::AuthModel do
       it "should not upgrade blank column" do
         subject.fix_passwords(nls)
         expect(nls).not_to be_password_changed
-      end
-
-      it "should upgrade legacy columns" do
-        subject.fix_passwords(leg)
-        expect(leg).to be_password_changed
-        expect(leg).not_to be_auth_key_changed
-        expect(leg.password).to be_encrypted(pass)
-        expect(leg.password).to be_encrypted_version(2)
       end
 
       it "should upgrade v1 columns" do
@@ -105,13 +93,6 @@ describe FixAuth::AuthModel do
     end
 
     context "#hardcode" do
-      it "should upgrade legacy columns" do
-        subject.fix_passwords(leg, :hardcode => "newpass")
-        expect(leg.password).to be_encrypted("newpass")
-        expect(leg.password).to be_encrypted_version(2)
-        expect(leg.auth_key).to be_blank
-      end
-
       it "should upgrade v2 columns" do
         subject.fix_passwords(v2, :hardcode => "newpass")
         expect(v2.password).to be_encrypted("newpass")
@@ -151,12 +132,12 @@ describe FixAuth::AuthModel do
     subject { FixAuth::FixMiqAeValue }
 
     let(:pass_field) { FixAuth::FixMiqAeField.new(:name => "pass", :datatype => "password") }
-    let(:v1) { subject.create(:field => pass_field, :value => enc_v1) }
+    let(:v2) { subject.create(:field => pass_field, :value => enc_v2) }
 
     it "should update with complex contenders" do
-      v1 # make sure record exists
+      v2 # make sure record exists
       subject.run(:silent => true)
-      expect(v1.reload.value).to be_encrypted_version(2)
+      expect(v2.reload.value).to be_encrypted_version(2)
     end
   end
 

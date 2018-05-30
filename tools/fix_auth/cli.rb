@@ -25,6 +25,7 @@ module FixAuth
         opt :databaseyml, "Rewrite database.yml", :type => :boolean, :short => "y", :default => false
         opt :db,       "Upgrade database",  :type => :boolean, :short => 'x', :default => false
         opt :legacy_key, "Legacy Key",      :type => :string, :short => "K"
+        opt :allow_failures, "Run through all records, even with errors", :type => :boolean, :short => nil, :default => false
       end
 
       options[:database] = args.first || "vmdb_production"
