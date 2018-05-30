@@ -1,0 +1,49 @@
+---
+where_clause:
+generate_cols:
+dims:
+reserved:
+title: "Hypervisor Cores"
+conditions:
+col_options:
+  derived_vm_used_disk_storage:
+    :grouping:
+    - :max
+    - :min
+order: Ascending
+graph:
+generate_rows:
+menu_name: "Hypervisor Cores"
+rpt_group: Custom
+priority:
+col_order:
+  - host.hostname
+  - hardware.cpu_total_cores
+  - cpu_total_cores
+timeline:
+file_mtime:
+categories:
+time_profile_id:
+rpt_type: Custom
+filename:
+col_formats:
+include:
+  host:
+    columns:
+    - hostname
+  hardware:
+    columns:
+    - cpu_total_cores
+
+db: Vm
+cols:
+  - cpu_total_cores
+template_type: report
+group: c
+sortby:
+- hostname
+headers:
+    - Host / Node Hostname
+    - Hardware Number of CPU Cores
+    - Number of CPU Cores
+display_filter:
