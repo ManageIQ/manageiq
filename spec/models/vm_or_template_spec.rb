@@ -686,19 +686,47 @@ describe VmOrTemplate do
     end
   end
 
+  describe "#used_storage" do
+    it "calculates in ruby with null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.used_storage).to eq(0.0)
+    end
+
+    it "calculates in ruby" do
+      hardware = FactoryGirl.create(:hardware, :memory_mb => 10)
+      vm = FactoryGirl.create(:vm_vmware, :hardware => hardware)
+      disk = FactoryGirl.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
+      expect(vm.used_storage).to eq(10 * 1024 * 1024 + 1024) # memory_mb + size on disk
+    end
+  end
+
+  # allocated_disk_storage.to_i + ram_size_in_bytes
   describe "#provisioned_storage" do
-    context "with no hardware" do
-      let(:vm) { FactoryGirl.create(:vm_vmware) }
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
+    let(:disk) { FactoryGirl.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware) }
 
-      it "calculates in ruby" do
-        expect(vm.provisioned_storage).to eq(0.0)
-      end
+    it "calculates in ruby with null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.provisioned_storage).to eq(0.0)
+    end
 
-      it "uses calculated (inline) attribute" do
-        vm # make sure the record is created
-        vm2 = VmOrTemplate.select(:id, :provisioned_storage).first
-        expect { expect(vm2.provisioned_storage).to eq(0) }.to match_query_limit_of(0)
-      end
+    it "uses calculated (inline) attribute with null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      vm2 = VmOrTemplate.select(:id, :provisioned_storage).first
+      expect { expect(vm2.provisioned_storage).to eq(0) }.to match_query_limit_of(0)
+    end
+
+    it "calculates in ruby" do
+      vm
+      disk # make sure the record is created
+      expect(vm.provisioned_storage).to eq(10_496_000)
+    end
+
+    it "uses calculated (inline) attribute" do
+      vm
+      disk # make sure the record is created
+      expect(virtual_column_sql_value(VmOrTemplate, "provisioned_storage")).to eq(10_496_000)
     end
   end
 
