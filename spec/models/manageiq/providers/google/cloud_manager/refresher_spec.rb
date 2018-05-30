@@ -20,7 +20,7 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
   let(:image_template)        { ManageIQ::Providers::Google::CloudManager::Template.find_by(:name => "rhel-7-v20180510") }
   let(:image_location)        { "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/images/rhel-7-v20180510" }
   let(:snapshot_template)     { ManageIQ::Providers::Google::CloudManager::Template.find_by(:name => "test-snapshot-1") }
-  let(:snapshot_location)     { "https://www.googleapis.com/compute/v1/projects/red-hat-cloudforms-support/global/snapshots/test-snapshot-1" }
+  let(:snapshot_location)     { "https://www.googleapis.com/compute/v1/projects/GOOGLE_PROJECT/global/snapshots/test-snapshot-1" }
 
   before(:each) do
     @ems = FactoryGirl.create(:ems_google_with_vcr_authentication)
