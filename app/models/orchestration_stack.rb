@@ -1,4 +1,6 @@
 require 'ancestry'
+require 'ancestry_patch'
+
 class OrchestrationStack < ApplicationRecord
   require_nested :Status
 
