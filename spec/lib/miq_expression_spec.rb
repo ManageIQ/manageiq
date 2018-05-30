@@ -3356,6 +3356,23 @@ describe MiqExpression do
       actual = described_class.tag_details(nil, {})
       expect(actual).to eq([["My Company Tags : Environment", "managed-env"]])
     end
+
+    it "returns the added classification when no_cache option is used" do
+      Tenant.seed
+      FactoryGirl.create(:classification,
+                         :name        => "first_classification",
+                         :description => "First Classification",
+                         :children    => [FactoryGirl.create(:classification)])
+      actual = described_class.tag_details(nil, {})
+      expect(actual).to eq([["My Company Tags : First Classification", "managed-first_classification"]])
+
+      FactoryGirl.create(:classification,
+                         :name        => "second_classification",
+                         :description => "Second Classification",
+                         :children    => [FactoryGirl.create(:classification)])
+      actual = described_class.tag_details(nil, :no_cache => true)
+      expect(actual).to eq([["My Company Tags : First Classification", "managed-first_classification"], ["My Company Tags : Second Classification", "managed-second_classification"]])
+    end
   end
 
   describe "miq_adv_search_lists" do
