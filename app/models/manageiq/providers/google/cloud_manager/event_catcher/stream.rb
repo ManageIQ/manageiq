@@ -39,6 +39,14 @@ class ManageIQ::Providers::Google::CloudManager::EventCatcher::Stream
     # For now, return immediately with up to 10 messages
     @ems.with_provider_connection(:service => 'pubsub') do |google|
       get_or_create_subscription(google)
+      # FIXME: Change once https://github.com/fog/fog-google/issues/349 is resolved
+      # In normal case we would use the return value of previous command and call :pull method on it.
+      # Due to Google API inconsitency we tend to implement our own pull method and pull it directly from the service.
+      # Current subscription.pull() in Fog follows Google API specification and does a Base64 decoding on the payload.
+      # This is consistent with Google API documentation for PubsubMessage
+      # (see https://cloud.google.com/pubsub/docs/reference/rest/v1/PubsubMessage).
+      # However in real world, the data comes in plain text, so the Base64 decoding makes it gibberish.
+      # Pulling directly from PubSub service workarounds it.
       pull_subscription(google).tap { |msgs| acknowledge_messages(google, msgs) }
     end
   rescue Fog::Errors::Error
