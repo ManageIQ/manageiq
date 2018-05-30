@@ -1499,11 +1499,11 @@ class VmOrTemplate < ApplicationRecord
   virtual_delegate :provisioned_storage, :to => :hardware, :allow_nil => true, :default => 0
 
   def used_storage
-    used_disk_storage.to_i + ram_size_in_bytes
+    used_disk_storage.to_i
   end
 
   def used_storage_by_state
-    used_disk_storage.to_i + ram_size_in_bytes_by_state
+    used_disk_storage.to_i
   end
 
   def uncommitted_storage

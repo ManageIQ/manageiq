@@ -133,7 +133,7 @@ class Hardware < ApplicationRecord
     if has_attribute?("provisioned_storage")
       self["provisioned_storage"]
     else
-      allocated_disk_storage.to_i + ram_size_in_bytes
+      allocated_disk_storage.to_i
     end
   end
 

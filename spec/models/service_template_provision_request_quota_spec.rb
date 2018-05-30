@@ -67,7 +67,7 @@ describe ServiceTemplateProvisionRequest do
         let(:load_requests) { vmware_requests }
         let(:request) { create_test_request(@vmware_user1, @vmware_template) }
         let(:counts_hash) do
-          {:count => 6, :memory => 6.gigabytes, :cpu => 16, :storage => 3.gigabytes}
+          {:count => 6, :memory => 6.gigabytes, :cpu => 16, :storage => 0.gigabytes}
         end
 
         context "active_provisions_by_tenant," do
@@ -89,7 +89,7 @@ describe ServiceTemplateProvisionRequest do
         context "active_provisions_by_owner," do
           let(:quota_method) { :active_provisions_by_owner }
           let(:counts_hash) do
-            {:count => 3, :memory => 3.gigabytes, :cpu => 8, :storage => 1_610_612_736}
+            {:count => 3, :memory => 3.gigabytes, :cpu => 8, :storage => 0.gigabytes}
           end
           it_behaves_like "check_quota"
 
