@@ -44,6 +44,20 @@ describe EvmDatabaseOps do
       @connect_opts[:remote_file_name] = nil
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to match(/smb:\/\/myserver.com\/share\/db_backup\/miq_backup_.*/)
     end
+
+    it "properly logs the result with no :dbname provided" do
+      @db_opts.delete(:dbname)
+      @db_opts[:local_file] = nil
+      @connect_opts[:remote_file_name] = nil
+      allow(described_class).to receive(:backup_file_name).and_return("miq_backup")
+
+      log_stub = instance_double("_log")
+      expect(described_class).to receive(:_log).twice.and_return(log_stub)
+      expect(log_stub).to        receive(:info).with(any_args)
+      expect(log_stub).to        receive(:info).with("[vmdb_production] database has been backed up to file: [smb://myserver.com/share/db_backup/miq_backup]")
+
+      EvmDatabaseOps.backup(@db_opts, @connect_opts)
+    end
   end
 
   context "#restore" do
@@ -71,6 +85,19 @@ describe EvmDatabaseOps do
       remote_backup = "smb://myserver.com/share/pg_backup1.backup"
       @connect_opts[:uri] = remote_backup
       expect(EvmDatabaseOps.restore(@db_opts, @connect_opts)).to eq(remote_backup)
+    end
+
+    it "properly logs the result with no :dbname provided" do
+      @db_opts.delete(:dbname)
+      @db_opts[:local_file] = nil
+      remote_backup = "smb://myserver.com/share/pg_backup1.backup"
+      @connect_opts[:uri] = remote_backup
+
+      log_stub = instance_double("_log")
+      expect(described_class).to receive(:_log).and_return(log_stub)
+      expect(log_stub).to        receive(:info).with("[vmdb_production] database has been restored from file: [smb://myserver.com/share/pg_backup1.backup]")
+
+      EvmDatabaseOps.restore(@db_opts, @connect_opts)
     end
   end
 end

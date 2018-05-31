@@ -106,6 +106,10 @@ class EvmDatabaseOps
     uri
   end
 
+  private_class_method def self.merged_db_opts(db_opts)
+    DEFAULT_OPTS.merge(db_opts)
+  end
+
   private_class_method def self.prepare_for_restore(filename)
     backup_type = validate_backup_file_type(filename)
 
