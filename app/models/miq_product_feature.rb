@@ -1,4 +1,8 @@
 class MiqProductFeature < ApplicationRecord
+  SUPER_ADMIN_FEATURE = "everything".freeze
+  REPORT_ADMIN_FEATURE  = "miq_report_superadmin".freeze
+  REQUEST_ADMIN_FEATURE = "miq_request_superadmin".freeze
+  ADMIN_FEATURE = REPORT_ADMIN_FEATURE
   acts_as_tree
 
   has_and_belongs_to_many :miq_user_roles, :join_table => :miq_roles_features
@@ -107,7 +111,7 @@ class MiqProductFeature < ApplicationRecord
     features = all.to_a.index_by(&:identifier)
     seen     = seed_from_hash(YAML.load_file(fixture_yaml), seen, nil, features)
 
-    root_feature = MiqProductFeature.find_by(:identifier => 'everything')
+    root_feature = MiqProductFeature.find_by(:identifier => SUPER_ADMIN_FEATURE)
     Dir.glob(path.join("*.yml")).each do |fixture|
       seed_from_hash(YAML.load_file(fixture), seen, root_feature)
     end

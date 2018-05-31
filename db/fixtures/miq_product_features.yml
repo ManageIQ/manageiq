@@ -180,6 +180,10 @@
       :description: Edit a Request
       :feature_type: admin
       :identifier: miq_request_edit
+  - :name: Request Admin
+    :description: Edit other user's requests
+    :feature_type: admin
+    :identifier: miq_request_superadmin
 
 # Catalog Items
 - :name: Catalogs Explorer
@@ -1598,6 +1602,11 @@
     :description: Edit Report Menus Accordion
     :feature_type: node
     :identifier: miq_report_menu_editor
+# Special Admin Functionality
+  - :name: Report Admin
+    :description: See other user's reports
+    :feature_type: admin
+    :identifier: miq_report_superadmin
   - :name: Import / Export
     :description: Import / Export Accordion
     :feature_type: node

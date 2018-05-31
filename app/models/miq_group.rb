@@ -15,11 +15,11 @@ class MiqGroup < ApplicationRecord
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_product_features, :through => :miq_user_role
 
-  virtual_column :miq_user_role_name, :type => :string,  :uses => :miq_user_role
+  virtual_delegate :name, :to => :miq_user_role, :allow_nil => true, :prefix => true
   virtual_column :read_only,          :type => :boolean
   virtual_has_one :sui_product_features, :class_name => "Array"
 
-  delegate :self_service?, :limited_self_service?, :disallowed_roles, :to => :miq_user_role, :allow_nil => true
+  delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
   validates :description, :presence => true, :unique_within_region => { :match_case => false }
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
@@ -60,8 +60,10 @@ class MiqGroup < ApplicationRecord
     super(indifferent_settings)
   end
 
-  def self.with_allowed_roles_for(user_or_group)
-    includes(:miq_user_role).where.not({:miq_user_roles => {:name => user_or_group.disallowed_roles}})
+  def self.with_roles_excluding(identifier)
+    where.not(:id => MiqGroup.joins(:miq_product_features)
+                             .where(:miq_product_features => {:identifier => identifier})
+                             .select(:id))
   end
 
   def self.next_sequence
@@ -183,10 +185,6 @@ class MiqGroup < ApplicationRecord
     entitlement.try(:get_belongsto_filters) || []
   end
 
-  def miq_user_role_name
-    miq_user_role.try(:name)
-  end
-
   def system_group?
     group_type == SYSTEM_GROUP
   end
@@ -251,9 +249,9 @@ class MiqGroup < ApplicationRecord
     in_my_region.non_tenant_groups
   end
 
-  def self.with_current_user_groups(user = nil)
-    current_user = user || User.current_user
-    current_user.admin_user? ? all : where(:id => current_user.miq_group_ids)
+  # parallel to User.with_groups - only show these groups
+  def self.with_groups(miq_group_ids)
+    where(:id => miq_group_ids)
   end
 
   def single_group_users?
