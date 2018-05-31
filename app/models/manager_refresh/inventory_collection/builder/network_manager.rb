@@ -41,6 +41,10 @@ module ManagerRefresh
           shared_builder_params
         end
 
+        def cloud_tenants
+          shared_builder_params
+        end
+
         def cloud_subnets
           shared_builder_params
         end
