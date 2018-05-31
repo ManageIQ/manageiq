@@ -283,14 +283,14 @@ describe Vmdb::Settings do
         described_class.save!(second_server, :api => {:token_ttl => server_value}, :session => {:timeout => server_value})
 
         described_class.save!(miq_server.zone, :api => {:token_ttl => zone_value}, :session => {:timeout => zone_value})
-        expect(SettingsChange.count).to eq 8
+        expect(SettingsChange.count).to eq 7
       end
 
       context "magic value <<reset>>" do
         it "deletes key-value for specific key for the resource if specified on leaf level" do
           described_class.save!(miq_server, :api => {:token_ttl => reset})
 
-          expect(SettingsChange.count).to eq 7
+          expect(SettingsChange.count).to eq 6
           expect(miq_server.settings_changes.find_by(:key => "/api/token_ttl")).to be nil
           expect(Vmdb::Settings.for_resource(miq_server).api.new_key).to eq "new value"
           expect(Vmdb::Settings.for_resource(second_server).api.token_ttl).to eq server_value
@@ -299,7 +299,7 @@ describe Vmdb::Settings do
         it "deletes current node and all sub-nodes for the resource if specified on node level" do
           described_class.save!(miq_server, :api => reset)
 
-          expect(SettingsChange.count).to eq 6
+          expect(SettingsChange.count).to eq 5
           expect(miq_server.settings_changes.where("key LIKE ?", "/api%").count).to eq 0
           expect(Vmdb::Settings.for_resource(miq_server).api.new_key).to eq nil
           expect(Vmdb::Settings.for_resource(second_server).api.token_ttl).to eq server_value
@@ -309,6 +309,11 @@ describe Vmdb::Settings do
           described_class.save!(miq_server, :api => {:new_key => reset})
           expect(Vmdb::Settings.for_resource(miq_server).api.new_key).to eq nil
         end
+
+        it "passes validation" do
+          described_class.save!(miq_server, :session => {:timeout => reset})
+          expect(Vmdb::Settings.for_resource(miq_server).session.timeout).to eq zone_value
+        end
       end
 
       context "magic value <<reset_all>>" do
@@ -317,14 +322,19 @@ describe Vmdb::Settings do
 
           expect(SettingsChange.where("key LIKE ?", "/api/token_ttl").count).to eq 0
           expect(SettingsChange.where("key LIKE ?", "/api%").count).to eq 1
-          expect(SettingsChange.where("key LIKE ?", "/session%").count).to eq 4
+          expect(SettingsChange.where("key LIKE ?", "/session%").count).to eq 3
         end
 
         it "deletes specific node and all sub-nodes for all resources if specified on node level" do
           described_class.save!(miq_server, :api => reset_all)
 
           expect(SettingsChange.where("key LIKE ?", "/api%").count).to eq 0
-          expect(SettingsChange.where("key LIKE ?", "/session%").count).to eq 4
+          expect(SettingsChange.where("key LIKE ?", "/session%").count).to eq 3
+        end
+
+        it "passes validation" do
+          described_class.save!(miq_server, :session => {:timeout => reset_all})
+          expect(SettingsChange.where("key LIKE ?", "/session%").count).to eq 0
         end
       end
     end
