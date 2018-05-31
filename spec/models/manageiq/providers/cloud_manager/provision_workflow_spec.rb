@@ -47,6 +47,7 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
     it "should retrieve sysprep templates when cloning" do
       options = {'key' => 'value' }
       allow(sysprep_workflow).to receive(:supports_native_clone?).and_return(true)
+      allow(sysprep_workflow).to receive(:supports_sysprep?).and_return(true)
       allow(sysprep_workflow).to receive(:load_ar_obj).and_return(template)
       allow(template).to receive(:platform).and_return('windows')
 
@@ -229,7 +230,7 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
     context "#supports_sysprep?" do
       it "returns the expected boolean value" do
-        expect(workflow.supports_sysprep?).to eql(true)
+        expect(workflow.supports_sysprep?).to eql(false)
       end
     end
   end

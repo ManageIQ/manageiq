@@ -60,12 +60,16 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
     ci.description.blank? ? ci.name : "#{ci.name}: #{ci.description}"
   end
 
+  # Override in provider subclass as needed.
+  #
   def supports_cloud_init?
     true
   end
 
+  # Override in provider subclass as needed.
+  #
   def supports_sysprep?
-    true
+    false
   end
 
   def set_or_default_hardware_field_values(_vm)
@@ -81,7 +85,10 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   end
 
   def allowed_customization_templates(options = {})
-    allowed_cloud_init_customization_templates(options).concat(allowed_sysprep_customization_templates(options))
+    allowed = []
+    allowed.concat(allowed_cloud_init_customization_templates(options)) if supports_cloud_init?
+    allowed.concat(allowed_sysprep_customization_templates(options)) if supports_sysprep?
+    allowed
   end
 
   private
