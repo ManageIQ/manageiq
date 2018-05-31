@@ -320,7 +320,7 @@ FactoryGirl.define do
     after(:create) do |ems|
       project         = Rails.application.secrets.google.try(:[], 'project') || 'GOOGLE_PROJECT'
 
-      # If service account JSON is not available in secrets provide a dummy JSON with fake cetrificare
+      # If service account JSON is not available in secrets provide a dummy JSON with fake certificate
       service_account = Rails.application.secrets.google.try(:[], 'service_account') || <<-GOOGLE_SERVICE_ACCOUNT
       {
         "type": "service_account",

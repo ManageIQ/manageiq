@@ -43,8 +43,8 @@ module ManageIQ::Providers
       end
 
       def get_flavors
-        # fog returns a duplicate flavor for every zone
-        # so build a unique list of flavors using the flavor id
+        # Google API returns a duplicate flavor for every zone
+        # so build a unique list of flavors using the flavor
         flavors = @connection.list_aggregated_machine_types.items.values.each_with_object([]) do |zone, arr|
           arr.concat(zone.machine_types) if zone.machine_types
         end

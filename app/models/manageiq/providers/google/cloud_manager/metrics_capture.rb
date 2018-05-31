@@ -42,7 +42,7 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
       # List of metric names in GCP that should be retrieved to calculate the
       # vim-style metric
       # https://cloud.google.com/monitoring/api/metrics_gcp#gcp-compute
-      :google_metric_names => ["compute.googleapis.com/instance/cpu/utilization"],
+      :google_metric_names => %w(compute.googleapis.com/instance/cpu/utilization),
 
       # Function that maps a point returned by Google's monitoring api (which
       # is a hash data structure; see
@@ -61,19 +61,19 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
     },
     {
       :vim_counter_name    => "disk_usage_rate_average",
-      :google_metric_names => [
-        "compute.googleapis.com/instance/disk/read_bytes_count",
-        "compute.googleapis.com/instance/disk/write_bytes_count"
-      ],
+      :google_metric_names => %w(
+        compute.googleapis.com/instance/disk/read_bytes_count
+        compute.googleapis.com/instance/disk/write_bytes_count
+      ),
       :point_to_val        => ->(point) { point[:int64_value].to_i / (60.0 * 1024.0) }, # convert from b/m to Kb/s
       :reducer             => ->(x, y) { x + y },
     },
     {
       :vim_counter_name    => "net_usage_rate_average",
-      :google_metric_names => [
-        "compute.googleapis.com/instance/network/received_bytes_count",
-        "compute.googleapis.com/instance/network/sent_bytes_count"
-      ],
+      :google_metric_names => %w(
+        compute.googleapis.com/instance/network/received_bytes_count
+        compute.googleapis.com/instance/network/sent_bytes_count
+      ),
       :point_to_val        => ->(point) { point[:int64_value].to_i / (60.0 * 1024.0) }, # convert from b/m to Kb/s
       :reducer             => ->(x, y) { x + y },
     }
@@ -132,9 +132,7 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
     }
 
     schema[:google_metric_names].each do |google_metric_name|
-      # Documentation on how to construct a filter and what are entities are
-      # available can be found
-      # https://cloud.google.com/monitoring/api/v3/filters
+      # For filter creation and entity selection see https://cloud.google.com/monitoring/api/v3/filters
       filter = "metric.type = \"#{google_metric_name}\" AND resource.labels.instance_id = \"#{target.ems_ref}\""
 
       # Make our service call for metrics; Note that we might get multiple
