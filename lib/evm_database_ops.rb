@@ -27,6 +27,19 @@ class EvmDatabaseOps
     PostgresAdmin.database_size(opts)
   end
 
+  def self.validate_free_space(database_opts)
+    free_space = backup_destination_free_space(database_opts[:local_file])
+    db_size = database_size(database_opts)
+    if free_space > db_size
+      _log.info("[#{database_opts[:dbname]}] with database size: [#{db_size} bytes], free space at [#{database_opts[:local_file]}]: [#{free_space} bytes]")
+    else
+      msg = "Destination location: [#{database_opts[:local_file]}], does not have enough free disk space: [#{free_space} bytes] for database of size: [#{db_size} bytes]"
+      _log.warn(msg)
+      MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
+      raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
+    end
+  end
+
   def self.backup(db_opts, connect_opts = {})
     # db_opts:
     #   :dbname => 'vmdb_production',
@@ -40,16 +53,7 @@ class EvmDatabaseOps
     #   :remote_file_name => "backup_1",     - Provide a base file name for the uploaded file
 
     uri = with_mount_session(:backup, db_opts, connect_opts) do |database_opts|
-      free_space = backup_destination_free_space(database_opts[:local_file])
-      db_size = database_size(database_opts)
-      if free_space > db_size
-        _log.info("[#{database_opts[:dbname]}] with database size: [#{db_size} bytes], free space at [#{database_opts[:local_file]}]: [#{free_space} bytes]")
-      else
-        msg = "Destination location: [#{database_opts[:local_file]}], does not have enough free disk space: [#{free_space} bytes] for database of size: [#{db_size} bytes]"
-        _log.warn(msg)
-        MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
-        raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
-      end
+      validate_free_space(database_opts)
       PostgresAdmin.backup(database_opts)
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been backed up to file: [#{uri}]")
