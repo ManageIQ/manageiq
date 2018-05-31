@@ -6,4 +6,3 @@ Installation Instructions
 - Generate SSH public/private keys using ssh-keygen, unless they already exist.
 - Push the SSH public keys out to all the servers in the region, miqssh-copy-id can help with this.
 - To be able to use miqtail, the multitail package from EPEL will need to be installed on this system.
-- Optionally to increase performance especially for miqgrep when matching large amounts of results, install the pssh package (Parallel SSH) from EPEL on this system and update .config file in this directory to use pssh for the TRANSPORT.
