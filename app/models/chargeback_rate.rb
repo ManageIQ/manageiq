@@ -39,7 +39,7 @@ class ChargebackRate < ApplicationRecord
     # we can memoize, as we get the same report_cols through the life of the object
     @relevant ||= begin
       chargeback_rate_details.select do |r|
-        r.affects_report_fields(report_cols) && allowed_cols.include?(r.metric_column_key)
+        r.affects_report_fields(report_cols) && allowed_cols.include?(r.metric_column_key(r.sub_metric))
       end
     end
   end
