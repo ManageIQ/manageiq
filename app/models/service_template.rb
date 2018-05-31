@@ -37,6 +37,7 @@ class ServiceTemplate < ApplicationRecord
   include OwnershipMixin
   include NewWithTypeStiMixin
   include TenancyMixin
+  include ArchivedMixin
   include_concern 'Filter'
 
   belongs_to :tenant
@@ -56,6 +57,7 @@ class ServiceTemplate < ApplicationRecord
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
 
   has_many   :miq_requests, :as => :source, :dependent => :nullify
+  has_many   :active_requests, -> { where(:request_state => MiqRequest::ACTIVE_STATES) }, :as => :source, :class_name => "MiqRequest"
 
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
@@ -149,6 +151,11 @@ class ServiceTemplate < ApplicationRecord
       rsc.destroy if rsc.kind_of?(MiqProvisionRequestTemplate)
     end
     super
+  end
+
+  def archive
+    raise _("Cannot archive while in use") unless active_requests.empty?
+    archive!
   end
 
   def request_class
