@@ -921,6 +921,27 @@ class MiqExpression
     end
   end
 
+  # MiqExpression.unavailable_fields_for("ChargebackVM")
+  # will return fields which are not related to ChargebackVM.
+  def self.unavailable_fields_for(model)
+    return [] unless Chargeback.db_is_chargeback?(model)
+    return [] if model.starts_with?('Metering') # TODO: replace this by method and also on other places
+
+    model = model.safe_constantize
+    chargeback_rate_types = %w(Compute Storage)
+    report_metrics = chargeback_rate_types.map do |rate_type|
+      ChargebackRate.get_assignments(rate_type).map do |rate|
+        rate[:cb_rate].rate_details_relevant_to(model.attribute_names, model.attribute_names).map { |rate_detail| rate_detail.metric_column_key(rate_detail.sub_metric) }
+      end
+    end.flatten.uniq
+
+    default_metrics = chargeback_rate_types.map do |rate_type|
+      ChargebackRateDetail.default_rate_details_for(rate_type).map { |rate_detail| rate_detail.metric_column_key(rate_detail.sub_metric) }
+    end.flatten.uniq
+
+    (default_metrics - report_metrics).map { |metric_column| Dictionary.gettext(metric_column, :type => :table, :notfound => :titleize) }
+  end
+
   def self.reporting_available_fields(model, interval = nil)
     if model.to_s == "VimPerformanceTrend"
       VimPerformanceTrend.trend_model_details(interval.to_s)
