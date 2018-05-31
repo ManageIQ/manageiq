@@ -24,6 +24,14 @@ module ManagerRefresh
           )
         end
 
+        def host_guest_devices
+          add_properties(
+            :model_class                  => ::GuestDevice,
+            :manager_ref                  => %i(hardware uid_ems),
+            :parent_inventory_collections => %i(hosts),
+          )
+        end
+
         def host_hardwares
           add_properties(
             :model_class                  => ::Hardware,
