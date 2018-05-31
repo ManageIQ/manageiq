@@ -28,9 +28,9 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParsing
     def self.event_to_hash(event_obj, ems_id = nil)
       log_header = "ems_id: [#{ems_id}] " unless ems_id.nil?
 
-      _log.debug { "#{log_header}event: [#{event.inspect}]" }
-
       event = event_obj.to_hash
+
+      _log.debug { "#{log_header}event: [#{event.inspect}]" }
 
       # Connect back to RHEV to get the actual user_name
       ems       = ManageIQ::Providers::Redhat::InfraManager.find_by(:id => ems_id)
