@@ -372,6 +372,8 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.containerized_worker?
+    # un-rearch containers for Hammer
+    return false
     MiqEnvironment::Command.is_podified? && supports_container?
   end
 
@@ -527,8 +529,6 @@ class MiqWorker < ApplicationRecord
   end
 
   def status_update
-    return if MiqEnvironment::Command.is_podified?
-
     begin
       pinfo = MiqProcess.processInfo(pid)
     rescue Errno::ESRCH
