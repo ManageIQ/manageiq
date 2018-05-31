@@ -54,6 +54,8 @@ module ProcessTasksMixin
         invoke_task_local(task, instance, options, args)
 
         msg = "#{instance.name}: '#{options[:task]}' initiated"
+        msg = "[Name: #{instance.name},Id: #{instance.id}, Ems_ref: #{instance.ems_ref}] Record destroyed" if options[:task] == 'destroy'
+
         task_audit_event(:success, options, :target_id => instance.id, :message => msg)
         task.update_status("Queued", "Ok", "Task has been queued") if task
       end
