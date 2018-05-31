@@ -12,8 +12,8 @@ class AuditEvent < ApplicationRecord
     }.merge(attrs)
 
     event = AuditEvent.create(attrs)
-    ipaddress = MiqServer.my_server.ipaddress
-    hostname  = MiqServer.my_server.hostname
+    ipaddress = MiqServer.my_server&.ipaddress
+    hostname  = MiqServer.my_server&.hostname
 
     # Cut an Audit log message
     $audit_log.send(attrs[:status], "MIQ(#{attrs[:source]}) userid: [#{attrs[:userid]}] userip: [#{ipaddress}] hostname: [#{hostname}] - #{attrs[:message]}")
