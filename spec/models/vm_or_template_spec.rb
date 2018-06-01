@@ -564,32 +564,6 @@ describe VmOrTemplate do
     end
   end
 
-  context "#self.batch_operation_supported?" do
-    let(:ems)     { FactoryGirl.create(:ext_management_system) }
-    let(:storage) { FactoryGirl.create(:storage) }
-    let(:host) { FactoryGirl.create(:host) }
-
-    it "when the vm_or_template supports migrate,  returns false" do
-      vm1 =  FactoryGirl.create(:vm_microsoft)
-      vm2 =  FactoryGirl.create(:vm_vmware)
-      expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(false)
-    end
-
-    it "when the vm_or_template exists and can be migrated, returns true" do
-      vm1 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
-      vm2 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
-      expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
-    end
-
-    it "when the vm_or_template supports terminate, returns true" do
-      ems_vmware = FactoryGirl.create(:ems_vmware)
-      ems_ms = FactoryGirl.create(:ems_microsoft)
-      vm1 =  FactoryGirl.create(:vm_microsoft, :host => host, :ext_management_system => ems_ms)
-      vm2 =  FactoryGirl.create(:vm_vmware, :host => host, :ext_management_system => ems_vmware)
-      expect(VmOrTemplate.batch_operation_supported?(:terminate, [vm1.id, vm2.id])).to eq(true)
-    end
-  end
-
   context ".set_tenant_from_group" do
     before { Tenant.seed }
     let(:tenant1) { FactoryGirl.create(:tenant) }

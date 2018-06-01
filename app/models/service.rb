@@ -93,6 +93,8 @@ class Service < ApplicationRecord
     unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
   end
 
+  supports :retire
+
   alias parent_service parent
   alias_attribute :service, :parent
   virtual_belongs_to :service
