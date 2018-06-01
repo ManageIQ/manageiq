@@ -17,9 +17,6 @@ module ManagerRefresh
       #   :adv_settings
       #     - values from Advanced settings (doesn't overwrite values specified in code)
       #     - @see method ManagerRefresh::Inventory::Persister.options()
-      #   :auto_missing_parent
-      #     - auto assigns parent if this property is missing
-      #     - @see method add_parent_if_missing()
       #   :auto_model_class
       #     - tries to set model_class from persister class
       #     - @see method auto_model_class
@@ -33,7 +30,6 @@ module ManagerRefresh
       def self.default_options
         {
           :adv_settings              => {},
-          :auto_missing_parent       => true,
           :auto_model_class          => true,
           :auto_inventory_attributes => true,
           :shared_properties         => {},
@@ -162,20 +158,6 @@ module ManagerRefresh
           :builder_params              => @builder_params,
           :dependency_attributes       => @dependency_attributes
         )
-      end
-
-      # Adds parent to InventoryCollection if not set before
-      # Can be disabled by :auto_missing_parent => false
-      def add_parent_if_missing(manager, targeted = false)
-        return unless @options[:auto_missing_parent]
-
-        if manager.present?
-          if targeted && network_manager_collections? && manager.respond_to?(:network_manager)
-            add_properties({:parent => manager.network_manager}, :if_missing)
-          else
-            add_properties({:parent => manager}, :if_missing)
-          end
-        end
       end
 
       protected
