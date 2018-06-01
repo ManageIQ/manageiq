@@ -62,6 +62,7 @@ class ServiceTemplate < ApplicationRecord
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
   virtual_column   :template_valid_error_message, :type => :string
+  virtual_column   :archived?,                    :type => :boolean
 
   default_value_for :service_type, 'unknown'
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
