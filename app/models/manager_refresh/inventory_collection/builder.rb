@@ -17,8 +17,6 @@ module ManagerRefresh
       #   :adv_settings
       #     - values from Advanced settings (doesn't overwrite values specified in code)
       #     - @see method ManagerRefresh::Inventory::Persister.options()
-      #   :adv_settings_enabled
-      #     - enable/disable this properties
       #   :auto_missing_parent
       #     - auto assigns parent if this property is missing
       #     - @see method add_parent_if_missing()
@@ -35,7 +33,6 @@ module ManagerRefresh
       def self.default_options
         {
           :adv_settings              => {},
-          :adv_settings_enabled      => true,
           :auto_missing_parent       => true,
           :auto_model_class          => true,
           :auto_inventory_attributes => true,
@@ -82,7 +79,7 @@ module ManagerRefresh
         add_properties(:association => @name)
         add_properties(:model_class => auto_model_class) if @options[:auto_model_class]
 
-        add_properties(@adv_settings, :if_missing) if @options[:adv_settings_enabled]
+        add_properties(@adv_settings, :if_missing)
         add_properties(@shared_properties, :if_missing)
 
         send(@name.to_sym) if respond_to?(@name.to_sym)

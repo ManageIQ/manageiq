@@ -63,12 +63,6 @@ describe ManagerRefresh::InventoryCollection::Builder do
 
   # --- adv. settings (TODO: link to gui)---
 
-  it 'works without Advanced settings' do
-    builder = cloud.prepare_data(:vms, persister_class, :adv_settings_enabled => false)
-
-    expect { builder.to_inventory_collection }.not_to raise_error
-  end
-
   it 'assigns Advanced settings' do
     builder = cloud.prepare_data(:tmp, persister_class, :adv_settings => adv_settings)
     data = builder.to_hash
