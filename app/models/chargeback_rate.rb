@@ -35,6 +35,13 @@ class ChargebackRate < ApplicationRecord
     super(klass)
   end
 
+  def self.relevant_details_for(chargeback_model, chargeback_rate_details)
+    allowed_cols = chargeback_model.attribute_names
+    chargeback_rate_details.select do |x|
+      x.chargeable_field.fixed? || x.affects_report_fields(allowed_cols) && allowed_cols.include?(x.metric_column_key)
+    end
+  end
+
   def rate_details_relevant_to(report_cols, allowed_cols)
     # we can memoize, as we get the same report_cols through the life of the object
     @relevant ||= begin
