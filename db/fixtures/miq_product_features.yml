@@ -788,6 +788,10 @@
       :description: Display Individual Key Pairs
       :feature_type: view
       :identifier: auth_key_pair_cloud_show
+    - :name: Download
+      :description: Download Private Key
+      :feature_type: view
+      :identifier: auth_key_pair_cloud_download
   - :name: Operate
     :description: Perform Operations on Key Pairs
     :feature_type: control
