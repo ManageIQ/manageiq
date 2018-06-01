@@ -178,6 +178,8 @@ describe User do
       stub_server_configuration(@auth_config)
       @miq_ldap = double('miq_ldap')
       allow(@miq_ldap).to receive_messages(:bind => false)
+
+      EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "will fail task if user object not found in ldap" do
@@ -347,6 +349,10 @@ describe User do
 
   context ".authenticate_with_http_basic" do
     let(:user) { FactoryGirl.create(:user, :password => "dummy") }
+
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
 
     it "should login with good username/password" do
       expect(User.authenticate_with_http_basic(user.userid, user.password)).to eq([true, user.userid])
