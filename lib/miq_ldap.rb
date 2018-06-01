@@ -43,6 +43,7 @@ class MiqLdap
     @bind_timeout     = options.delete(:bind_timeout) || ::Settings.authentication.bind_timeout.to_i_with_method
     @search_timeout   = options.delete(:search_timeout) || ::Settings.authentication.search_timeout.to_i_with_method
     @follow_referrals = options.delete(:follow_referrals) || ::Settings.authentication.follow_referrals
+    @group_attribute  = options.delete(:group_attribute) || ::Settings.authentication.group_attribute
     options[:host] ||= ::Settings.authentication.ldaphost
     options[:port] ||= ::Settings.authentication.ldapport
     options[:host] = resolve_host(options[:host], options[:port])
@@ -304,7 +305,7 @@ class MiqLdap
     user_type ||= @user_type.split("-").first
     user_type = "dn" if self.is_dn?(username)
     begin
-      search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", "memberof"]}
+      search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", @group_attribute]}
 
       case user_type
       when "samaccountname"
@@ -368,7 +369,7 @@ class MiqLdap
     udata
   end
 
-  def get_memberships(obj, max_depth = 0, attr = :memberof, followed = [], current_depth = 0)
+  def get_memberships(obj, max_depth = 0, attr = @group_attribute.to_sym, followed = [], current_depth = 0)
     current_depth += 1
 
     _log.debug("Enter get_memberships: #{obj.inspect}")
