@@ -184,7 +184,7 @@ class DockerEmbeddedAnsible < EmbeddedAnsible
   def database_host
     db_host = database_configuration["host"]
     return db_host if db_host.presence && db_host != "localhost"
-
+    return docker_bridge_gateway unless MiqEnvironment::Command.is_appliance?
     MiqServer.my_server.ipaddress || docker_bridge_gateway
   end
 
