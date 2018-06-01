@@ -7,6 +7,7 @@ require_dependency 'vmdb/settings_walker'
 module Vmdb
   class Settings
     extend Vmdb::SettingsWalker::ClassMethods
+    include Vmdb::Logging
 
     class ConfigurationInvalid < StandardError
       attr_accessor :errors
@@ -20,6 +21,11 @@ module Vmdb
 
     PASSWORD_FIELDS = Vmdb::SettingsWalker::PASSWORD_FIELDS
     DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
+
+    # RESET_COMMAND remove record for selected key and specific resource
+    # RESET_ALL_COMMAND remove all records for selected key and all resources
+    MAGIC_VALUES = [DELETE_COMMAND      = "<<reset>>".freeze,
+                    DELETE_ALL_COMMAND  = "<<reset_all>>".freeze].freeze
 
     cattr_accessor :last_loaded
 
@@ -62,8 +68,9 @@ module Vmdb
 
     def self.save!(resource, hash)
       new_settings = build_without_local(resource).load!.merge!(hash).to_hash
+      settings_to_validate = remove_magic_values(new_settings.deep_clone)
 
-      valid, errors = validate(new_settings)
+      valid, errors = validate(settings_to_validate)
       raise ConfigurationInvalid.new(errors) unless valid # rubocop:disable Style/RaiseArgs
 
       hash_for_parent = parent_settings_without_local(resource).load!.to_hash
@@ -188,6 +195,7 @@ module Vmdb
 
         deltas.each do |delta|
           record = index.delete(delta[:key])
+          next if process_magic_value(resource, delta)
           if record
             record.update_attributes!(delta)
           else
@@ -198,5 +206,34 @@ module Vmdb
       end
     end
     private_class_method :apply_settings_changes
+
+    def self.process_magic_value(resource, delta)
+      return false unless MAGIC_VALUES.include?(delta[:value])
+      case delta[:value]
+      when DELETE_COMMAND
+        _log.info("removing custom settings #{delta[:key]} on #{resource.class} id:#{resource.id}")
+        resource.settings_changes.where("key LIKE ?", "#{delta[:key]}%").destroy_all
+      when DELETE_ALL_COMMAND
+        _log.info("resetting #{delta[:key]} to defaul for all resorces")
+        SettingsChange.where("key LIKE ?", "#{delta[:key]}%").destroy_all
+      end
+      true
+    end
+    private_class_method :process_magic_value
+
+    def self.walk_hash(hash, path = [], &block)
+      hash.each do |key, value|
+        key_path = path.dup << key
+        yield key, value, key_path, hash
+        walk_hash(value, key_path, &block) if value&.class == hash.class
+      end
+    end
+    private_class_method :walk_hash
+
+    def self.remove_magic_values(hash)
+      walk_hash(hash) { |key, value, _path, owner| owner.delete(key) if MAGIC_VALUES.include?(value) }
+      hash
+    end
+    private_class_method :remove_magic_values
   end
 end
