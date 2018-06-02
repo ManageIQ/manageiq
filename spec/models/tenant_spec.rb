@@ -814,4 +814,20 @@ describe Tenant do
       expect(tenantA1.build_tenant_tree).to be_empty
     end
   end
+
+  describe "setting a parent for a new record" do
+    it "passes back the parent assigned" do
+      tenant.save!
+      sub_tenant = FactoryGirl.build(:tenant, :parent => Tenant.root_tenant)
+
+      expect(sub_tenant.parent = tenant).to eq(tenant)
+    end
+
+    it "passes back the parent_id assigned" do
+      tenant.save!
+      sub_tenant = FactoryGirl.build(:tenant, :parent => Tenant.root_tenant)
+
+      expect(sub_tenant.parent_id = tenant.id).to eq(tenant.id)
+    end
+  end
 end
