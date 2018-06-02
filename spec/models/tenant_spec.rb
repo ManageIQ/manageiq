@@ -365,6 +365,14 @@ describe Tenant do
                            :tenant_id => t2_2.id)
       end
 
+      # This spec is here to confirm that we don't mutate the memoized
+      # ancestor_ids value when calling `Tenant#visible_domains`.
+      it "does not affect the memoized ancestor_ids variable" do
+        expected_ancestor_ids = t1_1.ancestor_ids.dup  # dup required, don't remove
+        t1_1.visible_domains
+        expect(t1_1.ancestor_ids).to eq(expected_ancestor_ids)
+      end
+
       it "#visibile_domains sub_tenant" do
         t1_1
         expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15 DOM10))
