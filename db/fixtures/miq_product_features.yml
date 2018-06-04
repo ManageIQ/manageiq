@@ -5687,105 +5687,105 @@
       :feature_type: admin
       :identifier: ems_storage_new
 
-# EmsBlockStorage
-- :name: Block Storage Managers
-  :description: Everything under Block Storage Managers
-  :feature_type: node
-  :identifier: ems_block_storage
-  :children:
-  - :name: View
-    :description: View Block Storage Managers
-    :feature_type: view
-    :identifier: ems_block_storage_view
+  # EmsBlockStorage
+  - :name: Block Storage Managers
+    :description: Everything under Block Storage Managers
+    :feature_type: node
+    :identifier: ems_block_storage
     :children:
-    - :name: List
-      :description: Display Lists of Block Storage Managers
+    - :name: View
+      :description: View Block Storage Managers
       :feature_type: view
-      :identifier: ems_block_storage_show_list
-    - :name: Show
-      :description: Display Individual Block Storage Managers
-      :feature_type: view
-      :identifier: ems_block_storage_show
-    - :name: Timeline
-      :description: Display Timelines for Block Storage Managers
-      :feature_type: view
-      :identifier: ems_block_storage_timeline
-  - :name: Operate
-    :description: Perform Operations on Block Storage Managers
-    :feature_type: control
-    :identifier: ems_block_storage_control
-    :children:
-    - :name: Edit Tags
-      :description: Edit Tags of Block Storage Managers
+      :identifier: ems_block_storage_view
+      :children:
+      - :name: List
+        :description: Display Lists of Block Storage Managers
+        :feature_type: view
+        :identifier: ems_block_storage_show_list
+      - :name: Show
+        :description: Display Individual Block Storage Managers
+        :feature_type: view
+        :identifier: ems_block_storage_show
+      - :name: Timeline
+        :description: Display Timelines for Block Storage Managers
+        :feature_type: view
+        :identifier: ems_block_storage_timeline
+    - :name: Operate
+      :description: Perform Operations on Block Storage Managers
       :feature_type: control
-      :identifier: ems_block_storage_tag
-    - :name: Manage Policies
-      :description: Manage Policies of Block Storage Managers
-      :feature_type: control
-      :identifier: ems_block_storage_protect
-    - :name: Refresh
-      :description: Refresh Block Storage Managers
-      :feature_type: control
-      :identifier: ems_block_storage_refresh
-  - :name: Modify
-    :description: Modify Block Storage Managers
-    :feature_type: admin
-    :identifier: ems_block_storage_admin
-    :children:
-    - :name: Remove
-      :description: Remove Block Storage Manager
+      :identifier: ems_block_storage_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Tags of Block Storage Managers
+        :feature_type: control
+        :identifier: ems_block_storage_tag
+      - :name: Manage Policies
+        :description: Manage Policies of Block Storage Managers
+        :feature_type: control
+        :identifier: ems_block_storage_protect
+      - :name: Refresh
+        :description: Refresh Block Storage Managers
+        :feature_type: control
+        :identifier: ems_block_storage_refresh
+    - :name: Modify
+      :description: Modify Block Storage Managers
       :feature_type: admin
-      :identifier: ems_block_storage_delete
+      :identifier: ems_block_storage_admin
+      :children:
+      - :name: Remove
+        :description: Remove Block Storage Manager
+        :feature_type: admin
+        :identifier: ems_block_storage_delete
 
-# EmsObjectStorage
-- :name: Object Storage Managers
-  :description: Everything under Object Storage Managers
-  :feature_type: node
-  :identifier: ems_object_storage
-  :children:
-  - :name: View
-    :description: View Object Storage Managers
-    :feature_type: view
-    :identifier: ems_object_storage_view
+  # EmsObjectStorage
+  - :name: Object Storage Managers
+    :description: Everything under Object Storage Managers
+    :feature_type: node
+    :identifier: ems_object_storage
     :children:
-    - :name: List
-      :description: Display Lists of Object Storage Managers
+    - :name: View
+      :description: View Object Storage Managers
       :feature_type: view
-      :identifier: ems_object_storage_show_list
-    - :name: Show
-      :description: Display Individual Object Storage Managers
-      :feature_type: view
-      :identifier: ems_object_storage_show
-    - :name: Timeline
-      :description: Display Timelines for Object Storage Managers
-      :feature_type: view
-      :identifier: ems_object_storage_timeline
-  - :name: Operate
-    :description: Perform Operations on Object Storage Managers
-    :feature_type: control
-    :identifier: ems_object_storage_control
-    :children:
-    - :name: Edit Tags
-      :description: Edit Tags of Object Storage Managers
+      :identifier: ems_object_storage_view
+      :children:
+      - :name: List
+        :description: Display Lists of Object Storage Managers
+        :feature_type: view
+        :identifier: ems_object_storage_show_list
+      - :name: Show
+        :description: Display Individual Object Storage Managers
+        :feature_type: view
+        :identifier: ems_object_storage_show
+      - :name: Timeline
+        :description: Display Timelines for Object Storage Managers
+        :feature_type: view
+        :identifier: ems_object_storage_timeline
+    - :name: Operate
+      :description: Perform Operations on Object Storage Managers
       :feature_type: control
-      :identifier: ems_object_storage_tag
-    - :name: Manage Policies
-      :description: Manage Policies of Object Storage Managers
-      :feature_type: control
-      :identifier: ems_object_storage_protect
-    - :name: Refresh
-      :description: Refresh Object Storage Managers
-      :feature_type: control
-      :identifier: ems_object_storage_refresh
-  - :name: Modify
-    :description: Modify Object Storage Managers
-    :feature_type: admin
-    :identifier: ems_object_storage_admin
-    :children:
-    - :name: Remove
-      :description: Remove Object Storage Manager
+      :identifier: ems_object_storage_control
+      :children:
+      - :name: Edit Tags
+        :description: Edit Tags of Object Storage Managers
+        :feature_type: control
+        :identifier: ems_object_storage_tag
+      - :name: Manage Policies
+        :description: Manage Policies of Object Storage Managers
+        :feature_type: control
+        :identifier: ems_object_storage_protect
+      - :name: Refresh
+        :description: Refresh Object Storage Managers
+        :feature_type: control
+        :identifier: ems_object_storage_refresh
+    - :name: Modify
+      :description: Modify Object Storage Managers
       :feature_type: admin
-      :identifier: ems_object_storage_delete
+      :identifier: ems_object_storage_admin
+      :children:
+      - :name: Remove
+        :description: Remove Object Storage Manager
+        :feature_type: admin
+        :identifier: ems_object_storage_delete
 
 # EmsPhysicalInfra
 - :name: Physical Infrastructure Providers
