@@ -214,24 +214,23 @@ module Vmdb
         _log.info("removing custom settings #{delta[:key]} on #{resource.class} id:#{resource.id}")
         resource.settings_changes.where("key LIKE ?", "#{delta[:key]}%").destroy_all
       when DELETE_ALL_COMMAND
-        _log.info("resetting #{delta[:key]} to defaul for all resorces")
+        _log.info("resetting #{delta[:key]} to default for all resorces")
         SettingsChange.where("key LIKE ?", "#{delta[:key]}%").destroy_all
       end
       true
     end
     private_class_method :process_magic_value
 
-    def self.walk_hash(hash, path = [], &block)
+    def self.walk_hash(hash, &block)
       hash.each do |key, value|
-        key_path = path.dup << key
-        yield key, value, key_path, hash
-        walk_hash(value, key_path, &block) if value&.class == hash.class
+        yield key, value, hash
+        walk_hash(value, &block) if value&.class == Hash
       end
     end
     private_class_method :walk_hash
 
     def self.remove_magic_values(hash)
-      walk_hash(hash) { |key, value, _path, owner| owner.delete(key) if MAGIC_VALUES.include?(value) }
+      walk_hash(hash) { |key, value, owner| owner.delete(key) if MAGIC_VALUES.include?(value) }
       hash
     end
     private_class_method :remove_magic_values
