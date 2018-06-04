@@ -6,11 +6,13 @@ module ManageIQ::Providers
     has_many :physical_racks,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
     has_many :physical_servers,  :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
     has_many :physical_switches, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+    has_many :physical_storages, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
     virtual_total :total_physical_chassis,  :physical_chassis
     virtual_total :total_physical_racks,    :physical_racks
     virtual_total :total_physical_servers,  :physical_servers
     virtual_total :total_physical_switches, :physical_switches
+    virtual_total :total_physical_storages, :physical_storages
 
     virtual_column :total_hosts, :type => :integer
     virtual_column :total_vms,   :type => :integer
