@@ -24,8 +24,8 @@ module Vmdb
 
     # RESET_COMMAND remove record for selected key and specific resource
     # RESET_ALL_COMMAND remove all records for selected key and all resources
-    MAGIC_VALUES = [DELETE_COMMAND      = "<<reset>>".freeze,
-                    DELETE_ALL_COMMAND  = "<<reset_all>>".freeze].freeze
+    MAGIC_VALUES = [RESET_COMMAND      = "<<reset>>".freeze,
+                    RESET_ALL_COMMAND  = "<<reset_all>>".freeze].freeze
 
     cattr_accessor :last_loaded
 
@@ -210,10 +210,10 @@ module Vmdb
     def self.process_magic_value(resource, delta)
       return false unless MAGIC_VALUES.include?(delta[:value])
       case delta[:value]
-      when DELETE_COMMAND
-        _log.info("removing custom settings #{delta[:key]} on #{resource.class} id:#{resource.id}")
+      when RESET_COMMAND
+        _log.info("resetting #{delta[:key]} on #{resource.class} id:#{resource.id}")
         resource.settings_changes.where("key LIKE ?", "#{delta[:key]}%").destroy_all
-      when DELETE_ALL_COMMAND
+      when RESET_ALL_COMMAND
         _log.info("resetting #{delta[:key]} to default for all resorces")
         SettingsChange.where("key LIKE ?", "#{delta[:key]}%").destroy_all
       end

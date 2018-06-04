@@ -270,8 +270,8 @@ describe Vmdb::Settings do
       let(:server_value) { 1 }
       let(:zone_value)   { 2 }
 
-      let(:reset)     { ::Vmdb::Settings::DELETE_COMMAND }
-      let(:reset_all) { ::Vmdb::Settings::DELETE_ALL_COMMAND }
+      let(:reset)     { ::Vmdb::Settings::RESET_COMMAND }
+      let(:reset_all) { ::Vmdb::Settings::RESET_ALL_COMMAND }
 
       let(:second_server) { FactoryGirl.create(:miq_server, :zone => miq_server.zone) }
 
