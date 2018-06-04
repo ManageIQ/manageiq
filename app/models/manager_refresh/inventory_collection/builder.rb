@@ -9,7 +9,7 @@ module ManagerRefresh
       require_nested :AutomationManager
       require_nested :NetworkManager
       require_nested :StorageManager
-      require_nested :List
+      require_nested :PersisterHelper
 
       include ::ManagerRefresh::InventoryCollection::Builder::Shared
 
