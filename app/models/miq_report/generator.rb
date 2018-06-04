@@ -191,124 +191,138 @@ module MiqReport::Generator
 
   def _generate_table(options = {})
     return build_table_from_report(options) if db == self.class.name # Build table based on data from passed in report object
+    _generate_table_prep
 
-    klass = db.kind_of?(Class) ? db : Object.const_get(db)
-    interval = db_options.present? && db_options[:interval]
-    custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
-
-    includes = get_include_for_find
-
-    load_custom_attributes
-
-    time_profile.tz ||= tz if time_profile # Default time zone in profile to report time zone
-    ext_options = {:tz => tz, :time_profile => time_profile}
-    # TODO: these columns need to be converted to real SQL columns
-    # only_cols = cols
-    self.extras ||= {}
-
-    if custom_results_method
-      if klass.respond_to?(custom_results_method)
-        # Use custom method in DB class to get report results if defined
-        results, ext = klass.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
-                                                                                    :ext_options => ext_options,
-                                                                                    :report_cols => cols))
-      elsif self.respond_to?(custom_results_method)
-        # Use custom method in MiqReport class to get report results if defined
-        results, ext = send(custom_results_method, options)
-      else
-        raise _("Unsupported report type '%{type}'") % {:type => db_options[:rpt_type]}
-      end
-      # TODO: results = results.select(only_cols)
-      self.extras.merge!(ext) if ext && ext.kind_of?(Hash)
-
-    elsif performance
-      # Original C&U charts breakdown by tags
-      if performance[:group_by_category] && performance[:interval_name]
-        results, self.extras[:interval]  = db_class.vms_by_category(performance)
-        build_table(results, db, options)
-      else
-        results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.group_by_tags(
-          db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
-          :category     => performance[:group_by_category],
-          :cat_model    => options[:cat_model],
-          :include      => includes
-        )
-        build_correlate_tag_cols
-      end
-
-    elsif interval == 'daily' && klass <= MetricRollup
-      # Ad-hoc daily performance reports
-      #   Daily for: Performance - Clusters...
-      unless conditions.nil?
-        conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
-        exp_sql, exp_includes = conditions.to_sql
-        # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
-      end
-
-      time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
-      # TODO: add .select(only_cols)
-      results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, klass)
-                              .where(where_clause).where(exp_sql).where(options[:where_clause])
-                              .where(:timestamp => time_range)
-                              .includes(includes).includes(exp_includes || []).references(includes)
-                              .limit(options[:limit])
-      results = Rbac.filtered(results, :class        => db,
-                                       :filter       => conditions,
-                                       :userid       => options[:userid],
-                                       :miq_group_id => options[:miq_group_id])
-      results = Metric::Helper.remove_duplicate_timestamps(results)
-    elsif interval
-      # Ad-hoc performance reports
-
-      time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
-
-      # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
-      exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || klass.respond_to?(:instances_are_derived?)
-
-      results = klass.with_interval_and_time_range(interval, time_range)
-                     .where(where_clause).where(options[:where_clause]).where(exp_sql)
-                     .includes(includes).includes(exp_includes || []).limit(options[:limit])
-
-      results = Rbac.filtered(results, :class        => db,
-                                       :filter       => conditions,
-                                       :userid       => options[:userid],
-                                       :miq_group_id => options[:miq_group_id])
-      results = Metric::Helper.remove_duplicate_timestamps(results)
-    else
-      # Basic report
-      # Daily and Hourly for: C&U main reports go through here too
-      # TODO: need to enhance only_cols to better support virtual columns
-      # only_cols += conditions.columns_for_sql if conditions # Add cols references in expression to ensure they are present for evaluation
-      # NOTE: using search to get user property "managed", otherwise this is overkill
-      targets = db_class
-      targets = db_class.find_entries(ext_options) if targets.respond_to?(:find_entries)
-      # TODO: add once only_cols is fixed
-      # targets = targets.select(only_cols)
-      where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
-      rbac_opts = options.merge(
-        :targets          => targets,
-        :filter           => conditions,
-        :include_for_find => includes,
-        :where_clause     => where_clause,
-        :skip_counts      => true,
-      )
-
-      ## add in virtual attributes that can be calculated from sql
-      rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.nil? || va_sql_cols.empty?
-
-      results, attrs = Rbac.search(rbac_opts)
-      results = Metric::Helper.remove_duplicate_timestamps(results)
-      results = BottleneckEvent.remove_duplicate_find_results(results) if db == "BottleneckEvent"
-      @user_categories = attrs[:user_filters]["managed"]
-    end
+    results = if custom_results_method
+                generate_custom_method_results(options)
+              elsif performance
+                generate_performance_results(options)
+              elsif interval == 'daily' && db_klass <= MetricRollup
+                generate_daily_metric_rollup_results(options)
+              elsif interval
+                generate_interval_metric_results(options)
+              else
+                generate_basic_results(options)
+              end
 
     if db_options && db_options[:long_term_averages] && results.first.kind_of?(MetricRollup)
       # Calculate long_term_averages and save in extras
-      self.extras[:long_term_averages] = Metric::LongTermAverages.get_averages_over_time_period(results.first.resource, db_options[:long_term_averages].merge(:ext_options => ext_options))
+      extras[:long_term_averages] = Metric::LongTermAverages.get_averages_over_time_period(results.first.resource, db_options[:long_term_averages].merge(:ext_options => ext_options))
     end
 
     build_apply_time_profile(results)
     build_table(results, db, options)
+  end
+
+  def generate_custom_method_results(options = {})
+    if db_klass.respond_to?(custom_results_method)
+      # Use custom method in DB class to get report results if defined
+      results, ext = db_klass.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
+                                                                                     :ext_options => ext_options,
+                                                                                     :report_cols => cols))
+    elsif respond_to?(custom_results_method)
+      # Use custom method in MiqReport class to get report results if defined
+      results, ext = send(custom_results_method, options)
+    else
+      raise _("Unsupported report type '%{type}'") % {:type => db_options[:rpt_type]}
+    end
+    # TODO: results = results.select(only_cols)
+    extras.merge!(ext) if ext && ext.kind_of?(Hash)
+    results
+  end
+
+  # Original C&U charts breakdown by tags
+  def generate_performance_results(options = {})
+    if performance[:group_by_category] && performance[:interval_name]
+      results, extras[:interval] = db_class.vms_by_category(performance)
+    else
+      results, extras[:group_by_tag_cols], extras[:group_by_tags] = db_class.group_by_tags(
+        db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
+        :category  => performance[:group_by_category],
+        :cat_model => options[:cat_model],
+        :include   => get_include_for_find
+      )
+      build_correlate_tag_cols
+    end
+    results
+  end
+
+  # Ad-hoc daily performance reports
+  #   Daily for: Performance - Clusters...
+  def generate_daily_metric_rollup_results(options = {})
+    unless conditions.nil?
+      conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
+      exp_sql, exp_includes = conditions.to_sql
+      # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
+    end
+
+    time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
+    # TODO: add .select(only_cols)
+    db_includes = get_include_for_find
+    results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_klass)
+                            .where(where_clause).where(exp_sql)
+                            .where(options[:where_clause])
+                            .where(:timestamp => time_range)
+                            .includes(db_includes)
+                            .references(db_includes)
+                            .includes(exp_includes || [])
+                            .limit(options[:limit])
+    results = Rbac.filtered(results, :class        => db,
+                                     :filter       => conditions,
+                                     :userid       => options[:userid],
+                                     :miq_group_id => options[:miq_group_id])
+    Metric::Helper.remove_duplicate_timestamps(results)
+  end
+
+  # Ad-hoc performance reports
+  def generate_interval_metric_results(options = {})
+    time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
+
+    # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
+    exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || db_klass.respond_to?(:instances_are_derived?)
+
+    results = db_klass.with_interval_and_time_range(interval, time_range)
+                      .where(where_clause)
+                      .where(options[:where_clause])
+                      .where(exp_sql)
+                      .includes(get_include_for_find)
+                      .includes(exp_includes || [])
+                      .limit(options[:limit])
+
+    results = Rbac.filtered(results, :class        => db,
+                                     :filter       => conditions,
+                                     :userid       => options[:userid],
+                                     :miq_group_id => options[:miq_group_id])
+    Metric::Helper.remove_duplicate_timestamps(results)
+  end
+
+  # Basic report
+  # Daily and Hourly for: C&U main reports go through here too
+  def generate_basic_results(options = {})
+    # TODO: need to enhance only_cols to better support virtual columns
+    # only_cols += conditions.columns_for_sql if conditions # Add cols references in expression to ensure they are present for evaluation
+    # NOTE: using search to get user property "managed", otherwise this is overkill
+    targets = db_class
+    targets = db_class.find_entries(ext_options) if targets.respond_to?(:find_entries)
+    # TODO: add once only_cols is fixed
+    # targets = targets.select(only_cols)
+    where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
+    rbac_opts = options.merge(
+      :targets          => targets,
+      :filter           => conditions,
+      :include_for_find => get_include_for_find,
+      :where_clause     => where_clause,
+      :skip_counts      => true
+    )
+
+    ## add in virtual attributes that can be calculated from sql
+    rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.blank?
+
+    results, attrs = Rbac.search(rbac_opts)
+    results = Metric::Helper.remove_duplicate_timestamps(results)
+    results = BottleneckEvent.remove_duplicate_find_results(results) if db == "BottleneckEvent"
+    @user_categories = attrs[:user_filters]["managed"]
+    results
   end
 
   def build_create_results(options, taskid = nil)
@@ -363,14 +377,13 @@ module MiqReport::Generator
   end
 
   def build_table(data, db, options = {})
-    klass = db.respond_to?(:constantize) ? db.constantize : db
     data = data.to_a
-    objs = data[0] && data[0].kind_of?(Integer) ? klass.where(:id => data) : data.compact
+    objs = data[0] && data[0].kind_of?(Integer) ? db_klass.where(:id => data) : data.compact
 
     remove_loading_relations_for_virtual_custom_attributes
 
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support
-    if klass.to_s.ends_with?("Performance")
+    if db_klass.to_s.ends_with?("Performance")
       res_cols = ['resource_name', 'resource_type', 'resource_id']
       self.cols = (cols + res_cols).uniq
       orig_col_order = col_order.dup
@@ -868,5 +881,29 @@ module MiqReport::Generator
     else
       child.to_s
     end
+  end
+
+  # Preps the current instance and db class for building a report
+  def _generate_table_prep
+    # Make sure the db_klass has the custom_attribute definitions defined for
+    # the report being built.
+    load_custom_attributes
+
+    # Default time zone in profile to report time zone
+    time_profile.tz ||= tz if time_profile
+    self.ext_options  = {:tz => tz, :time_profile => time_profile}
+
+    # TODO: these columns need to be converted to real SQL columns
+    # only_cols = cols
+
+    self.extras ||= {}
+  end
+
+  def interval
+    @interval ||= db_options.present? && db_options[:interval]
+  end
+
+  def custom_results_method
+    @custom_results_method ||= db_options && db_options[:rpt_type] ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
   end
 end

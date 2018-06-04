@@ -44,6 +44,7 @@ class MiqReport < ApplicationRecord
   virtual_column  :based_on, :type => :string
 
   alias_attribute :menu_name, :name
+  attr_accessor :ext_options
   attr_accessor_that_yamls :table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                            :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
                            :report_run_time, :chart
@@ -200,10 +201,9 @@ class MiqReport < ApplicationRecord
   end
 
   def load_custom_attributes
-    klass = db.safe_constantize
-    return unless klass < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
+    return unless db_klass < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
 
-    klass.load_custom_attributes_for(cols.uniq)
+    db_klass.load_custom_attributes_for(cols.uniq)
   end
 
   # this method adds :custom_attributes => {} to MiqReport#include
@@ -239,5 +239,9 @@ class MiqReport < ApplicationRecord
     @va_sql_cols ||= cols.select do |col|
       db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
     end
+  end
+
+  def db_klass
+    @db_klass ||= db.kind_of?(Class) ? db : Object.const_get(db)
   end
 end
