@@ -420,11 +420,27 @@ class MiqRequest < ApplicationRecord
   def execute
     task_check_on_execute
 
-    deliver_on = nil
     if get_option(:schedule_type) == "schedule"
-      deliver_on = get_option(:schedule_time).utc rescue nil
-    end
+      start_time = get_option(:schedule_time).utc rescue nil
 
+      MiqSchedule.create!(
+        :name         => description,
+        :description  => description,
+        :sched_action => {:method => "queue_create_request_tasks"},
+        :filter       => MiqExpression.new("=" => {"field" => "MiqRequest-id", "value" => id}),
+        :towhat       => self.class.name,
+        :run_at       => {
+          :interval   => {:unit => "once"},
+          :start_time => start_time,
+          :tz         => "UTC",
+        },
+      )
+    else
+      queue_create_request_tasks
+    end
+  end
+
+  def queue_create_request_tasks
     # self.create_request_tasks
     MiqQueue.put(
       :class_name     => self.class.name,
@@ -434,7 +450,6 @@ class MiqRequest < ApplicationRecord
       :role           => my_role(:create_request_tasks),
       :tracking_label => tracking_label_id,
       :msg_timeout    => 3600,
-      :deliver_on     => deliver_on
     )
   end
 
