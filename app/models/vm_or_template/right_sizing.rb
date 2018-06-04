@@ -149,7 +149,8 @@ module VmOrTemplate::RightSizing
   alias_method :overallocated_mem_pct,   :aggressive_mem_recommended_change_pct
 
   def max_cpu_usage_rate_average_max_over_time_period
-    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
+    end_date = Time.now.utc.beginning_of_day - 1
+    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => end_date, :days => Metric::LongTermAverages::AVG_DAYS)
     perfs.collect do |p|
       # Ignore any CPU bursts to 100% 15 minutes after VM booted
       next if (p.abs_max_cpu_usage_rate_average_value == 100.0) && boot_time && (p.abs_max_cpu_usage_rate_average_timestamp <= (boot_time + 15.minutes))
@@ -158,17 +159,20 @@ module VmOrTemplate::RightSizing
   end
 
   def max_mem_usage_absolute_average_max_over_time_period
-    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
+    end_date = Time.now.utc.beginning_of_day - 1
+    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => end_date, :days => Metric::LongTermAverages::AVG_DAYS)
     perfs.collect(&:abs_max_mem_usage_absolute_average_value).compact.max
   end
 
   def cpu_usagemhz_rate_average_max_over_time_period
-    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
+    end_date = Time.now.utc.beginning_of_day - 1
+    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => end_date, :days => Metric::LongTermAverages::AVG_DAYS)
     perfs.collect(&:abs_max_cpu_usagemhz_rate_average_value).compact.max
   end
 
   def derived_memory_used_max_over_time_period
-    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => Time.now.utc, :days => Metric::LongTermAverages::AVG_DAYS)
+    end_date = Time.now.utc.beginning_of_day - 1
+    perfs = VimPerformanceAnalysis.find_perf_for_time_period(self, "daily", :end_date => end_date, :days => Metric::LongTermAverages::AVG_DAYS)
     perfs.collect(&:abs_max_derived_memory_used_value).compact.max
   end
 
