@@ -45,10 +45,9 @@ module ManageIQ::Providers
       def get_flavors
         # Google API returns a duplicate flavor for every zone
         # so build a unique list of flavors using the flavor
-        flavors = @connection.list_aggregated_machine_types.items.values.each_with_object([]) do |zone, arr|
-          arr.concat(zone.machine_types) if zone.machine_types
-        end
-        flavors.uniq!(&:id)
+        flavors_by_zone = @connection.list_aggregated_machine_types.items
+        flavors = flavors_by_zone.values.flat_map(&:machine_types).compact.uniq(&:id)
+
         process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
       end
 

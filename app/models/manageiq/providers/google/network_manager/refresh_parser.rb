@@ -181,7 +181,7 @@ module ManageIQ::Providers
 
       def subnetworks
         unless @subnetworks
-          @subnetworks = @connection.list_aggregated_subnetworks.to_h[:items].flat_map { |_, v| v[:subnetworks] }
+          @subnetworks = @connection.list_aggregated_subnetworks.to_h[:items].values.flat_map { |v| v[:subnetworks] }
           # For a backwards compatibility, old GCE networks were created without subnet. It's not possible now, but
           # GCE haven't migrated to new format. We will create a fake subnet for each network without subnets.
           @subnetworks += @connection.networks.select { |x| x.ipv4_range.present? }.map do |x|
