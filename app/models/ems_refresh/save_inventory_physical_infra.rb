@@ -51,7 +51,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
 
     deletes = target == ems ? :use_association : []
 
-    save_inventory_multi(ems.physical_switches, hashes, deletes, [:uid_ems], %i(asset_detail hardware physical_network_ports))
+    save_inventory_multi(ems.physical_switches, hashes, deletes, [:uid_ems], %i(asset_detail hardware physical_network_ports physical_component))
   end
 
   def save_physical_servers_inventory(ems, hashes, target = nil)
@@ -97,6 +97,11 @@ module EmsRefresh::SaveInventoryPhysicalInfra
   def save_asset_detail_inventory(parent, hash)
     return if hash.nil?
     save_inventory_single(:asset_detail, parent, hash)
+  end
+
+  def save_physical_component_inventory(parent, hash)
+    return if hash.nil?
+    save_inventory_single(:physical_component, parent, hash, [:asset_detail])
   end
 
   def save_physical_network_ports_inventory(guest_device, hashes, target = nil)
