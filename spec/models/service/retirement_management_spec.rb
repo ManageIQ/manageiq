@@ -7,14 +7,15 @@ describe "Service Retirement Management" do
 
   # shouldn't be running make_retire_request because it's the bimodal not from ui part
   it "#retirement_check" do
-    expect(MiqEvent).to receive(:raise_evm_event)
-    @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-    expect(@service.retirement_last_warn).to be_nil
-    expect(@service).to receive(:make_retire_request).once
-    @service.retirement_check
-    @service.reload
-    expect(@service.retirement_last_warn).not_to be_nil
-    expect(Time.now.utc - @service.retirement_last_warn).to be < 30
+    User.with_user(user) do
+      expect(MiqEvent).to receive(:raise_evm_event)
+      @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+      expect(@service.retirement_last_warn).to be_nil
+      @service.retirement_check
+      @service.reload
+      expect(@service.retirement_last_warn).not_to be_nil
+      expect(Time.now.utc - @service.retirement_last_warn).to be < 30
+    end
   end
 
   it "#start_retirement" do
