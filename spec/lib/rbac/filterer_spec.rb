@@ -204,6 +204,43 @@ describe Rbac::Filterer do
         end
       end
 
+      %w(
+        automation_manager_authentication ManageIQ::Providers::AutomationManager::Authentication
+        embedded_automation_manager_authentication ManageIQ::Providers::EmbeddedAutomationManager::Authentication
+      ).slice(2) do |factory, klass|
+        context "searching for instances of #{klass}" do
+          let!(:automation_manager_authentication) { FactoryGirl.create(factory) }
+          automation_manager_authentication.tag_with('/managed/environment/prod', :ns => '*')
+
+          results = described_class.search(:class => automation_manager_authentication.class.name, :user => user).first
+          expect(results.first).to eq(automation_manager_authentication)
+        end
+      end
+
+      it "tag entitled playbook with no tagged authentications" do
+        auth     = FactoryGirl.create(:automation_manager_authentication)
+        playbook = FactoryGirl.create(:ansible_playbook, :authentications => [auth])
+        playbook.tag_with('/managed/environment/prod', :ns => '*')
+
+        results = described_class.search(:class => playbook.class, :user => user).first
+        expect(results).to match_array [playbook]
+
+        results = described_class.search(:class => auth.class, :user => user).first
+        expect(results).to match_array []
+      end
+
+      it "tag entitled ansible authentications without a playbook for it" do
+        auth     = FactoryGirl.create(:automation_manager_authentication)
+        playbook = FactoryGirl.create(:ansible_playbook, :authentications => [auth])
+        auth.tag_with('/managed/environment/prod', :ns => '*')
+
+        results = described_class.search(:class => playbook.class, :user => user).first
+        expect(results).to match_array []
+
+        results = described_class.search(:class => auth.class, :user => user).first
+        expect(results).to match_array [auth]
+      end
+
       context 'searching for instances of AuthKeyPair' do
         let!(:auth_key_pair_cloud) { FactoryGirl.create_list(:auth_key_pair_cloud, 2).first }
 
