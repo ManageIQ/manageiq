@@ -1,6 +1,6 @@
 class MiqSchedule < ApplicationRecord
   include ReservedMixin
-  reserve_attribute :resource_id, :bigint
+  reserve_attribute :resource_id, :big_integer
 
   validates :name, :uniqueness => {:scope => [:userid, :towhat]}
   validates :name, :description, :towhat, :run_at, :presence => true
@@ -14,7 +14,6 @@ class MiqSchedule < ApplicationRecord
 
   belongs_to :file_depot
   belongs_to :miq_search
-  belongs_to :resource, :class_name => "MiqRequest"
   belongs_to :zone
 
   scope :in_zone, lambda { |zone_name|
@@ -42,6 +41,11 @@ class MiqSchedule < ApplicationRecord
   default_value_for :userid,  "system"
   default_value_for :enabled, true
   default_value_for(:zone_id) { MiqServer.my_server.zone_id }
+
+  def resource
+    # HACK: this should be a real relation, but for now it's using a reserve_attribute for backport reasons
+    Object.const_get(towhat).find_by(:id => resource_id)
+  end
 
   def set_start_time_and_prod_default
     run_at # Internally this will correct :start_time to UTC

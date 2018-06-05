@@ -417,6 +417,11 @@ class MiqRequest < ApplicationRecord
     raise _("approval is required for %{task}") % {:task => self.class::TASK_DESCRIPTION} unless approved?
   end
 
+  def miq_schedule
+    # HACK: this should be a real relation, but for now it's using a reserve_attribute for backport reasons
+    Reserve.where(:resource_type => "MiqSchedule").detect { |r| r.reserved == {:resource_id => id} }&.resource
+  end
+
   def execute
     task_check_on_execute
 
