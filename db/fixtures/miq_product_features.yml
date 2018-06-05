@@ -248,6 +248,14 @@
         :description: Request to Order Services
         :feature_type: admin
         :identifier: svc_catalog_provision
+      - :name: Archive Services
+        :description: Request to Archive Services
+        :feature_type: admin
+        :identifier: svc_catalog_archive
+      - :name: Unarchive Services
+        :description: Request to Unarchive Services
+        :feature_type: admin
+        :identifier: svc_catalog_unarchive
   - :name: Catalogs
     :description: Everything under Catalogs Accordion
     :feature_type: node
