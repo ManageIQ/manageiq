@@ -308,7 +308,7 @@ describe Rbac::Filterer do
       {
         "ExtManagementSystem"    => :ems_vmware,
         "MiqAeDomain"            => :miq_ae_domain,
-        # "MiqRequest"           => :miq_request,  # MiqRequest can't be instantuated, it is an abstract class
+        # "MiqRequest"           => :miq_request,  # MiqRequest can't be instantiated, it is an abstract class
         "MiqRequestTask"         => :miq_request_task,
         "Provider"               => :provider,
         "Service"                => :service,
