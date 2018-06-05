@@ -23,6 +23,8 @@ describe Authenticator::Httpd do
     # Authenticator#uses_stored_password? whether it's allowed to do anything.
 
     allow(User).to receive(:authenticator).and_return(subject)
+
+    EvmSpecHelper.create_guid_miq_server_zone
   end
 
   before do
