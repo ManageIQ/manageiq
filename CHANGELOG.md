@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 87 ending 2018-06-04
+
+### Added
+- Create a virtual column for `archived` for using in the API [(#17509)](https://github.com/ManageIQ/manageiq/pull/17509)
+- Raise an event on failed login attempt [(#17508)](https://github.com/ManageIQ/manageiq/pull/17508)
+- Move get_file and save_file to ConfigurationManagementMixin [(#17494)](https://github.com/ManageIQ/manageiq/pull/17494)
+- Remove changes to enable workers to be started in containers [(#17493)](https://github.com/ManageIQ/manageiq/pull/17493)
+- Add physical server asset details collection [(#17486)](https://github.com/ManageIQ/manageiq/pull/17486)
+- Add Redfish provider logger [(#17485)](https://github.com/ManageIQ/manageiq/pull/17485)
+- Add evm:db:dump:local and evm:db:dump:remote tasks [(#17483)](https://github.com/ManageIQ/manageiq/pull/17483)
+- Add ArchivedMixin to ServiceTemplate [(#17480)](https://github.com/ManageIQ/manageiq/pull/17480)
+- Add include_automate_models_and_dialogs to ::Settings [(#17467)](https://github.com/ManageIQ/manageiq/pull/17467)
+- Upload automate models dialogs during log collection [(#17445)](https://github.com/ManageIQ/manageiq/pull/17445)
+- Use feature for admin [(#17444)](https://github.com/ManageIQ/manageiq/pull/17444)
+- Add feature to allow downloading private keys [(#17439)](https://github.com/ManageIQ/manageiq/pull/17439)
+- Add Redfish server default collection [(#17426)](https://github.com/ManageIQ/manageiq/pull/17426)
+- Wire up Redfish inventory collector [(#17393)](https://github.com/ManageIQ/manageiq/pull/17393)
+- Save Physical Storage Model [(#17380)](https://github.com/ManageIQ/manageiq/pull/17380)
+- Add support for sysprep customization templates [(#17293)](https://github.com/ManageIQ/manageiq/pull/17293)
+- PhysicalRack refresh action [(#17162)](https://github.com/ManageIQ/manageiq/pull/17162)
+
+### Fixed
+- Define model_name with route keys for the StorageManager model [(#17513)](https://github.com/ManageIQ/manageiq/pull/17513)
+- Extend support from memberof to other multi-value attribute for group membership [(#17497)](https://github.com/ManageIQ/manageiq/pull/17497)
+- Adding the profile description option to the provision error message [(#17495)](https://github.com/ManageIQ/manageiq/pull/17495)
+- Honor user provided execution_ttl option [(#17476)](https://github.com/ManageIQ/manageiq/pull/17476)
+- Allow MiqReport.paged_view_search to take advantage of Rbac :extra_cols [(#17474)](https://github.com/ManageIQ/manageiq/pull/17474)
+- Use current tags for filtering resources in chargeback for VMs [(#17470)](https://github.com/ManageIQ/manageiq/pull/17470)
+- Added ActAsTaggable concern to MiqRequest model [(#17466)](https://github.com/ManageIQ/manageiq/pull/17466)
+- Add option to clear classifications for tag_details [(#17465)](https://github.com/ManageIQ/manageiq/pull/17465)
+- Do not delete children snapshots as part of parent [(#17462)](https://github.com/ManageIQ/manageiq/pull/17462)
+- Fix issue with source type being derived from base class
+- Remove :match_via_decendants for ConfiguredSystem::ConfiguredSystem [(#17430)](https://github.com/ManageIQ/manageiq/pull/17430)
+- Fix current/active server deletability validation [(#17391)](https://github.com/ManageIQ/manageiq/pull/17391)
+- NOR covers 30 days [(#17376)](https://github.com/ManageIQ/manageiq/pull/17376)
+- Remove 'Storage Total' field from Chargeback Preview reports [(#17199)](https://github.com/ManageIQ/manageiq/pull/17199)
+- PhysicalRack refresh action [(#17162)](https://github.com/ManageIQ/manageiq/pull/17162)
+
 ## Unreleased as of Sprint 86 ending 2018-05-21
 
 ### Added
