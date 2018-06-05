@@ -30,7 +30,9 @@ class MiqUserRole < ApplicationRecord
   # @param identifier [String] Product feature identifier to check if this role allows access to it
   #   Returns true when requested feature is directly assigned or a descendant of a feature
   def allows?(identifier:)
-    if feature_identifiers.include?(identifier)
+    # all features are children of "everything", so checking it isn't strictly necessary
+    # but it simplifies testing
+    if feature_identifiers.include?(MiqProductFeature::SUPER_ADMIN_FEATURE) || feature_identifiers.include?(identifier)
       true
     elsif (parent_identifier = MiqProductFeature.feature_parent(identifier))
       allows?(:identifier => parent_identifier)
@@ -107,13 +109,13 @@ class MiqUserRole < ApplicationRecord
   end
 
   def report_admin_user?
-    allows_any?(:identifiers => [MiqProductFeature::SUPER_ADMIN_FEATURE, MiqProductFeature::REPORT_ADMIN_FEATURE])
+    allows?(:identifier => MiqProductFeature::REPORT_ADMIN_FEATURE)
   end
 
   alias admin_user? report_admin_user?
 
   def request_admin_user?
-    allows_any?(:identifiers => [MiqProductFeature::SUPER_ADMIN_FEATURE, MiqProductFeature::REQUEST_ADMIN_FEATURE])
+    allows?(:identifier => MiqProductFeature::REQUEST_ADMIN_FEATURE)
   end
 
   def self.default_tenant_role
