@@ -72,21 +72,21 @@ class MiqSchedule < ApplicationRecord
     _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]")
 
     action = "action_" + method
-    unless sched.respond_to?(action)
+
+    if sched.respond_to?(action)
+      msg = MiqQueue.submit_job(
+        :class_name  => name,
+        :instance_id => sched.id,
+        :method_name => "invoke_actions",
+        :args        => [action, at],
+        :msg_timeout => 1200
+      )
+
+      _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
+      msg
+    else
       _log.warn("[#{sched.name}] no such action: [#{method}], aborting schedule")
-      return
     end
-
-    msg = MiqQueue.submit_job(
-      :class_name  => name,
-      :instance_id => sched.id,
-      :method_name => "invoke_actions",
-      :args        => [action, at],
-      :msg_timeout => 1200
-    )
-
-    _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
-    msg
   end
 
   def invoke_actions(action, at)
