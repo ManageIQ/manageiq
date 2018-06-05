@@ -8,6 +8,16 @@ module AncestryInstanceMethodsPatch
       end
     end
   end
+
+  def parent=(parent)
+    super
+    clear_memoized_instance_variables
+  end
+
+  def parent_id=(parent)
+    super
+    clear_memoized_instance_variables
+  end
 end
 
 module Ancestry
