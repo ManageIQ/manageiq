@@ -265,6 +265,10 @@ class ChargebackRateDetail < ApplicationRecord
     tier.start == previous_tier.finish
   end
 
+  def self.with_metric_keys(metric_key, sub_metric_key)
+    includes(:chargeable_field).where(:chargeable_fields => {:metric => metric_key}, :sub_metric => sub_metric_key )
+  end
+
   def self.default_rate_details_for(rate_type)
     rate_details = []
 
