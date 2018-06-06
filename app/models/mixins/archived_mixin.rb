@@ -26,6 +26,7 @@ module ArchivedMixin
 
   # Needed for metrics
   def my_zone
+    return 'default' unless self.respond_to?(:ext_management_system)
     if ext_management_system.present?
       ext_management_system.my_zone
     elsif old_ext_management_system.present?
