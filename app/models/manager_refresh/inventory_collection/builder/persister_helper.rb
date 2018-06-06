@@ -36,22 +36,27 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
     collections[collection_name] = builder.to_inventory_collection
   end
 
+  # builder_class for add_collection()
   def cloud
     ::ManagerRefresh::InventoryCollection::Builder::CloudManager
   end
 
+  # builder_class for add_collection()
   def network
     ::ManagerRefresh::InventoryCollection::Builder::NetworkManager
   end
 
+  # builder_class for add_collection()
   def infra
     ::ManagerRefresh::InventoryCollection::Builder::InfraManager
   end
 
+  # builder_class for add_collection()
   def storage
     ::ManagerRefresh::InventoryCollection::Builder::StorageManager
   end
 
+  # builder_class for add_collection()
   def automation
     ::ManagerRefresh::InventoryCollection::Builder::AutomationManager
   end
