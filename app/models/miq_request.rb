@@ -432,8 +432,8 @@ class MiqRequest < ApplicationRecord
         :name         => "Request scheduled",
         :description  => "Request scheduled",
         :sched_action => {:method => "queue_create_request_tasks"},
-        :filter       => MiqExpression.new("=" => {"field" => "MiqRequest-id", "value" => id}),
-        :towhat       => self.class.name,
+        :resource_id  => id,
+        :towhat       => "MiqRequest",
         :run_at       => {
           :interval   => {:unit => "once"},
           :start_time => start_time,
