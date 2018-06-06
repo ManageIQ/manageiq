@@ -235,8 +235,12 @@ module ManagerRefresh
         end
       end
 
-      # InventoryCollection definitions for NetworkManager?
       def network_manager_collections?
+        self.class.network_manager_collections?
+      end
+
+      # InventoryCollection definitions for NetworkManager?
+      def self.network_manager_collections?
         false
       end
     end
