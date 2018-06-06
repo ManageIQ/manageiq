@@ -8,4 +8,8 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations
   def raw_destroy
     with_provider_object(&:destroy)
   end
+
+  def raw_unregister
+    with_provider_object(:version => 4, &:unregister)
+  end
 end
