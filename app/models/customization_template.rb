@@ -21,7 +21,7 @@ class CustomizationTemplate < ApplicationRecord
   def self.seed
     return unless self == base_class # Prevent subclasses from seeding
 
-    current = where(:system => true).index_by(&:name)
+    current = in_my_region.where(:system => true).index_by(&:name)
 
     seed_data.each do |s|
       log_attrs = s.slice(:name, :type, :description)
