@@ -39,8 +39,8 @@ class OpenscapResult < ApplicationRecord
     openscap_rule_results.delete_all
     rule_results.each do |openscap_id, result|
       idents = []
-      benchmark_items[openscap_id].idents.each do | ident |
-        idents << ident.id  
+      benchmark_items[openscap_id].idents.each do |ident|
+        idents << ident.id
       end
       openscap_rule_results << OpenscapRuleResult.new(
         :name            => ascii8bit_to_utf8(openscap_id),
