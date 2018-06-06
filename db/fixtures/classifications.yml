@@ -1070,3 +1070,20 @@
   :parent_id: 0
   :default: true
   :single_value: "0"
+- :description: Transformation Status
+  :entries:
+  - :description: Migrated
+    :read_only: "0"
+    :syntax: string
+    :name: migrated
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: transformation_status
+  :example_text: VM has been migrated.
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
