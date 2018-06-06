@@ -114,7 +114,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def use_first_value_as_default
-    self.default_value = self['options'][:force_multi_value] ? [nil_option] : sort_data(@raw_values).first.try(:first)
+    self.default_value = self['options'][:force_multi_value] ? nil_option : sort_data(@raw_values).first.try(:first)
   end
 
   def default_value_included?(values_list)
