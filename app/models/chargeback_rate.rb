@@ -30,15 +30,22 @@ class ChargebackRate < ApplicationRecord
   VALID_CB_RATE_TYPES = ["Compute", "Storage"]
   DATASTORE_MAPPING   = {'CloudVolume' => 'Storage'}.freeze
 
+  ALLOWED_FIXED_METRIC = {
+    'Vm'               => %w(fixed_storage_metric fixed_storage_metric),
+    'ContainerProject' => ['fixed_compute_metric'],
+    'ContainerImage'   => ['fixed_compute_metric']
+  }.freeze
+
   def self.tag_class(klass)
     klass = ChargebackRate::DATASTORE_MAPPING[klass] || klass
     super(klass)
   end
 
-  def self.relevant_details_for(chargeback_model, chargeback_rate_details)
+  def self.relevant_details_for(model, chargeback_rate_details)
+    chargeback_model = ('Chargeback' + model).safe_constantize
     allowed_cols = chargeback_model.attribute_names
     chargeback_rate_details.select do |x|
-      x.chargeable_field.fixed? || x.affects_report_fields(allowed_cols) && allowed_cols.include?(x.metric_column_key)
+      x.chargeable_field.fixed? && ALLOWED_FIXED_METRIC[model].include?(x.metric_column_key) || x.affects_report_fields(allowed_cols) && allowed_cols.include?(x.metric_column_key)
     end
   end
 
