@@ -6,6 +6,7 @@ class ContainerGroup < ApplicationRecord
   include NewWithTypeStiMixin
   include TenantIdentityMixin
   include ArchivedMixin
+  include OldEmsMixin
   include CustomActionsMixin
   include CockpitSupportMixin
   include_concern 'Purging'

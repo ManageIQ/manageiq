@@ -2,6 +2,7 @@ class Container < ApplicationRecord
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include ArchivedMixin
+  include OldEmsMixin
   include_concern 'Purging'
 
   belongs_to :container_group

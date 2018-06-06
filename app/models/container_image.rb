@@ -5,6 +5,7 @@ class ContainerImage < ApplicationRecord
   include TenantIdentityMixin
   include CustomAttributeMixin
   include ArchivedMixin
+  include OldEmsMixin
   include NewWithTypeStiMixin
   include CustomActionsMixin
   include_concern 'Purging'
