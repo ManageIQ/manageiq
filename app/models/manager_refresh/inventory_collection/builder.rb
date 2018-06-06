@@ -16,24 +16,13 @@ module ManagerRefresh
       # Default options for builder
       #   :adv_settings
       #     - values from Advanced settings (doesn't overwrite values specified in code)
-      #     - @see method ManagerRefresh::Inventory::Persister.options()
-      #   :auto_model_class
-      #     - tries to set model_class from persister class
-      #     - @see method auto_model_class
-      #   :auto_inventory_attributes
-      #     - auto creates inventory_object_attributes from target model_class setters
-      #     - attributes used in InventoryObject.add_attributes
+      #     - @see method ManagerRefresh::Inventory::Persister.make_builder_settings()
       #   :shared_properties
       #     - any properties applied if missing (not explicitly specified)
-      #   :without_model_class
-      #     - if false and no model_class derived or specified, throws exception
       def self.default_options
         {
-          :adv_settings              => {},
-          :auto_model_class          => true,
-          :auto_inventory_attributes => true,
-          :shared_properties         => {},
-          :without_model_class       => false,
+          :adv_settings      => {},
+          :shared_properties => {},
         }
       end
 
@@ -64,6 +53,9 @@ module ManagerRefresh
         @dependency_attributes = {}
 
         @options = options
+        @options[:auto_inventory_attributes] = true if @options[:auto_inventory_attributes].nil?
+        @options[:without_model_class] = false if @options[:without_model_class].nil?
+
         @adv_settings = options[:adv_settings] # Configuration/Advanced settings in GUI
         @shared_properties = options[:shared_properties] # From persister
       end
@@ -73,7 +65,7 @@ module ManagerRefresh
       # Yields for overwriting provider-specific properties
       def construct_data
         add_properties(:association => @name)
-        add_properties(:model_class => auto_model_class) if @options[:auto_model_class]
+        add_properties(:model_class => auto_model_class) unless @options[:without_model_class]
 
         add_properties(@adv_settings, :if_missing)
         add_properties(@shared_properties, :if_missing)

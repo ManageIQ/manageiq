@@ -50,13 +50,13 @@ describe ManagerRefresh::InventoryCollection::Builder do
   end
 
   it "doesn't try to derive model_class when disabled" do
-    data = cloud.prepare_data(:vms, persister_class, :auto_model_class => false).to_hash
+    data = cloud.prepare_data(:vms, persister_class, :without_model_class => true).to_hash
 
     expect(data[:model_class]).to be_nil
   end
 
   it 'throws exception if model_class not specified' do
-    builder = cloud.prepare_data(:vms, persister_class, :auto_model_class => false)
+    builder = cloud.prepare_data(:non_existing_ic, persister_class)
 
     expect { builder.to_inventory_collection }.to raise_error(::ManagerRefresh::InventoryCollection::Builder::MissingModelClassError)
   end

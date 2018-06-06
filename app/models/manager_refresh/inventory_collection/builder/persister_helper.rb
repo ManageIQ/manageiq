@@ -57,11 +57,20 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   end
 
   # @param extra_settings [Hash]
+  #   :auto_inventory_attributes
+  #     - auto creates inventory_object_attributes from target model_class setters
+  #     - attributes used in InventoryObject.add_attributes
+  #   :without_model_class
+  #     - if false and no model_class derived or specified, throws exception
+  #     - doesn't try to derive model class automatically
+  #     - @see method ManagerRefresh::InventoryCollection::Builder.auto_model_class
   def make_builder_settings(extra_settings = {})
     opts = ::ManagerRefresh::InventoryCollection::Builder.default_options
 
     opts[:adv_settings] = options[:inventory_collections].try(:to_hash) || {}
     opts[:shared_properties] = shared_options
+    opts[:auto_inventory_attributes] = true
+    opts[:without_model_class] = false
 
     opts.merge(extra_settings)
   end
