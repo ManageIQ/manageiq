@@ -42,6 +42,10 @@ class ChargebackRate < ApplicationRecord
     end
   end
 
+  def self.rate_models
+    Chargeback.descendants.select { |x| x.to_s.starts_with?("Chargeback") }
+  end
+
   def rate_details_relevant_to(report_cols, allowed_cols)
     # we can memoize, as we get the same report_cols through the life of the object
     @relevant ||= begin
