@@ -4,6 +4,8 @@ class ManagerRefresh::Inventory::Persister
 
   attr_reader :manager, :target, :collections
 
+  include ::ManagerRefresh::InventoryCollection::Builder::PersisterHelper
+
   # @param manager [ManageIQ::Providers::BaseManager] A manager object
   # @param target [Object] A refresh Target object
   def initialize(manager, target = nil)
@@ -115,12 +117,6 @@ class ManagerRefresh::Inventory::Persister
 
   def initialize_inventory_collections
     # can be implemented in a subclass
-  end
-
-  # @return [Hash] kwargs shared for all InventoryCollection objects
-  def shared_options
-    # can be implemented in a subclass
-    {}
   end
 
   # Adds 1 ManagerRefresh::InventoryCollection under a target.collections using :association key as index

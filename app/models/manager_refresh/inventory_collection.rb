@@ -44,6 +44,8 @@ module ManagerRefresh
   #   puts @ems.vms.collect(&:ems_ref) # => ["vm2", "vm3"]
   #
   class InventoryCollection
+    require_nested :Builder
+
     # @return [Boolean] A true value marks that we collected all the data of the InventoryCollection,
     #         meaning we also collected all the references.
     attr_accessor :data_collection_finalized
@@ -445,7 +447,6 @@ module ManagerRefresh
       @attributes_whitelist             = Set.new
       @transitive_dependency_attributes = Set.new
       @dependees                        = Set.new
-
       @data_storage = ::ManagerRefresh::InventoryCollection::DataStorage.new(self, secondary_refs)
       @references_storage = ::ManagerRefresh::InventoryCollection::ReferencesStorage.new(index_proxy)
       @targeted_scope = ::ManagerRefresh::InventoryCollection::ReferencesStorage.new(index_proxy).merge!(manager_uuids)
