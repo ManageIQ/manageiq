@@ -1032,9 +1032,6 @@ en:
       lans:                        vLANs
       last_compliance:             Last Compliance History
       ldap:                        LDAP
-      ldap_domain:                 LDAP Domain
-      ldap_region:                 LDAP Region
-      ldap_server:                 LDAP Server
       linux_initprocesses:         Linux Init Processes
       miq_approval_stamps:         Stamped Approvals
       miq_approvals:               Approvals
