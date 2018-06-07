@@ -33,7 +33,7 @@ class Chargeback
     end
 
     def self.base_rollup_scope
-      MetricRollup.select(*(Metric::BASE_COLS + ChargeableField.chargeable_cols_on_metric_rollup)).order('resource_id, timestamp')
+      MetricRollup.select(*(Metric::BASE_COLS + ChargeableField.chargeable_cols_on_metric_rollup))
     end
 
     private_class_method :base_rollup_scope
