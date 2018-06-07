@@ -33,14 +33,13 @@ class Chargeback
     end
 
     def self.base_rollup_scope
-      base_rollup = MetricRollup.select(*(Metric::BASE_COLS + ChargeableField.chargeable_cols_on_metric_rollup)).order('resource_id, timestamp')
-      base_rollup.with_resource
+      MetricRollup.select(*(Metric::BASE_COLS + ChargeableField.chargeable_cols_on_metric_rollup)).order('resource_id, timestamp')
     end
 
     private_class_method :base_rollup_scope
 
     def self.uniq_timestamp_record_map(report_scope, group_by_tenant = false)
-      main_select = MetricRollup.select(:id, :resource_id).arel.ast.to_sql
+      main_select = MetricRollup.select(:id, :resource_id).with_resource.arel.ast.to_sql
                                 .gsub("SELECT", "DISTINCT ON (resource_type, resource_id, timestamp)")
                                 .gsub(/ FROM.*$/, '')
 
