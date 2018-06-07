@@ -33,15 +33,7 @@ class Chargeback
     end
 
     def self.base_rollup_scope
-      base_rollup = MetricRollup.includes(
-        :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes,
-                                {:container_image => :custom_attributes}],
-        :parent_host        => :tags,
-        :parent_ems_cluster => :tags,
-        :parent_storage     => :tags,
-        :parent_ems         => :tags)
-                                .select(*(Metric::BASE_COLS + ChargeableField.chargeable_cols_on_metric_rollup)).order('resource_id, timestamp')
-
+      base_rollup = MetricRollup.select(*(Metric::BASE_COLS + ChargeableField.chargeable_cols_on_metric_rollup)).order('resource_id, timestamp')
       base_rollup.with_resource
     end
 
