@@ -376,16 +376,36 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
       attributes.merge!(extra_attributes)
     end
 
-    def switches(extra_attributes = {})
+    def host_virtual_switches(extra_attributes = {})
       attributes = {
-        :model_class                 => ::Switch,
-        :manager_ref                 => [:uid_ems],
-        :association                 => :switches,
+        :model_class                 => ManageIQ::Providers::InfraManager::HostVirtualSwitch,
+        :manager_ref                 => %i(host uid_ems),
+        :association                 => :host_virtual_switches,
         :inventory_object_attributes => %i(
+          host
           uid_ems
           name
           lans
         ),
+      }
+
+      attributes.merge!(extra_attributes)
+    end
+
+    def distributed_virtual_switches(extra_attributes = {})
+      attributes = {
+        :model_class                 => ManageIQ::Providers::InfraManager::DistributedVirtualSwitch,
+        :manager_ref                 => [:uid_ems],
+        :association                 => :distributed_virtual_switches,
+        :inventory_object_attributes => %i(
+          shared
+          uid_ems
+          name
+          lans
+        ),
+        :builder_params              => {
+          :ems_id => ->(persister) { persister.manager.id },
+        },
       }
 
       attributes.merge!(extra_attributes)
