@@ -2357,20 +2357,10 @@
       :hidden: true
       :children:
       - :name: Add
-        :description: Add Dialog
-        :feature_type: admin
-        :hidden: true
-        :identifier: dialog_new
-      - :name: Add
         :description: Add Dialog in the Dialog Editor
         :feature_type: admin
         :hidden: true
         :identifier: dialog_new_editor
-      - :name: Edit
-        :description: Edit Dialog
-        :feature_type: admin
-        :hidden: true
-        :identifier: dialog_edit
       - :name: Edit
         :description: Edit Dialog in the Dialog Editor
         :feature_type: admin
@@ -2386,31 +2376,6 @@
         :feature_type: admin
         :hidden: true
         :identifier: dialog_delete
-      - :name: Add Tab
-        :description: Add Tab to Dialog
-        :feature_type: admin
-        :hidden: true
-        :identifier: dialog_add_tab
-      - :name: Add Box
-        :description: Add Box to Dialog
-        :feature_type: admin
-        :hidden: true
-        :identifier: dialog_add_box
-      - :name: Add Element
-        :description: Add Element to Dialog
-        :feature_type: admin
-        :hidden: true
-        :identifier: dialog_add_element
-      - :name: Discard Item
-        :description: Discard Dialog item
-        :feature_type: admin
-        :hidden: true
-        :identifier: dialog_res_discard
-      - :name: Discard resource
-        :description: Discard Dialog resource
-        :feature_type: admin
-        :hidden: true
-        :identifier: dialog_resource_remove
   - :name: Provisioning Dialogs
     :description: Provisioning Dialogs Accordion
     :feature_type: node
