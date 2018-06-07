@@ -84,10 +84,6 @@ class MiqPolicy < ApplicationRecord
     attrs
   end
 
-  def self.display_name
-    "Policy"
-  end
-
   def copy(new_fields)
     npolicy = self.class.new(self.class.clean_attrs(attributes).merge(new_fields))
     npolicy.conditions = conditions
@@ -182,6 +178,11 @@ class MiqPolicy < ApplicationRecord
       MiqEventDefinition.find_by(:name => event)
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Policy', 'Policies', number)
+  end
+
   private_class_method :find_event_def
 
   def self.evaluate_conditions(plist, target, mode, inputs, result)

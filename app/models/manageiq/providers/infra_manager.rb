@@ -54,4 +54,8 @@ module ManageIQ::Providers
       hosts.where(:ems_cluster => nil)
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Infrastructure Manager', 'Infrastructure Managers', number)
+  end
 end

@@ -133,6 +133,10 @@ class Vm < VmOrTemplate
     vm_as_resources.all? { |rsc| rsc.status == ServiceResource::STATUS_FAILED } ? TransformationMapping::VM_VALID : TransformationMapping::VM_IN_OTHER_PLAN
   end
 
+  def self.display_name(number = 1)
+    n_('VM and Instance', 'VMs and Instances', number)
+  end
+
   private
 
   def vnc_support

@@ -412,6 +412,10 @@ class ServiceTemplate < ApplicationRecord
     set_service_type
   end
 
+  def self.display_name(number = 1)
+    n_('Service Catalog Item', 'Service Catalog Items', number)
+  end
+
   private
 
   def update_service_resources(config_info, auth_user = nil)

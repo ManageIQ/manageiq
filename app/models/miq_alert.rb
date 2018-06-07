@@ -33,10 +33,6 @@ class MiqAlert < ApplicationRecord
     BASE_TABLES
   end
 
-  def self.display_name
-    "Alert"
-  end
-
   acts_as_miq_set_member
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :ext_management_system, :my_enterprise]
@@ -859,5 +855,9 @@ class MiqAlert < ApplicationRecord
       _a, stat = import_from_hash(e[name])
       stat
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Alert', 'Alerts', number)
   end
 end

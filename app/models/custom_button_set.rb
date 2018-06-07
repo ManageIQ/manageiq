@@ -76,4 +76,8 @@ class CustomButtonSet < ApplicationRecord
       custom_buttons.each { |cb| cbs.add_member(cb.copy(:applies_to => options[:owner])) }
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Button Group', 'Button Groups', number)
+  end
 end

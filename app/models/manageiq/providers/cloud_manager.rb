@@ -137,5 +137,9 @@ module ManageIQ::Providers
     def create_cloud_tenant(options)
       CloudTenant.create_cloud_tenant(self, options)
     end
+
+    def self.display_name(number = 1)
+      n_('Cloud Manager', 'Cloud Managers', number)
+    end
   end
 end

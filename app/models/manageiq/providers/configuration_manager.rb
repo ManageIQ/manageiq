@@ -21,4 +21,8 @@ class ManageIQ::Providers::ConfigurationManager < ManageIQ::Providers::BaseManag
   def total_configured_systems
     Rbac.filtered(configured_systems).count
   end
+
+  def self.display_name(number = 1)
+    n_('Configuration Manager', 'Configuration Managers', number)
+  end
 end

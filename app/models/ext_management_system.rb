@@ -708,6 +708,10 @@ class ExtManagementSystem < ApplicationRecord
     data
   end
 
+  def self.display_name(number = 1)
+    n_('Manager', 'Managers', number)
+  end
+
   private
 
   def build_connection(options = {})

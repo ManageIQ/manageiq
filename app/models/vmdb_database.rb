@@ -76,4 +76,8 @@ class VmdbDatabase < ApplicationRecord
   def self.report_client_connections
     connection.client_connections if connection.respond_to?(:client_connections)
   end
+
+  def self.display_name(number = 1)
+    n_('Database', 'Databases', number)
+  end
 end

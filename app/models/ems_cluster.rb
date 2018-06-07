@@ -338,4 +338,8 @@ class EmsCluster < ApplicationRecord
   def openstack_cluster?
     ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
   end
+
+  def self.display_name(number = 1)
+    n_('Cluster / Deployment Role', 'Clusters / Deployment Roles', number)
+  end
 end

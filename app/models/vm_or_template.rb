@@ -1736,6 +1736,10 @@ class VmOrTemplate < ApplicationRecord
     parent
   end
 
+  def self.display_name(number = 1)
+    n_('VM or Template', 'VMs or Templates', number)
+  end
+
   private
 
   def set_tenant_from_group

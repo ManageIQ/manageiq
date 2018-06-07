@@ -136,6 +136,10 @@ class MiqAeInstance < ApplicationRecord
     MiqAeDatastore.get_homonymic_across_domains(user, ::MiqAeInstance, fqname, enabled)
   end
 
+  def self.display_name(number = 1)
+    n_('Automate Instance', 'Automate Instances', number)
+  end
+
   private
 
   def validate_field(field)

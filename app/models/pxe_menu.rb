@@ -71,4 +71,8 @@ class PxeMenu < ApplicationRecord
 
     _log.info("Synchronizing Menu Items in Menu [#{file_name}] on PXE Server [#{pxe_server.name}]... Complete - #{stats.inspect}")
   end
+
+  def self.display_name(number = 1)
+    n_('PXE Menu', 'PXE Menus', number)
+  end
 end

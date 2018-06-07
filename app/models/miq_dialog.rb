@@ -49,4 +49,8 @@ class MiqDialog < ApplicationRecord
       create(item)
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Dialog', 'Dialogs', number)
+  end
 end

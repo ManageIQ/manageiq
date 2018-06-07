@@ -20,6 +20,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook <
     job_template_klass.raw_create_in_provider(manager, jt_options)
   end
 
+  def self.display_name(number = 1)
+    n_('Playbook (Embedded Ansible)', 'Playbooks (Embedded Ansible)', number)
+  end
+
   private
 
   def build_parameter_list(options)

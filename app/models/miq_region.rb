@@ -305,6 +305,10 @@ class MiqRegion < ApplicationRecord
     @perf_capture_always = options.freeze
   end
 
+  def self.display_name(number = 1)
+    n_('Region', 'Regions', number)
+  end
+
   private
 
   def clear_my_region_cache

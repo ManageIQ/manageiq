@@ -74,4 +74,8 @@ class MiqWidgetSet < ApplicationRecord
     recs = where(:id => ids).index_by(&:id)
     ids.map { |id| recs[id.to_i] }
   end
+
+  def self.display_name(number = 1)
+    n_('Dashboard', 'Dashboards', number)
+  end
 end

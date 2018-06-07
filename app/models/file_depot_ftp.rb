@@ -90,6 +90,10 @@ class FileDepotFtp < FileDepot
     false
   end
 
+  def self.display_name(number = 1)
+    n_('FTP', 'FTPs', number)
+  end
+
   private
 
   def create_directory_structure(directory_path)

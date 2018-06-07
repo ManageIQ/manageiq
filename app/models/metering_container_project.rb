@@ -22,4 +22,8 @@ class MeteringContainerProject < ChargebackContainerProject
   def self.build_results_for_report_MeteringContainerProject(options)
     build_results_for_report_ChargebackContainerProject(options)
   end
+
+  def self.display_name(number = 1)
+    n_('Metering for Project', 'Metering for Projects', number)
+  end
 end

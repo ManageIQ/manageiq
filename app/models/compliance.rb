@@ -112,4 +112,8 @@ class Compliance < ApplicationRecord
       end
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Compliance History', 'Compliance Histories', number)
+  end
 end

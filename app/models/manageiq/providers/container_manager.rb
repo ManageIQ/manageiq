@@ -110,4 +110,8 @@ module ManageIQ::Providers
       virtualization_endpoint_destroyed(role) if respond_to?(:virtualization_endpoint_destroyed)
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Containers Manager', 'Containers Managers', number)
+  end
 end

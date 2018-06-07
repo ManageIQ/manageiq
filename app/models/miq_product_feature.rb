@@ -220,4 +220,8 @@ class MiqProductFeature < ApplicationRecord
       )
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Product Feature', 'Product Features', number)
+  end
 end

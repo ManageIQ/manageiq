@@ -197,4 +197,8 @@ class CustomButton < ApplicationRecord
     options[:guid] = SecureRandom.uuid
     options.each_with_object(dup) { |(k, v), button| button.send("#{k}=", v) }.tap(&:save!)
   end
+
+  def self.display_name(number = 1)
+    n_('Button', 'Buttons', number)
+  end
 end

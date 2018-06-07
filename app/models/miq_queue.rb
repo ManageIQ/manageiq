@@ -541,6 +541,10 @@ class MiqQueue < ApplicationRecord
     find_by(:task_id => task_id).try(:get_worker)
   end
 
+  def self.display_name(number = 1)
+    n_('Queue', 'Queues', number)
+  end
+
   private
 
   def activate_miq_task(args)

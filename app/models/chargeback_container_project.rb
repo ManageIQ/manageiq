@@ -72,6 +72,10 @@ class ChargebackContainerProject < Chargeback
     }
   end
 
+  def self.display_name(number = 1)
+    n_('Chargeback for Projects', 'Chargebacks for Projects', number)
+  end
+
   private
 
   def init_extra_fields(consumption, _region)

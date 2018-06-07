@@ -142,9 +142,10 @@ namespace :locale do
     Rake::Task['locale:store_dictionary_strings'].invoke
     Rake::Task['locale:run_store_model_attributes'].invoke
     Rake::Task['locale:extract_yaml_strings'].invoke(Rails.root)
+    Rake::Task['locale:model_display_names'].invoke
     Rake::Task['gettext:find'].invoke
 
-    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
+    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/model_display_names.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
       File.unlink(file)
     end
   end
@@ -214,5 +215,16 @@ namespace :locale do
 
     Rake::Task['gettext:po_to_json'].invoke
     system "rm -rf #{combined_dir}"
+  end
+
+  desc "Create display names for models"
+  task "model_display_names" => :environment do
+    f = File.open(Rails.root.join("config/model_display_names.rb"), "w+")
+    Rails.application.eager_load!
+    ApplicationRecord.descendants.sort_by(&:display_name).collect do |model|
+      next if model.model_name.singular.titleize != model.display_name || model.display_name.start_with?('ManageIQ')
+      f.puts "n_('#{model.display_name}', '#{model.display_name 2}', n)"
+    end
+    f.close
   end
 end

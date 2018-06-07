@@ -96,4 +96,8 @@ class ContainerGroup < ApplicationRecord
     self.deleted_on = Time.now.utc
     save
   end
+
+  def self.display_name(number = 1)
+    n_('Pod', 'Pods', number)
+  end
 end

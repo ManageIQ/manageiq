@@ -155,6 +155,10 @@ class MiqAeClass < ApplicationRecord
     end
   end
 
+  def self.display_name(number = 1)
+    n_('Automate Class', 'Automate Classes', number)
+  end
+
   private
 
   def self.sub_namespaces(ns_obj, ids)

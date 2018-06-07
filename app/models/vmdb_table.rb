@@ -15,4 +15,8 @@ class VmdbTable < ApplicationRecord
   def my_metrics
     vmdb_metrics
   end
+
+  def self.display_name(number = 1)
+    n_('Table', 'Tables', number)
+  end
 end

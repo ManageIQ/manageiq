@@ -1778,4 +1778,8 @@ class Host < ApplicationRecord
   def validate_destroy
     {:available => true, :message => nil}
   end
+
+  def self.display_name(number = 1)
+    n_('Host / Node', 'Hosts / Nodes', number)
+  end
 end

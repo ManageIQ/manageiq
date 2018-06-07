@@ -134,4 +134,8 @@ class VmdbDatabaseConnection < ApplicationRecord
   def pid
     @pid ||= (miq_worker || miq_server).try(:pid)
   end
+
+  def self.display_name(number = 1)
+    n_('Database Connection', 'Database Connections', number)
+  end
 end

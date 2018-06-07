@@ -220,6 +220,10 @@ class EmsEvent < EventStream
     ext_management_system.class::EventTargetParser.new(self).parse
   end
 
+  def self.display_name(number = 1)
+    n_('Management Event', 'Management Events', number)
+  end
+
   private
 
   def self.event_allowed_ems_ref_keys

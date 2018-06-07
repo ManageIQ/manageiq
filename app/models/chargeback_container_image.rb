@@ -113,6 +113,10 @@ class ChargebackContainerImage < Chargeback
     }
   end
 
+  def self.display_name(number = 1)
+    n_('Chargeback for Image', 'Chargebacks for Image', number)
+  end
+
   private
 
   def init_extra_fields(consumption, _region)
