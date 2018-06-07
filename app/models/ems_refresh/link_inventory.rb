@@ -55,15 +55,6 @@ module EmsRefresh::LinkInventory
       [disconnect_proc, connect_proc]
     end
 
-    # Do the Folders to Vms relationships
-    update_relats(:folders_to_vms, prev_relats, new_relats) do |f|
-      folder = instance_with_id(EmsFolder, f)
-      break if folder.nil?
-      [do_disconnect ? proc { |v| folder.remove_vm(instance_with_id(VmOrTemplate, v)) } : nil, # Disconnect proc
-       proc { |v| folder.add_vm(instance_with_id(VmOrTemplate, v)) },                          # Connect proc
-       proc { |vs| folder.add_vm(instances_with_ids(VmOrTemplate, vs)) }]                      # Bulk connect proc
-    end
-
     # Do the Folders to Storages relationships
     update_relats(:folders_to_storages, prev_relats, new_relats) do |f|
       folder = instance_with_id(EmsFolder, f)
@@ -120,6 +111,15 @@ module EmsRefresh::LinkInventory
     #   we have enough information in the filtered data
 
     do_disconnect ||= target.kind_of?(VmOrTemplate) if disconnect
+
+    # Do the Folders to Vms relationships
+    update_relats(:folders_to_vms, prev_relats, new_relats) do |f|
+      folder = instance_with_id(EmsFolder, f)
+      break if folder.nil?
+      [do_disconnect ? proc { |v| folder.remove_vm(instance_with_id(VmOrTemplate, v)) } : nil, # Disconnect proc
+       proc { |v| folder.add_vm(instance_with_id(VmOrTemplate, v)) },                          # Connect proc
+       proc { |vs| folder.add_vm(instances_with_ids(VmOrTemplate, vs)) }]                      # Bulk connect proc
+    end
 
     # Do the ResourcePools to VMs relationships
     update_relats(:resource_pools_to_vms, prev_relats, new_relats) do |r|
