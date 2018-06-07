@@ -68,7 +68,14 @@ class Chargeback
     end
 
     def chargeback_fields_present
-      @chargeback_fields_present ||= @rollups.count(&:chargeback_fields_present?)
+      @chargeback_fields_present ||= @rollup_array.count { |rollup| chargeback_fields_present?(rollup) }
+    end
+
+    def chargeback_fields_present?(rollup_record)
+      MetricRollup::CHARGEBACK_METRIC_FIELDS.any? do |field|
+        rollup = rollup_record[ChargeableField.col_index(field)]
+        rollup.present? && rollup.nonzero?
+      end
     end
 
     def metering_used_fields_present
