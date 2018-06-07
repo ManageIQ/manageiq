@@ -9,6 +9,7 @@ class Chargeback
     def initialize(metric_rollup_records, start_time, end_time)
       super(start_time, end_time)
       @rollups = metric_rollup_records
+      @rollup_array = metric_rollup_records.pluck(*ChargeableField.cols_on_metric_rollup)
     end
 
     def hash_features_affecting_rate

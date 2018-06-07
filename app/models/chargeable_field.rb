@@ -92,6 +92,10 @@ class ChargeableField < ApplicationRecord
     "#{group}_#{source}"
   end
 
+  def self.cols_on_metric_rollup
+    (%w(id tag_names resource_id) + chargeable_cols_on_metric_rollup).uniq
+  end
+
   private
 
   def used?
@@ -128,6 +132,6 @@ class ChargeableField < ApplicationRecord
   def self.chargeable_cols_on_metric_rollup
     existing_cols = MetricRollup.attribute_names
     chargeable_cols = pluck(:metric) & existing_cols
-    chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }
+    chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.sort
   end
 end
