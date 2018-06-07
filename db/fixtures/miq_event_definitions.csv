@@ -1,5 +1,10 @@
 name,description,event_type,set_type
 #
+# Authentication
+#
+login_failed,Login failed,Default,authentication
+
+#
 # EVM Server operations
 #
 evm_server_start,Server Start,Default,evm_operations

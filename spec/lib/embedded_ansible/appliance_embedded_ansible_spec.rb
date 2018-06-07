@@ -124,10 +124,11 @@ describe ApplianceEmbeddedAnsible do
     let(:miq_database) { MiqDatabase.first }
     let(:extra_vars) do
       {
-        :minimum_var_space  => 0,
-        :http_port          => described_class::HTTP_PORT,
-        :https_port         => described_class::HTTPS_PORT,
-        :tower_package_name => "ansible-tower-server"
+        :awx_install_memcached_bind => MiqMemcached.server_address,
+        :minimum_var_space          => 0,
+        :http_port                  => described_class::HTTP_PORT,
+        :https_port                 => described_class::HTTPS_PORT,
+        :tower_package_name         => "ansible-tower-server"
       }.to_json
     end
 
@@ -300,6 +301,20 @@ describe ApplianceEmbeddedAnsible do
         expect { subject.start }.to raise_error(AwesomeSpawn::CommandResultError)
         expect(miq_database.reload.ansible_secret_key).not_to be_present
       end
+    end
+  end
+
+  describe "#create_local_playbook_repo" do
+    let!(:tmp_dir) { Pathname.new(Dir.mktmpdir("consolidated_ansible_playbooks")) }
+
+    before do
+      allow(subject).to receive(:playbook_repo_path).and_return(tmp_dir)
+    end
+
+    it "creates a git project containing the plugin playbooks" do
+      expect(FileUtils).to receive(:chown_R).with("awx", "awx", tmp_dir)
+      subject.create_local_playbook_repo
+      expect(Dir.exist?(tmp_dir.join(".git"))).to be_truthy
     end
   end
 

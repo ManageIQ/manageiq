@@ -1,4 +1,5 @@
 require 'ancestry'
+require 'ancestry_patch'
 
 class Tenant < ApplicationRecord
   HARDCODED_LOGO = "custom_logo.png"
@@ -183,7 +184,7 @@ class Tenant < ApplicationRecord
   end
 
   def visible_domains
-    MiqAeDomain.where(:tenant_id => ancestor_ids.append(id)).joins(:tenant).order('tenants.ancestry DESC NULLS LAST, priority DESC')
+    MiqAeDomain.where(:tenant_id => path_ids).joins(:tenant).order('tenants.ancestry DESC NULLS LAST, priority DESC')
   end
 
   def enabled_domains

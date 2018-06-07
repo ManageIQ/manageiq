@@ -11,7 +11,7 @@ class ServiceReconfigureRequest < MiqRequest
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
   default_value_for :source_type,  SOURCE_CLASS_NAME
 
-  def my_role
+  def my_role(_action = nil)
     'ems_operations'
   end
 

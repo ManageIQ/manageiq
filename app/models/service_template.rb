@@ -2,27 +2,27 @@ class ServiceTemplate < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
   GENERIC_ITEM_SUBTYPES = {
-    "custom"          => _("Custom"),
-    "vm"              => _("Virtual Machine"),
-    "playbook"        => _("Playbook"),
-    "hosted_database" => _("Hosted Database"),
-    "load_balancer"   => _("Load Balancer"),
-    "storage"         => _("Storage")
+    "custom"          => N_("Custom"),
+    "vm"              => N_("Virtual Machine"),
+    "playbook"        => N_("Playbook"),
+    "hosted_database" => N_("Hosted Database"),
+    "load_balancer"   => N_("Load Balancer"),
+    "storage"         => N_("Storage")
   }.freeze
 
   CATALOG_ITEM_TYPES = {
-    "amazon"                     => _("Amazon"),
-    "azure"                      => _("Azure"),
-    "generic"                    => _("Generic"),
-    "generic_orchestration"      => _("Orchestration"),
-    "generic_ansible_playbook"   => _("Ansible Playbook"),
-    "generic_ansible_tower"      => _("Ansible Tower"),
-    "generic_container_template" => _("OpenShift Template"),
-    "google"                     => _("Google"),
-    "microsoft"                  => _("SCVMM"),
-    "openstack"                  => _("OpenStack"),
-    "redhat"                     => _("Red Hat Virtualization"),
-    "vmware"                     => _("VMware")
+    "amazon"                     => N_("Amazon"),
+    "azure"                      => N_("Azure"),
+    "generic"                    => N_("Generic"),
+    "generic_orchestration"      => N_("Orchestration"),
+    "generic_ansible_playbook"   => N_("Ansible Playbook"),
+    "generic_ansible_tower"      => N_("Ansible Tower"),
+    "generic_container_template" => N_("OpenShift Template"),
+    "google"                     => N_("Google"),
+    "microsoft"                  => N_("SCVMM"),
+    "openstack"                  => N_("OpenStack"),
+    "redhat"                     => N_("Red Hat Virtualization"),
+    "vmware"                     => N_("VMware")
   }.freeze
 
   RESOURCE_ACTION_UPDATE_ATTRS = [:dialog,
@@ -37,6 +37,7 @@ class ServiceTemplate < ApplicationRecord
   include OwnershipMixin
   include NewWithTypeStiMixin
   include TenancyMixin
+  include ArchivedMixin
   include_concern 'Filter'
 
   belongs_to :tenant
@@ -55,9 +56,13 @@ class ServiceTemplate < ApplicationRecord
 
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
 
+  has_many   :miq_requests, :as => :source, :dependent => :nullify
+  has_many   :active_requests, -> { where(:request_state => MiqRequest::ACTIVE_STATES) }, :as => :source, :class_name => "MiqRequest"
+
   virtual_column   :type_display,                 :type => :string
   virtual_column   :template_valid,               :type => :boolean
   virtual_column   :template_valid_error_message, :type => :string
+  virtual_column   :archived?,                    :type => :boolean
 
   default_value_for :service_type, 'unknown'
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
@@ -147,6 +152,11 @@ class ServiceTemplate < ApplicationRecord
       rsc.destroy if rsc.kind_of?(MiqProvisionRequestTemplate)
     end
     super
+  end
+
+  def archive
+    raise _("Cannot archive while in use") unless active_requests.empty?
+    archive!
   end
 
   def request_class

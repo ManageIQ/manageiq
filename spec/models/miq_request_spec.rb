@@ -315,6 +315,38 @@ describe MiqRequest do
     end
   end
 
+  context '#execute' do
+    shared_examples_for "#calls create_request_tasks with the proper role" do
+      it "runs successfully" do
+        expect(request).to receive(:approved?).and_return(true)
+        expect(MiqQueue.count).to eq(0)
+
+        request.execute
+        expect(MiqQueue.count).to eq(1)
+        expect(MiqQueue.first.role).to eq(role)
+      end
+    end
+
+    context 'Service provisioning' do
+      let(:request) { FactoryGirl.create(:service_template_provision_request, :approval_state => 'approved', :requester => fred) }
+      let(:role)    { 'automate' }
+
+      context "uses the automate role" do
+        it_behaves_like "#calls create_request_tasks with the proper role"
+      end
+    end
+
+    context 'VM provisioning' do
+      let(:template) { FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)) }
+      let(:request)  { FactoryGirl.build(:miq_provision_request, :requester => fred, :src_vm_id => template.id).tap(&:valid?) }
+      let(:role)     { 'ems_operations' }
+
+      context "uses the ems_operations role" do
+        it_behaves_like "#calls create_request_tasks with the proper role"
+      end
+    end
+  end
+
   context '#post_create_request_tasks' do
     context 'VM provisioning' do
       before do
@@ -519,6 +551,18 @@ describe MiqRequest do
       request.update_request({:abc => 1}, fred)
 
       expect(request.options[:abc]).to eq(1)
+    end
+  end
+
+  context "retire request source classes" do
+    let(:vm_retire_request)      { FactoryGirl.create(:vm_retire_request, :requester => fred) }
+    let(:service_retire_request) { FactoryGirl.create(:service_retire_request, :requester => fred) }
+    let(:orch_stack_request)     { FactoryGirl.create(:orchestration_stack_retire_request, :requester => fred) }
+
+    it "gets the right source class names" do
+      expect(vm_retire_request.class::SOURCE_CLASS_NAME).to eq('Vm')
+      expect(service_retire_request.class::SOURCE_CLASS_NAME).to eq('Service')
+      expect(orch_stack_request.class::SOURCE_CLASS_NAME).to eq('OrchestrationStack')
     end
   end
 end

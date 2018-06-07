@@ -6,7 +6,7 @@ module ManagerRefresh
         # themselves. Dependencies are needed for building a graph, references are needed for effective DB querying, where
         # we can load all referenced objects of some InventoryCollection by one DB query.
         #
-        # @param inventory_collections [Array] Array fo
+        # @param inventory_collections [Array<ManagerRefresh::InventoryCollection>] Array of InventoryCollection objects
         def scan!(inventory_collections)
           indexed_inventory_collections = inventory_collections.index_by(&:name)
 
@@ -60,7 +60,7 @@ module ManagerRefresh
 
           if targeted? && parent_inventory_collections.blank?
             # We want to track what manager_uuids we should query from a db, for the targeted refresh
-            targeted_scope[inventory_object.manager_uuid] = inventory_object.reference
+            targeted_scope << inventory_object.reference
           end
         end
 

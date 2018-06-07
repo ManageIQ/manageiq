@@ -20,6 +20,10 @@ describe Authenticator do
     let(:task) { FactoryGirl.create(:miq_task) }
     let(:groups) { FactoryGirl.create_list(:miq_group, 2) }
 
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+
     it 'Updates the user groups when no matching groups' do
       expect(authenticator).to receive(:find_external_identity)
         .and_return([{:username => user.userid, :fullname => user.name, :domain => "example.com"}, []])

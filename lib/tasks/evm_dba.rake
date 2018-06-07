@@ -108,21 +108,22 @@ namespace :evm do
     task :region do
       require 'trollop'
       opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-        opt :region, "Region number", :type => :integer, :required => true
+        opt :region, "Region number", :type => :integer, :required => ENV["REGION"].blank?
       end
 
       Dir.chdir(Rails.root)
       begin
         #TODO: Raise an error if region is not valid
-        region = opts[:region]
+        ENV["REGION"] = opts[:region].to_s if opts[:region]
+        region = ENV["REGION"]
 
         region_file = Rails.root.join("REGION")
-        puts "Writing region: #{region} in #{region_file}..."
+        if File.exist?(region_file)
+          old_region = File.read(region_file)
+          File.delete(region_file)
+        end
 
-        old_region = File.exist?(region_file) ? File.read(region_file) : 0
-        File.write(region_file, region)
-
-        puts "Resetting #{Rails.env} database..."
+        puts "Resetting #{Rails.env} database to region #{region}..."
         ENV['VERBOSE'] = 'false' # Do not flood the output with migration details
         Rake::Task['evm:db:reset'].invoke
 
@@ -187,6 +188,55 @@ namespace :evm do
         connect_opts[:password] = connect_opts.delete(:uri_password) if connect_opts[:uri_password]
 
         EvmDatabaseOps.backup(db_opts, connect_opts)
+
+        exit # exit so that parameters to the first rake task are not run as rake tasks
+      end
+    end
+
+    namespace :dump do
+      require Rails.root.join("lib", "evm_database_ops").expand_path.to_s
+      desc 'Dump the local ManageIQ EVM Database (VMDB) to a local file'
+      task :local do
+        require 'trollop'
+        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
+          opt :local_file,           "Destination file",       :type => :string, :required => true
+          opt :username,             "Username",               :type => :string
+          opt :password,             "Password",               :type => :string
+          opt :hostname,             "Hostname",               :type => :string
+          opt :dbname,               "Database name",          :type => :string
+          opt :"exclude-table-data", "Tables to exclude data", :type => :strings
+        end
+
+        opts.delete_if { |_, v| v.nil? }
+        EvmDatabaseOps.dump(opts)
+
+        exit # exit so that parameters to the first rake task are not run as rake tasks
+      end
+
+      desc 'Dump the local ManageIQ EVM Database (VMDB) to a remote file'
+      task :remote do
+        require 'trollop'
+        opts = Trollop.options(EvmRakeHelper.extract_command_options) do
+          opt :uri,                  "Destination depot URI",      :type => :string, :required => true
+          opt :uri_username,         "Destination depot username", :type => :string
+          opt :uri_password,         "Destination depot password", :type => :string
+          opt :remote_file_name,     "Destination depot filename", :type => :string
+          opt :username,             "Username",                   :type => :string
+          opt :password,             "Password",                   :type => :string
+          opt :hostname,             "Hostname",                   :type => :string
+          opt :dbname,               "Database name",              :type => :string
+          opt :"exclude-table-data", "Tables to exclude data",     :type => :strings
+        end
+
+        db_opts = {}
+        [:dbname, :username, :password, :hostname, :"exclude-table-data"].each { |k| db_opts[k] = opts[k] if opts[k] }
+
+        connect_opts = {}
+        [:uri, :uri_username, :uri_password, :remote_file_name].each { |k| connect_opts[k] = opts[k] if opts[k] }
+        connect_opts[:username] = connect_opts.delete(:uri_username) if connect_opts[:uri_username]
+        connect_opts[:password] = connect_opts.delete(:uri_password) if connect_opts[:uri_password]
+
+        EvmDatabaseOps.dump(db_opts, connect_opts)
 
         exit # exit so that parameters to the first rake task are not run as rake tasks
       end

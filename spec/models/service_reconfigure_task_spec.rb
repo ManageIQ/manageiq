@@ -88,7 +88,8 @@ describe ServiceReconfigureTask do
           :args           => [automate_args],
           :role           => 'automate',
           :zone           => nil,
-          :tracking_label => "service_reconfigure_task_#{task.id}")
+          :tracking_label => "r#{request.id}_service_reconfigure_task_#{task.id}"
+        )
         task.deliver_to_automate
       end
 

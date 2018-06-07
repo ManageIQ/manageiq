@@ -13,11 +13,28 @@ module MiqServer::ConfigurationManagement
   def set_config(config)
     config = config.config if config.respond_to?(:config)
     add_settings_for_resource(config)
-    ntp_reload_queue
   end
 
   def reload_settings
-    Vmdb::Settings.reload! if is_local?
+    return if is_remote?
+
+    Vmdb::Settings.reload!
+    activate_settings_for_appliance
+  end
+
+  # The purpose of this method is to do special activation of things
+  #   that can only happen once per server.  Normally, the
+  #   VMDB::Config::Activator would be used, however the activations
+  #   will end up occurring once per worker on the entire server, which
+  #   can be detrimental.
+  #
+  #   As an example, ntp_reload works by telling systemctl to restart
+  #   chronyd.  However, if this occurs on every worker, you end up with
+  #   dozens of calls to `systemctl restart chronyd` simultaneously.
+  #   Instead, this method will allow it to only happen once on
+  #   the reload of settings in evmserverd.
+  private def activate_settings_for_appliance
+    ntp_reload_queue
   end
 
   def servers_for_settings_reload

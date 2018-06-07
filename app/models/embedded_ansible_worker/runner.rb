@@ -24,6 +24,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def do_work
     embedded_ansible.start if !embedded_ansible.alive? && !embedded_ansible.running?
     provider.authentication_check if embedded_ansible.alive? && !provider.authentication_status_ok?
+    update_job_data_retention
   end
 
   def before_exit(*_)
@@ -65,6 +66,13 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
   private
 
+  def update_job_data_retention
+    return if @job_data_retention == ::Settings.embedded_ansible.job_data_retention_days
+
+    embedded_ansible.set_job_data_retention
+    @job_data_retention = ::Settings.embedded_ansible.job_data_retention_days
+  end
+
   def provider
     @provider ||= ManageIQ::Providers::EmbeddedAnsible::Provider.first_or_initialize
   end
@@ -89,7 +97,12 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
       :role_name   => ServerRole.find_by(:name => worker.class.required_roles.first).description,
       :server_name => MiqServer.my_server.name
     }
-    Notification.create(:type => notification_type, :options => notification_options)
+
+    # Create the notification only if there are no existing ones for embedded ansible which are unseen
+    Notification.create(:type => notification_type, :options => notification_options) if Notification.of_type(notification_type).none? do |n|
+      correct_notification = n.options == notification_options
+      correct_notification && !n.seen_by_all_recipients?
+    end
   end
 
   def embedded_ansible

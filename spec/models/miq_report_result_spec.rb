@@ -1,5 +1,5 @@
 describe MiqReportResult do
-  before :each do
+  before do
     EvmSpecHelper.local_miq_server
 
     @user1 = FactoryGirl.create(:user_with_group)
@@ -28,7 +28,7 @@ describe MiqReportResult do
   end
 
   context "report result created by User 1 with current group 1" do
-    before :each do
+    before do
       @report_1 = FactoryGirl.create(:miq_report)
       group_1 = FactoryGirl.create(:miq_group)
       group_2 = FactoryGirl.create(:miq_group)
@@ -64,7 +64,7 @@ describe MiqReportResult do
       end
 
       it "returns report all results, admin user logged" do
-        admin_role = FactoryGirl.create(:miq_user_role, :name => "EvmRole-administrator", :read_only => false)
+        admin_role = FactoryGirl.create(:miq_user_role, :role => "administrator", :read_only => false)
         User.current_user.current_group.miq_user_role = admin_role
         report_result = MiqReportResult.with_current_user_groups
         expected_reports = [@report_result1, @report_result2, @report_result3, @report_result_nil_report_id]

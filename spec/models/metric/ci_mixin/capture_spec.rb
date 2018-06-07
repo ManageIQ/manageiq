@@ -97,7 +97,7 @@ describe Metric::CiMixin::Capture do
 
     ["miq_postgres", "miq_postgres_legacy"].each do |postgre_adapter|
       context "with adapter #{postgre_adapter}" do
-        before :each do
+        before do
           mock_adapter(postgre_adapter)
         end
 
@@ -354,6 +354,13 @@ describe Metric::CiMixin::Capture do
         Timecop.travel(current_time + 20.minutes)
         verify_perf_capture_queue(last_perf_capture_on, 11)
       end
+    end
+
+    it "links supplied miq_task with queued item which allow to initialize MiqTask#started_on attribute" do
+      MiqQueue.delete_all
+      task = FactoryGirl.create(:miq_task)
+      vm.perf_capture_queue("realtime", :task_id => task.id)
+      expect(MiqQueue.first.miq_task_id).to eq task.id
     end
   end
 

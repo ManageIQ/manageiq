@@ -146,7 +146,7 @@ class MiqRequestTask < ApplicationRecord
         :args           => [args],
         :role           => 'automate',
         :zone           => options.fetch(:miq_zone, zone),
-        :tracking_label => my_task_id,
+        :tracking_label => tracking_label_id,
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
     else
@@ -172,7 +172,7 @@ class MiqRequestTask < ApplicationRecord
       :method_name    => "execute",
       :zone           => options.fetch(:miq_zone, zone),
       :role           => miq_request.my_role,
-      :tracking_label => my_task_id,
+      :tracking_label => tracking_label_id,
       :deliver_on     => deliver_on,
       :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
     )

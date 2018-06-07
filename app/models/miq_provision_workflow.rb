@@ -59,8 +59,12 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
     false
   end
 
+  def supports_sysprep?
+    false
+  end
+
   def supports_customization_template?
-    supports_pxe? || supports_iso? || supports_cloud_init?
+    supports_pxe? || supports_iso? || supports_cloud_init? || supports_sysprep?
   end
 
   def continue_request(values)

@@ -862,6 +862,40 @@ describe ServiceTemplate do
       )
     end
   end
+
+  context "#archive" do
+    let(:service_template) { FactoryGirl.create(:service_template, :miq_requests => miq_requests) }
+    context "with no MiqRequests" do
+      let(:miq_requests) { [] }
+
+      it "archives the service_template" do
+        service_template.archive
+        expect(service_template.reload.archived?).to be_truthy
+      end
+    end
+
+    context "with no active MiqRequests" do
+      let(:miq_requests) { [FactoryGirl.create(:service_template_provision_request, :request_state => "finished")] }
+      it "archives the service_template" do
+        service_template.archive
+        expect(service_template.reload.archived?).to be_truthy
+      end
+    end
+
+    context "with an active MiqRequest" do
+      let(:miq_requests) do
+        [
+          FactoryGirl.create(:service_template_provision_request, :request_state => "finished"),
+          FactoryGirl.create(:service_template_provision_request, :request_state => "queued"),
+        ]
+      end
+
+      it "archives the service_template" do
+        expect { service_template.archive }.to raise_error("Cannot archive while in use")
+        expect(service_template.reload.archived?).to be_falsy
+      end
+    end
+  end
 end
 
 def add_and_save_service(p, c)

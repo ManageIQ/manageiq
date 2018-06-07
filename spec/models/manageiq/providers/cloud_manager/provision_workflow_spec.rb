@@ -5,11 +5,62 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
   let(:ems) { FactoryGirl.create(:ems_cloud) }
   let(:network_manager) { FactoryGirl.create(:ems_network, :parent_ems_id => ems.id) }
   let(:template) { FactoryGirl.create(:miq_template, :name => "template", :ext_management_system => ems) }
+
+  let(:cloud_init_template) { FactoryGirl.create(:customization_template_cloud_init) }
+  let(:sysprep_template) { FactoryGirl.create(:customization_template_sysprep) }
+
   let(:workflow) do
     stub_dialog
     allow(User).to receive_messages(:server_timezone => "UTC")
     allow_any_instance_of(described_class).to receive(:update_field_visibility)
-    described_class.new({:src_vm_id => template.id}, admin.userid)
+    described_class.new({:src_vm_id => template.id, :customization_template_id => cloud_init_template.id}, admin.userid)
+  end
+
+  let(:sysprep_workflow) do
+    stub_dialog
+    allow(User).to receive_messages(:server_timezone => "UTC")
+    allow_any_instance_of(described_class).to receive(:update_field_visibility)
+    described_class.new({:src_vm_id => template.id, :customization_template_id => sysprep_template.id}, admin.userid)
+  end
+
+  context "with allowed customization templates" do
+    it "#allowed_customization_templates" do
+      expect(workflow.allowed_customization_templates.first).to be_a(MiqHashStruct)
+      expect(sysprep_workflow.allowed_customization_templates.first).to be_a(MiqHashStruct)
+    end
+
+    it "should retrieve cloud-init templates when cloning" do
+      options = {'key' => 'value' }
+      allow(workflow).to receive(:supports_native_clone?).and_return(true)
+
+      result = workflow.allowed_customization_templates(options)
+      customization_template = workflow.instance_variable_get(:@values)[:customization_template_script]
+      template_hash = result.first.instance_variable_get(:@hash)
+
+      expect(customization_template).to eq cloud_init_template.script
+      expect(template_hash).to be_a(Hash)
+      %i(id name description).each do |attr|
+        expect(template_hash[attr]).to eq cloud_init_template.send(attr)
+      end
+    end
+
+    it "should retrieve sysprep templates when cloning" do
+      options = {'key' => 'value' }
+      allow(sysprep_workflow).to receive(:supports_native_clone?).and_return(true)
+      allow(sysprep_workflow).to receive(:supports_sysprep?).and_return(true)
+      allow(sysprep_workflow).to receive(:load_ar_obj).and_return(template)
+      allow(template).to receive(:platform).and_return('windows')
+
+      result = sysprep_workflow.allowed_customization_templates(options)
+      customization_template = sysprep_workflow.instance_variable_get(:@values)[:customization_template_script]
+      template_hash = result.first.instance_variable_get(:@hash)
+
+      expect(customization_template).to eq sysprep_template.script
+      expect(template_hash).to be_a(Hash)
+      %i(id name description).each do |attr|
+        expect(template_hash[attr]).to eq sysprep_template.send(attr)
+      end
+    end
   end
 
   context "with empty relationships" do
@@ -174,6 +225,12 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
     context "#allowed_floating_ip_addresses" do
       it "returns floating_ip_addresses" do
         expect(workflow.allowed_floating_ip_addresses).to eq(@ip1.id => @ip1.address, @ip2.id => @ip2.address)
+      end
+    end
+
+    context "#supports_sysprep?" do
+      it "returns the expected boolean value" do
+        expect(workflow.supports_sysprep?).to eql(false)
       end
     end
   end

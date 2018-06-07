@@ -1,18 +1,20 @@
 describe "Service Retirement Management" do
+  let(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => "admin") }
   before do
     @miq_server = EvmSpecHelper.local_miq_server
     @stack = FactoryGirl.create(:orchestration_stack)
   end
 
   it "#retirement_check" do
-    expect(MiqEvent).to receive(:raise_evm_event)
-    @stack.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-    expect(@stack.retirement_last_warn).to be_nil
-    expect(@stack).to receive(:make_retire_request).once
-    @stack.retirement_check
-    @stack.reload
-    expect(@stack.retirement_last_warn).not_to be_nil
-    expect(Time.now.utc - @stack.retirement_last_warn).to be < 30
+    User.with_user(user) do
+      expect(MiqEvent).to receive(:raise_evm_event)
+      @stack.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+      expect(@stack.retirement_last_warn).to be_nil
+      @stack.retirement_check
+      @stack.reload
+      expect(@stack.retirement_last_warn).not_to be_nil
+      expect(Time.now.utc - @stack.retirement_last_warn).to be < 30
+    end
   end
 
   it "#start_retirement" do

@@ -40,7 +40,8 @@ module Metric::LongTermAverages
     avg_cols = options[:avg_cols] || AVG_COLS
 
     ext_options = ext_options.merge(:only_cols => avg_cols)
-    perfs = VimPerformanceAnalysis.find_perf_for_time_period(obj, "daily", :end_date => Time.now.utc, :days => avg_days, :ext_options => ext_options)
+    end_date = Time.now.utc.beginning_of_day - 1
+    perfs = VimPerformanceAnalysis.find_perf_for_time_period(obj, "daily", :end_date => end_date, :days => avg_days, :ext_options => ext_options)
     perfs.each do |p|
       if ext_options[:time_profile] && !ext_options[:time_profile].ts_day_in_profile?(p.timestamp.in_time_zone(tz))
         next

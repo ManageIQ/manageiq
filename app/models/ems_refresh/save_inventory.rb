@@ -106,10 +106,12 @@ module EmsRefresh::SaveInventory
               found = found_dups if found.empty?
             end
           end
-          found = found.first
 
+          type = h[:template] ? "Template" : "Vm"
+
+          found = found.first
           if found.nil?
-            _log.info("#{log_header} Creating Vm [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
+            _log.info("#{log_header} Creating #{type} [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
 
             # Handle the off chance that we are adding an "unknown" Vm to the db
             h[:location] = "unknown" if h[:location].blank?
@@ -120,7 +122,7 @@ module EmsRefresh::SaveInventory
             vms_by_uid_ems[h[:uid_ems]].delete(found)
             h.delete(:type)
 
-            _log.info("#{log_header} Updating Vm [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
+            _log.info("#{log_header} Updating #{type} [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
             found.update_attributes!(h)
             disconnects_index.delete(found)
           end
@@ -245,8 +247,13 @@ module EmsRefresh::SaveInventory
     end
 
     deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"])
-    save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets, :firmwares, :child_devices], [:switch, :lan])
-    store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
+
+    find_key = %i(device_type uid_ems)
+    child_keys = %i(network miq_scsi_targets firmwares physical_network_ports)
+    extra_keys = %i(switch lan)
+
+    save_inventory_multi(hardware.guest_devices, hashes, deletes, find_key, child_keys, extra_keys)
+    store_ids_for_new_records(hardware.guest_devices, hashes, find_key)
   end
 
   def save_child_devices_inventory(guest_device, hashes)

@@ -29,6 +29,15 @@ class EmbeddedAnsible
     other_embedded_ansible.priority <=> priority
   end
 
+  def self.consolidate_plugin_playbooks(dir)
+    FileUtils.rm_rf(dir)
+    FileUtils.mkdir_p(dir)
+
+    Vmdb::Plugins.instance.registered_ansible_content.each do |content|
+      FileUtils.cp_r(Dir.glob("#{content.path}/*"), dir)
+    end
+  end
+
   def alive?
     return false unless configured? && running?
     begin
@@ -39,7 +48,21 @@ class EmbeddedAnsible
     true
   end
 
+  def set_job_data_retention
+    sched = job_cleanup_template.schedules.first
+    sched.extra_data.days = ::Settings.embedded_ansible.job_data_retention_days
+    sched.save!
+  end
+
+  def run_job_data_retention(days = ::Settings.embedded_ansible.job_data_retention_days)
+    job_cleanup_template.launch("days" => days)
+  end
+
   private
+
+  def job_cleanup_template
+    api_connection.api.system_job_templates.all.find { |t| t.job_type == "cleanup_jobs" }
+  end
 
   def api_connection_raw(host, port)
     admin_auth = miq_database.ansible_admin_authentication

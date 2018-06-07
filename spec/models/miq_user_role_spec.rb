@@ -172,31 +172,39 @@ describe MiqUserRole do
     expect(MiqUserRole.count).to eq(1)
   end
 
+  let(:super_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::SUPER_ADMIN_FEATURE) }
+  let(:report_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REPORT_ADMIN_FEATURE) }
+  let(:request_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REQUEST_ADMIN_FEATURE) }
+  let(:regular_role) { FactoryGirl.create(:miq_user_role) }
+
   describe "#super_admin_user?" do
     it "detects super admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_super_admin_user
+      expect(super_admin_role).to be_super_admin_user
     end
 
     it "detects admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).not_to be_super_admin_user
+      expect(report_admin_role).not_to be_super_admin_user
     end
 
     it "detects non-admin" do
-      expect(FactoryGirl.build(:miq_user_role)).not_to be_super_admin_user
+      expect(regular_role).not_to be_super_admin_user
     end
   end
 
-  describe "#admin_user?" do
+  describe "#admin_user?", "#report_admin_user?" do
     it "detects super admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_admin_user
+      expect(super_admin_role).to be_admin_user
+      expect(super_admin_role).to be_report_admin_user
     end
 
     it "detects admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).to be_admin_user
+      expect(report_admin_role).to be_admin_user
+      expect(report_admin_role).to be_report_admin_user
     end
 
     it "detects non-admin" do
-      expect(FactoryGirl.build(:miq_user_role)).not_to be_admin_user
+      expect(regular_role).not_to be_admin_user
+      expect(regular_role).not_to be_report_admin_user
     end
   end
 

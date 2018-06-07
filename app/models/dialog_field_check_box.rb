@@ -5,11 +5,6 @@ class DialogFieldCheckBox < DialogField
     value == "t"
   end
 
-  def value
-    @value = values_from_automate if dynamic && @value.blank?
-    @value
-  end
-
   def initial_values
     false
   end
@@ -30,10 +25,6 @@ class DialogFieldCheckBox < DialogField
   def refresh_json_value
     @value = values_from_automate
     {:checked => checked?, :read_only => read_only?, :visible => visible?}
-  end
-
-  def trigger_automate_value_updates
-    values_from_automate
   end
 
   private

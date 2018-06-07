@@ -1,4 +1,6 @@
 require 'ancestry'
+require 'ancestry_patch'
+
 class OrchestrationStack < ApplicationRecord
   require_nested :Status
 
@@ -8,6 +10,7 @@ class OrchestrationStack < ApplicationRecord
   include RetirementMixin
   include TenantIdentityMixin
   include CustomActionsMixin
+  include SupportsFeatureMixin
 
   acts_as_miq_taggable
 
@@ -49,6 +52,8 @@ class OrchestrationStack < ApplicationRecord
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
+
+  supports :retire
 
   def orchestration_stacks
     children

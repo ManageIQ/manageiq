@@ -33,8 +33,8 @@ class ServiceTemplateProvisionRequest < MiqRequest
     end
   end
 
-  def my_role
-    'ems_operations'
+  def my_role(action = nil)
+    action == :create_request_tasks ? 'automate' : 'ems_operations'
   end
 
   def my_zone

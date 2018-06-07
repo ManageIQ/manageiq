@@ -56,10 +56,6 @@ module FixAuth
     self.password_prefix = "password::"
     self.symbol_keys = true
     self.table_name = "miq_requests"
-
-    def self.contenders
-      where("options like '%password%'")
-    end
   end
 
   class FixMiqRequestTask < ActiveRecord::Base
@@ -71,10 +67,6 @@ module FixAuth
     self.password_prefix = "password::"
     self.symbol_keys = true
     self.table_name = "miq_request_tasks"
-
-    def self.contenders
-      where("options like '%password%'")
-    end
   end
 
   class FixSettingsChange < ActiveRecord::Base
@@ -111,6 +103,10 @@ module FixAuth
     def load
       @yaml = File.read(id)
       self
+    end
+
+    def changed?
+      true
     end
 
     def save!

@@ -4,12 +4,12 @@ class TestPersister < ManagerRefresh::Inventory::Persister
     # Top level models with direct references for Cloud
     add_inventory_collections_with_references(
       cloud,
-      %i(vms),
+      %i(vms miq_templates),
       :secondary_refs => {:by_name => [:name], :by_uid_ems_and_name => %i(uid_ems name)}
     )
     add_inventory_collections_with_references(
       cloud,
-      %i(miq_templates availability_zones orchestration_stacks)
+      %i(availability_zones orchestration_stacks)
     )
 
     add_inventory_collection_with_references(

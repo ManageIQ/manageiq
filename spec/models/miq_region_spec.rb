@@ -18,7 +18,7 @@ describe MiqRegion do
     end
 
     context "with cloud and infra EMSes" do
-      before :each do
+      before do
         _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
         ems_vmware = FactoryGirl.create(:ems_vmware, :zone => zone)
         ems_openstack = FactoryGirl.create(:ems_openstack, :zone => zone)
@@ -207,6 +207,26 @@ describe MiqRegion do
     it "fetches the url from the setting" do
       Vmdb::Settings.save!(web_server, :webservices => {:url => url})
       expect(region.remote_ws_url).to eq(url)
+    end
+  end
+
+  describe "#remote_ui_url" do
+    let(:ip) { "1.1.1.94" }
+    let(:hostname) { "www.manageiq.org" }
+    let(:url) { "http://localhost:3000" }
+    let!(:ui_server) do
+      FactoryGirl.create(:miq_server, :has_active_userinterface => true,
+                                      :hostname                 => hostname,
+                                      :ipaddress                => ip)
+    end
+
+    it "fetches the url from server" do
+      expect(region.remote_ui_url).to eq("https://#{hostname}")
+    end
+
+    it "fetches the url from the setting" do
+      Vmdb::Settings.save!(ui_server, :ui => {:url => url})
+      expect(region.remote_ui_url).to eq(url)
     end
   end
 end

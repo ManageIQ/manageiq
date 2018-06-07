@@ -12,6 +12,8 @@ class MiqRequest < ApplicationRecord
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
 
+  acts_as_miq_taggable
+
   alias_attribute :state, :request_state
 
   serialize   :options, Hash
@@ -130,6 +132,26 @@ class MiqRequest < ApplicationRecord
     joins(:miq_approvals).where("miq_approvals.reason LIKE (?)", "#{reason[:start] ? '%' : ''}#{sanitize_sql_like(reason[:content])}#{reason[:end] ? '%' : ''}")
   end
 
+  def self.user_or_group_owned(user, miq_group)
+    if user && miq_group
+      user_owned(user).or(group_owned(miq_group))
+    elsif user
+      user_owned(user)
+    elsif miq_group
+      group_owned(miq_group)
+    else
+      none
+    end
+  end
+
+  def self.user_owned(user)
+    where(:requester_id => user.id)
+  end
+
+  def self.group_owned(miq_group)
+    where(:requester_id => miq_group.user_ids)
+  end
+
   # Supports old-style requests where specific request was a seperate table connected as a resource
   def resource
     self
@@ -145,6 +167,10 @@ class MiqRequest < ApplicationRecord
 
   def resource_type
     self.class.name
+  end
+
+  def tracking_label_id
+    "r#{id}_#{self.class.name.underscore}_#{id}"
   end
 
   def initialize_attributes
@@ -377,7 +403,7 @@ class MiqRequest < ApplicationRecord
     MiqServer.my_zone
   end
 
-  def my_role
+  def my_role(_action = nil)
     nil
   end
 
@@ -405,8 +431,8 @@ class MiqRequest < ApplicationRecord
       :instance_id    => id,
       :method_name    => "create_request_tasks",
       :zone           => options.fetch(:miq_zone, my_zone),
-      :role           => my_role,
-      :tracking_label => "#{self.class.name.underscore}_#{id}",
+      :role           => my_role(:create_request_tasks),
+      :tracking_label => tracking_label_id,
       :msg_timeout    => 3600,
       :deliver_on     => deliver_on
     )

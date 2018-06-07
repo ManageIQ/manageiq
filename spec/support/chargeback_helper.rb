@@ -12,9 +12,10 @@ module Spec
         resource.metric_rollups.sum(&metric) / hours_in_interval
       end
 
-      def add_metric_rollups_for(resources, range, step, metric_rollup_params, trait = :with_data)
+      def add_metric_rollups_for(resources, range, step, metric_rollup_params, trait = :with_data, region = nil)
         range.step_value(step).each do |time|
           Array(resources).each do |resource|
+            metric_rollup_params[:id] = region_id_for(MetricRollup, region) if region
             metric_rollup_params[:timestamp]     = time
             metric_rollup_params[:resource_id]   = resource.id
             metric_rollup_params[:resource_name] = resource.name

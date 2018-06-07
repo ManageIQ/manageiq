@@ -4,7 +4,7 @@ These tools allow for running commands and copying files and searching log files
 
 Also, even if you do have pssh or other tools for running commands on multiple systems, the new miqgrep, miqgrep -r, miqtail, and miqtail -r are worth a look.
 
-Different transport mechanisms are now supported and can be selected by updating the .config file.  By default, Ansible is used since it can work in parallel and is included by default with ManageIQ.  Alternatively, if installed and selected, Parallel SSH can be used and is faster opening connections than Ansible.
+Different transport mechanisms are now supported and can be selected by updating the .config file.  By default, Ansible is used since it can work in parallel and is included by default with ManageIQ.  Ansible is now the recommended transport for best functionality.
 
 **Note that this program can enable you to do things faster, including mistakes, use at your own risk.**
 

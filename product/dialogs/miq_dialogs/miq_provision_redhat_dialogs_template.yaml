@@ -440,6 +440,7 @@
               :vlans: true
             :method: :allowed_vlans
           :description: Network
+          :required_description: Virtual NIC Profile ID or Profile Name (Network Name)
           :required: true
           :display: :edit
           :default: <Template>

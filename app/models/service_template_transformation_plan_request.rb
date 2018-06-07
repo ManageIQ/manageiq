@@ -4,7 +4,7 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   delegate :transformation_mapping, :vm_resources, :to => :source
 
   def requested_task_idx
-    vm_resources.where(:status => 'Approved')
+    vm_resources.where(:status => ServiceResource::STATUS_APPROVED)
   end
 
   def customize_request_task_attributes(req_task_attrs, vm_resource)
@@ -12,7 +12,7 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def source_vms
-    vm_resources.where(:status => %w(Queued Failed)).pluck(:resource_id)
+    vm_resources.where(:status => [ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_FAILED]).pluck(:resource_id)
   end
 
   def validate_vm(_vm_id)
@@ -21,6 +21,6 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def approve_vm(vm_id)
-    vm_resources.find_by(:resource_id => vm_id).update_attributes!(:status => 'Approved')
+    vm_resources.find_by(:resource_id => vm_id).update_attributes!(:status => ServiceResource::STATUS_APPROVED)
   end
 end

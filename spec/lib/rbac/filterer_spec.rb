@@ -51,9 +51,9 @@ describe Rbac::Filterer do
 
   describe '.combine_filtered_ids' do
     # Algorithm (from Rbac::Filterer.combine_filtered_ids):
-    # Algorithm: b_intersection_m = (b_filtered_ids INTERSECTION m_filtered_ids)
-    #            d_union_b_and_m  = d_filtered_ids UNION b_intersection_m
-    #            filter           = d_union_b_and_m INTERSECTION tenant_filter_ids INTERSECTION u_filtered_ids
+    # b_intersection_m        = (belongsto_filtered_ids INTERSECTION managed_filtered_ids)
+    # u_union_d_union_b_and_m = user_filtered_ids UNION descendant_filtered_ids UNION belongsto_filtered_ids
+    # filter                  = u_union_d_union_b_and_m INTERSECTION tenant_filter_ids
 
     def combine_filtered_ids(user_filtered_ids, belongsto_filtered_ids, managed_filtered_ids, descendant_filtered_ids, tenant_filter_ids)
       Rbac::Filterer.new.send(:combine_filtered_ids, user_filtered_ids, belongsto_filtered_ids, managed_filtered_ids, descendant_filtered_ids, tenant_filter_ids)
@@ -88,15 +88,15 @@ describe Rbac::Filterer do
     end
 
     it 'user filter, belongs to and managed filters(self service user, Host & Cluster filter and tags)' do
-      expect(combine_filtered_ids([1], [2, 3], [3, 4], nil, nil)).to be_empty
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], nil, nil)).to match_array([1, 3])
     end
 
     it 'user filter, belongs to, managed filters and descendants filter(self service user, Host & Cluster filter and tags)' do
-      expect(combine_filtered_ids([1, 5, 6], [2, 3], [3, 4], [5, 6], nil)).to match_array([5, 6])
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], [5, 6], nil)).to match_array([1, 3, 5, 6])
     end
 
     it 'user filter, belongs to managed filters, descendants filter and tenant filter(self service user, Host & Cluster filter and tags)' do
-      expect(combine_filtered_ids([1, 6], [2, 3], [3, 4], [5, 6], [1, 6])).to match_array([6])
+      expect(combine_filtered_ids([1], [2, 3], [3, 4], [5, 6], [1, 6])).to match_array([1, 6])
     end
 
     it 'belongs to managed filters, descendants filter and tenant filter(self service user, Host & Cluster filter and tags)' do
@@ -125,6 +125,62 @@ describe Rbac::Filterer do
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
+    context 'for MiqRequests' do
+      # MiqRequest for owner group
+      let!(:miq_request_user_owner) { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user) }
+      # User for owner group
+      let(:user_a)                        { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
+
+      # MiqRequests for other group
+      let!(:miq_request_user_a)     { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => other_user) }
+      let!(:miq_request_user_b)     { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => user_b) }
+
+      # other_group is from owner_tenant
+      let(:other_group)                   { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
+      # User for other group
+      let(:user_b)                        { FactoryGirl.create(:user, :miq_groups => [other_group]) }
+
+      context "self service user (User or group owned)" do
+        before do
+          allow(other_group).to receive(:self_service?).and_return(true)
+          allow(owner_group).to receive(:self_service?).and_return(true)
+        end
+
+        context 'users are in same tenant as requester' do
+          it "displays requests of user's of group owner_group" do
+            results = described_class.search(:class => MiqProvisionRequest, :user => user_a).first
+            expect(results).to match_array([miq_request_user_owner])
+          end
+
+          it "displays requests for users of other_user's group (other_group) so also for user_c" do
+            results = described_class.search(:class => MiqProvisionRequest, :user => user_b).first
+            expect(results).to match_array([miq_request_user_a, miq_request_user_b])
+          end
+        end
+      end
+
+      context "limited self service user (only user owned)" do
+        before do
+          allow(other_group).to receive(:limited_self_service?).and_return(true)
+          allow(other_group).to receive(:self_service?).and_return(true)
+          allow(owner_group).to receive(:limited_self_service?).and_return(true)
+          allow(owner_group).to receive(:self_service?).and_return(true)
+        end
+
+        context 'users are in same tenant as requester' do
+          it "displays requests of user's of group owner_group" do
+            results = described_class.search(:class => MiqProvisionRequest, :user => user_a).first
+            expect(results).to be_empty
+          end
+
+          it "displays requests for users of other_user's group (other_group) so also for user_c" do
+            results = described_class.search(:class => MiqProvisionRequest, :user => user_b).first
+            expect(results).to match_array([miq_request_user_b])
+          end
+        end
+      end
+    end
+
     context 'with tags' do
       let(:role)         { FactoryGirl.create(:miq_user_role) }
       let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
@@ -273,6 +329,151 @@ describe Rbac::Filterer do
       end
     end
 
+    context "with non-sql filter" do
+      subject { described_class.new }
+
+      let(:nonsql_expression) { {"=" => {"field" => "Vm-vendor_display", "value" => "VMware"}} }
+      let(:raw_expression)    { nonsql_expression }
+      let(:expression)        { MiqExpression.new(raw_expression) }
+      let(:search_attributes) { { :class => "Vm", :filter => expression } }
+      let(:results)           { subject.search(search_attributes).first }
+
+      before { [owned_vm, other_vm] }
+
+      it "finds the Vms" do
+        expect(results.to_a).to match_array [owned_vm, other_vm]
+        expect(results.count).to eq 2
+      end
+
+      it "does not add references without includes" do
+        expect(subject).to receive(:include_references).with(anything, Vm, nil, nil, true).and_call_original
+        results
+      end
+
+      context "with a partial non-sql filter" do
+        let(:sql_expression) { { "IS EMPTY" => { "field" => "Vm.host-name" } } }
+        let(:raw_expression) { { "AND" => [nonsql_expression, sql_expression] } }
+
+        it "finds the Vms" do
+          expect(results.to_a).to match_array [owned_vm, other_vm]
+          expect(results.count).to eq 2
+        end
+
+        it "includes references" do
+          expect(subject).to receive(:include_references).with(anything, ::Vm, nil, {:host => {}}, false)
+                                                         .and_call_original
+          expect(subject).to receive(:warn).never
+          results
+        end
+      end
+
+      context "with :include_for_find" do
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+        let(:results)        { subject.search(include_search).first }
+
+        it "finds the Vms" do
+          expect(results.to_a).to match_array [owned_vm, other_vm]
+          expect(results.count).to eq 2
+        end
+
+        it "does not add references since there isn't a SQL filter" do
+          expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, true).and_call_original
+          results
+        end
+
+        context "with a references based where_clause" do
+          let(:search_with_where) { include_search.merge(:where_clause => ['"users"."id" = ?', owner_user.id]) }
+          let(:results)           { subject.search(search_with_where).first }
+
+          it "will try to skip references to begin with" do
+            expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, true).and_call_original
+            expect(subject).to receive(:warn).exactly(4).times
+            results
+          end
+
+          context "and targets is a NullRelation scope" do
+            let(:targets)     { Vm.none }
+            let(:null_search) { search_with_where.merge(:targets => targets) }
+            let(:results)     { subject.search(null_search).first }
+
+            it "will not try to skip references" do
+              expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, false).and_call_original
+              expect(subject).to receive(:warn).never
+              results
+            end
+          end
+        end
+      end
+    end
+
+    context "with a miq_expression filter on vms" do
+      let(:expression)        { MiqExpression.new("=" => {"field" => "Vm-vendor", "value" => "vmware"}) }
+      let(:search_attributes) { { :class => "Vm", :filter => expression } }
+      let(:results)           { described_class.search(search_attributes).first }
+
+      before { [owned_vm, other_vm] }
+
+      it "finds the Vms" do
+        expect(results.to_a).to match_array [owned_vm, other_vm]
+        expect(results.count).to eq 2
+      end
+
+      it "does not add references without includes" do
+        # empty string here is basically passing `.references(nil)`, and the
+        # extra empty hash here is from the MiqExpression (which will result in
+        # the same), both of which will no-op to when determining if there are
+        # joins in ActiveRecord, and will not create a JoinDependency query
+        expect(results.references_values).to match_array ["", "{}"]
+      end
+
+      context "with :include_for_find" do
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+        let(:results)        { described_class.search(include_search).first }
+
+        it "finds the Service" do
+          expect(results.to_a).to match_array [owned_vm, other_vm]
+          expect(results.count).to eq 2
+        end
+
+        it "adds references" do
+          expect(results.references_values).to match_array ["{:evm_owner=>{}}", "{}"]
+        end
+      end
+    end
+
+    context "with :extra_cols on a Service" do
+      let(:extra_cols)        { [:owned_by_current_user] }
+      let(:search_attributes) { { :class => "Service", :extra_cols => extra_cols } }
+      let(:results)           { described_class.search(search_attributes).first }
+
+      before { FactoryGirl.create :service, :evm_owner => owner_user }
+
+      it "finds the Service" do
+        expect(results.first.attributes["owned_by_current_user"]).to be false
+      end
+
+      it "does not add references with no includes" do
+        # The single empty string is the result of a nil from both the lack of
+        # a MiqExpression filter and the user filter, which is deduped in
+        # ActiveRecord's internals and results in a `.references(nil)`
+        # effectively
+        expect(results.references_values).to match_array [""]
+      end
+
+      context "with :include_for_find" do
+        let(:include_search) { search_attributes.merge(:include_for_find => {:evm_owner => {}}) }
+        let(:results)        { described_class.search(include_search).first }
+
+        it "finds the Service" do
+          expect(results.first.attributes["owned_by_current_user"]).to be false
+        end
+
+        it "adds references" do
+          expect(results.references_values).to match_array ["", "{:evm_owner=>{}}"]
+        end
+      end
+    end
+
     describe "with find_options_for_tenant filtering" do
       before do
         owned_vm # happy path
@@ -304,12 +505,6 @@ describe Rbac::Filterer do
       it "with :miq_group_id finds Vm" do
         results = described_class.search(:class => "Vm", :miq_group_id => owner_group.id).first
         expect(results).to match_array [owned_vm]
-      end
-
-      it "with :extra_cols finds Service" do
-        FactoryGirl.create :service, :evm_owner => owner_user
-        results = described_class.search(:class => "Service", :extra_cols => [:owned_by_current_user]).first
-        expect(results.first.attributes["owned_by_current_user"]).to be false
       end
 
       it "leaving tenant doesnt find Vm" do
@@ -687,11 +882,11 @@ describe Rbac::Filterer do
         end
 
         let!(:super_administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::SUPER_ADMIN_ROLE_NAME)
+          FactoryGirl.create(:miq_user_role, :role => "super_administrator")
         end
 
         let!(:administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::ADMIN_ROLE_NAME)
+          FactoryGirl.create(:miq_user_role, :role => "administrator")
         end
 
         let(:group) do
@@ -702,7 +897,7 @@ describe Rbac::Filterer do
 
         it 'can see all roles expect to EvmRole-super_administrator' do
           expect(MiqUserRole.count).to eq(3)
-          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role])
+          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, administrator_user_role])
         end
 
         it 'can see all groups expect to group with role EvmRole-super_administrator' do
@@ -1765,6 +1960,125 @@ describe Rbac::Filterer do
     end
   end
 
+  describe "#include_references (private)" do
+    subject { described_class.new }
+
+    let(:skip)             { false }
+    let(:klass)            { VmOrTemplate }
+    let(:scope)            { klass.all }
+    let(:include_for_find) { { :miq_server => {} } }
+    let(:exp_includes)     { { :host => {} } }
+
+    it "adds include_for_find .references to the scope" do
+      method_args      = [scope, klass, include_for_find, nil, skip]
+      resulting_scope  = subject.send(:include_references, *method_args)
+
+      expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", ""])
+    end
+
+    it "adds exp_includes .references to the scope" do
+      method_args      = [scope, klass, nil, exp_includes, skip]
+      resulting_scope  = subject.send(:include_references, *method_args)
+
+      expect(resulting_scope.references_values).to eq(["", "{:host=>{}}"])
+    end
+
+    it "adds include_for_find and exp_includes .references to the scope" do
+      method_args      = [scope, klass, include_for_find, exp_includes, skip]
+      resulting_scope  = subject.send(:include_references, *method_args)
+
+      expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", "{:host=>{}}"])
+    end
+
+    context "if the include is polymorphic" do
+      let(:klass)            { MetricRollup }
+      let(:include_for_find) { { :resource => {} } }
+
+      it "does not add .references to the scope" do
+        method_args      = [scope, klass, include_for_find, nil, skip]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.references_values).to eq([])
+      end
+    end
+
+    context "when skip is passed as true" do
+      let(:skip) { true }
+
+      it "does not add .references to the scope" do
+        method_args      = [scope, klass, include_for_find, exp_includes, skip]
+        resulting_scope  = subject.send(:include_references, *method_args)
+
+        expect(resulting_scope.references_values).to eq([])
+      end
+
+      context "when the scope is invalid without .references" do
+        let(:scope)           { klass.where("hosts.name = 'foo'") }
+        let(:method_args)     { [scope, klass, include_for_find, exp_includes, skip] }
+        let(:resulting_scope) { subject.send(:include_references, *method_args) }
+
+        let(:explain_error_match) do
+          Regexp.new(Regexp.escape(<<~PG_ERR.chomp))
+            PG::UndefinedTable: ERROR:  missing FROM-clause entry for table "hosts"
+            LINE 1: EXPLAIN SELECT "vms".* FROM "vms" WHERE (hosts.name = 'foo')
+                                                             ^
+            : EXPLAIN SELECT "vms".* FROM "vms" WHERE (hosts.name = 'foo')
+          PG_ERR
+        end
+
+        it "adds .references to the scope" do
+          allow(subject).to receive(:warn)
+          expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", "{:host=>{}}"])
+        end
+
+        it "warns that there was an issue in test mode" do
+          # This next couple of lines is just used to check that some of the
+          # backtrace that we are dumping into the logs is what we expect will
+          # for sure be there, and not try to match the entire trace.
+          #
+          # Does a bit of line addition to avoid this being too brittle and
+          # breaking easily, but expect it to break if you update
+          # Rbac::Filterer#include_references
+          method_file, method_line = subject.method(:include_references).source_location
+          explain_stacktrace_includes = [
+            "#{method_file}:#{method_line + 10}:in `block in include_references'",
+            Thread.current.backtrace[1].gsub(/:\d*:/) { |sub| ":#{sub.tr(":", "").to_i + 7}:" }
+          ]
+
+          expect(subject).to receive(:warn).with("There was an issue with the Rbac filter without references!").ordered
+          expect(subject).to receive(:warn).with("Consider trying to fix this edge case in Rbac::Filterer!  Error Below:").ordered
+          expect(subject).to receive(:warn).with(explain_error_match).ordered
+          expect(subject).to receive(:warn).with(array_including(explain_stacktrace_includes)).ordered
+          resulting_scope
+        end
+
+        it "warns that there was an issue in development mode" do
+          expect(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("developement"))
+
+          # See above
+          method_file, method_line = subject.method(:include_references).source_location
+          explain_stacktrace_includes = [
+            "#{method_file}:#{method_line + 10}:in `block in include_references'",
+            Thread.current.backtrace[1].gsub(/:\d*:/) { |sub| ":#{sub.tr(":", "").to_i + 7}:" }
+          ]
+
+          expect(subject).to receive(:warn).with("There was an issue with the Rbac filter without references!").ordered
+          expect(subject).to receive(:warn).with("Consider trying to fix this edge case in Rbac::Filterer!  Error Below:").ordered
+          expect(subject).to receive(:warn).with(explain_error_match).ordered
+          expect(subject).to receive(:warn).with(array_including(explain_stacktrace_includes)).ordered
+          resulting_scope
+        end
+
+        it "does not warn that there was an issue in production mode" do
+          expect(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
+
+          expect(subject).to receive(:warn).never
+          resulting_scope
+        end
+      end
+    end
+  end
+
   it ".apply_rbac_directly?" do
     expect(described_class.new.send(:apply_rbac_directly?, Vm)).to be_truthy
     expect(described_class.new.send(:apply_rbac_directly?, Rbac)).not_to be
@@ -1867,6 +2181,14 @@ describe Rbac::Filterer do
         random_group = FactoryGirl.create(:miq_group)
         _, group = filter.send(:lookup_user_group, admin, nil, nil, random_group.id)
         expect(group).to eq(random_group)
+      end
+
+      it "does not update user.current_group if user is super admin" do
+        admin = FactoryGirl.create(:user_admin)
+        admin_group = admin.current_group
+        random_group = FactoryGirl.create(:miq_group)
+        filter.send(:lookup_user_group, admin, nil, nil, random_group.id)
+        expect(admin.current_group).to eq(admin_group)
       end
     end
 

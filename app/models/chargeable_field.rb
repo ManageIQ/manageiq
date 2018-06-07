@@ -48,7 +48,7 @@ class ChargeableField < ApplicationRecord
   def measure(consumption, options, sub_metric = nil)
     return consumption.consumed_hours_in_interval if metering?
     return 1.0 if fixed?
-    return 0 if options.method_for_allocated_metrics != :current_value && consumption.none?(metric)
+    return 0 if options.method_for_allocated_metrics != :current_value && consumption.none?(metric, sub_metric)
     return consumption.send(options.method_for_allocated_metrics, metric, sub_metric) if allocated?
     return consumption.avg(metric) if used?
   end
@@ -68,6 +68,13 @@ class ChargeableField < ApplicationRecord
 
   def metric_key(sub_metric = nil)
     "#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
+  end
+
+  # Fixed metric has _1 or _2 in name but column
+  # fixed_compute_metric is used in report and calculations
+  # TODO: remove and unify with metric_key
+  def metric_column_key
+    fixed? ? metric_key.gsub(/\_1|\_2/, '') : metric_key
   end
 
   def cost_keys(sub_metric = nil)

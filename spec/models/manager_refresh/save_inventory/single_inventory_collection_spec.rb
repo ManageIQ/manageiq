@@ -18,7 +18,7 @@ describe ManagerRefresh::SaveInventory do
   [{:inventory_object_saving_strategy => nil},
    {:inventory_object_saving_strategy => :recursive},].each do |inventory_object_settings|
     context "with settings #{inventory_object_settings}" do
-      before :each do
+      before do
         @zone = FactoryGirl.create(:zone)
         @ems  = FactoryGirl.create(:ems_cloud, :zone => @zone)
 
@@ -99,14 +99,14 @@ describe ManagerRefresh::SaveInventory do
       end
 
       context 'with existing Vms in the DB' do
-        before :each do
+        before do
           # Fill DB with test Vms
           @vm1 = FactoryGirl.create(:vm_cloud, vm_data(1).merge(:ext_management_system => @ems))
           @vm2 = FactoryGirl.create(:vm_cloud, vm_data(2).merge(:ext_management_system => @ems))
         end
 
         context 'with VM InventoryCollection with default settings' do
-          before :each do
+          before do
             # Initialize the InventoryCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
@@ -237,7 +237,7 @@ describe ManagerRefresh::SaveInventory do
         end
 
         context 'with VM InventoryCollection with :delete_method => :disconnect_inv' do
-          before :each do
+          before do
             # Initialize the InventoryCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
@@ -452,7 +452,7 @@ describe ManagerRefresh::SaveInventory do
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
-              :attributes_whitelist => [:uid_ems, :vendor, :ext_management_system]
+              :attributes_whitelist => [:uid_ems, :vendor, :ext_management_system, :ems_id]
             )
 
             # Fill the InventoryCollections with data, that have a modified name, new VM and a missing VM
@@ -493,7 +493,7 @@ describe ManagerRefresh::SaveInventory do
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
-              :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor, :ext_management_system],
+              :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor, :ems_id, :ext_management_system],
               :attributes_blacklist => [:name, :ems_ref, :raw_power_state]
             )
 
@@ -529,7 +529,7 @@ describe ManagerRefresh::SaveInventory do
         end
 
         context 'with VM InventoryCollection with :complete => false' do
-          before :each do
+          before do
             # Initialize the InventoryCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::InventoryCollection.new(

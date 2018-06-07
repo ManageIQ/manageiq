@@ -37,6 +37,7 @@ describe EmbeddedAnsibleWorker do
         expect(cred_collection).to receive(:create!).and_return(cred_resource)
         expect(inv_collection).to receive(:create!).and_return(inv_resource)
         expect(host_collection).to receive(:create!).and_return(host_resource)
+        expect(subject).to receive(:ensure_plugin_playbooks_project_seeded)
 
         subject.ensure_initial_objects(provider, api_connection)
       end
@@ -132,6 +133,44 @@ describe EmbeddedAnsibleWorker do
         expect(host_collection).not_to receive(:create!)
 
         subject.ensure_host(provider, api_connection)
+      end
+    end
+
+    describe "#ensure_plugin_playbooks_project_seeded" do
+      let(:tmp_dir) { "some/temp/directory" }
+      let!(:expected_attributes) do
+        {
+          :name                 => "ManageIQ Default Project",
+          :scm_type             => "git",
+          :scm_url              => "file://#{tmp_dir}",
+          :scm_update_on_launch => false,
+          :organization         => 42
+        }
+      end
+
+      before do
+        provider.default_organization = 42
+        ea = double("EmbeddedAnsible", :create_local_playbook_repo => "", :playbook_repo_path => tmp_dir)
+        allow(EmbeddedAnsible).to receive(:new).and_return(ea)
+      end
+
+      it "creates a git project as the provider's default project" do
+        expect(proj_collection).to receive(:create!)
+          .with(expected_attributes.to_json)
+          .and_return(double(:id => 1234))
+
+        subject.ensure_plugin_playbooks_project_seeded(provider, api_connection)
+        expect(provider.default_project).to eq(1234)
+      end
+
+      it "updates an existing project" do
+        project = double(:id => 1234)
+        expect(subject).to receive(:find_default_project).and_return(project)
+        expect(project).to receive(:update_attributes!)
+          .with(expected_attributes)
+          .and_return(double(:id => 1234))
+
+        subject.ensure_plugin_playbooks_project_seeded(provider, api_connection)
       end
     end
 

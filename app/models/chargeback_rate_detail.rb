@@ -12,7 +12,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
 
-  delegate :metric_key, :cost_keys, :rate_key, :to => :chargeable_field
+  delegate :metric_column_key, :metric_key, :cost_keys, :rate_key, :to => :chargeable_field
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id sub_metric).freeze
   PER_TIME_TYPES = {
@@ -92,18 +92,18 @@ class ChargebackRateDetail < ApplicationRecord
     "#{hourly_fixed_rate}/#{hourly_variable_rate}"
   end
 
-  def charge(relevant_fields, consumption, options)
+  def charge(consumption, options)
     result = {}
-    if (relevant_fields & [metric_key, cost_keys[0]]).present?
-      metric_value, cost = metric_and_cost_by(consumption, options)
-      if !consumption.chargeback_fields_present && chargeable_field.fixed?
-        cost = 0
-      end
 
-      result[rate_key(sub_metric)] = rate_values(consumption, options)
-      result[metric_key(sub_metric)] = metric_value
-      cost_keys(sub_metric).each { |field| result[field] = cost }
+    metric_value, cost = metric_and_cost_by(consumption, options)
+    if !consumption.chargeback_fields_present && chargeable_field.fixed?
+      cost = 0
     end
+
+    result[rate_key(sub_metric)] = rate_values(consumption, options)
+    result[metric_key(sub_metric)] = metric_value
+    cost_keys(sub_metric).each { |field| result[field] = cost }
+
     result
   end
 

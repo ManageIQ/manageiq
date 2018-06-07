@@ -54,6 +54,10 @@ describe Authenticator::Database do
     context "with bad password" do
       let(:password) { 'incorrect' }
 
+      before do
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
       it "fails" do
         expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
       end
@@ -67,11 +71,13 @@ describe Authenticator::Database do
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
+
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
       end
+
       it "doesn't change lastlogon" do
         expect(-> { authenticate rescue nil }).not_to change { alice.reload.lastlogon }
       end
@@ -79,6 +85,10 @@ describe Authenticator::Database do
 
     context "with unknown username" do
       let(:username) { 'bob' }
+
+      before do
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
 
       it "fails" do
         expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
@@ -93,6 +103,7 @@ describe Authenticator::Database do
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
+
       it "logs the failure" do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)

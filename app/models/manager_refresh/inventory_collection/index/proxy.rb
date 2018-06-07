@@ -47,6 +47,7 @@ module ManagerRefresh
         # @return [ManagerRefresh::InventoryObject] Passed InventoryObject
         def build_primary_index_for(inventory_object)
           # Building the object, we need to provide all keys of a primary index
+
           assert_index(inventory_object.data, primary_index_ref)
           primary_index.store_index_for(inventory_object)
         end
@@ -98,7 +99,7 @@ module ManagerRefresh
           lazy_find(manager_uuid_hash, :ref => ref, :key => key, :default => default)
         end
 
-        def lazy_find(manager_uuid, ref: primary_index_ref, key: nil, default: nil)
+        def lazy_find(manager_uuid, ref: primary_index_ref, key: nil, default: nil, transform_nested_lazy_finds: false)
           # TODO(lsmola) also, it should be enough to have only 1 find method, everything can be lazy, until we try to
           # access the data
           # TODO(lsmola) lazy_find will support only hash, then we can remove the _by variant
@@ -107,11 +108,18 @@ module ManagerRefresh
 
           ::ManagerRefresh::InventoryObjectLazy.new(inventory_collection,
                                                     manager_uuid,
-                                                    :ref => ref, :key => key, :default => default)
+                                                    :ref                         => ref,
+                                                    :key                         => key,
+                                                    :default                     => default,
+                                                    :transform_nested_lazy_finds => transform_nested_lazy_finds)
         end
 
         def named_ref(ref = primary_index_ref)
           all_refs[ref]
+        end
+
+        def primary_index_ref
+          :manager_ref
         end
 
         private
@@ -146,10 +154,6 @@ module ManagerRefresh
           local_db_index(reference.ref).find(reference)
         end
 
-        def primary_index_ref
-          :manager_ref
-        end
-
         def data_index(name)
           data_indexes[name] || raise("Index :#{name} not defined for #{inventory_collection}")
         end
@@ -177,6 +181,10 @@ module ManagerRefresh
           end
         end
 
+        def assert_index_exists(ref)
+          raise "Index :#{ref} doesn't exist on #{inventory_collection}" if named_ref(ref).nil?
+        end
+
         def assert_index(manager_uuid, ref)
           # TODO(lsmola) do we need some production logging too? Maybe the refresh log level could drive this
           # Let' do this really slick development and test env, but disable for production, since the checks are pretty
@@ -186,6 +194,9 @@ module ManagerRefresh
           if manager_uuid.kind_of?(ManagerRefresh::InventoryCollection::Reference)
             # ManagerRefresh::InventoryCollection::Reference has been already asserted, skip
           elsif manager_uuid.kind_of?(Hash)
+            # Test te index exists
+            assert_index_exists(ref)
+
             # Test we are sending all keys required for the index
             unless required_index_keys_present?(manager_uuid.keys, ref)
               raise "Finder has missing keys for index :#{ref}, missing indexes are: #{missing_keys(manager_uuid.keys, ref)}"
@@ -193,6 +204,9 @@ module ManagerRefresh
             # Test that keys, that are relations, are nil or InventoryObject or InventoryObjectlazy class
             assert_relation_keys(manager_uuid, ref)
           else
+            # Test te index exists
+            assert_index_exists(ref)
+
             # Check that other value (possibly String or Integer)) has no composite index
             if named_ref(ref).size > 1
               right_format = "collection.find(#{named_ref(ref).map { |x| ":#{x} => 'X'" }.join(", ")}"

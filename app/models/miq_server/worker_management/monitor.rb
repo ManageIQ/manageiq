@@ -92,7 +92,6 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def check_not_responding(class_name = nil)
-    return [] if MiqEnvironment::Command.is_podified?
     processed_workers = []
     miq_workers.each do |w|
       next unless class_name.nil? || (w.type == class_name)
@@ -160,6 +159,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def key_store
+    require 'dalli'
     @key_store ||= Dalli::Client.new(MiqMemcached.server_address, :namespace => "server_monitor")
   end
 

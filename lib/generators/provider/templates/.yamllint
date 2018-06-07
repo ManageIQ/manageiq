@@ -1,0 +1,13 @@
+---
+ignore: |
+  /vendor/**
+  /spec/manageiq/**
+  /spec/vcr_cassettes/**
+
+extends: relaxed
+
+rules:
+  indentation:
+    indent-sequences: false
+  line-length:
+    max: 120

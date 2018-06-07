@@ -1,0 +1,18 @@
+description: chart_server_health
+title: "Physical Server Health"
+content_type: chart
+options:
+  :timezone_matters: false
+visibility:
+  :roles:
+  - _ALL_
+user_id:
+resource_name: Physical Server Health
+resource_type: MiqReport
+miq_schedule_options:
+  :run_at:
+    :interval:
+      :value: "1"
+      :unit: hourly
+enabled: true
+read_only: true

@@ -17,7 +17,8 @@ module ManagerRefresh
                :skeletal_primary_index,
                :to => :index_proxy
 
-      delegate :builder_params,
+      delegate :association_to_foreign_key_mapping,
+               :builder_params,
                :inventory_object?,
                :inventory_object_lazy?,
                :manager_ref,
@@ -112,62 +113,14 @@ module ManagerRefresh
         data
       end
 
-      # Reconstructs InventoryCollection from it's serialized form
-      #
-      # @param inventory_objects_data [Array[Hash]] Serialized array of InventoryObject objects as hashes
-      # @param available_inventory_collections [Array<ManagerRefresh::InventoryCollection>] List of available
-      #        InventoryCollection objects
-      def from_raw_data(inventory_objects_data, available_inventory_collections)
-        inventory_objects_data.each do |inventory_object_data|
-          hash = inventory_object_data.each_with_object({}) do |(key, value), result|
-            result[key.to_sym] = if value.kind_of?(Array)
-                                   value.map { |x| from_raw_value(x, available_inventory_collections) }
-                                 else
-                                   from_raw_value(value, available_inventory_collections)
-                                 end
-          end
-          build(hash)
-        end
+      def to_hash
+        ManagerRefresh::InventoryCollection::Serialization.new(inventory_collection).to_hash
       end
 
-      # Transform serialized references into lazy InventoryObject objects
-      #
-      # @param value [Object, Hash] Serialized InventoryObject into Hash
-      # @param available_inventory_collections [Array<ManagerRefresh::InventoryCollection>] List of available
-      #        InventoryCollection objects
-      # @return [Object, ManagerRefresh::InventoryObjectLazy] Returns ManagerRefresh::InventoryObjectLazy object
-      #         if the serialized form was a reference, or return original value
-      def from_raw_value(value, available_inventory_collections)
-        if value.kind_of?(Hash) && (value['type'] || value[:type]) == "ManagerRefresh::InventoryObjectLazy"
-          value.transform_keys!(&:to_s)
-        end
-
-        if value.kind_of?(Hash) && value['type'] == "ManagerRefresh::InventoryObjectLazy"
-          inventory_collection = available_inventory_collections[value['inventory_collection_name'].try(:to_sym)]
-          raise "Couldn't build lazy_link #{value} the inventory_collection_name was not found" if inventory_collection.blank?
-          inventory_collection.lazy_find(value['ems_ref'], :key => value['key'], :default => value['default'])
-        else
-          value
-        end
-      end
-
-      # Serializes InventoryCollection's data storage into Array of Hashes, which we can turn into JSON or YAML
-      #
-      # @return [Array<Hash>] Serialized InventoryCollection's data storage
-      def to_raw_data
-        data.map do |inventory_object|
-          inventory_object.data.transform_values do |value|
-            if inventory_object_lazy?(value)
-              value.to_raw_lazy_relation
-            elsif value.kind_of?(Array) && (inventory_object_lazy?(value.compact.first) || inventory_object?(value.compact.first))
-              value.compact.map(&:to_raw_lazy_relation)
-            elsif inventory_object?(value)
-              value.to_raw_lazy_relation
-            else
-              value
-            end
-          end
-        end
+      def from_hash(inventory_objects_data, available_inventory_collections)
+        ManagerRefresh::InventoryCollection::Serialization
+          .new(inventory_collection)
+          .from_hash(inventory_objects_data, available_inventory_collections)
       end
 
       private
@@ -181,12 +134,26 @@ module ManagerRefresh
       def primary_index_scan(hash)
         hash = enrich_data(hash)
 
-        if manager_ref.any? { |x| !hash.key?(x) }
-          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
-        end
+        assert_all_keys_present(hash)
+        assert_only_primary_index(hash)
 
         uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(hash, named_ref)
         return hash, uuid, primary_index.find(uuid)
+      end
+
+      def assert_all_keys_present(hash)
+        if manager_ref.any? { |x| !hash.key?(x) }
+          raise "Needed find_or_build_by keys are: #{manager_ref}, data provided: #{hash}"
+        end
+      end
+
+      def assert_only_primary_index(data)
+        named_ref.each do |key|
+          if data[key].kind_of?(ManagerRefresh::InventoryObjectLazy) && !data[key].primary?
+            raise "Wrong index for key :#{key}, all references under this index must point to default :ref called"\
+                  " :manager_ref. Any other :ref is not valid. This applies also to nested lazy links."
+          end
+        end
       end
 
       # Returns new hash enriched by (see ManagerRefresh::InventoryCollection#builder_params) hash

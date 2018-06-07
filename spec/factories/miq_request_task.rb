@@ -3,6 +3,7 @@ FactoryGirl.define do
     status "Ok"
   end
 
+  factory :miq_retire_task,    :parent => :miq_request_task,   :class => "MiqRetireTask"
   factory :miq_provision_task, :parent => :miq_request_task,   :class => "MiqProvisionTask"
   factory :miq_provision,      :parent => :miq_provision_task, :class => "MiqProvision"
 
@@ -39,6 +40,10 @@ FactoryGirl.define do
   factory :service_template_provision_task, :parent => :miq_request_task, :class => "ServiceTemplateProvisionTask" do
     state        'pending'
     request_type 'clone_to_service'
+  end
+  factory :service_retire_task,             :parent => :miq_retire_task,  :class => "ServiceRetireTask" do
+    request_type 'service_retire'
+    state        'pending'
   end
 
   factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask'

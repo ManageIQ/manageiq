@@ -8,7 +8,7 @@ describe MiqReport::Generator do
 
   describe "#generate" do
     context "Memory Utilization Trends report (daily)" do
-      before :each do
+      before do
         @miq_report_profile_all = FactoryGirl.create(
           :miq_report,
           :db              => "VimPerformanceTrend",

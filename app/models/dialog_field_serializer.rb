@@ -17,8 +17,7 @@ class DialogFieldSerializer < Serializer
     }
 
     if dialog_field.dynamic?
-      dynamic_values = dialog_field.trigger_automate_value_updates
-      extra_attributes["values"] = dynamic_values
+      extra_attributes["values"] = dialog_field.extract_dynamic_values
     end
 
     if dialog_field.type == "DialogFieldTagControl"
@@ -28,6 +27,7 @@ class DialogFieldSerializer < Serializer
         dialog_field.options[:force_single_value] = dialog_field.options[:force_single_value] || category.single_value
       end
     end
-    included_attributes(dialog_field.as_json(:methods => [:type, :values]), all_attributes).merge(extra_attributes)
+    json_options = dialog_field.dynamic? ? {:methods => [:type], :except => [:values]} : {:methods => %i(type values)}
+    included_attributes(dialog_field.as_json(json_options), all_attributes).merge(extra_attributes)
   end
 end

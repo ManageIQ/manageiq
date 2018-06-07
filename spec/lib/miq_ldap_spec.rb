@@ -157,4 +157,27 @@ describe MiqLdap do
       expect(ldap.ldap.instance_variable_get(:@encryption)).to be_nil
     end
   end
+
+  context '#get_user_object' do
+    before do
+      allow(TCPSocket).to receive(:new)
+      @opts = {:base => nil, :scope => :sub, :filter => "(userprincipalname=myuserid@mycompany.com)"}
+    end
+
+    it "searches for group memberships with the specified group attribute" do
+      ldap = MiqLdap.new(:host => ["192.0.2.2"], :group_attribute => "groupMembership")
+      @opts[:attributes] = ["*", "groupMembership"]
+      expect(ldap).to receive(:search).with(@opts)
+
+      ldap.get_user_object("myuserid@mycompany.com", "upn")
+    end
+
+    it "searches for group memberships with the default group attribute" do
+      ldap = MiqLdap.new(:host => ["192.0.2.2"])
+      @opts[:attributes] = ["*", "memberof"]
+      expect(ldap).to receive(:search).with(@opts)
+
+      ldap.get_user_object("myuserid@mycompany.com", "upn")
+    end
+  end
 end

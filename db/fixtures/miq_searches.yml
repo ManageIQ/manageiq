@@ -67,9 +67,13 @@
     description: Status / Running
     filter: !ruby/object:MiqExpression
       exp:
-        "=":
-          field: Vm-power_state
-          value: "on"
+        and:
+        - "=":
+            field: Vm-power_state
+            value: "on"
+        - "=":
+            field: Vm-active
+            value: "true"
     search_type: default
     db: Vm
 - attributes:
@@ -673,9 +677,13 @@
     description: Status / Running
     filter: !ruby/object:MiqExpression
       exp:
-        "=":
-          field: TemplateInfra-power_state
-          value: "on"
+        and:
+        - "=":
+            field: TemplateInfra-power_state
+            value: "on"
+        - "=":
+            field: VTemplateInfra-active
+            value: "true"
     search_type: default
     db: ManageIQ::Providers::InfraManager::Template
 - attributes:
@@ -1125,9 +1133,13 @@
     description: Status / Running
     filter: !ruby/object:MiqExpression
       exp:
-        "=":
-          field: VmInfra-power_state
-          value: "on"
+        and:
+        - "=":
+            field: VmInfra-power_state
+            value: "on"
+        - "=":
+            field: VmInfra-active
+            value: "true"
     search_type: default
     db: ManageIQ::Providers::InfraManager::Vm
 - attributes:
@@ -1301,6 +1313,27 @@
           value: "waiting"
     search_type: default
     db: Container
+- attributes:
+    name: default_Status / Running
+    description: Status / Running
+    filter: !ruby/object:MiqExpression
+      exp:
+        INCLUDES:
+          field: PhysicalSwitch-power_state
+          value: "on"
+    search_type: default
+    db: PhysicalSwitch
+- attributes:
+    name: default_Status / Stopped
+    description: Status / Stopped
+    filter: !ruby/object:MiqExpression
+      exp:
+        not:
+          INCLUDES:
+            field: PhysicalSwitch-power_state
+            value: "on"
+    search_type: default
+    db: PhysicalSwitch
 - attributes:
     name: default_Over Sized
     description: Over Sized

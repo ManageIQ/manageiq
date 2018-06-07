@@ -12,6 +12,7 @@ class Zone < ApplicationRecord
   has_many :miq_schedules, :dependent => :destroy
   has_many :ldap_regions
   has_many :providers
+  has_many :miq_queues, :dependent => :destroy, :foreign_key => :zone, :primary_key => :name
 
   has_many :hosts,                 :through => :ext_management_systems
   has_many :clustered_hosts,       :through => :ext_management_systems
@@ -93,7 +94,14 @@ class Zone < ApplicationRecord
   end
 
   def synchronize_logs(*args)
-    active_miq_servers.each { |s| s.synchronize_logs(*args) }
+    options = args.extract_options!
+    enabled = Settings.log.collection.include_automate_models_and_dialogs
+
+    active_miq_servers.each_with_index do |s, index|
+      # If enabled, export the automate domains and dialogs on the first active server
+      include_models_and_dialogs = enabled ? index.zero? : false
+      s.synchronize_logs(*args, options.merge(:include_automate_models_and_dialogs => include_models_and_dialogs))
+    end
   end
 
   def last_log_sync_on

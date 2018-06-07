@@ -1,0 +1,41 @@
+---
+title: Physical Server Availability
+order: Ascending
+graph:
+  :type: Pie
+  :count: 10
+  :other: true
+menu_name: Physical Server Availability
+rpt_group: Custom
+rpt_type: Custom
+priority:
+col_order:
+- hostname
+- v_availability
+- health_state
+- power_state
+- v_host_os
+- product_name
+timeline:
+file_mtime:
+categories:
+filename:
+db: PhysicalServer
+cols:
+- hostname
+- v_availability
+- health_state
+- power_state
+- v_host_os
+- product_name
+template_type: report
+sortby:
+- v_availability
+- hostname
+headers:
+- Hostname
+- Availability
+- Health State
+- Power State
+- Host OS
+- Product Name

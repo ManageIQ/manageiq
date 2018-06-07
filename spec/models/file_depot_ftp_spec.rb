@@ -38,7 +38,7 @@ describe FileDepotFtp do
       expect(vsftpd.content).to eq('uploads' =>
                                    {"#{@zone.name}_#{@zone.id}" =>
                                    {"#{@miq_server.name}_#{@miq_server.id}" =>
-                                   {"Current_region_unknown_#{@zone.name}_#{@zone.id}_#{@miq_server.name}_#{@miq_server.id}_unknown_unknown.txt" =>
+                                   {"Current_region_unknown_#{@zone.name}_#{@zone.id}_#{@miq_server.name}_#{@miq_server.id}.txt".gsub(/\s+/, "_") =>
                                    log_file.local_file}}})
     end
 
@@ -49,7 +49,7 @@ describe FileDepotFtp do
       expect(vsftpd.content).to eq('uploads' =>
                                    {"#{@zone.name}_#{@zone.id}" =>
                                    {"#{@miq_server.name}_#{@miq_server.id}" =>
-                                   {"Current_region_unknown_#{@zone.name}_#{@zone.id}_#{@miq_server.name}_#{@miq_server.id}_unknown_unknown.txt" =>
+                                   {"Current_region_unknown_#{@zone.name}_#{@zone.id}_#{@miq_server.name}_#{@miq_server.id}.txt".gsub(/\s+/, "_") =>
                                    log_file.local_file}}})
     end
 

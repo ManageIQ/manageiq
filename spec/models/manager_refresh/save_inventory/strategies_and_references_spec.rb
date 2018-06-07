@@ -17,7 +17,7 @@ describe ManagerRefresh::SaveInventory do
     context "with settings #{inventory_object_settings}" do
       [:local_db_find_references, :local_db_cache_all].each do |db_strategy|
         context "with db strategy #{db_strategy}" do
-          before :each do
+          before do
             @zone = FactoryGirl.create(:zone)
             @ems = FactoryGirl.create(:ems_cloud,
                                       :zone            => @zone,
@@ -27,7 +27,7 @@ describe ManagerRefresh::SaveInventory do
             allow(Settings.ems_refresh).to receive(:mock).and_return(inventory_object_settings)
           end
 
-          before :each do
+          before do
             @image1 = FactoryGirl.create(:miq_template, image_data(1).merge(:ext_management_system => @ems))
             @image2 = FactoryGirl.create(:miq_template, image_data(2).merge(:ext_management_system => @ems))
             @image3 = FactoryGirl.create(:miq_template, image_data(3).merge(:ext_management_system => @ems))

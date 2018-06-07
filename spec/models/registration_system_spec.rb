@@ -181,10 +181,10 @@ describe RegistrationSystem do
         ssl_verify_depth = 3
 
         # an http proxy server to use
-        proxy_hostname = 192.0.2.0
+        proxy_hostname = ProxyHostnameValue
 
         # port for http proxy server
-        proxy_port = myport
+        proxy_port = 0
 
         # user name for authenticating to an http proxy, if needed
         proxy_user = my_dummy_username
@@ -195,14 +195,9 @@ describe RegistrationSystem do
       EOT
     end
 
-    let(:rhsm_conf) { Tempfile.new(@spec_name.downcase) }
+    let(:rhsm_conf) { Tempfile.new }
 
     before do
-      @proxy_args = {:registration_http_proxy_server   => "192.0.2.0:myport",
-                     :registration_http_proxy_username => "my_dummy_username",
-                     :registration_http_proxy_password => "my_dummy_password"}
-
-      @spec_name = File.basename(__FILE__).split(".rb").first.freeze
       stub_const("RegistrationSystem::RHSM_CONFIG_FILE", rhsm_conf.path)
       rhsm_conf.write(original_rhsm_conf)
       rhsm_conf.close
@@ -213,10 +208,22 @@ describe RegistrationSystem do
       FileUtils.rm_f("#{rhsm_conf.path}.miq_orig")
     end
 
-    it "will save then update the original config file" do
-      RegistrationSystem.update_rhsm_conf(@proxy_args)
-      expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
-      expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf)
+    context "will save then update the original config file" do
+      ["", "http://", "https://"].each do |prefix|
+        ["proxy.example.com", "192.0.2.0", "[2001:db8::]"].each do |address|
+          params = {
+            :registration_http_proxy_server   => "#{prefix}#{address}:0",
+            :registration_http_proxy_username => "my_dummy_username",
+            :registration_http_proxy_password => "my_dummy_password"
+          }
+
+          it "with #{params[:registration_http_proxy_server]}" do
+            RegistrationSystem.update_rhsm_conf(params)
+            expect(File.read("#{rhsm_conf.path}.miq_orig")).to eq(original_rhsm_conf)
+            expect(File.read(rhsm_conf)).to eq(updated_rhsm_conf.sub(/ProxyHostnameValue/, address))
+          end
+        end
+      end
     end
 
     it "with no proxy server will not update the rhsm config file" do
@@ -227,10 +234,10 @@ describe RegistrationSystem do
     it "with no options will use database valuses" do
       MiqDatabase.seed
       MiqDatabase.first.update_attributes(
-        :registration_http_proxy_server => "192.0.2.0:myport"
+        :registration_http_proxy_server => "192.0.2.0:0"
       )
       RegistrationSystem.update_rhsm_conf
-      expect(File.read(rhsm_conf)).to include("proxy_hostname = 192.0.2.0", "proxy_port = myport")
+      expect(File.read(rhsm_conf)).to include("proxy_hostname = 192.0.2.0", "proxy_port = 0")
     end
   end
 end

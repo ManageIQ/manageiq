@@ -22,7 +22,7 @@ class Chargeback
 
     def tag_names
       @tag_names ||= @rollups.inject([]) do |memo, rollup|
-        memo |= rollup.tag_names.split('|') if rollup.tag_names.present?
+        memo |= rollup.all_tag_names
         memo
       end
     end
@@ -62,8 +62,8 @@ class Chargeback
       end
     end
 
-    def none?(metric)
-      values(metric).empty?
+    def none?(metric, sub_metric)
+      values(metric, sub_metric).empty?
     end
 
     def chargeback_fields_present

@@ -6,6 +6,7 @@ class ContainerNode < ApplicationRecord
   include TenantIdentityMixin
   include SupportsFeatureMixin
   include ArchivedMixin
+  include OldEmsMixin
   include CockpitMixin
   include CustomActionsMixin
   include_concern 'Purging'
@@ -81,7 +82,6 @@ class ContainerNode < ApplicationRecord
   end
 
   def cockpit_url
-    URI::HTTP.build(:host => kubernetes_hostname, :port => 9090)
     address = kubernetes_hostname || name
     MiqCockpit::WS.url(cockpit_server, cockpit_worker, address)
   end

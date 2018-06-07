@@ -6,4 +6,10 @@ class PersistentVolume < ContainerVolume
   has_many :container_volumes, -> { where(:type => 'ContainerVolume') }, :through => :persistent_volume_claim
   has_many :parents, -> { distinct }, :through => :container_volumes, :source_type => 'ContainerGroup'
   alias_attribute :container_groups, :parents
+
+  virtual_column :storage_capacity, :type => :integer
+
+  def storage_capacity
+    capacity[:storage]
+  end
 end

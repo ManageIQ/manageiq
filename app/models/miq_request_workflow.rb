@@ -835,15 +835,20 @@ class MiqRequestWorkflow
   def find_classes_under_ci(item, klass)
     results = []
     return results if item.nil?
-    node = load_ems_node(item, _log.prefix)
+    @_find_classes_under_ci_prefix ||= _log.prefix
+    node = load_ems_node(item, @_find_classes_under_ci_prefix)
     each_ems_metadata(node.attributes[:object], klass) { |ci| results << ci } unless node.nil?
     results
   end
 
   def load_ems_node(item, log_header)
     @ems_xml_nodes ||= {}
-    klass_name = item.kind_of?(MiqHashStruct) ? item.evm_object_class : item.class.base_class.name
-    node = @ems_xml_nodes["#{klass_name}_#{item.id}"]
+    klass_name = if item.kind_of?(MiqHashStruct)
+                   Object.const_get(item.evm_object_class)
+                 else
+                   item.class.base_class
+                 end
+    node = @ems_xml_nodes[klass_name][item.id]
     $log.error("#{log_header} Resource <#{klass_name}_#{item.id} - #{item.name}> not found in cached resource tree.") if node.nil?
     node
   end
@@ -855,18 +860,25 @@ class MiqRequestWorkflow
   end
 
   def get_ems_folders(folder, dh = {}, full_path = "")
+    path = full_path
     if folder.evm_object_class == :EmsFolder
       if folder.hidden
         return dh if folder.name != 'vm'
       else
-        full_path += full_path.blank? ? folder.name.to_s : " / #{folder.name}"
-        dh[folder.id] = full_path unless folder.type == "Datacenter"
+        path = full_path.dup
+        if path.blank?
+          path << folder.name.to_s
+        else
+          path << " / ".freeze << folder.name
+        end
+        dh[folder.id] = path unless folder.type == "Datacenter".freeze
       end
     end
 
     # Process child folders
-    node = load_ems_node(folder, _log.prefix)
-    node.children.each { |child| get_ems_folders(child.attributes[:object], dh, full_path) } unless node.nil?
+    @_get_ems_folders_prefix ||= _log.prefix
+    node = load_ems_node(folder, @_get_ems_folders_prefix)
+    node.children.each { |child| get_ems_folders(child.attributes[:object], dh, path) } unless node.nil?
 
     dh
   end
@@ -905,7 +917,8 @@ class MiqRequestWorkflow
 
   def find_class_above_ci(item, klass, _ems_src = nil, datacenter = false)
     result = nil
-    node = load_ems_node(item, _log.prefix)
+    @_find_class_above_ci_prefix ||= _log.prefix
+    node = load_ems_node(item, @_find_class_above_ci_prefix)
     klass_name = klass.name.to_sym
     # Walk the xml document parents to find the requested class
     while node.kind_of?(XmlHash::Element)
@@ -926,7 +939,8 @@ class MiqRequestWorkflow
       ems_xml = get_ems_metadata_tree(src)
       ems_node = ems_xml.try(:root)
     else
-      ems_node = load_ems_node(ems_ci, _log.prefix)
+      @_each_ems_metadata_prefix ||= _log.prefix
+      ems_node = load_ems_node(ems_ci, @_each_ems_metadata_prefix)
     end
     klass_name = klass.name.to_sym unless klass.nil?
     unless ems_node.nil?
@@ -957,7 +971,8 @@ class MiqRequestWorkflow
 
   def convert_to_xml(xml, result)
     result.each do |obj, children|
-      @ems_xml_nodes["#{obj.class.base_class}_#{obj.id}"] = node = xml.add_element(obj.class.base_class.name, :object => ci_to_hash_struct(obj))
+      @ems_xml_nodes[obj.class.base_class] ||= {}
+      @ems_xml_nodes[obj.class.base_class][obj.id] = node = xml.add_element(obj.class.base_class.name, :object => ci_to_hash_struct(obj))
       convert_to_xml(node, children)
     end
   end
@@ -1030,13 +1045,14 @@ class MiqRequestWorkflow
     hosts_ids = find_all_ems_of_type(Host).collect(&:id)
     hosts_ids &= load_ar_obj(src[:storage]).hosts.collect(&:id) unless src[:storage].nil?
     if datacenter
-      dc_node = load_ems_node(datacenter, _log.prefix)
+      @_allowed_hosts_obj_prefix ||= _log.prefix
+      dc_node = load_ems_node(datacenter, @_allowed_hosts_obj_prefix)
       hosts_ids &= find_hosts_under_ci(dc_node.attributes[:object]).collect(&:id)
     end
     return [] if hosts_ids.blank?
 
     # Remove any hosts that are no longer in the list
-    all_hosts = load_ar_obj(src[:ems]).hosts.find_all { |h| hosts_ids.include?(h.id) }
+    all_hosts = load_ar_obj(src[:ems]).hosts.where(:id => hosts_ids)
     allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
     _log.info("allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds")
     rails_logger('allowed_hosts_obj', 1)
@@ -1050,7 +1066,7 @@ class MiqRequestWorkflow
 
     rails_logger('allowed_storages', 0)
     st = Time.now
-    MiqPreloader.preload(hosts, :storages)
+    MiqPreloader.preload(hosts, :storages => {}, :host_storages => :storage)
 
     storages = hosts.each_with_object({}) do |host, hash|
       host.writable_storages.each { |s| hash[s.id] = s }
@@ -1190,7 +1206,7 @@ class MiqRequestWorkflow
       result = find_datacenter_for_ci(h)
       rails_logger("host_to_folder for host #{h.name}", 1)
       result
-    end.compact
+    end.compact.uniq
     datacenters.each_with_object({}) do |dc, folders|
       rails_logger("host_to_folder for dc #{dc.name}", 0)
       folders.merge!(get_ems_folders(dc))

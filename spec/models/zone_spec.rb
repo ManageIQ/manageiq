@@ -37,7 +37,7 @@ describe Zone do
   end
 
   context "when dealing with clouds" do
-    before :each do
+    before do
       _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
@@ -200,5 +200,13 @@ describe Zone do
     it ".default_zone returns a zone in the current region" do
       expect(described_class.default_zone).to eq(default_in_my_region)
     end
+  end
+
+  it "removes queued items on destroy" do
+    zone = FactoryGirl.create(:zone)
+    FactoryGirl.create(:miq_queue, :zone => zone.name)
+    expect(MiqQueue.where(:zone => zone.name).count).to eq(1)
+    zone.destroy!
+    expect(MiqQueue.where(:zone => zone.name).count).to eq(0)
   end
 end

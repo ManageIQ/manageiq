@@ -25,7 +25,7 @@ module MiqRequestTask::PostInstallCallback
       :method_name    => 'provision_completed',
       :zone           => my_zone,
       :role           => my_role,
-      :tracking_label => my_task_id,
+      :tracking_label => tracking_label_id,
     )
   end
 

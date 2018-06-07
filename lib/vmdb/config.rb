@@ -57,23 +57,16 @@ module VMDB
     end
 
     # NOTE: Used by Configuration -> Advanced
-    def self.get_file
-      Vmdb::Settings.encrypt_passwords!(::Settings.to_hash).to_yaml
+    def self.get_file(resource = MiqServer.my_server)
+      resource.settings_for_resource_yaml
     end
 
     # NOTE: Used by Configuration -> Advanced
     def self.save_file(contents, resource = MiqServer.my_server)
-      config = new("vmdb")
-
-      begin
-        config.config = Vmdb::Settings.decrypt_passwords!(YAML.load(contents))
-        config.validate
-      rescue StandardError, Psych::SyntaxError => err
-        config.errors = [[:contents, "File contents are malformed, '#{err.message}'"]]
-      end
-
-      return config.errors unless config.errors.blank?
-      config.save(resource)
+      resource.add_settings_for_resource_yaml(contents)
+    rescue Vmdb::Settings::ConfigurationInvalid => err
+      err.errors
+    else
       true
     end
 

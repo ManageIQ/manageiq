@@ -13,6 +13,7 @@ module FixAuth
         opt :verbose,  "Verbose",           :short => "v"
         opt :dry_run,  "Dry Run",           :short => "d"
         opt :hostname, "Database Hostname", :type => :string,  :short => "h", :default => env['PGHOST']
+        opt :port,     "Database Port",     :type => :integer, :default => 5432
         opt :username, "Database Username", :type => :string,  :short => "U", :default => (env['PGUSER'] || "root")
         opt :password, "Database Password", :type => :string,  :short => "p", :default => env['PGPASSWORD']
         opt :hardcode, "Password to use for all passwords",     :type => :string, :short => "P"
@@ -24,6 +25,7 @@ module FixAuth
         opt :databaseyml, "Rewrite database.yml", :type => :boolean, :short => "y", :default => false
         opt :db,       "Upgrade database",  :type => :boolean, :short => 'x', :default => false
         opt :legacy_key, "Legacy Key",      :type => :string, :short => "K"
+        opt :allow_failures, "Run through all records, even with errors", :type => :boolean, :short => nil, :default => false
       end
 
       options[:database] = args.first || "vmdb_production"

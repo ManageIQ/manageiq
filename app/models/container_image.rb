@@ -5,6 +5,7 @@ class ContainerImage < ApplicationRecord
   include TenantIdentityMixin
   include CustomAttributeMixin
   include ArchivedMixin
+  include OldEmsMixin
   include NewWithTypeStiMixin
   include CustomActionsMixin
   include_concern 'Purging'
@@ -66,8 +67,8 @@ class ContainerImage < ApplicationRecord
     container_image_registry.present? ? container_image_registry.full_name : _("Unknown image source")
   end
 
-  def scan
-    ext_management_system.scan_job_create(self)
+  def scan(userid = "system")
+    ext_management_system.scan_job_create(self, userid)
   end
 
   def perform_metadata_scan(ost)

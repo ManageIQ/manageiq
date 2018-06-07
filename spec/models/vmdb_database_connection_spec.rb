@@ -1,7 +1,7 @@
 require "concurrent/atomic/event"
 
 describe VmdbDatabaseConnection do
-  before :each do
+  before do
     @db = FactoryGirl.create(:vmdb_database)
   end
 

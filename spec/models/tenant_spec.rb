@@ -365,6 +365,14 @@ describe Tenant do
                            :tenant_id => t2_2.id)
       end
 
+      # This spec is here to confirm that we don't mutate the memoized
+      # ancestor_ids value when calling `Tenant#visible_domains`.
+      it "does not affect the memoized ancestor_ids variable" do
+        expected_ancestor_ids = t1_1.ancestor_ids.dup  # dup required, don't remove
+        t1_1.visible_domains
+        expect(t1_1.ancestor_ids).to eq(expected_ancestor_ids)
+      end
+
       it "#visibile_domains sub_tenant" do
         t1_1
         expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15 DOM10))
@@ -804,6 +812,22 @@ describe Tenant do
 
     it "returns [] of a tenant without subtenants" do
       expect(tenantA1.build_tenant_tree).to be_empty
+    end
+  end
+
+  describe "setting a parent for a new record" do
+    it "passes back the parent assigned" do
+      tenant.save!
+      sub_tenant = FactoryGirl.build(:tenant, :parent => Tenant.root_tenant)
+
+      expect(sub_tenant.parent = tenant).to eq(tenant)
+    end
+
+    it "passes back the parent_id assigned" do
+      tenant.save!
+      sub_tenant = FactoryGirl.build(:tenant, :parent => Tenant.root_tenant)
+
+      expect(sub_tenant.parent_id = tenant.id).to eq(tenant.id)
     end
   end
 end

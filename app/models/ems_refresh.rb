@@ -195,6 +195,7 @@ module EmsRefresh
       item.merge(
         :data        => targets,
         :task_id     => task_id,
+        :miq_task_id => task_id,
         :msg_timeout => queue_timeout
       )
     end

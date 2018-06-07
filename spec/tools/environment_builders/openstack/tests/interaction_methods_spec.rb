@@ -62,7 +62,7 @@ describe Openstack::InteractionMethods do
   context "#Openstack::InteractionMethods" do
     let(:subject) { (Class.new { include Openstack::InteractionMethods }).new }
 
-    before :each do
+    before do
       allow($stdout).to receive(:puts)
     end
 

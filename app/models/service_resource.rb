@@ -1,4 +1,10 @@
 class ServiceResource < ApplicationRecord
+  STATUS_ACTIVE    = 'Active'.freeze
+  STATUS_APPROVED  = 'Approved'.freeze
+  STATUS_COMPLETED = 'Completed'.freeze
+  STATUS_FAILED    = 'Failed'.freeze
+  STATUS_QUEUED    = 'Queued'.freeze
+
   belongs_to :service_template
   belongs_to :service
   belongs_to :resource, :polymorphic => true

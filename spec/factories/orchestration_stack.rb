@@ -74,4 +74,6 @@ FactoryGirl.define do
   factory :embedded_ansible_job, :class => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job"
 
   factory :orchestration_stack_vmware_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack"
+
+  factory :orchestration_stack_container, :parent => :orchestration_stack, :class => "ManageIQ::Providers::ContainerManager::OrchestrationStack"
 end

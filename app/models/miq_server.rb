@@ -249,8 +249,7 @@ class MiqServer < ApplicationRecord
 
   def validate_is_deleteable
     unless self.is_deleteable?
-      _log.error(@error_message)
-      @error_message = nil
+      _log.error(@errors.full_messages)
       throw :abort
     end
   end
@@ -492,13 +491,17 @@ class MiqServer < ApplicationRecord
 
   def is_deleteable?
     if self.is_local?
-      @error_message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
+      message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
+      @errors ||= ActiveModel::Errors.new(self)
+      @errors.add(:base, message)
       return false
     end
     return true if self.stopped?
 
     if is_recently_active?
-      @error_message = N_("Cannot delete recently active %{log_message}") % {:log_message => format_short_log_msg}
+      message = N_("Cannot delete recently active %{log_message}") % {:log_message => format_short_log_msg}
+      @errors ||= ActiveModel::Errors.new(self)
+      @errors.add(:base, message)
       return false
     end
 

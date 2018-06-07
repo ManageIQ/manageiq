@@ -876,6 +876,9 @@ class MiqExpression
 
   def self.tag_details(path, opts)
     result = []
+    if opts[:no_cache]
+      @classifications = nil
+    end
     @classifications ||= categories
     @classifications.each do |name, cat|
       prefix = path.nil? ? "managed" : [path, "managed"].join(".")
@@ -1310,10 +1313,10 @@ class MiqExpression
   def to_arel(exp, tz)
     operator = exp.keys.first
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
-    arel_attribute = field && field.target.arel_attribute(field.column)
+    arel_attribute = field&.arel_attribute
     if exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"])
       field_value = Field.parse(exp[operator]["value"])
-      parsed_value = field_value.target.arel_attribute(field_value.column)
+      parsed_value = field_value.arel_attribute
     elsif exp[operator].kind_of?(Hash)
       parsed_value = exp[operator]["value"]
     end
@@ -1395,7 +1398,7 @@ class MiqExpression
         arel = arel_attribute.eq(parsed_value)
         arel = arel.and(Arel::Nodes::SqlLiteral.new(extract_where_values(reflection.klass, reflection.scope))) if reflection.scope
         field.model.arel_attribute(:id).in(
-          field.target.arel_table.where(arel).project(field.target.arel_table[reflection.foreign_key]).distinct
+          field.arel_table.where(arel).project(field.arel_table[reflection.foreign_key]).distinct
         )
       end
     when "is"
