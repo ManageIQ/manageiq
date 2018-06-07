@@ -19,7 +19,7 @@ describe OpenscapResult do
       rule_results = [
         [1, double(:result => 'result_1')],
         [2, double(:result => 'result_2')]]
-      benchmark_items = {1 => double(:severity => 'Bad',:idents => [],:title => "Bad"),
+      benchmark_items = {1 => double(:severity => 'Bad', :idents => [], :title => "Bad"),
                          2 => double(:severity => 'Not That Bad', :idents => []), :title => "Not That Bad"}
 
       openscap_result.instance_eval { create_results(rule_results, benchmark_items) }
