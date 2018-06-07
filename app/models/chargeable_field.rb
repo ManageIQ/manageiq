@@ -96,6 +96,11 @@ class ChargeableField < ApplicationRecord
     (%w(id tag_names resource_id) + chargeable_cols_on_metric_rollup).uniq
   end
 
+  def self.col_index(column)
+    @rate_cols ||= {}
+    @rate_cols[column] ||= cols_on_metric_rollup.index(column.to_s)
+  end
+
   private
 
   def used?

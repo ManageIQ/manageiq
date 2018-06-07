@@ -1,7 +1,7 @@
 class Chargeback
   class ConsumptionWithRollups < Consumption
     delegate :timestamp, :resource, :resource_id, :resource_name, :resource_type, :parent_ems,
-             :parents_determining_rate,
+             :parents_determining_rate, :resource_current_tag_names,
              :to => :first_metric_rollup_record
 
     attr_accessor :start_time, :end_time
@@ -22,8 +22,8 @@ class Chargeback
     end
 
     def tag_names
-      @tag_names ||= @rollups.inject([]) do |memo, rollup|
-        memo |= rollup.all_tag_names
+      @tag_names ||= @rollup_array.inject([]) do |memo, rollup|
+        memo |= all_tag_names(rollup)
         memo
       end
     end
@@ -73,6 +73,15 @@ class Chargeback
 
     def metering_used_fields_present
       @metering_used_fields_present ||= @rollups.count(&:metering_used_fields_present?)
+    end
+
+    def resource_tag_names(rollup)
+      tags_names = rollup[ChargeableField.col_index(:tag_names)]
+      tags_names ? tags_names.split('|') : []
+    end
+
+    def all_tag_names(rollup)
+      resource_current_tag_names | resource_tag_names(rollup)
     end
 
     private
