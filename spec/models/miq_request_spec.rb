@@ -355,10 +355,6 @@ describe MiqRequest do
 
       expect(MiqQueue.count).to eq(0)
       expect(MiqSchedule.count).to eq(1)
-
-      # HACK: This should be a real relation
-      expect(Reserve.count).to eq(1)
-      expect(request.miq_schedule).to be_kind_of(MiqSchedule)
     end
 
     it "non_scheduled - is queued directly" do
@@ -370,10 +366,6 @@ describe MiqRequest do
 
       expect(MiqQueue.count).to eq(1)
       expect(MiqSchedule.count).to eq(0)
-
-      # HACK: This should be a real relation
-      expect(Reserve.count).to eq(0)
-      expect(request.miq_schedule).to be_nil
     end
   end
 

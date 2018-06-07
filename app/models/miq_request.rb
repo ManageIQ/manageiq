@@ -11,6 +11,7 @@ class MiqRequest < ApplicationRecord
   belongs_to :service_order
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
+  has_one    :miq_schedule,      :dependent   => :destroy, :as => :resource
 
   acts_as_miq_taggable
 
@@ -415,11 +416,6 @@ class MiqRequest < ApplicationRecord
       raise _("%{task} request has already been processed") % {:task => self.class::TASK_DESCRIPTION}
     end
     raise _("approval is required for %{task}") % {:task => self.class::TASK_DESCRIPTION} unless approved?
-  end
-
-  def miq_schedule
-    # HACK: this should be a real relation, but for now it's using a reserve_attribute for backport reasons
-    Reserve.where(:resource_type => "MiqSchedule").detect { |r| r.reserved == {:resource_id => id} }&.resource
   end
 
   def execute

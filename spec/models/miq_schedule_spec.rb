@@ -712,7 +712,7 @@ describe MiqSchedule do
 
     it "with no action method, but resource exists and responds to the method" do
       resource = FactoryGirl.create(:host)
-      s = FactoryGirl.create(:miq_schedule, :resource_id => resource.id, :towhat => resource.class.name, :sched_action => {:method => "test_method"})
+      s = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method"})
 
       expect_any_instance_of(Host).to receive("test_method").once
 
