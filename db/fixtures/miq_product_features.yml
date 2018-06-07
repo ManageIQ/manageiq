@@ -5955,6 +5955,10 @@
       :description: Refresh relationships and power states for all items related to Physical Switches / Nodes
       :feature_type: control
       :identifier: physical_switch_refresh
+    - :name: Restart
+      :description: Restart Physical Switch
+      :feature_type: control
+      :identifier: physical_switch_restart
 
 # Physical Servers
 - :name: Physical Servers
