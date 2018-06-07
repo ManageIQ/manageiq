@@ -418,12 +418,21 @@ class MiqRequest < ApplicationRecord
     raise _("approval is required for %{task}") % {:task => self.class::TASK_DESCRIPTION} unless approved?
   end
 
+  private def scheduled_time
+    return unless get_option(:schedule_type) == "schedule"
+    t = get_option(:schedule_time)
+    if t.kind_of?(Time)
+      t.utc
+    elsif t.kind_of?(String)
+      require 'time'
+      Time.parse(t).utc
+    end
+  end
+
   def execute
     task_check_on_execute
 
-    if get_option(:schedule_type) == "schedule"
-      start_time = get_option(:schedule_time).utc rescue nil
-
+    if start_time = scheduled_time
       MiqSchedule.create!(
         :name         => "Request scheduled",
         :description  => "Request scheduled",

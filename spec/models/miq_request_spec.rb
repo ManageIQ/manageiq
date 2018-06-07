@@ -587,4 +587,26 @@ describe MiqRequest do
       expect(orch_stack_request.class::SOURCE_CLASS_NAME).to eq('OrchestrationStack')
     end
   end
+
+  context "private methods" do
+    context "#scheduled_time" do
+      it "without a schedule_type" do
+        expect(AutomationRequest.new(:options => {:schedule_time => "abc"}).send(:scheduled_time)).to be_nil
+      end
+
+      it "with a schedule_type and no schedule_time" do
+        expect(AutomationRequest.new(:options => {:schedule_type => "schedule"}).send(:scheduled_time)).to be_nil
+      end
+
+      it "with a schedule_type and a Time schedule_time" do
+        t = Time.now.utc
+        expect(AutomationRequest.new(:options => {:schedule_type => "schedule", :schedule_time => t}).send(:scheduled_time)).to eq(t)
+      end
+
+      it "with a schedule_type and a String schedule_time" do
+        t = Time.now.utc
+        expect(AutomationRequest.new(:options => {:schedule_type => "schedule", :schedule_time => t.to_s}).send(:scheduled_time)).to be_within(1.second).of(t)
+      end
+    end
+  end
 end
