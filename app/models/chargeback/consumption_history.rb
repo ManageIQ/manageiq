@@ -40,9 +40,9 @@ class Chargeback
         :parent_ems_cluster => :tags,
         :parent_storage     => :tags,
         :parent_ems         => :tags)
-                                .select(*Metric::BASE_COLS).order('resource_id, timestamp')
+                                .select(*(Metric::BASE_COLS + ChargeableField.chargeable_cols_on_metric_rollup)).order('resource_id, timestamp')
 
-      base_rollup.select(*ChargeableField.chargeable_cols_on_metric_rollup).with_resource
+      base_rollup.with_resource
     end
 
     private_class_method :base_rollup_scope
