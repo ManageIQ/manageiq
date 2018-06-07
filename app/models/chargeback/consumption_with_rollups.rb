@@ -78,8 +78,15 @@ class Chargeback
       end
     end
 
+    def metering_used_fields_present?(rollup_record)
+      MetricRollup::METERING_USED_METRIC_FIELDS.any? do |field|
+        rollup = rollup_record[ChargeableField.col_index(field)]
+        rollup.present? && rollup.nonzero?
+      end
+    end
+
     def metering_used_fields_present
-      @metering_used_fields_present ||= @rollups.count(&:metering_used_fields_present?)
+      @metering_used_fields_present ||= @rollup_array.count { |rollup| metering_used_fields_present?(rollup) }
     end
 
     def resource_tag_names(rollup)
