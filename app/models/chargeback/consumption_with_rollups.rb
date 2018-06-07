@@ -102,7 +102,8 @@ class Chargeback
     end
 
     def first_metric_rollup_record
-      @fmrr ||= @rollups.first
+      first_rollup_id = @rollup_array.first[ChargeableField.col_index(:id)]
+      @fmrr ||= MetricRollup.find(first_rollup_id) if first_rollup_id
     end
   end
 end
