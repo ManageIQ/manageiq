@@ -55,7 +55,7 @@ describe MiqAeNamespace do
         # domain/ns1/NAMESPACE
         expect do
           FactoryGirl.create(:miq_ae_namespace, :name => 'NAMESPACE', :parent_id => ns1.id)
-        end.to raise_error("Validation failed: Name has already been taken")
+        end.to raise_error("Validation failed: MiqAeNamespace: Name has already been taken")
       end
     end
   end
