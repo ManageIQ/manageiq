@@ -2824,43 +2824,6 @@
           :feature_type: admin
           :hidden: true
           :identifier: delete_build
-    - :name: Schedules
-      :description: Schedules
-      :feature_type: node
-      :hidden: true
-      :identifier: schedule
-      :children:
-      - :name: Modify
-        :description: Modify Schedules
-        :feature_type: admin
-        :identifier: schedule_admin
-        :hidden: true
-        :children:
-        - :name: Add
-          :description: Add a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_add
-        - :name: Edit
-          :description: Edit a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_edit
-        - :name: Delete
-          :description: Delete a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_delete
-        - :name: Enable
-          :description: Enable a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_enable
-        - :name: Disable
-          :description: Disable a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_disable
     - :name: Zones
       :description: Zones
       :feature_type: node
@@ -6476,3 +6439,34 @@
       :description: Display Individual Schedules
       :feature_type: view
       :identifier: schedule_show
+  - :name: Modify
+    :description: Modify Schedules
+    :feature_type: admin
+    :identifier: schedule_admin
+    :hidden: true
+    :children:
+    - :name: Add
+      :description: Add a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_add
+    - :name: Edit
+      :description: Edit a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_edit
+    - :name: Delete
+      :description: Delete a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_delete
+    - :name: Enable
+      :description: Enable a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_enable
+    - :name: Disable
+      :description: Disable a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_disable
