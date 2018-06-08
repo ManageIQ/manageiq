@@ -1434,6 +1434,7 @@ Vmdb::Application.routes.draw do
         provider_type_field_changed
         quick_search
         sections_field_changed
+        show
         show_list
         tag_edit_form_field_changed
         tagging_edit
