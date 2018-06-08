@@ -35,7 +35,7 @@ module Metric::ChargebackHelper
   end
 
   def tag_list_with_prefix
-    all_tag_names.join("|").split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + container_tag_list_with_prefix + chargeback_container_labels
+    all_tag_names.reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + container_tag_list_with_prefix + chargeback_container_labels
   end
 
   def resource_parents
