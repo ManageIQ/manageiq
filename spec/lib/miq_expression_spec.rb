@@ -321,6 +321,37 @@ describe MiqExpression do
       expect(sql).to eq("\"vms\".\"name\" LIKE '%foo%'")
     end
 
+    it "generates the SQL for an INCLUDES ANY with expression method" do
+      sql, * = MiqExpression.new("INCLUDES ANY" => {"field" => "Vm-ipaddresses", "value" => "foo"}).to_sql
+      expected_sql = <<-EXPECTED.strip_heredoc.split("\n").join(" ")
+        1 = (SELECT  1
+        FROM "hardwares"
+        INNER JOIN "networks" ON "networks"."hardware_id" = "hardwares"."id"
+        WHERE "hardwares"."vm_or_template_id" = "vms"."id"
+        AND (\"networks\".\"ipaddress\" ILIKE '%foo%' OR \"networks\".\"ipv6address\" ILIKE '%foo%')
+        LIMIT 1)
+      EXPECTED
+      expect(sql).to eq(expected_sql)
+    end
+
+    it "does not generate SQL for an INCLUDES ANY without an expression method" do
+      sql, _, attrs = MiqExpression.new("INCLUDES ANY" => {"field" => "Vm-name", "value" => "foo"}).to_sql
+      expect(sql).to be nil
+      expect(attrs).to eq(:supported_by_sql => false)
+    end
+
+    it "does not generate SQL for an INCLUDES ALL without an expression method" do
+      sql, _, attrs = MiqExpression.new("INCLUDES ALL" => {"field" => "Vm-ipaddresses", "value" => "foo"}).to_sql
+      expect(sql).to be nil
+      expect(attrs).to eq(:supported_by_sql => false)
+    end
+
+    it "does not generate SQL for an INCLUDES ONLY without an expression method" do
+      sql, _, attrs = MiqExpression.new("INCLUDES ONLY" => {"field" => "Vm-ipaddresses", "value" => "foo"}).to_sql
+      expect(sql).to be nil
+      expect(attrs).to eq(:supported_by_sql => false)
+    end
+
     it "generates the SQL for an AND expression" do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
