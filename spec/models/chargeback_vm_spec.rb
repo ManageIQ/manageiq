@@ -1186,6 +1186,6 @@ describe ChargebackVm do
       stub_settings(:new_chargeback => '1')
     end
 
-    include_examples "ChargebackVm"
+    include_examples "ChargebackVm", :skip
   end
 end
