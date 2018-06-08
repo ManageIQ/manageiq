@@ -25,7 +25,7 @@ class Chargeback
         # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
 
         records.each_value do |rollup_record_ids|
-          metric_rollup_records = base_rollup.where(:id => rollup_record_ids).to_a
+          metric_rollup_records = MetricRollup.where(:id => rollup_record_ids).pluck(*ChargeableField.cols_on_metric_rollup)
           consumption = ConsumptionWithRollups.new(metric_rollup_records, query_start_time, query_end_time)
           yield(consumption) unless consumption.consumed_hours_in_interval.zero?
         end
