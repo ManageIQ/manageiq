@@ -28,8 +28,47 @@ class Chargeback
       end
     end
 
+    TAG_MANAGED_PREFIX = "/tag/managed/".freeze
+
+    def tag_prefix
+      klass_prefix = case resource_type
+                     when Container.name        then 'container_image'
+                     when VmOrTemplate.name     then 'vm'
+                     when ContainerProject.name then 'container_project'
+                     end
+
+      klass_prefix + TAG_MANAGED_PREFIX
+    end
+
+    def chargeback_container_labels
+      resource.try(:container_image).try(:docker_labels).try(:collect_concat) do |l|
+        escaped_name = AssignmentMixin.escape(l.name)
+        escaped_value = AssignmentMixin.escape(l.value)
+        [
+          # The assignments in tags can appear the old way as they are, or escaped
+          "container_image/label/managed/#{l.name}/#{l.value}",
+          "container_image/label/managed/#{escaped_name}/#{escaped_value}"
+        ]
+      end || []
+    end
+
+    def container_tag_list_with_prefix
+      if resource.kind_of?(Container)
+        state = resource.vim_performance_state_for_ts(timestamp.to_s)
+        image_tag_name = "#{state.image_tag_names}|" if state
+
+        image_tag_name.split("|")
+      else
+        []
+      end
+    end
+
+    def tag_list_with_prefix_for(rollup)
+      (all_tag_names(rollup) + container_tag_list_with_prefix).uniq.reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + chargeback_container_labels
+    end
+
     def tag_list_with_prefix
-      @tag_list_with_prefix ||= @rollups.map(&:tag_list_with_prefix).flatten.uniq
+      @tag_list_with_prefix ||= @rollup_array.map { |rollup| tag_list_with_prefix_for(rollup) }.flatten.uniq
     end
 
     def sum(metric, sub_metric = nil)
