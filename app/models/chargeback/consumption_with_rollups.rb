@@ -112,7 +112,9 @@ class Chargeback
 
     def values(metric, sub_metric = nil)
       @values ||= {}
-      @values["#{metric}#{sub_metric}"] ||= sub_metric ? sub_metric_rollups(sub_metric) : @rollups.collect(&metric.to_sym).compact
+      @values["#{metric}#{sub_metric}"] ||= begin
+        sub_metric ? sub_metric_rollups(sub_metric) : @rollup_array.collect { |x| x[ChargeableField.col_index(metric)] }.compact
+      end
     end
 
     def first_metric_rollup_record
