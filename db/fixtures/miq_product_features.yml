@@ -1247,7 +1247,6 @@
       :feature_type: admin
       :identifier: host_provide
 
-
 # Resource Pools
 - :name: Resource Pools
   :description: Access Everything under Resource Pools
@@ -2709,7 +2708,6 @@
           :hidden: true
           :identifier: tp_delete
 
-
 # Tasks
 - :name: Tasks
   :description: Everything under Tasks
@@ -3591,7 +3589,6 @@
     :hidden: true
     :identifier: miq_capacity_download_text
 
-
 # OrchestrationStack
 - :name: Orchestration Stacks
   :description: Everything under Orchestration Stacks
@@ -3956,7 +3953,6 @@
       :feature_type: admin
       :identifier: cloud_network_delete
 
-
 # Network Port
 - :name: Network Ports
   :description: Everything under Network Ports
@@ -4096,7 +4092,6 @@
       :description: Remove Interface from Router
       :feature_type: admin
       :identifier: network_router_remove_interface
-
 
 # Load Balancer
 - :name: Load Balancers
@@ -4261,7 +4256,6 @@
       :description: Check Compliance of Last Known Configuration
       :feature_type: control
       :identifier: container_replicator_check_compliance
-
 
 # ContainerImage
 - :name: Images
@@ -6462,3 +6456,23 @@
         :description: Order cart
         :feature_type: control
         :identifier: sui_cart_order
+
+# Schedule
+- :name: Schedules
+  :description: MiqSchedules
+  :feature_type: node
+  :identifier: schedule
+  :children:
+  - :name: View
+    :description: View Schedules
+    :feature_type: node
+    :identifier: schedule_view
+    :children:
+    - :name: List
+      :description: Display Lists of Schedules
+      :feature_type: view
+      :identifier: schedule_list
+    - :name: Show
+      :description: Display Individual Schedules
+      :feature_type: view
+      :identifier: schedule_show
