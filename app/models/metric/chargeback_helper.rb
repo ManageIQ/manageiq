@@ -11,7 +11,7 @@ module Metric::ChargebackHelper
     klass_prefix + TAG_MANAGED_PREFIX
   end
 
-  def tag_list_with_prefix
+  def container_tag_list_with_prefix
     if resource.kind_of?(Container)
       state = resource.vim_performance_state_for_ts(timestamp.to_s)
       image_tag_name = "#{state.image_tag_names}|" if state
@@ -24,9 +24,15 @@ module Metric::ChargebackHelper
           "container_image/label/managed/#{escaped_name}/#{escaped_value}"
         ]
       end
-    end
 
-    "#{image_tag_name}#{all_tag_names.join("|")}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
+      image_tag_name.split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
+    else
+      []
+    end
+  end
+
+  def tag_list_with_prefix
+    all_tag_names.join("|").split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + container_tag_list_with_prefix
   end
 
   def resource_parents
