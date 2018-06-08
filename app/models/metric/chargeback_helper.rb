@@ -28,14 +28,14 @@ module Metric::ChargebackHelper
       state = resource.vim_performance_state_for_ts(timestamp.to_s)
       image_tag_name = "#{state.image_tag_names}|" if state
 
-      image_tag_name.split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" }
+      image_tag_name.split("|")
     else
       []
     end
   end
 
   def tag_list_with_prefix
-    all_tag_names.reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + container_tag_list_with_prefix + chargeback_container_labels
+    (all_tag_names + container_tag_list_with_prefix).uniq.reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + chargeback_container_labels
   end
 
   def resource_parents
