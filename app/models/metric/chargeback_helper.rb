@@ -52,10 +52,6 @@ module Metric::ChargebackHelper
     resource ? resource.tags.collect(&:name).map { |x| x.gsub("/managed/", "") } : []
   end
 
-  def resource_tag_names
-    tag_names ? tag_names.split("|") : []
-  end
-
   def all_tag_names
     resource_current_tag_names | resource_tag_names
   end
