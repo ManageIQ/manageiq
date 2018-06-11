@@ -37,7 +37,7 @@ module Spec
       def assert_nested_list(parent, children, relation, label, child_path: nil, gtl_types: nil)
         gtl_types    ||= [:list, :tile, :grid]
         child_path   ||= relation.singularize
-        parent_route = controller.restful? ? controller.class.table_name : "#{controller.class.table_name}/show"
+        parent_route = "#{controller.class.table_name}/show"
         child_route  = "#{child_path}/show"
 
         controller.instance_variable_set(:@breadcrumbs, [])
