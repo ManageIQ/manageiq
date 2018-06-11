@@ -115,7 +115,7 @@ class VmScan < Job
           return
         end
 
-        if proxy && proxy.forceVmScan
+        if proxy
           options[:snapshot] = :smartProxy
           _log.info("Skipping snapshot creation, it will be performed by the SmartProxy")
           context[:snapshot_mor] = options[:snapshot_description] = snapshotDescription("(embedded)")

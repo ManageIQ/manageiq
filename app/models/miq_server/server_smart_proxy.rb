@@ -157,10 +157,6 @@ module MiqServer::ServerSmartProxy
     errArray.each { |e| $log.error("Error Trace: [#{e}]") }
   end
 
-  def forceVmScan
-    true
-  end
-
   # TODO: This should be moved - where?
   def is_vix_disk_supported?
     caps = {:vixDisk => false}
