@@ -447,6 +447,12 @@ class MiqRequest < ApplicationRecord
     end
   end
 
+  def unschedule
+    raise "request in state #{request_state} can not be unscheduled" unless request_state == "scheduled"
+    miq_schedule.destroy!
+    update_attributes!(:request_state => "unscheduled")
+  end
+
   def queue_create_request_tasks
     # self.create_request_tasks
     MiqQueue.put(

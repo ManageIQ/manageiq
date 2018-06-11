@@ -595,4 +595,31 @@ describe MiqRequest do
       expect(orch_stack_request.class::SOURCE_CLASS_NAME).to eq('OrchestrationStack')
     end
   end
+
+  context "unschedule" do
+    it "with a scheduled request" do
+      EvmSpecHelper.local_miq_server
+      request = FactoryGirl.create(:automation_request, :options => {:schedule_type => "schedule", :schedule_time => Time.now.utc})
+      request.miq_approvals.all.each { |a| a.update_attributes!(:state => "approved") }
+
+      request.reload.execute
+
+      expect(MiqQueue.count).to eq(0)
+      expect(MiqSchedule.count).to eq(1)
+
+      request.unschedule
+
+      expect(MiqSchedule.count).to eq(0)
+      expect(request.request_state).to eq("unscheduled")
+    end
+
+    it "with a non-scheduled request" do
+      EvmSpecHelper.local_miq_server
+      request = FactoryGirl.create(:automation_request)
+
+      expect(MiqSchedule.count).to eq(0)
+
+      expect { request.unschedule }.to raise_error("request in state pending can not be unscheduled")
+    end
+  end
 end
