@@ -622,11 +622,19 @@ describe VirtualFields do
 
             include VirtualFields
           end
+
+          class CompSys < ComputerSystem
+            has_one :first_os, -> { order(:name) },
+                    :class_name  => "OperatingSystem",
+                    :foreign_key => "computer_system_id",
+                    :dependent   => :destroy
+          end
         end
 
         after do
           TestOtherClass.remove_connection
           Object.send(:remove_const, :TestOtherClass)
+          Object.send(:remove_const, :CompSys)
         end
 
         it "delegates to another table" do
@@ -643,6 +651,15 @@ describe VirtualFields do
           TestOtherClass.virtual_delegate :col1, :to => :oref1
           sql = TestOtherClass.all.select(:id, :ocol1, TestOtherClass.arel_attribute(:col1).as("x")).to_sql
           expect(sql).to match(/"test_classes"."col1"/i)
+        end
+
+        it "delegates has_one relationships with limit 1" do
+          CompSys.virtual_delegate :first_os_name, :to => 'first_os.name'
+          comp_sys = CompSys.create!
+          OperatingSystem.create(:name => "foo", :computer_system_id => comp_sys.id)
+          OperatingSystem.create(:name => "bar", :computer_system_id => comp_sys.id)
+          query = CompSys.all.select(:id, :first_os_name)
+          expect(query.map(&:first_os_name)).to match_array(["bar"])
         end
       end
     end
