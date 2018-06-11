@@ -222,6 +222,7 @@ containerproject_created,Container Project Discovered,Default,container_operatio
 #
 # Physical Server Operations
 #
+physicalserver_compliance_check,Physical Server Compliance Check,Default,compliance
 physical_server_shutdown,Physical Server Shutdown,Default,physical_server_operations
 physical_server_start,Physical Server Start,Default,physical_server_operations
 physical_server_reset,Physical Server Reset,Default,physical_server_operations
