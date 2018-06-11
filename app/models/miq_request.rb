@@ -440,6 +440,8 @@ class MiqRequest < ApplicationRecord
           :tz         => "UTC",
         },
       )
+
+      update_attributes!(:request_state => "scheduled")
     else
       queue_create_request_tasks
     end
