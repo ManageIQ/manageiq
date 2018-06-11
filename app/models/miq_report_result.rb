@@ -349,8 +349,6 @@ class MiqReportResult < ApplicationRecord
     n_('Report Result', 'Report Results', number)
   end
 
-  private
-
   def user_timezone
     user = userid.include?("|") ? nil : User.find_by_userid(userid)
     user ? user.get_timezone : MiqServer.my_server.server_timezone
