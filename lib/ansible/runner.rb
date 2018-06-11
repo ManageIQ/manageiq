@@ -8,7 +8,7 @@ module Ansible
       private
 
       def run_via_cli(env_vars, extra_vars, playbook_path)
-        result = %x(#{format_env_vars(env_vars)} #{ansible_command} #{format_extra_vars(extra_vars)} #{playbook_path})
+        result = %x(#{format_env_vars(env_vars)} #{ansible_command.shellescape} #{format_extra_vars(extra_vars)} #{playbook_path.to_s.shellescape})
         JSON.parse(result)
       end
 
@@ -18,7 +18,7 @@ module Ansible
       end
 
       def format_env_vars(env_vars)
-        env_vars.map { |key, value| "#{key}='#{value}'" }.join(" ")
+        env_vars.map { |key, value| "#{key.shellescape}='#{value.shellescape}'" }.join(" ")
       end
 
       def format_extra_vars(extra_vars)
