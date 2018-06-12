@@ -454,6 +454,14 @@
       :description: Edit a Cloud Provider
       :feature_type: admin
       :identifier: ems_cloud_edit
+    - :name: Pause
+      :description: Pause Cloud Providers
+      :feature_type: admin
+      :identifier: ems_cloud_pause
+    - :name: Resume
+      :description: Resume Cloud Providers
+      :feature_type: admin
+      :identifier: ems_cloud_resume
     - :name: Add
       :description: Add a Cloud Provider
       :feature_type: admin
@@ -1003,6 +1011,14 @@
       :description: Edit an Infrastructure Provider
       :feature_type: admin
       :identifier: ems_infra_edit
+    - :name: Pause
+      :description: Pause Infrastructure Providers
+      :feature_type: admin
+      :identifier: ems_infra_pause
+    - :name: Resume
+      :description: Resume Infrastructure Providers
+      :feature_type: admin
+      :identifier: ems_infra_resume
     - :name: Add
       :description: Add an Infrastructure Provider
       :feature_type: admin
@@ -5829,6 +5845,14 @@
       :description: Edit a Physical Infrastructure Provider
       :feature_type: admin
       :identifier: ems_physical_infra_edit
+    - :name: Pause
+      :description: Pause Physical Infrastructure Providers
+      :feature_type: admin
+      :identifier: ems_physical_infra_pause
+    - :name: Resume
+      :description: Resume Physical Infrastructure Providers
+      :feature_type: admin
+      :identifier: ems_physical_infra_resume
     - :name: Add
       :description: Add a Physical Infrastructure Provider
       :feature_type: admin
