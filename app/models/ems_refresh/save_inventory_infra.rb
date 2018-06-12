@@ -64,7 +64,7 @@ module EmsRefresh::SaveInventoryInfra
       :orchestration_templates,
       :orchestration_stacks
     ]
-
+    old_switch_ids = ems.switches.pluck(:id)
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target, disconnect)
 
@@ -78,7 +78,7 @@ module EmsRefresh::SaveInventoryInfra
 
     new_relats = hashes_relats(hashes)
     link_ems_inventory(ems, target, prev_relats, new_relats, disconnect)
-    remove_obsolete_switches
+    remove_obsolete_switches(ems, old_switch_ids)
 
     ems
   end
@@ -331,10 +331,9 @@ module EmsRefresh::SaveInventoryInfra
     host.switches.delete(deletes)
   end
 
-  def remove_obsolete_switches
-    # delete from switches as s where s.shared is NULL and s.id not in (select switch_id from host_switches)
-    # delete from switches as s where s.shared = 't' and s.id not in (select switch_id from host_switches)
-    Switch.where.not(:id => HostSwitch.all.collect(&:switch).uniq).destroy_all
+  def remove_obsolete_switches(ems, old_switch_ids)
+    obsolete_switch_ids = old_switch_ids - ems.switches.reload.pluck(:id)
+    Switch.where(:id => obsolete_switch_ids).destroy_all
   end
 
   def save_lans_inventory(switch, hashes)
