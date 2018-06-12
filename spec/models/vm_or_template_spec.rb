@@ -82,6 +82,30 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".miq_expression_includes_any_ipaddresses_arel" do
+    subject              { FactoryGirl.create(:vm) }
+    let(:no_hardware_vm) { FactoryGirl.create(:vm) }
+    let(:wrong_ip_vm)    { FactoryGirl.create(:vm) }
+
+    before do
+      hw1 = FactoryGirl.create(:hardware, :vm => subject)
+      FactoryGirl.create(:network, :hardware => hw1, :ipaddress => "10.11.11.11")
+      FactoryGirl.create(:network, :hardware => hw1, :ipaddress => "10.10.10.10")
+      FactoryGirl.create(:network, :hardware => hw1, :ipaddress => "10.10.10.11")
+
+      hw2 = FactoryGirl.create(:hardware, :vm => wrong_ip_vm)
+      FactoryGirl.create(:network, :hardware => hw2, :ipaddress => "11.11.11.11")
+    end
+
+    it "runs a single query, returning only the valid vm" do
+      expect do
+        query  = Vm.miq_expression_includes_any_ipaddresses_arel("10.10.10")
+        result = Vm.where(query)
+        expect(result.to_a).to eq([subject])
+      end.to match_query_limit_of(1)
+    end
+  end
+
   context ".event_by_property" do
     context "should add an EMS event" do
       before do
