@@ -21,6 +21,11 @@ module ManagerRefresh
           default_builder_params
         end
 
+        def configuration_workflows
+          default_manager_ref
+          default_builder_params
+        end
+
         def configured_systems
           default_manager_ref
           default_builder_params
