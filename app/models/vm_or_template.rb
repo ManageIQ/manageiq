@@ -1624,6 +1624,39 @@ class VmOrTemplate < ApplicationRecord
     end
   end
 
+  # This creates the following SQL conditional:
+  #
+  #   1 = (SELECT 1
+  #        FROM hardwares
+  #        JOIN networks ON networks.hardware_id = hardwares.id
+  #        WHERE hardwares.vm_or_template_id = vms.id
+  #          AND (networks.ipaddress LIKE "%IPADDRESS%"
+  #               OR networks.ipv6address LIKE "%IPADDRESS%")
+  #        LIMIT 1
+  #       )
+  #
+  # This is simply an existance check, so when one record is found matching the
+  # following conditions:
+  #
+  #   - It is a hardware record that is associated with the vm
+  #   - It has an ipaddress or ipv6address that matches the search
+  #
+  # It will return the VM record.
+  def self.miq_expression_includes_any_ipaddresses_arel(ipaddress)
+    vms       = arel_table
+    networks  = Network.arel_table
+    hardwares = Hardware.arel_table
+
+    match_grouping = networks[:ipaddress].matches("%#{ipaddress}%")
+                       .or(networks[:ipv6address].matches("%#{ipaddress}%"))
+
+    query = hardwares.project(1)
+                     .join(networks).on(networks[:hardware_id].eq(hardwares[:id]))
+                     .where(hardwares[:vm_or_template_id].eq(vms[:id]).and(match_grouping))
+                     .take(1)
+    Arel::Nodes::SqlLiteral.new("1").eq(query)
+  end
+
   def self.scan_by_property(property, value, _options = {})
     _log.info("scan_vm_by_property called with property:[#{property}] value:[#{value}]")
     case property

@@ -30,7 +30,11 @@ class Hardware < ApplicationRecord
   virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
 
   def ipaddresses
-    @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
+    @ipaddresses ||= if networks.loaded?
+                       networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
+                     else
+                       networks.pluck(:ipaddress, :ipv6address).flatten.tap(&:compact!).tap(&:uniq!)
+                     end
   end
 
   def hostnames
