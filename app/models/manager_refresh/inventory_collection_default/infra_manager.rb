@@ -409,18 +409,26 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
     def snapshot_parent(extra_attributes = {})
       snapshot_parent_save_block = lambda do |_ems, inventory_collection|
         snapshot_collection = inventory_collection.dependency_attributes[:snapshots].try(:first)
+        snapshot_parents    = snapshot_collection.data.each_with_object({}) do |snapshot, hash|
+          hash[snapshot.id] = snapshot.parent_uid if snapshot.parent_uid
+        end
 
-        snapshot_collection.each do |snapshot|
-          ActiveRecord::Base.transaction do
-            child = Snapshot.find(snapshot.id)
-            parent = Snapshot.find_by(:uid_ems => snapshot.parent_uid)
-            child.update_attribute(:parent_id, parent.try(:id))
+        ActiveRecord::Base.transaction do
+          snap_recs   = Snapshot.find(snapshot_parents.keys)
+          parent_recs = Snapshot.where(:uid_ems => snapshot_parents.values).index_by(&:uid_ems)
+
+          snap_recs.each do |snap_rec|
+            parent_uid = snapshot_parents[snap_rec.id]
+            parent     = parent_recs[parent_uid] if parent_uid
+            next if parent.nil?
+
+            snap_rec.update_attribute(:parent_id, parent.id)
           end
         end
       end
 
       attributes = {
-        :association       => :snapshot_patent,
+        :association       => :snapshot_parent,
         :custom_save_block => snapshot_parent_save_block,
       }
 
