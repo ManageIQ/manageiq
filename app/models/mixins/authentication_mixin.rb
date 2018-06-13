@@ -126,6 +126,10 @@ module AuthenticationMixin
     authentication_best_fit(type).try(:status) == "Valid"
   end
 
+  def default_auth_status_ok?
+    authentication_status_ok?
+  end
+
   def auth_user_pwd(type = nil)
     cred = authentication_best_fit(type)
     return nil if cred.nil? || cred.userid.blank?
