@@ -42,6 +42,12 @@ class MiqSchedule < ApplicationRecord
   default_value_for :enabled, true
   default_value_for(:zone_id) { MiqServer.my_server.zone_id }
 
+  def resource
+    # HACK: this should be a real relation, but for now it's using a reserve_attribute for backport reasons
+    return unless resource_id
+    towhat.safe_constantize.find_by(:id => resource_id)
+  end
+
   def set_start_time_and_prod_default
     run_at # Internally this will correct :start_time to UTC
     self.prod_default = "system" if SYSTEM_SCHEDULE_CLASSES.include?(towhat.to_s)
