@@ -73,18 +73,41 @@ describe UniqueWithinRegionValidator do
     end
 
     context "class with STI" do
+      let(:test_base_class) do
+        Class.new(ApplicationRecord) do
+          validates :name, :unique_within_region => true
+          self.table_name = "vms"
+        end
+      end
+
+      let(:test_subclass1) do
+        Class.new(test_base_class) do
+          def self.name
+            "Subclass1"
+          end
+        end
+      end
+
+      let(:test_subclass2) do
+        Class.new(test_base_class) do
+          def self.name
+            "Subclass2"
+          end
+        end
+      end
+
       context "two subclasses" do
         it "raises error with non-unique names in same region" do
-          FactoryGirl.create(:customization_template_cloud_init, :name => "foo")
+          test_subclass1.create(:name => "foo")
 
-          expect { FactoryGirl.create(:customization_template_sysprep, :name => "foo") }
+          expect { test_subclass2.create!(:name => "foo") }
             .to raise_error(ActiveRecord::RecordInvalid, / Name is not unique within region/)
         end
 
         it "doesn't raise error with unique names" do
-          FactoryGirl.create(:customization_template_cloud_init)
+          test_subclass1.create(:name => "foo")
 
-          expect { FactoryGirl.create(:customization_template_sysprep) }.to_not raise_error
+          expect { test_subclass2.create!(:name => "bar") }.to_not raise_error
         end
       end
     end
