@@ -26,4 +26,8 @@ class GuestDevice < ApplicationRecord
   def self.with_storage_type
     where(:device_type => "storage")
   end
+
+  def self.display_name(number = 1)
+    n_('Guest Device', 'Guest Devices', number)
+  end
 end
