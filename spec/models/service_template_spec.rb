@@ -839,8 +839,7 @@ describe ServiceTemplate do
       expect(result[:schedule]).to have_attributes(
         :name         => "Order ServiceTemplate #{service_template.id} at #{time}",
         :sched_action => {:args => [user.id, {}, {}], :method => "queue_order"},
-        :towhat       => "ServiceTemplate",
-        :resource_id  => service_template.id
+        :resource     => service_template
       )
     end
 

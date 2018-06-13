@@ -729,7 +729,7 @@ describe MiqSchedule do
         end
 
         it "and does not respond to the method" do
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method"})
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method"})
 
           expect($log).to receive(:warn) do |message|
             expect(message).to include("no such action: [test_method], aborting schedule")
@@ -739,7 +739,7 @@ describe MiqSchedule do
         end
 
         it "and responds to the method" do
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method"})
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method"})
 
           expect(resource).to receive("test_method").once
 
@@ -747,7 +747,7 @@ describe MiqSchedule do
         end
 
         it "and responds to the method with arguments" do
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method", :args => ["abc", 123, :a => 1]})
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method", :args => ["abc", 123, :a => 1]})
 
           expect(resource).to receive("test_method").once.with("abc", 123, :a => 1)
 

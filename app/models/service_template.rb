@@ -55,6 +55,7 @@ class ServiceTemplate < ApplicationRecord
   belongs_to :service_template_catalog
 
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
+  has_many   :miq_schedules, :as => :resource, :dependent => :destroy
 
   has_many   :miq_requests, :as => :source, :dependent => :nullify
   has_many   :active_requests, -> { where(:request_state => MiqRequest::ACTIVE_STATES) }, :as => :source, :class_name => "MiqRequest"
@@ -404,11 +405,6 @@ class ServiceTemplate < ApplicationRecord
       :method_name => "order",
       :args        => [user_id, options, request_options],
     )
-  end
-
-  def miq_schedules
-    schedule_ids = Reserve.where(:resource_type => "MiqSchedule").collect { |r| r.resource_id if r.reserved == {:resource_id => id} }.compact
-    MiqSchedule.where(:towhat => "ServiceTemplate", :id => schedule_ids)
   end
 
   def order(user_or_id, options = nil, request_options = nil, schedule_time = nil)
