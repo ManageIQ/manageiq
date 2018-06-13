@@ -22,4 +22,18 @@ class ConfigurationScriptBase < ApplicationRecord
   scope :with_manager, ->(manager_id) { where(:manager_id => manager_id) }
 
   include ProviderObjectMixin
+
+  EXCLUDED_WORKFLOW_TYPES = ["ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook",
+                             "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook",
+                             "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript",
+                             "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptPayload",
+                             "ManageIQ::Providers::AutomationManager::ConfigurationScriptPayload"]
+
+  def self.without_playbooks
+    where.not(:type => EXCLUDED_WORKFLOW_TYPES)
+  end
+
+  def self.without_playbooks_for_manager(manager_id)
+    where(:manager_id => manager_id).where.not(:type => EXCLUDED_WORKFLOW_TYPES)
+  end
 end
