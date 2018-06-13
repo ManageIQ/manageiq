@@ -695,4 +695,38 @@ describe MiqSchedule do
       expect(MiqSchedule.updated_since(1.month.ago)).to eq([s])
     end
   end
+
+  context ".queue_scheduled_work" do
+    it "When action exists" do
+      s = FactoryGirl.create(:miq_schedule, :sched_action => {:method => "scan"})
+      MiqSchedule.queue_scheduled_work(s.id, nil, "abc", nil)
+
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => "MiqSchedule",
+        :instance_id => s.id,
+        :method_name => "invoke_actions",
+        :args        => ["action_scan", "abc"],
+        :msg_timeout => 1200
+      )
+    end
+
+    it "with no action method, but resource exists and responds to the method" do
+      resource = FactoryGirl.create(:host)
+      s = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method"})
+
+      expect_any_instance_of(Host).to receive("test_method").once
+
+      MiqSchedule.queue_scheduled_work(s.id, nil, "abc", nil)
+    end
+
+    it "with no action or resource" do
+      s = FactoryGirl.create(:miq_schedule, :sched_action => {:method => "test_method"})
+
+      expect($log).to receive(:warn) do |message|
+        expect(message).to include("no such action: [test_method], aborting schedule")
+      end
+
+      MiqSchedule.queue_scheduled_work(s.id, nil, "abc", nil)
+    end
+  end
 end

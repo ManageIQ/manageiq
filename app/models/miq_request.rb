@@ -11,6 +11,7 @@ class MiqRequest < ApplicationRecord
   belongs_to :service_order
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
+  has_one    :miq_schedule,      :dependent   => :destroy, :as => :resource
 
   acts_as_miq_taggable
 
@@ -417,14 +418,39 @@ class MiqRequest < ApplicationRecord
     raise _("approval is required for %{task}") % {:task => self.class::TASK_DESCRIPTION} unless approved?
   end
 
+  private def scheduled_time
+    return unless get_option(:schedule_type) == "schedule"
+    t = get_option(:schedule_time)
+    if t.kind_of?(Time)
+      t.utc
+    elsif t.kind_of?(String)
+      require 'time'
+      Time.parse(t).utc
+    end
+  end
+
   def execute
     task_check_on_execute
 
-    deliver_on = nil
-    if get_option(:schedule_type) == "schedule"
-      deliver_on = get_option(:schedule_time).utc rescue nil
+    if start_time = scheduled_time
+      MiqSchedule.create!(
+        :name         => "Request scheduled",
+        :description  => "Request scheduled",
+        :sched_action => {:method => "queue_create_request_tasks"},
+        :resource_id  => id,
+        :towhat       => "MiqRequest",
+        :run_at       => {
+          :interval   => {:unit => "once"},
+          :start_time => start_time,
+          :tz         => "UTC",
+        },
+      )
+    else
+      queue_create_request_tasks
     end
+  end
 
+  def queue_create_request_tasks
     # self.create_request_tasks
     MiqQueue.put(
       :class_name     => self.class.name,
@@ -434,7 +460,6 @@ class MiqRequest < ApplicationRecord
       :role           => my_role(:create_request_tasks),
       :tracking_label => tracking_label_id,
       :msg_timeout    => 3600,
-      :deliver_on     => deliver_on
     )
   end
 

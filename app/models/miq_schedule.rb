@@ -1,4 +1,7 @@
 class MiqSchedule < ApplicationRecord
+  include DeprecationMixin
+  deprecate_attribute :towhat, :resource_type
+
   validates :name, :uniqueness => {:scope => [:userid, :towhat]}
   validates :name, :description, :towhat, :run_at, :presence => true
   validate  :validate_run_at, :validate_file_depot
@@ -11,6 +14,7 @@ class MiqSchedule < ApplicationRecord
 
   belongs_to :file_depot
   belongs_to :miq_search
+  belongs_to :resource, :polymorphic => true
   belongs_to :zone
 
   scope :in_zone, lambda { |zone_name|
@@ -72,21 +76,25 @@ class MiqSchedule < ApplicationRecord
     _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]")
 
     action = "action_" + method
-    unless sched.respond_to?(action)
+
+    if sched.respond_to?(action)
+      msg = MiqQueue.submit_job(
+        :class_name  => name,
+        :instance_id => sched.id,
+        :method_name => "invoke_actions",
+        :args        => [action, at],
+        :msg_timeout => 1200
+      )
+
+      _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
+      msg
+    elsif sched.resource.respond_to?(method)
+      sched.resource.send(method)
+      sched.update_attributes(:last_run_on => Time.now.utc)
+    else
       _log.warn("[#{sched.name}] no such action: [#{method}], aborting schedule")
       return
     end
-
-    msg = MiqQueue.submit_job(
-      :class_name  => name,
-      :instance_id => sched.id,
-      :method_name => "invoke_actions",
-      :args        => [action, at],
-      :msg_timeout => 1200
-    )
-
-    _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
-    msg
   end
 
   def invoke_actions(action, at)

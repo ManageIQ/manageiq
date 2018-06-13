@@ -343,6 +343,28 @@ describe MiqRequest do
         it_behaves_like "#calls create_request_tasks with the proper role"
       end
     end
+
+    it "scheduled - creates an associated schedule" do
+      EvmSpecHelper.local_miq_server
+      request = FactoryGirl.create(:automation_request, :options => {:schedule_type => "schedule", :schedule_time => Time.now.utc})
+      request.miq_approvals.all.each { |a| a.update_attributes!(:state => "approved") }
+
+      request.reload.execute
+
+      expect(MiqQueue.count).to eq(0)
+      expect(MiqSchedule.count).to eq(1)
+    end
+
+    it "non_scheduled - is queued directly" do
+      EvmSpecHelper.local_miq_server
+      request = FactoryGirl.create(:automation_request)
+      request.miq_approvals.all.each { |a| a.update_attributes!(:state => "approved") }
+
+      request.reload.execute
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqSchedule.count).to eq(0)
+    end
   end
 
   context '#post_create_request_tasks' do
@@ -561,6 +583,28 @@ describe MiqRequest do
       expect(vm_retire_request.class::SOURCE_CLASS_NAME).to eq('Vm')
       expect(service_retire_request.class::SOURCE_CLASS_NAME).to eq('Service')
       expect(orch_stack_request.class::SOURCE_CLASS_NAME).to eq('OrchestrationStack')
+    end
+  end
+
+  context "private methods" do
+    context "#scheduled_time" do
+      it "without a schedule_type" do
+        expect(AutomationRequest.new(:options => {:schedule_time => "abc"}).send(:scheduled_time)).to be_nil
+      end
+
+      it "with a schedule_type and no schedule_time" do
+        expect(AutomationRequest.new(:options => {:schedule_type => "schedule"}).send(:scheduled_time)).to be_nil
+      end
+
+      it "with a schedule_type and a Time schedule_time" do
+        t = Time.now.utc
+        expect(AutomationRequest.new(:options => {:schedule_type => "schedule", :schedule_time => t}).send(:scheduled_time)).to eq(t)
+      end
+
+      it "with a schedule_type and a String schedule_time" do
+        t = Time.now.utc
+        expect(AutomationRequest.new(:options => {:schedule_type => "schedule", :schedule_time => t.to_s}).send(:scheduled_time)).to be_within(1.second).of(t)
+      end
     end
   end
 end
