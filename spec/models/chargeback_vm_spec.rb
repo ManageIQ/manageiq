@@ -818,7 +818,7 @@ describe ChargebackVm do
         let(:report_options) { Chargeback::ReportOptions.new }
         let(:timestamp_key) { 'Fri, 13 May 2016 10:40:00 UTC +00:00' }
         let(:beginning_of_day) { timestamp_key.in_time_zone.beginning_of_day }
-        let(:metric_rollup) { FactoryGirl.build(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
+        let(:metric_rollup) { FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
         let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
         subject { described_class.report_row_key(consumption) }
         before do
@@ -844,7 +844,7 @@ describe ChargebackVm do
 
         context 'with parent ems' do
           let(:metric_rollup) do
-            FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+            FactoryGirl.create(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
                               :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                               :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                               :resource => @vm1, :resource_name => @vm1.name)
@@ -857,7 +857,7 @@ describe ChargebackVm do
 
         context 'when parent ems is missing' do
           let(:metric_rollup) do
-            FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+            FactoryGirl.create(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
                               :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                               :parent_storage_id => @storage.id,
                               :resource => @vm1, :resource_name => @vm1.name)
@@ -887,7 +887,6 @@ describe ChargebackVm do
                              :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                              :resource => @vm)
         end
-        let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
 
         before do
           @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
@@ -899,9 +898,11 @@ describe ChargebackVm do
           skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
 
           [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
-            metric_rollup.tag_names = rate_assignment[:tag].first.tag.send(:name_path)
+            metric_rollup.update_attributes!(:tag_names => rate_assignment[:tag].first.tag.send(:name_path))
             @vm.tag_with(["/managed/#{metric_rollup.tag_names}"], :ns => '*')
             @vm.reload
+
+            consumption = Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil)
             uniq_rates = Chargeback::RatesCache.new.get(consumption)
             consumption.instance_variable_set(:@tag_names, nil)
             consumption.instance_variable_set(:@hash_features_affecting_rate, nil)
@@ -935,10 +936,10 @@ describe ChargebackVm do
       let(:metering_used_hours) { 24 }
 
       let(:hardware) do
-        FactoryGirl.build(:hardware,
+        FactoryGirl.create(:hardware,
                           :cpu_total_cores => cores,
                           :memory_mb       => mem_mb,
-                          :disks           => [FactoryGirl.build(:disk, :size => disk_b)])
+                          :disks           => [FactoryGirl.create(:disk, :size => disk_b)])
       end
 
       let(:fixed_cost) { hourly_rate * 24 }
