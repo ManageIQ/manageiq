@@ -180,6 +180,10 @@
       :description: Edit a Request
       :feature_type: admin
       :identifier: miq_request_edit
+    - :name: Unschedule
+      :description: Unschedule a Request
+      :feature_type: admin
+      :identifier: miq_request_unschedule
   - :name: Request Admin
     :description: Edit other user's requests
     :feature_type: admin

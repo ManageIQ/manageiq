@@ -343,6 +343,36 @@ describe MiqRequest do
         it_behaves_like "#calls create_request_tasks with the proper role"
       end
     end
+
+    it "scheduled - creates an associated schedule" do
+      EvmSpecHelper.local_miq_server
+      request = FactoryGirl.create(:automation_request, :options => {:schedule_type => "schedule", :schedule_time => Time.now.utc})
+      request.miq_approvals.all.each { |a| a.update_attributes!(:state => "approved") }
+
+      request.reload.execute
+
+      expect(MiqQueue.count).to eq(0)
+      expect(MiqSchedule.count).to eq(1)
+
+      # HACK: This should be a real relation
+      expect(Reserve.count).to eq(1)
+      expect(request.miq_schedule).to be_kind_of(MiqSchedule)
+    end
+
+    it "non_scheduled - is queued directly" do
+      EvmSpecHelper.local_miq_server
+      request = FactoryGirl.create(:automation_request)
+      request.miq_approvals.all.each { |a| a.update_attributes!(:state => "approved") }
+
+      request.reload.execute
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqSchedule.count).to eq(0)
+
+      # HACK: This should be a real relation
+      expect(Reserve.count).to eq(0)
+      expect(request.miq_schedule).to be_nil
+    end
   end
 
   context '#post_create_request_tasks' do
@@ -561,6 +591,33 @@ describe MiqRequest do
       expect(vm_retire_request.class::SOURCE_CLASS_NAME).to eq('Vm')
       expect(service_retire_request.class::SOURCE_CLASS_NAME).to eq('Service')
       expect(orch_stack_request.class::SOURCE_CLASS_NAME).to eq('OrchestrationStack')
+    end
+  end
+
+  context "unschedule" do
+    it "with a scheduled request" do
+      EvmSpecHelper.local_miq_server
+      request = FactoryGirl.create(:automation_request, :options => {:schedule_type => "schedule", :schedule_time => Time.now.utc})
+      request.miq_approvals.all.each { |a| a.update_attributes!(:state => "approved") }
+
+      request.reload.execute
+
+      expect(MiqQueue.count).to eq(0)
+      expect(MiqSchedule.count).to eq(1)
+
+      request.unschedule
+
+      expect(MiqSchedule.count).to eq(0)
+      expect(request.request_state).to eq("unscheduled")
+    end
+
+    it "with a non-scheduled request" do
+      EvmSpecHelper.local_miq_server
+      request = FactoryGirl.create(:automation_request)
+
+      expect(MiqSchedule.count).to eq(0)
+
+      expect { request.unschedule }.to raise_error("request in state pending can not be unscheduled")
     end
   end
 end
