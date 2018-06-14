@@ -11,22 +11,31 @@ module Metric::ChargebackHelper
     klass_prefix + TAG_MANAGED_PREFIX
   end
 
-  def tag_list_with_prefix
+  def chargeback_container_labels
+    resource.try(:container_image).try(:docker_labels).try(:collect_concat) do |l|
+      escaped_name = AssignmentMixin.escape(l.name)
+      escaped_value = AssignmentMixin.escape(l.value)
+      [
+        # The assignments in tags can appear the old way as they are, or escaped
+        "container_image/label/managed/#{l.name}/#{l.value}",
+        "container_image/label/managed/#{escaped_name}/#{escaped_value}"
+      ]
+    end || []
+  end
+
+  def container_tag_list_with_prefix
     if resource.kind_of?(Container)
       state = resource.vim_performance_state_for_ts(timestamp.to_s)
       image_tag_name = "#{state.image_tag_names}|" if state
-      labels = resource.try(:container_image).try(:docker_labels).try(:collect_concat) do |l|
-        escaped_name = AssignmentMixin.escape(l.name)
-        escaped_value = AssignmentMixin.escape(l.value)
-        [
-          # The assignments in tags can appear the old way as they are, or escaped
-          "container_image/label/managed/#{l.name}/#{l.value}",
-          "container_image/label/managed/#{escaped_name}/#{escaped_value}"
-        ]
-      end
-    end
 
-    "#{image_tag_name}#{all_tag_names.join("|")}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
+      image_tag_name.split("|")
+    else
+      []
+    end
+  end
+
+  def tag_list_with_prefix
+    (all_tag_names + container_tag_list_with_prefix).uniq.reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + chargeback_container_labels
   end
 
   def resource_parents
