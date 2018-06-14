@@ -53,6 +53,13 @@ class MiqReportResult < ApplicationRecord
     miq_task.nil? ? _("The task associated with this report is no longer available") : miq_task.message
   end
 
+  # Use this method over `report_results` if you don't plan on using the
+  # `binary_blob` associated with the MiqReportResult (chances are you don't
+  # need it).
+  def valid_report_column?
+    report.kind_of?(MiqReport)
+  end
+
   def report_results
     if binary_blob
       data = binary_blob.data
