@@ -1,6 +1,6 @@
 describe Chargeback::ConsumptionWithRollups do
-  let(:vm)          { FactoryGirl.build(:vm_microsoft) }
-  let(:consumption) { described_class.new([metric_rollup], starting_date, starting_date + 1.day) }
+  let(:vm)          { FactoryGirl.create(:vm_microsoft) }
+  let(:consumption) { described_class.new(pluck_rollup([metric_rollup]), starting_date, starting_date + 1.day) }
 
   describe '#sub_metric_rollups' do
     let(:starting_date)        { Time.parse('2012-09-01 23:59:59Z').utc }
@@ -8,6 +8,10 @@ describe Chargeback::ConsumptionWithRollups do
     let(:ssd_volume)           { FactoryGirl.create(:cloud_volume_openstack, :volume_type => sub_metric) }
     let!(:state)         { FactoryGirl.create(:vim_performance_state, :resource => vm, :state_data => nil, :timestamp => starting_date, :capture_interval => 3_600) }
     let!(:metric_rollup) { FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => starting_date + 1.hour, :resource => vm) }
+
+    def pluck_rollup(metric_rollup_records)
+      metric_rollup_records.pluck(*ChargeableField.cols_on_metric_rollup)
+    end
 
     before do
       Timecop.travel(starting_date + 10.hours)
