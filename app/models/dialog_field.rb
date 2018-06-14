@@ -126,7 +126,7 @@ class DialogField < ApplicationRecord
   end
 
   def required_value_error?
-    value.blank?
+    value.blank? || value == '[nil, "<Choose>"]' || value == 'null'
   end
 
   def value_from_dialog_fields(dialog_values)
