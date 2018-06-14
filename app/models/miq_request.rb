@@ -417,14 +417,35 @@ class MiqRequest < ApplicationRecord
     raise _("approval is required for %{task}") % {:task => self.class::TASK_DESCRIPTION} unless approved?
   end
 
+  def miq_schedule
+    # HACK: this should be a real relation, but for now it's using a reserve_attribute for backport reasons
+    Reserve.where(:resource_type => "MiqSchedule").detect { |r| r.reserved == {:resource_id => id} }&.resource
+  end
+
   def execute
     task_check_on_execute
 
-    deliver_on = nil
     if get_option(:schedule_type) == "schedule"
-      deliver_on = get_option(:schedule_time).utc rescue nil
-    end
+      start_time = get_option(:schedule_time).utc rescue nil
 
+      MiqSchedule.create!(
+        :name         => "Request scheduled",
+        :description  => "Request scheduled",
+        :sched_action => {:method => "queue_create_request_tasks"},
+        :resource_id  => id,
+        :towhat       => "MiqRequest",
+        :run_at       => {
+          :interval   => {:unit => "once"},
+          :start_time => start_time,
+          :tz         => "UTC",
+        },
+      )
+    else
+      queue_create_request_tasks
+    end
+  end
+
+  def queue_create_request_tasks
     # self.create_request_tasks
     MiqQueue.put(
       :class_name     => self.class.name,
@@ -434,7 +455,6 @@ class MiqRequest < ApplicationRecord
       :role           => my_role(:create_request_tasks),
       :tracking_label => tracking_label_id,
       :msg_timeout    => 3600,
-      :deliver_on     => deliver_on
     )
   end
 
