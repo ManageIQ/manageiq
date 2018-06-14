@@ -202,6 +202,7 @@ describe ChargebackVm do
 
             cloud_volume_hdd.destroy
 
+            described_class.current_volume_types_clear_cache
             described_class.refresh_dynamic_metric_columns
             fields = described_class.attribute_names
             expect(fields).not_to include(cloud_volume_hdd_field)

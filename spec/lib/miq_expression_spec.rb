@@ -50,11 +50,13 @@ describe MiqExpression do
 
           # case: change name
           volume_2.update_attributes!(:volume_type => 'NEW_TYPE_2')
+          ChargebackVm.current_volume_types_clear_cache
           report_fields = described_class.reporting_available_fields(model).map(&:second)
           expect(report_fields).to include(volume_1_type_field_cost)
           expect(report_fields).not_to include(volume_2_type_field_cost) # old field
 
           # check existence of new name
+          ChargebackVm.current_volume_types_clear_cache
           report_fields = described_class.reporting_available_fields(model).map(&:second)
           volume_2_type_field_cost = "#{model}-storage_allocated_#{volume_2.volume_type}_cost"
           expect(report_fields).to include(volume_1_type_field_cost)
@@ -62,6 +64,7 @@ describe MiqExpression do
 
           # case: add volume_type
           volume_3
+          ChargebackVm.current_volume_types_clear_cache
           report_fields = described_class.reporting_available_fields(model).map(&:second)
           expect(report_fields).to include(volume_1_type_field_cost)
           expect(report_fields).to include(volume_3_type_field_cost)
@@ -70,6 +73,7 @@ describe MiqExpression do
           volume_2.destroy
           volume_3.destroy
 
+          ChargebackVm.current_volume_types_clear_cache
           report_fields = described_class.reporting_available_fields(model).map(&:second)
           expect(report_fields).to include(volume_1_type_field_cost)
           expect(report_fields).not_to include(volume_2_type_field_cost)
