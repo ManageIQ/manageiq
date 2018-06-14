@@ -134,16 +134,25 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
 
-  def raw_stdout(format = 'txt')
-    ext_management_system.with_provider_connection do |connection|
-      connection.api.jobs.find(ems_ref).stdout(format)
+  # Intend to be called by UI to display stdout. Therefore the error message directly returned
+  # instead of raising an exception.
+  def raw_stdout_via_worker(userid = User.current_user, format = 'txt')
+    unless MiqRegion.my_region.role_active?("embedded_ansible")
+      return "Cannot get standard output of this playbook because the embedded Ansible role is not enabled"
     end
-  rescue AnsibleTowerClient::ResourceNotFoundError
-    msg = "AnsibleTower Job #{name} with id(#{id}) does not exist on #{ext_management_system.name}"
-    raise MiqException::MiqOrchestrationStackNotExistError, msg
-  rescue => err
-    _log.error "Reading AnsibleTower Job #{name} with id(#{id}) stdout failed with error: #{err}"
-    raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
-  end
 
+    options = {:userid => userid, :action => 'ansible_stdout'}
+    queue_options = {:class_name  => self.class,
+                     :method_name => 'raw_stdout',
+                     :instance_id => id,
+                     :args        => [format],
+                     :priority    => MiqQueue::HIGH_PRIORITY,
+                     :role        => 'embedded_ansible'}
+    taskid = MiqTask.generic_action_with_callback(options, queue_options)
+    MiqTask.wait_for_taskid(taskid)
+    miq_task = MiqTask.find(taskid)
+    results = miq_task.task_results || miq_task.message
+    miq_task.destroy
+    results
+  end
 end
