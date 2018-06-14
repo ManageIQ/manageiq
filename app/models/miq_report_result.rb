@@ -60,6 +60,13 @@ class MiqReportResult < ApplicationRecord
     report.kind_of?(MiqReport)
   end
 
+  # Use this over `report_results.contains_records?` if you don't need to
+  # access the binary_blob associated with the MiqReportResult (chances are you
+  # don't need it)
+  def contains_records?
+    (report && (report.extras || {})[:total_html_rows].to_i.positive?) || html_details.exists?
+  end
+
   def report_results
     if binary_blob
       data = binary_blob.data
