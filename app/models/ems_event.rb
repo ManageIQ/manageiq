@@ -1,10 +1,6 @@
 class EmsEvent < EventStream
   include_concern 'Automate'
 
-  virtual_column :group,       :type => :symbol
-  virtual_column :group_level, :type => :symbol
-  virtual_column :group_name,  :type => :string
-
   CLONE_TASK_COMPLETE = "CloneVM_Task_Complete"
   SOURCE_DEST_TASKS = [
     'CloneVM_Task',
@@ -24,38 +20,8 @@ class EmsEvent < EventStream
     ::Settings.event_handling.task_final_events.to_hash
   end
 
-  def self.event_groups
-    core_event_groups = ::Settings.event_handling.event_groups.to_hash
-    Settings.ems.each_with_object(core_event_groups) do |(_provider_type, provider_settings), event_groups|
-      provider_event_groups = provider_settings.fetch_path(:event_handling, :event_groups)
-      next unless provider_event_groups
-      DeepMerge.deep_merge!(
-        provider_event_groups.to_hash, event_groups,
-        :preserve_unmergeables => false,
-        :overwrite_arrays      => false
-      )
-    end
-  end
-
   def self.bottleneck_event_groups
     ::Settings.event_handling.bottleneck_event_groups.to_hash
-  end
-
-  def self.group_and_level(event_type)
-    group, v = event_groups.find { |_k, v| v[:critical].include?(event_type) || v[:detail].include?(event_type) }
-    if group.nil?
-      group, level = :other, :detail
-    else
-      level = v[:detail].include?(event_type) ? :detail : :critical
-    end
-    return group, level
-  end
-
-  def self.group_name(group)
-    return nil if group.nil?
-    group = event_groups[group.to_sym]
-    return nil if group.nil?
-    group[:name]
   end
 
   def self.add_queue(meth, ems_id, event)
@@ -178,22 +144,6 @@ class EmsEvent < EventStream
 
   def first_chained_event
     @first_chained_event ||= EmsEvent.first_chained_event(ems_id, chain_id) || self
-  end
-
-  def group
-    return @group unless @group.nil?
-    @group, @group_level = self.class.group_and_level(event_type)
-    @group
-  end
-
-  def group_level
-    return @group_level unless @group_level.nil?
-    @group, @group_level = self.class.group_and_level(event_type)
-    @group_level
-  end
-
-  def group_name
-    @group_name ||= self.class.group_name(group)
   end
 
   def get_target(target_type)
