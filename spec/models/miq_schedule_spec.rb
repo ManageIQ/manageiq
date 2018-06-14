@@ -514,7 +514,7 @@ describe MiqSchedule do
     context "valid action_automation_request" do
       let(:admin) { FactoryGirl.create(:user_miq_request_approver) }
       let(:automate_sched) do
-        MiqSchedule.create(:name          => "test_method", :towhat => "AutomationRequest",
+        MiqSchedule.create(:name          => "test_method", :resource_type => "AutomationRequest",
                            :userid        => admin.userid, :enabled => true,
                            :run_at        => {:interval   => {:value => "1", :unit => "daily"},
                                               :start_time => 2.hours.from_now.utc.to_i},
@@ -541,7 +541,7 @@ describe MiqSchedule do
       before do
         @valid_schedules = []
         @valid_run_ats.each do |run_at|
-          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :towhat => "DatabaseBackup")
+          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :resource_type => "DatabaseBackup")
         end
         @schedule = @valid_schedules.first
       end

@@ -421,8 +421,7 @@ class ServiceTemplate < ApplicationRecord
         :name         => "Order #{self.class.name} #{id} at #{time}",
         :description  => "Order #{self.class.name} #{id} at #{time}",
         :sched_action => {:args => [user.id, options, request_options], :method => "queue_order"},
-        :resource_id  => id,
-        :towhat       => "ServiceTemplate",
+        :resource     => self,
         :run_at       => {
           :interval   => {:unit => "once"},
           :start_time => time,
