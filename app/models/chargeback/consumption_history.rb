@@ -40,22 +40,29 @@ class Chargeback
     private_class_method :base_rollup_scope
 
     def self.uniq_timestamp_record_map(report_scope, group_by_tenant = false)
-      main_select = MetricRollup.select(:id, :resource_id).with_resource.arel.ast.to_sql
-                                .gsub("SELECT", "DISTINCT ON (resource_type, resource_id, timestamp)")
-                                .gsub(/ FROM.*$/, '')
+      metric_columns = ChargeableField.chargeable_cols_on_metric_rollup.map { |column| "MAX(#{column}) OVER (PARTITION BY timestamp, resource_type, resource_id) as #{column}" }
+      partition_statements = metric_columns.join(', ')
 
-      query = report_scope.select(main_select).order(:resource_type, :resource_id, :timestamp)
+      partition_query = <<-SQL
+        metric_rollups.id, metric_rollups.tag_names, metric_rollups.resource_id, metric_rollups.timestamp, metric_rollups.resource_type, #{partition_statements}
+      SQL
 
-      rows = ActiveRecord::Base.connection.select_rows(query.to_sql)
+      metric_rollup_scope = report_scope.with_resource.select(partition_query).order(:resource_type, :resource_id, :timestamp).order("created_on DESC")
+
+      distinct_query = "SELECT DISTINCT rows.#{ChargeableField.cols_on_metric_rollup.join(', rows.')} FROM (#{metric_rollup_scope.to_sql}) as rows"
+
+      rows = ActiveRecord::Base.connection.select_rows(distinct_query)
 
       if group_by_tenant
-        vms = Hash[Vm.where(:id => rows.map(&:second)).pluck(:id, :tenant_id)]
+        # third is id of VM
+        vm_ids_with_tenant_ids = Hash[Vm.where(:id => rows.map(&:third)).pluck(:id, :tenant_id)]
       end
 
-      rows.each_with_object({}) do |(id, resource_id), result|
-        resource_id = vms[resource_id] if group_by_tenant
-        result[resource_id] ||= []
-        result[resource_id] << id
+      rows.each_with_object({}) do |(id, tag_names, resource_id, *row), result|
+        group_by_id = resource_id
+        group_by_id = vm_ids_with_tenant_ids[resource_id] if group_by_tenant
+        result[group_by_id] ||= []
+        result[group_by_id] << ([id, tag_names, resource_id] + row)
       end
     end
 
