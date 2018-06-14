@@ -8,21 +8,13 @@ module Ansible
       private
 
       def run_via_cli(env_vars, extra_vars, playbook_path)
-        result = %x(#{format_env_vars(env_vars)} #{ansible_command.shellescape} #{format_extra_vars(extra_vars)} #{playbook_path.to_s.shellescape})
-        JSON.parse(result)
+        result = AwesomeSpawn.run!(ansible_command, :env => env_vars, :params => [{:extra_vars => JSON.dump(extra_vars)}, playbook_path])
+        JSON.parse(result.output)
       end
 
       def ansible_command
         # TODO add possibility to use custom path, e.g. from virtualenv
         "ansible-playbook"
-      end
-
-      def format_env_vars(env_vars)
-        env_vars.map { |key, value| "#{key.shellescape}='#{value.shellescape}'" }.join(" ")
-      end
-
-      def format_extra_vars(extra_vars)
-        "--extra-vars '#{JSON.dump(extra_vars)}'"
       end
     end
   end
