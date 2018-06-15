@@ -93,6 +93,9 @@ class MiqSchedule < ApplicationRecord
 
       _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
       msg
+    elsif sched.resource.respond_to?(method)
+      sched.resource.send(method, *sched.sched_action[:args])
+      sched.update_attributes(:last_run_on => Time.now.utc)
     else
       _log.warn("[#{sched.name}] no such action: [#{method}], aborting schedule")
     end
