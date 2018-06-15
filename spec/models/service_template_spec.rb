@@ -810,35 +810,62 @@ describe ServiceTemplate do
     end
   end
 
-  context "#provision_request" do
+  context "#order" do
     let(:user) { FactoryGirl.create(:user, :userid => "barney") }
     let(:resource_action) { FactoryGirl.create(:resource_action, :action => "Provision") }
     let(:service_template) { FactoryGirl.create(:service_template, :resource_actions => [resource_action]) }
     let(:hash) { {:target => service_template, :initiator => 'control'} }
-    let(:workflow) { instance_double(ResourceActionWorkflow) }
+    let(:workflow) { instance_double(ResourceActionWorkflow, :validate_dialog => nil) }
     let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
     let(:good_result) { { :errors => [], :request => miq_request } }
-    let(:bad_result) { { :errors => %w(Error1 Error2), :request => miq_request } }
-    let(:arg1) { {'ordered_by' => 'fred'} }
-    let(:arg2) { {:initiator => 'control'} }
+    let(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action) }
 
-    it "provision's a service template without errors" do
-      expect(ResourceActionWorkflow).to(receive(:new)
-        .with({}, user, resource_action, hash).and_return(workflow))
-      expect(workflow).to receive(:submit_request).and_return(good_result)
-      expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
-      expect(workflow).to receive(:request_options=).with(:initiator => 'control')
+    it "success no optional args" do
+      expect(ResourceActionWorkflow).to(receive(:new).and_return(resource_action_workflow))
+      expect(resource_action_workflow).to receive(:submit_request).and_return(miq_request)
 
-      expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
+      expect(service_template.order(user)).to eq(miq_request)
     end
 
-    it "provision's a service template with errors" do
-      expect(ResourceActionWorkflow).to(receive(:new)
-        .with({}, user, resource_action, hash).and_return(workflow))
-      expect(workflow).to receive(:submit_request).and_return(bad_result)
-      expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
-      expect(workflow).to receive(:request_options=).with(:initiator => 'control')
-      expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
+    it "successfully scheduled" do
+      EvmSpecHelper.local_miq_server
+      expect(ResourceActionWorkflow).to(receive(:new).and_return(resource_action_workflow))
+      expect(resource_action_workflow).to receive(:validate_dialog).and_return(nil)
+
+      result = service_template.order(user, {}, {}, Time.now.utc.to_s)
+
+      expect(result.keys).to eq([:schedule]) # No errors
+      expect(result[:schedule]).to have_attributes(
+        :name         => "Order ServiceTemplate #{service_template.id}",
+        :sched_action => {:args => [user.id, {}, {}], :method => "queue_order"},
+        :towhat       => "ServiceTemplate",
+        :resource_id  => service_template.id
+      )
+    end
+
+    context "#provision_request" do
+      let(:arg1) { {'ordered_by' => 'fred'} }
+      let(:arg2) { {:initiator => 'control'} }
+      let(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action, hash) }
+
+      it "provision's a service template without errors" do
+        expect(ResourceActionWorkflow).to(receive(:new).with({}, user, resource_action, hash).and_return(resource_action_workflow))
+        expect(resource_action_workflow).to receive(:validate_dialog).and_return(nil)
+        expect(resource_action_workflow).to receive(:make_request).and_return(miq_request)
+        expect(resource_action_workflow).to receive(:set_value).with('ordered_by', 'fred')
+        expect(resource_action_workflow).to receive(:request_options=).with(:initiator => 'control')
+
+        expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
+      end
+
+      it "provision's a service template with errors" do
+        expect(ResourceActionWorkflow).to(receive(:new).with({}, user, resource_action, hash).and_return(resource_action_workflow))
+        expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
+        expect(resource_action_workflow).to receive(:set_value).with('ordered_by', 'fred')
+        expect(resource_action_workflow).to receive(:request_options=).with(:initiator => 'control')
+
+        expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
+      end
     end
   end
 
