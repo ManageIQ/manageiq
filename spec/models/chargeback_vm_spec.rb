@@ -457,24 +457,24 @@ describe ChargebackVm do
         #     \__Tenant 5
         #
         let(:tenant_1) { Tenant.root_tenant }
-        let(:vm_1_1)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_1, :miq_group => nil) }
-        let(:vm_2_1)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_1, :miq_group => nil) }
+        let(:vm_1_1)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_1, :miq_group => nil) }
+        let(:vm_2_1)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_1, :miq_group => nil) }
 
         let(:tenant_2) { FactoryGirl.create(:tenant, :name => 'Tenant 2', :parent => tenant_1) }
-        let(:vm_1_2)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_2, :miq_group => nil) }
-        let(:vm_2_2)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_2, :miq_group => nil) }
+        let(:vm_1_2)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_2, :miq_group => nil) }
+        let(:vm_2_2)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_2, :miq_group => nil) }
 
         let(:tenant_3) { FactoryGirl.create(:tenant, :name => 'Tenant 3', :parent => tenant_1) }
-        let(:vm_1_3)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_3, :miq_group => nil) }
-        let(:vm_2_3)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_3, :miq_group => nil) }
+        let(:vm_1_3)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_3, :miq_group => nil) }
+        let(:vm_2_3)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_3, :miq_group => nil) }
 
         let(:tenant_4) { FactoryGirl.create(:tenant, :name => 'Tenant 4', :divisible => false, :parent => tenant_3) }
-        let(:vm_1_4)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_4, :miq_group => nil) }
-        let(:vm_2_4)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_4, :miq_group => nil) }
+        let(:vm_1_4)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_4, :miq_group => nil) }
+        let(:vm_2_4)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_4, :miq_group => nil) }
 
         let(:tenant_5) { FactoryGirl.create(:tenant, :name => 'Tenant 5', :divisible => false, :parent => tenant_3) }
-        let(:vm_1_5)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_5, :miq_group => nil) }
-        let(:vm_2_5)   { FactoryGirl.create(:vm_vmware, :tenant => tenant_5, :miq_group => nil) }
+        let(:vm_1_5)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_5, :miq_group => nil) }
+        let(:vm_2_5)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_5, :miq_group => nil) }
 
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first }
 
