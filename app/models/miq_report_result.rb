@@ -35,6 +35,20 @@ class MiqReportResult < ApplicationRecord
     end
   end
 
+  # These two hooks prevent temporary chargeback aggregation data to be
+  # retained in each miq_report_results row, which was found and fixed as part
+  # of the following BZ:
+  #
+  #   https://bugzilla.redhat.com/show_bug.cgi?id=1590908
+  #
+  # These two hooks remove extra data on the `@extras` instance variable, since
+  # it is not necessary to be saved to the DB, but allows it to be retained for
+  # the remainder of the object's instantiation.  The `after_commit` hook
+  # specifically is probably overkill, but allows us to not break existing code
+  # that expects the temporary chargeback data in the instantiated object.
+  before_save  { @_extra_groupings = report.extras.delete(:grouping) if report.kind_of?(MiqReport) }
+  after_commit { report.extras[:grouping] = @_extra_groupings if report.kind_of?(MiqReport) }
+
   delegate :table, :to => :report_results, :allow_nil => true
 
   def result_set
