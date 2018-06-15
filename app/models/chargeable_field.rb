@@ -141,7 +141,7 @@ class ChargeableField < ApplicationRecord
     @chargeable_cols_on_metric_rollup ||= begin
       existing_cols = MetricRollup.attribute_names
       chargeable_cols = pluck(:metric) & existing_cols
-      chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.sort
+      chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.sort.uniq
     end
   end
 end
