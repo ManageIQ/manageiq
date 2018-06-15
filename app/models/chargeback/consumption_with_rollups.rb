@@ -1,14 +1,14 @@
 class Chargeback
   class ConsumptionWithRollups < Consumption
     delegate :timestamp, :resource, :resource_id, :resource_name, :resource_type, :parent_ems,
-             :parents_determining_rate,
+             :parents_determining_rate, :resource_current_tag_names,
              :to => :first_metric_rollup_record
 
     attr_accessor :start_time, :end_time
 
     def initialize(metric_rollup_records, start_time, end_time)
       super(start_time, end_time)
-      @rollups = metric_rollup_records
+      @rollup_array = metric_rollup_records
     end
 
     def hash_features_affecting_rate
@@ -21,14 +21,53 @@ class Chargeback
     end
 
     def tag_names
-      @tag_names ||= @rollups.inject([]) do |memo, rollup|
-        memo |= rollup.all_tag_names
+      @tag_names ||= @rollup_array.inject([]) do |memo, rollup|
+        memo |= all_tag_names(rollup)
         memo
       end
     end
 
+    TAG_MANAGED_PREFIX = "/tag/managed/".freeze
+
+    def tag_prefix
+      klass_prefix = case resource_type
+                     when Container.name        then 'container_image'
+                     when VmOrTemplate.name     then 'vm'
+                     when ContainerProject.name then 'container_project'
+                     end
+
+      klass_prefix + TAG_MANAGED_PREFIX
+    end
+
+    def chargeback_container_labels
+      resource.try(:container_image).try(:docker_labels).try(:collect_concat) do |l|
+        escaped_name = AssignmentMixin.escape(l.name)
+        escaped_value = AssignmentMixin.escape(l.value)
+        [
+          # The assignments in tags can appear the old way as they are, or escaped
+          "container_image/label/managed/#{l.name}/#{l.value}",
+          "container_image/label/managed/#{escaped_name}/#{escaped_value}"
+        ]
+      end || []
+    end
+
+    def container_tag_list_with_prefix
+      if resource.kind_of?(Container)
+        state = resource.vim_performance_state_for_ts(timestamp.to_s)
+        image_tag_name = "#{state.image_tag_names}|" if state
+
+        image_tag_name.split("|")
+      else
+        []
+      end
+    end
+
+    def tag_list_with_prefix_for(rollup)
+      (all_tag_names(rollup) + container_tag_list_with_prefix).uniq.reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + chargeback_container_labels
+    end
+
     def tag_list_with_prefix
-      @tag_list_with_prefix ||= @rollups.map(&:tag_list_with_prefix).flatten.uniq
+      @tag_list_with_prefix ||= @rollup_array.map { |rollup| tag_list_with_prefix_for(rollup) }.flatten.uniq
     end
 
     def sum(metric, sub_metric = nil)
@@ -44,8 +83,11 @@ class Chargeback
     def sum_of_maxes_from_grouped_values(metric, sub_metric = nil)
       return max(metric, sub_metric) if sub_metric
       @grouped_values ||= {}
-      grouped_rollups = @rollups.group_by { |x| x.resource.id }
-      @grouped_values[metric] ||= grouped_rollups.map { |_, rollups| rollups.collect(&metric.to_sym).compact.max }.compact.sum
+      grouped_rollups = @rollup_array.group_by { |x| x[ChargeableField.col_index(:resource_id)] }
+
+      @grouped_values[metric] ||= grouped_rollups.map do |_, rollups|
+        rollups.map { |x| x[ChargeableField.col_index(metric)] }.compact.max
+      end.compact.sum
     end
 
     def avg(metric, sub_metric = nil)
@@ -67,11 +109,34 @@ class Chargeback
     end
 
     def chargeback_fields_present
-      @chargeback_fields_present ||= @rollups.count(&:chargeback_fields_present?)
+      @chargeback_fields_present ||= @rollup_array.count { |rollup| chargeback_fields_present?(rollup) }
+    end
+
+    def chargeback_fields_present?(rollup_record)
+      MetricRollup::CHARGEBACK_METRIC_FIELDS.any? do |field|
+        rollup = rollup_record[ChargeableField.col_index(field)]
+        rollup.present? && rollup.nonzero?
+      end
+    end
+
+    def metering_used_fields_present?(rollup_record)
+      MetricRollup::METERING_USED_METRIC_FIELDS.any? do |field|
+        rollup = rollup_record[ChargeableField.col_index(field)]
+        rollup.present? && rollup.nonzero?
+      end
     end
 
     def metering_used_fields_present
-      @metering_used_fields_present ||= @rollups.count(&:metering_used_fields_present?)
+      @metering_used_fields_present ||= @rollup_array.count { |rollup| metering_used_fields_present?(rollup) }
+    end
+
+    def resource_tag_names(rollup)
+      tags_names = rollup[ChargeableField.col_index(:tag_names)]
+      tags_names ? tags_names.split('|') : []
+    end
+
+    def all_tag_names(rollup)
+      resource_current_tag_names | resource_tag_names(rollup)
     end
 
     private
@@ -88,11 +153,14 @@ class Chargeback
 
     def values(metric, sub_metric = nil)
       @values ||= {}
-      @values["#{metric}#{sub_metric}"] ||= sub_metric ? sub_metric_rollups(sub_metric) : @rollups.collect(&metric.to_sym).compact
+      @values["#{metric}#{sub_metric}"] ||= begin
+        sub_metric ? sub_metric_rollups(sub_metric) : @rollup_array.collect { |x| x[ChargeableField.col_index(metric)] }.compact
+      end
     end
 
     def first_metric_rollup_record
-      @fmrr ||= @rollups.first
+      first_rollup_id = @rollup_array.first[ChargeableField.col_index(:id)]
+      @fmrr ||= MetricRollup.find(first_rollup_id) if first_rollup_id
     end
   end
 end
