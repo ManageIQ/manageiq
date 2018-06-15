@@ -1,4 +1,7 @@
 class MiqSchedule < ApplicationRecord
+  include ReservedMixin
+  reserve_attribute :resource_id, :big_integer
+
   validates :name, :uniqueness => {:scope => [:userid, :towhat]}
   validates :name, :description, :towhat, :run_at, :presence => true
   validate  :validate_run_at, :validate_file_depot
@@ -39,6 +42,12 @@ class MiqSchedule < ApplicationRecord
   default_value_for :enabled, true
   default_value_for(:zone_id) { MiqServer.my_server.zone_id }
 
+  def resource
+    # HACK: this should be a real relation, but for now it's using a reserve_attribute for backport reasons
+    return unless resource_id
+    towhat.safe_constantize.find_by(:id => resource_id)
+  end
+
   def set_start_time_and_prod_default
     run_at # Internally this will correct :start_time to UTC
     self.prod_default = "system" if SYSTEM_SCHEDULE_CLASSES.include?(towhat.to_s)
@@ -72,21 +81,21 @@ class MiqSchedule < ApplicationRecord
     _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]")
 
     action = "action_" + method
-    unless sched.respond_to?(action)
+
+    if sched.respond_to?(action)
+      msg = MiqQueue.submit_job(
+        :class_name  => name,
+        :instance_id => sched.id,
+        :method_name => "invoke_actions",
+        :args        => [action, at],
+        :msg_timeout => 1200
+      )
+
+      _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
+      msg
+    else
       _log.warn("[#{sched.name}] no such action: [#{method}], aborting schedule")
-      return
     end
-
-    msg = MiqQueue.submit_job(
-      :class_name  => name,
-      :instance_id => sched.id,
-      :method_name => "invoke_actions",
-      :args        => [action, at],
-      :msg_timeout => 1200
-    )
-
-    _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
-    msg
   end
 
   def invoke_actions(action, at)
