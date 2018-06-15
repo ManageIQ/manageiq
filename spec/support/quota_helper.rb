@@ -142,6 +142,18 @@ module Spec
         @vm_vmware.update_attributes(:ems_id => @ems.id)
       end
 
+      def google_requested_quota_values
+        {:number_of_vms     => 1,
+         :instance_type     => [@small_flavor.id, @small_flavor.name],
+         :boot_disk_size    => ["10.GB", "10 GB"],
+         :placement_auto    => [true, 1],
+         :owner_email       => 'tester@miq.com',
+         :vm_memory         => [1024, '1024'],
+         :number_of_sockets => [2, '2'],
+         :st_prov_type      => 'google',
+         :cores_per_socket  => [2, '2']}
+      end
+
       def google_template
         @ems = FactoryGirl.create(:ems_google_with_authentication,
                                   :availability_zones => [FactoryGirl.create(:availability_zone_google)])
@@ -188,6 +200,18 @@ module Spec
                                            :request   => options}}
         build_service_template_tree(model)
         @service_request = build_service_template_request("vmware_service_item", @user, :dialog => {"test" => "dialog"})
+      end
+
+      def build_google_service_item
+        @small_flavor = FactoryGirl.create(:flavor_google, :ems_id => @ems.id, :cloud_subnet_required => false,
+                                          :cpus => 1, :cpu_cores => 1, :memory => 1024)
+
+        options = {:src_vm_id => @vm_template.id, :requester => @user}.merge(google_requested_quota_values)
+        model = {"google_service_item" => {:type      => 'atomic',
+                                           :prov_type => 'google',
+                                           :request   => options}}
+        build_service_template_tree(model)
+        @service_request = build_service_template_request("google_service_item", @user, :dialog => {"test" => "dialog"})
       end
 
       def create_service_bundle(items)
