@@ -68,12 +68,6 @@ class MetricRollup < ApplicationRecord
     metrics.order(:resource_id, :timestamp => :desc)
   end
 
-  def chargeback_fields_present?
-    return @chargeback_fields_present if defined?(@chargeback_fields_present)
-
-    @chargeback_fields_present = CHARGEBACK_METRIC_FIELDS.any? { |field| send(field).present? && send(field).nonzero? }
-  end
-
   def metering_used_fields_present?
     @metering_used_fields_present ||= METERING_USED_METRIC_FIELDS.any? { |field| send(field).present? && send(field).nonzero? }
   end
