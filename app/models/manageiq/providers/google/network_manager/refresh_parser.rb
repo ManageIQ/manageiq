@@ -434,7 +434,7 @@ module ManageIQ::Providers
           # "OutOfService" if we can't find a mapping.
           status = "OutOfService"
           unless instance_health.nil?
-            gcp_status = instance_health[0]["healthState"]
+            gcp_status = instance_health[0][:health_state]
 
             if GCP_HEALTH_STATUS_MAP.include?(gcp_status)
               status = GCP_HEALTH_STATUS_MAP[gcp_status]
