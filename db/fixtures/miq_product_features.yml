@@ -130,7 +130,7 @@
     :feature_type: view
     :identifier: infra_topology_view
 
-# MiqRequest
+# MiqRequest under Services maintab for all Request types
 - :name: Requests
   :description: Everything under Requests
   :feature_type: node
@@ -184,6 +184,108 @@
     :description: Edit other user's requests
     :feature_type: admin
     :identifier: miq_request_superadmin
+
+# MiqRequest under Compute/Infrastructure tab for Host Requests
+- :name: Requests
+  :description: Everything under Requests
+  :feature_type: node
+  :identifier: host_miq_request
+  :children:
+  - :name: View
+    :description: View Requests
+    :feature_type: view
+    :identifier: host_miq_request_view
+    :children:
+    - :name: List
+      :description: Display Lists of Requests
+      :feature_type: view
+      :identifier: host_miq_request_show_list
+    - :name: Show
+      :description: Display Individual Requests
+      :feature_type: view
+      :identifier: host_miq_request_show
+    - :name: Reload
+      :description: Reload Requests
+      :feature_type: view
+      :hidden: true
+      :identifier: host_miq_request_reload
+  - :name: Operate
+    :description: Perform Operations on Requests
+    :feature_type: control
+    :identifier: host_miq_request_control
+    :children:
+    - :name: Approve and Deny
+      :description: Approve and Deny Requests
+      :feature_type: control
+      :identifier: host_miq_request_approval
+  - :name: Modify
+    :description: Modify Requests
+    :feature_type: admin
+    :identifier: host_miq_request_admin
+    :children:
+    - :name: Copy
+      :description: Copy a Request
+      :feature_type: admin
+      :identifier: host_miq_request_copy
+    - :name: Delete
+      :description: Delete Requests
+      :feature_type: admin
+      :identifier: host_miq_request_delete
+    - :name: Edit
+      :description: Edit a Request
+      :feature_type: admin
+      :identifier: host_miq_request_edit
+
+# MiqRequest under Automation/Automate tab for Automate Requests
+- :name: Requests
+  :description: Everything under Requests
+  :feature_type: node
+  :identifier: ae_miq_request
+  :children:
+  - :name: View
+    :description: View Requests
+    :feature_type: view
+    :identifier: ae_miq_request_view
+    :children:
+    - :name: List
+      :description: Display Lists of Requests
+      :feature_type: view
+      :identifier: ae_miq_request_show_list
+    - :name: Show
+      :description: Display Individual Requests
+      :feature_type: view
+      :identifier: ae_miq_request_show
+    - :name: Reload
+      :description: Reload Requests
+      :feature_type: view
+      :hidden: true
+      :identifier: ae_miq_request_reload
+  - :name: Operate
+    :description: Perform Operations on Requests
+    :feature_type: control
+    :identifier: ae_miq_request_control
+    :children:
+    - :name: Approve and Deny
+      :description: Approve and Deny Requests
+      :feature_type: control
+      :identifier: ae_miq_request_approval
+  - :name: Modify
+    :description: Modify Requests
+    :feature_type: admin
+    :identifier: ae_miq_request_admin
+    :children:
+    - :name: Copy
+      :description: Copy a Request
+      :feature_type: admin
+      :identifier: ae_miq_request_copy
+    - :name: Delete
+      :description: Delete Requests
+      :feature_type: admin
+      :identifier: ae_miq_request_delete
+    - :name: Edit
+      :description: Edit a Request
+      :feature_type: admin
+      :identifier: ae_miq_request_edit
 
 # Catalog Items
 - :name: Catalogs Explorer
