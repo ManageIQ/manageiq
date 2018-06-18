@@ -181,7 +181,7 @@ module ManageIQ::Providers
 
       def subnetworks
         unless @subnetworks
-          @subnetworks = @connection.list_aggregated_subnetworks.to_h[:items].values.flat_map { |v| v[:subnetworks] }
+          @subnetworks = @connection.subnetworks.all
           # For a backwards compatibility, old GCE networks were created without subnet. It's not possible now, but
           # GCE haven't migrated to new format. We will create a fake subnet for each network without subnets.
           @subnetworks += @connection.networks.select { |x| x.ipv4_range.present? }.map do |x|
@@ -194,7 +194,8 @@ module ManageIQ::Providers
               :self_link          => x.self_link,
               :description        => "Subnetwork placeholder for GCE legacy networks without subnetworks",
               :creation_timestamp => x.creation_timestamp,
-              :kind               => x.kind)
+              :kind               => x.kind
+            )
           end
         end
 
@@ -202,14 +203,14 @@ module ManageIQ::Providers
       end
 
       def subnets_by_link(subnet)
-        @subnets_by_link ||= subnetworks.each_with_object({}) { |x, subnets| subnets[x[:self_link]] = x }
+        @subnets_by_link ||= subnetworks.each_with_object({}) { |x, subnets| subnets[x.self_link] = x }
 
         # For legacy GCE networks without subnets, we also try a network link
         @subnets_by_link[subnet[:subnetwork]] || @subnets_by_link[subnet[:network]]
       end
 
       def subnets_by_network_link(network_link)
-        @subnets_by_network_link ||= subnetworks.each_with_object({}) { |x, subnets| (subnets[x[:network]] ||= []) << x }
+        @subnets_by_network_link ||= subnetworks.each_with_object({}) { |x, subnets| (subnets[x.network] ||= []) << x }
 
         @subnets_by_network_link[network_link]
       end
@@ -459,7 +460,7 @@ module ManageIQ::Providers
 
         subnets = subnets_by_network_link(network.self_link) || []
         get_cloud_subnets(subnets)
-        cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s[:id].to_s) }
+        cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.id.to_s) }
 
         new_result = {
           :ems_ref       => uid,
@@ -475,17 +476,17 @@ module ManageIQ::Providers
       end
 
       def parse_cloud_subnet(subnet)
-        uid    = subnet[:id].to_s
+        uid    = subnet.id.to_s
 
-        name   = subnet[:name] || uid
+        name   = subnet.name || uid
 
         new_result = {
           :type    => self.class.cloud_subnet_type,
           :ems_ref => uid,
           :name    => name,
           :status  => "active",
-          :cidr    => subnet[:ip_cidr_range],
-          :gateway => subnet[:gateway_address],
+          :cidr    => subnet.ip_cidr_range,
+          :gateway => subnet.gateway_address,
         }
 
         return uid, new_result
@@ -579,7 +580,7 @@ module ManageIQ::Providers
       def parse_network_port(network_port)
         uid                        = network_port[:network_ip]
         cloud_subnet_network_ports = [
-          parse_cloud_subnet_network_port(network_port, subnets_by_link(network_port).try(:[], :id))
+          parse_cloud_subnet_network_port(network_port, subnets_by_link(network_port).try(:id))
         ]
         device                     = parent_manager_fetch_path(:vms, network_port[:device_id].to_s)
         security_groups            = [
