@@ -43,6 +43,9 @@ module ManagerRefresh::InventoryCollection::Builder::Shared
 
     def miq_templates
       vm_template_shared
+      add_builder_params(
+        :template => true
+      )
     end
 
     def vm_template_shared
@@ -56,8 +59,10 @@ module ManagerRefresh::InventoryCollection::Builder::Shared
       )
 
       add_builder_params(
-        :ems_id => ->(persister) { persister.manager.id },
-        :vendor => vendor
+        :ems_id   => ->(persister) { persister.manager.id },
+        :vendor   => vendor,
+        :name     => 'unknown',
+        :location => 'unknown'
       )
     end
 
