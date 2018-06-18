@@ -36,6 +36,8 @@ fixed = 0
 MiqReportResult.find_each(:batch_size => opts[:batch_size]).with_index do |rr, i|
   begin
     break if opts[:count].positive? && i == opts[:count]
+    total += 1
+
     next if rr.report.nil? || rr.report.extras.nil?
 
     if rr.report.extras.key?(:grouping)
@@ -50,8 +52,6 @@ MiqReportResult.find_each(:batch_size => opts[:batch_size]).with_index do |rr, i
     else
       puts "MiqReportResult: #{rr.id} doesn't need fixing"
     end
-
-    total += 1
   rescue => err
     puts "\nWarning: Rolling back all changes since an error occurred on MiqReportResult with id: #{rr.try(:id)}: #{err.message}"
     ActiveRecord::Base.connection.rollback_transaction unless opts[:dry_run]
