@@ -15,7 +15,7 @@ class ContainerEmbeddedAnsible < EmbeddedAnsible
     create_ansible_service
     create_ansible_deployment_config
 
-    loop do
+    settings.setup_wait_seconds.times do
       break if alive?
 
       _log.info("Waiting for Ansible container to respond")
