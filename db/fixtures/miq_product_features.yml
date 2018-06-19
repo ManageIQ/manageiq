@@ -1138,6 +1138,12 @@
       :feature_type: admin
       :identifier: ems_infra_change_password
 
+# Migration
+- :name: Migration
+  :description: Everything under Migration
+  :feature_type: node
+  :identifier: migration
+
 # Datacenters
 - :name: Datacenters
   :description: Datacenters
