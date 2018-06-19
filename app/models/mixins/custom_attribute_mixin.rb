@@ -51,7 +51,13 @@ module CustomAttributeMixin
         where_args[:name]    = custom_attribute_without_section
         where_args[:section] = section if section
 
-        custom_attributes.find_by(where_args).try(:value)
+        if custom_attributes.loaded?
+          custom_attributes.detect do |ca|
+            ca.name == custom_attribute_without_section && (section.nil? || ca.section == section)
+          end.try(:value)
+        else
+          custom_attributes.find_by(where_args).try(:value)
+        end
       end
     end
   end
