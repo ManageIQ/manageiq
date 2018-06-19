@@ -95,6 +95,21 @@ module VmOrTemplate::Operations::Relocation
     raw_relocate(host, pool, datastore, disk_move_type, transform, priority, disk)
   end
 
+  def raw_move_into_folder(folder)
+    raise _("VM has no EMS, unable to move VM into a new folder") unless ext_management_system
+    raise _("Folder not specified, unable to move VM into a new folder") unless folder.kind_of?(EmsFolder)
+
+    if parent_blue_folder == folder
+      raise _("The VM '%{name}' is already running on the same folder as the destination.") % {:name => name}
+    end
+
+    run_command_via_parent(:vm_move_into_folder, :folder => folder)
+  end
+
+  def move_into_folder(folder)
+    raw_move_into_folder(folder)
+  end
+
   def migrate_via_ids(host_id, pool_id = nil, priority = "defaultPriority", state = nil)
     host = Host.find_by(:id => host_id)
     raise _("Host with ID=%{host_id} was not found") % {:host_id => host_id} if host.nil?
