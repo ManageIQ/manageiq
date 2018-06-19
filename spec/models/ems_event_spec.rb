@@ -252,6 +252,27 @@ describe EmsEvent do
   end
 
   context '.event_groups' do
+    before(:each) do
+      stub_settings_merge(
+        :ems => {
+          :some_provider => {
+            :event_handling => {
+              :event_groups => {
+                :power => {
+                  :warning  => [provider_warning_event],
+                  :critical => [provider_critical_event],
+                  :detail   => [provider_detail_event],
+                }
+              }
+            }
+          }
+        }
+      )
+    end
+
+    let(:provider_critical_event) { 'SomeCriticalEvent' }
+    let(:provider_detail_event) { 'SomeDetailEvent' }
+    let(:provider_warning_event) { 'SomeWarningEvent' }
     let(:provider_event) { 'SomeSpecialProviderEvent' }
 
     it 'returns a list of expected groups' do
@@ -296,6 +317,34 @@ describe EmsEvent do
 
       expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
       expect(described_class.event_groups[:addition][:critical]).to include(provider_event)
+    end
+
+    it 'returns the group, level and group name of an unknown event' do
+      group, level = described_class.group_and_level(provider_event)
+      expect(group).to eq(:other)
+      expect(level).to eq(:detail)
+      expect(described_class.group_name(group)).to eq('Other')
+    end
+
+    it 'returns the group, level and group name of a warning event' do
+      group, level = described_class.group_and_level(provider_warning_event)
+      expect(group).to eq(:power)
+      expect(level).to eq(:warning)
+      expect(described_class.group_name(group)).to eq('Power Activity')
+    end
+
+    it 'returns the group, level and group name of a critical event' do
+      group, level = described_class.group_and_level(provider_critical_event)
+      expect(group).to eq(:power)
+      expect(level).to eq(:critical)
+      expect(described_class.group_name(group)).to eq('Power Activity')
+    end
+
+    it 'returns the group, level and group name of a detail event' do
+      group, level = described_class.group_and_level(provider_detail_event)
+      expect(group).to eq(:power)
+      expect(level).to eq(:detail)
+      expect(described_class.group_name(group)).to eq('Power Activity')
     end
   end
 end
