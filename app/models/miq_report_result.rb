@@ -46,8 +46,8 @@ class MiqReportResult < ApplicationRecord
   # the remainder of the object's instantiation.  The `after_commit` hook
   # specifically is probably overkill, but allows us to not break existing code
   # that expects the temporary chargeback data in the instantiated object.
-  before_save  { @_extra_groupings = report.extras.delete(:grouping) if report.kind_of?(MiqReport) }
-  after_commit { report.extras[:grouping] = @_extra_groupings if report.kind_of?(MiqReport) }
+  before_save  { @_extra_groupings = report.extras.delete(:grouping) if report.kind_of?(MiqReport) && report.extras }
+  after_commit { report.extras[:grouping] = @_extra_groupings if report.kind_of?(MiqReport) && report.extras }
 
   delegate :table, :to => :report_results, :allow_nil => true
 
