@@ -672,6 +672,13 @@ describe Metric do
 
           expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.124)
           expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.056)
+
+          expect(@vm1.cpu_usage_rate_average_avg_over_time_period).to         be_within(0.001).of(13.124)
+          expect(@vm1.cpu_usage_rate_average_high_over_time_period).to        be_within(0.001).of(20.048)
+          expect(@vm1.cpu_usage_rate_average_low_over_time_period).to         be_within(0.001).of(6.199)
+          expect(@vm1.mem_usage_absolute_average_avg_over_time_period).to     be_within(0.001).of(33.056)
+          expect(@vm1.mem_usage_absolute_average_high_over_time_period).to    be_within(0.001).of(37.865)
+          expect(@vm1.mem_usage_absolute_average_low_over_time_period).to     be_within(0.001).of(28.248)
         end
 
         it "should calculate the correct right-size values" do
