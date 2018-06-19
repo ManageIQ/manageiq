@@ -7,7 +7,6 @@ require_dependency 'vmdb/settings_walker'
 module Vmdb
   class Settings
     extend Vmdb::SettingsWalker::ClassMethods
-    include Vmdb::Logging
 
     class ConfigurationInvalid < StandardError
       attr_accessor :errors
@@ -22,10 +21,9 @@ module Vmdb
     PASSWORD_FIELDS = Vmdb::SettingsWalker::PASSWORD_FIELDS
     DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
 
-    # RESET_COMMAND remove record for selected key and specific resource
-    # RESET_ALL_COMMAND remove all records for selected key and all resources
-    MAGIC_VALUES = [RESET_COMMAND      = "<<reset>>".freeze,
-                    RESET_ALL_COMMAND  = "<<reset_all>>".freeze].freeze
+    # Magic value to reset a resource's setting to the parent's value
+    RESET_COMMAND = "<<reset>>".freeze
+    RESET_VALUE = HashDiffer::MissingKey
 
     cattr_accessor :last_loaded
 
@@ -67,14 +65,14 @@ module Vmdb
     end
 
     def self.save!(resource, hash)
-      new_settings = build_without_local(resource).load!.merge!(hash).to_hash
-      settings_to_validate = remove_magic_values(new_settings.deep_clone)
+      new_settings = build_without_local(resource).load!.merge!(hash.deep_symbolize_keys).to_hash
+      replace_magic_values!(new_settings, resource)
 
-      valid, errors = validate(settings_to_validate)
+      valid, errors = validate(new_settings)
       raise ConfigurationInvalid.new(errors) unless valid # rubocop:disable Style/RaiseArgs
 
-      hash_for_parent = parent_settings_without_local(resource).load!.to_hash
-      diff = HashDiffer.diff(hash_for_parent, new_settings)
+      parent_settings = parent_settings_without_local(resource).load!.to_hash
+      diff = HashDiffer.diff(parent_settings, new_settings)
       encrypt_passwords!(diff)
       deltas = HashDiffer.diff_to_deltas(diff)
       apply_settings_changes(resource, deltas)
@@ -189,13 +187,24 @@ module Vmdb
     end
     private_class_method :reset_settings_constant
 
+    def self.replace_magic_values!(settings, resource)
+      parent_settings = nil
+
+      walk(settings) do |key, value, path, owner|
+        next unless value == RESET_COMMAND
+
+        parent_settings ||= parent_settings_without_local(resource).load!.to_hash
+        owner[key] = parent_settings.key_path?(path) ? parent_settings.fetch_path(path) : RESET_VALUE
+      end
+    end
+    private_class_method :replace_magic_values!
+
     def self.apply_settings_changes(resource, deltas)
       resource.transaction do
         index = resource.settings_changes.index_by(&:key)
 
         deltas.each do |delta|
           record = index.delete(delta[:key])
-          next if process_magic_value(resource, delta)
           if record
             record.update_attributes!(delta)
           else
@@ -206,33 +215,5 @@ module Vmdb
       end
     end
     private_class_method :apply_settings_changes
-
-    def self.process_magic_value(resource, delta)
-      return false unless MAGIC_VALUES.include?(delta[:value])
-      case delta[:value]
-      when RESET_COMMAND
-        _log.info("resetting #{delta[:key]} on #{resource.class} id:#{resource.id}")
-        resource.settings_changes.where("key LIKE ?", "#{delta[:key]}%").destroy_all
-      when RESET_ALL_COMMAND
-        _log.info("resetting #{delta[:key]} to default for all resorces")
-        SettingsChange.where("key LIKE ?", "#{delta[:key]}%").destroy_all
-      end
-      true
-    end
-    private_class_method :process_magic_value
-
-    def self.walk_hash(hash, &block)
-      hash.each do |key, value|
-        yield key, value, hash
-        walk_hash(value, &block) if value&.class == Hash
-      end
-    end
-    private_class_method :walk_hash
-
-    def self.remove_magic_values(hash)
-      walk_hash(hash) { |key, value, owner| owner.delete(key) if MAGIC_VALUES.include?(value) }
-      hash
-    end
-    private_class_method :remove_magic_values
   end
 end
