@@ -814,12 +814,15 @@ describe ServiceTemplate do
     let(:user) { FactoryGirl.create(:user, :userid => "barney") }
     let(:resource_action) { FactoryGirl.create(:resource_action, :action => "Provision") }
     let(:service_template) { FactoryGirl.create(:service_template, :resource_actions => [resource_action]) }
-    let(:hash) { {:target => service_template, :initiator => 'control'} }
+    let(:resource_action_options) { {:target => service_template, :initiator => 'control'} }
     let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
-    let(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action) }
+    let!(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action, resource_action_options) }
+
+    before do
+      allow(ResourceActionWorkflow).to(receive(:new).and_return(resource_action_workflow))
+    end
 
     it "success no optional args" do
-      expect(ResourceActionWorkflow).to(receive(:new).and_return(resource_action_workflow))
       expect(resource_action_workflow).to receive(:submit_request).and_return(miq_request)
 
       expect(service_template.order(user)).to eq(miq_request)
@@ -827,8 +830,7 @@ describe ServiceTemplate do
 
     it "successfully scheduled" do
       EvmSpecHelper.local_miq_server
-      expect(ResourceActionWorkflow).to(receive(:new).and_return(resource_action_workflow))
-      expect(resource_action_workflow).to receive(:validate_dialog).and_return(nil)
+      expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
 
       result = service_template.order(user, {}, {}, Time.now.utc.to_s)
 
@@ -844,11 +846,9 @@ describe ServiceTemplate do
     context "#provision_request" do
       let(:arg1) { {'ordered_by' => 'fred'} }
       let(:arg2) { {:initiator => 'control'} }
-      let(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action, hash) }
 
       it "provision's a service template without errors" do
-        expect(ResourceActionWorkflow).to(receive(:new).with({}, user, resource_action, hash).and_return(resource_action_workflow))
-        expect(resource_action_workflow).to receive(:validate_dialog).and_return(nil)
+        expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
         expect(resource_action_workflow).to receive(:make_request).and_return(miq_request)
         expect(resource_action_workflow).to receive(:set_value).with('ordered_by', 'fred')
         expect(resource_action_workflow).to receive(:request_options=).with(:initiator => 'control')
@@ -857,7 +857,6 @@ describe ServiceTemplate do
       end
 
       it "provision's a service template with errors" do
-        expect(ResourceActionWorkflow).to(receive(:new).with({}, user, resource_action, hash).and_return(resource_action_workflow))
         expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
         expect(resource_action_workflow).to receive(:set_value).with('ordered_by', 'fred')
         expect(resource_action_workflow).to receive(:request_options=).with(:initiator => 'control')
