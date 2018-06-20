@@ -41,17 +41,39 @@ module CustomAttributeMixin
     def self.add_custom_attribute(custom_attribute)
       return if respond_to?(custom_attribute)
 
-      virtual_column(custom_attribute.to_sym, :type => :string, :uses => :custom_attributes)
+      ca_sym                 = custom_attribute.to_sym
+      without_prefix         = custom_attribute.sub(CUSTOM_ATTRIBUTES_PREFIX, "")
+      name_val, section      = without_prefix.split(SECTION_SEPARATOR)
+      sanatized_column_alias = custom_attribute.tr('.', 'DOT').tr('/', 'BS').tr(':', 'CLN')
+      ca_arel                = custom_attribute_arel(name_val, section, sanatized_column_alias)
 
-      define_method(custom_attribute.to_sym) do
-        custom_attribute_without_prefix           = custom_attribute.sub(CUSTOM_ATTRIBUTES_PREFIX, "")
-        custom_attribute_without_section, section = custom_attribute_without_prefix.split(SECTION_SEPARATOR)
+      virtual_column(ca_sym, :type => :string, :uses => :custom_attributes, :arel => ca_arel)
 
-        where_args = {}
-        where_args[:name]    = custom_attribute_without_section
+      define_method(ca_sym) do
+        return self[sanatized_column_alias] if has_attribute?(sanatized_column_alias)
+
+        where_args           = {}
+        where_args[:name]    = name_val
         where_args[:section] = section if section
 
         custom_attributes.find_by(where_args).try(:value)
+      end
+    end
+
+    def self.custom_attribute_arel(name_val, section, column_alias)
+      lambda do |t|
+        ca_field    = CustomAttribute.arel_table
+
+        field_where = ca_field[:resource_id].eq(t[:id])
+        field_where = field_where.and(ca_field[:resource_type].eq(base_class.name))
+        field_where = field_where.and(ca_field[:name].eq(name_val))
+        field_where = field_where.and(ca_field[:section].eq(section)) if section
+
+        # Because there is a `find_by` in the `define_method` above, we are
+        # using a `take(1)` here as well, since a limit is assumed in each.
+        # Without it, there can be some invalid queries if more than one result
+        # is returned.
+        ca_field.project(:value).where(field_where).take(1).as(column_alias)
       end
     end
   end
