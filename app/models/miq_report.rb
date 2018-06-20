@@ -200,6 +200,11 @@ class MiqReport < ApplicationRecord
     rpt_options.try(:fetch_path, :pdf, :page_size) || "a4"
   end
 
+  def all_custom_attributes_are_virtual_sql_attributes?
+    ca_va_cols = CustomAttributeMixin.select_virtual_custom_attributes(cols)
+    ca_va_cols.all? { |custom_attribute| va_sql_cols.include?(custom_attribute) }
+  end
+
   def load_custom_attributes
     return unless db_klass < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
 
