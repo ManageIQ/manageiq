@@ -6,6 +6,7 @@ class PhysicalChassis < ApplicationRecord
   belongs_to :physical_rack, :foreign_key => :physical_rack_id, :inverse_of => :physical_chassis
 
   has_many :physical_servers, :dependent => :destroy, :inverse_of => :physical_chassis
+  has_many :physical_storages, :dependent => :destroy, :inverse_of => :physical_chassis
 
   has_one :computer_system, :as => :managed_entity, :dependent => :destroy, :inverse_of => false
   has_one :hardware, :through => :computer_system

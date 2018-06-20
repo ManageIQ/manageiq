@@ -98,6 +98,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
 
     hashes.each do |h|
       h[:physical_rack_id] = h.delete(:physical_rack).try(:[], :id)
+      h[:physical_chassis_id] = h.delete(:physical_chassis).try(:[], :id)
     end
 
     child_keys = %i(computer_system asset_detail)
