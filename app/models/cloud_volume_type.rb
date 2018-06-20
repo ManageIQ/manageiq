@@ -1,4 +1,7 @@
 class CloudVolumeType < ApplicationRecord
+  # CloudVolumeTypes represent various "flavors" of
+  # volume that are available to create within a given
+  # Storage service.
   include NewWithTypeStiMixin
   include ProviderObjectMixin
 
