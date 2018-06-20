@@ -59,10 +59,7 @@ module ManagerRefresh::InventoryCollection::Builder::Shared
       )
 
       add_builder_params(
-        :ems_id   => ->(persister) { persister.manager.id },
-        :vendor   => vendor,
-        :name     => 'unknown',
-        :location => 'unknown'
+        :ems_id => ->(persister) { persister.manager.id }
       )
     end
 
