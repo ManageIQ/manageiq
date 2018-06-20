@@ -722,9 +722,14 @@ describe MiqSchedule do
       end
 
       context "resource exists" do
+        let(:resource) { FactoryGirl.create(:host) }
+
+        before do
+          allow(Host).to receive(:find_by).with(:id => resource.id).and_return(resource)
+        end
+
         it "and does not respond to the method" do
-          resource = FactoryGirl.create(:host)
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource, :sched_action => {:method => "test_method"})
+          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method"})
 
           expect($log).to receive(:warn) do |message|
             expect(message).to include("no such action: [test_method], aborting schedule")
@@ -734,19 +739,17 @@ describe MiqSchedule do
         end
 
         it "and responds to the method" do
-          resource = FactoryGirl.create(:host)
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource, :sched_action => {:method => "test_method"})
+          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method"})
 
-          expect_any_instance_of(Host).to receive("test_method").once
+          expect(resource).to receive("test_method").once
 
           MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
         end
 
         it "and responds to the method with arguments" do
-          resource = FactoryGirl.create(:host)
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource, :sched_action => {:method => "test_method", :args => ["abc", 123, :a => 1]})
+          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method", :args => ["abc", 123, :a => 1]})
 
-          expect_any_instance_of(Host).to receive("test_method").once.with("abc", 123, :a => 1)
+          expect(resource).to receive("test_method").once.with("abc", 123, :a => 1)
 
           MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
         end
