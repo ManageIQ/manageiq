@@ -809,7 +809,6 @@ describe ServiceTemplate do
     let(:resource_action) { FactoryGirl.create(:resource_action, :action => "Provision") }
     let(:service_template) { FactoryGirl.create(:service_template, :resource_actions => [resource_action]) }
     let(:hash) { {:target => service_template, :initiator => 'control', :submit_workflow => nil} }
-    let(:workflow) { instance_double(ResourceActionWorkflow, :validate_dialog => nil) }
     let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
     let(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action) }
 
