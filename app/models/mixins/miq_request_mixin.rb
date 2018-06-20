@@ -40,7 +40,9 @@ module MiqRequestMixin
   def tags
     tag_ids.to_miq_a.each do |tag_id|
       tag = Classification.find(tag_id)
-      yield(tag.name, tag.parent.name)  unless tag.nil?    # yield the tag's name and category
+      if tag.present?
+        yield(tag.name, tag.parent.name) if block_given? # yield the tag's name and category
+      end
     end
   end
 
