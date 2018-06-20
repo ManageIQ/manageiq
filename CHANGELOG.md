@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 88 ending 2018-06-18
+
+### Added
+- Add save hooks on MiqReportResult to remove groupings [(#17598)](https://github.com/ManageIQ/manageiq/pull/17598)
+- Add faster MiqReportResult helper methods for viewing saved report results [(#17590)](https://github.com/ManageIQ/manageiq/pull/17590)
+- Add tool to remove grouping from report results [(#17589)](https://github.com/ManageIQ/manageiq/pull/17589)
+- MiqSchedule call method directly if available [(#17588)](https://github.com/ManageIQ/manageiq/pull/17588)
+- Cashe cloud volumes in ChargebackVm [(#17585)](https://github.com/ManageIQ/manageiq/pull/17585)
+- Add policy event host_failure. [(#17578)](https://github.com/ManageIQ/manageiq/pull/17578)
+- Add display name for guest device [(#17573)](https://github.com/ManageIQ/manageiq/pull/17573)
+- Add display name for Credential (RHV) [(#17572)](https://github.com/ManageIQ/manageiq/pull/17572)
+- Added IC Builder definition for Tower Workflow [(#17571)](https://github.com/ManageIQ/manageiq/pull/17571)
+- Add simple wrapping code for running ansible-playbook [(#17564)](https://github.com/ManageIQ/manageiq/pull/17564)
+- Add physical infra related default collections [(#17557)](https://github.com/ManageIQ/manageiq/pull/17557)
+- Adding miq_feature to Physical Switch restart [(#17548)](https://github.com/ManageIQ/manageiq/pull/17548)
+- Add display name for Physical Server (Redfish) [(#17532)](https://github.com/ManageIQ/manageiq/pull/17532)
+- Add tests for rbac on ansible playbooks and authentications [(#17528)](https://github.com/ManageIQ/manageiq/pull/17528)
+- Added separate features for Requests subtabs [(#17524)](https://github.com/ManageIQ/manageiq/pull/17524)
+- Adds support for Physical Chassis in the UI [(#17523)](https://github.com/ManageIQ/manageiq/pull/17523)
+- Add Archive/Unarchive for Service Templates to features [(#17518)](https://github.com/ManageIQ/manageiq/pull/17518)
+- Fix to show vm/image related info in audit log when deleting vm/image [(#17504)](https://github.com/ManageIQ/manageiq/pull/17504)
+- Added actions for suspend a provider [(#17500)](https://github.com/ManageIQ/manageiq/pull/17500)
+- Ability to reset settings to default value and delete newly added keys [(#17482)](https://github.com/ManageIQ/manageiq/pull/17482)
+- Add has_one scope support to virtual_delegate [(#17473)](https://github.com/ManageIQ/manageiq/pull/17473)
+- Integrate with external Tower Workflow [(#17440)](https://github.com/ManageIQ/manageiq/pull/17440)
+- Warn when we're running fix_auth in dry run mode [(#17410)](https://github.com/ManageIQ/manageiq/pull/17410)
+- Add built in policy to prevent transformed VM from starting. [(#17389)](https://github.com/ManageIQ/manageiq/pull/17389)
+- Fix call for future retirement [(#17382)](https://github.com/ManageIQ/manageiq/pull/17382)
+
+### Fixed
+- Add `nil` check for report.extras on save hooks [(#17605)](https://github.com/ManageIQ/manageiq/pull/17605)
+- Skip Vm reconnect if already reconnected [(#17570)](https://github.com/ManageIQ/manageiq/pull/17570)
+- Allow models to include methods for MiqExpression sql evaluation [(#17562)](https://github.com/ManageIQ/manageiq/pull/17562)
+- Use pluck on  metric rollup query in chargeback [(#17560)](https://github.com/ManageIQ/manageiq/pull/17560)
+- Get rid off query "All in One" in Chargeback [(#17552)](https://github.com/ManageIQ/manageiq/pull/17552)
+- Allow duplicate nil pxe_image_types during seed (for the current region) [(#17544)](https://github.com/ManageIQ/manageiq/pull/17544)
+- move #my_zone from ArchivedMixin to OldEmsMixin [(#17539)](https://github.com/ManageIQ/manageiq/pull/17539)
+- Replace remove duplicate timestamp by sql version for chargeback [(#17538)](https://github.com/ManageIQ/manageiq/pull/17538)
+- Add Flavor model to :tag_classes: section in miq_expression.yml. [(#17537)](https://github.com/ManageIQ/manageiq/pull/17537)
+- Explicitly shortcut "everything" for privileges [(#17526)](https://github.com/ManageIQ/manageiq/pull/17526)
+- Fix multiple parents error moving vm to new folder [(#17525)](https://github.com/ManageIQ/manageiq/pull/17525)
+- No event will be shown when a compliance policy is created for a Physical Infra [(#17516)](https://github.com/ManageIQ/manageiq/pull/17516)
+- Join object and block storage under ems_storage in the features tree [(#17512)](https://github.com/ManageIQ/manageiq/pull/17512)
+- Ancestry Patch updates/fixes [(#17511)](https://github.com/ManageIQ/manageiq/pull/17511)
+- Restrict Vm Operating System detection for XP [(#17405)](https://github.com/ManageIQ/manageiq/pull/17405)
+- Fixing the refresh to remove all physical switches. [(#17390)](https://github.com/ManageIQ/manageiq/pull/17390)
+- Add display name for RHV Embedded Ansible Credential [(#17330)](https://github.com/ManageIQ/manageiq/pull/17330)
+- Bug 1546535: include shared external networks in list on router create [(#17305)](https://github.com/ManageIQ/manageiq/pull/17305)
+- Migrate model display names from locale/en.yml to models [(#16836)](https://github.com/ManageIQ/manageiq/pull/16836)
+
 ## Unreleased as of Sprint 87 ending 2018-06-04
 
 ### Added
