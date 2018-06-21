@@ -307,6 +307,13 @@ module MiqReport::Generator
     # TODO: add once only_cols is fixed
     # targets = targets.select(only_cols)
     where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
+
+    # Remove custom_attributes as part of the `includes` if all of them exist
+    # in the select statement
+    if all_custom_attributes_are_virtual_sql_attributes?
+      remove_loading_relations_for_virtual_custom_attributes
+    end
+
     rbac_opts = options.merge(
       :targets          => targets,
       :filter           => conditions,
