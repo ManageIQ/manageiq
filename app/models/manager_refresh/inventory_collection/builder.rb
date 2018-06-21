@@ -72,7 +72,6 @@ module ManagerRefresh
 
         send(@name.to_sym) if respond_to?(@name.to_sym)
 
-        add_inventory_attributes(auto_inventory_attributes) if @options[:auto_inventory_attributes]
       end
 
       # Creates InventoryCollection
@@ -125,6 +124,7 @@ module ManagerRefresh
 
       # Clears all inventory object attributes
       def clear_inventory_attributes!
+        @options[:auto_inventory_attributes] = false
         @inventory_object_attributes = []
       end
 
@@ -153,6 +153,8 @@ module ManagerRefresh
       # Returns whole InventoryCollection properties
       # TODO: default values converted to builder_params, change InventoryCollection and usages in next PR
       def to_hash
+        add_inventory_attributes(auto_inventory_attributes) if @options[:auto_inventory_attributes]
+
         @properties.merge(
           :inventory_object_attributes => @inventory_object_attributes,
           :builder_params              => @default_values,
