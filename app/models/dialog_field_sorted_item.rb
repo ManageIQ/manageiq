@@ -19,7 +19,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def sort_by
-    options[:sort_by] || :description
+    options[:sort_by].try(:to_sym) || :description
   end
 
   def sort_by=(value)
