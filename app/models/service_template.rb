@@ -392,9 +392,46 @@ class ServiceTemplate < ApplicationRecord
   private_class_method :create_from_options
 
   def provision_request(user, options = nil, request_options = nil)
-    result = provision_workflow(user, options, request_options).submit_request
+    result = order(user, options, request_options)
     raise result[:errors].join(", ") if result[:errors].any?
     result[:request]
+  end
+
+  def queue_order(user_id, options, request_options)
+    MiqQueue.submit_job(
+      :class_name  => name,
+      :instance_id => id,
+      :method_name => "order",
+      :args        => [user_id, options, request_options],
+    )
+  end
+
+  def order(user_or_id, options = nil, request_options = nil, schedule_time = nil)
+    user     = user_or_id.kind_of?(User) ? user_or_id : User.find(user_or_id)
+    workflow = provision_workflow(user, options, request_options)
+    if schedule_time
+      require 'time'
+      time = Time.parse(schedule_time).utc
+
+      errors = workflow.validate_dialog
+      return {:errors => errors} unless errors.blank?
+
+      schedule = MiqSchedule.create!(
+        :name         => "Order #{self.class.name} #{id}",
+        :description  => "Order #{self.class.name} #{id}",
+        :sched_action => {:args => [user.id, options, request_options], :method => "queue_order"},
+        :resource_id  => id,
+        :towhat       => "ServiceTemplate",
+        :run_at       => {
+          :interval   => {:unit => "once"},
+          :start_time => time,
+          :tz         => "UTC",
+        },
+      )
+      {:schedule => schedule}
+    else
+      workflow.submit_request
+    end
   end
 
   def provision_workflow(user, dialog_options = nil, request_options = nil)
