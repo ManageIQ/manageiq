@@ -276,6 +276,13 @@ module MiqReport::Generator
       va_sql_cols = cols.select do |col|
         db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
       end
+
+      # Remove custom_attributes as part of the `includes` if all of them exist
+      # in the select statement
+      if all_custom_attributes_are_virtual_sql_attributes?
+        remove_loading_relations_for_virtual_custom_attributes
+      end
+
       rbac_opts = options.merge(
         :targets          => targets,
         :filter           => conditions,
