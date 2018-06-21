@@ -1,8 +1,6 @@
 module ManageIQ
   module Providers
     class BaseManager::ManagerRefresher < ManageIQ::Providers::BaseManager::Refresher
-      include ::EmsRefresh::Refreshers::EmsRefresherMixin
-
       # Gives a Builder class for Inventory
       # @param klass [Class] Class of used ManageIQ::Providers::BaseManager object
       # @return [ManageIQ::Providers::<provider_name>::Builder] Builder class for Inventory
