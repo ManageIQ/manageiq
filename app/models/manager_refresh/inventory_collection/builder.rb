@@ -132,7 +132,7 @@ module ManagerRefresh
       def add_default_values(params = {}, mode = :overwrite)
         @default_values = merge_hashes(@default_values, params, mode)
       end
-      alias :add_builder_params :add_default_values
+      alias add_builder_params add_default_values
 
       # Evaluates lambda blocks
       def evaluate_lambdas!(persister)

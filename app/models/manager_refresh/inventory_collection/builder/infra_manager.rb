@@ -61,11 +61,11 @@ module ManagerRefresh
             :manager_ref          => %i(uid_ems),
             :attributes_blacklist => %i(ems_children),
           )
-          shared_builder_params
+          add_common_default_values
         end
 
         def datacenters
-          shared_builder_params
+          add_common_default_values
         end
 
         def resource_pools
@@ -73,7 +73,7 @@ module ManagerRefresh
             :manager_ref          => %i(uid_ems),
             :attributes_blacklist => %i(ems_children),
           )
-          shared_builder_params
+          add_common_default_values
         end
 
         def ems_clusters
@@ -82,7 +82,7 @@ module ManagerRefresh
           )
 
           add_inventory_attributes(%i(datacenter_id))
-          shared_builder_params
+          add_common_default_values
         end
 
         def storages
@@ -94,7 +94,7 @@ module ManagerRefresh
         end
 
         def hosts
-          shared_builder_params
+          add_common_default_values
 
           add_custom_reconnect_block(
             lambda do |inventory_collection, inventory_objects_index, attributes_index|
@@ -203,8 +203,8 @@ module ManagerRefresh
 
         private
 
-        def shared_builder_params
-          add_builder_params(:ems_id => default_ems_id)
+        def add_common_default_values
+          add_default_values(:ems_id => default_ems_id)
         end
 
         def default_ems_id

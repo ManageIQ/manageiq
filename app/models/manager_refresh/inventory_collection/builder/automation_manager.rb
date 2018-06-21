@@ -6,40 +6,40 @@ module ManagerRefresh
       class AutomationManager < ::ManagerRefresh::InventoryCollection::Builder
         def configuration_scripts
           default_manager_ref
-          default_builder_params
+          add_common_default_values
         end
 
         def configuration_script_payloads
           add_properties(
             :manager_ref => %i(configuration_script_source manager_ref)
           )
-          default_builder_params
+          add_common_default_values
         end
 
         def configuration_script_sources
           default_manager_ref
-          default_builder_params
+          add_common_default_values
         end
 
         def configuration_workflows
           default_manager_ref
-          default_builder_params
+          add_common_default_values
         end
 
         def configured_systems
           default_manager_ref
-          default_builder_params
+          add_common_default_values
         end
 
         def credentials
           default_manager_ref
-          add_builder_params(
+          add_default_values(
             :resource => ->(persister) { persister.manager }
           )
         end
 
         def inventory_root_groups
-          default_builder_params
+          add_common_default_values
         end
 
         def vms
@@ -52,8 +52,8 @@ module ManagerRefresh
           add_properties(:manager_ref => %i(manager_ref))
         end
 
-        def default_builder_params
-          add_builder_params(
+        def add_common_default_values
+          add_default_values(
             :manager => ->(persister) { persister.manager }
           )
         end

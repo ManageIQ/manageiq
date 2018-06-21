@@ -26,35 +26,35 @@ module ManagerRefresh
             :saver_strategy => :default
           )
 
-          shared_builder_params
+          add_common_default_values
         end
 
         def network_groups
-          shared_builder_params
+          add_common_default_values
         end
 
         def network_routers
-          shared_builder_params
+          add_common_default_values
         end
 
         def floating_ips
-          shared_builder_params
+          add_common_default_values
         end
 
         def cloud_tenants
-          shared_builder_params
+          add_common_default_values
         end
 
         def cloud_subnets
-          shared_builder_params
+          add_common_default_values
         end
 
         def cloud_networks
-          shared_builder_params
+          add_common_default_values
         end
 
         def security_groups
-          shared_builder_params
+          add_common_default_values
         end
 
         def firewall_rules
@@ -65,7 +65,7 @@ module ManagerRefresh
         end
 
         def load_balancers
-          shared_builder_params
+          add_common_default_values
         end
 
         def load_balancer_pools
@@ -83,7 +83,7 @@ module ManagerRefresh
             end
           )
 
-          shared_builder_params
+          add_common_default_values
         end
 
         def load_balancer_pool_members
@@ -106,7 +106,7 @@ module ManagerRefresh
             end
           )
 
-          shared_builder_params
+          add_common_default_values
         end
 
         def load_balancer_pool_member_pools
@@ -142,7 +142,7 @@ module ManagerRefresh
             end
           )
 
-          shared_builder_params
+          add_common_default_values
         end
 
         def load_balancer_listener_pools
@@ -177,7 +177,7 @@ module ManagerRefresh
             end
           )
 
-          shared_builder_params
+          add_common_default_values
         end
 
         def load_balancer_health_check_members
@@ -199,8 +199,8 @@ module ManagerRefresh
 
         protected
 
-        def shared_builder_params
-          add_builder_params(:ems_id => default_ems_id)
+        def add_common_default_values
+          add_default_values(:ems_id => default_ems_id)
         end
 
         def default_ems_id

@@ -3,11 +3,11 @@ module ManagerRefresh
     class Builder
       class CloudManager < ::ManagerRefresh::InventoryCollection::Builder
         def availability_zones
-          shared_builder_params
+          add_common_default_values
         end
 
         def flavors
-          shared_builder_params
+          add_common_default_values
         end
 
         def key_pairs
@@ -15,7 +15,7 @@ module ManagerRefresh
             :model_class => ::ManageIQ::Providers::CloudManager::AuthKeyPair,
             :manager_ref => %i(name)
           )
-          add_builder_params(
+          add_default_values(
             :resource_id   => ->(persister) { persister.manager.id },
             :resource_type => ->(persister) { persister.manager.class.base_class }
           )
@@ -62,7 +62,7 @@ module ManagerRefresh
             :attributes_blacklist => %i(parent),
           )
 
-          shared_builder_params
+          add_common_default_values
         end
 
         def orchestration_stacks_resources
@@ -133,8 +133,8 @@ module ManagerRefresh
 
       private
 
-      def shared_builder_params
-        add_builder_params(:ems_id => default_ems_id)
+      def add_common_default_values
+        add_default_values(:ems_id => default_ems_id)
       end
 
       def default_ems_id
@@ -143,7 +143,6 @@ module ManagerRefresh
 
       def orchestration_stack_ancestry_save_block
         lambda do |_ems, inventory_collection|
-
           stacks_inventory_collection = inventory_collection.dependency_attributes[:orchestration_stacks].try(:first)
 
           return if stacks_inventory_collection.blank?
@@ -155,13 +154,12 @@ module ManagerRefresh
 
           model_class = stacks_inventory_collection.model_class
 
-          stacks_parents_indexed = model_class
-                                     .select(%i(id ancestry))
-                                     .where(:id => stacks_parents.values).find_each.index_by(&:id)
+          stacks_parents_indexed = model_class.select(%i(id ancestry))
+                                              .where(:id => stacks_parents.values).find_each.index_by(&:id)
 
           ActiveRecord::Base.transaction do
             model_class.select(%i(id ancestry))
-              .where(:id => stacks_parents.keys).find_each do |stack|
+                       .where(:id => stacks_parents.keys).find_each do |stack|
               parent = stacks_parents_indexed[stacks_parents[stack.id]]
               stack.update_attribute(:parent, parent)
             end
@@ -194,11 +192,11 @@ module ManagerRefresh
           ActiveRecord::Base.transaction do
             # associate parent templates to child instances
             parent_miq_templates = miq_templates_inventory_collection.model_class
-                                     .select([:id])
-                                     .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
+                                                                     .select([:id])
+                                                                     .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
             vms_inventory_collection.model_class
-              .select([:id])
-              .where(:id => vms_genealogy_parents.keys).find_each do |vm|
+                                    .select([:id])
+                                    .where(:id => vms_genealogy_parents.keys).find_each do |vm|
               parent = parent_miq_templates[vms_genealogy_parents[vm.id]]
               vm.with_relationship_type('genealogy') { vm.parent = parent }
             end
@@ -207,11 +205,11 @@ module ManagerRefresh
           ActiveRecord::Base.transaction do
             # associate parent instances to child templates
             parent_vms = vms_inventory_collection.model_class
-                           .select([:id])
-                           .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
+                                                 .select([:id])
+                                                 .where(:id => miq_template_genealogy_parents.values).find_each.index_by(&:id)
             miq_templates_inventory_collection.model_class
-              .select([:id])
-              .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
+                                              .select([:id])
+                                              .where(:id => miq_template_genealogy_parents.keys).find_each do |miq_template|
               parent = parent_vms[miq_template_genealogy_parents[miq_template.id]]
               miq_template.with_relationship_type('genealogy') { miq_template.parent = parent }
             end
