@@ -167,7 +167,7 @@
           options: {}
       Condition: []
 - MiqPolicySet:
-    name: physical infrastructure profile 
+    name: physical infrastructure profile
     description: Physical Infrastructure Profile
     set_type: MiqPolicySet
     guid: e89997cd-e7ba-4c1f-92f6-57154fe1c875
@@ -207,4 +207,3 @@
           action_type: default
           options: {}
       Condition: []
-
