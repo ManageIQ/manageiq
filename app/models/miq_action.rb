@@ -309,6 +309,7 @@ class MiqAction < ApplicationRecord
         :header            => "Alert Triggered",
         :policy_detail     => "Alert '#{inputs[:policy].description}', triggered",
         :event_description => inputs[:event].description,
+        :event_details     => Notification.notification_text(inputs[:triggering_type], inputs[:triggering_data]),
         :entity_type       => rec.class.to_s,
         :entity_name       => rec.name
       }
