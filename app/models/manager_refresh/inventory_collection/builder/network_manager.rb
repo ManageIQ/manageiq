@@ -206,11 +206,6 @@ module ManagerRefresh
         def default_ems_id
           ->(persister) { persister.manager.try(:network_manager).try(:id) || persister.manager.id }
         end
-
-        # InventoryCollection definitions for NetworkManager?
-        def self.network_manager_collections?
-          true
-        end
       end
     end
   end

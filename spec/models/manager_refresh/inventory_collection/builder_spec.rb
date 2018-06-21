@@ -135,22 +135,22 @@ describe ManagerRefresh::InventoryCollection::Builder do
     expect(data[:some_tmp_param]).to eq :some_value
   end
 
-  # --- builder params ---
+  # --- default values ---
 
-  it 'adds builder_params repeatedly' do
+  it 'adds default_values repeatedly' do
     data = cloud.prepare_data(:tmp, persister_class) do |builder|
-      builder.add_builder_params(:ems_id => 10)
-      builder.add_builder_params(:ems_id => 20)
-      builder.add_builder_params(:tmp_id => 30)
+      builder.add_default_values(:ems_id => 10)
+      builder.add_default_values(:ems_id => 20)
+      builder.add_default_values(:tmp_id => 30)
     end.to_hash
 
     expect(data[:builder_params][:ems_id]).to eq 20
     expect(data[:builder_params][:tmp_id]).to eq 30
   end
 
-  it 'transforms lambdas in builder_params' do
+  it 'transforms lambdas in default_values' do
     bldr = cloud.prepare_data(:tmp, persister_class) do |builder|
-      builder.add_builder_params(:ems_id => ->(persister) { persister.manager.id })
+      builder.add_default_values(:ems_id => ->(persister) { persister.manager.id })
     end
     bldr.evaluate_lambdas!(@persister)
 

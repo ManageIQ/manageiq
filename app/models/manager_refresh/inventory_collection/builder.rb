@@ -49,7 +49,7 @@ module ManagerRefresh
 
         @properties = {}
         @inventory_object_attributes = []
-        @builder_params = {}
+        @default_values = {}
         @dependency_attributes = {}
 
         @options = options
@@ -128,14 +128,16 @@ module ManagerRefresh
         @inventory_object_attributes = []
       end
 
-      # Adds key/values to builder params (part of @properties)
-      def add_builder_params(params = {}, mode = :overwrite)
-        @builder_params = merge_hashes(@builder_params, params, mode)
+      # Adds key/values to default values (InventoryCollection.builder_params) (part of @properties)
+      def add_default_values(params = {}, mode = :overwrite)
+        @default_values = merge_hashes(@default_values, params, mode)
       end
+      alias :add_builder_params :add_default_values
 
       # Evaluates lambda blocks
       def evaluate_lambdas!(persister)
-        evaluate_builder_params_lambdas!(persister)
+        @default_values = evaluate_lambdas_on(@default_values, persister)
+        @dependency_attributes = evaluate_lambdas_on(@dependency_attributes, persister)
       end
 
       # Adds key/values to dependency_attributes (part of @properties)
@@ -143,11 +145,17 @@ module ManagerRefresh
         @dependency_attributes = merge_hashes(@dependency_attributes, attrs, mode)
       end
 
+      # Deletes key from dependency_attributes
+      def remove_dependency_attributes(key)
+        @dependency_attributes.delete(key)
+      end
+
       # Returns whole InventoryCollection properties
+      # TODO: default values converted to builder_params, change InventoryCollection and usages in next PR
       def to_hash
         @properties.merge(
           :inventory_object_attributes => @inventory_object_attributes,
-          :builder_params              => @builder_params,
+          :builder_params              => @default_values,
           :dependency_attributes       => @dependency_attributes
         )
       end
@@ -222,10 +230,12 @@ module ManagerRefresh
         end
       end
 
-      # Evaluates lambda blocks in @builder_params
-      def evaluate_builder_params_lambdas!(persister)
-        if @builder_params
-          @builder_params = @builder_params.transform_values do |value|
+      # Evaluates lambda blocks in @default_values and @dependency_attributes
+      # @param values[Hash]
+      # @param persister [ManagerRefresh::Inventory::Persister]
+      def evaluate_lambdas_on(values, persister)
+        if values
+          values.transform_values do |value|
             if value.respond_to?(:call)
               value.call(persister)
             else
@@ -233,15 +243,6 @@ module ManagerRefresh
             end
           end
         end
-      end
-
-      def network_manager_collections?
-        self.class.network_manager_collections?
-      end
-
-      # InventoryCollection definitions for NetworkManager?
-      def self.network_manager_collections?
-        false
       end
     end
   end
