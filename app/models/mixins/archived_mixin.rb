@@ -16,6 +16,14 @@ module ArchivedMixin
     deleted_on.nil?
   end
 
+  def archive!
+    update_attributes!(:deleted_on => Time.now.utc)
+  end
+
+  def unarchive!
+    update_attributes!(:deleted_on => nil)
+  end
+
   # Needed for metrics
   def my_zone
     if ext_management_system.present?
