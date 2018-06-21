@@ -350,6 +350,17 @@ describe DialogFieldSortedItem do
             it "returns the values with the first option being a nil 'None' option" do
               expect(dialog_field.values).to eq([[nil, "<None>"], %w(test test), %w(abc abc)])
             end
+
+            context "when the values are in a seemingly random order" do
+              let(:values) { [%w(3 Three), %w(1 One), %w(2 Two)] }
+              before do
+                dialog_field.options[:sort_by] = "none"
+              end
+
+              it "does not attempt to sort them" do
+                expect(dialog_field.values).to eq([[nil, "<None>"], %w(3 Three), %w(1 One), %w(2 Two)])
+              end
+            end
           end
         end
       end
