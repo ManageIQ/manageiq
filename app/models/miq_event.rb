@@ -40,7 +40,7 @@ class MiqEvent < EventStream
       return
     end
 
-    event_obj = build_evm_event(event, target)
+    event_obj = build_evm_event(event, target, inputs[:full_data])
     inputs.merge!('MiqEvent::miq_event' => event_obj.id, :miq_event_id => event_obj.id)
     inputs.merge!('EventStream::event_stream' => event_obj.id, :event_stream_id => event_obj.id)
 
@@ -79,10 +79,11 @@ class MiqEvent < EventStream
     results
   end
 
-  def self.build_evm_event(event, target)
+  def self.build_evm_event(event, target, full_data = nil)
     options = {
       :event_type => event,
       :target     => target,
+      :full_data  => full_data,
       :source     => 'POLICY',
       :timestamp  => Time.now.utc
     }

@@ -264,3 +264,8 @@
   :expires_in: 24.hours
   :level: :error
   :audience: superadmin
+- :name: evm_worker_memory_exceeded
+  :message: 'Killing worker %{name} due to excessive memory usage. %{memory_usage} used memory exceeds limit of %{memory_threshold}.'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: none
