@@ -19,7 +19,7 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   #     )
   #   )
   #
-  # @see ManagerRefresh::InventoryCollection::Builder
+  # @see documentation https://github.com/ManageIQ/guides/tree/master/providers/persister/inventory_collections.md
   #
   def add_collection(builder_class, collection_name, extra_properties = {}, settings = {}, &block)
     builder = builder_class.prepare_data(collection_name,
