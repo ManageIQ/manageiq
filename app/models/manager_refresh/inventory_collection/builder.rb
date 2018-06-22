@@ -4,10 +4,11 @@ module ManagerRefresh
     class Builder
       class MissingModelClassError < StandardError; end
 
+      require_nested :AutomationManager
       require_nested :CloudManager
       require_nested :InfraManager
-      require_nested :AutomationManager
       require_nested :NetworkManager
+      require_nested :PhysicalInfraManager
       require_nested :StorageManager
       require_nested :PersisterHelper
 
@@ -71,7 +72,6 @@ module ManagerRefresh
         add_properties(@shared_properties, :if_missing)
 
         send(@name.to_sym) if respond_to?(@name.to_sym)
-
       end
 
       # Creates InventoryCollection
@@ -236,13 +236,11 @@ module ManagerRefresh
       # @param values[Hash]
       # @param persister [ManagerRefresh::Inventory::Persister]
       def evaluate_lambdas_on(values, persister)
-        if values
-          values.transform_values do |value|
-            if value.respond_to?(:call)
-              value.call(persister)
-            else
-              value
-            end
+        values&.transform_values do |value|
+          if value.respond_to?(:call)
+            value.call(persister)
+          else
+            value
           end
         end
       end

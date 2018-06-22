@@ -61,6 +61,11 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
     ::ManagerRefresh::InventoryCollection::Builder::AutomationManager
   end
 
+  # builder class for add_collection()
+  def physical_infra
+    ::ManagerRefresh::InventoryCollection::Builder::PhysicalInfraManager
+  end
+
   # @param extra_settings [Hash]
   #   :auto_inventory_attributes
   #     - auto creates inventory_object_attributes from target model_class setters
