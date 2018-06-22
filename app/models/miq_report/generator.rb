@@ -291,6 +291,17 @@ module MiqReport::Generator
       va_sql_cols = cols.select do |col|
         db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
       end
+
+      custom_attributes_sql_cols = db_class.select_custom_attributes_for(cols)
+
+      # Can't use `remove_loading_relations_for_virtual_custom_attributes`
+      # since `includes` is what is being passed, and not the the `include`
+      # instance variable which is modified in the method.
+      if custom_attributes_sql_cols.present?
+        vc_attributes = CustomAttributeMixin.select_virtual_custom_attributes(cols).present?
+        includes.delete(:custom_attributes) if vc_attributes.present? && includes && includes[:custom_attributes].blank?
+      end
+
       rbac_opts = options.merge(
         :targets          => targets,
         :filter           => conditions,
@@ -299,7 +310,9 @@ module MiqReport::Generator
         :skip_counts      => true,
       )
 
-      rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.nil? || va_sql_cols.empty?
+      rbac_opts[:extra_cols] ||= []
+      rbac_opts[:extra_cols]  += va_sql_cols unless va_sql_cols.nil? || va_sql_cols.empty?
+      rbac_opts[:extra_cols]  += custom_attributes_sql_cols if custom_attributes_sql_cols.present?
 
       results, attrs = Rbac.search(rbac_opts)
       results = Metric::Helper.remove_duplicate_timestamps(results)
