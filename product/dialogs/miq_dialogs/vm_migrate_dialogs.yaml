@@ -198,6 +198,14 @@
           :required: false
           :display: :edit
           :data_type: :integer
+        :placement_folder_name:
+          :values_from:
+            :method: :allowed_folders
+          :auto_select_single: false
+          :description: Name
+          :required: false
+          :display: :edit
+          :data_type: :integer
       :display: :show
     :schedule:
       :description: Schedule
