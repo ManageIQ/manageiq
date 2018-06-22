@@ -20,6 +20,14 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     miq_request.transformation_mapping.destination(source_obj)
   end
 
+  def pre_ansible_playbook_service_template
+    ServiceTemplate.find_by(:id => vm_resource.options["pre_ansible_playbook_service_template_id"])
+  end
+
+  def post_ansible_playbook_service_template
+    ServiceTemplate.find_by(:id => vm_resource.options["post_ansible_playbook_service_template_id"])
+  end
+
   def update_transformation_progress(progress)
     options[:progress] = (options[:progress] || {}).merge(progress)
     save
