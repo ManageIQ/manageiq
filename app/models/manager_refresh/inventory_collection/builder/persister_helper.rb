@@ -77,7 +77,7 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   def make_builder_settings(extra_settings = {})
     opts = ::ManagerRefresh::InventoryCollection::Builder.default_options
 
-    opts[:adv_settings] = options[:inventory_collections].try(:to_hash) || {}
+    opts[:adv_settings] = options.try(:[], :inventory_collections).try(:to_hash) || {}
     opts[:shared_properties] = shared_options
     opts[:auto_inventory_attributes] = true
     opts[:without_model_class] = false
@@ -103,12 +103,12 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   # Returns list of target's ems_refs
   # @return [Array<String>]
   def references(collection)
-    target.manager_refs_by_association.try(:[], collection).try(:[], :ems_ref).try(:to_a) || []
+    target.try(:manager_refs_by_association).try(:[], collection).try(:[], :ems_ref).try(:to_a) || []
   end
 
   # Returns list of target's name
   # @return [Array<String>]
   def name_references(collection)
-    target.manager_refs_by_association.try(:[], collection).try(:[], :name).try(:to_a) || []
+    target.try(:manager_refs_by_association).try(:[], collection).try(:[], :name).try(:to_a) || []
   end
 end
