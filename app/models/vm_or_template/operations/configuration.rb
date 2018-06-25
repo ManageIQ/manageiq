@@ -90,6 +90,17 @@ module VmOrTemplate::Operations::Configuration
     raw_add_disk(disk_name, disk_size_mb, options)
   end
 
+  def raw_remove_disk(disk_name, options = {})
+    raise _("VM has no EMS, unable to remove disk") unless ext_management_system
+
+    options[:delete_backing] = true if options[:delete_backing].nil?
+    run_command_via_parent(:vm_remove_disk, :diskName => disk_name, :delete_backing => options[:delete_backing])
+  end
+
+  def remove_disk(disk_name, options = {})
+    raw_remove_disk(disk_name, options)
+  end
+
   def raw_attach_volume(volume_id, device = nil)
     raise _("VM has no EMS, unable to attach volume") unless ext_management_system
     run_command_via_parent(:vm_attach_volume, :volume_id => volume_id, :device => device)
