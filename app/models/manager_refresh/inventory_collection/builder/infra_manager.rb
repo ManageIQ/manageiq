@@ -56,6 +56,17 @@ module ManagerRefresh
           )
         end
 
+        def vm_and_template_ems_custom_fields
+          @options[:auto_inventory_attributes] = false
+
+          add_properties(
+            :model_class => ::CustomAttribute,
+            :manager_ref => %i(name)
+          )
+
+          add_inventory_attributes(%i(section name value source resource))
+        end
+
         def ems_folders
           add_properties(
             :manager_ref          => %i(uid_ems),
