@@ -56,4 +56,41 @@ describe VmOrTemplate::Operations::Configuration do
       end
     end
   end
+
+  context "#raw_remove_disk" do
+    let(:disk_name) { "[datastore1] vm1/vm1.vmdk" }
+
+    context "from an archived vm" do
+      let(:vm) { FactoryGirl.create(:vm_or_template) }
+
+      it "raises an exception" do
+        expect { vm.raw_remove_disk(disk_name) }.to raise_error("VM has no EMS, unable to remove disk")
+      end
+    end
+
+    context "from an active vm" do
+      let(:ems) { FactoryGirl.create(:ext_management_system) }
+      let(:vm)  { FactoryGirl.create(:vm_or_template, :ext_management_system => ems) }
+
+      it "defaults to delete the backing file" do
+        expected_options = {
+          :diskName       => disk_name,
+          :delete_backing => true,
+        }
+
+        expect(vm).to receive(:run_command_via_parent).with(:vm_remove_disk, expected_options)
+        vm.raw_remove_disk(disk_name)
+      end
+
+      it "can override the delete backing file option" do
+        expected_options = {
+          :diskName       => disk_name,
+          :delete_backing => false,
+        }
+
+        expect(vm).to receive(:run_command_via_parent).with(:vm_remove_disk, expected_options)
+        vm.raw_remove_disk(disk_name, :delete_backing => false)
+      end
+    end
+  end
 end
