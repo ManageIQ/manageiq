@@ -206,6 +206,13 @@ class MiqReport < ApplicationRecord
     klass.load_custom_attributes_for(cols.uniq)
   end
 
+  def select_custom_attributes_for(cols)
+    klass = db.safe_constantize
+    return unless klass < CustomAttributeMixin
+
+    klass.select_custom_attributes_for(cols)
+  end
+
   # this method adds :custom_attributes => {} to MiqReport#include
   # when report with virtual custom attributes is stored
   # we need preload custom_attributes table to main query for building report for elimination of superfluous queries
