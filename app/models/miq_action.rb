@@ -526,6 +526,16 @@ class MiqAction < ApplicationRecord
     end
   end
 
+  def action_physical_server_power_on(action, rec, inputs)
+    unless rec.kind_of?(PhysicalServer)
+      MiqPolicy.logger.error("MIQ(physical_server_power_on): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a physical server")
+      return
+    end
+
+    invoke_or_queue(inputs[:synchronous], __method__, "ems_operations", rec.my_zone, rec, 'power_on',
+                    [], "[#{action.description}] of physical server [#{rec.name}]")
+  end
+
   def action_vm_mark_as_vm(action, rec, inputs)
     unless rec.kind_of?(VmOrTemplate)
       MiqPolicy.logger.error("MIQ(action_vm_mark_as_vm): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a VM")
