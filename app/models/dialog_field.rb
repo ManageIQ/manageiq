@@ -96,7 +96,9 @@ class DialogField < ApplicationRecord
   end
 
   def initialize_value_context
-    @value = values_from_automate if dynamic && @value.blank?
+    if @value.blank?
+      @value = dynamic ? values_from_automate : default_value
+    end
   end
 
   def initialize_with_values(dialog_values)
