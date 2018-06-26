@@ -136,6 +136,73 @@
     :customize:
       :description: Customize
       :fields:
+        :sysprep_computer_name:
+          :description: Computer Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_organization:
+          :description: Organization Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_domain:
+          :description: Domain
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_admin_password:
+          :description: Administrator Password
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_locale_ui:
+          :description: UI Locale
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_locale_user:
+          :description: User Locale
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_locale_input:
+          :description: Input Locale
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_locale_system:
+          :description: System Locale
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_machine_object_ou:
+          :description: Machine Object OU
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_product_key:
+          :description: Product Key
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_timezone:
+          :values_from:
+            :method: :get_timezones
+          :description: Timezone
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_domain_admin:
+          :description: Domain User Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+        :sysprep_domain_password:
+          :description: Domain Password
+          :required: false
+          :display: :edit
+          :data_type: :string
         :dns_servers:
           :description: DNS Server list
           :required: false

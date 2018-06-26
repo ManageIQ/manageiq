@@ -275,6 +275,118 @@
   :type: CustomizationTemplateSysprep
   :system: true
 
+- :name: Windows Server 2012 R2
+  :description: Windows Server 2012 R2 Enterprise x64
+  :script: |-
+    <%
+    # Setting Variables
+    debug                       = false
+    time_zone                   = evm[:sysprep_timezone].present? ? evm[:sysprep_timezone] : "GMT+1"
+    # Change values if blank
+    evm[:sysprep_computer_name] = evm[:vm_target_hostname] if evm[:sysprep_computer_name].blank?      # Use vm_target_hostname if hostname in the dialog was blank
+    %>
+
+    <%= evm.inspect if debug == true %>
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <unattend xmlns="urn:schemas-microsoft-com:unattend">
+        <settings pass="specialize">
+            <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <ComputerName><![CDATA[<%= evm[:sysprep_computer_name] %>]]></ComputerName>
+                <% if evm[:sysprep_organization].present? %>
+                <RegisteredOrganization><![CDATA[<%= evm[:sysprep_organization] %>]]></RegisteredOrganization>
+                <% end %>
+                <RegisteredOwner>User</RegisteredOwner>
+                <% if evm[:sysprep_product_key].present? %>
+                <ProductKey><![CDATA[<%= evm[:sysprep_product_key] %>]]></ProductKey>
+                <% end %>
+            </component>
+            <component name="Microsoft-Windows-UnattendedJoin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <Identification>
+                <% if evm[:sysprep_domain].present? %>
+                    <Credentials>
+                        <Domain><![CDATA[<%= evm[:sysprep_domain] %>]]></Domain>
+                        <Password><![CDATA[<%= evm[:sysprep_domain_password] %>]]></Password>
+                        <Username><![CDATA[<%= evm[:sysprep_domain_admin] %>]]></Username>
+                    </Credentials>
+                    <DebugJoin>true</DebugJoin>
+                    <JoinDomain><![CDATA[<%= evm[:sysprep_domain] %>]]></JoinDomain>
+                <% end %>
+                <% if evm[:sysprep_machine_object_ou].present? %>
+                    <MachineObjectOU><![CDATA[<%= evm[:sysprep_machine_object_ou] %>]]></MachineObjectOU>
+                <% end %>
+                </Identification>
+            </component>
+        </settings>
+        <settings pass="oobeSystem">
+            <component name="Microsoft-Windows-IE-ClientNetworkProtocolImplementation" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <HKLMProxyEnable>false</HKLMProxyEnable>
+            </component>
+            <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <InputLocale><![CDATA[<%= evm[:sysprep_locale_input] %>]]></InputLocale>
+                <SystemLocale><![CDATA[<%= evm[:sysprep_locale_system] %>]]></SystemLocale>
+                <UILanguage><![CDATA[<%= evm[:sysprep_locale_ui] %>]]></UILanguage>
+                <UILanguageFallback>en-US</UILanguageFallback>
+                <UserLocale><![CDATA[<%= evm[:sysprep_locale_user] %>]]></UserLocale>
+            </component>
+            <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <Display>
+                    <ColorDepth>32</ColorDepth>
+                    <HorizontalResolution>1024</HorizontalResolution>
+                    <RefreshRate>75</RefreshRate>
+                    <VerticalResolution>768</VerticalResolution>
+                </Display>
+                <OOBE>
+                    <HideEULAPage>true</HideEULAPage>
+                    <SkipUserOOBE>true</SkipUserOOBE>
+                </OOBE>
+                <% if evm[:sysprep_admin_password].present? %>
+                <UserAccounts>
+                    <AdministratorPassword>
+                    <Value><![CDATA[<%= evm[:sysprep_admin_password] %>]]></Value>
+                        <PlainText>true</PlainText>
+                    </AdministratorPassword>
+                </UserAccounts>
+                <% end %>
+                <% if evm[:sysprep_organization].present? %>
+                <RegisteredOrganization><![CDATA[<%= evm[:sysprep_organization] %>]]></RegisteredOrganization>
+                <% end %>
+                <RegisteredOwner>User</RegisteredOwner>
+                <TimeZone><![CDATA[<%= time_zone %>]]></TimeZone>
+            </component>
+        </settings>
+        <settings pass="windowsPE">
+            <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <SetupUILanguage>
+                    <UILanguage><![CDATA[<%= evm[:sysprep_locale_ui] %>]]></UILanguage>
+                </SetupUILanguage>
+                <InputLocale><![CDATA[<%= evm[:sysprep_locale_input] %>]]></InputLocale>
+                <UILanguage><![CDATA[<%= evm[:sysprep_locale_ui] %>]]></UILanguage>
+                <SystemLocale><![CDATA[<%= evm[:sysprep_locale_system] %>]]></SystemLocale>
+                <UILanguageFallback>en-US</UILanguageFallback>
+                <UserLocale><![CDATA[<%= evm[:sysprep_locale_user] %>]]></UserLocale>
+            </component>
+            <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <UserData>
+                    <% if evm[:sysprep_product_key].present? %>
+                    <ProductKey>
+                      <Key><![CDATA[<%= evm[:sysprep_product_key] %>]]></Key>
+                      <WillShowUI>Never</WillShowUI>
+                    </ProductKey>
+                    <% end %>
+                    <AcceptEula>true</AcceptEula>
+                    <% if evm[:sysprep_organization].present? %>
+                    <Organization><![CDATA[<%= evm[:sysprep_organization] %>]]></Organization>
+                    <% end %>
+                    <FullName>User</FullName>
+                </UserData>
+            </component>
+        </settings>
+        <cpi:offlineImage cpi:source="catalog://catalogs/windows2012-x86/sources/install_windows longhorn serverenterprise.clg" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    </unattend>
+  :type: CustomizationTemplateSysprep
+  :system: true
+
 - :name: Basic root pass template
   :description: This template takes use of rootpassword defined in the UI
   :script: "#cloud-config\nchpasswd:\n  list: |\n    root:<%= MiqPassword.decrypt(evm[:root_password]) %>\n  expire: False"
