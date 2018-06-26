@@ -25,6 +25,7 @@ module Vmdb
     end
 
     def init
+      load_inflections
       register_models
     end
 
@@ -52,6 +53,20 @@ module Vmdb
 
     def provider_plugins
       @provider_plugins ||= select { |engine| engine.name.start_with?("ManageIQ::Providers::") }
+    end
+
+    def asset_paths
+      @asset_paths ||= begin
+        require_relative 'plugins/asset_path'
+        map { |engine| AssetPath.new(engine) if AssetPath.asset_path?(engine) }.compact
+      end
+    end
+
+    def load_inflections
+      each do |engine|
+        file = engine.root.join("config", "initializers", "inflections.rb")
+        load file if file.exist?
+      end
     end
 
     def register_models
