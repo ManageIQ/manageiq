@@ -110,6 +110,7 @@ describe DialogField do
 
   describe "#initialize_value_context" do
     let(:field) { described_class.new(:dynamic => dynamic, :value => value) }
+    let(:field_with_default) { described_class.new(:dynamic => dynamic, :value => value, :default_value => "drew_was_here") }
 
     context "when the field is dynamic" do
       let(:dynamic) { true }
@@ -140,11 +141,25 @@ describe DialogField do
 
     context "when the field is not dynamic" do
       let(:dynamic) { false }
-      let(:value) { "not dynamic" }
 
-      it "does not adjust the value" do
-        field.initialize_value_context
-        expect(field.instance_variable_get(:@value)).to eq("not dynamic")
+      context "with a user-adjusted value" do
+        let(:value) { "not dynamic" }
+
+        it "does not adjust the value" do
+          field.initialize_value_context
+          expect(field.instance_variable_get(:@value)).to eq("not dynamic")
+        end
+      end
+
+      context "without a user-adjusted value" do
+        context "with a default value" do
+          let(:value) { nil }
+
+          it "does adjust the value" do
+            field_with_default.initialize_value_context
+            expect(field_with_default.instance_variable_get(:@value)).to eq("drew_was_here")
+          end
+        end
       end
     end
   end
