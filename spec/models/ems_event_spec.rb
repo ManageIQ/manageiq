@@ -292,7 +292,6 @@ describe EmsEvent do
           }
         }
       )
-      allow(Vmdb::Plugins.instance).to receive(:registered_provider_plugin_names).and_return([:some_provider])
 
       expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
       expect(described_class.event_groups[:addition][:critical]).to include(provider_event)

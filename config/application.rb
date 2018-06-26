@@ -133,16 +133,15 @@ module Vmdb
       require 'vmdb_helper'
     end
 
-    initializer :load_inflections, :before => :load_vmdb_settings do
-      Vmdb::Inflections.load_inflections
-    end
-
     # Note: If an initializer doesn't have an after, Rails will add one based
     # on the top to bottom order of initializer calls in the file.
     # Because this is easy to mess up, keep your initializers in order.
-    # register plugins even before loading settings, as plugins can bring their own settings
-    initializer :register_vmdb_plugins, :before => :load_vmdb_settings do
-      Vmdb::Plugins.instance.register_vmdb_plugins
+    initializer :load_inflections, :before => :init_vmdb_plugins do
+      Vmdb::Inflections.load_inflections
+    end
+
+    initializer :init_vmdb_plugins, :before => :load_vmdb_settings do
+      Vmdb::Plugins.init
     end
 
     initializer :load_vmdb_settings, :before => :load_config_initializers do

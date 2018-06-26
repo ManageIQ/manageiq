@@ -153,7 +153,7 @@ module Vmdb
     private_class_method :build_without_local
 
     def self.template_roots
-      Vmdb::Plugins.instance.vmdb_plugins.collect { |p| p.root.join('config') } << Rails.root.join('config')
+      Vmdb::Plugins.collect { |p| p.root.join('config') } << Rails.root.join('config')
     end
     private_class_method :template_roots
 

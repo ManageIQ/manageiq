@@ -21,7 +21,7 @@ class Dialog < ApplicationRecord
   def self.seed
     dialog_import_service = DialogImportService.new
 
-    Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
+    Vmdb::Plugins.each do |plugin|
       Dir.glob(plugin.root.join(DIALOG_DIR_PLUGIN, YAML_FILES_PATTERN)).each do |file|
         dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
       end

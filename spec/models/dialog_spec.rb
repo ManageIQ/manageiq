@@ -10,7 +10,7 @@ describe Dialog do
 
     it "seed files from plugins" do
       mock_engine = double(:root => Rails.root)
-      expect(Vmdb::Plugins.instance).to receive(:vmdb_plugins).and_return([mock_engine])
+      expect(Vmdb::Plugins).to receive(:each).and_yield(mock_engine)
 
       stub_const('Dialog::DIALOG_DIR_PLUGIN', test_file_path)
       stub_const('Dialog::DIALOG_DIR_CORE', 'non-existent-dir')

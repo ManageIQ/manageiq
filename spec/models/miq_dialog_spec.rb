@@ -17,7 +17,7 @@ describe MiqDialog do
       mock_engine = double(:root => Pathname.new('/some/root'))
       allow(described_class).to receive(:sync_from_dir)
 
-      expect(Vmdb::Plugins.instance).to receive(:vmdb_plugins).and_return([mock_engine])
+      expect(Vmdb::Plugins).to receive(:each).and_yield(mock_engine)
       expect(described_class).to receive(:sync_from_dir).once.with(
         mock_engine.root.join('content', 'miq_dialogs')
       )
