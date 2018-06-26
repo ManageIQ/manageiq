@@ -14,6 +14,8 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :metric_key, :cost_keys, :to => :chargeable_field
 
+  delegate :metric_column_key, :metric_key, :cost_keys, :rate_key, :to => :chargeable_field
+
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id sub_metric).freeze
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),

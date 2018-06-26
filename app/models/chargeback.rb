@@ -101,7 +101,7 @@ class Chargeback < ActsAsArModel
                                                                         :resource    => MiqEnterprise.first)
 
       data = {}
-      rate.rate_details_relevant_to(relevant_fields).each do |r|
+      rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
         r.populate_showback_rate(plan, r, showback_category)
         measure = r.chargeable_field.showback_measure
         dimension, _, _ = r.chargeable_field.showback_dimension
@@ -137,7 +137,7 @@ class Chargeback < ActsAsArModel
     self.class.try(:refresh_dynamic_metric_columns)
 
     rates.each do |rate|
-      rate.rate_details_relevant_to(relevant_fields).each do |r|
+      rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
         r.charge(relevant_fields, consumption, @options).each do |field, value|
           next unless self.class.attribute_names.include?(field)
           self[field] = (self[field] || 0) + value

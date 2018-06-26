@@ -640,6 +640,16 @@ describe ChargebackVm do
           end
         end
 
+        context "chargeback rate contains rate unrelated to chargeback vm" do
+          let!(:chargeback_rate) do
+            FactoryGirl.create(:chargeback_rate, :detail_params => detail_params.merge(:chargeback_rate_detail_cpu_cores_allocated => {:tiers => [count_hourly_variable_tier_rate]}))
+          end
+
+          it "skips unrelated columns and calculate related columns" do
+            expect(subject.cpu_allocated_metric).to eq(cpu_count)
+          end
+        end
+
         it "cpu" do
           expect(subject.cpu_allocated_metric).to eq(cpu_count)
           used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, @vm1)
