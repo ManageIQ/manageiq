@@ -64,6 +64,7 @@ class ServiceTemplate < ApplicationRecord
   virtual_column   :template_valid_error_message, :type => :string
   virtual_column   :archived,                     :type => :boolean
   virtual_column   :active,                       :type => :boolean
+  virtual_column   :schedule_time,                :type => :time
 
   default_value_for :service_type, 'unknown'
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
@@ -74,6 +75,10 @@ class ServiceTemplate < ApplicationRecord
   scope :without_service_template_catalog_id,       ->         { where(:service_template_catalog_id => nil) }
   scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
   scope :displayed,                                 ->         { where(:display => true) }
+
+  def schedule_time
+    miq_schedule.try(:run_at).try(:[], :start_time)
+  end
 
   def self.catalog_item_types
     ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
