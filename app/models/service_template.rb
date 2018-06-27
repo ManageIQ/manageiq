@@ -70,6 +70,7 @@ class ServiceTemplate < ApplicationRecord
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
   virtual_has_one :config_info, :class_name => "Hash"
+  virtual_has_one :miq_schedule,:class_name => "MiqSchedule"
 
   scope :with_service_template_catalog_id,          ->(cat_id) { where(:service_template_catalog_id => cat_id) }
   scope :without_service_template_catalog_id,       ->         { where(:service_template_catalog_id => nil) }
@@ -78,6 +79,10 @@ class ServiceTemplate < ApplicationRecord
 
   def schedule_time
     miq_schedule.try(:run_at).try(:[], :start_time)
+  end
+
+  def miq_schedule
+    MiqSchedule.where(:towhat => "ServiceTemplate").find { |s| s.resource_id == id }
   end
 
   def self.catalog_item_types
