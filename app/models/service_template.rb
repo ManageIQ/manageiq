@@ -444,6 +444,24 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
+  def update_schedule(schedule_time)
+    if schedule_time
+      require 'time'
+      time = schedule_time.kind_of?(String) ? Time.parse(schedule_time).utc : schedule_time
+
+      schedule = miq_schedule
+      raise _('service_template is not currently scheduled') unless schedule
+      schedule.run_at = {
+        :interval   => {:unit => "once"},
+        :start_time => time,
+        :tz         => "UTC",
+      }
+      schedule.save!
+    else
+      miq_schedule&.destroy
+    end
+  end
+
   def provision_workflow(user, dialog_options = nil, request_options = nil)
     dialog_options ||= {}
     request_options ||= {}
