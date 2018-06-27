@@ -10,6 +10,17 @@ class MiqTask < ApplicationRecord
   STATUS_ERROR      = 'Error'.freeze
   STATUS_TIMEOUT    = 'Timeout'.freeze
   STATUS_EXPIRED    = 'Expired'.freeze
+  STATUS_UNKNOWN    = 'Unknown'.freeze
+
+  HUMAN_STATUS      = {
+    STATE_INITIALIZED => STATE_INITIALIZED,
+    STATE_QUEUED      => STATE_QUEUED,
+    STATE_ACTIVE      => 'Running'.freeze,
+    STATUS_OK         => 'Complete'.freeze,
+    STATUS_WARNING    => 'Finished with Warnings'.freeze,
+    STATUS_ERROR      => STATUS_ERROR,
+    STATUS_TIMEOUT    => 'Timed Out'.freeze
+  }.freeze
 
   DEFAULT_MESSAGE   = 'Initialized'.freeze
   DEFAULT_USERID    = 'system'.freeze
@@ -331,17 +342,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.human_status(state_or_status)
-    case state_or_status
-    when STATE_INITIALIZED then "Initialized"
-    when STATE_QUEUED      then "Queued"
-    when STATE_ACTIVE      then "Running"
-    # STATE_FINISHED:
-    when STATUS_OK         then "Complete"
-    when STATUS_WARNING    then "Finished with Warnings"
-    when STATUS_ERROR      then "Error"
-    when STATUS_TIMEOUT    then "Timed Out"
-    else "Unknown"
-    end
+    HUMAN_STATUS[state_or_status] || STATUS_UNKNOWN
   end
 
   def process_cancel
