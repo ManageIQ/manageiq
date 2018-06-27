@@ -28,7 +28,7 @@ module ManagerRefresh::Inventory::Core
         :manager_ref                 => [:manager_ref],
         :inventory_object_attributes => %i(
           name description scm_type scm_url scm_branch scm_clean scm_delete_on_update
-          scm_update_on_launch authentication status last_updated_on
+          scm_update_on_launch authentication status last_updated_on last_update_error
         ),
       }.merge(options))
     end
