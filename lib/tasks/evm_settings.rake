@@ -3,6 +3,7 @@ module EvmSettings
     "/authentication/sso_enabled",
     "/authentication/saml_enabled",
     "/authentication/oidc_enabled",
+    "/authentication/provider_type",
     "/authentication/local_login_disabled"
   ].freeze
 
@@ -81,8 +82,8 @@ module EvmSettings
   private_class_method :str_to_value
 
   def self.value_to_str(value)
-    return "true"  if value  || value =~ /true/i
-    return "false" if !value || value =~ /false/i
+    return "true"  if value == true || value =~ /true/i
+    return "false" if value == false || value =~ /false/i
     value
   end
   private_class_method :value_to_str
