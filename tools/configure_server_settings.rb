@@ -46,7 +46,7 @@ newval =
   when "float"
     opts[:value].to_f
   when "array"
-    opts[:value] = opts[:value].split(",")
+    opts[:value].split(",")
   end
 
 # load rails after checking CLI args so we can report args errors as fast as possible
@@ -73,7 +73,7 @@ elsif path[key] && path[key].class != newval.class
   exit 1
 end
 
-puts "Setting [#{opts[:path]}], old value: [#{path[key]}], new value: [#{opts[:value]}]"
+puts "Setting [#{opts[:path]}], old value: [#{path[key]}], new value: [#{newval}]"
 path[key] = newval
 
 valid, errors = VMDB::Config::Validator.new(settings).validate
