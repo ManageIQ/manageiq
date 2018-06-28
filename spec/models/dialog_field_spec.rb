@@ -162,6 +162,15 @@ describe DialogField do
     end
   end
 
+  describe "#initialize_with_given_value" do
+    let(:field) { described_class.new(:default_value => "not the given value") }
+
+    it "uses the given value" do
+      field.initialize_with_given_value("given_value")
+      expect(field.default_value).to eq("given_value")
+    end
+  end
+
   describe "#automate_output_values" do
     let(:dialog_field) { described_class.new(:data_type => data_type, :value => "123") }
 

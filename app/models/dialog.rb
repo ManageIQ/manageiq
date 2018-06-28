@@ -95,6 +95,18 @@ class Dialog < ApplicationRecord
     end
   end
 
+  def initialize_with_given_values(values)
+    dialog_field_hash.each_value do |field|
+      field.dialog = self
+      field.value = values[field.automate_key_name] || values[field.name]
+    end
+
+    dialog_field_hash.each_value do |field|
+      given_value = values[field.automate_key_name] || values[field.name]
+      field.initialize_with_given_value(given_value)
+    end
+  end
+
   def initialize_value_context(_values)
     dialog_field_hash.each_value do |field|
       field.dialog = self

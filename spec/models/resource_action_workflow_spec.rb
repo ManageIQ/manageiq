@@ -140,6 +140,15 @@ describe ResourceActionWorkflow do
       end
     end
 
+    context "when the options are set to a reconfigure request" do
+      let(:options) { {:reconfigure => true} }
+
+      it "initializes the fields with the given values" do
+        expect(dialog).to receive(:initialize_with_given_values).with(values)
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
+      end
+    end
+
     context "when neither display_view_only nor refresh are true" do
       let(:options) { {} }
 
