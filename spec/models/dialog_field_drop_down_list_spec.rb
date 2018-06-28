@@ -134,6 +134,25 @@ describe DialogFieldDropDownList do
     end
   end
 
+  describe "#initialize_with_given_value" do
+    context "when the dialog field forces multi values" do
+      let(:dialog_field) do
+        described_class.new(:default_value => default_value, :options => {:force_multi_value => true}, :dynamic => true)
+      end
+      let(:values) { [%w(test test), %w(test2 test2)] }
+      let(:default_value) { "test2" }
+
+      before do
+        allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(values)
+      end
+
+      it "uses the given value as the default" do
+        dialog_field.initialize_with_given_value("test")
+        expect(dialog_field.default_value).to eq(["test"].to_json)
+      end
+    end
+  end
+
   describe "#refresh_json_value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic, :read_only => true) }
 

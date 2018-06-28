@@ -132,7 +132,7 @@ describe DialogFieldSortedItem do
     end
   end
 
-  describe "#initialize_with_given_values" do
+  describe "#initialize_with_given_value" do
     let(:dialog_field) do
       described_class.new(:default_value => default_value, :dynamic => true)
     end
