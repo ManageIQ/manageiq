@@ -82,8 +82,8 @@ class TransformationMapping < ApplicationRecord
   def describe_vm(vm, reason)
     {
       "name"           => vm.name,
-      "cluster"        => vm.ems_cluster.name,
-      "path"           => "#{vm.ext_management_system.name}/#{vm.parent_blue_folder_path(:exclude_non_display_folders => true)}",
+      "cluster"        => vm.ems_cluster.try(:name) || '',
+      "path"           => vm.ext_management_system ? "#{vm.ext_management_system.name}/#{vm.parent_blue_folder_path(:exclude_non_display_folders => true)}" : '',
       "allocated_size" => vm.allocated_disk_storage,
       "id"             => vm.id,
       "reason"         => reason
