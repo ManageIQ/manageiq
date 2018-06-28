@@ -72,7 +72,7 @@ class EvmDatabaseOps
       # won't hurt to do as a generic way to get a rough idea if we have enough
       # disk space or the appliance for the task.
       validate_free_space(database_opts)
-      PostgresAdmin.backup(database_opts)
+      PostgresAdmin.backup_pg_dump(database_opts)
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been dumped up to file: [#{uri}]")
     uri
