@@ -394,6 +394,11 @@
   :url: /miq_ae_customization/explorer
   :rbac_feature_name: miq_ae_customization_explorer
   :startup: true
+- :name: generic_object_definition
+  :description: Automation / Automate / Generic Objects
+  :url: /generic_object_definition
+  :rbac_feature_name: generic_object_definition_show_list
+  :startup: true
 - :name: miq_ae_class_import_export
   :description: Automation / Automate / Import / Export
   :url: /miq_ae_tools/import_export
