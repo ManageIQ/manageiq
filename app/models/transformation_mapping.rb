@@ -5,6 +5,7 @@ class TransformationMapping < ApplicationRecord
   VM_MIGRATED = "migrated".freeze
   VM_NOT_EXIST = "not_exist".freeze
   VM_VALID = "ok".freeze
+  VM_INACTIVE = "inactive".freeze
 
   has_many :transformation_mapping_items, :dependent => :destroy
   has_many :service_resources, :as => :resource, :dependent => :nullify
@@ -93,6 +94,8 @@ class TransformationMapping < ApplicationRecord
   def validate_vm(vm, quick = true)
     # a valid vm must find all resources in the mapping and has never been migrated
     invalid_list = []
+
+    return VM_INACTIVE unless vm.active?
 
     unless valid_cluster?(vm)
       invalid_list << "cluster: %{name}" % {:name => vm.ems_cluster.name}
