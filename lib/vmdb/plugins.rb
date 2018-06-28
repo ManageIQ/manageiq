@@ -3,6 +3,8 @@ require 'singleton'
 module Vmdb
   class Plugins
     include Singleton
+    private_class_method :instance
+
     include Enumerable
 
     def self.method_missing(m, *args, &block)
