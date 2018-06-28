@@ -34,6 +34,8 @@ module EvmDba
           opt :local_file,       "Destination file",           :type => :string, :required => true
         when :remote_file
           opt :remote_file_name, "Destination depot filename", :type => :string
+        when :splitable
+          opt :byte_count,       "Size to split files by",     :type => :string
         when :remote_uri
           opt :uri,              "Destination depot URI",      :type => :string, :required => true
           opt :uri_username,     "Destination depot username", :type => :string
@@ -58,6 +60,12 @@ module EvmDba
     connect_opts[:username] = connect_opts.delete(:uri_username) if connect_opts[:uri_username]
     connect_opts[:password] = connect_opts.delete(:uri_password) if connect_opts[:uri_password]
     connect_opts
+  end
+
+  def self.collect_additional_opts(opts)
+    additional_opts = {}
+    [:byte_count].each { |k| additional_opts[k] = opts[k] if opts[k] }
+    additional_opts
   end
 end
 
@@ -185,21 +193,24 @@ namespace :evm do
       require File.expand_path(File.join(Rails.root, "lib", "evm_database_ops"))
       desc 'Backup the local ManageIQ EVM Database (VMDB) to a local file'
       task :local do
-        opts = EvmDba.with_options(:local_file, :db_credentials)
+        opts = EvmDba.with_options(:local_file, :splitable, :db_credentials)
 
-        EvmDatabaseOps.backup(opts)
+        additional_opts = EvmDba.collect_additional_opts(opts)
+
+        EvmDatabaseOps.backup(opts, {}, additional_opts)
 
         exit # exit so that parameters to the first rake task are not run as rake tasks
       end
 
       desc 'Backup the local ManageIQ EVM Database (VMDB) to a remote file'
       task :remote do
-        opts = EvmDba.with_options(:remote_uri, :remote_file, :db_credentials)
+        opts = EvmDba.with_options(:remote_uri, :remote_file, :splitable, :db_credentials)
 
-        db_opts      = EvmDba.collect_db_opts(opts)
-        connect_opts = EvmDba.collect_connect_opts(opts)
+        db_opts         = EvmDba.collect_db_opts(opts)
+        connect_opts    = EvmDba.collect_connect_opts(opts)
+        additional_opts = EvmDba.collect_additional_opts(opts)
 
-        EvmDatabaseOps.backup(db_opts, connect_opts)
+        EvmDatabaseOps.backup(db_opts, connect_opts, additional_opts)
 
         exit # exit so that parameters to the first rake task are not run as rake tasks
       end
@@ -209,21 +220,23 @@ namespace :evm do
       require Rails.root.join("lib", "evm_database_ops").expand_path.to_s
       desc 'Dump the local ManageIQ EVM Database (VMDB) to a local file'
       task :local do
-        opts = EvmDba.with_options(:local_file, :db_credentials, :exclude_table_data)
+        opts = EvmDba.with_options(:local_file, :splitable, :db_credentials, :exclude_table_data)
 
-        EvmDatabaseOps.dump(opts)
+        additional_opts = EvmDba.collect_additional_opts(opts)
+        EvmDatabaseOps.dump(opts, {}, additional_opts)
 
         exit # exit so that parameters to the first rake task are not run as rake tasks
       end
 
       desc 'Dump the local ManageIQ EVM Database (VMDB) to a remote file'
       task :remote do
-        opts = EvmDba.with_options(:remote_uri, :remote_file, :db_credentials, :exclude_table_data)
+        opts = EvmDba.with_options(:remote_uri, :remote_file, :splitable, :db_credentials, :exclude_table_data)
 
-        db_opts      = EvmDba.collect_db_opts(opts)
-        connect_opts = EvmDba.collect_connect_opts(opts)
+        db_opts         = EvmDba.collect_db_opts(opts)
+        connect_opts    = EvmDba.collect_connect_opts(opts)
+        additional_opts = EvmDba.collect_additional_opts(opts)
 
-        EvmDatabaseOps.dump(db_opts, connect_opts)
+        EvmDatabaseOps.dump(db_opts, connect_opts, additional_opts)
 
         exit # exit so that parameters to the first rake task are not run as rake tasks
       end
