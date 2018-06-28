@@ -41,7 +41,7 @@ class EvmDatabaseOps
     end
   end
 
-  def self.backup(db_opts, connect_opts = {})
+  def self.backup(db_opts, connect_opts = {}, additional_opts = {})
     # db_opts:
     #   :dbname => 'vmdb_production',
     #   :username => 'root',
@@ -55,13 +55,13 @@ class EvmDatabaseOps
 
     uri = with_mount_session(:backup, db_opts, connect_opts) do |database_opts|
       validate_free_space(database_opts)
-      PostgresAdmin.backup(database_opts)
+      PostgresAdmin.backup(pg_admin_opts(database_opts, additional_opts))
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been backed up to file: [#{uri}]")
     uri
   end
 
-  def self.dump(db_opts, connect_opts = {})
+  def self.dump(db_opts, connect_opts = {}, additional_opts = {})
     # db_opts and connect_opts similar to .backup
 
     uri = with_mount_session(:dump, db_opts, connect_opts) do |database_opts|
@@ -70,7 +70,7 @@ class EvmDatabaseOps
       # won't hurt to do as a generic way to get a rough idea if we have enough
       # disk space or the appliance for the task.
       validate_free_space(database_opts)
-      PostgresAdmin.backup_pg_dump(database_opts)
+      PostgresAdmin.backup_pg_dump(pg_admin_opts(database_opts, additional_opts))
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been dumped up to file: [#{uri}]")
     uri
@@ -205,4 +205,19 @@ class EvmDatabaseOps
     "#{action == :backup ? BACKUP_TMP_FILE : DUMP_TMP_FILE}_#{time_suffix}"
   end
   private_class_method :backup_file_name
+
+  FILE_SPLITTER = File.expand_path("../manageiq/util/file_splitter.rb", __FILE__).freeze
+  def self.pg_admin_opts(db_opts, additional_opts)
+    if additional_opts[:byte_count]
+      split_opts = [
+        additional_opts.slice(:byte_count),
+        "-",
+        db_opts[:local_file]
+      ]
+      db_opts.merge(:local_file => "-", :pipe => [[FILE_SPLITTER, :params => split_opts]])
+    else
+      db_opts
+    end
+  end
+  private_class_method :pg_admin_opts
 end
