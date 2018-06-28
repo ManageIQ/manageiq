@@ -4,9 +4,9 @@ module MiqReport::ImportExport
   module ClassMethods
     def view_paths
       @view_paths ||= (
-        Vmdb::Plugins.instance.vmdb_plugins.map do |engine|
-          directory = File.join(engine.root, 'product/views')
-          directory if File.directory?(directory)
+        Vmdb::Plugins.map do |engine|
+          path = engine.root.join('product/views')
+          path if path.directory?
         end.compact
       )
     end
