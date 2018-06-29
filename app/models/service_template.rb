@@ -457,9 +457,11 @@ class ServiceTemplate < ApplicationRecord
         :tz         => "UTC",
       }
       schedule.save!
-    else
-      miq_schedule&.destroy
     end
+  end
+
+  def delete_schedule
+    miq_schedule&.destroy
   end
 
   def provision_workflow(user, dialog_options = nil, request_options = nil)
