@@ -92,10 +92,11 @@ class TransformationMapping < ApplicationRecord
   end
 
   def validate_vm(vm, quick = true)
+    validate_result = vm.validate_v2v_migration
+    return validate_result unless validate_result == VM_VALID
+
     # a valid vm must find all resources in the mapping and has never been migrated
     invalid_list = []
-
-    return VM_INACTIVE unless vm.active?
 
     unless valid_cluster?(vm)
       invalid_list << "cluster: %{name}" % {:name => vm.ems_cluster.name}
@@ -114,8 +115,7 @@ class TransformationMapping < ApplicationRecord
       return no_mapping_msg(invalid_list) if quick
     end
 
-    return no_mapping_msg(invalid_list) if invalid_list.present?
-    vm.validate_v2v_migration
+    invalid_list.present? ? no_mapping_msg(invalid_list) : VM_VALID
   end
 
   def no_mapping_msg(list)
