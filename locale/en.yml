@@ -908,6 +908,7 @@ en:
       ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate:    vApp Template
       PersistentVolume:         Persistent Volume
       PhysicalServer:           Physical Server
+      PhysicalSwitch:           Physical Switch
       PolicyEvent:              Policy Event
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
