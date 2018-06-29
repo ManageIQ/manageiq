@@ -844,4 +844,36 @@ describe Service do
   describe '#configuration_script' do
     it { expect(subject.configuration_script).to be_nil }
   end
+
+  describe "#reconfigure_dialog" do
+    let(:service) { described_class.new(:options => {:dialog => "dialog_options"}) }
+    let(:dialog_serializer) { instance_double("DialogSerializer") }
+    let(:workflow) { instance_double("ResourceActionWorkflow", :dialog => "workflow_dialog") }
+
+    before do
+      allow(DialogSerializer).to receive(:new).and_return(dialog_serializer)
+      allow(dialog_serializer).to receive(:serialize).and_return("serialized_reconfigure_dialog")
+      allow(ResourceActionWorkflow).to receive(:new).and_return(workflow)
+      allow(service).to receive(:reconfigure_resource_action).and_return("reconfigure_resource_action")
+    end
+
+    it "creates a new resource action workflow" do
+      expect(ResourceActionWorkflow).to receive(:new).with(
+        "dialog_options",
+        User.current_user,
+        "reconfigure_resource_action",
+        :target => service, :reconfigure => true
+      )
+      service.reconfigure_dialog
+    end
+
+    it "serializes the dialog returned by the workflow with all attributes" do
+      expect(dialog_serializer).to receive(:serialize).with(Array["workflow_dialog"], true)
+      service.reconfigure_dialog
+    end
+
+    it "returns a serialized dialog" do
+      expect(service.reconfigure_dialog).to eq("serialized_reconfigure_dialog")
+    end
+  end
 end

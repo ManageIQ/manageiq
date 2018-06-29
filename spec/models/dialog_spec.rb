@@ -22,6 +22,43 @@ describe Dialog do
     end
   end
 
+  describe "#initialize_with_given_values" do
+    let(:dialog) { described_class.new }
+    let(:field1) { DialogField.new(:name => "name1") }
+    let(:field2) { DialogField.new(:name => "name2") }
+
+    let(:given_values) do
+      {
+        "name1" => "One",
+        "name2" => "Two"
+      }
+    end
+
+    before do
+      allow(dialog).to receive(:dialog_fields).and_return([field1, field2])
+      allow(field1).to receive(:initialize_with_given_value)
+      allow(field2).to receive(:initialize_with_given_value)
+    end
+
+    it "sets the current dialog to each field" do
+      dialog.initialize_with_given_values(given_values)
+      expect(field1.dialog).to eq(dialog)
+      expect(field2.dialog).to eq(dialog)
+    end
+
+    it "sets the value from the given values to the value property for automate processing" do
+      dialog.initialize_with_given_values(given_values)
+      expect(field1.value).to eq("One")
+      expect(field2.value).to eq("Two")
+    end
+
+    it "calls initialize_with_given_value on each field" do
+      expect(field1).to receive(:initialize_with_given_value).with("One")
+      expect(field2).to receive(:initialize_with_given_value).with("Two")
+      dialog.initialize_with_given_values(given_values)
+    end
+  end
+
   describe "#content" do
     it "returns the serialized content" do
       dialog = FactoryGirl.create(:dialog, :description => "foo", :label => "bar")

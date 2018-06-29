@@ -9,13 +9,9 @@ class DialogFieldSortedItem < DialogField
     end
   end
 
-  def initialize_with_values(dialog_values)
-    if load_values_on_init?
-      raw_values
-      @value = value_from_dialog_fields(dialog_values) || default_value_if_included
-    else
-      @raw_values = initial_values
-    end
+  def initialize_with_given_value(given_value)
+    raw_values
+    self.default_value = given_value
   end
 
   def sort_by
