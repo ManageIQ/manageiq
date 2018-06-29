@@ -12,8 +12,6 @@ class MiqRequest < ApplicationRecord
   has_many   :miq_approvals,     :dependent   => :destroy
   has_many   :miq_request_tasks, :dependent   => :destroy
 
-  acts_as_miq_taggable
-
   alias_attribute :state, :request_state
 
   serialize   :options, Hash
