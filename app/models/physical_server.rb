@@ -33,6 +33,8 @@ class PhysicalServer < ApplicationRecord
   virtual_column :v_availability, :type => :string, :uses => :host
   virtual_column :v_host_os, :type => :string, :uses => :host
 
+  has_many :physical_switches, :through => :computer_system, :source => :connected_physical_switches
+
   def name_with_details
     details % {
       :name => name,
