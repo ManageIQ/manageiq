@@ -437,11 +437,14 @@ class ServiceTemplate < ApplicationRecord
   def provision_workflow(user, dialog_options = nil, request_options = nil)
     dialog_options ||= {}
     request_options ||= {}
-    ra_options = { :target => self, :initiator => request_options[:initiator] }
-    ResourceActionWorkflow.new({}, user,
-                               provision_action, ra_options).tap do |wf|
+    ra_options = {
+      :target          => self,
+      :initiator       => request_options[:initiator],
+      :submit_workflow => request_options[:submit_workflow]
+    }
+
+    ResourceActionWorkflow.new(dialog_options, user, provision_action, ra_options).tap do |wf|
       wf.request_options = request_options
-      dialog_options.each { |key, value| wf.set_value(key, value) }
     end
   end
 
