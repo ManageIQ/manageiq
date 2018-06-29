@@ -11,6 +11,7 @@ class PhysicalChassis < ApplicationRecord
   has_one :hardware, :through => :computer_system
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false
   has_many :guest_devices, :through => :hardware
+  has_one :physical_component, :as => :component, :dependent => :destroy
 
   def my_zone
     ems = ext_management_system

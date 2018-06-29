@@ -6,6 +6,7 @@ class PhysicalRack < ApplicationRecord
 
   has_many :physical_chassis, :dependent => :nullify, :inverse_of => :physical_rack
   has_many :physical_servers, :dependent => :nullify, :inverse_of => :physical_rack
+  has_one :physical_component, :as => :component, :dependent => :destroy
 
   def my_zone
     ems = ext_management_system
