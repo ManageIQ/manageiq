@@ -122,6 +122,8 @@ class Vm < VmOrTemplate
   end
 
   def validate_v2v_migration
+    return TransformationMapping::VM_INACTIVE unless active?
+
     vm_as_resources = ServiceResource.where(:resource => self).includes(:service_template).where(:service_templates => {:type => "ServiceTemplateTransformationPlan"})
 
     # VM has not been migrated before

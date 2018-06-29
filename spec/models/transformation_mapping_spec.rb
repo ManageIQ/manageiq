@@ -31,6 +31,7 @@ describe TransformationMapping do
 
   describe '#validate_vms' do
     let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryGirl.create(:ext_management_system)) }
+    let(:inactive_vm) { FactoryGirl.create(:vm_vmware, :name => 'test_vm_inactive', :ems_cluster => src, :ext_management_system => nil) }
     let(:storage) { FactoryGirl.create(:storage) }
     let(:lan) { FactoryGirl.create(:lan) }
     let(:nic) { FactoryGirl.create(:guest_device_nic, :lan => lan) }
@@ -47,6 +48,12 @@ describe TransformationMapping do
         it 'if VM does not exist' do
           result = mapping.validate_vms(['name' => 'vm1'])
           expect(result['invalid_vms'].first).to match(hash_including('reason' => TransformationMapping::VM_NOT_EXIST))
+        end
+
+        it 'if VM is inactive' do
+          inactive_vm.storages << FactoryGirl.create(:storage, :name => 'storage_for_inactive_vm')
+          result = mapping.validate_vms(['name' => 'test_vm_inactive'])
+          expect(result['invalid_vms'].first).to match(hash_including('reason' => TransformationMapping::VM_INACTIVE))
         end
 
         it "if VM's cluster is not in the mapping" do
