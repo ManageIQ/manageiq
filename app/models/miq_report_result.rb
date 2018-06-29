@@ -274,7 +274,7 @@ class MiqReportResult < ApplicationRecord
       new_res.report_results = user.with_my_timezone do
         case result_type.to_sym
         when :csv then rpt.to_csv
-        when :pdf then to_pdf
+        when :pdf then html_rows.join
         when :txt then rpt.to_text
         else
           raise _("Result type %{result_type} not supported") % {:result_type => result_type}
