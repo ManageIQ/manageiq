@@ -51,6 +51,7 @@ class Service < ApplicationRecord
   virtual_has_one    :user
   virtual_has_one    :chargeback_report
   virtual_has_one    :configuration_script
+  virtual_has_one    :reconfigure_dialog
 
   before_validation :set_tenant_from_group
   before_create     :apply_dialog_settings
@@ -314,6 +315,15 @@ class Service < ApplicationRecord
 
   def reconfigure_resource_action
     service_template.resource_actions.find_by(:action => 'Reconfigure') if service_template
+  end
+
+  def reconfigure_dialog
+    resource_action = reconfigure_resource_action
+    options = {:target => self, :reconfigure => true}
+
+    workflow = ResourceActionWorkflow.new(self.options[:dialog], User.current_user, resource_action, options)
+
+    DialogSerializer.new.serialize(Array[workflow.dialog], true)
   end
 
   def raise_final_process_event(action)

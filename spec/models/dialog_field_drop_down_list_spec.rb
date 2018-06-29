@@ -141,59 +141,21 @@ describe DialogFieldDropDownList do
     end
   end
 
-  describe "#initialize_with_values" do
-    let(:dialog_field) { described_class.new(:options => {:force_multi_value => force_multi_value}) }
+  describe "#initialize_with_given_value" do
+    context "when the dialog field forces multi values" do
+      let(:dialog_field) do
+        described_class.new(:default_value => default_value, :options => {:force_multi_value => true}, :dynamic => true)
+      end
+      let(:values) { [%w(test test), %w(test2 test2)] }
+      let(:default_value) { "test2" }
 
-    before do
-      dialog_field.values = [%w(3 X), %w(2 Y), %w(1 Z)]
-      dialog_field.load_values_on_init = true
-    end
-
-    context "when force_multi_value is not true" do
-      let(:force_multi_value) { false }
-
-      it "uses the nil as the default value" do
-        dialog_field.default_value = nil
-        dialog_field.initialize_with_values({})
-        expect(dialog_field.value).to eq(nil)
+      before do
+        allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(values)
       end
 
-      it "with default value" do
-        dialog_field.default_value = "1"
-        dialog_field.initialize_with_values({})
-        expect(dialog_field.value).to eq("1")
-      end
-
-      it "uses the nil when there is a non-matching default value" do
-        dialog_field.default_value = "4"
-        dialog_field.initialize_with_values({})
-        expect(dialog_field.value).to eq(nil)
-      end
-    end
-
-    context "when force_multi_value is true" do
-      let(:force_multi_value) { true }
-
-      context "when the default values are included in the value list" do
-        before do
-          dialog_field.default_value = "[\"3\", \"2\"]"
-        end
-
-        it "uses the default value" do
-          dialog_field.initialize_with_values({})
-          expect(dialog_field.value).to eq("[\"3\", \"2\"]")
-        end
-      end
-
-      context "when the default values are not included in the value list" do
-        before do
-          dialog_field.default_value = "[\"4\"]"
-        end
-
-        it "uses nil" do
-          dialog_field.initialize_with_values({})
-          expect(dialog_field.value).to eq(nil)
-        end
+      it "uses the given value as the default" do
+        dialog_field.initialize_with_given_value("test")
+        expect(dialog_field.default_value).to eq(["test"].to_json)
       end
     end
   end
