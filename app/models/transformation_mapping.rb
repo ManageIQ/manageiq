@@ -5,6 +5,7 @@ class TransformationMapping < ApplicationRecord
   VM_MIGRATED = "migrated".freeze
   VM_NOT_EXIST = "not_exist".freeze
   VM_VALID = "ok".freeze
+  VM_INACTIVE = "inactive".freeze
 
   has_many :transformation_mapping_items, :dependent => :destroy
   has_many :service_resources, :as => :resource, :dependent => :nullify
@@ -82,8 +83,8 @@ class TransformationMapping < ApplicationRecord
   def describe_vm(vm, reason)
     {
       "name"           => vm.name,
-      "cluster"        => vm.ems_cluster.name,
-      "path"           => "#{vm.ext_management_system.name}/#{vm.parent_blue_folder_path(:exclude_non_display_folders => true)}",
+      "cluster"        => vm.ems_cluster.try(:name) || '',
+      "path"           => vm.ext_management_system ? "#{vm.ext_management_system.name}/#{vm.parent_blue_folder_path(:exclude_non_display_folders => true)}" : '',
       "allocated_size" => vm.allocated_disk_storage,
       "id"             => vm.id,
       "reason"         => reason
@@ -91,6 +92,9 @@ class TransformationMapping < ApplicationRecord
   end
 
   def validate_vm(vm, quick = true)
+    validate_result = vm.validate_v2v_migration
+    return validate_result unless validate_result == VM_VALID
+
     # a valid vm must find all resources in the mapping and has never been migrated
     invalid_list = []
 
@@ -111,8 +115,7 @@ class TransformationMapping < ApplicationRecord
       return no_mapping_msg(invalid_list) if quick
     end
 
-    return no_mapping_msg(invalid_list) if invalid_list.present?
-    vm.validate_v2v_migration
+    invalid_list.present? ? no_mapping_msg(invalid_list) : VM_VALID
   end
 
   def no_mapping_msg(list)
