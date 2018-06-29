@@ -96,6 +96,7 @@ module SupportsFeatureMixin
     :launch_mks_console                  => 'Launch WebMKS Console',
     :launch_spice_console                => 'Launch Spice Console',
     :admin_ui                            => 'Open Admin UI for a Provider',
+    :limit                               => 'Limit Option for Ansible Job Template',
     :live_migrate                        => 'Live Migration',
     :migrate                             => 'Migration',
     :capture                             => 'Capture of Capacity & Utilization Metrics',
