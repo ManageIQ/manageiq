@@ -118,6 +118,7 @@ module SupportsFeatureMixin
     :remove_security_group               => 'Remove Security Group',
     :remove_snapshot                     => 'Remove Snapshot',
     :remove_snapshot_by_description      => 'Remove snapshot having a description',
+    :rename                              => 'Rename a VM',
     :reset                               => 'Reset',
     :resize                              => 'Resizing',
     :retire                              => 'Retirement',
