@@ -4,7 +4,7 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   # Interface for creating InventoryCollection under @collections
   #
   # @param builder_class    [ManagerRefresh::InventoryCollection::Builder] or subclasses
-  # @param collection_name  [Symbol] used as InventoryCollection:association
+  # @param collection_name  [Symbol || Array] used as InventoryCollection:association
   # @param extra_properties [Hash]   props from InventoryCollection.initialize list
   #         - adds/overwrites properties added by builder
   #

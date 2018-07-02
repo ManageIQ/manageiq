@@ -26,7 +26,7 @@ module ManagerRefresh
 
         def container_quota_items
           add_properties(
-            :manager_ref    => %i(container_quota resource quota_desired quota_enforced quota_observed),
+            :manager_ref   => %i(container_quota resource quota_desired quota_enforced quota_observed),
             :delete_method => :disconnect_inv
           )
         end
@@ -135,7 +135,7 @@ module ManagerRefresh
 
         def container_services
           add_properties(
-            :secondary_refs       => {:by_container_project_and_name => [:container_project, :name]},
+            :secondary_refs       => {:by_container_project_and_name => %i(container_project name)},
             :attributes_blacklist => [:namespace],
             :saver_strategy       => "default" # TODO: (fryguy) (perf) Can't use batch strategy because of usage of M:N container_groups relation
           )
@@ -170,14 +170,14 @@ module ManagerRefresh
         def container_build_pods
           add_properties(
             # TODO: (bpaskinc) convert namespace column -> container_project_id?
-            :manager_ref => %i(namespace name),
+            :manager_ref    => %i(namespace name),
             :secondary_refs => {:by_namespace_and_name => %i(namespace name)},
           )
           add_common_default_values
         end
 
         def persistent_volumes
-          add_default_values(:parent => ->(persister) { persister.manager})
+          add_default_values(:parent => ->(persister) { persister.manager })
         end
 
         def persistent_volume_claims
@@ -187,6 +187,7 @@ module ManagerRefresh
           )
           add_common_default_values
         end
+
         protected
 
         def custom_reconnect_block

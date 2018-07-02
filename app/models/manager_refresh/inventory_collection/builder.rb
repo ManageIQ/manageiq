@@ -29,7 +29,7 @@ module ManagerRefresh
 
       # Entry point
       # Creates builder and builds data for inventory collection
-      # @param name [Symbol] InventoryCollection.association value
+      # @param name [Symbol || Array] InventoryCollection.association value. <name> method not called when Array
       #        (optional) method with this name also used for concrete inventory collection specific properties
       # @param persister_class [Class] used for "guessing" model_class
       # @param options [Hash]
@@ -66,12 +66,15 @@ module ManagerRefresh
       # Yields for overwriting provider-specific properties
       def construct_data
         add_properties(:association => @name)
-        add_properties(:model_class => auto_model_class) unless @options[:without_model_class]
 
         add_properties(@adv_settings, :if_missing)
         add_properties(@shared_properties, :if_missing)
 
-        send(@name.to_sym) if respond_to?(@name.to_sym)
+        send(@name.to_sym) if @name.respond_to?(:to_sym) && respond_to?(@name.to_sym)
+
+        if @properties[:model_class].nil?
+          add_properties(:model_class => auto_model_class) unless @options[:without_model_class]
+        end
       end
 
       # Creates InventoryCollection

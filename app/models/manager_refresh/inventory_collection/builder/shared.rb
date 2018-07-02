@@ -97,6 +97,5 @@ module ManagerRefresh::InventoryCollection::Builder::Shared
     def add_common_default_values
       add_default_values(:ems_id => ->(persister) { persister.manager.id })
     end
-
   end
 end
