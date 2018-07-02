@@ -35,12 +35,6 @@ module ManagerRefresh
         def physical_chassis
           add_common_default_values
         end
-
-        private
-
-        def add_common_default_values
-          add_default_values(:ems_id => ->(persister) { persister.manager.id })
-        end
       end
     end
   end

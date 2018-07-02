@@ -133,14 +133,6 @@ module ManagerRefresh
 
       private
 
-      def add_common_default_values
-        add_default_values(:ems_id => default_ems_id)
-      end
-
-      def default_ems_id
-        ->(persister) { persister.manager.id }
-      end
-
       def orchestration_stack_ancestry_save_block
         lambda do |_ems, inventory_collection|
           stacks_inventory_collection = inventory_collection.dependency_attributes[:orchestration_stacks].try(:first)

@@ -211,16 +211,6 @@ module ManagerRefresh
             :custom_save_block => snapshot_parent_save_block
           )
         end
-
-        private
-
-        def add_common_default_values
-          add_default_values(:ems_id => default_ems_id)
-        end
-
-        def default_ems_id
-          ->(persister) { persister.manager.id }
-        end
       end
     end
   end
