@@ -704,6 +704,7 @@ en:
       ContainerQuota:           Container Quota
       CustomButton:             Button
       CustomButtonSet:          Button Group
+      ConfigurationScript:      Template (Ansible Tower)
       ConfigurationScriptSource: Repository
       Container:                Container
       ContainerPerformance:     Performance - Container
@@ -774,6 +775,7 @@ en:
       ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:     Credential (VMware)
       ManageIQ::Providers::AnsibleTower::AutomationManager:                 Automation Manager (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript: Job Template (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow: Workflow Template (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook: Playbook (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager:                   Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
