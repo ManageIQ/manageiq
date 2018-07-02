@@ -24,4 +24,8 @@ class PhysicalSwitch < Switch
 
     EmsRefresh.queue_refresh(ext_management_system)
   end
+
+  def self.display_name(number = 1)
+    n_('Physical Switch', 'Physical Switches', number)
+  end
 end
