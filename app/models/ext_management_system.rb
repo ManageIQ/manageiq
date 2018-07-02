@@ -76,6 +76,12 @@ class ExtManagementSystem < ApplicationRecord
   has_many :miq_events,             :as => :target, :dependent => :destroy
   has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
 
+  has_many :configuration_scripts_and_workflows,
+           :class_name  => 'ConfigurationScript',
+           :dependent   => :destroy,
+           :foreign_key => "manager_id",
+           :inverse_of  => :manager
+
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?

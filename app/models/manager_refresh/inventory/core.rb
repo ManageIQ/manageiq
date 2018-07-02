@@ -43,7 +43,7 @@ module ManagerRefresh::Inventory::Core
 
     def has_configuration_workflows(options = {})
       has_inventory({
-        :model_class                 => ::ConfigurationWorkflow,
+        :model_class                 => ManageIQ::Providers::AutomationManager::ConfigurationWorkflow,
         :manager_ref                 => [:manager_ref],
         :inventory_object_attributes => %i(name description survey_spec variables),
       }.merge(options))
