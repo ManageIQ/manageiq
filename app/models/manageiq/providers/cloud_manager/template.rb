@@ -20,6 +20,13 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
                             ManageIQ::Providers::Openstack::CloudManager::VolumeSnapshotTemplate))
   end
 
+  def self.tenant_id_clause(user_or_group)
+    template_tenant_ids = MiqTemplate.accessible_tenant_ids(user_or_group, Rbac.accessible_tenant_ids_strategy(self))
+    return if template_tenant_ids.empty?
+
+    ["(vms.template = true AND (vms.tenant_id IN (?) OR vms.publicly_available = true))", template_tenant_ids]
+  end
+
   private
 
   def raise_created_event

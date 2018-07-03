@@ -691,6 +691,38 @@ describe Rbac::Filterer do
             expect(results).to match_array []
           end
         end
+
+        context "searching CloudTemplate" do
+          let(:group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) } # T1
+          let(:admin_user) { FactoryGirl.create(:user, :role => "super_administrator") }
+          let!(:cloud_template_root) { FactoryGirl.create(:template_cloud, :publicly_available => false) }
+
+          it 'returns all cloud templates when user is admin' do
+            results = described_class.filtered(TemplateCloud, :user => admin_user)
+            expect(results).to match_array(TemplateCloud.all)
+          end
+
+          context "when user is restricted user" do
+            let(:tenant_2) { FactoryGirl.create(:tenant, :parent => default_tenant, :source_type => 'CloudTenant') } # T2
+            let(:group_2) { FactoryGirl.create(:miq_group, :tenant => tenant_2) } # T1
+            let(:user_2) { FactoryGirl.create(:user, :miq_groups => [group_2]) }
+            let(:tenant_3) { FactoryGirl.create(:tenant, :parent => tenant_2) } # T3
+            let!(:cloud_template) { FactoryGirl.create(:template_cloud, :tenant => tenant_3, :publicly_available => true) }
+
+            it "returns all public cloud templates" do
+              results = described_class.filtered(TemplateCloud, :user => user_2)
+              expect(results).to match_array([cloud_template, cloud_template_root])
+            end
+
+            context "should ignore" do
+              let!(:cloud_template) { FactoryGirl.create(:template_cloud, :tenant => tenant_3, :publicly_available => false) }
+              it "private cloud templates" do
+                results = described_class.filtered(TemplateCloud, :user => user_2)
+                expect(results).to match_array([cloud_template_root])
+              end
+            end
+          end
+        end
       end
 
       context "tenant 0" do
