@@ -449,4 +449,11 @@ describe MiqServer do
       expect(described_class.new(:status => "stopped").active?).to be_falsey
     end
   end
+
+  describe "#zone_description" do
+    it "delegates to zone" do
+      _, miq_server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      expect(miq_server.zone_description).to eq(zone.description)
+    end
+  end
 end

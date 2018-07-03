@@ -29,14 +29,12 @@ class MiqServer < ApplicationRecord
   before_destroy          :validate_is_deleteable
   after_destroy           :destroy_linked_events_queue
 
-  virtual_column :zone_description, :type => :string
-
   default_value_for(:name, "EVM")
   default_value_for(:zone) { Zone.default_zone }
 
   scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
-  delegate :description, :to => :zone, :prefix => true
+  virtual_delegate :description, :to => :zone, :prefix => true
 
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze
