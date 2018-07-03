@@ -23,6 +23,7 @@ class PhysicalServer < ApplicationRecord
   belongs_to :physical_chassis, :foreign_key => :physical_chassis_id, :inverse_of => :physical_servers
 
   has_one :computer_system, :as => :managed_entity, :dependent => :destroy
+  has_one :physical_component, :as => :component, :dependent => :destroy
   has_one :hardware, :through => :computer_system
   has_one :host, :inverse_of => :physical_server
   has_one :asset_detail, :as => :resource, :dependent => :destroy
@@ -78,7 +79,7 @@ class PhysicalServer < ApplicationRecord
   end
 
   def event_where_clause(assoc = :ems_events)
-    ["#{events_table_name(assoc)}.physical_server_id = ?", id]
+    ["#{events_table_name(assoc)}.physical_component_id = ?", id]
   end
 
   def self.refresh_ems(physical_server_ids)
