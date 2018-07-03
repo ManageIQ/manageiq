@@ -2,6 +2,7 @@ module ManagerRefresh
   class InventoryCollection
     class Builder
       class ContainerManager < ::ManagerRefresh::InventoryCollection::Builder
+        # TODO: (agrare) Targeted refreshes will require adjusting the associations / arels. (duh)
         def container_projects
           add_properties(
             :secondary_refs => {:by_name => %i(name)},
@@ -76,6 +77,8 @@ module ManagerRefresh
           add_properties(
             # TODO: (bpaskinc) old save matches on [:image_ref, :container_image_registry_id]
             # TODO: (bpaskinc) should match on digest when available
+            # TODO: (mslemr) provider-specific class exists (openshift), but specs fail with them (?)
+            :model_class            => ::ContainerImage,
             :manager_ref            => %i(image_ref),
             :delete_method          => :disconnect_inv,
             :custom_reconnect_block => custom_reconnect_block
@@ -90,6 +93,7 @@ module ManagerRefresh
 
         def container_groups
           add_properties(
+            :model_class            => ContainerGroup,
             :secondary_refs         => {:by_container_project_and_name => %i(container_project name)},
             :attributes_blacklist   => %i(namespace),
             :delete_method          => :disconnect_inv,
@@ -104,6 +108,8 @@ module ManagerRefresh
 
         def containers
           add_properties(
+            :model_class            => Container,
+            # parser sets :ems_ref => "#{pod_id}_#{container.name}_#{container.image}"
             :delete_method          => :disconnect_inv,
             :custom_reconnect_block => custom_reconnect_block
           )
@@ -136,14 +142,14 @@ module ManagerRefresh
         def container_services
           add_properties(
             :secondary_refs       => {:by_container_project_and_name => %i(container_project name)},
-            :attributes_blacklist => [:namespace],
+            :attributes_blacklist => %i(namespace),
             :saver_strategy       => "default" # TODO: (fryguy) (perf) Can't use batch strategy because of usage of M:N container_groups relation
           )
           add_common_default_values
         end
 
         def container_service_port_configs
-          add_properties(:manager_ref => %i(ems_ref protocol)) # TODO(lsmola) make protocol part of the ems_ref?)
+          add_properties(:manager_ref => %i(ems_ref protocol)) # TODO: (lsmola) make protocol part of the ems_ref?)
         end
 
         def container_routes
@@ -152,7 +158,10 @@ module ManagerRefresh
         end
 
         def container_templates
-          add_properties(:attributes_blacklist => %i(namespace))
+          add_properties(
+            :model_class          => ::ContainerTemplate,
+            :attributes_blacklist => %i(namespace)
+          )
           add_common_default_values
         end
 
