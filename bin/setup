@@ -16,6 +16,7 @@ end
 
 Dir.chdir(ManageIQ::Environment::APP_ROOT) do
   ManageIQ::Environment.ensure_config_files
+  Dir.mkdir("log") unless File.exist?("log")
 
   puts '== Installing dependencies =='
   ManageIQ::Environment.install_bundler
