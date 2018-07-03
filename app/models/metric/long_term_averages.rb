@@ -1,6 +1,8 @@
 module Metric::LongTermAverages
   AVG_COLS_TO_OVERHEAD_TYPE = {
     :cpu_usagemhz_rate_average      => nil,
+    :cpu_usage_rate_average         => nil,
+    :mem_usage_absolute_average     => nil,
     :derived_memory_used            => nil,
     :max_cpu_usage_rate_average     => :cpu,
     :max_mem_usage_absolute_average => :memory
