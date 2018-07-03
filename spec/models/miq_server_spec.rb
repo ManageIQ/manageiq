@@ -456,4 +456,11 @@ describe MiqServer do
       expect(miq_server.zone_description).to eq(zone.description)
     end
   end
+
+  describe "#description" do
+    it "doesnt blowup" do
+      s = described_class.new(:name => "name")
+      expect(s.description).to eq(s.name)
+    end
+  end
 end

@@ -19,6 +19,8 @@ class MiqServer < ApplicationRecord
   acts_as_miq_taggable
   include RelationshipMixin
 
+  alias_attribute :description, :name
+
   belongs_to              :vm, :inverse_of => :miq_server
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
