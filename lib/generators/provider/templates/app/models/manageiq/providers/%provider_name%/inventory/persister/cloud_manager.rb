@@ -1,5 +1,7 @@
-class ManageIQ::Providers::<%= class_name %>::Inventory::Persister::CloudManager < ManagerRefresh::Inventory::Persister
-  include ManagerRefresh::Inventory::CloudManager
+class ManageIQ::Providers::<%= class_name %>::Inventory::Persister::CloudManager < ManageIQ::Providers::<%= class_name %>::Inventory::Persister
+  include ManageIQ::Providers::<%= class_name %>::Inventory::Persister::Definitions::CloudCollections
 
-  has_cloud_manager_vms
+  def initialize_inventory_collections
+    initialize_cloud_inventory_collections
+  end
 end
