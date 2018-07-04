@@ -223,6 +223,12 @@ module ManagerRefresh
         end
       end
 
+      # Enables/disables auto_model_class and exception check
+      # @param skip [Boolean]
+      def skip_model_class(skip = true)
+        @options[:without_model_class] = skip
+      end
+
       # Inventory object attributes are derived from setters
       #
       # Can be disabled by options :auto_inventory_attributes => false
@@ -233,6 +239,12 @@ module ManagerRefresh
         (@properties[:model_class].new.methods - ApplicationRecord.methods).grep(/^[\w]+?\=$/).collect do |setter|
           setter.to_s[0..setter.length - 2].to_sym
         end
+      end
+
+      # Enables/disables auto_inventory_attributes
+      # @param skip [Boolean]
+      def skip_auto_inventory_attributes(skip = true)
+        @options[:auto_inventory_attributes] = !skip
       end
 
       # Evaluates lambda blocks in @default_values and @dependency_attributes

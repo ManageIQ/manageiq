@@ -103,8 +103,8 @@ module ManagerRefresh
         end
 
         def orchestration_stack_ancestry
-          @options[:auto_inventory_attributes] = false
-          @options[:without_model_class]       = true
+          skip_auto_inventory_attributes
+          skip_model_class
 
           add_properties(
             :custom_save_block => orchestration_stack_ancestry_save_block
@@ -117,8 +117,8 @@ module ManagerRefresh
         end
 
         def vm_and_miq_template_ancestry
-          @options[:auto_inventory_attributes] = false
-          @options[:without_model_class]       = true
+          skip_auto_inventory_attributes
+          skip_model_class
 
           add_properties(
             :custom_save_block => vm_and_miq_template_ancestry_save_block

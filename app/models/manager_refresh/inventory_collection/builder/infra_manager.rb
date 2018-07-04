@@ -57,7 +57,7 @@ module ManagerRefresh
         end
 
         def vm_and_template_ems_custom_fields
-          @options[:auto_inventory_attributes] = false
+          skip_auto_inventory_attributes
 
           add_properties(
             :model_class => ::CustomAttribute,
