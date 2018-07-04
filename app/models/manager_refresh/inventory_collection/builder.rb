@@ -29,7 +29,7 @@ module ManagerRefresh
 
       # Entry point
       # Creates builder and builds data for inventory collection
-      # @param name [Symbol || Array] InventoryCollection.association value. <name> method not called when Array
+      # @param name [Symbol, Array] InventoryCollection.association value. <name> method not called when Array
       #        (optional) method with this name also used for concrete inventory collection specific properties
       # @param persister_class [Class] used for "guessing" model_class
       # @param options [Hash]
@@ -236,7 +236,7 @@ module ManagerRefresh
       end
 
       # Evaluates lambda blocks in @default_values and @dependency_attributes
-      # @param values[Hash]
+      # @param values [Hash]
       # @param persister [ManagerRefresh::Inventory::Persister]
       def evaluate_lambdas_on(values, persister)
         values&.transform_values do |value|
