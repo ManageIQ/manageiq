@@ -38,7 +38,12 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   #   :description
   #   :config_info
   #     :transformation_mapping_id
-  #     :vm_ids
+  #     :pre_service_id
+  #     :post_service_id
+  #     :actions => [
+  #        {:vm_id => 1, :pre_service => true, :post_service => false},
+  #        {:vm_id => 2, :pre_service => true, :post_service => true},
+  #     ]
   #
   def self.create_catalog_item(options, _auth_user = nil)
     enhanced_config_info = validate_config_info(options)
@@ -51,7 +56,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     transaction do
       create_from_options(options.merge(default_options)).tap do |service_template|
         service_template.add_resource(enhanced_config_info[:transformation_mapping])
-        enhanced_config_info[:vms].each { |vm| service_template.add_resource(vm, :status => ServiceResource::STATUS_QUEUED) }
+        enhanced_config_info[:vms].each { |vm_hash| service_template.add_resource(vm_hash[:vm], :status => ServiceResource::STATUS_QUEUED, :options => vm_hash[:options]) }
         service_template.create_resource_actions(enhanced_config_info)
       end
     end
@@ -73,11 +78,22 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
 
     raise _('Must provide an existing transformation mapping') if mapping.blank?
 
-    vms = if config_info[:vm_ids]
-            VmOrTemplate.find(config_info[:vm_ids])
-          else
-            config_info[:vms]
-          end
+    pre_service_id  = config_info[:pre_service].try(:id) || config_info[:pre_service_id]
+    post_service_id = config_info[:post_service].try(:id) || config_info[:post_service_id]
+
+    vms = []
+    if config_info[:actions]
+      vm_objects = VmOrTemplate.where(:id => config_info[:actions].collect { |vm_hash| vm_hash[:vm_id] }.compact).group_by(&:id)
+      config_info[:actions].each do |vm_hash|
+        vm_obj = vm_objects[vm_hash[:vm_id]].try(:first) || vm_hash[:vm]
+        next if vm_obj.nil?
+
+        vm_options = {}
+        vm_options[:pre_ansible_playbook_service_template_id] = pre_service_id if vm_hash[:pre_service]
+        vm_options[:post_ansible_playbook_service_template_id] = post_service_id if vm_hash[:post_service]
+        vms << {:vm => vm_obj, :options => vm_options}
+      end
+    end
 
     raise _('Must select a list of valid vms') if vms.blank?
 
