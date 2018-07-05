@@ -128,8 +128,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def value(name)
-    dlg_field = @dialog.field(name)
-    dlg_field.value if dlg_field
+    @dialog.field(name)&.value
   end
 
   def dialog_field(name)
