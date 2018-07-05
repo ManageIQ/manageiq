@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 89 ending 2018-07-02
+
+### Added
+- Add the ability to rename a VM [(#17658)](https://github.com/ManageIQ/manageiq/pull/17658)
+- Add display name for PhysicalSwitch model [(#17655)](https://github.com/ManageIQ/manageiq/pull/17655)
+- Add factory :ansible_tower_workflow_job. [(#17654)](https://github.com/ManageIQ/manageiq/pull/17654)
+- Adding title and cve's to openscap_rule_result creation [(#17651)](https://github.com/ManageIQ/manageiq/pull/17651)
+- Add an ansible_tower_log to vmdb loggers [(#17634)](https://github.com/ManageIQ/manageiq/pull/17634)
+- Add a method to remove a disk from a VM [(#17633)](https://github.com/ManageIQ/manageiq/pull/17633)
+- Return with HTML table instead of PDF in the saved report async task [(#17632)](https://github.com/ManageIQ/manageiq/pull/17632)
+- Add a precanned physical server policy [(#17624)](https://github.com/ManageIQ/manageiq/pull/17624)
+- [RFE]Added 64 and 128gb to provision dialogs [(#17622)](https://github.com/ManageIQ/manageiq/pull/17622)
+- Changes custom_attribute virtual_attributes to support AREL/SQL [(#17615)](https://github.com/ManageIQ/manageiq/pull/17615)
+- Add Polish to chargeback currencies [(#17609)](https://github.com/ManageIQ/manageiq/pull/17609)
+- Scheduling catalog items [(#17594)](https://github.com/ManageIQ/manageiq/pull/17594)
+- Extracting physical ports of a switch to a new page [(#17593)](https://github.com/ManageIQ/manageiq/pull/17593)
+- Adjusting ManageIQ core to enable PhysicalStorage API endpoint [(#17586)](https://github.com/ManageIQ/manageiq/pull/17586)
+- Add RBAC feature for Migration (v2v). [(#17596)](https://github.com/ManageIQ/manageiq/pull/17596)
+- Support moving a VM to another folder during VM Migrate. [(#17519)](https://github.com/ManageIQ/manageiq/pull/17519)
+- Keep track of the server ids where the automate task has been processed. [(#17451)](https://github.com/ManageIQ/manageiq/pull/17451)
+- Adding connection b/w physical servers and physical switches [(#17311)](https://github.com/ManageIQ/manageiq/pull/17311)
+- Add configuration_script_sources.last_update_error [(#17290)](https://github.com/ManageIQ/manageiq/pull/17290)
+- Make all public images be visible for provisioning. [(#17058)](https://github.com/ManageIQ/manageiq/pull/17058)
+
+### Fixed
+- Fixes undefined method `name` error during CSV validation required for v2v migration [(#17650)](https://github.com/ManageIQ/manageiq/pull/17650)
+- Change reconfigure setup to include values configured with originally [(#17647)](https://github.com/ManageIQ/manageiq/pull/17647)
+- Set value of static text box to default when default exists [(#17631)](https://github.com/ManageIQ/manageiq/pull/17631)
+- Add Automate Generic Objects shortcut menu [(#17630)](https://github.com/ManageIQ/manageiq/pull/17630)
+- Ensure sorting does not happen when sort_by is set to "none" [(#17625)](https://github.com/ManageIQ/manageiq/pull/17625)
+- Fix ordering of metric rollups in consumption history [(#17620)](https://github.com/ManageIQ/manageiq/pull/17620)
+- Reject empty button groups from the result of #custom_actions [(#17607)](https://github.com/ManageIQ/manageiq/pull/17607)
+- Remove conversion to UTC in Chargeback  [(#17606)](https://github.com/ManageIQ/manageiq/pull/17606)
+- Fixed InventoryCollection Vm and Template [(#17602)](https://github.com/ManageIQ/manageiq/pull/17602)
+- Fixed the virtual columns to be able to use in the API with `filter[]` [(#17553)](https://github.com/ManageIQ/manageiq/pull/17553)
+
+### Removed
+- Remove Request taggable and prevent tag filtering [(#17656)](https://github.com/ManageIQ/manageiq/pull/17656)
+
 ## Unreleased as of Sprint 88 ending 2018-06-18
 
 ### Added
