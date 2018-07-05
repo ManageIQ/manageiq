@@ -15,8 +15,8 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     @initiator       = options[:initiator]
     @dialog          = load_dialog(resource_action, values, options)
 
-    @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
-    @settings[:dialog_id]          = @dialog.id         unless @dialog.nil?
+    @settings[:resource_action_id] = resource_action.id if resource_action
+    @settings[:dialog_id]          = @dialog.id         if @dialog
   end
 
   def dialogs
@@ -95,11 +95,11 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   def load_dialog(resource_action, values, options)
     if resource_action.nil?
       resource_action = load_resource_action(values)
-      @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
+      @settings[:resource_action_id] = resource_action.id if resource_action
     end
 
-    dialog = resource_action.dialog unless resource_action.nil?
-    unless dialog.nil?
+    dialog = resource_action.dialog if resource_action
+    if dialog
       dialog.target_resource = @target
       if options[:display_view_only]
         dialog.init_fields_with_values_for_request(values)
