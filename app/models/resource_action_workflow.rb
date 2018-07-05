@@ -77,11 +77,8 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def load_resource_action(values = nil)
-    if values.nil?
-      ResourceAction.find_by(:id => @settings[:resource_action_id])
-    else
-      ResourceAction.find_by(:id => values.fetch_path(:workflow_settings, :resource_action_id))
-    end
+    id = values ? values.fetch_path(:workflow_settings, :resource_action_id) : @settings[:resource_action_id]
+    ResourceAction.find_by(:id => id)
   end
 
   def create_values_hash
