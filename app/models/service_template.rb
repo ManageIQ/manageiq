@@ -406,6 +406,11 @@ class ServiceTemplate < ApplicationRecord
     )
   end
 
+  def miq_schedules
+    schedule_ids = Reserve.where(:resource_type => "MiqSchedule").collect { |r| r.resource_id if r.reserved == {:resource_id => id} }.compact
+    MiqSchedule.where(:towhat => "ServiceTemplate", :id => schedule_ids)
+  end
+
   def order(user_or_id, options = nil, request_options = nil, schedule_time = nil)
     user     = user_or_id.kind_of?(User) ? user_or_id : User.find(user_or_id)
     workflow = provision_workflow(user, options, request_options)
