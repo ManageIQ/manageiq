@@ -16,6 +16,8 @@ describe ServiceTemplateTransformationPlanTask do
     let(:src) { FactoryGirl.create(:ems_cluster) }
     let(:dst) { FactoryGirl.create(:ems_cluster) }
     let(:vm)  { FactoryGirl.create(:vm_or_template) }
+    let(:vm2)  { FactoryGirl.create(:vm_or_template) }
+    let(:apst) { FactoryGirl.create(:service_template_ansible_playbook) }
     let(:mapping) do
       FactoryGirl.create(
         :transformation_mapping,
@@ -29,7 +31,12 @@ describe ServiceTemplateTransformationPlanTask do
         :description => 'a description',
         :config_info => {
           :transformation_mapping_id => mapping.id,
-          :vm_ids                    => [vm.id],
+          :pre_service_id            => apst.id,
+          :post_service_id           => apst.id,
+          :actions                   => [
+            {:vm_id => vm.id, :pre_service => true, :post_service => true},
+            {:vm_id => vm2.id, :pre_service => false, :post_service => false},
+          ],
         }
       }
     end
@@ -38,6 +45,7 @@ describe ServiceTemplateTransformationPlanTask do
 
     let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
     let(:task) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => vm) }
+    let(:task2) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => vm2) }
 
     describe '#resource_action' do
       it 'has a resource action points to the entry point for transformation' do
@@ -52,6 +60,16 @@ describe ServiceTemplateTransformationPlanTask do
       it { expect(task.transformation_destination(src)).to eq(dst) }
     end
 
+    describe '#pre_ansible_playbook_service_template' do
+      it { expect(task.pre_ansible_playbook_service_template).to eq(apst) }
+      it { expect(task2.pre_ansible_playbook_service_template).to be_nil }
+    end
+
+    describe '#post_ansible_playbook_service_template' do
+      it { expect(task.post_ansible_playbook_service_template).to eq(apst) }
+      it { expect(task2.post_ansible_playbook_service_template).to be_nil }
+    end
+
     describe '#update_transformation_progress' do
       it 'saves the progress in options' do
         task.update_transformation_progress(:vm_percent => '80')
@@ -62,14 +80,14 @@ describe ServiceTemplateTransformationPlanTask do
     describe 'task_active' do
       it 'sets vm_request status to Started' do
         task.task_active
-        expect(plan.vm_resources.first.status).to eq(ServiceResource::STATUS_ACTIVE)
+        expect(plan.vm_resources.find_by(:resource => task.source).status).to eq(ServiceResource::STATUS_ACTIVE)
       end
     end
 
     describe 'task_finished' do
       it 'sets vm_request status to Completed' do
         task.task_finished
-        expect(plan.vm_resources.first.status).to eq(ServiceResource::STATUS_COMPLETED)
+        expect(plan.vm_resources.find_by(:resource => task.source).status).to eq(ServiceResource::STATUS_COMPLETED)
       end
     end
 
