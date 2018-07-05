@@ -19,12 +19,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     @settings[:dialog_id]          = @dialog.id         if @dialog
   end
 
-  def dialogs
-    msg = "[DEPRECATION] ResourceActionWorkflow#dialogs should not be used.  Please use ResourceActionWorkflow#dialog instead.  At #{caller[0]}"
-    $log.warn(msg)
-    Kernel.warn(msg)
-    dialog
-  end
+  Vmdb::Deprecation.deprecate_methods(self, :dialogs => :dialog)
 
   def submit_request
     process_request(ServiceOrder::STATE_ORDERED)
