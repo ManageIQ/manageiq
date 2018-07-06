@@ -6023,6 +6023,18 @@
       :description: Refresh relationships and power states for all items related to Physical Chassis
       :feature_type: control
       :identifier: physical_chassis_refresh
+    - :name: Blink LED
+      :description: Blink Loc LED
+      :feature_type: control
+      :identifier: physical_chassis_blink_loc_led
+    - :name: Turn On LED
+      :description: Turn On Loc LED
+      :feature_type: control
+      :identifier: physical_chassis_turn_on_loc_led
+    - :name: Turn Off LED
+      :description: Turn Off Loc LED
+      :feature_type: control
+      :identifier: physical_chassis_turn_off_loc_led
 
 # Physical Switches
 - :name: Physical Switches
