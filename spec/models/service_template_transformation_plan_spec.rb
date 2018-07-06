@@ -30,8 +30,8 @@ describe ServiceTemplateTransformationPlan do
         :pre_service_id            => apst.id,
         :post_service_id           => apst.id,
         :actions                   => [
-          {:vm_id => vm1.id, :pre_service => true, :post_service => false},
-          {:vm_id => vm2.id, :pre_service => true, :post_service => true}
+          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false},
+          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true}
         ],
       }
     }
