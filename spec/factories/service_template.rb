@@ -8,7 +8,9 @@ FactoryGirl.define do
   factory :service_template_ansible_playbook, :class => 'ServiceTemplateAnsiblePlaybook', :parent => :service_template
 
   factory :service_template_container_template, :class => 'ServiceTemplateContainerTemplate', :parent => :service_template
-  factory :service_template_transformation_plan, :class => 'ServiceTemplateTransformationPlan', :parent => :service_template
+  factory :service_template_transformation_plan, :class => 'ServiceTemplateTransformationPlan', :parent => :service_template do
+    sequence(:name) { |n| "service_template_#{seq_padded_for_sorting(n)}" }
+  end
 
   trait :with_provision_resource_action_and_dialog do
     after(:create) do |x|
