@@ -408,7 +408,7 @@ describe ManagerRefresh::Inventory::Persister do
       expect do
         persister.add_collection(persister.send(:cloud),
                                  :vms,
-                                 {:manager_ref => %i(ems_ref ems_gref)})
+                                 :manager_ref => %i(ems_ref ems_gref))
       end.to raise_error("Invalid definition of index :manager_ref, there is no attribute :ems_gref on model Vm")
     end
 

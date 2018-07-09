@@ -112,7 +112,7 @@ class TestPersister < ManagerRefresh::Inventory::Persister
     add_collection(network, :floating_ips) do |builder|
       builder.add_properties(
         :manager_uuids => references(:floating_ips) + references(:load_balancers),
-        :parent => manager.network_manager
+        :parent        => manager.network_manager
       )
     end
   end
