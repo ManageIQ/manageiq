@@ -168,6 +168,14 @@ group :rest_api, :manageiq_default do
   manageiq_plugin "manageiq-api"
 end
 
+# FIXME: uncomment this after the decorator repo has been created
+# group :decorators, :manageiq_default do
+#   manageiq_plugin "manageiq-decorators"
+# end
+
+# FIXME: delete this after the decorator repo has been created
+gem 'manageiq-decorators', :git => "https://github.com/skateman/manageiq-decorators"
+
 group :graphql_api, :manageiq_default do
   manageiq_plugin "manageiq-graphql"
 end
