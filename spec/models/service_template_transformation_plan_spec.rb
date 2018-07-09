@@ -71,5 +71,12 @@ describe ServiceTemplateTransformationPlan do
         described_class.create_catalog_item(catalog_item_options)
       end.to raise_error(StandardError, 'Must select a list of valid vms')
     end
+
+    it 'validates unique name' do
+      described_class.create_catalog_item(catalog_item_options)
+      expect { described_class.create_catalog_item(catalog_item_options) }.to raise_error(
+        ActiveRecord::RecordInvalid, 'Validation failed: Name has already been taken'
+      )
+    end
   end
 end
