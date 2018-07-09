@@ -64,16 +64,26 @@ class ServiceTemplate < ApplicationRecord
   virtual_column   :template_valid_error_message, :type => :string
   virtual_column   :archived,                     :type => :boolean
   virtual_column   :active,                       :type => :boolean
+  virtual_column   :schedule_time,                :type => :time
 
   default_value_for :service_type, 'unknown'
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
   virtual_has_one :config_info, :class_name => "Hash"
+  virtual_has_one :miq_schedule,:class_name => "MiqSchedule"
 
   scope :with_service_template_catalog_id,          ->(cat_id) { where(:service_template_catalog_id => cat_id) }
   scope :without_service_template_catalog_id,       ->         { where(:service_template_catalog_id => nil) }
   scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
   scope :displayed,                                 ->         { where(:display => true) }
+
+  def schedule_time
+    miq_schedule.try(:run_at).try(:[], :start_time)
+  end
+
+  def miq_schedule
+    MiqSchedule.where(:towhat => "ServiceTemplate").find { |s| s.resource_id == id }
+  end
 
   def self.catalog_item_types
     ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
@@ -437,6 +447,26 @@ class ServiceTemplate < ApplicationRecord
     else
       workflow.submit_request
     end
+  end
+
+  def update_schedule(schedule_time)
+    if schedule_time
+      require 'time'
+      time = schedule_time.kind_of?(String) ? Time.parse(schedule_time).utc : schedule_time
+
+      schedule = miq_schedule
+      raise _('service_template is not currently scheduled') unless schedule
+      schedule.run_at = {
+        :interval   => {:unit => "once"},
+        :start_time => time,
+        :tz         => "UTC",
+      }
+      schedule.save!
+    end
+  end
+
+  def delete_schedule
+    miq_schedule&.destroy
   end
 
   def provision_workflow(user, dialog_options = nil, request_options = nil)

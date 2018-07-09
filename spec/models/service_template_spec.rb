@@ -866,6 +866,38 @@ describe ServiceTemplate do
     end
   end
 
+  context "with a schedule" do
+    let(:st)   { FactoryGirl.create(:service_template, :name => "st") }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      user = FactoryGirl.create(:user, :userid => "barney")
+      st.order(user, {}, {}, Time.now.utc.to_s)
+    end
+
+    context "update_schedule" do
+      it "updates the scheduled time" do
+        new_time = 1.day.from_now.utc
+
+        st.update_schedule(new_time)
+
+        st.reload
+        expect(st.schedule_time.to_s).to eq(new_time.to_s)
+      end
+    end
+
+    context "delete_schedule" do
+      it "deletes the schedule" do
+        st.delete_schedule
+
+        st.reload
+
+        expect(st.schedule_time).to be_nil
+        expect(st.miq_schedule).to be_nil
+      end
+    end
+  end
+
   context "catalog_item_types" do
     it "only returns generic with no providers" do
       expect(ServiceTemplate.catalog_item_types).to match(
