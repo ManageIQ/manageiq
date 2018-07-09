@@ -43,8 +43,8 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   #     :pre_service_id
   #     :post_service_id
   #     :actions => [
-  #        {:vm_id => 1, :pre_service => true, :post_service => false},
-  #        {:vm_id => 2, :pre_service => true, :post_service => true},
+  #        {:vm_id => "1", :pre_service => true, :post_service => false},
+  #        {:vm_id => "2", :pre_service => true, :post_service => true},
   #     ]
   #
   def self.create_catalog_item(options, _auth_user = nil)
@@ -85,9 +85,9 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
 
     vms = []
     if config_info[:actions]
-      vm_objects = VmOrTemplate.where(:id => config_info[:actions].collect { |vm_hash| vm_hash[:vm_id] }.compact).group_by(&:id)
+      vm_objects = VmOrTemplate.where(:id => config_info[:actions].collect { |vm_hash| vm_hash[:vm_id] }.compact).index_by(&:id).stringify_keys
       config_info[:actions].each do |vm_hash|
-        vm_obj = vm_objects[vm_hash[:vm_id]].try(:first) || vm_hash[:vm]
+        vm_obj = vm_objects[vm_hash[:vm_id]] || vm_hash[:vm]
         next if vm_obj.nil?
 
         vm_options = {}
