@@ -246,7 +246,7 @@ class MiqGenericMountSession
     res
   end
 
-  def add(source, dest_uri)
+  def add(source, dest_uri, _object_file = nil)
     log_header = "MIQ(#{self.class.name}-add)"
 
     logger.info("#{log_header} Source: [#{source}], Destination: [#{dest_uri}]...")
