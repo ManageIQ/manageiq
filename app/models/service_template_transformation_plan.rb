@@ -49,7 +49,6 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     enhanced_config_info = validate_config_info(options)
     default_options =  {
       :display      => false,
-      :service_type => 'atomic',
       :prov_type    => 'transformation_plan'
     }
 

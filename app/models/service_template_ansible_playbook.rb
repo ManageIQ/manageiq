@@ -38,7 +38,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   #     :reconfigure (same as provision)
   #
   def self.create_catalog_item(options, auth_user)
-    options      = options.merge(:service_type => 'atomic', :prov_type => 'generic_ansible_playbook')
+    options      = options.merge(:service_type => SERVICE_TYPE_ATOMIC, :prov_type => 'generic_ansible_playbook')
     service_name = options[:name]
     description  = options[:description]
     config_info  = validate_config_info(options[:config_info])
@@ -115,7 +115,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :build_parameter_list
 
   def self.validate_config_info(info)
-    info[:provision][:fqname]   ||= default_provisioning_entry_point('atomic') if info.key?(:provision)
+    info[:provision][:fqname]   ||= default_provisioning_entry_point(SERVICE_TYPE_ATOMIC) if info.key?(:provision)
     info[:reconfigure][:fqname] ||= default_reconfiguration_entry_point if info.key?(:reconfigure)
 
     if info.key?(:retirement)
