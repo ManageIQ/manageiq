@@ -149,6 +149,15 @@ describe ResourceActionWorkflow do
       end
     end
 
+    context "when the options are set to a submit workflow request" do
+      let(:options) { {:submit_workflow => true} }
+
+      it "loads the values into fields" do
+        expect(dialog).to receive(:load_values_into_fields).with(values)
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
+      end
+    end
+
     context "when neither display_view_only nor refresh are true" do
       let(:options) { {} }
 
