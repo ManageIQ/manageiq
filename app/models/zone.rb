@@ -40,6 +40,8 @@ class Zone < ApplicationRecord
   scope :visible, -> { where(:visible => true) }
   default_value_for :visible, true
 
+  MAINTENANCE_ZONE_NAME = '__maintenance__'.freeze
+
   def active_miq_servers
     MiqServer.active_miq_servers.where(:zone_id => id)
   end
@@ -53,7 +55,7 @@ class Zone < ApplicationRecord
   end
 
   def self.seed
-    create_with(:description => "Maintenance Zone", :visible => false).find_or_create_by!(:name => 'maintenance') do |_z|
+    create_with(:description => "Maintenance Zone", :visible => false).find_or_create_by!(:name => MAINTENANCE_ZONE_NAME) do |_z|
       _log.info("Creating maintenance zone...")
     end
     create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
@@ -87,7 +89,7 @@ class Zone < ApplicationRecord
 
   # Zone for suspended providers (no servers in it), not visible by default
   def self.maintenance_zone
-    unscoped.in_my_region.find_by(:name => "maintenance")
+    in_my_region.find_by(:name => MAINTENANCE_ZONE_NAME)
   end
 
   def remote_cockpit_ws_miq_server
@@ -221,7 +223,7 @@ class Zone < ApplicationRecord
 
   def check_zone_in_use_on_destroy
     raise _("cannot delete default zone") if name == "default"
-    raise _("cannot delete maintenance zone") if name == "maintenance"
+    raise _("cannot delete maintenance zone") if name == MAINTENANCE_ZONE_NAME
     raise _("zone name '%{name}' is used by a server") % {:name => name} unless miq_servers.blank?
   end
 end
