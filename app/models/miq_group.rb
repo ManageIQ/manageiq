@@ -15,7 +15,7 @@ class MiqGroup < ApplicationRecord
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_product_features, :through => :miq_user_role
 
-  virtual_delegate :name, :to => :miq_user_role, :allow_nil => true, :prefix => true
+  virtual_delegate :miq_user_role_name, :to => :entitlement, :allow_nil => true
   virtual_column :read_only,          :type => :boolean
   virtual_has_one :sui_product_features, :class_name => "Array"
 

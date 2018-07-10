@@ -1,4 +1,6 @@
 describe MiqGroup do
+  include Spec::Support::ArelHelper
+
   describe "#settings" do
     subject { FactoryGirl.create(:miq_group) }
 
@@ -566,6 +568,19 @@ describe MiqGroup do
       allow(role).to receive(:allows?).with(:identifier => 'sui_role_b').and_return(false)
 
       expect(subject.sui_product_features).to eq(%w(sui_role_a sui_role_c))
+    end
+  end
+
+  describe "#miq_user_role_name" do
+    let(:group) { FactoryGirl.build(:miq_group, :role => "the_role") }
+
+    it "calculates in ruby" do
+      expect(group.miq_user_role_name).to eq("EvmRole-the_role")
+    end
+
+    it "calculates in the database" do
+      group.save
+      expect(virtual_column_sql_value(MiqGroup.where(:id => group.id), "miq_user_role_name")).to eq("EvmRole-the_role")
     end
   end
 end
