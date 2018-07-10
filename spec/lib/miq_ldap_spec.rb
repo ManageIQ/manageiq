@@ -226,9 +226,17 @@ describe MiqLdap do
     end
 
     it "returns samaccountname when user_type is samaccountname" do
-      @opts[:user_type]   = 'samaccountname'
+      @opts[:user_type] = 'samaccountname'
       ldap = MiqLdap.new(@opts)
       expect(ldap.fqusername('myuserid')).to eq('my\domain\myuserid')
+    end
+
+    it "searches for username when user_type is mail even when username is UPN" do
+      @opts[:user_type] = 'mail'
+      ldap = MiqLdap.new(@opts)
+      expect(User).to receive(:find_by_email)
+      expect(User).to receive(:find_by_userid)
+      expect(ldap.fqusername('myuserid@mycompany.com')).to eq('myuserid@mycompany.com')
     end
   end
 end
