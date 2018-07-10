@@ -53,9 +53,11 @@ class EvmDatabaseOps
     #   :password => 'Zug-drep5s',
     #   :remote_file_name => "backup_1",     - Provide a base file name for the uploaded file
 
-    uri = with_mount_session(:backup, db_opts, connect_opts) do |database_opts|
+    uri = with_mount_session(:backup, db_opts, connect_opts) do |database_opts, session, remote_file_uri|
       validate_free_space(database_opts)
-      PostgresAdmin.backup(database_opts)
+      backup_result = PostgresAdmin.backup(database_opts)
+      session&.add(database_opts[:local_file], remote_file_uri)
+      backup_result
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been backed up to file: [#{uri}]")
     uri
@@ -64,7 +66,7 @@ class EvmDatabaseOps
   def self.dump(db_opts, connect_opts = {})
     # db_opts and connect_opts similar to .backup
 
-    uri = with_mount_session(:dump, db_opts, connect_opts) do |database_opts|
+    uri = with_mount_session(:dump, db_opts, connect_opts) do |database_opts, _session, _remote_file_uri|
       # For database dumps, this isn't going to be as accurate (since the dump
       # size will probably be larger than the calculated BD size), but it still
       # won't hurt to do as a generic way to get a rough idea if we have enough
@@ -87,7 +89,7 @@ class EvmDatabaseOps
     #   :username => 'samba_one',
     #   :password => 'Zug-drep5s',
 
-    uri = with_mount_session(:restore, db_opts, connect_opts) do |database_opts|
+    uri = with_mount_session(:restore, db_opts, connect_opts) do |database_opts, _session, _remote_file_uri|
       prepare_for_restore(database_opts[:local_file])
 
       # remove all the connections before we restore; AR will reconnect on the next query
@@ -119,7 +121,7 @@ class EvmDatabaseOps
       db_opts[:local_file] = session.uri_to_local_path(uri)
     end
 
-    block_result = yield db_opts if block_given?
+    block_result = yield(db_opts, session, uri) if block_given?
     uri || block_result
   ensure
     session.disconnect if session

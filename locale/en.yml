@@ -729,6 +729,7 @@ en:
       FileDepotFtp:             FTP
       FileDepotFtpAnonymous:    Anonymous FTP
       FileDepotNfs:             NFS
+      FileDepotS3:              AWS S3
       FileDepotSmb:             Samba
       Filesystem:               File
       Flavor:                   Flavor
