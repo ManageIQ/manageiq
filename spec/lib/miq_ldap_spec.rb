@@ -179,5 +179,56 @@ describe MiqLdap do
 
       ldap.get_user_object("myuserid@mycompany.com", "upn")
     end
+
+    it "searches for group membership when username is upn regardless of user_type" do
+      ldap = MiqLdap.new(:host => ["192.0.2.2"])
+      @opts[:attributes] = ["*", "memberof"]
+      expect(ldap).to receive(:search).with(@opts)
+
+      ldap.get_user_object("myuserid@mycompany.com", "bad_user_type")
+    end
+  end
+
+  context "#fqusername" do
+    before do
+      allow(TCPSocket).to receive(:new)
+      @opts = {:host => ["192.0.2.2"], :user_suffix => 'mycompany.com', :domain_prefix => 'my\domain'}
+    end
+
+    it "returns username when username is already a dn" do
+      # ldap = MiqLdap.new(:host => ["192.0.2.2"])
+      ldap = MiqLdap.new(@opts)
+      expect(ldap.fqusername("cn=myuser,ou=people,ou=prod,dc=example,dc=com")).to eq("cn=myuser,ou=people,ou=prod,dc=example,dc=com")
+    end
+
+    it "returns username when username is already a upn" do
+      ldap = MiqLdap.new(@opts)
+      expect(ldap.fqusername("myuserid@mycompany.com")).to eq("myuserid@mycompany.com")
+    end
+
+    it "returns username when username is already a domain username" do
+      ldap = MiqLdap.new(@opts)
+      expect(ldap.fqusername('my\domain\myuserid')).to eq('my\domain\myuserid')
+    end
+
+    it "returns username when username is already a upn even if user_type is samaccountname" do
+      @opts[:user_type]   = 'samaccountname'
+      @opts[:user_suffix] = 'not_mycompany.com'
+      ldap = MiqLdap.new(@opts)
+      expect(ldap.fqusername("myuserid@mycompany.com")).to eq("myuserid@mycompany.com")
+    end
+
+    it "returns upn when user_type is upn" do
+      @opts[:user_type]   = 'userprincipalname'
+      @opts[:user_suffix] = 'mycompany.com'
+      ldap = MiqLdap.new(@opts)
+      expect(ldap.fqusername("myuserid")).to eq("myuserid@mycompany.com")
+    end
+
+    it "returns samaccountname when user_type is samaccountname" do
+      @opts[:user_type]   = 'samaccountname'
+      ldap = MiqLdap.new(@opts)
+      expect(ldap.fqusername('myuserid')).to eq('my\domain\myuserid')
+    end
   end
 end
