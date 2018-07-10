@@ -371,7 +371,8 @@ class MiqAlert < ApplicationRecord
   def self.rt_perf_model_details(dbs)
     dbs.inject({}) do |h, db|
       h[db] = Metric::Rollup.const_get("#{db.underscore.upcase}_REALTIME_COLS").inject({}) do |hh, c|
-        hh[c.to_s] = Dictionary.gettext("#{db}Performance.#{c}")
+        db_column = "#{db}Performance.#{c}" # this is to prevent the string from being collected during string extraction
+        hh[c.to_s] = Dictionary.gettext(db_column)
         hh
       end
       h
@@ -381,7 +382,8 @@ class MiqAlert < ApplicationRecord
   def self.operating_range_perf_model_details(dbs)
     dbs.inject({}) do |h, db|
       h[db] = Metric::LongTermAverages::AVG_COLS.inject({}) do |hh, c|
-        hh[c.to_s] = Dictionary.gettext("#{db}Performance.#{c}")
+        db_column = "#{db}Performance.#{c}" # this is to prevent the string from being collected during string extraction
+        hh[c.to_s] = Dictionary.gettext(db_column)
         hh
       end
       h
