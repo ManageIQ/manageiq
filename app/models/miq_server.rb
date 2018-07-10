@@ -34,6 +34,8 @@ class MiqServer < ApplicationRecord
   default_value_for(:name, "EVM")
   default_value_for(:zone) { Zone.default_zone }
 
+  scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }
+  scope :recently_active,    -> { where(:last_heartbeat => 10.minutes.ago.utc...Time.now.utc) }
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
 
   STATUS_STARTING       = 'starting'.freeze
