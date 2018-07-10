@@ -352,6 +352,14 @@ describe GenericObject do
       go.remove_from_service(service)
       expect(service.generic_objects).to be_blank
     end
+
+    it 'removes the generic object from all related services before destroy' do
+      go.add_to_service(service)
+      expect(service.generic_objects).to include(go)
+
+      go.destroy
+      expect(service.generic_objects).to be_blank
+    end
   end
 
   context "custom buttons" do
