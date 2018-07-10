@@ -117,6 +117,10 @@ class TestPersister < ManagerRefresh::Inventory::Persister
     end
   end
 
+  def options
+    {}
+  end
+
   def targeted?
     true
   end
