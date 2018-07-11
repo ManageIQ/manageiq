@@ -56,16 +56,27 @@ module ManagerRefresh
           )
         end
 
+        def vm_and_template_ems_custom_fields
+          skip_auto_inventory_attributes
+
+          add_properties(
+            :model_class => ::CustomAttribute,
+            :manager_ref => %i(name)
+          )
+
+          add_inventory_attributes(%i(section name value source resource))
+        end
+
         def ems_folders
           add_properties(
             :manager_ref          => %i(uid_ems),
             :attributes_blacklist => %i(ems_children),
           )
-          shared_builder_params
+          add_common_default_values
         end
 
         def datacenters
-          shared_builder_params
+          add_common_default_values
         end
 
         def resource_pools
@@ -73,7 +84,7 @@ module ManagerRefresh
             :manager_ref          => %i(uid_ems),
             :attributes_blacklist => %i(ems_children),
           )
-          shared_builder_params
+          add_common_default_values
         end
 
         def ems_clusters
@@ -82,7 +93,7 @@ module ManagerRefresh
           )
 
           add_inventory_attributes(%i(datacenter_id))
-          shared_builder_params
+          add_common_default_values
         end
 
         def storages
@@ -94,7 +105,7 @@ module ManagerRefresh
         end
 
         def hosts
-          shared_builder_params
+          add_common_default_values
 
           add_custom_reconnect_block(
             lambda do |inventory_collection, inventory_objects_index, attributes_index|
@@ -199,16 +210,6 @@ module ManagerRefresh
           add_properties(
             :custom_save_block => snapshot_parent_save_block
           )
-        end
-
-        private
-
-        def shared_builder_params
-          add_builder_params(:ems_id => default_ems_id)
-        end
-
-        def default_ems_id
-          ->(persister) { persister.manager.id }
         end
       end
     end

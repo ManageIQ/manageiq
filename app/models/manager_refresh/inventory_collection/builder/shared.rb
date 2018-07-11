@@ -43,7 +43,7 @@ module ManagerRefresh::InventoryCollection::Builder::Shared
 
     def miq_templates
       vm_template_shared
-      add_builder_params(
+      add_default_values(
         :template => true
       )
     end
@@ -58,7 +58,7 @@ module ManagerRefresh::InventoryCollection::Builder::Shared
         :custom_reconnect_block => INVENTORY_RECONNECT_BLOCK
       )
 
-      add_builder_params(
+      add_default_values(
         :ems_id => ->(persister) { persister.manager.id }
       )
     end
@@ -90,6 +90,12 @@ module ManagerRefresh::InventoryCollection::Builder::Shared
         :manager_ref                  => %i(hardware device_name),
         :parent_inventory_collections => %i(vms)
       )
+    end
+
+    protected
+
+    def add_common_default_values
+      add_default_values(:ems_id => ->(persister) { persister.manager.id })
     end
   end
 end

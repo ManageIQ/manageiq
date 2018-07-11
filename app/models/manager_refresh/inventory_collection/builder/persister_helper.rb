@@ -4,7 +4,7 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   # Interface for creating InventoryCollection under @collections
   #
   # @param builder_class    [ManagerRefresh::InventoryCollection::Builder] or subclasses
-  # @param collection_name  [Symbol] used as InventoryCollection:association
+  # @param collection_name  [Symbol || Array] used as InventoryCollection:association
   # @param extra_properties [Hash]   props from InventoryCollection.initialize list
   #         - adds/overwrites properties added by builder
   #
@@ -19,7 +19,7 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   #     )
   #   )
   #
-  # @see ManagerRefresh::InventoryCollection::Builder
+  # @see documentation https://github.com/ManageIQ/guides/tree/master/providers/persister/inventory_collections.md
   #
   def add_collection(builder_class, collection_name, extra_properties = {}, settings = {}, &block)
     builder = builder_class.prepare_data(collection_name,
@@ -61,6 +61,15 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
     ::ManagerRefresh::InventoryCollection::Builder::AutomationManager
   end
 
+  # builder class for add_collection()
+  def physical_infra
+    ::ManagerRefresh::InventoryCollection::Builder::PhysicalInfraManager
+  end
+
+  def container
+    ::ManagerRefresh::InventoryCollection::Builder::ContainerManager
+  end
+
   # @param extra_settings [Hash]
   #   :auto_inventory_attributes
   #     - auto creates inventory_object_attributes from target model_class setters
@@ -72,7 +81,7 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   def make_builder_settings(extra_settings = {})
     opts = ::ManagerRefresh::InventoryCollection::Builder.default_options
 
-    opts[:adv_settings] = options[:inventory_collections].try(:to_hash) || {}
+    opts[:adv_settings] = options.try(:[], :inventory_collections).try(:to_hash) || {}
     opts[:shared_properties] = shared_options
     opts[:auto_inventory_attributes] = true
     opts[:without_model_class] = false
@@ -98,12 +107,12 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   # Returns list of target's ems_refs
   # @return [Array<String>]
   def references(collection)
-    target.manager_refs_by_association.try(:[], collection).try(:[], :ems_ref).try(:to_a) || []
+    target.try(:manager_refs_by_association).try(:[], collection).try(:[], :ems_ref).try(:to_a) || []
   end
 
   # Returns list of target's name
   # @return [Array<String>]
   def name_references(collection)
-    target.manager_refs_by_association.try(:[], collection).try(:[], :name).try(:to_a) || []
+    target.try(:manager_refs_by_association).try(:[], collection).try(:[], :name).try(:to_a) || []
   end
 end

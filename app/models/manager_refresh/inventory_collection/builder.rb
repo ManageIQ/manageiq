@@ -4,10 +4,11 @@ module ManagerRefresh
     class Builder
       class MissingModelClassError < StandardError; end
 
+      require_nested :AutomationManager
       require_nested :CloudManager
       require_nested :InfraManager
-      require_nested :AutomationManager
       require_nested :NetworkManager
+      require_nested :PhysicalInfraManager
       require_nested :StorageManager
       require_nested :PersisterHelper
 
@@ -28,7 +29,7 @@ module ManagerRefresh
 
       # Entry point
       # Creates builder and builds data for inventory collection
-      # @param name [Symbol] InventoryCollection.association value
+      # @param name [Symbol, Array] InventoryCollection.association value. <name> method not called when Array
       #        (optional) method with this name also used for concrete inventory collection specific properties
       # @param persister_class [Class] used for "guessing" model_class
       # @param options [Hash]
@@ -49,7 +50,7 @@ module ManagerRefresh
 
         @properties = {}
         @inventory_object_attributes = []
-        @builder_params = {}
+        @default_values = {}
         @dependency_attributes = {}
 
         @options = options
@@ -65,14 +66,15 @@ module ManagerRefresh
       # Yields for overwriting provider-specific properties
       def construct_data
         add_properties(:association => @name)
-        add_properties(:model_class => auto_model_class) unless @options[:without_model_class]
 
         add_properties(@adv_settings, :if_missing)
         add_properties(@shared_properties, :if_missing)
 
-        send(@name.to_sym) if respond_to?(@name.to_sym)
+        send(@name.to_sym) if @name.respond_to?(:to_sym) && respond_to?(@name.to_sym)
 
-        add_inventory_attributes(auto_inventory_attributes) if @options[:auto_inventory_attributes]
+        if @properties[:model_class].nil?
+          add_properties(:model_class => auto_model_class) unless @options[:without_model_class]
+        end
       end
 
       # Creates InventoryCollection
@@ -125,17 +127,20 @@ module ManagerRefresh
 
       # Clears all inventory object attributes
       def clear_inventory_attributes!
+        @options[:auto_inventory_attributes] = false
         @inventory_object_attributes = []
       end
 
-      # Adds key/values to builder params (part of @properties)
-      def add_builder_params(params = {}, mode = :overwrite)
-        @builder_params = merge_hashes(@builder_params, params, mode)
+      # Adds key/values to default values (InventoryCollection.builder_params) (part of @properties)
+      def add_default_values(params = {}, mode = :overwrite)
+        @default_values = merge_hashes(@default_values, params, mode)
       end
+      alias add_builder_params add_default_values
 
       # Evaluates lambda blocks
       def evaluate_lambdas!(persister)
-        evaluate_builder_params_lambdas!(persister)
+        @default_values = evaluate_lambdas_on(@default_values, persister)
+        @dependency_attributes = evaluate_lambdas_on(@dependency_attributes, persister)
       end
 
       # Adds key/values to dependency_attributes (part of @properties)
@@ -143,11 +148,19 @@ module ManagerRefresh
         @dependency_attributes = merge_hashes(@dependency_attributes, attrs, mode)
       end
 
+      # Deletes key from dependency_attributes
+      def remove_dependency_attributes(key)
+        @dependency_attributes.delete(key)
+      end
+
       # Returns whole InventoryCollection properties
+      # TODO: default values converted to builder_params, change InventoryCollection and usages in next PR
       def to_hash
+        add_inventory_attributes(auto_inventory_attributes) if @options[:auto_inventory_attributes]
+
         @properties.merge(
           :inventory_object_attributes => @inventory_object_attributes,
-          :builder_params              => @builder_params,
+          :builder_params              => @default_values,
           :dependency_attributes       => @dependency_attributes
         )
       end
@@ -210,6 +223,12 @@ module ManagerRefresh
         end
       end
 
+      # Enables/disables auto_model_class and exception check
+      # @param skip [Boolean]
+      def skip_model_class(skip = true)
+        @options[:without_model_class] = skip
+      end
+
       # Inventory object attributes are derived from setters
       #
       # Can be disabled by options :auto_inventory_attributes => false
@@ -222,26 +241,23 @@ module ManagerRefresh
         end
       end
 
-      # Evaluates lambda blocks in @builder_params
-      def evaluate_builder_params_lambdas!(persister)
-        if @builder_params
-          @builder_params = @builder_params.transform_values do |value|
-            if value.respond_to?(:call)
-              value.call(persister)
-            else
-              value
-            end
+      # Enables/disables auto_inventory_attributes
+      # @param skip [Boolean]
+      def skip_auto_inventory_attributes(skip = true)
+        @options[:auto_inventory_attributes] = !skip
+      end
+
+      # Evaluates lambda blocks in @default_values and @dependency_attributes
+      # @param values [Hash]
+      # @param persister [ManagerRefresh::Inventory::Persister]
+      def evaluate_lambdas_on(values, persister)
+        values&.transform_values do |value|
+          if value.respond_to?(:call)
+            value.call(persister)
+          else
+            value
           end
         end
-      end
-
-      def network_manager_collections?
-        self.class.network_manager_collections?
-      end
-
-      # InventoryCollection definitions for NetworkManager?
-      def self.network_manager_collections?
-        false
       end
     end
   end
