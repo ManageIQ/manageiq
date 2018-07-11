@@ -51,6 +51,12 @@ module ManagerRefresh
         def default_manager_ref
           add_properties(:manager_ref => %i(manager_ref))
         end
+
+        def add_common_default_values
+          add_default_values(
+            :manager => ->(persister) { persister.manager }
+          )
+        end
       end
     end
   end
