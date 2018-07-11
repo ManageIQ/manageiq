@@ -279,10 +279,10 @@ class MiqLdap
   end
 
   def fqusername(username)
-    return username if self.dn?(username) || self.domain_username?(username)
+    return username if dn?(username) || domain_username?(username)
 
     user_type = @user_type.split("-").first
-    return username if user_type != "mail" && self.upn?(username)
+    return username if user_type != "mail" && upn?(username)
 
     user_prefix = @user_type.split("-").last
     user_prefix = "cn" if user_prefix == "dn"
@@ -295,7 +295,7 @@ class MiqLdap
 
       return "#{username}@#{@user_suffix}"
     when "mail"
-      username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || self.upn?(username)
+      username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || upn?(username)
       dbuser = User.find_by_email(username.downcase)
       dbuser ||= User.find_by_userid(username.downcase)
       return dbuser.userid if dbuser && dbuser.userid
@@ -308,8 +308,11 @@ class MiqLdap
 
   def get_user_object(username, user_type = nil)
     user_type ||= @user_type.split("-").first
-    user_type = "dn" if self.dn?(username)
-    user_type = "upn" if self.upn?(username)
+    if dn?(username)
+      user_type = "dn"
+    elsif upn?(username)
+      user_type = "upn"
+    end
 
     begin
       search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", @group_attribute]}

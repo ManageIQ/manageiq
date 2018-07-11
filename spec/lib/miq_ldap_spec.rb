@@ -196,9 +196,19 @@ describe MiqLdap do
     end
 
     it "returns username when username is already a dn" do
-      # ldap = MiqLdap.new(:host => ["192.0.2.2"])
       ldap = MiqLdap.new(@opts)
       expect(ldap.fqusername("cn=myuser,ou=people,ou=prod,dc=example,dc=com")).to eq("cn=myuser,ou=people,ou=prod,dc=example,dc=com")
+    end
+
+    it "returns username when username is a dn with an @ in the dn" do
+      ldap = MiqLdap.new(@opts)
+      expect(ldap.fqusername("cn=my@user,ou=people,ou=prod,dc=example,dc=com")).to eq("cn=my@user,ou=people,ou=prod,dc=example,dc=com")
+    end
+
+    it "returns a constructed dn when user type is a dn" do
+      @opts[:user_type] = 'dn'
+      ldap = MiqLdap.new(@opts)
+      expect(ldap.fqusername("myuser")).to eq("cn=myuser,mycompany.com")
     end
 
     it "returns username when username is already a upn" do
