@@ -10,8 +10,6 @@ module Metric::CiMixin::Capture
       self
     elsif respond_to?(:ext_management_system) && ext_management_system.present?
       ext_management_system
-    elsif respond_to?(:old_ext_management_system) && old_ext_management_system.present?
-      old_ext_management_system
     end
   end
 

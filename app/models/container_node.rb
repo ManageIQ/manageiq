@@ -6,7 +6,6 @@ class ContainerNode < ApplicationRecord
   include TenantIdentityMixin
   include SupportsFeatureMixin
   include ArchivedMixin
-  include OldEmsMixin
   include CockpitMixin
   include CustomActionsMixin
   include_concern 'Purging'

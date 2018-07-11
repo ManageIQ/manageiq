@@ -2,7 +2,6 @@ class ContainerProject < ApplicationRecord
   include SupportsFeatureMixin
   include CustomAttributeMixin
   include ArchivedMixin
-  include OldEmsMixin
   include MiqPolicyMixin
   include TenantIdentityMixin
   include CustomActionsMixin
