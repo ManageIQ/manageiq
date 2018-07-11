@@ -443,6 +443,36 @@ describe ExtManagementSystem do
     end
   end
 
+  context "changing zone" do
+    it 'is allowed when enabled' do
+      zones = (1..2).collect { FactoryGirl.create(:zone) }
+      ems   = FactoryGirl.create(:ext_management_system, :zone => zones[0])
+
+      ems.zone = zones[1]
+      expect(ems.save).to be_truthy
+    end
+
+    it 'is denied when disabled' do
+      zones = (1..2).collect { FactoryGirl.create(:zone) }
+      ems   = FactoryGirl.create(:ext_management_system, :zone => zones[0], :enabled => false)
+
+      ems.zone = zones[1]
+      expect(ems.save).to be_falsy
+      expect(ems.errors.messages[:zone]).to be_present
+    end
+
+    it 'to invisible is not possible when provider enabled' do
+      zone_visible = FactoryGirl.create(:zone)
+      zone_invisible = FactoryGirl.create(:zone, :visible => false)
+
+      ems = FactoryGirl.create(:ext_management_system, :zone => zone_visible, :enabled => true)
+
+      ems.zone = zone_invisible
+      expect(ems.save).to be_falsy
+      expect(ems.errors.messages[:zone]).to be_present
+    end
+  end
+
   context "destroy" do
     it "destroys an ems with no active workers" do
       ems = FactoryBot.create(:ext_management_system)

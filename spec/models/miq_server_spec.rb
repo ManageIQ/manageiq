@@ -94,6 +94,14 @@ describe MiqServer do
       expect(@miq_server.zone.name).to eq(@zone.name)
     end
 
+    it "cannot have invisible zone" do
+      zone = FactoryGirl.create(:zone, :visible => false)
+
+      @miq_server.zone = zone
+      expect(@miq_server.save).to be_falsy
+      expect(@miq_server.errors.messages[:zone]).to be_present
+    end
+
     it "shutdown will raise an event and quiesce" do
       expect(MiqEvent).to receive(:raise_evm_event)
       expect(@miq_server).to receive(:quiesce)

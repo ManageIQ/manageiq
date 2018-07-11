@@ -92,6 +92,8 @@ class ExtManagementSystem < ApplicationRecord
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
 
+  validate :validate_ems_enabled_when_zone_changed?, :validate_zone_visible_when_ems_enabled?
+
   scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
 
   serialize :options
@@ -111,6 +113,22 @@ class ExtManagementSystem < ApplicationRecord
   def hostname_format_valid?
     return if hostname.ipaddress? || hostname.hostname?
     errors.add(:hostname, _("format is invalid."))
+  end
+
+  # validation - Zone cannot be changed when enabled == false
+  def validate_ems_enabled_when_zone_changed?
+    return if changed_attributes.include?('enabled')
+
+    if changed_attributes.include?('zone_id') && !enabled?
+      errors.add(:zone, N_("cannot be changed when provider paused"))
+    end
+  end
+
+  # validation - Zone has to be visible when enabled == true
+  def validate_zone_visible_when_ems_enabled?
+    if enabled? && zone.present? && !zone.visible?
+      errors.add(:zone, N_("cannot be invisible when provider active"))
+    end
   end
 
   include NewWithTypeStiMixin
