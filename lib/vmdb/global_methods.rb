@@ -73,14 +73,10 @@ module Vmdb
       elsif options[:models]
         Dictionary.gettext(options[:models], :type => :model, :notfound => :titleize, :plural => true)
       elsif options[:ui_title]
-        ui_lookup_for_title(options[:ui_title])
+        Dictionary.gettext(options[:ui_title], :type => :ui_title)
       else
         ''
       end
-    end
-
-    def ui_lookup_for_title(text)
-      Dictionary.gettext(text, :type => :ui_title)
     end
 
     # Wrap a report html table body with html table tags and headers for the columns
