@@ -34,6 +34,8 @@ class EventStream < ApplicationRecord
 
   after_commit :emit_notifications, :on => :create
 
+  GROUP_LEVELS = %i(critical detail warning).freeze
+
   def emit_notifications
     Notification.emit_for_event(self)
   rescue => err
@@ -54,20 +56,21 @@ class EventStream < ApplicationRecord
   end
 
   def self.group_and_level(event_type)
-    group, v = event_groups.find { |_k, v| v[:critical].include?(event_type) || v[:detail].include?(event_type) }
-    if group.nil?
-      group, level = :other, :detail
-    else
-      level = v[:detail].include?(event_type) ? :detail : :critical
+    level = :detail # the level is detail as default
+    group, _ = event_groups.find do |_k, value|
+      GROUP_LEVELS.detect { |lvl| value[lvl]&.include?(event_type) }.tap do |level_found|
+        level = level_found if level_found
+      end
     end
+
+    group ||= :other
     return group, level
   end
 
   def self.group_name(group)
-    return nil if group.nil?
+    return if group.nil?
     group = event_groups[group.to_sym]
-    return nil if group.nil?
-    group[:name]
+    group.nil? ? 'Other' : group[:name]
   end
 
   def group
