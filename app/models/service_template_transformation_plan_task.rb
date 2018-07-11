@@ -102,6 +102,15 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     MiqTask.generic_action_with_callback(options, queue_options)
   end
 
+  def cancel
+    options['cancel_requested'] = true
+    save!
+  end
+
+  def canceling?
+    options['cancel_requested']
+  end
+
   private
 
   def vm_resource

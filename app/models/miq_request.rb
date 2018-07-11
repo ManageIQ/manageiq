@@ -561,6 +561,14 @@ class MiqRequest < ApplicationRecord
     "#{self.class::SOURCE_CLASS_NAME}:#{requested_task_idx.inspect}"
   end
 
+  def cancel
+    raise _("Cancel operation is not supported for #{self.class.name}")
+  end
+
+  def canceling?
+    false
+  end
+
   private
 
   def clean_up_keys_for_request_task
