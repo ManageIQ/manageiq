@@ -32,7 +32,7 @@ class ChargebackContainerProject < Chargeback
                 elsif provider_id == "all"
                   ContainerProject.all
                 elsif provider_id.present? && project_id == "all"
-                  ContainerProject.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+                  ContainerProject.where(:ems_id => provider_id)
                 elsif project_id.present?
                   ContainerProject.where(:id => project_id)
                 elsif project_id.nil? && provider_id.nil? && filter_tag.nil?
