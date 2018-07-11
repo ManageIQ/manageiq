@@ -103,7 +103,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
       dialog.target_resource = @target
       if options[:display_view_only]
         dialog.init_fields_with_values_for_request(values)
-      elsif options[:refresh]
+      elsif options[:refresh] || options[:submit_workflow]
         dialog.load_values_into_fields(values)
       elsif options[:reconfigure]
         dialog.initialize_with_given_values(values)
