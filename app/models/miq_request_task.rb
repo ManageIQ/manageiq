@@ -206,6 +206,14 @@ class MiqRequestTask < ApplicationRecord
     n_('Request Task', 'Request Tasks', number)
   end
 
+  def cancel
+    raise _("Cancel operation is not supported for #{self.class.name}")
+  end
+
+  def canceling?
+    false
+  end
+
   private
 
   def validate_request_type
