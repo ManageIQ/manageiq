@@ -2,7 +2,6 @@ class Container < ApplicationRecord
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include ArchivedMixin
-  include OldEmsMixin
   include_concern 'Purging'
 
   belongs_to :container_group
@@ -21,6 +20,7 @@ class Container < ApplicationRecord
   has_many   :metrics, :as => :resource
   has_many   :metric_rollups, :as => :resource
   has_many   :vim_performance_states, :as => :resource
+  delegate   :my_zone, :to => :ext_management_system
 
   include EventMixin
   include Metric::CiMixin

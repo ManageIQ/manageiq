@@ -2,7 +2,6 @@ class ContainerProject < ApplicationRecord
   include SupportsFeatureMixin
   include CustomAttributeMixin
   include ArchivedMixin
-  include OldEmsMixin
   include MiqPolicyMixin
   include TenantIdentityMixin
   include CustomActionsMixin
@@ -46,6 +45,8 @@ class ContainerProject < ApplicationRecord
   include Metric::CiMixin
 
   PERF_ROLLUP_CHILDREN = :all_container_groups
+
+  delegate :my_zone, :to => :ext_management_system
 
   def all_container_groups
     ContainerGroup.where(:container_project_id => id).or(ContainerGroup.where(:old_container_project_id => id))

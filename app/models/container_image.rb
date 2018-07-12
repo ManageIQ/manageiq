@@ -5,7 +5,6 @@ class ContainerImage < ApplicationRecord
   include TenantIdentityMixin
   include CustomAttributeMixin
   include ArchivedMixin
-  include OldEmsMixin
   include NewWithTypeStiMixin
   include CustomActionsMixin
   include_concern 'Purging'
@@ -37,6 +36,8 @@ class ContainerImage < ApplicationRecord
   virtual_total :total_containers, :containers
 
   after_create :raise_creation_event
+
+  delegate :my_zone, :to => :ext_management_system
 
   def full_name
     return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)

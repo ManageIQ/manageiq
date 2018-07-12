@@ -6,7 +6,6 @@ class ContainerNode < ApplicationRecord
   include TenantIdentityMixin
   include SupportsFeatureMixin
   include ArchivedMixin
-  include OldEmsMixin
   include CockpitMixin
   include CustomActionsMixin
   include_concern 'Purging'
@@ -33,6 +32,8 @@ class ContainerNode < ApplicationRecord
   has_many :metric_rollups, :as => :resource
   has_many :vim_performance_states, :as => :resource
   has_many :miq_alert_statuses, :as => :resource
+  delegate :my_zone, :to => :ext_management_system
+
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :system_distribution, :type => :string

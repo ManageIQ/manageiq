@@ -33,7 +33,7 @@ class ChargebackContainerImage < Chargeback
     @containers = if provider_id == "all"
                     Container.all
                   elsif id == "all"
-                    Container.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+                    Container.where(:ems_id => provider_id)
                   else
                     Container.joins(:container_group).where('container_groups.container_project_id = ? or container_groups.old_container_project_id = ?', id, id)
                   end
