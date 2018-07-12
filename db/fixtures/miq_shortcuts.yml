@@ -164,11 +164,6 @@
   :url: /infra_networking/explorer
   :rbac_feature_name: infra_networking
   :startup: true
-- :name: miq_request_hosts
-  :description: Compute / Infrastructure / Requests
-  :url: /miq_request/show_list
-  :rbac_feature_name: miq_request_show_list
-  :startup: true
 - :name: infra_topology
   :description: Compute / Infrastructure / Topology
   :url: /infra_topology

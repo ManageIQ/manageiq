@@ -7,7 +7,6 @@ class MiqDialog < ApplicationRecord
   DIALOG_TYPES = [
     [_("VM Provision"),                "MiqProvisionWorkflow"],
     [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
-    [_("Host Provision"),              "MiqHostProvisionWorkflow"],
     [_("VM Migrate"),                  "VmMigrateWorkflow"],
     [_("Physical Server Provision"),   "PhysicalServerProvisionWorkflow"]
   ].freeze

@@ -64,11 +64,6 @@ class MiqRequest < ApplicationRecord
         :automation => N_("Automation")
       }
     },
-    :Infrastructure => {
-      :MiqHostProvisionRequest => {
-        :host_pxe_install => N_("Host Provision")
-      },
-    },
     :Service        => {
       :MiqProvisionConfiguredSystemRequest => {
         :provision_via_foreman => N_("%{config_mgr_type} Provision") % {:config_mgr_type => ui_lookup(:ui_title => 'foreman')}
@@ -336,7 +331,7 @@ class MiqRequest < ApplicationRecord
   def self.request_task_class
     @request_task_class ||= begin
       case name
-      when 'MiqProvisionRequest', 'MiqHostProvisionRequest'
+      when 'MiqProvisionRequest'
         name.underscore.chomp('_request').camelize.constantize
       else
         name.underscore.gsub(/_request$/, "_task").camelize.constantize

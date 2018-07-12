@@ -1328,7 +1328,7 @@ class MiqRequestWorkflow
     result = []
     customization_template_id = get_value(@values[:customization_template_id])
     @values[:customization_template_script] = nil if customization_template_id.nil?
-    prov_typ = self.class == MiqHostProvisionWorkflow ? "host" : "vm"
+    prov_typ = "vm"
     image = supports_iso? ? get_iso_image : get_pxe_image
     unless image.nil?
       result = image.customization_templates.collect do |c|
@@ -1369,7 +1369,7 @@ class MiqRequestWorkflow
   def allowed_pxe_images(_options = {})
     pxe_server = get_pxe_server
     return [] if pxe_server.nil?
-    prov_typ = self.class == MiqHostProvisionWorkflow ? "host" : "vm"
+    prov_typ = "vm"
 
     pxe_server.pxe_images.collect do |p|
       next if p.pxe_image_type.nil? || p.default_for_windows

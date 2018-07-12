@@ -54,7 +54,6 @@ host_failure,Host Failure,Default,host_operations
 request_host_scan,Host Analysis Request,Default,host_operations
 host_scan_complete,Host Analysis Complete,Default,host_operations
 host_perf_complete,Host C & U Processing Complete,Default,host_operations
-host_provisioned,Host Provision Complete,Default,host_operations
 host_add_to_cluster,Host Added to Cluster,Default,host_operations
 host_remove_from_cluster,Host Removed from Cluster,Default,host_operations
 host_compliance_check,Host Compliance Check,Default,compliance

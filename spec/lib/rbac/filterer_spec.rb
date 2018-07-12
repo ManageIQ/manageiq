@@ -624,7 +624,7 @@ describe Rbac::Filterer do
 
       context "with accessible_tenant_ids filtering (strategy = :descendants_id) through" do
         it "can see their own request in the same tenant" do
-          request = FactoryGirl.create(:miq_host_provision_request, :tenant => owner_tenant, :requester => owner_user)
+          request = FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user)
           results = described_class.search(:class => "MiqRequest", :user => owner_user).first
           expect(results).to match_array [request]
         end
@@ -635,7 +635,7 @@ describe Rbac::Filterer do
           child_group.entitlement.set_belongsto_filters([])
           child_group.save!
 
-          request = FactoryGirl.create(:miq_host_provision_request, :tenant => child_tenant, :requester => child_user)
+          request = FactoryGirl.create(:miq_provision_request, :tenant => child_tenant, :requester => child_user)
           results = described_class.search(:class => "MiqRequest", :user => child_user).first
           expect(results).to match_array [request]
         end
@@ -644,19 +644,19 @@ describe Rbac::Filterer do
           group = FactoryGirl.create(:miq_group, :tenant => owner_tenant)
           user  = FactoryGirl.create(:user, :miq_groups => [group])
 
-          request = FactoryGirl.create(:miq_host_provision_request, :tenant => owner_tenant, :requester => owner_user)
+          request = FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user)
           results = described_class.search(:class => "MiqRequest", :user => user).first
           expect(results).to match_array [request]
         end
 
         it "can't see parent tenant's request" do
-          FactoryGirl.create(:miq_host_provision_request, :tenant => owner_tenant, :requester => owner_user)
+          FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user)
           results = described_class.search(:class => "MiqRequest", :miq_group => child_group).first
           expect(results).to match_array []
         end
 
         it "can see descendant tenant's request" do
-          request = FactoryGirl.create(:miq_host_provision_request, :tenant => child_tenant, :requester => child_user)
+          request = FactoryGirl.create(:miq_provision_request, :tenant => child_tenant, :requester => child_user)
           results = described_class.search(:class => "MiqRequest", :miq_group => owner_group).first
           expect(results).to match_array [request]
         end
