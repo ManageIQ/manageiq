@@ -832,15 +832,26 @@ describe ServiceTemplate do
       EvmSpecHelper.local_miq_server
       expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
 
-      result = service_template.order(user, {}, {}, Time.now.utc.to_s)
+      time   = Time.zone.now.utc.to_s
+      result = service_template.order(user, {}, {}, time)
 
       expect(result.keys).to eq([:schedule]) # No errors
       expect(result[:schedule]).to have_attributes(
-        :name         => "Order ServiceTemplate #{service_template.id}",
+        :name         => "Order ServiceTemplate #{service_template.id} at #{time}",
         :sched_action => {:args => [user.id, {}, {}], :method => "queue_order"},
         :towhat       => "ServiceTemplate",
         :resource_id  => service_template.id
       )
+    end
+
+    it "successfully scheduled twice" do
+      EvmSpecHelper.local_miq_server
+      expect(resource_action_workflow).to receive(:validate_dialog).twice.and_return([])
+
+      service_template.order(user, {}, {}, Time.zone.now.utc.to_s)
+      service_template.order(user, {}, {}, (Time.zone.now + 1.hour).utc.to_s)
+
+      expect(service_template.miq_schedules.length).to eq(2)
     end
 
     context "#provision_request" do
