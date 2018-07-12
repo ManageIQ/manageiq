@@ -5,7 +5,7 @@ module ManagerRefresh
         def networks
           add_properties(
             :manager_ref                  => %i(hardware ipaddress ipv6address),
-            :parent_inventory_collections => %i(vms),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
