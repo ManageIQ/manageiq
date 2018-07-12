@@ -15,16 +15,11 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     @initiator       = options[:initiator]
     @dialog          = load_dialog(resource_action, values, options)
 
-    @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
-    @settings[:dialog_id]          = @dialog.id         unless @dialog.nil?
+    @settings[:resource_action_id] = resource_action.id if resource_action
+    @settings[:dialog_id]          = @dialog.id         if @dialog
   end
 
-  def dialogs
-    msg = "[DEPRECATION] ResourceActionWorkflow#dialogs should not be used.  Please use ResourceActionWorkflow#dialog instead.  At #{caller[0]}"
-    $log.warn(msg)
-    Kernel.warn(msg)
-    dialog
-  end
+  Vmdb::Deprecation.deprecate_methods(self, :dialogs => :dialog)
 
   def submit_request
     process_request(ServiceOrder::STATE_ORDERED)
@@ -77,11 +72,8 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def load_resource_action(values = nil)
-    if values.nil?
-      ResourceAction.find_by(:id => @settings[:resource_action_id])
-    else
-      ResourceAction.find_by(:id => values.fetch_path(:workflow_settings, :resource_action_id))
-    end
+    id = values ? values.fetch_path(:workflow_settings, :resource_action_id) : @settings[:resource_action_id]
+    ResourceAction.find_by(:id => id)
   end
 
   def create_values_hash
@@ -95,11 +87,11 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   def load_dialog(resource_action, values, options)
     if resource_action.nil?
       resource_action = load_resource_action(values)
-      @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
+      @settings[:resource_action_id] = resource_action.id if resource_action
     end
 
-    dialog = resource_action.dialog unless resource_action.nil?
-    unless dialog.nil?
+    dialog = resource_action.dialog if resource_action
+    if dialog
       dialog.target_resource = @target
       if options[:display_view_only]
         dialog.init_fields_with_values_for_request(values)
@@ -131,8 +123,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def value(name)
-    dlg_field = @dialog.field(name)
-    dlg_field.value if dlg_field
+    @dialog.field(name)&.value
   end
 
   def dialog_field(name)
