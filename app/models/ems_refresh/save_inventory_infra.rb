@@ -68,7 +68,7 @@ module EmsRefresh::SaveInventoryInfra
       :orchestration_templates,
       :orchestration_stacks
     ]
-    old_switch_ids = ems.switches.pluck(:id)
+
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target, disconnect)
 
