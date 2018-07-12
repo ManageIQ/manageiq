@@ -397,7 +397,7 @@ describe ExtManagementSystem do
   end
 
   context "#pause!" do
-    it 'disables an ems with child managers and moves them to maintenance zone' do
+    it 'disables an ems with child managers and moves parent to maintenance zone' do
       zone  = FactoryGirl.create(:zone)
       ems   = FactoryGirl.create(:ext_management_system, :zone => zone)
       child = FactoryGirl.create(:ext_management_system, :zone => zone)
@@ -411,13 +411,11 @@ describe ExtManagementSystem do
 
       child.reload
       expect(child.enabled).to be_falsy
-      expect(child.zone).to eq(Zone.maintenance_zone)
-      expect(child.backup_zone).to eq(zone)
     end
   end
 
   context "#resume" do
-    it "enables an ems with child managers and move them from maintenance zone" do
+    it "enables an ems with child managers and move parent from maintenance zone" do
       zone = FactoryGirl.create(:zone)
       ems = FactoryGirl.create(:ext_management_system,
                                :backup_zone => zone,
@@ -425,9 +423,8 @@ describe ExtManagementSystem do
                                :enabled     => false)
 
       child = FactoryGirl.create(:ext_management_system,
-                                 :backup_zone => zone,
-                                 :zone        => Zone.maintenance_zone,
-                                 :enabled     => false)
+                                 :zone    => zone,
+                                 :enabled => false)
       ems.child_managers << child
 
       ems.resume!
@@ -438,8 +435,6 @@ describe ExtManagementSystem do
 
       child.reload
       expect(child.enabled).to be_truthy
-      expect(child.zone).to eq(zone)
-      expect(child.backup_zone).to be_nil
     end
   end
 
