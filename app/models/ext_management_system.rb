@@ -76,8 +76,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :miq_events,             :as => :target, :dependent => :destroy
   has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
 
-  has_many :configuration_scripts_and_workflows,
-           :class_name  => 'ConfigurationScript',
+  has_many :configuration_scripts,
            :dependent   => :destroy,
            :foreign_key => "manager_id",
            :inverse_of  => :manager
