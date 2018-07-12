@@ -8,7 +8,7 @@ module TaskHelpers
           next if p.read_only
           next if p.members.map { |m| m.slice(:filename) }
 
-          $log.send(level, "Exporting Scan Profile: #{p.name} (#{p.description})")
+          $log.send(:info, "Exporting Scan Profile: #{p.name} (#{p.description})")
 
           profile = ScanItem.get_profile(p.name).first.dup
 
