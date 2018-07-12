@@ -4,10 +4,13 @@ module TaskHelpers
       def export(options = {})
         export_dir = options[:directory]
 
-        ScanItemSet.all.each do |p|
-          next if p.read_only
-          next if p.members.map { |m| m.slice(:filename) }
+        scan_item_sets = if options[:all]
+                           ScanItemSet.order(:id).all
+                         else
+                           ScanItemSet.order(:id).where(:read_only => [false, nil])
+                         end
 
+        scan_item_sets.each do |p|
           $log.send(:info, "Exporting Scan Profile: #{p.name} (#{p.description})")
 
           profile = ScanItem.get_profile(p.name).first.dup
