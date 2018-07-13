@@ -37,7 +37,7 @@ class ContainerImage < ApplicationRecord
 
   after_create :raise_creation_event
 
-  delegate :my_zone, :to => :ext_management_system
+  delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
   def full_name
     return docker_id if image_ref && image_ref.start_with?(DOCKER_PULLABLE_PREFIX)
