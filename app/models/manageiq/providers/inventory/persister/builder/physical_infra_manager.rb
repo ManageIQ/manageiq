@@ -35,6 +35,14 @@ module ManageIQ::Providers
         def physical_chassis
           add_common_default_values
         end
+
+        def physical_storages
+          add_common_default_values
+        end
+
+        def canisters
+          add_common_default_values
+        end
       end
     end
   end
