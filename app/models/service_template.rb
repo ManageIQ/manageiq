@@ -428,8 +428,8 @@ class ServiceTemplate < ApplicationRecord
       return {:errors => errors} unless errors.blank?
 
       schedule = MiqSchedule.create!(
-        :name         => "Order #{self.class.name} #{id}",
-        :description  => "Order #{self.class.name} #{id}",
+        :name         => "Order #{self.class.name} #{id} at #{time}",
+        :description  => "Order #{self.class.name} #{id} at #{time}",
         :sched_action => {:args => [user.id, options, request_options], :method => "queue_order"},
         :resource_id  => id,
         :towhat       => "ServiceTemplate",
