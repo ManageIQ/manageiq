@@ -11,6 +11,7 @@ class ApplicationRecord < ActiveRecord::Base
   include ArNestedCountBy
   include ArHrefSlug
   include ToModelHash
+  include DisplayName
 
   extend ArTableLock
 
@@ -18,9 +19,5 @@ class ApplicationRecord < ActiveRecord::Base
   if defined?(ManageIQ::UI::Classic::Engine)
     extend MiqDecorator::Klass
     include MiqDecorator::Instance
-  end
-
-  def self.display_name(number = 1)
-    n_(model_name.singular.titleize, model_name.plural.titleize, number)
   end
 end
