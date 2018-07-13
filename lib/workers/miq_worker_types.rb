@@ -6,6 +6,7 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Amazon::CloudManager::EventCatcher"                     => %i(manageiq_default),
   "ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker"           => %i(manageiq_default),
   "ManageIQ::Providers::Amazon::CloudManager::RefreshWorker"                    => %i(manageiq_default),
+  "ManageIQ::Providers::Amazon::StorageManager::S3::RefreshWorker"              => %i(manageiq_default),
   "ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher"          => %i(manageiq_default),
   "ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker"         => %i(manageiq_default),
   "ManageIQ::Providers::Azure::CloudManager::EventCatcher"                      => %i(manageiq_default),
