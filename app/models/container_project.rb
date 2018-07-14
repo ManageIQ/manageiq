@@ -46,7 +46,7 @@ class ContainerProject < ApplicationRecord
 
   PERF_ROLLUP_CHILDREN = :all_container_groups
 
-  delegate :my_zone, :to => :ext_management_system
+  delegate :my_zone, :to => :ext_management_system, :allow_nil => true
 
   def all_container_groups
     ContainerGroup.where(:container_project_id => id).or(ContainerGroup.where(:old_container_project_id => id))
