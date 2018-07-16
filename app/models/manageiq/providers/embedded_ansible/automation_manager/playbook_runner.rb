@@ -13,7 +13,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
 
   def current_job_timeout(_timeout_adjustment = 1)
     @execution_ttl ||=
-      (options[:execution_ttl].try(:to_i) || DEFAULT_EXECUTION_TTL) * 60
+      (options[:execution_ttl].present? ? options[:execution_ttl].try(:to_i) : DEFAULT_EXECUTION_TTL) * 60
   end
 
   def start
