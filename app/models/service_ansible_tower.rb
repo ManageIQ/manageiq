@@ -16,8 +16,9 @@ class ServiceAnsibleTower < Service
     save_launch_options
   end
 
-  def job
-    @job ||= service_resources.find { |sr| sr.resource.kind_of?(OrchestrationStack) }.try(:resource)
+  def job(_action = nil)
+    # parameter _action unifies the interface with ServiceAnsiblePlaybook
+    @job ||= service_resources.find_by(:resource_type => "OrchestrationStack").try(:resource)
   end
 
   def build_stack_options_from_dialog(dialog_options)
