@@ -24,7 +24,12 @@ module Ansible
       private
 
       def run_via_cli(env_vars, extra_vars, playbook_path)
-        result = AwesomeSpawn.run!(ansible_command, :env => env_vars, :params => [{:extra_vars => JSON.dump(extra_vars)}, playbook_path])
+        result = AwesomeSpawn.run(ansible_command, :env => env_vars, :params => [{:extra_vars => JSON.dump(extra_vars)}, playbook_path])
+        if result.failure?
+          $log.error("ansible-playbook errored - stdout: #{result.output}")
+          $log.error("ansible-playbook errored - stderr: #{result.error}")
+          raise AwesomeSpawn::CommandResultError
+        end
         JSON.parse(result.output)
       end
 
