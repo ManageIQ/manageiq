@@ -48,6 +48,14 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
         expect(subject.current_job_timeout).to eq(described_class::DEFAULT_EXECUTION_TTL * 60)
       end
     end
+
+    context 'timeout is blank in options' do
+      let(:options) { {:execution_ttl => ""} }
+
+      it 'uses default timeout value' do
+        expect(subject.current_job_timeout).to eq(described_class::DEFAULT_EXECUTION_TTL * 60)
+      end
+    end
   end
 
   describe '#create_inventory' do
