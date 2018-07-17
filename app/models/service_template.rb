@@ -410,7 +410,7 @@ class ServiceTemplate < ApplicationRecord
 
   def queue_order(user_id, options, request_options)
     MiqQueue.submit_job(
-      :class_name  => name,
+      :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "order",
       :args        => [user_id, options, request_options],
