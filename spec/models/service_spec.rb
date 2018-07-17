@@ -826,17 +826,36 @@ describe Service do
     let(:service_template) { FactoryGirl.create(:service_template) }
     let(:service) { FactoryGirl.create(:service, :service_template => service_template) }
 
-    describe "#custom_actions" do
-      it "get list of custom actions from linked service template" do
-        expect(service_template).to receive(:custom_actions)
-        service.custom_actions
+    context "with template" do
+      describe "#custom_actions" do
+        it "get list of custom actions from linked service template" do
+          expect(service_template).to receive(:custom_actions)
+          service.custom_actions
+        end
+      end
+
+      describe "#custom_action_buttons" do
+        it "get list of custom action buttons from linked service template" do
+          expect(service_template).to receive(:custom_action_buttons)
+          service.custom_action_buttons
+        end
       end
     end
 
-    describe "#custom_action_buttons" do
-      it "get list of custom action buttons from linked service template" do
-        expect(service_template).to receive(:custom_action_buttons)
-        service.custom_action_buttons
+    context "without template" do
+      let!(:custom_button) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
+      let(:service) { FactoryGirl.create(:service, :service_template_id => -1) }
+
+      describe "#custom_action_buttons" do
+        it "get list of custom action buttons on services" do
+          expect(service.custom_action_buttons).to include(custom_button)
+        end
+      end
+
+      describe "#custom_actions" do
+        it "get list of custom actions on services" do
+          expect(service.custom_actions).to include(:buttons => [a_hash_including("id" => custom_button.id)], :button_groups => [])
+        end
       end
     end
   end
