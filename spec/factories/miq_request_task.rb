@@ -43,5 +43,7 @@ FactoryGirl.define do
     state        'pending'
   end
 
-  factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask'
+  factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask' do
+    request_type 'transformation_plan'
+  end
 end
