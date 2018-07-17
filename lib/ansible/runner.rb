@@ -29,21 +29,12 @@ module Ansible
 
           result = AwesomeSpawn.run!(ansible_command(base_dir), :env => env_vars, :params => [{:cmdline => "--extra-vars '#{JSON.dump(extra_vars)}'", :playbook => playbook_path}])
 
-          parsed_stdout = []
-
-          # output is JSON per new line
-          result.output.each_line do |line|
-            # TODO(lsmola) we can remove exception handling when this is fixed
-            # https://github.com/ansible/ansible-runner/issues/89#issuecomment-404236832 , so it fails early if there is
-            # a non json line
-            begin
-              parsed_stdout << JSON.parse(line)
-            rescue => e
-              _log.warn("Couldn't parse JSON from: #{e}")
-            end
-          end
-          parsed_stdout
+          return Ansible::Runner::Response.new(:return_code => return_code(base_dir), :stdout => result.output, :stderr => result.error)
         end
+      end
+
+      def return_code(base_dir)
+        File.read(File.join(base_dir, "artifacts/result/rc"))
       end
 
       def mkdir(base_dir)
@@ -52,7 +43,7 @@ module Ansible
 
       def ansible_command(base_dir)
         # TODO add possibility to use custom path, e.g. from virtualenv
-        "ansible-runner run #{base_dir} --json"
+        "ansible-runner run #{base_dir} --json -i result"
       end
     end
   end
