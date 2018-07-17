@@ -34,7 +34,10 @@ module Ansible
       end
 
       def return_code(base_dir)
-        File.read(File.join(base_dir, "artifacts/result/rc"))
+        File.read(File.join(base_dir, "artifacts/result/rc")).to_i
+      rescue
+        _log.warn("Couldn't find ansible-runner return code")
+        1
       end
 
       def ansible_command(base_dir)
