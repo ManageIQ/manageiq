@@ -844,6 +844,19 @@ describe ServiceTemplate do
       )
     end
 
+    it "#queue_order" do
+      EvmSpecHelper.local_miq_server
+
+      service_template.queue_order(user.id, {}, {})
+
+      expect(MiqQueue.first).to have_attributes(
+        :args        => [user.id, {}, {}],
+        :class_name  => "ServiceTemplate",
+        :instance_id => service_template.id,
+        :method_name => "order",
+      )
+    end
+
     it "successfully scheduled twice" do
       EvmSpecHelper.local_miq_server
       expect(resource_action_workflow).to receive(:validate_dialog).twice.and_return([])
