@@ -112,8 +112,8 @@ describe TaskHelpers::Exports::Tags do
     TaskHelpers::Exports::Tags.new.export(:directory => export_dir)
     file_contents = File.read("#{export_dir}/Export_Test.yaml")
     file_contents2 = File.read("#{export_dir}/Default_Export_Test_2.yaml")
-    expect(YAML.safe_load(file_contents)).to eq(tag_export_test)
-    expect(YAML.safe_load(file_contents2)).to eq(tag_default_export_test_2)
+    expect(YAML.safe_load(file_contents)).to contain_exactly(*tag_export_test)
+    expect(YAML.safe_load(file_contents2)).to contain_exactly(*tag_default_export_test_2)
     expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(2)
   end
 
@@ -122,9 +122,9 @@ describe TaskHelpers::Exports::Tags do
     file_contents = File.read("#{export_dir}/Export_Test.yaml")
     file_contents2 = File.read("#{export_dir}/Default_Export_Test.yaml")
     file_contents3 = File.read("#{export_dir}/Default_Export_Test_2.yaml")
-    expect(YAML.safe_load(file_contents)).to eq(tag_export_test)
-    expect(YAML.safe_load(file_contents2)).to eq(tag_default_export_test)
-    expect(YAML.safe_load(file_contents3)).to eq(tag_default_export_test_2)
+    expect(YAML.safe_load(file_contents)).to contain_exactly(*tag_export_test)
+    expect(YAML.safe_load(file_contents2)).to contain_exactly(*tag_default_export_test)
+    expect(YAML.safe_load(file_contents3)).to contain_exactly(*tag_default_export_test_2)
     expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(3)
   end
 end
