@@ -59,6 +59,7 @@ class Service < ApplicationRecord
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
 
+  include CustomActionsMixin
   include ServiceMixin
   include OwnershipMixin
   include CustomAttributeMixin
@@ -100,12 +101,14 @@ class Service < ApplicationRecord
     vms.map(&:power_state)
   end
 
+  # renaming method from custom_actions_mixin
+  alias_method :custom_service_actions, :custom_actions
   def custom_actions
-    service_template&.custom_actions(self)
+    service_template ? service_template.custom_actions(self) : custom_service_actions(self)
   end
 
   def custom_action_buttons
-    service_template&.custom_action_buttons(self)
+    service_template ? service_template.custom_action_buttons(self) : generic_custom_buttons
   end
 
   def power_state
