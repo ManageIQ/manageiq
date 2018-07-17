@@ -15,6 +15,10 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::AuthPrivateKey
       :action => "creating Auth Key Pair for user #{userid}",
       :userid => userid
     }
+
+    target_user = User.find_by(:userid => userid)
+    options[:user_id] = target_user[:settings][:openstack_user_id]
+
     queue_opts = {
       :class_name  => "ManageIQ::Providers::CloudManager::AuthKeyPair",
       :method_name => 'create_key_pair',
@@ -37,7 +41,8 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::AuthPrivateKey
       :name        => created_key_pair.name,
       :fingerprint => created_key_pair.fingerprint,
       :resource    => ext_management_system,
-      :auth_key    => created_key_pair.private_key
+      :auth_key    => created_key_pair.private_key,
+      :userid      => created_key_pair.user_id
     )
   end
 
