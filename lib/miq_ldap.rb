@@ -266,8 +266,12 @@ class MiqLdap
     dn.split(",").collect { |i| i.downcase.strip }.join(",")
   end
 
-  def is_dn?(str)
+  def dn?(str)
     !!(str =~ /^([a-z|0-9|A-Z]+ *=[^,]+[,| ]*)+$/)
+  end
+
+  def upn?(str)
+    !!(str =~ /^.+@.+$/)
   end
 
   def domain_username?(str)
@@ -275,9 +279,11 @@ class MiqLdap
   end
 
   def fqusername(username)
-    return username if self.is_dn?(username) || self.domain_username?(username)
+    return username if dn?(username) || domain_username?(username)
 
     user_type = @user_type.split("-").first
+    return username if user_type != "mail" && upn?(username)
+
     user_prefix = @user_type.split("-").last
     user_prefix = "cn" if user_prefix == "dn"
     case user_type
@@ -286,13 +292,12 @@ class MiqLdap
       return username
     when "upn", "userprincipalname"
       return username if @user_suffix.blank?
-      return username if username =~ /^.+@.+$/ # already qualified with user@domain
 
       return "#{username}@#{@user_suffix}"
     when "mail"
-      username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || username =~ /^.+@.+$/
+      username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || upn?(username)
       dbuser = User.find_by_email(username.downcase)
-      dbuser = User.find_by_userid(username.downcase) unless dbuser
+      dbuser ||= User.find_by_userid(username.downcase)
       return dbuser.userid if dbuser && dbuser.userid
 
       return username
@@ -303,7 +308,12 @@ class MiqLdap
 
   def get_user_object(username, user_type = nil)
     user_type ||= @user_type.split("-").first
-    user_type = "dn" if self.is_dn?(username)
+    if dn?(username)
+      user_type = "dn"
+    elsif upn?(username)
+      user_type = "upn"
+    end
+
     begin
       search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", @group_attribute]}
 
