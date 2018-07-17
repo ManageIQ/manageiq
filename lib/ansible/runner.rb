@@ -27,9 +27,14 @@ module Ansible
         Dir.mktmpdir("ansible-runner") do |base_dir|
           Dir.mkdir(File.join(base_dir, 'project')) # without this, there is a silent fail of the ansible-runner command see https://github.com/ansible/ansible-runner/issues/88
 
-          result = AwesomeSpawn.run!(ansible_command(base_dir), :env => env_vars, :params => [{:cmdline => "--extra-vars '#{JSON.dump(extra_vars)}'", :playbook => playbook_path}])
+          result = AwesomeSpawn.run!(ansible_command(base_dir),
+                                     :env    => env_vars,
+                                     :params => [{:cmdline  => "--extra-vars '#{JSON.dump(extra_vars)}'",
+                                                  :playbook => playbook_path}])
 
-          return Ansible::Runner::Response.new(:return_code => return_code(base_dir), :stdout => result.output, :stderr => result.error)
+          Ansible::Runner::Response.new(:return_code => return_code(base_dir),
+                                        :stdout      => result.output,
+                                        :stderr      => result.error)
         end
       end
 
