@@ -306,12 +306,13 @@ describe DialogFieldSortedItem do
   describe "#get_default_value" do
     let(:dialog_field) { described_class.new(:default_value => default_value, :values => values) }
     let(:values) { [%w(value1 text1), %w(value2 text2)] }
+    context "single value" do
+      context "when the default value is set to nil" do
+        let(:default_value) { nil }
 
-    context "when the default value is set to nil" do
-      let(:default_value) { nil }
-
-      it "returns nil as the default value" do
-        expect(dialog_field.get_default_value).to eq(nil)
+        it "returns nil as the default value" do
+          expect(dialog_field.get_default_value).to eq(nil)
+        end
       end
     end
 
@@ -328,6 +329,17 @@ describe DialogFieldSortedItem do
         let(:default_value) { "value3" }
 
         it "returns nil" do
+          expect(dialog_field.get_default_value).to eq(nil)
+        end
+      end
+    end
+
+    context "multi value" do
+      context "when the default value isn't set" do
+        let(:dialog_field) { described_class.new(:values => values, :options => {:force_multi_value => true}) }
+        let(:values) { [%w(value1 text1), %w(value2 text2)] }
+
+        it "returns nil as the default value" do
           expect(dialog_field.get_default_value).to eq(nil)
         end
       end

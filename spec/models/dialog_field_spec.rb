@@ -60,6 +60,20 @@ describe DialogField do
                 .to eq("tab/group/dialog_field is required")
             end
           end
+          context "with value of literally nothing" do
+            let(:value) { '[nil, "<Choose>"]' }
+            it "returns error message" do
+              expect(visible_dialog_field.validate_field_data(dialog_tab, dialog_group))
+                .to eq("tab/group/dialog_field is required")
+            end
+          end
+          context "with value of null" do
+            let(:value) { 'null' }
+            it "returns error message" do
+              expect(visible_dialog_field.validate_field_data(dialog_tab, dialog_group))
+                .to eq("tab/group/dialog_field is required")
+            end
+          end
           context "with a non-blank value" do
             let(:value) { "test value" }
             it_behaves_like "DialogField#validate that returns nil"
