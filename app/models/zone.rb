@@ -20,6 +20,7 @@ class Zone < ApplicationRecord
   has_many :vms,                   :through => :ext_management_systems
   has_many :miq_templates,         :through => :ext_management_systems
   has_many :ems_clusters,          :through => :ext_management_systems
+  has_many :physical_servers,      :through => :ext_management_systems
   has_many :container_nodes,       :through => :container_managers
   has_many :container_groups,      :through => :container_managers
   has_many :container_replicators, :through => :container_managers
