@@ -4,6 +4,7 @@ class Switch < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :distributed_virtual_switches,
              :class_name => "ManageIQ::Providers::InfraManager"
+  belongs_to :host, :inverse_of => :host_virtual_switches
 
   has_many :host_switches, :dependent => :destroy
   has_many :hosts, :through => :host_switches
