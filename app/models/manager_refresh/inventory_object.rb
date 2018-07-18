@@ -27,6 +27,10 @@ module ManagerRefresh
       self
     end
 
+    def key
+      nil
+    end
+
     # Transforms InventoryObject object data into hash format with keys that are column names and resolves correct
     # values of the foreign keys (even the polymorphic ones)
     #
