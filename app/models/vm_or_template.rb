@@ -64,6 +64,7 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :disks, :through => :hardware
   belongs_to                :host
   belongs_to                :ems_cluster
+  belongs_to                :flavor
 
   belongs_to                :storage
   has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
