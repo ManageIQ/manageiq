@@ -48,10 +48,6 @@ module ManagerRefresh
 
         protected
 
-        def auto_model_class_manager_module
-          'AutomationManager'
-        end
-        
         def default_manager_ref
           add_properties(:manager_ref => %i(manager_ref))
         end

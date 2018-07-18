@@ -207,10 +207,16 @@ module ManagerRefresh
         model_class = begin
           # a) Provider specific class
           provider_module = ManageIQ::Providers::Inflector.provider_module(@persister_class).name
-          manager_module = auto_model_class_manager_module
+          manager_module = self.class.name.split('::').last
 
           class_name = "#{provider_module}::#{manager_module}::#{@name.to_s.classify}"
-          class_name.safe_constantize
+
+          inferred_class = class_name.safe_constantize
+
+          # safe_constantize can return different similar class ( some Rails auto-magic :/ )
+          if inferred_class.to_s == class_name
+            inferred_class
+          end
         rescue ::ManageIQ::Providers::Inflector::ObjectNotNamespacedError
           nil
         end
@@ -221,10 +227,6 @@ module ManagerRefresh
           # b) general class
           "::#{@name.to_s.classify}".safe_constantize
         end
-      end
-
-      def auto_model_class_manager_module
-        self.class.name.split('::').last
       end
 
       # Enables/disables auto_model_class and exception check
