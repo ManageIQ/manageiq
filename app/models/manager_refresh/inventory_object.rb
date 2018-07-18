@@ -180,52 +180,6 @@ module ManagerRefresh
 
     private
 
-    # @return [Set] all model's writer names
-    def allowed_writers
-      return [] unless model_class
-
-      # Get all writers of a model
-      @allowed_writers ||= (model_class.new.methods - Object.methods).grep(/^[\w]+?\=$/).to_set
-    end
-
-    # @return [Set] all model's reader names
-    def allowed_readers
-      return [] unless model_class
-
-      # Get all readers inferred from writers of a model
-      @allowed_readers ||= allowed_writers.map { |x| x.to_s.delete("=").to_sym }.to_set
-    end
-
-    def method_missing(method_name, *arguments, &block)
-      if allowed_writers.include?(method_name)
-        self.class.define_data_writer(method_name)
-        public_send(method_name, arguments[0])
-      elsif allowed_readers.include?(method_name)
-        self.class.define_data_reader(method_name)
-        public_send(method_name)
-      else
-        super
-      end
-    end
-
-    def respond_to_missing?(method_name, _include_private = false)
-      allowed_writers.include?(method_name) || allowed_readers.include?(method_name) || super
-    end
-
-    def self.define_data_writer(data_key)
-      define_method(data_key) do |value|
-        public_send(:[]=, data_key.to_s.delete("=").to_sym, value)
-      end
-    end
-    private_class_method :define_data_writer
-
-    def self.define_data_reader(data_key)
-      define_method(data_key) do
-        public_send(:[], data_key)
-      end
-    end
-    private_class_method :define_data_reader
-
     # Return true passed key representing a getter is an association
     #
     # @param inventory_collection_scope [ManagerRefresh::InventoryCollection]
