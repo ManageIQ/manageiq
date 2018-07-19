@@ -34,6 +34,11 @@ class Authentication < ApplicationRecord
 
   serialize :options
 
+  include OwnershipMixin
+  include TenancyMixin
+
+  belongs_to :tenant
+
   # TODO: DELETE ME!!!!
   ERRORS = {
     :incomplete => "Incomplete credentials",
