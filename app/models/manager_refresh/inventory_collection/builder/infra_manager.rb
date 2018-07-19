@@ -4,7 +4,8 @@ module ManagerRefresh
       class InfraManager < ::ManagerRefresh::InventoryCollection::Builder
         def networks
           add_properties(
-            :manager_ref => %i(hardware ipaddress ipv6address)
+            :manager_ref                  => %i(hardware ipaddress ipv6address),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
@@ -18,7 +19,8 @@ module ManagerRefresh
 
         def guest_devices
           add_properties(
-            :manager_ref => %i(hardware uid_ems),
+            :manager_ref                  => %i(hardware uid_ems),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
@@ -32,13 +34,15 @@ module ManagerRefresh
 
         def snapshots
           add_properties(
-            :manager_ref => %i(uid)
+            :manager_ref                  => %i(uid),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
         def operating_systems
           add_properties(
-            :manager_ref => %i(vm_or_template)
+            :manager_ref                  => %i(vm_or_template),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
@@ -52,7 +56,8 @@ module ManagerRefresh
 
         def custom_attributes
           add_properties(
-            :manager_ref => %i(name)
+            :manager_ref                  => %i(name),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
@@ -60,8 +65,9 @@ module ManagerRefresh
           skip_auto_inventory_attributes
 
           add_properties(
-            :model_class => ::CustomAttribute,
-            :manager_ref => %i(name)
+            :model_class                  => ::CustomAttribute,
+            :manager_ref                  => %i(name),
+            :parent_inventory_collections => %i(vms)
           )
 
           add_inventory_attributes(%i(section name value source resource))
@@ -184,13 +190,15 @@ module ManagerRefresh
 
         def switches
           add_properties(
-            :manager_ref => %i(uid_ems)
+            :manager_ref => %i(uid_ems), # TODO looks like switches are using a bad association, this one is defined as through hosts
           )
+          add_common_default_values
         end
 
         def lans
           add_properties(
-            :manager_ref => %i(uid_ems),
+            :manager_ref                  => %i(uid_ems),
+            :parent_inventory_collections => %i(hosts),
           )
         end
 
