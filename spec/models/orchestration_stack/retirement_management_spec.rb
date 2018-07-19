@@ -13,7 +13,6 @@ describe "Service Retirement Management" do
       @stack.retirement_check
       @stack.reload
       expect(@stack.retirement_last_warn).not_to be_nil
-      expect(Time.now.utc - @stack.retirement_last_warn).to be < 30
     end
   end
 

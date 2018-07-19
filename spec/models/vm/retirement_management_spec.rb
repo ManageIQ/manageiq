@@ -17,7 +17,6 @@ describe "VM Retirement Management" do
       @vm.retirement_check
       @vm.reload
       expect(@vm.retirement_last_warn).not_to be_nil
-      expect(Time.now.utc - @vm.retirement_last_warn).to be < 30
     end
   end
 
