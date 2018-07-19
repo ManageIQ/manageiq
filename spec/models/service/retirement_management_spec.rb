@@ -14,7 +14,6 @@ describe "Service Retirement Management" do
       @service.retirement_check
       @service.reload
       expect(@service.retirement_last_warn).not_to be_nil
-      expect(Time.now.utc - @service.retirement_last_warn).to be < 30
     end
   end
 
