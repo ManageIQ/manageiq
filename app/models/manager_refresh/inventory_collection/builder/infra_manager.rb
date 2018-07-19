@@ -20,7 +20,7 @@ module ManagerRefresh
         def guest_devices
           add_properties(
             :manager_ref                  => %i(hardware uid_ems),
-            :parent_inventory_collections => %i(vms),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
@@ -35,14 +35,14 @@ module ManagerRefresh
         def snapshots
           add_properties(
             :manager_ref                  => %i(uid),
-            :parent_inventory_collections => %i(vms),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
         def operating_systems
           add_properties(
             :manager_ref                  => %i(vm_or_template),
-            :parent_inventory_collections => %i(vms),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
@@ -57,7 +57,7 @@ module ManagerRefresh
         def custom_attributes
           add_properties(
             :manager_ref                  => %i(name),
-            :parent_inventory_collections => %i(vms),
+            :parent_inventory_collections => %i(vms miq_templates),
           )
         end
 
