@@ -219,6 +219,30 @@ module ManagerRefresh
             :custom_save_block => snapshot_parent_save_block
           )
         end
+
+        def customization_specs
+          add_properties(:manager_ref => %i(name))
+
+          add_common_default_values
+        end
+
+        def miq_scsi_luns
+          add_properties(
+            :manager_ref                  => %i(miq_scsi_target uid_ems),
+            :parent_inventory_collections => %i(hosts)
+          )
+        end
+
+        def miq_scsi_targets
+          add_properties(
+            :manager_ref                  => %i(guest_device uid_ems),
+            :parent_inventory_collections => %i(hosts)
+          )
+        end
+
+        def storage_profiles
+          add_common_default_values
+        end
       end
     end
   end

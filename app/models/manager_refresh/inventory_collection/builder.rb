@@ -158,11 +158,15 @@ module ManagerRefresh
       def to_hash
         add_inventory_attributes(auto_inventory_attributes) if @options[:auto_inventory_attributes]
 
-        @properties.merge(
-          :inventory_object_attributes => @inventory_object_attributes,
-          :builder_params              => @default_values,
-          :dependency_attributes       => @dependency_attributes
-        )
+        @properties[:inventory_object_attributes] ||= @inventory_object_attributes
+
+        @properties[:builder_params] ||= {}
+        @properties[:builder_params].merge!(@default_values)
+
+        @properties[:dependency_attributes] ||= {}
+        @properties[:dependency_attributes].merge!(@dependency_attributes)
+
+        @properties
       end
 
       protected
