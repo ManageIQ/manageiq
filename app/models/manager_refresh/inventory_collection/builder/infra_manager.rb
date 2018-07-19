@@ -65,8 +65,9 @@ module ManagerRefresh
           skip_auto_inventory_attributes
 
           add_properties(
-            :model_class => ::CustomAttribute,
-            :manager_ref => %i(name)
+            :model_class                  => ::CustomAttribute,
+            :manager_ref                  => %i(name),
+            :parent_inventory_collections => %i(vms)
           )
 
           add_inventory_attributes(%i(section name value source resource))
@@ -191,7 +192,7 @@ module ManagerRefresh
           add_properties(
             :manager_ref => %i(uid_ems), # TODO looks like switches are using a bad association, this one is defined as through hosts
           )
-          shared_builder_params
+          add_common_default_values
         end
 
         def lans
