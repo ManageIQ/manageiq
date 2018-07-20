@@ -1,11 +1,21 @@
-require "English"
-
 module TaskHelpers
   class Imports
     class CustomButtons
-      class ImportArInstances
-        DEBUG_MODE = false
+      def import(options)
+        return unless options[:source]
+        glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/*.yaml"
+        Dir.glob(glob) do |filename|
+          begin
+            import_custom_buttons(filename)
+          rescue StandardError
+            raise StandardError, "Error importing #{filename} at #{$@}"
+          end
+        end
+      end
 
+      private
+
+      class ImportArInstances
         def self.import(obj_hash)
           new.import(obj_hash)
         end
@@ -18,26 +28,30 @@ module TaskHelpers
           klass = class_name.camelize.constantize
 
           obj_array.collect do |obj|
-            create_unique_values(obj) if DEBUG_MODE
             begin
-              klass.create!(obj['attributes'].except('guid')).tap do |new_obj|
-                if obj['children'].present?
-                  obj['children'].each do |child|
-                    new_obj.add_members(create_object(*child))
-                  end
-                end
-
-                if obj['associations'].present?
-                  obj['associations'].each do |hoo|
-                    new_obj.send("#{hoo.first}=", create_object(*hoo).first)
-                  end
-                end
+              klass.create!(obj['attributes']&.except('guid')).tap do |new_obj|
+                add_children(obj, new_obj)
+                add_associations(obj, new_obj)
                 try("#{class_name}_post", new_obj)
               end
             rescue StandardError
-              $log.send(:info, "Failed to create new instance [#{class_name}] with attributes #{obj['attributes'].inspect}")
-              $log.send(:info, "#{$ERROR_INFO} at #{$ERROR_POSITION}")
               raise
+            end
+          end
+        end
+
+        def add_children(obj, new_obj)
+          if obj['children'].present?
+            obj['children'].each do |child|
+              new_obj.add_members(create_object(*child))
+            end
+          end
+        end
+
+        def add_associations(obj, new_obj)
+          if obj['associations'].present?
+            obj['associations'].each do |assoc|
+              new_obj.send("#{assoc.first}=", create_object(*assoc).first)
             end
           end
         end
@@ -47,29 +61,15 @@ module TaskHelpers
           new_obj.save!
         end
 
-        def create_unique_values(obj)
-          %w(name description).each do |attr_name|
-            attr_value = obj.dig('attributes', attr_name)
-            obj.store_path('attributes', attr_name, "#{attr_value} #{Time.zone.now}") if attr_value.present?
-          end
+        def custom_button_post(new_obj)
+          check_user(new_obj)
+        end
+
+        def check_user(new_obj)
+          existing_user = User.find_by(:name => new_obj[:userid])
+          new_obj.update_attributes(:userid => existing_user.nil? ? "admin" : existing_user)
         end
       end
-
-      def import(options)
-        return unless options[:source]
-
-        glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/CustomButtons.yaml"
-        Dir.glob(glob) do |filename|
-          begin
-            import_custom_buttons(filename)
-          rescue
-            p "#{$ERROR_INFO} at #{$ERROR_POSITION}"
-            warn("Error importing #{options[:source]}")
-          end
-        end
-      end
-
-      private
 
       def import_custom_buttons(filename)
         custom_buttons = YAML.load_file(filename)
