@@ -12,6 +12,7 @@ module ManageIQ::Providers
     has_many :host_storages,              :through => :hosts
     has_many :host_switches,              :through => :hosts
     has_many :host_networks,              :through => :hosts, :source => :networks
+    has_many :host_guest_devices,         :through => :host_hardwares, :source => :guest_devices
     has_many :snapshots,                  :through => :vms_and_templates
     has_many :switches, -> { distinct },  :through => :hosts
     has_many :lans, -> { distinct },      :through => :hosts
