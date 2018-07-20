@@ -1,5 +1,5 @@
 module EvmSettings
-  ALLOWED_KEYS = [
+  ALLOWED_KEYS ||= [
     "/authentication/sso_enabled",
     "/authentication/saml_enabled",
     "/authentication/oidc_enabled",
@@ -7,10 +7,12 @@ module EvmSettings
     "/authentication/local_login_disabled"
   ].freeze
 
-  INFO, WARN, ERROR = %w(info warn error)
+  INFO  ||= "info".freeze
+  WARN  ||= "warn".freeze
+  ERROR ||= "error".freeze
 
   def self.get_keys(keylist = nil)
-    keylist = ALLOWED_KEYS unless keylist.present?
+    keylist = ALLOWED_KEYS if keylist.blank?
     settings_hash = Settings.to_hash
     keylist.each do |key|
       validate_key(key)
