@@ -54,7 +54,7 @@ class MiqGenericMountSession
 
   def self.new_session(opts)
     klass = uri_scheme_to_class(opts[:uri])
-    session = klass.new(:uri => opts[:uri], :username => opts[:username], :password => opts[:password], :region => opts[:region])
+    session = klass.new(opts.slice(:uri, :username, :password, :region))
     session.connect
     session
   end
@@ -465,10 +465,6 @@ class MiqGenericMountSession
     else
       raise "platform not supported"
     end
-  end
-
-  def copy_dump_to_store
-    # nothing to do
   end
 
   private
