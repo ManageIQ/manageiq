@@ -54,8 +54,9 @@ module ManagerRefresh
           )
         end
 
-        def custom_attributes
+        def ems_custom_attributes
           add_properties(
+            :model_class                  => ::CustomAttribute,
             :manager_ref                  => %i(name),
             :parent_inventory_collections => %i(vms miq_templates),
           )
