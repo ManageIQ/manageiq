@@ -21,6 +21,7 @@ db: EventStream
 cols:
 - event_type
 - source
+- group_level
 - message
 - timestamp
 - ems_cluster_name
@@ -51,6 +52,7 @@ col_order:
 - timestamp
 - event_type
 - source
+- group_level
 - ext_management_system.name
 - message
 - ems_cluster_name
@@ -73,6 +75,7 @@ headers:
 - Date Time
 - Event Type
 - Event Source
+- Group Level
 - Provider
 - Message
 - Cluster
