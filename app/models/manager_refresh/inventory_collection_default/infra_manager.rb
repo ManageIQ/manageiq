@@ -125,6 +125,16 @@ class ManagerRefresh::InventoryCollectionDefault::InfraManager < ManagerRefresh:
       attributes.merge!(extra_attributes)
     end
 
+    def host_system_services(extra_attributes = {})
+      attributes = {
+        :model_class                  => ::SystemService,
+        :manager_ref                  => %i(host name),
+        :parent_inventory_collections => %i(hosts),
+      }
+
+      attributes.merge!(extra_attributes)
+    end
+
     def operating_systems(extra_attributes = {})
       attributes = {
         :model_class                 => ::OperatingSystem,

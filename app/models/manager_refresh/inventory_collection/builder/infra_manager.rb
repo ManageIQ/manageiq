@@ -40,6 +40,14 @@ module ManagerRefresh
           )
         end
 
+        def host_system_services
+          add_properties(
+            :model_class                  => ::SystemService,
+            :manager_ref                  => %i(host name),
+            :parent_inventory_collections => %i(hosts)
+          )
+        end
+
         def snapshots
           add_properties(
             :manager_ref                  => %i(uid),
