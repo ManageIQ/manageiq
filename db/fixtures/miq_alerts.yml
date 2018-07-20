@@ -324,10 +324,10 @@
 - description: Physical server has critical health state
   options:
     :notifications:
-        :delay_next_evaluation: 3600
+      :delay_next_evaluation: 3600
         :email:
-            :from: ''
-            :to: []
+          :from: ''
+          :to: []
   miq_expression: !ruby/object:MiqExpression
     :exp:
       =:
