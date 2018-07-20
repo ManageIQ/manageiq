@@ -1316,7 +1316,6 @@
       :feature_type: admin
       :identifier: host_provide
 
-
 # Resource Pools
 - :name: Resource Pools
   :description: Access Everything under Resource Pools
@@ -2743,7 +2742,6 @@
           :hidden: true
           :identifier: tp_delete
 
-
 # Tasks
 - :name: Tasks
   :description: Everything under Tasks
@@ -2860,43 +2858,6 @@
           :feature_type: admin
           :hidden: true
           :identifier: delete_build
-    - :name: Schedules
-      :description: Schedules
-      :feature_type: node
-      :hidden: true
-      :identifier: schedule
-      :children:
-      - :name: Modify
-        :description: Modify Schedules
-        :feature_type: admin
-        :identifier: schedule_admin
-        :hidden: true
-        :children:
-        - :name: Add
-          :description: Add a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_add
-        - :name: Edit
-          :description: Edit a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_edit
-        - :name: Delete
-          :description: Delete a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_delete
-        - :name: Enable
-          :description: Enable a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_enable
-        - :name: Disable
-          :description: Disable a Schedule
-          :feature_type: admin
-          :hidden: true
-          :identifier: schedule_disable
     - :name: Zones
       :description: Zones
       :feature_type: node
@@ -3625,7 +3586,6 @@
     :hidden: true
     :identifier: miq_capacity_download_text
 
-
 # OrchestrationStack
 - :name: Orchestration Stacks
   :description: Everything under Orchestration Stacks
@@ -3990,7 +3950,6 @@
       :feature_type: admin
       :identifier: cloud_network_delete
 
-
 # Network Port
 - :name: Network Ports
   :description: Everything under Network Ports
@@ -4130,7 +4089,6 @@
       :description: Remove Interface from Router
       :feature_type: admin
       :identifier: network_router_remove_interface
-
 
 # Load Balancer
 - :name: Load Balancers
@@ -4295,7 +4253,6 @@
       :description: Check Compliance of Last Known Configuration
       :feature_type: control
       :identifier: container_replicator_check_compliance
-
 
 # ContainerImage
 - :name: Images
@@ -6545,3 +6502,54 @@
         :description: Order cart
         :feature_type: control
         :identifier: sui_cart_order
+
+# Schedule
+- :name: Schedules
+  :description: MiqSchedules
+  :feature_type: node
+  :identifier: schedule
+  :children:
+  - :name: View
+    :description: View Schedules
+    :feature_type: node
+    :identifier: schedule_view
+    :children:
+    - :name: List
+      :description: Display Lists of Schedules
+      :feature_type: view
+      :identifier: schedule_list
+    - :name: Show
+      :description: Display Individual Schedules
+      :feature_type: view
+      :identifier: schedule_show
+  - :name: Modify
+    :description: Modify Schedules
+    :feature_type: admin
+    :identifier: schedule_admin
+    :hidden: true
+    :children:
+    - :name: Add
+      :description: Add a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_add
+    - :name: Edit
+      :description: Edit a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_edit
+    - :name: Delete
+      :description: Delete a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_delete
+    - :name: Enable
+      :description: Enable a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_enable
+    - :name: Disable
+      :description: Disable a Schedule
+      :feature_type: admin
+      :hidden: true
+      :identifier: schedule_disable
