@@ -214,7 +214,13 @@ module ManagerRefresh
           manager_module = self.class.name.split('::').last
 
           class_name = "#{provider_module}::#{manager_module}::#{@name.to_s.classify}"
-          class_name.safe_constantize
+
+          inferred_class = class_name.safe_constantize
+
+          # safe_constantize can return different similar class ( some Rails auto-magic :/ )
+          if inferred_class.to_s == class_name
+            inferred_class
+          end
         rescue ::ManageIQ::Providers::Inflector::ObjectNotNamespacedError
           nil
         end
