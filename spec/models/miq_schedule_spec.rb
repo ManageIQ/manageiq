@@ -739,17 +739,17 @@ describe MiqSchedule do
         end
 
         it "and responds to the method" do
-          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method"})
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name"})
 
-          expect(resource).to receive("test_method").once
+          expect_any_instance_of(Host).to receive("name").once
 
           MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
         end
 
         it "and responds to the method with arguments" do
-          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method", :args => ["abc", 123, :a => 1]})
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name", :args => ["abc", 123, :a => 1]})
 
-          expect(resource).to receive("test_method").once.with("abc", 123, :a => 1)
+          expect_any_instance_of(Host).to receive("name").once.with("abc", 123, :a => 1)
 
           MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
         end
