@@ -141,14 +141,14 @@ describe MiqVimBrokerWorker::Runner do
     context "#create_miq_vim_broker_server" do
       it "with ems_inventory role" do
         @vim_broker_worker.instance_variable_set(:@active_roles, ['ems_inventory'])
-        expect(MiqVimBroker).to receive(:new).with(:server, 0).once
+        expect(MiqVimBroker).to receive(:new).with(:server).once
         @vim_broker_worker.create_miq_vim_broker_server
         expect(MiqVimBroker.cacheScope).to eq(:cache_scope_ems_refresh)
       end
 
       it "without ems_inventory role" do
         @vim_broker_worker.instance_variable_set(:@active_roles, ['ems_operations'])
-        expect(MiqVimBroker).to receive(:new).with(:server, 0).once
+        expect(MiqVimBroker).to receive(:new).with(:server).once
         @vim_broker_worker.create_miq_vim_broker_server
         expect(MiqVimBroker.cacheScope).to eq(:cache_scope_core)
       end
