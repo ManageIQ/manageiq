@@ -119,9 +119,14 @@ module ProcessTasksMixin
 
       if resource_ids.present?
         resource_ids.each do |id|
-          obj = collection.find(id)
-          _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
-          obj.send(action, post_args)
+          begin
+            obj = collection.find(id)
+          rescue ManageIQ::API::Client::ResourceNotFound => err
+            _log.error(err.message)
+          else
+            _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
+            obj.send(action, post_args)
+          end
         end
       else
         _log.info("Invoking task #{action} on collection #{collection_name}, with args #{post_args}")
