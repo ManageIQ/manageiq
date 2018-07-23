@@ -38,7 +38,12 @@ module MiqAeEngine
       require 'drb/timeridconv'
       global_id_conv = DRb::TimerIdConv.new(drb_cache_timeout)
       drb_front = MiqAeMethodService::MiqAeServiceFront.new(@workspace)
-      self.drb_server = DRb::DRbServer.new("druby://127.0.0.1:0", drb_front, :idconv => global_id_conv)
+
+      require 'tmpdir'
+      Dir::Tmpname.create("automation_engine", nil) do |path|
+        self.drb_server = DRb.start_service("drbunix://#{path}", drb_front, :idconv => global_id_conv)
+        FileUtils.chmod(0o750, path)
+      end
     end
 
     def teardown
