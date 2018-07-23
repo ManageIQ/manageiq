@@ -578,16 +578,6 @@ describe User do
     end
   end
 
-  context ".admin?" do
-    it "admin? succeeds with admin account" do
-      expect(User.admin?("admin")).to be_truthy
-    end
-
-    it "admin? fails with non-admin account" do
-      expect(User.admin?("regular_user")).to be_falsey
-    end
-  end
-
   context ".authorize_user" do
     it "returns nil with blank userid" do
       expect(User.authorize_user("")).to be_nil
