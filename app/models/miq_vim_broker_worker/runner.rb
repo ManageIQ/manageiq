@@ -253,7 +253,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
 
     _log.info("#{log_prefix} Creating broker server with [#{MiqVimBroker.cacheScope}]")
 
-    @vim_broker_server = MiqVimBroker.new(:server, 0)   # Port 0 means to let it pick any available port
+    @vim_broker_server = MiqVimBroker.new(:server)
   end
 
   def start_broker_server(emses_to_prime = nil)
