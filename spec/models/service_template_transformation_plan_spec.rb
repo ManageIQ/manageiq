@@ -37,6 +37,17 @@ describe ServiceTemplateTransformationPlan do
     }
   end
 
+  describe '.public_service_templates' do
+    it 'display public service templates' do
+      st1 = FactoryGirl.create(:service_template_transformation_plan)
+      st2 = FactoryGirl.create(:service_template)
+
+      expect(st1.internal?).to be_truthy
+      expect(st2.internal?).to be_falsey
+      expect(ServiceTemplate.public_service_templates).to match_array([st2])
+    end
+  end
+
   describe '.create_catalog_item' do
     it 'creates and returns a transformation plan' do
       service_template = described_class.create_catalog_item(catalog_item_options)
