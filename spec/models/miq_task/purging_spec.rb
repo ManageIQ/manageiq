@@ -10,12 +10,14 @@ describe MiqTask do
 
         Timecop.freeze(6.days.ago) do
           @new_task = Job.create_job("VmScan", :guid => "recent").miq_task
+          @new_task.state_finished
           FactoryGirl.create(:binary_blob, :name => "recent", :resource_type => 'MiqTask', :resource_id => @new_task.id)
           FactoryGirl.create(:log_file, :name => "recent", :miq_task_id => @new_task.id)
         end
       end
 
-      it "purges old notifications" do
+      it "purges old finished tasks" do
+        @old_task.state_finished
         expect(described_class.all).to match_array([@old_task, @new_task])
 
         described_class.purge_by_date(described_class.purge_date)
@@ -27,6 +29,12 @@ describe MiqTask do
         expect(LogFile.first.name).to eq("recent")
         expect(Job.count).to eq(1)
         expect(Job.first.guid).to eq("recent")
+      end
+
+      it "does not purge old not finished tasks" do
+        @old_task.state_active
+        described_class.purge_by_date(described_class.purge_date)
+        expect(described_class.all).to match_array([@old_task, @new_task])
       end
     end
 

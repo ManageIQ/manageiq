@@ -13,7 +13,7 @@ class MiqTask
       end
 
       def purge_scope(older_than)
-        where(arel_table[:created_on].lt(older_than))
+        MiqTask.finished.where(arel_table[:created_on].lt(older_than))
       end
 
       def purge_associated_records(ids)
