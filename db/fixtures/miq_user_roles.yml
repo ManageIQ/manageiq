@@ -532,6 +532,7 @@
   - miq_template_timeline
   - policy_log
   - policy_simulation
+  - physical_server_view
   - resource_pool_show
   - resource_pool_show_list
   - resource_pool_tag
