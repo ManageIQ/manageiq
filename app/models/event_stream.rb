@@ -27,6 +27,8 @@ class EventStream < ApplicationRecord
 
   belongs_to :middleware_server, :foreign_key => :middleware_server_id
   belongs_to :physical_server
+  belongs_to :physical_chassis, :inverse_of => :event_streams
+  belongs_to :physical_switch, :inverse_of => :event_streams
 
   virtual_column :group,       :type => :string
   virtual_column :group_level, :type => :string

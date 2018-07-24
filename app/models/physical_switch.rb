@@ -1,10 +1,14 @@
 class PhysicalSwitch < Switch
+  include SupportsFeatureMixin
+  include EventMixin
+
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_switches,
     :class_name => "ManageIQ::Providers::PhysicalInfraManager"
 
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => :resource
   has_one :hardware, :dependent => :destroy, :foreign_key => :switch_id, :inverse_of => :physical_switch
   has_many :physical_network_ports, :dependent => :destroy, :foreign_key => :switch_id
+  has_many :event_streams, :inverse_of => :physical_switch, :dependent => :nullify
 
   def my_zone
     ems = ext_management_system
@@ -23,6 +27,10 @@ class PhysicalSwitch < Switch
     end
 
     EmsRefresh.queue_refresh(ext_management_system)
+  end
+
+  def event_where_clause(assoc = :ems_events)
+    ["#{events_table_name(assoc)}.physical_switch_id = ?", id]
   end
 
   def self.display_name(number = 1)
