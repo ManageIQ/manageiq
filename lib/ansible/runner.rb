@@ -24,6 +24,8 @@ module Ansible
       private
 
       def run_via_cli(env_vars, extra_vars, playbook_path)
+        validate_params!(env_vars, extra_vars, playbook_path)
+
         Dir.mktmpdir("ansible-runner") do |base_dir|
           Dir.mkdir(File.join(base_dir, 'project')) # without this, there is a silent fail of the ansible-runner command see https://github.com/ansible/ansible-runner/issues/88
 
@@ -43,6 +45,24 @@ module Ansible
       rescue
         _log.warn("Couldn't find ansible-runner return code")
         1
+      end
+
+      def validate_params!(env_vars, extra_vars, playbook_path)
+        assert_hash!(env_vars)
+        assert_hash!(extra_vars)
+        assert_path!(playbook_path)
+      end
+
+      def assert_hash!(hash)
+        unless hash.kind_of?(Hash)
+          raise "Passed parameter must be of type Hash, got: #{hash}"
+        end
+      end
+
+      def assert_path!(path)
+        unless File.exist?(path)
+          raise "File doesn't exist: #{path}"
+        end
       end
 
       def ansible_command(base_dir)
