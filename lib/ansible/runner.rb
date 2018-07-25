@@ -10,11 +10,21 @@ module Ansible
       end
 
       def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts)
+        run_in_queue("run", env_vars, extra_vars, playbook_path, user_id, queue_opts)
+      end
+
+      def run_role_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts)
+        run_in_queue("run_role", env_vars, extra_vars, playbook_path, user_id, queue_opts)
+      end
+
+      private
+
+      def run_in_queue(method_name, env_vars, extra_vars, playbook_path, user_id, queue_opts)
         queue_opts = {
           :args        => [env_vars, extra_vars, playbook_path],
           :queue_name  => "generic",
           :class_name  => name,
-          :method_name => "run",
+          :method_name => method_name,
         }.merge(queue_opts)
 
         task_opts = {
@@ -24,8 +34,6 @@ module Ansible
 
         MiqTask.generic_action_with_callback(task_opts, queue_opts)
       end
-
-      private
 
       def run_via_cli(env_vars, extra_vars, playbook_path: nil, role_name: nil, roles_path: nil, role_skip_facts: true)
         validate_params!(env_vars, extra_vars, playbook_path, roles_path)
