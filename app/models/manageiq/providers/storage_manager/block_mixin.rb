@@ -5,6 +5,7 @@ module ManageIQ::Providers::StorageManager::BlockMixin
     has_many :cloud_volumes,          :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volume_snapshots, :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volume_backups,   :foreign_key => :ems_id, :dependent => :destroy
+    has_many :cloud_volume_types,     :foreign_key => :ems_id, :dependent => :destroy
 
     supports :block_storage
   end
