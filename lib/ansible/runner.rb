@@ -75,13 +75,8 @@ module Ansible
       def role_params(role_name:, roles_path:, role_skip_facts:)
         role_params = {:role => role_name}
 
-        if roles_path
-          role_params[:"roles-path"] = roles_path
-        end
-
-        if role_skip_facts
-          role_params[:"role-skip-facts"] = nil
-        end
+        role_params[:"roles-path"] = roles_path if roles_path
+        role_params[:"role-skip-facts"] = nil if role_skip_facts
 
         role_params
       end
