@@ -354,4 +354,16 @@ RSpec.describe MiqExpression::Field do
       expect(described_class.is_field?("ManageIQ-name")).to be(false)
     end
   end
+
+  describe ".attribute?" do
+    it "returns false if parameter does not represent valid attribute" do
+      expect(described_class.attribute?("Vm-hello")).to be(false)
+      expect(described_class.attribute?("VM-name")).to be(false)
+    end
+
+    it "returns true if parameter represent valid attribute" do
+      expect(described_class.attribute?("Vm-name")).to be(true)
+      expect(described_class.attribute?("Vm.hardware-cpu_type")).to be(true)
+    end
+  end
 end
