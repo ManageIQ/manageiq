@@ -5,23 +5,26 @@ module Ansible
         run_via_cli(env_vars, extra_vars, :playbook_path => playbook_path)
       end
 
-      def run_role(env_vars, extra_vars, role_name, roles_path: nil, role_skip_facts: true)
+      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true)
         run_via_cli(env_vars, extra_vars, :role_name => role_name, :roles_path => roles_path, :role_skip_facts => role_skip_facts)
       end
 
       def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts)
-        run_in_queue("run", env_vars, extra_vars, playbook_path, user_id, queue_opts)
+        run_in_queue("run", user_id, queue_opts, [env_vars, extra_vars, playbook_path])
       end
 
-      def run_role_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts)
-        run_in_queue("run_role", env_vars, extra_vars, playbook_path, user_id, queue_opts)
+      def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true)
+        run_in_queue("run_role",
+                     user_id,
+                     queue_opts,
+                     [env_vars, extra_vars, role_name, {:roles_path => roles_path, :role_skip_facts => role_skip_facts}])
       end
 
       private
 
-      def run_in_queue(method_name, env_vars, extra_vars, playbook_path, user_id, queue_opts)
+      def run_in_queue(method_name, user_id, queue_opts, args)
         queue_opts = {
-          :args        => [env_vars, extra_vars, playbook_path],
+          :args        => args,
           :queue_name  => "generic",
           :class_name  => name,
           :method_name => method_name,
