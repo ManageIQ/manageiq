@@ -68,7 +68,7 @@ module Ansible
         [shared_params(:extra_vars => extra_vars).merge(role_or_playbook_params)]
       end
 
-      def playbook_params(playbook_path: playbook_path)
+      def playbook_params(playbook_path:)
         {:playbook => playbook_path}
       end
 
