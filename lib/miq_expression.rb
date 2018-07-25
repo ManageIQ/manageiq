@@ -658,7 +658,7 @@ class MiqExpression
   end
 
   def self.quote(val, typ)
-    if Field.is_field?(val)
+    if Field.attribute?(val)
       ref, value = value2tag(val)
       col_type = get_col_type(val) || "string"
       return ref ? "<value ref=#{ref}, type=#{col_type}>#{value}</value>" : "<value type=#{col_type}>#{value}</value>"
