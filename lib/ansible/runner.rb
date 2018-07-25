@@ -25,8 +25,6 @@ module Ansible
 
       def run_via_cli(env_vars, extra_vars, playbook_path)
         Dir.mktmpdir("ansible-runner") do |base_dir|
-          Dir.mkdir(File.join(base_dir, 'project')) # without this, there is a silent fail of the ansible-runner command see https://github.com/ansible/ansible-runner/issues/88
-
           result = AwesomeSpawn.run!(ansible_command(base_dir),
                                      :env    => env_vars,
                                      :params => [{:cmdline  => "--extra-vars '#{JSON.dump(extra_vars)}'",
