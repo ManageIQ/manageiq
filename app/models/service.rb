@@ -469,6 +469,6 @@ class Service < ApplicationRecord
   end
 
   private def update_attributes_from_dialog
-    Service::DialogProperties.parse(options[:dialog]).each { |key, value| self[key] = value }
+    Service::DialogProperties.parse(options[:dialog], evm_owner).each { |key, value| self[key] = value }
   end
 end
