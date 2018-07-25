@@ -18,7 +18,7 @@ module ManagerRefresh
                :to => :index_proxy
 
       delegate :association_to_foreign_key_mapping,
-               :builder_params,
+               :default_values,
                :inventory_object?,
                :inventory_object_lazy?,
                :manager_ref,
@@ -156,13 +156,13 @@ module ManagerRefresh
         end
       end
 
-      # Returns new hash enriched by (see ManagerRefresh::InventoryCollection#builder_params) hash
+      # Returns new hash enriched by (see ManagerRefresh::InventoryCollection#default_values) hash
       #
       # @param hash [Hash] Input hash
-      # @return [Hash] Enriched hash by (see ManagerRefresh::InventoryCollection#builder_params)
+      # @return [Hash] Enriched hash by (see ManagerRefresh::InventoryCollection#default_values)
       def enrich_data(hash)
-        # This is 25% faster than builder_params.merge(hash)
-        {}.merge!(builder_params).merge!(hash)
+        # This is 25% faster than default_values.merge(hash)
+        {}.merge!(default_values).merge!(hash)
       end
     end
   end

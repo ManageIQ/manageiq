@@ -131,11 +131,10 @@ module ManagerRefresh
         @inventory_object_attributes = []
       end
 
-      # Adds key/values to default values (InventoryCollection.builder_params) (part of @properties)
+      # Adds key/values to default values (InventoryCollection.default_values) (part of @properties)
       def add_default_values(params = {}, mode = :overwrite)
         @default_values = merge_hashes(@default_values, params, mode)
       end
-      alias add_builder_params add_default_values
 
       # Evaluates lambda blocks
       def evaluate_lambdas!(persister)
@@ -154,14 +153,13 @@ module ManagerRefresh
       end
 
       # Returns whole InventoryCollection properties
-      # TODO: default values converted to builder_params, change InventoryCollection and usages in next PR
       def to_hash
         add_inventory_attributes(auto_inventory_attributes) if @options[:auto_inventory_attributes]
 
         @properties[:inventory_object_attributes] ||= @inventory_object_attributes
 
-        @properties[:builder_params] ||= {}
-        @properties[:builder_params].merge!(@default_values)
+        @properties[:default_values] ||= {}
+        @properties[:default_values].merge!(@default_values)
 
         @properties[:dependency_attributes] ||= {}
         @properties[:dependency_attributes].merge!(@dependency_attributes)

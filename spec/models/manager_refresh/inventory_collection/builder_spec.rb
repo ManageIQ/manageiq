@@ -144,8 +144,8 @@ describe ManagerRefresh::InventoryCollection::Builder do
       builder.add_default_values(:tmp_id => 30)
     end.to_hash
 
-    expect(data[:builder_params][:ems_id]).to eq 20
-    expect(data[:builder_params][:tmp_id]).to eq 30
+    expect(data[:default_values][:ems_id]).to eq 20
+    expect(data[:default_values][:tmp_id]).to eq 30
   end
 
   it 'transforms lambdas in default_values' do
@@ -156,7 +156,7 @@ describe ManagerRefresh::InventoryCollection::Builder do
 
     data = bldr.to_hash
 
-    expect(data[:builder_params][:ems_id]).to eq(@persister.manager.id)
+    expect(data[:default_values][:ems_id]).to eq(@persister.manager.id)
   end
 
   # --- inventory object attributes ---

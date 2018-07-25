@@ -104,7 +104,7 @@ module ManagerRefresh
     attr_writer :reference
 
     # Instead of loading the reference from the DB, we'll add the skeletal InventoryObject (having manager_ref and
-    # info from the builder_params) to the correct InventoryCollection. Which will either be found in the DB or
+    # info from the default_values) to the correct InventoryCollection. Which will either be found in the DB or
     # created as a skeletal object. The later refresh of the object will then fill the rest of the data, while not
     # touching the reference.
     #
