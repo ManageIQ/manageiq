@@ -1,7 +1,6 @@
 class Chargeback
   class ConsumptionHistory
     def self.for_report(cb_class, options, region)
-      base_rollup = base_rollup_scope.in_region(region)
       timerange = options.report_time_range
       interval_duration = options.duration_of_report_step
 
