@@ -129,5 +129,18 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
 
       job.signal(:poll_runner)
     end
+
+    context ".deliver_on" do
+      let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), "/path/to/playbook", :poll_interval => 5.minutes] }
+
+      it "uses the option to queue poll_runner" do
+        now = Time.now
+        allow(Time).to receive(:now).and_return(now)
+        expect(Ansible::Runner).to receive(:running?).with(uuid).and_return(true)
+        expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 5.minute)
+
+        job.signal(:poll_runner)
+      end
+    end
   end
 end
