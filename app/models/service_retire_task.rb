@@ -34,6 +34,7 @@ class ServiceRetireTask < MiqRetireTask
     parent_service.service_resources.collect do |svc_rsc|
       next unless svc_rsc.resource.present? && svc_rsc.resource.respond_to?(:retire_now)
       next if svc_rsc.resource.type.blank?
+      next if svc_rsc.resource.type.demodulize.to_s == "Job"
       next if svc_rsc.resource_type == "ServiceTemplate" &&
               !self.class.include_service_template?(self,
                                                     svc_rsc.resource.id,
