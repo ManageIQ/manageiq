@@ -5,6 +5,11 @@ module Ansible
 
       attr_reader :return_code, :stdout, :stderr, :parsed_stdout
 
+      # Response object designed for holding full response from ansible-runner
+      #
+      # @param return_code [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
+      # @param stdout [String] Stdout from ansible-runner run
+      # @param stderr [String] Stderr from ansible-runner run
       def initialize(return_code:, stdout:, stderr:)
         @return_code   = return_code
         @stdout        = stdout
@@ -14,6 +19,10 @@ module Ansible
 
       private
 
+      # Parses stdout to array of hashes
+      #
+      # @param stdout [String] Stdout that is text, where each line should be JSON encoded object
+      # @return [Array<Hash>] Array of hashes as individual Ansible plays
       def parse_stdout(stdout)
         parsed_stdout = []
 
