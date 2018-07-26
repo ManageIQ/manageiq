@@ -173,6 +173,7 @@ describe MiqUserRole do
   end
 
   let(:super_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::SUPER_ADMIN_FEATURE) }
+  let(:tenant_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::TENANT_ADMIN_FEATURE) }
   let(:report_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REPORT_ADMIN_FEATURE) }
   let(:request_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REQUEST_ADMIN_FEATURE) }
   let(:regular_role) { FactoryGirl.create(:miq_user_role) }
@@ -205,6 +206,20 @@ describe MiqUserRole do
     it "detects non-admin" do
       expect(regular_role).not_to be_admin_user
       expect(regular_role).not_to be_report_admin_user
+    end
+  end
+
+  describe "#tenant_admin" do
+    it "detects tenant_admin" do
+      expect(tenant_admin_role).to be_tenant_admin_user
+    end
+
+    it "detects super_admin" do
+      expect(super_admin_role).to be_tenant_admin_user
+    end
+
+    it "does not detect regular role" do
+      expect(regular_role).not_to be_tenant_admin_user
     end
   end
 
