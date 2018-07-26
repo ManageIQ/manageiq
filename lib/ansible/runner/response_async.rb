@@ -19,16 +19,19 @@ module Ansible
 
       # @return [Boolean] true if the ansible job is still running, false when it's finished
       def running?
-
+        false # TODO(lsmola) can't get running? from ansible-runner https://github.com/ansible/ansible-runner/issues/99
       end
 
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
       def response
-        response = nil # TODO(lsmola) add Ansible::Runner::Response.new(...)
+        return if running?
+        return @response if @response
+
+        @response = Ansible::Runner::Response.new(:base_dir => base_dir, :ident => ident)
 
         FileUtils.remove_entry(base_dir) # Clean up the temp dir, when the response is generated
 
-        response
+        @response
       end
 
       def dump
@@ -39,7 +42,7 @@ module Ansible
       end
 
       def self.load(kwargs)
-        self.new(kwargs)
+        new(kwargs)
       end
     end
   end

@@ -157,9 +157,9 @@ module Ansible
         if async?(ansible_runner_method)
           Ansible::Runner::ResponseAsync.new(:base_dir => base_dir)
         else
-          Ansible::Runner::Response.new(:return_code => return_code(base_dir),
-                                        :stdout      => result.output,
-                                        :stderr      => result.error)
+          Ansible::Runner::Response.new(:base_dir => base_dir,
+                                        :stdout   => result.output,
+                                        :stderr   => result.error)
         end
       end
 
@@ -218,16 +218,6 @@ module Ansible
       # @return [Hash] Partial arguments for the ansible-runner run
       def shared_params(extra_vars:)
         {:cmdline => "--extra-vars '#{JSON.dump(extra_vars)}'"}
-      end
-
-      # Reads a return code from a file used by ansible-runner
-      #
-      # @return [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
-      def return_code(base_dir)
-        File.read(File.join(base_dir, "artifacts/result/rc")).to_i
-      rescue
-        _log.warn("Couldn't find ansible-runner return code")
-        1
       end
 
       # Asserts passed parameters are correct, if not throws an exception.
