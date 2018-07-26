@@ -99,7 +99,7 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
 
     it "ansible-runner fails" do
       expect(Ansible::Runner).to receive(:run_async).and_return(nil)
-      expect(job).to receive(:queue_signal).with(:error)
+      expect(job).to receive(:queue_signal).with(:abort, "Failed to run ansible playbook", "error")
 
       job.signal(:run_playbook)
     end
@@ -111,6 +111,7 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
 
     before do
       job.context[:ansible_runner_uuid] = uuid
+      job.context[:ansible_runner_started_on] = Time.now.utc
       job.save!
     end
 
@@ -128,6 +129,17 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
       expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 1.minute)
 
       job.signal(:poll_runner)
+    end
+
+    it "fails if the playbook has been running too long" do
+      time = job.context[:ansible_runner_started_on] + job.options[:timeout] + 5.minutes
+
+      Timecop.travel(time) do
+        expect(Ansible::Runner).to receive(:running?).with(uuid).and_return(true)
+        expect(job).to receive(:queue_signal).with(:abort, "Playbook has been running longer than timeout", "error")
+
+        job.signal(:poll_runner)
+      end
     end
 
     context ".deliver_on" do

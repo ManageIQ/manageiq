@@ -21,9 +21,11 @@ class ManageIQ::Providers::AnsibleOperationWorkflow < Job
 
     uuid = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path)
     if uuid.nil?
-      queue_signal(:error)
+      queue_signal(:abort, "Failed to run ansible playbook", "error")
     else
-      context[:ansible_runner_uuid] = uuid
+      context[:ansible_runner_uuid]       = uuid
+      context[:ansible_runner_started_on] = Time.now.utc
+
       update_attributes!(:context => context)
 
       queue_signal(:poll_runner)
@@ -32,7 +34,11 @@ class ManageIQ::Providers::AnsibleOperationWorkflow < Job
 
   def poll_runner
     if Ansible::Runner.running?(context[:ansible_runner_uuid])
-      queue_signal(:poll_runner, :deliver_on => deliver_on)
+      if context[:ansible_runner_started_on] + options[:timeout] < Time.now.utc
+        queue_signal(:abort, "Playbook has been running longer than timeout", "error")
+      else
+        queue_signal(:poll_runner, :deliver_on => deliver_on)
+      end
     else
       queue_signal(:post_playbook)
     end
