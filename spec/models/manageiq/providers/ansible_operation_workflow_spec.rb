@@ -123,7 +123,7 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
     end
 
     it "ansible-runner still running" do
-      now = Time.now
+      now = Time.now.utc
       allow(Time).to receive(:now).and_return(now)
       expect(Ansible::Runner).to receive(:running?).with(uuid).and_return(true)
       expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 1.minute)
@@ -146,10 +146,10 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
       let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), "/path/to/playbook", :poll_interval => 5.minutes] }
 
       it "uses the option to queue poll_runner" do
-        now = Time.now
+        now = Time.now.utc
         allow(Time).to receive(:now).and_return(now)
         expect(Ansible::Runner).to receive(:running?).with(uuid).and_return(true)
-        expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 5.minute)
+        expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 5.minutes)
 
         job.signal(:poll_runner)
       end
