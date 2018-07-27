@@ -129,7 +129,7 @@ class GenericMailer < ActionMailer::Base
     options = {
       :to      => to,
       :from    => settings[:from],
-      :subject => "#{I18n.t("product.name")} Test Email",
+      :subject => "#{Vmdb::Appliance.PRODUCT_NAME} Test Email",
       :body    => "If you have received this email, your SMTP settings are correct."
     }
     prepare_generic_email(options)
