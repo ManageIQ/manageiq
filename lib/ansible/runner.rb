@@ -7,6 +7,42 @@ module Ansible
       #        ansible-runner run
       # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
       # @param playbook_path [String] Path to the playbook we will want to run
+      # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
+      #         Ansible::Runner::Response object, when the job is finished.
+      def run_async(env_vars, extra_vars, playbook_path)
+        run_via_cli(env_vars,
+                    extra_vars,
+                    :playbook_path         => playbook_path,
+                    :ansible_runner_method => "start")
+      end
+
+      # Runs a role directly via ansible-runner, a simple playbook is then automatically created,
+      # see: https://ansible-runner.readthedocs.io/en/latest/standalone.html#running-roles-directly
+      #
+      # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the
+      #        ansible-runner run
+      # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
+      # @param role_name [String] Ansible role name
+      # @param roles_path [String] Path to the directory with roles
+      # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
+      #        playbook. True by default.
+      # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
+      #         Ansible::Runner::Response object, when the job is finished.
+      def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true)
+        run_via_cli(env_vars,
+                    extra_vars,
+                    :role_name             => role_name,
+                    :roles_path            => roles_path,
+                    :role_skip_facts       => role_skip_facts,
+                    :ansible_runner_method => "start")
+      end
+
+      # Runs a playbook via ansible-runner, see: https://ansible-runner.readthedocs.io/en/latest/standalone.html#running-playbooks
+      #
+      # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the
+      #        ansible-runner run
+      # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
+      # @param playbook_path [String] Path to the playbook we will want to run
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
       def run(env_vars, extra_vars, playbook_path)
         run_via_cli(env_vars, extra_vars, :playbook_path => playbook_path)
@@ -95,11 +131,13 @@ module Ansible
       # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
       #        playbook. True by default.
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_via_cli(env_vars, extra_vars, playbook_path: nil, role_name: nil, roles_path: nil, role_skip_facts: true)
+      def run_via_cli(env_vars, extra_vars, playbook_path: nil, role_name: nil, roles_path: nil, role_skip_facts: true,
+                      ansible_runner_method: "run")
         validate_params!(env_vars, extra_vars, playbook_path, roles_path)
 
-        Dir.mktmpdir("ansible-runner") do |base_dir|
-          result = AwesomeSpawn.run(ansible_command(base_dir),
+        base_dir = Dir.mktmpdir("ansible-runner")
+        begin
+          result = AwesomeSpawn.run(ansible_command(base_dir, ansible_runner_method),
                                     :env    => env_vars,
                                     :params => params(:extra_vars      => extra_vars,
                                                       :playbook_path   => playbook_path,
@@ -107,10 +145,33 @@ module Ansible
                                                       :roles_path      => roles_path,
                                                       :role_skip_facts => role_skip_facts))
 
-          Ansible::Runner::Response.new(:return_code => return_code(base_dir),
-                                        :stdout      => result.output,
-                                        :stderr      => result.error)
+          response(base_dir, ansible_runner_method, result)
+        ensure
+          # Clean up the tmp dir for the sync method, for async we will clean it up after the job is finished and we've
+          # read the output, that will be written into this directory.
+          FileUtils.remove_entry(base_dir) unless async?(ansible_runner_method)
         end
+      end
+
+      # @param base_dir [String] ansible-runner private_data_dir parameter
+      # @param ansible_runner_method [String] Method we will use to run the ansible-runner. It can be either "run",
+      #        which is sync call, or "start" which is async call
+      # @param result [AwesomeSpawn::CommandResult] Result object of AwesomeSpawn.run
+      # @return [Ansible::Runner::ResponseAsync, Ansible::Runner::Response] response or ResponseAsync based on the
+      #         ansible_runner_method
+      def response(base_dir, ansible_runner_method, result)
+        if async?(ansible_runner_method)
+          Ansible::Runner::ResponseAsync.new(:base_dir => base_dir)
+        else
+          Ansible::Runner::Response.new(:base_dir => base_dir,
+                                        :stdout   => result.output,
+                                        :stderr   => result.error)
+        end
+      end
+
+      # @return [Bollean] True if ansible-runner will run on background
+      def async?(ansible_runner_method)
+        ansible_runner_method == "start"
       end
 
       # Generate correct params, depending if we've passed :playbook_path or a :role_name
@@ -150,9 +211,9 @@ module Ansible
       #        playbook.
       # @return [Hash] Partial arguments for the ansible-runner run
       def role_params(role_name:, roles_path:, role_skip_facts:)
-        role_params = {:role => role_name}
+        role_params                     = {:role => role_name}
 
-        role_params[:"roles-path"] = roles_path if roles_path
+        role_params[:"roles-path"]      = roles_path if roles_path
         role_params[:"role-skip-facts"] = nil if role_skip_facts
 
         role_params
@@ -164,16 +225,6 @@ module Ansible
       # @return [Hash] Partial arguments for the ansible-runner run
       def shared_params(extra_vars:)
         {:cmdline => "--extra-vars '#{JSON.dump(extra_vars)}'"}
-      end
-
-      # Reads a return code from a file used by ansible-runner
-      #
-      # @return [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
-      def return_code(base_dir)
-        File.read(File.join(base_dir, "artifacts/result/rc")).to_i
-      rescue
-        _log.warn("Couldn't find ansible-runner return code")
-        1
       end
 
       # Asserts passed parameters are correct, if not throws an exception.
@@ -210,9 +261,14 @@ module Ansible
         end
       end
 
-      # @return [String] ansible_runner executable command
-      def ansible_command(base_dir)
-        "ansible-runner run #{base_dir} --json -i result --hosts localhost"
+      # Returns ansible-runner executable command
+      #
+      # @param base_dir [String] ansible-runner private_data_dir parameter
+      # @param ansible_runner_method [String] Method we will use to run the ansible-runner. It can be either "run",
+      #        which is sync call, or "start" which is async call
+      # @return [String] ansible-runner executable command
+      def ansible_command(base_dir, ansible_runner_method)
+        "ansible-runner #{ansible_runner_method} #{base_dir} --json -i result --hosts localhost"
       end
     end
   end
