@@ -108,13 +108,13 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
   end
 
   context ".poll_runner" do
-    let(:state)    { "running" }
+    let(:state)          { "running" }
     let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
     before do
       allow(Ansible::Runner::ResponseAsync).to receive(:new).and_return(response_async)
 
-      job.context[:ansible_runner_response]   = response_async.dump
+      job.context[:ansible_runner_response] = response_async.dump
       job.started_on = Time.now.utc
       job.save!
     end
@@ -152,7 +152,6 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
 
     context ".deliver_on" do
       let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), "/path/to/playbook", :poll_interval => 5.minutes] }
-      #let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
       it "uses the option to queue poll_runner" do
         now = Time.now.utc

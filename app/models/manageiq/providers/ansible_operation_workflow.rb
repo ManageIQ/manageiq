@@ -37,7 +37,6 @@ class ManageIQ::Providers::AnsibleOperationWorkflow < Job
     response = Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
     if response.running?
       if started_on + options[:timeout] < Time.now.utc
-        # TODO find out if this is blocking and we need a new state for it
         response.stop
 
         queue_signal(:abort, "Playbook has been running longer than timeout", "error")
