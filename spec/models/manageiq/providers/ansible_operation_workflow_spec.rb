@@ -86,15 +86,17 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
 
   context ".run_playbook" do
     let(:state) { "pre_playbook" }
+    let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
     it "ansible-runner succeeds" do
-      uuid = "b4146f49-aec1-4f8f-a9aa-94afc99d5d80"
-      expect(Ansible::Runner).to receive(:run_async).and_return(uuid)
+      response_async = Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results")
+
+      expect(Ansible::Runner).to receive(:run_async).and_return(response_async)
       expect(job).to receive(:queue_signal).with(:poll_runner)
 
       job.signal(:run_playbook)
 
-      expect(job.context[:ansible_runner_uuid]).to eq(uuid)
+      expect(job.context[:ansible_runner_response]).to eq(response_async.dump)
     end
 
     it "ansible-runner fails" do
@@ -106,17 +108,22 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
   end
 
   context ".poll_runner" do
-    let(:state) { "running" }
-    let(:uuid)  { "b4146f49-aec1-4f8f-a9aa-94afc99d5d80" }
+    let(:state)    { "running" }
+    let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
     before do
-      job.context[:ansible_runner_uuid] = uuid
+      allow(Ansible::Runner::ResponseAsync).to receive(:new).and_return(response_async)
+
+      job.context[:ansible_runner_response]   = response_async.dump
       job.context[:ansible_runner_started_on] = Time.now.utc
       job.save!
     end
 
     it "ansible-runner completed" do
-      expect(Ansible::Runner).to receive(:running?).with(uuid).and_return(false)
+      expect(response_async).to receive(:running?).and_return(false)
+
+      response = Ansible::Runner::Response.new(response_async.dump.merge(:return_code => 0))
+      expect(response_async).to receive(:response).and_return(response)
       expect(job).to receive(:queue_signal).with(:post_playbook)
 
       job.signal(:poll_runner)
@@ -125,7 +132,7 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
     it "ansible-runner still running" do
       now = Time.now.utc
       allow(Time).to receive(:now).and_return(now)
-      expect(Ansible::Runner).to receive(:running?).with(uuid).and_return(true)
+      expect(response_async).to receive(:running?).and_return(true)
       expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 1.minute)
 
       job.signal(:poll_runner)
@@ -135,7 +142,8 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
       time = job.context[:ansible_runner_started_on] + job.options[:timeout] + 5.minutes
 
       Timecop.travel(time) do
-        expect(Ansible::Runner).to receive(:running?).with(uuid).and_return(true)
+        expect(response_async).to receive(:running?).and_return(true)
+        expect(response_async).to receive(:stop)
         expect(job).to receive(:queue_signal).with(:abort, "Playbook has been running longer than timeout", "error")
 
         job.signal(:poll_runner)
@@ -144,11 +152,12 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
 
     context ".deliver_on" do
       let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), "/path/to/playbook", :poll_interval => 5.minutes] }
+      #let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
       it "uses the option to queue poll_runner" do
         now = Time.now.utc
         allow(Time).to receive(:now).and_return(now)
-        expect(Ansible::Runner).to receive(:running?).with(uuid).and_return(true)
+        expect(response_async).to receive(:running?).and_return(true)
         expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 5.minutes)
 
         job.signal(:poll_runner)

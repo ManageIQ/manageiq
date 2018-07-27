@@ -19,11 +19,11 @@ class ManageIQ::Providers::AnsibleOperationWorkflow < Job
   def run_playbook
     env_vars, extra_vars, playbook_path = options.values_at(:env_vars, :extra_vars, :playbook_path)
 
-    uuid = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path)
-    if uuid.nil?
+    response = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path)
+    if response.nil?
       queue_signal(:abort, "Failed to run ansible playbook", "error")
     else
-      context[:ansible_runner_uuid]       = uuid
+      context[:ansible_runner_response]   = response.dump
       context[:ansible_runner_started_on] = Time.now.utc
 
       update_attributes!(:context => context)
@@ -33,13 +33,24 @@ class ManageIQ::Providers::AnsibleOperationWorkflow < Job
   end
 
   def poll_runner
-    if Ansible::Runner.running?(context[:ansible_runner_uuid])
+    response = Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
+    if response.running?
       if context[:ansible_runner_started_on] + options[:timeout] < Time.now.utc
+        # TODO find out if this is blocking and we need a new state for it
+        response.stop
+
         queue_signal(:abort, "Playbook has been running longer than timeout", "error")
       else
         queue_signal(:poll_runner, :deliver_on => deliver_on)
       end
     else
+      result = response.response
+
+      context[:ansible_runner_return_code] = result.return_code
+      context[:ansible_runner_stdout]      = result.parsed_stdout
+
+      set_status("Playbook failed", "error") if result.return_code != 0
+
       queue_signal(:post_playbook)
     end
   end
