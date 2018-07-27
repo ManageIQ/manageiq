@@ -115,7 +115,7 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
       allow(Ansible::Runner::ResponseAsync).to receive(:new).and_return(response_async)
 
       job.context[:ansible_runner_response]   = response_async.dump
-      job.context[:ansible_runner_started_on] = Time.now.utc
+      job.started_on = Time.now.utc
       job.save!
     end
 
@@ -139,7 +139,7 @@ describe ManageIQ::Providers::AnsibleOperationWorkflow do
     end
 
     it "fails if the playbook has been running too long" do
-      time = job.context[:ansible_runner_started_on] + job.options[:timeout] + 5.minutes
+      time = job.started_on + job.options[:timeout] + 5.minutes
 
       Timecop.travel(time) do
         expect(response_async).to receive(:running?).and_return(true)

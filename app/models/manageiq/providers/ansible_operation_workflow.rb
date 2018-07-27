@@ -23,10 +23,11 @@ class ManageIQ::Providers::AnsibleOperationWorkflow < Job
     if response.nil?
       queue_signal(:abort, "Failed to run ansible playbook", "error")
     else
-      context[:ansible_runner_response]   = response.dump
-      context[:ansible_runner_started_on] = Time.now.utc
+      context[:ansible_runner_response] = response.dump
 
-      update_attributes!(:context => context)
+      started_on = Time.now.utc
+      update_attributes!(:context => context, :started_on => started_on)
+      miq_task.update_attributes!(:started_on => started_on)
 
       queue_signal(:poll_runner)
     end
@@ -35,7 +36,7 @@ class ManageIQ::Providers::AnsibleOperationWorkflow < Job
   def poll_runner
     response = Ansible::Runner::ResponseAsync.load(context[:ansible_runner_response])
     if response.running?
-      if context[:ansible_runner_started_on] + options[:timeout] < Time.now.utc
+      if started_on + options[:timeout] < Time.now.utc
         # TODO find out if this is blocking and we need a new state for it
         response.stop
 
