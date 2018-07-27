@@ -19,21 +19,29 @@ module Ansible
 
       # @return [Boolean] true if the ansible job is still running, false when it's finished
       def running?
-        false # TODO(lsmola) can't get running? from ansible-runner https://github.com/ansible/ansible-runner/issues/99
+        AwesomeSpawn.run("ansible-runner is-alive #{base_dir} --json -i result").exit_status.zero?
       end
 
-      # @return [Ansible::Runner::Response] Response object with all details about the ansible run
+      # Stops the running Ansible job
+      def stop
+        AwesomeSpawn.run("ansible-runner stop #{base_dir} --json -i result")
+      end
+
+      # @return [Ansible::Runner::Response, NilClass] Response object with all details about the Ansible run, or nil
+      #         if the Ansible is still running
       def response
         return if running?
         return @response if @response
 
         @response = Ansible::Runner::Response.new(:base_dir => base_dir, :ident => ident)
-
-        FileUtils.remove_entry(base_dir) # Clean up the temp dir, when the response is generated
+        @response.cleanup_filesystem!
 
         @response
       end
 
+      # Dumps the Ansible::Runner::ResponseAsync into the hash
+      #
+      # @return [Hash] Dumped Ansible::Runner::ResponseAsync object
       def dump
         {
           :base_dir => base_dir,
@@ -41,6 +49,10 @@ module Ansible
         }
       end
 
+      # Creates the Ansible::Runner::ResponseAsync object from hash data
+      #
+      # @param [Hash] Dumped Ansible::Runner::ResponseAsync object
+      # @return [Ansible::Runner::ResponseAsync] Ansible::Runner::ResponseAsync Object created from hash data
       def self.load(kwargs)
         new(kwargs)
       end

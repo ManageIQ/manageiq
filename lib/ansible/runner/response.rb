@@ -33,6 +33,14 @@ module Ansible
         @parsed_stdout ||= parse_stdout(stdout)
       end
 
+      def cleanup_filesystem!
+        # Load all needed files, before we cleanup the dir
+        return_code
+        stdout
+
+        FileUtils.remove_entry(base_dir)
+      end
+
       private
 
       # Parses stdout to array of hashes
