@@ -21,18 +21,22 @@ module Ansible
         @stderr        = stderr
       end
 
+      # @return [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
       def return_code
         @return_code ||= load_return_code
       end
 
+      # @return [String] Stdout that is text, where each line should be JSON encoded object
       def stdout
         @stdout ||= load_stdout
       end
 
+      # @return [Array<Hash>] Array of hashes as individual Ansible plays
       def parsed_stdout
         @parsed_stdout ||= parse_stdout(stdout)
       end
 
+      # Loads needed data from the filesystem and deletes the ansible-runner base dir
       def cleanup_filesystem!
         # Load all needed files, before we cleanup the dir
         return_code
@@ -75,6 +79,7 @@ module Ansible
         1
       end
 
+      # @return [String] Stdout that is text, where each line should be JSON encoded object
       def load_stdout
         File.read(File.join(base_dir, "artifacts", ident, "stdout"))
       rescue

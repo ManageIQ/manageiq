@@ -153,6 +153,12 @@ module Ansible
         end
       end
 
+      # @param base_dir [String] ansible-runner private_data_dir parameter
+      # @param ansible_runner_method [String] Method we will use to run the ansible-runner. It can be either "run",
+      #        which is sync call, or "start" which is async call
+      # @param result [AwesomeSpawn::CommandResult] Result object of AwesomeSpawn.run
+      # @return [Ansible::Runner::ResponseAsync, Ansible::Runner::Response] response or ResponseAsync based on the
+      #         ansible_runner_method
       def response(base_dir, ansible_runner_method, result)
         if async?(ansible_runner_method)
           Ansible::Runner::ResponseAsync.new(:base_dir => base_dir)
@@ -163,6 +169,7 @@ module Ansible
         end
       end
 
+      # @return [Bollean] True if ansible-runner will run on background
       def async?(ansible_runner_method)
         ansible_runner_method == "start"
       end
@@ -254,7 +261,12 @@ module Ansible
         end
       end
 
-      # @return [String] ansible_runner executable command
+      # Returns ansible-runner executable command
+      #
+      # @param base_dir [String] ansible-runner private_data_dir parameter
+      # @param ansible_runner_method [String] Method we will use to run the ansible-runner. It can be either "run",
+      #        which is sync call, or "start" which is async call
+      # @return [String] ansible-runner executable command
       def ansible_command(base_dir, ansible_runner_method)
         "ansible-runner #{ansible_runner_method} #{base_dir} --json -i result --hosts localhost"
       end
