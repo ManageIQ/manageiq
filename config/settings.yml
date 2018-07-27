@@ -974,6 +974,7 @@
     :keep_archived_quotas: 6.months
     :purge_window_size: 1000
 :product:
+  :name:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
 :prototype:
