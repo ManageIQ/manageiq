@@ -219,18 +219,29 @@ describe ServiceTemplate do
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
     end
 
-    it "with service_type of unknown" do
-      expect(@st1.type_display).to eq('Unknown')
+    it "with default service_type" do
+      expect(@st1.service_type).to eq("atomic")
+      expect(@st1.type_display).to eq('Item')
     end
 
     it "with service_type of atomic" do
-      @st1.update_attributes(:service_type => 'atomic')
+      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_ATOMIC)
       expect(@st1.type_display).to eq('Item')
     end
 
     it "with service_type of composite" do
-      @st1.update_attributes(:service_type => 'composite')
+      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
       expect(@st1.type_display).to eq('Bundle')
+    end
+
+    it "with user service_type" do
+      @st1.update_attributes(:service_type => 'user')
+      expect(@st1.type_display).to eq('User')
+    end
+
+    it "with no service_type" do
+      @st1.update_attributes(:service_type => nil)
+      expect(@st1.type_display).to eq('Unknown')
     end
   end
 
@@ -240,12 +251,18 @@ describe ServiceTemplate do
     end
 
     it "with service_type of unknown" do
+      @st1.update_attributes(:service_type => 'user')
       expect(@st1.atomic?).to be_falsey
     end
 
     it "with service_type of atomic" do
-      @st1.update_attributes(:service_type => 'atomic')
+      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_ATOMIC)
       expect(@st1.atomic?).to be_truthy
+    end
+
+    it "with service_type of composite" do
+      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
+      expect(@st1.atomic?).to be_falsey
     end
   end
 
@@ -255,11 +272,17 @@ describe ServiceTemplate do
     end
 
     it "with service_type of unknown" do
+      @st1.update_attributes(:service_type => 'user')
+      expect(@st1.composite?).to be_falsey
+    end
+
+    it "with service_type of atomic" do
+      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_ATOMIC)
       expect(@st1.composite?).to be_falsey
     end
 
     it "with service_type of composite" do
-      @st1.update_attributes(:service_type => 'composite')
+      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
       expect(@st1.composite?).to be_truthy
     end
   end
@@ -438,6 +461,7 @@ describe ServiceTemplate do
     it "should create a valid service template" do
       expect(@st1.guid).not_to be_empty
       expect(@st1.service_resources.size).to eq(0)
+      expect(@st1.service_type).to eq(described_class::SERVICE_TYPE_ATOMIC)
     end
 
     it "should not set the owner for the service template" do
@@ -457,12 +481,6 @@ describe ServiceTemplate do
       expect(@test_service.evm_owner.name).to eq(@user.name)
       expect(@test_service.evm_owner.current_group).not_to be_nil
       expect(@test_service.evm_owner.current_group.description).to eq(@user.current_group.description)
-    end
-
-    it "should create an empty service template without a type" do
-      expect(@st1.service_type).to eq('unknown')
-      expect(@st1.composite?).to be_falsey
-      expect(@st1.atomic?).to be_falsey
     end
 
     it "should create a composite service template" do
@@ -513,12 +531,6 @@ describe ServiceTemplate do
       user         = FactoryGirl.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
       @vm_template = FactoryGirl.create(:template_vmware, :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
       @ptr = FactoryGirl.create(:miq_provision_request_template, :requester => user, :src_vm_id => @vm_template.id)
-    end
-
-    it 'unknown' do
-      expect(@st1.service_type).to eq "unknown"
-      expect(@st1.template_valid?).to be_truthy
-      expect(@st1.template_valid_error_message).to be_nil
     end
 
     context 'atomic' do

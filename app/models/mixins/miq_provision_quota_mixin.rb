@@ -313,7 +313,7 @@ module MiqProvisionQuotaMixin
   def service_quota_values(request, result)
     return unless request.service_template
     request.service_template.service_resources.each do |sr|
-      if request.service_template.service_type == 'composite'
+      if request.service_template.service_type == ServiceTemplate::SERVICE_TYPE_COMPOSITE
         bundle_quota_values(sr, result)
       else
         next if request.service_template.prov_type.starts_with?("generic")
