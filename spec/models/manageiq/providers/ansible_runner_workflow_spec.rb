@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::AnsibleOperationWorkflow do
+describe ManageIQ::Providers::AnsibleRunnerWorkflow do
   let(:job)     { described_class.create_job(*options).tap { |job| job.state = state } }
   let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), "/path/to/playbook"] }
   let(:state)   { "waiting_to_start" }

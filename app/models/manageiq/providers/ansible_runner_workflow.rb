@@ -1,4 +1,4 @@
-class ManageIQ::Providers::AnsibleOperationWorkflow < Job
+class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   def self.create_job(env_vars, extra_vars, playbook_path, timeout: 1.hour, poll_interval: 1.minute)
     options = {
       :env_vars      => env_vars,
