@@ -145,11 +145,11 @@ module Ansible
                                                       :roles_path      => roles_path,
                                                       :role_skip_facts => role_skip_facts))
 
-          response(base_dir, ansible_runner_method, result)
+          res = response(base_dir, ansible_runner_method, result)
         ensure
           # Clean up the tmp dir for the sync method, for async we will clean it up after the job is finished and we've
           # read the output, that will be written into this directory.
-          FileUtils.remove_entry(base_dir) unless async?(ansible_runner_method)
+          res.cleanup_filesystem! unless async?(ansible_runner_method)
         end
       end
 
