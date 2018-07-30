@@ -133,7 +133,7 @@ describe ManageIQ::Providers::AnsibleRunnerWorkflow do
       now = Time.now.utc
       allow(Time).to receive(:now).and_return(now)
       expect(response_async).to receive(:running?).and_return(true)
-      expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 1.minute)
+      expect(job).to receive(:queue_signal).with(:poll_runner, :deliver_on => now + 1.second)
 
       job.signal(:poll_runner)
     end
