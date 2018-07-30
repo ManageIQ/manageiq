@@ -81,23 +81,6 @@ describe TaskHelpers::Exports::ProvisionDialogs do
       expect(dialog[:content]).to eq(content)
       expect(dialog[:description]).to eq(dialog_desc2)
     end
-
-    it 'exports dialogs with the same name to different files' do
-      FactoryGirl.create(:miq_dialog,
-                         :dialog_type => dialog_type3,
-                         :name        => dialog_name2,
-                         :description => dialog_desc2,
-                         :content     => content2,
-                         :default     => false)
-      TaskHelpers::Exports::ProvisionDialogs.new.export(:directory => export_dir)
-      expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(2)
-      dialog = YAML.load_file(dialog_filename1)
-      expect(dialog[:content]).to eq(content)
-      expect(dialog[:description]).to eq(dialog_desc2)
-      dialog2 = YAML.load_file(dialog_filename2)
-      expect(dialog2[:content]).to eq(content2)
-      expect(dialog2[:description]).to eq(dialog_desc2)
-    end
   end
 
   describe "when --all is specified" do
@@ -112,6 +95,31 @@ describe TaskHelpers::Exports::ProvisionDialogs do
       expect(dialog1[:content]).to eq(content)
       expect(dialog1[:description]).to eq(dialog_desc1)
       expect(dialog2[:content]).to eq(content)
+      expect(dialog2[:description]).to eq(dialog_desc2)
+    end
+  end
+
+  describe "when multiple dialogs of different types have the same name" do
+    let(:dialog_filename1) { "#{export_dir}/#{dialog_type1}-custom_dialog.yaml" }
+    let(:dialog_filename2) { "#{export_dir}/#{dialog_type3}-custom_dialog.yaml" }
+
+    before do
+      FactoryGirl.create(:miq_dialog,
+                         :dialog_type => dialog_type3,
+                         :name        => dialog_name2,
+                         :description => dialog_desc2,
+                         :content     => content2,
+                         :default     => false)
+    end
+
+    it 'exports the dialogs to different files' do
+      TaskHelpers::Exports::ProvisionDialogs.new.export(:directory => export_dir)
+      expect(Dir[File.join(export_dir, '**', '*')].count { |file| File.file?(file) }).to eq(2)
+      dialog = YAML.load_file(dialog_filename1)
+      expect(dialog[:content]).to eq(content)
+      expect(dialog[:description]).to eq(dialog_desc2)
+      dialog2 = YAML.load_file(dialog_filename2)
+      expect(dialog2[:content]).to eq(content2)
       expect(dialog2[:description]).to eq(dialog_desc2)
     end
   end
