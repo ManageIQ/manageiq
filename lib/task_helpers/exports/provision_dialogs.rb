@@ -4,9 +4,9 @@ module TaskHelpers
       def export(options = {})
         export_dir = options[:directory]
 
-        dialogs = options[:all] ? MiqDialog.order(:id).all : MiqDialog.order(:id).where(:default => [false, nil])
+        dialogs = options[:all] ? MiqDialog.all : MiqDialog.where(:default => [false, nil])
 
-        dialogs = dialogs.collect do |dialog|
+        dialogs.order(:id).to_a.collect! do |dialog|
           Exports.exclude_attributes(dialog.to_model_hash, %i(file_mtime created_at updated_at id class))
         end
 
