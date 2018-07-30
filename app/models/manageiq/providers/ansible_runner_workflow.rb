@@ -49,7 +49,10 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       context[:ansible_runner_return_code] = result.return_code
       context[:ansible_runner_stdout]      = result.parsed_stdout
 
-      set_status("Playbook failed", "error") if result.return_code != 0
+      if result.return_code != 0
+        set_status("Playbook failed", "error")
+        _log.warn("Playbook failed:\n#{result.parsed_stdout.join("\n")}")
+      end
 
       queue_signal(:post_playbook)
     end
