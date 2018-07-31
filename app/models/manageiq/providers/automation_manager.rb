@@ -3,7 +3,6 @@ class ManageIQ::Providers::AutomationManager < ManageIQ::Providers::BaseManager
   require_nested :ConfigurationScript
   require_nested :ConfigurationScriptPayload
   require_nested :ConfigurationScriptSource
-  require_nested :ConfigurationWorkflow
   require_nested :ConfiguredSystem
   require_nested :InventoryGroup
   require_nested :InventoryRootGroup
