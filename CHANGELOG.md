@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 91 ending 2018-07-30
+
+### Added
+- Ansible runner async method [(#17763)](https://github.com/ManageIQ/manageiq/pull/17763)
+- Ansible runner add missing yard docs [(#17761)](https://github.com/ManageIQ/manageiq/pull/17761)
+- Add a state machine for long ansible operations [(#17759)](https://github.com/ManageIQ/manageiq/pull/17759)
+- Ansible runner allow to run roles without playbook [(#17757)](https://github.com/ManageIQ/manageiq/pull/17757)
+- Add validations for the ansible-runner params [(#17749)](https://github.com/ManageIQ/manageiq/pull/17749)
+- Connecting physical switch to computer systems [(#17735)](https://github.com/ManageIQ/manageiq/pull/17735)
+- Replace custom_attributes by ems_custom_attributes [(#17734)](https://github.com/ManageIQ/manageiq/pull/17734)
+- InventoryCollection definitions for vmware infra [(#17729)](https://github.com/ManageIQ/manageiq/pull/17729)
+- locale:po_to_json: add support for including catalogs from javascript plugins [(#17725)](https://github.com/ManageIQ/manageiq/pull/17725)
+- Service AnsibleTower and EmbeddedAnsible UI parity [(#17712)](https://github.com/ManageIQ/manageiq/pull/17712)
+- Add support to show Group Level of an event in the timeline page. [(#17702)](https://github.com/ManageIQ/manageiq/pull/17702)
+- Add rake task to export custom buttons [(#17699)](https://github.com/ManageIQ/manageiq/pull/17699)
+- Use ansible-runner instead of ansible-playbook [(#17688)](https://github.com/ManageIQ/manageiq/pull/17688)
+- Add relationship between [physical switch and physical chassis] and event stream [(#17661)](https://github.com/ManageIQ/manageiq/pull/17661)
+- Adding PhysicalStorage into PhysicalChassis [(#17616)](https://github.com/ManageIQ/manageiq/pull/17616)
+- Add Cloud Volume Type model [(#17610)](https://github.com/ManageIQ/manageiq/pull/17610)
+- Add host_guest_devices association and inv_collection [(#17505)](https://github.com/ManageIQ/manageiq/pull/17505)
+
+### Fixed
+- Add pt_BR.yml for Brazilian Portuguese [(#17775)](https://github.com/ManageIQ/manageiq/pull/17775)
+- Added Physical Server view to OOTB Security role. [(#17753)](https://github.com/ManageIQ/manageiq/pull/17753)
+- Start the drb server with a unix socket [(#17744)](https://github.com/ManageIQ/manageiq/pull/17744)
+- Fix refresh time and memory issues [(#17724)](https://github.com/ManageIQ/manageiq/pull/17724)
+- Fix detection of an EMS to use for Storage#scan [(#17718)](https://github.com/ManageIQ/manageiq/pull/17718)
+- Fix class name for queueing [(#17717)](https://github.com/ManageIQ/manageiq/pull/17717)
+- Allow for empty strings in the execution_ttl field [(#17715)](https://github.com/ManageIQ/manageiq/pull/17715)
+- Return custom buttons for service having nil service template [(#17703)](https://github.com/ManageIQ/manageiq/pull/17703)
+- Adding flavor as a has one on VM [(#17692)](https://github.com/ManageIQ/manageiq/pull/17692)
+- Force user_type to UPN when username is a UPN [(#17690)](https://github.com/ManageIQ/manageiq/pull/17690)
+- Missing embedded ansible persisters dependencies [(#17574)](https://github.com/ManageIQ/manageiq/pull/17574)
+
 ## Unreleased as of Sprint 90 ending 2018-07-16
 
 ### Added
