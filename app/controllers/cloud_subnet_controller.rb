@@ -54,13 +54,11 @@ class CloudSubnetController < ApplicationController
 
   def cloud_subnet_networks_by_ems
     assert_privileges("cloud_subnet_new")
-    networks = []
-    available_networks = CloudNetwork.where(:ems_id => params[:id]).find_each
-    available_networks.each do |network|
-      networks << { 'name' => network.name, 'id' => network.ems_ref }
+    available_networks = CloudNetwork.where(:ems_id => params[:id]).map do |network|
+      { 'name' => network.name, 'id' => network.ems_ref }
     end
     render :json => {
-      :available_networks => networks
+      :available_networks => available_networks
     }
   end
 
