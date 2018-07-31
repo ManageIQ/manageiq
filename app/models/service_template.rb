@@ -41,8 +41,6 @@ class ServiceTemplate < ApplicationRecord
   include NewWithTypeStiMixin
   include TenancyMixin
   include ArchivedMixin
-  include ReservedMixin
-  reserve_attribute :internal, :boolean
   include_concern 'Filter'
 
   belongs_to :tenant
@@ -70,6 +68,7 @@ class ServiceTemplate < ApplicationRecord
   virtual_column   :archived,                     :type => :boolean
   virtual_column   :active,                       :type => :boolean
 
+  default_value_for :internal, false
   default_value_for :service_type, SERVICE_TYPE_ATOMIC
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
@@ -79,7 +78,7 @@ class ServiceTemplate < ApplicationRecord
   scope :without_service_template_catalog_id,       ->         { where(:service_template_catalog_id => nil) }
   scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
   scope :displayed,                                 ->         { where(:display => true) }
-  scope :public_service_templates,                  ->         { where.not(:id => Reserve.where(:resource_type => "ServiceTemplate").all.collect { |r| r.resource_id if r.reserved[:internal] }.compact) }
+  scope :public_service_templates,                  ->         { where.not(:internal => true) }
 
   def self.catalog_item_types
     ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
