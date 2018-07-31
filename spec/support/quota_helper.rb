@@ -194,7 +194,7 @@ module Spec
       end
 
       def build_vmware_service_item
-        options = {:src_vm_id => @vm_template.id, :requester => @user}.merge(vmware_requested_quota_values)
+        options = {:src_vm_id => @vm_template.id, :requester_id => @user.id}.merge(vmware_requested_quota_values)
         model = {"vmware_service_item" => {:type      => 'atomic',
                                            :prov_type => 'vmware',
                                            :request   => options}}
@@ -206,7 +206,7 @@ module Spec
         @small_flavor = FactoryGirl.create(:flavor_google, :ems_id => @ems.id, :cloud_subnet_required => false,
                                           :cpus => 1, :cpu_cores => 1, :memory => 1024)
 
-        options = {:src_vm_id => @vm_template.id, :requester => @user}.merge(google_requested_quota_values)
+        options = {:src_vm_id => @vm_template.id, :requester_id => @user.id}.merge(google_requested_quota_values)
         model = {"google_service_item" => {:type      => 'atomic',
                                            :prov_type => 'google',
                                            :request   => options}}
