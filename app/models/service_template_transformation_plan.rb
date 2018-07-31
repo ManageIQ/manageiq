@@ -7,6 +7,8 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     "transformation_plan"
   end
 
+  default_value_for :internal, true
+
   def transformation_mapping
     service_resources.find_by(:resource_type => 'TransformationMapping').resource
   end
