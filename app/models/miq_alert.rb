@@ -27,6 +27,7 @@ class MiqAlert < ApplicationRecord
     MiqServer
     ContainerNode
     ContainerProject
+    PhysicalServer
   )
 
   def self.base_tables
@@ -35,7 +36,7 @@ class MiqAlert < ApplicationRecord
 
   acts_as_miq_set_member
 
-  ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :ext_management_system, :my_enterprise]
+  ASSIGNMENT_PARENT_ASSOCIATIONS = %i(host ems_cluster ext_management_system my_enterprise physical_server).freeze
 
   HOURLY_TIMER_EVENT   = "_hourly_timer_"
 

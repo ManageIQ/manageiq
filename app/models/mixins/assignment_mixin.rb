@@ -16,7 +16,7 @@ module AssignmentMixin
   included do  #:nodoc:
     acts_as_miq_taggable
 
-    const_set("ASSIGNMENT_PARENT_ASSOCIATIONS", [:parent_blue_folders, :parent_resource_pool, :host, :ems_cluster, :ext_management_system, :my_enterprise]) unless const_defined?("ASSIGNMENT_PARENT_ASSOCIATIONS")
+    const_set("ASSIGNMENT_PARENT_ASSOCIATIONS", %i(parent_blue_folders parent_resource_pool host ems_cluster ext_management_system my_enterprise physical_server)) unless const_defined?("ASSIGNMENT_PARENT_ASSOCIATIONS")
 
     cache_with_timeout(:assignments_cached, 1.minute) { assignments }
   end
