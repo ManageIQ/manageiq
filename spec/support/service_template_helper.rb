@@ -6,6 +6,10 @@ module Spec
         build_all_composites(hash)
       end
 
+      def get_user(options)
+        options[:requester] || User.find(options[:requester_id])
+      end
+
       def build_all_atomics(hash)
         hash.each do |name, value|
           next unless value[:type] == "atomic"
@@ -19,7 +23,7 @@ module Spec
           options ||= {}
           options[:dialog] = {}
           mprt = FactoryGirl.create(:miq_provision_request_template,
-                                    :requester => options[:requester],
+                                    :requester => get_user(options),
                                     :src_vm_id => options[:src_vm_id],
                                     :options   => options)
           add_st_resource(item, mprt)
