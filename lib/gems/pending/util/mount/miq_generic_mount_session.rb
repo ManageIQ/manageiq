@@ -9,6 +9,7 @@ require 'util/miq-uuid'
 
 class MiqGenericMountSession
   require 'util/mount/miq_nfs_session'
+  require 'util/mount/miq_s3_session'
   require 'util/mount/miq_smb_session'
   require 'util/mount/miq_glusterfs_session'
 
@@ -53,7 +54,7 @@ class MiqGenericMountSession
 
   def self.new_session(opts)
     klass = uri_scheme_to_class(opts[:uri])
-    session = klass.new(:uri => opts[:uri], :username => opts[:username], :password => opts[:password])
+    session = klass.new(opts.slice(:uri, :username, :password, :region))
     session.connect
     session
   end
@@ -62,6 +63,8 @@ class MiqGenericMountSession
     require 'uri'
     scheme, userinfo, host, port, registry, share, opaque, query, fragment = URI.split(URI.encode(uri))
     case scheme
+    when 's3'
+      MiqS3Session
     when 'smb'
       MiqSmbSession
     when 'nfs'
