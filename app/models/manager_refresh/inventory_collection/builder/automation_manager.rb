@@ -19,11 +19,6 @@ module ManagerRefresh
           add_common_default_values
         end
 
-        def configuration_workflows
-          default_manager_ref
-          add_common_default_values
-        end
-
         def configured_systems
           default_manager_ref
           add_common_default_values
