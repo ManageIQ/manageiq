@@ -53,9 +53,12 @@ describe ResourceActionWorkflow do
       end
     end
 
-    context "#submit_request" do
+    describe "#submit_request" do
       subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
       let(:resource_action) { @resource_action }
+      let(:task) { double }
+
+      before { allow(task).to receive(:id).and_return(123) }
 
       context "with request class" do
         let(:target) { FactoryGirl.create(:service) }
@@ -84,10 +87,10 @@ describe ResourceActionWorkflow do
           EvmSpecHelper.local_miq_server
           expect(subject).not_to receive(:make_request)
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
-          expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
+          expect(MiqAeEngine).to receive(:deliver_queue).and_return(task) # calls into automate
           expect(AuditEvent).not_to receive(:success)
           response = subject.submit_request
-          expect(response).to eq(:errors => [])
+          expect(response).to eq(:errors => [], :task_id => 123)
         end
       end
 
@@ -101,7 +104,7 @@ describe ResourceActionWorkflow do
 
         it "calls automate" do
           expect(subject).not_to receive(:make_request)
-          expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
+          expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_return(task)
 
           subject.submit_request
         end
