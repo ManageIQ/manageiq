@@ -71,7 +71,6 @@ class Chargeback
     end
 
     def sum(metric, sub_metric = nil)
-      metric = ChargeableField::VIRTUAL_COL_USES[metric] || metric
       values(metric, sub_metric).sum
     end
 
