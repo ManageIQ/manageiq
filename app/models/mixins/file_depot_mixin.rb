@@ -5,7 +5,8 @@ module FileDepotMixin
   extend ActiveSupport::Concern
   SUPPORTED_DEPOTS = {
     'smb' => 'Samba',
-    'nfs' => 'Network File System'
+    'nfs' => 'Network File System',
+    's3'  => 'Amazon Web Services'
   }.freeze
 
   included do
