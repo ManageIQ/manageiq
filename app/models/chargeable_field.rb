@@ -98,6 +98,7 @@ class ChargeableField < ApplicationRecord
 
   def self.col_index(column)
     @rate_cols ||= {}
+    column = VIRTUAL_COL_USES[column] || column
     @rate_cols[column] ||= cols_on_metric_rollup.index(column.to_s)
   end
 
