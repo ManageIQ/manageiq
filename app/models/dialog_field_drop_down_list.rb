@@ -19,7 +19,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def initial_values
-    [[nil, "<None>"]]
+    [[nil, N_("<None>")]]
   end
 
   def refresh_json_value(checked_value)
