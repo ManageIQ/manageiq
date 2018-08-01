@@ -10,15 +10,15 @@ describe "MiqSchedule Filter" do
       @vm4 = FactoryGirl.create(:vm_vmware, :name => "Special Test VM")
 
       @vm_single_schedule = FactoryGirl.create(:miq_schedule,
-                                               :towhat       => "Vm",
-                                               :sched_action => {:method => "vm_scan"},
-                                               :filter       => MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Special Test VM"})
+                                               :resource_type => "Vm",
+                                               :sched_action  => {:method => "vm_scan"},
+                                               :filter        => MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Special Test VM"})
                                               )
 
       @vm_all_schedule = FactoryGirl.create(:miq_schedule,
-                                            :towhat       => "Vm",
-                                            :sched_action => {:method => "vm_scan"},
-                                            :filter       => MiqExpression.new("IS NOT NULL" => {"field" => "Vm-name"})
+                                            :resource_type => "Vm",
+                                            :sched_action  => {:method => "vm_scan"},
+                                            :filter        => MiqExpression.new("IS NOT NULL" => {"field" => "Vm-name"})
                                            )
 
       # Schedule froma saved search
@@ -27,15 +27,15 @@ describe "MiqSchedule Filter" do
                                    :filter => MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Test VM 2"})
                                   )
       @vm_search_schedule = FactoryGirl.create(:miq_schedule,
-                                               :towhat        => "Vm",
+                                               :resource_type => "Vm",
                                                :sched_action  => {:method => "vm_scan"},
                                                :miq_search_id => @search.id
                                               )
 
       # DB Baskup Schedule
       @db_backup = FactoryGirl.create(:miq_schedule,
-                                      :towhat       => "DatabaseBackup",
-                                      :sched_action => {:method => "db_backup"}
+                                      :resource_type => "DatabaseBackup",
+                                      :sched_action  => {:method => "db_backup"}
                                      )
     end
 
@@ -44,9 +44,9 @@ describe "MiqSchedule Filter" do
         MiqReport.seed_report("Vendor and Guest OS")
         @report = MiqReport.first
         @report_schedule = FactoryGirl.create(:miq_schedule,
-                                              :towhat       => "MiqReport",
-                                              :sched_action => {:method => "run_report"},
-                                              :filter       => MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => @report.id})
+                                              :resource_type => "MiqReport",
+                                              :sched_action  => {:method => "run_report"},
+                                              :filter        => MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => @report.id})
                                              )
       end
 

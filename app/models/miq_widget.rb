@@ -521,12 +521,12 @@ class MiqWidget < ApplicationRecord
     end
 
     sched = MiqSchedule.create!(
-      :name         => description,
-      :description  => description,
-      :sched_action => {:method => "generate_widget"},
-      :filter       => MiqExpression.new("=" => {"field" => "MiqWidget-id", "value" => id}),
-      :towhat       => self.class.name,
-      :run_at       => {
+      :name          => description,
+      :description   => description,
+      :sched_action  => {:method => "generate_widget"},
+      :filter        => MiqExpression.new("=" => {"field" => "MiqWidget-id", "value" => id}),
+      :resource_type => self.class.name,
+      :run_at        => {
         :interval   => {:value => value, :unit  => unit},
         :tz         => server_tz,
         :start_time => sched_time
