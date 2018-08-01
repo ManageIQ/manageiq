@@ -26,8 +26,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :Refresher
   require_nested :RefreshWorker
 
-  has_many :configuration_workflows, :dependent => :destroy, :foreign_key => "manager_id", :inverse_of => :manager
-
   def self.ems_type
     @ems_type ||= "embedded_ansible_automation".freeze
   end
