@@ -7,11 +7,11 @@ namespace :locale do
     ]
     no_plurals = %w(NFS OS) # strings which we don't want to create automatic plurals for
 
-    dict = YAML.load(File.open(Rails.root.join("locale/en.yml")))["en"]["dictionary"]
-    dict.keys.each do |tree|
+    dict = YAML.safe_load(File.open(Rails.root.join("locale/en.yml")))["en"]["dictionary"]
+    dict.each_key do |tree|
       next unless %w(column model table).include?(tree) # subtrees of interest
 
-      dict[tree].keys.each do |item|
+      dict[tree].each_key do |item|
         if dict[tree][item].kind_of?(String) # leaf node
           output_strings.push("# TRANSLATORS: en.yml key: dictionary.#{tree}.#{item}")
           value = dict[tree][item]
@@ -27,7 +27,7 @@ namespace :locale do
             end
           end
         elsif dict[tree][item].kind_of?(Hash) # subtree
-          dict[tree][item].keys.each do |subitem|
+          dict[tree][item].each_key do |subitem|
             output_strings.push("# TRANSLATORS: en.yml key: dictionary.#{tree}.#{item}.#{subitem}")
             output_strings.push('_("%s")' % dict[tree][item][subitem])
           end
@@ -44,7 +44,7 @@ namespace :locale do
   task :extract_yaml_strings, [:root] => :environment do |_t, args|
     def update_output(string, file, output, root)
       file.gsub!(root + '/', "")
-      return if string.nil? || string.empty?
+      return if string.blank?
       if output.key?(string)
         output[string].append(file)
       else
@@ -54,7 +54,7 @@ namespace :locale do
 
     def parse_object(object, keys, file, output, root)
       if object.kind_of?(Hash)
-        object.keys.each do |key|
+        object.each_key do |key|
           if keys.include?(key) || keys.include?(key.to_s)
             if object[key].kind_of?(Array)
               object[key].each { |i| update_output(i, file, output, root) }
@@ -77,7 +77,7 @@ namespace :locale do
     yamls = YAML.load_file(config_file)['yaml_strings_to_extract']
     output = {}
 
-    yamls.keys.each do |yaml_glob|
+    yamls.each_key do |yaml_glob|
       yaml_glob_full = args[:root].join(yaml_glob)
       Dir.glob(yaml_glob_full).each do |file|
         yml = YAML.load_file(file)
@@ -88,7 +88,7 @@ namespace :locale do
     File.open(args[:root].join("config/yaml_strings.rb"), "w+") do |f|
       f.puts "# This is automatically generated file (rake locale:extract_yaml_strings)."
       f.puts "# The file contains strings extracted from various yaml files for gettext to find."
-      output.keys.each do |key|
+      output.each_key do |key|
         output[key].sort.uniq.each do |file|
           f.puts "# TRANSLATORS: file: #{file}"
         end
@@ -152,7 +152,7 @@ namespace :locale do
 
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
   task "plugin:find", :engine do |_, args|
-    unless args.has_key?(:engine)
+    unless args.key?(:engine)
       $stderr.puts "You need to specify a plugin name: rake locale:plugin:find[plugin_name]"
       exit 1
     end
@@ -234,7 +234,7 @@ namespace :locale do
 
       combined_dir = File.join(Rails.root, "locale/combined")
       Dir.mkdir(combined_dir, 0700)
-      po_files.keys.each do |locale|
+      po_files.each_key do |locale|
         dir = File.join(combined_dir, locale)
         po = File.join(dir, 'manageiq.po')
         Dir.mkdir(dir, 0700)
