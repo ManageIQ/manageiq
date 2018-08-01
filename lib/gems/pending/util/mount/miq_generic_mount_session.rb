@@ -187,14 +187,6 @@ class MiqGenericMountSession
     connect
   end
 
-  def self.supports_objects?
-    false
-  end
-
-  def supports_objects?
-    false
-  end
-
   def with_test_file(&_block)
     raise "requires a block" unless block_given?
     file = '/tmp/miq_verify_test_file'
