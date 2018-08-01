@@ -48,7 +48,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def script_error_values
-    "<Script error>"
+    N_("<Script error>")
   end
 
   def sample_text
