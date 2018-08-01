@@ -30,8 +30,8 @@ describe MiqAlertSet do
 
   def without_file(fname)
     # Note: can the file you are moving cause sporadic failures in other threads?
-    raise _("no block given") unless block_given?
-    raise _("fname is blank") if fname.blank?
+    raise "no block given" unless block_given?
+    raise "fname is blank" if fname.blank?
     tempf = Tempfile.new("temporary_backup")
     begin
       FileUtils.mv(fname, tempf.path)
