@@ -83,4 +83,36 @@ describe MiqWidgetSet do
       expect(MiqWidgetSet.find_with_same_order([g2.id.to_s, g1.id.to_s])).to eq([g2, g1])
     end
   end
+
+  context "loading group specific defaul dashboard" do
+    describe ".sync_from_file" do
+      let(:dashboard_name) { "Dashboard for Group" }
+      before do
+        @yml_file = Tempfile.new('default_dashboard_for_group.yaml')
+        yml_data = YAML.safe_load(<<~DOC, [Symbol])
+          ---
+          name: #{dashboard_name}
+          read_only: t
+          set_type: MiqWidgetSet
+          description: Test Dashboard for Group
+          owner_type: MiqGroup
+          owner_description: #{group.description}
+          set_data_by_description:
+            :col1:
+            - chart_vendor_and_guest_os
+        DOC
+        File.write(@yml_file.path, yml_data.to_yaml)
+      end
+
+      after do
+        @yml_file.close(true)
+      end
+
+      it "loads dashboard for specific group" do
+        described_class.sync_from_file(@yml_file.path)
+        dashboard = MiqWidgetSet.find_by(:name => dashboard_name)
+        expect(dashboard.owner_id).to eq(group.id)
+      end
+    end
+  end
 end
