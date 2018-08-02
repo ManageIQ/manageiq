@@ -40,6 +40,17 @@ module Vmdb
       end
     end
 
+    def ansible_runner_content
+      @ansible_runner_content ||= begin
+        map do |engine|
+          content_dir = engine.root.join("content", "ansible_tmp")
+          next unless File.exist?(content_dir.join("requirements.yml"))
+
+          [engine, content_dir]
+        end.compact
+      end
+    end
+
     def automate_domains
       @automate_domains ||= begin
         require_relative 'plugins/automate_domain'
