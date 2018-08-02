@@ -2,7 +2,7 @@ require 'awesome_spawn'
 require "vmdb/plugins"
 
 namespace :evm do
-  namespace :ansible do
+  namespace :ansible_runner do
     desc "Seed galaxy roles for provider playbooks"
     task :seed do
       plugins_with_req_yml = Vmdb::Plugins.select do |plugin|
