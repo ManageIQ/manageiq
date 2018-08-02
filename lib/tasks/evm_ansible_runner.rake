@@ -5,16 +5,11 @@ namespace :evm do
   namespace :ansible_runner do
     desc "Seed galaxy roles for provider playbooks"
     task :seed do
-      plugins_with_req_yml = Vmdb::Plugins.select do |plugin|
-        req_yml_path = plugin.root.join('content', 'ansible_tmp', 'requirements.yml')
-        File.file?(req_yml_path)
-      end
-
-      plugins_with_req_yml.each do |plugin|
+      Vmdb::Plugins.ansible_runner_content.each do |plugin, content_dir|
         puts "Seeding roles for #{plugin.name}..."
 
-        roles_path = plugin.root.join('content', 'ansible_tmp', 'roles')
-        role_file  = plugin.root.join('content', 'ansible_tmp', 'requirements.yml')
+        roles_path = content_dir.join('roles')
+        role_file  = content_dir.join('requirements.yml')
 
         params = ["install", :roles_path= => roles_path, :role_file= => role_file]
 
