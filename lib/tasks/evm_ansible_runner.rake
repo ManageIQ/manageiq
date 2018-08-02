@@ -16,11 +16,7 @@ namespace :evm do
         roles_path = plugin.root.join('content_tmp', 'ansible', 'roles')
         role_file  = plugin.root.join('content_tmp', 'ansible', 'requirements.yml')
 
-        params = {
-          nil          => "install",
-          :roles_path= => roles_path,
-          :role_file=  => role_file
-        }
+        params = ["install", :roles_path= => roles_path, :role_file= => role_file]
 
         begin
           AwesomeSpawn.run!("ansible-galaxy", :params => params)
