@@ -157,5 +157,13 @@ namespace :evm do
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
+
+    desc 'Imports all custom buttons from YAML file'
+    task :custom_buttons => :environment do
+      options = TaskHelpers::Imports.parse_options
+      TaskHelpers::Imports::CustomButtons.new.import(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
   end
 end
