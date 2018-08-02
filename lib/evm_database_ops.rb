@@ -89,7 +89,10 @@ class EvmDatabaseOps
     #   :username => 'samba_one',
     #   :password => 'Zug-drep5s',
 
-    uri = with_mount_session(:restore, db_opts, connect_opts) do |database_opts, _session, _remote_file_uri|
+    uri = with_mount_session(:restore, db_opts, connect_opts) do |database_opts, session, remote_file_uri|
+      if session && !File.exist?(database_opts[:local_file])
+        database_opts[:local_file] = session.download(database_opts[:local_file], remote_file_uri)
+      end
       prepare_for_restore(database_opts[:local_file])
 
       # remove all the connections before we restore; AR will reconnect on the next query
