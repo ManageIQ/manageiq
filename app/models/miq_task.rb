@@ -1,4 +1,6 @@
 class MiqTask < ApplicationRecord
+  include_concern 'Purging'
+
   serialize :context_data
   STATE_INITIALIZED = 'Initialized'.freeze
   STATE_QUEUED      = 'Queued'.freeze
