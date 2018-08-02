@@ -1090,6 +1090,10 @@
   :watchdog_interval: 1.minute
 :task:
   :active_task_timeout: 6.hours
+  :history:
+    :keep_tasks: 1.week
+    :purge_window_size: 1000
+
 :ui:
   :mark_translated_strings: false
   :url:
@@ -1252,6 +1256,7 @@
       :session_timeout_interval: 30.seconds
       :storage_file_collection_interval: 1.days
       :storage_file_collection_time_utc: 21600
+      :task_purge_interval: 1.day
       :task_timeout_check_frequency: 1.hour
       :vim_performance_states_purge_interval: 1.day
       :vm_retired_interval: 10.minutes
