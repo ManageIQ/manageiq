@@ -3,6 +3,10 @@ require 'util/mount/miq_generic_mount_session'
 class MiqNfsSession < MiqGenericMountSession
   PORTS = [2049, 111]
 
+  def self.uri_scheme
+    "nfs".freeze
+  end
+
   def initialize(log_settings)
     super(log_settings.merge(:ports => PORTS))
   end
