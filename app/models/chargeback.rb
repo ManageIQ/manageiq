@@ -31,7 +31,7 @@ class Chargeback < ActsAsArModel
     @options = options = ReportOptions.new_from_h(options)
 
     data = {}
-    rates = RatesCache.new
+    rates = RatesCache.new(options)
 
     MiqRegion.all.each do |region|
       ConsumptionHistory.for_report(self, options, region.region) do |consumption|
@@ -158,7 +158,9 @@ class Chargeback < ActsAsArModel
     rates.each do |rate|
       rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
         r.charge(consumption, @options).each do |field, value|
-          self[field] = self[field].kind_of?(Numeric) ? (self[field] || 0) + value : value
+          next if @options.skip_field_accumulation?(field, self[field])
+
+          (self[field] = self[field].kind_of?(Numeric) ? (self[field] || 0) + value : value)
         end
       end
     end
