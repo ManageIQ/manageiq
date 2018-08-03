@@ -5,3 +5,11 @@ zh-CN:
     copyright: "Copyright (c) 2018 ManageIQ。由红帽赞助。"
     support_website: "http://www.manageiq.org"
     support_website_text: "ManageIQ.org"
+
+  # Used in NumberHelper.number_to_human_size() and NumberHelper.number_to_human()
+  number:
+    human:
+      storage_units:
+        units:
+          pb: "PB"
+          eb: "EB"
