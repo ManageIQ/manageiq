@@ -33,7 +33,6 @@ class FileDepotS3 < FileDepot
   end
 
   def verify_credentials(auth_type = nil, options = {})
-    _log.debug("verifying credentials for auth_type [#{auth_type}] with options [#{options}]")
 
     connection_rescue_block do
       # EC2 does Lazy Connections, so call a cheap function
