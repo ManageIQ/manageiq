@@ -3,6 +3,8 @@ class MiqProductFeature < ApplicationRecord
   REPORT_ADMIN_FEATURE  = "miq_report_superadmin".freeze
   REQUEST_ADMIN_FEATURE = "miq_request_superadmin".freeze
   ADMIN_FEATURE = REPORT_ADMIN_FEATURE
+  TENANT_ADMIN_FEATURE = "rbac_tenant".freeze
+
   acts_as_tree
 
   has_and_belongs_to_many :miq_user_roles, :join_table => :miq_roles_features
