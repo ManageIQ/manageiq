@@ -13,18 +13,18 @@ module AuthenticationMixin
       assocs.each { |a| a.authentication_check_types_queue(:attempt => 1) }
     end
 
-    def self.validate_credentials_task(args, user_id, zone)
+    def self.validate_credentials_task(args, user_id, zone, method_name = 'raw_connect?')
       task_opts = {
-        :action => "Validate EMS Provider Credentials",
+        :action => 'Validate EMS Provider Credentials',
         :userid => user_id
       }
 
       queue_opts = {
         :args        => [*args],
         :class_name  => self,
-        :method_name => "raw_connect?",
-        :queue_name  => "generic",
-        :role        => "ems_operations",
+        :method_name => method_name,
+        :queue_name  => 'generic',
+        :role        => 'ems_operations',
         :zone        => zone
       }
 
@@ -32,7 +32,7 @@ module AuthenticationMixin
       task = MiqTask.wait_for_taskid(task_id, :timeout => 30)
 
       if task.nil?
-        error_message = "Task Error"
+        error_message = 'Task Error'
       elsif MiqTask.status_error?(task.status) || MiqTask.status_timeout?(task.status)
         error_message = task.message
       end

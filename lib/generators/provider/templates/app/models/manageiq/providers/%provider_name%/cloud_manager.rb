@@ -36,6 +36,10 @@ class ManageIQ::Providers::<%= class_name %>::CloudManager < ManageIQ::Providers
     true
   end
 
+  def self.raw_event_connect(*args)
+    true
+  end
+
   def self.ems_type
     @ems_type ||= "<%= provider_name %>".freeze
   end
