@@ -54,7 +54,7 @@ describe Endpoint do
 
     it "raises when provided and already exists" do
       Endpoint.create!(:url => "abc")
-      expect { Endpoint.create!(:url => "abc") }.to raise_error("Validation failed: Url has already been taken")
+      expect { Endpoint.create!(:url => "abc") }.to raise_error("Validation failed: Endpoint: Url has already been taken")
     end
   end
 

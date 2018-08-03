@@ -569,7 +569,7 @@ describe MiqAlert do
         )
       end.to raise_error(
         ActiveRecord::RecordInvalid,
-        'Validation failed: Notifications Datawarehouse alerts must have a 0 notification frequency'
+        'Validation failed: MiqAlert: Notifications Datawarehouse alerts must have a 0 notification frequency'
       )
     end
   end

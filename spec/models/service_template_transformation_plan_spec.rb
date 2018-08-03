@@ -86,7 +86,7 @@ describe ServiceTemplateTransformationPlan do
     it 'validates unique name' do
       described_class.create_catalog_item(catalog_item_options)
       expect { described_class.create_catalog_item(catalog_item_options) }.to raise_error(
-        ActiveRecord::RecordInvalid, 'Validation failed: Name has already been taken'
+        ActiveRecord::RecordInvalid, 'Validation failed: ServiceTemplateTransformationPlan: Name has already been taken'
       )
     end
   end
