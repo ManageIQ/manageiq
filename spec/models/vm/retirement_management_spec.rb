@@ -87,13 +87,13 @@ describe "VM Retirement Management" do
   describe "retire request" do
     it "with one src_id" do
       User.current_user = user
-      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => ['yabadabadoo'] }, User.current_user, true)
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => ['yabadabadoo'], :__request_type__ => "vm_retire"}, User.current_user, true)
       @vm.class.to_s.demodulize.constantize.make_retire_request('yabadabadoo')
     end
 
     it "with many src_ids" do
       User.current_user = user
-      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [1, 2, 3]}, User.current_user, true)
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [1, 2, 3], :__request_type__ => "vm_retire"}, User.current_user, true)
       @vm.class.to_s.demodulize.constantize.make_retire_request(1, 2, 3)
     end
   end
