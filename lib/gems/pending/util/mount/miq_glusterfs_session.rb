@@ -3,6 +3,10 @@ require 'util/mount/miq_generic_mount_session'
 class MiqGlusterfsSession < MiqGenericMountSession
   PORTS = [2049, 111].freeze
 
+  def self.uri_scheme
+    "glusterfs".freeze
+  end
+
   def initialize(log_settings)
     super(log_settings.merge(:ports => PORTS))
   end

@@ -6,8 +6,9 @@ require 'uri'
 
 require 'util/miq-exception'
 require 'util/miq-uuid'
+require 'util/miq_file_storage'
 
-class MiqGenericMountSession
+class MiqGenericMountSession < MiqFileStorage::Interface
   require 'util/mount/miq_nfs_session'
   require 'util/mount/miq_s3_session'
   require 'util/mount/miq_smb_session'
@@ -54,9 +55,13 @@ class MiqGenericMountSession
 
   def self.new_session(opts)
     klass = uri_scheme_to_class(opts[:uri])
-    session = klass.new(opts.slice(:uri, :username, :password, :region))
+    session = klass.new_with_opts(opts)
     session.connect
     session
+  end
+
+  def self.new_with_opts(opts)
+    new(opts.slice(:uri, :username, :password, :region))
   end
 
   def self.uri_scheme_to_class(uri)
