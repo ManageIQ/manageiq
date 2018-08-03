@@ -32,6 +32,7 @@
   - ems_infra
   - ems_infra_admin_ui
   - ems_physical_infra
+  - event_streams
   - container_dashboard
   - ems_container
   - ems_container_deployment
@@ -206,6 +207,7 @@
   - ems_physical_infra_console
   - ems_physical_infra_tag
   - ems_physical_infra_view
+  - event_streams_view
   - host_show
   - host_show_list
   - host_perf
@@ -295,6 +297,7 @@
   - automation_manager
   - dashboard
   - ems_physical_infra
+  - event_streams
   - miq_request_admin
   - miq_request_view
   - miq_template_clone
@@ -394,6 +397,7 @@
   - ems_physical_infra_refresh
   - ems_physical_infra_tag
   - ems_physical_infra_view
+  - event_streams_view
   - physical_rack_control
   - physical_rack_view
   - physical_chassis_view
@@ -503,6 +507,7 @@
   - ems_infra_timeline
   - ems_physical_infra_tag
   - ems_physical_infra_view
+  - event_streams_view
   - physical_server_timeline
   - host_show
   - host_show_list
@@ -588,6 +593,7 @@
   - ems_physical_infra_console
   - ems_physical_infra_tag
   - ems_physical_infra_view
+  - event_streams_view
   - host_show
   - host_show_list
   - host_perf
@@ -678,6 +684,7 @@
   - ems_physical_infra_show_list
   - ems_physical_infra_tag
   - ems_physical_infra_timeline
+  - event_streams_view
   - host_show
   - host_show_list
   - host_perf
@@ -1187,6 +1194,7 @@
   - ems_physical_infra_view
   - ems_network_view
   - ems_object_storage_view
+  - event_streams_view
   - flavor_view
   - floating_ip_view
   - host_aggregate_view
