@@ -53,11 +53,9 @@ class EvmDatabaseOps
     #   :password => 'Zug-drep5s',
     #   :remote_file_name => "backup_1",     - Provide a base file name for the uploaded file
 
-    uri = with_mount_session(:backup, db_opts, connect_opts) do |database_opts, session, remote_file_uri|
+    uri = with_mount_session(:backup, db_opts, connect_opts) do |database_opts|
       validate_free_space(database_opts)
-      backup_result = PostgresAdmin.backup(database_opts)
-      session&.add(database_opts[:local_file], remote_file_uri)
-      backup_result
+      PostgresAdmin.backup(database_opts)
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been backed up to file: [#{uri}]")
     uri
@@ -66,7 +64,7 @@ class EvmDatabaseOps
   def self.dump(db_opts, connect_opts = {})
     # db_opts and connect_opts similar to .backup
 
-    uri = with_mount_session(:dump, db_opts, connect_opts) do |database_opts, _session, _remote_file_uri|
+    uri = with_mount_session(:dump, db_opts, connect_opts) do |database_opts|
       # For database dumps, this isn't going to be as accurate (since the dump
       # size will probably be larger than the calculated BD size), but it still
       # won't hurt to do as a generic way to get a rough idea if we have enough
@@ -89,10 +87,7 @@ class EvmDatabaseOps
     #   :username => 'samba_one',
     #   :password => 'Zug-drep5s',
 
-    uri = with_mount_session(:restore, db_opts, connect_opts) do |database_opts, session, remote_file_uri|
-      if session && !File.exist?(database_opts[:local_file])
-        database_opts[:local_file] = session.download(database_opts[:local_file], remote_file_uri)
-      end
+    uri = with_mount_session(:restore, db_opts, connect_opts) do |database_opts|
       prepare_for_restore(database_opts[:local_file])
 
       # remove all the connections before we restore; AR will reconnect on the next query
@@ -124,10 +119,25 @@ class EvmDatabaseOps
       db_opts[:local_file] = session.uri_to_local_path(uri)
     end
 
-    block_result = yield(db_opts, session, uri) if block_given?
+    download_from_mount_if_needed(action, session, uri, db_opts)
+    block_result = yield(db_opts) if block_given?
+    upload_to_mount_if_needed(action, session, uri, db_opts)
     uri || block_result
   ensure
     session.disconnect if session
+  end
+
+  private_class_method def self.download_from_mount_if_needed(action, session, uri, db_opts)
+    if action == :restore && session.kind_of?(MiqS3Session) && !File.exist?(db_opts[:local_file])
+      db_opts[:local_file] = session.download(db_opts[:local_file], uri)
+    end
+  end
+
+  private_class_method def self.upload_to_mount_if_needed(action, session, uri, db_opts)
+    if action == :backup && session.kind_of?(MiqS3Session)
+      session.add(db_opts[:local_file], uri)
+      FileUtils.rm_rf db_opts[:local_file] if false # TODO: consider doing this
+    end
   end
 
   private_class_method def self.prepare_for_restore(filename)
