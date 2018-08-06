@@ -1,7 +1,7 @@
 describe ServiceAnsibleTower do
   let(:tower) { FactoryGirl.create(:automation_manager_ansible_tower) }
-  let(:template_by_dialog) { FactoryGirl.create(:configuration_script, :manager => tower) }
-  let(:template_by_setter) { FactoryGirl.create(:configuration_script, :manager => tower) }
+  let(:template_by_dialog) { FactoryGirl.create(:ansible_configuration_script, :manager => tower) }
+  let(:template_by_setter) { FactoryGirl.create(:ansible_configuration_script, :manager => tower) }
 
   let(:dialog_options) do
     {
