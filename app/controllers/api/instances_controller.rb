@@ -3,6 +3,8 @@ module Api
     include Subcollections::LoadBalancers
     include Subcollections::Snapshots
 
+    DEFAULT_ROLE = 'ems_operations'.freeze
+
     def terminate_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for terminating a #{type} resource" unless id
 
@@ -112,7 +114,7 @@ module Api
 
     def terminate_instance(instance)
       desc = "#{instance_ident(instance)} terminating"
-      task_id = queue_object_action(instance, desc, :method_name => "vm_destroy", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, queue_options("vm_destroy", DEFAULT_ROLE))
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -120,7 +122,7 @@ module Api
 
     def stop_instance(instance)
       desc = "#{instance_ident(instance)} stopping"
-      task_id = queue_object_action(instance, desc, :method_name => "stop", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, queue_options("stop", DEFAULT_ROLE))
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -128,7 +130,7 @@ module Api
 
     def start_instance(instance)
       desc = "#{instance_ident(instance)} starting"
-      task_id = queue_object_action(instance, desc, :method_name => "start", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, queue_options("start", DEFAULT_ROLE))
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -136,7 +138,7 @@ module Api
 
     def pause_instance(instance)
       desc = "#{instance_ident(instance)} pausing"
-      task_id = queue_object_action(instance, desc, :method_name => "pause", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, queue_options("pause", DEFAULT_ROLE))
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -153,7 +155,7 @@ module Api
 
     def suspend_instance(instance)
       desc = "#{instance_ident(instance)} suspending"
-      task_id = queue_object_action(instance, desc, :method_name => "suspend", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, queue_options("suspend", DEFAULT_ROLE))
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -161,7 +163,7 @@ module Api
 
     def shelve_instance(instance)
       desc = "#{instance_ident(instance)} shelving"
-      task_id = queue_object_action(instance, desc, :method_name => "shelve", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, queue_options("shelve", DEFAULT_ROLE))
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -169,7 +171,7 @@ module Api
 
     def reboot_guest_instance(instance)
       desc = "#{instance_ident(instance)} rebooting"
-      task_id = queue_object_action(instance, desc, :method_name => "reboot_guest", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, queue_options("reboot_guest", DEFAULT_ROLE))
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -177,7 +179,7 @@ module Api
 
     def reset_instance(instance)
       desc = "#{instance_ident(instance)} resetting"
-      task_id = queue_object_action(instance, desc, :method_name => "reset", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, queue_options("reset", DEFAULT_ROLE))
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
