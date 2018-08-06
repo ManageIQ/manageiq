@@ -331,10 +331,11 @@ class MiqSchedule < ApplicationRecord
   end
 
   def verify_file_depot(params)  # TODO: This logic belongs in the UI, not sure where
-    depot_class = FileDepot.supported_protocols[params[:uri_prefix]]
-    depot       = file_depot.class.name == depot_class ? file_depot : build_file_depot(:type => depot_class)
-    depot.name  = params[:name]
-    depot.uri   = params[:uri]
+    depot_class      = FileDepot.supported_protocols[params[:uri_prefix]]
+    depot            = file_depot.class.name == depot_class ? file_depot : build_file_depot(:type => depot_class)
+    depot.name       = params[:name]
+    depot.uri        = params[:uri]
+    depot.aws_region = params[:aws_region]
     if params[:save]
       file_depot.save!
       file_depot.update_authentication(:default => {:userid => params[:username], :password => params[:password]}) if (params[:username] || params[:password]) && depot.class.requires_credentials?
