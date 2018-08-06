@@ -1,5 +1,9 @@
 class Chargeback
   class RatesCache
+    def initialize(options = nil)
+      @options = options
+    end
+
     def get(consumption)
       # we need to select ChargebackRates for groups of MetricRollups records
       # and rates are selected by first MetricRollup record
@@ -30,7 +34,7 @@ class Chargeback
 
       metric_rollup_record_tags = consumption.tag_names
 
-      unique_rates_by_tagged_resources(rates, metric_rollup_record_tags)
+      @options.cumulative_rate_calculation? ? rates.sort_by(&:description) : unique_rates_by_tagged_resources(rates, metric_rollup_record_tags)
     end
 
     def unique_rates_by_tagged_resources(rates, metric_rollup_record_tags)
