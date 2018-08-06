@@ -16,7 +16,7 @@ class Chargeback < ActsAsArModel
     @options = options = ReportOptions.new_from_h(options)
 
     data = {}
-    rates = RatesCache.new
+    rates = RatesCache.new(options)
     ConsumptionHistory.for_report(self, options) do |consumption|
       rates_to_apply = rates.get(consumption)
 
@@ -140,7 +140,9 @@ class Chargeback < ActsAsArModel
       rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
         r.charge(relevant_fields, consumption, @options).each do |field, value|
           next unless self.class.attribute_names.include?(field)
-          self[field] = (self[field] || 0) + value
+          next if @options.skip_field_accumulation?(field, self[field])
+
+          (self[field] = (self[field] || 0) + value)
         end
       end
     end
