@@ -221,4 +221,8 @@ class CustomButton < ApplicationRecord
   def self.display_name(number = 1)
     n_('Button', 'Buttons', number)
   end
+
+  def open_url?
+    options[:open_url] == true
+  end
 end
