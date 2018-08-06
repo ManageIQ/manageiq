@@ -201,8 +201,9 @@ describe Host do
     before do
       EvmSpecHelper.local_miq_server
 
+      ems = FactoryGirl.create(:ems_vmware)
       @password = "v2:{/OViaBJ0Ug+RSW9n7EFGqw==}"
-      @host = FactoryGirl.create(:host_vmware_esx)
+      @host = FactoryGirl.create(:host_vmware_esx, :ext_management_system => ems)
       @data = {:default => {:userid => "root", :password => @password}}
       @options = {:save => false}
     end
@@ -266,6 +267,17 @@ describe Host do
 
         @data[:default] = {:userid => "root", :password => @password}
         assert_default_credentials_validated
+      end
+    end
+
+    context "archived" do
+      let(:archived_host) { FactoryGirl.create(:host_vmware_esx).tap { |h| h.update_authentication(@data, @options) } }
+
+      context "default credentials" do
+        it "validate" do
+          expect { archived_host.verify_credentials(:default) }
+            .to raise_error(MiqException::MiqHostError, "The Host is not connected to an active Provider")
+        end
       end
     end
   end

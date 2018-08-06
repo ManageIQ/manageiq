@@ -744,6 +744,7 @@ class Host < ApplicationRecord
   end
 
   def verify_credentials(auth_type = nil, options = {})
+    raise MiqException::MiqHostError, _("The Host is not connected to an active Provider") unless has_active_ems?
     raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(auth_type)
     if auth_type.to_s != 'ipmi' && os_image_name !~ /linux_*/
       raise MiqException::MiqHostError, _("Logon to platform [%{os_name}] not supported") % {:os_name => os_image_name}
