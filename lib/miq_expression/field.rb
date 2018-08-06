@@ -31,6 +31,12 @@ class MiqExpression::Field < MiqExpression::Target
     !!(model < ApplicationRecord)
   end
 
+  def self.attribute?(val)
+    parse(val).valid?
+  rescue LoadError, StandardError
+    false
+  end
+
   def to_s
     "#{[model, *associations].join(".")}-#{column}"
   end
