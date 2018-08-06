@@ -160,7 +160,7 @@ module MiqServer::UpdateManagement
     _log.info("Checking for postgres updates...")
     check_postgres_updates
 
-    _log.info("Checking for %{product} updates..." % {:product => I18n.t('product.name')})
+    _log.info("Checking for %{product} updates..." % {:product => Vmdb::Appliance.PRODUCT_NAME})
     check_cfme_version_available
 
     _log.info("Checking for updates... Complete")

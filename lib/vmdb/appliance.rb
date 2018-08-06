@@ -21,7 +21,7 @@ module Vmdb
     end
 
     def self.PRODUCT_NAME
-      I18n.t("product.name").freeze
+      ::Settings.product.name || I18n.t("product.name").freeze
     end
 
     def self.USER_AGENT

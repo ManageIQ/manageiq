@@ -214,7 +214,7 @@ describe GenericMailer do
   describe "#test_mail" do
     it "should be called directly" do
       mail = GenericMailer.test_email(@args[:to], {})
-      expect(mail.subject).to start_with I18n.t("product.name")
+      expect(mail.subject).to start_with Vmdb::Appliance.PRODUCT_NAME
     end
 
     it "should not change the input parameters" do

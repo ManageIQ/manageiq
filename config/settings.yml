@@ -974,6 +974,7 @@
     :keep_archived_quotas: 6.months
     :purge_window_size: 1000
 :product:
+  :name:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
 :prototype:
@@ -1001,6 +1002,8 @@
   :console_proxy_port:
     :start: 6000
     :end: 7000
+  :custom_brand: false
+  :custom_login_logo: false
   :custom_logo: false
   :events:
     :disk_usage_gt_percent: 80
