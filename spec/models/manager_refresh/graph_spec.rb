@@ -6,15 +6,17 @@ describe ManagerRefresh::Graph do
   let(:edges) { [[node1, node2], [node1, node3], [node2, node4]] }
   let(:fixed_edges) { [] }
 
-  class TestGraph < described_class
-    def initialize(nodes, edges, fixed_edges)
-      @nodes = nodes
-      @edges = edges
-      @fixed_edges = fixed_edges
+  let(:test_graph_class) do
+    Class.new(described_class) do
+      def initialize(nodes, edges, fixed_edges)
+        @nodes = nodes
+        @edges = edges
+        @fixed_edges = fixed_edges
+      end
     end
   end
 
-  let(:graph) { TestGraph.new([node1, node2, node3, node4], edges, fixed_edges) }
+  let(:graph) { test_graph_class.new([node1, node2, node3, node4], edges, fixed_edges) }
 
   describe '#to_graphviz' do
     it 'prints the graph' do
