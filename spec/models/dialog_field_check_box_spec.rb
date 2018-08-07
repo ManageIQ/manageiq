@@ -19,11 +19,46 @@ describe DialogFieldCheckBox do
     end
   end
 
+  describe "#initialize_value_context" do
+    context "dynamic" do
+      let(:dialog_field) { described_class.new(:dynamic => true) }
+      before do
+        allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("f")
+      end
+
+      it "returns automate vals" do
+        dialog_field.initialize_value_context
+
+        expect(dialog_field.value).to eq('f')
+      end
+    end
+
+    context "not dynamic" do
+      context "with default" do
+        let(:dialog_field) { described_class.new(:default_value => "t") }
+        it "returns default" do
+          dialog_field.initialize_value_context
+
+          expect(dialog_field.value).to eq('t')
+        end
+      end
+
+      context "without default" do
+        let(:dialog_field) { described_class.new(:default_value => nil) }
+        it "returns initial vals" do
+          dialog_field.initialize_value_context
+
+          expect(dialog_field.value).to eq('f')
+        end
+      end
+    end
+  end
+
   describe "#initial_values" do
     let(:dialog_field) { described_class.new }
 
     it "returns false" do
-      expect(dialog_field.initial_values).to be_falsey
+      expect(dialog_field.initial_values).to eq('f')
     end
   end
 
@@ -85,7 +120,7 @@ describe DialogFieldCheckBox do
       end
 
       it "returns the initial values" do
-        expect(dialog_field.normalize_automate_values(automate_hash)).to eq(false)
+        expect(dialog_field.normalize_automate_values(automate_hash)).to eq('f')
       end
     end
   end
