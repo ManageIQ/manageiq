@@ -49,6 +49,11 @@ module ManageIQ::Providers
           _log.warn "Not Found response code returned in provider: #{@os_handle.address}. Message=#{err.message}"
           _log.warn err.backtrace.join("\n")
           nil
+        rescue Excon::Errors::BadRequest => err
+          # This can happen if stack resources are missing, among other reasons. In such a case log a warning but continue the refresh.
+          _log.warn "Bad Request response code returned in provider: #{@os_handle.address}. Message=#{err.message}"
+          _log.warn err.backtrace.join("\n")
+          nil
         end
 
         alias safe_get safe_call
