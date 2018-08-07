@@ -273,7 +273,6 @@ describe EmsEvent do
     let(:provider_critical_event) { 'SomeCriticalEvent' }
     let(:provider_detail_event) { 'SomeDetailEvent' }
     let(:provider_warning_event) { 'SomeWarningEvent' }
-    let(:provider_event) { 'SomeSpecialProviderEvent' }
 
     it 'returns a list of expected groups' do
       event_group_names = [
@@ -298,30 +297,11 @@ describe EmsEvent do
       expect(described_class.event_groups.keys).to match_array(event_group_names)
       expect(described_class.event_groups[:addition]).to include(:name => 'Creation/Addition')
       expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
-      expect(described_class.event_groups[:addition][:critical]).not_to include(provider_event)
-    end
-
-    it 'returns the provider event if configured' do
-      stub_settings_merge(
-        :ems => {
-          :some_provider => {
-            :event_handling => {
-              :event_groups => {
-                :addition => {
-                  :critical => [provider_event]
-                }
-              }
-            }
-          }
-        }
-      )
-
-      expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
-      expect(described_class.event_groups[:addition][:critical]).to include(provider_event)
+      expect(described_class.event_groups[:addition][:critical]).not_to include('BogueEvent')
     end
 
     it 'returns the group, level and group name of an unknown event' do
-      group, level = described_class.group_and_level(provider_event)
+      group, level = described_class.group_and_level('BogusEvent')
       expect(group).to eq(:other)
       expect(level).to eq(:detail)
       expect(described_class.group_name(group)).to eq('Other')
@@ -346,6 +326,71 @@ describe EmsEvent do
       expect(group).to eq(:power)
       expect(level).to eq(:detail)
       expect(described_class.group_name(group)).to eq('Power Activity')
+    end
+
+    context 'with provider events' do
+      before(:each) do
+        stub_settings_merge(
+          :ems => {
+            :some_provider => {
+              :event_handling => {
+                :event_groups => {
+                  :addition => {
+                    :warning  => [provider_regex],
+                    :critical => [provider_event]
+                  }
+                }
+              }
+            }
+          }
+        )
+      end
+
+      let(:provider_event) { 'SomeSpecialProviderEvent' }
+      let(:provider_regex) { /Some.+Event/ }
+
+      it 'returns the provider event if configured' do
+        expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
+        expect(described_class.event_groups[:addition][:critical]).to include(provider_event)
+        expect(described_class.event_groups[:addition][:warning]).to include(provider_regex)
+      end
+
+      # Make sure explicitly named event types take precedence over regex
+      it 'returns the group, level and group name of a warning event' do
+        group, level = described_class.group_and_level(provider_warning_event)
+        expect(group).to eq(:power)
+        expect(level).to eq(:warning)
+        expect(described_class.group_name(group)).to eq('Power Activity')
+      end
+
+      it 'returns the group, level and group name of a critical event' do
+        group, level = described_class.group_and_level(provider_critical_event)
+        expect(group).to eq(:power)
+        expect(level).to eq(:critical)
+        expect(described_class.group_name(group)).to eq('Power Activity')
+      end
+
+      it 'returns the group, level and group name of a detail event' do
+        group, level = described_class.group_and_level(provider_detail_event)
+        expect(group).to eq(:power)
+        expect(level).to eq(:detail)
+        expect(described_class.group_name(group)).to eq('Power Activity')
+      end
+      # End make sure explicitly named event types take precedence over regex
+
+      it 'returns the group, level and group name of a regex-matched event' do
+        group, level = described_class.group_and_level('SomeMatchingEvent')
+        expect(group).to eq(:addition)
+        expect(level).to eq(:warning)
+        expect(described_class.group_name(group)).to eq('Creation/Addition')
+      end
+
+      it 'returns the group, level and group name of an unknown event' do
+        group, level = described_class.group_and_level('BogusEvent')
+        expect(group).to eq(:other)
+        expect(level).to eq(:detail)
+        expect(described_class.group_name(group)).to eq('Other')
+      end
     end
   end
 end

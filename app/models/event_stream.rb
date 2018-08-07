@@ -59,11 +59,19 @@ class EventStream < ApplicationRecord
 
   def self.group_and_level(event_type)
     level = :detail # the level is detail as default
-    group, _ = event_groups.find do |_k, value|
-      GROUP_LEVELS.detect { |lvl| value[lvl]&.include?(event_type) }.tap do |level_found|
-        level = level_found if level_found
-      end
-    end
+    egroups = event_groups
+
+    group = egroups.detect do |_, value|
+      GROUP_LEVELS
+        .detect { |lvl| value[lvl]&.any? { |typ| typ.kind_of?(String) && typ == event_type } }
+        .tap { |level_found| level = level_found || level }
+    end&.first
+
+    group ||= egroups.detect do |_, value|
+      GROUP_LEVELS
+        .detect { |lvl| value[lvl]&.any? { |typ| typ.kind_of?(Regexp) && typ.match(event_type) } }
+        .tap { |level_found| level = level_found || level }
+    end&.first
 
     group ||= :other
     return group, level
