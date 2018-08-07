@@ -199,9 +199,8 @@ describe SupportsFeatureMixin do
 
   context "guards against unqueriable features" do
     it "when defining a class with :supports_not" do
-      stub_const("MegaPost", Class.new)
       expect do
-        class MegaPost
+        Class.new do
           include SupportsFeatureMixin
           supports_not :mega
         end
@@ -209,9 +208,8 @@ describe SupportsFeatureMixin do
     end
 
     it "when defining a class with :supports" do
-      stub_const("MegaPost", Class.new)
       expect do
-        class MegaPost
+        Class.new do
           include SupportsFeatureMixin
           supports :mega
         end

@@ -9,33 +9,35 @@ describe Authenticator::Ldap do
     }
   end
 
-  class FakeLdap
-    def initialize(user_data)
-      @user_data = user_data
-    end
+  let(:fake_ldap) do
+    Class.new do
+      def initialize(user_data)
+        @user_data = user_data
+      end
 
-    def bind(username, password)
-      @user_data[username].try(:[], :password) == password
-    end
+      def bind(username, password)
+        @user_data[username].try(:[], :password) == password
+      end
 
-    def fqusername(username)
-      username.delete('X')
-    end
+      def fqusername(username)
+        username.delete('X')
+      end
 
-    def get_user_object(username)
-      @user_data[username]
-    end
+      def get_user_object(username)
+        @user_data[username]
+      end
 
-    def get_memberships(user_obj, _max_depth)
-      user_obj.fetch(:groups)
-    end
+      def get_memberships(user_obj, _max_depth)
+        user_obj.fetch(:groups)
+      end
 
-    def get_attr(user_obj, attr_name)
-      user_obj.fetch(attr_name)
-    end
+      def get_attr(user_obj, attr_name)
+        user_obj.fetch(attr_name)
+      end
 
-    def normalize(dn)
-      dn
+      def normalize(dn)
+        dn
+      end
     end
   end
 
@@ -114,7 +116,7 @@ describe Authenticator::Ldap do
   end
 
   before do
-    allow(MiqLdap).to receive(:new) { FakeLdap.new(user_data) }
+    allow(MiqLdap).to receive(:new) { fake_ldap.new(user_data) }
     allow(MiqLdap).to receive(:using_ldap?) { true }
   end
 
