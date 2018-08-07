@@ -35,6 +35,11 @@ module ManagerRefresh
             end
           end
 
+          # @return [Array] Returns index data
+          def index_data
+            index.values
+          end
+
           # Find value based on index_value
           #
           # @param _index_value [String] a index_value of the InventoryObject we search for

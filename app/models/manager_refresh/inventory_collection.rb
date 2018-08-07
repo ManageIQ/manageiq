@@ -82,6 +82,7 @@ module ManagerRefresh
 
     delegate :<<,
              :build,
+             :build_partial,
              :data,
              :each,
              :find_or_build,
