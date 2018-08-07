@@ -36,21 +36,30 @@ module ManagerRefresh
             index.delete(index_value)
           end
 
-          # Builds index record with skeletal InventoryObject and returns it, or returns nil if it's already present
-          # in primary_index or skeletal_primary_index
+          # Builds index record with skeletal InventoryObject and returns it. Or it returns existing InventoryObject
+          # that is found in primary_index or skeletal_primary_index.
           #
           # @param attributes [Hash] Skeletal data of the index, must contain unique index keys and everything else
           #        needed for creating the record in the Database
-          # @return [InventoryObject|nil] Returns built value or nil
+          # @return [InventoryObject] Returns built InventoryObject or existing InventoryObject with new attributes
+          #         assigned
           def build(attributes)
             attributes = {}.merge!(default_values).merge!(attributes)
 
             # If the primary index is already filled, we don't want populate skeletal index
             uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(attributes, named_ref)
-            return if primary_index.find(uuid)
+            if (inventory_object = primary_index.find(uuid))
+              # TODO(lsmola) add timestamp check? If timestamps are present, we should assign the data, only if they
+              # have newer timestamp
+              return inventory_object.assign_attributes(attributes)
+            end
 
             # Return if skeletal index already exists
-            return if index[uuid]
+            if (inventory_object = index[uuid])
+              # TODO(lsmola) add timestamp check? If timestamps are present, we should assign the data, only if they
+              # have newer timestamp
+              return inventory_object.assign_attributes(attributes)
+            end
 
             # We want to populate a new skeletal index
             inventory_object                     = new_inventory_object(attributes)
