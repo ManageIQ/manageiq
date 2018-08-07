@@ -100,8 +100,11 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
 
   # @return [Hash] kwargs shared for all InventoryCollection objects
   def shared_options
-    # can be implemented in a subclass
-    {}
+    {
+      :strategy => strategy,
+      :targeted => targeted?,
+      :parent   => manager.presence
+    }
   end
 
   # Returns list of target's ems_refs
