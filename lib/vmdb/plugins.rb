@@ -49,7 +49,7 @@ module Vmdb
     def ansible_runner_content
       @ansible_runner_content ||= begin
         map do |engine|
-          content_dir = engine.root.join("content", "ansible_tmp")
+          content_dir = engine.root.join("content", "ansible_runner")
           next unless File.exist?(content_dir.join("requirements.yml"))
 
           [engine, content_dir]
