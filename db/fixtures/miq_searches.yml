@@ -329,13 +329,27 @@
     search_type: default
     db: Host
 - attributes:
+    name: default_Status / Orhaned
+    description: Status / Orhaned
+    filter: !ruby/object:MiqExpression
+      exp:
+        "=":
+          field: Host-archived
+          value: "true"
+    search_type: default
+    db: Host
+- attributes:
     name: default_Status / Running
     description: Status / Running
     filter: !ruby/object:MiqExpression
       exp:
-        INCLUDES:
-          field: Host-power_state
-          value: "on"
+        and:
+        - INCLUDES:
+            field: Host-power_state
+            value: "on"
+        - "=":
+            field: Host-archived
+            value: "false"
     search_type: default
     db: Host
 - attributes:
