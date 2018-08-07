@@ -17,6 +17,8 @@ module ManagerRefresh::SaveCollection
       # @param on_conflict [Symbol, NilClass] defines behavior on conflict with unique index constraint, allowed values
       #        are :do_update, :do_nothing, nil
       def build_insert_query(all_attribute_keys, hashes, on_conflict: nil)
+        _log.debug("Building insert query for #{inventory_collection} of size #{inventory_collection.size}...")
+
         # Cache the connection for the batch
         connection = get_connection
 
@@ -48,26 +50,28 @@ module ManagerRefresh::SaveCollection
                   UPDATE
                     SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
             }
+
+            # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
+            # the ems_id as a cross manager migration, since ems_id should be there as part of the insert. The attempt of
+            # changing ems_id could lead to putting it back by a refresh.
+            # TODO(lsmola) should we add :deleted => false to the update clause? That should handle a reconnect, without a
+            # a need to list :deleted anywhere in the parser. We just need to check that a model has the :deleted attribute
+
+            # This conditional will avoid rewriting new data by old data. But we want it only when remote_data_timestamp is a
+            # part of the data, since for the fake records, we just want to update ems_ref.
+            if supports_remote_data_timestamp?(all_attribute_keys)
+              insert_query += %{
+                WHERE EXCLUDED.timestamp IS NULL OR (EXCLUDED.timestamp > #{table_name}.timestamp)
+              }
+            end
           end
-        end
-
-        # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
-        # the ems_id as a cross manager migration, since ems_id should be there as part of the insert. The attempt of
-        # changing ems_id could lead to putting it back by a refresh.
-        # TODO(lsmola) should we add :deleted => false to the update clause? That should handle a reconnect, without a
-        # a need to list :deleted anywhere in the parser. We just need to check that a model has the :deleted attribute
-
-        # This conditional will avoid rewriting new data by old data. But we want it only when remote_data_timestamp is a
-        # part of the data, since for the fake records, we just want to update ems_ref.
-        if supports_remote_data_timestamp?(all_attribute_keys)
-          insert_query += %{
-            WHERE EXCLUDED.remote_data_timestamp IS NULL OR (EXCLUDED.remote_data_timestamp > #{table_name}.remote_data_timestamp)
-          }
         end
 
         insert_query += %{
           RETURNING "id",#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")}
         }
+
+        _log.debug("Building insert query for #{inventory_collection} of size #{inventory_collection.size}...Complete")
 
         insert_query
       end
@@ -97,6 +101,7 @@ module ManagerRefresh::SaveCollection
       # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
       # @param hashes [Array<Hash>] data used for building a batch update sql query
       def build_update_query(all_attribute_keys, hashes)
+        _log.debug("Building update query for #{inventory_collection} of size #{inventory_collection.size}...")
         # Cache the connection for the batch
         connection = get_connection
 
@@ -127,9 +132,12 @@ module ManagerRefresh::SaveCollection
         # part of the data, since for the fake records, we just want to update ems_ref.
         if supports_remote_data_timestamp?(all_attribute_keys)
           update_query += %{
-            AND (updated_values.remote_data_timestamp IS NULL OR (updated_values.remote_data_timestamp > #{table_name}.remote_data_timestamp))
+            AND (updated_values.timestamp IS NULL OR (updated_values.timestamp > #{table_name}.timestamp))
           }
         end
+
+        _log.debug("Building update query for #{inventory_collection} of size #{inventory_collection.size}...Complete")
+
         update_query
       end
 

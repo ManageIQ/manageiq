@@ -377,7 +377,7 @@ module ManagerRefresh::SaveCollection
 
       # @return [Boolean] true if the model_class has remote_data_timestamp column
       def supports_remote_data_timestamp?(all_attribute_keys)
-        all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
+        all_attribute_keys.include?(:timestamp) # include? on Set is O(1)
       end
     end
   end
