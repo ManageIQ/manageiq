@@ -156,7 +156,7 @@ module Vmdb
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection
-      puts "ManageIQ version: #{Vmdb::Appliance.VERSION} codename: #{Vmdb::Appliance.CODENAME}"
+      puts "** #{Vmdb::Appliance.BANNER}"
     end
 
     console do

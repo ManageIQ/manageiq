@@ -14,6 +14,10 @@ module Vmdb
       "Hammer".freeze
     end
 
+    def self.BANNER
+      "#{self.PRODUCT_NAME} #{self.VERSION}, codename: #{self.CODENAME}"
+    end
+
     def self.BUILD_NUMBER
       @EVM_BUILD_NUMBER ||= self.BUILD.nil? ? "N/A" : self.BUILD.split("-").last   # Grab the build number after the last hyphen
     end
