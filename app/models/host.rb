@@ -139,6 +139,7 @@ class Host < ApplicationRecord
   virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true
   virtual_column :vmm_vendor_display,           :type => :string
   virtual_column :ipmi_enabled,                 :type => :boolean
+  virtual_column :archived, :type => :boolean
 
   virtual_has_many   :resource_pools,                               :uses => :all_relationships
   virtual_has_many   :miq_scsi_luns,                                :uses => {:hardware => {:storage_adapters => {:miq_scsi_targets => :miq_scsi_luns}}}
@@ -1768,6 +1769,7 @@ class Host < ApplicationRecord
   def archived?
     ems_id.nil?
   end
+  alias archived archived?
 
   def normalized_state
     return 'archived' if archived?
