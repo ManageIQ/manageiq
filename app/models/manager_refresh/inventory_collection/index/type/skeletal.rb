@@ -18,6 +18,7 @@ module ManagerRefresh
 
           delegate :blank?,
                    :each,
+                   :each_value,
                    :to => :index
 
           # Find value based on index_value
