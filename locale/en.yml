@@ -1104,3 +1104,11 @@ en:
     ui_title:
       foreman:             Foreman
       ansible_tower:       Ansible Tower
+
+  # Used in NumberHelper.number_to_human_size() and NumberHelper.number_to_human()
+  number:
+    human:
+      storage_units:
+        units:
+          pb: "PB"
+          eb: "EB"
