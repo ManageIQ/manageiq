@@ -37,14 +37,12 @@ describe EvmDatabaseOps do
     it "remotely" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = "custom_backup"
-      expect(session).to receive(:add).and_return("smb://myserver.com/share/db_backup/custom_backup")
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to eq("smb://myserver.com/share/db_backup/custom_backup")
     end
 
     it "remotely without a remote file name" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = nil
-      expect(session).to receive(:add)
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to match(/smb:\/\/myserver.com\/share\/db_backup\/miq_backup_.*/)
     end
 
@@ -58,7 +56,6 @@ describe EvmDatabaseOps do
       expect(described_class).to receive(:_log).twice.and_return(log_stub)
       expect(log_stub).to        receive(:info).with(any_args)
       expect(log_stub).to        receive(:info).with("[vmdb_production] database has been backed up to file: [smb://myserver.com/share/db_backup/miq_backup]")
-      expect(session).to receive(:add).and_return("smb://myserver.com/share/db_backup/miq_backup")
 
       EvmDatabaseOps.backup(@db_opts, @connect_opts)
     end
