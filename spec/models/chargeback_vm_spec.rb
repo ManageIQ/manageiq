@@ -822,7 +822,6 @@ describe ChargebackVm do
 
             ChargebackRate.set_assignments(:storage, [rate_assignment_options])
 
-            @rate = Chargeback::RatesCache.new.get(consumption).first
             expect(subject).to be_nil
           end
         end
@@ -1212,13 +1211,5 @@ describe ChargebackVm do
     include_examples "ChargebackVm"
   end
 
-  context "New Chargeback" do
-    before do
-      ManageIQ::Consumption::ShowbackInputMeasure.seed
 
-      stub_settings(:new_chargeback => '1')
-    end
-
-    include_examples "ChargebackVm", :skip
-  end
 end
