@@ -957,9 +957,13 @@
     description: Status / Running
     filter: !ruby/object:MiqExpression
       exp:
-        "=":
-          field: VmCloud-power_state
-          value: "on"
+        and:
+        - "=":
+            field: VmCloud-power_state
+            value: "on"
+        - "=":
+            field: VmCloud-archived
+            value: "false"
     search_type: default
     db: ManageIQ::Providers::CloudManager::Vm
 - attributes:
