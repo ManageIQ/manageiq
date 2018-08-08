@@ -160,7 +160,8 @@
             :method: :allowed_cloud_tenants
           :auto_select_single: false
           :description: Cloud Tenant
-          :required: false
+          :required_method: :validate_placement
+          :required: true
           :display: :edit
           :data_type: :integer
         :cloud_network:
