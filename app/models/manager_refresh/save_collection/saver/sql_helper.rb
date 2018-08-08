@@ -16,11 +16,17 @@ module ManagerRefresh::SaveCollection
       # @param hashes [Array<Hash>] data used for building a batch insert sql query
       # @param on_conflict [Symbol, NilClass] defines behavior on conflict with unique index constraint, allowed values
       #        are :do_update, :do_nothing, nil
-      def build_insert_query(all_attribute_keys, hashes, on_conflict: nil)
+      def build_insert_query(all_attribute_keys, hashes, on_conflict: nil, mode:, column_name: nil)
         _log.debug("Building insert query for #{inventory_collection} of size #{inventory_collection.size}...")
 
         # Cache the connection for the batch
         connection = get_connection
+
+        ignore_cols = if mode == :partial
+                        [:timestamp]
+                      elsif mode == :full
+                        []
+                      end
 
         # Make sure we don't send a primary_key for INSERT in any form, it could break PG sequencer
         all_attribute_keys_array = all_attribute_keys.to_a - [primary_key.to_s, primary_key.to_sym]
@@ -48,7 +54,6 @@ module ManagerRefresh::SaveCollection
               ON CONFLICT (#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")}) #{where_to_sql}
                 DO
                   UPDATE
-                    SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
             }
 
             # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
@@ -59,10 +64,40 @@ module ManagerRefresh::SaveCollection
 
             # This conditional will avoid rewriting new data by old data. But we want it only when remote_data_timestamp is a
             # part of the data, since for the fake records, we just want to update ems_ref.
-            if supports_remote_data_timestamp?(all_attribute_keys)
+            if mode == :full
               insert_query += %{
-                WHERE EXCLUDED.timestamp IS NULL OR (EXCLUDED.timestamp > #{table_name}.timestamp)
+                SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
               }
+              if supports_remote_data_timestamp?(all_attribute_keys)
+                insert_query += %{
+                  WHERE EXCLUDED.timestamp IS NULL OR (
+                    EXCLUDED.timestamp > #{table_name}.timestamp AND
+                    EXCLUDED.timestamp >= #{table_name}.timestamps_max
+                  )
+                }
+              end
+            elsif mode == :partial
+              insert_query += %{
+                 SET #{(all_attribute_keys_array - ignore_cols).map { |key| build_insert_set_cols(key) }.join(", ")}
+              }
+              if supports_remote_data_timestamp?(all_attribute_keys)
+                # TODO(lsmola) we should have EXCLUDED.timestamp > #{table_name}.timestamp, but if skeletal precreate
+                # creates the row, it sets timestamp. Should we combine it with complete => true only? We probably need
+                # to set the timestamp, otherwise we can't touch it in the update clause. Maybe we coud set it as
+                # timestamps_max?
+
+
+                insert_query += %{
+                  , timestamps = #{table_name}.timestamps || ('{"#{column_name}": "' || EXCLUDED.timestamp::timestamp || '"}')::jsonb
+                  , timestamps_max = greatest(#{table_name}.timestamps_max::timestamp, EXCLUDED.timestamp::timestamp)
+                  WHERE EXCLUDED.timestamp IS NULL OR (
+                    EXCLUDED.timestamp >= #{table_name}.timestamp AND (
+                      (#{table_name}.timestamps->>'#{column_name}')::timestamp IS NULL OR
+                      EXCLUDED.timestamp > (#{table_name}.timestamps->>'#{column_name}')::timestamp
+                    )
+                  )
+                }
+              end
             end
           end
         end
@@ -132,7 +167,10 @@ module ManagerRefresh::SaveCollection
         # part of the data, since for the fake records, we just want to update ems_ref.
         if supports_remote_data_timestamp?(all_attribute_keys)
           update_query += %{
-            AND (updated_values.timestamp IS NULL OR (updated_values.timestamp > #{table_name}.timestamp))
+            AND (updated_values.timestamp IS NULL OR (
+              updated_values.timestamp > #{table_name}.timestamp) AND
+              updated_values.timestamp >= #{table_name}.timestamps_max
+            )
           }
         end
 

@@ -129,6 +129,21 @@ module ManagerRefresh::SaveCollection
               skeletal_inventory_objects_index[index] = inventory_object
             end
 
+            base_columns = unique_index_columns + [:created_on, :updated_on, :timestamp, :type]
+            columns_for_per_column_batches = all_attribute_keys - base_columns
+            columns_for_per_column_batches.each do |column_name|
+              filtered = skeletal_inventory_objects_index.select { |_, v| v.data.key?(column_name) }
+
+              filtered.each_slice(batch_size_for_persisting) do |batch|
+                create_records!(base_columns + [column_name],
+                                batch,
+                                skeletal_attributes_index,
+                                :on_conflict => :do_update,
+                                :mode        => :partial,
+                                :column_name => column_name)
+              end
+            end
+
             skeletal_inventory_objects_index.each_slice(batch_size_for_persisting) do |batch|
               create_records!(all_attribute_keys, batch, skeletal_attributes_index, :on_conflict => :do_nothing)
             end
@@ -293,20 +308,22 @@ module ManagerRefresh::SaveCollection
       #        models's table
       # @param on_conflict [Symbol, NilClass] defines behavior on conflict with unique index constraint, allowed values
       #        are :do_update, :do_nothing, nil
-      def create_records!(all_attribute_keys, batch, attributes_index, on_conflict: nil)
+      # @param on_conflict [Symbol] Mode for saving, allowed values are [:full, :partial], :full is when we save all
+      #        columns of a row, :partial is when we save only few columns, so a partial row.
+      def create_records!(all_attribute_keys, batch, attributes_index, on_conflict: nil, mode: :full, column_name: nil)
         indexed_inventory_objects = {}
         hashes                    = []
         create_time               = time_now
         batch.each do |index, inventory_object|
           hash = if inventory_collection.use_ar_object?
-                   record = inventory_collection.model_class.new(attributes_index.delete(index))
+                   record = inventory_collection.model_class.new(attributes_index[index])
                    values_for_database!(all_attribute_keys,
                                         record.attributes.symbolize_keys)
                  elsif serializable_keys?
                    values_for_database!(all_attribute_keys,
-                                        attributes_index.delete(index))
+                                        attributes_index[index])
                  else
-                   attributes_index.delete(index)
+                   attributes_index[index]
                  end
 
           assign_attributes_for_create!(hash, create_time)
@@ -321,12 +338,19 @@ module ManagerRefresh::SaveCollection
         return if hashes.blank?
 
         result = get_connection.execute(
-          build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict)
+          build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict, :mode => mode, :column_name => column_name)
         )
+        # TODO(lsmola) we need to recognize what records were created and what records were updated. Will we take
+        # skeletal records as created? The creation should be having :complete => true
         inventory_collection.store_created_records(result)
-        if inventory_collection.dependees.present?
+        if inventory_collection.dependees.present? && mode == :full
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
-          map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result, :on_conflict => on_conflict)
+          map_ids_to_inventory_objects(indexed_inventory_objects,
+                                       all_attribute_keys,
+                                       hashes,
+                                       result,
+                                       :on_conflict => on_conflict,
+                                       :mode        => mode)
         end
       end
 
@@ -340,8 +364,10 @@ module ManagerRefresh::SaveCollection
       #        contains a primary key_value plus all columns that are a part of the unique index
       # @param on_conflict [Symbol, NilClass] defines behavior on conflict with unique index constraint, allowed values
       #        are :do_update, :do_nothing, nil
-      def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result, on_conflict:)
+      def map_ids_to_inventory_objects(indexed_inventory_objects, all_attribute_keys, hashes, result, on_conflict:, mode:)
         if on_conflict == :do_nothing
+          # TODO(lsmola) is the comment below still accurate? We will update some partial rows, the actual skeletal
+          # precreate will still do nothing.
           # For ON CONFLICT DO NOTHING, we need to always fetch the records plus the attribute_references. This path
           # applies only for skeletal precreate.
           inventory_collection.model_class.where(
