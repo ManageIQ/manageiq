@@ -9,3 +9,11 @@ ja:
     support_website: "http://www.manageiq.org"
     support_website_text: "ManageIQ.org"
 
+  # Used in NumberHelper.number_to_human_size() and NumberHelper.number_to_human()
+  number:
+    human:
+      storage_units:
+        units:
+          pb: "PB"
+          eb: "EB"
+

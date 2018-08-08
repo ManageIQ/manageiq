@@ -5,3 +5,11 @@ pt-BR:
     copyright: "Copyright (c) 2018 ManageIQ. Sponsored by Red Hat Inc."
     support_website: "http://www.manageiq.org"
     support_website_text: "ManageIQ.org"
+
+  # Used in NumberHelper.number_to_human_size() and NumberHelper.number_to_human()
+  number:
+    human:
+      storage_units:
+        units:
+          pb: "PB"
+          eb: "EB"
