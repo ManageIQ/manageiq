@@ -519,7 +519,8 @@ module Rbac
 
         if MiqUserRole != klass
           filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
-          scope = scope.with_current_user_groups(user)
+          # Non tenant admins can only see their own groups. Note - a super admin is also a tenant admin
+          scope = scope.with_current_user_groups(user) unless user.tenant_admin_user?
         end
 
         scope_by_ids(scope, filtered_ids)
