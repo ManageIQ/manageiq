@@ -12,8 +12,8 @@ module Ansible
       def run_async(env_vars, extra_vars, playbook_path)
         run_via_cli(env_vars,
                     extra_vars,
-                    :playbook_path         => playbook_path,
-                    :ansible_runner_method => "start")
+                    :ansible_runner_method => "start",
+                    :playbook              => playbook_path)
       end
 
       # Runs a role directly via ansible-runner, a simple playbook is then automatically created,
@@ -31,10 +31,10 @@ module Ansible
       def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true)
         run_via_cli(env_vars,
                     extra_vars,
-                    :role_name             => role_name,
+                    :ansible_runner_method => "start",
+                    :role                  => role_name,
                     :roles_path            => roles_path,
-                    :role_skip_facts       => role_skip_facts,
-                    :ansible_runner_method => "start")
+                    :role_skip_facts       => role_skip_facts)
       end
 
       # Runs a playbook via ansible-runner, see: https://ansible-runner.readthedocs.io/en/latest/standalone.html#running-playbooks
@@ -45,7 +45,9 @@ module Ansible
       # @param playbook_path [String] Path to the playbook we will want to run
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
       def run(env_vars, extra_vars, playbook_path)
-        run_via_cli(env_vars, extra_vars, :playbook_path => playbook_path)
+        run_via_cli(env_vars,
+                    extra_vars,
+                    :playbook => playbook_path)
       end
 
       # Runs a role directly via ansible-runner, a simple playbook is then automatically created,
@@ -60,7 +62,11 @@ module Ansible
       #        playbook. True by default.
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
       def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true)
-        run_via_cli(env_vars, extra_vars, :role_name => role_name, :roles_path => roles_path, :role_skip_facts => role_skip_facts)
+        run_via_cli(env_vars,
+                    extra_vars,
+                    :role            => role_name,
+                    :roles_path      => roles_path,
+                    :role_skip_facts => role_skip_facts)
       end
 
       # Runs "run" method via queue
@@ -89,9 +95,7 @@ module Ansible
       #        playbook. True by default.
       # @return [BigInt] ID of MiqTask record wrapping the task
       def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true)
-        run_in_queue("run_role",
-                     user_id,
-                     queue_opts,
+        run_in_queue("run_role", user_id, queue_opts,
                      [env_vars, extra_vars, role_name, {:roles_path => roles_path, :role_skip_facts => role_skip_facts}])
       end
 
@@ -125,31 +129,23 @@ module Ansible
       # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the
       #        ansible-runner run
       # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
-      # @param playbook_path [String] Path to the playbook we will want to run
-      # @param role_name [String] Ansible role name
-      # @param roles_path [String] Path to the directory with roles
-      # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
-      #        playbook. True by default.
+      # @param ansible_runner_method [String] Optional method we will use to run the ansible-runner. It can be either
+      #        "run", which is sync call, or "start" which is async call.  Default is "run"
+      # @param playbook_or_role_args [Hash] Hash that includes the :playbook key or :role keys
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_via_cli(env_vars, extra_vars, playbook_path: nil, role_name: nil, roles_path: nil, role_skip_facts: true,
-                      ansible_runner_method: "run")
-        validate_params!(env_vars, extra_vars, playbook_path, roles_path)
+      def run_via_cli(env_vars, extra_vars, ansible_runner_method: "run", **playbook_or_role_args)
+        validate_params!(env_vars, extra_vars, ansible_runner_method, playbook_or_role_args)
 
         base_dir = Dir.mktmpdir("ansible-runner")
-        begin
-          result = AwesomeSpawn.run(ansible_command(base_dir, ansible_runner_method),
-                                    :env    => env_vars,
-                                    :params => params(:extra_vars      => extra_vars,
-                                                      :playbook_path   => playbook_path,
-                                                      :role_name       => role_name,
-                                                      :roles_path      => roles_path,
-                                                      :role_skip_facts => role_skip_facts))
+        params = runner_params(base_dir, ansible_runner_method, extra_vars, playbook_or_role_args)
 
+        begin
+          result = AwesomeSpawn.run("ansible-runner", :env => env_vars, :params => params)
           res = response(base_dir, ansible_runner_method, result)
         ensure
           # Clean up the tmp dir for the sync method, for async we will clean it up after the job is finished and we've
           # read the output, that will be written into this directory.
-          res.cleanup_filesystem! unless async?(ansible_runner_method)
+          res&.cleanup_filesystem! unless async?(ansible_runner_method)
         end
       end
 
@@ -169,106 +165,46 @@ module Ansible
         end
       end
 
-      # @return [Bollean] True if ansible-runner will run on background
+      # @return [Boolean] True if ansible-runner will run on background
       def async?(ansible_runner_method)
         ansible_runner_method == "start"
       end
 
-      # Generate correct params, depending if we've passed :playbook_path or a :role_name
-      #
-      # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
-      # @param playbook_path [String] Path to the playbook we will want to run
-      # @param role_name [String] Ansible role name
-      # @param roles_path [String] Path to the directory with roles
-      # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
-      #        playbook.
-      # @return [Array] Arguments for the ansible-runner run
-      def params(extra_vars:, playbook_path:, role_name:, roles_path:, role_skip_facts:)
-        role_or_playbook_params = if playbook_path
-                                    playbook_params(:playbook_path => playbook_path)
-                                  elsif role_name
-                                    role_params(:role_name       => role_name,
-                                                :roles_path      => roles_path,
-                                                :role_skip_facts => role_skip_facts)
-                                  end
+      def runner_params(base_dir, ansible_runner_method, extra_vars, playbook_or_role_args)
+        runner_args = playbook_or_role_args.dup
 
-        [shared_params(:extra_vars => extra_vars).merge(role_or_playbook_params)]
-      end
+        runner_args.delete(:roles_path) if runner_args[:roles_path].nil?
+        skip_facts = runner_args.delete(:role_skip_facts)
+        runner_args[:role_skip_facts] = nil if skip_facts
 
-      # Generate correct params if using :playbook_path
-      #
-      # @param playbook_path [String] Path to the playbook we will want to run
-      # @return [Hash] Partial arguments for the ansible-runner run
-      def playbook_params(playbook_path:)
-        {:playbook => playbook_path}
-      end
+        runner_args[:ident]   = "result"
+        runner_args[:hosts]   = "localhost"
+        runner_args[:cmdline] = AwesomeSpawn.build_command_line(nil, [{:extra_vars => extra_vars.to_json}]).lstrip if extra_vars.any?
 
-      # Generate correct params if using :role_name
-      #
-      # @param role_name [String] Ansible role name
-      # @param roles_path [String] Path to the directory with roles
-      # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
-      #        playbook.
-      # @return [Hash] Partial arguments for the ansible-runner run
-      def role_params(role_name:, roles_path:, role_skip_facts:)
-        role_params                     = {:role => role_name}
-
-        role_params[:"roles-path"]      = roles_path if roles_path
-        role_params[:"role-skip-facts"] = nil if role_skip_facts
-
-        role_params
-      end
-
-      # Generate correct params shared by :playbook_path or a :role_name paths
-      #
-      # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
-      # @return [Hash] Partial arguments for the ansible-runner run
-      def shared_params(extra_vars:)
-        {:cmdline => "--extra-vars '#{JSON.dump(extra_vars)}'"}
+        [ansible_runner_method, base_dir, :json, runner_args]
       end
 
       # Asserts passed parameters are correct, if not throws an exception.
-      #
-      # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the
-      #        ansible-runner run
-      # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
-      # @param playbook_path [String] Path to the playbook we will want to run
-      # @param roles_path [String] Path to the directory with roles
-      def validate_params!(env_vars, extra_vars, playbook_path, roles_path)
-        assert_hash!(env_vars)
-        assert_hash!(extra_vars)
-        assert_path!(playbook_path)
-        assert_path!(roles_path)
-      end
+      def validate_params!(env_vars, extra_vars, ansible_runner_method, playbook_or_role_args)
+        errors = []
 
-      # Asserts that passed argument is a hash
-      #
-      # @param hash [Hash] Passed argument we test for being Hash
-      def assert_hash!(hash)
-        unless hash.kind_of?(Hash)
-          raise "Passed parameter must be of type Hash, got: #{hash}"
+        errors << "env_vars must be a Hash, got: #{hash.class}" unless env_vars.kind_of?(Hash)
+        errors << "extra_vars must be a Hash, got: #{hash.class}" unless extra_vars.kind_of?(Hash)
+
+        unless %w(run start).include?(ansible_runner_method.to_s)
+          errors << "ansible_runner_method must be 'run' or 'start'"
         end
-      end
 
-      # Asserts that passed path exists
-      #
-      # @param path [Hash, NilClass] Passed path we test for existence
-      def assert_path!(path)
-        return unless path
-
-        unless File.exist?(path)
-          raise "File doesn't exist: #{path}"
+        unless playbook_or_role_args.keys == %i(playbook) || playbook_or_role_args.keys.sort == %i(role role_skip_facts roles_path)
+          errors << "Unexpected playbook/role args: #{args}"
         end
-      end
 
-      # Returns ansible-runner executable command
-      #
-      # @param base_dir [String] ansible-runner private_data_dir parameter
-      # @param ansible_runner_method [String] Method we will use to run the ansible-runner. It can be either "run",
-      #        which is sync call, or "start" which is async call
-      # @return [String] ansible-runner executable command
-      def ansible_command(base_dir, ansible_runner_method)
-        "ansible-runner #{ansible_runner_method} #{base_dir} --json -i result --hosts localhost"
+        playbook = playbook_or_role_args[:playbook]
+        errors << "playbook path doesn't exist: #{playbook}" if playbook && !File.exist?(playbook)
+        roles_path = playbook_or_role_args[:roles_path]
+        errors << "roles path doesn't exist: #{roles_path}" if roles_path && !File.exist?(roles_path)
+
+        raise ArgumentError, errors.join("; ") if errors.any?
       end
     end
   end
