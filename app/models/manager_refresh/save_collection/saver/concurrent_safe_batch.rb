@@ -139,8 +139,9 @@ module ManagerRefresh::SaveCollection
       #        models's table
       # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
       def update_or_destroy_records!(records_batch_iterator, inventory_objects_index, attributes_index, all_attribute_keys)
-        hashes_for_update   = []
+        hashes_for_update   = {}
         records_for_destroy = []
+        db_index_to_inventory_object_mapping = {}
 
         records_batch_iterator.find_in_batches(:batch_size => batch_size) do |batch|
           update_time = time_now
@@ -150,22 +151,7 @@ module ManagerRefresh::SaveCollection
 
             next unless assert_distinct_relation(primary_key_value)
 
-            # Incoming values are in SQL string form.
-            # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
-            # TODO(lsmola) maybe we can drop the whole pure sql fetching, since everything will be targeted refresh
-            # with streaming refresh? Maybe just metrics and events will not be, but those should be upsert only
-            index = unique_index_keys_to_s.map do |attribute|
-              value = record_key(record, attribute)
-              if attribute == "timestamp"
-                # TODO: can this be covered by @deserializable_keys?
-                type = model_class.type_for_attribute(attribute)
-                type.cast(value).utc.iso8601.to_s
-              elsif (type = deserializable_keys[attribute.to_sym])
-                type.deserialize(value).to_s
-              else
-                value.to_s
-              end
-            end.join("__")
+            index = db_columns_index(record)
 
             inventory_object = inventory_objects_index.delete(index)
             hash             = attributes_index.delete(index)
@@ -198,15 +184,17 @@ module ManagerRefresh::SaveCollection
               assign_attributes_for_update!(hash_for_update, update_time)
 
               hash_for_update[:id] = primary_key_value
-              hashes_for_update << hash_for_update
+              db_index_to_inventory_object_mapping[index] = inventory_object.manager_uuid
+              hashes_for_update[index] = hash_for_update
             end
           end
 
           # Update in batches
           if hashes_for_update.size >= batch_size_for_persisting
-            update_records!(all_attribute_keys, hashes_for_update)
+            update_records!(all_attribute_keys, hashes_for_update, db_index_to_inventory_object_mapping)
 
-            hashes_for_update = []
+            hashes_for_update = {}
+            db_index_to_inventory_object_mapping = {}
           end
 
           # Destroy in batches
@@ -217,13 +205,44 @@ module ManagerRefresh::SaveCollection
         end
 
         # Update the last batch
-        update_records!(all_attribute_keys, hashes_for_update)
+        update_records!(all_attribute_keys, hashes_for_update, db_index_to_inventory_object_mapping)
         hashes_for_update = [] # Cleanup so GC can release it sooner
 
         # Destroy the last batch
         destroy_records!(records_for_destroy)
         records_for_destroy = [] # Cleanup so GC can release it sooner
       end
+
+      def db_columns_index(record, pure_sql: false)
+        # Incoming values are in SQL string form.
+        # TODO(lsmola) unify this behavior with object_index_with_keys method in InventoryCollection
+        # TODO(lsmola) maybe we can drop the whole pure sql fetching, since everything will be targeted refresh
+        # with streaming refresh? Maybe just metrics and events will not be, but those should be upsert only
+        # TODO(lsmola) taking ^ in account, we can't drop pure sql, since that is returned by batch insert and
+        # update queries
+        unique_index_keys_to_s.map do |attribute|
+          value = if pure_sql
+                    record[attribute]
+                  else
+                    record_key(record, attribute)
+                  end
+
+          format_value(attribute, value)
+        end.join("__")
+      end
+
+      def format_value(attribute, value)
+        if attribute == "timestamp"
+          # TODO: can this be covered by @deserializable_keys?
+          type = model_class.type_for_attribute(attribute)
+          type.cast(value).utc.iso8601.to_s
+        elsif (type = deserializable_keys[attribute.to_sym])
+          type.deserialize(value).to_s
+        else
+          value.to_s
+        end
+      end
+
 
       # Deletes or sof-deletes records. If the model_class supports a custom class delete method, we will use it for
       # batch soft-delete.
@@ -262,11 +281,30 @@ module ManagerRefresh::SaveCollection
       #
       # @param hashes [Array<Hash>] data used for building a batch update sql query
       # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
-      def update_records!(all_attribute_keys, hashes)
+      def update_records!(all_attribute_keys, hashes, db_index_to_inventory_object_mapping)
         return if hashes.blank?
-        inventory_collection.store_updated_records(hashes)
-        query = build_update_query(all_attribute_keys, hashes)
-        get_connection.execute(query)
+        data = hashes.values
+        query = build_update_query(all_attribute_keys, data)
+        result = get_connection.execute(query)
+
+        if inventory_collection.parallel_safe?
+          # We will check for timestamp clashes of full row update and we will fallback to skeletal update
+          inventory_collection.store_updated_records(result)
+
+          updated = result.map { |x| db_columns_index(x, :pure_sql => true) }
+          updated.each { |x| hashes.delete(x) }
+
+          # Now lets skeletonize all inventory_objects that were not saved
+          # TODO(lsmola) we should compare timestamps and ignore InventoryObjects or attributes that are old, to lower
+          # what we send as upsert in skeletal index
+          hashes.keys.each do |db_index|
+            inventory_collection.skeletal_primary_index.skeletonize_primary_index(db_index_to_inventory_object_mapping[db_index])
+          end
+        else
+          inventory_collection.store_updated_records(data)
+        end
+
+        result
       end
 
 

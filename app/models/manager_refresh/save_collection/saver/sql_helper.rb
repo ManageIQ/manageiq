@@ -198,6 +198,12 @@ module ManagerRefresh::SaveCollection
           }
         end
 
+        if inventory_collection.parallel_safe?
+          update_query += %{
+            RETURNING updated_values.#{quote_column_name("id")},#{unique_index_columns.map { |x| "updated_values.#{quote_column_name(x)}" }.join(",")}
+          }
+        end
+
         _log.debug("Building update query for #{inventory_collection} of size #{inventory_collection.size}...Complete")
 
         update_query
