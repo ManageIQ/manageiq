@@ -952,6 +952,35 @@
       :feature_type: control
       :identifier: cloud_volume_backup_delete
 
+# CloudVolumeType
+- :name: Cloud Volume Types
+  :description: Everything under Cloud Volume Types
+  :feature_type: node
+  :identifier: cloud_volume_type
+  :children:
+  - :name: View
+    :description: View Volume Types
+    :feature_type: view
+    :identifier: cloud_volume_type_view
+    :children:
+    - :name: List
+      :description: Display Lists of Volume Types
+      :feature_type: view
+      :identifier: cloud_volume_type_show_list
+    - :name: Show
+      :description: Display Individual Volume Types
+      :feature_type: view
+      :identifier: cloud_volume_type_show
+  - :name: Operate
+    :description: Perform Operations on Volume Types
+    :feature_type: control
+    :identifier: cloud_volume_type_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Volume Types
+      :feature_type: control
+      :identifier: cloud_volume_type_tag
+
 # Flavor
 - :name: Flavors
   :description: Everything under Flavors
