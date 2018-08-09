@@ -9,11 +9,16 @@ class MiqExpression::Target
   # returns hash:
   # {:model_name => Host<ApplicationRecord> , :associations => ['vms']<Array>, :column_name => 'host_name' <String>}
   def self.parse_params(field)
+    return unless field.kind_of?(String)
     match = self::REGEX.match(field) || return
     # convert matches to hash to format
     # {:model_name => 'User', :associations => ...}
     parsed_params = Hash[match.names.map(&:to_sym).zip(match.to_a[1..-1])]
-    parsed_params[:model_name] = parsed_params[:model_name].classify.safe_constantize
+    begin
+      parsed_params[:model_name] = parsed_params[:model_name].classify.safe_constantize
+    rescue LoadError # issues for case sensitivity (e.g.: VM vs vm)
+      parsed_params[:model_name] = nil
+    end
     parsed_params[:associations] = parsed_params[:associations].to_s.split(".")
     parsed_params
   end
