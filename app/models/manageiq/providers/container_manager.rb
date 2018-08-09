@@ -62,6 +62,11 @@ module ManageIQ::Providers
       end
     end
 
+    # TODO: move this to supports_feature_mixin
+    def supports_metrics?
+      true
+    end
+
     # required by aggregate_hardware
     alias :all_computer_systems :computer_systems
     alias :all_computer_system_ids :computer_system_ids
