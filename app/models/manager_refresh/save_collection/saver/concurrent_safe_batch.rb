@@ -299,8 +299,7 @@ module ManagerRefresh::SaveCollection
           hash = skeletal_attributes_index.delete(index)
           # Partial create or update nevers sets a timestamp for the whole row
           hash[:timestamps_max] = hash.delete(:timestamp)
-          # TODO(lsmola) have to filter this by keys, so we set timestamp only of cols that were passed, add spec
-          hash[:timestamps] = columns_for_per_column_batches.map { |x| [x, hash[:timestamps_max]] }.to_h
+          hash[:timestamps] = columns_for_per_column_batches.map { |x| [x, hash[:timestamps_max]] if hash.key?(x) }.compact.to_h
           # Transform hash to DB format
           hash = transform_to_hash!(all_attribute_keys, hash)
 

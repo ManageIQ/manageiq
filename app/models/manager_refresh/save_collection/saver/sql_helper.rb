@@ -80,8 +80,8 @@ module ManagerRefresh::SaveCollection
               if supports_remote_data_timestamp?(all_attribute_keys)
                 insert_query += %{
                   WHERE EXCLUDED.timestamp IS NULL OR (
-                    EXCLUDED.timestamp > #{table_name}.timestamp AND
-                    EXCLUDED.timestamp >= #{table_name}.timestamps_max
+                    (#{table_name}.timestamp IS NULL OR EXCLUDED.timestamp > #{table_name}.timestamp) AND
+                    (#{table_name}.timestamps_max IS NULL OR EXCLUDED.timestamp >= #{table_name}.timestamps_max)
                   )
                 }
               end
@@ -101,7 +101,7 @@ module ManagerRefresh::SaveCollection
                   , timestamps = #{table_name}.timestamps || ('{"#{column_name}": "' || EXCLUDED.timestamps_max::timestamp || '"}')::jsonb
                   , timestamps_max = greatest(#{table_name}.timestamps_max::timestamp, EXCLUDED.timestamps_max::timestamp)
                   WHERE EXCLUDED.timestamps_max IS NULL OR (
-                    EXCLUDED.timestamps_max > #{table_name}.timestamp AND (
+                    (#{table_name}.timestamp IS NULL OR EXCLUDED.timestamps_max > #{table_name}.timestamp) AND (
                       (#{table_name}.timestamps->>'#{column_name}')::timestamp IS NULL OR
                       EXCLUDED.timestamps_max::timestamp > (#{table_name}.timestamps->>'#{column_name}')::timestamp
                     )
