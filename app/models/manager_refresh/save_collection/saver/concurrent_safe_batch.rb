@@ -364,7 +364,7 @@ module ManagerRefresh::SaveCollection
       #        models's table
       # @param on_conflict [Symbol, NilClass] defines behavior on conflict with unique index constraint, allowed values
       #        are :do_update, :do_nothing, nil
-      def create_records!(all_attribute_keys, batch, attributes_index, on_conflict: nil, column_name: nil)
+      def create_records!(all_attribute_keys, batch, attributes_index, on_conflict: nil)
         indexed_inventory_objects = {}
         hashes                    = []
         create_time               = time_now
@@ -392,7 +392,7 @@ module ManagerRefresh::SaveCollection
         return if hashes.blank?
 
         result = get_connection.execute(
-          build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict, :mode => :full, :column_name => column_name)
+          build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict, :mode => :full)
         )
         # TODO(lsmola) we need to recognize what records were created and what records were updated. Will we take
         # skeletal records as created? The creation should be having :complete => true

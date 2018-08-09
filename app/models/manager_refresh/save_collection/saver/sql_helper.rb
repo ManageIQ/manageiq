@@ -79,6 +79,8 @@ module ManagerRefresh::SaveCollection
               }
               if supports_remote_data_timestamp?(all_attribute_keys)
                 insert_query += %{
+                  , timestamps = '{}', timestamps_max = NULL
+
                   WHERE EXCLUDED.timestamp IS NULL OR (
                     (#{table_name}.timestamp IS NULL OR EXCLUDED.timestamp > #{table_name}.timestamp) AND
                     (#{table_name}.timestamps_max IS NULL OR EXCLUDED.timestamp >= #{table_name}.timestamps_max)
@@ -162,6 +164,16 @@ module ManagerRefresh::SaveCollection
           UPDATE #{table_name}
             SET
               #{all_attribute_keys_array.map { |key| build_update_set_cols(key) }.join(",")}
+        }
+
+        if supports_remote_data_timestamp?(all_attribute_keys)
+          # Full row update will reset the partial update timestamps
+          update_query += %{
+             , timestamps = '{}', timestamps_max = NULL
+          }
+        end
+
+        update_query += %{
           FROM (
             VALUES
               #{values}
@@ -177,9 +189,11 @@ module ManagerRefresh::SaveCollection
         # part of the data, since for the fake records, we just want to update ems_ref.
         if supports_remote_data_timestamp?(all_attribute_keys)
           update_query += %{
-            AND (updated_values.timestamp IS NULL OR (
-              updated_values.timestamp > #{table_name}.timestamp) AND
-              updated_values.timestamp >= #{table_name}.timestamps_max
+            AND (
+              updated_values.timestamp IS NULL OR (
+                (#{table_name}.timestamp IS NULL OR updated_values.timestamp > #{table_name}.timestamp) AND
+                (#{table_name}.timestamps_max IS NULL OR updated_values.timestamp >= #{table_name}.timestamps_max)
+              )
             )
           }
         end
