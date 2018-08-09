@@ -6,10 +6,13 @@ module TaskHelpers
 
         glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/ScanProfile_*.yaml"
         Dir.glob(glob) do |filename|
+          $log.info("Importing Scan Profiles from: #{filename}")
+
           begin
             import_scan_profile(filename)
-          rescue
-            warn("Error importing #{options[:source]}")
+          rescue StandardError => err
+            $log.error("Error importing #{filename} : #{err.message}")
+            warn("Error importing #{filename} : #{err.message}")
           end
         end
       end

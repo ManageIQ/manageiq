@@ -5,12 +5,14 @@ module TaskHelpers
         return unless options[:source]
 
         glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/*.yaml"
-        Dir.glob(glob) do |fname|
+        Dir.glob(glob) do |filename|
+          $log.info("Importing Policy Profiles from: #{filename}")
+
           begin
-            policysets = YAML.load_file(fname)
+            policysets = YAML.load_file(filename)
             import_policysets(policysets)
-          rescue => e
-            $stderr.puts "Error importing #{fname} : #{e.message}"
+          rescue StandardError => err
+            warn("Error importing #{filename} : #{err.message}")
           end
         end
       end
