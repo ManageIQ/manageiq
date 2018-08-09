@@ -51,6 +51,7 @@ module ManagerRefresh::SaveCollection
             @deserializable_keys[key.to_sym] = attribute_type
           elsif attribute_type.respond_to?(:coder) ||
                 attribute_type.type == :int4range ||
+                attribute_type.type == :jsonb ||
                 pg_type == "text[]" ||
                 pg_type == "character varying[]"
             # Identify columns that needs to be encoded by type.serialize(value), it's a costy operations so lets do
@@ -95,6 +96,19 @@ module ManagerRefresh::SaveCollection
           end
         end
         attributes
+      end
+
+      def transform_to_hash!(all_attribute_keys, hash)
+        if inventory_collection.use_ar_object?
+          record = inventory_collection.model_class.new(hash)
+          values_for_database!(all_attribute_keys,
+                               record.attributes.symbolize_keys)
+        elsif serializable_keys?
+          values_for_database!(all_attribute_keys,
+                               hash)
+        else
+          hash
+        end
       end
 
       private
@@ -290,6 +304,18 @@ module ManagerRefresh::SaveCollection
         assign_attributes_for_update!(hash, create_time)
       end
 
+      def internal_columns
+        return @internal_columns if @internal_columns
+
+        @internal_columns = []
+        @internal_columns << :type if supports_sti?
+        @internal_columns << :created_on if supports_created_on?
+        @internal_columns << :created_at if supports_created_at?
+        @internal_columns << :updated_on if supports_updated_on?
+        @internal_columns << :updated_at if supports_updated_at?
+        @internal_columns
+      end
+
       # @return [Array<ActiveRecord::ConnectionAdapters::IndexDefinition>] array of all unique indexes known to model
       def unique_indexes
         @unique_indexes_cache if @unique_indexes_cache
@@ -375,9 +401,14 @@ module ManagerRefresh::SaveCollection
         @serializable_keys_bool_cache ||= serializable_keys.present?
       end
 
-      # @return [Boolean] true if the model_class has remote_data_timestamp column
+      # @return [Boolean] true if the model_class has timestamp column
       def supports_remote_data_timestamp?(all_attribute_keys)
         all_attribute_keys.include?(:timestamp) # include? on Set is O(1)
+      end
+
+      # @return [Boolean] true if the model_class has remote_data_timestamp column
+      def supports_max_timestamp?
+        @supports_max_timestamp_cache ||= model_class.column_names.include?("timestamps_max")
       end
     end
   end

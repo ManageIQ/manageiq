@@ -14,6 +14,8 @@ module ManagerRefresh::SaveCollection
 
       # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
       # @param hashes [Array<Hash>] data used for building a batch insert sql query
+      # @param mode [Symbol] Mode for saving, allowed values are [:full, :partial], :full is when we save all
+      #        columns of a row, :partial is when we save only few columns, so a partial row.
       # @param on_conflict [Symbol, NilClass] defines behavior on conflict with unique index constraint, allowed values
       #        are :do_update, :do_nothing, nil
       def build_insert_query(all_attribute_keys, hashes, on_conflict: nil, mode:, column_name: nil)
@@ -29,7 +31,7 @@ module ManagerRefresh::SaveCollection
                       end
 
         # Make sure we don't send a primary_key for INSERT in any form, it could break PG sequencer
-        all_attribute_keys_array = all_attribute_keys.to_a - [primary_key.to_s, primary_key.to_sym]
+        all_attribute_keys_array = all_attribute_keys.to_a - [primary_key.to_s, primary_key.to_sym] - ignore_cols
         values                   = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(connection, hash[x], x) }.join(",")})"
         end.join(",")
@@ -56,6 +58,13 @@ module ManagerRefresh::SaveCollection
                   UPDATE
             }
 
+            ignore_cols += if mode == :partial
+                            [:timestamps, :timestamps_max]
+                          elsif mode == :full
+                            []
+                          end
+            ignore_cols += [:created_on, :created_at] # Lets not change created_at for the update clause
+
             # TODO(lsmola) do we want to exclude the ems_id from the UPDATE clause? Otherwise it might be difficult to change
             # the ems_id as a cross manager migration, since ems_id should be there as part of the insert. The attempt of
             # changing ems_id could lead to putting it back by a refresh.
@@ -66,7 +75,7 @@ module ManagerRefresh::SaveCollection
             # part of the data, since for the fake records, we just want to update ems_ref.
             if mode == :full
               insert_query += %{
-                SET #{all_attribute_keys_array.map { |key| build_insert_set_cols(key) }.join(", ")}
+                SET #{(all_attribute_keys_array - ignore_cols).map { |key| build_insert_set_cols(key) }.join(", ")}
               }
               if supports_remote_data_timestamp?(all_attribute_keys)
                 insert_query += %{
@@ -77,23 +86,24 @@ module ManagerRefresh::SaveCollection
                 }
               end
             elsif mode == :partial
+              raise "Column name not defined for #{hashes}" unless column_name
+
               insert_query += %{
                  SET #{(all_attribute_keys_array - ignore_cols).map { |key| build_insert_set_cols(key) }.join(", ")}
               }
-              if supports_remote_data_timestamp?(all_attribute_keys)
+              if supports_max_timestamp?
                 # TODO(lsmola) we should have EXCLUDED.timestamp > #{table_name}.timestamp, but if skeletal precreate
                 # creates the row, it sets timestamp. Should we combine it with complete => true only? We probably need
                 # to set the timestamp, otherwise we can't touch it in the update clause. Maybe we coud set it as
                 # timestamps_max?
 
-
                 insert_query += %{
-                  , timestamps = #{table_name}.timestamps || ('{"#{column_name}": "' || EXCLUDED.timestamp::timestamp || '"}')::jsonb
-                  , timestamps_max = greatest(#{table_name}.timestamps_max::timestamp, EXCLUDED.timestamp::timestamp)
-                  WHERE EXCLUDED.timestamp IS NULL OR (
-                    EXCLUDED.timestamp >= #{table_name}.timestamp AND (
+                  , timestamps = #{table_name}.timestamps || ('{"#{column_name}": "' || EXCLUDED.timestamps_max::timestamp || '"}')::jsonb
+                  , timestamps_max = greatest(#{table_name}.timestamps_max::timestamp, EXCLUDED.timestamps_max::timestamp)
+                  WHERE EXCLUDED.timestamps_max IS NULL OR (
+                    EXCLUDED.timestamps_max > #{table_name}.timestamp AND (
                       (#{table_name}.timestamps->>'#{column_name}')::timestamp IS NULL OR
-                      EXCLUDED.timestamp > (#{table_name}.timestamps->>'#{column_name}')::timestamp
+                      EXCLUDED.timestamps_max::timestamp > (#{table_name}.timestamps->>'#{column_name}')::timestamp
                     )
                   )
                 }
