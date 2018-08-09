@@ -156,6 +156,7 @@ module Vmdb
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection
+      puts "** #{Vmdb::Appliance.BANNER}"
     end
 
     console do

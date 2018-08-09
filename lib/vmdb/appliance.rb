@@ -10,6 +10,14 @@ module Vmdb
       @EVM_BUILD ||= get_build
     end
 
+    def self.CODENAME
+      "Hammer".freeze
+    end
+
+    def self.BANNER
+      "#{self.PRODUCT_NAME} #{self.VERSION}, codename: #{self.CODENAME}"
+    end
+
     def self.BUILD_NUMBER
       @EVM_BUILD_NUMBER ||= self.BUILD.nil? ? "N/A" : self.BUILD.split("-").last   # Grab the build number after the last hyphen
     end
@@ -39,6 +47,7 @@ module Vmdb
 
       fh.info("Version: #{self.VERSION}")
       fh.info("Build:   #{self.BUILD}")
+      fh.info("Codename: #{self.CODENAME}")
       fh.info("RUBY Environment:  #{Object.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION : "ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} patchlevel #{RUBY_PATCHLEVEL}) [#{RUBY_PLATFORM}]"}")
       fh.info("RAILS Environment: #{Rails.env} version #{Rails.version}")
 
