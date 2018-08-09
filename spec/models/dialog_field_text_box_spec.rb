@@ -2,10 +2,10 @@ describe DialogFieldTextBox do
   describe "#initialize_value_context" do
     let(:field) do
       described_class.new(
-        :dynamic => dynamic,
+        :dynamic             => dynamic,
         :load_values_on_init => load_values_on_init,
         :show_refresh_button => show_refresh_button,
-        :default_value => "default value"
+        :default_value       => "default value"
       )
     end
     let(:automate_value) { "value from automate" }
