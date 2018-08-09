@@ -5,8 +5,14 @@ class DialogFieldCheckBox < DialogField
     value == "t"
   end
 
+  def initialize_value_context
+    if @value.blank?
+      @value = dynamic ? values_from_automate : default_value.presence || initial_values
+    end
+  end
+
   def initial_values
-    false
+    'f'
   end
 
   def script_error_values
