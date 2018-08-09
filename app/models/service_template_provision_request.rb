@@ -25,6 +25,13 @@ class ServiceTemplateProvisionRequest < MiqRequest
   include MiqProvisionQuotaMixin
 
   def process_service_order
+    # skip to create service order for internal template
+    if source.internal?
+      update_attributes(:process => true)
+      call_automate_event_queue("request_created")
+      return
+    end
+
     case options[:cart_state]
     when ServiceOrder::STATE_ORDERED
       ServiceOrder.order_immediately(self, requester)
