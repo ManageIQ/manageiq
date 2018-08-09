@@ -93,7 +93,7 @@ module ManagerRefresh::SaveCollection
               insert_query += %{
                  SET #{(all_attribute_keys_array - ignore_cols).map { |key| build_insert_set_cols(key) }.join(", ")}
               }
-              if supports_max_timestamp?
+              if supports_timestamps_max?
                 # TODO(lsmola) we should have EXCLUDED.timestamp > #{table_name}.timestamp, but if skeletal precreate
                 # creates the row, it sets timestamp. Should we combine it with complete => true only? We probably need
                 # to set the timestamp, otherwise we can't touch it in the update clause. Maybe we coud set it as

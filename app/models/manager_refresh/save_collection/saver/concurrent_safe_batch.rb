@@ -287,9 +287,10 @@ module ManagerRefresh::SaveCollection
         base_columns = unique_index_columns + internal_columns + [:timestamps_max]
         columns_for_per_column_batches = all_attribute_keys - base_columns
 
-        # TODO(lsmola) needs to have supports timestamp or resource version
-        all_attribute_keys << :timestamps
-        all_attribute_keys << :timestamps_max
+        if supports_timestamps_max?
+          all_attribute_keys << :timestamps
+          all_attribute_keys << :timestamps_max
+        end
 
         indexed_inventory_objects = {}
         hashes                    = []
@@ -297,9 +298,11 @@ module ManagerRefresh::SaveCollection
 
         skeletal_inventory_objects_index.each do |index, inventory_object|
           hash = skeletal_attributes_index.delete(index)
-          # Partial create or update nevers sets a timestamp for the whole row
-          hash[:timestamps_max] = hash.delete(:timestamp)
-          hash[:timestamps] = columns_for_per_column_batches.map { |x| [x, hash[:timestamps_max]] if hash.key?(x) }.compact.to_h
+          # Partial create or update must never set a timestamp for the whole row
+          if supports_timestamps_max?
+            hash[:timestamps_max] = hash.delete(:timestamp)
+            hash[:timestamps] = columns_for_per_column_batches.map { |x| [x, hash[:timestamps_max]] if hash.key?(x) }.compact.to_h
+          end
           # Transform hash to DB format
           hash = transform_to_hash!(all_attribute_keys, hash)
 

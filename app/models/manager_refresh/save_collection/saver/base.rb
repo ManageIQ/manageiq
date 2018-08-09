@@ -407,8 +407,8 @@ module ManagerRefresh::SaveCollection
       end
 
       # @return [Boolean] true if the model_class has remote_data_timestamp column
-      def supports_max_timestamp?
-        @supports_max_timestamp_cache ||= model_class.column_names.include?("timestamps_max")
+      def supports_timestamps_max?
+        @supports_timestamps_max_cache ||= model_class.column_names.include?("timestamps_max")
       end
     end
   end
