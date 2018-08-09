@@ -1,5 +1,11 @@
 require 'util/runcmd'
 describe EvmDatabaseOps do
+  let(:local_backup) { "/tmp/backup_1" }
+  let(:file_splitter_path) do
+    described_class_path = described_class.method(:backup).source_location[0]
+    File.expand_path("../manageiq/util/file_splitter.rb", described_class_path)
+  end
+
   context "#backup" do
     let(:session) { double("MiqSmbSession", :disconnect => nil) }
     before do
@@ -15,15 +21,22 @@ describe EvmDatabaseOps do
     end
 
     it "locally" do
-      local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to eq(local_backup)
     end
 
     it "defaults" do
-      local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
       expect(EvmDatabaseOps.backup(@db_opts, {})).to eq(local_backup)
+    end
+
+    it "splits files with a local file" do
+      split_params          = [{:byte_count => "200M"}, "-", local_backup]
+      pipe                  = [[file_splitter_path, {:params => split_params }]]
+      @db_opts[:local_file] = local_backup
+
+      expect(PostgresAdmin).to receive(:backup).with(@db_opts.merge(:local_file => "-", :pipe => pipe))
+      EvmDatabaseOps.backup(@db_opts, {}, { :byte_count => "200M" })
     end
 
     it "without enough free space" do
@@ -87,6 +100,15 @@ describe EvmDatabaseOps do
       local_dump = "/tmp/dump_1"
       @db_opts[:local_file] = local_dump
       expect(EvmDatabaseOps.dump(@db_opts, {})).to eq(local_dump)
+    end
+
+    it "splits files with a local file" do
+      split_params          = [{:byte_count => "200M"}, "-", local_backup]
+      pipe                  = [[file_splitter_path, {:params => split_params }]]
+      @db_opts[:local_file] = local_backup
+
+      expect(PostgresAdmin).to receive(:backup_pg_dump).with(@db_opts.merge(:local_file => "-", :pipe => pipe))
+      EvmDatabaseOps.dump(@db_opts, {}, { :byte_count => "200M" })
     end
 
     it "without enough free space" do
