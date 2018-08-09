@@ -30,7 +30,7 @@ module Vmdb
       return unless default_log
       proc do |message, callstack|
         default_log.warn(message)
-        default_log.debug(callstack.join("\n  ")) if default_log.debug?
+        default_log.debug { callstack.join("\n  ") } unless Rails.env.production?
       end
     end
     private_class_method :proc_for_default_log
