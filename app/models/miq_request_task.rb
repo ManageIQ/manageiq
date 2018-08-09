@@ -25,6 +25,15 @@ class MiqRequestTask < ApplicationRecord
   include MiqRequestMixin
   include TenancyMixin
 
+  CANCEL_STATUS_REQUESTED  = "cancel_requested".freeze
+  CANCEL_STATUS_PROCESSING = "canceling".freeze
+  CANCEL_STATUS_FINISHED   = "canceled".freeze
+  CANCEL_STATUS            = [CANCEL_STATUS_REQUESTED, CANCEL_STATUS_PROCESSING, CANCEL_STATUS_FINISHED].freeze
+
+  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
+                                                 :allow_nil => true,
+                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
+
   def approved?
     if miq_request.class.name.include?('Template') && miq_request_task
       miq_request_task.miq_request.approved?
@@ -208,8 +217,16 @@ class MiqRequestTask < ApplicationRecord
     raise _("Cancel operation is not supported for #{self.class.name}")
   end
 
+  def cancel_requested?
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_REQUESTED
+  end
+
   def canceling?
-    false
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_PROCESSING
+  end
+
+  def canceled?
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_FINISHED
   end
 
   private

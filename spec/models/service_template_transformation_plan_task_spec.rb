@@ -196,5 +196,13 @@ describe ServiceTemplateTransformationPlanTask do
         expect(vm).to be_is_tagged_with("migrated", :ns => "/managed", :cat => "transformation_status")
       end
     end
+
+    describe '#cancel' do
+      it 'catches cancel state' do
+        task.cancel
+        expect(task.cancelation_status).to eq(MiqRequestTask::CANCEL_STATUS_REQUESTED)
+        expect(task.cancel_requested?).to be_truthy
+      end
+    end
   end
 end
