@@ -132,6 +132,8 @@ module ManageIQ
         # override this method and return an array of:
         #   [[target1, inventory_for_target1], [target2, inventory_for_target2]]
 
+        return [[ems, nil]] unless refresher_options.inventory_object_refresh
+
         provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class).name
 
         targets_to_collectors = targets.each_with_object({}) do |target, memo|
