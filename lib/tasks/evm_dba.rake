@@ -169,23 +169,25 @@ namespace :evm do
       task :remote do
         require 'trollop'
         opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-          opt :uri,              "Destination depot URI",       :type => :string, :required => true
-          opt :uri_username,     "Destination depot username",  :type => :string
-          opt :uri_password,     "Destination depot password",  :type => :string
-          opt :remote_file_name, "Destination depot filename",  :type => :string
-          opt :username,         "Username",                    :type => :string
-          opt :password,         "Password",                    :type => :string
-          opt :hostname,         "Hostname",                    :type => :string
-          opt :dbname,           "Database name",               :type => :string
+          opt :uri,              "Destination depot URI",        :type => :string, :required => true
+          opt :uri_username,     "Destination depot username",   :type => :string
+          opt :uri_password,     "Destination depot password",   :type => :string
+          opt :aws_region,       "Destination depot AWS region", :type => :string
+          opt :remote_file_name, "Destination depot filename",   :type => :string
+          opt :username,         "Username",                     :type => :string
+          opt :password,         "Password",                     :type => :string
+          opt :hostname,         "Hostname",                     :type => :string
+          opt :dbname,           "Database name",                :type => :string
         end
 
         db_opts = {}
         [:dbname, :username, :password, :hostname].each { |k| db_opts[k] = opts[k] if opts[k] }
 
         connect_opts = {}
-        [:uri, :uri_username, :uri_password, :remote_file_name].each { |k| connect_opts[k] = opts[k] if opts[k] }
+        [:uri, :uri_username, :uri_password, :aws_region, :remote_file_name].each { |k| connect_opts[k] = opts[k] if opts[k] }
         connect_opts[:username] = connect_opts.delete(:uri_username) if connect_opts[:uri_username]
         connect_opts[:password] = connect_opts.delete(:uri_password) if connect_opts[:uri_password]
+        connect_opts[:region]   = connect_opts.delete(:aws_region)   if connect_opts[:aws_region]
 
         EvmDatabaseOps.backup(db_opts, connect_opts)
 
@@ -268,22 +270,24 @@ namespace :evm do
       task :remote => :environment do
         require 'trollop'
         opts = Trollop.options(EvmRakeHelper.extract_command_options) do
-          opt :uri,              "Destination depot URI",       :type => :string, :required => true
-          opt :uri_username,     "Destination depot username",  :type => :string
-          opt :uri_password,     "Destination depot password",  :type => :string
-          opt :username,         "Username",                    :type => :string
-          opt :password,         "Password",                    :type => :string
-          opt :hostname,         "Hostname",                    :type => :string
-          opt :dbname,           "Database name",               :type => :string
+          opt :uri,              "Destination depot URI",        :type => :string, :required => true
+          opt :uri_username,     "Destination depot username",   :type => :string
+          opt :uri_password,     "Destination depot password",   :type => :string
+          opt :aws_region,       "Destination depot AWS region", :type => :string
+          opt :username,         "Username",                     :type => :string
+          opt :password,         "Password",                     :type => :string
+          opt :hostname,         "Hostname",                     :type => :string
+          opt :dbname,           "Database name",                :type => :string
         end
 
         db_opts = {}
         [:dbname, :username, :password, :hostname].each { |k| db_opts[k] = opts[k] if opts[k] }
 
         connect_opts = {}
-        [:uri, :uri_username, :uri_password].each { |k| connect_opts[k] = opts[k] if opts[k] }
+        [:uri, :uri_username, :uri_password, :aws_region].each { |k| connect_opts[k] = opts[k] if opts[k] }
         connect_opts[:username] = connect_opts.delete(:uri_username) if connect_opts[:uri_username]
         connect_opts[:password] = connect_opts.delete(:uri_password) if connect_opts[:uri_password]
+        connect_opts[:region]   = connect_opts.delete(:aws_region)   if connect_opts[:aws_region]
 
         # If running through runner, disconnect any local connections
         ActiveRecord::Base.clear_all_connections! if ActiveRecord && ActiveRecord::Base
