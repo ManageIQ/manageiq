@@ -5,6 +5,8 @@ module TaskHelpers
         return unless options[:source]
         glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/*.yaml"
         Dir.glob(glob) do |filename|
+          $log.info("Importing Custom Buttons from: #{filename}")
+
           begin
             import_custom_buttons(filename)
           rescue StandardError

@@ -5,12 +5,15 @@ module TaskHelpers
         return unless options[:source]
 
         glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/*.yaml"
-        Dir.glob(glob) do |fname|
+        Dir.glob(glob) do |filename|
+          $log.info("Importing Roles from: #{filename}")
+
           begin
-            roles = YAML.load_file(fname)
+            roles = YAML.load_file(filename)
             import_roles(roles)
-          rescue ActiveRecord::RecordInvalid => e
-            warn("Error importing #{fname} : #{e.message}")
+          rescue ActiveRecord::RecordInvalid => err
+            $log.error("Error importing #{filename} : #{err.message}")
+            warn("Error importing #{filename} : #{err.message}")
           end
         end
       end
@@ -20,12 +23,12 @@ module TaskHelpers
       def import_roles(roles)
         available_features = MiqProductFeature.all
 
-        roles.each do |r|
-          r['miq_product_feature_ids'] = available_features.collect do |f|
-            f.id if r['feature_identifiers']&.include?(f.identifier)
+        roles.each do |role|
+          role['miq_product_feature_ids'] = available_features.collect do |feature|
+            feature.id if role['feature_identifiers']&.include?(feature.identifier)
           end.compact
-          role = MiqUserRole.find_or_create_by(:name => r['name'])
-          role.update_attributes!(r.reject { |k| k == 'feature_identifiers' })
+          found_role = MiqUserRole.find_or_create_by(:name => role['name'])
+          found_role.update_attributes!(role.reject { |key| key == 'feature_identifiers' })
         end
       end
     end

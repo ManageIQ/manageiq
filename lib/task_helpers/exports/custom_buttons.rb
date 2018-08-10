@@ -6,7 +6,7 @@ module TaskHelpers
         def self.export_object(obj, hash)
           class_name = obj.class.name.underscore
 
-          $log.send(:info, "Exporting #{obj.class.name} [#{obj.try('name')}] with ID: #{obj&.id}")
+          $log.info("Exporting #{obj.class.name}: #{obj.try('name')} (ID: #{obj&.id})")
           (hash[class_name] ||= []) << item = { 'attributes' => build_attr_list(obj.try(:attributes)) }
           create_association_list(obj, item)
           descendant_list(obj, item)

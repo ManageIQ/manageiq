@@ -14,15 +14,22 @@ module TaskHelpers
         return unless options[:source]
 
         glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/*.yaml"
-        Dir.glob(glob) do |fname|
+        Dir.glob(glob) do |filename|
+          $log.info("Importing Tags from: #{filename}")
+
           begin
-            tag_categories = YAML.load_file(fname)
+            tag_categories = YAML.load_file(filename)
             import_tags(tag_categories)
-          rescue ClassificationYamlError => e
-            warn("Error importing #{fname} : #{e.message}")
-            e.details.each { |d| warn("\t#{d}") }
-          rescue ActiveModel::UnknownAttributeError => e
-            warn("Error importing #{fname} : #{e.message}")
+          rescue ClassificationYamlError => err
+            $log.error("Error importing #{filename} : #{err.message}")
+            warn("Error importing #{filename} : #{err.message}")
+            err.details.each do |detail|
+              $log.error(detail.to_s)
+              warn("\t#{detail}")
+            end
+          rescue ActiveModel::UnknownAttributeError => err
+            $log.error("Error importing #{filename} : #{err.message}")
+            warn("Error importing #{filename} : #{err.message}")
           end
         end
       end
@@ -71,10 +78,10 @@ module TaskHelpers
         entries.each_with_index do |entry, index|
           entry["name"] = entry["name"].to_s
           tag_entry = classification.find_entry_by_name(entry['name'])
-          tag_entry = classification.entries.detect { |e| e.description == entry['description'] } if tag_entry.nil?
+          tag_entry = classification.entries.detect { |ent| ent.description == entry['description'] } if tag_entry.nil?
 
           if tag_entry
-            tag_entry.update_attributes(entry.select { |k| UPDATE_ENTRY_FIELDS.include?(k) })
+            tag_entry.update_attributes(entry.select { |key| UPDATE_ENTRY_FIELDS.include?(key) })
           else
             tag_entry = Classification.create(entry.merge('parent_id' => classification.id))
           end
