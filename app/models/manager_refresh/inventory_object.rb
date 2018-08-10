@@ -169,21 +169,30 @@ module ManagerRefresh
 
           if assign
             public_send("#{k}=", v) # Attribute is newer than current one, lets use it
-            data[:timestamps][k] = specific_attr_timestamp if specific_attr_timestamp # and set the latest timestamp
+            (data[:timestamps] ||= {})[k] = specific_attr_timestamp if specific_attr_timestamp # and set the latest timestamp
           end
         else
           public_send("#{k}=", v)
         end
       end
 
-      if inventory_collection.supports_timestamps_max? && attributes[:timestamp] && data[:timestamp]
-        # If timestamps are present, store the bigger one
-        data[:timestamp] = attributes[:timestamp] if attributes[:timestamp] > data[:timestamp]
+      if inventory_collection.supports_timestamps_max?
+        if attributes[:timestamp] && data[:timestamp]
+          # If both timestamps are present, store the bigger one
+          data[:timestamp] = attributes[:timestamp] if attributes[:timestamp] > data[:timestamp]
+        elsif attributes[:timestamp] && !data[:timestamp]
+          # We are assigning timestamp that was missing
+          data[:timestamp] = attributes[:timestamp]
+        end
       end
 
-      if inventory_collection.supports_resource_versions_max? && attributes[:timestamp] && data[:timestamp]
-        # If timestamps are present, store the bigger one
-        data[:timestamp] = attributes[:timestamp] if attributes[:timestamp] > data[:timestamp]
+      if inventory_collection.supports_resource_versions_max?
+        if attributes[:resource_version] && data[:resource_version]
+          # If timestamps are present, store the bigger one
+          data[:resource_version] = attributes[:resource_version] if attributes[:resource_version] > data[:resource_version]
+        elsif attributes[:resource_version] && !data[:resource_version]
+          data[:resource_version] = attributes[:resource_version]
+        end
       end
 
       self
