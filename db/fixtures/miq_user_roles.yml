@@ -1252,3 +1252,8 @@
   - sui_services_view
   - sui_orders_view
   - sui_notifications
+
+- :name: EvmRole-physical_infrastructure
+  :read_only: true
+  :miq_product_feature_identifiers:
+  - everything
