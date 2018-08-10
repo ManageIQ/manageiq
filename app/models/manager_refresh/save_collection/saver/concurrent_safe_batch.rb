@@ -387,9 +387,8 @@ module ManagerRefresh::SaveCollection
                           :on_conflict => :do_nothing)
         end
 
-        # TODO(lsmola) for the ones without timestamp or resource_version, we should just update everything? Not for the
-        # skeletal precreate though, there we want just do_nothing?
-        # We need only skeletal records with timestamp
+        # We need only skeletal records with timestamp. We can't save the ones without timestamp, because e.g. skeletal
+        # precreate would be updating records with default values, that are not correct.
         pre_filtered = hashes.select { |x| x[:timestamps_max] }
 
         # TODO(lsmola) we don't need to process rows that were save by the create -> oncoflict do nothing
