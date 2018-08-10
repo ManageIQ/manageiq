@@ -27,7 +27,7 @@ class PhysicalServer < ApplicationRecord
   has_one :host, :inverse_of => :physical_server
   has_one :asset_detail, :as => :resource, :dependent => :destroy
   has_many :guest_devices, :through => :hardware
-  has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy, :inverse_of => :physical_server
+  has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   scope :with_hosts, -> { where("physical_servers.id in (select hosts.physical_server_id from hosts)") }
 
