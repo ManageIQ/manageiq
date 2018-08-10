@@ -19,7 +19,7 @@ module ArRecentRecords
     #
     def recent_records(date = 30.days.ago.utc, group_by = 'day', filter = {})
       query = where("created_on > ?", date).group("to_char(date_trunc('#{group_by}', created_on), 'YYYY-MM-DD')")
-      filter.each{ |key, value| query = query.where(key => value) if value }
+      filter.each { |key, value| query = query.where(key => value) if value }
       query.count
     end
   end
