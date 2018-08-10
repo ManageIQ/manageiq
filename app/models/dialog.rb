@@ -89,6 +89,8 @@ class Dialog < ApplicationRecord
   end
 
   def load_values_into_fields(values)
+    values = values.with_indifferent_access
+
     dialog_field_hash.each_value do |field|
       field.dialog = self
       field.value = values[field.automate_key_name] || values[field.name]

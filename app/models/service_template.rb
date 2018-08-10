@@ -379,7 +379,8 @@ class ServiceTemplate < ApplicationRecord
   end
   private_class_method :create_from_options
 
-  def provision_request(user, options = nil, request_options = nil)
+  def provision_request(user, options = nil, request_options = {})
+    request_options[:provision_workflow] = true
     result = order(user, options, request_options)
     raise result[:errors].join(", ") if result[:errors].any?
     result[:request]
@@ -421,13 +422,15 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
-  def provision_workflow(user, dialog_options = nil, request_options = nil)
+  def provision_workflow(user, dialog_options = nil, request_options = {})
     dialog_options ||= {}
-    request_options ||= {}
+    request_options.delete(:provision_workflow) if request_options[:submit_workflow]
+
     ra_options = {
-      :target          => self,
-      :initiator       => request_options[:initiator],
-      :submit_workflow => request_options[:submit_workflow]
+      :target             => self,
+      :initiator          => request_options[:initiator],
+      :submit_workflow    => request_options[:submit_workflow],
+      :provision_workflow => request_options[:provision_workflow]
     }
 
     ResourceActionWorkflow.new(dialog_options, user, provision_action, ra_options).tap do |wf|
