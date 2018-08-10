@@ -905,14 +905,14 @@ describe ServiceTemplate do
         it "provisions a service template without errors" do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return([])
           expect(resource_action_workflow).to receive(:make_request).and_return(miq_request)
-          expect(resource_action_workflow).to receive(:request_options=).with(:initiator => 'control')
+          expect(resource_action_workflow).to receive(:request_options=).with(:initiator => 'control', :submit_workflow => true)
 
           expect(service_template.provision_request(user, arg1, arg2)).to eq(miq_request)
         end
 
         it "provisions a service template with errors" do
           expect(resource_action_workflow).to receive(:validate_dialog).and_return(%w(Error1 Error2))
-          expect(resource_action_workflow).to receive(:request_options=).with(:initiator => 'control')
+          expect(resource_action_workflow).to receive(:request_options=).with(:initiator => 'control', :submit_workflow => true)
 
           expect { service_template.provision_request(user, arg1, arg2) }.to raise_error(RuntimeError)
         end
