@@ -571,6 +571,142 @@ module ManagerRefresh
       @parallel_safe_cache ||= %i(concurrent_safe concurrent_safe_batch).include?(saver_strategy)
     end
 
+    # @return [Boolean] true if the model_class supports STI
+    def supports_sti?
+      @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
+      @supports_sti_cache
+    end
+
+    # @return [Boolean] true if the model_class has created_on column
+    def supports_created_on?
+      if @supports_created_on_cache.nil?
+        @supports_created_on_cache = (model_class.column_names.include?("created_on") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_created_on_cache
+    end
+
+    # @return [Boolean] true if the model_class has updated_on column
+    def supports_updated_on?
+      if @supports_updated_on_cache.nil?
+        @supports_updated_on_cache = (model_class.column_names.include?("updated_on") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_updated_on_cache
+    end
+
+    # @return [Boolean] true if the model_class has created_at column
+    def supports_created_at?
+      if @supports_created_at_cache.nil?
+        @supports_created_at_cache = (model_class.column_names.include?("created_at") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_created_at_cache
+    end
+
+    # @return [Boolean] true if the model_class has updated_at column
+    def supports_updated_at?
+      if @supports_updated_at_cache.nil?
+        @supports_updated_at_cache = (model_class.column_names.include?("updated_at") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_updated_at_cache
+    end
+
+    # @return [Boolean] true if the model_class has timestamps_max column
+    def supports_timestamps_max?
+      @supports_timestamps_max_cache ||= model_class.column_names.include?("timestamps_max")
+    end
+
+    # @return [Boolean] true if the model_class has timestamps column
+    def supports_timestamps?
+      @supports_timestamps_cache ||= model_class.column_names.include?("timestamps")
+    end
+
+    # @return [Boolean] true if the model_class has timestamp column
+    def supports_timestamp?
+      @supports_timestamp_cache ||= model_class.column_names.include?("timestamp")
+    end
+
+    # @return [Boolean] true if the model_class has timestamps_max column
+    def supports_resource_versions_max?
+      @supports_resource_versions_max_cache ||= model_class.column_names.include?("resource_versions_max")
+    end
+
+    # @return [Boolean] true if the model_class has timestamps column
+    def supports_resource_versions?
+      @supports_resource_versions_cache ||= model_class.column_names.include?("resource_versions")
+    end
+
+    # @return [Boolean] true if the model_class has timestamp column
+    def supports_resource_version?
+      @supports_resource_version_cache ||= model_class.column_names.include?("resource_version")
+    end
+
+    # @return [Array<Symbol>] all columns that are part of the best fit unique index
+    def unique_index_columns
+      return @unique_index_columns if @unique_index_columns
+
+      @unique_index_columns = unique_index_for(unique_index_keys).columns.map(&:to_sym)
+    end
+
+    def unique_index_keys
+      @unique_index_keys ||= manager_ref_to_cols.map(&:to_sym)
+    end
+
+    # @return [Array<ActiveRecord::ConnectionAdapters::IndexDefinition>] array of all unique indexes known to model
+    def unique_indexes
+      @unique_indexes_cache if @unique_indexes_cache
+
+      @unique_indexes_cache = model_class.connection.indexes(model_class.table_name).select(&:unique)
+
+      if @unique_indexes_cache.blank?
+        raise "#{inventory_collection} and its table #{model_class.table_name} must have a unique index defined, to"\
+                " be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
+      end
+
+      @unique_indexes_cache
+    end
+
+    # Finds an index that fits the list of columns (keys) the best
+    #
+    # @param keys [Array<Symbol>]
+    # @raise [Exception] if the unique index for the columns was not found
+    # @return [ActiveRecord::ConnectionAdapters::IndexDefinition] unique index fitting the keys
+    def unique_index_for(keys)
+      @unique_index_for_keys_cache ||= {}
+      @unique_index_for_keys_cache[keys] if @unique_index_for_keys_cache[keys]
+
+      # Find all uniq indexes that that are covering our keys
+      uniq_key_candidates = unique_indexes.each_with_object([]) { |i, obj| obj << i if (keys - i.columns.map(&:to_sym)).empty? }
+
+      if @unique_indexes_cache.blank?
+        raise "#{inventory_collection} and its table #{model_class.table_name} must have a unique index defined "\
+                "covering columns #{keys} to be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
+      end
+
+      # Take the uniq key having the least number of columns
+      @unique_index_for_keys_cache[keys] = uniq_key_candidates.min_by { |x| x.columns.count }
+    end
+
+    def internal_columns
+      return @internal_columns if @internal_columns
+
+      @internal_columns = []
+      @internal_columns << :type if supports_sti?
+      @internal_columns << :created_on if supports_created_on?
+      @internal_columns << :created_at if supports_created_at?
+      @internal_columns << :updated_on if supports_updated_on?
+      @internal_columns << :updated_at if supports_updated_at?
+      @internal_columns << :timestamps_max if supports_timestamps_max?
+      @internal_columns << :timestamps if supports_timestamps?
+      @internal_columns << :timestamp if supports_timestamp?
+      @internal_columns << :resource_versions_max if supports_resource_versions_max?
+      @internal_columns << :resource_versions if supports_resource_versions?
+      @internal_columns << :resource_version if supports_resource_version?
+      @internal_columns
+    end
+
+    def base_columns
+      @base_columns ||= unique_index_columns + internal_columns
+    end
+
     # @return [Boolean] true if no more data will be added to this InventoryCollection object, that usually happens
     #         after the parsing step is finished
     def data_collection_finalized?

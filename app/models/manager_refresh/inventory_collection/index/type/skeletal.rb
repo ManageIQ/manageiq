@@ -43,6 +43,8 @@ module ManagerRefresh
           def skeletonize_primary_index(index_value)
             inventory_object = primary_index.delete(index_value)
             return unless inventory_object
+            fill_timestamps!(inventory_object.data)
+
             index[index_value] = inventory_object
           end
 
@@ -55,6 +57,7 @@ module ManagerRefresh
           #         assigned
           def build(attributes)
             attributes = {}.merge!(default_values).merge!(attributes)
+            fill_timestamps!(attributes)
 
             # If the primary index is already filled, we don't want populate skeletal index
             uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(attributes, named_ref)
@@ -74,6 +77,17 @@ module ManagerRefresh
             # We want to populate a new skeletal index
             inventory_object                     = new_inventory_object(attributes)
             index[inventory_object.manager_uuid] = inventory_object
+          end
+
+          def fill_timestamps!(attributes)
+            if inventory_collection.supports_timestamps_max? && attributes[:timestamp]
+              # We have to symbolize, since serializing persistor makes these strings
+              (attributes[:timestamps] ||= {}).symbolize_keys!
+
+              (attributes.keys - inventory_collection.base_columns).each do |key|
+                attributes[:timestamps][key] ||= attributes[:timestamp]
+              end
+            end
           end
 
           private

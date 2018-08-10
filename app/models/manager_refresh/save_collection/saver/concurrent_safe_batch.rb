@@ -315,7 +315,6 @@ module ManagerRefresh::SaveCollection
         end
       end
 
-
       def create_or_update_partial_records(all_attribute_keys)
         # We will create also remaining skeletal records
         skeletal_attributes_index        = {}
@@ -329,9 +328,7 @@ module ManagerRefresh::SaveCollection
           skeletal_inventory_objects_index[index] = inventory_object
         end
 
-
-        base_columns = unique_index_columns + internal_columns + [:timestamps_max]
-        columns_for_per_column_batches = all_attribute_keys - base_columns
+        columns_for_per_column_batches = all_attribute_keys - inventory_collection.base_columns
 
         if supports_timestamps_max?
           all_attribute_keys << :timestamps
@@ -347,7 +344,13 @@ module ManagerRefresh::SaveCollection
           # Partial create or update must never set a timestamp for the whole row
           if supports_timestamps_max?
             hash[:timestamps_max] = hash.delete(:timestamp)
-            hash[:timestamps] = columns_for_per_column_batches.map { |x| [x, hash[:timestamps_max]] if hash.key?(x) }.compact.to_h
+
+            timestamps = {}
+            if hash[:timestamps].present?
+              # Lets clean to only what we save, since when we build the skeletal object, we can set more
+              hash[:timestamps] = hash[:timestamps].slice(*all_attribute_keys)
+              timestamps = hash[:timestamps]
+            end
           end
           # Transform hash to DB format
           hash = transform_to_hash!(all_attribute_keys, hash)
@@ -356,6 +359,7 @@ module ManagerRefresh::SaveCollection
 
           next unless assert_referential_integrity(hash)
 
+          hash[:__non_serialized_timestamps] = timestamps # store non serialized timestamps for the partial updates
           hashes << hash
           # Index on Unique Columns values, so we can easily fill in the :id later
           indexed_inventory_objects[unique_index_columns.map { |x| hash[x] }] = inventory_object
@@ -372,12 +376,13 @@ module ManagerRefresh::SaveCollection
 
         # TODO(lsmola) we don't need to process rows that were save by the create -> oncoflict do nothing
         (columns_for_per_column_batches - [:timestamp]).each do |column_name|
-          # TODO(lsmola) we need to move here the hash loading ar object etc. otherwise the key? is not correct
-          # and we don't want to do the map_ids
           filtered = hashes.select { |x| x.key?(column_name) }
 
           filtered.each_slice(batch_size_for_persisting) do |batch|
-            create_partial!(base_columns + [column_name],
+            # We need to set correct timestamps_max for this particular attribute, based on what is in timestamps
+            batch.each { |x| x[:timestamps_max] = x[:__non_serialized_timestamps][column_name] if x[:__non_serialized_timestamps][column_name] }
+
+            create_partial!(inventory_collection.base_columns + [column_name],
                             batch,
                             :on_conflict => :do_update,
                             :column_name => column_name)
@@ -387,6 +392,8 @@ module ManagerRefresh::SaveCollection
         # TODO(lsmola) we need to recognize what records were created and what records were updated. Will we take
         # skeletal records as created? The creation should be having :complete => true
         # inventory_collection.store_created_records(result)
+        # TODO(lsmola) we need to move here the hash loading ar object etc. otherwise the lazy_find with key will not
+        # be correct
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
           map_ids_to_inventory_objects(indexed_inventory_objects,
