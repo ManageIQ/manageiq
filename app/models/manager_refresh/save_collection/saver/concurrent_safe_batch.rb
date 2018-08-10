@@ -298,6 +298,12 @@ module ManagerRefresh::SaveCollection
       # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
       def update_records!(all_attribute_keys, hashes, indexed_inventory_objects)
         return if hashes.blank?
+
+        unless inventory_collection.parallel_safe?
+          # We need to update the stored records before we save it, since hashes are modified
+          inventory_collection.store_updated_records(hashes)
+        end
+
         query = build_update_query(all_attribute_keys, hashes)
         result = get_connection.execute(query)
 
@@ -306,8 +312,6 @@ module ManagerRefresh::SaveCollection
           inventory_collection.store_updated_records(result)
 
           skeletonize_ignored_records!(indexed_inventory_objects, result)
-        else
-          inventory_collection.store_updated_records(hashes)
         end
 
         result
@@ -479,7 +483,9 @@ module ManagerRefresh::SaveCollection
                                        :on_conflict => on_conflict)
         end
 
-        skeletonize_ignored_records!(indexed_inventory_objects, result, :all_unique_columns => true)
+        if inventory_collection.parallel_safe?
+          skeletonize_ignored_records!(indexed_inventory_objects, result, :all_unique_columns => true)
+        end
       end
 
       # Stores primary_key values of created records into associated InventoryObject objects.
