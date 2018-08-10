@@ -167,6 +167,21 @@ module ManagerRefresh::SaveCollection
               next unless assert_referential_integrity(hash)
               inventory_object.id = primary_key_value
 
+              if inventory_collection.parallel_safe? && supports_remote_data_timestamp?(all_attribute_keys)
+                record_timestamp = record.try(:timestamp) || record.try(:[], :timestamp)
+                record_timestamps_max = record.try(:timestamps_max) || record.try(:[], :timestamps_max)
+                hash_timestamp = hash[:timestamp]
+
+                # Skip updating this record, because it is old
+                next if record_timestamp && hash_timestamp && record_timestamp >= hash_timestamp
+
+                # Some column has bigger timestamp than the whole row, we need to store the row partially
+                if record_timestamps_max && hash_timestamp && record_timestamps_max > hash_timestamp
+                  inventory_collection.skeletal_primary_index.skeletonize_primary_index(inventory_object.manager_uuid)
+                  next
+                end
+              end
+
               hash_for_update = if inventory_collection.use_ar_object?
                                   record.assign_attributes(hash.except(:id, :type))
                                   values_for_database!(all_attribute_keys,
