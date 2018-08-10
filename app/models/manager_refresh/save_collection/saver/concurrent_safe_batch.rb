@@ -139,9 +139,9 @@ module ManagerRefresh::SaveCollection
       #        models's table
       # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
       def update_or_destroy_records!(records_batch_iterator, inventory_objects_index, attributes_index, all_attribute_keys)
-        hashes_for_update   = {}
+        hashes_for_update   = []
         records_for_destroy = []
-        db_index_to_inventory_object_mapping = {}
+        indexed_inventory_objects = {}
 
         records_batch_iterator.find_in_batches(:batch_size => batch_size) do |batch|
           update_time = time_now
@@ -184,17 +184,17 @@ module ManagerRefresh::SaveCollection
               assign_attributes_for_update!(hash_for_update, update_time)
 
               hash_for_update[:id] = primary_key_value
-              db_index_to_inventory_object_mapping[index] = inventory_object.manager_uuid
-              hashes_for_update[index] = hash_for_update
+              indexed_inventory_objects[index] = inventory_object
+              hashes_for_update << hash_for_update
             end
           end
 
           # Update in batches
           if hashes_for_update.size >= batch_size_for_persisting
-            update_records!(all_attribute_keys, hashes_for_update, db_index_to_inventory_object_mapping)
+            update_records!(all_attribute_keys, hashes_for_update, indexed_inventory_objects)
 
-            hashes_for_update = {}
-            db_index_to_inventory_object_mapping = {}
+            hashes_for_update = []
+            indexed_inventory_objects = {}
           end
 
           # Destroy in batches
@@ -205,7 +205,7 @@ module ManagerRefresh::SaveCollection
         end
 
         # Update the last batch
-        update_records!(all_attribute_keys, hashes_for_update, db_index_to_inventory_object_mapping)
+        update_records!(all_attribute_keys, hashes_for_update, indexed_inventory_objects)
         hashes_for_update = [] # Cleanup so GC can release it sooner
 
         # Destroy the last batch
@@ -281,30 +281,38 @@ module ManagerRefresh::SaveCollection
       #
       # @param hashes [Array<Hash>] data used for building a batch update sql query
       # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
-      def update_records!(all_attribute_keys, hashes, db_index_to_inventory_object_mapping)
+      def update_records!(all_attribute_keys, hashes, indexed_inventory_objects)
         return if hashes.blank?
-        data = hashes.values
-        query = build_update_query(all_attribute_keys, data)
+        query = build_update_query(all_attribute_keys, hashes)
         result = get_connection.execute(query)
 
         if inventory_collection.parallel_safe?
           # We will check for timestamp clashes of full row update and we will fallback to skeletal update
           inventory_collection.store_updated_records(result)
 
-          updated = result.map { |x| db_columns_index(x, :pure_sql => true) }
-          updated.each { |x| hashes.delete(x) }
-
-          # Now lets skeletonize all inventory_objects that were not saved
-          # TODO(lsmola) we should compare timestamps and ignore InventoryObjects or attributes that are old, to lower
-          # what we send as upsert in skeletal index
-          hashes.keys.each do |db_index|
-            inventory_collection.skeletal_primary_index.skeletonize_primary_index(db_index_to_inventory_object_mapping[db_index])
-          end
+          skeletonize_ignored_records!(indexed_inventory_objects, result)
         else
-          inventory_collection.store_updated_records(data)
+          inventory_collection.store_updated_records(hashes)
         end
 
         result
+      end
+
+      def skeletonize_ignored_records!(hash, result, all_unique_columns: false)
+        updated = if all_unique_columns
+                    result.map { |x| unique_index_columns_to_s.map { |key| x[key] } }
+                  else
+                    result.map { |x| db_columns_index(x, :pure_sql => true) }
+                  end
+
+        updated.each { |x| hash.delete(x) }
+
+        # Now lets skeletonize all inventory_objects that were not saved
+        # TODO(lsmola) we should compare timestamps and ignore InventoryObjects or attributes that are old, to lower
+        # what we send as upsert in skeletal index
+        hash.keys.each do |db_index|
+          inventory_collection.skeletal_primary_index.skeletonize_primary_index(hash[db_index].manager_uuid)
+        end
       end
 
 
@@ -435,8 +443,8 @@ module ManagerRefresh::SaveCollection
         result = get_connection.execute(
           build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict, :mode => :full)
         )
-        # TODO(lsmola) we need to recognize what records were created and what records were updated. Will we take
-        # skeletal records as created? The creation should be having :complete => true
+        # TODO(lsmola) so for all of the lazy_find with key, we will need to fetch a fresh attributes from the
+        # db, otherwise we will be getting attribute that might not have been updated (add spec)
         inventory_collection.store_created_records(result)
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
@@ -446,6 +454,8 @@ module ManagerRefresh::SaveCollection
                                        result,
                                        :on_conflict => on_conflict)
         end
+
+        skeletonize_ignored_records!(indexed_inventory_objects, result, :all_unique_columns => true)
       end
 
       # Stores primary_key values of created records into associated InventoryObject objects.

@@ -200,7 +200,7 @@ module ManagerRefresh::SaveCollection
 
         if inventory_collection.parallel_safe?
           update_query += %{
-            RETURNING updated_values.#{quote_column_name("id")},#{unique_index_columns.map { |x| "updated_values.#{quote_column_name(x)}" }.join(",")}
+            RETURNING updated_values.#{quote_column_name("id")}, #{unique_index_columns.map { |x| "updated_values.#{quote_column_name(x)}" }.join(",")}
           }
         end
 

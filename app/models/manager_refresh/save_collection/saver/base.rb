@@ -358,6 +358,13 @@ module ManagerRefresh::SaveCollection
         @unique_index_columns = unique_index_for(unique_index_keys).columns.map(&:to_sym)
       end
 
+      # @return [Array<String>] all columns that are part of the best fit unique index
+      def unique_index_columns_to_s
+        return @unique_index_columns_to_s if @unique_index_columns_to_s
+
+        @unique_index_columns_to_s = unique_index_columns.map(&:to_s)
+      end
+
       # @return [Boolean] true if the model_class supports STI
       def supports_sti?
         @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
