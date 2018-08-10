@@ -363,12 +363,12 @@ module ManagerRefresh::SaveCollection
 
       # @return [Boolean] true if the model_class has timestamp column
       def supports_remote_data_timestamp?(all_attribute_keys)
-        all_attribute_keys.include?(:timestamp) # include? on Set is O(1)
+        all_attribute_keys.include?(:resource_timestamp) # include? on Set is O(1)
       end
 
       # @return [Boolean] true if the model_class has remote_data_timestamp column
-      def supports_timestamps_max?
-        @supports_timestamps_max_cache ||= inventory_collection.supports_timestamps_max?
+      def supports_resource_timestamps_max?
+        @supports_resource_timestamps_max_cache ||= inventory_collection.supports_resource_timestamps_max?
       end
     end
   end

@@ -139,13 +139,13 @@ module ManagerRefresh
     def assign_attributes(attributes)
       attributes.each do |k, v|
         # We don't want timestamps or resource versions to be overwritten here, since those are driving the conditions
-        next if %i(timestamps timestamps_max timestamp).include?(k)
+        next if %i(resource_timestamps resource_timestamps_max resource_timestamp).include?(k)
         next if %i(resource_versions resource_versions_max resource_version).include?(k)
 
-        if inventory_collection.supports_timestamps_max? && attributes[:timestamp] && data[:timestamp]
+        if inventory_collection.supports_resource_timestamps_max? && attributes[:resource_timestamp] && data[:resource_timestamp]
           # If timestamps are in play, we will set only attributes that are newer
-          specific_attr_timestamp = attributes[:timestamps].try(:[], k)
-          specific_data_timestamp = data[:timestamps].try(:[], k)
+          specific_attr_timestamp = attributes[:resource_timestamps].try(:[], k)
+          specific_data_timestamp = data[:resource_timestamps].try(:[], k)
 
           assign = if !specific_attr_timestamp
                      # Data have no timestamp, we will ignore the check
@@ -153,7 +153,7 @@ module ManagerRefresh
                    elsif specific_attr_timestamp && !specific_data_timestamp
                      # Data specific timestamp is nil and we have new specific timestamp
                      if data.key?(k)
-                       if attributes[:timestamp] >= data[:timestamp]
+                       if attributes[:resource_timestamp] >= data[:resource_timestamp]
                          # We can save if the full timestamp is bigger, if the data already contains the attribute
                          true
                        end
@@ -169,20 +169,20 @@ module ManagerRefresh
 
           if assign
             public_send("#{k}=", v) # Attribute is newer than current one, lets use it
-            (data[:timestamps] ||= {})[k] = specific_attr_timestamp if specific_attr_timestamp # and set the latest timestamp
+            (data[:resource_timestamps] ||= {})[k] = specific_attr_timestamp if specific_attr_timestamp # and set the latest timestamp
           end
         else
           public_send("#{k}=", v)
         end
       end
 
-      if inventory_collection.supports_timestamps_max?
-        if attributes[:timestamp] && data[:timestamp]
+      if inventory_collection.supports_resource_timestamps_max?
+        if attributes[:resource_timestamp] && data[:resource_timestamp]
           # If both timestamps are present, store the bigger one
-          data[:timestamp] = attributes[:timestamp] if attributes[:timestamp] > data[:timestamp]
-        elsif attributes[:timestamp] && !data[:timestamp]
+          data[:resource_timestamp] = attributes[:resource_timestamp] if attributes[:resource_timestamp] > data[:resource_timestamp]
+        elsif attributes[:resource_timestamp] && !data[:resource_timestamp]
           # We are assigning timestamp that was missing
-          data[:timestamp] = attributes[:timestamp]
+          data[:resource_timestamp] = attributes[:resource_timestamp]
         end
       end
 

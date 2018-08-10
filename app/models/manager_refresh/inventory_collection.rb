@@ -609,32 +609,32 @@ module ManagerRefresh
       @supports_updated_at_cache
     end
 
-    # @return [Boolean] true if the model_class has timestamps_max column
-    def supports_timestamps_max?
-      @supports_timestamps_max_cache ||= model_class.column_names.include?("timestamps_max")
+    # @return [Boolean] true if the model_class has resource_timestamps_max column
+    def supports_resource_timestamps_max?
+      @supports_resource_timestamps_max_cache ||= model_class.column_names.include?("resource_timestamps_max")
     end
 
-    # @return [Boolean] true if the model_class has timestamps column
-    def supports_timestamps?
-      @supports_timestamps_cache ||= model_class.column_names.include?("timestamps")
+    # @return [Boolean] true if the model_class has resource_timestamps column
+    def supports_resource_timestamps?
+      @supports_resource_timestamps_cache ||= model_class.column_names.include?("resource_timestamps")
     end
 
-    # @return [Boolean] true if the model_class has timestamp column
-    def supports_timestamp?
-      @supports_timestamp_cache ||= model_class.column_names.include?("timestamp")
+    # @return [Boolean] true if the model_class has resource_timestamp column
+    def supports_resource_timestamp?
+      @supports_resource_timestamp_cache ||= model_class.column_names.include?("resource_timestamp")
     end
 
-    # @return [Boolean] true if the model_class has timestamps_max column
+    # @return [Boolean] true if the model_class has resource_versions_max column
     def supports_resource_versions_max?
       @supports_resource_versions_max_cache ||= model_class.column_names.include?("resource_versions_max")
     end
 
-    # @return [Boolean] true if the model_class has timestamps column
+    # @return [Boolean] true if the model_class has resource_versions column
     def supports_resource_versions?
       @supports_resource_versions_cache ||= model_class.column_names.include?("resource_versions")
     end
 
-    # @return [Boolean] true if the model_class has timestamp column
+    # @return [Boolean] true if the model_class has resource_version column
     def supports_resource_version?
       @supports_resource_version_cache ||= model_class.column_names.include?("resource_version")
     end
@@ -694,9 +694,9 @@ module ManagerRefresh
       @internal_columns << :created_at if supports_created_at?
       @internal_columns << :updated_on if supports_updated_on?
       @internal_columns << :updated_at if supports_updated_at?
-      @internal_columns << :timestamps_max if supports_timestamps_max?
-      @internal_columns << :timestamps if supports_timestamps?
-      @internal_columns << :timestamp if supports_timestamp?
+      @internal_columns << :resource_timestamps_max if supports_resource_timestamps_max?
+      @internal_columns << :resource_timestamps if supports_resource_timestamps?
+      @internal_columns << :resource_timestamp if supports_resource_timestamp?
       @internal_columns << :resource_versions_max if supports_resource_versions_max?
       @internal_columns << :resource_versions if supports_resource_versions?
       @internal_columns << :resource_version if supports_resource_version?

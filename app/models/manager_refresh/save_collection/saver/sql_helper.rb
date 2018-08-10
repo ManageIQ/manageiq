@@ -25,7 +25,7 @@ module ManagerRefresh::SaveCollection
         connection = get_connection
 
         ignore_cols = if mode == :partial
-                        [:timestamp]
+                        [:resource_timestamp]
                       elsif mode == :full
                         []
                       end
@@ -59,7 +59,7 @@ module ManagerRefresh::SaveCollection
             }
 
             ignore_cols += if mode == :partial
-                            [:timestamps, :timestamps_max]
+                            [:resource_timestamps, :resource_timestamps_max]
                           elsif mode == :full
                             []
                           end
@@ -79,11 +79,11 @@ module ManagerRefresh::SaveCollection
               }
               if supports_remote_data_timestamp?(all_attribute_keys)
                 insert_query += %{
-                  , timestamps = '{}', timestamps_max = NULL
+                  , resource_timestamps = '{}', resource_timestamps_max = NULL
 
-                  WHERE EXCLUDED.timestamp IS NULL OR (
-                    (#{table_name}.timestamp IS NULL OR EXCLUDED.timestamp > #{table_name}.timestamp) AND
-                    (#{table_name}.timestamps_max IS NULL OR EXCLUDED.timestamp >= #{table_name}.timestamps_max)
+                  WHERE EXCLUDED.resource_timestamp IS NULL OR (
+                    (#{table_name}.resource_timestamp IS NULL OR EXCLUDED.resource_timestamp > #{table_name}.resource_timestamp) AND
+                    (#{table_name}.resource_timestamps_max IS NULL OR EXCLUDED.resource_timestamp >= #{table_name}.resource_timestamps_max)
                   )
                 }
               end
@@ -93,19 +93,14 @@ module ManagerRefresh::SaveCollection
               insert_query += %{
                  SET #{(all_attribute_keys_array - ignore_cols).map { |key| build_insert_set_cols(key) }.join(", ")}
               }
-              if supports_timestamps_max?
-                # TODO(lsmola) we should have EXCLUDED.timestamp > #{table_name}.timestamp, but if skeletal precreate
-                # creates the row, it sets timestamp. Should we combine it with complete => true only? We probably need
-                # to set the timestamp, otherwise we can't touch it in the update clause. Maybe we coud set it as
-                # timestamps_max?
-
+              if supports_resource_timestamps_max?
                 insert_query += %{
-                  , timestamps = #{table_name}.timestamps || ('{"#{column_name}": "' || EXCLUDED.timestamps_max::timestamp || '"}')::jsonb
-                  , timestamps_max = greatest(#{table_name}.timestamps_max::timestamp, EXCLUDED.timestamps_max::timestamp)
-                  WHERE EXCLUDED.timestamps_max IS NULL OR (
-                    (#{table_name}.timestamp IS NULL OR EXCLUDED.timestamps_max > #{table_name}.timestamp) AND (
-                      (#{table_name}.timestamps->>'#{column_name}')::timestamp IS NULL OR
-                      EXCLUDED.timestamps_max::timestamp > (#{table_name}.timestamps->>'#{column_name}')::timestamp
+                  , resource_timestamps = #{table_name}.resource_timestamps || ('{"#{column_name}": "' || EXCLUDED.resource_timestamps_max::timestamp || '"}')::jsonb
+                  , resource_timestamps_max = greatest(#{table_name}.resource_timestamps_max::timestamp, EXCLUDED.resource_timestamps_max::timestamp)
+                  WHERE EXCLUDED.resource_timestamps_max IS NULL OR (
+                    (#{table_name}.resource_timestamp IS NULL OR EXCLUDED.resource_timestamps_max > #{table_name}.resource_timestamp) AND (
+                      (#{table_name}.resource_timestamps->>'#{column_name}')::timestamp IS NULL OR
+                      EXCLUDED.resource_timestamps_max::timestamp > (#{table_name}.resource_timestamps->>'#{column_name}')::timestamp
                     )
                   )
                 }
@@ -169,7 +164,7 @@ module ManagerRefresh::SaveCollection
         if supports_remote_data_timestamp?(all_attribute_keys)
           # Full row update will reset the partial update timestamps
           update_query += %{
-             , timestamps = '{}', timestamps_max = NULL
+             , resource_timestamps = '{}', resource_timestamps_max = NULL
           }
         end
 
@@ -190,9 +185,9 @@ module ManagerRefresh::SaveCollection
         if supports_remote_data_timestamp?(all_attribute_keys)
           update_query += %{
             AND (
-              updated_values.timestamp IS NULL OR (
-                (#{table_name}.timestamp IS NULL OR updated_values.timestamp > #{table_name}.timestamp) AND
-                (#{table_name}.timestamps_max IS NULL OR updated_values.timestamp >= #{table_name}.timestamps_max)
+              updated_values.resource_timestamp IS NULL OR (
+                (#{table_name}.resource_timestamp IS NULL OR updated_values.resource_timestamp > #{table_name}.resource_timestamp) AND
+                (#{table_name}.resource_timestamps_max IS NULL OR updated_values.resource_timestamp >= #{table_name}.resource_timestamps_max)
               )
             )
           }

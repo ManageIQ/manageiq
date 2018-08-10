@@ -80,12 +80,12 @@ module ManagerRefresh
           end
 
           def fill_timestamps!(attributes)
-            if inventory_collection.supports_timestamps_max? && attributes[:timestamp]
+            if inventory_collection.supports_resource_timestamps_max? && attributes[:resource_timestamp]
               # We have to symbolize, since serializing persistor makes these strings
-              (attributes[:timestamps] ||= {}).symbolize_keys!
+              (attributes[:resource_timestamps] ||= {}).symbolize_keys!
 
               (attributes.keys - inventory_collection.base_columns).each do |key|
-                attributes[:timestamps][key] ||= attributes[:timestamp]
+                attributes[:resource_timestamps][key] ||= attributes[:resource_timestamp]
               end
             end
           end
