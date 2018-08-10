@@ -328,8 +328,6 @@ module ManagerRefresh::SaveCollection
           skeletal_inventory_objects_index[index] = inventory_object
         end
 
-        columns_for_per_column_batches = all_attribute_keys - inventory_collection.base_columns
-
         if supports_timestamps_max?
           all_attribute_keys << :timestamps
           all_attribute_keys << :timestamps_max
@@ -374,9 +372,14 @@ module ManagerRefresh::SaveCollection
                           :on_conflict => :do_nothing)
         end
 
+        # TODO(lsmola) for the ones without timestamp or resource_version, we should just update everything? Not for the
+        # skeletal precreate though, there we want just do_nothing?
+        # We need only skeletal records with timestamp
+        pre_filtered = hashes.select { |x| x[:timestamps_max] }
+
         # TODO(lsmola) we don't need to process rows that were save by the create -> oncoflict do nothing
-        (columns_for_per_column_batches - [:timestamp]).each do |column_name|
-          filtered = hashes.select { |x| x.key?(column_name) }
+        (all_attribute_keys - inventory_collection.base_columns).each do |column_name|
+          filtered = pre_filtered.select { |x| x.key?(column_name) }
 
           filtered.each_slice(batch_size_for_persisting) do |batch|
             # We need to set correct timestamps_max for this particular attribute, based on what is in timestamps
