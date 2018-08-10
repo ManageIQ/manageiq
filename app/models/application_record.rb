@@ -24,7 +24,7 @@ class ApplicationRecord < ActiveRecord::Base
     n_(model_name.singular.titleize, model_name.plural.titleize, number)
   end
 
-  def self.human_attribute_name(attribute, *args)
+  def self.human_attribute_name(attribute, options = {})
     "#{name}: #{super}"
   end
 end
