@@ -21,14 +21,16 @@ module ManagerRefresh
 
         def container_quota_scopes
           add_properties(
-            :manager_ref => %i(container_quota scope)
+            :manager_ref                  => %i(container_quota scope),
+            :parent_inventory_collections => %i(container_quotas)
           )
         end
 
         def container_quota_items
           add_properties(
-            :manager_ref   => %i(container_quota resource quota_desired quota_enforced quota_observed),
-            :delete_method => :disconnect_inv
+            :manager_ref                  => %i(container_quota resource quota_desired quota_enforced quota_observed),
+            :delete_method                => :disconnect_inv,
+            :parent_inventory_collections => %i(container_quotas)
           )
         end
 
@@ -41,7 +43,8 @@ module ManagerRefresh
 
         def container_limit_items
           add_properties(
-            :manager_ref => %i(container_limit resource item_type)
+            :manager_ref                  => %i(container_limit resource item_type),
+            :parent_inventory_collections => %i(container_limits)
           )
         end
 
@@ -55,20 +58,29 @@ module ManagerRefresh
         end
 
         def computer_systems
-          add_properties(:manager_ref => %i(managed_entity))
+          add_properties(
+            :manager_ref => %i(managed_entity),
+            # TODO(lsmola) can we introspect this from the relation? Basically, the
+            # :parent_inventory_collections are needed only if :association goes :through other association. Then the
+            # parent is actually the root association (if we chain several :through associations). We should be able to
+            # create a tree of :through associations of ems and infer the parent_inventory_collections from that?
+            :parent_inventory_collections => %i(container_nodes),
+          )
         end
 
         def computer_system_hardwares
           add_properties(
-            :model_class => ::Hardware,
-            :manager_ref => %i(computer_system)
+            :model_class                  => ::Hardware,
+            :manager_ref                  => %i(computer_system),
+            :parent_inventory_collections => %i(container_nodes),
           )
         end
 
         def computer_system_operating_systems
           add_properties(
-            :model_class => ::OperatingSystem,
-            :manager_ref => %i(computer_system)
+            :model_class                  => ::OperatingSystem,
+            :manager_ref                  => %i(computer_system),
+            :parent_inventory_collections => %i(container_nodes),
           )
         end
 
@@ -103,7 +115,10 @@ module ManagerRefresh
         end
 
         def container_volumes
-          add_properties(:manager_ref => %i(parent name))
+          add_properties(
+            :manager_ref                  => %i(parent name),
+            :parent_inventory_collections => %i(container_groups),
+          )
         end
 
         def containers
@@ -118,17 +133,24 @@ module ManagerRefresh
 
         def container_port_configs
           # parser sets :ems_ref => "#{pod_id}_#{container_name}_#{port_config.containerPort}_#{port_config.hostPort}_#{port_config.protocol}"
+          add_properties(
+            :parent_inventory_collections => %i(containers)
+          )
         end
 
         def container_env_vars
           add_properties(
             # TODO: (agrare) old save matches on all :name, :value, :field_path - does this matter?
-            :manager_ref => %i(container name)
+            :manager_ref                  => %i(container name),
+            :parent_inventory_collections => %i(containers)
           )
         end
 
         def security_contexts
-          add_properties(:manager_ref => %i(resource))
+          add_properties(
+            :manager_ref                  => %i(resource),
+            :parent_inventory_collections => %i(containers)
+          )
         end
 
         def container_replicators
@@ -149,11 +171,17 @@ module ManagerRefresh
         end
 
         def container_service_port_configs
-          add_properties(:manager_ref => %i(ems_ref protocol)) # TODO: (lsmola) make protocol part of the ems_ref?)
+          add_properties(
+            :manager_ref                  => %i(ems_ref protocol), # TODO: (lsmola) make protocol part of the ems_ref?)
+            :parent_inventory_collections => %i(container_services)
+          )
         end
 
         def container_routes
-          add_properties(:attributes_blacklist => %i(namespace))
+          add_properties(
+            :attributes_blacklist         => %i(namespace),
+            :parent_inventory_collections => %i(container_services)
+          )
           add_common_default_values
         end
 
@@ -166,7 +194,10 @@ module ManagerRefresh
         end
 
         def container_template_parameters
-          add_properties(:manager_ref => %i(container_template name))
+          add_properties(
+            :manager_ref                  => %i(container_template name),
+            :parent_inventory_collections => %i(container_templates)
+          )
         end
 
         def container_builds
