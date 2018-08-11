@@ -9,6 +9,7 @@ require 'util/miq-uuid'
 require 'util/miq_file_storage'
 
 class MiqGenericMountSession < MiqFileStorage::Interface
+  require 'util/mount/miq_local_mount_session'
   require 'util/mount/miq_nfs_session'
   require 'util/mount/miq_s3_session'
   require 'util/mount/miq_smb_session'
@@ -296,7 +297,7 @@ class MiqGenericMountSession < MiqFileStorage::Interface
 
     begin
       reconnect!
-      relpath = File.join(mnt_point, relative_to_mount(remote_file))
+      relpath = uri_to_local_path(remote_file)
       unless File.exist?(relpath)
         logger.warn("#{log_header} Remote file: [#{remote_file}] does not exist!")
         return
