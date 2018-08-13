@@ -1,20 +1,26 @@
 describe "AR Count By Date extension" do
   context "vms with dates" do
     before do
-      FactoryGirl.create(:vm, :ems_id => 1, :created_on => 0.days.ago)
-      FactoryGirl.create(:vm, :ems_id => 1, :created_on => 1.day.ago)
-      FactoryGirl.create(:vm, :ems_id => 1, :created_on => 2.days.ago)
-      FactoryGirl.create(:vm, :ems_id => 1, :created_on => 2.days.ago)
-      FactoryGirl.create(:vm, :ems_id => 2, :created_on => 2.days.ago)
-      FactoryGirl.create(:vm, :ems_id => 1, :created_on => 10.days.ago)
-      FactoryGirl.create(:vm, :ems_id => 2, :created_on => 10.days.ago)
-      FactoryGirl.create(:vm, :ems_id => 1, :created_on => 29.days.ago)
-      FactoryGirl.create(:vm, :ems_id => 1, :created_on => 30.days.ago)
-      FactoryGirl.create(:vm, :ems_id => 1, :created_on => 45.days.ago)
+      Timecop.freeze do
+        FactoryGirl.create(:vm, :ems_id => 1, :created_on => 0.days.ago)
+        FactoryGirl.create(:vm, :ems_id => 1, :created_on => 1.day.ago)
+        FactoryGirl.create(:vm, :ems_id => 1, :created_on => 2.days.ago)
+        FactoryGirl.create(:vm, :ems_id => 1, :created_on => 2.days.ago)
+        FactoryGirl.create(:vm, :ems_id => 2, :created_on => 2.days.ago)
+        FactoryGirl.create(:vm, :ems_id => 1, :created_on => 10.days.ago)
+        FactoryGirl.create(:vm, :ems_id => 2, :created_on => 10.days.ago)
+        FactoryGirl.create(:vm, :ems_id => 1, :created_on => 29.days.ago)
+        FactoryGirl.create(:vm, :ems_id => 1, :created_on => 30.days.ago)
+        FactoryGirl.create(:vm, :ems_id => 1, :created_on => 45.days.ago)
+      end
+    end
+
+    after do
+      Timecop.return
     end
 
     it "returns expected results with default parameters" do
-      expect(Vm.recent_records).to eql(
+      expect(Vm.recent_records).to eq(
         0.days.ago.strftime('%Y-%m-%d')  => 1,
         1.day.ago.strftime('%Y-%m-%d')   => 1,
         2.days.ago.strftime('%Y-%m-%d')  => 3,
@@ -24,7 +30,7 @@ describe "AR Count By Date extension" do
     end
 
     it "returns expected results for specified date limit" do
-      expect(Vm.recent_records(5.days.ago)).to eql(
+      expect(Vm.recent_records(5.days.ago)).to eq(
         0.days.ago.strftime('%Y-%m-%d') => 1,
         1.day.ago.strftime('%Y-%m-%d')  => 1,
         2.days.ago.strftime('%Y-%m-%d') => 3,
@@ -38,7 +44,7 @@ describe "AR Count By Date extension" do
     end
 
     it "returns expected results for specified filter" do
-      expect(Vm.recent_records(30.days.ago, 'day', :ems_id => 1)).to eql(
+      expect(Vm.recent_records(30.days.ago, 'day', :ems_id => 1)).to eq(
         0.days.ago.strftime('%Y-%m-%d')  => 1,
         1.day.ago.strftime('%Y-%m-%d')   => 1,
         2.days.ago.strftime('%Y-%m-%d')  => 2,
