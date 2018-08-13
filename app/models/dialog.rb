@@ -88,10 +88,15 @@ class Dialog < ApplicationRecord
     result
   end
 
-  def load_values_into_fields(values)
+  def load_values_into_fields(values, overwrite = true)
+    values = values.with_indifferent_access
+
     dialog_field_hash.each_value do |field|
       field.dialog = self
-      field.value = values[field.automate_key_name] || values[field.name]
+      new_value = values[field.automate_key_name] || values[field.name]
+      new_value ||= field.value unless overwrite
+
+      field.value = new_value
     end
   end
 
