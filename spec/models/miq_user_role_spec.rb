@@ -16,6 +16,8 @@ describe MiqUserRole do
     end
 
     it "with existing records" do
+      # administrator is a role that we know is provide with the product
+      # this is not testing administrator privileges
       changed   = FactoryGirl.create(:miq_user_role, :name => "EvmRole-administrator", :read_only => false)
       unchanged = FactoryGirl.create(:miq_user_role, :name => "xxx", :read_only => false)
       unchanged_orig_updated_at = unchanged.updated_at

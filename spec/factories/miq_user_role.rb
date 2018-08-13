@@ -25,8 +25,6 @@ FactoryGirl.define do
           # admins now using a feature instead of a roll
           if evaluator.role == "super_administrator"
             e_features = MiqProductFeature::SUPER_ADMIN_FEATURE
-          elsif evaluator.role == "administrator"
-            e_features = MiqProductFeature::ADMIN_FEATURE
           end
         end
       end

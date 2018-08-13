@@ -999,10 +999,6 @@ describe Rbac::Filterer do
           FactoryGirl.create(:miq_user_role, :role => "super_administrator")
         end
 
-        let!(:administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :role => "administrator")
-        end
-
         let(:group) do
           FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => tenant_administrator_user_role)
         end
@@ -1018,12 +1014,12 @@ describe Rbac::Filterer do
         let!(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
 
         it 'can see all roles except for EvmRole-super_administrator' do
-          expect(MiqUserRole.count).to eq(4)
-          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, administrator_user_role, user_role])
+          expect(MiqUserRole.count).to eq(3)
+          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, user_role])
         end
 
         it 'can see all groups except for group with role EvmRole-super_administrator' do
-          expect(MiqUserRole.count).to eq(4)
+          expect(MiqUserRole.count).to eq(3)
           default_group_for_tenant = user.current_tenant.miq_groups.where(:group_type => "tenant").first
           super_admin_group
           get_rbac_results_for_and_expect_objects(MiqGroup, [group, other_group, default_group_for_tenant])
