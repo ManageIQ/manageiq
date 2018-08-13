@@ -124,6 +124,7 @@ module Authenticator
           matching_groups = match_groups(groups_for(identity))
           userid, user = find_or_initialize_user(identity, username)
           update_user_attributes(user, userid, identity)
+          audit_new_user(audit, user) if user.new_record?
           user.miq_groups = matching_groups
 
           if matching_groups.empty?
@@ -193,6 +194,10 @@ module Authenticator
 
     def audit_event
       "authenticate_#{self.class.short_name}"
+    end
+
+    def audit_new_user(audit, user)
+      audit_success(audit.merge(:message => "User creation successful for User: #{user.name} with ID: #{user.userid}"))
     end
 
     def authorize?

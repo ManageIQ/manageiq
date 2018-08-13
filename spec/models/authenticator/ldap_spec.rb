@@ -253,7 +253,7 @@ describe Authenticator::Ldap do
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it "records three successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'alice',
@@ -408,11 +408,16 @@ describe Authenticator::Ldap do
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it "records three successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'bob',
             :message => "User bob successfully validated by LDAP",
+          )
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authorize',
+            :userid  => 'bob',
+            :message => "User creation successful for User: Bob Builderson with ID: bob",
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
@@ -443,11 +448,16 @@ describe Authenticator::Ldap do
             expect(authenticate).to eq(123)
           end
 
-          it "records two successful audit entries plus one failure" do
+          it "records three successful audit entries plus one failure" do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_ldap',
               :userid  => 'bob',
               :message => "User bob successfully validated by LDAP",
+            )
+            expect(AuditEvent).to receive(:success).with(
+              :event   => 'authorize',
+              :userid  => 'bob',
+              :message => "User creation successful for User: Bob Builderson with ID: bob",
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_ldap',
