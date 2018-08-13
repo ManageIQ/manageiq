@@ -32,7 +32,7 @@ class User < ApplicationRecord
 
   delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
              :to => :current_group, :allow_nil => true
-  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?, :disallowed_roles,
+  delegate   :super_admin_user?, :admin_user?, :tenant_admin_user?, :self_service?, :limited_self_service?, :disallowed_roles,
              :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid
@@ -285,7 +285,7 @@ class User < ApplicationRecord
 
   def self.with_current_user_groups(user = nil)
     user ||= current_user
-    user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => user.miq_group_ids})
+    user.tenant_admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => user.miq_group_ids})
   end
 
   def self.missing_user_features(db_user)

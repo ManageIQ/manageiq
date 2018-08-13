@@ -200,6 +200,24 @@ describe MiqUserRole do
     end
   end
 
+  describe "#tenant_admin" do
+    it "detects tenant_admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "tenant_administrator")).to be_tenant_admin_user
+    end
+
+    it "detects admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).to be_tenant_admin_user
+    end
+
+    it "detects super_admin" do
+      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_tenant_admin_user
+    end
+
+    it "does not detect regular role" do
+      expect(FactoryGirl.build(:miq_user_role)).not_to be_tenant_admin_user
+    end
+  end
+
   describe "#destroy" do
     subject { miq_group.entitlement.miq_user_role }
     let!(:miq_group) { FactoryGirl.create(:miq_group, :role => "EvmRole-administrator") }

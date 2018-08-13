@@ -937,14 +937,37 @@ describe Rbac::Filterer do
 
         let!(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
 
-        it 'can see all roles expect to EvmRole-super_administrator' do
-          expect(MiqUserRole.count).to eq(3)
-          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role])
+        let!(:user_role) do
+          FactoryGirl.create(:miq_user_role, :role => "user")
         end
 
-        it 'can see all groups expect to group with role EvmRole-super_administrator' do
-          expect(MiqUserRole.count).to eq(3)
-          get_rbac_results_for_and_expect_objects(MiqGroup, [group])
+        let!(:other_group) do
+          FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => user_role)
+        end
+
+        it 'can see all roles except for EvmRole-super_administrator' do
+          expect(MiqUserRole.count).to eq(4)
+          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, user_role])
+        end
+
+        it 'can see all groups except for group with roles EvmRole-super_administrator amd EvmRole-administrator' do
+          expect(MiqUserRole.count).to eq(4)
+          default_group_for_tenant = user.current_tenant.miq_groups.where(:group_type => "tenant").first
+          default_group_for_tenant.miq_user_role = MiqUserRole.default_tenant_role
+          default_group_for_tenant.save!
+          super_admin_group
+          get_rbac_results_for_and_expect_objects(MiqGroup, [group, other_group, default_group_for_tenant])
+        end
+
+        it 'can see all groups in the current tenant only' do
+          another_tenant = FactoryGirl.create(:tenant)
+          another_tenant_group = FactoryGirl.create(:miq_group, :miq_user_role => user_role, :tenant => another_tenant)
+          group.tenant = another_tenant
+
+          default_group_for_tenant = user.current_tenant.miq_groups.where(:group_type => "tenant").first
+          default_group_for_tenant.miq_user_role = MiqUserRole.default_tenant_role
+          default_group_for_tenant.save!
+          get_rbac_results_for_and_expect_objects(MiqGroup, [another_tenant_group, default_group_for_tenant])
         end
 
         let(:super_admin_group) do
@@ -953,7 +976,7 @@ describe Rbac::Filterer do
 
         let!(:super_admin_user) { FactoryGirl.create(:user, :miq_groups => [super_admin_group]) }
 
-        it 'can see all users expect to user with group with role EvmRole-super_administrator' do
+        it 'can see all users except for user with group with role EvmRole-super_administrator' do
           expect(User.count).to eq(2)
           get_rbac_results_for_and_expect_objects(User, [user])
         end
@@ -983,7 +1006,7 @@ describe Rbac::Filterer do
               h.metric_rollups << FactoryGirl.create(:metric_rollup_host_hr,
                                                      :timestamp                  => t,
                                                      :cpu_usage_rate_average     => v,
-                                                     :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to maake it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
+                                                     :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to make it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
                                                      :sys_uptime_absolute_latest => v
                                                     )
             end

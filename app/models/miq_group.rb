@@ -251,7 +251,7 @@ class MiqGroup < ApplicationRecord
 
   def self.with_current_user_groups(user = nil)
     current_user = user || User.current_user
-    current_user.admin_user? ? all : where(:id => current_user.miq_group_ids)
+    current_user.tenant_admin_user? ? all : where(:id => current_user.miq_group_ids)
   end
 
   def single_group_users?
