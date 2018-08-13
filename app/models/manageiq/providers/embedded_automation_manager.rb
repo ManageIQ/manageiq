@@ -1,5 +1,10 @@
 class ManageIQ::Providers::EmbeddedAutomationManager < ManageIQ::Providers::AutomationManager
-  require_nested_all
+  require_nested :Authentication
+  require_nested :ConfigurationScript
+  require_nested :ConfigurationScriptPayload
+  require_nested :ConfigurationScriptSource
+  require_nested :ConfiguredSystem
+  require_nested :OrchestrationStack
 
   def supported_catalog_types
     %w(generic_ansible_playbook)
