@@ -180,10 +180,6 @@
       :description: Edit a Request
       :feature_type: admin
       :identifier: miq_request_edit
-  - :name: Request Admin
-    :description: Edit other user's requests
-    :feature_type: admin
-    :identifier: miq_request_superadmin
 
 # MiqRequest under Automation/Automate tab for Automate Requests
 - :name: Requests
