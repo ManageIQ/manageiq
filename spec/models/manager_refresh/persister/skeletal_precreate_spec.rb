@@ -171,8 +171,115 @@ describe ManagerRefresh::Inventory::Persister do
       end
 
       it "test skeletal precreate sets a base STI type and entity full refresh updates it, then skeletal leaves it be" do
-        # TODO(lsmola) we need to allow STI type to be updatable
+        # Manually set bad STI class. This simulates cases where we have base class, then we fill STI :type subclasses
+        # in parser.
+        # TODO(lsmola) verify that this is wanted behavior, maybe we want to disallow to modify :type in parser?
+        persister.container_groups.instance_variable_set(:@model_class, ContainerGroup)
 
+        persister.containers.build(
+          container_data(
+            1,
+            :container_group => persister.container_groups.lazy_find("container_group_ems_ref_1"),
+          )
+        )
+
+        persister.persist!
+
+        # Assert container_group and container_image are pre-created using the lazy_find data
+        assert_containers_counts(
+          :container       => 1,
+          :container_group => 1,
+        )
+
+        container = Container.first
+        expect(container).to(
+          have_attributes(
+            :name    => "container_name_1",
+            :ems_id  => @ems.id,
+            :ems_ref => "container_ems_ref_1",
+          )
+        )
+
+        expect(container.container_group).to(
+          have_attributes(
+            :type    => "ContainerGroup",
+            :name    => nil,
+            :ems_id  => @ems.id,
+            :ems_ref => "container_group_ems_ref_1",
+          )
+        )
+
+        # Now we persist the relations which should update the skeletal pre-created objects
+        persister = create_containers_persister
+
+        persister.container_groups.build(
+          container_group_data(
+            1,
+            :type => "ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup")
+        )
+
+        persister.persist!
+
+        # Assert container_group and container_image are updated
+        assert_containers_counts(
+          :container       => 1,
+          :container_group => 1,
+        )
+
+        container = Container.first
+        expect(container).to(
+          have_attributes(
+            :name    => "container_name_1",
+            :ems_id  => @ems.id,
+            :ems_ref => "container_ems_ref_1",
+          )
+        )
+
+        expect(container.container_group).to(
+          have_attributes(
+            :type    => "ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup",
+            :name    => "container_group_name_1",
+            :ems_id  => @ems.id,
+            :ems_ref => "container_group_ems_ref_1",
+          )
+        )
+
+        # Now another skeletal will leave the right STI
+        persister = create_containers_persister
+        persister.container_groups.instance_variable_set(:@model_class, ContainerGroup)
+
+        persister.containers.build(
+          container_data(
+            1,
+            :container_group => persister.container_groups.lazy_find("container_group_ems_ref_1"),
+          )
+        )
+
+        persister.persist!
+
+        # Assert container_group and container_image are pre-created using the lazy_find data
+        assert_containers_counts(
+          :container       => 1,
+          :container_group => 1,
+        )
+
+        container = Container.first
+        expect(container).to(
+          have_attributes(
+            :name    => "container_name_1",
+            :ems_id  => @ems.id,
+            :ems_ref => "container_ems_ref_1",
+          )
+        )
+
+        expect(container.container_group).to(
+          have_attributes(
+            :type    => "ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup",
+            :name    => "container_group_name_1",
+            :ems_id  => @ems.id,
+            :ems_ref => "container_group_ems_ref_1",
+          )
+        )
       end
 
       it "we prec-create object that was already disconnected and the relation is filled but not reconnected" do
