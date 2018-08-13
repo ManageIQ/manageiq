@@ -131,4 +131,25 @@ describe Notification, :type => :model do
       expect(notification.seen_by_all_recipients?).to be_truthy
     end
   end
+
+  describe '.notification_text' do
+    before do
+      NotificationType.instance_variable_set(:@names, nil)
+      NotificationType.seed if NotificationType.all.empty?
+    end
+
+    it 'does not lookup notificaiton type without event or full_data' do
+      NotificationType.names
+      expect do
+        Notification.notification_text(nil, nil)
+        Notification.notification_text('abc', nil)
+        Notification.notification_text(nil, {})
+      end.to match_query_limit_of(0)
+    end
+
+    it 'applies message' do
+      full_data = {:subject => 'vm1'}
+      expect(Notification.notification_text('vm_retired', full_data)).to eq("Virtual Machine vm1 has been retired.")
+    end
+  end
 end

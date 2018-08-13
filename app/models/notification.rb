@@ -25,7 +25,10 @@ class Notification < ApplicationRecord
   def self.emit_for_event(event)
     return unless NotificationType.names.include?(event.event_type)
     type = NotificationType.find_by(:name => event.event_type)
-    Notification.create(:notification_type => type, :subject => event.target)
+    return unless type.enabled?
+    Notification.create(:notification_type => type,
+                        :options           => event.full_data,
+                        :subject           => event.target)
   end
 
   def to_h
@@ -39,6 +42,12 @@ class Notification < ApplicationRecord
 
   def seen_by_all_recipients?
     notification_recipients.unseen.empty?
+  end
+
+  def self.notification_text(name, message_params)
+    return unless message_params && NotificationType.names.include?(name)
+    type = NotificationType.find_by(:name => name)
+    type.message % message_params
   end
 
   private
