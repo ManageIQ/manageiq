@@ -152,7 +152,7 @@ namespace :locale do
 
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
   task "plugin:find", :engine do |_, args|
-    unless args.key?(:engine)
+    unless args[:engine]
       $stderr.puts "You need to specify a plugin name: rake locale:plugin:find[plugin_name]"
       exit 1
     end
