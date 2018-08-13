@@ -25,6 +25,7 @@ class Notification < ApplicationRecord
   def self.emit_for_event(event)
     return unless NotificationType.names.include?(event.event_type)
     type = NotificationType.find_by(:name => event.event_type)
+    return if type.none?
     Notification.create(:notification_type => type, :subject => event.target)
   end
 
