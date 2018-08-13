@@ -1,7 +1,7 @@
 class MiqUserRole < ApplicationRecord
-  SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
-  ADMIN_ROLE_NAME       = "EvmRole-administrator"
-  DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
+  SUPER_ADMIN_ROLE_NAME    = "EvmRole-super_administrator".freeze
+  ADMIN_ROLE_NAME          = "EvmRole-administrator".freeze
+  DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator".freeze
 
   has_many                :entitlements, :dependent => :restrict_with_exception
   has_many                :miq_groups, :through => :entitlements
@@ -110,6 +110,10 @@ class MiqUserRole < ApplicationRecord
 
   def admin_user?
     name == SUPER_ADMIN_ROLE_NAME || name == ADMIN_ROLE_NAME
+  end
+
+  def tenant_admin_user?
+    name == SUPER_ADMIN_ROLE_NAME || name == ADMIN_ROLE_NAME || name == DEFAULT_TENANT_ROLE_NAME
   end
 
   def self.default_tenant_role
