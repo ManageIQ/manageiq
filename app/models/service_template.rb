@@ -395,7 +395,7 @@ class ServiceTemplate < ApplicationRecord
     )
   end
 
-  def order(user_or_id, options = nil, request_options = nil, schedule_time = nil)
+  def order(user_or_id, options = nil, request_options = {}, schedule_time = nil)
     user     = user_or_id.kind_of?(User) ? user_or_id : User.find(user_or_id)
     workflow = provision_workflow(user, options, request_options)
     if schedule_time

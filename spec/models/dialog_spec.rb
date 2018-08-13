@@ -470,6 +470,12 @@ describe Dialog do
         dialog.load_values_into_fields(vars)
         expect(dialog_field1.value).to eq("10.8.99.248")
       end
+
+      it "sets field value when prefixed with 'dialog'" do
+        vars = {"dialog_field1" => "10.8.99.248"}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
     end
 
     context "symbol values" do
@@ -477,6 +483,33 @@ describe Dialog do
         vars = {:field1 => "10.8.99.248"}
         dialog.load_values_into_fields(vars)
         expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+
+      it "sets field value when prefixed with 'dialog'" do
+        vars = {:dialog_field1 => "10.8.99.248"}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+    end
+
+    context "when the incoming values are missing keys" do
+      let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1, dialog_field2]) }
+      let(:dialog_field2) { DialogField.new(:value => "321", :name => "field2") }
+
+      context "when overwrite is true" do
+        it "sets nil values" do
+          vars = {:field1 => "10.8.99.248"}
+          dialog.load_values_into_fields(vars)
+          expect(dialog_field2.value).to eq(nil)
+        end
+      end
+
+      context "when overwrite is false" do
+        it "does not set nil values" do
+          vars = {:field1 => "10.8.99.248"}
+          dialog.load_values_into_fields(vars, false)
+          expect(dialog_field2.value).to eq("321")
+        end
       end
     end
   end
