@@ -157,7 +157,12 @@ namespace :locale do
       exit 1
     end
     @domain = args[:engine].gsub('::', '_')
-    @engine = "#{args[:engine].camelize}::Engine".constantize
+    begin
+      @engine = "#{args[:engine].camelize}::Engine".constantize
+    rescue NameError
+      warn "The specified plugin #{args[:engine]} does not exist."
+      exit 1
+    end
     @engine_root = @engine.root
 
     # extract plugin's yaml strings
