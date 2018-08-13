@@ -116,8 +116,6 @@ class MiqUserRole < ApplicationRecord
     allows?(:identifier => MiqProductFeature::REPORT_ADMIN_FEATURE)
   end
 
-  alias admin_user? report_admin_user?
-
   def request_admin_user?
     allows?(:identifier => MiqProductFeature::REQUEST_ADMIN_FEATURE)
   end
