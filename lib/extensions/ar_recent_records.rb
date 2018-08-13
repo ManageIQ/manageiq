@@ -10,7 +10,7 @@ module ArRecentRecords
     # @param filter Additional fields to add to the filter.
     # @return [Hash] counts per group_by
     #
-    # Examples:
+    # @example recent_records
     #
     #   Vm.recent_records                                       # => {'2018-10-01' => 5, '2018-10-02' => 3}
     #   Vm.recent_records(10.days.ago.utc)                      # => {'2018-10-01' => 5, '2018-10-02' => 1}
