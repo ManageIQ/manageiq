@@ -77,7 +77,7 @@ module VmOrTemplate::Operations
 
   def rename_queue(userid, new_name)
     task_opts = {
-      :action => "Renanimg VM for user #{userid}",
+      :action => "Renaming VM for user #{userid}",
       :userid => userid
     }
 
