@@ -458,6 +458,29 @@ describe Dialog do
     end
   end
 
+  describe "#load_values_into_fields" do
+    let(:dialog) { described_class.new(:dialog_tabs => [dialog_tab]) }
+    let(:dialog_tab) { DialogTab.new(:dialog_groups => [dialog_group]) }
+    let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1]) }
+    let(:dialog_field1) { DialogField.new(:value => "123", :name => "field1") }
+
+    context "string values" do
+      it "sets field value" do
+        vars = {"field1" => "10.8.99.248"}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+    end
+
+    context "symbol values" do
+      it "sets field value" do
+        vars = {:field1 => "10.8.99.248"}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+    end
+  end
+
   describe "#init_fields_with_values_for_request" do
     let(:dialog) { described_class.new(:dialog_tabs => [dialog_tab]) }
     let(:dialog_tab) { DialogTab.new(:dialog_groups => [dialog_group]) }
