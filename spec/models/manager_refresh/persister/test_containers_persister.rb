@@ -21,7 +21,7 @@ class TestContainersPersister < ManagerRefresh::Inventory::Persister
   end
 
   def strategy
-    :local_db_find_references
+    :local_db_find_missing_references
   end
 
   def shared_options

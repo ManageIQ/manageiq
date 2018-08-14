@@ -29,6 +29,8 @@ describe ManagerRefresh::Inventory::Persister do
       let(:persister) { create_containers_persister }
 
       it "tests container relations are pre-created and updated by other refresh" do
+        persister = create_containers_persister
+
         persister.containers.build(
           container_data(
             1,
@@ -570,7 +572,7 @@ describe ManagerRefresh::Inventory::Persister do
             container_group_data(
               1,
               :container_build_pod => persister.container_build_pods.lazy_find(
-                :namespace => persister.container_projects.lazy_find("container_project_name_1", :ref => :by_name, :key => :name),
+                :namespace => persister.container_projects.lazy_find("container_project_ems_ref_1", :key => :name),
                 :name      => "container_build_pod_name_1"
               )
             )
