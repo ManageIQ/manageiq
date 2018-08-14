@@ -192,7 +192,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 end
 
 group :v2v, :ui_dependencies do
-  manageiq_plugin "manageiq-v2v"
+  gem "miq_v2v_ui", :git => "https://github.com/ManageIQ/manageiq-v2v.git", :branch => "gaprindashvili"
 end
 
 group :web_server, :manageiq_default do
