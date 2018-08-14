@@ -11,7 +11,7 @@ class ApplicationRecord < ActiveRecord::Base
   include ArNestedCountBy
   include ArHrefSlug
   include ToModelHash
-  include ArRecentRecords
+  include ArRecentRecordCounts
 
   extend ArTableLock
 
