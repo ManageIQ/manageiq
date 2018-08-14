@@ -7,10 +7,12 @@ module ArRecentRecordCounts
     #
     # @param date Maximum number of days to look back. Default is 30.
     # @param group_by Date group to use for collating data. Default is 'day'.
+    # @param key_format Date format used for the hash key. Default is Time object.
+    # @param date_field Used by query internally. Default is 'created_on'.
     # @param filter Additional fields to add to the filter.
     # @return [Hash] counts per group_by
     #
-    # @example recent_records
+    # @example recent_record_counts
     #
     #   Vm.recent_record_counts
     #   Vm.recent_record_counts(date: 10.days.ago.utc)
