@@ -43,7 +43,7 @@ module ManagerRefresh
           def skeletonize_primary_index(index_value)
             inventory_object = primary_index.delete(index_value)
             return unless inventory_object
-            fill_timestamps!(inventory_object.data)
+            fill_versions!(inventory_object.data)
 
             index[index_value] = inventory_object
           end
@@ -57,7 +57,7 @@ module ManagerRefresh
           #         assigned
           def build(attributes)
             attributes = {}.merge!(default_values).merge!(attributes)
-            fill_timestamps!(attributes)
+            fill_versions!(attributes)
 
             # If the primary index is already filled, we don't want populate skeletal index
             uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(attributes, named_ref)
@@ -79,20 +79,26 @@ module ManagerRefresh
             index[inventory_object.manager_uuid] = inventory_object
           end
 
-          def fill_timestamps!(attributes)
+          def fill_versions!(attributes)
             if inventory_collection.supports_resource_timestamps_max? && attributes[:resource_timestamp]
-              # We have to symbolize, since serializing persistor makes these strings
-              (attributes[:resource_timestamps] ||= {}).symbolize_keys!
-
-              (attributes.keys - inventory_collection.base_columns).each do |key|
-                attributes[:resource_timestamps][key] ||= attributes[:resource_timestamp]
-              end
+              fill_specific_version_attr(:resource_timestamps, :resource_timestamp, attributes)
+            elsif inventory_collection.supports_resource_versions_max? && attributes[:resource_version]
+              fill_specific_version_attr(:resource_versions, :resource_version, attributes)
             end
           end
 
           private
 
           attr_reader :primary_index
+
+          def fill_specific_version_attr(partial_row_version_attr, full_row_version_attr, attributes)
+            # We have to symbolize, since serializing persistor makes these strings
+            (attributes[partial_row_version_attr] ||= {}).symbolize_keys!
+
+            (attributes.keys - inventory_collection.base_columns).each do |key|
+              attributes[partial_row_version_attr][key] ||= attributes[full_row_version_attr]
+            end
+          end
         end
       end
     end

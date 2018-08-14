@@ -361,14 +361,24 @@ module ManagerRefresh::SaveCollection
         @serializable_keys_bool_cache ||= serializable_keys.present?
       end
 
-      # @return [Boolean] true if the model_class has timestamp column
+      # @return [Boolean] true if the model_class has resource_timestamp column
       def supports_remote_data_timestamp?(all_attribute_keys)
         all_attribute_keys.include?(:resource_timestamp) # include? on Set is O(1)
       end
 
-      # @return [Boolean] true if the model_class has remote_data_timestamp column
+      # @return [Boolean] true if the model_class has resource_version column
+      def supports_remote_data_version?(all_attribute_keys)
+        all_attribute_keys.include?(:resource_version) # include? on Set is O(1)
+      end
+
+      # @return [Boolean] true if the model_class has resource_timestamps column
       def supports_resource_timestamps_max?
         @supports_resource_timestamps_max_cache ||= inventory_collection.supports_resource_timestamps_max?
+      end
+
+      # @return [Boolean] true if the model_class has resource_versions column
+      def supports_resource_versions_max?
+        @supports_resource_versions_max_cache ||= inventory_collection.supports_resource_versions_max?
       end
     end
   end

@@ -142,57 +142,19 @@ module ManagerRefresh
         next if %i(resource_timestamps resource_timestamps_max resource_timestamp).include?(k)
         next if %i(resource_versions resource_versions_max resource_version).include?(k)
 
-        if inventory_collection.supports_resource_timestamps_max? && attributes[:resource_timestamp] && data[:resource_timestamp]
-          # If timestamps are in play, we will set only attributes that are newer
-          specific_attr_timestamp = attributes[:resource_timestamps].try(:[], k)
-          specific_data_timestamp = data[:resource_timestamps].try(:[], k)
-
-          assign = if !specific_attr_timestamp
-                     # Data have no timestamp, we will ignore the check
-                     true
-                   elsif specific_attr_timestamp && !specific_data_timestamp
-                     # Data specific timestamp is nil and we have new specific timestamp
-                     if data.key?(k)
-                       if attributes[:resource_timestamp] >= data[:resource_timestamp]
-                         # We can save if the full timestamp is bigger, if the data already contains the attribute
-                         true
-                       end
-                     else
-                       # Data do not contain the attribute, so we are saving the newest
-                       true
-                     end
-                     true
-                   elsif specific_attr_timestamp > specific_data_timestamp
-                     # both partial timestamps are there, newer must be bigger
-                     true
-                   end
-
-          if assign
-            public_send("#{k}=", v) # Attribute is newer than current one, lets use it
-            (data[:resource_timestamps] ||= {})[k] = specific_attr_timestamp if specific_attr_timestamp # and set the latest timestamp
-          end
+        if data[:resource_timestamp] && attributes[:resource_timestamp]
+          assign_only_newest(:resource_timestamp, :resource_timestamps, attributes, data, k, v)
+        elsif data[:resource_version] && attributes[:resource_version]
+          assign_only_newest(:resource_version, :resource_versions, attributes, data, k, v)
         else
           public_send("#{k}=", v)
         end
       end
 
-      if inventory_collection.supports_resource_timestamps_max?
-        if attributes[:resource_timestamp] && data[:resource_timestamp]
-          # If both timestamps are present, store the bigger one
-          data[:resource_timestamp] = attributes[:resource_timestamp] if attributes[:resource_timestamp] > data[:resource_timestamp]
-        elsif attributes[:resource_timestamp] && !data[:resource_timestamp]
-          # We are assigning timestamp that was missing
-          data[:resource_timestamp] = attributes[:resource_timestamp]
-        end
-      end
-
-      if inventory_collection.supports_resource_versions_max?
-        if attributes[:resource_version] && data[:resource_version]
-          # If timestamps are present, store the bigger one
-          data[:resource_version] = attributes[:resource_version] if attributes[:resource_version] > data[:resource_version]
-        elsif attributes[:resource_version] && !data[:resource_version]
-          data[:resource_version] = attributes[:resource_version]
-        end
+      if attributes[:resource_timestamp]
+        assign_full_row_version_attr(:resource_timestamp, attributes, data)
+      elsif attributes[:resource_version]
+        assign_full_row_version_attr(:resource_version, attributes, data)
       end
 
       self
@@ -236,6 +198,47 @@ module ManagerRefresh
     end
 
     private
+
+    def assign_only_newest(full_row_version_attr, partial_row_version_attr, attributes, data, k, v)
+      # If timestamps are in play, we will set only attributes that are newer
+      specific_attr_timestamp = attributes[partial_row_version_attr].try(:[], k)
+      specific_data_timestamp = data[partial_row_version_attr].try(:[], k)
+
+      assign = if !specific_attr_timestamp
+                 # Data have no timestamp, we will ignore the check
+                 true
+               elsif specific_attr_timestamp && !specific_data_timestamp
+                 # Data specific timestamp is nil and we have new specific timestamp
+                 if data.key?(k)
+                   if attributes[full_row_version_attr] >= data[full_row_version_attr]
+                     # We can save if the full timestamp is bigger, if the data already contains the attribute
+                     true
+                   end
+                 else
+                   # Data do not contain the attribute, so we are saving the newest
+                   true
+                 end
+                 true
+               elsif specific_attr_timestamp > specific_data_timestamp
+                 # both partial timestamps are there, newer must be bigger
+                 true
+               end
+
+      if assign
+        public_send("#{k}=", v) # Attribute is newer than current one, lets use it
+        (data[partial_row_version_attr] ||= {})[k] = specific_attr_timestamp if specific_attr_timestamp # and set the latest timestamp
+      end
+    end
+
+    def assign_full_row_version_attr(full_row_version_attr, attributes, data)
+      if attributes[full_row_version_attr] && data[full_row_version_attr]
+        # If both timestamps are present, store the bigger one
+        data[full_row_version_attr] = attributes[full_row_version_attr] if attributes[full_row_version_attr] > data[full_row_version_attr]
+      elsif attributes[full_row_version_attr] && !data[full_row_version_attr]
+        # We are assigning timestamp that was missing
+        data[full_row_version_attr] = attributes[full_row_version_attr]
+      end
+    end
 
     # Return true passed key representing a getter is an association
     #

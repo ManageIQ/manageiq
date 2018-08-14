@@ -25,7 +25,7 @@ module ManagerRefresh::SaveCollection
         connection = get_connection
 
         ignore_cols = if mode == :partial
-                        [:resource_timestamp]
+                        [:resource_timestamp, :resource_version]
                       elsif mode == :full
                         []
                       end
@@ -59,7 +59,7 @@ module ManagerRefresh::SaveCollection
             }
 
             ignore_cols += if mode == :partial
-                            [:resource_timestamps, :resource_timestamps_max]
+                            [:resource_timestamps, :resource_timestamps_max, :resource_versions, :resource_versions_max]
                           elsif mode == :full
                             []
                           end
@@ -78,32 +78,20 @@ module ManagerRefresh::SaveCollection
                 SET #{(all_attribute_keys_array - ignore_cols).map { |key| build_insert_set_cols(key) }.join(", ")}
               }
               if supports_remote_data_timestamp?(all_attribute_keys)
-                insert_query += %{
-                  , resource_timestamps = '{}', resource_timestamps_max = NULL
-
-                  WHERE EXCLUDED.resource_timestamp IS NULL OR (
-                    (#{table_name}.resource_timestamp IS NULL OR EXCLUDED.resource_timestamp > #{table_name}.resource_timestamp) AND
-                    (#{table_name}.resource_timestamps_max IS NULL OR EXCLUDED.resource_timestamp >= #{table_name}.resource_timestamps_max)
-                  )
-                }
+                insert_query += full_update_condition(:resource_timestamp)
+              elsif supports_remote_data_version?(all_attribute_keys)
+                insert_query += full_update_condition(:resource_version)
               end
             elsif mode == :partial
               raise "Column name not defined for #{hashes}" unless column_name
 
               insert_query += %{
-                 SET #{(all_attribute_keys_array - ignore_cols).map { |key| build_insert_set_cols(key) }.join(", ")}
+                SET #{(all_attribute_keys_array - ignore_cols).map { |key| build_insert_set_cols(key) }.join(", ")}
               }
-              if supports_resource_timestamps_max?
-                insert_query += %{
-                  , resource_timestamps = #{table_name}.resource_timestamps || ('{"#{column_name}": "' || EXCLUDED.resource_timestamps_max::timestamp || '"}')::jsonb
-                  , resource_timestamps_max = greatest(#{table_name}.resource_timestamps_max::timestamp, EXCLUDED.resource_timestamps_max::timestamp)
-                  WHERE EXCLUDED.resource_timestamps_max IS NULL OR (
-                    (#{table_name}.resource_timestamp IS NULL OR EXCLUDED.resource_timestamps_max > #{table_name}.resource_timestamp) AND (
-                      (#{table_name}.resource_timestamps->>'#{column_name}')::timestamp IS NULL OR
-                      EXCLUDED.resource_timestamps_max::timestamp > (#{table_name}.resource_timestamps->>'#{column_name}')::timestamp
-                    )
-                  )
-                }
+              if supports_remote_data_timestamp?(all_attribute_keys)
+                insert_query += partial_update_condition(:resource_timestamp, column_name)
+              elsif supports_remote_data_version?(all_attribute_keys)
+                insert_query += partial_update_condition(:resource_version, column_name)
               end
             end
           end
@@ -116,6 +104,54 @@ module ManagerRefresh::SaveCollection
         _log.debug("Building insert query for #{inventory_collection} of size #{inventory_collection.size}...Complete")
 
         insert_query
+      end
+
+      def full_update_condition(full_row_version_attr)
+        if full_row_version_attr == :resource_timestamp
+          %{
+            , resource_timestamps = '{}', resource_timestamps_max = NULL
+
+            WHERE EXCLUDED.resource_timestamp IS NULL OR (
+              (#{table_name}.resource_timestamp IS NULL OR EXCLUDED.resource_timestamp > #{table_name}.resource_timestamp) AND
+              (#{table_name}.resource_timestamps_max IS NULL OR EXCLUDED.resource_timestamp >= #{table_name}.resource_timestamps_max)
+            )
+          }
+        elsif full_row_version_attr == :resource_version
+          %{
+            , resource_versions = '{}', resource_versions_max = NULL
+
+            WHERE EXCLUDED.resource_version IS NULL OR (
+              (#{table_name}.resource_version IS NULL OR EXCLUDED.resource_version > #{table_name}.resource_version) AND
+              (#{table_name}.resource_versions_max IS NULL OR EXCLUDED.resource_version >= #{table_name}.resource_versions_max)
+            )
+          }
+        end
+      end
+
+      def partial_update_condition(full_row_version_attr, column_name)
+        if full_row_version_attr == :resource_timestamp
+          %{
+            , resource_timestamps = #{table_name}.resource_timestamps || ('{"#{column_name}": "' || EXCLUDED.resource_timestamps_max::timestamp || '"}')::jsonb
+            , resource_timestamps_max = greatest(#{table_name}.resource_timestamps_max::timestamp, EXCLUDED.resource_timestamps_max::timestamp)
+            WHERE EXCLUDED.resource_timestamps_max IS NULL OR (
+              (#{table_name}.resource_timestamp IS NULL OR EXCLUDED.resource_timestamps_max > #{table_name}.resource_timestamp) AND (
+                (#{table_name}.resource_timestamps->>'#{column_name}')::timestamp IS NULL OR
+                EXCLUDED.resource_timestamps_max::timestamp > (#{table_name}.resource_timestamps->>'#{column_name}')::timestamp
+              )
+            )
+          }
+        elsif full_row_version_attr == :resource_version
+          %{
+            , resource_versions = #{table_name}.resource_versions || ('{"#{column_name}": "' || EXCLUDED.resource_versions_max::integer || '"}')::jsonb
+            , resource_versions_max = greatest(#{table_name}.resource_versions_max::integer, EXCLUDED.resource_versions_max::integer)
+            WHERE EXCLUDED.resource_versions_max IS NULL OR (
+              (#{table_name}.resource_version IS NULL OR EXCLUDED.resource_versions_max > #{table_name}.resource_version) AND (
+                (#{table_name}.resource_versions->>'#{column_name}')::integer IS NULL OR
+                EXCLUDED.resource_versions_max::integer > (#{table_name}.resource_versions->>'#{column_name}')::integer
+              )
+            )
+          }
+        end
       end
 
       # Builds update clause for one column identified by the passed key
@@ -164,7 +200,11 @@ module ManagerRefresh::SaveCollection
         if supports_remote_data_timestamp?(all_attribute_keys)
           # Full row update will reset the partial update timestamps
           update_query += %{
-             , resource_timestamps = '{}', resource_timestamps_max = NULL
+            , resource_timestamps = '{}', resource_timestamps_max = NULL
+          }
+        elsif supports_remote_data_version?(all_attribute_keys)
+          update_query += %{
+            , resource_versions = '{}', resource_versions_max = NULL
           }
         end
 
@@ -188,6 +228,15 @@ module ManagerRefresh::SaveCollection
               updated_values.resource_timestamp IS NULL OR (
                 (#{table_name}.resource_timestamp IS NULL OR updated_values.resource_timestamp > #{table_name}.resource_timestamp) AND
                 (#{table_name}.resource_timestamps_max IS NULL OR updated_values.resource_timestamp >= #{table_name}.resource_timestamps_max)
+              )
+            )
+          }
+        elsif supports_remote_data_version?(all_attribute_keys)
+          update_query += %{
+            AND (
+              updated_values.resource_version IS NULL OR (
+                (#{table_name}.resource_version IS NULL OR updated_values.resource_version > #{table_name}.resource_version) AND
+                (#{table_name}.resource_versions_max IS NULL OR updated_values.resource_version >= #{table_name}.resource_versions_max)
               )
             )
           }

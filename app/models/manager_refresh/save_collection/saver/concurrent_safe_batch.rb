@@ -167,19 +167,19 @@ module ManagerRefresh::SaveCollection
               next unless assert_referential_integrity(hash)
               inventory_object.id = primary_key_value
 
-              if inventory_collection.parallel_safe? && supports_remote_data_timestamp?(all_attribute_keys)
-                record_timestamp = record.try(:resource_timestamp) || record.try(:[], :resource_timestamp)
-                record_timestamps_max = record.try(:resource_timestamps_max) || record.try(:[], :resource_timestamps_max)
-                hash_timestamp = hash[:resource_timestamp]
+              if inventory_collection.parallel_safe? &&
+                 (supports_remote_data_timestamp?(all_attribute_keys) || supports_remote_data_version?(all_attribute_keys))
 
-                # Skip updating this record, because it is old
-                next if record_timestamp && hash_timestamp && record_timestamp >= hash_timestamp
+                version_attr, max_version_attr = if supports_remote_data_timestamp?(all_attribute_keys)
+                                                   [:resource_timestamp, :resource_timestamps_max]
+                                                 elsif supports_remote_data_version?(all_attribute_keys)
+                                                   [:resource_version, :resource_versions_max]
+                                                 end
 
-                # Some column has bigger timestamp than the whole row, we need to store the row partially
-                if record_timestamps_max && hash_timestamp && record_timestamps_max > hash_timestamp
-                  inventory_collection.skeletal_primary_index.skeletonize_primary_index(inventory_object.manager_uuid)
-                  next
-                end
+                next if skeletonize_or_skip_record(record.try(version_attr) || record.try(:[], version_attr),
+                                                   hash[version_attr],
+                                                   record.try(max_version_attr) || record.try(:[], max_version_attr),
+                                                   inventory_object)
               end
 
               hash_for_update = if inventory_collection.use_ar_object?
@@ -347,9 +347,12 @@ module ManagerRefresh::SaveCollection
           skeletal_inventory_objects_index[index] = inventory_object
         end
 
-        if supports_resource_timestamps_max?
+        if supports_remote_data_timestamp?(all_attribute_keys)
           all_attribute_keys << :resource_timestamps
           all_attribute_keys << :resource_timestamps_max
+        elsif supports_remote_data_version?(all_attribute_keys)
+          all_attribute_keys << :resource_versions
+          all_attribute_keys << :resource_versions_max
         end
 
         indexed_inventory_objects = {}
@@ -359,16 +362,19 @@ module ManagerRefresh::SaveCollection
         skeletal_inventory_objects_index.each do |index, inventory_object|
           hash = skeletal_attributes_index.delete(index)
           # Partial create or update must never set a timestamp for the whole row
-          if supports_resource_timestamps_max?
-            hash[:resource_timestamps_max] = hash.delete(:resource_timestamp)
-
-            timestamps = {}
-            if hash[:resource_timestamps].present?
-              # Lets clean to only what we save, since when we build the skeletal object, we can set more
-              hash[:resource_timestamps] = hash[:resource_timestamps].slice(*all_attribute_keys)
-              timestamps = hash[:resource_timestamps]
-            end
-          end
+          timestamps = if supports_remote_data_timestamp?(all_attribute_keys) && supports_resource_timestamps_max?
+                         assign_partial_row_version_attributes!(:resource_timestamp,
+                                                                :resource_timestamps,
+                                                                :resource_timestamps_max,
+                                                                hash,
+                                                                all_attribute_keys)
+                       elsif supports_remote_data_version?(all_attribute_keys) && supports_resource_versions_max?
+                         assign_partial_row_version_attributes!(:resource_version,
+                                                                :resource_versions,
+                                                                :resource_versions_max,
+                                                                hash,
+                                                                all_attribute_keys)
+                       end
           # Transform hash to DB format
           hash = transform_to_hash!(all_attribute_keys, hash)
 
@@ -376,7 +382,7 @@ module ManagerRefresh::SaveCollection
 
           next unless assert_referential_integrity(hash)
 
-          hash[:__non_serialized_resource_timestampa] = timestamps # store non serialized timestamps for the partial updates
+          hash[:__non_serialized_versions] = timestamps # store non serialized timestamps for the partial updates
           hashes << hash
           # Index on Unique Columns values, so we can easily fill in the :id later
           indexed_inventory_objects[unique_index_columns.map { |x| hash[x] }] = inventory_object
@@ -393,7 +399,7 @@ module ManagerRefresh::SaveCollection
 
         # We need only skeletal records with timestamp. We can't save the ones without timestamp, because e.g. skeletal
         # precreate would be updating records with default values, that are not correct.
-        pre_filtered = hashes.select { |x| x[:resource_timestamps_max] }
+        pre_filtered = hashes.select { |x| x[:resource_timestamps_max] || x[:resource_versions_max] }
 
         # TODO(lsmola) we don't need to process rows that were save by the create -> oncoflict do nothing
         (all_attribute_keys - inventory_collection.base_columns).each do |column_name|
@@ -401,7 +407,11 @@ module ManagerRefresh::SaveCollection
 
           filtered.each_slice(batch_size_for_persisting) do |batch|
             # We need to set correct timestamps_max for this particular attribute, based on what is in timestamps
-            batch.each { |x| x[:resource_timestamps_max] = x[:__non_serialized_resource_timestampa][column_name] if x[:__non_serialized_resource_timestampa][column_name] }
+            if supports_remote_data_timestamp?(all_attribute_keys)
+              batch.each { |x| x[:resource_timestamps_max] = x[:__non_serialized_versions][column_name] if x[:__non_serialized_versions][column_name] }
+            elsif supports_remote_data_version?(all_attribute_keys)
+              batch.each { |x| x[:resource_versions_max] = x[:__non_serialized_versions][column_name] if x[:__non_serialized_versions][column_name] }
+            end
 
             create_partial!(inventory_collection.base_columns + [column_name],
                             batch,
@@ -426,7 +436,7 @@ module ManagerRefresh::SaveCollection
       end
 
       def create_partial!(all_attribute_keys, hashes, on_conflict: nil, column_name: nil)
-        result = get_connection.execute(
+        get_connection.execute(
           build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict, :mode => :partial, :column_name => column_name)
         )
       end
@@ -548,6 +558,30 @@ module ManagerRefresh::SaveCollection
             inventory_object    = indexed_inventory_objects[key]
             inventory_object.id = inserted_record.id if inventory_object
           end
+        end
+      end
+
+      def skeletonize_or_skip_record(record_version, hash_version, record_versions_max, inventory_object)
+        # Skip updating this record, because it is old
+        return true if record_version && hash_version && record_version >= hash_version
+
+        # Some column has bigger version than the whole row, we need to store the row partially
+        if record_versions_max && hash_version && record_versions_max > hash_version
+          inventory_collection.skeletal_primary_index.skeletonize_primary_index(inventory_object.manager_uuid)
+          return true
+        end
+
+        false
+      end
+
+      def assign_partial_row_version_attributes!(full_row_version_attr, partial_row_version_attr,
+                                                 partial_row_version_attr_max, hash, all_attribute_keys)
+        hash[partial_row_version_attr_max] = hash.delete(full_row_version_attr)
+
+        if hash[partial_row_version_attr].present?
+          # Lets clean to only what we save, since when we build the skeletal object, we can set more
+          # TODO(lsmola) should this be without internal columns? Add spec
+          hash[partial_row_version_attr] = hash[partial_row_version_attr].slice(*all_attribute_keys)
         end
       end
     end
