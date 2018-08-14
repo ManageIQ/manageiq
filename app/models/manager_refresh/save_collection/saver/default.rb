@@ -10,7 +10,7 @@ module ManagerRefresh::SaveCollection
       # @param inventory_object [ManagerRefresh::InventoryObject] InventoryObject instance where we will store primary
       #        key value
       def update_record!(record, hash, inventory_object)
-        record.assign_attributes(hash.except(:id, :type))
+        record.assign_attributes(hash.except(:id))
         if !inventory_collection.check_changed? || record.changed?
           record.save
           inventory_collection.store_updated_records(record)

@@ -5,6 +5,10 @@ module TargetedRefreshSpecHelper
     TestPersister.new(@ems, ManagerRefresh::TargetCollection.new(:manager => @ems))
   end
 
+  def create_containers_persister
+    TestContainersPersister.new(@ems, ManagerRefresh::TargetCollection.new(:manager => @ems))
+  end
+
   def expected_ext_management_systems_count
     2
   end
@@ -42,6 +46,47 @@ module TargetedRefreshSpecHelper
       :vm                            => 0,
       :vm_or_template                => 0
     }
+  end
+
+  def base_inventory_counts_containers
+    {
+      :container_build               => 0,
+      :container_build_pod           => 0,
+      :container_group               => 0,
+      :container_limit               => 0,
+      :container_node                => 0,
+      :container_project             => 0,
+      :container_quota               => 0,
+      :container_replicator          => 0,
+      :container_route               => 0,
+      :container_service             => 0,
+      :container_template            => 0,
+      :container                     => 0,
+      :persistent_volume_claim       => 0,
+      :container_image               => 0,
+      :container_image_registry      => 0,
+      :container_condition           => 0,
+      :security_context              => 0,
+      :tagging                       => 0,
+      :computer_system               => 0,
+      :container_env_var             => 0,
+      :container_limit_item          => 0,
+      :container_port_config         => 0,
+      :container_quota_item          => 0,
+      :container_quota_scope         => 0,
+      :container_service_port_config => 0,
+      :container_template_parameter  => 0,
+      :container_volume              => 0,
+      :custom_attribute              => 0,
+      :hardware                      => 0,
+      :operating_system              => 0,
+    }
+  end
+
+  def assert_containers_counts(expected_table_counts)
+    expected_counts = base_inventory_counts_containers.merge(expected_table_counts)
+    assert_containers_table_counts(expected_counts)
+    # assert_ems(expected_counts)
   end
 
   def assert_counts(expected_table_counts, expected_ems_table_counts = nil)
@@ -85,6 +130,42 @@ module TargetedRefreshSpecHelper
       :network_router                => NetworkRouter.count,
       :cloud_subnet                  => CloudSubnet.count,
       :custom_attribute              => CustomAttribute.count
+    }
+    expect(actual).to eq expected_table_counts
+  end
+
+  def assert_containers_table_counts(expected_table_counts)
+    actual = {
+      :container_build               => ContainerBuild.count,
+      :container_build_pod           => ContainerBuildPod.count,
+      :container_group               => ContainerGroup.count,
+      :container_limit               => ContainerLimit.count,
+      :container_node                => ContainerNode.count,
+      :container_project             => ContainerProject.count,
+      :container_quota               => ContainerQuota.count,
+      :container_replicator          => ContainerReplicator.count,
+      :container_route               => ContainerRoute.count,
+      :container_service             => ContainerService.count,
+      :container_template            => ContainerTemplate.count,
+      :container                     => Container.count,
+      :persistent_volume_claim       => PersistentVolumeClaim.count,
+      :container_image               => ContainerImage.count,
+      :container_image_registry      => ContainerImageRegistry.count,
+      :container_condition           => ContainerCondition.count,
+      :security_context              => SecurityContext.count,
+      :tagging                       => Tagging.count,
+      :computer_system               => ComputerSystem.count,
+      :container_env_var             => ContainerEnvVar.count,
+      :container_limit_item          => ContainerLimitItem.count,
+      :container_port_config         => ContainerPortConfig.count,
+      :container_quota_item          => ContainerQuotaItem.count,
+      :container_quota_scope         => ContainerQuotaScope.count,
+      :container_service_port_config => ContainerServicePortConfig.count,
+      :container_template_parameter  => ContainerTemplateParameter.count,
+      :container_volume              => ContainerVolume.count,
+      :custom_attribute              => CustomAttribute.count,
+      :hardware                      => Hardware.count,
+      :operating_system              => OperatingSystem.count,
     }
     expect(actual).to eq expected_table_counts
   end
