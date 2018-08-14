@@ -9,6 +9,17 @@ describe ServiceRetireTask do
   let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
   let(:zone) { FactoryGirl.create(:zone, :name => "fred") }
 
+  shared_context "service_bundle" do
+    let(:zone) { FactoryGirl.create(:small_environment) }
+    let(:service_c1) { FactoryGirl.create(:service, :service => service) }
+
+    before do
+      allow(MiqServer).to receive(:my_server).and_return(zone.miq_servers.first)
+      @miq_request = FactoryGirl.create(:service_retire_request, :requester => user)
+      @miq_request.approve(approver, reason)
+    end
+  end
+
   it "should initialize properly" do
     expect(service_retire_task.state).to eq('pending')
     expect(service_retire_task.status).to eq('Ok')
@@ -59,13 +70,11 @@ describe ServiceRetireTask do
     end
 
     context "bundled service retires all children" do
-      let(:zone) { FactoryGirl.create(:small_environment) }
+      include_context "service_bundle"
       let(:vm1) { FactoryGirl.create(:vm_vmware) }
-      let(:service_c1) { FactoryGirl.create(:service, :service => service) }
       let(:service_c2) { FactoryGirl.create(:service, :service => service_c1) }
 
       before do
-        allow(MiqServer).to receive(:my_server).and_return(zone.miq_servers.first)
         service_c1 << vm
         service_c2 << vm1
         service.save
@@ -74,8 +83,6 @@ describe ServiceRetireTask do
       end
 
       it "creates subtask" do
-        @miq_request = FactoryGirl.create(:service_retire_request, :requester => user)
-        @miq_request.approve(approver, reason)
         @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
         service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => vm.id)
         service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => vm1.id)
@@ -86,6 +93,58 @@ describe ServiceRetireTask do
         expect(VmRetireTask.all.pluck(:message)).to eq(["Automation Starting", "Automation Starting", "Automation Starting", "Automation Starting"])
         expect(ServiceRetireTask.count).to eq(1)
         expect(ServiceRetireRequest.count).to eq(1)
+      end
+    end
+  end
+
+  describe "#retireable?" do
+    include_context "service_bundle"
+
+    context "without srr" do
+      it "is not retireable" do
+        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => nil)
+        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
+
+        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
+      end
+    end
+
+    context "srr nonresponsive to retireable?" do
+      it "is not retireable" do
+        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => User.first.id)
+        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
+
+        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
+      end
+    end
+
+    context "srr sans type" do
+      let(:vm_without_type) { FactoryGirl.create(:vm, :type => nil) }
+      it "is not retireable" do
+        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => vm_without_type.id)
+        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
+
+        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
+      end
+    end
+
+    context "svc_rsc resource_type is not ServiceTemplate" do
+      it "is not retireable" do
+        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => service_c1.id)
+        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
+        allow(@service_retire_task.class).to receive(:include_service_template?).with(@service_retire_task, service.service_resources.first.id, service).and_return(true)
+
+        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
+      end
+    end
+
+    context "class includes service template" do
+      it "is not retireable" do
+        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "ServiceTemplate", :service_id => service_c1.id, :resource_id => vm.id)
+        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
+        allow(@service_retire_task.class).to receive(:include_service_template?).with(@service_retire_task, service.service_resources.first.id, service).and_return(false)
+
+        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
       end
     end
   end
