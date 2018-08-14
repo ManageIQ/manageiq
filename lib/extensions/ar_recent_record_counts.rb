@@ -19,10 +19,10 @@ module ArRecentRecordCounts
     #   Vm.recent_record_counts(date: 40.days.ago.utc, date_field: 'created_at', :ems_id => 8)
     #
     def recent_record_counts(date: 30.days.ago.utc, group_by: 'day', key_format: nil, date_field: 'created_on', **filter)
-      if key_format
-        query = where("#{date_field} > ?", date).group("to_char(date_trunc('#{group_by}', #{date_field}), '#{key_format}')")
+      query = if key_format
+        where("#{date_field} > ?", date).group("to_char(date_trunc('#{group_by}', #{date_field}), '#{key_format}')")
       else
-        query = where("#{date_field} > ?", date).group("date_trunc('#{group_by}', #{date_field})")
+        where("#{date_field} > ?", date).group("date_trunc('#{group_by}', #{date_field})")
       end
 
       filter.each { |key, value| query = query.where(key => value) if value }
