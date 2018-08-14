@@ -25,7 +25,15 @@ module MiqServer::WorkerManagement::Monitor::Validation
     if MiqWorker::STATUSES_CURRENT.include?(w.status) && usage_exceeds_threshold?(usage, memory_threshold)
       msg = "#{w.format_full_log_msg} process memory usage [#{usage}] exceeded limit [#{memory_threshold}], requesting worker to exit"
       _log.warn(msg)
-      MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_memory_exceeded", :event_details => msg, :type => w.class.name)
+      full_data = {
+        :name             => w.type,
+        :memory_usage     => ActiveSupport::NumberHelper.number_to_human_size(usage),
+        :memory_threshold => ActiveSupport::NumberHelper.number_to_human_size(memory_threshold),
+      }
+      MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_memory_exceeded",
+                                     :event_details => msg,
+                                     :type          => w.class.name,
+                                     :full_data     => full_data)
       restart_worker(w)
       return false
     end

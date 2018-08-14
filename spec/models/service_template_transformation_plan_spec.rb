@@ -37,6 +37,17 @@ describe ServiceTemplateTransformationPlan do
     }
   end
 
+  describe '.public_service_templates' do
+    it 'display public service templates' do
+      st1 = FactoryGirl.create(:service_template_transformation_plan)
+      st2 = FactoryGirl.create(:service_template)
+
+      expect(st1.internal?).to be_truthy
+      expect(st2.internal?).to be_falsey
+      expect(ServiceTemplate.public_service_templates).to match_array([st2])
+    end
+  end
+
   describe '.create_catalog_item' do
     it 'creates and returns a transformation plan' do
       service_template = described_class.create_catalog_item(catalog_item_options)
@@ -75,7 +86,7 @@ describe ServiceTemplateTransformationPlan do
     it 'validates unique name' do
       described_class.create_catalog_item(catalog_item_options)
       expect { described_class.create_catalog_item(catalog_item_options) }.to raise_error(
-        ActiveRecord::RecordInvalid, 'Validation failed: Name has already been taken'
+        ActiveRecord::RecordInvalid, 'Validation failed: ServiceTemplateTransformationPlan: Name has already been taken'
       )
     end
   end

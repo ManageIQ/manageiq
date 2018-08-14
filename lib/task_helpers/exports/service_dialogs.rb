@@ -4,11 +4,15 @@ module TaskHelpers
       def export(options = {})
         export_dir = options[:directory]
 
-        dialogs = DialogSerializer.new.serialize(Dialog.order(:id).all)
+        dialogs = Dialog.order(:id).all
 
         dialogs.each do |dialog|
-          fname = Exports.safe_filename(dialog['label'], options[:keep_spaces])
-          File.write("#{export_dir}/#{fname}.yaml", [dialog].to_yaml)
+          $log.info("Exporting Service Dialog: #{dialog.name} (ID: #{dialog.id})")
+
+          dialog_hash = DialogSerializer.new.serialize([dialog])
+
+          filename = Exports.safe_filename(dialog_hash.first['label'], options[:keep_spaces])
+          File.write("#{export_dir}/#{filename}.yaml", dialog_hash.to_yaml)
         end
       end
     end

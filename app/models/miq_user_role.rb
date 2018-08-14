@@ -108,6 +108,10 @@ class MiqUserRole < ApplicationRecord
     allows?(:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE)
   end
 
+  def tenant_admin_user?
+    allows?(:identifier => MiqProductFeature::TENANT_ADMIN_FEATURE)
+  end
+
   def report_admin_user?
     allows?(:identifier => MiqProductFeature::REPORT_ADMIN_FEATURE)
   end

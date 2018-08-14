@@ -1,10 +1,11 @@
 class GuestDevice < ApplicationRecord
   belongs_to :hardware
 
-  has_one :vm_or_template, :through => :hardware
-  has_one :vm,             :through => :hardware
-  has_one :miq_template,   :through => :hardware
-  has_one :host,           :through => :hardware
+  has_one :vm_or_template,  :through => :hardware
+  has_one :vm,              :through => :hardware
+  has_one :miq_template,    :through => :hardware
+  has_one :host,            :through => :hardware
+  has_one :computer_system, :through => :hardware
 
   belongs_to :switch    # pNICs link to one switch
   belongs_to :lan       # vNICs link to one lan

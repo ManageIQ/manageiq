@@ -158,6 +158,16 @@ describe ResourceActionWorkflow do
       end
     end
 
+    context "when the options are set to a provision workflow request" do
+      let(:options) { {:provision_workflow => true} }
+
+      it "initializes the value context and then loads the values into fields" do
+        expect(dialog).to receive(:initialize_value_context).with(values).ordered
+        expect(dialog).to receive(:load_values_into_fields).with(values, false).ordered
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
+      end
+    end
+
     context "when neither display_view_only nor refresh are true" do
       let(:options) { {} }
 

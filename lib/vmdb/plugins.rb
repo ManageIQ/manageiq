@@ -31,12 +31,29 @@ module Vmdb
       register_models
     end
 
+    def versions
+      each_with_object({}) do |engine, hash|
+        hash[engine] = version(engine)
+      end
+    end
+
     def ansible_content
       @ansible_content ||= begin
         require_relative 'plugins/ansible_content'
         flat_map do |engine|
           content_directories(engine, "ansible").map { |dir| AnsibleContent.new(dir) }
         end
+      end
+    end
+
+    def ansible_runner_content
+      @ansible_runner_content ||= begin
+        map do |engine|
+          content_dir = engine.root.join("content", "ansible_runner")
+          next unless File.exist?(content_dir.join("requirements.yml"))
+
+          [engine, content_dir]
+        end.compact
       end
     end
 
@@ -79,6 +96,48 @@ module Vmdb
     end
 
     private
+
+    # Determine the version of the specified engine
+    #
+    # If the gem is
+    # - git based, pointing to a branch:   <branch>@<sha>
+    # - git based, pointing to a tag:      <tag>@<sha>
+    # - git based, pointing to a sha:      <sha>
+    # - path based, with git, on a branch: <branch>@<sha>
+    # - path based, with git, on a tag:    <tag>@<sha>
+    # - path based, with git, on a sha:    <sha>
+    # - path based, without git:           nil
+    # - a real gem:                        <gem_version>
+    def version(engine)
+      spec = bundler_specs_by_path[engine.root.to_s]
+
+      case spec.source
+      when Bundler::Source::Git
+        [
+          spec.source.branch || spec.source.options["tag"],
+          spec.source.revision.presence[0, 8]
+        ].compact.join("@").presence
+      when Bundler::Source::Path
+        if engine.root.join(".git").exist?
+          branch = sha = nil
+          Dir.chdir(engine.root) do
+            branch   = `git rev-parse --abbrev-ref HEAD 2>/dev/null`.strip.presence
+            branch   = nil if branch == "HEAD"
+            branch ||= `git describe --tags --exact-match HEAD 2>/dev/null`.strip.presence
+
+            sha = `git rev-parse HEAD 2>/dev/null`.strip[0, 8].presence
+          end
+
+          [branch, sha].compact.join("@").presence
+        end
+      when Bundler::Source::Rubygems
+        spec.version
+      end
+    end
+
+    def bundler_specs_by_path
+      @bundler_specs_by_path ||= Bundler.environment.specs.index_by(&:full_gem_path)
+    end
 
     def content_directories(engine, subfolder)
       Dir.glob(engine.root.join("content", subfolder, "*"))

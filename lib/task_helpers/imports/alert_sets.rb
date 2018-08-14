@@ -3,12 +3,15 @@ module TaskHelpers
     class AlertSets
       def import(options)
         glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/*.yaml"
-        Dir.glob(glob) do |fname|
+        Dir.glob(glob) do |filename|
+          $log.info("Importing Alert Profiles from: #{filename}")
+
           begin
-            alertsets = YAML.load_file(fname)
+            alertsets = YAML.load_file(filename)
             import_alert_sets(alertsets)
-          rescue => e
-            $stderr.puts "Error importing #{fname} : #{e.message}"
+          rescue StandardError => err
+            $log.error("Error importing #{filename} : #{err.message}")
+            warn("Error importing #{filename} : #{err.message}")
           end
         end
       end

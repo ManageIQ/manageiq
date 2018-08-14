@@ -79,6 +79,7 @@ module SupportsFeatureMixin
     :external_logging                    => 'Launch External Logging UI',
     :swift_service                       => 'Swift storage service',
     :delete                              => 'Deletion',
+    :destroy                             => 'Destroy',
     :delete_aggregate                    => 'Host Aggregate Deletion',
     :delete_floating_ip                  => 'Floating IP Deletion',
     :delete_security_group               => 'Security Group Deletion',

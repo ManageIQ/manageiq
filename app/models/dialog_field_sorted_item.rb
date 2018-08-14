@@ -50,7 +50,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def script_error_values
-    [[nil, "<Script error>"]]
+    [[nil, N_("<Script error>")]]
   end
 
   def normalize_automate_values(automate_hash)
@@ -139,11 +139,11 @@ class DialogFieldSortedItem < DialogField
   end
 
   def initial_values
-    [[nil, "<None>"]]
+    [[nil, N_("<None>")]]
   end
 
   def initial_required_values
-    [nil, "<Choose>"]
+    [nil, N_("<Choose>")]
   end
 
   def nil_option

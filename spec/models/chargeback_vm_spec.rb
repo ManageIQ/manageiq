@@ -47,11 +47,11 @@ describe ChargebackVm do
 
     let(:metric_rollup_params) do
       {
-          :tag_names             => "environment/prod",
-          :parent_host_id        => @host1.id,
-          :parent_ems_cluster_id => @ems_cluster.id,
-          :parent_ems_id         => ems.id,
-          :parent_storage_id     => @storage.id,
+        :tag_names             => "environment/prod",
+        :parent_host_id        => @host1.id,
+        :parent_ems_cluster_id => @ems_cluster.id,
+        :parent_ems_id         => ems.id,
+        :parent_storage_id     => @storage.id,
       }
     end
 
@@ -805,7 +805,7 @@ describe ChargebackVm do
 
         before do
           ChargebackRate.set_assignments(:compute, [rate_assignment_options])
-          @rate = Chargeback::RatesCache.new.get(consumption).first
+          @rate = Chargeback::RatesCache.new(Chargeback::ReportOptions.new_from_h(base_options)).get(consumption).first
           @assigned_rate = ChargebackRate.get_assignments("Compute").first
         end
 
@@ -832,7 +832,7 @@ describe ChargebackVm do
 
           let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :tag => [classification, "storage"]} }
 
-          subject { Chargeback::RatesCache.new.get(consumption).first }
+          subject { Chargeback::RatesCache.new(Chargeback::ReportOptions.new_from_h(base_options)).get(consumption).first }
 
           before do
             ChargebackRate.set_assignments(:storage, [rate_assignment_options])
@@ -909,10 +909,182 @@ describe ChargebackVm do
         end
       end
 
+      context 'cumulative chargeback' do
+        let(:options) do
+          base_options[:tag] = nil
+          base_options[:entity_id] = vm.id
+          base_options[:cumulative_rate_calculation] = true
+          base_options[:interval] = 'monthly'
+          base_options
+        end
+
+        let(:vm) { FactoryGirl.create(:vm_vmware, :evm_owner => admin, :name => "vm_1", :created_on => month_beginning) }
+
+        let(:parent_classification_1)   { FactoryGirl.create(:classification, :name => 'department') }
+        let(:classification_1_1)        { FactoryGirl.create(:classification, :name => 'financial', :parent_id => parent_classification_1.id) }
+
+        let(:parent_classification_2)   { FactoryGirl.create(:classification, :name => 'enviroment') }
+        let(:classification_2_1)        { FactoryGirl.create(:classification, :name => 'test', :parent_id => parent_classification_2.id) }
+
+        let(:hourly_rate_2)       { 0.05 }
+        let(:count_hourly_rate_2) { 10.00 }
+
+        let(:hourly_variable_tier_rate_2)       { {:variable_rate => hourly_rate_2.to_s} }
+        let(:count_hourly_variable_tier_rate_2) { {:variable_rate => count_hourly_rate_2.to_s} }
+
+        let(:fixed_hourly_variable_tier_rate_2) { {:fixed_rate    => count_hourly_rate_2.to_s} }
+
+        let(:detail_params_2) do
+          {
+            :chargeback_rate_detail_cpu_used           => {:tiers => [hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_cpu_allocated      => {:tiers => [count_hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_memory_allocated   => {:tiers => [hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_disk_io_used       => {:tiers => [hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_storage_used       => {:tiers => [count_hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_storage_allocated  => {:tiers => [count_hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_fixed_compute_cost => {:tiers => [fixed_hourly_variable_tier_rate_2]},
+            :chargeback_rate_detail_metering_used      => {:tiers => [count_hourly_variable_tier_rate_2]}
+          }
+        end
+
+        let(:chargeback_rate_1) { FactoryGirl.create(:chargeback_rate, :rate_type => "Compute", :detail_params => detail_params) }
+        let(:chargeback_rate_2) { FactoryGirl.create(:chargeback_rate, :rate_type => "Compute", :detail_params => detail_params_2) }
+
+        let(:rates) do
+          [
+            {:cb_rate => chargeback_rate_1, :tag => [classification_1_1, "vm"]},
+            {:cb_rate => chargeback_rate_2, :tag => [classification_2_1, "vm"]}
+          ]
+        end
+
+        before do
+          # fix fixed computes cost tier - we are not using variable part
+          detail_params[:chargeback_rate_detail_fixed_compute_cost][:tiers] = [{:fixed_rate => count_hourly_rate.to_s }]
+
+          vm.tag_with([classification_1_1.tag.name, classification_2_1.tag.name], :ns => '*')
+
+          metric_rollup_params[:tag_names] = rates.map { |rate| rate[:tag].first.tag.send(:name_path) }.join('|')
+          add_metric_rollups_for(vm, month_beginning...month_end, 12.hours, metric_rollup_params)
+
+          ChargebackRate.set_assignments(:compute, rates)
+        end
+
+        subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
+
+        it 'calculates accumulations' do
+          skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
+
+          descriptions = [chargeback_rate_1.description, chargeback_rate_2.description].sort
+          expect(subject.chargeback_rates).to eq(descriptions.join(", "))
+
+          # fixed
+          expect(subject.fixed_compute_metric).to eq(vm.metric_rollups.count)
+
+          fixed_cost1 = hours_in_month * count_hourly_rate
+          fixed_cost2 = hours_in_month * count_hourly_rate_2
+          expect(subject.fixed_compute_1_cost).to eq(fixed_cost1 + fixed_cost2)
+
+          # cpu
+          expect(subject.cpu_allocated_metric).to eq(cpu_count)
+
+          cpu_cost_rate1 = cpu_count * count_hourly_rate * hours_in_month
+          cpu_cost_rate2 = cpu_count * count_hourly_rate_2 * hours_in_month
+          expect(subject.cpu_allocated_cost).to eq(cpu_cost_rate1 + cpu_cost_rate2)
+
+          used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, vm)
+
+          expect(subject.cpu_used_metric).to eq(used_metric)
+
+          cpu_cost_rate1 = used_metric * hourly_rate * hours_in_month
+          cpu_cost_rate2 = used_metric * hourly_rate_2 * hours_in_month
+          expect(subject.cpu_used_cost).to eq(cpu_cost_rate1 + cpu_cost_rate2)
+
+          expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
+
+          # memory
+          expect(subject.memory_allocated_metric).to eq(memory_available)
+
+          memory_cost_rate1 = memory_available * hourly_rate * hours_in_month
+          memory_cost_rate2 = memory_available * hourly_rate_2 * hours_in_month
+          expect(subject.memory_allocated_cost).to eq(memory_cost_rate1 + memory_cost_rate2)
+
+          used_metric = used_average_for(:derived_memory_used, hours_in_month, vm)
+          expect(subject.memory_used_metric).to eq(used_metric)
+
+          memory_cost_rate1 = used_metric * hourly_rate * hours_in_month
+          memory_cost_rate2 = used_metric * hourly_rate_2 * hours_in_month
+
+          expect(subject.memory_used_cost).to eq(memory_cost_rate1 + memory_cost_rate2)
+          expect(subject.memory_cost).to eq(subject.memory_allocated_cost + subject.memory_used_cost)
+
+          used_metric = used_average_for(:disk_usage_rate_average, hours_in_month, vm)
+          expect(subject.disk_io_used_metric).to eq(used_metric)
+
+          # disk io
+          disk_io_cost_rate1 = used_metric * hourly_rate * hours_in_month
+          disk_io_cost_rate2 = used_metric * hourly_rate_2 * hours_in_month
+          expect(subject.disk_io_used_cost).to eq(disk_io_cost_rate1 + disk_io_cost_rate2)
+
+          used_metric = used_average_for(:net_usage_rate_average, hours_in_month, vm)
+          expect(subject.net_io_used_metric).to eq(used_metric)
+
+          # net io
+          net_io_cost_rate1 = used_metric * hourly_rate * hours_in_month
+          net_io_cost_rate2 = used_metric * hourly_rate_2 * hours_in_month
+          expect(subject.net_io_used_cost).to eq(net_io_cost_rate1 + net_io_cost_rate2)
+
+          expect(subject.storage_allocated_metric).to eq(vm_allocated_disk_storage.gigabytes)
+
+          # storage
+          storage_cost_rate1 = vm_allocated_disk_storage * count_hourly_rate * hours_in_month
+          storage_cost_rate2 = vm_allocated_disk_storage * count_hourly_rate_2 * hours_in_month
+          expect(subject.storage_allocated_cost).to eq(storage_cost_rate1 + storage_cost_rate2)
+
+          used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_month, vm)
+          expect(subject.storage_used_metric).to eq(used_metric)
+          storage_cost_rate1 = used_metric / 1.gigabytes * count_hourly_rate * hours_in_month
+          storage_cost_rate2 = used_metric / 1.gigabytes * count_hourly_rate_2 * hours_in_month
+
+          expect(subject.storage_used_cost).to be_within(0.01).of(storage_cost_rate1 + storage_cost_rate2)
+          expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
+        end
+
+        context 'with fixed part for second chargeback rates' do
+          let(:fixed_rate)                  { 100 }
+          let(:hourly_variable_tier_rate_2) { {:variable_rate => hourly_rate_2.to_s, :fixed_rate => fixed_rate.to_s} }
+
+          it 'calculates accumulations' do
+            skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
+
+            # memory
+            expect(subject.memory_allocated_metric).to eq(memory_available)
+
+            memory_cost_rate1 = memory_available * hourly_rate * hours_in_month
+            memory_cost_rate2 = fixed_rate * hours_in_month + memory_available * hourly_rate_2 * hours_in_month
+
+            expect(subject.memory_allocated_cost).to eq(memory_cost_rate1 + memory_cost_rate2)
+
+            used_metric = used_average_for(:derived_memory_used, hours_in_month, vm)
+            expect(subject.memory_used_metric).to eq(used_metric)
+
+            memory_cost_rate1 = used_metric * hourly_rate * hours_in_month
+            memory_cost_rate2 = fixed_rate * hours_in_month + used_metric * hourly_rate_2 * hours_in_month
+
+            expect(subject.memory_used_cost).to eq(memory_cost_rate1 + memory_cost_rate2)
+            expect(subject.memory_cost).to eq(subject.memory_allocated_cost + subject.memory_used_cost)
+
+            used_metric = used_average_for(:disk_usage_rate_average, hours_in_month, vm)
+            expect(subject.disk_io_used_metric).to eq(used_metric)
+          end
+        end
+      end
+
       context 'more rates have been selected' do
         let(:storage_chargeback_rate_1) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
         let(:storage_chargeback_rate_2) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
-        let(:chargeback_vm)             { Chargeback::RatesCache.new }
+        let(:chargeback_vm)             { Chargeback::RatesCache.new(Chargeback::ReportOptions.new_from_h(base_options)) }
 
         let(:parent_classification) { FactoryGirl.create(:classification) }
         let(:classification_1)      { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
@@ -941,9 +1113,8 @@ describe ChargebackVm do
             metric_rollup.update_attributes!(:tag_names => rate_assignment[:tag].first.tag.send(:name_path))
             @vm.tag_with(["/managed/#{metric_rollup.tag_names}"], :ns => '*')
             @vm.reload
-
             consumption = Chargeback::ConsumptionWithRollups.new(pluck_rollup([metric_rollup]), nil, nil)
-            uniq_rates = Chargeback::RatesCache.new.get(consumption)
+            uniq_rates = Chargeback::RatesCache.new(Chargeback::ReportOptions.new_from_h(base_options)).get(consumption)
             consumption.instance_variable_set(:@tag_names, nil)
             consumption.instance_variable_set(:@hash_features_affecting_rate, nil)
             expect([rate_assignment[:cb_rate]]).to match_array(uniq_rates)

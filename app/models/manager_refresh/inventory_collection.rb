@@ -77,7 +77,7 @@ module ManagerRefresh
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :dependency_attributes, :manager_ref, :create_only,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :check_changed, :arel,
-                :inventory_object_attributes, :name, :saver_strategy, :targeted_scope, :builder_params,
+                :inventory_object_attributes, :name, :saver_strategy, :targeted_scope, :default_values,
                 :targeted_arel, :targeted, :manager_ref_allowed_nil, :use_ar_object,
                 :created_records, :updated_records, :deleted_records,
                 :custom_reconnect_block, :batch_extra_attributes, :references_storage
@@ -276,14 +276,14 @@ module ManagerRefresh
     #               'vms' => {:ems_ref => manager_refs}
     #             )
     #        And etc. for the other Vm related records.
-    # @param builder_params [Hash] A hash of an attributes that will be added to every inventory object created by
+    # @param default_values [Hash] A hash of an attributes that will be added to every inventory object created by
     #        inventory_collection.build(hash)
     #
     #        Example: Given
     #          inventory_collection = InventoryCollection.new({
     #            :model_class    => ::Vm,
     #            :arel           => @ems.vms,
-    #            :builder_params => {:ems_id => 10}
+    #            :default_values => {:ems_id => 10}
     #          })
     #        And building the inventory_object like:
     #            inventory_object = inventory_collection.build(:ems_ref => "vm_1", :name => "vm1")
@@ -404,7 +404,7 @@ module ManagerRefresh
     def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil,
                    custom_save_block: nil, delete_method: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   check_changed: nil, arel: nil, builder_params: {}, create_only: nil,
+                   check_changed: nil, arel: nil, default_values: {}, create_only: nil,
                    inventory_object_attributes: nil, name: nil, saver_strategy: nil,
                    parent_inventory_collections: nil, manager_uuids: [], all_manager_uuids: nil, targeted_arel: nil,
                    targeted: nil, manager_ref_allowed_nil: nil, secondary_refs: {}, use_ar_object: nil,
@@ -425,7 +425,7 @@ module ManagerRefresh
       @complete               = complete.nil? ? true : complete
       @update_only            = update_only.nil? ? false : update_only
       @create_only            = create_only.nil? ? false : create_only
-      @builder_params         = builder_params
+      @default_values         = default_values
       @name                   = name || association || model_class.to_s.demodulize.tableize
       @saver_strategy         = process_saver_strategy(saver_strategy)
       @use_ar_object          = use_ar_object || false

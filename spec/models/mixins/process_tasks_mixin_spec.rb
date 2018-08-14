@@ -166,6 +166,19 @@ describe ProcessTasksMixin do
         end
       end
 
+      it "with missing remote resource does not raise" do
+        resource0 = double("resource0", :id => 0)
+        expect(api_collection).to receive(:find).with(0).and_raise(ManageIQ::API::Client::ResourceNotFound, "Couldn't find resource with 'id' [0]")
+        options = {
+          :ids  => [0],
+          :task => "the_task",
+          :args => {:some => "args"}
+        }
+        expect(resource0).not_to receive(:the_task)
+
+        expect { test_class.invoke_api_tasks(api_connection, options) }.not_to raise_error
+      end
+
       context "when passed resource ids" do
         let(:resource0)     { double("resource0", :id => 0) }
         let(:resource1)     { double("resource1", :id => 1) }

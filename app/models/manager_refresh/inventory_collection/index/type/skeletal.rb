@@ -11,7 +11,7 @@ module ManagerRefresh
             @primary_index = primary_index
           end
 
-          delegate :builder_params,
+          delegate :default_values,
                    :new_inventory_object,
                    :named_ref,
                    :to => :inventory_collection
@@ -43,7 +43,7 @@ module ManagerRefresh
           #        needed for creating the record in the Database
           # @return [InventoryObject|nil] Returns built value or nil
           def build(attributes)
-            attributes = {}.merge!(builder_params).merge!(attributes)
+            attributes = {}.merge!(default_values).merge!(attributes)
 
             # If the primary index is already filled, we don't want populate skeletal index
             uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(attributes, named_ref)

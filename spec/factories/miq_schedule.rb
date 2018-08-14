@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :miq_schedule_validation, :class => :MiqSchedule do
     sequence(:name)     { |n| "schedule_#{seq_padded_for_sorting(n)}" }
     description         "test"
-    towhat              "MiqReport"
+    resource_type       "MiqReport"
     run_at              {}
     sched_action        {}
   end
@@ -12,7 +12,7 @@ FactoryGirl.define do
     sched_action = {:method => "test"}
     sequence(:name)     { |n| "schedule_#{seq_padded_for_sorting(n)}" }
     description         "test"
-    towhat              "MiqReport"
+    resource_type       "MiqReport"
     run_at              run_at
     sched_action        sched_action
   end
@@ -23,7 +23,7 @@ FactoryGirl.define do
     filter = {:uri_parts => {:instance => 'test', :message => 'create'}, :ui => { :ui_attrs => [], :ui_object => {} }, :parameters => {'request' => 'test_request', 'key1' => 'value1'}}
     sequence(:name)     { |n| "automate_schedule_#{seq_padded_for_sorting(n)}" }
     description         "test_automation"
-    towhat              "AutomationRequest"
+    resource_type       "AutomationRequest"
     run_at              run_at
     sched_action        sched_action
     filter              filter

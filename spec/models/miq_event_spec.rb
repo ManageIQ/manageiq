@@ -129,11 +129,10 @@ describe MiqEvent do
         event = 'vm_start'
         FactoryGirl.create(:miq_event_definition, :name => event)
         FactoryGirl.create(:miq_event, :event_type => event, :target => @cluster)
-        target_class = @cluster.class.name
-
-        expect(MiqPolicy).to receive(:enforce_policy).with(@cluster, event, :type => target_class)
-        expect(MiqAlert).to receive(:evaluate_alerts).with(@cluster, event, :type => target_class)
-        expect(MiqEvent).to receive(:raise_event_for_children).with(@cluster, event, :type => target_class)
+        inputs = {:type => @cluster.class.name, :triggering_type => event, :triggering_data => nil}
+        expect(MiqPolicy).to receive(:enforce_policy).with(@cluster, event, inputs)
+        expect(MiqAlert).to receive(:evaluate_alerts).with(@cluster, event, inputs)
+        expect(MiqEvent).to receive(:raise_event_for_children).with(@cluster, event, inputs)
 
         results = MiqEvent.first.process_evm_event
         expect(results.keys).to match_array([:policy, :alert, :children_events])
@@ -163,8 +162,9 @@ describe MiqEvent do
         ems = FactoryGirl.create(:ext_management_system)
         FactoryGirl.create(:miq_event_definition, :name => event)
         FactoryGirl.create(:miq_event, :event_type => event, :target => ems)
+        inputs = {:type => ems.class.name, :triggering_type => event, :triggering_data => nil}
 
-        expect(MiqPolicy).to receive(:enforce_policy).with(ems, event, :type => ems.class.name)
+        expect(MiqPolicy).to receive(:enforce_policy).with(ems, event, inputs)
         MiqEvent.first.process_evm_event
       end
 
@@ -181,12 +181,18 @@ describe MiqEvent do
           :event_type => event,
           :target     => vm,
           :full_data  => {:source_event_id => ems_event.id})
+        inputs = {
+          :type            => vm.class.name,
+          :source_event    => ems_event,
+          :triggering_type => event,
+          :triggering_data => {:source_event_id => ems_event.id}
+        }
 
         expect(MiqPolicy).to receive(:enforce_policy).with(
           vm,
           event,
-          :type         => vm.class.name,
-          :source_event => ems_event)
+          inputs
+        )
         MiqEvent.first.process_evm_event
       end
     end

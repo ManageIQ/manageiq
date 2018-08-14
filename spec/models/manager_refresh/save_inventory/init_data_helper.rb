@@ -24,36 +24,47 @@ module InitDataHelper
 
   def orchestration_stacks_init_data(extra_attributes = {})
     # Shadowing the default blacklist so we have an automatically solved graph cycle
-    init_data(cloud.orchestration_stacks(extra_attributes.merge(:attributes_blacklist => [])))
+    data = cloud.prepare_data(:orchestration_stacks, persister_class) do |builder|
+      builder.add_properties(:model_class => ::ManageIQ::Providers::CloudManager::OrchestrationStack)
+    end.to_hash
+
+    init_data(data.merge(extra_attributes.merge(:attributes_blacklist => [])))
   end
 
   def orchestration_stacks_resources_init_data(extra_attributes = {})
     # Shadowing the default blacklist so we have an automatically solved graph cycle
-    init_data(cloud.orchestration_stacks_resources(extra_attributes))
+    data = cloud.prepare_data(:orchestration_stacks_resources, persister_class).to_hash
+    init_data(data.merge(extra_attributes))
   end
 
   def vms_init_data(extra_attributes = {})
-    init_data(cloud.vms(extra_attributes.merge(:attributes_blacklist => [])))
+    data = cloud.prepare_data(:vms, persister_class).to_hash
+    init_data(data.merge(extra_attributes.merge(:attributes_blacklist => [])))
   end
 
   def miq_templates_init_data(extra_attributes = {})
-    init_data(cloud.miq_templates(extra_attributes))
+    data = cloud.prepare_data(:miq_templates, persister_class).to_hash
+    init_data(data.merge(extra_attributes))
   end
 
   def key_pairs_init_data(extra_attributes = {})
-    init_data(cloud.key_pairs(extra_attributes))
+    data = cloud.prepare_data(:key_pairs, persister_class).to_hash
+    init_data(data.merge(extra_attributes))
   end
 
   def hardwares_init_data(extra_attributes = {})
-    init_data(cloud.hardwares(extra_attributes))
+    data = cloud.prepare_data(:hardwares, persister_class).to_hash
+    init_data(data.merge(extra_attributes))
   end
 
   def disks_init_data(extra_attributes = {})
-    init_data(cloud.disks(extra_attributes))
+    data = cloud.prepare_data(:disks, persister_class).to_hash
+    init_data(data.merge(extra_attributes))
   end
 
   def network_ports_init_data(extra_attributes = {})
-    init_data(network.network_ports(extra_attributes))
+    data = network.prepare_data(:network_ports, persister_class).to_hash
+    init_data(data.merge(extra_attributes))
   end
 
   # Following 2 are fictional, not like this in practice.
@@ -76,11 +87,15 @@ module InitDataHelper
   end
 
   def cloud
-    ManagerRefresh::InventoryCollectionDefault::CloudManager
+    ManagerRefresh::InventoryCollection::Builder::CloudManager
   end
 
   def network
-    ManagerRefresh::InventoryCollectionDefault::NetworkManager
+    ManagerRefresh::InventoryCollection::Builder::NetworkManager
+  end
+
+  def persister_class
+    ManagerRefresh::Inventory::Persister
   end
 
   def init_data(extra_attributes)

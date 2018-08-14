@@ -51,6 +51,19 @@ newval =
 
 # load rails after checking CLI args so we can report args errors as fast as possible
 require File.expand_path("../config/environment", __dir__)
+
+def boolean?(value)
+  value.kind_of?(TrueClass) || value.kind_of?(FalseClass)
+end
+
+def types_valid?(old_val, new_val)
+  if boolean?(old_val)
+    boolean?(new_val)
+  else
+    new_val.kind_of?(old_val.class)
+  end
+end
+
 server = MiqServer.where(:id => opts[:serverid]).take
 unless server
   puts "Unable to find server with id [#{opts[:serverid]}]"
@@ -68,7 +81,7 @@ keys.each { |p| path = path[p.to_sym] }
 # such as setting a String where it was previously an Integer
 if opts[:force]
   puts "Change [#{opts[:path]}], old class: [#{path[key].class}], new class: [#{newval.class}]"
-elsif path[key] && path[key].class != newval.class
+elsif path[key] && !types_valid?(path[key], newval)
   STDERR.puts "The new value's class #{newval.class} does not match the prior one's #{path[key].class}. Use -t to specify the type for the provided value. Use -f to force changing this value. Note, -f may break things! See -h for examples."
   exit 1
 end

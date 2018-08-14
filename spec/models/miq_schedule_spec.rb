@@ -514,7 +514,7 @@ describe MiqSchedule do
     context "valid action_automation_request" do
       let(:admin) { FactoryGirl.create(:user_miq_request_approver) }
       let(:automate_sched) do
-        MiqSchedule.create(:name          => "test_method", :towhat => "AutomationRequest",
+        MiqSchedule.create(:name          => "test_method", :resource_type => "AutomationRequest",
                            :userid        => admin.userid, :enabled => true,
                            :run_at        => {:interval   => {:value => "1", :unit => "daily"},
                                               :start_time => 2.hours.from_now.utc.to_i},
@@ -541,7 +541,7 @@ describe MiqSchedule do
       before do
         @valid_schedules = []
         @valid_run_ats.each do |run_at|
-          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :towhat => "DatabaseBackup")
+          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :resource_type => "DatabaseBackup")
         end
         @schedule = @valid_schedules.first
       end
@@ -729,7 +729,7 @@ describe MiqSchedule do
         end
 
         it "and does not respond to the method" do
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method"})
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method"})
 
           expect($log).to receive(:warn) do |message|
             expect(message).to include("no such action: [test_method], aborting schedule")
@@ -739,17 +739,17 @@ describe MiqSchedule do
         end
 
         it "and responds to the method" do
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method"})
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name"})
 
-          expect(resource).to receive("test_method").once
+          expect_any_instance_of(Host).to receive("name").once
 
           MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
         end
 
         it "and responds to the method with arguments" do
-          schedule = FactoryGirl.create(:miq_schedule, :towhat => resource.class.name, :resource_id => resource.id, :sched_action => {:method => "test_method", :args => ["abc", 123, :a => 1]})
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name", :args => ["abc", 123, :a => 1]})
 
-          expect(resource).to receive("test_method").once.with("abc", 123, :a => 1)
+          expect_any_instance_of(Host).to receive("name").once.with("abc", 123, :a => 1)
 
           MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
         end

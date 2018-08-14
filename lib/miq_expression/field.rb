@@ -18,17 +18,7 @@ class MiqExpression::Field < MiqExpression::Target
   end
 
   def self.is_field?(field)
-    return false unless field.kind_of?(String)
-    match = REGEX.match(field)
-    return false unless match
-    model =
-      begin
-        match[:model_name].safe_constantize
-      rescue LoadError
-        nil
-      end
-    return false unless model
-    !!(model < ApplicationRecord)
+    parse(field)&.valid? || false
   end
 
   def to_s
@@ -36,7 +26,8 @@ class MiqExpression::Field < MiqExpression::Target
   end
 
   def valid?
-    target.column_names.include?(column) || virtual_attribute? || custom_attribute_column?
+    (target < ApplicationRecord) &&
+      (target.column_names.include?(column) || virtual_attribute? || custom_attribute_column?)
   end
 
   def attribute_supported_by_sql?

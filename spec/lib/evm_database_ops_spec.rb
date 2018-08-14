@@ -1,12 +1,13 @@
 require 'util/runcmd'
 describe EvmDatabaseOps do
   context "#backup" do
+    let(:session) { double("MiqSmbSession", :disconnect => nil) }
     before do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
-      allow(MiqSmbSession).to receive(:runcmd)
-      allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
-      allow(MiqUtil).to receive(:runcmd)
+      allow(MiqGenericMountSession).to receive(:new_session).and_return(session)
+      allow(session).to receive(:settings_mount_point).and_return(Rails.root.join("tmp").to_s)
+      allow(session).to receive(:uri_to_local_path).and_return(Rails.root.join("tmp/share").to_s)
       allow(PostgresAdmin).to receive(:runcmd_with_logging)
       allow(FileUtils).to receive(:mv).and_return(true)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(200.megabytes)
@@ -36,12 +37,14 @@ describe EvmDatabaseOps do
     it "remotely" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = "custom_backup"
+      expect(session).to receive(:add).and_return("smb://myserver.com/share/db_backup/custom_backup")
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to eq("smb://myserver.com/share/db_backup/custom_backup")
     end
 
     it "remotely without a remote file name" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = nil
+      expect(session).to receive(:add)
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to match(/smb:\/\/myserver.com\/share\/db_backup\/miq_backup_.*/)
     end
 
@@ -55,6 +58,7 @@ describe EvmDatabaseOps do
       expect(described_class).to receive(:_log).twice.and_return(log_stub)
       expect(log_stub).to        receive(:info).with(any_args)
       expect(log_stub).to        receive(:info).with("[vmdb_production] database has been backed up to file: [smb://myserver.com/share/db_backup/miq_backup]")
+      expect(session).to receive(:add).and_return("smb://myserver.com/share/db_backup/miq_backup")
 
       EvmDatabaseOps.backup(@db_opts, @connect_opts)
     end
@@ -158,7 +162,7 @@ describe EvmDatabaseOps do
 
     # convenience_wrapper for private method
     def execute_with_mount_session(action = :backup)
-      described_class.send(:with_mount_session, action, db_opts, connect_opts) do |dbopts|
+      described_class.send(:with_mount_session, action, db_opts, connect_opts) do |dbopts, _session, _remote_file_uri|
         yield dbopts if block_given?
       end
     end

@@ -8,7 +8,8 @@ class ServiceAnsibleTower < Service
   alias_method :job_options=, :stack_options=
 
   def launch_job
-    @job = ManageIQ::Providers::AnsibleTower::AutomationManager::Job.create_job(job_template, job_options)
+    job_class = "#{job_template.class.parent.name}::#{job_template.class.stack_type}".constantize
+    @job = job_class.create_job(job_template, job_options)
     add_resource(@job)
     @job
   ensure

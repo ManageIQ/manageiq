@@ -30,13 +30,13 @@ describe MiqPolicy do
 
     it "should raise an error with empty description" do
       @description = nil
-      expect { subject.description }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
+      expect { subject.description }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqPolicy: Description can't be blank")
     end
 
     it "should raise an error when description is reset to empty" do
       @description = "a" * 30
       subject.description = nil
-      expect { subject.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Description can't be blank")
+      expect { subject.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqPolicy: Description can't be blank")
     end
   end
 

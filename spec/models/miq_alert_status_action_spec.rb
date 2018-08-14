@@ -8,22 +8,21 @@ describe MiqAlertStatusAction do
       expect do
         FactoryGirl.create(:miq_alert_status_action, :action_type => 'churn', :user => user,
                            :miq_alert_status => alert)
-      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Action type must be accepted")
+      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatusAction: Action type must be accepted")
     end
 
     it "must be linked to a user" do
       expect do
         FactoryGirl.create(:miq_alert_status_action, :action_type => 'unassign', :user => nil,
                            :miq_alert_status => alert)
-      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: User can't be blank")
+      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatusAction: User can't be blank")
     end
 
     it "must have a comment if the action_type is comment" do
       expect do
         FactoryGirl.create(:miq_alert_status_action, :action_type => 'comment', :user => user, :comment => nil,
                            :miq_alert_status => alert)
-      end.to raise_error(ActiveRecord::RecordInvalid,
-                         "Validation failed: Comment can't be blank")
+      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatusAction: Comment can't be blank")
     end
 
     it "can have a comment if the action_type isn't comment" do
@@ -37,14 +36,14 @@ describe MiqAlertStatusAction do
       expect do
         FactoryGirl.create(:miq_alert_status_action, :action_type => 'unassign', :user => user, :assignee => user,
                            :miq_alert_status => alert)
-      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Assignee must be blank")
+      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatusAction: Assignee must be blank")
     end
 
     it "must have an assignee if the action_type is assign" do
       expect do
         FactoryGirl.create(:miq_alert_status_action, :action_type => 'assign', :user => user, :assignee => nil,
                            :miq_alert_status => alert)
-      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Assignee can't be blank")
+      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatusAction: Assignee can't be blank")
     end
 
     it "should allow the currently assigned user to acknoledge the alert" do
@@ -80,7 +79,7 @@ describe MiqAlertStatusAction do
           :user             => user2,
           :miq_alert_status => alert
         )
-      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: User that is not assigned cannot acknowledge")
+      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatusAction: User that is not assigned cannot acknowledge")
     end
   end
 end

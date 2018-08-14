@@ -49,6 +49,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :hardwares,         :through => :vms_and_templates
   has_many :networks,          :through => :hardwares
   has_many :disks,             :through => :hardwares
+  has_many :physical_servers,  :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
 
   has_many :storages,       -> { distinct },          :through => :hosts
   has_many :ems_events,     -> { order("timestamp") }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
@@ -60,6 +61,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :miq_alert_statuses, :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :datacenters,    :foreign_key => "ems_id", :class_name => "Datacenter", :inverse_of => :ext_management_system
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system

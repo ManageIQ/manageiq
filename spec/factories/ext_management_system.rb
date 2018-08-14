@@ -347,7 +347,7 @@ FactoryGirl.define do
   trait(:configuration_workflow) do
     after(:create) do |x|
       type = (x.type.split("::")[0..2] + %w(AutomationManager ConfigurationWorkflow)).join("::")
-      x.configuration_workflows << FactoryGirl.create(:configuration_workflow, :type => type)
+      x.configuration_scripts << FactoryGirl.create(:configuration_workflow, :type => type)
     end
   end
 

@@ -50,6 +50,9 @@ class MiqWidgetSet < ApplicationRecord
         end.compact
         h
       end
+
+      owner = attrs.delete("owner_description")
+      attrs["owner_id"] = MiqGroup.find_by(:description => owner).try(:id) if owner
     end
 
     if ws

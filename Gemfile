@@ -42,7 +42,7 @@ gem "inifile",                        "~>3.0",         :require => false
 gem "kubeclient",                     "~>2.4",         :require => false # For scaling pods at runtime
 gem "linux_admin",                    "~>1.2.1",       :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
-gem "manageiq-api-client",            "~>0.3.0",       :require => false
+gem "manageiq-api-client",            "~>0.3.1",       :require => false
 gem "manageiq-messaging",                              :require => false, :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>3.0",         :path => File.expand_path("mime-types-redirector", __dir__)
@@ -142,7 +142,7 @@ end
 
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
-  gem "vmware_web_service",             "~>0.2.0"
+  gem "vmware_web_service",             "~>0.3.0"
 end
 
 ### shared dependencies
@@ -197,7 +197,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 end
 
 group :v2v, :ui_dependencies do
-  gem "manageiq-v2v", :git => "https://github.com/ManageIQ/miq_v2v_ui_plugin.git", :branch => "master"
+  manageiq_plugin "manageiq-v2v"
 end
 
 group :web_server, :manageiq_default do

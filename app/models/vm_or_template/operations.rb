@@ -75,6 +75,24 @@ module VmOrTemplate::Operations
     raw_rename(new_name)
   end
 
+  def rename_queue(userid, new_name)
+    task_opts = {
+      :action => "Renaming VM for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'rename',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [new_name]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   private
 
   #

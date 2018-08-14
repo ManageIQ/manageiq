@@ -1,10 +1,14 @@
 class PhysicalChassis < ApplicationRecord
+  include SupportsFeatureMixin
+  include EventMixin
+
   acts_as_miq_taggable
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_chassis,
     :class_name => "ManageIQ::Providers::PhysicalInfraManager"
   belongs_to :physical_rack, :foreign_key => :physical_rack_id, :inverse_of => :physical_chassis
 
+  has_many :event_streams, :inverse_of => :physical_chassis, :dependent => :nullify
   has_many :physical_servers, :dependent => :destroy, :inverse_of => :physical_chassis
   has_many :physical_storages, :dependent => :destroy, :inverse_of => :physical_chassis
 
@@ -16,6 +20,10 @@ class PhysicalChassis < ApplicationRecord
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone
+  end
+
+  def event_where_clause(assoc = :ems_events)
+    ["#{events_table_name(assoc)}.physical_chassis_id = ?", id]
   end
 
   def refresh_ems

@@ -101,7 +101,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
       h[:physical_chassis_id] = h.delete(:physical_chassis).try(:[], :id)
     end
 
-    child_keys = %i(computer_system asset_detail)
+    child_keys = %i(computer_system asset_detail physical_disk)
     save_inventory_multi(ems.physical_storages, hashes, deletes, [:ems_ref], child_keys)
     store_ids_for_new_records(ems.physical_storages, hashes, :ems_ref)
   end
@@ -112,6 +112,14 @@ module EmsRefresh::SaveInventoryPhysicalInfra
   def save_asset_detail_inventory(parent, hash)
     return if hash.nil?
     save_inventory_single(:asset_detail, parent, hash)
+  end
+
+  #
+  # Saves the drive information of a storage
+  #
+  def save_physical_disk_inventory(parent, hash)
+    return if hash.nil?
+    save_inventory_single(:physical_disk, parent, hash)
   end
 
   def save_physical_network_ports_inventory(guest_device, hashes, target = nil)
