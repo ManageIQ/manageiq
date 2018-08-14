@@ -64,6 +64,7 @@ class Chargeback
     end
     alias avg current_value
     alias max current_value
+    alias sum current_value
     alias sum_of_maxes_from_grouped_values current_value
     private :current_value
   end

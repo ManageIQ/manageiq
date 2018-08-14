@@ -54,6 +54,49 @@ describe MeteringVm do
       :parent_storage_id     => storage.id,
     }
   end
+  context 'without metric rollups' do
+    let(:cores)               { 7 }
+    let(:mem_mb)              { 1777 }
+    let(:disk_gb)             { 7 }
+    let(:disk_b)              { disk_gb * 1024**3 }
+    let(:metering_used_hours) { 24 }
+
+    let(:hardware) do
+      FactoryGirl.create(:hardware,
+                         :cpu_total_cores => cores,
+                         :memory_mb       => mem_mb,
+                         :disks           => [FactoryGirl.create(:disk, :size => disk_b)])
+    end
+
+    context 'for SCVMM (hyper-v)' do
+      before do
+        cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
+        FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+        @tag = Tag.find_by(:name => "/managed/environment/prod")
+      end
+
+      let!(:vm1) do
+        vm = FactoryGirl.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day)
+        vm.tag_with(@tag.name, :ns => '*')
+        vm
+      end
+
+      let(:options) { base_options.merge(:interval => 'daily', :tag => '/managed/environment/prod') }
+
+      subject { MeteringVm.build_results_for_report_ChargebackVm(options).first.first }
+
+      it 'fixed compute is calculated properly' do
+        expect(subject.fixed_compute_metric).to eq(1) # One day of fixed compute metric
+      end
+
+      it 'allocated metrics are calculated properly' do
+        expect(subject.memory_allocated_metric).to  eq(mem_mb)
+        expect(subject.metering_used_metric).to     eq(0) # metric rollups are not used
+        expect(subject.cpu_allocated_metric).to     eq(cores)
+        expect(subject.storage_allocated_metric).to eq(disk_b)
+      end
+    end
+  end
 
   context 'monthly' do
     subject { MeteringVm.build_results_for_report_MeteringVm(options).first.first }
