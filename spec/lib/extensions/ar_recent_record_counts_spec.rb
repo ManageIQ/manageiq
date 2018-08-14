@@ -30,7 +30,7 @@ describe "AR Recent Record Counts extension" do
     end
 
     it "returns expected results with a formatted date" do
-      expect(Vm.recent_record_counts(key_format: 'YYYY-MM-DD')).to eq(
+      expect(Vm.recent_record_counts(:key_format => 'YYYY-MM-DD')).to eq(
         0.days.ago.strftime('%Y-%m-%d')  => 1,
         1.day.ago.strftime('%Y-%m-%d')   => 1,
         2.days.ago.strftime('%Y-%m-%d')  => 3,
@@ -40,7 +40,7 @@ describe "AR Recent Record Counts extension" do
     end
 
     it "returns expected results for specified date limit" do
-      expect(Vm.recent_record_counts(date: 5.days.ago, key_format: 'YYYY-MM-DD')).to eq(
+      expect(Vm.recent_record_counts(:date => 5.days.ago, :key_format => 'YYYY-MM-DD')).to eq(
         0.days.ago.strftime('%Y-%m-%d') => 1,
         1.day.ago.strftime('%Y-%m-%d')  => 1,
         2.days.ago.strftime('%Y-%m-%d') => 3,
@@ -48,13 +48,13 @@ describe "AR Recent Record Counts extension" do
     end
 
     it "returns expected results for specified group by parameter" do
-      result = Vm.recent_record_counts(date: 45.days.ago, group_by: 'month', key_format: 'YYYY-MM-DD')
+      result = Vm.recent_record_counts(:date => 45.days.ago, :group_by => 'month', :key_format => 'YYYY-MM-DD')
       expect(result[0.months.ago.beginning_of_month.strftime('%Y-%m-%d')]).to be > 0
       expect(result[1.month.ago.beginning_of_month.strftime('%Y-%m-%d')]).to be > 0
     end
 
     it "returns expected results for specified filter" do
-      expect(Vm.recent_record_counts(date: 30.days.ago, group_by: 'day', key_format: 'YYYY-MM-DD', :ems_id => 1)).to eq(
+      expect(Vm.recent_record_counts(:date => 30.days.ago, :group_by => 'day', :key_format => 'YYYY-MM-DD', :ems_id => 1)).to eq(
         0.days.ago.strftime('%Y-%m-%d')  => 1,
         1.day.ago.strftime('%Y-%m-%d')   => 1,
         2.days.ago.strftime('%Y-%m-%d')  => 2,
