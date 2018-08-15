@@ -688,7 +688,7 @@ module ManagerRefresh
     def internal_columns
       return @internal_columns if @internal_columns
 
-      @internal_columns = internal_timestamp_columns
+      @internal_columns = [] + internal_timestamp_columns
       @internal_columns << :type if supports_sti?
       @internal_columns << :resource_timestamps_max if supports_resource_timestamps_max?
       @internal_columns << :resource_timestamps if supports_resource_timestamps?

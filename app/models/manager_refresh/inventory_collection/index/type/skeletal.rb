@@ -38,6 +38,7 @@ module ManagerRefresh
           end
 
           # Takes value from primary_index and puts it to skeletal index
+          #
           # @param index_value [String] a index_value of the InventoryObject we search for
           # @return [InventoryObject|nil] Returns found value or nil
           def skeletonize_primary_index(index_value)
@@ -62,15 +63,11 @@ module ManagerRefresh
             # If the primary index is already filled, we don't want populate skeletal index
             uuid = ::ManagerRefresh::InventoryCollection::Reference.build_stringified_reference(attributes, named_ref)
             if (inventory_object = primary_index.find(uuid))
-              # TODO(lsmola) add timestamp check? If timestamps are present, we should assign the data, only if they
-              # have newer timestamp
               return inventory_object.assign_attributes(attributes)
             end
 
             # Return if skeletal index already exists
             if (inventory_object = index[uuid])
-              # TODO(lsmola) add timestamp check? If timestamps are present, we should assign the data, only if they
-              # have newer timestamp
               return inventory_object.assign_attributes(attributes)
             end
 
@@ -79,6 +76,13 @@ module ManagerRefresh
             index[inventory_object.manager_uuid] = inventory_object
           end
 
+          private
+
+          attr_reader :primary_index
+
+          # Add versions columns into the passed attributes
+          #
+          # @param attributes [Hash] Attributes we want to extend with version related attributes
           def fill_versions!(attributes)
             if inventory_collection.supports_resource_timestamps_max? && attributes[:resource_timestamp]
               fill_specific_version_attr(:resource_timestamps, :resource_timestamp, attributes)
@@ -87,10 +91,13 @@ module ManagerRefresh
             end
           end
 
-          private
-
-          attr_reader :primary_index
-
+          # Add specific versions columns into the passed attributes
+          #
+          # @param partial_row_version_attr [Symbol] Attr name for partial rows, allowed values are
+          #        [:resource_timestamps, :resource_versions]
+          # @param full_row_version_attr [Symbol] Attr name for full rows, allowed values are
+          #        [:resource_timestamp, :resource_version]
+          # @param attributes [Hash] Attributes we want to extend with version related attributes
           def fill_specific_version_attr(partial_row_version_attr, full_row_version_attr, attributes)
             # We have to symbolize, since serializing persistor makes these strings
             (attributes[partial_row_version_attr] ||= {}).symbolize_keys!

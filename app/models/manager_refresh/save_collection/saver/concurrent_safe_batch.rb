@@ -258,7 +258,6 @@ module ManagerRefresh::SaveCollection
         end
       end
 
-
       # Deletes or sof-deletes records. If the model_class supports a custom class delete method, we will use it for
       # batch soft-delete.
       #
@@ -317,6 +316,13 @@ module ManagerRefresh::SaveCollection
         result
       end
 
+      # Taking result from update or upsert of the row. The records that were not saved will be turned into skeletal
+      # records and we will save them attribute by attribute.
+      #
+      # @param hash [Hash{String => InventoryObject}>] Hash with indexed data we want to save
+      # @param result [Array<Hash>] Result from the DB containing the data that were actually saved
+      # @param all_unique_columns [Boolean] True if index is consisted from all columns of the unique index. False if
+      #        index is just made from manager_ref turned in DB column names.
       def skeletonize_ignored_records!(hash, result, all_unique_columns: false)
         updated = if all_unique_columns
                     result.map { |x| unique_index_columns_to_s.map { |key| x[key] } }
@@ -326,16 +332,20 @@ module ManagerRefresh::SaveCollection
 
         updated.each { |x| hash.delete(x) }
 
-        # Now lets skeletonize all inventory_objects that were not saved
-        # TODO(lsmola) we should compare timestamps and ignore InventoryObjects or attributes that are old, to lower
-        # what we send as upsert in skeletal index
+        # Now lets skeletonize all inventory_objects that were not saved by update or upsert. Old rows that can't be
+        # saved are not being sent here. We have only rows that are new, but become old as we send the query (so other
+        # parallel process saved the data in the meantime). Or if some attributes are newer than the whole row
+        # being sent.
         hash.keys.each do |db_index|
           inventory_collection.skeletal_primary_index.skeletonize_primary_index(hash[db_index].manager_uuid)
         end
       end
 
+      # Saves partial records using upsert, taking records from skeletal_primary_index. This is used both for
+      # skeletal precreate as well as for saving partial rows.
+      #
+      # @param all_attribute_keys [Set] Superset of all keys of all records being saved
       def create_or_update_partial_records(all_attribute_keys)
-        # We will create also remaining skeletal records
         skeletal_attributes_index        = {}
         skeletal_inventory_objects_index = {}
 
@@ -439,6 +449,14 @@ module ManagerRefresh::SaveCollection
         end
       end
 
+      # Batch upserts 1 data column of the row, plus the internal columns
+      #
+      # @param all_attribute_keys [Array<Symbol>] Array of all columns we will be saving into each table row
+      # @param hashes [Array<ManagerRefresh::InventoryObject>] Array of InventoryObject objects we will be inserting
+      #        into the DB
+      # @param on_conflict [Symbol, NilClass] defines behavior on conflict with unique index constraint, allowed values
+      #        are :do_update, :do_nothing, nil
+      # @param column_name [Symbol] Name of the data column we will be upserting
       def create_partial!(all_attribute_keys, hashes, on_conflict: nil, column_name: nil)
         get_connection.execute(
           build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict, :mode => :partial, :column_name => column_name)
@@ -485,10 +503,9 @@ module ManagerRefresh::SaveCollection
         result = get_connection.execute(
           build_insert_query(all_attribute_keys, hashes, :on_conflict => on_conflict, :mode => :full)
         )
-        # TODO(lsmola) so for all of the lazy_find with key, we will need to fetch a fresh attributes from the
-        # db, otherwise we will be getting attribute that might not have been updated (add spec)
+
         if inventory_collection.parallel_safe?
-          # We've done upsert, so records were either created or update. We can recognize that by checking if
+          # We've done upsert, so records were either created or updated. We can recognize that by checking if
           # created and updated timestamps are the same
           created_attr = "created_on" if inventory_collection.supports_created_on?
           created_attr ||= "created_at" if inventory_collection.supports_created_at?
@@ -604,7 +621,6 @@ module ManagerRefresh::SaveCollection
 
         if hash[partial_row_version_attr].present?
           # Lets clean to only what we save, since when we build the skeletal object, we can set more
-          # TODO(lsmola) should this be without internal columns? Add spec
           hash[partial_row_version_attr] = hash[partial_row_version_attr].slice(*all_attribute_keys)
         end
       end

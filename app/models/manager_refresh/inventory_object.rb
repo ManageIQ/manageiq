@@ -199,6 +199,17 @@ module ManagerRefresh
 
     private
 
+    # Assigns value based on the version attributes. If versions are specified, it asigns attribute only if it's
+    # newer than existing attribute.
+    #
+    # @param full_row_version_attr [Symbol] Attr name for full rows, allowed values are
+    #        [:resource_timestamp, :resource_version]
+    # @param partial_row_version_attr [Symbol] Attr name for partial rows, allowed values are
+    #        [:resource_timestamps, :resource_versions]
+    # @param attributes [Hash] New attributes we are assigning
+    # @param data [Hash] Existing attributes of the InventoryObject
+    # @param k [Symbol] Name of the attribute we are assigning
+    # @param v [Object] Value of the attribute we are assigning
     def assign_only_newest(full_row_version_attr, partial_row_version_attr, attributes, data, k, v)
       # If timestamps are in play, we will set only attributes that are newer
       specific_attr_timestamp = attributes[partial_row_version_attr].try(:[], k)
@@ -230,6 +241,12 @@ module ManagerRefresh
       end
     end
 
+    # Assigns attribute representing version of the whole row
+    #
+    # @param full_row_version_attr [Symbol] Attr name for full rows, allowed values are
+    #        [:resource_timestamp, :resource_version]
+    # @param attributes [Hash] New attributes we are assigning
+    # @param data [Hash] Existing attributes of the InventoryObject
     def assign_full_row_version_attr(full_row_version_attr, attributes, data)
       if attributes[full_row_version_attr] && data[full_row_version_attr]
         # If both timestamps are present, store the bigger one
