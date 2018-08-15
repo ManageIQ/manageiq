@@ -43,6 +43,8 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
                  :type => :string_set,
                  :uses => {:load_balancer_pool_members => :load_balancer_health_check_states_with_reason}
 
+  scoped_search :relation => :network_ports, :on => :name, :complete_value => true, :rename => "network_ports.name"
+
   def load_balancer_health_check_state
     return @health_check_state if @health_check_state
     return (@health_check_state = nil) if load_balancer_pool_members.blank?

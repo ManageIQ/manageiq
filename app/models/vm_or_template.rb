@@ -205,6 +205,23 @@ class VmOrTemplate < ApplicationRecord
     where(arel_table[:template].eq(true).and(arel_table[:ems_id].eq(nil)).or(arel_table[:host_id].eq(nil)))
   end)
 
+  scoped_search :on => :name
+  scoped_search :relation => :tags, :on => :name, :complete_value => true, :rename => "tag"
+
+  # ManageIQ::Providers::CloudManager::Vm.complete_for("")
+  # ManageIQ::Providers::CloudManager::Vm.complete_for("tag ")
+  # ManageIQ::Providers::CloudManager::Vm.complete_for("tag = ")
+  # ManageIQ::Providers::CloudManager::Vm.search_for("(tag = /managed/environment/prod OR tag = /managed/environment/prod) AND name ~ bronagh%")
+  #
+  # We have to URI.encode(param) the params send, so e.g. URI.encode("(tag = /managed/environment/prod OR tag = /managed/environment/prod) AND name ~ bronagh%")
+  #
+  # curl --user admin:smartvm -i -X GET -H "Accept: application/json" http://localhost:3001/api/auth
+  # curl -i -X OPTIONS -H "Accept: application/json" -H "X-Auth-Token: 7d4114d64b521757a026114147a64497" http://localhost:3001/api/vms?complete_for=
+  # curl -i -X OPTIONS -H "Accept: application/json" -H "X-Auth-Token: 7d4114d64b521757a026114147a64497" http://localhost:3001/api/vms?complete_for=tag%20
+  # curl -i -X OPTIONS -H "Accept: application/json" -H "X-Auth-Token: 7d4114d64b521757a026114147a64497" http://localhost:3001/api/vms?complete_for=tag%20=%20
+  # curl -i -X OPTIONS -H "Accept: application/json" -H "X-Auth-Token: 7d4114d64b521757a026114147a64497" http://localhost:3001/api/vms?complete_for=tag%20=%20/managed/env
+  #
+  # curl -i -X GET -H "Accept: application/json" -H "X-Auth-Token: 7d4114d64b521757a026114147a64497" "http://localhost:3001/api/vms?expand=resources&search_for=(tag%20=%20/managed/environment/prod%20OR%20tag%20=%20/managed/environment/prod)%20AND%20name%20~%20bronagh%25"
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
   alias_method :parent_cluster, :ems_cluster

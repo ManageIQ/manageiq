@@ -33,6 +33,11 @@ class NetworkPort < ApplicationRecord
   virtual_column :floating_ip_addresses, :type => :string_set, :uses => :floating_ips
   virtual_column :cloud_subnets_names, :type => :string_set, :uses => :cloud_subnets
 
+
+  scoped_search on: :name
+  scoped_search relation: :cloud_networks, on: :name
+
+
   def floating_ip_addresses
     @floating_ip_addresses ||= floating_ips.collect(&:address).compact.uniq
   end

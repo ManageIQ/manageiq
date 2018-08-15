@@ -32,6 +32,9 @@ class CloudNetwork < ApplicationRecord
   virtual_column :port_security_enabled,     :type => :string
   virtual_column :qos_policy_id,             :type => :string
 
+  scoped_search on: :name
+  scoped_search relation: :network_ports, on: :name
+
   # Define all getters and setters for extra_attributes related virtual columns
   %i(maximum_transmission_unit port_security_enabled qos_policy_id).each do |action|
 	  define_method("#{action}=") do |value|
