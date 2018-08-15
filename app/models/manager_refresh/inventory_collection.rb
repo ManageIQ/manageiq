@@ -688,12 +688,8 @@ module ManagerRefresh
     def internal_columns
       return @internal_columns if @internal_columns
 
-      @internal_columns = []
+      @internal_columns = internal_timestamp_columns
       @internal_columns << :type if supports_sti?
-      @internal_columns << :created_on if supports_created_on?
-      @internal_columns << :created_at if supports_created_at?
-      @internal_columns << :updated_on if supports_updated_on?
-      @internal_columns << :updated_at if supports_updated_at?
       @internal_columns << :resource_timestamps_max if supports_resource_timestamps_max?
       @internal_columns << :resource_timestamps if supports_resource_timestamps?
       @internal_columns << :resource_timestamp if supports_resource_timestamp?
@@ -701,6 +697,18 @@ module ManagerRefresh
       @internal_columns << :resource_versions if supports_resource_versions?
       @internal_columns << :resource_version if supports_resource_version?
       @internal_columns
+    end
+
+    def internal_timestamp_columns
+      return @internal_timestamp_columns if @internal_timestamp_columns
+
+      @internal_timestamp_columns = []
+      @internal_timestamp_columns << :created_on if supports_created_on?
+      @internal_timestamp_columns << :created_at if supports_created_at?
+      @internal_timestamp_columns << :updated_on if supports_updated_on?
+      @internal_timestamp_columns << :updated_at if supports_updated_at?
+
+      @internal_timestamp_columns
     end
 
     def base_columns

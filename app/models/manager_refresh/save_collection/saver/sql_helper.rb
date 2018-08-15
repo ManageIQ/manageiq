@@ -101,6 +101,16 @@ module ManagerRefresh::SaveCollection
           RETURNING "id",#{unique_index_columns.map { |x| quote_column_name(x) }.join(",")}
         }
 
+        if inventory_collection.parallel_safe?
+          # For upsert, we'll return also created and updated timestamps, so we can recognize what was created and what
+          # updated
+          if inventory_collection.internal_timestamp_columns.present?
+            insert_query += %{
+              ,#{inventory_collection.internal_timestamp_columns.join(",")}
+            }
+          end
+        end
+
         _log.debug("Building insert query for #{inventory_collection} of size #{inventory_collection.size}...Complete")
 
         insert_query

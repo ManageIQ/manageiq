@@ -392,15 +392,17 @@ module ManagerRefresh::SaveCollection
 
         # First, lets try to create all partial records
         hashes.each_slice(batch_size_for_persisting) do |batch|
-          create_partial!(all_attribute_keys,
-                          batch,
-                          :on_conflict => :do_nothing)
+          result = create_partial!(all_attribute_keys,
+                                   batch,
+                                   :on_conflict => :do_nothing)
+          inventory_collection.store_created_records(result)
         end
 
         # We need only skeletal records with timestamp. We can't save the ones without timestamp, because e.g. skeletal
         # precreate would be updating records with default values, that are not correct.
         pre_filtered = hashes.select { |x| x[:resource_timestamps_max] || x[:resource_versions_max] }
 
+        results = {}
         # TODO(lsmola) we don't need to process rows that were save by the create -> oncoflict do nothing
         (all_attribute_keys - inventory_collection.base_columns).each do |column_name|
           filtered = pre_filtered.select { |x| x.key?(column_name) }
@@ -413,16 +415,18 @@ module ManagerRefresh::SaveCollection
               batch.each { |x| x[:resource_versions_max] = x[:__non_serialized_versions][column_name] if x[:__non_serialized_versions][column_name] }
             end
 
-            create_partial!(inventory_collection.base_columns + [column_name],
-                            batch,
-                            :on_conflict => :do_update,
-                            :column_name => column_name)
+            result = create_partial!(inventory_collection.base_columns + [column_name],
+                                     batch,
+                                     :on_conflict => :do_update,
+                                     :column_name => column_name)
+            result.each do |result|
+              results[result["id"]] = result
+            end
           end
         end
 
-        # TODO(lsmola) we need to recognize what records were created and what records were updated. Will we take
-        # skeletal records as created? The creation should be having :complete => true
-        # inventory_collection.store_created_records(result)
+        inventory_collection.store_updated_records(results.values)
+
         # TODO(lsmola) we need to move here the hash loading ar object etc. otherwise the lazy_find with key will not
         # be correct
         if inventory_collection.dependees.present?
@@ -483,7 +487,27 @@ module ManagerRefresh::SaveCollection
         )
         # TODO(lsmola) so for all of the lazy_find with key, we will need to fetch a fresh attributes from the
         # db, otherwise we will be getting attribute that might not have been updated (add spec)
-        inventory_collection.store_created_records(result)
+        if inventory_collection.parallel_safe?
+          # We've done upsert, so records were either created or update. We can recognize that by checking if
+          # created and updated timestamps are the same
+          created_attr = "created_on" if inventory_collection.supports_created_on?
+          created_attr ||= "created_at" if inventory_collection.supports_created_at?
+          updated_attr = "updated_on" if inventory_collection.supports_updated_on?
+          updated_attr ||= "updated_at" if inventory_collection.supports_updated_at?
+
+          if created_attr && updated_attr
+            created, updated = result.to_a.partition { |x| x[created_attr] == x[updated_attr] }
+            inventory_collection.store_created_records(created)
+            inventory_collection.store_updated_records(updated)
+          else
+            # The record doesn't have both created and updated attrs, so we'll take all as created
+            inventory_collection.store_created_records(result)
+          end
+        else
+          # We've done just insert, so all records were created
+          inventory_collection.store_created_records(result)
+        end
+
         if inventory_collection.dependees.present?
           # We need to get primary keys of the created objects, but only if there are dependees that would use them
           map_ids_to_inventory_objects(indexed_inventory_objects,
