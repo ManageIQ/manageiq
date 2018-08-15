@@ -160,7 +160,7 @@ module SpecParsedData
       :ems_ref          => "container_group_ems_ref_#{i}",
       :name             => "container_group_name_#{i}",
       :ems_created_on   => "2015-07-29T13:02:52Z",
-      :resource_version => "5253",
+      :resource_version => 5253,
       :type             => "ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup",
       :restart_policy   => "Always",
       :dns_policy       => "ClusterFirst",
@@ -193,7 +193,7 @@ module SpecParsedData
       :ems_ref          => "container_project_ems_ref_#{i}",
       :name             => "container_project_name_#{i}",
       :ems_created_on   => "2015-07-29T12:50:33Z",
-      :resource_version => "6"
+      :resource_version => 6
     }.merge(data)
   end
 
@@ -202,7 +202,7 @@ module SpecParsedData
       :ems_ref          => "container_replicator_ems_ref_#{i}",
       :name             => "container_replicator_name_#{i}",
       :ems_created_on   => "2015-07-29T13:02:52Z",
-      :resource_version => "122",
+      :resource_version => 122,
       :replicas         => 1,
       :current_replicas => 1,
     }.merge(data)
@@ -213,7 +213,7 @@ module SpecParsedData
       :ems_ref                    => "container_node_ems_ref_#{i}",
       :name                       => "container_node_name_#{i}",
       :ems_created_on             => "2015-07-29T12:50:45Z",
-      :resource_version           => "5302",
+      :resource_version           => 5302,
       :type                       => "ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode",
       :identity_infra             => nil,
       :lives_on_id                => 18882,
