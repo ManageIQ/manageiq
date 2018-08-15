@@ -192,6 +192,17 @@ describe EmsCloud do
           expect_created_tenant_tree
         end
 
+        it "cleans up created tenant tree when the ems is destroyed" do
+          ems_cloud.sync_cloud_tenants_with_tenants
+          expect_created_tenant_tree
+          # 4 cloud tenants, plus the provider tenant and root tenant
+          expect(Tenant.count).to eq(6)
+          ems_cloud.destroy
+          # only the root tenant should remain after destroying the ems
+          expect(Tenant.count).to eq(1)
+          expect(Tenant.first.name).to eq("My Company")
+        end
+
         let(:vm_5) { FactoryGirl.create(:vm_openstack) }
 
         let(:ct_5) do
