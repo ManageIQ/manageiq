@@ -37,9 +37,10 @@ module ManagerRefresh::SaveCollection
       private
 
       def insert_query_insert_values(hashes, all_attribute_keys_array, connection)
-        values    = hashes.map do |hash|
+        values = hashes.map do |hash|
           "(#{all_attribute_keys_array.map { |x| quote(connection, hash[x], x) }.join(",")})"
         end.join(",")
+
         col_names = all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")
 
         <<-SQL

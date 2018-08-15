@@ -336,7 +336,7 @@ module ManagerRefresh::SaveCollection
         # saved are not being sent here. We have only rows that are new, but become old as we send the query (so other
         # parallel process saved the data in the meantime). Or if some attributes are newer than the whole row
         # being sent.
-        hash.keys.each do |db_index|
+        hash.each_key do |db_index|
           inventory_collection.skeletal_primary_index.skeletonize_primary_index(hash[db_index].manager_uuid)
         end
       end
@@ -429,8 +429,8 @@ module ManagerRefresh::SaveCollection
                                      batch,
                                      :on_conflict => :do_update,
                                      :column_name => column_name)
-            result.each do |result|
-              results[result["id"]] = result
+            result.each do |res|
+              results[res["id"]] = res
             end
           end
         end

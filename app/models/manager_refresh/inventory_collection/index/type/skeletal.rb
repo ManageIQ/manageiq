@@ -37,7 +37,7 @@ module ManagerRefresh
             index.delete(index_value)
           end
 
-          # Takes value from primary_index and puts it to skeletal index
+          # Takes value from primary_index and inserts it to skeletal index
           #
           # @param index_value [String] a index_value of the InventoryObject we search for
           # @return [InventoryObject|nil] Returns found value or nil
