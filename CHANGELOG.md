@@ -55,7 +55,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Include task_id in result of ResourceActionWorkflow#process_request [(#17788)](https://github.com/ManageIQ/manageiq/pull/17788)
 - Graph refresh of configuration_scripts and configuration_workflows in one InventoryCollection [(#17785)](https://github.com/ManageIQ/manageiq/pull/17785)
 - Add internal attribute to service template [(#17781)](https://github.com/ManageIQ/manageiq/pull/17781)
-- Fix Remove Selected Items from Inventory button for Images
+- Fix Remove Selected Items from Inventory button for Images Instances [(#17780)](https://github.com/ManageIQ/manageiq/pull/17780)
 - Include the request_type when creating a retirement request [(#17779)](https://github.com/ManageIQ/manageiq/pull/17779)
 - Use standard method for filesystem cleanup [(#17774)](https://github.com/ManageIQ/manageiq/pull/17774)
 - Allow tenant admins to see all groups within the scope of their tenant [(#17768)](https://github.com/ManageIQ/manageiq/pull/17768)
