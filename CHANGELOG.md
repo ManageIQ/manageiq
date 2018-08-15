@@ -5,6 +5,69 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 92 ending 2018-08-13
+
+### Added
+- Add new rename_queue method to VM operations [(#17853)](https://github.com/ManageIQ/manageiq/pull/17853)
+- Missing definitions for targeted refresh for containers [(#17846)](https://github.com/ManageIQ/manageiq/pull/17846)
+- rake evm:db:restore:remote mods for S3 [(#17827)](https://github.com/ManageIQ/manageiq/pull/17827)
+- Add an association for Datacenters [(#17821)](https://github.com/ManageIQ/manageiq/pull/17821)
+- Vmdb::Plugins::AssetPath - add node_modules development_gem? [(#17818)](https://github.com/ManageIQ/manageiq/pull/17818)
+- Move the roles dir to content/ansible_runner [(#17811)](https://github.com/ManageIQ/manageiq/pull/17811)
+- Cleanup Ansible::Runner [(#17808)](https://github.com/ManageIQ/manageiq/pull/17808)
+- Add Danish krone (DKK) currency to chargeback rates [(#17807)](https://github.com/ManageIQ/manageiq/pull/17807)
+- ServiceAnsibleTower to provision both job and workflow [(#17804)](https://github.com/ManageIQ/manageiq/pull/17804)
+- Support for DB Restore from Object Stores [(#17791)](https://github.com/ManageIQ/manageiq/pull/17791)
+- Added ability to create default dashboard for group [(#17778)](https://github.com/ManageIQ/manageiq/pull/17778)
+- Seed Ansible Roles for Vmdb Plugins [(#17777)](https://github.com/ManageIQ/manageiq/pull/17777)
+- [RFE] Allow customizing product title and brand image through settings [(#17773)](https://github.com/ManageIQ/manageiq/pull/17773)
+- Allow mapping event types to groups using regexes [(#17772)](https://github.com/ManageIQ/manageiq/pull/17772)
+- Add codename in log file and stdout [(#17769)](https://github.com/ManageIQ/manageiq/pull/17769)
+- Add Vmdb::Plugins#versions [(#17755)](https://github.com/ManageIQ/manageiq/pull/17755)
+- Prefix the method name with the class name for validation errors [(#17754)](https://github.com/ManageIQ/manageiq/pull/17754)
+- Do not fallback-compile missing assets [(#17741)](https://github.com/ManageIQ/manageiq/pull/17741)
+- Add support for exporting and importing provision dialogs [(#17739)](https://github.com/ManageIQ/manageiq/pull/17739)
+- Add rake task to import custom buttons [(#17726)](https://github.com/ManageIQ/manageiq/pull/17726)
+- Add permission to groups of users access the event_streams_view [(#17723)](https://github.com/ManageIQ/manageiq/pull/17723)
+- ConfigurationWorkflow to exist only in AutomationManager space [(#17720)](https://github.com/ManageIQ/manageiq/pull/17720)
+- put S3 refresh in a separate worker [(#17704)](https://github.com/ManageIQ/manageiq/pull/17704)
+- Save Physical Disks Model [(#17700)](https://github.com/ManageIQ/manageiq/pull/17700)
+- DB Backups to AWS S3 [(#17689)](https://github.com/ManageIQ/manageiq/pull/17689)
+- Notify users of killing workers when exceed memory [(#17673)](https://github.com/ManageIQ/manageiq/pull/17673)
+- Remove hacked relations [(#17545)](https://github.com/ManageIQ/manageiq/pull/17545)
+
+### Fixed
+- switch back to require_nested due to linux load error [(#17848)](https://github.com/ManageIQ/manageiq/pull/17848)
+- Fix for $evm.execute not honoring dialog options [(#17844)](https://github.com/ManageIQ/manageiq/pull/17844)
+- human_attribute_name():  add ui option to be able to call original (super) method [(#17834)](https://github.com/ManageIQ/manageiq/pull/17834)
+- Fix bug with EvmDatabaseOps.dump [(#17830)](https://github.com/ManageIQ/manageiq/pull/17830)
+- Fix for physical server alert bug [(#17829)](https://github.com/ManageIQ/manageiq/pull/17829)
+- Don't log the deprecation debug messages in production [(#17824)](https://github.com/ManageIQ/manageiq/pull/17824)
+- Mark Cloud Tenant as required for Openstack provisioning [(#17822)](https://github.com/ManageIQ/manageiq/pull/17822)
+- Don't queue metrics capture if metrics unsupported [(#17820)](https://github.com/ManageIQ/manageiq/pull/17820)
+- Add support for load_values_on_init to text boxes. [(#17814)](https://github.com/ManageIQ/manageiq/pull/17814)
+- Save Aws Region in File Depot for DB Backup [(#17803)](https://github.com/ManageIQ/manageiq/pull/17803)
+- New and improved Field.is_field?() [(#17801)](https://github.com/ManageIQ/manageiq/pull/17801)
+- L10N - Add the missing pb and eb types for storage_units  [(#17800)](https://github.com/ManageIQ/manageiq/pull/17800)
+- Add Cumulative Chargeback rates   [(#17795)](https://github.com/ManageIQ/manageiq/pull/17795)
+- Distinguish between no password provided and bad password in error message [(#17792)](https://github.com/ManageIQ/manageiq/pull/17792)
+- Apply gettext to initial & error service dialog values [(#17789)](https://github.com/ManageIQ/manageiq/pull/17789)
+- Include task_id in result of ResourceActionWorkflow#process_request [(#17788)](https://github.com/ManageIQ/manageiq/pull/17788)
+- Graph refresh of configuration_scripts and configuration_workflows in one InventoryCollection [(#17785)](https://github.com/ManageIQ/manageiq/pull/17785)
+- Add internal attribute to service template [(#17781)](https://github.com/ManageIQ/manageiq/pull/17781)
+- Fix Remove Selected Items from Inventory button for Images Instances [(#17780)](https://github.com/ManageIQ/manageiq/pull/17780)
+- Include the request_type when creating a retirement request [(#17779)](https://github.com/ManageIQ/manageiq/pull/17779)
+- Use standard method for filesystem cleanup [(#17774)](https://github.com/ManageIQ/manageiq/pull/17774)
+- Allow tenant admins to see all groups within the scope of their tenant [(#17768)](https://github.com/ManageIQ/manageiq/pull/17768)
+- Logging archived targets during C&U collection [(#17762)](https://github.com/ManageIQ/manageiq/pull/17762)
+- Add internal column to service template for transformation plan [(#17748)](https://github.com/ManageIQ/manageiq/pull/17748)
+- Move VIRTUAL_COL_USES translation to col_index method in ChargeableField [(#17747)](https://github.com/ManageIQ/manageiq/pull/17747)
+- Avoid raising and re-queueing when the remote resource is not found [(#17745)](https://github.com/ManageIQ/manageiq/pull/17745)
+
+### Removed
+- Remove Debug Message [(#17796)](https://github.com/ManageIQ/manageiq/pull/17796)
+- remove 'require_nested :ConfigurationWorkflow' from parent space [(#17782)](https://github.com/ManageIQ/manageiq/pull/17782)
+
 ## Unreleased as of Sprint 91 ending 2018-07-30
 
 ### Added
