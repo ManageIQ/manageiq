@@ -68,7 +68,9 @@ class TestCollector
     end
 
     def refresh(persister)
-      persister.class.from_json(persister.to_json).persist!
+      persister = persister.class.from_json(persister.to_json)
+      persister.persist!
+      persister
     end
 
     def new_persister(ems)

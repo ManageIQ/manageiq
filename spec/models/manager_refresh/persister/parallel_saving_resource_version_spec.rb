@@ -37,8 +37,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       it "checks the full row saving versions" do
         container_group_created_on = nil
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_full_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
@@ -59,6 +59,16 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               )
             )
           end
+
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
 
         # Expect the second+ run with same version for each record doesn't change rails versions (the row should
@@ -71,8 +81,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       it "checks the full row saving with increasing versions" do
         bigger_newest_version = newest_version
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_full_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => bigger_newest_version,
@@ -94,6 +104,16 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             )
           end
 
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister, :container_groups => ContainerGroup.all)
+            match_deleted(persister)
+          end
+
           bigger_newest_version += 10
         end
       end
@@ -101,8 +121,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       it "checks the partial rows saving versions" do
         container_group_created_on = nil
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_partial_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
@@ -132,14 +152,24 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           container_group_current_created_on = ContainerGroup.where(:dns_policy => "1").first.created_on
           container_group_created_on         ||= container_group_current_created_on
           expect(container_group_created_on).to eq(container_group_current_created_on)
+
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
       end
 
       it "check full then partial with the same version" do
         container_group_created_on = nil
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_full_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
@@ -149,10 +179,20 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           # Expect the second+ run with same version for each record doesn't change rails versions (the row should
           # not be updated)
           container_group_created_on = ContainerGroup.where(:dns_policy => "1").first.created_on
+
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
 
         2.times do
-          TestCollector.refresh(
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_partial_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
@@ -178,12 +218,16 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           # not be updated)
           container_group_current_created_on = ContainerGroup.where(:dns_policy => "1").first.created_on
           expect(container_group_created_on).to eq(container_group_current_created_on)
+
+          match_created(persister)
+          match_updated(persister)
+          match_deleted(persister)
         end
       end
 
       it "check partial then full with the same version" do
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_partial_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
@@ -207,10 +251,20 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_version
             expect(version_parse(container_group.resource_versions["reason"])).to eq expected_version
           end
+
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_full_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
@@ -231,6 +285,16 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               )
             )
           end
+
+          if i == 0
+            match_created(persister)
+            match_updated(persister, :container_groups => ContainerGroup.all)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
       end
 
@@ -239,8 +303,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
         bigger_newest_version = newest_version + 1
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_full_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
@@ -250,10 +314,20 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           # Expect the second+ run with same version for each record doesn't change rails versions (the row should
           # not be updated)
           container_group_created_on = ContainerGroup.where(:dns_policy => "1").first.created_on
+
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_partial_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => bigger_newest_version,
@@ -282,23 +356,43 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           # not be updated)
           container_group_current_created_on = ContainerGroup.where(:dns_policy => "1").first.created_on
           expect(container_group_created_on).to eq(container_group_current_created_on)
+
+          if i == 0
+            match_created(persister)
+            match_updated(persister, :container_groups => ContainerGroup.all)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
       end
 
       it "check partial then full with the bigger version" do
         bigger_newest_version = newest_version + 1
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_partial_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
             )
           )
+
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_full_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => bigger_newest_version,
@@ -319,6 +413,16 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               )
             )
           end
+
+          if i == 0
+            match_created(persister)
+            match_updated(persister, :container_groups => ContainerGroup.all)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
       end
 
@@ -326,16 +430,26 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
         bigger_newest_version      = newest_version + 1
         even_bigger_newest_version = newest_version + 2
 
-        2.times do
-          TestCollector.refresh(
+        2.times do |i|
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_partial_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => bigger_newest_version,
             )
           )
+
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
 
-        2.times do
+        2.times do |i|
           persister = TestCollector.generate_batches_of_full_container_group_data(
             :ems_name         => @ems.name,
             :resource_version => newest_version,
@@ -351,7 +465,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             :batch_size       => 2
           )
 
-          TestCollector.refresh(persister)
+          persister = TestCollector.refresh(persister)
 
           ContainerGroup.find_each do |container_group|
             expected_version             = expected_version(container_group, newest_version)
@@ -362,9 +476,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               # This gets full row update
               expect(container_group).to(
                 have_attributes(
-                  :name => "container_group_#{expected_even_bigger_version}",
-                  # TODO(lsmola) so this means we do full by partial, so it should be 'expected_version', how to do it?
-                  # It should also flip complete => true
+                  :name                  => "container_group_#{expected_even_bigger_version}",
                   :resource_version      => expected_even_bigger_version,
                   :resource_versions_max => nil,
                   :resource_versions     => {},
@@ -376,9 +488,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               # This gets full row, transformed to skeletal update, leading to only updating :name
               expect(container_group).to(
                 have_attributes(
-                  :name => "container_group_#{expected_version}",
-                  # TODO(lsmola) so this means we do full by partial, so it should be 'expected_version', how to do it?
-                  # It should also flip complete => true
+                  :name                  => "container_group_#{expected_version}",
                   :resource_version      => nil,
                   :resource_versions_max => expected_bigger_version,
                   :reason                => expected_bigger_version.to_s,
@@ -391,13 +501,23 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
             end
           end
+
+          if i == 0
+            match_created(persister)
+            match_updated(persister, :container_groups => ContainerGroup.all)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
       end
 
       it "checks that 2 different partial records are batched and saved correctly when starting with older" do
         bigger_newest_version = newest_version + 1
 
-        2.times do
+        2.times do |i|
           persister = TestCollector.generate_batches_of_partial_container_group_data(
             :ems_name         => @ems.name,
             :resource_version => newest_version,
@@ -411,9 +531,19 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             :batch_size       => 2
           )
 
-          TestCollector.refresh(persister)
+          persister = TestCollector.refresh(persister)
 
-          TestCollector.refresh(
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
+
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_different_partial_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => bigger_newest_version,
@@ -440,6 +570,16 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_bigger_version
             expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
           end
+
+          if i == 0
+            match_created(persister)
+            match_updated(persister, :container_groups => ContainerGroup.where(:dns_policy => ["0", "1"]))
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
       end
 
@@ -459,7 +599,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           :batch_size       => 2
         )
 
-        TestCollector.refresh(persister)
+        persister = TestCollector.refresh(persister)
 
         ContainerGroup.find_each do |container_group|
           expected_version        = expected_version(container_group, newest_version)
@@ -495,7 +635,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
         end
 
-        TestCollector.refresh(
+        match_created(persister, :container_groups => ContainerGroup.all)
+        match_updated(persister)
+        match_deleted(persister)
+
+        persister = TestCollector.refresh(
           TestCollector.generate_batches_of_different_partial_container_group_data(
             :ems_name         => @ems.name,
             :resource_version => newest_version,
@@ -518,18 +662,21 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             )
           )
 
-          # TODO(lsmola) wrong, this should be expected_version, we need to set the right versions on parsing time
           expect(version_parse(container_group.resource_versions["phase"])).to eq expected_bigger_version
           expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_bigger_version
           expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
           expect(version_parse(container_group.resource_versions["message"])).to eq expected_version
         end
+
+        match_created(persister)
+        match_updated(persister, :container_groups => ContainerGroup.where(:dns_policy => ["0", "1"]))
+        match_deleted(persister)
       end
 
-      it "checks that 2 different full rows are saved corerctly when starting with newer" do
+      it "checks that 2 different full rows are saved correctly when starting with newer" do
         bigger_newest_version = newest_version + 1
 
-        2.times do
+        2.times do |i|
           persister = TestCollector.generate_batches_of_full_container_group_data(
             :ems_name         => @ems.name,
             :resource_version => bigger_newest_version,
@@ -543,7 +690,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             :batch_size       => 2
           )
 
-          TestCollector.refresh(persister)
+          persister = TestCollector.refresh(persister)
 
           ContainerGroup.find_each do |container_group|
             expected_bigger_version = expected_version(container_group, bigger_newest_version)
@@ -560,7 +707,17 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             )
           end
 
-          TestCollector.refresh(
+          if i == 0
+            match_created(persister, :container_groups => ContainerGroup.all)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
+
+          persister = TestCollector.refresh(
             TestCollector.generate_batches_of_full_container_group_data(
               :ems_name         => @ems.name,
               :resource_version => newest_version,
@@ -583,6 +740,16 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               )
             )
           end
+
+          if i == 0
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          else
+            match_created(persister)
+            match_updated(persister)
+            match_deleted(persister)
+          end
         end
       end
     end
@@ -604,5 +771,37 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
   def version_parse(version)
     version.to_i
+  end
+
+  def records_identities(arels)
+    arels.transform_values! do |value|
+      value.to_a.map { |x| {:id => x.id} }.sort_by { |x| x[:id] }
+    end
+  end
+
+  def match_created(persister, records = {})
+    match_records(persister, :created_records, records)
+  end
+
+  def match_updated(persister, records = {})
+    match_records(persister, :updated_records, records)
+  end
+
+  def match_deleted(persister, records = {})
+    match_records(persister, :deleted_records, records)
+  end
+
+  def persister_records_identities(persister, kind)
+    persister.collections.map { |key, value| [key, value.send(kind)] if value.send(kind).present? }.compact.to_h.transform_values! do |value|
+      value.sort_by { |x| x[:id] }
+    end
+  end
+
+  def match_records(persister, kind, records)
+    expect(
+      persister_records_identities(persister, kind)
+    ).to(
+      match(records_identities(records))
+    )
   end
 end
