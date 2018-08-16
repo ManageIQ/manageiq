@@ -14,6 +14,7 @@ module ManagerRefresh::SaveCollection
         # Private attrs
         @model_class            = inventory_collection.model_class
         @table_name             = @model_class.table_name
+        @q_table_name           = get_connection.quote_table_name(@table_name)
         @primary_key            = @model_class.primary_key
         @arel_primary_key       = @model_class.arel_attribute(@primary_key)
         @unique_index_keys      = inventory_collection.unique_index_keys
@@ -117,7 +118,8 @@ module ManagerRefresh::SaveCollection
 
       attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
                   :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes,
-                  :batch_size, :batch_size_for_persisting, :model_class, :serializable_keys, :deserializable_keys, :pg_types, :table_name
+                  :batch_size, :batch_size_for_persisting, :model_class, :serializable_keys, :deserializable_keys, :pg_types, :table_name,
+                  :q_table_name
 
       # Saves the InventoryCollection
       #

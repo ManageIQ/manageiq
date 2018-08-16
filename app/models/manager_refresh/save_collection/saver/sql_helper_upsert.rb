@@ -44,7 +44,7 @@ module ManagerRefresh::SaveCollection
         col_names = all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")
 
         <<-SQL
-          INSERT INTO #{table_name} (#{col_names})
+          INSERT INTO #{q_table_name} (#{col_names})
             VALUES
               #{values}
         SQL
@@ -124,14 +124,13 @@ module ManagerRefresh::SaveCollection
           , #{attr_partial} = '{}', #{attr_partial_max} = NULL
 
           WHERE EXCLUDED.#{attr_full} IS NULL OR (
-            (#{table_name}.#{attr_full} IS NULL OR EXCLUDED.#{attr_full} > #{table_name}.#{attr_full}) AND
-            (#{table_name}.#{attr_partial_max} IS NULL OR EXCLUDED.#{attr_full} >= #{table_name}.#{attr_partial_max})
+            (#{q_table_name}.#{attr_full} IS NULL OR EXCLUDED.#{attr_full} > #{q_table_name}.#{attr_full}) AND
+            (#{q_table_name}.#{attr_partial_max} IS NULL OR EXCLUDED.#{attr_full} >= #{q_table_name}.#{attr_partial_max})
           )
         SQL
       end
 
       def partial_update_condition(attr_full, column_name)
-        # column_name = quote_column_name(column_name)
         attr_partial     = attr_full.to_s.pluralize # Changes resource_version/timestamp to resource_versions/timestamps
         attr_partial_max = "#{attr_partial}_max"
         cast             = if attr_full == :resource_timestamp
@@ -144,15 +143,16 @@ module ManagerRefresh::SaveCollection
         attr_full        = quote_column_name(attr_full)
         attr_partial     = quote_column_name(attr_partial)
         attr_partial_max = quote_column_name(attr_partial_max)
-        # TODO(lsmola) how to quote 'column_name', seems like basic column quoting doesn't work on jsob
+        column_name      = get_connection.quote_string(column_name.to_s)
+        q_table_name     = get_connection.quote_table_name(table_name)
 
         <<-SQL
-          , #{attr_partial} = #{table_name}.#{attr_partial} || ('{"#{column_name}": "' || EXCLUDED.#{attr_partial_max}::#{cast} || '"}')::jsonb
-          , #{attr_partial_max} = greatest(#{table_name}.#{attr_partial_max}::#{cast}, EXCLUDED.#{attr_partial_max}::#{cast})
+          , #{attr_partial} = #{q_table_name}.#{attr_partial} || ('{"#{column_name}": "' || EXCLUDED.#{attr_partial_max}::#{cast} || '"}')::jsonb
+          , #{attr_partial_max} = greatest(#{q_table_name}.#{attr_partial_max}::#{cast}, EXCLUDED.#{attr_partial_max}::#{cast})
           WHERE EXCLUDED.#{attr_partial_max} IS NULL OR (
-            (#{table_name}.#{attr_full} IS NULL OR EXCLUDED.#{attr_partial_max} > #{table_name}.#{attr_full}) AND (
-              (#{table_name}.#{attr_partial}->>'#{column_name}')::#{cast} IS NULL OR
-              EXCLUDED.#{attr_partial_max}::#{cast} > (#{table_name}.#{attr_partial}->>'#{column_name}')::#{cast}
+            (#{q_table_name}.#{attr_full} IS NULL OR EXCLUDED.#{attr_partial_max} > #{q_table_name}.#{attr_full}) AND (
+              (#{q_table_name}.#{attr_partial}->>'#{column_name}')::#{cast} IS NULL OR
+              EXCLUDED.#{attr_partial_max}::#{cast} > (#{q_table_name}.#{attr_partial}->>'#{column_name}')::#{cast}
             )
           )
         SQL
@@ -171,7 +171,7 @@ module ManagerRefresh::SaveCollection
           # updated
           if inventory_collection.internal_timestamp_columns.present?
             <<-SQL
-              , #{inventory_collection.internal_timestamp_columns.join(",")}
+              , #{inventory_collection.internal_timestamp_columns.map { |x| quote_column_name(x) }.join(",")}
             SQL
           end
         else

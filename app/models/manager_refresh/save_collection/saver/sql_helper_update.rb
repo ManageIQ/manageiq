@@ -22,10 +22,17 @@ module ManagerRefresh::SaveCollection
         all_attribute_keys_array = all_attribute_keys.to_a.delete_if { |x| %i(created_at created_on).include?(x) }
         all_attribute_keys_array << :id
 
+        # If there is not version attribute, the version conditions will be ignored
+        version_attribute = if supports_remote_data_timestamp?(all_attribute_keys)
+                              :resource_timestamp
+                            elsif supports_remote_data_version?(all_attribute_keys)
+                              :resource_version
+                            end
+
         update_query = update_query_beginning(all_attribute_keys_array)
-        update_query += update_query_reset_version_columns(all_attribute_keys)
+        update_query += update_query_reset_version_columns(version_attribute)
         update_query += update_query_from_values(hashes, all_attribute_keys_array, connection)
-        update_query += update_query_version_conditions(all_attribute_keys)
+        update_query += update_query_version_conditions(version_attribute)
         update_query += update_query_returning
 
         _log.debug("Building update query for #{inventory_collection} of size #{inventory_collection.size}...Complete")
@@ -43,15 +50,18 @@ module ManagerRefresh::SaveCollection
         SQL
       end
 
-      def update_query_reset_version_columns(all_attribute_keys)
-        if supports_remote_data_timestamp?(all_attribute_keys)
+      def update_query_reset_version_columns(version_attribute)
+        if version_attribute
+          attr_partial     = version_attribute.to_s.pluralize # Changes resource_version/timestamp to resource_versions/timestamps
+          attr_partial_max = "#{attr_partial}_max"
+
+          # Quote the column names
+          attr_partial     = quote_column_name(attr_partial)
+          attr_partial_max = quote_column_name(attr_partial_max)
+
           # Full row update will reset the partial update timestamps
           <<-SQL
-            , resource_timestamps = '{}', resource_timestamps_max = NULL
-          SQL
-        elsif supports_remote_data_version?(all_attribute_keys)
-          <<-SQL
-            , resource_versions = '{}', resource_versions_max = NULL
+            , #{attr_partial} = '{}', #{attr_partial_max} = NULL
           SQL
         else
           ""
@@ -68,28 +78,26 @@ module ManagerRefresh::SaveCollection
             VALUES
               #{values}
           ) AS updated_values (#{all_attribute_keys_array.map { |x| quote_column_name(x) }.join(",")})
-          WHERE updated_values.id = #{table_name}.id
+          WHERE updated_values.id = #{q_table_name}.id
         SQL
       end
 
-      def update_query_version_conditions(all_attribute_keys)
-        # This conditional will avoid rewriting new data by old data. But we want it only when remote_data_timestamp is
-        # a part of the data, since for the fake records, we just want to update ems_ref.
-        if supports_remote_data_timestamp?(all_attribute_keys)
+      def update_query_version_conditions(version_attribute)
+        if version_attribute
+          # This conditional will avoid rewriting new data by old data. But we want it only when version_attribute is
+          # a part of the data, since for the fake records, we just want to update ems_ref.
+          attr_partial     = version_attribute.to_s.pluralize # Changes resource_version/timestamp to resource_versions/timestamps
+          attr_partial_max = "#{attr_partial}_max"
+
+          # Quote the column names
+          attr_full        = quote_column_name(version_attribute)
+          attr_partial_max = quote_column_name(attr_partial_max)
+
           <<-SQL
             AND (
-              updated_values.resource_timestamp IS NULL OR (
-                (#{table_name}.resource_timestamp IS NULL OR updated_values.resource_timestamp > #{table_name}.resource_timestamp) AND
-                (#{table_name}.resource_timestamps_max IS NULL OR updated_values.resource_timestamp >= #{table_name}.resource_timestamps_max)
-              )
-            )
-          SQL
-        elsif supports_remote_data_version?(all_attribute_keys)
-          <<-SQL
-            AND (
-              updated_values.resource_version IS NULL OR (
-                (#{table_name}.resource_version IS NULL OR updated_values.resource_version > #{table_name}.resource_version) AND
-                (#{table_name}.resource_versions_max IS NULL OR updated_values.resource_version >= #{table_name}.resource_versions_max)
+              updated_values.#{attr_full} IS NULL OR (
+                (#{q_table_name}.#{attr_full} IS NULL OR updated_values.#{attr_full} > #{q_table_name}.#{attr_full}) AND
+                (#{q_table_name}.#{attr_partial_max} IS NULL OR updated_values.#{attr_full} >= #{q_table_name}.#{attr_partial_max})
               )
             )
           SQL
