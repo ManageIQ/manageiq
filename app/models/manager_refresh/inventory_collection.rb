@@ -657,7 +657,7 @@ module ManagerRefresh
       @unique_indexes_cache = model_class.connection.indexes(model_class.table_name).select(&:unique)
 
       if @unique_indexes_cache.blank?
-        raise "#{inventory_collection} and its table #{model_class.table_name} must have a unique index defined, to"\
+        raise "#{self} and its table #{model_class.table_name} must have a unique index defined, to"\
                 " be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
       end
 
@@ -677,7 +677,7 @@ module ManagerRefresh
       uniq_key_candidates = unique_indexes.each_with_object([]) { |i, obj| obj << i if (keys - i.columns.map(&:to_sym)).empty? }
 
       if @unique_indexes_cache.blank?
-        raise "#{inventory_collection} and its table #{model_class.table_name} must have a unique index defined "\
+        raise "#{self} and its table #{model_class.table_name} must have a unique index defined "\
                 "covering columns #{keys} to be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
       end
 
