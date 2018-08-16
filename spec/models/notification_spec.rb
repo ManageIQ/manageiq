@@ -112,6 +112,44 @@ describe Notification, :type => :model do
                                        )
       )
     end
+
+    context "subject text" do
+      let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
+      subject { Notification.create(:type => :vm_snapshot_failure, :subject => vm, :options => {:error => "oops", :snapshot_op => "create"}) }
+
+      it "stuffs subject into options hash in case the subject is destroyed" do
+        expect(subject.options[:subject]).to eql(subject.subject.name)
+      end
+
+      it "detects a rename of the subject" do
+        subject
+        vm_name = "#{vm.name}_1"
+        vm.update(:name => vm_name)
+
+        note = Notification.first
+        expect(note.to_h.fetch_path(:bindings, :subject, :text)).to eql(vm_name)
+      end
+
+      it "retains name incase subject is destroyed" do
+        subject
+        vm_name = vm.name
+        vm.destroy
+
+        note = Notification.first
+        expect(note.to_h.fetch_path(:bindings, :subject, :text)).to eql(vm_name)
+      end
+
+      it "doesn't detect subject rename if subject is destroyed" do
+        subject
+        original_name = vm.name
+        vm_name = "#{vm.name}_1"
+        vm.update(:name => vm_name)
+        vm.destroy
+
+        note = Notification.first
+        expect(note.to_h.fetch_path(:bindings, :subject, :text)).to eql(original_name)
+      end
+    end
   end
 
   describe "#seen_by_all_recipients?" do
