@@ -62,13 +62,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
+
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
         end
 
         # Expect the second+ run with same version for each record doesn't change rails versions (the row should
@@ -107,12 +106,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
             match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
             match_updated(persister, :container_groups => ContainerGroup.all)
-            match_deleted(persister)
           end
+          match_deleted(persister)
 
           bigger_newest_version += 10
         end
@@ -158,13 +156,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
         end
       end
 
@@ -185,13 +181,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
         end
 
         2.times do
@@ -261,13 +255,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
         end
 
         2.times do |i|
@@ -294,14 +286,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           end
 
           if i == 0
-            match_created(persister)
             match_updated(persister, :container_groups => ContainerGroup.all)
-            match_deleted(persister)
           else
-            match_created(persister)
             match_updated(persister)
-            match_deleted(persister)
           end
+          match_created(persister)
+          match_deleted(persister)
         end
       end
 
@@ -324,13 +314,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
         end
 
         2.times do |i|
@@ -369,14 +357,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           expect(container_group_created_on).to eq(container_group_current_created_on)
 
           if i == 0
-            match_created(persister)
             match_updated(persister, :container_groups => ContainerGroup.all)
-            match_deleted(persister)
           else
-            match_created(persister)
             match_updated(persister)
-            match_deleted(persister)
           end
+          match_created(persister)
+          match_deleted(persister)
         end
       end
 
@@ -393,13 +379,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
         end
 
         2.times do |i|
@@ -426,14 +410,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           end
 
           if i == 0
-            match_created(persister)
             match_updated(persister, :container_groups => ContainerGroup.all)
-            match_deleted(persister)
           else
-            match_created(persister)
             match_updated(persister)
-            match_deleted(persister)
           end
+          match_created(persister)
+          match_deleted(persister)
         end
       end
 
@@ -451,13 +433,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
         end
 
         2.times do |i|
@@ -522,14 +502,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           end
 
           if i == 0
-            match_created(persister)
             match_updated(persister, :container_groups => ContainerGroup.all)
-            match_deleted(persister)
           else
-            match_created(persister)
             match_updated(persister)
-            match_deleted(persister)
           end
+          match_created(persister)
+          match_deleted(persister)
         end
       end
 
@@ -554,13 +532,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
 
           persister = TestCollector.refresh(
             TestCollector.generate_batches_of_different_partial_container_group_data(
@@ -596,14 +572,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
           end
 
           if i == 0
-            match_created(persister)
             match_updated(persister, :container_groups => ContainerGroup.where(:dns_policy => ["0", "1"]))
-            match_deleted(persister)
           else
-            match_created(persister)
             match_updated(persister)
-            match_deleted(persister)
           end
+          match_created(persister)
+          match_deleted(persister)
         end
       end
 
@@ -747,13 +721,11 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
           if i == 0
             match_created(persister, :container_groups => ContainerGroup.all)
-            match_updated(persister)
-            match_deleted(persister)
           else
             match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
           end
+          match_updated(persister)
+          match_deleted(persister)
 
           persister = TestCollector.refresh(
             TestCollector.generate_batches_of_full_container_group_data(
@@ -779,15 +751,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             )
           end
 
-          if i == 0
-            match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
-          else
-            match_created(persister)
-            match_updated(persister)
-            match_deleted(persister)
-          end
+          match_created(persister)
+          match_updated(persister)
+          match_deleted(persister)
         end
       end
     end
