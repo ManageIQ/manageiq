@@ -256,7 +256,7 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
           attribute_to_update = str_method_name.split("update_")[1].delete('!')
           send("#{attribute_to_update}=", *args, &block)
         else
-          # This is requied becasue of Ovirt::Vm strage behaviour - while rhevm.respond_to?(:nics)
+          # This is required becasue of Ovirt::Vm strange behaviour - while rhevm.respond_to?(:nics)
           # returns false, rhevm.nics actually works.
           begin
             __getobj__.send(method_name, *args, &block)
@@ -264,6 +264,11 @@ module ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Strategies
             super
           end
         end
+      end
+
+      def update_memory!(memory, _limit = nil)
+        # memory limit is not supported in v3
+        self.memory= memory
       end
     end
 

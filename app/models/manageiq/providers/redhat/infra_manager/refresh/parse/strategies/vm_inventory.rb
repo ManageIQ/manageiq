@@ -62,6 +62,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
         additional = {
           :memory_reserve    => vm_memory_reserve(vm_inv),
+          :memory_limit      => extract_vm_memory_policy(vm_inv, :max),
           :raw_power_state   => raw_power_state,
           :boot_time         => boot_time,
           :connection_state  => 'connected',
@@ -280,7 +281,11 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
     require 'ostruct'
 
     def vm_memory_reserve(vm_inv)
-      in_bytes = vm_inv.dig(:memory_policy, :guaranteed)
+      extract_vm_memory_policy(vm_inv, :guaranteed)
+    end
+
+    def extract_vm_memory_policy(vm_inv, type)
+      in_bytes = vm_inv.dig(:memory_policy, type)
       in_bytes.nil? ? nil : in_bytes / Numeric::MEGABYTE
     end
   end

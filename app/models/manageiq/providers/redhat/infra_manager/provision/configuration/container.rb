@@ -9,9 +9,12 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Cont
 
   def configure_memory(rhevm_vm)
     vm_memory = get_option(:vm_memory).to_i * 1.megabyte
-    return if vm_memory.zero?
-    _log.info "Setting memory to:<#{vm_memory.inspect}>"
-    rhevm_vm.update_memory!(vm_memory)
+    memory_limit = get_option(:memory_limit).to_i * 1.megabyte
+    return if vm_memory.zero? && memory_limit.zero?
+
+    limit_message = ", total: <#{memory_limit}>" unless memory_limit.zero?
+    _log.info("Setting memory to:<#{vm_memory.inspect}>#{limit_message}")
+    rhevm_vm.update_memory!(vm_memory, memory_limit)
   end
 
   def configure_memory_reserve(rhevm_vm)
