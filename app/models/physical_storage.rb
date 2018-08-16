@@ -9,7 +9,7 @@ class PhysicalStorage < ApplicationRecord
   has_one :asset_detail, :as => :resource, :dependent => :destroy, :inverse_of => false
   has_many :guest_devices, :through => :hardware
 
-  has_many :physical_disks, :dependent => :destroy, :inverse_of => :physical_storages
+  has_many :physical_disks, :dependent => :destroy, :inverse_of => :physical_storage
 
   def my_zone
     ems = ext_management_system
