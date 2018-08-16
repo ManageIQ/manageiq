@@ -147,7 +147,7 @@ module ManagerRefresh::SaveCollection
         q_table_name     = get_connection.quote_table_name(table_name)
 
         <<-SQL
-          , #{attr_partial} = #{q_table_name}.#{attr_partial} || ('{"#{column_name}": "' || EXCLUDED.#{attr_partial_max}::#{cast} || '"}')::jsonb
+          #{insert_query_set_jsonb_version(cast, attr_partial, attr_partial_max, column_name)}
           , #{attr_partial_max} = greatest(#{q_table_name}.#{attr_partial_max}::#{cast}, EXCLUDED.#{attr_partial_max}::#{cast})
           WHERE EXCLUDED.#{attr_partial_max} IS NULL OR (
             (#{q_table_name}.#{attr_full} IS NULL OR EXCLUDED.#{attr_partial_max} > #{q_table_name}.#{attr_full}) AND (
@@ -156,6 +156,19 @@ module ManagerRefresh::SaveCollection
             )
           )
         SQL
+      end
+
+      def insert_query_set_jsonb_version(cast, attr_partial, attr_partial_max, column_name)
+        if cast == "integer"
+          # If we have integer value, we don't want to encapsulate the value in ""
+          <<-SQL
+            , #{attr_partial} = #{q_table_name}.#{attr_partial} || ('{"#{column_name}": ' || EXCLUDED.#{attr_partial_max}::#{cast} || '}')::jsonb
+          SQL
+        else
+          <<-SQL
+            , #{attr_partial} = #{q_table_name}.#{attr_partial} || ('{"#{column_name}": "' || EXCLUDED.#{attr_partial_max}::#{cast} || '"}')::jsonb
+          SQL
+        end
       end
 
       def insert_query_returning
