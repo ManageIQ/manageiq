@@ -34,7 +34,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
         end
       end
 
-      it "checks the full row saving versions" do
+      it "checks the full row saving with the same versions" do
         container_group_created_on = nil
 
         2.times do |i|
@@ -118,7 +118,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
         end
       end
 
-      it "checks the partial rows saving versions" do
+      it "checks the partial rows saving with the same versions" do
         container_group_created_on = nil
 
         2.times do |i|
@@ -141,10 +141,13 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
                 :phase                 => "#{expected_version} status",
               )
             )
-
-            expect(version_parse(container_group.resource_versions["phase"])).to eq expected_version
-            expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_version
-            expect(version_parse(container_group.resource_versions["reason"])).to eq expected_version
+            expect(container_group.resource_versions).to(
+              match(
+                "phase"      => expected_version,
+                "dns_policy" => expected_version,
+                "reason"     => expected_version,
+              )
+            )
           end
 
           # Expect the second+ run with same version for each record doesn't change rails versions (the row should
@@ -247,9 +250,13 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               )
             )
 
-            expect(version_parse(container_group.resource_versions["phase"])).to eq expected_version
-            expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_version
-            expect(version_parse(container_group.resource_versions["reason"])).to eq expected_version
+            expect(container_group.resource_versions).to(
+              match(
+                "phase"      => expected_version,
+                "dns_policy" => expected_version,
+                "reason"     => expected_version,
+              )
+            )
           end
 
           if i == 0
@@ -347,9 +354,13 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               )
             )
 
-            expect(version_parse(container_group.resource_versions["phase"])).to eq expected_bigger_version
-            expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_bigger_version
-            expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
+            expect(container_group.resource_versions).to(
+              match(
+                "phase"      => expected_bigger_version,
+                "dns_policy" => expected_bigger_version,
+                "reason"     => expected_bigger_version,
+              )
+            )
           end
 
           # Expect the second+ run with same version for each record doesn't change rails versions (the row should
@@ -477,6 +488,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               expect(container_group).to(
                 have_attributes(
                   :name                  => "container_group_#{expected_even_bigger_version}",
+                  :message               => "#{expected_even_bigger_version}",
                   :resource_version      => expected_even_bigger_version,
                   :resource_versions_max => nil,
                   :resource_versions     => {},
@@ -489,6 +501,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               expect(container_group).to(
                 have_attributes(
                   :name                  => "container_group_#{expected_version}",
+                  :message               => "#{expected_version}",
                   :resource_version      => nil,
                   :resource_versions_max => expected_bigger_version,
                   :reason                => expected_bigger_version.to_s,
@@ -496,9 +509,15 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
                 )
               )
 
-              expect(version_parse(container_group.resource_versions["phase"])).to eq expected_bigger_version
-              expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_bigger_version
-              expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
+              expect(container_group.resource_versions).to(
+                match(
+                  "dns_policy" => expected_bigger_version,
+                  "message"    => expected_version,
+                  "name"       => expected_version,
+                  "phase"      => expected_bigger_version,
+                  "reason"     => expected_bigger_version,
+                )
+              )
             end
           end
 
@@ -566,9 +585,14 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
               )
             )
 
-            expect(version_parse(container_group.resource_versions["phase"])).to eq expected_version
-            expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_bigger_version
-            expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
+            expect(container_group.resource_versions).to(
+              match(
+                "dns_policy" => expected_bigger_version,
+                "message"    => expected_bigger_version,
+                "phase"      => expected_version,
+                "reason"     => expected_bigger_version,
+              )
+            )
           end
 
           if i == 0
@@ -621,18 +645,28 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
                 :message => expected_version.to_s,
               )
             )
-            expect(version_parse(container_group.resource_versions["message"])).to eq expected_version
+            expect(container_group.resource_versions).to(
+              match(
+                "dns_policy" => expected_bigger_version,
+                "message"    => expected_version,
+                "phase"      => expected_bigger_version,
+                "reason"     => expected_bigger_version,
+              )
+            )
           else
             expect(container_group).to(
               have_attributes(
                 :message => nil,
               )
             )
-            expect(container_group.resource_versions["message"]).to eq nil
+            expect(container_group.resource_versions).to(
+              match(
+                "dns_policy" => expected_bigger_version,
+                "phase"      => expected_bigger_version,
+                "reason"     => expected_bigger_version,
+              )
+            )
           end
-          expect(version_parse(container_group.resource_versions["phase"])).to eq expected_bigger_version
-          expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_bigger_version
-          expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
         end
 
         match_created(persister, :container_groups => ContainerGroup.all)
@@ -662,10 +696,14 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
             )
           )
 
-          expect(version_parse(container_group.resource_versions["phase"])).to eq expected_bigger_version
-          expect(version_parse(container_group.resource_versions["dns_policy"])).to eq expected_bigger_version
-          expect(version_parse(container_group.resource_versions["reason"])).to eq expected_bigger_version
-          expect(version_parse(container_group.resource_versions["message"])).to eq expected_version
+          expect(container_group.resource_versions).to(
+            match(
+              "dns_policy" => expected_bigger_version,
+              "message"    => expected_version,
+              "phase"      => expected_bigger_version,
+              "reason"     => expected_bigger_version,
+            )
+          )
         end
 
         match_created(persister)
