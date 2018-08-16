@@ -82,6 +82,8 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :guest_applications, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
 
+  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
+
   belongs_to                :resource_group
 
   # Accounts - Users and Groups

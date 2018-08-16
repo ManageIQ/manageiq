@@ -91,6 +91,7 @@ class Host < ApplicationRecord
                             :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
+  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   # Physical server reference
   belongs_to :physical_server, :inverse_of => :host
