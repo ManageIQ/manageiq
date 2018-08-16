@@ -51,6 +51,9 @@ module EmsRefresh
       h[e] << t unless e.nil?
     end
 
+    # Drop targets on EMSs which are using streaming refresh
+    targets_by_ems.reject! { |ems, _| ems.supports_streaming_refresh? }
+
     # Queue the refreshes
     task_ids = targets_by_ems.collect do |ems, ts|
       ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq

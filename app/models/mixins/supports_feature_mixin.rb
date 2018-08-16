@@ -129,6 +129,7 @@ module SupportsFeatureMixin
     :snapshots                           => 'Snapshots',
     :shutdown_guest                      => 'Shutdown Guest Operation',
     :start                               => 'Start',
+    :streaming_refresh                   => 'Streaming refresh',
     :suspend                             => 'Suspending',
     :terminate                           => 'Terminate a VM',
     :timeline                            => 'Query for events',
