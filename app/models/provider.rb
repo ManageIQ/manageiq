@@ -5,6 +5,8 @@ class Provider < ApplicationRecord
   include EmsRefresh::Manager
   include TenancyMixin
 
+  include SupportsFeatureMixin
+
   belongs_to :tenant
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
