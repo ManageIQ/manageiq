@@ -18,7 +18,7 @@ class Chargeback
         records = uniq_timestamp_record_map(records, options.group_by_tenant?)
 
         next if records.empty?
-        _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
+        _log.info("Found #{records.flatten.flatten.count - records.keys.count} records for time range #{[query_start_time, query_end_time].inspect}")
 
         # we are building hash with grouped calculated values
         # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
