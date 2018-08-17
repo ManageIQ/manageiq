@@ -70,7 +70,9 @@
   - policy_simulation
   - policy_log
   - miq_report
+  - miq_report_superadmin
   - miq_request
+  - miq_request_approval
   - miq_template
   - orchestration_stack
   - physical_server

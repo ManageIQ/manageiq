@@ -919,16 +919,20 @@ describe Rbac::Filterer do
       end
 
       context 'with EvmRole-tenant_administrator' do
+        let(:rbac_tenant) do
+          FactoryGirl.create(:miq_product_feature, :identifier => MiqProductFeature::TENANT_ADMIN_FEATURE)
+        end
+
         let(:tenant_administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME, :miq_product_features => [rbac_tenant])
         end
 
         let!(:super_administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::SUPER_ADMIN_ROLE_NAME)
+          FactoryGirl.create(:miq_user_role, :role => "super_administrator")
         end
 
         let!(:administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::ADMIN_ROLE_NAME)
+          FactoryGirl.create(:miq_user_role, :role => "administrator")
         end
 
         let(:group) do
@@ -947,7 +951,7 @@ describe Rbac::Filterer do
 
         it 'can see all roles except for EvmRole-super_administrator' do
           expect(MiqUserRole.count).to eq(4)
-          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, user_role])
+          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, administrator_user_role, user_role])
         end
 
         it 'can see all groups except for group with roles EvmRole-super_administrator amd EvmRole-administrator' do
