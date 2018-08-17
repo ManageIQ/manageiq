@@ -35,7 +35,7 @@ module TaskHelpers
 
       def import_customization_template(custom_template_hash)
         CustomizationTemplate.transaction do
-          unless validate_type(custom_template_hash[:type])
+          unless valid_type?(custom_template_hash[:type])
             raise CustomizationTemplateYamlError.new("Customization Template error",
                                                      ["Invalid type: #{custom_template_hash[:type]}"])
           end
@@ -82,10 +82,8 @@ module TaskHelpers
         pit
       end
 
-      def validate_type(custom_template_type)
-        valid_types = CustomizationTemplate.descendants.collect(&:name)
-
-        valid_types.include?(custom_template_type) ? true : false
+      def valid_type?(custom_template_type)
+        CustomizationTemplate.descendants.collect(&:name).include?(custom_template_type)
       end
     end
   end

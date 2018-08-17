@@ -11,9 +11,9 @@ module TaskHelpers
           $log.info("Exporting Customization Template: #{customization_template.name} (ID: #{customization_template.id})")
 
           ct_hash = Exports.exclude_attributes(customization_template.to_model_hash, EXCLUDE_ATTRS)
-          ct_hash.merge!(pxe_image(customization_template.pxe_image_type))
+          ct_hash.merge!(pxe_image_type_hash(customization_template.pxe_image_type))
 
-          image_type_name = ct_hash[:pxe_image_type][:name] ? ct_hash[:pxe_image_type][:name] : "Examples"
+          image_type_name = ct_hash.fetch_path(:pxe_image_type, :name) || "Examples"
           filename = Exports.safe_filename("#{image_type_name}-#{ct_hash[:name]}", options[:keep_spaces])
           File.write("#{export_dir}/#{filename}.yaml", ct_hash.to_yaml)
         end
@@ -21,9 +21,9 @@ module TaskHelpers
 
       private
 
-      def pxe_image(pxe_image)
-        if pxe_image
-          { :pxe_image_type => pxe_image.to_model_hash.reject { |key| EXCLUDE_ATTRS.include?(key) } }
+      def pxe_image_type_hash(pxe_image_type)
+        if pxe_image_type
+          { :pxe_image_type => pxe_image_type.to_model_hash.reject { |key| EXCLUDE_ATTRS.include?(key) } }
         else
           { :pxe_image_type => {} }
         end

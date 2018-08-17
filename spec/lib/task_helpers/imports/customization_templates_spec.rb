@@ -1,18 +1,12 @@
 describe TaskHelpers::Imports::CustomizationTemplate do
-  let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'customization_templates') }
-  let(:ct_file) { "existing_ct_and_pit.yaml" }
-  let(:update_file) { "update_existing.yml" }
-  let(:ct_system_file) { "system_ct.yml" }
-  let(:invalid_pt_file) { "invalid_pit_pt.yml" }
-  let(:no_pit_name_file) { "no_pit_name.yml" }
-  let(:diff_pt_file) { "pit_existing_name_new_pt.yml" }
-  let(:ct_name) { "Basic root pass template" }
-  let(:ct_desc) { "This template takes use of rootpassword defined in the UI" }
-  let(:existing_pit_name) { "RHEL-6" }
-  let(:new_pit_name) { "RHEL-7" }
-  let(:new_pit_pt) { "vm" }
-
   describe "#import" do
+    let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'customization_templates') }
+    let(:ct_file) { "existing_ct_and_pit.yaml" }
+    let(:ct_name) { "Basic root pass template" }
+    let(:ct_desc) { "This template takes use of rootpassword defined in the UI" }
+    let(:existing_pit_name) { "RHEL-6" }
+    let(:new_pit_name) { "RHEL-7" }
+    let(:new_pit_pt) { "vm" }
     let(:options) { { :source => source } }
 
     describe "when the source is a directory" do
@@ -41,6 +35,7 @@ describe TaskHelpers::Imports::CustomizationTemplate do
     end
 
     describe "when the source file modifies an existing file" do
+      let(:update_file) { "update_existing.yml" }
       let(:source) { "#{data_dir}/#{update_file}" }
 
       before do
@@ -57,6 +52,7 @@ describe TaskHelpers::Imports::CustomizationTemplate do
 
     describe "when the source file has invalid settings" do
       describe "when :system is true" do
+        let(:ct_system_file) { "system_ct.yml" }
         let(:source) { "#{data_dir}/#{ct_system_file}" }
 
         it 'fails to import' do
@@ -67,6 +63,7 @@ describe TaskHelpers::Imports::CustomizationTemplate do
       end
 
       describe "when there is no :pxe_image_type[:name]" do
+        let(:no_pit_name_file) { "no_pit_name.yml" }
         let(:source) { "#{data_dir}/#{no_pit_name_file}" }
 
         it 'fails to import' do
@@ -77,6 +74,7 @@ describe TaskHelpers::Imports::CustomizationTemplate do
       end
 
       describe "when the :pxe_image_type[:provision_type] is invalid" do
+        let(:invalid_pt_file) { "invalid_pit_pt.yml" }
         let(:source) { "#{data_dir}/#{invalid_pt_file}" }
 
         it 'fails to import' do
@@ -87,6 +85,7 @@ describe TaskHelpers::Imports::CustomizationTemplate do
       end
 
       describe "when the :pxe_image_type[:name] is found with a different provision_type"
+      let(:diff_pt_file) { "pit_existing_name_new_pt.yml" }
       let(:source) { "#{data_dir}/#{diff_pt_file}" }
 
       before do
@@ -102,7 +101,6 @@ describe TaskHelpers::Imports::CustomizationTemplate do
   end
 
   def assert_test_ct_one_present(pit)
-    # pit = PxeImageType.find_by(:name => existing_pit_name)
     custom_template = CustomizationTemplate.find_by(:name => ct_name, :pxe_image_type => pit)
     expect(custom_template.description).to eq(ct_desc)
     expect(custom_template.pxe_image_type).to eq(pit)
