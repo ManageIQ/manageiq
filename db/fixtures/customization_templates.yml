@@ -299,12 +299,17 @@
     # line tool. Note that this expects the subnet mask in the prefix format,
     # for example 24 instead of 255.255.255.0.
     runcmd:
-    - nmcli connection down eth0
-    - nmcli connection modify eth0
+    - ETH_CON=$(nmcli --get-values name connection show | grep "eth")
+    - nmcli connection down "$ETH_CON"
+    - nmcli connection modify "$ETH_CON"
       ip4 <%= evm[:ip_addr] %>/<%= evm[:subnet_mask] %>
       gw4 <%= evm[:gateway] %>
       ipv4.dns "<%= evm[:dns_servers] %>"
       ipv4.dns-search "<%= evm[:dns_suffixes] %>"
-    - nmcli connection up eth0
+      # If address mode was set to static, disable DHCP address obtaining.
+    - if [[ <%= evm[:addr_mode].first %> = "static" ]];
+      then nmcli connection modify "$ETH_CON" ipv4.method "manual";
+      fi
+    - nmcli connection up "$ETH_CON"
   :type: CustomizationTemplateCloudInit
   :system: true
