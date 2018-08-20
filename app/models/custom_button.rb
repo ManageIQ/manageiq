@@ -88,9 +88,27 @@ class CustomButton < ApplicationRecord
     end
   end
 
-  def invoke(target)
+  def invoke(target, source = nil)
     args = resource_action.automate_queue_hash(target, {}, User.current_user)
+
+    publish_event(source, target, args)
     MiqQueue.put(queue_opts(target, args))
+  end
+
+  def publish_event(source, target, args)
+    CustomButtonEvent.create(
+      :event_type => 'button.trigger.start',
+      :message    => 'Custom button launched',
+      :source     => source,
+      :target     => target,
+      :user_id    => args[:user_id],
+      :group_id   => args[:miq_group_id],
+      :tenant_id  => args[:tenant_id],
+      :full_data  => {
+        :args                 => args,
+        :automate_entry_point => resource_action.ae_path
+      }
+    )
   end
 
   def queue_opts(target, args)
@@ -104,13 +122,15 @@ class CustomButton < ApplicationRecord
     }
   end
 
-  def invoke_async(target)
+  def invoke_async(target, source = nil)
     task_opts = {
       :action => "Calling automate for user #{userid}",
       :userid => User.current_user
     }
 
     args = resource_action.automate_queue_hash(target, {}, User.current_user)
+
+    publish_event(source, target, args)
     MiqTask.generic_action_with_callback(task_opts, queue_opts(target, args))
   end
 

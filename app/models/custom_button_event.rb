@@ -1,0 +1,2 @@
+class CustomButtonEvent < EventStream
+end
