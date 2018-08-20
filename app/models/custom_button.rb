@@ -101,12 +101,15 @@ class CustomButton < ApplicationRecord
       :message    => 'Custom button launched',
       :source     => source,
       :target     => target,
+      :username   => args[:username],
       :user_id    => args[:user_id],
       :group_id   => args[:miq_group_id],
       :tenant_id  => args[:tenant_id],
       :full_data  => {
         :args                 => args,
-        :automate_entry_point => resource_action.ae_path
+        :automate_entry_point => resource_action.ae_path,
+        :button_id            => id,
+        :button_name          => name
       }
     )
   end
