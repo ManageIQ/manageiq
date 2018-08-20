@@ -263,7 +263,7 @@ module ManagerRefresh::SaveCollection
       #
       # @param records [Array<ApplicationRecord, Hash>] Records we want to delete. If we have only hashes, we need to
       #        to fetch ApplicationRecord objects from the DB
-      def destroy_records!(records)
+      def destroy_records!(records, id_extractor: :record_primary_key_value)
         return false unless inventory_collection.delete_allowed?
         return if records.blank?
 
@@ -271,15 +271,15 @@ module ManagerRefresh::SaveCollection
         rails_delete = %i(destroy delete).include?(inventory_collection.delete_method)
         if !rails_delete && inventory_collection.model_class.respond_to?(inventory_collection.delete_method)
           # We have custom delete method defined on a class, that means it supports batch destroy
-          inventory_collection.store_deleted_records(records.map { |x| {:id => record_key(x, primary_key)} })
-          inventory_collection.model_class.public_send(inventory_collection.delete_method, records.map { |x| record_key(x, primary_key) })
+          inventory_collection.store_deleted_records(records.map { |x| {:id => send(id_extractor, x) } })
+          inventory_collection.model_class.public_send(inventory_collection.delete_method, records.map { |x| send(id_extractor, x) })
         else
           # We have either standard :destroy and :delete rails method, or custom instance level delete method
           # Note: The standard :destroy and :delete rails method can't be batched because of the hooks and cascade destroy
           ActiveRecord::Base.transaction do
-            if pure_sql_records_fetching
+            if pure_sql_records_fetching || id_extractor != :record_primary_key_value
               # For pure SQL fetching, we need to get the AR objects again, so we can call destroy
-              inventory_collection.model_class.where(:id => records.map { |x| record_key(x, primary_key) }).find_each do |record|
+              inventory_collection.model_class.where(:id => records.map { |x| send(id_extractor, x) }).find_each do |record|
                 delete_record!(record)
               end
             else
@@ -289,6 +289,10 @@ module ManagerRefresh::SaveCollection
             end
           end
         end
+      end
+
+      def record_primary_key_value(record)
+        record_key(record, primary_key)
       end
 
       # Batch updates existing records
