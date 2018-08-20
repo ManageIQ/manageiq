@@ -22,6 +22,11 @@ module ManagerRefresh
       reference.stringified_reference
     end
 
+    # @return [Hash] hash reference having :manager_ref keys, which can uniquely identity entity under a manager
+    def uuid
+      reference.full_reference.slice(*reference.keys)
+    end
+
     # @return [ManagerRefresh::InventoryObject] returns self
     def load
       self

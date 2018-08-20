@@ -1089,18 +1089,6 @@ module ManagerRefresh
       full_collection_for_comparison.where(targeted_selection_for(references))
     end
 
-    # Builds an ActiveRecord::Relation that can fetch complement of all the references from the DB
-    #
-    # @param manager_uuids_set [Array<String>] passed references
-    # @return [ActiveRecord::Relation] relation that can fetch complement of all the references from the DB
-    def db_collection_for_comparison_for_complement_of(manager_uuids_set)
-      # TODO(lsmola) this should have the build_multi_selection_condition, like in the method above
-      # TODO(lsmola) this query will be highly ineffective, we will try approach with updating a timestamp of all
-      # records, then we can get list of all records that were not update. That would be equivalent to result of this
-      # more effective query and without need of all manager_uuids
-      full_collection_for_comparison.where.not(manager_ref.first => manager_uuids_set)
-    end
-
     # @return [ActiveRecord::Relation] relation that can fetch all the references from the DB
     def full_collection_for_comparison
       return arel unless arel.nil?
