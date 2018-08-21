@@ -39,6 +39,9 @@ module ManageIQ
         puts "Copying #{file} from template..."
         FileUtils.cp(APP_ROOT.join(source), file)
       end
+
+      logdir = APP_ROOT.join("log")
+      Dir.mkdir(logdir) unless Dir.exist?(logdir)
     end
 
     def self.while_updating_bower
