@@ -100,7 +100,8 @@ module AssignmentMixin
         result[:objects] << object unless object.nil?
       when :tag
         tag = Tag.find_by(:name => "/" + parts.join("/"))
-        result[:tags] << [Classification.find_by(:tag_id => tag.id), klass] unless tag.nil?
+        classification = Classification.find_by(:tag_id => tag.id) if tag
+        result[:tags] << [classification, klass] if classification
       when :label
         label = if AssignmentMixin.escaped?(parts[1])
                   name = AssignmentMixin.unescape(parts[1])
