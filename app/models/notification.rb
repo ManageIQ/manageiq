@@ -13,6 +13,8 @@ class Notification < ApplicationRecord
   # Do not emit notifications if they are not enabled for the server
   after_commit :emit_message, :on => :create
 
+  before_save :backup_subject_name
+
   serialize :options, Hash
   default_value_for(:options) { Hash.new }
 
@@ -67,6 +69,15 @@ class Notification < ApplicationRecord
       end
     end
     self.notification_recipients_attributes = subscribers.collect { |id| {:user_id => id } }
+  end
+
+  def backup_subject_name
+    return unless subject
+    backup_name = (subject.try(:name) || subject.try(:description))
+
+    # Note, options are read in text_bindings_dynamic and used in text_bindings
+    # if the subject is no longer there such as when a vm is deleted.
+    self.options[:subject] = backup_name if backup_name
   end
 
   def text_bindings
