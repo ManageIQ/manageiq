@@ -19,6 +19,7 @@
 - ContainerGroupPerformance
 - ContainerImage
 - ContainerImageRegistry
+- CloudNetwork
 - ContainerNode
 - ContainerNodePerformance
 - ContainerProject
@@ -30,6 +31,7 @@
 - ContainerTemplate
 - PersistentVolume
 - ManageIQ::Providers::CloudManager
+- ManageIQ::Providers::CloudManager::AuthKeyPair
 - EmsCluster
 - EmsClusterPerformance
 - EmsEvent
@@ -47,6 +49,7 @@
 - MiqServer
 - MiqTemplate
 - MiqWorker
+- Network
 - OrchestrationStack
 - OrchestrationTemplate
 - PhysicalRack
