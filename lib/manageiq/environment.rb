@@ -21,6 +21,8 @@ module ManageIQ
 
       ensure_config_files
 
+      FileUtils.mkdir_p(APP_ROOT.join("log"))
+
       create_database_user if ENV["CI"]
 
       setup_test_environment(:task_prefix => 'app:', :root => plugin_root)
