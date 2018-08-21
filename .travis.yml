@@ -24,7 +24,6 @@ matrix:
 addons:
   postgresql: '9.5'
 before_install:
-- mkdir ${TRAVIS_BUILD_DIR}/log
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
 - bundle exec rake test:$TEST_SUITE:setup
