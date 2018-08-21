@@ -92,6 +92,20 @@ describe AssignmentMixin do
       expect(assigned_tos[:objects]).to include(vm)
       expect(assigned_tos[:tags]).to include([classification_tag, "vms"])
     end
+
+    it "doesn't return tags when classification is missing" do
+      cc_classification = FactoryGirl.create(:classification_cost_center)
+      classification_tag = FactoryGirl.create(:classification_tag, :parent => cc_classification)
+      vm = FactoryGirl.create(:vm)
+      alert_set = FactoryGirl.create(:miq_alert_set)
+      classification_tag.destroy
+      alert_set.assign_to_objects([vm])
+      alert_set.assign_to_tags([classification_tag], "vms")
+
+      assigned_tos = alert_set.get_assigned_tos
+      expect(assigned_tos[:objects]).to include(vm)
+      expect(alert_set.get_assigned_tos[:tags]).to be_empty
+    end
   end
 
   describe ".all_assignments" do
