@@ -1,6 +1,8 @@
 require 'util/miq_file_storage'
 
 class MiqObjectStorage < MiqFileStorage::Interface
+  require 'util/object_storage/miq_s3_storage'
+
   attr_accessor :settings
   attr_writer   :logger
 
