@@ -39,6 +39,8 @@ class Chargeback < ActsAsArModel
       classification = @options.classification_for(consumption)
       classification_id = classification.present? ? classification.id : 'none'
       "#{classification_id}_#{ts_key}"
+    elsif @options.group_by_date_only?
+      ts_key
     else
       default_key(consumption, ts_key)
     end
@@ -63,8 +65,19 @@ class Chargeback < ActsAsArModel
     self.entity ||= consumption.resource
   end
 
+  def calculate_fixed_compute_metric(consumption)
+    return unless consumption.chargeback_fields_present
+
+    if @options.group_by_date_only?
+      self.fixed_compute_metric ||= 0
+      self.fixed_compute_metric += consumption.chargeback_fields_present
+    else
+      self.fixed_compute_metric = consumption.chargeback_fields_present
+    end
+  end
+
   def calculate_costs(consumption, rates)
-    self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
+    calculate_fixed_compute_metric(consumption)
 
     rates.each do |rate|
       rate.rate_details_relevant_to(relevant_fields).each do |r|
@@ -91,7 +104,9 @@ class Chargeback < ActsAsArModel
   def self.set_chargeback_report_options(rpt, group_by, header_for_tag, tz)
     rpt.cols = %w(start_date display_range)
 
-    static_cols       = group_by == "project" ? report_static_cols - ["image_name"] : report_static_cols
+    static_cols       = report_static_cols
+    static_cols      -= ["image_name"] if group_by == "project"
+    static_cols      -= ["vm_name"] if group_by == "date-only"
     static_cols       = group_by == "tag" ? [report_tag_field] : static_cols
     rpt.cols         += static_cols
     rpt.col_order     = static_cols + ["display_range"]

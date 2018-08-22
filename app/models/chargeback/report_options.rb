@@ -16,6 +16,7 @@ class Chargeback
     :userid,
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U
+    :group_by_date_only?
   ) do
     def self.new_from_h(hash)
       new(*hash.values_at(*members))
@@ -105,6 +106,10 @@ class Chargeback
       tag = consumption.tag_names.find { |x| x.starts_with?(groupby_tag) } # 'department/*'
       tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
       tag_hash[tag]
+    end
+
+    def group_by_date_only?
+      self[:groupby] == 'date-only'
     end
 
     private
