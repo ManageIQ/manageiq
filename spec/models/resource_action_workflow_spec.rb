@@ -39,6 +39,7 @@ describe ResourceActionWorkflow do
     end
 
     context "with workflow" do
+      let(:data) { {"parameters" => {"field_1" => "new_value"}} }
       before do
         @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
       end
@@ -51,72 +52,154 @@ describe ResourceActionWorkflow do
       it "#validate" do
         expect { @wf.validate(nil) }.to_not raise_error
       end
+
+      it "#update_dialog_field_values" do
+        @wf.update_dialog_field_values(data)
+
+        expect(@dialog.dialog_fields.first.value).to eq("new_value")
+      end
     end
 
     context "#submit_request" do
       subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
       let(:resource_action) { @resource_action }
+      context "with blank data" do
+        let(:data) { {} }
 
-      context "with request class" do
-        let(:target) { FactoryGirl.create(:service) }
+        context "with request class" do
+          let(:target) { FactoryGirl.create(:service) }
 
-        it "creates requests" do
-          EvmSpecHelper.local_miq_server
-          expect(subject).to receive(:make_request).and_call_original
-          expect(AuditEvent).to receive(:success).with(
-            :event        => "service_reconfigure_request_created",
-            :target_class => "Service",
-            :userid       => admin.userid,
-            :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
-          )
-          response = subject.submit_request
-          expect(response).to include(:errors => [])
-        end
-      end
-
-      context "without request class" do
-        subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
-        let(:resource_action) { @resource_action }
-
-        let(:target) { FactoryGirl.create(:vm_vmware) }
-
-        it "calls automate" do
-          EvmSpecHelper.local_miq_server
-          expect(subject).not_to receive(:make_request)
-          expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
-          expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
-          expect(AuditEvent).not_to receive(:success)
-          response = subject.submit_request
-          expect(response).to eq(:errors => [])
-        end
-      end
-
-      context "with custom button request" do
-        let(:target)  { FactoryGirl.build(:service) }
-        let(:options) { {} }
-        let(:resource_action) do
-          @resource_action.tap do |ra|
-            ra.update_attributes(:resource => FactoryGirl.create(:custom_button, :applies_to_class => target.class.name, :options => options))
+          it "creates requests" do
+            EvmSpecHelper.local_miq_server
+            expect(subject).to receive(:make_request).and_call_original
+            expect(AuditEvent).to receive(:success).with(
+              :event        => "service_reconfigure_request_created",
+              :target_class => "Service",
+              :userid       => admin.userid,
+              :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
+            )
+            expect(subject.dialog.dialog_fields.first.value).to eq(nil)
+            response = subject.submit_request(data)
+            expect(response).to include(:errors => [])
           end
         end
 
-        it "calls automate" do
-          expect(subject).not_to receive(:make_request)
-          expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
+        context "without request class" do
+          subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
+          let(:resource_action) { @resource_action }
 
-          subject.submit_request
+          let(:target) { FactoryGirl.create(:vm_vmware) }
+
+          it "calls automate" do
+            EvmSpecHelper.local_miq_server
+            expect(subject).not_to receive(:make_request)
+            expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
+            expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
+            expect(AuditEvent).not_to receive(:success)
+            expect(subject.dialog.dialog_fields.first.value).to eq(nil)
+            response = subject.submit_request(data)
+            expect(response).to eq(:errors => [])
+          end
         end
 
-        it "calls automate with miq_task" do
-          options[:open_url] = true
-          allow(resource_action).to(receive(:deliver_to_automate_from_dialog))
-          allow(subject).to(receive(:load_resource_action)).and_return(resource_action)
+        context "with custom button request" do
+          let(:target)  { FactoryGirl.build(:service) }
+          let(:options) { {} }
+          let(:resource_action) do
+            @resource_action.tap do |ra|
+              ra.update_attributes(:resource => FactoryGirl.create(:custom_button, :applies_to_class => target.class.name, :options => options))
+            end
+          end
 
-          result   = subject.submit_request
-          miq_task = MiqTask.find(result[:task_id])
-          expect(miq_task.state).to(eq(MiqTask::STATE_QUEUED))
-          expect(miq_task.status).to(eq(MiqTask::STATUS_OK))
-          expect(miq_task.message).to(eq('MiqTask has been queued.'))
+          it "calls automate" do
+            expect(subject).not_to receive(:make_request)
+            expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
+
+            subject.submit_request(data)
+            expect(subject.dialog.dialog_fields.first.value).to eq(nil)
+          end
+
+          it "calls automate with miq_task" do
+            options[:open_url] = true
+            allow(resource_action).to(receive(:deliver_to_automate_from_dialog))
+            allow(subject).to(receive(:load_resource_action)).and_return(resource_action)
+
+            result   = subject.submit_request
+            miq_task = MiqTask.find(result[:task_id])
+            expect(miq_task.state).to(eq(MiqTask::STATE_QUEUED))
+            expect(miq_task.status).to(eq(MiqTask::STATUS_OK))
+            expect(miq_task.message).to(eq('MiqTask has been queued.'))
+          end
+        end
+      end
+
+      context "with non-blank data" do
+        let(:data) { {"parameters" => {"field_1" => "new_value"}} }
+
+        context "with request class" do
+          let(:target) { FactoryGirl.create(:service) }
+
+          it "creates requests" do
+            EvmSpecHelper.local_miq_server
+            expect(subject).to receive(:make_request).and_call_original
+            expect(AuditEvent).to receive(:success).with(
+              :event        => "service_reconfigure_request_created",
+              :target_class => "Service",
+              :userid       => admin.userid,
+              :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
+            )
+            response = subject.submit_request(data)
+            expect(subject.dialog.dialog_fields.first.value).to eq("new_value")
+            expect(response).to include(:errors => [])
+          end
+        end
+
+        context "without request class" do
+          subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
+          let(:resource_action) { @resource_action }
+
+          let(:target) { FactoryGirl.create(:vm_vmware) }
+
+          it "calls automate" do
+            EvmSpecHelper.local_miq_server
+            expect(subject).not_to receive(:make_request)
+            expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
+            expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
+            expect(AuditEvent).not_to receive(:success)
+            response = subject.submit_request(data)
+            expect(subject.dialog.dialog_fields.first.value).to eq("new_value")
+            expect(response).to eq(:errors => [])
+          end
+        end
+
+        context "with custom button request" do
+          let(:target)  { FactoryGirl.build(:service) }
+          let(:options) { {} }
+          let(:resource_action) do
+            @resource_action.tap do |ra|
+              ra.update_attributes(:resource => FactoryGirl.create(:custom_button, :applies_to_class => target.class.name, :options => options))
+            end
+          end
+
+          it "calls automate" do
+            expect(subject).not_to receive(:make_request)
+            expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
+
+            subject.submit_request(data)
+            expect(subject.dialog.dialog_fields.first.value).to eq("new_value")
+          end
+
+          it "calls automate with miq_task" do
+            options[:open_url] = true
+            allow(resource_action).to(receive(:deliver_to_automate_from_dialog))
+            allow(subject).to(receive(:load_resource_action)).and_return(resource_action)
+
+            result   = subject.submit_request
+            miq_task = MiqTask.find(result[:task_id])
+            expect(miq_task.state).to(eq(MiqTask::STATE_QUEUED))
+            expect(miq_task.status).to(eq(MiqTask::STATUS_OK))
+            expect(miq_task.message).to(eq('MiqTask has been queued.'))
+          end
         end
       end
     end
