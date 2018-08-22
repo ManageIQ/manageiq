@@ -141,6 +141,13 @@ module VMDB
           errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
         end
 
+        if keys.include?(:zone)
+          unless Zone.in_my_region.find_by(:name => data.zone)
+            valid = false
+            errors << [:zone, "zone, \"#{data.zone}\", invalid. Should be a vaild Zone"]
+          end
+        end
+
         return valid, errors
       end
 
