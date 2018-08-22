@@ -621,6 +621,66 @@ describe ChargebackVm do
               expect(subject_row_for_tenant(tenant_1).cpu_allocated_cost).to eq(all_vms_cpu_cost)
             end
           end
+
+          context 'test against group by date-only report' do
+            let(:options_group_date_only) do
+              {
+                :interval                     => "daily",
+                :interval_size                => 7,
+                :end_interval_offset          => 0,
+                :tenant_id                    => tenant_5.id,
+                :method_for_allocated_metrics => :max,
+                :include_metrics              => true,
+                :groupby                      => "date-only"
+              }
+            end
+
+            let(:options_group_date) do
+              {
+                :interval                     => "daily",
+                :interval_size                => 7,
+                :end_interval_offset          => 0,
+                :tenant_id                    => tenant_5.id,
+                :method_for_allocated_metrics => :max,
+                :include_metrics              => true,
+                :groupby                      => "date"
+              }
+            end
+
+            let(:result_group_by_date_only) { ChargebackVm.build_results_for_report_ChargebackVm(options_group_date_only).first }
+            let(:result_group_by_date)      { ChargebackVm.build_results_for_report_ChargebackVm(options_group_date).first }
+
+            def result_row_by(chargeback_result, date)
+              chargeback_result.select { |x| x.display_range == date }
+            end
+
+            it 'is grouping values per date' do
+              skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
+
+              ((month_end - 5.days)..month_end).step_value(1.day) do |display_range|
+                display_range = display_range.strftime('%m/%d/%Y')
+                rs1 = result_row_by(result_group_by_date_only, display_range)
+                rs2 = result_row_by(result_group_by_date, display_range)
+
+                %w(cpu_allocated_metric
+                   cpu_allocated_cost
+                   cpu_used_metric
+                   cpu_used_cost
+                   disk_io_used_metric
+                   disk_io_used_cost
+                   fixed_compute_metric
+                   fixed_compute_1_cost
+                   memory_allocated_metric
+                   memory_allocated_cost
+                   net_io_used_metric
+                   net_io_used_cost
+                   storage_allocated_metric
+                   storage_allocated_cost
+                   storage_used_metric
+                   storage_used_cost).each { |field| expect(rs2.map { |x| x.send(field) }.sum).to eq(rs1.map { |x| x.send(field) }.sum) }
+              end
+            end
+          end
         end
       end
 
