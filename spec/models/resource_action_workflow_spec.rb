@@ -92,10 +92,11 @@ describe ResourceActionWorkflow do
       end
 
       context "with custom button request" do
-        let(:target) { FactoryGirl.build(:service) }
+        let(:target)  { FactoryGirl.build(:service) }
+        let(:options) { {} }
         let(:resource_action) do
           @resource_action.tap do |ra|
-            ra.update_attributes(:resource => FactoryGirl.create(:custom_button, :applies_to_class => target.class.name))
+            ra.update_attributes(:resource => FactoryGirl.create(:custom_button, :applies_to_class => target.class.name, :options => options))
           end
         end
 
@@ -104,6 +105,18 @@ describe ResourceActionWorkflow do
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
 
           subject.submit_request
+        end
+
+        it "calls automate with miq_task" do
+          options[:open_url] = true
+          allow(resource_action).to(receive(:deliver_to_automate_from_dialog))
+          allow(subject).to(receive(:load_resource_action)).and_return(resource_action)
+
+          result   = subject.submit_request
+          miq_task = MiqTask.find(result[:task_id])
+          expect(miq_task.state).to(eq(MiqTask::STATE_QUEUED))
+          expect(miq_task.status).to(eq(MiqTask::STATUS_OK))
+          expect(miq_task.message).to(eq('MiqTask has been queued.'))
         end
       end
     end

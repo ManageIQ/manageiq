@@ -181,4 +181,8 @@ class CustomButton < ApplicationRecord
     options[:guid] = SecureRandom.uuid
     options.each_with_object(dup) { |(k, v), button| button.send("#{k}=", v) }.tap(&:save!)
   end
+
+  def open_url?
+    options[:open_url] == true
+  end
 end
