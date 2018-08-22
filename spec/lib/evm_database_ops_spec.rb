@@ -1,6 +1,7 @@
 require 'util/runcmd'
 describe EvmDatabaseOps do
   let(:file_storage) { double("MiqSmbSession", :disconnect => nil) }
+  let(:local_backup) { "/tmp/backup_1" }
   let(:input_path)   { "foo/bar/mkfifo" }
   let(:run_db_ops)   { @db_opts.dup.merge(:local_file => input_path) }
   let(:tmpdir)       { Rails.root.join("tmp") }
@@ -23,17 +24,24 @@ describe EvmDatabaseOps do
     end
 
     it "locally" do
-      local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
       expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to eq(local_backup)
     end
 
     it "defaults" do
-      local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
       expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
       expect(EvmDatabaseOps.backup(@db_opts, {})).to eq(local_backup)
+    end
+
+    it "splits files with a local file" do
+      @db_opts[:local_file] = local_backup
+      @db_opts[:byte_count] = "200M"
+
+      allow(file_storage).to   receive(:send).with(:add, local_backup, "200M").and_yield(input_path)
+      expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
+      EvmDatabaseOps.backup(@db_opts, {})
     end
 
     it "without enough free space" do
@@ -76,6 +84,7 @@ describe EvmDatabaseOps do
   end
 
   context "#dump" do
+    let(:local_dump) { "/tmp/dump_1" }
     before do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
@@ -91,17 +100,24 @@ describe EvmDatabaseOps do
     end
 
     it "locally" do
-      local_dump = "/tmp/dump_1"
       @db_opts[:local_file] = local_dump
       expect(PostgresAdmin).to receive(:backup_pg_dump).with(run_db_ops)
       expect(EvmDatabaseOps.dump(@db_opts, @connect_opts)).to eq(local_dump)
     end
 
     it "defaults" do
-      local_dump = "/tmp/dump_1"
       @db_opts[:local_file] = local_dump
       expect(PostgresAdmin).to receive(:backup_pg_dump).with(run_db_ops)
       expect(EvmDatabaseOps.dump(@db_opts, {})).to eq(local_dump)
+    end
+
+    it "splits files with a local file" do
+      @db_opts[:local_file] = local_dump
+      @db_opts[:byte_count] = "200M"
+
+      allow(file_storage).to   receive(:send).with(:add, local_dump, "200M").and_yield(input_path)
+      expect(PostgresAdmin).to receive(:backup_pg_dump).with(run_db_ops)
+      EvmDatabaseOps.dump(@db_opts, {})
     end
 
     it "without enough free space" do
@@ -146,7 +162,6 @@ describe EvmDatabaseOps do
     end
 
     it "from local backup" do
-      local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
       expect(EvmDatabaseOps.restore(@db_opts, @connect_opts)).to eq(local_backup)
     end

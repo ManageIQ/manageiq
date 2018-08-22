@@ -128,6 +128,7 @@ class EvmDatabaseOps
     end
 
     MiqFileStorage.with_interface_class(connect_opts) do |file_storage|
+      send_args = [uri, db_opts[:byte_count]].compact
 
       # Note:  `input_path` will always be a fifo stream (input coming from
       # PostgresAdmin, and the output going to the `uri`), since we want to
@@ -142,7 +143,7 @@ class EvmDatabaseOps
       # This also makes sure that the streamed output is never written to disk
       # locally, unless `uri` is targeting the local machine.  This is why we
       # set `db_opts` local file to that stream.
-      file_storage.send(STORAGE_ACTIONS_TO_METHODS[action], uri) do |input_path|
+      file_storage.send(STORAGE_ACTIONS_TO_METHODS[action], *send_args) do |input_path|
         db_opts[:local_file] = input_path
         yield(db_opts)
       end
