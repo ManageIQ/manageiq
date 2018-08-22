@@ -370,12 +370,18 @@ describe Authenticator::Httpd do
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it "records three successful audit entries" do
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authorize',
+            :userid  => 'bob',
+            :message => "User creation successful for User: Bob Builderson with ID: bob@example.com",
+          )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bOb',
             :message => "User bob successfully validated by External httpd",
           )
+
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bOb',
@@ -405,7 +411,12 @@ describe Authenticator::Httpd do
             expect(authenticate).to eq(123)
           end
 
-          it "records two successful audit entries plus one failure" do
+          it "records three successful audit entries plus one failure" do
+            expect(AuditEvent).to receive(:success).with(
+              :event   => 'authorize',
+              :userid  => 'bob',
+              :message => "User creation successful for User: Bob Builderson with ID: bob@example.com",
+            )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
               :userid  => 'bOb',
