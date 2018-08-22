@@ -21,12 +21,17 @@ class ResourceActionWorkflow < MiqRequestWorkflow
 
   Vmdb::Deprecation.deprecate_methods(self, :dialogs => :dialog)
 
-  def submit_request
+  def submit_request(data = {})
+    update_dialog_field_values(data) if data.present?
     process_request(ServiceOrder::STATE_ORDERED)
   end
 
   def add_request_to_cart
     process_request(ServiceOrder::STATE_CART)
+  end
+
+  def update_dialog_field_values(data)
+    @dialog.load_values_into_fields(data.values.first)
   end
 
   def process_request(state)
