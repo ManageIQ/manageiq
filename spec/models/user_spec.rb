@@ -143,18 +143,6 @@ describe User do
         expect(user.super_admin_user?).to be_falsey
       end
     end
-
-    describe "#admin_user?" do
-      let(:role_name) { "administrator" }
-
-      it "should check Admin Roles" do
-        expect(user.admin_user?).to be_truthy
-        expect(user.super_admin_user?).to be_falsey
-
-        user.current_group = nil
-        expect(user.admin_user?).to be_falsey
-      end
-    end
   end
 
   context "#authorize_ldap" do

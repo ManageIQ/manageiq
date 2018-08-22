@@ -16,6 +16,8 @@ describe MiqUserRole do
     end
 
     it "with existing records" do
+      # administrator is a role that we know is provide with the product
+      # this is not testing administrator privileges
       changed   = FactoryGirl.create(:miq_user_role, :name => "EvmRole-administrator", :read_only => false)
       unchanged = FactoryGirl.create(:miq_user_role, :name => "xxx", :read_only => false)
       unchanged_orig_updated_at = unchanged.updated_at
@@ -192,19 +194,16 @@ describe MiqUserRole do
     end
   end
 
-  describe "#admin_user?", "#report_admin_user?" do
+  describe "#report_admin_user?" do
     it "detects super admin" do
-      expect(super_admin_role).to be_admin_user
       expect(super_admin_role).to be_report_admin_user
     end
 
     it "detects admin" do
-      expect(report_admin_role).to be_admin_user
       expect(report_admin_role).to be_report_admin_user
     end
 
     it "detects non-admin" do
-      expect(regular_role).not_to be_admin_user
       expect(regular_role).not_to be_report_admin_user
     end
   end

@@ -33,7 +33,7 @@ class User < ApplicationRecord
 
   delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
              :to => :current_group, :allow_nil => true
-  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?, :report_admin_user?,
+  delegate   :super_admin_user?, :request_admin_user?, :self_service?, :limited_self_service?, :report_admin_user?,
              :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid
