@@ -43,7 +43,7 @@ module ManageIQ
           rescue => e
             raise if EmsRefresh.debug_failures
 
-            _log.error("#{log_ems_target} Refresh failed")
+            _log.error("#{log_ems_target} Refresh failed: #{e.truncate(255)}")
             _log.log_backtrace(e)
             _log.error("#{log_ems_target} Unable to perform refresh for the following targets:")
             targets.each do |target|
