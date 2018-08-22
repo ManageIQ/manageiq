@@ -14,6 +14,7 @@ describe ResourceAction do
         :user_id          => user.id,
         :miq_group_id     => user.current_group.id,
         :tenant_id        => user.current_tenant.id,
+        :username         => user.userid,
         :attrs            => ae_attributes,
       }
     end

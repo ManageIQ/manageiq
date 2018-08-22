@@ -38,6 +38,7 @@ class ResourceAction < ApplicationRecord
       args[:user_id] ||= user.id
       args[:miq_group_id] ||= user.current_group.id
       args[:tenant_id] ||= user.current_tenant.id
+      args[:username] ||= user.userid
     end
   end
 
