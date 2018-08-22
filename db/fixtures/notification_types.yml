@@ -269,3 +269,23 @@
   :expires_in: 24.hours
   :level: :error
   :audience: none
+- :name: cloud_network_delete_success
+  :message: 'Deleting Cloud Network %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: success
+  :audience: global
+- :name: cloud_network_delete_error
+  :message: 'Deleting Cloud Network %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: error
+  :audience: global
+- :name: cloud_subnet_delete_success
+  :message: 'Deleting Cloud Subnet %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: success
+  :audience: global
+- :name: cloud_subnet_delete_error
+  :message: 'Deleting Cloud Subnet %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: error
+  :audience: global
