@@ -68,50 +68,29 @@ describe Dialog do
 
   context "validate label uniqueness" do
     it "with same label" do
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
+      dialog = FactoryGirl.create(:dialog)
+
+      expect { FactoryGirl.create(:dialog, :name => dialog.name) }
         .to raise_error(ActiveRecord::RecordInvalid, /Name is not unique within region/)
     end
 
     it "with different labels" do
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog')   }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog 1') }.to_not raise_error
-    end
-  end
+      FactoryGirl.create(:dialog)
 
-  context "#create" do
-    it "validates_presence_of name" do
-      expect do
-        FactoryGirl.create(:dialog, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog, :label => 'dialog') }.not_to raise_error
-
-      expect do
-        FactoryGirl.create(:dialog_tab, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog_tab, :label => 'tab') }.not_to raise_error
-
-      expect do
-        FactoryGirl.create(:dialog_group, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog_group, :label => 'group') }.not_to raise_error
+      expect { FactoryGirl.create(:dialog) }.to_not raise_error
     end
   end
 
   context "#destroy" do
-    before do
-      @dialog = FactoryGirl.create(:dialog, :label => 'dialog')
-    end
-
     it "destroy without resource_action association" do
-      expect(@dialog.destroy).to be_truthy
+      expect(FactoryGirl.create(:dialog).destroy).to be_truthy
       expect(Dialog.count).to eq(0)
     end
 
     it "destroy with resource_action association" do
-      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
-      @dialog.reload
-      expect { @dialog.destroy }
+      dialog = FactoryGirl.create(:dialog)
+      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog)
+      expect { dialog.destroy }
         .to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
       expect(Dialog.count).to eq(1)
     end
