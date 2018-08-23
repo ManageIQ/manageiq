@@ -68,23 +68,23 @@ describe Dialog do
 
   context "validate label uniqueness" do
     it "with same label" do
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
+      expect { @dialog = FactoryGirl.create(:dialog, :name => 'dialog') }.to_not raise_error
+      expect { @dialog = FactoryGirl.create(:dialog, :name => 'dialog') }
         .to raise_error(ActiveRecord::RecordInvalid, /Name is not unique within region/)
     end
 
     it "with different labels" do
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog')   }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog 1') }.to_not raise_error
+      expect { @dialog = FactoryGirl.create(:dialog, :name => 'dialog')   }.to_not raise_error
+      expect { @dialog = FactoryGirl.create(:dialog, :name => 'dialog 1') }.to_not raise_error
     end
   end
 
   context "#create" do
     it "validates_presence_of name" do
       expect do
-        FactoryGirl.create(:dialog, :label => nil)
+        FactoryGirl.create(:dialog, :name => nil)
       end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog, :label => 'dialog') }.not_to raise_error
+      expect { FactoryGirl.create(:dialog, :name => 'dialog') }.not_to raise_error
 
       expect do
         FactoryGirl.create(:dialog_tab, :label => nil)
@@ -99,8 +99,8 @@ describe Dialog do
   end
 
   context "#destroy" do
-    before do
-      @dialog = FactoryGirl.create(:dialog, :label => 'dialog')
+    before(:each) do
+      @dialog = FactoryGirl.create(:dialog, :name => 'dialog')
     end
 
     it "destroy without resource_action association" do
