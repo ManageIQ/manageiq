@@ -153,7 +153,7 @@ class Chargeback < ActsAsArModel
   def calculate_costs(consumption, rates)
     calculate_fixed_compute_metric(consumption)
     self.class.try(:refresh_dynamic_metric_columns)
-
+    _log.debug("Consumption Type: #{consumption.class}")
     rates.each do |rate|
       _log.debug("Calculation with rate: #{rate.id} #{rate.description}(#{rate.rate_type})")
       rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
