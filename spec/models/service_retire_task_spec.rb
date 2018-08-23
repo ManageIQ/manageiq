@@ -97,58 +97,6 @@ describe ServiceRetireTask do
     end
   end
 
-  describe "#retireable?" do
-    include_context "service_bundle"
-
-    context "without srr" do
-      it "is not retireable" do
-        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => nil)
-        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
-
-        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
-      end
-    end
-
-    context "srr nonresponsive to retireable?" do
-      it "is not retireable" do
-        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => User.first.id)
-        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
-
-        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
-      end
-    end
-
-    context "srr sans type" do
-      let(:vm_without_type) { FactoryGirl.create(:vm, :type => nil) }
-      it "is not retireable" do
-        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => vm_without_type.id)
-        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
-
-        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
-      end
-    end
-
-    context "svc_rsc resource_type is not ServiceTemplate" do
-      it "is not retireable" do
-        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => service_c1.id)
-        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
-        allow(@service_retire_task.class).to receive(:include_service_template?).with(@service_retire_task, service.service_resources.first.id, service).and_return(true)
-
-        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
-      end
-    end
-
-    context "class includes service template" do
-      it "is not retireable" do
-        service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "ServiceTemplate", :service_id => service_c1.id, :resource_id => vm.id)
-        @service_retire_task = FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
-        allow(@service_retire_task.class).to receive(:include_service_template?).with(@service_retire_task, service.service_resources.first.id, service).and_return(false)
-
-        expect(@service_retire_task.retireable?(service.service_resources.first, service)).to be(false)
-      end
-    end
-  end
-
   describe "deliver_to_automate" do
     before do
       allow(MiqServer).to receive(:my_zone).and_return(Zone.seed.name)

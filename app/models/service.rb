@@ -215,6 +215,10 @@ class Service < ApplicationRecord
     children.present?
   end
 
+  def retireable?
+    type.present?
+  end
+
   def atomic?
     children.empty?
   end

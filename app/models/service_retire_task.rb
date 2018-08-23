@@ -32,7 +32,7 @@ class ServiceRetireTask < MiqRetireTask
   def create_retire_subtasks(parent_service)
     parent_service.direct_service_children.each { |child| create_retire_subtasks(child) }
     parent_service.service_resources.collect do |svc_rsc|
-      next unless svc_rsc.try(:retireable?)
+      next unless svc_rsc.resource.try(:retireable?)
       # TODO: the next line deals with the filtering for provisioning
       # (https://github.com/ManageIQ/manageiq/blob/3921e87915b5a69937b9d4a70bb24ab71b97c165/app/models/service_template/filter.rb#L5)
       # which should be extended to retirement as part of later work
