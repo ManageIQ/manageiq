@@ -49,9 +49,8 @@ module Authenticator
       user_or_taskid = nil
 
       begin
-        audit = {:event => audit_event, :userid => username}
-
         username = normalize_username(username)
+        audit = {:event => audit_event, :userid => username}
 
         authenticated = options[:authorize_only] || _authenticate(username, password, request)
         if authenticated

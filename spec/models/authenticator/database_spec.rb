@@ -121,12 +121,12 @@ describe Authenticator::Database do
       it "records two successful audit entries" do
         expect(AuditEvent).to receive(:success).with(
           :event   => 'authenticate_database',
-          :userid  => 'vInCeNt',
+          :userid  => 'vincent',
           :message => "User vincent successfully validated by EVM",
         )
         expect(AuditEvent).to receive(:success).with(
           :event   => 'authenticate_database',
-          :userid  => 'vInCeNt',
+          :userid  => 'vincent',
           :message => "Authentication successful for user vincent",
         )
         expect(AuditEvent).not_to receive(:failure)

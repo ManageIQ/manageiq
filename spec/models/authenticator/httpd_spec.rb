@@ -345,12 +345,12 @@ describe Authenticator::Httpd do
         it "records one successful and one failing audit entry" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bOb',
+            :userid  => 'bob',
             :message => "User bob successfully validated by External httpd",
           )
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bOb',
+            :userid  => 'bob',
             :message => "User bob authenticated but not defined in EVM",
           )
           authenticate rescue nil
@@ -378,13 +378,13 @@ describe Authenticator::Httpd do
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bOb',
+            :userid  => 'bob',
             :message => "User bob successfully validated by External httpd",
           )
 
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
-            :userid  => 'bOb',
+            :userid  => 'bob',
             :message => "Authentication successful for user bob",
           )
           expect(AuditEvent).not_to receive(:failure)
@@ -419,12 +419,12 @@ describe Authenticator::Httpd do
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
-              :userid  => 'bOb',
+              :userid  => 'bob',
               :message => "User bob successfully validated by External httpd",
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
-              :userid  => 'bOb',
+              :userid  => 'bob',
               :message => "Authentication successful for user bob",
             )
             expect(AuditEvent).to receive(:failure).with(
