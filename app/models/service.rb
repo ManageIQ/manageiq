@@ -66,6 +66,7 @@ class Service < ApplicationRecord
   include ProcessTasksMixin
   include TenancyMixin
   include SupportsFeatureMixin
+  include CiFeatureMixin
   include Metric::CiMixin
 
   include_concern 'RetirementManagement'

@@ -11,6 +11,7 @@ class OrchestrationStack < ApplicationRecord
   include TenantIdentityMixin
   include CustomActionsMixin
   include SupportsFeatureMixin
+  include CiFeatureMixin
 
   acts_as_miq_taggable
 

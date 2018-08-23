@@ -1,5 +1,6 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::Providers::EmbeddedAutomationManager::OrchestrationStack
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
+  include CiFeatureMixin
 
   require_nested :Status
 
@@ -18,5 +19,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
     end
 
     super(userid, format, 'embedded_ansible')
+  end
+
+  def retireable?
+    false
   end
 end
