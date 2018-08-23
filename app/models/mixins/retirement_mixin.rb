@@ -203,7 +203,7 @@ module RetirementMixin
   def raise_retirement_event(event_name, requester = nil)
     requester ||= User.current_user.try(:userid)
     q_options = retire_queue_options
-    $log.info("Raising Retirement Event for [#{name}] with queue options: #{q_options.inspect}")
+    $log.info("Requester [#{requester}] raising Retirement Event for [#{name}] with queue options: #{q_options.inspect}")
     MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester), q_options)
   end
 
