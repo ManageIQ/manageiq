@@ -173,7 +173,7 @@ module AssignmentMixin
     # @option options :parents
     # @option options :tag_list
     def get_assigned_for_target(target, options = {})
-      _log.debug("Input for get_assigned_for_target id: #{target.id} class: #{target.class}")
+      _log.debug("Input for get_assigned_for_target id: #{target.id} class: #{target.class}") if target
       if options[:parents]
         parents = options[:parents]
         _log.debug("Parents are passed from parameter")
@@ -185,12 +185,10 @@ module AssignmentMixin
         parents << target
       end
 
-      parents.each do |parent|
-        _log.debug("parent id: #{parent.id} class: #{parent.class}")
-      end if parents.kind_of?(Array)
+      parents.each { |parent| _log.debug("parent id: #{parent.id} class: #{parent.class}") } if parents.kind_of?(Array)
 
       tlist =  parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents
-      if options[:tag_list]  # Assigned to target (passed in)
+      if options[:tag_list] # Assigned to target (passed in)
         tlist += options[:tag_list]
         _log.debug("Using tag list: #{options[:tag_list].join(', ')}")
       end
@@ -199,7 +197,7 @@ module AssignmentMixin
 
       individually_assigned_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
 
-      _log.debug("Individually assigned resources: #{individually_assigned_resources.map {|x| "id:#{x.id} class:#{x.class}" }.join(', ')}")
+      _log.debug("Individually assigned resources: #{individually_assigned_resources.map { |x| "id:#{x.id} class:#{x.class}" }.join(', ')}")
 
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
@@ -212,7 +210,7 @@ module AssignmentMixin
       _log.debug("Tags assigned to parents: #{tlist.join(', ')}")
       tagged_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
 
-      _log.debug("Tagged resources: #{individually_assigned_resources.map {|x| "id:#{x.id} class:#{x.class}" }.join(', ')}")
+      _log.debug("Tagged resources: #{individually_assigned_resources.map { |x| "id:#{x.id} class:#{x.class}" }.join(', ')}")
       (individually_assigned_resources + tagged_resources).uniq
     end
 
