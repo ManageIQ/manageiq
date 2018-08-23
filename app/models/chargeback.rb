@@ -174,7 +174,7 @@ class Chargeback < ActsAsArModel
     self.class.try(:refresh_dynamic_metric_columns)
 
     rates.each do |rate|
-      _log.debug("Calculation with rate: #{rate.description}(#{rate.rate_type})")
+      _log.debug("Calculation with rate: #{rate.id} #{rate.description}(#{rate.rate_type})")
       rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
         _log.debug("Metric: #{r.chargeable_field.metric} Group: #{r.chargeable_field.group} Source: #{r.chargeable_field.source}")
         r.chargeback_tiers.each do |tier|
