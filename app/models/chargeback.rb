@@ -43,21 +43,6 @@ class Chargeback < ActsAsArModel
     [data.values]
   end
 
-  def self.log_rates(rates)
-    rates.each do |rate|
-      _log.debug("Rate: #{rate.description}")
-      rate.chargeback_rate_details.each do |rate_detail|
-        chargeable_field = rate_detail.chargeable_field
-        _log.debug("Description #{chargeable_field.description}")
-        _log.debug("Metric: #{chargeable_field.metric} Group: #{chargeable_field.group} Source: #{chargeable_field.source}")
-
-        rate_detail.chargeback_tiers.each do |tier|
-          _log.debug("Start: #{tier.start} Finish: #{tier.finish} Fixed Rate: #{tier.fixed_rate} Variable Rate: #{tier.variable_rate}")
-        end
-      end
-    end
-  end
-
   def self.report_row_key(consumption)
     ts_key = @options.start_of_report_step(consumption.timestamp)
     if @options[:groupby_tag].present?
@@ -173,8 +158,13 @@ class Chargeback < ActsAsArModel
       _log.debug("Calculation with rate: #{rate.description}(#{rate.rate_type})")
       rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
         _log.debug("Metric: #{r.chargeable_field.metric} Group: #{r.chargeable_field.group} Source: #{r.chargeable_field.source}")
+
         r.charge(relevant_fields, consumption, @options).each do |field, value|
           next unless self.class.attribute_names.include?(field)
+          r.chargeback_tiers.each do |tier|
+            _log.debug("Start: #{tier.start} Finish: #{tier.finish} Fixed Rate: #{tier.fixed_rate} Variable Rate: #{tier.variable_rate}")
+          end
+
           next if @options.skip_field_accumulation?(field, self[field])
 
           _log.debug("Calculation with field: #{field} and with value: #{value}")
