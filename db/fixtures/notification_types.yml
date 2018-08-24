@@ -289,3 +289,23 @@
   :expires_in: 24.hours
   :level: error
   :audience: global
+- :name: generic_task_start
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: success
+  :audience: user
+- :name: generic_task_finish
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: success
+  :audience: user
+- :name: generic_task_fail
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: error
+  :audience: user
+- :name: generic_task_update
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: success
+  :audience: user
