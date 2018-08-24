@@ -306,7 +306,10 @@ describe CustomButton do
     %i(invoke invoke_async).each do |method|
       describe "##{method}" do
         it "publishes CustomButtonEvent" do
-          User.with_user(user) { custom_button.send(method, vm, 'UI') }
+          Timecop.freeze(Time.now.utc) do
+            User.with_user(user) { custom_button.send(method, vm, 'UI') }
+            expect(CustomButtonEvent.first.timestamp).to be_within(0.01).of(Time.now.utc)
+          end
 
           expect(CustomButtonEvent.count).to eq(1)
           expect(CustomButtonEvent.first).to have_attributes(
