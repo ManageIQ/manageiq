@@ -32,7 +32,7 @@ module ManageIQ
       # @param targets [Array] Array of targets which can be ManageIQ::Providers::BaseManager or ManagerRefresh::Target
       #        or ManagerRefresh::TargetCollection or ApplicationRecord we will be collecting data for.
       # @return [Array<Array>] Array of doubles [target, inventory] with target class from parameter and
-      #         ManagerRefresh::Inventory object
+      #         ManageIQ::Providers::Inventory object
       def collect_inventory_for_targets(ems, targets)
         targets_with_data = targets.collect do |target|
           target_name = target.try(:name) || target.try(:event_type)
@@ -54,7 +54,7 @@ module ManageIQ
       # Persister object. For legacy refresh we invoke parse_legacy.
       # @param ems [ManageIQ::Providers::BaseManager] Manager which targets we want to parse
       # @param _target [Array] Not used in new refresh or legacy refresh by default.
-      # @param inventory [ManagerRefresh::Inventory] Inventory object having Parsers, Collector and Persister objects
+      # @param inventory [ManageIQ::Providers::Inventory] Inventory object having Parsers, Collector and Persister objects
       #        that we need for parsing.
       # @return [Array<Hash> or ManagerRefresh::Persister] Returns parsed Array of hashes for legacy refresh, or
       #         Persister object containing parsed data for new refresh.

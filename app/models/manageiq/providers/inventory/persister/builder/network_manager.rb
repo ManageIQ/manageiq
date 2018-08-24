@@ -1,7 +1,7 @@
-module ManagerRefresh
+module ManageIQ::Providers
   class Inventory::Persister
     class Builder
-      class NetworkManager < ::ManagerRefresh::Inventory::Persister::Builder
+      class NetworkManager < ::ManageIQ::Providers::Inventory::Persister::Builder
         def cloud_subnet_network_ports
           add_properties(
             # :model_class                  => ::CloudSubnetNetworkPort,

@@ -1,4 +1,4 @@
-module ManagerRefresh
+module ManageIQ::Providers
   class Inventory::Persister
     # @see test in /spec/models/manager_refresh/inventory_collection/builder_spec.rb
     class Builder
@@ -12,12 +12,12 @@ module ManagerRefresh
       require_nested :StorageManager
       require_nested :PersisterHelper
 
-      include ::ManagerRefresh::Inventory::Persister::Builder::Shared
+      include ::ManageIQ::Providers::Inventory::Persister::Builder::Shared
 
       # Default options for builder
       #   :adv_settings
       #     - values from Advanced settings (doesn't overwrite values specified in code)
-      #     - @see method ManagerRefresh::Inventory::Persister.make_builder_settings()
+      #     - @see method ManageIQ::Providers::Inventory::Persister.make_builder_settings()
       #   :shared_properties
       #     - any properties applied if missing (not explicitly specified)
       def self.default_options
@@ -199,7 +199,7 @@ module ManagerRefresh
       #
       # @example derives model_class from @name only
       #
-      #   @persister_class = ManagerRefresh::Inventory::Persister
+      #   @persister_class = ManageIQ::Providers::Inventory::Persister
       #   @name = :vms
       #
       #   returns ::Vm
@@ -257,7 +257,7 @@ module ManagerRefresh
 
       # Evaluates lambda blocks in @default_values and @dependency_attributes
       # @param values [Hash]
-      # @param persister [ManagerRefresh::Inventory::Persister]
+      # @param persister [ManageIQ::Providers::Inventory::Persister]
       def evaluate_lambdas_on(values, persister)
         values&.transform_values do |value|
           if value.respond_to?(:call)

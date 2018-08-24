@@ -109,7 +109,7 @@ module ManageIQ
           Benchmark.realtime_block(:save_inventory) { save_inventory(ems, target, parsed) }
           _log.info "#{log_header} Refreshing target #{target.class} [#{target.name}] id [#{target.id}]...Complete"
 
-          if parsed.kind_of?(ManagerRefresh::Inventory::Persister)
+          if parsed.kind_of?(ManageIQ::Providers::Inventory::Persister)
             _log.info("#{log_header} ManagerRefresh Post Processing #{target.class} [#{target.name}] id [#{target.id}]...")
             # We have array of InventoryCollection, we want to use that data for post refresh
             Benchmark.realtime_block(:manager_refresh_post_processing) { manager_refresh_post_processing(ems, target, parsed) }
@@ -159,14 +159,14 @@ module ManageIQ
         # new refreshers should override this method to parse inventory
         # TODO: remove this call after all refreshers support retrieving
         # inventory separate from parsing
-        if collector.kind_of?(ManagerRefresh::Inventory::Collector)
+        if collector.kind_of?(ManageIQ::Providers::Inventory::Collector)
           log_header = format_ems_for_logging(ems)
           _log.debug("#{log_header} Parsing inventory...")
           persister, = Benchmark.realtime_block(:parse_inventory) do
-            persister = ManagerRefresh::Inventory.persister_class_for(target.class).new(ems, target)
-            parser = ManagerRefresh::Inventory.parser_class_for(target.class).new
+            persister = ManageIQ::Providers::Inventory.persister_class_for(target.class).new(ems, target)
+            parser = ManageIQ::Providers::Inventory.parser_class_for(target.class).new
 
-            i = ManagerRefresh::Inventory.new(persister, collector, parser)
+            i = ManageIQ::Providers::Inventory.new(persister, collector, parser)
             i.parse
           end
           _log.debug("#{log_header} Parsing inventory...Complete")
@@ -181,9 +181,9 @@ module ManageIQ
       #
       # @param ems [ManageIQ::Providers::BaseManager]
       # @param target [ManageIQ::Providers::BaseManager or ManagerRefresh::Target or ManagerRefresh::TargetCollection]
-      # @param parsed [Array<Hash> or ManagerRefresh::Inventory::Persister]
+      # @param parsed [Array<Hash> or ManageIQ::Providers::Inventory::Persister]
       def save_inventory(ems, target, parsed_hashes_or_persister)
-        if parsed_hashes_or_persister.kind_of?(ManagerRefresh::Inventory::Persister)
+        if parsed_hashes_or_persister.kind_of?(ManageIQ::Providers::Inventory::Persister)
           parsed_hashes_or_persister.persist!
         else
           EmsRefresh.save_ems_inventory(ems, parsed_hashes_or_persister, target)

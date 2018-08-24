@@ -1,4 +1,4 @@
-class ManageIQ::Providers::<%= class_name %>::Inventory::Persister < ManagerRefresh::Inventory::Persister
+class ManageIQ::Providers::<%= class_name %>::Inventory::Persister < ManageIQ::Providers::Inventory::Persister
   require_nested :CloudManager
 
   def strategy
