@@ -1,4 +1,4 @@
-class ManagerRefresh::Inventory::Collector
+class ManageIQ::Providers::Inventory::Collector
   attr_reader :manager, :target
 
   include Vmdb::Logging

@@ -1,4 +1,4 @@
-class ManagerRefresh::Inventory::Parser
+class ManageIQ::Providers::Inventory::Parser
   attr_accessor :collector
   attr_accessor :persister
 

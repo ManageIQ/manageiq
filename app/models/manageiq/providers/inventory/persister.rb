@@ -1,11 +1,11 @@
-class ManagerRefresh::Inventory::Persister
+class ManageIQ::Providers::Inventory::Persister
   require 'json'
   require 'yaml'
   require_nested :Builder
 
   attr_reader :manager, :target, :collections
 
-  include ::ManagerRefresh::Inventory::Persister::Builder::PersisterHelper
+  include ::ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
 
   # @param manager [ManageIQ::Providers::BaseManager] A manager object
   # @param target [Object] A refresh Target object
@@ -37,7 +37,7 @@ class ManagerRefresh::Inventory::Persister
   # Returns Persister object loaded from a passed JSON
   #
   # @param json_data [String] input JSON data
-  # @return [ManagerRefresh::Inventory::Persister] Persister object loaded from a passed JSON
+  # @return [ManageIQ::Providers::Inventory::Persister] Persister object loaded from a passed JSON
   def self.from_json(json_data)
     from_hash(JSON.parse(json_data))
   end
@@ -112,12 +112,12 @@ class ManagerRefresh::Inventory::Persister
     # Returns Persister object built from serialized data
     #
     # @param persister_data [Hash] serialized Persister object in hash
-    # @return [ManagerRefresh::Inventory::Persister] Persister object built from serialized data
+    # @return [ManageIQ::Providers::Inventory::Persister] Persister object built from serialized data
     def from_hash(persister_data)
       # Extract the specific Persister class
       persister_class = persister_data['class'].constantize
-      unless persister_class < ManagerRefresh::Inventory::Persister
-        raise "Persister class must inherit from a ManagerRefresh::Inventory::Persister"
+      unless persister_class < ManageIQ::Providers::Inventory::Persister
+        raise "Persister class must inherit from a ManageIQ::Providers::Inventory::Persister"
       end
 
       ems = ManageIQ::Providers::BaseManager.find(persister_data['ems_id'])

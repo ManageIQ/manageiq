@@ -1,7 +1,7 @@
-module ManagerRefresh
+module ManageIQ::Providers
   class Inventory::Persister
     class Builder
-      class StorageManager < ::ManagerRefresh::Inventory::Persister::Builder
+      class StorageManager < ::ManageIQ::Providers::Inventory::Persister::Builder
         # Nothing there
       end
     end

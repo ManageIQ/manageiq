@@ -1,4 +1,4 @@
-class TestPersister < ManagerRefresh::Inventory::Persister
+class TestPersister < ManageIQ::Providers::Inventory::Persister
   def initialize_inventory_collections
     ######### Cloud ##########
     # Top level models with direct references for Cloud

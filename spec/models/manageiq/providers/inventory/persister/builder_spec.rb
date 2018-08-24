@@ -1,6 +1,6 @@
 require_relative 'test_persister'
 
-describe ManagerRefresh::Inventory::Persister::Builder do
+describe ManageIQ::Providers::Inventory::Persister::Builder do
   before :each do
     @zone = FactoryGirl.create(:zone)
     @ems  = FactoryGirl.create(:ems_cloud,
@@ -15,11 +15,11 @@ describe ManagerRefresh::Inventory::Persister::Builder do
 
   let(:adv_settings) { {:strategy => :local_db_find_missing_references, :saver_strategy => :concurrent_safe_batch} }
 
-  let(:cloud) { ::ManagerRefresh::Inventory::Persister::Builder::CloudManager }
+  let(:cloud) { ::ManageIQ::Providers::Inventory::Persister::Builder::CloudManager }
 
-  let(:network) { ::ManagerRefresh::Inventory::Persister::Builder::NetworkManager }
+  let(:network) { ::ManageIQ::Providers::Inventory::Persister::Builder::NetworkManager }
 
-  let(:persister_class) { ::ManagerRefresh::Inventory::Persister }
+  let(:persister_class) { ::ManageIQ::Providers::Inventory::Persister }
 
   # --- association ---
 
@@ -58,7 +58,7 @@ describe ManagerRefresh::Inventory::Persister::Builder do
   it 'throws exception if model_class not specified' do
     builder = cloud.prepare_data(:non_existing_ic, persister_class)
 
-    expect { builder.to_inventory_collection }.to raise_error(::ManagerRefresh::Inventory::Persister::Builder::MissingModelClassError)
+    expect { builder.to_inventory_collection }.to raise_error(::ManageIQ::Providers::Inventory::Persister::Builder::MissingModelClassError)
   end
 
   # --- adv. settings (TODO: link to gui)---

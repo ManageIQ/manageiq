@@ -1,4 +1,4 @@
-module ManagerRefresh
+module ManageIQ::Providers
   class Inventory
     require_nested :Collector
     require_nested :Parser
@@ -28,10 +28,10 @@ module ManagerRefresh
       nil
     end
 
-    # @param persister [ManagerRefresh::Inventory::Persister] A Persister object
-    # @param collector [ManagerRefresh::Inventory::Collector] A Collector object
-    # @param parsers [ManagerRefresh::Inventory::Parser|Array] A Parser object or an array of
-    #   ManagerRefresh::Inventory::Parser objects
+    # @param persister [ManageIQ::Providers::Inventory::Persister] A Persister object
+    # @param collector [ManageIQ::Providers::Inventory::Collector] A Collector object
+    # @param parsers [ManageIQ::Providers::Inventory::Parser|Array] A Parser object or an array of
+    #   ManageIQ::Providers::Inventory::Parser objects
     def initialize(persister, collector, parsers)
       @collector = collector
       @persister = persister
@@ -40,7 +40,7 @@ module ManagerRefresh
 
     # Invokes all associated parsers storing parsed data into persister.inventory_collections
     #
-    # @return [ManagerRefresh::Inventory::Persister] persister object, to allow chaining
+    # @return [ManageIQ::Providers::Inventory::Persister] persister object, to allow chaining
     def parse
       parsers.each do |parser|
         parser.collector = collector

@@ -1,7 +1,7 @@
-module ManagerRefresh
+module ManageIQ::Providers
   class Inventory::Persister
     class Builder
-      class PhysicalInfraManager < ::ManagerRefresh::Inventory::Persister::Builder
+      class PhysicalInfraManager < ::ManageIQ::Providers::Inventory::Persister::Builder
         def physical_servers
           add_common_default_values
         end

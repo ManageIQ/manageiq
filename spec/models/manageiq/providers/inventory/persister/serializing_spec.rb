@@ -1,8 +1,8 @@
-require_relative '../helpers/spec_parsed_data'
+require_relative '../../../../manager_refresh/helpers/spec_parsed_data'
 require_relative 'test_persister'
 require_relative 'targeted_refresh_spec_helper'
 
-describe ManagerRefresh::Inventory::Persister do
+describe ManageIQ::Providers::Inventory::Persister do
   include SpecParsedData
   include TargetedRefreshSpecHelper
 
@@ -24,7 +24,7 @@ describe ManagerRefresh::Inventory::Persister do
     persister = create_persister
     populate_test_data(persister)
 
-    ManagerRefresh::Inventory::Persister.from_json(persister.to_json).persist!
+    ManageIQ::Providers::Inventory::Persister.from_json(persister.to_json).persist!
 
     counts = {
       :disk           => 2,

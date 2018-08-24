@@ -1,7 +1,7 @@
-module ManagerRefresh
+module ManageIQ::Providers
   class Inventory::Persister
     class Builder
-      class CloudManager < ::ManagerRefresh::Inventory::Persister::Builder
+      class CloudManager < ::ManageIQ::Providers::Inventory::Persister::Builder
         def availability_zones
           add_common_default_values
         end

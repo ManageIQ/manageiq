@@ -130,7 +130,7 @@ module EmsRefresh
       # Take care of both String or Class type being passed in
       target_class = target_class.to_s.constantize unless target_class.kind_of?(Class)
 
-      if ManagerRefresh::Inventory.persister_class_for(target_class).blank? &&
+      if ManageIQ::Providers::Inventory.persister_class_for(target_class).blank? &&
          [VmOrTemplate, Host, PhysicalServer, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
         _log.warn("Unknown target type: [#{target_class}].")
         next
