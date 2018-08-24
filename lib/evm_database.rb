@@ -113,6 +113,10 @@ class EvmDatabase
     MiqEvent.raise_evm_event_queue(MiqServer.my_server, event, :event_details => msg)
   end
 
+  def self.restart_failover_monitor_service
+    LinuxAdmin::Service.new("evm-failover-monitor").restart
+  end
+
   def self.run_failover_monitor
     require 'manageiq-postgres_ha_admin'
     ManageIQ::PostgresHaAdmin.logger = Vmdb.logger
