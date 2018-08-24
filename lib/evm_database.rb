@@ -126,11 +126,11 @@ class EvmDatabase
     )
   end
 
-  def self.run_failover_monitor
+  def self.run_failover_monitor(monitor = nil)
     require 'manageiq-postgres_ha_admin'
     ManageIQ::PostgresHaAdmin.logger = Vmdb.logger
 
-    monitor = ManageIQ::PostgresHaAdmin::FailoverMonitor.new(Rails.root.join("config", "ha_admin.yml"))
+    monitor ||= ManageIQ::PostgresHaAdmin::FailoverMonitor.new(Rails.root.join("config", "ha_admin.yml"))
 
     configure_rails_handler(monitor)
     configure_pglogical_handlers(monitor)
