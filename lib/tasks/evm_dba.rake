@@ -222,7 +222,7 @@ namespace :evm do
 
       desc 'Dump the local ManageIQ EVM Database (VMDB) to a remote file'
       task :remote do
-        opts = EvmDba.with_options(:remote_uri, :remote_file, :db_credentials, :exclude_table_data)
+        opts = EvmDba.with_options(:remote_uri, :aws, :remote_file, :db_credentials, :exclude_table_data)
 
         db_opts      = EvmDba.collect_db_opts(opts)
         connect_opts = EvmDba.collect_connect_opts(opts)
