@@ -77,7 +77,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :miq_events,             :as => :target, :dependent => :destroy
   has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
 
-  has_many :advanced_settings, :through => :vms_and_templates
+  has_many :vms_and_templates_advanced_settings, :through => :vms_and_templates, :source => :advanced_settings
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?

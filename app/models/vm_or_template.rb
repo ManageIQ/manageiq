@@ -102,7 +102,7 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :scan_histories,    :dependent => :destroy
   has_many                  :lifecycle_events,  :class_name => "LifecycleEvent"
-  has_many                  :advanced_settings, -> { where(:resource_type => "VmOrTemplate") }, :as => :resource, :dependent => :destroy
+  has_many                  :advanced_settings, :as => :resource, :dependent => :destroy
 
   # Scan Items
   has_many                  :registry_items, :dependent => :destroy
