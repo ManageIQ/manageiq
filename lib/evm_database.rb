@@ -150,6 +150,8 @@ class EvmDatabase
   private_class_method :configure_rails_handler
 
   def self.configure_pglogical_handlers(monitor)
+    return unless MiqServer.my_server.has_active_role?("database_operations")
+
     local_db_conninfo = ActiveRecord::Base.connection.raw_connection.conninfo_hash.delete_blanks
     PglogicalSubscription.all.each do |s|
       handler = ManageIQ::PostgresHaAdmin::PglogicalConfigHandler.new(:subscription => s.id, :conn_info => local_db_conninfo)
