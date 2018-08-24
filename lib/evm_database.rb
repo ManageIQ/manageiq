@@ -117,6 +117,15 @@ class EvmDatabase
     LinuxAdmin::Service.new("evm-failover-monitor").restart
   end
 
+  def self.restart_failover_monitor_service_queue
+    MiqQueue.put(
+      :class_name  => name,
+      :method_name => 'restart_failover_monitor_service',
+      :role        => 'database_operations',
+      :zone        => nil
+    )
+  end
+
   def self.run_failover_monitor
     require 'manageiq-postgres_ha_admin'
     ManageIQ::PostgresHaAdmin.logger = Vmdb.logger
