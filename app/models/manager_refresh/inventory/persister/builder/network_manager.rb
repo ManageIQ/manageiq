@@ -1,7 +1,7 @@
 module ManagerRefresh
-  class InventoryCollection
+  class Inventory::Persister
     class Builder
-      class NetworkManager < ::ManagerRefresh::InventoryCollection::Builder
+      class NetworkManager < ::ManagerRefresh::Inventory::Persister::Builder
         def cloud_subnet_network_ports
           add_properties(
             # :model_class                  => ::CloudSubnetNetworkPort,

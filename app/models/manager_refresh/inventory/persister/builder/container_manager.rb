@@ -1,7 +1,7 @@
 module ManagerRefresh
-  class InventoryCollection
+  class Inventory::Persister
     class Builder
-      class ContainerManager < ::ManagerRefresh::InventoryCollection::Builder
+      class ContainerManager < ::ManagerRefresh::Inventory::Persister::Builder
         # TODO: (agrare) Targeted refreshes will require adjusting the associations / arels. (duh)
         def container_projects
           add_properties(

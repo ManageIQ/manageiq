@@ -1,7 +1,7 @@
 module ManagerRefresh
-  class InventoryCollection
+  class Inventory::Persister
     class Builder
-      class InfraManager < ::ManagerRefresh::InventoryCollection::Builder
+      class InfraManager < ::ManagerRefresh::Inventory::Persister::Builder
         def networks
           add_properties(
             :manager_ref                  => %i(hardware ipaddress ipv6address),
