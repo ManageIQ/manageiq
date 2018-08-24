@@ -1,7 +1,7 @@
 module ManagerRefresh
-  class InventoryCollection
+  class Inventory::Persister
     class Builder
-      class AutomationManager < ::ManagerRefresh::InventoryCollection::Builder
+      class AutomationManager < ::ManagerRefresh::Inventory::Persister::Builder
         def configuration_scripts
           default_manager_ref
           add_common_default_values

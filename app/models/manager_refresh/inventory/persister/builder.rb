@@ -1,5 +1,5 @@
 module ManagerRefresh
-  class InventoryCollection
+  class Inventory::Persister
     # @see test in /spec/models/manager_refresh/inventory_collection/builder_spec.rb
     class Builder
       class MissingModelClassError < StandardError; end
@@ -12,7 +12,7 @@ module ManagerRefresh
       require_nested :StorageManager
       require_nested :PersisterHelper
 
-      include ::ManagerRefresh::InventoryCollection::Builder::Shared
+      include ::ManagerRefresh::Inventory::Persister::Builder::Shared
 
       # Default options for builder
       #   :adv_settings

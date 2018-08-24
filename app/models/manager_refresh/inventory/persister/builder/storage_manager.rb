@@ -1,7 +1,7 @@
 module ManagerRefresh
-  class InventoryCollection
+  class Inventory::Persister
     class Builder
-      class StorageManager < ::ManagerRefresh::InventoryCollection::Builder
+      class StorageManager < ::ManagerRefresh::Inventory::Persister::Builder
         # Nothing there
       end
     end

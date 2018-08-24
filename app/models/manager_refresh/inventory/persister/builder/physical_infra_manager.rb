@@ -1,7 +1,7 @@
 module ManagerRefresh
-  class InventoryCollection
+  class Inventory::Persister
     class Builder
-      class PhysicalInfraManager < ::ManagerRefresh::InventoryCollection::Builder
+      class PhysicalInfraManager < ::ManagerRefresh::Inventory::Persister::Builder
         def physical_servers
           add_common_default_values
         end

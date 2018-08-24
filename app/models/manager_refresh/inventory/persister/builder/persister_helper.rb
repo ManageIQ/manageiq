@@ -1,19 +1,19 @@
-module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
+module ManagerRefresh::Inventory::Persister::Builder::PersisterHelper
   extend ActiveSupport::Concern
 
   # Interface for creating InventoryCollection under @collections
   #
-  # @param builder_class    [ManagerRefresh::InventoryCollection::Builder] or subclasses
+  # @param builder_class    [ManagerRefresh::Inventory::Persister::Builder] or subclasses
   # @param collection_name  [Symbol || Array] used as InventoryCollection:association
   # @param extra_properties [Hash]   props from InventoryCollection.initialize list
   #         - adds/overwrites properties added by builder
   #
   # @param settings [Hash] builder settings
-  #         - @see ManagerRefresh::InventoryCollection::Builder.default_options
+  #         - @see ManagerRefresh::Inventory::Persister::Builder.default_options
   #         - @see make_builder_settings()
   #
   # @example
-  #   add_collection(ManagerRefresh::InventoryCollection::Builder::CloudManager, :vms) do |builder|
+  #   add_collection(ManagerRefresh::Inventory::Persister::Builder::CloudManager, :vms) do |builder|
   #     builder.add_properties(
   #       :strategy => :local_db_cache_all,
   #     )
@@ -38,36 +38,36 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
 
   # builder_class for add_collection()
   def cloud
-    ::ManagerRefresh::InventoryCollection::Builder::CloudManager
+    ::ManagerRefresh::Inventory::Persister::Builder::CloudManager
   end
 
   # builder_class for add_collection()
   def network
-    ::ManagerRefresh::InventoryCollection::Builder::NetworkManager
+    ::ManagerRefresh::Inventory::Persister::Builder::NetworkManager
   end
 
   # builder_class for add_collection()
   def infra
-    ::ManagerRefresh::InventoryCollection::Builder::InfraManager
+    ::ManagerRefresh::Inventory::Persister::Builder::InfraManager
   end
 
   # builder_class for add_collection()
   def storage
-    ::ManagerRefresh::InventoryCollection::Builder::StorageManager
+    ::ManagerRefresh::Inventory::Persister::Builder::StorageManager
   end
 
   # builder_class for add_collection()
   def automation
-    ::ManagerRefresh::InventoryCollection::Builder::AutomationManager
+    ::ManagerRefresh::Inventory::Persister::Builder::AutomationManager
   end
 
   # builder class for add_collection()
   def physical_infra
-    ::ManagerRefresh::InventoryCollection::Builder::PhysicalInfraManager
+    ::ManagerRefresh::Inventory::Persister::Builder::PhysicalInfraManager
   end
 
   def container
-    ::ManagerRefresh::InventoryCollection::Builder::ContainerManager
+    ::ManagerRefresh::Inventory::Persister::Builder::ContainerManager
   end
 
   # @param extra_settings [Hash]
@@ -77,9 +77,9 @@ module ManagerRefresh::InventoryCollection::Builder::PersisterHelper
   #   :without_model_class
   #     - if false and no model_class derived or specified, throws exception
   #     - doesn't try to derive model class automatically
-  #     - @see method ManagerRefresh::InventoryCollection::Builder.auto_model_class
+  #     - @see method ManagerRefresh::Inventory::Persister::Builder.auto_model_class
   def make_builder_settings(extra_settings = {})
-    opts = ::ManagerRefresh::InventoryCollection::Builder.default_options
+    opts = ::ManagerRefresh::Inventory::Persister::Builder.default_options
 
     opts[:adv_settings] = options.try(:[], :inventory_collections).try(:to_hash) || {}
     opts[:shared_properties] = shared_options

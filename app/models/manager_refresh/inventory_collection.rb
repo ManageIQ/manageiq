@@ -44,8 +44,6 @@ module ManagerRefresh
   #   puts @ems.vms.collect(&:ems_ref) # => ["vm2", "vm3"]
   #
   class InventoryCollection
-    require_nested :Builder
-
     # @return [Boolean] A true value marks that we collected all the data of the InventoryCollection,
     #         meaning we also collected all the references.
     attr_accessor :data_collection_finalized

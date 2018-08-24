@@ -87,11 +87,11 @@ module InitDataHelper
   end
 
   def cloud
-    ManagerRefresh::InventoryCollection::Builder::CloudManager
+    ManagerRefresh::Inventory::Persister::Builder::CloudManager
   end
 
   def network
-    ManagerRefresh::InventoryCollection::Builder::NetworkManager
+    ManagerRefresh::Inventory::Persister::Builder::NetworkManager
   end
 
   def persister_class

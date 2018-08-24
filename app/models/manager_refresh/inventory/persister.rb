@@ -1,10 +1,11 @@
 class ManagerRefresh::Inventory::Persister
   require 'json'
   require 'yaml'
+  require_nested :Builder
 
   attr_reader :manager, :target, :collections
 
-  include ::ManagerRefresh::InventoryCollection::Builder::PersisterHelper
+  include ::ManagerRefresh::Inventory::Persister::Builder::PersisterHelper
 
   # @param manager [ManageIQ::Providers::BaseManager] A manager object
   # @param target [Object] A refresh Target object
