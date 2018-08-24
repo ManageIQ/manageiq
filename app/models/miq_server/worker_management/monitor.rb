@@ -133,6 +133,8 @@ module MiqServer::WorkerManagement::Monitor
     resync_needed         = config_changed || roles_changed || sync_interval_reached
     sync_message          = nil
 
+    roles_added, roles_deleted, _roles_unchanged = role_changes
+
     if resync_needed
       @last_sync = Time.now.utc
       sync_message = "sync_config"
@@ -145,6 +147,8 @@ module MiqServer::WorkerManagement::Monitor
 
       stop_apache                if roles_changed && !apache_needed?
       start_apache               if roles_changed &&  apache_needed?
+
+      EvmDatabase.restart_failover_monitor_service if (roles_added | roles_deleted).include?("database_operations")
 
       reset_queue_messages       if config_changed || roles_changed
 
