@@ -3,6 +3,7 @@ module ManageIQ::Providers
     require_nested :Collector
     require_nested :Parser
     require_nested :Persister
+    require_nested :Builder
 
     attr_accessor :collector, :parsers, :persister
 
