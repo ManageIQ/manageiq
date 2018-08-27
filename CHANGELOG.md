@@ -5,7 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Gaprindashvili-4
+## Gaprindashvili-5
+
+### Added
+- Scheduling catalog items [(#17765)](https://github.com/ManageIQ/manageiq/pull/17765)
+- locale:po_to_json: add support for including catalogs from js plugins [(#17740)](https://github.com/ManageIQ/manageiq/pull/17740)
+- Support cancellation for miq_request and miq_request_task [(#17687)](https://github.com/ManageIQ/manageiq/pull/17687)
+- Add Cumulative Chargeback rates [(#17795)](https://github.com/ManageIQ/manageiq/pull/17795)
+- Add RBAC feature for Migration (v2v). [(#17596)](https://github.com/ManageIQ/manageiq/pull/17596)
+- Add ServiceTemplate#miq_schedules relation [(#17672)](https://github.com/ManageIQ/manageiq/pull/17672)
+- Support for v2v pre/post Ansible playbook service. [(#17627)](https://github.com/ManageIQ/manageiq/pull/17627)
+- The vm_id coming in from API is a string. [(#17674)](https://github.com/ManageIQ/manageiq/pull/17674)
+- MiqSchedule call method directly if available [(#17588)](https://github.com/ManageIQ/manageiq/pull/17588)
+- Validate name uniqueness for Transformation Plans [(#17677)](https://github.com/ManageIQ/manageiq/pull/17677)
+
+### Fixed
+- Add option to prov workflow to not rerun methods [(#17641)](https://github.com/ManageIQ/manageiq/pull/17641)
+- Set Settings.product.transformation to true [(#17733)](https://github.com/ManageIQ/manageiq/pull/17733)
+- Set checkbox on load, sans default, to be false, not nil [(#17810)](https://github.com/ManageIQ/manageiq/pull/17810)
+- Allow tenant admins to see all groups within the scope of their tenant [(#17817)](https://github.com/ManageIQ/manageiq/pull/17817)
+- Ensure MiqSchedule#name is unique for ServiceTemplate orders [(#17696)](https://github.com/ManageIQ/manageiq/pull/17696)
+- Fix class name for queueing [(#17717)](https://github.com/ManageIQ/manageiq/pull/17717)
+- Start the drb server with a unix socket [(#17744)](https://github.com/ManageIQ/manageiq/pull/17744)
+- Add internal column to service template for transformation plan [(#17748)](https://github.com/ManageIQ/manageiq/pull/17748)
+- Add pt_BR.yml for Brazilian Portuguese [(#17775)](https://github.com/ManageIQ/manageiq/pull/17775)
+- Fix for $evm.execute not honoring dialog options [(#17844)](https://github.com/ManageIQ/manageiq/pull/17844)
+- Move VIRTUAL_COL_USES translation to col_index method in ChargeableField [(#17747)](https://github.com/ManageIQ/manageiq/pull/17747)
+- Only update zone if found [(#17139)](https://github.com/ManageIQ/manageiq/pull/17139)
+- Add option to clear classifications for tag_details [(#17465)](https://github.com/ManageIQ/manageiq/pull/17465)
+- Add Flavor model to :tag_classes: section in miq_expression.yml. [(#17537)](https://github.com/ManageIQ/manageiq/pull/17537)
+- Restrict Vm Operating System detection for XP [(#17405)](https://github.com/ManageIQ/manageiq/pull/17405)
+- Delete #retire_now since it has been moved to shared code [(#17095)](https://github.com/ManageIQ/manageiq/pull/17095)
+- Return custom buttons for service having nil service template [(#17703)](https://github.com/ManageIQ/manageiq/pull/17703)
+- Force user_type to UPN when username is a UPN [(#17690)](https://github.com/ManageIQ/manageiq/pull/17690)
+- Adding flavor as a has one on VM [(#17692)](https://github.com/ManageIQ/manageiq/pull/17692)
+- Clean up queued items on Zone#destroy [(#17374)](https://github.com/ManageIQ/manageiq/pull/17374)
+
+## Gaprindashvili-4 - Released 2018-05-15
 
 ### Added
 - Introduce model changes for v2v [(#16787)](https://github.com/ManageIQ/manageiq/pull/16787)
@@ -84,7 +120,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Get rid off query "All in One" in Chargeback [(#17552)](https://github.com/ManageIQ/manageiq/pull/17552)
 - Remove N+1 obj creation in flatten_arranged_rels [(#17325)](https://github.com/ManageIQ/manageiq/pull/17325)
 
-## Gaprindashvili-3
+## Gaprindashvili-3 - Released 2018-05-15
 
 ### Added
 - Introduce $nuage_log that logs into log/nuage.log [(#16455)](https://github.com/ManageIQ/manageiq/pull/16455)
