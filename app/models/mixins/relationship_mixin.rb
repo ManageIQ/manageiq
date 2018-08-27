@@ -127,7 +127,7 @@ module RelationshipMixin
   def parent_rels(*args)
     options = args.extract_options!
     pri = parent_rel_ids
-    rels = pri.kind_of?(Array) && pri.empty? ? Relationship.none : Relationship.where(:id => parent_rel_ids)
+    rels = pri.kind_of?(Array) && pri.empty? ? Relationship.none : Relationship.where(:id => pri)
     Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -504,7 +504,6 @@ module RelationshipMixin
     options = args.extract_options!
     root_id = relationship.try(:root_id)
     return {relationship_for_isolated_root => {}} if root_id.nil?
-    Relationship.subtree_of(root_id).arrange
     Relationship.filter_by_resource_type(Relationship.subtree_of(root_id), options).arrange
   end
 
