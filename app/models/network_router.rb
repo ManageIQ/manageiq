@@ -17,6 +17,7 @@ class NetworkRouter < ApplicationRecord
 
   has_many :floating_ips, :through => :cloud_network
   has_many :cloud_networks, -> { distinct }, :through => :cloud_subnets
+  has_many :security_groups, :dependent => :nullify
 
   alias private_networks cloud_networks
   alias public_network cloud_network

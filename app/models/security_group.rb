@@ -11,6 +11,8 @@ class SecurityGroup < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :orchestration_stack
   belongs_to :network_group
+  belongs_to :cloud_subnet
+  belongs_to :network_router
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
 
   has_many :network_port_security_groups, :dependent => :destroy
