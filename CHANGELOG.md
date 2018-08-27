@@ -41,7 +41,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Adding flavor as a has one on VM [(#17692)](https://github.com/ManageIQ/manageiq/pull/17692)
 - Clean up queued items on Zone#destroy [(#17374)](https://github.com/ManageIQ/manageiq/pull/17374)
 
-## Gaprindashvili-4 - Released 2018-05-15
+## Gaprindashvili-4 - Released 2018-07-16
 
 ### Added
 - Introduce model changes for v2v [(#16787)](https://github.com/ManageIQ/manageiq/pull/16787)
