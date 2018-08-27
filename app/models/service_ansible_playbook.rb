@@ -100,12 +100,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   def save_job_options(action, overrides)
     job_options = options.fetch_path(:config_info, action.downcase.to_sym).slice(:hosts, :extra_vars).with_indifferent_access
     job_options[:extra_vars].try(:transform_values!) do |val|
-      tmp_val = val.kind_of?(String) ? val : val[:default] # TODO: support Hash only
-      begin
-        JSON.parse(tmp_val)
-      rescue JSON::ParserError
-        tmp_val
-      end
+      json_parse(val.kind_of?(String) ? val : val[:default]) # TODO: support Hash only
     end
     job_options.deep_merge!(parse_dialog_options) unless action == ResourceAction::RETIREMENT
     job_options.deep_merge!(overrides)
@@ -140,12 +135,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     params =
       (options[:dialog] || {}).each_with_object({}) do |(attr, val), obj|
         var_key = attr.sub(/^(password::)?dialog_param_/, '')
-        next if var_key == attr
-        begin
-          obj[var_key] = JSON.parse(val)
-        rescue JSON::ParserError
-          obj[var_key] = val
-        end
+        obj[var_key] = json_parse(val) unless var_key == attr
       end
 
     params.blank? ? {} : {:extra_vars => params}
@@ -193,6 +183,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     opts.tap do
       opts[:extra_vars].transform_values! { |val| val.kind_of?(String) ? MiqPassword.try_decrypt(val) : val }
     end
+  end
+
+  def json_parse(str)
+    JSON.parse(str)
+  rescue JSON::ParserError
+    str
   end
 
   def log_stdout(action)
