@@ -7,7 +7,9 @@ class Chargeback
       extra_resources = cb_class.try(:extra_resources_without_rollups, region) || []
       timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
         extra_resources.each do |resource|
+          _log.info("Using ConsumptionWithoutRollups for resource #{resource.id} #{resource.class} for time range #{[query_start_time, query_end_time].inspect}")
           consumption = ConsumptionWithoutRollups.new(resource, query_start_time, query_end_time)
+          _log.info("Consumed Hours for ConsumptionWithoutRollups: #{consumption.consumed_hours_in_interval}")
           yield(consumption) unless consumption.consumed_hours_in_interval.zero?
         end
 
@@ -24,6 +26,7 @@ class Chargeback
         # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
         records.each_value do |rollup_record_ids|
           metric_rollup_records = MetricRollup.where(:id => rollup_record_ids).order(:resource_type, :resource_id, :timestamp).pluck(*ChargeableField.cols_on_metric_rollup)
+          _log.debug("Count of Metric Rollups for consumption: #{metric_rollup_records.count}")
           consumption = ConsumptionWithRollups.new(metric_rollup_records, query_start_time, query_end_time)
           yield(consumption) unless consumption.consumed_hours_in_interval.zero?
         end
