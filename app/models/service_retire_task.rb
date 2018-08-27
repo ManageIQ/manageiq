@@ -32,7 +32,11 @@ class ServiceRetireTask < MiqRetireTask
   def create_retire_subtasks(parent_service)
     parent_service.direct_service_children.each { |child| create_retire_subtasks(child) }
     parent_service.service_resources.collect do |svc_rsc|
-      next unless retireable?(svc_rsc, parent_service)
+      next unless svc_rsc.resource.try(:retireable?)
+      # TODO: the next line deals with the filtering for provisioning
+      # (https://github.com/ManageIQ/manageiq/blob/3921e87915b5a69937b9d4a70bb24ab71b97c165/app/models/service_template/filter.rb#L5)
+      # which should be extended to retirement as part of later work
+      # svc_rsc.resource_type != "ServiceTemplate" || self.class.include_service_template?(self, srr.id, parent_service)
       nh = attributes.except("id", "created_on", "updated_on", "type", "state", "status", "message")
       nh['options'] = options.except(:child_tasks)
       # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
@@ -43,14 +47,6 @@ class ServiceRetireTask < MiqRetireTask
       new_task.deliver_to_automate
       new_task
     end.compact!
-  end
-
-  def retireable?(svc_rsc, parent_service)
-    srr = svc_rsc.resource
-    srr.present? &&
-      srr.respond_to?(:retire_now) &&
-      srr.type.present? &&
-      (svc_rsc.resource_type != "ServiceTemplate" || self.class.include_service_template?(self, srr.id, parent_service))
   end
 
   def create_task(svc_rsc, parent_service, nh)

@@ -66,6 +66,7 @@ class Service < ApplicationRecord
   include ProcessTasksMixin
   include TenancyMixin
   include SupportsFeatureMixin
+  include CiFeatureMixin
   include Metric::CiMixin
 
   include_concern 'RetirementManagement'
@@ -212,6 +213,10 @@ class Service < ApplicationRecord
 
   def composite?
     children.present?
+  end
+
+  def retireable?
+    type.present?
   end
 
   def atomic?
