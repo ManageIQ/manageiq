@@ -58,7 +58,7 @@ describe ManageIQ::Providers::Inventory::Persister::Builder do
   it 'throws exception if model_class not specified' do
     builder = cloud.prepare_data(:non_existing_ic, persister_class)
 
-    expect { builder.to_inventory_collection }.to raise_error(::ManageIQ::Providers::Inventory::Persister::Builder::MissingModelClassError)
+    expect { builder.to_inventory_collection }.to raise_error(::ManageIQ::Providers::Inventory::Persister::Builder::MissingModelClassError, /NonExistingIc/)
   end
 
   # --- adv. settings (TODO: link to gui)---
