@@ -236,10 +236,6 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
-        def service_instances
-          add_common_default_values
-        end
-
         protected
 
         def custom_reconnect_block
