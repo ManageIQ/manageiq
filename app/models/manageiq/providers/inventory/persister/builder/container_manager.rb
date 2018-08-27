@@ -232,7 +232,7 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
-        def service_plans
+        def service_parameters_sets
           add_common_default_values
         end
 
