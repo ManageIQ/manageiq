@@ -35,6 +35,7 @@ describe(ServiceAnsiblePlaybook) do
         'dialog_credential'           => credential_1.id,
         'dialog_param_var1'           => 'value1',
         'dialog_param_var2'           => 'value2',
+        'dialog_param_var_json'       => '{ "jvar1": "jvalue1", "jvar2": "jvalue2" }',
         'password::dialog_param_pswd' => encrypted_val
       }
     }
@@ -98,7 +99,13 @@ describe(ServiceAnsiblePlaybook) do
         expect(service.options[:provision_job_options]).to include(
           :inventory  => 20,
           :credential => credential_1.manager_ref,
-          :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val}
+          :extra_vars => {
+            'var1'     => 'value1',
+            'var2'     => 'value2',
+            'var3'     => 'default_val3',
+            'var_json' => { "jvar1" => "jvalue1", "jvar2" => "jvalue2" },
+            'pswd'     => encrypted_val
+          }
         )
       end
 
@@ -134,7 +141,13 @@ describe(ServiceAnsiblePlaybook) do
         expect(service.options[:provision_job_options]).to include(
           :inventory  => 30,
           :credential => credential_2.manager_ref,
-          :extra_vars => {'var1' => 'new_val1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val2}
+          :extra_vars => {
+            'var1'     => 'new_val1',
+            'var2'     => 'value2',
+            'var3'     => 'default_val3',
+            'var_json' => { "jvar1" => "jvalue1", "jvar2" => "jvalue2" },
+            'pswd'     => encrypted_val2
+          }
         )
       end
     end
