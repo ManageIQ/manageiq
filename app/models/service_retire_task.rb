@@ -26,11 +26,10 @@ class ServiceRetireTask < MiqRetireTask
     parent_svc = Service.find_by(:id => options[:src_ids])
     _log.info("- creating service tasks for service <#{self.class.name}:#{id}>")
 
-    create_retire_subtasks(parent_svc)
+    create_retire_subtasks(parent_svc, self)
   end
 
-  def create_retire_subtasks(parent_service)
-    parent_service.direct_service_children.each { |child| create_retire_subtasks(child) }
+  def create_retire_subtasks(parent_service, task)
     parent_service.service_resources.collect do |svc_rsc|
       next unless svc_rsc.resource.try(:retireable?)
       # TODO: the next line deals with the filtering for provisioning
@@ -42,6 +41,7 @@ class ServiceRetireTask < MiqRetireTask
       # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
       nh['options'][:dialog] = {}
       new_task = create_task(svc_rsc, parent_service, nh)
+      create_retire_subtasks(svc_rsc.resource, new_task) if svc_rsc.resource.kind_of?(Service)
       new_task.after_request_task_create
       miq_request.miq_request_tasks << new_task
       new_task.deliver_to_automate
