@@ -82,6 +82,7 @@ module ManagerRefresh
 
     delegate :<<,
              :build,
+             :build_partial,
              :data,
              :each,
              :find_or_build,
@@ -568,6 +569,150 @@ module ManagerRefresh
     # @return [Boolean] true if we are using a saver strategy that allows saving in parallel processes
     def parallel_safe?
       @parallel_safe_cache ||= %i(concurrent_safe concurrent_safe_batch).include?(saver_strategy)
+    end
+
+    # @return [Boolean] true if the model_class supports STI
+    def supports_sti?
+      @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
+      @supports_sti_cache
+    end
+
+    # @return [Boolean] true if the model_class has created_on column
+    def supports_created_on?
+      if @supports_created_on_cache.nil?
+        @supports_created_on_cache = (model_class.column_names.include?("created_on") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_created_on_cache
+    end
+
+    # @return [Boolean] true if the model_class has updated_on column
+    def supports_updated_on?
+      if @supports_updated_on_cache.nil?
+        @supports_updated_on_cache = (model_class.column_names.include?("updated_on") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_updated_on_cache
+    end
+
+    # @return [Boolean] true if the model_class has created_at column
+    def supports_created_at?
+      if @supports_created_at_cache.nil?
+        @supports_created_at_cache = (model_class.column_names.include?("created_at") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_created_at_cache
+    end
+
+    # @return [Boolean] true if the model_class has updated_at column
+    def supports_updated_at?
+      if @supports_updated_at_cache.nil?
+        @supports_updated_at_cache = (model_class.column_names.include?("updated_at") && ActiveRecord::Base.record_timestamps)
+      end
+      @supports_updated_at_cache
+    end
+
+    # @return [Boolean] true if the model_class has resource_timestamps_max column
+    def supports_resource_timestamps_max?
+      @supports_resource_timestamps_max_cache ||= model_class.column_names.include?("resource_timestamps_max")
+    end
+
+    # @return [Boolean] true if the model_class has resource_timestamps column
+    def supports_resource_timestamps?
+      @supports_resource_timestamps_cache ||= model_class.column_names.include?("resource_timestamps")
+    end
+
+    # @return [Boolean] true if the model_class has resource_timestamp column
+    def supports_resource_timestamp?
+      @supports_resource_timestamp_cache ||= model_class.column_names.include?("resource_timestamp")
+    end
+
+    # @return [Boolean] true if the model_class has resource_versions_max column
+    def supports_resource_versions_max?
+      @supports_resource_versions_max_cache ||= model_class.column_names.include?("resource_versions_max")
+    end
+
+    # @return [Boolean] true if the model_class has resource_versions column
+    def supports_resource_versions?
+      @supports_resource_versions_cache ||= model_class.column_names.include?("resource_versions")
+    end
+
+    # @return [Boolean] true if the model_class has resource_version column
+    def supports_resource_version?
+      @supports_resource_version_cache ||= model_class.column_names.include?("resource_version")
+    end
+
+    # @return [Array<Symbol>] all columns that are part of the best fit unique index
+    def unique_index_columns
+      return @unique_index_columns if @unique_index_columns
+
+      @unique_index_columns = unique_index_for(unique_index_keys).columns.map(&:to_sym)
+    end
+
+    def unique_index_keys
+      @unique_index_keys ||= manager_ref_to_cols.map(&:to_sym)
+    end
+
+    # @return [Array<ActiveRecord::ConnectionAdapters::IndexDefinition>] array of all unique indexes known to model
+    def unique_indexes
+      @unique_indexes_cache if @unique_indexes_cache
+
+      @unique_indexes_cache = model_class.connection.indexes(model_class.table_name).select(&:unique)
+
+      if @unique_indexes_cache.blank?
+        raise "#{self} and its table #{model_class.table_name} must have a unique index defined, to"\
+                " be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
+      end
+
+      @unique_indexes_cache
+    end
+
+    # Finds an index that fits the list of columns (keys) the best
+    #
+    # @param keys [Array<Symbol>]
+    # @raise [Exception] if the unique index for the columns was not found
+    # @return [ActiveRecord::ConnectionAdapters::IndexDefinition] unique index fitting the keys
+    def unique_index_for(keys)
+      @unique_index_for_keys_cache ||= {}
+      @unique_index_for_keys_cache[keys] if @unique_index_for_keys_cache[keys]
+
+      # Find all uniq indexes that that are covering our keys
+      uniq_key_candidates = unique_indexes.each_with_object([]) { |i, obj| obj << i if (keys - i.columns.map(&:to_sym)).empty? }
+
+      if @unique_indexes_cache.blank?
+        raise "#{self} and its table #{model_class.table_name} must have a unique index defined "\
+                "covering columns #{keys} to be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
+      end
+
+      # Take the uniq key having the least number of columns
+      @unique_index_for_keys_cache[keys] = uniq_key_candidates.min_by { |x| x.columns.count }
+    end
+
+    def internal_columns
+      return @internal_columns if @internal_columns
+
+      @internal_columns = [] + internal_timestamp_columns
+      @internal_columns << :type if supports_sti?
+      @internal_columns << :resource_timestamps_max if supports_resource_timestamps_max?
+      @internal_columns << :resource_timestamps if supports_resource_timestamps?
+      @internal_columns << :resource_timestamp if supports_resource_timestamp?
+      @internal_columns << :resource_versions_max if supports_resource_versions_max?
+      @internal_columns << :resource_versions if supports_resource_versions?
+      @internal_columns << :resource_version if supports_resource_version?
+      @internal_columns
+    end
+
+    def internal_timestamp_columns
+      return @internal_timestamp_columns if @internal_timestamp_columns
+
+      @internal_timestamp_columns = []
+      @internal_timestamp_columns << :created_on if supports_created_on?
+      @internal_timestamp_columns << :created_at if supports_created_at?
+      @internal_timestamp_columns << :updated_on if supports_updated_on?
+      @internal_timestamp_columns << :updated_at if supports_updated_at?
+
+      @internal_timestamp_columns
+    end
+
+    def base_columns
+      @base_columns ||= unique_index_columns + internal_columns
     end
 
     # @return [Boolean] true if no more data will be added to this InventoryCollection object, that usually happens

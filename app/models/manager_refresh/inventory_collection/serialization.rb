@@ -8,6 +8,7 @@ module ManagerRefresh
                :inventory_object_lazy?,
                :inventory_object?,
                :name,
+               :skeletal_primary_index,
                :to => :inventory_collection
 
       attr_reader :inventory_collection
@@ -30,6 +31,10 @@ module ManagerRefresh
           build(hash_to_data(inventory_object_data, available_inventory_collections).symbolize_keys!)
         end
 
+        inventory_objects_data['partial_data'].each do |inventory_object_data|
+          skeletal_primary_index.build(hash_to_data(inventory_object_data, available_inventory_collections).symbolize_keys!)
+        end
+
         # TODO(lsmola) add support for all_manager_uuids serialization
         # self.all_manager_uuids = inventory_objects_data['all_manager_uuids']
       end
@@ -43,7 +48,8 @@ module ManagerRefresh
           # TODO(lsmola) we do not support nested references here, should we?
           :manager_uuids     => targeted_scope.primary_references.values.map(&:full_reference),
           :all_manager_uuids => all_manager_uuids,
-          :data              => data.map { |x| data_to_hash(x.data) }
+          :data              => data.map { |x| data_to_hash(x.data) },
+          :partial_data      => skeletal_primary_index.index_data.map { |x| data_to_hash(x.data) },
         }
       end
 

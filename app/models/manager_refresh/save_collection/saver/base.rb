@@ -14,9 +14,10 @@ module ManagerRefresh::SaveCollection
         # Private attrs
         @model_class            = inventory_collection.model_class
         @table_name             = @model_class.table_name
+        @q_table_name           = get_connection.quote_table_name(@table_name)
         @primary_key            = @model_class.primary_key
         @arel_primary_key       = @model_class.arel_attribute(@primary_key)
-        @unique_index_keys      = inventory_collection.manager_ref_to_cols.map(&:to_sym)
+        @unique_index_keys      = inventory_collection.unique_index_keys
         @unique_index_keys_to_s = inventory_collection.manager_ref_to_cols.map(&:to_s)
         @select_keys            = [@primary_key] + @unique_index_keys_to_s
         @unique_db_primary_keys = Set.new
@@ -51,6 +52,7 @@ module ManagerRefresh::SaveCollection
             @deserializable_keys[key.to_sym] = attribute_type
           elsif attribute_type.respond_to?(:coder) ||
                 attribute_type.type == :int4range ||
+                attribute_type.type == :jsonb ||
                 pg_type == "text[]" ||
                 pg_type == "character varying[]"
             # Identify columns that needs to be encoded by type.serialize(value), it's a costy operations so lets do
@@ -90,6 +92,8 @@ module ManagerRefresh::SaveCollection
       # @return [Hash] modified hash from parameter attributes with casted values
       def values_for_database!(all_attribute_keys, attributes)
         all_attribute_keys.each do |key|
+          next unless attributes.key?(key)
+
           if (type = serializable_keys[key])
             attributes[key] = type.serialize(attributes[key])
           end
@@ -97,11 +101,25 @@ module ManagerRefresh::SaveCollection
         attributes
       end
 
+      def transform_to_hash!(all_attribute_keys, hash)
+        if inventory_collection.use_ar_object?
+          record = inventory_collection.model_class.new(hash)
+          values_for_database!(all_attribute_keys,
+                               record.attributes.slice(*record.changed_attributes.keys).symbolize_keys)
+        elsif serializable_keys?
+          values_for_database!(all_attribute_keys,
+                               hash)
+        else
+          hash
+        end
+      end
+
       private
 
       attr_reader :unique_index_keys, :unique_index_keys_to_s, :select_keys, :unique_db_primary_keys, :unique_db_indexes,
                   :primary_key, :arel_primary_key, :record_key_method, :pure_sql_records_fetching, :select_keys_indexes,
-                  :batch_size, :batch_size_for_persisting, :model_class, :serializable_keys, :deserializable_keys, :pg_types, :table_name
+                  :batch_size, :batch_size_for_persisting, :model_class, :serializable_keys, :deserializable_keys, :pg_types, :table_name,
+                  :q_table_name
 
       # Saves the InventoryCollection
       #
@@ -275,6 +293,7 @@ module ManagerRefresh::SaveCollection
       # @param hash [Hash] data hash
       # @param update_time [Time] data hash
       def assign_attributes_for_update!(hash, update_time)
+        hash[:type]         = model_class.name if supports_sti? && hash[:type].nil?
         hash[:updated_on]   = update_time if supports_updated_on?
         hash[:updated_at]   = update_time if supports_updated_at?
       end
@@ -284,24 +303,13 @@ module ManagerRefresh::SaveCollection
       # @param hash [Hash] data hash
       # @param create_time [Time] data hash
       def assign_attributes_for_create!(hash, create_time)
-        hash[:type]         = model_class.name if supports_sti? && hash[:type].nil?
         hash[:created_on]   = create_time if supports_created_on?
         hash[:created_at]   = create_time if supports_created_at?
         assign_attributes_for_update!(hash, create_time)
       end
 
-      # @return [Array<ActiveRecord::ConnectionAdapters::IndexDefinition>] array of all unique indexes known to model
-      def unique_indexes
-        @unique_indexes_cache if @unique_indexes_cache
-
-        @unique_indexes_cache = model_class.connection.indexes(model_class.table_name).select(&:unique)
-
-        if @unique_indexes_cache.blank?
-          raise "#{inventory_collection} and its table #{model_class.table_name} must have a unique index defined, to"\
-                " be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
-        end
-
-        @unique_indexes_cache
+      def internal_columns
+        @internal_columns ||= inventory_collection.internal_columns
       end
 
       # Finds an index that fits the list of columns (keys) the best
@@ -310,64 +318,44 @@ module ManagerRefresh::SaveCollection
       # @raise [Exception] if the unique index for the columns was not found
       # @return [ActiveRecord::ConnectionAdapters::IndexDefinition] unique index fitting the keys
       def unique_index_for(keys)
-        @unique_index_for_keys_cache ||= {}
-        @unique_index_for_keys_cache[keys] if @unique_index_for_keys_cache[keys]
-
-        # Find all uniq indexes that that are covering our keys
-        uniq_key_candidates = unique_indexes.each_with_object([]) { |i, obj| obj << i if (keys - i.columns.map(&:to_sym)).empty? }
-
-        if @unique_indexes_cache.blank?
-          raise "#{inventory_collection} and its table #{model_class.table_name} must have a unique index defined "\
-                "covering columns #{keys} to be able to use saver_strategy :concurrent_safe or :concurrent_safe_batch."
-        end
-
-        # Take the uniq key having the least number of columns
-        @unique_index_for_keys_cache[keys] = uniq_key_candidates.min_by { |x| x.columns.count }
+        inventory_collection.unique_index_for(keys)
       end
 
       # @return [Array<Symbol>] all columns that are part of the best fit unique index
       def unique_index_columns
-        return @unique_index_columns if @unique_index_columns
+        @unique_index_columns ||= inventory_collection.unique_index_columns
+      end
 
-        @unique_index_columns = unique_index_for(unique_index_keys).columns.map(&:to_sym)
+      # @return [Array<String>] all columns that are part of the best fit unique index
+      def unique_index_columns_to_s
+        return @unique_index_columns_to_s if @unique_index_columns_to_s
+
+        @unique_index_columns_to_s = unique_index_columns.map(&:to_s)
       end
 
       # @return [Boolean] true if the model_class supports STI
       def supports_sti?
-        @supports_sti_cache = model_class.column_names.include?("type") if @supports_sti_cache.nil?
-        @supports_sti_cache
+        @supports_sti_cache ||= inventory_collection.supports_sti?
       end
 
       # @return [Boolean] true if the model_class has created_on column
       def supports_created_on?
-        if @supports_created_on_cache.nil?
-          @supports_created_on_cache = (model_class.column_names.include?("created_on") && ActiveRecord::Base.record_timestamps)
-        end
-        @supports_created_on_cache
+        @supports_created_on_cache ||= inventory_collection.supports_created_on?
       end
 
       # @return [Boolean] true if the model_class has updated_on column
       def supports_updated_on?
-        if @supports_updated_on_cache.nil?
-          @supports_updated_on_cache = (model_class.column_names.include?("updated_on") && ActiveRecord::Base.record_timestamps)
-        end
-        @supports_updated_on_cache
+        @supports_updated_on_cache ||= inventory_collection.supports_updated_on?
       end
 
       # @return [Boolean] true if the model_class has created_at column
       def supports_created_at?
-        if @supports_created_at_cache.nil?
-          @supports_created_at_cache = (model_class.column_names.include?("created_at") && ActiveRecord::Base.record_timestamps)
-        end
-        @supports_created_at_cache
+        @supports_created_at_cache ||= inventory_collection.supports_created_at?
       end
 
       # @return [Boolean] true if the model_class has updated_at column
       def supports_updated_at?
-        if @supports_updated_at_cache.nil?
-          @supports_updated_at_cache = (model_class.column_names.include?("updated_at") && ActiveRecord::Base.record_timestamps)
-        end
-        @supports_updated_at_cache
+        @supports_updated_at_cache ||= inventory_collection.supports_updated_at?
       end
 
       # @return [Boolean] true if any serializable keys are present
@@ -375,9 +363,24 @@ module ManagerRefresh::SaveCollection
         @serializable_keys_bool_cache ||= serializable_keys.present?
       end
 
-      # @return [Boolean] true if the model_class has remote_data_timestamp column
+      # @return [Boolean] true if the model_class has resource_timestamp column
       def supports_remote_data_timestamp?(all_attribute_keys)
-        all_attribute_keys.include?(:remote_data_timestamp) # include? on Set is O(1)
+        all_attribute_keys.include?(:resource_timestamp) # include? on Set is O(1)
+      end
+
+      # @return [Boolean] true if the model_class has resource_version column
+      def supports_remote_data_version?(all_attribute_keys)
+        all_attribute_keys.include?(:resource_version) # include? on Set is O(1)
+      end
+
+      # @return [Boolean] true if the model_class has resource_timestamps column
+      def supports_resource_timestamps_max?
+        @supports_resource_timestamps_max_cache ||= inventory_collection.supports_resource_timestamps_max?
+      end
+
+      # @return [Boolean] true if the model_class has resource_versions column
+      def supports_resource_versions_max?
+        @supports_resource_versions_max_cache ||= inventory_collection.supports_resource_versions_max?
       end
     end
   end

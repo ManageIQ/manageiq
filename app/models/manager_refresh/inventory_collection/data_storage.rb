@@ -106,6 +106,15 @@ module ManagerRefresh
         inventory_object
       end
 
+      # Finds of builds a new InventoryObject with incomplete data.
+      #
+      # @param hash [Hash] Hash that needs to contain attributes defined in :manager_ref of the
+      #        InventoryCollection
+      # @return [ManagerRefresh::InventoryObject] Found or built InventoryObject object
+      def build_partial(hash)
+        skeletal_primary_index.build(hash)
+      end
+
       # Returns array of built InventoryObject objects
       #
       # @return [Array<ManagerRefresh::InventoryObject>] Array of built InventoryObject objects
