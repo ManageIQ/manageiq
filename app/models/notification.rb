@@ -83,13 +83,17 @@ class Notification < ApplicationRecord
   def text_bindings
     [:initiator, :subject, :cause].each_with_object(text_bindings_dynamic) do |key, result|
       value = public_send(key)
+      next unless value
+
+      # Set the link based on the notification_type.link_to
+      result[:link] = {
+        :id    => value.id,
+        :model => value.class.name
+      } if notification_type.link_to.try(:to_sym) == key
+
       result[key] = {
-        :link => {
-          :id    => value.id,
-          :model => value.class.name,
-        },
         :text => value.try(:name) || value.try(:description)
-      } if value
+      }
     end
   end
 

@@ -106,11 +106,21 @@ describe Notification, :type => :model do
         :level      => notification.notification_type.level,
         :created_at => notification.created_at,
         :text       => notification.notification_type.message,
-        :bindings   => a_hash_including(:initiator => a_hash_including(:text => user.name,
-                                                                       :link => a_hash_including(:id, :model)),
+        :bindings   => a_hash_including(:initiator => a_hash_including(:text => user.name),
                                         :extra     => a_hash_including(:text => 'information')
                                        )
       )
+    end
+
+    context 'link_to is set' do
+      let(:notification) do
+        FactoryGirl.create(:notification, :initiator         => user,
+                                          :notification_type => FactoryGirl.create(:notification_type, :link_to => 'initiator'))
+      end
+
+      it 'contains the link to the initiator' do
+        expect(notification.to_h).to include(:bindings => a_hash_including(:link => a_hash_including(:model => 'User', :id => user.id)))
+      end
     end
 
     context "subject text" do
