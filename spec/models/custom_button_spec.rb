@@ -256,7 +256,7 @@ describe CustomButton do
         "disabled_text"         => nil,
         "enablement_expression" => nil,
         "applies_to_class"      => nil,
-        "options"               => nil,
+        "options"               => {},
         "userid"                => nil,
         "wait_for_complete"     => nil,
         "created_on"            => nil,
