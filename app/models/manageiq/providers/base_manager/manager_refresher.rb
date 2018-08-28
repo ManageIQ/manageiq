@@ -39,7 +39,7 @@ module ManageIQ
 
           _log.info("Filtering inventory for #{target.class} [#{target_name}] id: [#{target.id}]...")
 
-          if refresher_options.try(:[], :inventory_object_refresh)
+          if inventory_object_refresh?
             inventory = builder_class_for(ems.class).build_inventory(ems, target)
           end
 
@@ -62,7 +62,7 @@ module ManageIQ
         log_header = format_ems_for_logging(ems)
         _log.debug("#{log_header} Parsing inventory...")
         hashes_or_persister, = Benchmark.realtime_block(:parse_inventory) do
-          if refresher_options.try(:[], :inventory_object_refresh)
+          if inventory_object_refresh?
             inventory.parse
           else
             parsed, _ = Benchmark.realtime_block(:parse_legacy_inventory) { parse_legacy(ems) }
@@ -89,7 +89,7 @@ module ManageIQ
           all_targets, sub_ems_targets = targets.partition { |x| x.kind_of?(ExtManagementSystem) }
 
           unless sub_ems_targets.blank?
-            if refresher_options.try(:[], :allow_targeted_refresh)
+            if allow_targeted_refresh?
               # We can disable targeted refresh with a setting, then we will just do full ems refresh on any event
               ems_event_collection = ManagerRefresh::TargetCollection.new(:targets    => sub_ems_targets,
                                                                           :manager_id => ems_id)
