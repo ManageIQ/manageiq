@@ -685,6 +685,18 @@ describe Service do
       service = FactoryGirl.build(:service, :retired => nil)
       expect(service).not_to be_valid
     end
+
+    context "retires service children" do
+      let(:service) { FactoryGirl.create(:service) }
+      let(:child_service) { FactoryGirl.create(:service) }
+
+      it 'associates a child_service to the service' do
+        child_service.add_to_service(service)
+        service.finish_retirement
+
+        expect(service.direct_service_children.first.retired).to eq(true)
+      end
+    end
   end
 
   describe '#orchestration_stacks' do

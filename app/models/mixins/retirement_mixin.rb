@@ -153,6 +153,14 @@ module RetirementMixin
 
   def finish_retirement
     raise _("%{name} already retired") % {:name => name} if retired?
+    mark_as_retired
+
+    if kind_of?(Service)
+      all_service_children&.each { |child| child.mark_as_retired unless child.retired? }
+    end
+  end
+
+  def mark_as_retired
     $log.info("Finishing Retirement for [#{name}]")
     requester = retirement_requester
     update_attributes(:retires_on => Time.zone.now, :retired => true, :retirement_state => "retired")
