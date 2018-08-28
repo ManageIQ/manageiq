@@ -6317,6 +6317,24 @@
       :hidden: true
       :feature_type: view
       :identifier: custom_button_events_show_list
+  - :name: Service Offerings
+    :description: Everything under Service Offerings
+    :feature_type: node
+    :identifier: service_offerings
+    :children:
+    - :name: View
+      :description: View Service Offerings
+      :feature_type: view
+      :identifier: service_offerings_view
+  - :name: Service Parameters Sets
+    :description: Everything under Service Parameters Sets
+    :feature_type: node
+    :identifier: service_parameters_sets
+    :children:
+    - :name: View
+      :description: View Service Parameters Sets
+      :feature_type: view
+      :identifier: service_parameters_sets_view
 
 # SUI
 - :name: Service UI
