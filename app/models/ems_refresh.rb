@@ -77,6 +77,8 @@ module EmsRefresh
   end
 
   def self.refresh(target, id = nil)
+    require "inventory_refresh"
+
     EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references

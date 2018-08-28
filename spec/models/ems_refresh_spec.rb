@@ -1,3 +1,5 @@
+require "inventory_refresh"
+
 describe EmsRefresh do
   context ".queue_refresh" do
     before do

@@ -1,3 +1,4 @@
+require "inventory_refresh"
 require_relative 'helpers/spec_mocked_data'
 require_relative 'helpers/spec_parsed_data'
 require_relative 'test_persister'

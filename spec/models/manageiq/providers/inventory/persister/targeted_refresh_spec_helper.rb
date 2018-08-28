@@ -1,3 +1,4 @@
+require "inventory_refresh"
 require_relative 'test_persister'
 
 module TargetedRefreshSpecHelper

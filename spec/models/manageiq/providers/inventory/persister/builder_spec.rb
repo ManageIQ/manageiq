@@ -1,3 +1,4 @@
+require "inventory_refresh"
 require_relative 'test_persister'
 
 describe ManageIQ::Providers::Inventory::Persister::Builder do
