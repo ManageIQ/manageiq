@@ -89,8 +89,8 @@ describe ServiceRetireTask do
         service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "Service", :service_id => service_c1.id, :resource_id => service_c1.id)
 
         @service_retire_task.after_request_task_create
-        expect(VmRetireTask.count).to eq(4)
-        expect(VmRetireTask.all.pluck(:message)).to eq(["Automation Starting", "Automation Starting", "Automation Starting", "Automation Starting"])
+        expect(VmRetireTask.count).to eq(2)
+        expect(VmRetireTask.all.pluck(:message)).to eq(["Automation Starting", "Automation Starting"])
         expect(ServiceRetireTask.count).to eq(1)
         expect(ServiceRetireRequest.count).to eq(1)
       end
