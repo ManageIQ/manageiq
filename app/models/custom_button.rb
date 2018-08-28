@@ -1,7 +1,7 @@
 class CustomButton < ApplicationRecord
   has_one :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
-  serialize :options
+  serialize :options, Hash
   serialize :visibility_expression
   serialize :enablement_expression
   serialize :visibility
