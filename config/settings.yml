@@ -158,8 +158,10 @@
   :debug_trace: false
   :capture_vm_created_on_date: false
   :ansible_tower_automation:
+    :inventory_object_refresh: true
     :refresh_interval: 15.minutes
   :embedded_ansible_automation:
+    :inventory_object_refresh: true
     :refresh_interval: 15.minutes
   :foreman_configuration:
     :refresh_interval: 15.minutes
