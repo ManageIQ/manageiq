@@ -411,7 +411,7 @@ module ManagerRefresh
       @model_class            = model_class
       @manager_ref            = manager_ref || [:ems_ref]
       @secondary_refs         = secondary_refs
-      @association            = association || []
+      @association            = association
       @parent                 = parent || nil
       @arel                   = arel
       @dependency_attributes  = dependency_attributes || {}
