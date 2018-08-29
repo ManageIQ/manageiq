@@ -1,4 +1,5 @@
 require "util/mount/miq_generic_mount_session"
+require "util/miq_object_storage"
 
 describe MiqFileStorage do
   def opts_for_nfs
@@ -13,6 +14,10 @@ describe MiqFileStorage do
 
   def opts_for_glusterfs
     opts[:uri] = "glusterfs://example.com/share/path/to/file.txt"
+  end
+
+  def opts_for_ftp
+    opts[:uri] = "ftp://example.com/share/path/to/file.txt"
   end
 
   def opts_for_fakefs
@@ -63,6 +68,12 @@ describe MiqFileStorage do
       before { opts_for_glusterfs }
 
       include_examples ".with_interface_class implementation", "MiqGlusterfsSession"
+    end
+
+    context "with an ftp:// uri" do
+      before { opts_for_ftp }
+
+      include_examples ".with_interface_class implementation", "MiqFtpStorage"
     end
 
     context "with an unknown uri scheme" do
