@@ -9,6 +9,7 @@ class NotificationType < ApplicationRecord
   has_many :notifications
   validates :message, :presence => true
   validates :level, :inclusion => { :in => %w(success error warning info) }
+  validates :link_to, :inclusion => { :in => %w(subject initiator cause) }, :allow_blank => true
   validates :audience, :inclusion => {
     :in => [AUDIENCE_USER, AUDIENCE_GROUP, AUDIENCE_TENANT, AUDIENCE_GLOBAL, AUDIENCE_SUPERADMIN]
   }
