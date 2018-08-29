@@ -29,6 +29,24 @@ class ServiceRetireTask < MiqRetireTask
     create_retire_subtasks(parent_svc)
   end
 
+  def lock_retirement
+    lock do
+      reload
+      if retry_retiring?
+        update_attributes(:state => "initializing")
+        parent_svc = model_being_retired.find_by(:id => options[:src_ids])
+        _log.info("- creating #{model_being_retired} tasks for #{model_being_retired} <#{self.class.name}:#{id}>")
+        begin
+          create_retire_subtasks(parent_svc)
+        rescue => err
+          _log.log_backtrace(err)
+        end
+      else
+        _log.info("#{request_type}: retirement for [#{type}, #{id}] got updated while waiting to be unlocked and is now #{state}")
+      end
+    end
+  end
+
   def create_retire_subtasks(parent_service)
     parent_service.direct_service_children.each { |child| create_retire_subtasks(child) }
     parent_service.service_resources.collect do |svc_rsc|
