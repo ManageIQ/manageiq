@@ -20,9 +20,9 @@ describe RssFeed do
     it "#generate 1 vms with owner_tenant tenant in newest_vms rss" do
       [owner_group, owner_user].each do |user_or_group|
         User.with_user(owner_user) do
-          feed_container = rss_feed.generate(nil, nil, nil, user_or_group)
+          feed_container = rss_feed.generate(nil, nil, user_or_group)
 
-          expect(feed_container[:text]).to eq <<-EOXML
+          expect(feed_container).to eq <<-EOXML
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <rss version=\"2.0\">
   <channel>
@@ -41,8 +41,6 @@ describe RssFeed do
   </channel>
 </rss>
           EOXML
-
-          expect(feed_container[:content_type]).to eq('application/rss+xml')
         end
       end
     end
@@ -57,7 +55,7 @@ describe RssFeed do
     it "#generate 2 hosts in newest_hosts rss" do
       RssFeed.sync_from_yml_file("newest_hosts")
       feed_container = RssFeed.where(:name => "newest_hosts").first.generate
-      expect(feed_container[:text]).to eq <<-EOXML
+      expect(feed_container).to eq <<-EOXML
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <rss version=\"2.0\">
   <channel>
@@ -83,7 +81,6 @@ describe RssFeed do
   </channel>
 </rss>
 EOXML
-      expect(feed_container[:content_type]).to eq('application/rss+xml')
     end
   end
 
