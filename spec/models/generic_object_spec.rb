@@ -376,5 +376,13 @@ describe GenericObject do
         go.custom_action_buttons
       end
     end
+
+    describe '#custom_button_events' do
+      let(:cb_event) { FactoryGirl.create(:custom_button_event, :target => go) }
+
+      it 'returns list of custom button events' do
+        expect(go.custom_button_events).to match_array([cb_event])
+      end
+    end
   end
 end

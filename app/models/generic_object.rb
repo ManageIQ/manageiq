@@ -6,6 +6,7 @@ class GenericObject < ApplicationRecord
 
   belongs_to :generic_object_definition
   has_one :picture, :through => :generic_object_definition
+  has_many :custom_button_events, -> { where(:type => "CustomButtonEvent") }, :class_name => "EventStream", :foreign_key => :target_id
 
   validates :name, :presence => true
 
