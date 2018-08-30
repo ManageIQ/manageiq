@@ -32,7 +32,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Add Openstack to list of valid prefixes for tag mapping [(#17790)](https://github.com/ManageIQ/manageiq/pull/17790)
 - Add CustomButton event emiter [(#17764)](https://github.com/ManageIQ/manageiq/pull/17764)
 - remote log/.gitkeep [(#17663)](https://github.com/ManageIQ/manageiq/pull/17663)
-- Add delete notifications for Networks
+- Add delete notifications for Networks Subnets [(#17556)](https://github.com/ManageIQ/manageiq/pull/17556)
 - Don't queue EmsRefresh if using streaming refresh [(#17531)](https://github.com/ManageIQ/manageiq/pull/17531)
 
 ### Fixed
