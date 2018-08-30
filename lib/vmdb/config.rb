@@ -11,15 +11,15 @@ module VMDB
     attr_accessor :errors, :name
 
     def initialize(name)
-      _log.debug("VMDB::Config.new is deprecated.  Prefer using Settings directly.")
       @name = name
       @errors = nil
     end
+    Vmdb::Deprecation.deprecate_methods(self, :initialize => "Prefer using Settings directly")
 
     def config
-      _log.debug("VMDB::Config#config is deprecated.  Prefer using Settings directly.")
       @config ||= self.class.filter_settings_by_name(::Settings.to_hash, name).to_hash
     end
+    Vmdb::Deprecation.deprecate_methods(self, :config => "Prefer using Settings directly")
 
     def config=(settings)
       @config = self.class.filter_settings_by_name(settings.to_hash, name).to_hash
