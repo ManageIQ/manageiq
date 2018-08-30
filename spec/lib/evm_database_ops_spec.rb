@@ -8,7 +8,7 @@ describe EvmDatabaseOps do
       allow(MiqGenericMountSession).to receive(:new_session).and_return(session)
       allow(session).to receive(:settings_mount_point).and_return(Rails.root.join("tmp").to_s)
       allow(session).to receive(:uri_to_local_path).and_return(Rails.root.join("tmp/share").to_s)
-      allow(PostgresAdmin).to receive(:runcmd_with_logging)
+      allow(PostgresAdmin).to receive(:backup).and_return("/tmp/backup_1")
       allow(FileUtils).to receive(:mv).and_return(true)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(200.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(100.megabytes)
