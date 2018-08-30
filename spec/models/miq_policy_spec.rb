@@ -149,7 +149,7 @@ describe MiqPolicy do
     let(:policies) do
       [
         FactoryGirl.create(:miq_policy, :conditions => [conds[0]], :active => true, :mode => 'control').tap do |p|
-          p.replace_actions_for_event(events[0], [[actions[0], {:qualifier => :success}]])
+          p.replace_actions_for_event(events[0], [[actions[0], {:qualifier => :success}], [actions[1], {:qualifier => :failure}]])
         end,
         FactoryGirl.create(:miq_policy, :conditions => [conds[1]], :active => false).tap do |p|
           p.replace_actions_for_event(events[1], [[actions[1], {:qualifier => :success}]])
@@ -230,6 +230,20 @@ describe MiqPolicy do
         described_class.enforce_policy(target, events[0].name)
       end
     end
+
+    describe ".eval_condition" do
+      it "returns 'allow' when condition is met" do
+        vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :cpu_sockets => 2))
+        result = described_class.send(:eval_condition, conds[0], vm)
+
+        expect(result).to eq('allow')
+      end
+
+      it "returns 'deny' when condition is not met" do
+        result = described_class.send(:eval_condition, conds[0], target)
+        expect(result).to eq('deny')
+      end
+    end
   end
 
   describe ".built_in_policies" do
@@ -258,7 +272,7 @@ describe MiqPolicy do
     it 'prevents retired instance from starting' do
       MiqQueue.destroy_all
       @vm.update_attributes(:retired => true)
-      expect(subject[:result]).to be false
+      expect(subject[:result]).to be true
       expect(subject[:actions].size).to eq(1)
       expect(subject[:details].first["name"]).to eq("(Built-in) Prevent Retired Instance from Starting")
       q = MiqQueue.first
@@ -268,7 +282,7 @@ describe MiqPolicy do
     end
 
     it 'allows active vm to start' do
-      expect(subject[:result]).to be true
+      expect(subject[:result]).to be false
       expect(subject[:actions].size).to eq(0)
       expect(subject[:details].first["name"]).to eq("(Built-in) Prevent Retired Instance from Starting")
     end

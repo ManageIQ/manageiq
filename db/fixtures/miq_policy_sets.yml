@@ -72,18 +72,18 @@
       Condition:
       - name: if container image has high severity openscap rule results
         description: Has high severity OpenSCAP rule results
-        modifier: deny
         expression: !ruby/object:MiqExpression
           exp:
-            FIND:
-              search:
-                "=":
-                  field: ContainerImage.openscap_rule_results-result
-                  value: fail
-              checkany:
-                "=":
-                  field: ContainerImage.openscap_rule_results-severity
-                  value: High
+            not:
+              FIND:
+                search:
+                  "=":
+                    field: ContainerImage.openscap_rule_results-result
+                    value: fail
+                checkany:
+                  "=":
+                    field: ContainerImage.openscap_rule_results-severity
+                    value: High
           context_type:
         towhat: ContainerImage
         file_mtime:
@@ -123,12 +123,12 @@
       Condition:
       - name: "Do not scan image-inspector's image"
         description: "Don't scan image-inspector's image"
-        modifier: deny
         expression: !ruby/object:MiqExpression
           exp:
-            ENDS WITH:
-              field: ContainerImage-name
-              value: "/image-inspector"
+            not:
+              ENDS WITH:
+                field: ContainerImage-name
+                value: "/image-inspector"
           context_type:
         towhat: ContainerImage
         file_mtime:

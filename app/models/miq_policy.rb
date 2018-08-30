@@ -63,7 +63,6 @@ class MiqPolicy < ApplicationRecord
             :name        => policy.attributes["name"],
             :description => policy.attributes["description"],
             :expression  => MiqExpression.new(policy.condition),
-            :modifier    => policy.modifier,
             :towhat      => "Vm"
           )]
         else
@@ -333,13 +332,9 @@ class MiqPolicy < ApplicationRecord
   end
 
   def self.eval_condition(c, rec, inputs = {})
-    possible_results = c['modifier'] == 'allow' ? %w(allow deny) : %w(deny allow)
-    begin
-      index = Condition.evaluate(c, rec, inputs) ? 0 : 1
-      possible_results[index]
-    rescue => err
-      logger.log_backtrace(err)
-    end
+    Condition.evaluate(c, rec, inputs) ? 'allow' : 'deny'
+  rescue => err
+    logger.log_backtrace(err)
   end
   private_class_method :eval_condition
 

@@ -106,11 +106,30 @@ class MiqAction < ApplicationRecord
     results = {}
 
     begin
-      failed.each do |p|
+      succeeded.each do |p|
         actions = case p
-                  when MiqPolicy then p.actions_for_event(inputs[:event], :failure).uniq
+                  when MiqPolicy then p.actions_for_event(inputs[:event], :success).uniq
                   else            p.actions_for_event
                   end
+
+        actions.each do |a|
+          inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
+          _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
+
+          if a.name == "prevent"
+            deferred.push([a, apply_policies_to, inputs])
+            next
+          end
+
+          name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
+          results[name] ||= []
+          results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
+        end
+      end
+
+      failed.each do |p|
+        next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on success
+        actions = p.actions_for_event(inputs[:event], :failure).uniq
 
         actions.each do |a|
           # merge in the synchronous flag and possibly the sequence if not already sorted by this
@@ -125,24 +144,6 @@ class MiqAction < ApplicationRecord
           name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
           results[name] ||= []
           results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :failure, :result => a.invoke(apply_policies_to, inputs)}
-        end
-      end
-
-      succeeded.each do |p|
-        next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on failure
-        actions = p.actions_for_event(inputs[:event], :success).uniq
-        actions.each do |a|
-          inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
-          _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
-
-          if a.name == "prevent"
-            deferred.push([a, apply_policies_to, inputs])
-            next
-          end
-
-          name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
-          results[name] ||= []
-          results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
         end
       end
 

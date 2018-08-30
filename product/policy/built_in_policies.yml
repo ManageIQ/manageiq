@@ -13,7 +13,6 @@
     - "=":
         field: Vm-power_state
         value: 'on'
-  :modifier: deny
   :mode: control
   :action: vm_stop
 - :name: Prevent Retired VM from Starting
@@ -26,7 +25,6 @@
     "=":
       field: Vm-retired
       value: true
-  :modifier: deny
   :mode: control
   :action: prevent
 - :name: Prevent Retired Instance from Starting
@@ -39,7 +37,6 @@
     "=":
       field: Vm-retired
       value: true
-  :modifier: deny
   :mode: control
   :action: vm_suspend
 - :name: Prevent Transformed VM from Starting
@@ -65,6 +62,5 @@
     "=":
       field: Vm-retired
       value: true
-  :modifier: deny
   :mode: control
   :action: vm_stop

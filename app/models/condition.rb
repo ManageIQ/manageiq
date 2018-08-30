@@ -2,9 +2,8 @@ class Condition < ApplicationRecord
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
 
-  validates_presence_of     :name, :description, :guid, :modifier, :expression, :towhat
-  validates_uniqueness_of   :name, :description, :guid
-  validates_inclusion_of    :modifier, :in => %w( allow deny )
+  validates :name, :description, :guid, :expression, :towhat, :presence => true
+  validates :name, :description, :guid, :uniqueness => true
 
   acts_as_miq_taggable
   acts_as_miq_set_member
@@ -257,6 +256,10 @@ class Condition < ApplicationRecord
   end
 
   def self.import_from_hash(condition, options = {})
+    # To delete condition modifier in policy from versions 5.8 and older
+    condition["expression"].exp = {"not" => condition["expression"].exp} if condition["modifier"] == 'deny'
+    condition.delete("modifier")
+
     status = {:class => name, :description => condition["description"]}
     c = Condition.find_by(:guid => condition["guid"])
     msg_pfx = "Importing Condition: guid=[#{condition["guid"]}] description=[#{condition["description"]}]"
