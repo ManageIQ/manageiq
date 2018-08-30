@@ -1,5 +1,5 @@
 class Job < ApplicationRecord
-  include_concern 'StateMachine'
+  include StateMachineMixin
   include UuidMixin
   include FilterableMixin
 
