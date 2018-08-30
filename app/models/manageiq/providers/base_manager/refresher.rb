@@ -132,7 +132,7 @@ module ManageIQ
         # override this method and return an array of:
         #   [[target1, inventory_for_target1], [target2, inventory_for_target2]]
 
-        return [[ems, nil]] unless inventory_object_refresh?
+        return [[ems, nil]] unless ems.inventory_object_refresh?
 
         provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class).name
 
@@ -251,14 +251,6 @@ module ManageIQ
 
       def format_ems_for_logging(ems)
         "EMS: [#{ems.name}], id: [#{ems.id}]"
-      end
-
-      def inventory_object_refresh?
-        refresher_options.try(:[], :inventory_object_refresh)
-      end
-
-      def allow_targeted_refresh?
-        refresher_options.try(:[], :allow_targeted_refresh)
       end
     end
   end
