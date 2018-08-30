@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 93 ending 2018-08-27
+
+### Added
+- Inform Rails that SecurityGroup now belongs to Router/Subnet [(#17900)](https://github.com/ManageIQ/manageiq/pull/17900)
+- Populate timestamp of CustomButtonEvent. [(#17899)](https://github.com/ManageIQ/manageiq/pull/17899)
+- Add requester to raise_retirement_event log message [(#17898)](https://github.com/ManageIQ/manageiq/pull/17898)
+- Refresh containers service catalog entities [(#17895)](https://github.com/ManageIQ/manageiq/pull/17895)
+- Add possibility to group by date only in chargeback [(#17893)](https://github.com/ManageIQ/manageiq/pull/17893)
+- Add search filter to ESX 6.7 [(#17891)](https://github.com/ManageIQ/manageiq/pull/17891)
+- Advanced_settings assoc for google refresh [(#17890)](https://github.com/ManageIQ/manageiq/pull/17890)
+- Logging to Inventory collector/parser [(#17889)](https://github.com/ManageIQ/manageiq/pull/17889)
+- Added key pairs cloud networks and networks to reporting and expresions [(#17888)](https://github.com/ManageIQ/manageiq/pull/17888)
+- Changes to CustomButtonEvent. [(#17885)](https://github.com/ManageIQ/manageiq/pull/17885)
+- Add support for exporting and importing customization templates [(#17877)](https://github.com/ManageIQ/manageiq/pull/17877)
+- Expose ems_cluster_id on VMs for use in V2V OpenStack support [(#17876)](https://github.com/ManageIQ/manageiq/pull/17876)
+- Add log messages to Chargeback [(#17874)](https://github.com/ManageIQ/manageiq/pull/17874)
+- Updating example oVirt cloud-init template [(#17869)](https://github.com/ManageIQ/manageiq/pull/17869)
+- Add a relationship between Tenant and VolumeTypes [(#17864)](https://github.com/ManageIQ/manageiq/pull/17864)
+- Partial row updates in parallel [(#17861)](https://github.com/ManageIQ/manageiq/pull/17861)
+- Added Audit logging to new user creation [(#17852)](https://github.com/ManageIQ/manageiq/pull/17852)
+- Adding summary for number of resources racks and health states to Provider [(#17841)](https://github.com/ManageIQ/manageiq/pull/17841)
+- Create a physical infrastructure user group [(#17840)](https://github.com/ManageIQ/manageiq/pull/17840)
+- Create generic task notifications [(#17835)](https://github.com/ManageIQ/manageiq/pull/17835)
+- Add a model for ConversionHosts [(#17813)](https://github.com/ManageIQ/manageiq/pull/17813)
+- Add Openstack to list of valid prefixes for tag mapping [(#17790)](https://github.com/ManageIQ/manageiq/pull/17790)
+- Add CustomButton event emiter [(#17764)](https://github.com/ManageIQ/manageiq/pull/17764)
+- remote log/.gitkeep [(#17663)](https://github.com/ManageIQ/manageiq/pull/17663)
+- Add delete notifications for Networks Subnets [(#17556)](https://github.com/ManageIQ/manageiq/pull/17556)
+- Don't queue EmsRefresh if using streaming refresh [(#17531)](https://github.com/ManageIQ/manageiq/pull/17531)
+
+### Fixed
+- Add possibility to group by date only in chargeback [(#17893)](https://github.com/ManageIQ/manageiq/pull/17893)
+- Ensure Zone data is Valid [(#17892)](https://github.com/ManageIQ/manageiq/pull/17892)
+- Skip tags without classification in assigments [(#17883)](https://github.com/ManageIQ/manageiq/pull/17883)
+- Send the notification ID when propagating a notification through WS [(#17875)](https://github.com/ManageIQ/manageiq/pull/17875)
+- Backup subject's name in case subject is removed [(#17871)](https://github.com/ManageIQ/manageiq/pull/17871)
+- Fix counts in log message in ConsumptionHistory [(#17868)](https://github.com/ManageIQ/manageiq/pull/17868)
+- Load dialog fields with updated values on workflow submit [(#17855)](https://github.com/ManageIQ/manageiq/pull/17855)
+- Fix Physical Storage to Physical Disks inverse association [(#17854)](https://github.com/ManageIQ/manageiq/pull/17854)
+- Converge request user roles to match API and UI [(#17849)](https://github.com/ManageIQ/manageiq/pull/17849)
+- Fix metering report for resources without rollups [(#17836)](https://github.com/ManageIQ/manageiq/pull/17836)
+- Filter out orphaned hosts and cloud instances from list of running [(#17815)](https://github.com/ManageIQ/manageiq/pull/17815)
+- Creating miq_request for CustomButton request call with open_url. [(#17802)](https://github.com/ManageIQ/manageiq/pull/17802)
+
 ## Unreleased as of Sprint 92 ending 2018-08-13
 
 ### Added
