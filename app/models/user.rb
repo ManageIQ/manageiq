@@ -49,10 +49,10 @@ class User < ApplicationRecord
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
-  scope :with_same_userid, ->(id) { where(:userid => User.find(id).userid) }
+  scope :with_same_userid, ->(id) { where(:userid => User.where(:id => id).pluck(:userid)) }
 
   def self.with_roles_excluding(identifier)
-    where.not(:id => User.joins(:miq_groups => :miq_product_features)
+    where.not(:id => User.unscope(:select).joins(:miq_groups => :miq_product_features)
                              .where(:miq_product_features => {:identifier => identifier})
                              .select(:id))
   end

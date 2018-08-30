@@ -261,4 +261,14 @@ describe MiqUserRole do
       expect(role.group_count).to eq(2)
     end
   end
+
+  describe ".with_roles_excluding" do
+    it "handles multiple columns" do
+      a = FactoryGirl.create(:miq_user_role, :features => "good")
+      FactoryGirl.create(:miq_user_role, :features => %w(good everything))
+      FactoryGirl.create(:miq_user_role, :features => "everything")
+
+      expect(MiqUserRole.select(:id, :name).with_roles_excluding("everything")).to match_array([a])
+    end
+  end
 end
