@@ -73,7 +73,7 @@ module ManageIQ::Providers
     # @param manager_name [String, nil] @see default_manager_name
     def self.class_for(ems, target, type, manager_name = nil)
       provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class)
-      
+
       manager_name = parsed_manager_name(target) if manager_name.nil?
 
       klass = "#{provider_module}::Inventory::#{type}::#{manager_name}".safe_constantize
