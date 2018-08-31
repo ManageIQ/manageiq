@@ -1,4 +1,4 @@
-module Job::StateMachine
+module StateMachineMixin
   extend ActiveSupport::Concern
 
   def transitions
@@ -17,8 +17,8 @@ module Job::StateMachine
       next_state = permitted_transitions[state]
 
       # if current state is not explicitly permitted, is any state (referred by '*') permitted?
-      next_state = permitted_transitions['*'] unless next_state
-      self.state = next_state
+      next_state ||= permitted_transitions['*']
+      self.state = next_state if next_state
     end
     !!next_state
   end
@@ -29,6 +29,7 @@ module Job::StateMachine
 
   def signal(signal, *args)
     signal = :abort_job if signal == :abort
+    signal = :do_pending if signal == :pending
     if transit_state(signal)
       save
       send(signal, *args) if respond_to?(signal)

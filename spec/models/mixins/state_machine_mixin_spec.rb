@@ -1,23 +1,31 @@
-describe Job, "::StateMachine" do
-  subject(:job) do
-    # Job is expected to be subclassed by something
-    # that implements load_transitions
-    Class.new(described_class) {
-      def load_transitions
-        self.state ||= 'initialize'
+describe StateMachineMixin do
+  let(:job_class) do
+    Class.new do
+      attr_accessor :state
+      include StateMachineMixin
+
+      def transitions
         {
-          :initializing => {'initialize' => 'waiting'},
+          :initializing => {'waiting_to_start' => 'waiting'},
           :start        => {'waiting'  => 'doing',
                             'retrying' => 'working'},
-          :cancel       => {'*'          => 'canceling'},
-          :stop         => {'*'          => 'stopping'},
-          :error        => {'*'          => '*'}
+          :cancel       => {'*'                => 'canceling'},
+          :stop         => {'*'                => 'stopping'},
+          :error        => {'*'                => '*'}
         }
       end
-    }.new
+    end
+  end
+
+  let(:job) { job_class.new }
+
+  before do
+    allow(job).to receive(:save)
+    allow(job).to receive(:cancel)
   end
 
   it "should transition from one state to another by a signal" do
+    job.state = "waiting_to_start"
     job.signal(:initializing)
     expect(job.state).to eq 'waiting'
   end
@@ -40,17 +48,17 @@ describe Job, "::StateMachine" do
   it "should leave the state unchanged for some selected signal" do
     job.state = 'doing'
     job.signal(:error)
-    expect(job.state).to eq 'doing'
+    expect(job.state).to eq '*'
   end
 
   it "should raise an error if the transition is not allowed" do
     job.state = 'working'
     expect { job.signal(:initializing) }
-      .to raise_error(RuntimeError, /initializing is not permitted at state working/)
+      .to raise_error(RuntimeError, "initializing is not permitted at state working")
   end
 
   it "should raise an error if the signal is not defined" do
     job.state = 'working'
-    expect { job.signal(:wrong) }.to raise_error(RuntimeError, /wrong is not permitted at state working/)
+    expect { job.signal(:wrong) }.to raise_error(RuntimeError, "wrong is not permitted at state working")
   end
 end
