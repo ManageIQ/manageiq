@@ -92,6 +92,18 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
       )
     end
 
+    def service_offerings
+      add_common_default_values
+    end
+
+    def service_instances
+      add_common_default_values
+    end
+
+    def service_parameters_sets
+      add_common_default_values
+    end
+
     protected
 
     def add_common_default_values
