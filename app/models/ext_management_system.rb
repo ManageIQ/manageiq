@@ -718,6 +718,14 @@ class ExtManagementSystem < ApplicationRecord
     n_('Manager', 'Managers', number)
   end
 
+  def inventory_object_refresh?
+    Settings.ems_refresh.fetch_path(emstype, :inventory_object_refresh)
+  end
+
+  def allow_targeted_refresh?
+    Settings.ems_refresh.fetch_path(emstype, :allow_targeted_refresh)
+  end
+
   private
 
   def build_connection(options = {})
