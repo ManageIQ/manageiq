@@ -9,6 +9,11 @@ module ManageIQ
         "#{provider_module}::Builder".constantize
       end
 
+      def inventory_class_for(klass)
+        provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
+        "#{provider_module}::Inventory".constantize
+      end
+
       # Legacy inventory parser
       #
       # @param ems [ManageIQ::Providers::BaseManager] Manager we want to parse
@@ -40,7 +45,13 @@ module ManageIQ
           _log.info("Filtering inventory for #{target.class} [#{target_name}] id: [#{target.id}]...")
 
           if ems.inventory_object_refresh?
-            inventory = builder_class_for(ems.class).build_inventory(ems, target)
+            # Tmp construction until all providers will be refactored
+            # to use `inventory_class_for`
+            begin
+              inventory = builder_class_for(ems.class).build_inventory(ems, target)
+            rescue NameError
+              inventory = inventory_class_for(ems.class).build(ems, target)
+            end
           end
 
           _log.info("Filtering inventory...Complete")
