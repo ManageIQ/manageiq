@@ -19,8 +19,7 @@ describe ChargebackContainerProject do
           :chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]},
           :chargeback_rate_detail_cpu_cores_used     => {:tiers => [hourly_variable_tier_rate]},
           :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
-          :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate]},
-          :chargeback_rate_detail_metering_used      => {:tiers => [hourly_variable_tier_rate]}
+          :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate]}
       }
     end
 
@@ -31,9 +30,6 @@ describe ChargebackContainerProject do
     let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
 
     before do
-      # TODO: remove metering columns form specs
-      described_class.set_columns_hash(:metering_used_metric => :integer, :metering_used_cost => :float)
-
       MiqRegion.seed
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
@@ -106,11 +102,6 @@ describe ChargebackContainerProject do
         expect(subject.fixed_compute_1_cost).to eq(hourly_rate * hours_in_day)
         expect(subject.fixed_compute_metric).to eq(@metric_size)
       end
-
-      it 'calculates metering used hours and cost' do
-        expect(subject.metering_used_metric).to eq(hours_in_day)
-        expect(subject.metering_used_cost).to eq(hours_in_day * hourly_rate)
-      end
     end
 
     context "Monthly" do
@@ -144,11 +135,6 @@ describe ChargebackContainerProject do
         # .to be_within(0.01) is used since theres a float error here
         expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
         expect(subject.fixed_compute_metric).to eq(@metric_size)
-      end
-
-      it 'calculates metering used hours and cost' do
-        expect(subject.metering_used_metric).to eq(hours_in_month)
-        expect(subject.metering_used_cost).to eq(hours_in_month * hourly_rate)
       end
     end
 

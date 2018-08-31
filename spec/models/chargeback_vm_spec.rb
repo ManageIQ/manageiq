@@ -36,8 +36,7 @@ describe ChargebackVm do
           :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
           :chargeback_rate_detail_storage_used       => {:tiers => [count_hourly_variable_tier_rate]},
           :chargeback_rate_detail_storage_allocated  => {:tiers => [count_hourly_variable_tier_rate]},
-          :chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]},
-          :chargeback_rate_detail_metering_used      => {:tiers => [count_hourly_variable_tier_rate]}
+          :chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]}
       }
     end
 
@@ -60,9 +59,6 @@ describe ChargebackVm do
     end
 
     before do
-      # TODO: remove metering columns form specs
-      described_class.set_columns_hash(:metering_used_metric => :integer, :metering_used_cost => :float)
-
       MiqRegion.seed
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
@@ -348,11 +344,6 @@ describe ChargebackVm do
           expect(subject.storage_allocated_cost).to eq(storage_allocated_cost)
 
           expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
-        end
-
-        it 'calculates metering used hours and cost' do
-          expect(subject.metering_used_metric).to eq(hours_in_day)
-          expect(subject.metering_used_cost).to eq(hours_in_day * count_hourly_rate)
         end
 
         context "only memory_cost instead of all report columns" do
@@ -737,7 +728,6 @@ describe ChargebackVm do
             expect(subject.fixed_compute_1_rate).to eq("100.0/0.01")
             expect(subject.memory_allocated_rate).to eq("100.0/0.01")
             expect(subject.memory_used_rate).to eq("100.0/0.01")
-            expect(subject.metering_used_rate).to eq("0.0/1.0")
             expect(subject.net_io_used_rate).to eq("100.0/0.01")
             expect(subject.storage_allocated_rate).to eq("0.0/1.0")
             expect(subject.storage_used_rate).to eq("0.0/1.0")
@@ -788,11 +778,6 @@ describe ChargebackVm do
           used_metric = used_average_for(:net_usage_rate_average, hours_in_month, @vm1)
           expect(subject.net_io_used_metric).to be_within(0.01).of(used_metric)
           expect(subject.net_io_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
-        end
-
-        it 'calculates metering used hours and cost' do
-          expect(subject.metering_used_metric).to eq(hours_in_month)
-          expect(subject.metering_used_cost).to eq(count_hourly_rate * hours_in_month)
         end
 
         context "fixed rates" do
@@ -1004,8 +989,7 @@ describe ChargebackVm do
             :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate_2]},
             :chargeback_rate_detail_storage_used       => {:tiers => [count_hourly_variable_tier_rate_2]},
             :chargeback_rate_detail_storage_allocated  => {:tiers => [count_hourly_variable_tier_rate_2]},
-            :chargeback_rate_detail_fixed_compute_cost => {:tiers => [fixed_hourly_variable_tier_rate_2]},
-            :chargeback_rate_detail_metering_used      => {:tiers => [count_hourly_variable_tier_rate_2]}
+            :chargeback_rate_detail_fixed_compute_cost => {:tiers => [fixed_hourly_variable_tier_rate_2]}
           }
         end
 
@@ -1316,7 +1300,6 @@ describe ChargebackVm do
       let(:mem_mb)              { 1777 }
       let(:disk_gb)             { 7 }
       let(:disk_b)              { disk_gb * 1024**3 }
-      let(:metering_used_hours) { 24 }
 
       let(:hardware) do
         FactoryGirl.create(:hardware,
@@ -1329,7 +1312,6 @@ describe ChargebackVm do
       let(:mem_cost) { mem_mb * hourly_rate * 24 }
       let(:cpu_cost) { cores * count_hourly_rate * 24 }
       let(:disk_cost) { disk_gb * count_hourly_rate * 24 }
-      let(:metering_used_cost) { metering_used_hours * count_hourly_rate }
 
       context 'for SCVMM (hyper-v)' do
         let!(:vm1) do
@@ -1351,13 +1333,11 @@ describe ChargebackVm do
         it 'allocated metrics are calculated properly' do
           expect(subject.memory_allocated_metric).to  eq(mem_mb)
           expect(subject.memory_allocated_cost).to    eq(mem_cost)
-          expect(subject.metering_used_metric).to  eq(metering_used_hours)
-          expect(subject.metering_used_cost).to    eq(metering_used_cost)
           expect(subject.cpu_allocated_metric).to     eq(cores)
           expect(subject.cpu_allocated_cost).to       eq(cpu_cost)
           expect(subject.storage_allocated_metric).to eq(disk_b)
           expect(subject.storage_allocated_cost).to   eq(disk_cost)
-          expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost + metering_used_cost)
+          expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost)
         end
       end
 
@@ -1381,14 +1361,12 @@ describe ChargebackVm do
         it 'metrics are calculated properly' do
           expect(subject.memory_allocated_metric).to  eq(mem_mb)
           expect(subject.memory_allocated_cost).to    eq(mem_cost)
-          expect(subject.metering_used_metric).to  eq(metering_used_hours)
-          expect(subject.metering_used_cost).to    eq(metering_used_cost)
           expect(subject.cpu_allocated_metric).to     eq(cores)
           expect(subject.cpu_allocated_cost).to       eq(cpu_cost)
           expect(subject.storage_allocated_metric).to eq(disk_b)
           expect(subject.storage_allocated_cost).to   eq(disk_cost)
 
-          expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost + metering_used_cost)
+          expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost)
         end
 
         context 'metrics are included (but dont have any)' do
