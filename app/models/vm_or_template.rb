@@ -1526,7 +1526,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def num_cpu
-    hardware.nil? ? 0 : hardware.cpu_sockets
+    hardware.try(:cpu_sockets) || 0
   end
 
   def num_disks
