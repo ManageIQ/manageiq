@@ -45,6 +45,10 @@ class Chargeback
       0 # we don't count used hours in metering report
     end
 
+    def metering_allocated_for(_metric)
+      1 # we count allocated hours in metering report
+    end
+
     def current_value(metric, sub_metric = nil)
       # Return the last seen allocation for charging purposes.
       @value ||= {}

@@ -65,16 +65,37 @@ describe MeteringContainerProject do
       expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
       expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
     end
+
+    context 'count of used hours is different than count of metric rollups' do
+      it 'calculates metering used hours only from allocated metrics' do
+        expect(subject.metering_allocated_cpu_cores_metric).to eq(60)
+        expect(subject.metering_allocated_memory_metric).to eq(60)
+      end
+
+      context 'with uncompleted allocation of cpu and mem' do
+        before do
+          project.metric_rollups.limit(20).each { |record| record.update(:cpu_usage_rate_average => 0) }
+          project.metric_rollups.limit(25).each { |record| record.update(:derived_memory_available => 0) }
+        end
+
+        it 'calculates metering used hours only from allocated metrics' do
+          expect(subject.metering_allocated_cpu_cores_metric).to eq(40)
+          expect(subject.metering_allocated_memory_metric).to eq(35)
+        end
+      end
+    end
   end
 
   let(:report_col_options) do
     {
-      "cpu_cores_used_metric"  => {:grouping => [:total]},
-      "existence_hours_metric" => {:grouping => [:total]},
-      "fixed_compute_metric"   => {:grouping => [:total]},
-      "memory_used_metric"     => {:grouping => [:total]},
-      "metering_used_metric"   => {:grouping => [:total]},
-      "net_io_used_metric"     => {:grouping => [:total]},
+      "cpu_cores_used_metric"               => {:grouping => [:total]},
+      "existence_hours_metric"              => {:grouping => [:total]},
+      "fixed_compute_metric"                => {:grouping => [:total]},
+      "metering_allocated_cpu_cores_metric" => {:grouping=>[:total]},
+      "metering_allocated_memory_metric"    => {:grouping=>[:total]},
+      "memory_used_metric"                  => {:grouping => [:total]},
+      "metering_used_metric"                => {:grouping => [:total]},
+      "net_io_used_metric"                  => {:grouping => [:total]},
     }
   end
 

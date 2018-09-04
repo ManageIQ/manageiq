@@ -129,6 +129,14 @@ class Chargeback
       @metering_used_fields_present ||= @rollup_array.count { |rollup| metering_used_fields_present?(rollup) }
     end
 
+    def metering_allocated_for(metric)
+      @metering_allocated_metric ||= {}
+      @metering_allocated_metric[metric] ||= @rollup_array.count do |rollup|
+        rollup_record = rollup[ChargeableField.col_index(metric)]
+        rollup_record.present? && rollup_record.nonzero?
+      end
+    end
+
     def resource_tag_names(rollup)
       tags_names = rollup[ChargeableField.col_index(:tag_names)]
       tags_names ? tags_names.split('|') : []
