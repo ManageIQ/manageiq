@@ -395,54 +395,50 @@ class MiqQueue < ApplicationRecord
     delivered_on
     _log.info("#{MiqQueue.format_short_log_msg(self)}, Delivering...")
 
-    begin
-      raise _("class_name cannot be nil") if class_name.nil?
+    raise _("class_name cannot be nil") if class_name.nil?
 
-      obj = class_name.constantize
+    #######################
+    mode = :loading_message
 
-      if instance_id
-        begin
-          if (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
-            obj = requester
+    obj = if instance_id.nil?
+            class_name.constantize
+          elsif (class_name == requester.class.name) && requester.respond_to?(:id) && (instance_id == requester.id)
+            requester
           else
-            obj = obj.find(instance_id)
+            class_name.constantize.find(instance_id)
           end
-        rescue ActiveRecord::RecordNotFound => err
-          _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
-          return STATUS_WARN, nil, nil
-        rescue => err
-          _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{err.message}")
-          return STATUS_ERROR, err.message, nil
-        end
-      end
 
-      data = self.data
-      args.push(data) if data
-      args.unshift(target_id) if obj.kind_of?(Class) && target_id
+    #######################
+    mode = :delivering
 
-      begin
-        status = STATUS_OK
-        message = "Message delivered successfully"
-        result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args) }
-      rescue MiqException::MiqQueueRetryLater => err
-        unget(err.options)
-        message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
-        _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
-        status = STATUS_RETRY
-      rescue Timeout::Error
-        message = "timed out after #{Time.now - delivered_on} seconds.  Timeout threshold [#{msg_timeout}]"
-        _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
-        status = STATUS_TIMEOUT
-      end
-    rescue StandardError, SyntaxError => error
-      _log.error("#{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
-      _log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
-      status = STATUS_ERROR
-      self.last_exception = error
-      message = error.message
+    data = self.data
+    args.push(data) if data
+    args.unshift(target_id) if obj.kind_of?(Class) && target_id
+
+    result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args) }
+    return STATUS_OK, "Message delivered successfully", result
+    #######################
+  rescue MiqException::MiqQueueRetryLater => err
+    unget(err.options)
+    message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
+    _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
+    return STATUS_RETRY, message, nil
+  rescue Timeout::Error
+    message = "timed out after #{Time.now - delivered_on} seconds.  Timeout threshold [#{msg_timeout}]"
+    _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
+    return STATUS_TIMEOUT, message, nil
+  rescue StandardError, SyntaxError => error
+    if mode == :loading_message && error.kind_of?(ActiveRecord::RecordNotFound)
+      _log.warn("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{error.message}")
+      return STATUS_WARN, nil, nil
+    elsif mode == :loading_message
+      _log.error("#{MiqQueue.format_short_log_msg(self)} will not be delivered because #{error.message}")
+      return STATUS_ERROR, error.message, nil
     end
-
-    return status, message, result
+    _log.error("#{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
+    _log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
+    self.last_exception = error
+    return STATUS_ERROR, error.message, nil
   end
 
   def dispatch_method(obj, args)
