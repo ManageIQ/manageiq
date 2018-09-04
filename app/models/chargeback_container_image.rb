@@ -103,8 +103,6 @@ class ChargebackContainerImage < Chargeback
       "fixed_cost"                 => {:grouping => [:total]},
       "memory_used_cost"           => {:grouping => [:total]},
       "memory_used_metric"         => {:grouping => [:total]},
-      "metering_used_metric"       => {:grouping => [:total]},
-      "metering_used_cost"         => {:grouping => [:total]},
       "memory_allocated_cost"      => {:grouping => [:total]},
       "memory_allocated_metric"    => {:grouping => [:total]},
       "net_io_used_cost"           => {:grouping => [:total]},
