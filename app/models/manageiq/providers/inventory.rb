@@ -49,11 +49,12 @@ module ManageIQ::Providers
 
     # Based on the given provider/manager class, this returns correct collector class
     #
-    # @param target class of the Provider/Manager
+    # @param ems class of the Provider/Manager
+    # @param target class of refresh's target
     # @return [Class] Correct class name of the collector
-    def self.collector_class_for(ems, target = nil)
+    def self.collector_class_for(ems, target = nil, manager_name = nil)
       target = ems if target.nil?
-      class_for(ems, target, 'Collector')
+      class_for(ems, target, 'Collector', manager_name)
     end
 
     # Based on the given provider/manager class, this returns correct persister class
@@ -61,18 +62,19 @@ module ManageIQ::Providers
     # @param ems class of the Provider/Manager
     # @param target class of refresh's target
     # @return [Class] Correct class name of the persister
-    def self.persister_class_for(ems, target = nil)
+    def self.persister_class_for(ems, target = nil, manager_name = nil)
       target = ems if target.nil?
-      class_for(ems, target, 'Persister')
+      class_for(ems, target, 'Persister', manager_name)
     end
 
     # Based on the given provider/manager class, this returns correct parser class
     #
-    # @param target class of the Provider/Manager
+    # @param ems class of the Provider/Manager
+    # @param target class of refresh's target
     # @return [Class] Correct class name of the Parser
-    def self.parser_class_for(ems, target = nil)
+    def self.parser_class_for(ems, target = nil, manager_name = nil)
       target = ems if target.nil?
-      class_for(ems, target, 'Parser')
+      class_for(ems, target, 'Parser', manager_name)
     end
 
     # @param ems [ExtManagementSystem]
