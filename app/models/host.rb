@@ -1223,7 +1223,7 @@ class Host < ApplicationRecord
   end
   alias_method :ipmi_enabled, :ipmi_config_valid?
 
-  def self.ready_for_provisioning?(ids)
+  def self.ready_for_provisioning(ids)
     errors = ActiveModel::Errors.new(self)
     hosts = where(:id => ids)
     missing = ids - hosts.collect(&:id)
@@ -1240,7 +1240,7 @@ class Host < ApplicationRecord
       end
     end
 
-    errors.empty? ? true : errors
+    errors
   end
 
   def set_custom_field(attribute, value)
