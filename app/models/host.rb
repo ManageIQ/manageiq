@@ -183,6 +183,7 @@ class Host < ApplicationRecord
       unsupported_reason_add(:reset, _("The Host has invalid IPMI credentials"))
     end
   end
+  supports :refresh_ems
 
   def self.non_clustered
     where(:ems_cluster_id => nil)

@@ -54,6 +54,7 @@ class OrchestrationStack < ApplicationRecord
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
 
+  supports :refresh_ems
   supports :retire
 
   def orchestration_stacks

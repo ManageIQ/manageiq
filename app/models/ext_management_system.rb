@@ -1,5 +1,6 @@
 class ExtManagementSystem < ApplicationRecord
   include CustomActionsMixin
+  include SupportsFeatureMixin
 
   def self.types
     leaf_subclasses.collect(&:ems_type)
@@ -89,6 +90,8 @@ class ExtManagementSystem < ApplicationRecord
   scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
 
   serialize :options
+
+  supports :refresh_ems
 
   def hostname_uniqueness_valid?
     return unless hostname_required?

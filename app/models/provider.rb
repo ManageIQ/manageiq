@@ -3,6 +3,7 @@ class Provider < ApplicationRecord
   include AuthenticationMixin
   include AsyncDeleteMixin
   include EmsRefresh::Manager
+  include SupportsFeatureMixin
   include TenancyMixin
 
   belongs_to :tenant
@@ -19,6 +20,8 @@ class Provider < ApplicationRecord
 
   virtual_column :verify_ssl,        :type => :integer
   virtual_column :security_protocol, :type => :string
+
+  supports :refresh_ems
 
   def self.leaf_subclasses
     descendants.select { |d| d.subclasses.empty? }

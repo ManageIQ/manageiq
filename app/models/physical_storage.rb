@@ -1,4 +1,6 @@
 class PhysicalStorage < ApplicationRecord
+  include SupportsFeatureMixin
+
   belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_storages,
    :class_name => "ManageIQ::Providers::PhysicalInfraManager"
   belongs_to :physical_rack, :foreign_key => :physical_rack_id, :inverse_of => :physical_storages
@@ -12,6 +14,8 @@ class PhysicalStorage < ApplicationRecord
   has_many :guest_devices, :through => :canisters
 
   has_many :physical_disks, :dependent => :destroy, :inverse_of => :physical_storage
+
+  supports :refresh_ems
 
   def my_zone
     ems = ext_management_system
