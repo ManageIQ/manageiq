@@ -6308,6 +6308,17 @@
         :description: Display Individual Event Streams
         :feature_type: view
         :identifier: event_streams_show
+  - :name: Custom Button Events
+    :description: Everything under Custom Button Events
+    :hidden: true
+    :feature_type: node
+    :identifier: custom_button_events
+    :children:
+    - :name: List
+      :description: Display List of Custom Button Events
+      :hidden: true
+      :feature_type: view
+      :identifier: custom_button_events_show_list
 # SUI
 - :name: Service UI
   :description: Features for the Service UI
