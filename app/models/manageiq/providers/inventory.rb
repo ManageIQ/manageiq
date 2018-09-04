@@ -8,9 +8,11 @@ module ManageIQ::Providers
 
     # Entry point for building inventory
     def self.build(ems, target)
+      collector = collector_class_for(ems, target).new(ems, target)
+      persister = persister_class_for(ems, target).new(ems, target)
       new(
-        class_for(ems, target, 'Persister').new(ems, target),
-        class_for(ems, target, 'Collector').new(ems, target),
+        persister,
+        collector,
         parser_classes_for(ems, target).map(&:new)
       )
     end
@@ -45,26 +47,34 @@ module ManageIQ::Providers
       parse.inventory_collections
     end
 
+    # Based on the given provider/manager class, this returns correct collector class
+    #
+    # @param ems class of the Provider/Manager
+    # @param target class of refresh's target
+    # @return [Class] Correct class name of the collector
+    def self.collector_class_for(ems, target = nil, manager_name = nil)
+      target = ems if target.nil?
+      class_for(ems, target, 'Collector', manager_name)
+    end
+
     # Based on the given provider/manager class, this returns correct persister class
     #
-    # @param klass class of the Provider/Manager
+    # @param ems class of the Provider/Manager
+    # @param target class of refresh's target
     # @return [Class] Correct class name of the persister
-    def self.persister_class_for(klass)
-      provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
-      "#{provider_module}::Inventory::Persister::#{klass.name.demodulize}".safe_constantize
-    rescue ManageIQ::Providers::Inflector::ObjectNotNamespacedError => _err
-      nil
+    def self.persister_class_for(ems, target = nil, manager_name = nil)
+      target = ems if target.nil?
+      class_for(ems, target, 'Persister', manager_name)
     end
 
     # Based on the given provider/manager class, this returns correct parser class
     #
-    # @param klass class of the Provider/Manager
+    # @param ems class of the Provider/Manager
+    # @param target class of refresh's target
     # @return [Class] Correct class name of the Parser
-    def self.parser_class_for(klass)
-      provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
-      "#{provider_module}::Inventory::Parser::#{klass.name.demodulize}".safe_constantize
-    rescue ManageIQ::Providers::Inflector::ObjectNotNamespacedError => _err
-      nil
+    def self.parser_class_for(ems, target = nil, manager_name = nil)
+      target = ems if target.nil?
+      class_for(ems, target, 'Parser', manager_name)
     end
 
     # @param ems [ExtManagementSystem]
@@ -72,7 +82,8 @@ module ManageIQ::Providers
     # @param type [String] 'Persister' | 'Collector' | 'Parser'
     # @param manager_name [String, nil] @see default_manager_name
     def self.class_for(ems, target, type, manager_name = nil)
-      provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class)
+      ems_class = ems.class == Class ? ems : ems.class
+      provider_module = ManageIQ::Providers::Inflector.provider_module(ems_class)
 
       manager_name = parsed_manager_name(target) if manager_name.nil?
 
@@ -110,7 +121,7 @@ module ManageIQ::Providers
     # Multiple parser classes
     # Can be implemented in subclass when custom set needed (mainly for TargetCollection)
     def self.parser_classes_for(ems, target)
-      [class_for(ems, target, 'Parser')]
+      [parser_class_for(ems, target)]
     end
   end
 end

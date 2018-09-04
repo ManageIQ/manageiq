@@ -165,8 +165,8 @@ module ManageIQ
           log_header = format_ems_for_logging(ems)
           _log.debug("#{log_header} Parsing inventory...")
           persister, = Benchmark.realtime_block(:parse_inventory) do
-            persister = ManageIQ::Providers::Inventory.persister_class_for(target.class).new(ems, target)
-            parser = ManageIQ::Providers::Inventory.parser_class_for(target.class).new
+            persister = ManageIQ::Providers::Inventory.persister_class_for(ems, target, target.class.name.demodulize).new(ems, target)
+            parser = ManageIQ::Providers::Inventory.parser_class_for(ems, target, target.class.name.demodulize).new
 
             i = ManageIQ::Providers::Inventory.new(persister, collector, parser)
             i.parse
