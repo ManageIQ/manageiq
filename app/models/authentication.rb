@@ -34,6 +34,41 @@ class Authentication < ApplicationRecord
 
   serialize :options
 
+  include OwnershipMixin
+  include TenancyMixin
+
+  include ReservedMixin
+  reserve_attribute :evm_owner_id, :big_integer
+  reserve_attribute :miq_group_id, :big_integer
+  reserve_attribute :tenant_id,    :big_integer
+
+  virtual_belongs_to :evm_owner, :class_name => ::User
+  def evm_owner
+    User.find_by(:id => evm_owner_id)
+  end
+
+  def evm_owner=(owner)
+    self.evm_owner_id = owner&.id
+  end
+
+  virtual_belongs_to :miq_group
+  def miq_group
+    MiqGroup.find_by(:id => miq_group_id)
+  end
+
+  def miq_group=(group)
+    self.miq_group_id = group&.id
+  end
+
+  virtual_belongs_to :tenant
+  def tenant
+    Tenant.find_by(:id => tenant_id)
+  end
+
+  def tenant=(tenant)
+    self.tenant_id = tenant&.id
+  end
+
   # TODO: DELETE ME!!!!
   ERRORS = {
     :incomplete => "Incomplete credentials",
