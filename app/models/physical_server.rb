@@ -36,6 +36,8 @@ class PhysicalServer < ApplicationRecord
 
   has_many :physical_switches, :through => :computer_system, :source => :connected_physical_switches
 
+  supports :refresh_ems
+
   def name_with_details
     details % {
       :name => name,

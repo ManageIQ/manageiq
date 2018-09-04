@@ -19,6 +19,8 @@ class PhysicalSwitch < Switch
 
   alias_attribute :physical_servers, :connected_physical_servers
 
+  supports :refresh_ems
+
   def my_zone
     ems = ext_management_system
     ems ? ems.my_zone : MiqServer.my_zone

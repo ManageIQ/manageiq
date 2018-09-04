@@ -1728,6 +1728,7 @@ class VmOrTemplate < ApplicationRecord
 
   supports_not :snapshots
   supports :destroy
+  supports :refresh_ems
 
   # Stop showing Reconfigure VM task unless the subclass allows
   def reconfigurable?
