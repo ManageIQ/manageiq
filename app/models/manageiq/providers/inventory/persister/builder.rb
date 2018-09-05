@@ -80,7 +80,7 @@ module ManageIQ::Providers
       # Creates InventoryCollection
       def to_inventory_collection
         if @properties[:model_class].nil? && !@options[:without_model_class]
-          raise MissingModelClassError
+          raise MissingModelClassError, "Missing model_class for :#{@name} (\"#{@name.to_s.classify}\" or subclass expected)."
         end
 
         ::ManagerRefresh::InventoryCollection.new(to_hash)
