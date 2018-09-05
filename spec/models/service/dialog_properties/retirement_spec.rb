@@ -30,6 +30,16 @@ describe Service::DialogProperties::Retirement do
           expect(parsed_results[:retirement_warn]).to be_nil
         end
       end
+
+      it 'with an invalid date that has already past' do
+        Timecop.freeze(time) do
+          options = {'dialog_service_retires_on' => "2000-01-01"}
+          parsed_results = described_class.parse(options, nil)
+
+          expect(parsed_results[:retires_on]).to be_nil
+          expect(parsed_results[:retirement_warn]).to be_nil
+        end
+      end
     end
 
     describe 'retires_in_hours' do
@@ -76,7 +86,7 @@ describe Service::DialogProperties::Retirement do
   context 'when setting retirement warn date' do
     it 'with retirement_warn_on' do
       user = FactoryGirl.create(:user)
-      expect(user).to receive(:with_my_timezone).and_yield.twice
+      expect(user).to receive(:with_my_timezone).exactly(3).times.and_yield
 
       Timecop.freeze(time) do
         options = {'dialog_service_retires_in_days'    => 5,

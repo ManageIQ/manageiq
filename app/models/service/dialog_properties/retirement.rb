@@ -80,7 +80,11 @@ class Service
       end
 
       def time_parse(value)
-        with_user_timezone { Time.zone.parse(value).utc }
+        with_user_timezone do
+          Time.zone.parse(value).utc.tap do |time|
+            raise "Retirement date cannot be set in the past" if time < time_now
+          end
+        end
       end
 
       def time_now
