@@ -119,18 +119,23 @@ class DialogImportService
   end
 
   def build_association_list(dialog)
-    associations = []
-    dialog["dialog_tabs"].flat_map do |tab|
-      tab["dialog_groups"].flat_map do |group|
-        group["dialog_fields"].flat_map do |field|
-          associations << { field["name"] => field["dialog_field_responders"] } if field["dialog_field_responders"].present?
-        end
-      end
-    end
-    associations
+    field_list = fields(dialog)
+    field_list.collect do |field|
+      next if field["dialog_field_responders"].blank?
+      dynamic_field_responders = field["dialog_field_responders"].select { |dfr| dynamic_field_list(field_list).include?(dfr) }
+      { field["name"] => dynamic_field_responders } if dynamic_field_responders.present?
+    end.compact
   end
 
   private
+
+  def dynamic_field_list(field_list)
+    field_list.reject { |f| f["dynamic"] == false }.pluck("name")
+  end
+
+  def fields(dialog)
+    dialog["dialog_tabs"].collect { |tab| tab["dialog_groups"].collect { |group| group["dialog_fields"] } }.flatten
+  end
 
   def create_import_file_upload(file_contents)
     ImportFileUpload.create.tap do |import_file_upload|

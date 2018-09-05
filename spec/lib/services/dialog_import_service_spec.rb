@@ -508,28 +508,56 @@ describe DialogImportService do
   end
 
   describe "#build_association_list" do
-    let(:dialog) do
-      {
-        "dialog_tabs" => [{
-          "dialog_groups" => [{
-            "dialog_fields" => [field1, field2, field3]
+    context "without static fields" do
+      let(:dialog) do
+        {
+          "dialog_tabs" => [{
+            "dialog_groups" => [{
+              "dialog_fields" => [field1, field2, field3]
+            }]
           }]
-        }]
-      }
+        }
+      end
+
+      let(:field1) { {"name" => "field1", "dialog_field_responders" => %w(field2 field3)} }
+      let(:field2) { {"name" => "field2", "dialog_field_responders" => %w(field3)} }
+      let(:field3) { {"name" => "field3", "dialog_field_responders" => []} }
+
+      it "creates an association list of ids based on names" do
+        expect(dialog_import_service.build_association_list(dialog)).to eq(
+          [{"field1" => %w(field2 field3)}, {"field2" => %w(field3)}]
+        )
+      end
+
+      it "association list doesn't include empty arrays" do
+        expect(dialog_import_service.build_association_list(dialog)).not_to include("field3" => [])
+      end
     end
 
-    let(:field1) { {"name" => "field1", "dialog_field_responders" => %w(field2 field3)} }
-    let(:field2) { {"name" => "field2", "dialog_field_responders" => %w(field3)} }
-    let(:field3) { {"name" => "field3", "dialog_field_responders" => []} }
+    context "with static fields" do
+      let(:dialog) do
+        {
+          "dialog_tabs" => [{
+            "dialog_groups" => [{
+              "dialog_fields" => [field1, field2, field3]
+            }]
+          }]
+        }
+      end
 
-    it "creates an association list of ids based on names" do
-      expect(dialog_import_service.build_association_list(dialog)).to eq(
-        [{"field1" => %w(field2 field3)}, {"field2" => %w(field3)}]
-      )
-    end
+      let(:field1) { {"name" => "field1", "dialog_field_responders" => %w(field2 field3)} }
+      let(:field2) { {"name" => "field2", "dialog_field_responders" => %w(field3)} }
+      let(:field3) { {"name" => "field3", "dialog_field_responders" => [], "dynamic" => false} }
 
-    it "association list doesn't include empty arrays" do
-      expect(dialog_import_service.build_association_list(dialog)).not_to include("field3" => [])
+      it "creates an association list of ids based on names" do
+        expect(dialog_import_service.build_association_list(dialog)).to eq(
+          [{"field1" => %w(field2)}]
+        )
+      end
+
+      it "association list doesn't include empty arrays" do
+        expect(dialog_import_service.build_association_list(dialog)).not_to include("field3" => [])
+      end
     end
   end
 end
