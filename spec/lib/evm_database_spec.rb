@@ -43,6 +43,26 @@ describe EvmDatabase do
     end
   end
 
+  describe ".restart_failover_monitor_service" do
+    let(:service) { instance_double(LinuxAdmin::SystemdService) }
+
+    before do
+      expect(LinuxAdmin::Service).to receive(:new).and_return(service)
+    end
+
+    it "restarts the service when running" do
+      expect(service).to receive(:running?).and_return(true)
+      expect(service).to receive(:restart)
+      described_class.restart_failover_monitor_service
+    end
+
+    it "doesn't restart the service when it isn't running" do
+      expect(service).to receive(:running?).and_return(false)
+      expect(service).not_to receive(:restart)
+      described_class.restart_failover_monitor_service
+    end
+  end
+
   describe ".restart_failover_monitor_service_queue" do
     it "queues a message for the correct role and zone" do
       subject.restart_failover_monitor_service_queue

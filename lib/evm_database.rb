@@ -114,7 +114,8 @@ class EvmDatabase
   end
 
   def self.restart_failover_monitor_service
-    LinuxAdmin::Service.new("evm-failover-monitor").restart
+    service = LinuxAdmin::Service.new("evm-failover-monitor")
+    service.restart if service.running?
   end
 
   def self.restart_failover_monitor_service_queue
