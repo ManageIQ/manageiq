@@ -27,7 +27,7 @@ class NotificationType < ApplicationRecord
         subject.tenant
       elsif initiator.kind_of?(User)
         initiator.current_tenant
-      end.try(:user_ids)
+      end.try(:user_ids).try(:uniq)
     when AUDIENCE_SUPERADMIN
       User.superadmins.pluck(:id)
     when AUDIENCE_NONE

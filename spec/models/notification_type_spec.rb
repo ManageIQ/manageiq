@@ -13,7 +13,7 @@ describe NotificationType, :type => :model do
     end
   end
 
-  describe '#subscribers' do
+  describe '#subscribers_ids' do
     let(:user1) { FactoryGirl.create(:user) }
     let(:tenant2) { FactoryGirl.create(:tenant) }
     let!(:user2) { FactoryGirl.create(:user_with_group, :tenant => tenant2) }
@@ -36,6 +36,10 @@ describe NotificationType, :type => :model do
     context 'tenant specific notification type' do
       let(:notification) { FactoryGirl.create(:notification_type, :audience => 'tenant') }
       it 'returns the users in the tenant same tenant as concerned vm' do
+        is_expected.to match_array([user2.id])
+      end
+      it "returns single id if user belongs to different group" do
+        user2.miq_groups << FactoryGirl.create(:miq_group, :tenant => tenant2)
         is_expected.to match_array([user2.id])
       end
     end

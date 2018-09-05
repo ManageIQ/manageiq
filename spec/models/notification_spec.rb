@@ -36,6 +36,11 @@ describe Notification, :type => :model do
         expect(user.unseen_notifications.count).to eq(1)
       end
 
+      it 'creates single record in notification_recipients table if recipent user belongs to several groups' do
+        user.miq_groups << FactoryGirl.create(:miq_group, :tenant => tenant)
+        expect(subject.recipients).to match_array([user])
+      end
+
       context 'asynchronous notifications' do
         before { stub_settings(:server => {:asynchronous_notifications => async}) }
         context 'enabled' do
