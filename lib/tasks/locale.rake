@@ -152,12 +152,17 @@ namespace :locale do
 
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
   task "plugin:find", :engine do |_, args|
-    unless args.key?(:engine)
+    unless args[:engine]
       $stderr.puts "You need to specify a plugin name: rake locale:plugin:find[plugin_name]"
       exit 1
     end
     @domain = args[:engine].gsub('::', '_')
-    @engine = "#{args[:engine].camelize}::Engine".constantize
+    begin
+      @engine = "#{args[:engine].camelize}::Engine".constantize
+    rescue NameError
+      warn "The specified plugin #{args[:engine]} does not exist."
+      exit 1
+    end
     @engine_root = @engine.root
 
     # extract plugin's yaml strings
