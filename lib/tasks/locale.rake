@@ -320,6 +320,14 @@ namespace :locale do
       end
 
       Rake::Task['gettext:po_to_json'].invoke
+
+      # Work-around for extraneous '\' symbols in json catalogs
+      # This can go away once https://github.com/webhippie/gettext_i18n_rails_js/issues/42 is resolved
+      Dir.glob(File.join(GettextI18nRailsJs::Task.output_path, "*.json")).each do |file|
+        text = File.read(file)
+        new_content = text.gsub(/\\\\\\\"|\\\\\\\\\\\\\\\"/, '\"')
+        File.open(file, "w") { |new_file| new_file.puts(new_content) }
+      end
     ensure
       system "rm -rf #{combined_dir} #{plugins_dir}"
     end
