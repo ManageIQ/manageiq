@@ -8,6 +8,7 @@ class Tenant < ApplicationRecord
 
   include ActiveVmAggregationMixin
   include CustomActionsMixin
+  include TenantQuotasMixin
 
   acts_as_miq_taggable
 
