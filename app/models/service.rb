@@ -53,7 +53,7 @@ class Service < ApplicationRecord
   virtual_has_one    :reconfigure_dialog
 
   before_validation :set_tenant_from_group
-  before_create     :apply_dialog_settings
+  before_create :update_attributes_from_dialog
 
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
@@ -468,21 +468,7 @@ class Service < ApplicationRecord
   def configuration_script
   end
 
-  private
-
-  def apply_dialog_settings
-    dialog_options = options[:dialog] || {}
-
-    %w(dialog_service_name dialog_service_description).each do |field_name|
-      send(field_name, dialog_options[field_name]) if dialog_options.key?(field_name)
-    end
-  end
-
-  def dialog_service_name(value)
-    self.name = value if value.present?
-  end
-
-  def dialog_service_description(value)
-    self.description = value if value.present?
+  private def update_attributes_from_dialog
+    Service::DialogProperties.parse(options[:dialog], evm_owner).each { |key, value| self[key] = value }
   end
 end
