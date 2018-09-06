@@ -8,7 +8,7 @@ class RequestStartedOnMiddleware
   end
 
   def call(env)
-    start_request(env['PATH_INFO'], Time.now.utc)
+    start_request(env['PATH_INFO'], Time.zone.now)
     @app.call(env)
   ensure
     complete_request
@@ -26,7 +26,7 @@ class RequestStartedOnMiddleware
 
   def self.long_running_requests
     requests = []
-    timed_out_request_started_on = request_timeout.ago.utc
+    allowable_request_start_time = long_request.ago
 
     relevant_thread_list.each do |thread|
       request    = thread[:current_request]
@@ -36,8 +36,8 @@ class RequestStartedOnMiddleware
       # thread after we set one or more of the above local variables. The fallout
       # of this is we return a false positive for a request that finished very close
       # to the 2 minute timeout.
-      if request.present? && started_on.kind_of?(Time) && timed_out_request_started_on > started_on
-        duration = (Time.now.utc - started_on).to_f
+      if request.present? && started_on.kind_of?(Time) && started_on < allowable_request_start_time
+        duration = (Time.zone.now - started_on).to_f
         requests << [request, duration, thread]
       end
     end
@@ -45,9 +45,9 @@ class RequestStartedOnMiddleware
     requests
   end
 
-  REQUEST_TIMEOUT = 2.minutes
-  private_class_method def self.request_timeout
-    REQUEST_TIMEOUT
+  LONG_REQUEST = 1.minute
+  private_class_method def self.long_request
+    LONG_REQUEST
   end
 
   # For testing: mocking Thread.list feels dangerous
