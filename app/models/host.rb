@@ -1224,26 +1224,6 @@ class Host < ApplicationRecord
   end
   alias_method :ipmi_enabled, :ipmi_config_valid?
 
-  def self.ready_for_provisioning?(ids)
-    errors = ActiveModel::Errors.new(self)
-    hosts = where(:id => ids)
-    missing = ids - hosts.collect(&:id)
-    errors.add(:missing_ids, "Unable to find Hosts with the following ids #{missing.inspect}") unless missing.empty?
-
-    hosts.each do |host|
-      begin
-        if host.ipmi_config_valid?(true) == false
-          errors.add(:"Error -", _("Host not available for provisioning. Name: [%{host_name}]") % {:host_name => host.name})
-        end
-      rescue => err
-        errors.add(:error_checking, _("Error, '%{error_message}, checking Host for provisioning: Name: [%{host_name}]") %
-          {:error_message => err.message, :host_name => host.name})
-      end
-    end
-
-    errors.empty? ? true : errors
-  end
-
   def set_custom_field(attribute, value)
     return unless is_vmware?
     raise _("Host has no EMS, unable to set custom attribute") unless ext_management_system
