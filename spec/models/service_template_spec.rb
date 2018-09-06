@@ -1,6 +1,8 @@
 describe ServiceTemplate do
   include_examples "OwnershipMixin"
 
+  let(:service_user) { FactoryGirl.build(:user) }
+
   describe "#custom_actions" do
     let(:service_template) do
       described_class.create(:name => "test", :description => "test", :custom_button_sets => [assigned_group_set])
@@ -119,7 +121,7 @@ describe ServiceTemplate do
         svc_template = FactoryGirl.create(:service_template, :name => 'Svc A')
         options = {:dialog => {}}
         options[:initiator] = initiator if initiator
-        svc_task = instance_double("service_task", :options => options)
+        svc_task = instance_double("service_task", :options => options, :get_user => service_user)
         svc = svc_template.create_service(svc_task, nil)
 
         expect(svc.initiator).to eq(match)
@@ -180,7 +182,7 @@ describe ServiceTemplate do
     end
 
     it "should add_resource! only if a parent_svc exists" do
-      sub_svc = instance_double("service_task", :options => {:dialog => {}})
+      sub_svc = instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user)
       parent_svc = instance_double("service_task", :options => {:dialog => {}})
       expect(parent_svc).to receive(:add_resource!).once
 
@@ -188,7 +190,7 @@ describe ServiceTemplate do
     end
 
     it "should not call add_resource! if no parent_svc exists" do
-      sub_svc = instance_double("service_task", :options => {:dialog => {}})
+      sub_svc = instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user)
       expect(sub_svc).to receive(:add_resource!).never
 
       @svc_a.create_service(sub_svc)
@@ -196,17 +198,17 @@ describe ServiceTemplate do
 
     it "should pass display attribute to created top level service" do
       @svc_a.display = true
-      expect(@svc_a.create_service(double(:options => {:dialog => {}})).display).to eq(true)
+      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user)).display).to eq(true)
     end
 
     it "should set created child service's display to false" do
       @svc_a.display = true
       allow(@svc_b).to receive(:add_resource!)
-      expect(@svc_a.create_service(double(:options => {:dialog => {}}), @svc_b).display).to eq(false)
+      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user), @svc_b).display).to eq(false)
     end
 
     it "should set created service's display to false by default" do
-      expect(@svc_a.create_service(double(:options => {:dialog => {}})).display).to eq(false)
+      expect(@svc_a.create_service(double(:options => {:dialog => {}}, :get_user => service_user)).display).to eq(false)
     end
 
     it "should return all parent services for a service" do
@@ -306,7 +308,6 @@ describe ServiceTemplate do
       @test_service = FactoryGirl.create(:service, :name => 'test service')
       expect(@test_service.evm_owner).to be_nil
       @st1.set_ownership(@test_service, @user)
-      @test_service.reload
       expect(@test_service.evm_owner.name).to eq(@user.name)
       expect(@test_service.evm_owner.current_group).not_to be_nil
       expect(@test_service.evm_owner.current_group.description).to eq(@user.current_group.description)
