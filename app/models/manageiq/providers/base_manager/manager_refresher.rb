@@ -1,14 +1,6 @@
 module ManageIQ
   module Providers
     class BaseManager::ManagerRefresher < ManageIQ::Providers::BaseManager::Refresher
-      # Gives a Builder class for Inventory
-      # @param klass [Class] Class of used ManageIQ::Providers::BaseManager object
-      # @return [ManageIQ::Providers::<provider_name>::Builder] Builder class for Inventory
-      def builder_class_for(klass)
-        provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
-        "#{provider_module}::Builder".constantize
-      end
-
       def inventory_class_for(klass)
         provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
         "#{provider_module}::Inventory".constantize
@@ -45,13 +37,7 @@ module ManageIQ
           _log.info("Filtering inventory for #{target.class} [#{target_name}] id: [#{target.id}]...")
 
           if ems.inventory_object_refresh?
-            # Tmp construction until all providers will be refactored
-            # to use `inventory_class_for`
-            begin
-              inventory = builder_class_for(ems.class).build_inventory(ems, target)
-            rescue NameError
-              inventory = inventory_class_for(ems.class).build(ems, target)
-            end
+            inventory = inventory_class_for(ems.class).build(ems, target)
           end
 
           _log.info("Filtering inventory...Complete")
@@ -100,7 +86,7 @@ module ManageIQ
           # we could be missing some crosslinks in the refreshed data
           all_targets, sub_ems_targets = targets.partition { |x| x.kind_of?(ExtManagementSystem) }
 
-          unless sub_ems_targets.blank?
+          if sub_ems_targets.present?
             if ems.allow_targeted_refresh?
               # We can disable targeted refresh with a setting, then we will just do full ems refresh on any event
               ems_event_collection = ManagerRefresh::TargetCollection.new(:targets    => sub_ems_targets,
