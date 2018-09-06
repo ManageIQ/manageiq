@@ -197,22 +197,21 @@ class ServiceTemplate < ApplicationRecord
 
     nh['initiator'] = service_task.options[:initiator] if service_task.options[:initiator]
 
-    svc = Service.create(nh)
-    svc.service_template = self
+    Service.create(nh) do |svc|
+      svc.service_template = self
+      set_ownership(svc, service_task.get_user)
 
-    service_resources.each do |sr|
-      nh = sr.attributes.dup
-      %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
-      svc.add_resource(sr.resource, nh) unless sr.resource.nil?
+      service_resources.each do |sr|
+        nh = sr.attributes.dup
+        %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
+        svc.add_resource(sr.resource, nh) unless sr.resource.nil?
+      end
+
+      if parent_svc
+        service_resource = ServiceResource.find_by(:id => service_task.options[:service_resource_id])
+        parent_svc.add_resource!(svc, service_resource)
+      end
     end
-
-    if parent_svc
-      service_resource = ServiceResource.find_by(:id => service_task.options[:service_resource_id])
-      parent_svc.add_resource!(svc, service_resource)
-    end
-
-    svc.save
-    svc
   end
 
   def set_service_type
@@ -258,8 +257,6 @@ class ServiceTemplate < ApplicationRecord
                                                             parent_svc)
     end
     svc = create_service(service_task, parent_svc)
-
-    set_ownership(svc, service_task.get_user)
 
     service_task.destination = svc
 
@@ -313,7 +310,6 @@ class ServiceTemplate < ApplicationRecord
     else
       $log.info("Setting Service Owning User to Name=#{user.name}, ID=#{user.id}")
     end
-    service.save
   end
 
   def self.default_provisioning_entry_point(service_type)
