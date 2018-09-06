@@ -195,14 +195,18 @@ module RetirementMixin
   end
 
   def raise_retirement_event(event_name, requester = nil)
-    requester ||= User.current_user.try(:userid)
     q_options = retire_queue_options
+    initiator = initiator_context(requester)
+    if initiator == "system"
+      q_user_info(q_options)
+      requester = q_options[:user_id]
+      $log.info("System retirement initiator using id: [#{requester}] for: #{name}")
+    end
     $log.info("Raising Retirement Event for [#{name}] with queue options: #{q_options.inspect}")
-    MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester), q_options)
+    MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester, initiator), q_options)
   end
 
   def raise_audit_event(event_name, message, requester = nil)
-    requester ||= User.current_user.try(:userid)
     event_hash = {
       :target_class => retirement_base_model_name,
       :target_id    => id.to_s,
@@ -211,6 +215,10 @@ module RetirementMixin
     }
     event_hash[:userid] = requester if requester.present?
     AuditEvent.success(event_hash)
+  end
+
+  def initiator_context(requester)
+    requester.present? ? user_initiation : system_initiation
   end
 
   def retiring?
@@ -227,18 +235,34 @@ module RetirementMixin
     valid_zone? ? {:zone => my_zone} : {}
   end
 
+  def user_initiation
+    "user".freeze
+  end
+
   def valid_zone?
     respond_to?(:my_zone) && my_zone.present?
   end
 
-  def setup_event_hash(requester)
-    event_hash = {:retirement_initiator => "system"}
-    event_hash[retirement_base_model_name.underscore.to_sym] = self
-    event_hash[:host] = host if self.respond_to?(:host)
-    if requester
-      event_hash[:userid] = requester
-      event_hash[:retirement_initiator] = "user"
+  def q_user_info(q_options)
+    if respond_to?(:evm_owner)
+      q_options[:user_id]   = evm_owner.id
+      q_options[:group_id]  = evm_owner.current_group.id
+      q_options[:tenant_id] = evm_owner.current_tenant.id
+      q_options
+    else
     end
+  end
+
+  def system_initiation
+    "system".freeze
+  end
+
+  def setup_event_hash(requester, initiator)
+    event_hash = {}
+    event_hash[:retirement_initiator] = initiator
+    event_hash[:userid] = requester
+    event_hash[retirement_base_model_name.underscore.to_sym] = self
+    event_hash[:host] = host if respond_to?(:host)
     event_hash[:type] ||= self.class.name
     event_hash
   end
