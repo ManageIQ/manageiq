@@ -143,6 +143,41 @@ class MiqPglogical
     YAML.load_file(Rails.root.join("config/default_replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
   end
 
+  def self.save_replication_type(type)
+    error = []
+    begin
+      MiqRegion.replication_type = type
+    rescue => e
+      error << "Failed to update replication type: #{e.message}"
+    end
+    error
+  end
+
+  def self.save_remote_region(exclusion_list)
+    errors = save_replication_type(:remote)
+    return errors unless errors.empty?
+
+    begin
+      refresh_excludes(YAML.safe_load(exclusion_list))
+    rescue => e
+      errors << "Failed to update exclution list: #{e.message}"
+    end
+    errors
+  end
+
+  def self.save_global_region(subscriptions_to_save, subscriptions_to_remove)
+    errors = save_replication_type(:global)
+    return errors unless errors.empty?
+
+    errors = PglogicalSubscription.delete_all(subscriptions_to_remove)
+    begin
+      PglogicalSubscription.save_all!(subscriptions_to_save)
+    rescue => e
+      errors << e.message
+    end
+    errors
+  end
+
   private
 
   def pglogical(refresh = false)
