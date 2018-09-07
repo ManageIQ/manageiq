@@ -2,7 +2,7 @@ module EmsRefresh::SaveInventory
   # Parsed inventory can come as hash of hashes or array of InventoryCollection's.
   def save_ems_inventory(ems, hashes_or_collections, target = nil, disconnect = true)
     if hashes_or_collections.kind_of?(Array)
-      ManagerRefresh::SaveInventory.save_inventory(ems, hashes_or_collections) # InventoryCollections.
+      InventoryRefresh::SaveInventory.save_inventory(ems, hashes_or_collections) # InventoryCollections.
       return
     end
     hashes = hashes_or_collections

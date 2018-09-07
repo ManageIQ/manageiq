@@ -1,6 +1,6 @@
 module EmsRefresh::SaveInventoryContainer
   def save_ems_container_inventory(ems, hashes, _target = nil)
-    ManagerRefresh::SaveInventory.save_inventory(ems, [hashes[:tag_mapper].tags_to_resolve_collection])
+    InventoryRefresh::SaveInventory.save_inventory(ems, [hashes[:tag_mapper].tags_to_resolve_collection])
 
     child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
                   :container_builds, :container_build_pods, :persistent_volume_claims, :persistent_volumes,

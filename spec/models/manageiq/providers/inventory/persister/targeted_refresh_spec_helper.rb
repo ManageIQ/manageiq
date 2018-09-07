@@ -3,7 +3,7 @@ require_relative 'test_persister'
 
 module TargetedRefreshSpecHelper
   def create_persister
-    TestPersister.new(@ems, ManagerRefresh::TargetCollection.new(:manager => @ems))
+    TestPersister.new(@ems, InventoryRefresh::TargetCollection.new(:manager => @ems))
   end
 
   def expected_ext_management_systems_count

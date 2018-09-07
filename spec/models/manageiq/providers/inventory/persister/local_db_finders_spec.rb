@@ -79,7 +79,7 @@ describe ManageIQ::Providers::Inventory::Persister do
       persister.vms.build(@vm_data102)
       persister.vms.build(@vm_data160)
 
-      ManagerRefresh::InventoryCollection::Scanner.scan!(persister.inventory_collections)
+      InventoryRefresh::InventoryCollection::Scanner.scan!(persister.inventory_collections)
 
       # Assert the local db index is empty if we do not load the reference
       expect(persister.networks.index_proxy.send(:local_db_indexes)[:manager_ref].send(:index)).to be_nil

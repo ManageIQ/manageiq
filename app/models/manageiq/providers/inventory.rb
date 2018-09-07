@@ -42,7 +42,7 @@ module ManageIQ::Providers
 
     # Returns all InventoryCollections contained in persister
     #
-    # @return [Array<ManagerRefresh::InventoryCollection>] List of InventoryCollections objects
+    # @return [Array<InventoryRefresh::InventoryCollection>] List of InventoryCollections objects
     def inventory_collections
       parse.inventory_collections
     end
@@ -78,7 +78,7 @@ module ManageIQ::Providers
     end
 
     # @param ems [ExtManagementSystem]
-    # @param target [ExtManagementSystem, ManagerRefresh::TargetCollection]
+    # @param target [ExtManagementSystem, InventoryRefresh::TargetCollection]
     # @param type [String] 'Persister' | 'Collector' | 'Parser'
     # @param manager_name [String, nil] @see default_manager_name
     def self.class_for(ems, target, type, manager_name = nil)
@@ -107,7 +107,7 @@ module ManageIQ::Providers
     # For example 'CloudManager' or 'StorageManager::Ebs'
     def self.parsed_manager_name(target)
       case target
-      when ManagerRefresh::TargetCollection
+      when InventoryRefresh::TargetCollection
         'TargetCollection'
       else
         klass = target.class == Class ? target : target.class

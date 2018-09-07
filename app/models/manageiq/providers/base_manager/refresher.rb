@@ -182,7 +182,7 @@ module ManageIQ
       # Saves the inventory to the DB
       #
       # @param ems [ManageIQ::Providers::BaseManager]
-      # @param target [ManageIQ::Providers::BaseManager or ManagerRefresh::Target or ManagerRefresh::TargetCollection]
+      # @param target [ManageIQ::Providers::BaseManager or InventoryRefresh::Target or InventoryRefresh::TargetCollection]
       # @param parsed [Array<Hash> or ManageIQ::Providers::Inventory::Persister]
       def save_inventory(ems, target, parsed_hashes_or_persister)
         if parsed_hashes_or_persister.kind_of?(ManageIQ::Providers::Inventory::Persister)
@@ -225,7 +225,7 @@ module ManageIQ
         self.targets_by_ems_id = Hash.new { |h, k| h[k] = [] }
 
         targets.each do |t|
-          if t.kind_of?(ManagerRefresh::Target)
+          if t.kind_of?(InventoryRefresh::Target)
             ems_by_ems_id[t.manager_id] ||= t.manager
             targets_by_ems_id[t.manager_id] << t
           else

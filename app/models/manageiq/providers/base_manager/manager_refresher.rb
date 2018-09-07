@@ -26,8 +26,8 @@ module ManageIQ
       # anything.
       #
       # @param ems [ManageIQ::Providers::BaseManager] Manager having creds for API connection
-      # @param targets [Array] Array of targets which can be ManageIQ::Providers::BaseManager or ManagerRefresh::Target
-      #        or ManagerRefresh::TargetCollection or ApplicationRecord we will be collecting data for.
+      # @param targets [Array] Array of targets which can be ManageIQ::Providers::BaseManager or InventoryRefresh::Target
+      #        or InventoryRefresh::TargetCollection or ApplicationRecord we will be collecting data for.
       # @return [Array<Array>] Array of doubles [target, inventory] with target class from parameter and
       #         ManageIQ::Providers::Inventory object
       def collect_inventory_for_targets(ems, targets)
@@ -53,7 +53,7 @@ module ManageIQ
       # @param _target [Array] Not used in new refresh or legacy refresh by default.
       # @param inventory [ManageIQ::Providers::Inventory] Inventory object having Parsers, Collector and Persister objects
       #        that we need for parsing.
-      # @return [Array<Hash> or ManagerRefresh::Persister] Returns parsed Array of hashes for legacy refresh, or
+      # @return [Array<Hash> or InventoryRefresh::Persister] Returns parsed Array of hashes for legacy refresh, or
       #         Persister object containing parsed data for new refresh.
       def parse_targeted_inventory(ems, _target, inventory)
         log_header = format_ems_for_logging(ems)
@@ -72,7 +72,7 @@ module ManageIQ
       end
 
       # We preprocess targets to merge all non ExtManagementSystem class targets into one
-      # ManagerRefresh::TargetCollection. This way we can do targeted refresh of all queued targets in 1 refresh
+      # InventoryRefresh::TargetCollection. This way we can do targeted refresh of all queued targets in 1 refresh
       def preprocess_targets
         @targets_by_ems_id.each do |ems_id, targets|
           ems = @ems_by_ems_id[ems_id]
@@ -89,8 +89,8 @@ module ManageIQ
           if sub_ems_targets.present?
             if ems.allow_targeted_refresh?
               # We can disable targeted refresh with a setting, then we will just do full ems refresh on any event
-              ems_event_collection = ManagerRefresh::TargetCollection.new(:targets    => sub_ems_targets,
-                                                                          :manager_id => ems_id)
+              ems_event_collection = InventoryRefresh::TargetCollection.new(:targets    => sub_ems_targets,
+                                                                            :manager_id => ems_id)
               all_targets << ems_event_collection
             else
               all_targets << @ems_by_ems_id[ems_id]
