@@ -888,7 +888,7 @@ describe Rbac::Filterer do
     def get_rbac_results_for_and_expect_objects(klass, expected_objects)
       User.current_user = user
 
-      results = described_class.search(:class => klass).first
+      results = described_class.search(:targets => klass).first
       expect(results).to match_array(expected_objects)
     end
 
@@ -1015,14 +1015,14 @@ describe Rbac::Filterer do
 
         it 'can see all roles except for EvmRole-super_administrator' do
           expect(MiqUserRole.count).to eq(3)
-          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role, user_role])
+          get_rbac_results_for_and_expect_objects(MiqUserRole.select(:id, :name), [tenant_administrator_user_role, user_role])
         end
 
         it 'can see all groups except for group with role EvmRole-super_administrator' do
           expect(MiqUserRole.count).to eq(3)
           default_group_for_tenant = user.current_tenant.miq_groups.where(:group_type => "tenant").first
           super_admin_group
-          get_rbac_results_for_and_expect_objects(MiqGroup, [group, other_group, default_group_for_tenant])
+          get_rbac_results_for_and_expect_objects(MiqGroup.select(:id, :description), [group, other_group, default_group_for_tenant])
         end
 
         it 'can see all groups in the current tenant only' do

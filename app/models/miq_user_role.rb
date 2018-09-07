@@ -65,7 +65,7 @@ class MiqUserRole < ApplicationRecord
   end
 
   def self.with_roles_excluding(identifier)
-    where.not(:id => MiqUserRole.joins(:miq_product_features)
+    where.not(:id => MiqUserRole.unscope(:select).joins(:miq_product_features)
                                 .where(:miq_product_features => {:identifier => identifier})
                                 .select(:id))
   end

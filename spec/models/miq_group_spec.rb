@@ -583,4 +583,14 @@ describe MiqGroup do
       expect(virtual_column_sql_value(MiqGroup.where(:id => group.id), "miq_user_role_name")).to eq("EvmRole-the_role")
     end
   end
+
+  describe ".with_roles_excluding" do
+    it "handles multiple columns" do
+      a = FactoryGirl.create(:miq_group, :features => "good")
+      FactoryGirl.create(:miq_group, :features => %w(good everything))
+      FactoryGirl.create(:miq_group, :features => "everything")
+
+      expect(MiqGroup.select(:id, :description).with_roles_excluding("everything")).to match_array([a])
+    end
+  end
 end
