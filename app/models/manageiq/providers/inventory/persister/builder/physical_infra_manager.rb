@@ -36,6 +36,14 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def physical_chassis_details
+          add_properties(
+            :model_class                  => ::AssetDetail,
+            :manager_ref                  => %i(resource),
+            :parent_inventory_collections => %i(physical_chassis)
+          )
+        end
+
         def physical_storages
           add_common_default_values
         end
