@@ -11,10 +11,13 @@ class RailsRequestMonitor
 
   class << self
     def log_long_running_requests(with_backtrace = false)
-      now = Time.now
       Thread.list.each do |thread|
         if thread[THREAD_VAR_KEY] && queue = thread[THREAD_VAR_KEY].get_queue(QUEUE_KEY)
+          now      ||= nil
+          too_slow ||= nil
           queue.each do |request|
+            now      ||= Time.now
+            too_slow ||= now - long_request_time
             next unless request.time < too_slow
 
             duration = (now - request.time).to_f  # don't use event.duration, will mutate
@@ -33,8 +36,10 @@ class RailsRequestMonitor
     private
 
     # TODO:  Maybe make this a setting?
-    def too_slow
-      10.seconds.ago
+    # LONG_REQUEST = 10.seconds
+    LONG_REQUEST = 10 # seconds
+    def long_request_time
+      LONG_REQUEST
     end
   end
 end
