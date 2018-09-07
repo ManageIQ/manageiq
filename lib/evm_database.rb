@@ -112,4 +112,72 @@ class EvmDatabase
     msg = "Server IP: #{MiqServer.my_server.ipaddress}, Server Host Name: #{MiqServer.my_server.hostname}"
     MiqEvent.raise_evm_event_queue(MiqServer.my_server, event, :event_details => msg)
   end
+
+  def self.restart_failover_monitor_service
+    service = LinuxAdmin::Service.new("evm-failover-monitor")
+    service.restart if service.running?
+  end
+
+  def self.restart_failover_monitor_service_queue
+    MiqQueue.put(
+      :class_name  => name,
+      :method_name => 'restart_failover_monitor_service',
+      :role        => 'database_operations',
+      :zone        => nil
+    )
+  end
+
+  def self.run_failover_monitor(monitor = nil)
+    require 'manageiq-postgres_ha_admin'
+    ManageIQ::PostgresHaAdmin.logger = Vmdb.logger
+
+    monitor ||= ManageIQ::PostgresHaAdmin::FailoverMonitor.new(Rails.root.join("config", "ha_admin.yml"))
+
+    configure_rails_handler(monitor)
+    configure_pglogical_handlers(monitor)
+
+    _log.info("Starting database failover monitor")
+    monitor.monitor_loop
+  end
+
+  def self.configure_rails_handler(monitor)
+    file_path = Rails.root.join("config", "database.yml")
+    rails_handler = ManageIQ::PostgresHaAdmin::RailsConfigHandler.new(:file_path => file_path, :environment => Rails.env)
+    _log.info("Configuring database failover for #{file_path}'s #{Rails.env} environment")
+
+    rails_handler.before_failover { LinuxAdmin::Service.new("evmserverd").stop }
+    rails_handler.after_failover do
+      # refresh the rails connection info after the config handler changed database.yml
+      begin
+        ActiveRecord::Base.remove_connection
+      rescue PG::Error
+        # We expect this to fail because it cannot access the database in the cached config
+      end
+      ActiveRecord::Base.establish_connection(Rails.application.config.database_configuration[Rails.env])
+
+      raise_server_event("db_failover_executed")
+      LinuxAdmin::Service.new("evmserverd").restart
+    end
+
+    monitor.add_handler(rails_handler)
+  end
+  private_class_method :configure_rails_handler
+
+  def self.configure_pglogical_handlers(monitor)
+    return unless MiqServer.my_server.has_active_role?("database_operations")
+
+    local_db_conninfo = ActiveRecord::Base.connection.raw_connection.conninfo_hash.delete_blanks
+    PglogicalSubscription.all.each do |s|
+      handler = ManageIQ::PostgresHaAdmin::PglogicalConfigHandler.new(:subscription => s.id, :conn_info => local_db_conninfo)
+      _log.info("Configuring database failover for replication subscription #{s.id} ")
+
+      handler.after_failover do |new_conn_info|
+        s.delete
+        PglogicalSubscription.new(new_conn_info.slice(:dbname, :host, :user, :password, :port)).save
+      end
+
+      monitor.add_handler(handler)
+    end
+  end
+  private_class_method :configure_pglogical_handlers
 end
