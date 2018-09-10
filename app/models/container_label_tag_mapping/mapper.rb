@@ -16,6 +16,7 @@ class ContainerLabelTagMapping
       @mappings = mappings.group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
                           .transform_values { |ms| ms.collect(&:tag_id) }
 
+      require "inventory_refresh"
       @tags_to_resolve_collection = ::InventoryRefresh::InventoryCollection.new(
         :name              => :mapped_tags_to_resolve,
         :model_class       => Tag,
