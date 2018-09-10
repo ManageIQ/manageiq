@@ -4,9 +4,10 @@ require 'mount/miq_generic_mount_session'
 module FileDepotMixin
   extend ActiveSupport::Concern
   SUPPORTED_DEPOTS = {
-    'smb' => 'Samba',
-    'nfs' => 'Network File System',
-    's3'  => 'Amazon Web Services'
+    'smb'   => 'Samba',
+    'nfs'   => 'Network File System',
+    's3'    => 'Amazon Web Services',
+    'swift' => 'Openstack Swift'
   }.freeze
 
   included do
