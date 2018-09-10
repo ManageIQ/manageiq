@@ -199,7 +199,7 @@ class Service < ApplicationRecord
   end
 
   def all_states_match?(action, states = nil)
-    states = power_states if states.nil?
+    states ||= power_states
     return true if composite? && (states.uniq == map_power_states(action))
     return true if atomic? && (states[0] == POWER_STATE_MAP[action])
     false

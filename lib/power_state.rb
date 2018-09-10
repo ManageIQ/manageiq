@@ -36,7 +36,9 @@ class PowerState
   end
 
   def partial_state_calculation
-    summed_hash = @states.inject(Hash.new(0)) { |total, e| total[e] += 1; total }
+    summed_hash = @states.each_with_object(Hash.new { |h, k| h[k] = 0 }) do |e, total|
+      total[e] += 1
+    end
     greatest_value = summed_hash.values.sort.last
     summed_hash.select { |x| summed_hash[x] == greatest_value }.keys.first
   end
