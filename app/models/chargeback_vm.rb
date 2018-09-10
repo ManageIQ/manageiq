@@ -138,8 +138,6 @@ class ChargebackVm < Chargeback
       "memory_cost"              => {:grouping => [:total]},
       "memory_used_cost"         => {:grouping => [:total]},
       "memory_used_metric"       => {:grouping => [:total]},
-      "metering_used_cost"       => {:grouping => [:total]},
-      "metering_used_metric"     => {:grouping => [:total]},
       "net_io_used_cost"         => {:grouping => [:total]},
       "net_io_used_metric"       => {:grouping => [:total]},
       "storage_allocated_cost"   => {:grouping => [:total]},
