@@ -1341,7 +1341,6 @@
       :feature_type: admin
       :identifier: host_provide
 
-
 # Resource Pools
 - :name: Resource Pools
   :description: Access Everything under Resource Pools
@@ -2701,6 +2700,7 @@
   :description: Display of Utilization Data
   :feature_type: node
   :identifier: utilization
+
 # Planning
 - :name: Planning
   :description: Display of Planning Data
@@ -2767,7 +2767,6 @@
           :feature_type: admin
           :hidden: true
           :identifier: tp_delete
-
 
 # Tasks
 - :name: Tasks
@@ -3391,11 +3390,13 @@
   :description: Open the Documentation Page
   :feature_type: node
   :identifier: documentation
+
 # Product
 - :name: Product
   :description: Open the Product Website
   :feature_type: node
   :identifier: product
+
 # About
 - :name: About
   :description: Show the About Information
@@ -3649,7 +3650,6 @@
     :feature_type: admin
     :hidden: true
     :identifier: miq_capacity_download_text
-
 
 # OrchestrationStack
 - :name: Orchestration Stacks
@@ -4015,7 +4015,6 @@
       :feature_type: admin
       :identifier: cloud_network_delete
 
-
 # Network Port
 - :name: Network Ports
   :description: Everything under Network Ports
@@ -4155,7 +4154,6 @@
       :description: Remove Interface from Router
       :feature_type: admin
       :identifier: network_router_remove_interface
-
 
 # Load Balancer
 - :name: Load Balancers
@@ -4320,7 +4318,6 @@
       :description: Check Compliance of Last Known Configuration
       :feature_type: control
       :identifier: container_replicator_check_compliance
-
 
 # ContainerImage
 - :name: Images
@@ -6173,6 +6170,7 @@
       :description: Access Physical Server Remote Console
       :feature_type: control
       :identifier: physical_server_remote_console
+
 # Firmwares
 - :name: Firmwares
   :description: Everything under Firmware
@@ -6348,6 +6346,25 @@
       :hidden: true
       :feature_type: view
       :identifier: custom_button_events_show_list
+  - :name: Service Offerings
+    :description: Everything under Service Offerings
+    :feature_type: node
+    :identifier: service_offerings
+    :children:
+    - :name: View
+      :description: View Service Offerings
+      :feature_type: view
+      :identifier: service_offerings_view
+  - :name: Service Parameters Sets
+    :description: Everything under Service Parameters Sets
+    :feature_type: node
+    :identifier: service_parameters_sets
+    :children:
+    - :name: View
+      :description: View Service Parameters Sets
+      :feature_type: view
+      :identifier: service_parameters_sets_view
+
 # SUI
 - :name: Service UI
   :description: Features for the Service UI
