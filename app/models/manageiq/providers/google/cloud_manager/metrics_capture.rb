@@ -37,46 +37,45 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
   VIM_COUNTER_SCHEMAS = [
     {
       # Name of the VIM_STYLE_COUNTER this schema describes
-      :vim_counter_name        => "cpu_usage_rate_average",
+      :vim_counter_name    => "cpu_usage_rate_average",
 
       # List of metric names in GCP that should be retrieved to calculate the
       # vim-style metric
-      :google_metric_names     => ["compute.googleapis.com/instance/cpu/utilization"],
-
-      # A function that maps a target to a list of google labels to be applied
-      # to the request. Only results matching the label are returned.
-      :target_to_google_labels => ->(target) { ["compute.googleapis.com/resource_id==#{target.ems_ref}"] },
+      # https://cloud.google.com/monitoring/api/metrics_gcp#gcp-compute
+      :google_metric_names => %w(compute.googleapis.com/instance/cpu/utilization),
 
       # Function that maps a point returned by Google's monitoring api (which
       # is a hash data structure; see
-      # https://cloud.google.com/monitoring/v2beta2/timeseries) to our counter
-      # value. Any unit transformations are applied as well.
-      :point_to_val            => ->(point) { point["doubleValue"].to_f * 100 },
+      # https://cloud.google.com/monitoring/api/ref_v3/rest/v3/TimeSeries)
+      # to our counter value. Any unit transformations are applied as well.
+      :point_to_val        => ->(point) { point[:double_value].to_f * 100 },
 
       # Function that takes two points and reduces them to one. This is used
       # when multiple points are found for the same data point in the same
       # query (e.g. if we are querying disk usage and the host has multiple
       # disks, this method is used to combine the points into a single metric)
-      :reducer                 => lambda do |x, _|
+      :reducer             => lambda do |x, _|
         _log.warn("Received multiple values for cpu_usage; ignoring duplicates")
         x
       end
     },
     {
-      :vim_counter_name        => "disk_usage_rate_average",
-      :google_metric_names     => ["compute.googleapis.com/instance/disk/read_bytes_count",
-                                   "compute.googleapis.com/instance/disk/write_bytes_count"],
-      :target_to_google_labels => ->(target) { ["compute.googleapis.com/resource_id==#{target.ems_ref}"] },
-      :point_to_val            => ->(point) { point["int64Value"].to_i / (60.0 * 1024.0) }, # convert from b/m to Kb/s
-      :reducer                 => ->(x, y) { x + y },
+      :vim_counter_name    => "disk_usage_rate_average",
+      :google_metric_names => %w(
+        compute.googleapis.com/instance/disk/read_bytes_count
+        compute.googleapis.com/instance/disk/write_bytes_count
+      ),
+      :point_to_val        => ->(point) { point[:int64_value].to_i / (60.0 * 1024.0) }, # convert from b/m to Kb/s
+      :reducer             => ->(x, y) { x + y },
     },
     {
-      :vim_counter_name        => "net_usage_rate_average",
-      :google_metric_names     => ["compute.googleapis.com/instance/network/received_bytes_count",
-                                   "compute.googleapis.com/instance/network/sent_bytes_count"],
-      :target_to_google_labels => ->(target) { ["compute.googleapis.com/resource_id==#{target.ems_ref}"] },
-      :point_to_val            => ->(point) { point["int64Value"].to_i / (60.0 * 1024.0) }, # convert from b/m to Kb/s
-      :reducer                 => ->(x, y) { x + y },
+      :vim_counter_name    => "net_usage_rate_average",
+      :google_metric_names => %w(
+        compute.googleapis.com/instance/network/received_bytes_count
+        compute.googleapis.com/instance/network/sent_bytes_count
+      ),
+      :point_to_val        => ->(point) { point[:int64_value].to_i / (60.0 * 1024.0) }, # convert from b/m to Kb/s
+      :reducer             => ->(x, y) { x + y },
     }
   ].freeze
 
@@ -127,15 +126,19 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
   #   aggregate metrics onto (will be modified by method)
   # @return nil
   def collect_metrics(google, start_time, end_time, schema, counter_values_by_ts)
+    interval = {
+      :start_time => start_time.to_datetime.rfc3339,
+      :end_time   => end_time.to_datetime.rfc3339
+    }
+
     schema[:google_metric_names].each do |google_metric_name|
-      options = {
-        :labels => schema[:target_to_google_labels].call(target),
-        :oldest => start_time.to_datetime.rfc3339,
-      }
+      # For filter creation and entity selection see https://cloud.google.com/monitoring/api/v3/filters
+      filter = "metric.type = \"#{google_metric_name}\" AND resource.labels.instance_id = \"#{target.ems_ref}\""
+
       # Make our service call for metrics; Note that we might get multiple
       # time series back (for example, if the host has multiple disks/network
       # cards)
-      tss = google.timeseries_collection.all(google_metric_name, end_time.to_datetime.rfc3339, options)
+      tss = google.timeseries_collection.all(:filter => filter, :interval => interval)
 
       tss.each do |ts|
         collect_time_series_metrics(ts, schema, counter_values_by_ts)
@@ -147,7 +150,8 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
   # provided 'counter_values_by_ts' hash, using the provided schema.
   #
   # @param time_series [Hash] resource returned by GCP describing a metric
-  #   lookup result (see https://cloud.google.com/monitoring/v2beta2/timeseries)
+  #   lookup result (see
+  #   https://cloud.google.com/monitoring/api/ref_v3/rest/v3/TimeSeries)
   # @param schema [Hash] schema describing the metric to query (see
   #   VIM_STYLE_COUNTERS definition for a description)
   # @param counter_values_by_ts [Hash{Time => Hash{String => Number}}] hash to
@@ -159,8 +163,8 @@ class ManageIQ::Providers::Google::CloudManager::MetricsCapture < ManageIQ::Prov
       # minute; this allows us to sum up points across time series that may
       # have landed on different seconds. Note this only holds true for
       # 1-minute metrics.
-      timestamp = Time.zone.parse(point["start"]).beginning_of_minute
-      val = schema[:point_to_val].call(point)
+      timestamp = Time.zone.parse(point[:interval][:start_time]).beginning_of_minute
+      val = schema[:point_to_val].call(point[:value])
 
       # If we already have a value, reduce using our reduction function
       prev_val = counter_values_by_ts.fetch_path(timestamp, schema[:vim_counter_name])

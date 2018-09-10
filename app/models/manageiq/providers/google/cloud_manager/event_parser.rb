@@ -5,7 +5,6 @@ module ManageIQ::Providers::Google::CloudManager::EventParser
     log_header = "ems_id: [#{ems_id}] " unless ems_id.nil?
 
     event_type = parse_event_type(event)
-    timestamp = event.fetch_path('metadata', 'timestamp')
 
     _log.debug { "#{log_header}event: [#{event_type}]" }
 
@@ -13,7 +12,7 @@ module ManageIQ::Providers::Google::CloudManager::EventParser
       :event_type => event_type,
       :source     => "GOOGLE",
       :message    => event_type,
-      :timestamp  => timestamp,
+      :timestamp  => event['timestamp'],
       :full_data  => event,
       :ems_id     => ems_id
     }

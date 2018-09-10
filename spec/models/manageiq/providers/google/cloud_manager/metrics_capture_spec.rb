@@ -1,205 +1,200 @@
 require 'fog/google'
 
 describe ManageIQ::Providers::Google::CloudManager::MetricsCapture do
-  let(:ems) { FactoryGirl.create(:ems_google) }
-  let(:vm) { FactoryGirl.build(:vm_google, :ext_management_system => ems, :ems_ref => "my_ems_ref") }
+  require 'fog/google'
 
-  context "#perf_collect_metrics" do
-    it "raises an error when no EMS is defined" do
-      vm = FactoryGirl.build(:vm_google, :ext_management_system => nil)
-      expect { vm.perf_collect_metrics('interval_name') }.to raise_error(RuntimeError, /No EMS defined/)
+  let(:ems)                   { FactoryGirl.create(:ems_google_with_project) }
+  let(:metrics_connection)    { ems.connect(:service => 'monitoring') }
+  let(:timeseries_collection) { double }
+
+  before(:all) { Fog.mock! }
+  after(:all)  { Fog.unmock! }
+
+  describe '#perf_collect_metrics' do
+    subject { vm.perf_collect_metrics('realtime') }
+
+    before do
+      allow(ems).to                   receive(:with_provider_connection).and_yield(metrics_connection)
+      allow(metrics_connection).to    receive(:timeseries_collection).and_return(timeseries_collection)
+      allow(timeseries_collection).to receive(:all).and_return({})
     end
 
-    it "returns [{},{}] when target is not a vm" do
-      template = FactoryGirl.build(:template_google, :ext_management_system => ems)
-      expect(template.perf_collect_metrics('interval_name')).to eq([{}, {}])
-    end
+    context 'no metrics collected' do
+      context 'when no EMS is defined' do
+        let(:vm) { FactoryGirl.build(:vm_google) }
 
-    it "has definitions for cpu, network and disk metrics" do
-      # Don't stage any metrics
-      stage_metrics({})
-
-      counters_by_id, = vm.perf_collect_metrics('interval_name')
-
-      expect(counters_by_id).to have_key("my_ems_ref")
-      expect(counters_by_id["my_ems_ref"]).to have_key("cpu_usage_rate_average")
-      expect(counters_by_id["my_ems_ref"]).to have_key("disk_usage_rate_average")
-      expect(counters_by_id["my_ems_ref"]).to have_key("net_usage_rate_average")
-    end
-
-    it "parses and handles cpu metrics" do
-      # Stage a single cpu metric
-      stage_metrics(
-        "compute.googleapis.com/instance/cpu/utilization" => [
-          {
-            "points" => [
-              {
-                "start"       => "2016-06-23T00:00:00.000Z",
-                "doubleValue" => "0.42"
-              }
-            ]
-          }
-        ]
-      )
-
-      _, counter_values_by_id_and_ts = vm.perf_collect_metrics('interval_name')
-
-      expect(counter_values_by_id_and_ts).to eq(
-        "my_ems_ref" => {
-          Time.zone.parse("2016-06-23T00:00:00.000Z") => {
-            "cpu_usage_rate_average" => 42.0
-          },
-          Time.zone.parse("2016-06-23T00:00:20.000Z") => {
-            "cpu_usage_rate_average" => 42.0
-          },
-          Time.zone.parse("2016-06-23T00:00:40.000Z") => {
-            "cpu_usage_rate_average" => 42.0
-          }
-        }
-      )
-    end
-
-    it "parses and aggregates multiple disks" do
-      stage_metrics(
-        "compute.googleapis.com/instance/disk/read_bytes_count" => [
-          { # Disk 1
-            "points" => [
-              {
-                "start"      => "2016-06-23T00:00:00.000Z",
-                "int64Value" => "7864020"
-              }
-            ]
-          },
-          { # Disk 2
-            "points" => [
-              {
-                "start"      => "2016-06-23T00:00:00.000Z",
-                "int64Value" => "300"
-              }
-            ]
-          }
-        ]
-      )
-
-      _, counter_values_by_id_and_ts = vm.perf_collect_metrics('interval_name')
-
-      expect(counter_values_by_id_and_ts).to eq(
-        "my_ems_ref" => {
-          Time.zone.parse("2016-06-23T00:00:00.000Z") => {
-            "disk_usage_rate_average" => 128.0 # 7864320 bytes/min = 128 kb/s
-          },
-          Time.zone.parse("2016-06-23T00:00:20.000Z") => {
-            "disk_usage_rate_average" => 128.0
-          },
-          Time.zone.parse("2016-06-23T00:00:40.000Z") => {
-            "disk_usage_rate_average" => 128.0
-          }
-        }
-      )
-    end
-
-    it "parses and aggregates read and write on disk" do
-      stage_metrics(
-        "compute.googleapis.com/instance/disk/read_bytes_count"  => [
-          {
-            "points" => [
-              {
-                "start"      => "2016-06-23T00:00:00.000Z",
-                "int64Value" => "982252"
-              }
-            ]
-          },
-        ],
-        "compute.googleapis.com/instance/disk/write_bytes_count" => [
-          {
-            "points" => [
-              {
-                "start"      => "2016-06-23T00:00:00.000Z",
-                "int64Value" => "788"
-              }
-            ]
-          },
-        ]
-      )
-
-      _, counter_values_by_id_and_ts = vm.perf_collect_metrics('interval_name')
-
-      expect(counter_values_by_id_and_ts).to eq(
-        "my_ems_ref" => {
-          Time.zone.parse("2016-06-23T00:00:00.000Z") => {
-            "disk_usage_rate_average" => 16.0 # 983040 bytes/min = 16 kb/s
-          },
-          Time.zone.parse("2016-06-23T00:00:20.000Z") => {
-            "disk_usage_rate_average" => 16.0
-          },
-          Time.zone.parse("2016-06-23T00:00:40.000Z") => {
-            "disk_usage_rate_average" => 16.0
-          }
-        }
-      )
-    end
-
-    it "parses and aggregates read and write on network" do
-      stage_metrics(
-        "compute.googleapis.com/instance/network/received_bytes_count" => [
-          {
-            "points" => [
-              {
-                "start"      => "2016-06-23T00:00:00.000Z",
-                "int64Value" => "982252"
-              }
-            ]
-          },
-        ],
-        "compute.googleapis.com/instance/network/sent_bytes_count"     => [
-          {
-            "points" => [
-              {
-                "start"      => "2016-06-23T00:00:00.000Z",
-                "int64Value" => "788"
-              }
-            ]
-          },
-        ]
-      )
-
-      _, counter_values_by_id_and_ts = vm.perf_collect_metrics('interval_name')
-
-      expect(counter_values_by_id_and_ts).to eq(
-        "my_ems_ref" => {
-          Time.zone.parse("2016-06-23T00:00:00.000Z") => {
-            "net_usage_rate_average" => 16.0  # 983040 bytes/min = 16 kb/s
-          },
-          Time.zone.parse("2016-06-23T00:00:20.000Z") => {
-            "net_usage_rate_average" => 16.0
-          },
-          Time.zone.parse("2016-06-23T00:00:40.000Z") => {
-            "net_usage_rate_average" => 16.0
-          }
-        }
-      )
-    end
-  end
-
-  def stage_metrics(metrics)
-    timeseries_collection = double("timeseries_collection")
-    # By default, missing metrics return empty lists
-    allow(timeseries_collection).to receive(:all) { [] }
-
-    # Annoyingly fog returns an object for each time series rather than a hash
-    # so we're forced to use test doubles here
-    metrics.each do |metric_name, tss|
-      time_series_list = []
-      tss.each do |ts|
-        time_series = double(:points => ts["points"])
-        time_series_list << time_series
+        it { expect { subject }.to raise_error(RuntimeError, /No EMS defined/) }
       end
-      allow(timeseries_collection).to receive(:all).with(metric_name, anything, anything) { time_series_list }
+
+      context 'when target is not a vm' do
+        let(:vm) { FactoryGirl.build(:template_google, :ext_management_system => ems) }
+
+        it { is_expected.to eq([{}, {}]) }
+      end
     end
 
-    # Create a monitoring double and ensure it gets used instead of the real client
-    monitoring = double("::Fog::Google::Monitoring")
-    allow(monitoring).to receive(:timeseries_collection) { timeseries_collection }
-    allow(::Fog::Google::Monitoring).to receive(:new) { monitoring }
+    context 'metrics collected' do
+      let(:vm) do
+        FactoryGirl.build(:vm_google, :ext_management_system => ems, :ems_ref => "my_ems_ref")
+      end
+
+      it 'sets metrics name and ems_ref in filter' do
+        %w(
+          compute.googleapis.com/instance/cpu/utilization
+          compute.googleapis.com/instance/disk/read_bytes_count
+          compute.googleapis.com/instance/disk/write_bytes_count
+          compute.googleapis.com/instance/network/received_bytes_count
+          compute.googleapis.com/instance/network/sent_bytes_count
+        ).each do |type|
+          expect(timeseries_collection).to receive(:all).once.with(
+            hash_including(
+              :filter => "metric.type = \"#{type}\" AND resource.labels.instance_id = \"#{vm.ems_ref}\""
+            )
+          )
+        end
+        subject
+      end
+
+      context 'contains proper headers' do
+        subject { super().first["my_ems_ref"] }
+
+        it { is_expected.to eq described_class::VIM_STYLE_COUNTERS }
+      end
+
+      context 'has content for' do
+        let(:metric_scheme) { {} }
+        subject { super().last["my_ems_ref"] }
+
+        before do
+          # Parse metric_scheme to create similar structure generated by Fog
+          metric_scheme.each_pair do |type, raw_data|
+            # Wrap up timeseries so they respond to :points method
+            ts_collection = raw_data.map do |series|
+              series_double = double('Fog::Google::Monitoring::Timeseries')
+
+              allow(series_double).to receive(:points).and_return(series)
+              series_double
+            end
+
+            # Return desired timeseries collection only when the request matches in type
+            allow(timeseries_collection).to receive(:all).with(
+              hash_including(
+                :filter => "metric.type = \"#{type}\" AND resource.labels.instance_id = \"#{vm.ems_ref}\""
+              )
+            ).and_return(ts_collection)
+          end
+        end
+
+        context 'cpu utilization' do
+          let(:metric_scheme) do
+            {
+              # metric.type as key with value as an Array of all timeseries
+              "compute.googleapis.com/instance/cpu/utilization" => [
+                [
+                  # Array of all points in this timeseries
+                  {
+                    :value    => { :double_value => 0.42 },
+                    :interval => { :start_time   => "2016-06-23T00:00:00.000Z" }
+                  },
+                  {
+                    :value    => { :double_value => 0.20 },
+                    :interval => { :start_time   => "2016-06-23T00:01:00.000Z" }
+                  }
+                ]
+              ]
+            }
+          end
+
+          it { is_expected.to have_key(Time.zone.parse("2016-06-23T00:00:00.000Z")) }
+          it { is_expected.to have_key(Time.zone.parse("2016-06-23T00:00:20.000Z")) }
+          it { is_expected.to have_key(Time.zone.parse("2016-06-23T00:00:40.000Z")) }
+          it { is_expected.to have_key(Time.zone.parse("2016-06-23T00:01:00.000Z")) }
+          it { is_expected.to have_key(Time.zone.parse("2016-06-23T00:01:20.000Z")) }
+          it { is_expected.to have_key(Time.zone.parse("2016-06-23T00:01:40.000Z")) }
+
+          it "preserves interpolated values" do
+            expect(subject.values.flat_map(&:values)).to contain_exactly(42.0, 42.0, 42.0, 20.0, 20.0, 20.0)
+          end
+        end
+
+        context 'disk usage' do
+          subject { super().values.flat_map(&:values) }
+
+          context 'aggregates multiple disks' do
+            let(:metric_scheme) do
+              {
+                "compute.googleapis.com/instance/disk/read_bytes_count" => [
+                  [
+                    {
+                      :value    => { :int64_value => 7_864_020 },
+                      :interval => { :start_time  => "2016-06-23T00:00:00.000Z" }
+                    }
+                  ],
+                  [
+                    {
+                      :value    => { :int64_value => 300 },
+                      :interval => { :start_time  => "2016-06-23T00:00:00.000Z" }
+                    }
+                  ]
+                ]
+              }
+            end
+
+            it { is_expected.to eq [128, 128, 128] }
+          end
+
+          context 'aggregates reads and writes' do
+            let(:metric_scheme) do
+              {
+                "compute.googleapis.com/instance/disk/read_bytes_count"  => [
+                  [
+                    {
+                      :value    => { :int64_value => 982_252 },
+                      :interval => { :start_time  => "2016-06-23T00:00:00.000Z" }
+                    }
+                  ]
+                ],
+                "compute.googleapis.com/instance/disk/write_bytes_count" => [
+                  [
+                    {
+                      :value    => { :int64_value => 788 },
+                      :interval => { :start_time  => "2016-06-23T00:00:00.000Z" }
+                    }
+                  ]
+                ]
+              }
+            end
+
+            it { is_expected.to eq [16.0, 16.0, 16.0] }
+          end
+        end
+
+        context 'net usage aggregates reads and writes' do
+          subject { super().values.flat_map(&:values) }
+          let(:metric_scheme) do
+            {
+              "compute.googleapis.com/instance/network/received_bytes_count" => [
+                [
+                  {
+                    :value    => { :int64_value => 982_252 },
+                    :interval => { :start_time  => "2016-06-23T00:00:00.000Z" }
+                  }
+                ]
+              ],
+              "compute.googleapis.com/instance/network/sent_bytes_count"     => [
+                [
+                  {
+                    :value    => { :int64_value => 788 },
+                    :interval => { :start_time  => "2016-06-23T00:00:00.000Z" }
+                  }
+                ]
+              ]
+            }
+          end
+
+          it { is_expected.to eq [16.0, 16.0, 16.0] }
+        end
+      end
+    end
   end
 end
