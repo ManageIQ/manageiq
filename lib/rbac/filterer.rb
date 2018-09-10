@@ -51,6 +51,7 @@ module Rbac
       Service
       ServiceTemplate
       Storage
+      Switch
       VmOrTemplate
     )
 
