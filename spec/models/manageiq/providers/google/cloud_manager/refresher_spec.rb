@@ -524,7 +524,6 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
       :ems_ref     => "4530445150875817520",
       :status      => "READY",
       :description => nil,
-      :encrypted   => nil,
       :size        => 10.gigabyte
     )
     expect(cloud_volume_snapshot.creation_time.to_s).to eql("2018-05-11 14:29:52 UTC")
