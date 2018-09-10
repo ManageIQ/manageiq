@@ -201,21 +201,22 @@ module ManagerRefresh::SaveCollection
 
         _log.debug("Processing :delete_complement of #{inventory_collection} of size "\
                    "#{all_manager_uuids_size}...")
-        deleted_counter = 0
 
-        inventory_collection.db_collection_for_comparison_for_complement_of(
-          inventory_collection.all_manager_uuids
-        ).find_in_batches do |batch|
-          ActiveRecord::Base.transaction do
-            batch.each do |record|
-              record.public_send(inventory_collection.delete_method)
-              deleted_counter += 1
-            end
-          end
+        query = complement_of!(inventory_collection.all_manager_uuids)
+
+        ids_of_non_active_entities = ActiveRecord::Base.connection.execute(query.to_sql).to_a
+        # TODO(lsmola) we should allow only archiving, which is done via update, then the batch can be bigger. Without
+        #              batch archiving, this is a big bottleneck.
+        ids_of_non_active_entities.each_slice(1000) do |batch|
+          destroy_records!(batch, :id_extractor => :hash_primary_key_value)
         end
 
         _log.debug("Processing :delete_complement of #{inventory_collection} of size "\
-                   "#{all_manager_uuids_size}, deleted=#{deleted_counter}...Complete")
+                   "#{all_manager_uuids_size}, deleted=#{deleted_records.size}...Complete")
+      end
+
+      def hash_primary_key_value(hash)
+        hash[primary_key]
       end
 
       # Deletes/soft-deletes a given record
