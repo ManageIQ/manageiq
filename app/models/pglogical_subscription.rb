@@ -75,16 +75,9 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def self.delete_all(list = nil)
-    errors = []
-    (list.nil? ? find(:all) : list)&.each do |sub|
-      begin
-        sub.delete(false)
-      rescue => e
-        errors << "Failed to delete subscription to #{sub.host}: #{e.message}"
-      end
-    end
+    (list.nil? ? find(:all) : list)&.each { |sub| sub.delete(false) }
     EvmDatabase.restart_failover_monitor_service_queue
-    errors
+    nil
   end
 
   def disable
