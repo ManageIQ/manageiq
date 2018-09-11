@@ -160,6 +160,22 @@ describe ManageIQ::Providers::Inventory::Persister::Builder do
     expect(data[:default_values][:ems_id]).to eq(@persister.manager.id)
   end
 
+  # --- shared definitions ---
+
+  it 'applies shared properties and values' do
+    data = cloud.prepare_data(:miq_templates, persister_class).to_hash
+
+    expect(data[:custom_reconnect_block]).not_to be_nil
+    expect(data[:default_values][:template]).to be_truthy
+  end
+
+  it 'applied cloud properties and values' do
+    data = cloud.prepare_data(:key_pairs, persister_class).to_hash
+
+    expect(data[:manager_ref]).to eq(%i(name))
+    expect(data[:default_values][:resource_id]).not_to be_nil
+  end
+
   # --- inventory object attributes ---
 
   it 'derives inventory object attributes automatically' do

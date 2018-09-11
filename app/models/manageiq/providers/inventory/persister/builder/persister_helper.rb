@@ -36,6 +36,10 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
     collections[collection_name] = builder.to_inventory_collection
   end
 
+  def base_builder
+    ::ManageIQ::Providers::Inventory::Persister::Builder
+  end
+
   # builder_class for add_collection()
   def cloud
     ::ManageIQ::Providers::Inventory::Persister::Builder::CloudManager
@@ -79,7 +83,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
   #     - doesn't try to derive model class automatically
   #     - @see method ManageIQ::Providers::Inventory::Persister::Builder.auto_model_class
   def make_builder_settings(extra_settings = {})
-    opts = ::ManageIQ::Providers::Inventory::Persister::Builder.default_options
+    opts = base_builder.default_options
 
     opts[:adv_settings] = options.try(:[], :inventory_collections).try(:to_hash) || {}
     opts[:shared_properties] = shared_options
