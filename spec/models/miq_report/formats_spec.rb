@@ -31,6 +31,17 @@ describe MiqReport::Formats do
           name = ChargebackVm.default_column_for_format(name)
           subj = described_class.default_format_for_path("ChargebackVm-#{name}", datatype.first)
           if name.ends_with?('_cost')
+            if ChargeableField.col_index(field).nil?
+              puts subj
+              puts "IS NILL"
+              puts field
+              puts ChargeableField.cols_on_metric_rollup
+              puts "--"
+              puts ChargeableField.chargeable_cols_on_metric_rollup
+              puts "--%%%-"
+              puts ChargeableField.pluck(:metric)
+              puts "IS NILLLEND"
+            end
             expect(subj).to eq(:currency_precision_2)
           elsif name.ends_with?('_metric')
             expect(subj).not_to be_nil
