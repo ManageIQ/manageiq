@@ -313,6 +313,28 @@ describe PglogicalSubscription do
     end
   end
 
+  describe ".delete_all" do
+    let(:subscription1) { double }
+    let(:subscription2) { double }
+
+    after do
+      expect(MiqQueue.where(:method_name => "restart_failover_monitor_service").count).to eq(1)
+    end
+
+    it "deletes all subscriptions if no parameter passed" do
+      allow(described_class).to receive(:find).with(:all).and_return([subscription1, subscription2])
+      expect(subscription1).to receive(:delete)
+      expect(subscription2).to receive(:delete)
+      described_class.delete_all
+    end
+
+    it "only deletes subscriptions listed in parameter if parameter passed" do
+      expect(subscription1).to receive(:delete)
+      expect(subscription2).not_to receive(:delete)
+      described_class.delete_all([subscription1])
+    end
+  end
+
   describe ".save_all!" do
     after do
       expect(MiqQueue.where(:method_name => "restart_failover_monitor_service").count).to eq(1)
