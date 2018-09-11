@@ -25,7 +25,6 @@ class FileDepotSwift < FileDepot
   def openstack_handle(options = {})
     require 'manageiq/providers/openstack/legacy/openstack_handle'
     @openstack_handle ||= begin
-
       username = options[:username] || authentication_userid(options[:auth_type])
       password = options[:password] || authentication_password(options[:auth_type])
       uri      = options[:uri]
@@ -63,12 +62,12 @@ class FileDepotSwift < FileDepot
   end
 
   def merged_uri(uri, api_port)
-    port      = api_port.blank? ? 5000 : api_port
+    port      = api_port.presence || 5000
     uri       = URI.parse("#{URI(uri).scheme}://#{URI(uri).host}:#{port}#{URI(uri).path}")
-    uri.query = [uri.query, "region=#{openstack_region}"].compact.join('&') unless openstack_region.blank?
-    uri.query = [uri.query, "api_version=#{keystone_api_version}"].compact.join('&') unless keystone_api_version.blank?
-    uri.query = [uri.query, "domain_id=#{v3_domain_ident}"].compact.join('&') unless v3_domain_ident.blank?
-    uri.query = [uri.query, "security_protocol=#{security_protocol}"].compact.join('&') unless security_protocol.blank?
+    uri.query = [uri.query, "region=#{openstack_region}"].compact.join('&') if openstack_region.present?
+    uri.query = [uri.query, "api_version=#{keystone_api_version}"].compact.join('&') if keystone_api_version.present?
+    uri.query = [uri.query, "domain_id=#{v3_domain_ident}"].compact.join('&') if v3_domain_ident.present?
+    uri.query = [uri.query, "security_protocol=#{security_protocol}"].compact.join('&') if security_protocol.present?
     uri
   end
 end
