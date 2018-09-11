@@ -766,6 +766,17 @@
       :feature_type: admin
       :identifier: cloud_tenant_delete
 
+# CloudVolumeType
+- :name: Cloud Volume Types
+  :description: Everything under Cloud Volume Types
+  :feature_type: node
+  :identifier: cloud_volume_type
+  :children:
+  - :name: View
+    :description: View Volume Types
+    :feature_type: view
+    :identifier: cloud_volume_types_view
+
 # CloudVolume
 - :name: Cloud Volumes
   :description: Everything under Cloud Volumes
