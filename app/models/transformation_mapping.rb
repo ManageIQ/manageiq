@@ -84,7 +84,7 @@ class TransformationMapping < ApplicationRecord
     {
       "name"           => vm.name,
       "cluster"        => vm.ems_cluster.try(:name) || '',
-      "path"           => vm.ext_management_system ? "#{vm.ext_management_system.name}/#{vm.parent_blue_folder_path(:exclude_non_display_folders => true)}" : '',
+      "path"           => vm.ext_management_system ? "#{vm.ext_management_system.name}/#{vm.v_parent_blue_folder_display_path}" : '',
       "allocated_size" => vm.allocated_disk_storage,
       "id"             => vm.id,
       "ems_cluster_id" => vm.ems_cluster_id,
