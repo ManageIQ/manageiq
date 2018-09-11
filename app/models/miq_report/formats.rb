@@ -25,6 +25,16 @@ class MiqReport::Formats
     # HACK: formats for columns are unqualified, so we need a
     # temporary way to avoid collisions
     DEFAULTS_AND_OVERRIDES[:formats_by_path].fetch(path.to_sym) do
+      puts "default--5-#{suffix}"
+      puts DEFAULTS_AND_OVERRIDES[:formats_by_suffix][suffix]
+      puts "default--4-#{column}"
+      puts DEFAULTS_AND_OVERRIDES[:formats_by_column][column]
+      puts "default--3-#{sub_type(column)}"
+      puts DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type(column)]
+      puts "default--2-#{datatype}"
+      puts DEFAULTS_AND_OVERRIDES[:formats_by_data_type][datatype]
+      puts "default--1-"
+
       DEFAULTS_AND_OVERRIDES[:formats_by_suffix][suffix] ||
         DEFAULTS_AND_OVERRIDES[:formats_by_column][column] ||
         DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type(column)] ||

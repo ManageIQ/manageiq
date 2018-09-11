@@ -130,6 +130,13 @@ class ChargeableField < ApplicationRecord
         rec.save! if rec.changed?
       end
     end
+    if ChargeableField.pluck(:metric).count < 15
+      puts "END Of procedure:"
+      puts "#{ChargeableField.pluck(:metric)}"
+      caller.each {|x| puts x}
+      puts Time.now.to_f
+      puts "END Of procedure:"
+    end
   end
 
   def self.seed_data
@@ -138,9 +145,16 @@ class ChargeableField < ApplicationRecord
   end
 
   def self.chargeable_cols_on_metric_rollup
+    puts "hello form chargeable_cols_on_metric_rollup"
     @chargeable_cols_on_metric_rollup ||= begin
       existing_cols = MetricRollup.attribute_names
       chargeable_cols = pluck(:metric) & existing_cols
+      if chargeable_cols.count < 9
+        puts "Hello chargeable_cols_on_metric_rollup"
+        puts Time.now.to_f
+        caller.each {|x| puts x}
+        puts "Hello chargeable_cols_on_metric_rollup#{chargeable_cols}"
+      end
       chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.sort.uniq
     end
   end

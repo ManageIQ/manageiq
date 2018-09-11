@@ -113,6 +113,17 @@ class Chargeback
 
     def chargeback_fields_present?(rollup_record)
       MetricRollup::CHARGEBACK_METRIC_FIELDS.any? do |field|
+        if ChargeableField.col_index(field).nil?
+          puts "IS NILL"
+          puts field
+          puts ChargeableField.cols_on_metric_rollup
+          puts "--"
+          puts ChargeableField.chargeable_cols_on_metric_rollup
+          puts "--%%%-"
+          puts ChargeableField.pluck(:metric)
+          puts "IS NILLLEND"
+        end
+
         rollup = rollup_record[ChargeableField.col_index(field)]
         rollup.present? && rollup.nonzero?
       end
