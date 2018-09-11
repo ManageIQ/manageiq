@@ -142,4 +142,40 @@ describe MiqPglogical do
       expect(described_class.node_name_to_region("region_5")).to eq(5)
     end
   end
+
+  describe ".save_remote_region" do
+    it "sets replication type for this region to 'remote'" do
+      allow(described_class).to receive(:refresh_excludes)
+      expect(MiqRegion).to receive(:replication_type=).with(:remote)
+      described_class.save_remote_region("")
+    end
+
+    it "updates list of tables to be excluded from replication" do
+      tables = "---\n- vmdb_databases\n- vmdb_indexes\n- vmdb_metrics\n- vmdb_tables\n"
+      allow(MiqRegion).to receive(:replication_type=)
+      expect(described_class).to receive(:refresh_excludes).with(YAML.safe_load(tables))
+      described_class.save_remote_region(tables)
+    end
+  end
+
+  describe ".save_global_region" do
+    let(:subscription) { double }
+    it "sets replication type for this region to 'global'" do
+      allow(described_class).to receive(:refresh_excludes)
+      expect(MiqRegion).to receive(:replication_type=).with(:global)
+      described_class.save_global_region([], [])
+    end
+
+    it "deletes subscriptions passed as second paramer" do
+      allow(MiqRegion).to receive(:replication_type=)
+      expect(subscription).to receive(:delete)
+      described_class.save_global_region([], [subscription])
+    end
+
+    it "saves subscriptions passed as first paramer" do
+      allow(MiqRegion).to receive(:replication_type=)
+      expect(subscription).to receive(:save!)
+      described_class.save_global_region([subscription], [])
+    end
+  end
 end
