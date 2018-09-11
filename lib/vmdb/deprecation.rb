@@ -17,7 +17,7 @@ module Vmdb
     end
 
     def self.default_behavior
-      [proc_for_default_log].tap { |a| a << ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr] unless Rails.env.production? }
+      Rails.env.production? ? [] : [proc_for_default_log, ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr]]
     end
     private_class_method :default_behavior
 
@@ -30,7 +30,7 @@ module Vmdb
       return unless default_log
       proc do |message, callstack|
         default_log.warn(message)
-        default_log.debug { callstack.join("\n  ") } unless Rails.env.production?
+        default_log.debug { callstack.join("\n  ") }
       end
     end
     private_class_method :proc_for_default_log
