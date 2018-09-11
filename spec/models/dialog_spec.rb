@@ -455,6 +455,25 @@ describe Dialog do
         dialog.load_values_into_fields(vars)
         expect(dialog_field1.value).to eq("10.8.99.248")
       end
+
+      it "sets field value when in a hash with a key of 'parameters'" do
+        vars = {"parameters" => {"field1" => "10.8.99.248"}}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+
+      context "with multiple fields" do
+        let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1, dialog_field2]) }
+        let(:dialog_field1) { DialogField.new(:value => "123", :name => "field1") }
+        let(:dialog_field2) { DialogField.new(:value => "12", :name => "field2") }
+
+        it "sets multiple field values" do
+          vars = {"field1" => "10.8.99.248", "field2" => "new_value"}
+          dialog.load_values_into_fields(vars)
+          expect(dialog_field1.value).to eq("10.8.99.248")
+          expect(dialog_field2.value).to eq("new_value")
+        end
+      end
     end
 
     context "symbol values" do
