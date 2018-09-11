@@ -24,8 +24,10 @@ class ChargebackRateDetailMeasure < ApplicationRecord
   end
 
   def self.seed
+    puts "Hello from ChargebackRateDetailMeasure.seed"
     fixture_file_measure = File.join(FIXTURE_DIR, "chargeback_rates_measures.yml")
     if File.exist?(fixture_file_measure)
+      puts "Hello from ChargebackRateDetailMeasure.seed 2"
       fixture = YAML.load_file(fixture_file_measure)
       fixture.each do |cbr|
         rec = ChargebackRateDetailMeasure.find_by(:name => cbr[:name])

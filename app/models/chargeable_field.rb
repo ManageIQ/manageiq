@@ -115,18 +115,24 @@ class ChargeableField < ApplicationRecord
   end
 
   def self.seed
+    puts "Hello from ChargeableField.seed"
     measures = ChargebackRateDetailMeasure.all.index_by(&:name)
+    puts "#{ChargebackRateDetailMeasure.all.ids}"
     existing = ChargeableField.all.index_by(&:metric)
+    puts "#{ChargeableField.pluck(:metric)}"
     seed_data.each do |f|
       measure = f.delete(:measure)
+      puts "#{measure} ---|"
       if measure
         f[:chargeback_rate_detail_measure_id] = measures[measure].id
       end
       rec = existing[f[:metric]]
+      puts "#{rec} --existing-|"
       if rec.nil?
         create(f)
       else
         rec.attributes = f
+        puts "#{rec.changed?} --|||||"
         rec.save! if rec.changed?
       end
     end
@@ -149,7 +155,7 @@ class ChargeableField < ApplicationRecord
     @chargeable_cols_on_metric_rollup ||= begin
       existing_cols = MetricRollup.attribute_names
       chargeable_cols = pluck(:metric) & existing_cols
-      if chargeable_cols.count < 15
+      if chargeable_cols.count < 9
         puts "Hello chargeable_cols_on_metric_rollup"
         puts Time.now.to_f
         caller.each {|x| puts x}
