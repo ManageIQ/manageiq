@@ -35,8 +35,6 @@ class CloudTenant < ApplicationRecord
 
   virtual_total :total_vms, :vms
 
-  virtual_column :default_security_group, :uses => :security_groups
-
   def self.class_by_ems(ext_management_system)
     ext_management_system && ext_management_system.class::CloudTenant
   end
