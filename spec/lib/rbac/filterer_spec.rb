@@ -194,6 +194,24 @@ describe Rbac::Filterer do
         tagged_group.save!
       end
 
+      context 'searching for instances of Switches' do
+        let!(:switch) { FactoryGirl.create_list(:switch, 2).first }
+
+        before do
+          switch.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged Switches' do
+          results = described_class.search(:class => Switch, :user => user).first
+          expect(results).to match_array [switch]
+        end
+
+        it 'lists only all Switches' do
+          results = described_class.search(:class => Switch, :user => admin_user).first
+          expect(results).to match_array Switch.all
+        end
+      end
+
       context 'searching for instances of ConfigurationScriptSource' do
         let!(:configuration_script_source) { FactoryGirl.create_list(:embedded_ansible_configuration_script_source, 2).first }
 
