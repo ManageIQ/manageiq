@@ -1,5 +1,6 @@
 describe ResourceActionWorkflow do
   let(:admin) { FactoryGirl.create(:user_with_group) }
+
   context "#create" do
     before do
       @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
@@ -56,7 +57,7 @@ describe ResourceActionWorkflow do
       it "#update_dialog_field_values" do
         @wf.update_dialog_field_values(data)
 
-        expect(@dialog.dialog_fields.first.value).to eq("new_value")
+        expect(dialog_fields(@dialog)).to eq("field_1" => "new_value", "field_2" => nil)
       end
     end
 
@@ -78,7 +79,7 @@ describe ResourceActionWorkflow do
               :userid       => admin.userid,
               :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
             )
-            expect(subject.dialog.dialog_fields.first.value).to eq(nil)
+            expect(dialog_fields(@dialog)).to eq("field_1" => nil, "field_2" => nil)
             response = subject.submit_request(data)
             expect(response).to include(:errors => [])
           end
@@ -96,7 +97,7 @@ describe ResourceActionWorkflow do
             expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
             expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
             expect(AuditEvent).not_to receive(:success)
-            expect(subject.dialog.dialog_fields.first.value).to eq(nil)
+            expect(dialog_fields(@dialog)).to eq("field_2" => nil, "field_1" => nil)
             response = subject.submit_request(data)
             expect(response).to eq(:errors => [])
           end
@@ -116,7 +117,7 @@ describe ResourceActionWorkflow do
             expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
 
             subject.submit_request(data)
-            expect(subject.dialog.dialog_fields.first.value).to eq(nil)
+            expect(dialog_fields(@dialog)).to eq("field_1" => nil, "field_2" => nil)
           end
 
           it "calls automate with miq_task" do
@@ -149,7 +150,7 @@ describe ResourceActionWorkflow do
               :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
             )
             response = subject.submit_request(data)
-            expect(subject.dialog.dialog_fields.first.value).to eq("new_value")
+            expect(dialog_fields(@dialog)).to eq("field_1" => "new_value", "field_2" => nil)
             expect(response).to include(:errors => [])
           end
         end
@@ -167,7 +168,7 @@ describe ResourceActionWorkflow do
             expect(MiqAeEngine).to receive(:deliver_queue) # calls into automate
             expect(AuditEvent).not_to receive(:success)
             response = subject.submit_request(data)
-            expect(subject.dialog.dialog_fields.first.value).to eq("new_value")
+            expect(dialog_fields(@dialog)).to eq("field_2" => nil, "field_1" => "new_value")
             expect(response).to eq(:errors => [])
           end
         end
@@ -186,7 +187,7 @@ describe ResourceActionWorkflow do
             expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
 
             subject.submit_request(data)
-            expect(subject.dialog.dialog_fields.first.value).to eq("new_value")
+            expect(dialog_fields(@dialog)).to eq("field_2" => nil, "field_1" => "new_value")
           end
 
           it "calls automate with miq_task" do
@@ -272,5 +273,9 @@ describe ResourceActionWorkflow do
         ResourceActionWorkflow.new(values, nil, resource_action, options)
       end
     end
+  end
+
+  def dialog_fields(dialog)
+    dialog.dialog_fields.map { |df| [df.name, df.value] }.to_h
   end
 end
