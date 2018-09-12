@@ -1,7 +1,7 @@
 module ManageIQ::Providers
-  class Inventory::Persister
-    class Builder
-      class ContainerManager < ::ManageIQ::Providers::Inventory::Persister::Builder
+  class Inventory
+    class Persister
+      class Builder::ContainerManager < Builder
         # TODO: (agrare) Targeted refreshes will require adjusting the associations / arels. (duh)
         def container_projects
           add_properties(

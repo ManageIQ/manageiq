@@ -1,7 +1,7 @@
 module ManageIQ::Providers
-  class Inventory::Persister
-    class Builder
-      class InfraManager < ::ManageIQ::Providers::Inventory::Persister::Builder
+  class Inventory
+    class Persister
+      class Builder::InfraManager < Builder
         def networks
           add_properties(
             :manager_ref                  => %i(hardware ipaddress ipv6address),

@@ -1,7 +1,7 @@
 module ManageIQ::Providers
-  class Inventory::Persister
-    class Builder
-      class AutomationManager < ::ManageIQ::Providers::Inventory::Persister::Builder
+  class Inventory
+    class Persister
+      class Builder::AutomationManager < Builder
         def configuration_scripts
           default_manager_ref
           add_common_default_values

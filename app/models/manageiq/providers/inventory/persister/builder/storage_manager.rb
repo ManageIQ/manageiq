@@ -1,7 +1,7 @@
 module ManageIQ::Providers
-  class Inventory::Persister
-    class Builder
-      class StorageManager < ::ManageIQ::Providers::Inventory::Persister::Builder
+  class Inventory
+    class Persister
+      class Builder::StorageManager < Builder
         # Nothing there
       end
     end
