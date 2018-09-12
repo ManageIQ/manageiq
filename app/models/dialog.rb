@@ -93,7 +93,7 @@ class Dialog < ApplicationRecord
 
     dialog_field_hash.each_value do |field|
       field.dialog = self
-      new_value = values[field.automate_key_name] || values[field.name]
+      new_value = values[field.automate_key_name] || values[field.name] || values.dig("parameters", field.name)
       new_value ||= field.value unless overwrite
 
       field.value = new_value

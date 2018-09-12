@@ -31,7 +31,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def update_dialog_field_values(data)
-    @dialog.load_values_into_fields(data.values.first)
+    @dialog.load_values_into_fields(data)
   end
 
   def process_request(state)
