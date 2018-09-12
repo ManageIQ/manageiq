@@ -9,7 +9,7 @@ describe Service::DialogProperties do
     expect(described_class.parse(options, nil)).to eq({})
   end
 
-  it `will call the Retirement class` do
+  it 'will call the Retirement class' do
     expect(Service::DialogProperties::Retirement).to receive(:parse).with({}, nil).and_return({})
     described_class.parse(nil, nil)
   end
