@@ -13,6 +13,7 @@ class Dialog < ApplicationRecord
 
   before_destroy :reject_if_has_resource_actions
   validates      :name, :unique_within_region => true
+  validates      :dialog_tabs, :presence => {:message => ->(object, _) { "missing for Dialog #{object.name}" }}
 
   alias_attribute  :name, :label
 
@@ -55,12 +56,6 @@ class Dialog < ApplicationRecord
   end
 
   def validate_children
-    # To remove the meaningless error message like "Dialog tabs is invalid" when child's validation fails
-    errors[:dialog_tabs].delete("is invalid")
-    if dialog_tabs.blank?
-      errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
-    end
-
     duplicate_field_names = dialog_fields.collect(&:name).duplicates
     if duplicate_field_names.present?
       errors.add(:base, _("Dialog field name cannot be duplicated on a dialog: %{duplicates}") % {:duplicates => duplicate_field_names.join(', ')})
