@@ -447,5 +447,22 @@ describe ManageIQ::Providers::Inventory::Persister do
 
       expect(persister.vms.index_proxy.send(:data_indexes).keys).to match_array([:manager_ref])
     end
+
+    it "finds complex relation" do
+      container_persister = create_containers_persister
+
+      container_persister.container_groups.build(
+        container_group_data(
+          1,
+          :container_build_pod => persister.container_build_pods.lazy_find(
+            :namespace => persister.container_projects.lazy_find("container_ems_ref_1", :ref => :by_name, :key => :name),
+            :name      => "container_build_pod_name_1"
+          )
+        )
+      )
+
+      container_persister.persist!
+
+    end
   end
 end
