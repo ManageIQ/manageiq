@@ -143,6 +143,17 @@ class MiqPglogical
     YAML.load_file(Rails.root.join("config/default_replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
   end
 
+  def self.save_remote_region(exclusion_list)
+    MiqRegion.replication_type = :remote
+    refresh_excludes(YAML.safe_load(exclusion_list))
+  end
+
+  def self.save_global_region(subscriptions_to_save, subscriptions_to_remove)
+    MiqRegion.replication_type = :global
+    PglogicalSubscription.delete_all(subscriptions_to_remove)
+    PglogicalSubscription.save_all!(subscriptions_to_save)
+  end
+
   private
 
   def pglogical(refresh = false)
