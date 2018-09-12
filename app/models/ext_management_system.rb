@@ -80,6 +80,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
 
   has_many :vms_and_templates_advanced_settings, :through => :vms_and_templates, :source => :advanced_settings
+  has_many :service_instances, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :service_offerings, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :service_parameters_sets, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
 
