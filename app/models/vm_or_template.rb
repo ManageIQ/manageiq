@@ -151,6 +151,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :v_owning_blue_folder,                 :type => :string,     :uses => :all_relationships
   virtual_column :v_owning_blue_folder_path,            :type => :string,     :uses => :all_relationships
   virtual_column :v_datastore_path,                     :type => :string,     :uses => :storage
+  virtual_column :v_parent_blue_folder_display_path,    :type => :string,     :uses => :all_relationships
   virtual_column :thin_provisioned,                     :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
@@ -802,6 +803,11 @@ class VmOrTemplate < ApplicationRecord
     ems_cluster.try(:parent_datacenter)
   end
   alias_method :owning_datacenter, :parent_datacenter
+
+  def parent_blue_folder_display_path
+    parent_blue_folder_path(:exclude_non_display_folders => true)
+  end
+  alias_method :v_parent_blue_folder_display_path, :parent_blue_folder_display_path
 
   def lans
     !hardware.nil? ? hardware.nics.collect(&:lan).compact : []
