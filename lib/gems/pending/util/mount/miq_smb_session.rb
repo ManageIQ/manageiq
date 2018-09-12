@@ -3,6 +3,10 @@ require 'util/mount/miq_generic_mount_session'
 class MiqSmbSession < MiqGenericMountSession
   PORTS = [445, 139]
 
+  def self.uri_scheme
+    "smb".freeze
+  end
+
   def initialize(log_settings)
     super(log_settings.merge(:ports => PORTS))
     raise "username is a required value!" if @settings[:username].nil?
