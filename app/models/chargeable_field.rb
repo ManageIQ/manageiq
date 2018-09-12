@@ -104,6 +104,14 @@ class ChargeableField < ApplicationRecord
     @rate_cols[column] ||= cols_on_metric_rollup.index(column.to_s)
   end
 
+  cache_with_timeout(:chargeable_cols_on_metric_rollup) { chargeable_cols_on_metric_rollup_without_cash }
+
+  def self.chargeable_cols_on_metric_rollup_without_cash
+    existing_cols = MetricRollup.attribute_names
+    chargeable_cols = pluck(:metric) & existing_cols
+    chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.sort.uniq
+  end
+
   private
 
   def used?
@@ -135,13 +143,5 @@ class ChargeableField < ApplicationRecord
   def self.seed_data
     fixture_file = File.join(FIXTURE_DIR, 'chargeable_fields.yml')
     File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
-  end
-
-  def self.chargeable_cols_on_metric_rollup
-    @chargeable_cols_on_metric_rollup ||= begin
-      existing_cols = MetricRollup.attribute_names
-      chargeable_cols = pluck(:metric) & existing_cols
-      chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.sort.uniq
-    end
   end
 end
