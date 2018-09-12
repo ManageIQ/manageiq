@@ -6,10 +6,11 @@ require 'uri'
 
 require 'util/miq-exception'
 require 'util/miq-uuid'
+require 'util/miq_file_storage'
 
-class MiqGenericMountSession
+class MiqGenericMountSession < MiqFileStorage::Interface
+  require 'util/mount/miq_local_mount_session'
   require 'util/mount/miq_nfs_session'
-  require 'util/mount/miq_s3_session'
   require 'util/mount/miq_smb_session'
   require 'util/mount/miq_glusterfs_session'
 
@@ -54,17 +55,19 @@ class MiqGenericMountSession
 
   def self.new_session(opts)
     klass = uri_scheme_to_class(opts[:uri])
-    session = klass.new(opts.slice(:uri, :username, :password, :region))
+    session = klass.new_with_opts(opts)
     session.connect
     session
+  end
+
+  def self.new_with_opts(opts)
+    new(opts.slice(:uri, :username, :password))
   end
 
   def self.uri_scheme_to_class(uri)
     require 'uri'
     scheme, userinfo, host, port, registry, share, opaque, query, fragment = URI.split(URI.encode(uri))
     case scheme
-    when 's3'
-      MiqS3Session
     when 'smb'
       MiqSmbSession
     when 'nfs'
@@ -246,55 +249,59 @@ class MiqGenericMountSession
     res
   end
 
-  def add(source, dest_uri)
+  def add(*upload_args)
+    dest_uri   = nil
     log_header = "MIQ(#{self.class.name}-add)"
 
-    logger.info("#{log_header} Source: [#{source}], Destination: [#{dest_uri}]...")
+    # Don't think this log line is possible when using MiqFileStorage::Interface
+    #
+    # logger.info("#{log_header} Source: [#{source}], Destination: [#{dest_uri}]...")
 
     begin
       reconnect!
-      relpath = File.join(@mnt_point, relative_to_mount(dest_uri))
-      if File.exist?(relpath)
-        logger.info("#{log_header} Skipping add since URI: [#{dest_uri}] already exists")
-        return dest_uri
-      end
 
-      logger.info("#{log_header} Building relative path: [#{relpath}]...")
-      FileUtils.mkdir_p(File.dirname(relpath))
-      logger.info("#{log_header} Building relative path: [#{relpath}]...complete")
-
-      logger.info("#{log_header} Copying file [#{source}] to [#{relpath}]...")
-      FileUtils.cp(source, relpath)
-      logger.info("#{log_header} Copying file [#{source}] to [#{relpath}] complete")
+      dest_uri = super
     rescue => err
-      msg = "Adding [#{source}] to [#{dest_uri}], failed due to error: '#{err.message}'"
+      msg = "Adding [#{source_for_log}] to [#{remote_file_path}], failed due to error: '#{err.message}'"
       logger.error("#{log_header} #{msg}")
       raise
     ensure
       disconnect
     end
 
-    logger.info("#{log_header} File URI added: [#{dest_uri}] complete")
+    logger.info("#{log_header} File URI added: [#{remote_file_path}] complete")
     dest_uri
   end
 
-  alias_method :upload, :add
+  def upload_single(dest_uri)
+    log_header = "MIQ(#{self.class.name}-upload_single)"
+    relpath    = uri_to_local_path(dest_uri)
+    if File.exist?(relpath)
+      logger.info("#{log_header} Skipping add since URI: [#{dest_uri}] already exists")
+      return dest_uri
+    end
 
-  def download(local_file, remote_file)
+    logger.info("#{log_header} Copying file [#{source_for_log}] to [#{dest_uri}]...")
+    IO.copy_stream(source_input, relpath, byte_count)
+    logger.info("#{log_header} Copying file [#{source_for_log}] to [#{dest_uri}] complete")
+    dest_uri
+  end
+
+  def download_single(remote_file, local_file)
     log_header = "MIQ(#{self.class.name}-download)"
 
     logger.info("#{log_header} Target: [#{local_file}], Remote file: [#{remote_file}]...")
 
     begin
       reconnect!
-      relpath = File.join(@mnt_point, relative_to_mount(remote_file))
+      relpath = uri_to_local_path(remote_file)
       unless File.exist?(relpath)
         logger.warn("#{log_header} Remote file: [#{remote_file}] does not exist!")
         return
       end
 
       logger.info("#{log_header} Copying file [#{relpath}] to [#{local_file}]...")
-      FileUtils.cp(relpath, local_file)
+      IO.copy_stream(relpath, local_file)
       logger.info("#{log_header} Copying file [#{relpath}] to [#{local_file}] complete")
     rescue => err
       msg = "Downloading [#{remote_file}] to [#{local_file}], failed due to error: '#{err.message}'"
@@ -387,7 +394,11 @@ class MiqGenericMountSession
 
   def mkdir(path)
     with_mounted_exception_handling do
-      FileUtils.mkdir_p("#{mount_root}/#{path}")
+      log_header = "MIQ(#{self.class.name}-mkdir)"
+      new_path = uri_to_local_path(path)
+      logger.info("#{log_header} Building relative path: [#{new_path}]...")
+      FileUtils.mkdir_p(new_path)
+      logger.info("#{log_header} Building relative path: [#{new_path}]...complete")
     end
   end
 
@@ -476,5 +487,9 @@ class MiqGenericMountSession
   def settings_mount_point
     return nil if @settings[:mount_point].blank? # Check if settings contains the mount_point to use
     FileUtils.mkdir_p(@settings[:mount_point]).first
+  end
+
+  def source_for_log
+    @input_writer ? "<STREAMED_FROM_CMD>" : @source_input.path
   end
 end
