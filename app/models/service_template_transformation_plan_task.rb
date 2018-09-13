@@ -103,12 +103,15 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def cancel
-    options['cancel_requested'] = true
-    save!
+    update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
   end
 
-  def canceling?
-    options['cancel_requested']
+  def canceling
+    update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_PROCESSING)
+  end
+
+  def canceled
+    update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_FINISHED)
   end
 
   private

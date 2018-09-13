@@ -38,4 +38,23 @@ describe ServiceTemplateTransformationPlanRequest do
       expect(ServiceResource.find_by(:resource => vms[0]).status).to eq(ServiceResource::STATUS_APPROVED)
     end
   end
+
+  context "when request gets canceled" do
+    before { request.cancel }
+
+    it "cancelation_status is set to requested" do
+      expect(request.cancelation_status).to eq(MiqRequest::CANCEL_STATUS_REQUESTED)
+      expect(request.cancel_requested?).to be_truthy
+      expect(request.canceling?).to be_falsey
+      expect(request.canceled?).to be_falsey
+    end
+
+    it "marks request as finished in error" do
+      request.send(:do_cancel)
+      expect(request.cancelation_status).to eq(MiqRequest::CANCEL_STATUS_FINISHED)
+      expect(request.request_state).to eq('finished')
+      expect(request.status).to eq('Error')
+      expect(request.message).to eq('Request is canceled by user.')
+    end
+  end
 end
