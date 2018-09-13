@@ -27,7 +27,7 @@ class MiqRequestWorkflow
   end
 
   def self.encrypted_options_field_regs
-    encrypted_options_fields.map { |f| /\[:#{f}\]/ }
+    encrypted_options_fields.map { |f| /\[:#{f}\]/ } + [/password::/]
   end
 
   def self.all_encrypted_options_fields
