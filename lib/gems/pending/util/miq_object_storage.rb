@@ -2,13 +2,10 @@ require 'util/miq_file_storage'
 
 class MiqObjectStorage < MiqFileStorage::Interface
   require 'util/object_storage/miq_s3_storage'
+  require 'util/object_storage/miq_ftp_storage'
 
   attr_accessor :settings
   attr_writer   :logger
-
-  def self.new_with_opts(opts)
-    new(opts.slice(:uri, :username, :password))
-  end
 
   def initialize(settings)
     raise "URI missing" unless settings.key?(:uri)
