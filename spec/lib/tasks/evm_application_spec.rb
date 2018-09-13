@@ -202,9 +202,10 @@ describe EvmApplication do
   context ".queue_status" do
     it "calculates oldest and counts" do
       tgt_time = 2.hours.ago
-      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => 1.hour.ago)
-      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => tgt_time)
-      MiqQueue.put(:zone        => "zone1",
+      zone = FactoryGirl.create(:zone)
+      MiqQueue.put(:zone => zone.name, :class_name => "X", :method_name => "x", :created_on => 1.hour.ago)
+      MiqQueue.put(:zone => zone.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      MiqQueue.put(:zone        => zone.name,
                    :class_name  => "X",
                    :method_name => "x",
                    :created_on  => 5.hours.ago,
@@ -212,7 +213,7 @@ describe EvmApplication do
       expect(described_class.queue_status).to eq(
         [
           {
-            "Zone"   => "zone1",
+            "Zone"   => zone.name,
             "Queue"  => "generic",
             "Role"   => nil,
             "method" => "X.x",
@@ -225,12 +226,14 @@ describe EvmApplication do
 
     it "groups zone together" do
       tgt_time = 2.hours.ago
-      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => tgt_time)
-      MiqQueue.put(:zone => "zone2", :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      zone1 = FactoryGirl.create(:zone)
+      zone2 = FactoryGirl.create(:zone)
+      MiqQueue.put(:zone => zone1.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      MiqQueue.put(:zone => zone2.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
       expect(described_class.queue_status).to eq(
         [
           {
-            "Zone"   => "zone1",
+            "Zone"   => zone1.name,
             "Queue"  => "generic",
             "Role"   => nil,
             "method" => "X.x",
@@ -238,7 +241,7 @@ describe EvmApplication do
             "count"  => 1,
           },
           {
-            "Zone"   => "zone2",
+            "Zone"   => zone2.name,
             "Queue"  => "generic",
             "Role"   => nil,
             "method" => "X.x",

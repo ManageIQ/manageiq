@@ -94,6 +94,8 @@ class MiqQueue < ApplicationRecord
   serialize :args, Array
   serialize :miq_callback, Hash
 
+  validates :zone, :inclusion => {:in => proc { Zone.in_my_region.pluck(:name) }}, :allow_nil => true
+
   STATE_READY   = 'ready'.freeze
   STATE_DEQUEUE = 'dequeue'.freeze
   STATE_WARN    = 'warn'.freeze

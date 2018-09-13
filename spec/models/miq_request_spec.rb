@@ -68,7 +68,8 @@ describe MiqRequest do
     end
 
     it "#call_automate_event_queue" do
-      allow(MiqServer).to receive(:my_zone).and_return("New York")
+      zone = FactoryGirl.create(:zone)
+      allow(MiqServer).to receive(:my_zone).and_return(zone.name)
 
       expect(MiqQueue.count).to eq(0)
 
@@ -79,7 +80,7 @@ describe MiqRequest do
       expect(msg.class_name).to  eq(request.class.name)
       expect(msg.instance_id).to eq(request.id)
       expect(msg.method_name).to eq("call_automate_event")
-      expect(msg.zone).to        eq("New York")
+      expect(msg.zone).to        eq(zone.name)
       expect(msg.args).to        eq([event_name])
       expect(msg.msg_timeout).to eq(1.hour)
     end
