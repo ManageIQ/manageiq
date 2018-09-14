@@ -14,6 +14,7 @@ class MiqGroup < ApplicationRecord
   has_many   :miq_widget_contents, :dependent => :destroy
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_product_features, :through => :miq_user_role
+  has_many   :authentications, :dependent => :nullify
 
   virtual_delegate :miq_user_role_name, :to => :entitlement, :allow_nil => true
   virtual_column :read_only,          :type => :boolean
