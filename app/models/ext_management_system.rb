@@ -403,7 +403,13 @@ class ExtManagementSystem < ApplicationRecord
   def with_provider_connection(options = {})
     raise _("no block given") unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
-    yield connect(options)
+    connection = connect(options)
+    yield connection
+  ensure
+    disconnect(connection) if connection
+  end
+
+  def disconnect(_connection)
   end
 
   def self.refresh_all_ems_timer
