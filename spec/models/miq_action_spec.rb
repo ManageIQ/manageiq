@@ -178,8 +178,8 @@ describe MiqAction do
 
     it "asynchronous" do
       input = {:synchronous => false}
-      zone  = 'Test Zone'
-      allow(@vm).to receive_messages(:my_zone => zone)
+      zone  = FactoryGirl.create(:zone)
+      allow(@vm).to receive_messages(:my_zone => zone.name)
 
       Timecop.freeze do
         date   = Time.now.utc - 1.day
@@ -190,7 +190,7 @@ describe MiqAction do
         expect(msg.class_name).to eq(@vm.class.name)
         expect(msg.method_name).to eq('retire')
         expect(msg.args).to eq([[@vm], :date => date])
-        expect(msg.zone).to eq(zone)
+        expect(msg.zone).to eq(zone.name)
       end
     end
   end
