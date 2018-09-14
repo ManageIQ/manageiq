@@ -1,37 +1,19 @@
-class ManageIQ::Providers::Inventory::Persister
+class ManageIQ::Providers::Inventory::Persister < InventoryRefresh::Persister
   require 'json'
   require 'yaml'
   require_nested :Builder
 
-  attr_reader :manager, :target, :collections
-
   include ::ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
 
-  # @param manager [ManageIQ::Providers::BaseManager] A manager object
-  # @param target [Object] A refresh Target object
-  def initialize(manager, target = nil)
-    @manager = manager
-    @target  = target
-
-    @collections = {}
-
-    # call every collection method at least once in order to be initialized
-    # otherwise, if the method was not called during parsing it will not be set
-    self.class.supported_collections.each do |name|
-      public_send(name)
-    end
-
-    initialize_inventory_collections
+  # @param _manager [ManageIQ::Providers::BaseManager] A manager object
+  # @param _target [Object] A refresh Target object
+  def initialize(_manager, _target = nil)
+    super
   end
 
   # Persists InventoryCollection objects into the DB
   def persist!
     InventoryRefresh::SaveInventory.save_inventory(manager, inventory_collections)
-  end
-
-  # @return [Array<Symbol>] array of InventoryCollection object names
-  def self.supported_collections
-    @supported_collections ||= Concurrent::Array.new
   end
 
   # Returns Persister object loaded from a passed JSON
@@ -53,43 +35,7 @@ class ManageIQ::Providers::Inventory::Persister
     @options ||= Settings.ems_refresh[manager.class.ems_type]
   end
 
-  # @return [Array<InventoryRefresh::InventoryCollection>] array of InventoryCollection objects of the persister
-  def inventory_collections
-    collections.values
-  end
-
-  # @return [Array<Symbol>] array of InventoryCollection object names of the persister
-  def inventory_collections_names
-    collections.keys
-  end
-
-  # @return [InventoryRefresh::InventoryCollection] returns a defined InventoryCollection or undefined method
-  def method_missing(method_name, *arguments, &block)
-    if inventory_collections_names.include?(method_name)
-      self.class.define_collections_reader(method_name)
-      send(method_name)
-    else
-      super
-    end
-  end
-
-  # @return [Boolean] true if InventoryCollection with passed method_name name is defined
-  def respond_to_missing?(method_name, _include_private = false)
-    inventory_collections_names.include?(method_name) || super
-  end
-
-  # Defines a new attr reader returning InventoryCollection object
-  def self.define_collections_reader(collection_key)
-    define_method(collection_key) do
-      collections[collection_key]
-    end
-  end
-
   protected
-
-  def initialize_inventory_collections
-    # can be implemented in a subclass
-  end
 
   # @return [Hash] entire Persister object serialized to hash
   def to_hash
