@@ -240,7 +240,7 @@ describe MiqQueue do
     ]
 
     message_parms.each do |mparms|
-      msg = FactoryGirl.create(:miq_queue, mparms)
+      msg = FactoryGirl.build(:miq_queue, mparms)
       expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
       expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], MiqTask id: [#{msg.miq_task_id}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{args_cleaned_password.inspect}")
     end
@@ -771,10 +771,11 @@ describe MiqQueue do
     end
 
     it "should not unqueue a message from a different zone" do
+      zone = FactoryGirl.create(:zone)
       MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
-        :zone        => 'other_zone'
+        :zone        => zone.name
       )
 
       expect(MiqQueue.unqueue(
@@ -838,6 +839,21 @@ describe MiqQueue do
       q.delivered('warn', nil, nil)
 
       expect(MiqQueue.where(:id => q.id).count).to eq(0)
+    end
+  end
+
+  context "validates that the zone exists in the current region" do
+    it "with a matching region" do
+      zone = FactoryGirl.create(:zone)
+      expect(MiqQueue.create!(:state => "ready", :zone => zone.name)).to be_kind_of(MiqQueue)
+    end
+
+    it "without a matching region" do
+      expect { MiqQueue.create!(:state => "ready", :zone => "Missing Zone") }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "without a zone" do
+      expect(MiqQueue.create!(:state => "ready")).to be_kind_of(MiqQueue)
     end
   end
 end
