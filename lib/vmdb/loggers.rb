@@ -83,6 +83,9 @@ module Vmdb
 
       require 'log_decorator'
       LogDecorator.logger = $log
+
+      require 'inventory_refresh'
+      InventoryRefresh.logger = $log
     end
     private_class_method :configure_external_loggers
 

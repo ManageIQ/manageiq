@@ -1,3 +1,5 @@
+require "inventory_refresh"
+
 describe EmsRefresh do
   context ".queue_refresh" do
     before do
@@ -10,8 +12,8 @@ describe EmsRefresh do
       queue_refresh_and_assert_queue_item(target, [target])
     end
 
-    it "with ManagerRefresh::Target" do
-      target = ManagerRefresh::Target.load(
+    it "with InventoryRefresh::Target" do
+      target = InventoryRefresh::Target.load(
         :manager_id  => @ems.id,
         :association => :vms,
         :manager_ref => {:ems_ref => "vm_1"},
@@ -62,7 +64,7 @@ describe EmsRefresh do
     let(:targets) do
       targets = []
       (0..996).each do |i|
-        targets << ManagerRefresh::Target.load(
+        targets << InventoryRefresh::Target.load(
           :manager_id  => @ems.id,
           :association => :vms,
           :manager_ref => {:ems_ref => "vm_1"},
@@ -196,22 +198,22 @@ describe EmsRefresh do
       expect(described_class.get_target_objects(pairs)).to match_array([ems1, ems2])
     end
 
-    it "array of class/hash pairs for ManagerRefresh::Target objects" do
+    it "array of class/hash pairs for InventoryRefresh::Target objects" do
       ems1 = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
       ems2 = FactoryGirl.create(:ems_redhat, :name => "ems_redhat1")
 
-      target1     = ManagerRefresh::Target.load(:manager_id  => ems1.id,
-                                                :association => :vms,
-                                                :manager_ref => {:ems_ref => "vm1"})
-      target2     = ManagerRefresh::Target.load(:manager_id  => ems2.id,
-                                                :association => :network_ports,
-                                                :manager_ref => {:ems_ref => "network_port_1"})
-      target3     = ManagerRefresh::Target.new(:manager_id  => ems1.id,
-                                               :association => :vms,
-                                               :manager_ref => {:ems_ref => "vm2"})
-      target1_dup = ManagerRefresh::Target.load(:manager_id  => ems1.id,
-                                                :association => :vms,
-                                                :manager_ref => {:ems_ref => "vm1"})
+      target1     = InventoryRefresh::Target.load(:manager_id  => ems1.id,
+                                                  :association => :vms,
+                                                  :manager_ref => {:ems_ref => "vm1"})
+      target2     = InventoryRefresh::Target.load(:manager_id  => ems2.id,
+                                                  :association => :network_ports,
+                                                  :manager_ref => {:ems_ref => "network_port_1"})
+      target3     = InventoryRefresh::Target.new(:manager_id  => ems1.id,
+                                                 :association => :vms,
+                                                 :manager_ref => {:ems_ref => "vm2"})
+      target1_dup = InventoryRefresh::Target.load(:manager_id  => ems1.id,
+                                                  :association => :vms,
+                                                  :manager_ref => {:ems_ref => "vm1"})
       pairs = [
         [target1.class, target1.id],
         [target2.class, target2.id],

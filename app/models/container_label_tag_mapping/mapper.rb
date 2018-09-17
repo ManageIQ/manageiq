@@ -16,7 +16,8 @@ class ContainerLabelTagMapping
       @mappings = mappings.group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
                           .transform_values { |ms| ms.collect(&:tag_id) }
 
-      @tags_to_resolve_collection = ::ManagerRefresh::InventoryCollection.new(
+      require "inventory_refresh"
+      @tags_to_resolve_collection = ::InventoryRefresh::InventoryCollection.new(
         :name              => :mapped_tags_to_resolve,
         :model_class       => Tag,
         # more than needed to identify, doesn't matter much as we use custom save
@@ -30,7 +31,7 @@ class ContainerLabelTagMapping
         end
       )
 
-      @specific_tags_collection = ::ManagerRefresh::InventoryCollection.new(
+      @specific_tags_collection = ::InventoryRefresh::InventoryCollection.new(
         :name        => :mapped_specific_tags,
         :model_class => Tag,
         :manager_ref => [:id],

@@ -1,3 +1,4 @@
+require "inventory_refresh"
 require_relative 'test_persister'
 
 describe ManageIQ::Providers::Inventory::Persister::Builder do
@@ -10,7 +11,7 @@ describe ManageIQ::Providers::Inventory::Persister::Builder do
   end
 
   def create_persister
-    TestPersister.new(@ems, ManagerRefresh::TargetCollection.new(:manager => @ems))
+    TestPersister.new(@ems, InventoryRefresh::TargetCollection.new(:manager => @ems))
   end
 
   let(:adv_settings) { {:strategy => :local_db_find_missing_references, :saver_strategy => :concurrent_safe_batch} }

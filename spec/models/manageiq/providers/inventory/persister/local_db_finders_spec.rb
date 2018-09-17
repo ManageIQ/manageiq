@@ -1,5 +1,6 @@
-require_relative '../../../../manager_refresh/helpers/spec_mocked_data'
-require_relative '../../../../manager_refresh/helpers/spec_parsed_data'
+require "inventory_refresh"
+require_relative 'helpers/spec_mocked_data'
+require_relative 'helpers/spec_parsed_data'
 require_relative 'test_persister'
 require_relative 'targeted_refresh_spec_helper'
 
@@ -78,7 +79,7 @@ describe ManageIQ::Providers::Inventory::Persister do
       persister.vms.build(@vm_data102)
       persister.vms.build(@vm_data160)
 
-      ManagerRefresh::InventoryCollection::Scanner.scan!(persister.inventory_collections)
+      InventoryRefresh::InventoryCollection::Scanner.scan!(persister.inventory_collections)
 
       # Assert the local db index is empty if we do not load the reference
       expect(persister.networks.index_proxy.send(:local_db_indexes)[:manager_ref].send(:index)).to be_nil

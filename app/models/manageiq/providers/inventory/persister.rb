@@ -26,7 +26,7 @@ class ManageIQ::Providers::Inventory::Persister
 
   # Persists InventoryCollection objects into the DB
   def persist!
-    ManagerRefresh::SaveInventory.save_inventory(manager, inventory_collections)
+    InventoryRefresh::SaveInventory.save_inventory(manager, inventory_collections)
   end
 
   # @return [Array<Symbol>] array of InventoryCollection object names
@@ -53,7 +53,7 @@ class ManageIQ::Providers::Inventory::Persister
     @options ||= Settings.ems_refresh[manager.class.ems_type]
   end
 
-  # @return [Array<ManagerRefresh::InventoryCollection>] array of InventoryCollection objects of the persister
+  # @return [Array<InventoryRefresh::InventoryCollection>] array of InventoryCollection objects of the persister
   def inventory_collections
     collections.values
   end
@@ -63,7 +63,7 @@ class ManageIQ::Providers::Inventory::Persister
     collections.keys
   end
 
-  # @return [ManagerRefresh::InventoryCollection] returns a defined InventoryCollection or undefined method
+  # @return [InventoryRefresh::InventoryCollection] returns a defined InventoryCollection or undefined method
   def method_missing(method_name, *arguments, &block)
     if inventory_collections_names.include?(method_name)
       self.class.define_collections_reader(method_name)
@@ -126,7 +126,7 @@ class ManageIQ::Providers::Inventory::Persister
       ems = ManageIQ::Providers::BaseManager.find(persister_data['ems_id'])
       persister = persister_class.new(
         ems,
-        ManagerRefresh::TargetCollection.new(:manager => ems) # TODO(lsmola) we need to pass serialized targeted scope here
+        InventoryRefresh::TargetCollection.new(:manager => ems) # TODO(lsmola) we need to pass serialized targeted scope here
       )
 
       persister_data['collections'].each do |collection|

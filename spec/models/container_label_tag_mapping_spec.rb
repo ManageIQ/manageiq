@@ -31,7 +31,7 @@ describe ContainerLabelTagMapping do
   # All-in-one
   def map_to_tags(mapper, model_name, labels_kv)
     tag_refs = mapper.map_labels(model_name, labels(labels_kv))
-    ManagerRefresh::SaveInventory.save_inventory(ems, [mapper.tags_to_resolve_collection])
+    InventoryRefresh::SaveInventory.save_inventory(ems, [mapper.tags_to_resolve_collection])
     ContainerLabelTagMapping::Mapper.references_to_tags(tag_refs)
   end
 
@@ -214,7 +214,7 @@ describe ContainerLabelTagMapping do
     let(:node) { FactoryGirl.create(:container_node) }
 
     def ref_to_tag(tag)
-      instance_double(ManagerRefresh::InventoryObject, :id => tag.id)
+      instance_double(InventoryRefresh::InventoryObject, :id => tag.id)
     end
 
     before do

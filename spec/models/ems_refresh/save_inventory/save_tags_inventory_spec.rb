@@ -1,4 +1,4 @@
-require 'manager_refresh/inventory_object'
+require 'inventory_refresh/inventory_object'
 
 context "save_tags_inventory" do
   # @return [Tag] a tag in a category linked to a mapping.
@@ -29,16 +29,16 @@ context "save_tags_inventory" do
   let(:data) do
     {
       :tags => [
-        instance_double(ManagerRefresh::InventoryObject, :id => @tag1.id),
-        instance_double(ManagerRefresh::InventoryObject, :id => @tag2.id),
-        instance_double(ManagerRefresh::InventoryObject, :id => @tag3.id),
+        instance_double(InventoryRefresh::InventoryObject, :id => @tag1.id),
+        instance_double(InventoryRefresh::InventoryObject, :id => @tag2.id),
+        instance_double(InventoryRefresh::InventoryObject, :id => @tag3.id),
       ]
     }
   end
   let(:data2) do
     {
       :tags => [
-        instance_double(ManagerRefresh::InventoryObject, :id => @tag2.id),
+        instance_double(InventoryRefresh::InventoryObject, :id => @tag2.id),
       ]
     }
   end
