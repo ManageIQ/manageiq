@@ -18,6 +18,10 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     service_resources.where(:resource_type => 'VmOrTemplate')
   end
 
+  def transformation_mapping_resource
+    service_resources.where(:resource_type => 'TransformationMapping')
+  end
+
   def validate_order
     true
   end
@@ -66,9 +70,29 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     end
   end
 
+  def update_catalog_item(options, _auth_user = nil)
+    raise _("Editing a plan in progress is prohibited") if %w(active pending).include?(miq_requests.sort_by(&:created_on).last.try(:request_state))
+
+    if miq_requests.any? || options[:config_info].nil?
+      update_attributes(:name => options[:name], :description => options[:description])
+      return reload
+    end
+
+    added_vms_enhanced_config_info = validate_config_info(options)
+
+    transaction do
+      vm_resources.destroy_all
+      reload
+      update_from_options(options)
+      transformation_mapping_resource.update(:resource_id => added_vms_enhanced_config_info[:transformation_mapping][:id])
+      added_vms_enhanced_config_info[:vms].each { |vm_hash| add_resource(vm_hash[:vm], :status => ServiceResource::STATUS_QUEUED, :options => vm_hash[:options]) }
+      save!
+    end
+    reload
+  end
+
   private
 
   def enforce_single_service_parent(_resource)
   end
-
 end
