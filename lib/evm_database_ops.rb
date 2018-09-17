@@ -2,6 +2,7 @@ $LOAD_PATH << File.expand_path(__dir__)
 require 'util/postgres_admin'
 
 require 'mount/miq_generic_mount_session'
+require 'util/miq_object_storage'
 
 class EvmDatabaseOps
   include Vmdb::Logging
@@ -53,10 +54,9 @@ class EvmDatabaseOps
     #   :password => 'Zug-drep5s',
     #   :remote_file_name => "backup_1",     - Provide a base file name for the uploaded file
 
-    uri = with_mount_session(:backup, db_opts, connect_opts) do |database_opts, session, remote_file_uri|
+    uri = with_file_storage(:backup, db_opts, connect_opts) do |database_opts|
       validate_free_space(database_opts)
       backup_result = PostgresAdmin.backup(database_opts)
-      session&.add(database_opts[:local_file], remote_file_uri)
       backup_result
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been backed up to file: [#{uri}]")
@@ -66,7 +66,7 @@ class EvmDatabaseOps
   def self.dump(db_opts, connect_opts = {})
     # db_opts and connect_opts similar to .backup
 
-    uri = with_mount_session(:dump, db_opts, connect_opts) do |database_opts, _session, _remote_file_uri|
+    uri = with_file_storage(:dump, db_opts, connect_opts) do |database_opts|
       # For database dumps, this isn't going to be as accurate (since the dump
       # size will probably be larger than the calculated BD size), but it still
       # won't hurt to do as a generic way to get a rough idea if we have enough
@@ -89,10 +89,7 @@ class EvmDatabaseOps
     #   :username => 'samba_one',
     #   :password => 'Zug-drep5s',
 
-    uri = with_mount_session(:restore, db_opts, connect_opts) do |database_opts, session, remote_file_uri|
-      if session && !File.exist?(database_opts[:local_file])
-        database_opts[:local_file] = session.download(database_opts[:local_file], remote_file_uri)
-      end
+    uri = with_file_storage(:restore, db_opts, connect_opts) do |database_opts|
       prepare_for_restore(database_opts[:local_file])
 
       # remove all the connections before we restore; AR will reconnect on the next query
@@ -107,8 +104,9 @@ class EvmDatabaseOps
     DEFAULT_OPTS.merge(db_opts)
   end
 
-  private_class_method def self.with_mount_session(action, db_opts, connect_opts)
-    db_opts = DEFAULT_OPTS.merge(db_opts)
+  STORAGE_ACTIONS_TO_METHODS = { :backup => :add, :dump => :add, :restore => :download }.freeze
+  private_class_method def self.with_file_storage(action, db_opts, connect_opts)
+    db_opts = merged_db_opts(db_opts)
 
     if db_opts[:local_file].nil?
       if action == :restore
@@ -119,15 +117,39 @@ class EvmDatabaseOps
         backup_folder = action == :dump ? "db_dump" : "db_backup"
         uri = File.join(connect_opts[:uri], backup_folder, connect_opts[:remote_file_name])
       end
+    else
+      uri = db_opts[:local_file]
 
-      session = MiqGenericMountSession.new_session(connect_opts)
-      db_opts[:local_file] = session.uri_to_local_path(uri)
+      # HACK(ish): This just puts the bare minimum necessary for URI.parse to
+      # recognize the :uri option as "file" scheme, and allows MiqFileStorage
+      # to then instantiate MiqLocalMountSession below in the
+      # `.with_interface_class` method.
+      connect_opts[:uri] = "file://"
     end
 
-    block_result = yield(db_opts, session, uri) if block_given?
-    uri || block_result
-  ensure
-    session.disconnect if session
+    MiqFileStorage.with_interface_class(connect_opts) do |file_storage|
+      send_args = [uri, db_opts[:byte_count]].compact
+
+      # Note:  `input_path` will always be a fifo stream (input coming from
+      # PostgresAdmin, and the output going to the `uri`), since we want to
+      # maintain the same interface for all backup types.
+      #
+      # This means that `uri` will always be the final destination, but
+      # `input_path` below will be an intermediary fifo that will take the
+      # input from `pg_dump`, `pg_restore`, or `pg_basebackup`, and streams the
+      # results from those commands (in ruby) it to whatever file storage
+      # endpoint `uri` is pointing to.
+      #
+      # This also makes sure that the streamed output is never written to disk
+      # locally, unless `uri` is targeting the local machine.  This is why we
+      # set `db_opts` local file to that stream.
+      file_storage.send(STORAGE_ACTIONS_TO_METHODS[action], *send_args) do |input_path|
+        db_opts[:local_file] = input_path
+        yield(db_opts)
+      end
+    end
+
+    uri
   end
 
   private_class_method def self.prepare_for_restore(filename)

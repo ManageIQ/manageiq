@@ -1,29 +1,47 @@
 require 'util/runcmd'
 describe EvmDatabaseOps do
+  let(:file_storage) { double("MiqSmbSession", :disconnect => nil) }
+  let(:local_backup) { "/tmp/backup_1" }
+  let(:input_path)   { "foo/bar/mkfifo" }
+  let(:run_db_ops)   { @db_opts.dup.merge(:local_file => input_path) }
+  let(:tmpdir)       { Rails.root.join("tmp") }
+
+  before do
+    allow(MiqFileStorage).to receive(:with_interface_class).and_yield(file_storage)
+  end
+
   context "#backup" do
-    let(:session) { double("MiqSmbSession", :disconnect => nil) }
     before do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
-      @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
-      allow(MiqGenericMountSession).to receive(:new_session).and_return(session)
-      allow(session).to receive(:settings_mount_point).and_return(Rails.root.join("tmp").to_s)
-      allow(session).to receive(:uri_to_local_path).and_return(Rails.root.join("tmp/share").to_s)
-      allow(PostgresAdmin).to receive(:backup).and_return("/tmp/backup_1")
-      allow(FileUtils).to receive(:mv).and_return(true)
+      @db_opts      = {:username => 'root', :dbname => 'vmdb_production' }
+      allow(file_storage).to   receive(:settings_mount_point).and_return(tmpdir.to_s)
+      allow(file_storage).to   receive(:uri_to_local_path).and_return(tmpdir.join("share").to_s)
+      allow(file_storage).to   receive(:add).and_yield(input_path)
+
+      allow(FileUtils).to      receive(:mv).and_return(true)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(200.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(100.megabytes)
     end
 
     it "locally" do
-      local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
+      expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to eq(local_backup)
     end
 
     it "defaults" do
-      local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
+      expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
       expect(EvmDatabaseOps.backup(@db_opts, {})).to eq(local_backup)
+    end
+
+    it "splits files with a local file" do
+      @db_opts[:local_file] = local_backup
+      @db_opts[:byte_count] = "200M"
+
+      allow(file_storage).to   receive(:send).with(:add, local_backup, "200M").and_yield(input_path)
+      expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
+      EvmDatabaseOps.backup(@db_opts, {})
     end
 
     it "without enough free space" do
@@ -37,14 +55,14 @@ describe EvmDatabaseOps do
     it "remotely" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = "custom_backup"
-      expect(session).to receive(:add).and_return("smb://myserver.com/share/db_backup/custom_backup")
+      expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to eq("smb://myserver.com/share/db_backup/custom_backup")
     end
 
     it "remotely without a remote file name" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = nil
-      expect(session).to receive(:add)
+      expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
       expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to match(/smb:\/\/myserver.com\/share\/db_backup\/miq_backup_.*/)
     end
 
@@ -52,47 +70,61 @@ describe EvmDatabaseOps do
       @db_opts.delete(:dbname)
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = nil
+      run_db_ops[:dbname] = "vmdb_production"
       allow(described_class).to receive(:backup_file_name).and_return("miq_backup")
+      expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
 
       log_stub = instance_double("_log")
       expect(described_class).to receive(:_log).twice.and_return(log_stub)
       expect(log_stub).to        receive(:info).with(any_args)
       expect(log_stub).to        receive(:info).with("[vmdb_production] database has been backed up to file: [smb://myserver.com/share/db_backup/miq_backup]")
-      expect(session).to receive(:add).and_return("smb://myserver.com/share/db_backup/miq_backup")
 
       EvmDatabaseOps.backup(@db_opts, @connect_opts)
     end
   end
 
   context "#dump" do
+    let(:local_dump) { "/tmp/dump_1" }
     before do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
       allow(MiqSmbSession).to receive(:runcmd)
-      allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
-      allow(MiqUtil).to receive(:runcmd)
-      allow(PostgresAdmin).to receive(:runcmd_with_logging)
-      allow(FileUtils).to receive(:mv).and_return(true)
+      allow(file_storage).to  receive(:settings_mount_point).and_return(tmpdir)
+      allow(file_storage).to  receive(:add).and_yield(input_path)
+
+      allow(MiqUtil).to        receive(:runcmd)
+      allow(PostgresAdmin).to  receive(:runcmd_with_logging)
+      allow(FileUtils).to      receive(:mv).and_return(true)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(200.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(100.megabytes)
     end
 
     it "locally" do
-      local_dump = "/tmp/dump_1"
       @db_opts[:local_file] = local_dump
+      expect(PostgresAdmin).to receive(:backup_pg_dump).with(run_db_ops)
       expect(EvmDatabaseOps.dump(@db_opts, @connect_opts)).to eq(local_dump)
     end
 
     it "defaults" do
-      local_dump = "/tmp/dump_1"
       @db_opts[:local_file] = local_dump
+      expect(PostgresAdmin).to receive(:backup_pg_dump).with(run_db_ops)
       expect(EvmDatabaseOps.dump(@db_opts, {})).to eq(local_dump)
+    end
+
+    it "splits files with a local file" do
+      @db_opts[:local_file] = local_dump
+      @db_opts[:byte_count] = "200M"
+
+      allow(file_storage).to   receive(:send).with(:add, local_dump, "200M").and_yield(input_path)
+      expect(PostgresAdmin).to receive(:backup_pg_dump).with(run_db_ops)
+      EvmDatabaseOps.dump(@db_opts, {})
     end
 
     it "without enough free space" do
       EvmSpecHelper.create_guid_miq_server_zone
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(100.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(200.megabytes)
+      expect(PostgresAdmin).to receive(:backup_pg_dump).never
       expect { EvmDatabaseOps.dump(@db_opts, @connect_opts) }.to raise_error(MiqException::MiqDatabaseBackupInsufficientSpace)
       expect(MiqQueue.where(:class_name => "MiqEvent", :method_name => "raise_evm_event").count).to eq(1)
     end
@@ -100,12 +132,14 @@ describe EvmDatabaseOps do
     it "remotely" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = "custom_pg_dump"
+      expect(PostgresAdmin).to receive(:backup_pg_dump).with(run_db_ops)
       expect(EvmDatabaseOps.dump(@db_opts, @connect_opts)).to eq("smb://myserver.com/share/db_dump/custom_pg_dump")
     end
 
     it "remotely without a remote file name" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = nil
+      expect(PostgresAdmin).to receive(:backup_pg_dump).with(run_db_ops)
       expect(EvmDatabaseOps.dump(@db_opts, @connect_opts)).to match(/smb:\/\/myserver.com\/share\/db_dump\/miq_pg_dump_.*/)
     end
   end
@@ -114,9 +148,12 @@ describe EvmDatabaseOps do
     before do
       @connect_opts = {:username => 'blah', :password => 'blahblah'}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
+
       allow(MiqSmbSession).to receive(:runcmd)
       allow(MiqSmbSession).to receive(:raw_disconnect)
-      allow_any_instance_of(MiqSmbSession).to receive(:settings_mount_point).and_return(Rails.root.join("tmp"))
+      allow(file_storage).to  receive(:settings_mount_point).and_return(tmpdir)
+      allow(file_storage).to  receive(:download).and_yield(input_path)
+
       allow(PostgresAdmin).to receive(:runcmd_with_logging)
       allow(PostgresAdmin).to receive(:pg_dump_file?).and_return(true)
       allow(PostgresAdmin).to receive(:base_backup_file?).and_return(false)
@@ -125,7 +162,6 @@ describe EvmDatabaseOps do
     end
 
     it "from local backup" do
-      local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
       expect(EvmDatabaseOps.restore(@db_opts, @connect_opts)).to eq(local_backup)
     end
@@ -151,25 +187,26 @@ describe EvmDatabaseOps do
     end
   end
 
-  describe "with_mount_session (private method)" do
+  describe "with_file_storage (private method)" do
     let(:db_opts)       { {} }
     let(:connect_opts)  { {} }
-    let(:mount_session) { instance_double("MiqGenericMountSession") }
-
-    before do
-      allow(MiqGenericMountSession).to receive(:new_session).and_return(mount_session)
-    end
 
     # convenience_wrapper for private method
-    def execute_with_mount_session(action = :backup)
-      described_class.send(:with_mount_session, action, db_opts, connect_opts) do |dbopts, _session, _remote_file_uri|
+    def execute_with_file_storage(action = :backup)
+      described_class.send(:with_file_storage, action, db_opts, connect_opts) do |dbopts|
         yield dbopts if block_given?
       end
     end
 
-    shared_examples "default with_mount_session behaviors" do
+    shared_examples "default with_file_storage behaviors" do
+      it "sets dbopts[:local_file] to the input_path" do
+        execute_with_file_storage do |dbopts|
+          expect(dbopts[:local_file]).to eq(input_path)
+        end
+      end
+
       it "updates db_opts for the block to set the :dbname" do
-        execute_with_mount_session do |dbopts|
+        execute_with_file_storage do |dbopts|
           expect(dbopts[:dbname]).to eq("vmdb_production")
         end
       end
@@ -178,7 +215,7 @@ describe EvmDatabaseOps do
         it "does not update :dbname if passed" do
           db_opts[:dbname] = "my_db"
 
-          execute_with_mount_session do |dbopts|
+          execute_with_file_storage do |dbopts|
             expect(dbopts[:dbname]).to eq("my_db")
           end
         end
@@ -188,53 +225,40 @@ describe EvmDatabaseOps do
     context "with a local file" do
       let(:db_opts) { { :local_file => "/tmp/foo" } }
 
-      include_examples "default with_mount_session behaviors"
+      before { expect(file_storage).to receive(:add).and_yield(input_path) }
 
-      it "does not create a MiqGenericMountSession" do
-        expect(MiqGenericMountSession).to_not receive(:new_session)
-        execute_with_mount_session
+      include_examples "default with_file_storage behaviors"
+
+      it "always uses a file_storage interface" do
+        execute_with_file_storage do
+          expect(file_storage).to receive(:test_method)
+          file_storage.test_method
+        end
       end
 
       it "does not try to close a session" do
-        expect(mount_session).to_not receive(:disconnect)
+        expect(file_storage).to_not receive(:disconnect)
 
-        execute_with_mount_session
+        execute_with_file_storage
       end
 
-      it "does not db_opts[:local_file] in the method context" do
-        execute_with_mount_session do |dbopts|
-          expect(dbopts[:local_file]).to eq("/tmp/foo")
+      it "updates the db_opts[:local_file] to the file_storage fifo" do
+        execute_with_file_storage do |dbopts|
+          expect(dbopts[:local_file]).to eq(input_path)
         end
       end
 
       it "returns the result of the block" do
-        expect(execute_with_mount_session { "block result" }).to eq("block result")
+        expect(execute_with_file_storage { "block result" }).to eq(db_opts[:local_file])
       end
     end
 
     context "without a local file" do
       let(:connect_opts) { { :uri => "smb://tmp/foo" } }
 
-      include_examples "default with_mount_session behaviors"
+      before { allow(file_storage).to receive(:add).and_yield(input_path) }
 
-      before do
-        allow(mount_session).to receive(:disconnect)
-        # give a slightly different result for this stub so we see a difference
-        # in the specs.  This just truncates the scheme from the passed in
-        # `uri` arg.
-        allow(mount_session).to receive(:uri_to_local_path) { |uri| uri[5..-1] }
-      end
-
-      it "creates a MiqGenericMountSession" do
-        expect(MiqGenericMountSession).to receive(:new_session)
-        execute_with_mount_session
-      end
-
-      it "closes the session" do
-        expect(mount_session).to receive(:disconnect)
-
-        execute_with_mount_session
-      end
+      include_examples "default with_file_storage behaviors"
 
       context "for a backup-ish action" do
         let(:backup_file) { "/tmp/bar/baz" }
@@ -242,36 +266,34 @@ describe EvmDatabaseOps do
         before { allow(described_class).to receive(:backup_file_name).and_return(backup_file) }
 
         it "updates db_opts[:local_file] in the method context" do
-          expected_filename = "/tmp/foo/db_backup/baz"
+          expected_uri = "smb://tmp/foo/db_backup/baz"
 
-          execute_with_mount_session do |dbopts|
-            expect(dbopts[:local_file]).to eq(expected_filename)
-          end
+          expect(file_storage).to receive(:send).with(:add, expected_uri)
+          execute_with_file_storage
         end
 
         it "respects user passed in connect_opts[:remote_file_name]" do
-          expected_filename = "/tmp/foo/db_backup/my_dir/my_backup"
+          expected_uri = "smb://tmp/foo/db_backup/my_dir/my_backup"
           connect_opts[:remote_file_name] = "/my_dir/my_backup"
 
-          execute_with_mount_session do |dbopts|
-            expect(dbopts[:local_file]).to eq(expected_filename)
-          end
+          expect(file_storage).to receive(:send).with(:add, expected_uri)
+          execute_with_file_storage
         end
 
         it "returns calculated uri" do
-          expect(execute_with_mount_session { "block result" }).to eq("smb://tmp/foo/db_backup/baz")
+          expect(execute_with_file_storage { "block result" }).to eq("smb://tmp/foo/db_backup/baz")
         end
       end
 
       context "for a restore action" do
         it "updates db_opts[:local_file] in the method context" do
-          execute_with_mount_session(:restore) do |dbopts|
-            expect(dbopts[:local_file]).to eq("/tmp/foo")
-          end
+          expect(file_storage).to receive(:send).with(:download, "smb://tmp/foo")
+          execute_with_file_storage(:restore)
         end
 
         it "returns calculated uri" do
-          expect(execute_with_mount_session(:restore) { "block result" }).to eq("smb://tmp/foo")
+          allow(file_storage).to receive(:download).and_yield(input_path)
+          expect(execute_with_file_storage(:restore) { "block result" }).to eq("smb://tmp/foo")
         end
       end
     end
