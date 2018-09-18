@@ -62,7 +62,11 @@ class MiqRegion < ApplicationRecord
   end
 
   def servers_for_settings_reload
-    miq_servers.where(:status => "started")
+    # This method is used to queue reload_settings for the resources which
+    # had settings changed.  If those servers are in a different region it is
+    # not possible to queue methods for them so we want to filter the
+    # returned servers to just ones in the current region.
+    miq_servers.in_my_region.where(:status => "started")
   end
 
   def active_miq_servers
