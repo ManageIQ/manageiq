@@ -101,7 +101,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
       h[:physical_chassis_id] = h.delete(:physical_chassis).try(:[], :id)
     end
 
-    child_keys = %i(computer_system asset_detail physical_disk canister)
+    child_keys = %i(computer_system asset_detail physical_disks canister)
     save_inventory_multi(ems.physical_storages, hashes, deletes, [:ems_ref], child_keys)
     store_ids_for_new_records(ems.physical_storages, hashes, :ems_ref)
   end
@@ -115,11 +115,17 @@ module EmsRefresh::SaveInventoryPhysicalInfra
   end
 
   #
-  # Saves the drive information of a storage
+  # Saves the disks information of a storage
   #
-  def save_physical_disk_inventory(parent, hash)
-    return if hash.nil?
-    save_inventory_single(:physical_disk, parent, hash)
+  def save_physical_disks_inventory(physical_storage, hashes)
+    return if hashes.nil?
+
+    # Update the associated ids
+    hashes.each do |h|
+      h[:physical_storage_id] = h.delete(:physical_storage).try(:[], :id)
+    end
+
+    save_inventory_multi(physical_storage.physical_disks, hashes, :use_association, [:physical_storage_id])
   end
 
   #
