@@ -730,7 +730,7 @@ en:
       FileDepotFtpAnonymous:    Anonymous FTP
       FileDepotNfs:             NFS
       FileDepotS3:              AWS S3
-      FileDepotSwift:           Openstack Swift
+      FileDepotSwift:           OpenStack Swift
       FileDepotSmb:             Samba
       Filesystem:               File
       Flavor:                   Flavor

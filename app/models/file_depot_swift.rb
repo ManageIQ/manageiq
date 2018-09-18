@@ -50,9 +50,7 @@ class FileDepotSwift < FileDepot
     end
   end
 
-  def verify_credentials(auth_type = nil, options = {})
-    auth_type ||= 'default'
-
+  def verify_credentials(auth_type = 'default', options = {})
     options[:auth_type] = auth_type
     connect(options.merge(:auth_type => auth_type))
   rescue => err
@@ -62,12 +60,14 @@ class FileDepotSwift < FileDepot
   end
 
   def merged_uri(uri, api_port)
-    port      = api_port.presence || 5000
-    uri       = URI.parse("#{URI(uri).scheme}://#{URI(uri).host}:#{port}#{URI(uri).path}")
-    uri.query = [uri.query, "region=#{openstack_region}"].compact.join('&') if openstack_region.present?
-    uri.query = [uri.query, "api_version=#{keystone_api_version}"].compact.join('&') if keystone_api_version.present?
-    uri.query = [uri.query, "domain_id=#{v3_domain_ident}"].compact.join('&') if v3_domain_ident.present?
-    uri.query = [uri.query, "security_protocol=#{security_protocol}"].compact.join('&') if security_protocol.present?
+    port           = api_port.presence || 5000
+    uri            = URI.parse("#{URI(uri).scheme}://#{URI(uri).host}:#{port}#{URI(uri).path}")
+    query_elements = []
+    query_elements << "region=#{openstack_region}"              if openstack_region.present?
+    query_elements << "api_version=#{keystone_api_version}"     if keystone_api_version.present?
+    query_elements << "domain_id=#{v3_domain_ident}"            if v3_domain_ident.present?
+    query_elements << "security_protocol=#{security_protocol}"  if security_protocol.present?
+    uri.query = query_elements.join('&').presence
     uri
   end
 end

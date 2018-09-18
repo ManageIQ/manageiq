@@ -3,7 +3,7 @@ class DatabaseBackup < ApplicationRecord
     'smb'   => 'Samba',
     'nfs'   => 'Network File System',
     's3'    => 'AWS S3',
-    'swift' => 'Openstack Swift'
+    'swift' => 'OpenStack Swift'
   }.freeze
 
   def self.supported_depots
