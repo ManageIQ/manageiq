@@ -1,4 +1,4 @@
-describe VMDB::Config::Validator do
+describe Vmdb::Settings::Validator do
   describe ".new" do
     it "with a Hash" do
       validator = described_class.new(:session => {:timeout => 123})

@@ -48,11 +48,11 @@ module Vmdb
     end
 
     def self.activate
-      VMDB::Config::Activator.new(::Settings).activate
+      Vmdb::Settings::Activator.new(::Settings).activate
     end
 
     def self.validator(settings = ::Settings)
-      VMDB::Config::Validator.new(settings)
+      Vmdb::Settings::Validator.new(settings)
     end
     private_class_method :validator
 

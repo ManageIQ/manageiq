@@ -89,7 +89,7 @@ end
 puts "Setting [#{opts[:path]}], old value: [#{path[key]}], new value: [#{newval}]"
 path[key] = newval
 
-valid, errors = VMDB::Config::Validator.new(settings).validate
+valid, errors = Vmdb::Settings.validate(settings)
 unless valid
   puts "ERROR: Configuration is invalid:"
   errors.each { |k, v| puts "\t#{k}: #{v}" }

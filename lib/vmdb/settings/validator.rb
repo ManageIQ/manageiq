@@ -1,5 +1,5 @@
-module VMDB
-  class Config
+module Vmdb
+  class Settings
     class Validator
       include Vmdb::Logging
 
