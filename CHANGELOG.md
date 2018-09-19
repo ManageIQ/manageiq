@@ -5,6 +5,72 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 94 ending 2018-09-10
+
+### Added
+- Add an alias for InventoryRefresh -> ManagerRefresh [(#17965)](https://github.com/ManageIQ/manageiq/pull/17965)
+- Add physical chassis details builder [(#17941)](https://github.com/ManageIQ/manageiq/pull/17941)
+- Add accessors for physical chassis tree [(#17940)](https://github.com/ManageIQ/manageiq/pull/17940)
+- Add product feature for displaying custom button events [(#17939)](https://github.com/ManageIQ/manageiq/pull/17939)
+- Add CustomButtonEvent association to GenericObject. [(#17924)](https://github.com/ManageIQ/manageiq/pull/17924)
+- Product features for servicey things [(#17920)](https://github.com/ManageIQ/manageiq/pull/17920)
+- Send link with the text_bindings in notifications when link_to is set [(#17913)](https://github.com/ManageIQ/manageiq/pull/17913)
+- InventoryCollection's Builder exception message [(#17904)](https://github.com/ManageIQ/manageiq/pull/17904)
+- Add best fit logic for transformations moving vms to openstack [(#17880)](https://github.com/ManageIQ/manageiq/pull/17880)
+- Core fixes for infra graph refresh [(#17870)](https://github.com/ManageIQ/manageiq/pull/17870)
+- Add Cloud Volume Type features [(#17828)](https://github.com/ManageIQ/manageiq/pull/17828)
+- Save Canister Model [(#17706)](https://github.com/ManageIQ/manageiq/pull/17706)
+- Service retirement values from dialog [(#16799)](https://github.com/ManageIQ/manageiq/pull/16799)
+
+### Fixed
+- Fixing Computer System relationship on Physical Storage [(#17945)](https://github.com/ManageIQ/manageiq/pull/17945)
+- Fix of inventory building and refactoring [(#17942)](https://github.com/ManageIQ/manageiq/pull/17942)
+- Always return 0 for missing num_cpu [(#17937)](https://github.com/ManageIQ/manageiq/pull/17937)
+- fix: with_role_excluding has bad subquery [(#17930)](https://github.com/ManageIQ/manageiq/pull/17930)
+- Add method to allow access for tenant quotas [(#17926)](https://github.com/ManageIQ/manageiq/pull/17926)
+- Do not duplicate same notification if user belongs to several groups [(#17918)](https://github.com/ManageIQ/manageiq/pull/17918)
+- Ensure options is always a hash [(#17917)](https://github.com/ManageIQ/manageiq/pull/17917)
+- Association default can't be array [(#17915)](https://github.com/ManageIQ/manageiq/pull/17915)
+- Fix Refresh Relationships and Power States button for VMs Instances Images [(#17863)](https://github.com/ManageIQ/manageiq/pull/17863)
+- rake locale:plugin:find fixes [(#17847)](https://github.com/ManageIQ/manageiq/pull/17847)
+- Get rid of the condition modifier. [(#16213)](https://github.com/ManageIQ/manageiq/pull/16213)
+
+## Gaprindashvili-5 - Released 2018-09-07
+
+### Added
+- Scheduling catalog items [(#17765)](https://github.com/ManageIQ/manageiq/pull/17765)
+- locale:po_to_json: add support for including catalogs from js plugins [(#17740)](https://github.com/ManageIQ/manageiq/pull/17740)
+- Support cancellation for miq_request and miq_request_task [(#17687)](https://github.com/ManageIQ/manageiq/pull/17687)
+- Add Cumulative Chargeback rates [(#17795)](https://github.com/ManageIQ/manageiq/pull/17795)
+- Add RBAC feature for Migration (v2v). [(#17596)](https://github.com/ManageIQ/manageiq/pull/17596)
+- Add ServiceTemplate#miq_schedules relation [(#17672)](https://github.com/ManageIQ/manageiq/pull/17672)
+- Support for v2v pre/post Ansible playbook service. [(#17627)](https://github.com/ManageIQ/manageiq/pull/17627)
+- The vm_id coming in from API is a string. [(#17674)](https://github.com/ManageIQ/manageiq/pull/17674)
+- MiqSchedule call method directly if available [(#17588)](https://github.com/ManageIQ/manageiq/pull/17588)
+- Validate name uniqueness for Transformation Plans [(#17677)](https://github.com/ManageIQ/manageiq/pull/17677)
+
+### Fixed
+- Add option to prov workflow to not rerun methods [(#17641)](https://github.com/ManageIQ/manageiq/pull/17641)
+- Set Settings.product.transformation to true [(#17733)](https://github.com/ManageIQ/manageiq/pull/17733)
+- Set checkbox on load, sans default, to be false, not nil [(#17810)](https://github.com/ManageIQ/manageiq/pull/17810)
+- Allow tenant admins to see all groups within the scope of their tenant [(#17817)](https://github.com/ManageIQ/manageiq/pull/17817)
+- Ensure MiqSchedule#name is unique for ServiceTemplate orders [(#17696)](https://github.com/ManageIQ/manageiq/pull/17696)
+- Fix class name for queueing [(#17717)](https://github.com/ManageIQ/manageiq/pull/17717)
+- Start the drb server with a unix socket [(#17744)](https://github.com/ManageIQ/manageiq/pull/17744)
+- Add internal column to service template for transformation plan [(#17748)](https://github.com/ManageIQ/manageiq/pull/17748)
+- Add pt_BR.yml for Brazilian Portuguese [(#17775)](https://github.com/ManageIQ/manageiq/pull/17775)
+- Fix for $evm.execute not honoring dialog options [(#17844)](https://github.com/ManageIQ/manageiq/pull/17844)
+- Move VIRTUAL_COL_USES translation to col_index method in ChargeableField [(#17747)](https://github.com/ManageIQ/manageiq/pull/17747)
+- Only update zone if found [(#17139)](https://github.com/ManageIQ/manageiq/pull/17139)
+- Add option to clear classifications for tag_details [(#17465)](https://github.com/ManageIQ/manageiq/pull/17465)
+- Add Flavor model to :tag_classes: section in miq_expression.yml. [(#17537)](https://github.com/ManageIQ/manageiq/pull/17537)
+- Restrict Vm Operating System detection for XP [(#17405)](https://github.com/ManageIQ/manageiq/pull/17405)
+- Delete #retire_now since it has been moved to shared code [(#17095)](https://github.com/ManageIQ/manageiq/pull/17095)
+- Return custom buttons for service having nil service template [(#17703)](https://github.com/ManageIQ/manageiq/pull/17703)
+- Force user_type to UPN when username is a UPN [(#17690)](https://github.com/ManageIQ/manageiq/pull/17690)
+- Adding flavor as a has one on VM [(#17692)](https://github.com/ManageIQ/manageiq/pull/17692)
+- Clean up queued items on Zone#destroy [(#17374)](https://github.com/ManageIQ/manageiq/pull/17374)
+
 ## Unreleased as of Sprint 93 ending 2018-08-27
 
 ### Added
@@ -82,7 +148,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Fixed
 - switch back to require_nested due to linux load error [(#17848)](https://github.com/ManageIQ/manageiq/pull/17848)
-- Fix for $evm.execute not honoring dialog options [(#17844)](https://github.com/ManageIQ/manageiq/pull/17844)
 - human_attribute_name():  add ui option to be able to call original (super) method [(#17834)](https://github.com/ManageIQ/manageiq/pull/17834)
 - Fix bug with EvmDatabaseOps.dump [(#17830)](https://github.com/ManageIQ/manageiq/pull/17830)
 - Fix for physical server alert bug [(#17829)](https://github.com/ManageIQ/manageiq/pull/17829)
@@ -93,7 +158,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Save Aws Region in File Depot for DB Backup [(#17803)](https://github.com/ManageIQ/manageiq/pull/17803)
 - New and improved Field.is_field?() [(#17801)](https://github.com/ManageIQ/manageiq/pull/17801)
 - L10N - Add the missing pb and eb types for storage_units  [(#17800)](https://github.com/ManageIQ/manageiq/pull/17800)
-- Add Cumulative Chargeback rates   [(#17795)](https://github.com/ManageIQ/manageiq/pull/17795)
 - Distinguish between no password provided and bad password in error message [(#17792)](https://github.com/ManageIQ/manageiq/pull/17792)
 - Apply gettext to initial & error service dialog values [(#17789)](https://github.com/ManageIQ/manageiq/pull/17789)
 - Include task_id in result of ResourceActionWorkflow#process_request [(#17788)](https://github.com/ManageIQ/manageiq/pull/17788)
@@ -104,8 +168,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Use standard method for filesystem cleanup [(#17774)](https://github.com/ManageIQ/manageiq/pull/17774)
 - Allow tenant admins to see all groups within the scope of their tenant [(#17768)](https://github.com/ManageIQ/manageiq/pull/17768)
 - Logging archived targets during C&U collection [(#17762)](https://github.com/ManageIQ/manageiq/pull/17762)
-- Add internal column to service template for transformation plan [(#17748)](https://github.com/ManageIQ/manageiq/pull/17748)
-- Move VIRTUAL_COL_USES translation to col_index method in ChargeableField [(#17747)](https://github.com/ManageIQ/manageiq/pull/17747)
 - Avoid raising and re-queueing when the remote resource is not found [(#17745)](https://github.com/ManageIQ/manageiq/pull/17745)
 
 ### Removed
@@ -134,35 +196,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Add host_guest_devices association and inv_collection [(#17505)](https://github.com/ManageIQ/manageiq/pull/17505)
 
 ### Fixed
-- Add pt_BR.yml for Brazilian Portuguese [(#17775)](https://github.com/ManageIQ/manageiq/pull/17775)
 - Added Physical Server view to OOTB Security role. [(#17753)](https://github.com/ManageIQ/manageiq/pull/17753)
-- Start the drb server with a unix socket [(#17744)](https://github.com/ManageIQ/manageiq/pull/17744)
 - Fix refresh time and memory issues [(#17724)](https://github.com/ManageIQ/manageiq/pull/17724)
 - Fix detection of an EMS to use for Storage#scan [(#17718)](https://github.com/ManageIQ/manageiq/pull/17718)
-- Fix class name for queueing [(#17717)](https://github.com/ManageIQ/manageiq/pull/17717)
 - Allow for empty strings in the execution_ttl field [(#17715)](https://github.com/ManageIQ/manageiq/pull/17715)
-- Return custom buttons for service having nil service template [(#17703)](https://github.com/ManageIQ/manageiq/pull/17703)
-- Adding flavor as a has one on VM [(#17692)](https://github.com/ManageIQ/manageiq/pull/17692)
-- Force user_type to UPN when username is a UPN [(#17690)](https://github.com/ManageIQ/manageiq/pull/17690)
 - Missing embedded ansible persisters dependencies [(#17574)](https://github.com/ManageIQ/manageiq/pull/17574)
 
 ## Unreleased as of Sprint 90 ending 2018-07-16
 
 ### Added
 - Add a method to queue an Ansible::Runner.run [(#17705)](https://github.com/ManageIQ/manageiq/pull/17705)
-- Support cancellation for miq_request and miq_request_task [(#17687)](https://github.com/ManageIQ/manageiq/pull/17687)
-- The vm_id coming in from API is a string. [(#17674)](https://github.com/ManageIQ/manageiq/pull/17674)
-- Add ServiceTemplate#miq_schedules relation [(#17672)](https://github.com/ManageIQ/manageiq/pull/17672)
 - Adding miq_feature to chassis LED operation [(#17668)](https://github.com/ManageIQ/manageiq/pull/17668)
 - Provider generator: Persister update [(#17666)](https://github.com/ManageIQ/manageiq/pull/17666)
-- Support for v2v pre/post Ansible playbook service. [(#17627)](https://github.com/ManageIQ/manageiq/pull/17627)
 - InventoryCollection Builder improvements [(#17621)](https://github.com/ManageIQ/manageiq/pull/17621)
 - Add a new event group level [(#17611)](https://github.com/ManageIQ/manageiq/pull/17611)
 
 ### Fixed
 - Maintenance must run VACUUM to avoid long held locks [(#17713)](https://github.com/ManageIQ/manageiq/pull/17713)
 - Fix import export smartstate analysis [(#17697)](https://github.com/ManageIQ/manageiq/pull/17697)
-- Ensure MiqSchedule#name is unique for ServiceTemplate orders [(#17696)](https://github.com/ManageIQ/manageiq/pull/17696)
 - automation_manager should use :manager(_id) instead of :ems_id [(#17694)](https://github.com/ManageIQ/manageiq/pull/17694)
 - fix MiqGroup#miq_user_role_name [(#17686)](https://github.com/ManageIQ/manageiq/pull/17686)
 - Network Subnet total_vms work correctly [(#17683)](https://github.com/ManageIQ/manageiq/pull/17683)
@@ -270,7 +321,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Scheduling catalog items [(#17594)](https://github.com/ManageIQ/manageiq/pull/17594)
 - Extracting physical ports of a switch to a new page [(#17593)](https://github.com/ManageIQ/manageiq/pull/17593)
 - Adjusting ManageIQ core to enable PhysicalStorage API endpoint [(#17586)](https://github.com/ManageIQ/manageiq/pull/17586)
-- Add RBAC feature for Migration (v2v). [(#17596)](https://github.com/ManageIQ/manageiq/pull/17596)
 - Support moving a VM to another folder during VM Migrate. [(#17519)](https://github.com/ManageIQ/manageiq/pull/17519)
 - Keep track of the server ids where the automate task has been processed. [(#17451)](https://github.com/ManageIQ/manageiq/pull/17451)
 - Adding connection b/w physical servers and physical switches [(#17311)](https://github.com/ManageIQ/manageiq/pull/17311)
@@ -285,7 +335,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ## Unreleased as of Sprint 88 ending 2018-06-18
 
 ### Added
-- MiqSchedule call method directly if available [(#17588)](https://github.com/ManageIQ/manageiq/pull/17588)
 - Cashe cloud volumes in ChargebackVm [(#17585)](https://github.com/ManageIQ/manageiq/pull/17585)
 - Add policy event host_failure. [(#17578)](https://github.com/ManageIQ/manageiq/pull/17578)
 - Add display name for guest device [(#17573)](https://github.com/ManageIQ/manageiq/pull/17573)
@@ -308,11 +357,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Fixed
 - Skip Vm reconnect if already reconnected [(#17570)](https://github.com/ManageIQ/manageiq/pull/17570)
-- Add Flavor model to :tag_classes: section in miq_expression.yml. [(#17537)](https://github.com/ManageIQ/manageiq/pull/17537)
 - Explicitly shortcut "everything" for privileges [(#17526)](https://github.com/ManageIQ/manageiq/pull/17526)
 - Fix multiple parents error moving vm to new folder [(#17525)](https://github.com/ManageIQ/manageiq/pull/17525)
 - Join object and block storage under ems_storage in the features tree [(#17512)](https://github.com/ManageIQ/manageiq/pull/17512)
-- Restrict Vm Operating System detection for XP [(#17405)](https://github.com/ManageIQ/manageiq/pull/17405)
 - Fixing the refresh to remove all physical switches. [(#17390)](https://github.com/ManageIQ/manageiq/pull/17390)
 - Add display name for RHV Embedded Ansible Credential [(#17330)](https://github.com/ManageIQ/manageiq/pull/17330)
 - Migrate model display names from locale/en.yml to models [(#16836)](https://github.com/ManageIQ/manageiq/pull/16836)
@@ -341,7 +388,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Define model_name with route keys for the StorageManager model [(#17513)](https://github.com/ManageIQ/manageiq/pull/17513)
 - Extend support from memberof to other multi-value attribute for group membership [(#17497)](https://github.com/ManageIQ/manageiq/pull/17497)
 - Allow MiqReport.paged_view_search to take advantage of Rbac :extra_cols [(#17474)](https://github.com/ManageIQ/manageiq/pull/17474)
-- Add option to clear classifications for tag_details [(#17465)](https://github.com/ManageIQ/manageiq/pull/17465)
 - Remove :match_via_decendants for ConfiguredSystem::ConfiguredSystem [(#17430)](https://github.com/ManageIQ/manageiq/pull/17430)
 - Fix current/active server deletability validation [(#17391)](https://github.com/ManageIQ/manageiq/pull/17391)
 - NOR covers 30 days [(#17376)](https://github.com/ManageIQ/manageiq/pull/17376)
@@ -496,7 +542,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Fixed
 - Delete dequeued shutdown_and_exit messages from MiqQueue on server start [(#17370)](https://github.com/ManageIQ/manageiq/pull/17370)
-- Clean up queued items on Zone#destroy [(#17374)](https://github.com/ManageIQ/manageiq/pull/17374)
 - Add an entry for guest device to en.yml [(#17350)](https://github.com/ManageIQ/manageiq/pull/17350)
 - Renamed method to delete cloud object store for consistency reasons [(#17143)](https://github.com/ManageIQ/manageiq/pull/17143)
 
@@ -567,11 +612,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - ConfigurationScriptSource to have last_updated_on column [(#17026)](https://github.com/ManageIQ/manageiq/pull/17026)
 
 ### Fixed
-- Only update zone if found [(#17139)](https://github.com/ManageIQ/manageiq/pull/17139)
 - Alphabets are hard... [(#17136)](https://github.com/ManageIQ/manageiq/pull/17136)
 - Bump manageiq-smartstate to 0.2.10 version [(#17121)](https://github.com/ManageIQ/manageiq/pull/17121)
 - Fix ambiguous created_recently scope [(#17102)](https://github.com/ManageIQ/manageiq/pull/17102)
-- Delete #retire_now since it has been moved to shared code [(#17095)](https://github.com/ManageIQ/manageiq/pull/17095)
 - Fix single security group in provisioning [(#17094)](https://github.com/ManageIQ/manageiq/pull/17094)
 - Remove new fields from export if empty [(#17080)](https://github.com/ManageIQ/manageiq/pull/17080)
 - Calculate totals for hours of exitstence in metering reports [(#17077)](https://github.com/ManageIQ/manageiq/pull/17077)
