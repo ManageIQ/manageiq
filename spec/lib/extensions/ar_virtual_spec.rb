@@ -981,6 +981,15 @@ describe VirtualFields do
   end
 end
 
+describe "ActiveRecord attributes" do
+  it "doesn't botch up the attributes" do
+    hardware = Hardware.select(:id, :model).find(FactoryGirl.create(:hardware).id)
+    expect(hardware.attributes.size).to eq(2)
+    hardware.save
+    expect(hardware.attributes.size).to eq(2)
+  end
+end
+
 describe "ApplicationRecord class" do
   describe ".virtual_attribute_names" do
     it "class immediately under ApplicationRecord" do

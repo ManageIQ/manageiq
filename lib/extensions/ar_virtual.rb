@@ -400,12 +400,15 @@ module VirtualAttributes
       end
     end
 
-    def attributes_builder
-      @attributes_builder ||= ::ActiveRecord::AttributeSet::Builder.new(attribute_types, primary_key) do |name|
-        unless columns_hash.key?(name) || virtual_attribute?(name)
-          _default_attributes[name].dup
-        end
+    def attributes_builder # :nodoc:
+      unless defined?(@attributes_builder) && @attributes_builder
+        defaults = _default_attributes.except(*(column_names - [primary_key]))
+        # change necessary for rails 5.0 and 5.1 - (changed/introduced in https://github.com/rails/rails/pull/31894)
+        defaults = defaults.except(*virtual_attribute_names)
+        # end change
+        @attributes_builder = ActiveRecord::AttributeSet::Builder.new(attribute_types, defaults)
       end
+      @attributes_builder
     end
 
     private
@@ -596,6 +599,18 @@ end
 #
 # Class extensions
 #
+
+# this patch is no longer necessary for 5.2
+require "active_record/attribute"
+module ActiveRecord
+  # This is a bug in rails 5.0 and 5.1, but it is made much worse by virtual attributes
+  class Attribute
+    def with_value_from_database(value)
+      # self.class.from_database(name, value, type)
+      initialized? ? self.class.from_database(name, value, type) : self
+    end
+  end
+end
 
 module ActiveRecord
   class Base
