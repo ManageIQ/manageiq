@@ -48,6 +48,7 @@ describe ArPglogicalMigration::ArPglogicalMigrationHelper do
       let(:subscription) { double("Subscription", :enable => nil, :disable => nil, :provider_region => my_region.region) }
 
       it "sleeps until the migration is added" do
+        allow(described_class).to receive(:restart_subscription)
         my_region.update_attributes!(:migrations_ran => nil)
         t = Thread.new do
           Thread.current.abort_on_exception = true

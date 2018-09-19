@@ -4,12 +4,21 @@ module ArPglogicalMigration
       ActiveRecord::Base.connection.columns("miq_regions").any? { |c| c.name == "migrations_ran" }
     end
 
+    class HelperARClass < ActiveRecord::Base; end
+
+    def self.restart_subscription(s)
+      c = HelperARClass.establish_connection.connection
+      c.pglogical.subscription_disable(s.id)
+      c.pglogical.subscription_enable(s.id)
+    ensure
+      HelperARClass.remove_connection
+    end
+
     def self.wait_for_remote_region_migration(subscription, version, wait_time = 1)
       return unless ArPglogicalMigrationHelper.migrations_column_present?
       region = MiqRegion.find_by(:region => subscription.provider_region)
       until region.migrations_ran&.include?(version)
-        subscription.disable
-        subscription.enable
+        restart_subscription(subscription)
         sleep(wait_time)
         region.reload
       end
