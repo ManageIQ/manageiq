@@ -97,6 +97,32 @@ describe "Service Retirement Management" do
     @service.retire_service_resources
   end
 
+  context "bundled service retires all children" do
+    let(:vm) { FactoryGirl.create(:vm_vmware) }
+    let(:vm1) { FactoryGirl.create(:vm_vmware) }
+    let(:service_c1) { FactoryGirl.create(:service, :service => @service) }
+    let(:service_c2) { FactoryGirl.create(:service, :service => service_c1) }
+
+    before do
+      service_c1 << vm
+      service_c2 << vm1
+      @service.save
+      service_c1.save
+      service_c2.save
+    end
+
+    it "sets up bundled service" do
+      @service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => vm.id)
+      @service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => vm1.id)
+      @service.service_resources << FactoryGirl.create(:service_resource, :resource_type => "Service", :service_id => service_c1.id, :resource_id => service_c1.id)
+      expect(@service.service_resources.size).to eq(3)
+      expect(@service.service_resources.sort.first.resource).to receive(:retire_now).once
+      expect(@service.service_resources.sort.second.resource).to receive(:retire_now).once
+      expect(@service.service_resources.sort.third.resource).to receive(:retire_now).once
+      @service.retire_service_resources
+    end
+  end
+
   it "#retire_service_resources should get service's retirement_requester" do
     ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
     vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
