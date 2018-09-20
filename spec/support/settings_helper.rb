@@ -33,8 +33,3 @@ def stub_local_settings_file(path, content)
 
   ::Settings.reload!
 end
-
-def stub_server_configuration(config, config_name = "vmdb")
-  configuration = double(:config => config.deep_symbolize_keys)
-  allow(VMDB::Config).to receive(:new).with(config_name) { configuration }
-end

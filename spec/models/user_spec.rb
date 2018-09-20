@@ -163,7 +163,7 @@ describe User do
                              :group_memberships_max_depth => 2,
                              :ldaphost => ["192.168.254.15"]}
         }
-      stub_server_configuration(@auth_config)
+      stub_settings(@auth_config)
       @miq_ldap = double('miq_ldap')
       allow(@miq_ldap).to receive_messages(:bind => false)
 

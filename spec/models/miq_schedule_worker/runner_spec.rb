@@ -222,7 +222,6 @@ describe MiqScheduleWorker::Runner do
 
         context "Database operations role" do
           before do
-            stub_server_configuration(Hash.new(5.minutes))
             allow(@schedule_worker).to receive(:heartbeat)
 
             @region = MiqRegion.seed
@@ -240,8 +239,12 @@ describe MiqScheduleWorker::Runner do
                                       MiqWorker MiqServer MiqSearch MiqScsiLun MiqScsiTarget StorageFile
                                       Tagging VimPerformanceState)
             }
-            database_config = {:metrics_collection => @metrics_collection, :metrics_history => @metrics_history}
-            stub_server_configuration(:database => database_config)
+            database_config = {
+              :maintenance        => @database_maintenance,
+              :metrics_collection => @metrics_collection,
+              :metrics_history    => @metrics_history,
+            }
+            stub_settings(:database => database_config)
           end
 
           context "with database_owner in region" do
@@ -359,7 +362,7 @@ describe MiqScheduleWorker::Runner do
         context "end-to-end schedules modified to run every 5 minutes" do
           before do
             allow(@schedule_worker).to receive(:worker_settings).and_return(Hash.new(5.minutes))
-            stub_server_configuration(Hash.new(5.minutes))
+            stub_settings(Hash.new(5.minutes))
             allow(@schedule_worker).to receive(:heartbeat)
 
             # Initialize active_roles
@@ -533,7 +536,7 @@ describe MiqScheduleWorker::Runner do
     it "#schedule_settings_for_ems_refresh (private)" do
       _ = ManageIQ::Providers::Microsoft::InfraManager # FIXME: Loader
 
-      stub_server_configuration(
+      stub_settings(
         :ems_refresh => {
           :refresh_interval => 24.hours,
           :scvmm            => {:refresh_interval => 15.minutes}
