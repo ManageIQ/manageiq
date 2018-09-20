@@ -122,20 +122,6 @@ class Vm < VmOrTemplate
     }
   end
 
-  def validate_v2v_migration
-    return TransformationMapping::VM_INACTIVE unless active?
-
-    vm_as_resources = ServiceResource.where(:resource => self).includes(:service_template).where(:service_templates => {:type => "ServiceTemplateTransformationPlan"})
-
-    # VM has not been migrated before
-    return TransformationMapping::VM_VALID if vm_as_resources.blank?
-
-    return TransformationMapping::VM_MIGRATED if vm_as_resources.any? { |rsc| rsc.status == ServiceResource::STATUS_COMPLETED }
-
-    # VM failed in previous migration
-    vm_as_resources.all? { |rsc| rsc.status == ServiceResource::STATUS_FAILED } ? TransformationMapping::VM_VALID : TransformationMapping::VM_IN_OTHER_PLAN
-  end
-
   def self.display_name(number = 1)
     n_('VM and Instance', 'VMs and Instances', number)
   end

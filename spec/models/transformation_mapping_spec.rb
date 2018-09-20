@@ -29,7 +29,7 @@ describe TransformationMapping do
     end
   end
 
-  describe '#validate_vms' do
+  describe '#search_vms_and_validate' do
     let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryGirl.create(:ext_management_system)) }
     let(:inactive_vm) { FactoryGirl.create(:vm_vmware, :name => 'test_vm_inactive', :ems_cluster => src, :ext_management_system => nil) }
     let(:storage) { FactoryGirl.create(:storage) }
@@ -46,14 +46,14 @@ describe TransformationMapping do
     context 'with VM list' do
       context 'returns invalid vms' do
         it 'if VM does not exist' do
-          result = mapping.validate_vms(['name' => 'vm1'])
-          expect(result['invalid_vms'].first).to match(hash_including('reason' => TransformationMapping::VM_NOT_EXIST))
+          result = mapping.search_vms_and_validate(['name' => 'vm1'])
+          expect(result['invalid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_NOT_EXIST)
         end
 
         it 'if VM is inactive' do
           inactive_vm.storages << FactoryGirl.create(:storage, :name => 'storage_for_inactive_vm')
-          result = mapping.validate_vms(['name' => 'test_vm_inactive'])
-          expect(result['invalid_vms'].first).to match(hash_including('reason' => TransformationMapping::VM_INACTIVE))
+          result = mapping.search_vms_and_validate(['name' => 'test_vm_inactive'])
+          expect(result['invalid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_INACTIVE)
         end
 
         it "if VM's cluster is not in the mapping" do
@@ -63,27 +63,27 @@ describe TransformationMapping do
             :ems_cluster           => FactoryGirl.create(:ems_cluster, :name => 'cluster1'),
             :ext_management_system => FactoryGirl.create(:ext_management_system)
           )
-          result = mapping.validate_vms(['name' => 'vm2'])
-          expect(result['invalid_vms'].first['reason']).to match(/Mapping source not found - cluster: cluster1/)
+          result = mapping.search_vms_and_validate(['name' => 'vm2'])
+          expect(result['invalid'].first.reason).to match(/not_exist/)
         end
 
         it "if VM's storages are not all in the mapping" do
           vm.storages << FactoryGirl.create(:storage, :name => 'storage2')
-          result = mapping.validate_vms(['name' => vm.name])
-          expect(result['invalid_vms'].first['reason']).to match(/Mapping source not found - storages: storage2/)
+          result = mapping.search_vms_and_validate(['name' => vm.name])
+          expect(result['invalid'].first.reason).to match(/Mapping source not found - storages: storage2/)
         end
 
         it "if VM's lans are not all in the mapping" do
           vm.hardware.guest_devices << FactoryGirl.create(:guest_device_nic, :lan =>FactoryGirl.create(:lan, :name => 'lan2'))
-          result = mapping.validate_vms(['name' => vm.name])
-          expect(result['invalid_vms'].first['reason']).to match(/Mapping source not found - lans: lan2/)
+          result = mapping.search_vms_and_validate(['name' => vm.name])
+          expect(result['invalid'].first.reason).to match(/Mapping source not found - lans: lan2/)
         end
 
         it "if any source is invalid" do
           vm.storages << FactoryGirl.create(:storage, :name => 'storage2')
           vm.hardware.guest_devices << FactoryGirl.create(:guest_device_nic, :lan =>FactoryGirl.create(:lan, :name => 'lan2'))
-          result = mapping.validate_vms(['name' => vm.name])
-          expect(result['invalid_vms'].first['reason']).to match(/Mapping source not found - storages: storage2. lans: lan2/)
+          result = mapping.search_vms_and_validate(['name' => vm.name])
+          expect(result['invalid'].first.reason).to match(/Mapping source not found - storages: storage2. lans: lan2/)
         end
 
         it 'if VM is in another migration plan' do
@@ -95,8 +95,8 @@ describe TransformationMapping do
               :status           => status
             )
 
-            result = mapping.validate_vms(['name' => vm.name])
-            expect(result['invalid_vms'].first['reason']).to match(/in_other_plan/)
+            result = mapping.search_vms_and_validate(['name' => vm.name])
+            expect(result['invalid'].first.reason).to match(/in_other_plan/)
           end
         end
 
@@ -108,27 +108,27 @@ describe TransformationMapping do
             :status           => 'Completed'
           )
 
-          result = mapping.validate_vms(['name' => vm.name])
-          expect(result['invalid_vms'].first['reason']).to match(/migrated/)
+          result = mapping.search_vms_and_validate(['name' => vm.name])
+          expect(result['invalid'].first.reason).to match(/migrated/)
         end
       end
 
       it 'returns valid vms' do
-        result = mapping.validate_vms(['name' => vm.name])
-        expect(result['valid_vms'].first).to match(hash_including('reason' => TransformationMapping::VM_VALID))
+        result = mapping.search_vms_and_validate(['name' => vm.name])
+        expect(result['valid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_VALID)
       end
 
       it 'returns conflict vms' do
         FactoryGirl.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryGirl.create(:ext_management_system))
-        result = mapping.validate_vms(['name' => vm.name])
-        expect(result['conflict_vms'].first).to match(hash_including('reason' => TransformationMapping::VM_CONFLICT))
+        result = mapping.search_vms_and_validate(['name' => vm.name])
+        expect(result['conflicted'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_CONFLICT)
       end
     end
 
     context 'without VM list' do
       it 'returns valid vms' do
-        result = mapping.validate_vms
-        expect(result['valid_vms'].count).to eq(1)
+        result = mapping.search_vms_and_validate
+        expect(result['valid'].count).to eq(1)
       end
 
       it 'skips invalid vms' do
@@ -138,8 +138,8 @@ describe TransformationMapping do
           :ems_cluster           => FactoryGirl.create(:ems_cluster, :name => 'cluster1'),
           :ext_management_system => FactoryGirl.create(:ext_management_system)
         )
-        result = mapping.validate_vms
-        expect(result['valid_vms'].count).to eq(1)
+        result = mapping.search_vms_and_validate
+        expect(result['valid'].count).to eq(1)
       end
     end
   end
