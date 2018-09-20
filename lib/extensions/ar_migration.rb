@@ -15,7 +15,7 @@ module ArPglogicalMigration
     end
 
     def self.wait_for_remote_region_migration(subscription, version, wait_time = 1)
-      return unless ArPglogicalMigrationHelper.migrations_column_present?
+      return unless migrations_column_present?
       region = MiqRegion.find_by(:region => subscription.provider_region)
       until region.migrations_ran&.include?(version)
         restart_subscription(subscription)
@@ -25,7 +25,7 @@ module ArPglogicalMigration
     end
 
     def self.update_local_migrations_ran(version, direction)
-      return unless ArPglogicalMigrationHelper.migrations_column_present?
+      return unless migrations_column_present?
       return unless (region = MiqRegion.my_region)
 
       new_migrations = ActiveRecord::SchemaMigration.normalized_versions
