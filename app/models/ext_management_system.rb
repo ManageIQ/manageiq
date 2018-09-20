@@ -142,6 +142,8 @@ class ExtManagementSystem < ApplicationRecord
            :port=,
            :security_protocol,
            :security_protocol=,
+           :verify_ssl,
+           :verify_ssl=,
            :certificate_authority,
            :certificate_authority=,
            :to => :default_endpoint,
