@@ -4,6 +4,8 @@ describe ArPglogicalMigration::ArPglogicalMigrationHelper do
     MiqRegion.my_region
   end
 
+  before { allow(described_class).to receive_messages(:puts => nil, :print => nil) }
+
   context "without the migrations ran column" do
     before do
       column_list = %w(id region created_at updated_at description guid).map { |n| double(:name => n) }

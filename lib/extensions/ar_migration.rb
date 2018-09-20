@@ -4,6 +4,16 @@ module ArPglogicalMigration
       ActiveRecord::Base.connection.columns("miq_regions").any? { |c| c.name == "migrations_ran" }
     end
 
+    def self.log_and_print(message)
+      if @current_message == message
+        print "."
+      else
+        Vmdb.rails_logger.info(message)
+        print message
+      end
+      @current_message = message
+    end
+
     class HelperARClass < ActiveRecord::Base; end
 
     def self.restart_subscription(s)
@@ -17,11 +27,15 @@ module ArPglogicalMigration
     def self.wait_for_remote_region_migration(subscription, version, wait_time = 1)
       return unless migrations_column_present?
       region = MiqRegion.find_by(:region => subscription.provider_region)
+      waited = false
       until region.migrations_ran&.include?(version)
+        waited = true
+        log_and_print("Waiting for remote region #{region.region} to run migration #{version}")
         restart_subscription(subscription)
         sleep(wait_time)
         region.reload
       end
+      puts "\n" if waited
     end
 
     def self.update_local_migrations_ran(version, direction)
