@@ -11,7 +11,6 @@ require 'util/miq_file_storage'
 class MiqGenericMountSession < MiqFileStorage::Interface
   require 'util/mount/miq_local_mount_session'
   require 'util/mount/miq_nfs_session'
-  require 'util/mount/miq_s3_session'
   require 'util/mount/miq_swift_session'
   require 'util/mount/miq_smb_session'
   require 'util/mount/miq_glusterfs_session'
@@ -70,8 +69,6 @@ class MiqGenericMountSession < MiqFileStorage::Interface
     require 'uri'
     scheme, userinfo, host, port, registry, share, opaque, query, fragment = URI.split(URI.encode(uri))
     case scheme
-    when 's3'
-      MiqS3Session
     when 'swift'
       MiqSwiftSession
     when 'smb'
