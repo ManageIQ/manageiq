@@ -91,10 +91,26 @@ describe Vmdb::Plugins do
     before { clear_versions_caches }
     after  { clear_versions_caches }
 
-    def with_temp_dir(_options)
+    def with_temp_dir(options)
       Dir.mktmpdir("plugins_spec") do |dir|
         allow(engine).to receive(:root).and_return(Pathname.new(dir))
-        yield dir
+
+        if options[:symlinked]
+          with_temp_symlink(dir) { |ln| yield ln }
+        else
+          yield dir
+        end
+      end
+    end
+
+    def with_temp_symlink(dir)
+      Dir::Tmpname.create("plugins_spec") do |ln|
+        FileUtils.ln_s(dir, ln)
+        begin
+          yield ln
+        ensure
+          FileUtils.remove_entry(ln)
+        end
       end
     end
 
@@ -197,6 +213,36 @@ describe Vmdb::Plugins do
 
     it "path based, without git" do
       with_spec(:path) do
+        expect(subject).to be_nil
+      end
+    end
+
+    it "symlinked path based, with git, on master" do
+      with_spec(:path_with_git, :symlinked => true, :branch => "master") do |sha|
+        expect(subject).to eq("master@#{sha}")
+      end
+    end
+
+    it "symlinked path based, with git, on a branch" do
+      with_spec(:path_with_git, :symlinked => true, :branch => "my_branch") do |sha|
+        expect(subject).to eq("my_branch@#{sha}")
+      end
+    end
+
+    it "symlinked path based, with git, on a tag" do
+      with_spec(:path_with_git, :symlinked => true, :tag => "my_tag") do |sha|
+        expect(subject).to eq("my_tag@#{sha}")
+      end
+    end
+
+    it "symlinked path based, with git, on a sha" do
+      with_spec(:path_with_git, :symlinked => true) do |sha|
+        expect(subject).to eq(sha)
+      end
+    end
+
+    it "symlinked path based, without git" do
+      with_spec(:path, :symlinked => true) do
         expect(subject).to be_nil
       end
     end

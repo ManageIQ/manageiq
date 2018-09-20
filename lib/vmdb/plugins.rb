@@ -108,8 +108,10 @@ module Vmdb
     # - path based, with git, on a sha:    <sha>
     # - path based, without git:           nil
     # - a real gem:                        <gem_version>
+    #
+    # The paths above can be real paths or symlinked paths.
     def version(engine)
-      spec = bundler_specs_by_path[engine.root.to_s]
+      spec = bundler_specs_by_path[engine.root.realpath.to_s]
 
       case spec.source
       when Bundler::Source::Git
@@ -136,7 +138,7 @@ module Vmdb
     end
 
     def bundler_specs_by_path
-      @bundler_specs_by_path ||= Bundler.environment.specs.index_by(&:full_gem_path)
+      @bundler_specs_by_path ||= Bundler.environment.specs.index_by { |s| File.realpath(s.full_gem_path) }
     end
 
     def content_directories(engine, subfolder)
