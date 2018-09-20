@@ -144,8 +144,10 @@ class MiqPglogical
   end
 
   def self.save_remote_region(exclusion_list)
+    # part of `MiqRegion.replication_type=` is initialization of default subscription list
     MiqRegion.replication_type = :remote
-    refresh_excludes(YAML.safe_load(exclusion_list))
+    # UI is passing empty 'exclution_list' if there are no changes to default subscription list
+    refresh_excludes(YAML.safe_load(exclusion_list)) unless exclusion_list.empty?
   end
 
   def self.save_global_region(subscriptions_to_save, subscriptions_to_remove)

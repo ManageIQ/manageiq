@@ -158,6 +158,12 @@ describe MiqPglogical do
       expect(described_class).to receive(:refresh_excludes).with(YAML.safe_load(tables))
       described_class.save_remote_region(tables)
     end
+
+    it "does not updates list of tables to be excluded from replication if passed parameter is empty" do
+      allow(MiqRegion).to receive(:replication_type=)
+      expect(described_class).not_to receive(:refresh_excludes)
+      described_class.save_remote_region("")
+    end
   end
 
   describe ".save_global_region" do
