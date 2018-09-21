@@ -763,6 +763,7 @@
   - catalog_items_view
   - miq_request_admin
   - miq_request_view
+  - miq_task_my_ui
   - my_settings_default_views
   - my_settings_visuals
   - service_edit
@@ -809,6 +810,7 @@
   - embedded_automation_manager
   - ems_physical_infra_console
   - catalog_items_view
+  - miq_task_my_ui
   - miq_template_clone
   - miq_template_drift
   - miq_template_edit
@@ -870,6 +872,7 @@
   - all_vm_rules
   - automation_manager
   - embedded_automation_manager
+  - miq_task_my_ui
   - miq_request_admin
   - miq_request_view
   - miq_template_check_compliance
