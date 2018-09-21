@@ -226,14 +226,14 @@ describe EvmApplication do
 
     it "groups zone together" do
       tgt_time = 2.hours.ago
-      zone1 = FactoryGirl.create(:zone)
-      zone2 = FactoryGirl.create(:zone)
+      zone1 = FactoryGirl.create(:zone, :name => "zone1")
+      zone2 = FactoryGirl.create(:zone, :name => "zone2")
       MiqQueue.put(:zone => zone1.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
       MiqQueue.put(:zone => zone2.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
       expect(described_class.queue_status).to eq(
         [
           {
-            "Zone"   => zone1.name,
+            "Zone"   => "zone1",
             "Queue"  => "generic",
             "Role"   => nil,
             "method" => "X.x",
@@ -241,7 +241,7 @@ describe EvmApplication do
             "count"  => 1,
           },
           {
-            "Zone"   => zone2.name,
+            "Zone"   => "zone2",
             "Queue"  => "generic",
             "Role"   => nil,
             "method" => "X.x",
