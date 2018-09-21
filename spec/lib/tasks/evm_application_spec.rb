@@ -230,7 +230,7 @@ describe EvmApplication do
       zone2 = FactoryGirl.create(:zone)
       MiqQueue.put(:zone => zone1.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
       MiqQueue.put(:zone => zone2.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
-      expect(described_class.queue_status).to eq(
+      expect(described_class.queue_status).to match_array(
         [
           {
             "Zone"   => zone1.name,
