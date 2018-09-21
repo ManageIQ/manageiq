@@ -132,7 +132,8 @@ class TransformationMapping::VmMigrationValidator
           "cluster"        => vm.ems_cluster.try(:name) || '',
           "path"           => vm.ext_management_system ? "#{vm.ext_management_system.name}/#{vm.v_parent_blue_folder_display_path}" : '',
           "allocated_size" => vm.allocated_disk_storage,
-          "id"             => vm.id.to_s
+          "id"             => vm.id.to_s,
+          "ems_cluster_id" => vm.ems_cluster_id.to_s
         )
       end
 
