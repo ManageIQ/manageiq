@@ -21,9 +21,11 @@ module MiqServer::QueueManagement
       if status == "timeout"
         begin
           _log.info("Reconnecting to DB after timeout error during queue deliver")
-          ActiveRecord::Base.connection.reconnect!
+          # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
+          spec_name = ActiveRecord::Base.connection_specification_name
+          ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
         rescue => err
-          _log.error("Error encountered during <ActiveRecord::Base.connection.reconnect!> error:#{err.class.name}: #{err.message}")
+          _log.error("Error encountered reconnecting to the database, error:#{err.class.name}: #{err.message}")
         end
       end
 

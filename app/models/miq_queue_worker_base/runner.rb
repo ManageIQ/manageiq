@@ -106,7 +106,10 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       if status == MiqQueue::STATUS_TIMEOUT
         begin
           _log.info("#{log_prefix} Reconnecting to DB after timeout error during queue deliver")
-          ActiveRecord::Base.connection.reconnect!
+
+          # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
+          spec_name = ActiveRecord::Base.connection_specification_name
+          ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
           @worker.update_spid!
         rescue => err
           do_exit("Exiting worker due to timeout error that could not be recovered from...error: #{err.class.name}: #{err.message}", 1)
