@@ -758,6 +758,7 @@
   - compute
   - miq_request_admin
   - miq_request_view
+  - miq_task_my_ui
   - my_settings_default_views
   - my_settings_visuals
   - service_edit
@@ -808,6 +809,7 @@
   - ems_physical_infra_console
   - catalog_items_view
   - compute
+  - miq_task_my_ui
   - miq_template_clone
   - miq_template_drift
   - miq_template_edit
@@ -875,6 +877,7 @@
   - automation_manager
   - embedded_automation_manager
   - compute
+  - miq_task_my_ui
   - miq_request_admin
   - miq_request_view
   - miq_template_analyze
