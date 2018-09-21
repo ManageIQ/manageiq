@@ -116,6 +116,7 @@ describe TransformationMapping do
       it 'returns valid vms' do
         result = mapping.search_vms_and_validate(['name' => vm.name])
         expect(result['valid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_VALID)
+        expect(result['valid'].first.ems_cluster_id).to eq(vm.ems_cluster_id.to_s)
       end
 
       it 'returns conflict vms' do
