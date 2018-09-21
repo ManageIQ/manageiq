@@ -1,41 +1,7 @@
 module ArPglogicalMigration
-  module ArPglogicalMigrationHelper
+  module PglogicalMigrationHelper
     def self.migrations_column_present?
       ActiveRecord::Base.connection.columns("miq_regions").any? { |c| c.name == "migrations_ran" }
-    end
-
-    def self.log_and_print(message)
-      if @current_message == message
-        print "."
-      else
-        Vmdb.rails_logger.info(message)
-        print message
-      end
-      @current_message = message
-    end
-
-    class HelperARClass < ActiveRecord::Base; end
-
-    def self.restart_subscription(s)
-      c = HelperARClass.establish_connection.connection
-      c.pglogical.subscription_disable(s.id)
-      c.pglogical.subscription_enable(s.id)
-    ensure
-      HelperARClass.remove_connection
-    end
-
-    def self.wait_for_remote_region_migration(subscription, version, wait_time = 1)
-      return unless migrations_column_present?
-      region = MiqRegion.find_by(:region => subscription.provider_region)
-      waited = false
-      until region.migrations_ran&.include?(version)
-        waited = true
-        log_and_print("Waiting for remote region #{region.region} to run migration #{version}")
-        restart_subscription(subscription)
-        sleep(wait_time)
-        region.reload
-      end
-      puts "\n" if waited
     end
 
     def self.update_local_migrations_ran(version, direction)
@@ -54,13 +20,63 @@ module ArPglogicalMigration
     end
   end
 
+  class RemoteRegionMigrationWatcher
+    class HelperARClass < ActiveRecord::Base; end
+
+    attr_reader :region, :subscription, :version
+
+    def initialize(subscription, version)
+      @region       = MiqRegion.find_by(:region => subscription.provider_region)
+      @subscription = subscription
+      @version      = version
+    end
+
+    def wait_for_remote_region_migration(wait_time = 1)
+      return unless wait_for_migration?
+
+      Vmdb.rails_logger.info(wait_message)
+      print(wait_message)
+
+      while wait_for_migration?
+        print(".")
+        restart_subscription
+        sleep(wait_time)
+        region.reload
+      end
+
+      puts("\n")
+    end
+
+    private
+
+    def wait_for_migration?
+      migrations_column_present? ? !region.migrations_ran&.include?(version) : false
+    end
+
+    def migrations_column_present?
+      @migrations_column_present ||= PglogicalMigrationHelper.migrations_column_present?
+    end
+
+    def wait_message
+      @wait_message ||= "Waiting for remote region #{region.region} to run migration #{version}"
+    end
+
+    def restart_subscription
+      c = HelperARClass.establish_connection.connection
+      c.pglogical.subscription_disable(subscription.id)
+      c.pglogical.subscription_enable(subscription.id)
+    ensure
+      HelperARClass.remove_connection
+    end
+  end
+
   def migrate(direction)
     PglogicalSubscription.all.each do |s|
-      ArPglogicalMigrationHelper.wait_for_remote_region_migration(s, version.to_s)
+      RemoteRegionMigrationWatcher.new(s, version.to_s).wait_for_remote_region_migration
     end
 
     ret = super
-    ArPglogicalMigrationHelper.update_local_migrations_ran(version.to_s, direction)
+    PglogicalMigrationHelper.update_local_migrations_ran(version.to_s, direction)
     ret
   end
 end
