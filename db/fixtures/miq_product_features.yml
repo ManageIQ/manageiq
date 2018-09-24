@@ -4693,6 +4693,17 @@
     :feature_type: view
     :identifier: ems_infra_dashboard_view
 
+# Physical Infra Provider Overview
+- :name: Physical Infra Providers Overview
+  :description: Physical Infra Providers Overview
+  :feature_type: node
+  :identifier: physical_infra_overview
+  :children:
+  - :name: View
+    :description: View Physical Infra Providers Overview
+    :feature_type: view
+    :identifier: physical_infra_overview_view
+
 # Foreman
 - :name: Configuration Management
   :description: Everything under Configuration Management
