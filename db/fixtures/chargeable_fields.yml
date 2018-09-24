@@ -66,3 +66,15 @@
   :group: metering
   :source: used
   :description: Metering - Hours Used
+- :metric: metering_allocated_cpu
+  :group: metering
+  :source: allocated_cpu
+  :description: Metering - Hours Allocated CPU
+- :metric: metering_allocated_memory
+  :group: metering
+  :source: allocated_memory
+  :description: Metering - Hours Allocated Memory
+- :metric: metering_allocated_cpu_cores
+  :group: metering
+  :source: allocated_cpu_cores
+  :description: Metering - Hours Allocated Memory
