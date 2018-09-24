@@ -207,3 +207,31 @@
           action_type: default
           options: {}
       Condition: []
+    - name: apply a firmware update to a server
+      description: Apply a firmware update to a server
+      expression:
+      towhat: PhysicalServer
+      guid: 6220e15b-01a4-430c-9e70-d67af3798719
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        failure_sequence: 1
+        failure_synchronous: true
+        MiqEventDefinition:
+          name: physical_server_firmware_update
+          description: Physical Server Firmware Update
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: physical_server_firmware_update
+          description: Apply a firmware update to a server
+          action_type: default
+          options: {}
+      Condition: []

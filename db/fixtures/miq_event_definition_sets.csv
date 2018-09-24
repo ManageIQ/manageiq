@@ -8,6 +8,7 @@ evm_operations,Appliance Operation
 host_operations,Host Operation
 orchestration_process,Orchestration Lifecycle
 physical_server_operations,Physical Server Operation
+physical_server_update_firmwares,Physical Server Update Firmware
 service_process,Service Lifecycle
 storage_operational,Datastore Operation
 tags,Company Tag
