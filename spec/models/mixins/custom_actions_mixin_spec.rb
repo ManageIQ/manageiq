@@ -28,4 +28,33 @@ describe CustomActionsMixin do
       expect(definition.custom_actions[:button_groups]).not_to be_empty
     end
   end
+
+  context 'with RBAC' do
+    let(:user)                         { FactoryGirl.create(:user_admin) }
+    let(:cloud_tenant)                 { FactoryGirl.create(:cloud_tenant) }
+    let!(:custom_button_event_1) { FactoryGirl.create(:custom_button_event, :target => cloud_tenant) }
+    let!(:custom_button_event_2) { FactoryGirl.create(:custom_button_event, :target => cloud_tenant) }
+
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+
+    it "returns all custom button events for super admin user" do
+      User.with_user(user) do
+        result = Rbac::Filterer.filtered(cloud_tenant.custom_button_events)
+        expect(result).to match_array([custom_button_event_1, custom_button_event_2])
+      end
+    end
+
+    context "when user is non-super admin user" do
+      let(:user) { FactoryGirl.create(:user) }
+
+      it "returns all custom button events" do
+        User.with_user(user) do
+          result = Rbac::Filterer.filtered(cloud_tenant.custom_button_events)
+          expect(result).to be_empty
+        end
+      end
+    end
+  end
 end

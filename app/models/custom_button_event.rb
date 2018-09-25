@@ -2,6 +2,14 @@ class CustomButtonEvent < EventStream
   virtual_column :button_name, :type => :string
   virtual_column :automate_entry_point, :type => :string
 
+  def self.rbac_scope_for_model(user)
+    if user.super_admin_user?
+      all
+    else
+      none
+    end
+  end
+
   def automate_entry_point
     full_data[:automate_entry_point].to_s
   end

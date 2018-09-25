@@ -544,6 +544,10 @@ module Rbac
         scope = scope_to_cloud_tenant(scope, user, miq_group)
       end
 
+      if klass.respond_to?(:rbac_scope_for_model)
+        scope = scope.rbac_scope_for_model(user)
+      end
+
       if apply_rbac_directly?(klass)
         filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group, nil)
         scope_by_ids(scope, filtered_ids)

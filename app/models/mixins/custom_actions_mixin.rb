@@ -3,7 +3,7 @@ module CustomActionsMixin
 
   included do
     has_many :custom_button_sets, :as => :owner, :dependent => :destroy
-    has_many :custom_button_events, -> { where(:type => "CustomButtonEvent") }, :class_name => "EventStream", :foreign_key => :target_id
+    has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
     virtual_has_many :custom_buttons
     virtual_has_one :custom_actions, :class_name => "Hash"
     virtual_has_one :custom_action_buttons, :class_name => "Array"
