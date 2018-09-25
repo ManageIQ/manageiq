@@ -289,6 +289,16 @@
   :expires_in: 24.hours
   :level: error
   :audience: global
+- :name: network_router_delete_success
+  :message: 'Deleting Network Router %{subject} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: network_router_delete_error
+  :message: 'Deleting Network Router %{subject} failed: %{error_message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
 - :name: generic_task_start
   :message: '%{message}'
   :expires_in: 7.days
