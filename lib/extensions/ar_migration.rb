@@ -38,7 +38,8 @@ module ArPglogicalMigration
     attr_reader :region, :subscription, :version
 
     def initialize(subscription, version)
-      @region       = MiqRegion.find_by(:region => subscription.provider_region)
+      region_class  = Class.new(ApplicationRecord) { self.table_name = "miq_regions" }
+      @region       = region_class.find_by(:region => subscription.provider_region)
       @subscription = subscription
       @version      = version
     end
