@@ -179,6 +179,23 @@ describe ProcessTasksMixin do
         expect { test_class.invoke_api_tasks(api_connection, options) }.not_to raise_error
       end
 
+      context "should not raise when it does not respond_to the method" do
+        let(:api_collection) { [] }
+
+        it "multiple resources (one responds, one does not, both are tried)" do
+          expect(api_collection).to receive(:find).with(0).and_return(Struct.new(:id).new(0))
+          expect(api_collection).to receive(:find).with(1).and_return(double("Something that responds", :id => 0, :the_task => nil))
+
+          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.invoke_api_tasks) undefined method `the_task' for #<struct id=0>").and_call_original
+          expect(test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task")).to eq([0, 1])
+        end
+
+        it "collection" do
+          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.invoke_api_tasks) undefined method `the_task' for []:Array").and_call_original
+          expect(test_class.invoke_api_tasks(api_connection, :task => "the_task")).to eq(true)
+        end
+      end
+
       context "when passed resource ids" do
         let(:resource0)     { double("resource0", :id => 0) }
         let(:resource1)     { double("resource1", :id => 1) }
