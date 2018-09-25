@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "Hammer".freeze
+      "Ivanchuk".freeze
     end
 
     def self.BANNER
