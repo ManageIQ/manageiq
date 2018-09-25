@@ -2037,6 +2037,10 @@ describe MiqExpression do
   end
 
   context 'value2tag' do
+    it 'dotted notation with Taq' do
+      expect(described_class.value2tag('Vm.managed-amazon:vm:name', "mapped:smartstate")).to eq ["vm", "/managed/amazon:vm:name/mapped:smartstate"]
+    end
+
     it 'dotted notation with CountField' do
       expect(described_class.value2tag('Vm.disks')).to eq ['vm', '/virtual/disks']
     end

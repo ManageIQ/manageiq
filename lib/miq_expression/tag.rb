@@ -3,7 +3,7 @@ class MiqExpression::Tag < MiqExpression::Target
 (?<model_name>(?:[[:upper:]][[:alnum:]]*(?:::[[:upper:]][[:alnum:]]*)*)?)
 \.?(?<associations>([a-z_]+\.)*)
 (?<namespace>\bmanaged|user_tag\b)
--(?<column>[a-z]+[_[:alnum:]]+)
+-(?<column>[a-z]+[_:[:alnum:]]+)
 /x
 
   MANAGED_NAMESPACE      = 'managed'.freeze

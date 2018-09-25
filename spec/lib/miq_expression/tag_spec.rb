@@ -1,5 +1,26 @@
 RSpec.describe MiqExpression::Tag do
   describe ".parse" do
+    it "with model.managed-amazon" do
+      tag = "Vm.managed-amazon:vm:name"
+      expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/amazon:vm:name")
+    end
+
+    it "with model.managed-in_tag" do
+      tag = "Vm.managed-service_level"
+      expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/service_level")
+    end
+
+    it "with model.managed-in_tag" do
+      tag = "Vm.managed-service_level"
+      expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/service_level")
+    end
+
     it "with model.managed-in_tag" do
       tag = "Vm.managed-service_level"
       expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
