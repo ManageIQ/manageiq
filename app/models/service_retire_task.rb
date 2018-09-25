@@ -35,10 +35,7 @@ class ServiceRetireTask < MiqRetireTask
       # (https://github.com/ManageIQ/manageiq/blob/3921e87915b5a69937b9d4a70bb24ab71b97c165/app/models/service_template/filter.rb#L5)
       # which should be extended to retirement as part of later work
       # svc_rsc.resource_type != "ServiceTemplate" || self.class.include_service_template?(self, srr.id, parent_service)
-
-      # TODO: use changes here: https://github.com/ManageIQ/manageiq/pull/17996 to not have to filter by col_names
-      # 17996 removes virtual attributes from @attrs list
-      nh = attributes.slice(*self.class.column_names).except!("id", "created_on", "updated_on", "type", "state", "status", "message")
+      nh = attributes.except("id", "created_on", "updated_on", "type", "state", "status", "message")
       nh['options'] = options.except(:child_tasks)
       # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
       nh['options'][:dialog] = {}
