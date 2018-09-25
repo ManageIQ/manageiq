@@ -125,12 +125,20 @@ module ProcessTasksMixin
             _log.error(err.message)
           else
             _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
-            obj.send(action, post_args)
+            begin
+              obj.send(action, post_args)
+            rescue NoMethodError => err
+              _log.error(err.message)
+            end
           end
         end
       else
         _log.info("Invoking task #{action} on collection #{collection_name}, with args #{post_args}")
-        collection.send(action, post_args)
+        begin
+          collection.send(action, post_args)
+        rescue NoMethodError => err
+          _log.error(err.message)
+        end
       end
     end
 
