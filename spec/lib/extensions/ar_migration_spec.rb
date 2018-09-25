@@ -30,7 +30,7 @@ context "with a region seeded" do
 
       describe ".update_local_migrations_ran" do
         it "does nothing" do
-          expect(MiqRegion).not_to receive(:my_region)
+          expect(ActiveRecord::SchemaMigration).not_to receive(:normalized_versions)
           described_class.update_local_migrations_ran("12345", :up)
         end
       end

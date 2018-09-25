@@ -4,9 +4,21 @@ module ArPglogicalMigration
       ActiveRecord::Base.connection.columns("miq_regions").any? { |c| c.name == "migrations_ran" }
     end
 
+    def self.my_region_number
+      @my_region_number ||= ApplicationRecord.my_region_number
+    end
+
+    def self.my_region_created?
+      ActiveRecord::Base.connection.exec_query(<<~SQL).first["exists"]
+        SELECT EXISTS(
+          SELECT id FROM miq_regions WHERE region = #{ActiveRecord::Base.connection.quote(my_region_number)}
+        )
+      SQL
+    end
+
     def self.update_local_migrations_ran(version, direction)
       return unless migrations_column_present?
-      return unless (region = MiqRegion.my_region)
+      return unless my_region_created?
 
       new_migrations = ActiveRecord::SchemaMigration.normalized_versions
       new_migrations << version if direction == :up
@@ -15,7 +27,7 @@ module ArPglogicalMigration
       ActiveRecord::Base.connection.exec_query(<<~SQL)
         UPDATE miq_regions
         SET migrations_ran = #{migrations_value}
-        WHERE id = #{region.id}
+        WHERE region = #{ActiveRecord::Base.connection.quote(my_region_number)}
       SQL
     end
   end
