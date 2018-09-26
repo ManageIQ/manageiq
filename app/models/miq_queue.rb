@@ -277,7 +277,7 @@ class MiqQueue < ApplicationRecord
   # TODO (juliancheal) This is a hack. Brakeman was giving us an SQL injection
   # warning when we concatonated the queue_name string onto the query.
   # Creating two seperate queries like this, resolves the Brakeman issue, but
-  # isn't idea. This will need to be rewritten using Arel queires at some point.
+  # isn't ideal. This will need to be rewritten using Arel queries at some point.
 
   MIQ_QUEUE_PEEK = <<-EOL
     state = 'ready'
