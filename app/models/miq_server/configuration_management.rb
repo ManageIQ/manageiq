@@ -6,10 +6,6 @@ module MiqServer::ConfigurationManagement
     (is_local? ? ::Settings : settings_for_resource).to_hash
   end
 
-  def set_config(config)
-    add_settings_for_resource(config)
-  end
-
   def reload_settings
     return if is_remote?
 

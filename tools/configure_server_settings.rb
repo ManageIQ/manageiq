@@ -99,7 +99,7 @@ end
 if opts[:dry_run]
   puts "Dry run, no updates have been made"
 else
-  server.set_config(settings)
+  server.add_settings_for_resource(settings)
   server.save!
 
   puts "Done"
