@@ -5,11 +5,6 @@ describe Vmdb::Settings::Validator do
       expect(validator).to be_valid
     end
 
-    it "with a VMDB::Config" do
-      validator = described_class.new(VMDB::Config.new("vmdb"))
-      expect(validator).to be_valid
-    end
-
     it "with a Config::Options" do
       validator = described_class.new(Settings)
       expect(validator).to be_valid

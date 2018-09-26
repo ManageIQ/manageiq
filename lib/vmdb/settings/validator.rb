@@ -4,14 +4,7 @@ module Vmdb
       include Vmdb::Logging
 
       def initialize(config)
-        @config =
-          if config.kind_of?(::Config::Options)
-            config.to_hash
-          elsif config.respond_to?(:config)
-            config.config
-          else
-            config
-          end
+        @config = config.to_hash
       end
 
       def valid?
