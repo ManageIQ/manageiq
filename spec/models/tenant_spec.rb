@@ -830,4 +830,25 @@ describe Tenant do
       expect(sub_tenant.parent_id = tenant.id).to eq(tenant.id)
     end
   end
+
+  describe "#create" do
+    it "properly creates a default group" do
+      # create a tenant, but one that doesn't have a default_miq_group
+      # this is only possibly during an upgrade
+      tenant.save!
+      tenant.default_miq_group.delete
+      # We are using update_attribute to create an invalid tenant.
+      # rubocop:disable Rails/SkipsModelValidations
+      tenant.update_attribute(:default_miq_group_id, nil)
+      # rubocop:enable Rails/SkipsModelValidations
+      # lets make sure the tenant doesn't get assigned this user created group (the bug)
+      false_group = FactoryGirl.create(:miq_group, :tenant_id => tenant.id)
+
+      # 20151021174140_assign_tenant_default_group.rb
+      tenant.send(:create_tenant_group)
+
+      expect(tenant.default_miq_group).not_to eq(false_group)
+      expect(tenant.default_miq_group).to be_tenant_group
+    end
+  end
 end
