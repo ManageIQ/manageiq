@@ -26,12 +26,12 @@ module VMDB
     end
 
     def validate
-      valid, @errors = Validator.new(self).validate
+      valid, @errors = Vmdb::Settings::Validator.new(self).validate
       valid
     end
 
     def activate
-      Activator.new(self).activate
+      Vmdb::Settings::Activator.new(self).activate
     end
 
     # Get the worker settings as they are in the yaml: 1.seconds, 1, etc.

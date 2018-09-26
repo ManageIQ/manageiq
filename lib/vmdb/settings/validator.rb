@@ -1,5 +1,5 @@
-module VMDB
-  class Config
+module Vmdb
+  class Settings
     class Validator
       include Vmdb::Logging
 
@@ -22,20 +22,16 @@ module VMDB
         @errors = {}
         valid = true
         @config.each_key do |k|
-          if respond_to?(k.to_s, true)
-            _log.debug("Validating #{k}")
-            ost = OpenStruct.new(@config[k].stringify_keys)
-            section_valid, errors = send(k.to_s, ost)
+          next unless respond_to?(k.to_s, true)
 
-            unless section_valid
-              _log.debug("  Invalid: #{errors}")
-              errors.each do |e|
-                key, msg = e
-                @errors[[k, key].join("-")] = msg
-              end
-              valid = false
-            end
-          end
+          _log.debug("Validating #{k}")
+          ost = OpenStruct.new(@config[k].stringify_keys)
+          section_valid, errors = send(k.to_s, ost)
+          next if section_valid
+
+          _log.debug("  Invalid: #{errors}")
+          errors.each { |key, msg| @errors["#{k}-#{key}"] = msg }
+          valid = false
         end
         return valid, @errors
       end
@@ -47,12 +43,12 @@ module VMDB
 
         keys = data.each_pair.to_a.transpose.first.to_set
 
-        if keys.include?(:mode) && !["invoke", "disable"].include?(data.mode)
+        if keys.include?(:mode) && !%w(invoke disable).include?(data.mode)
           valid = false
           errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke or disable"]
         end
 
-        if keys.include?(:contactwith) && !["ipaddress", "hostname"].include?(data.contactwith)
+        if keys.include?(:contactwith) && !%w(ipaddress hostname).include?(data.contactwith)
           valid = false
           errors << [:contactwith, "webservices contactwith, \"#{data.contactwith}\", invalid. Should be one of: ipaddress or hostname"]
         end
@@ -136,7 +132,7 @@ module VMDB
           end
         end
 
-        if keys.include?(:session_store) && !["sql", "memory", "cache"].include?(data.session_store)
+        if keys.include?(:session_store) && !%w(sql memory cache).include?(data.session_store)
           valid = false
           errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
         end
@@ -156,7 +152,7 @@ module VMDB
 
         keys = data.each_pair.to_a.transpose.first.to_set
 
-        if keys.include?(:authentication) && !["login", "plain", "none"].include?(data.authentication)
+        if keys.include?(:authentication) && !%w(login plain none).include?(data.authentication)
           valid = false
           errors << [:mode, "authentication, \"#{data.mode}\", invalid. Should be one of: login, plain, or none"]
         end

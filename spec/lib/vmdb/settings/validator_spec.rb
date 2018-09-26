@@ -1,4 +1,4 @@
-describe VMDB::Config::Validator do
+describe Vmdb::Settings::Validator do
   describe ".new" do
     it "with a Hash" do
       validator = described_class.new(:session => {:timeout => 123})
@@ -29,9 +29,9 @@ describe VMDB::Config::Validator do
     {:webservices => {:timeout => 123}},   true,
     {:webservices => {:timeout => "xxx"}}, false,
 
-    {:authentication => {:mode => "ldaps"}}, false,
+    {:authentication => {:mode => "ldaps"}},                     false,
     {:authentication => {:mode => "ldaps", :ldaphost => "foo"}}, true,
-    {:authentication => {:mode => "xxx"}},   false,
+    {:authentication => {:mode => "xxx"}},                       false,
 
     {:authentication => {:mode => "ldap", :ldaphost => "foo"}}, true,
     {:authentication => {:mode => "ldap", :ldaphost => nil}},   false,

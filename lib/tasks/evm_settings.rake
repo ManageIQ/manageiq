@@ -36,7 +36,7 @@ module EvmSettings
 
   def self.config_import(import_hash)
     if import_hash.present?
-      full_config_hash = MiqServer.my_server.get_config.config
+      full_config_hash = MiqServer.my_server.settings
       MiqServer.my_server.set_config(full_config_hash.deep_merge(import_hash))
     end
   end

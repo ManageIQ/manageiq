@@ -2,6 +2,10 @@ module MiqServer::ConfigurationManagement
   extend ActiveSupport::Concern
   include ConfigurationManagementMixin
 
+  def settings
+    (is_local? ? ::Settings : settings_for_resource).to_hash
+  end
+
   def get_config(type = "vmdb")
     if is_local?
       VMDB::Config.new(type)
@@ -24,7 +28,7 @@ module MiqServer::ConfigurationManagement
 
   # The purpose of this method is to do special activation of things
   #   that can only happen once per server.  Normally, the
-  #   VMDB::Config::Activator would be used, however the activations
+  #   Vmdb::Settings::Activator would be used, however the activations
   #   will end up occurring once per worker on the entire server, which
   #   can be detrimental.
   #
@@ -41,7 +45,7 @@ module MiqServer::ConfigurationManagement
     [self]
   end
 
-  # Callback from VMDB::Config::Activator#activate when the configuration has
+  # Callback from Vmdb::Settings::Activator#activate when the configuration has
   #   changed for this server
   def config_activated(data)
     # Check that the column exists in the table and we are passed data that does not match
@@ -80,7 +84,7 @@ module MiqServer::ConfigurationManagement
   end
 
   def sync_log_level
-    # TODO: Can this be removed since the VMDB::Config::Activator will do this anyway?
+    # TODO: Can this be removed since the Vmdb::Settings::Activator will do this anyway?
     Vmdb::Loggers.apply_config(::Settings.log)
   end
 end

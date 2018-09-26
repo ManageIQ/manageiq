@@ -1,5 +1,5 @@
-module VMDB
-  class Config
+module Vmdb
+  class Settings
     class Activator
       include Vmdb::Logging
 
@@ -18,11 +18,11 @@ module VMDB
         raise "configuration invalid, see errors for details" unless Validator.new(@config).valid?
 
         @config.each_key do |k|
-          if respond_to?(k.to_s, true)
-            _log.debug("Activating #{k}")
-            ost = OpenStruct.new(@config[k].stringify_keys)
-            send(k.to_s, ost)
-          end
+          next unless respond_to?(k.to_s, true)
+
+          _log.debug("Activating #{k}")
+          ost = OpenStruct.new(@config[k].stringify_keys)
+          send(k.to_s, ost)
         end
       end
 
@@ -38,7 +38,9 @@ module VMDB
       end
 
       def server(data)
-        MiqServer.my_server.config_activated(data) unless MiqServer.my_server.nil? rescue nil
+        MiqServer.my_server&.config_activated(data)
+      rescue StandardError
+        nil
       end
     end
   end
