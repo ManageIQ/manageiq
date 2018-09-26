@@ -229,9 +229,11 @@ class MiqGroup < ApplicationRecord
 
     create_with(
       :description         => "Tenant #{tenant_full_name} access",
-      :group_type          => TENANT_GROUP,
       :default_tenant_role => MiqUserRole.default_tenant_role
-    ).find_or_create_by!(:tenant_id => tenant.id)
+    ).find_or_create_by!(
+      :group_type => TENANT_GROUP,
+      :tenant_id  => tenant.id,
+    )
   end
 
   def self.sort_by_desc
