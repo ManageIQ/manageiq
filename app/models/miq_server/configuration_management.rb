@@ -2,6 +2,10 @@ module MiqServer::ConfigurationManagement
   extend ActiveSupport::Concern
   include ConfigurationManagementMixin
 
+  def settings
+    (is_local? ? ::Settings : settings_for_resource).to_hash
+  end
+
   def get_config(type = "vmdb")
     if is_local?
       VMDB::Config.new(type)

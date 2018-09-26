@@ -1,4 +1,41 @@
 describe MiqServer, "::ConfigurationManagement" do
+  describe "#settings" do
+    shared_examples_for "#settings" do
+      it "with no changes in the database" do
+        settings = miq_server.settings
+        expect(settings).to be_kind_of(Hash)
+        expect(settings.fetch_path(:api, :token_ttl)).to eq("10.minutes")
+      end
+
+      it "with changes in the database" do
+        miq_server.settings_changes = [
+          FactoryGirl.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
+        ]
+        Settings.reload!
+
+        settings = miq_server.settings
+        expect(settings).to be_kind_of(Hash)
+        expect(settings.fetch_path(:api, :token_ttl)).to eq("2.minutes")
+      end
+    end
+
+    context "local server" do
+      let(:miq_server) { EvmSpecHelper.local_miq_server }
+
+      before { stub_local_settings(miq_server) }
+
+      include_examples "#settings"
+    end
+
+    context "remote server" do
+      let(:miq_server) { EvmSpecHelper.remote_miq_server }
+
+      before { stub_local_settings(nil) }
+
+      include_examples "#settings"
+    end
+  end
+
   describe "#get_config" do
     shared_examples_for "#get_config" do
       it "with no changes in the database" do
