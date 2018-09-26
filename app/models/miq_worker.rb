@@ -189,8 +189,7 @@ class MiqWorker < ApplicationRecord
     settings = {}
 
     unless miq_server.nil?
-      server_config = options[:config] || miq_server.get_config("vmdb")
-      server_config = server_config.config if server_config.respond_to?(:config)
+      server_config = options[:config] || miq_server.settings
       # Get the configuration values
       section = server_config[:workers]
       unless section.nil?

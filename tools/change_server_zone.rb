@@ -23,8 +23,8 @@ end
 server.zone = zone
 server.save!
 
-settings = server.get_config("vmdb")
-settings.config[:server][:zone] = zone.name
+settings = server.settings
+settings[:server][:zone] = zone.name
 server.set_config(settings)
 
 server.save!
