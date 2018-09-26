@@ -164,4 +164,12 @@ describe Condition do
       expect(condition.expression.exp).to eq("not" => {">" => {"field" => "Vm-cpu_num", "value" => 2}})
     end
   end
+
+  describe ".options2hash" do
+    it 'returns the same record if it is descendant from Service class and passed reference is "service" ' do
+      record = ServiceContainerTemplate.new
+      _, result_record, _ = described_class.options2hash("ref=service", record)
+      expect(result_record).to be(record)
+    end
+  end
 end
