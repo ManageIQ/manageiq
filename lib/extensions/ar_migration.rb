@@ -5,6 +5,7 @@ module ArPglogicalMigration
     end
 
     def self.my_region_number
+      # Use ApplicationRecord here because we need to query region information
       @my_region_number ||= ApplicationRecord.my_region_number
     end
 
@@ -38,7 +39,7 @@ module ArPglogicalMigration
     attr_reader :region, :subscription, :version
 
     def initialize(subscription, version)
-      region_class  = Class.new(ApplicationRecord) { self.table_name = "miq_regions" }
+      region_class  = Class.new(ActiveRecord::Base) { self.table_name = "miq_regions" }
       @region       = region_class.find_by(:region => subscription.provider_region)
       @subscription = subscription
       @version      = version
