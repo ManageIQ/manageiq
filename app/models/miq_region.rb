@@ -1,5 +1,5 @@
 class MiqRegion < ApplicationRecord
-  belongs_to :maintenance_zone, :class_name => 'Zone', :inverse_of => :maintenance_zone_regions
+  belongs_to :maintenance_zone, :class_name => 'Zone', :inverse_of => :maintenance_zone_region
 
   has_many :metrics,        :as => :resource # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource # Destroy will be handled by purger
