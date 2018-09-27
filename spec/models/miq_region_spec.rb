@@ -234,11 +234,6 @@ describe MiqRegion do
       it "fetches the url from server" do
         expect(region.remote_ui_url).to eq("https://#{hostname}")
       end
-
-      it "fetches the url from the setting" do
-        Vmdb::Settings.save!(ui_server, :ui => {:url => url})
-        expect(region.remote_ui_url).to eq(url)
-      end
     end
 
     it "with no recently active servers" do
