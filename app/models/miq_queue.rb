@@ -128,7 +128,7 @@ class MiqQueue < ApplicationRecord
       :handler_id   => nil,
     )
 
-    if options[:zone] == Zone::MAINTENANCE_ZONE_NAME
+    if options[:zone] == Zone.maintenance_zone&.name
       _log.debug("MiqQueue#put skipped: #{options.inspect}")
       return
     end
@@ -180,7 +180,6 @@ class MiqQueue < ApplicationRecord
   def self.submit_job(options)
     service = options.delete(:service) || "generic"
     resource = options.delete(:affinity)
-
     case service
     when "automate"
       # options[:queue_name] = "generic"

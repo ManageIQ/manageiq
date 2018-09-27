@@ -72,7 +72,7 @@ class ExtManagementSystem < ApplicationRecord
   has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
 
   belongs_to :zone
-  belongs_to :backup_zone, :class_name => "Zone", :inverse_of => :paused_ext_management_systems # used for maintenance mode
+  belongs_to :zone_before_pause, :class_name => "Zone", :inverse_of => :paused_ext_management_systems # used for maintenance mode
 
   has_many :metrics,        :as => :resource  # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
@@ -226,9 +226,9 @@ class ExtManagementSystem < ApplicationRecord
   def pause!
     _log.info("Pausing EMS [#{name}] id [#{id}].")
     update!(
-      :backup_zone => zone,
-      :zone        => Zone.maintenance_zone,
-      :enabled     => false
+      :zone_before_pause => zone,
+      :zone              => Zone.maintenance_zone,
+      :enabled           => false
     )
     _log.info("Pausing EMS [#{name}] id [#{id}] successful.")
   end
@@ -237,9 +237,9 @@ class ExtManagementSystem < ApplicationRecord
   def resume!
     _log.info("Resuming EMS [#{name}] id [#{id}].")
     update!(
-      :backup_zone => nil,
-      :zone        => backup_zone || Zone.default_zone,
-      :enabled     => true
+      :zone_before_pause => nil,
+      :zone              => zone_before_pause || Zone.default_zone,
+      :enabled           => true
     )
     _log.info("Resuming EMS [#{name}] id [#{id}] successful.")
   end

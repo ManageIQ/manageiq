@@ -4,11 +4,12 @@ class Zone < ApplicationRecord
 
   serialize :settings, Hash
 
-  belongs_to      :log_file_depot, :class_name => "FileDepot"
+  belongs_to :log_file_depot, :class_name => "FileDepot"
 
   has_many :miq_servers
   has_many :ext_management_systems
-  has_many :paused_ext_management_systems, :class_name => 'ExtManagementSystem', :inverse_of => :backup_zone
+  has_many :paused_ext_management_systems, :class_name => 'ExtManagementSystem', :inverse_of => :zone_before_pause
+  has_one  :maintenance_zone_region, :class_name => 'MiqRegion', :inverse_of => :maintenance_zone
   has_many :container_managers, :class_name => "ManageIQ::Providers::ContainerManager"
   has_many :miq_schedules, :dependent => :destroy
   has_many :providers
@@ -40,7 +41,7 @@ class Zone < ApplicationRecord
   scope :visible, -> { where(:visible => true) }
   default_value_for :visible, true
 
-  MAINTENANCE_ZONE_NAME = '__maintenance__'.freeze
+  MAINTENANCE_ZONE_NAME_PREFIX = '__maintenance__'.freeze
 
   def active_miq_servers
     MiqServer.active_miq_servers.where(:zone_id => id)
@@ -54,10 +55,38 @@ class Zone < ApplicationRecord
     active_miq_servers.detect(&:is_master?)
   end
 
-  def self.seed
-    create_with(:description => "Maintenance Zone", :visible => false).find_or_create_by!(:name => MAINTENANCE_ZONE_NAME) do |_z|
-      _log.info("Creating maintenance zone...")
+  def self.create_maintenance_zone
+    if maintenance_zone.nil?
+      # 1) Create region, if not exists
+      MiqRegion.seed
+
+      # 2) Create Maintenance zone
+      threshold = 100 # avoiding infinite loop
+      zone = nil
+      (1..threshold).each do |idx|
+        zone = create(:name        => "#{MAINTENANCE_ZONE_NAME_PREFIX}#{idx}",
+                      :description => "Maintenance Zone",
+                      :visible     => false)
+        break if zone.valid?
+      end
+
+      # 3) Assign zone to region
+      if zone&.valid?
+        region = zone.miq_region
+        region&.maintenance_zone = zone
+        unless region&.save
+          _log.error("Saving Maintenance zone to region failed with: #{region&.errors&.messages.inspect}")
+        end
+        _log.info("Creating maintenance zone...")
+      else
+        _log.error("Maintenance zone not created in #{threshold} attempts")
+      end
     end
+  end
+
+  def self.seed
+    create_maintenance_zone
+
     create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
       _log.info("Creating default zone...")
     end
@@ -87,9 +116,9 @@ class Zone < ApplicationRecord
     in_my_region.find_by(:name => "default")
   end
 
-  # Zone for suspended providers (no servers in it), not visible by default
+  # Zone for paused providers (no servers in it), not visible by default
   def self.maintenance_zone
-    in_my_region.find_by(:name => MAINTENANCE_ZONE_NAME)
+    MiqRegion.find_by(:region => my_region_number)&.maintenance_zone
   end
 
   def remote_cockpit_ws_miq_server
@@ -223,7 +252,7 @@ class Zone < ApplicationRecord
 
   def check_zone_in_use_on_destroy
     raise _("cannot delete default zone") if name == "default"
-    raise _("cannot delete maintenance zone") if name == MAINTENANCE_ZONE_NAME
+    raise _("cannot delete maintenance zone") if self == miq_region&.maintenance_zone
     raise _("zone name '%{name}' is used by a server") % {:name => name} unless miq_servers.blank?
   end
 end
