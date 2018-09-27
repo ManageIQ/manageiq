@@ -42,11 +42,13 @@ module Ansible
       # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the
       #        ansible-runner run
       # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
+      # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @param playbook_path [String] Path to the playbook we will want to run
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run(env_vars, extra_vars, playbook_path)
+      def run(env_vars, extra_vars, playbook_path, tags: nil)
         run_via_cli(env_vars,
                     extra_vars,
+                    :tags     => tags,
                     :playbook => playbook_path)
       end
 
@@ -60,13 +62,15 @@ module Ansible
       # @param roles_path [String] Path to the directory with roles
       # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
       #        playbook. True by default.
+      # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true)
+      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, tags: nil)
         run_via_cli(env_vars,
                     extra_vars,
+                    :tags            => tags,
                     :role            => role_name,
                     :roles_path      => roles_path,
-                    :role_skip_facts => role_skip_facts)
+                    :role_skip_facts => role_skip_facts,)
       end
 
       # Runs "run" method via queue
@@ -129,15 +133,16 @@ module Ansible
       # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the
       #        ansible-runner run
       # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
+      # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @param ansible_runner_method [String] Optional method we will use to run the ansible-runner. It can be either
       #        "run", which is sync call, or "start" which is async call.  Default is "run"
       # @param playbook_or_role_args [Hash] Hash that includes the :playbook key or :role keys
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_via_cli(env_vars, extra_vars, ansible_runner_method: "run", **playbook_or_role_args)
-        validate_params!(env_vars, extra_vars, ansible_runner_method, playbook_or_role_args)
+      def run_via_cli(env_vars, extra_vars, tags: nil, ansible_runner_method: "run", **playbook_or_role_args)
+        validate_params!(env_vars, extra_vars, tags, ansible_runner_method, playbook_or_role_args)
 
         base_dir = Dir.mktmpdir("ansible-runner")
-        params = runner_params(base_dir, ansible_runner_method, extra_vars, playbook_or_role_args)
+        params = runner_params(base_dir, ansible_runner_method, extra_vars, tags, playbook_or_role_args)
 
         begin
           result = AwesomeSpawn.run("ansible-runner", :env => env_vars, :params => params)
@@ -170,26 +175,36 @@ module Ansible
         ansible_runner_method == "start"
       end
 
-      def runner_params(base_dir, ansible_runner_method, extra_vars, playbook_or_role_args)
+      def runner_params(base_dir, ansible_runner_method, extra_vars, tags, playbook_or_role_args)
         runner_args = playbook_or_role_args.dup
 
         runner_args.delete(:roles_path) if runner_args[:roles_path].nil?
         skip_facts = runner_args.delete(:role_skip_facts)
         runner_args[:role_skip_facts] = nil if skip_facts
 
+        cmdline_commands = set_cmdline_commands(extra_vars, tags)
+
         runner_args[:ident]   = "result"
         runner_args[:hosts]   = "localhost"
-        runner_args[:cmdline] = AwesomeSpawn.build_command_line(nil, [{:extra_vars => extra_vars.to_json}]).lstrip if extra_vars.any?
+        runner_args[:cmdline] = AwesomeSpawn.build_command_line(nil, [cmdline_commands]).lstrip if extra_vars.any?
 
         [ansible_runner_method, base_dir, :json, runner_args]
       end
 
+      def set_cmdline_commands(extra_vars, tags)
+        commands = {:extra_vars => extra_vars.to_json}
+        commands[:tags] = tags if tags.present?
+
+        commands
+      end
+
       # Asserts passed parameters are correct, if not throws an exception.
-      def validate_params!(env_vars, extra_vars, ansible_runner_method, playbook_or_role_args)
+      def validate_params!(env_vars, extra_vars, tags, ansible_runner_method, playbook_or_role_args)
         errors = []
 
         errors << "env_vars must be a Hash, got: #{hash.class}" unless env_vars.kind_of?(Hash)
         errors << "extra_vars must be a Hash, got: #{hash.class}" unless extra_vars.kind_of?(Hash)
+        errors << "tags must be a String, got: #{tags.class}" if tags.present? && !tags.kind_of?(String)
 
         unless %w(run start).include?(ansible_runner_method.to_s)
           errors << "ansible_runner_method must be 'run' or 'start'"
