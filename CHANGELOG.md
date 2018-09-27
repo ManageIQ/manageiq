@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 95 ending 2018-09-24
+
+### Added
+- Add ems_cluster_id to vms returned by validator [(#18011)](https://github.com/ManageIQ/manageiq/pull/18011)
+- Add :cinder_volume_types to SupportsFeatureMixin [(#18000)](https://github.com/ManageIQ/manageiq/pull/18000)
+- virtual column for parent blue folder path with excluded non-display folders [(#17976)](https://github.com/ManageIQ/manageiq/pull/17976)
+- virtual column for `default_security_group` to make it accessible via the API [(#17975)](https://github.com/ManageIQ/manageiq/pull/17975)
+- Allow ems to terminate connection after use [(#17959)](https://github.com/ManageIQ/manageiq/pull/17959)
+- Add CPU cores and MEMORY metering allocation to Metering reports [(#17938)](https://github.com/ManageIQ/manageiq/pull/17938)
+- Shared persistor definitions plus adding ServiceInstance [(#17933)](https://github.com/ManageIQ/manageiq/pull/17933)
+- Add file splitting to evm:db tasks (V2) [(#17894)](https://github.com/ManageIQ/manageiq/pull/17894)
+- Adding product features for PhysicalInfra Overview page [(#17770)](https://github.com/ManageIQ/manageiq/pull/17770)
+- Add sysprep support for oVirt provider [(#17636)](https://github.com/ManageIQ/manageiq/pull/17636)
+- Add VmMigrationValidator. [(#17364)](https://github.com/ManageIQ/manageiq/pull/17364)
+
+### Fixed
+- Establish a new connection instead of reconnect! [(#18010)](https://github.com/ManageIQ/manageiq/pull/18010)
+- Added access to MyTasks to self_service roles [(#18006)](https://github.com/ManageIQ/manageiq/pull/18006)
+- Delegate verify_ssl & verify_ssl= to default endpoint [(#18001)](https://github.com/ManageIQ/manageiq/pull/18001)
+- Fixed error with replication setup when default exclude list used [(#17999)](https://github.com/ManageIQ/manageiq/pull/17999)
+- Fix to handle the case when default value of internal is nil [(#17995)](https://github.com/ManageIQ/manageiq/pull/17995)
+- Only reload settings for servers in current region [(#17992)](https://github.com/ManageIQ/manageiq/pull/17992)
+- Prevent queueing things for a zone that doesn't exist in the region [(#17987)](https://github.com/ManageIQ/manageiq/pull/17987)
+- Add regex for dialog password fields. [(#17986)](https://github.com/ManageIQ/manageiq/pull/17986)
+- Move `virtual` definition for `default_security_group` to OpenStack [(#17979)](https://github.com/ManageIQ/manageiq/pull/17979)
+- Remove line from metering_container_image_spec and FIX CI failure [(#17974)](https://github.com/ManageIQ/manageiq/pull/17974)
+- Load all the values along with their key names into the field update method [(#17973)](https://github.com/ManageIQ/manageiq/pull/17973)
+- Fix Physical Disks save inventory [(#17972)](https://github.com/ManageIQ/manageiq/pull/17972)
+- Fix Canisters save inventory [(#17966)](https://github.com/ManageIQ/manageiq/pull/17966)
+- Add Switch model to RBAC [(#17964)](https://github.com/ManageIQ/manageiq/pull/17964)
+- Consolidate production env checks [(#17957)](https://github.com/ManageIQ/manageiq/pull/17957)
+- Add replication set-up methods to be queued on UI side [(#17956)](https://github.com/ManageIQ/manageiq/pull/17956)
+- Adds task to subservices for correct retirement completion [(#17912)](https://github.com/ManageIQ/manageiq/pull/17912)
+- Enable cancel operation for service template transformation plan request [(#17825)](https://github.com/ManageIQ/manageiq/pull/17825)
+- Add Ownership and Tenancy Mixins to Authentication [(#17731)](https://github.com/ManageIQ/manageiq/pull/17731)
+
 ## Unreleased as of Sprint 94 ending 2018-09-10
 
 ### Added
