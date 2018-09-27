@@ -368,6 +368,19 @@ describe MiqQueue do
       expect(MiqQueue.get).to eq(nil)
     end
 
+    it "should skip putting message on queue in maintenance zone" do
+      Zone.seed
+
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+        :zone        => Zone.maintenance_zone&.name
+      )
+
+      expect(MiqQueue.get).to eq(nil)
+    end
+
     it "should accept non-Array args (for now)" do
       begin
         class MiqQueueSpecNonArrayArgs
