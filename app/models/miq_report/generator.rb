@@ -164,8 +164,8 @@ module MiqReport::Generator
     if sync
       _async_generate_table(task.id, options)
     else
-      MiqQueue.put(
-        :queue_name  => "reporting",
+      MiqQueue.submit_job(
+        :service     => "reporting",
         :class_name  => self.class.name,
         :instance_id => id,
         :method_name => "_async_generate_table",
@@ -792,9 +792,8 @@ module MiqReport::Generator
     _log.info("Adding generate report task to the message queue...")
     task = MiqTask.create(:name => "Generate Report: '#{name}'", :userid => options[:userid])
 
-    MiqQueue.put(
-      :queue_name  => "reporting",
-      :role        => "reporting",
+    MiqQueue.submit_job(
+      :service     => "reporting",
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "build_report_result",
