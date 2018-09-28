@@ -44,4 +44,12 @@ describe NotificationType, :type => :model do
       end
     end
   end
+
+  describe "#enabled?" do
+    it "detects properly" do
+      expect(FactoryGirl.build(:notification_type, :audience => NotificationType::AUDIENCE_USER)).to be_enabled
+      expect(FactoryGirl.build(:notification_type, :audience => NotificationType::AUDIENCE_NONE)).not_to be_enabled
+      expect(FactoryGirl.build(:notification_type, :audience => NotificationType::AUDIENCE_NONE)).to be_valid
+    end
+  end
 end
