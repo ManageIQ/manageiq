@@ -31,7 +31,7 @@ class DialogFieldTextBox < DialogField
 
   def automate_output_value
     return nil if @value.nil?
-    return MiqPassword.encrypt(@value) if self.protected?
+    return MiqPassword.encrypt(@value) if self.protected? && !value_is_already_encrypted?
     convert_value_to_type
   end
 
@@ -88,5 +88,9 @@ class DialogFieldTextBox < DialogField
   def load_values_on_init?
     return true unless show_refresh_button
     load_values_on_init
+  end
+
+  def value_is_already_encrypted?
+    return true if MiqPassword.encrypted?(@value)
   end
 end

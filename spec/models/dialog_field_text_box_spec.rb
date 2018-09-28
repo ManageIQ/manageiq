@@ -118,6 +118,18 @@ describe DialogFieldTextBox do
     it "#automate_key_name" do
       expect(df.automate_key_name).to eq("password::dialog_test field")
     end
+
+    context "when the value is already encrypted" do
+      before do
+        allow(MiqPassword).to receive(:encrypted?).and_return(true)
+      end
+
+      it "does not double encrypt it" do
+        df.value = MiqPassword.encrypt("test")
+
+        expect(df.automate_output_value).to be_encrypted("test")
+      end
+    end
   end
 
   context "validation" do
