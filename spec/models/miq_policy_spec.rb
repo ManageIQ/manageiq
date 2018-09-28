@@ -310,19 +310,11 @@ describe MiqPolicy do
 
   context '.validates' do
     it 'validates towhat' do
-      expect(described_class.create!(:towhat      => "Host",
-                                     :active      => false,
-                                     :description => 'x',)).to have_attributes(:towhat => "Host",
-                                                                               :active => false)
+      expect(FactoryGirl.build(:miq_policy, :towhat => "Host")).to be_valid
     end
 
     it 'reports invalid towhat' do
-      expect do
-        described_class.create!(:towhat      => "BobsYourUncle",
-                                :active      => false,
-                                :description => 'x')
-      end.to raise_error(ActiveRecord::RecordInvalid,
-                         "Validation failed: MiqPolicy: Towhat is not included in the list")
+      expect(FactoryGirl.build(:miq_policy, :towhat => "BobsYourUncle")).not_to be_valid
     end
   end
 end
