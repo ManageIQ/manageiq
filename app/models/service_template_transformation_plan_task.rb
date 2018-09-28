@@ -47,7 +47,64 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def conversion_host
-    Host.find_by(:id => options[:transformation_host_id])
+    ConversionHost.find_by(:id => options[:transformation_host_id])
+  end
+
+  def source_ems
+    options[:source_ems_id] ||= source.ext_management_system.id
+    source.ext_management_system
+  end
+
+  def destination_ems
+    options[:destination_ems_id] ||= transformation_destination(source.ems_cluster).ext_management_system.id
+    transformation_destination(source.ems_cluster).ext_management_system
+  end
+
+  def source_disks
+    options[:source_disks] ||= source.hardware.disks.select { |d| d.device_type == 'disk' }.collect do |disk|
+      source_storage = disk.storage
+      destination_storage = transformation_destination(disk.storage)
+      raise "[#{source.name}] Disk #{disk.device_name} [#{source_storage.name}] has no mapping. Aborting." if destination_storage.nil?
+      {
+        :path    => disk.filename,
+        :size    => disk.size,
+        :percent => 0,
+        :weight  => disk.size.to_f / source.allocated_disk_storage.to_f * 100
+      }
+    end
+  end
+
+  def network_mappings
+    options[:network_mappings] ||= source.hardware.nics.select { |n| n.device_type == 'ethernet' }.collect do |nic|
+      source_network = nic.lan
+      destination_network = transformation_destination(source_network)
+      raise "[#{source.name}] NIC #{nic.device_name} [#{source_network.name}] has no mapping. Aborting." if destination_network.nil?
+      {
+        :source      => source_network.name,
+        :destination => destination_network_ref(destination_network),
+        :mac_address => nic.address
+      }
+    end
+  end
+
+  def destination_network_ref(network)
+    send("destination_network_ref_#{destination_ems.emstype}", network)
+  end
+
+  def destination_network_ref_rhevm(network)
+    network.name
+  end
+
+  def destination_network_ref_openstack(network)
+    network.ems_ref
+  end
+
+  def destination_flavor
+    Flavor.find_by(:id => miq_request.source.options[:config_info][:osp_flavor])
+  end
+
+  def destination_security_group
+    SecurityGroup.find_by(:id => miq_request.source.options[:config_info][:osp_security_group])
   end
 
   def transformation_log
@@ -58,9 +115,9 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       raise MiqException::Error, msg
     end
 
-    userid, password = host.auth_user_pwd(:remote)
+    userid, password = host.resource.auth_user_pwd(:remote)
     if userid.blank? || password.blank?
-      msg = "Credential was not found for host #{host.name}. Download of transformation log aborted."
+      msg = "Credential was not found for host #{host.resource.name}. Download of transformation log aborted."
       _log.error(msg)
       raise MiqException::Error, msg
     end
@@ -74,7 +131,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
     begin
       require 'net/scp'
-      Net::SCP.download!(host.ipaddress, userid, logfile, nil, :ssh => {:password => password})
+      Net::SCP.download!(host.resource.ipaddress, userid, logfile, nil, :ssh => {:password => password})
     rescue Net::SCP::Error => scp_err
       _log.error("Download of transformation log for #{description} with ID [#{id}] failed with error: #{scp_err.message}")
       raise scp_err
@@ -98,7 +155,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
                      :instance_id => id,
                      :priority    => MiqQueue::HIGH_PRIORITY,
                      :args        => [],
-                     :zone        => host.my_zone}
+                     :zone        => host.resource.my_zone}
     MiqTask.generic_action_with_callback(options, queue_options)
   end
 
