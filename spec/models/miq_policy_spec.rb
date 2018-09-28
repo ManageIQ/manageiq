@@ -307,4 +307,25 @@ describe MiqPolicy do
       )
     end
   end
+
+  context '.validates' do
+    it 'validates towhat and mode' do
+      expect(described_class.create!(:towhat      => "Host",
+                                     :mode        => "compliance",
+                                     :active      => false,
+                                     :description => 'x',)).to have_attributes(:towhat => "Host",
+                                                                               :active => false,
+                                                                               :mode   => "compliance")
+    end
+
+    it 'reports invalid towhat' do
+      expect do
+        described_class.create!(:towhat      => "BobsYourUncle",
+                                :mode        => "compliance",
+                                :active      => false,
+                                :description => 'x')
+      end.to raise_error(ActiveRecord::RecordInvalid,
+                         "Validation failed: MiqPolicy: Towhat is not included in the list")
+    end
+  end
 end
