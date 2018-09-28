@@ -1,15 +1,15 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ApplicationRecord
-  TOWHAT_APPLIES_TO_CLASSES = %w(Host
-                                 Vm
-                                 ContainerReplicator
-                                 ContainerGroup
-                                 ContainerNode
+  TOWHAT_APPLIES_TO_CLASSES = %w(ContainerGroup
                                  ContainerImage
+                                 ContainerNode
                                  ContainerProject
+                                 ContainerReplicator
                                  ExtManagementSystem
-                                 PhysicalServer).freeze
+                                 Host
+                                 PhysicalServer
+                                 Vm).freeze
 
   acts_as_miq_taggable
   acts_as_miq_set_member
