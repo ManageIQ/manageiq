@@ -307,4 +307,14 @@ describe MiqPolicy do
       )
     end
   end
+
+  context '.validates' do
+    it 'validates towhat' do
+      expect(FactoryGirl.build(:miq_policy, :towhat => "Host")).to be_valid
+    end
+
+    it 'reports invalid towhat' do
+      expect(FactoryGirl.build(:miq_policy, :towhat => "BobsYourUncle")).not_to be_valid
+    end
+  end
 end

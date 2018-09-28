@@ -1,6 +1,16 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ApplicationRecord
+  TOWHAT_APPLIES_TO_CLASSES = %w(ContainerGroup
+                                 ContainerImage
+                                 ContainerNode
+                                 ContainerProject
+                                 ContainerReplicator
+                                 ExtManagementSystem
+                                 Host
+                                 PhysicalServer
+                                 Vm).freeze
+
   acts_as_miq_taggable
   acts_as_miq_set_member
   include_concern 'ImportExport'
@@ -29,6 +39,7 @@ class MiqPolicy < ApplicationRecord
   validates_presence_of     :name, :description, :guid
   validates_uniqueness_of   :name, :description, :guid
   validates :mode, :inclusion => { :in => %w(compliance control) }
+  validates :towhat, :inclusion => { :in => TOWHAT_APPLIES_TO_CLASSES }
 
   scope :with_mode,   ->(mode)   { where(:mode => mode) }
   scope :with_towhat, ->(towhat) { where(:towhat => towhat) }
