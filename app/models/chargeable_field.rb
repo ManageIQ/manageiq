@@ -135,9 +135,13 @@ class ChargeableField < ApplicationRecord
     File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
   end
 
+  private_class_method :seed_data
+
   def self.chargeable_cols_on_metric_rollup
     existing_cols = MetricRollup.attribute_names
     chargeable_cols = pluck(:metric) & existing_cols
     chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.sort
   end
+
+  private_class_method :chargeable_cols_on_metric_rollup
 end

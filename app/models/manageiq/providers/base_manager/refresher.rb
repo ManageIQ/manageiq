@@ -211,6 +211,7 @@ module ManageIQ
           _log.info("#{log_ems_target} Performing post-refresh operations for #{klass} instances...Complete")
         end
       end
+
       private
 
       def self.ems_type
