@@ -220,7 +220,7 @@ class Condition < ApplicationRecord
         attr, val = o.split("=")
         ohash[attr.strip.downcase.to_sym] = val.strip.downcase
       end
-      if ohash[:ref] != rec.class.to_s.downcase
+      if ohash[:ref] != rec.class.to_s.downcase && !exclude_from_object_ref_substitution(ohash[:ref], rec)
         ref = rec.send(val) if val && rec.respond_to?(val)
       end
 
@@ -230,6 +230,13 @@ class Condition < ApplicationRecord
       end
     end
     return ohash, ref, object
+  end
+
+  def self.exclude_from_object_ref_substitution(reference, rec)
+    case reference
+    when "service"
+      rec.kind_of?(Service)
+    end
   end
 
   def self.registry_data(ref, name, ohash)
