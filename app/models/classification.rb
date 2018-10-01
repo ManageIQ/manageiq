@@ -224,9 +224,13 @@ class Classification < ApplicationRecord
   end
 
   def self.categories(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    cats = where(:classifications => {:parent_id => 0}).includes(:tag, :children)
-    cats = cats.in_region(region_id) if region_id
-    cats.select { |c| c.ns == ns }
+    classificatin_scope       = Classification.parent_classifications.references(:tag).includes(:tag, :children)
+    classificatin_scope       = classificatin_scope.in_region(region_id) if region_id
+    condition_for_mapped_tags = ContainerLabelTagMapping::TAG_PREFIXES.map { "name LIKE ?" }.join(' OR ')
+    mapped_tags_scope         = Classification.parent_classifications.includes(:tag, :children).references(:tag).where(condition_for_mapped_tags, *ContainerLabelTagMapping::TAG_PREFIXES.map { |x| "#{x}%:%" })
+    classificatin_scope       = classificatin_scope.or(mapped_tags_scope)
+
+    classificatin_scope.select { |c| c.ns == ns }
   end
 
   def self.category_names_for_perf_by_tag(region_id = my_region_number, ns = DEFAULT_NAMESPACE)

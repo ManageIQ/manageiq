@@ -25,6 +25,12 @@ describe Classification do
         )
       end
     end
+
+    describe ".categories" do
+      it 'lists mapped and readonly classifications' do
+        expect(Classification.categories).to eq([parent_classification])
+      end
+    end
   end
 
   context ".hash_all_by_type_and_name" do
