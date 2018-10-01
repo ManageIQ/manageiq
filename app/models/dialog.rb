@@ -76,16 +76,14 @@ class Dialog < ApplicationRecord
   end
 
   def validate_field_data
-    result = []
-    dialog_tabs.each do |dt|
+    dialog_tabs.each_with_object([]) do |dt, result|
       dt.dialog_groups.each do |dg|
         dg.dialog_fields.each do |df|
           err_msg = df.validate_field_data(dt, dg)
-          result << err_msg unless err_msg.blank?
+          result << err_msg if err_msg.present?
         end
       end
     end
-    result
   end
 
   def load_values_into_fields(values, overwrite = true)
