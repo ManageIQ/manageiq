@@ -3,11 +3,7 @@ class CustomButtonEvent < EventStream
   virtual_column :automate_entry_point, :type => :string
 
   def self.rbac_scope_for_model(user)
-    if user.super_admin_user?
-      all
-    else
-      none
-    end
+    user.super_admin_user? ? all : none
   end
 
   def automate_entry_point
