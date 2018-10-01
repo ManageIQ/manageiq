@@ -96,7 +96,11 @@ class CustomButton < ApplicationRecord
   end
 
   def publish_event(source, target, args)
-    CustomButtonEvent.create(
+    target.kind_of?(Array) ? target.each { |t| create_event(source, t, args) } : create_event(source, target, args)
+  end
+
+  def create_event(source, target, args)
+    CustomButtonEvent.create!(
       :event_type => 'button.trigger.start',
       :message    => 'Custom button launched',
       :source     => source,
