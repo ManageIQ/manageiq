@@ -151,4 +151,12 @@ describe Condition do
       expect(Condition.subst_matches?(expr, vm1)).not_to be_truthy
     end
   end
+
+  describe ".options2hash" do
+    it 'returns the same record if it is descendant from Service class and passed reference is "service" ' do
+      record = ServiceContainerTemplate.new
+      _, result_record, _ = described_class.options2hash("ref=service", record)
+      expect(result_record).to be(record)
+    end
+  end
 end
