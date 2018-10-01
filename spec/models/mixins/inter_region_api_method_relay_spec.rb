@@ -231,24 +231,24 @@ describe InterRegionApiMethodRelay do
       it "calls the given action with the given args" do
         args = {:my => "args", :here => 123}
         expect(api_collection).to receive(action).with(args).and_return(api_success_result)
-        described_class.exec_api_call(region, collection_name, action, args)
+        expect(described_class.exec_api_call(region, collection_name, action, args)).to eq(api_success_result.attributes)
       end
 
       it "defaults the args to an empty hash" do
         expect(api_collection).to receive(action).with({}).and_return(api_success_result)
-        described_class.exec_api_call(region, collection_name, action)
+        expect(described_class.exec_api_call(region, collection_name, action)).to eq(api_success_result.attributes)
       end
 
       it "defaults the args to an empty hash when nil is explicitly passed as args" do
         expect(api_collection).to receive(action).with({}).and_return(api_success_result)
-        described_class.exec_api_call(region, collection_name, action, nil)
+        expect(described_class.exec_api_call(region, collection_name, action, nil)).to eq(api_success_result.attributes)
       end
 
       it "calls a method on an instance if id is passed" do
         instance = double("instance")
         expect(api_collection).to receive(:find).with(4).and_return(instance)
         expect(instance).to receive(action).and_return(api_success_result)
-        described_class.exec_api_call(region, collection_name, action, nil, 4)
+        expect(described_class.exec_api_call(region, collection_name, action, nil, 4)).to eq(api_success_result.attributes)
       end
     end
   end
