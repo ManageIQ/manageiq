@@ -1099,6 +1099,16 @@ class MiqExpression
     if ns == "managed"
       cat = field.split("-").last
       catobj = Classification.find_by_name(cat) # rubocop:disable Rails/DynamicFindBy
+      catobjs = [catobj]
+
+      unless catobj
+        MiqRegion.where.not(:region => MiqRegion.my_region_number).each do |region|
+          classification = Classification.find_by_name(cat, region.region) # rubocop:disable Rails/DynamicFindBy
+          catobjs.push(classification) if classification
+        end
+      end
+
+      catobj = catobjs.compact.first
       return catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
     elsif ns == "user_tag" || ns == "user"
       cat = field.split("-").last
@@ -1188,7 +1198,7 @@ class MiqExpression
   end
 
   def self.categories
-    classifications = Classification.in_my_region.hash_all_by_type_and_name(:show => true)
+    classifications = Classification.in_my_region.hash_all_by_type_and_name(:show => true).merge(Classification.hash_all_by_type_and_name_with_mapped_labels(:show => true))
     categories_with_entries = classifications.reject { |_k, v| !v.key?(:entry) }
     categories_with_entries.each_with_object({}) do |(name, hash), categories|
       categories[name] = hash[:category]

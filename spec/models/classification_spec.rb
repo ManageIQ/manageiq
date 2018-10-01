@@ -1,4 +1,32 @@
 describe Classification do
+  context 'mapped tags from labels' do
+    let(:miq_region_remote)        { FactoryGirl.create(:miq_region) }
+    let(:unique_classification_id) { Classification.count + 1 }
+    let(:remote_region_id)         { ApplicationRecord.id_in_region(unique_classification_id, miq_region_remote.region) }
+    let!(:parent_classification)   { FactoryGirl.create(:classification, :read_only => true, :name => "amazon:vm:name", :description => 'MyNewCategory', :id => remote_region_id) }
+    let!(:classification)          { FactoryGirl.create(:classification, :read_only => true, :name => "name", :description => 'description', :id => remote_region_id + 1, :parent => parent_classification) }
+
+    before do
+      MiqRegion.seed
+      tag = parent_classification.tag
+      unique_tag_id = Tag.count + 1
+      Tag.where(:id => tag.id).update_all(:id => ApplicationRecord.id_in_region(unique_tag_id, miq_region_remote.region)) # rubocop:disable Rails/SkipsModelValidations
+      tag_id = ApplicationRecord.id_in_region(unique_tag_id, miq_region_remote.region)
+      parent_classification.update_attributes(:tag_id => tag_id)
+    end
+
+    describe '.hash_all_by_type_and_name_with_mapped_labels' do
+      it 'list mapped and readonly classifications' do
+        expect(Classification.hash_all_by_type_and_name_with_mapped_labels).to include(
+          "amazon:vm:name" => {
+            :category => parent_classification,
+            :entry    => {"name" => classification}
+          }
+        )
+      end
+    end
+  end
+
   context ".hash_all_by_type_and_name" do
     it "with entries duped across categories should return both entries" do
       clergy        = FactoryGirl.create(:classification,     :name => "clergy", :single_value => 1)

@@ -46,6 +46,27 @@ class Classification < ApplicationRecord
 
   FIXTURE_FILE = FIXTURE_DIR.join("classifications.yml")
 
+  def self.parent_classifications
+    where(:classifications => {:parent_id => 0})
+  end
+
+  def self.hash_all_by_type_and_name_with_mapped_labels(conditions = {})
+    ret = {}
+
+    condition_for_mapped_tags = ContainerLabelTagMapping::TAG_PREFIXES.map { "tags.name LIKE ?" }.join(' OR ')
+
+    tag_values = ContainerLabelTagMapping::TAG_PREFIXES.map { |x| "#{x}%:%" }
+    where(conditions).parent_classifications.includes(:tag).references(:tag).where(condition_for_mapped_tags, *tag_values).each do |c|
+      ret.store_path(c.name, :category, c)
+    end
+
+    where(conditions).where.not(:parent_id => 0).includes(:tag, :parent => :tag).references(:tag).where(condition_for_mapped_tags, *tag_values).each do |e|
+      ret.store_path(e.parent.name, :entry, e.name, e) unless e.parent.nil?
+    end
+
+    ret
+  end
+
   def self.hash_all_by_type_and_name(conditions = {})
     ret = {}
 

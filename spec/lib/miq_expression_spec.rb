@@ -1,4 +1,25 @@
 describe MiqExpression do
+  describe '.get_entry_details' do
+    let(:miq_region_remote)            { FactoryGirl.create(:miq_region) }
+    let(:unique_classification_id)     { Classification.count + 1 }
+    let(:remote_region_id)             { ApplicationRecord.id_in_region(unique_classification_id, miq_region_remote.region) }
+    let!(:parent_classification) { FactoryGirl.create(:classification, :name => "amazon:vm:name", :description => 'MyNewCategory', :id => remote_region_id) }
+    let!(:classification)        { FactoryGirl.create(:classification, :name => "name", :description => 'description', :id => remote_region_id + 1, :parent => parent_classification) }
+
+    before do
+      MiqRegion.seed
+      tag = parent_classification.tag
+      unique_tag_id = Tag.count + 1
+      Tag.where(:id => tag.id).update_all(:id => ApplicationRecord.id_in_region(unique_tag_id, miq_region_remote.region)) # rubocop:disable Rails/SkipsModelValidations
+      tag_id = ApplicationRecord.id_in_region(unique_tag_id, miq_region_remote.region)
+      parent_classification.update_attributes(:tag_id => tag_id)
+    end
+
+    it 'returns details' do
+      expect(MiqExpression.get_entry_details("ManageIQ::Providers::CloudManager::Vm.managed-amazon:vm:name")).to eq([%w(description name)])
+    end
+  end
+
   describe '#reporting_available_fields' do
     let(:vm) { FactoryGirl.create(:vm) }
     let!(:custom_attribute) { FactoryGirl.create(:custom_attribute, :name => 'my_attribute_1', :resource => vm) }
@@ -1218,6 +1239,15 @@ describe MiqExpression do
         "hash"
       ).to_ruby
       expected = "<value type=string>managed.environment</value> CONTAINS \"\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the ruby for a CONTAINS expression with hash context with mapped tag" do
+      actual = described_class.new(
+        {"CONTAINS" => {"tag" => "ManageIQ::Providers::CloudManager::Vm.managed-amazon:vm:name", "value" => "prod"}},
+        "hash"
+      ).to_ruby
+      expected = "<value type=string>managed.amazon:vm:name</value> CONTAINS \"\""
       expect(actual).to eq(expected)
     end
 
