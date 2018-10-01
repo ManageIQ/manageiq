@@ -207,18 +207,6 @@ class ExtManagementSystem < ApplicationRecord
 
   after_save :change_maintenance_for_child_managers, :if => proc { |ems| ems.changed_attributes.include?('enabled') }
 
-  def disable!
-    _log.info("Disabling EMS [#{name}] id [#{id}].")
-    update!(:enabled => false)
-    _log.info("Disabling EMS [#{name}] id [#{id}] successful.")
-  end
-
-  def enable!
-    _log.info("Enabling EMS [#{name}] id [#{id}].")
-    update!(:enabled => true)
-    _log.info("Enabling EMS [#{name}] id [#{id}] successful.")
-  end
-
   # Move ems to maintenance zone and backup current one
   def pause!
     _log.info("Pausing EMS [#{name}] id [#{id}].")
@@ -788,14 +776,28 @@ class ExtManagementSystem < ApplicationRecord
     Settings.ems_refresh.fetch_path(emstype, :allow_targeted_refresh)
   end
 
+  protected
+
+  def disable!
+    _log.info("Disabling EMS [#{name}] id [#{id}].")
+    update!(:enabled => false)
+    _log.info("Disabling EMS [#{name}] id [#{id}] successful.")
+  end
+
+  def enable!
+    _log.info("Enabling EMS [#{name}] id [#{id}].")
+    update!(:enabled => true)
+    _log.info("Enabling EMS [#{name}] id [#{id}] successful.")
+  end
+
   private
 
   # Child managers went to/from maintenance mode with parent
   def change_maintenance_for_child_managers
     if enabled?
-      child_managers.each(&:enable!)
+      child_managers.each { |ems| ems.enable! }
     else
-      child_managers.each(&:disable!)
+      child_managers.each { |ems| ems.disable! }
     end
   end
 
