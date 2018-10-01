@@ -108,6 +108,7 @@ class MiqWidget < ApplicationRecord
     MiqQueue.create_with(callback).put_unless_exists(
       :queue_name  => "reporting",
       :role        => "reporting",
+      :zone        => nil, # any zone
       :class_name  => self.class.to_s,
       :instance_id => id,
       :msg_timeout => 3600,

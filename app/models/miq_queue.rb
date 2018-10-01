@@ -197,7 +197,6 @@ class MiqQueue < ApplicationRecord
       # TODO: can we transition to zone = nil
     when "notifier"
       options[:role] = service
-      options[:zone] = nil # any zone
     when "reporting"
       options[:queue_name] = "generic"
       options[:role] = service
@@ -205,6 +204,9 @@ class MiqQueue < ApplicationRecord
       options[:queue_name] = "smartproxy"
       options[:role] = "smartproxy"
     end
+
+    # Note, options[:zone] is set in 'put' via 'determine_queue_zone' and handles setting
+    # a nil (any) zone for regional roles.  Therefore, regional roles don't need to set zone here.
     put(options)
   end
 
