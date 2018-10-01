@@ -1,4 +1,5 @@
 class ServiceTemplateTransformationPlan < ServiceTemplate
+  include_concern 'ValidateConfigInfo'
   def request_class
     ServiceTemplateTransformationPlanRequest
   end
@@ -15,6 +16,10 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
 
   def vm_resources
     service_resources.where(:resource_type => 'VmOrTemplate')
+  end
+
+  def transformation_mapping_resource
+    service_resources.where(:resource_type => 'TransformationMapping')
   end
 
   def validate_order
@@ -65,46 +70,29 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     end
   end
 
+  def update_catalog_item(options, _auth_user = nil)
+    raise _("Editing a plan in progress is prohibited") if %w(active pending).include?(miq_requests.sort_by(&:created_on).last.try(:request_state))
+
+    if miq_requests.any? || options[:config_info].nil?
+      update_attributes(:name => options[:name], :description => options[:description])
+      return reload
+    end
+
+    added_vms_enhanced_config_info = validate_config_info(options)
+
+    transaction do
+      vm_resources.destroy_all
+      reload
+      update_from_options(options)
+      transformation_mapping_resource.update(:resource_id => added_vms_enhanced_config_info[:transformation_mapping][:id])
+      added_vms_enhanced_config_info[:vms].each { |vm_hash| add_resource(vm_hash[:vm], :status => ServiceResource::STATUS_QUEUED, :options => vm_hash[:options]) }
+      save!
+    end
+    reload
+  end
+
   private
 
   def enforce_single_service_parent(_resource)
   end
-
-  def self.validate_config_info(options)
-    config_info = options[:config_info]
-
-    mapping = if config_info[:transformation_mapping_id]
-                TransformationMapping.find(config_info[:transformation_mapping_id])
-              else
-                config_info[:transformation_mapping]
-              end
-
-    raise _('Must provide an existing transformation mapping') if mapping.blank?
-
-    pre_service_id  = config_info[:pre_service].try(:id) || config_info[:pre_service_id]
-    post_service_id = config_info[:post_service].try(:id) || config_info[:post_service_id]
-
-    vms = []
-    if config_info[:actions]
-      vm_objects = VmOrTemplate.where(:id => config_info[:actions].collect { |vm_hash| vm_hash[:vm_id] }.compact).index_by(&:id).stringify_keys
-      config_info[:actions].each do |vm_hash|
-        vm_obj = vm_objects[vm_hash[:vm_id]] || vm_hash[:vm]
-        next if vm_obj.nil?
-
-        vm_options = {}
-        vm_options[:pre_ansible_playbook_service_template_id] = pre_service_id if vm_hash[:pre_service]
-        vm_options[:post_ansible_playbook_service_template_id] = post_service_id if vm_hash[:post_service]
-        vms << {:vm => vm_obj, :options => vm_options}
-      end
-    end
-
-    raise _('Must select a list of valid vms') if vms.blank?
-
-    {
-      :transformation_mapping => mapping,
-      :vms                    => vms,
-      :provision              => config_info[:provision] || {}
-    }
-  end
-  private_class_method :validate_config_info
 end
