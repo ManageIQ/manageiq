@@ -371,7 +371,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.containerized_worker?
-    # un-rearch containers for Hammer
+    # un-rearch containers until further notice
     return false
     MiqEnvironment::Command.is_podified? && supports_container?
   end
