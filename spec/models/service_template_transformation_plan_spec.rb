@@ -22,6 +22,10 @@ describe ServiceTemplateTransformationPlan do
   let(:vm1) { FactoryGirl.create(:vm_or_template) }
   let(:vm2) { FactoryGirl.create(:vm_or_template) }
   let(:vm3) { FactoryGirl.create(:vm_or_template) }
+  let(:security_group1) { FactoryGirl.create(:security_group, :name => "default") }
+  let(:flavor1) { FactoryGirl.create(:flavor, :name => "large") }
+  let(:security_group2) { FactoryGirl.create(:security_group, :name => "default") }
+  let(:flavor2) { FactoryGirl.create(:flavor, :name => "medium") }
 
   let(:catalog_item_options) do
     {
@@ -32,8 +36,8 @@ describe ServiceTemplateTransformationPlan do
         :pre_service_id            => apst.id,
         :post_service_id           => apst.id,
         :actions                   => [
-          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false},
-          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true}
+          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id},
+          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id}
         ],
       }
     }
@@ -48,9 +52,9 @@ describe ServiceTemplateTransformationPlan do
         :pre_service_id            => apst.id,
         :post_service_id           => apst.id,
         :actions                   => [
-          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false},
-          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true},
-          {:vm_id => vm3.id.to_s, :pre_service => true, :post_service => true}
+          {:vm_id => vm1.id.to_s, :pre_service => true, :post_service => false, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id},
+          {:vm_id => vm2.id.to_s, :pre_service => true, :post_service => true, :osp_security_group_id => security_group1.id, :osp_flavor_id => flavor1.id},
+          {:vm_id => vm3.id.to_s, :pre_service => true, :post_service => true, :osp_security_group_id => security_group2.id, :osp_flavor_id => flavor2.id}
         ],
       }
     }
@@ -126,9 +130,9 @@ describe ServiceTemplateTransformationPlan do
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
       expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id)
       expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id)
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -179,11 +183,11 @@ describe ServiceTemplateTransformationPlan do
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2, vm3])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
       expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id)
       expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id)
       expect(service_template.vm_resources.find_by(:resource_id => vm3.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group2.id, "osp_flavor_id" => flavor2.id)
       expect(service_template.config_info).to eq(updated_catalog_item_options_with_vms_added[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -240,9 +244,9 @@ describe ServiceTemplateTransformationPlan do
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
       expect(service_template.vm_resources.collect(&:status)).to eq([ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_QUEUED])
       expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id)
       expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id)
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
@@ -260,9 +264,9 @@ describe ServiceTemplateTransformationPlan do
       expect(service_template.transformation_mapping).to eq(transformation_mapping)
       expect(service_template.vm_resources.collect(&:resource)).to match_array([vm1, vm2])
       expect(service_template.vm_resources.find_by(:resource_id => vm1.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id)
       expect(service_template.vm_resources.find_by(:resource_id => vm2.id).options)
-        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id)
+        .to eq("pre_ansible_playbook_service_template_id" => apst.id, "post_ansible_playbook_service_template_id" => apst.id, "osp_security_group_id" => security_group1.id, "osp_flavor_id" => flavor1.id)
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
       expect(service_template.resource_actions.first).to have_attributes(
         :action => 'Provision',
