@@ -76,6 +76,63 @@ describe MiqReport::Generator do
     end
   end
 
+  describe "creates task, queue, audit event" do
+    let(:report) do
+      MiqReport.new(
+        :name      => "Custom VM report",
+        :title     => "Custom VM report",
+        :rpt_group => "Custom",
+        :rpt_type  => "Custom",
+        :db        => "ManageIQ::Providers::InfraManager::Vm",
+      )
+    end
+
+    before do
+      User.seed
+      EvmSpecHelper.local_miq_server
+      ServerRole.seed
+      expect(AuditEvent).to receive(:success)
+    end
+
+    it "#queue_generate_table" do
+      report.queue_generate_table(:userid => "admin")
+      task = MiqTask.first
+      expect(task).to have_attributes(
+        :name   => "Generate Report: '#{report.name}'",
+        :userid => "admin"
+      )
+
+      message = MiqQueue.find_by(:method_name => "_async_generate_table")
+      expect(message).to have_attributes(
+        :role        => "reporting",
+        :zone        => nil,
+        :class_name  => report.class.name,
+        :method_name => "_async_generate_table"
+      )
+
+      expect(message.args.first).to eq(task.id)
+    end
+
+    it "#queue_report_result" do
+      task_id = report.queue_report_result({:userid => "admin"}, {})
+      task = MiqTask.find(task_id)
+      expect(task).to have_attributes(
+        :name   => "Generate Report: '#{report.name}'",
+        :userid => "admin"
+      )
+
+      message = MiqQueue.find_by(:method_name => "build_report_result")
+      expect(message).to have_attributes(
+        :role        => "reporting",
+        :zone        => nil,
+        :class_name  => report.class.name,
+        :method_name => "build_report_result"
+      )
+
+      expect(message.args.first).to eq(task_id)
+    end
+  end
+
   describe "#cols_for_report" do
     it "uses cols" do
       rpt = MiqReport.new(:db => "VmOrTemplate", :cols => %w(vendor version name))

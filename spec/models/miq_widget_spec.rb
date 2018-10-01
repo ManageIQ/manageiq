@@ -273,6 +273,7 @@ describe MiqWidget do
 
       @q_options = {:queue_name  => "reporting",
                     :role        => "reporting",
+                    :zone        => nil,
                     :class_name  => @widget.class.name,
                     :instance_id => @widget.id,
                     :msg_timeout => 3600
