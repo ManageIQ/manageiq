@@ -56,7 +56,7 @@ class CustomButtonSet < ApplicationRecord
   #  - filtered custom_button_sets array when all visibilty expression custom buttons have been evaluated to false
   def self.filter_with_visibility_expression(custom_button_sets, object)
     custom_button_sets.each_with_object([]) do |custom_button_set, ret|
-      custom_button_from_set = CustomButton.where(:id => custom_button_set.custom_buttons.pluck(:id)).select(:id, :visibility_expression)
+      custom_button_from_set = CustomButton.where(:id => custom_button_set.custom_buttons.pluck(:id)).select(:id, :visibility_expression).order(:name)
       filtered_ids = custom_button_from_set.select { |x| x.evaluate_visibility_expression_for(object) }.pluck(:id)
       if filtered_ids.present?
         custom_button_set.set_data[:button_order] = filtered_ids
