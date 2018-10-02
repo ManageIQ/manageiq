@@ -206,7 +206,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ui_miq_server
-    MiqServer.in_region(region).find_by(:has_active_userinterface => true)
+    MiqServer.in_region(region).recently_active.find_by(:has_active_userinterface => true)
   end
 
   def remote_ui_ipaddress
@@ -225,7 +225,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ws_miq_server
-    MiqServer.in_region(region).find_by(:has_active_webservices => true)
+    MiqServer.in_region(region).recently_active.find_by(:has_active_webservices => true)
   end
 
   def remote_ws_address

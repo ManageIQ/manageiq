@@ -191,22 +191,83 @@ describe MiqRegion do
   end
 
   describe "#remote_ws_url" do
-    let(:ip) { "1.1.1.94" }
     let(:hostname) { "www.manageiq.org" }
-    let(:url) { "https://www.manageiq.org" }
-    let!(:web_server) do
-      FactoryGirl.create(:miq_server, :has_active_webservices => true,
-                                      :hostname               => hostname,
-                                      :ipaddress              => ip)
+
+    context "with a recently active server" do
+      let(:ip) { "1.1.1.94" }
+      let(:url) { "https://www.manageiq.org" }
+      let!(:web_server) do
+        FactoryGirl.create(:miq_server, :has_active_webservices => true,
+                                        :hostname               => hostname,
+                                        :ipaddress              => ip)
+      end
+
+      it "fetches the url from server" do
+        expect(region.remote_ws_url).to eq("https://#{ip}")
+      end
+
+      it "fetches the url from the setting" do
+        Vmdb::Settings.save!(web_server, :webservices => {:url => url})
+        expect(region.remote_ws_url).to eq(url)
+      end
     end
 
-    it "fetches the url from server" do
-      expect(region.remote_ws_url).to eq("https://#{ip}")
+    it "with no recently active servers" do
+      FactoryGirl.create(:miq_server, :has_active_webservices => true, :hostname => hostname, :last_heartbeat => 11.minutes.ago.utc)
+
+      expect(region.remote_ws_url).to be_nil
+    end
+  end
+
+  describe "#remote_ui_url" do
+    let(:hostname) { "www.manageiq.org" }
+
+    context "with a recently active server" do
+      let(:ip) { "1.1.1.94" }
+      let(:url) { "http://localhost:3000" }
+      let!(:ui_server) do
+        FactoryGirl.create(:miq_server, :has_active_userinterface => true,
+                                        :hostname                 => hostname,
+                                        :ipaddress                => ip)
+      end
+
+      it "fetches the url from server" do
+        expect(region.remote_ui_url).to eq("https://#{hostname}")
+      end
     end
 
-    it "fetches the url from the setting" do
-      Vmdb::Settings.save!(web_server, :webservices => {:url => url})
-      expect(region.remote_ws_url).to eq(url)
+    it "with no recently active servers" do
+      FactoryGirl.create(:miq_server, :has_active_userinterface => true, :hostname => hostname, :last_heartbeat => 11.minutes.ago.utc)
+
+      expect(region.remote_ws_url).to be_nil
+    end
+  end
+
+  describe "#remote_ui_miq_server" do
+    it "with no recently active servers" do
+      server = FactoryGirl.create(:miq_server, :has_active_userinterface => true, :hostname => "example.com")
+
+      expect(region.remote_ui_miq_server).to eq(server)
+    end
+
+    it "with no recently active servers" do
+      FactoryGirl.create(:miq_server, :has_active_userinterface => true, :hostname => "example.com", :last_heartbeat => 1.month.ago.utc)
+
+      expect(region.remote_ui_miq_server).to be_nil
+    end
+  end
+
+  describe "#remote_ws_miq_server" do
+    it "with no recently active servers" do
+      server = FactoryGirl.create(:miq_server, :has_active_webservices => true, :hostname => "example.com")
+
+      expect(region.remote_ws_miq_server).to eq(server)
+    end
+
+    it "with no recently active servers" do
+      FactoryGirl.create(:miq_server, :has_active_webservices => true, :hostname => "example.com", :last_heartbeat => 1.month.ago.utc)
+
+      expect(region.remote_ws_miq_server).to be_nil
     end
   end
 end
