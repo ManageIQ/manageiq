@@ -66,7 +66,7 @@ module VmOrTemplate::Operations
 
   def raw_rename(new_name)
     unless ext_management_system
-      raise _("VM has no Provider, unable to renamey VM")
+      raise _("VM has no Provider, unable to rename VM")
     end
     run_command_via_parent(:vm_rename, :new_name => new_name)
   end
