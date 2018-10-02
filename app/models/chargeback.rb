@@ -17,10 +17,15 @@ class Chargeback < ActsAsArModel
 
     data = {}
     rates = RatesCache.new(options)
+
+    _log.debug("With report options: #{options.inspect}")
+
     ConsumptionHistory.for_report(self, options) do |consumption|
       rates_to_apply = rates.get(consumption)
 
       key = report_row_key(consumption)
+      _log.debug("Report row key #{key}")
+
       data[key] ||= new(options, consumption)
 
       chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
@@ -148,14 +153,23 @@ class Chargeback < ActsAsArModel
   def calculate_costs(consumption, rates)
     calculate_fixed_compute_metric(consumption)
     self.class.try(:refresh_dynamic_metric_columns)
-
+    _log.debug("Consumption Type: #{consumption.class}")
     rates.each do |rate|
+      _log.debug("Calculation with rate: #{rate.id} #{rate.description}(#{rate.rate_type})")
       rate.rate_details_relevant_to(relevant_fields, self.class.attribute_names).each do |r|
+        _log.debug("Metric: #{r.chargeable_field.metric} Group: #{r.chargeable_field.group} Source: #{r.chargeable_field.source}")
+
         r.charge(relevant_fields, consumption, @options).each do |field, value|
           next unless self.class.attribute_names.include?(field)
+          r.chargeback_tiers.each do |tier|
+            _log.debug("Start: #{tier.start} Finish: #{tier.finish} Fixed Rate: #{tier.fixed_rate} Variable Rate: #{tier.variable_rate}")
+          end
+
           next if @options.skip_field_accumulation?(field, self[field])
 
+          _log.debug("Calculation with field: #{field} and with value: #{value}")
           (self[field] = (self[field] || 0) + value)
+          _log.debug("Accumulated value: #{self[field]}")
         end
       end
     end
