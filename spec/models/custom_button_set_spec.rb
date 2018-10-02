@@ -25,7 +25,7 @@ describe CustomButtonSet do
     let(:vm_1)              { FactoryGirl.create(:vm_vmware, :name => 'vm_1') }
     let(:custom_button_1)   { FactoryGirl.create(:custom_button, :applies_to => vm_1) }
     let(:miq_expression)    { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => "vm_1"}) }
-    let(:custom_button_2)   { FactoryGirl.create(:custom_button, :applies_to => vm_1, :visibility_expression => miq_expression) }
+    let(:custom_button_2)   { FactoryGirl.create(:custom_button, :name => "DDD", :applies_to => vm_1, :visibility_expression => miq_expression) }
     let(:set_data)          { {:applies_to_class => "Vm", :button_order => [custom_button_1.id, custom_button_2.id]} }
     let(:custom_button_set) { FactoryGirl.create(:custom_button_set, :name => "set_1", :set_data => set_data) }
 
@@ -42,12 +42,20 @@ describe CustomButtonSet do
     end
 
     context 'when any visibility_expression is evaluated to false and any to true' do
-      let(:miq_expression_false) { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => "vm_2"}) }
-      let(:custom_button_1)      { FactoryGirl.create(:custom_button, :applies_to => vm_1, :visibility_expression => miq_expression_false) }
+      let(:miq_expression_false)   { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => "vm_2"}) }
+      let(:custom_button_1)        { FactoryGirl.create(:custom_button, :applies_to => vm_1, :visibility_expression => miq_expression_false) }
+      let(:custom_button_3)        { FactoryGirl.create(:custom_button, :name => "ZZZ", :applies_to => vm_1, :visibility_expression => miq_expression) }
+      let(:custom_button_4)        { FactoryGirl.create(:custom_button, :name => "BBBB", :applies_to => vm_1, :visibility_expression => miq_expression) }
+      let(:set_data)               { {:applies_to_class => "Vm", :button_order => [custom_button_1.id, custom_button_2.id, custom_button_3.id]} }
+      let(:custom_button_set)      { FactoryGirl.create(:custom_button_set, :name => "set_1", :set_data => set_data) }
 
-      it 'returns filtered array of CustomButtonSet and CustomButtons' do
+      before do
+        [custom_button_3, custom_button_4].each { |x| custom_button_set.add_member(x) }
+      end
+
+      it 'returns filtered array of CustomButtonSet and CustomButtons ordered by name' do
         set = described_class.filter_with_visibility_expression([custom_button_set], vm_1).first
-        expect(set.set_data[:button_order]).to eq([custom_button_2.id])
+        expect(set.set_data[:button_order]).to eq([custom_button_4.id, custom_button_2.id, custom_button_3.id])
       end
 
       context 'all CustomButtons#visibility_expression are evaluated to false' do
