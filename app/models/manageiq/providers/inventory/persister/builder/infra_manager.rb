@@ -205,17 +205,35 @@ module ManageIQ::Providers
           )
         end
 
-        def switches
+        def distributed_virtual_switches
           add_properties(
-            :manager_ref => %i(uid_ems), # TODO looks like switches are using a bad association, this one is defined as through hosts
+            :manager_ref    => %i(uid_ems),
+            :secondary_refs => {:by_switch_uuid => %i(switch_uuid)}
           )
           add_common_default_values
         end
 
-        def lans
+        def host_virtual_switches
+          add_properties(
+            :manager_ref                  => %i(host uid_ems),
+            :model_class                  => ::Switch,
+            :parent_inventory_collections => %i(hosts)
+          )
+        end
+
+        def host_virtual_lans
           add_properties(
             :manager_ref                  => %i(switch uid_ems),
-            :parent_inventory_collections => %i(hosts),
+            :model_class                  => ::Lan,
+            :parent_inventory_collections => %i(host_virtual_switches),
+          )
+        end
+
+        def distributed_virtual_lans
+          add_properties(
+            :manager_ref                  => %i(switch uid_ems),
+            :model_class                  => ::Lan,
+            :parent_inventory_collections => %i(distributed_virtual_switches),
           )
         end
 
