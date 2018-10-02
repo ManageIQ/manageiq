@@ -20,6 +20,8 @@ module ManageIQ::Providers
     has_many :snapshots,                  :through => :vms_and_templates
     has_many :switches, -> { distinct },  :through => :hosts
     has_many :lans, -> { distinct },      :through => :hosts
+    has_many :distributed_virtual_lans,   :through => :distributed_virtual_switches, :source => :lans
+    has_many :host_virtual_lans,          :through => :host_virtual_switches, :source => :lans
     has_many :subnets, -> { distinct },   :through => :lans
     has_many :networks,                   :through => :hardwares
     has_many :guest_devices,              :through => :hardwares
