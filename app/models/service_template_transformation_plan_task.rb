@@ -1,5 +1,6 @@
 class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   belongs_to :conversion_host
+  delegate :source_transport_method, :to => :conversion_host
 
   def self.base_model
     ServiceTemplateTransformationPlanTask
@@ -169,6 +170,22 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_FINISHED)
   end
 
+  def conversion_options
+    source_cluster = source.ems_cluster
+    source_storage = source.hardware.disks.select { |d| d.device_type == 'disk' }.first.storage
+    destination_cluster = transformation_destination(source_cluster)
+    destination_storage = transformation_destination(source_storage)
+
+    [
+      { 
+        :source_disks     => source_disks.map { |disk| disk[:path] },
+        :network_mappings => network_mappings
+      },
+      send("conversion_options_source_provider_#{source_ems.emstype}_#{source_transport_method}", source_storage),
+      send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage )   
+    ].inject(&:merge)
+  end 
+
   private
 
   def vm_resource
@@ -184,4 +201,60 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :message => msg
     )
   end
+
+  def conversion_options_source_provider_vmwarews_vddk(_storage)
+    {   
+      :vm_name            => source.name,
+      :transport_method   => 'vddk',
+      :vmware_fingerprint => source.host.fingerprint,
+      :vmware_uri         => URI::Generic.build(
+        :scheme   => 'esx',
+        :userinfo => CGI.escape(source.host.authentication_userid),
+        :host     => source.host.ipaddress,
+        :path     => '/',
+        :query    => { :no_verify => 1 }.to_query
+      ).to_s,
+      :vmware_password    => source.host.authentication_password
+    }   
+  end 
+
+  def conversion_options_source_provider_vmwarews_ssh(storage)
+    {   
+      :vm_name          => URI::Generic.build(:scheme => 'ssh', :userinfo => 'root', :host => source.host.ipaddress, :path => "/vmfs/volumes").to_s + "/#{storage.name}/#{source.location}",
+      :transport_method => 'ssh'
+    }   
+  end 
+
+  def conversion_options_destination_provider_rhevm(cluster, storage)
+    {   
+      :rhv_url             => URI::Generic.build(:scheme => 'https', :host => destination_ems.hostname, :path => '/ovirt-engine/api').to_s,
+      :rhv_cluster         => cluster.name,
+      :rhv_storage         => storage.name,
+      :rhv_password        => destination_ems.authentication_password,
+      :install_drivers     => true,
+      :insecure_connection => true
+    }   
+  end 
+
+  def conversion_options_destination_provider_openstack(cluster, storage)
+    {   
+      :osp_environment            => {
+        :os_no_cache         => true,
+        :os_auth_url         => URI::Generic.build(
+          :scheme => destination_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
+          :host   => destination_ems.hostname,
+          :port   => destination_ems.port,
+          :path   => destination_ems.api_version
+        ),
+        :os_user_domain_name => destination_ems.uid_ems,
+        :os_username         => destination_ems.authentication_userid,
+        :os_password         => destination_ems.authentication_password,
+        :os_project_name     => cluster.name
+      },  
+      :osp_destination_project_id => cluster.ems_ref,
+      :osp_volume_type_id         => storage.ems_ref,
+      :osp_flavor_id              => destination_flavor.ems_ref,
+      :osp_security_groups_ids    => [destination_security_group.ems_ref]
+    }   
+  end 
 end
