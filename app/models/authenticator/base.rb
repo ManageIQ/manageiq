@@ -196,7 +196,9 @@ module Authenticator
     end
 
     def audit_new_user(audit, user)
-      audit_success(audit.merge(:message => "User creation successful for User: #{user.name} with ID: #{user.userid}"))
+      msg = "User creation successful for User: #{user.name} with ID: #{user.userid}"
+      audit_success(audit.merge(:message => msg))
+      MiqEvent.raise_evm_event_queue(MiqServer.my_server, "user_created", :event_details => msg)
     end
 
     def authorize?
