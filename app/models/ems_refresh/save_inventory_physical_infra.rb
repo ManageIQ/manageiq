@@ -115,17 +115,17 @@ module EmsRefresh::SaveInventoryPhysicalInfra
   end
 
   #
-  # Saves the disks information of a storage
+  # Saves the disks information of a resource
   #
-  def save_physical_disks_inventory(physical_storage, hashes)
+  def save_physical_disks_inventory(parent, hashes)
     return if hashes.nil?
 
     # Update the associated ids
     hashes.each do |h|
-      h[:physical_storage_id] = h.delete(:physical_storage).try(:[], :id)
+      h[:canister_id] = h.delete(:canister).try(:[], :id)
     end
 
-    save_inventory_multi(physical_storage.physical_disks, hashes, :use_association, [:physical_storage_id])
+    save_inventory_multi(parent.physical_disks, hashes, :use_association, [:ems_ref])
   end
 
   #
