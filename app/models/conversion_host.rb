@@ -4,11 +4,10 @@ class ConversionHost < ApplicationRecord
   acts_as_miq_taggable
 
   belongs_to :resource, :polymorphic => true
+  has_many :service_template_transformation_plan_tasks, :dependent => :nullify
 
   def active_tasks
-    ServiceTemplateTransformationPlanTask.where(:state => 'active').select do |task|
-      task.conversion_host == self
-    end
+    service_template_transformation_plan_tasks { active }
   end
 
   def eligible?

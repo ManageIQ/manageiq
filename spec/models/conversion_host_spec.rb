@@ -1,22 +1,18 @@
 describe ConversionHost do
   let(:apst) { FactoryGirl.create(:service_template_ansible_playbook) }
-  let(:conversion_host) { FactoryGirl.create(:conversion_host) }
 
   context "provider independent methods" do
-    let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task) }
-    let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task) }
-    let(:task_3) { FactoryGirl.create(:service_template_transformation_plan_task) }
-
-    let(:conversion_host_1) { FactoryGirl.create(:conversion_host) }
-    let(:conversion_host_2) { FactoryGirl.create(:conversion_host) }
+    let(:host) { FactoryGirl.create(:host) }
+    let(:vm) { FactoryGirl.create(:vm_or_template) }
+    let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host) }
+    let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm) }
+    let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
+    let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task, :conversion_host => conversion_host_1) }
+    let(:task_3) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_2) }
 
     before do
       conversion_host_1.concurrent_transformation_limit = "2"
       conversion_host_2.concurrent_transformation_limit = "1"
-
-      task_1.options[:transformation_host_id] = conversion_host_1.id
-      task_2.options[:transformation_host_id] = conversion_host_1.id
-      task_3.options[:transformation_host_id] = conversion_host_2.id
 
       allow(ServiceTemplateTransformationPlanTask).to receive(:where).with(:state => 'active').and_return([task_1, task_3])
     end
@@ -85,6 +81,7 @@ describe ConversionHost do
       let(:dst_storage) { FactoryGirl.create(:storage) }
       let(:dst_lan_1) { FactoryGirl.create(:lan) }
       let(:dst_lan_2) { FactoryGirl.create(:lan) }
+      let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => FactoryGirl.create(:host, :ext_management_system => dst_ems)) }
 
       let(:mapping) do
         FactoryGirl.create(
@@ -115,11 +112,11 @@ describe ConversionHost do
 
       let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
       let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
-      let(:task) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm) }
+      let(:task) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm, :conversion_host => conversion_host) }
 
       before do
-        task.options[:transformation_host_id] = conversion_host.id
         allow(task).to receive(:source_disks).and_return(source_disks)
+        allow(conversion_host).to receive(:ipaddress).and_return('10.0.1.1')
       end
 
       context "transport method is vddk" do
@@ -177,6 +174,7 @@ describe ConversionHost do
       let(:dst_cloud_network_2) { FactoryGirl.create(:cloud_network) }
       let(:dst_flavor) { FactoryGirl.create(:flavor) }
       let(:dst_security_group) { FactoryGirl.create(:security_group) }
+      let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => FactoryGirl.create(:vm_or_template, :ext_management_system => dst_ems)) }
 
       let(:mapping) do
         FactoryGirl.create(
@@ -209,10 +207,9 @@ describe ConversionHost do
 
       let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
       let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
-      let(:task) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm) }
+      let(:task) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm, :conversion_host => conversion_host) }
 
       before do
-        task.options[:transformation_host_id] = conversion_host.id
         allow(task).to receive(:source_disks).and_return(source_disks)
       end
 

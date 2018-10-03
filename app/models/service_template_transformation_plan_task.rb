@@ -1,4 +1,6 @@
 class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
+  belongs_to :conversion_host
+
   def self.base_model
     ServiceTemplateTransformationPlanTask
   end
@@ -44,10 +46,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def task_active
     vm_resource.update_attributes(:status => ServiceResource::STATUS_ACTIVE)
-  end
-
-  def conversion_host
-    ConversionHost.find_by(:id => options[:transformation_host_id])
   end
 
   def source_ems
@@ -110,7 +108,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def transformation_log
     host = conversion_host
     if host.nil?
-      msg = "Conversion host was not found: ID [#{options[:transformation_host_id]}]. Download of transformation log aborted."
+      msg = "Conversion host was not found. Download of transformation log aborted."
       _log.error(msg)
       raise MiqException::Error, msg
     end
@@ -144,7 +142,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     userid ||= User.current_userid || 'system'
     host = conversion_host
     if host.nil?
-      msg = "Conversion host was not found: ID [#{options[:transformation_host_id]}]. Cannot queue the download of transformation log."
+      msg = "Conversion host was not found. Cannot queue the download of transformation log."
       return create_error_status_task(userid, msg).id
     end
 

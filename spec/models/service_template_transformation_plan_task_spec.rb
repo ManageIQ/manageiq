@@ -19,6 +19,8 @@ describe ServiceTemplateTransformationPlanTask do
     let(:vm)  { FactoryGirl.create(:vm_or_template) }
     let(:vm2)  { FactoryGirl.create(:vm_or_template) }
     let(:apst) { FactoryGirl.create(:service_template_ansible_playbook) }
+    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host) }
+
     let(:mapping) do
       FactoryGirl.create(
         :transformation_mapping,
@@ -103,16 +105,9 @@ describe ServiceTemplateTransformationPlanTask do
     end
 
     describe '#transformation_log_queue' do
-      let(:conversion_host_id) { 22 }
-
-      before do
-        task.options[:transformation_host_id] = conversion_host_id
-        task.save!
-      end
-
       context 'when conversion host exists' do
         before do
-          FactoryGirl.create(:conversion_host, :id => conversion_host_id, :resource => host)
+          task.conversion_host = conversion_host
 
           allow(described_class).to receive(:find).and_return(task)
 
@@ -147,7 +142,7 @@ describe ServiceTemplateTransformationPlanTask do
         it 'returns an error message' do
           taskid = task.transformation_log_queue('user')
           expect(MiqTask.find(taskid)).to have_attributes(
-            :message => "Conversion host was not found: ID [#{conversion_host_id}]. Cannot queue the download of transformation log.",
+            :message => "Conversion host was not found. Cannot queue the download of transformation log.",
             :status  => 'Error'
           )
         end
@@ -155,11 +150,9 @@ describe ServiceTemplateTransformationPlanTask do
     end
 
     describe '#transformation_log' do
-      let(:conversion_host) { FactoryGirl.create(:conversion_host, :id => 9, :resource => host) }
-
       before do
         EvmSpecHelper.create_guid_miq_server_zone
-        task.options[:transformation_host_id] = conversion_host.id
+        task.conversion_host = conversion_host
         task.options.store_path(:virtv2v_wrapper, "v2v_log", "/path/to/log.file")
         task.save!
 
