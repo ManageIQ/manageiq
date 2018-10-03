@@ -479,6 +479,8 @@ class Classification < ApplicationRecord
     end
   end
 
+  private_class_method :add_entries_from_hash
+
   def validate_uniqueness_on_tag_name
     tag = find_tag
     return if tag.nil?
@@ -523,6 +525,8 @@ class Classification < ApplicationRecord
 
     "#{cname}: #{ename}"
   end
+
+  private_class_method :tag2human
 
   def find_tag
     Tag.find_by_classification_name(name, region_id, ns, parent_id)

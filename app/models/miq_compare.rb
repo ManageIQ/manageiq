@@ -165,6 +165,8 @@ class MiqCompare
     end
   end
 
+  private_class_method :build_sections
+
   # Add an include section to the final collected all_sections hash provided
   def self.build_section(all_sections, name, key = nil, group = nil)
     name = name.to_sym
@@ -185,6 +187,8 @@ class MiqCompare
       model.titleize
     end
   end
+
+  private_class_method :build_section
 
   # Resets the master_list to an initial version without dynamic subsections,
   # nor the tag columns
