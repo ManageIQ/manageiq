@@ -55,7 +55,7 @@ class ServiceRetireTask < MiqRetireTask
         :parent_service_id   => parent_service.id,
         :parent_task_id      => parent_task.id,
       )
-      task.request_type = svc_rsc.resource.type.demodulize.downcase + "_retire"
+      task.request_type = svc_rsc.resource.type.demodulize.underscore.downcase + "_retire"
       task.source = svc_rsc.resource
       parent_task.miq_request_tasks << task
       task.save!
