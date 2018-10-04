@@ -96,7 +96,7 @@ class CustomButton < ApplicationRecord
   end
 
   def publish_event(source, target, args)
-    target.kind_of?(Array) ? target.each { |t| create_event(source, t, args) } : create_event(source, target, args)
+    Array(target).each { |t| create_event(source, t, args) }
   end
 
   def create_event(source, target, args)

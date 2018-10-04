@@ -325,22 +325,43 @@ describe CustomButton do
           )
         end
 
-        it "with multiple vms" do
-          Timecop.freeze(Time.now.utc) do
-            User.with_user(user) { custom_button.send(method, [vm, vm2, vm3], 'UI') }
-            expect(CustomButtonEvent.first.timestamp).to be_within(0.01).of(Time.now.utc)
+        describe "multiple vms" do
+          it "with an array" do
+            Timecop.freeze(Time.now.utc) do
+              User.with_user(user) { custom_button.send(method, [vm, vm2, vm3], 'UI') }
+              expect(CustomButtonEvent.first.timestamp).to be_within(0.01).of(Time.now.utc)
+            end
+
+            expect(CustomButtonEvent.count).to eq(3)
+            expect(CustomButtonEvent.first).to have_attributes(
+              :source      => 'UI',
+              :target_id   => vm.id,
+              :target_type => 'VmOrTemplate',
+              :type        => 'CustomButtonEvent',
+              :event_type  => 'button.trigger.start',
+              :user_id     => user.id,
+              :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+            )
           end
 
-          expect(CustomButtonEvent.count).to eq(3)
-          expect(CustomButtonEvent.first).to have_attributes(
-            :source      => 'UI',
-            :target_id   => vm.id,
-            :target_type => 'VmOrTemplate',
-            :type        => 'CustomButtonEvent',
-            :event_type  => 'button.trigger.start',
-            :user_id     => user.id,
-            :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
-          )
+          it "with an ActiveRecord::Relation" do
+            vm && vm2 && vm3
+            Timecop.freeze(Time.now.utc) do
+              User.with_user(user) { custom_button.send(method, Vm.all, 'UI') }
+              expect(CustomButtonEvent.first.timestamp).to be_within(0.01).of(Time.now.utc)
+            end
+
+            expect(CustomButtonEvent.count).to eq(3)
+            expect(CustomButtonEvent.first).to have_attributes(
+              :source      => 'UI',
+              :target_id   => vm.id,
+              :target_type => 'VmOrTemplate',
+              :type        => 'CustomButtonEvent',
+              :event_type  => 'button.trigger.start',
+              :user_id     => user.id,
+              :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+            )
+          end
         end
       end
     end
