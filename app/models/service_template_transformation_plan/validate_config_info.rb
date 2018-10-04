@@ -30,6 +30,8 @@ module ServiceTemplateTransformationPlan::ValidateConfigInfo
           vm_options = {}
           vm_options[:pre_ansible_playbook_service_template_id] = pre_service_id if vm_hash[:pre_service]
           vm_options[:post_ansible_playbook_service_template_id] = post_service_id if vm_hash[:post_service]
+          vm_options[:osp_security_group_id] = vm_hash[:osp_security_group_id] if vm_hash[:osp_security_group_id].present?
+          vm_options[:osp_flavor_id] = vm_hash[:osp_flavor_id] if vm_hash[:osp_flavor_id].present?
           vms << {:vm => vm_obj, :options => vm_options}
         end
       end
