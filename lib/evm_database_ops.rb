@@ -114,7 +114,13 @@ class EvmDatabaseOps
         connect_opts[:uri] = File.dirname(connect_opts[:uri])
       else
         connect_opts[:remote_file_name] ||= File.basename(backup_file_name(action))
-        backup_folder = action == :dump ? "db_dump" : "db_backup"
+        backup_folder = if connect_opts[:skip_directory]
+                          []
+                        elsif action == :dump
+                          "db_dump"
+                        else
+                          "db_backup"
+                        end
         #
         # If the passed in URI contains query parameters, ignore them
         # when creating the dump file name. They'll be used in the session object.
