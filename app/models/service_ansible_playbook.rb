@@ -1,4 +1,6 @@
 class ServiceAnsiblePlaybook < ServiceGeneric
+  include AnsibleExtraVarsMixin
+
   delegate :job_template, :to => :service_template, :allow_nil => true
 
   # A chance for taking options from automate script to override options from a service dialog
@@ -13,7 +15,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def execute(action)
     jt = job_template(action)
-    opts = get_job_options(action).deep_merge(:extra_vars => {'manageiq' => manageiq_extra_vars(action), 'manageiq_connection' => manageiq_connection_env})
+    opts = get_job_options(action).deep_merge(
+      :extra_vars => {
+        'manageiq'            => service_manageiq_env(action),
+        'manageiq_connection' => manageiq_connection_env(evm_owner)
+      }
+    )
     hosts = opts.delete(:hosts)
 
     _log.info("Launching Ansible Tower job with options:")
@@ -61,32 +68,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   private
 
-  def manageiq_extra_vars(action)
+  def service_manageiq_env(action)
     {
-      'api_url'     => api_url,
-      'api_token'   => api_token,
-      'service'     => href_slug,
-      'user'        => evm_owner.href_slug,
-      'group'       => miq_group.href_slug,
-      'action'      => action,
-      'X_MIQ_Group' => evm_owner.current_group.description
-    }.merge(request_options_extra_vars)
-  end
-
-  def manageiq_connection_env
-    {
-      'url'         => api_url,
-      'token'       => api_token,
-      'X_MIQ_Group' => evm_owner.current_group.description
-    }
-  end
-
-  def api_token
-    @api_token ||= Api::UserTokenService.new.generate_token(evm_owner.userid, 'api')
-  end
-
-  def api_url
-    @api_url ||= MiqRegion.my_region.remote_ws_url
+      'service' => href_slug,
+      'action'  => action
+    }.merge(manageiq_env(evm_owner, miq_group, miq_request_task))
+     .merge(request_options_extra_vars)
   end
 
   def request_options_extra_vars
