@@ -1,6 +1,25 @@
 describe CustomButton do
-  context "with no buttons" do
+  describe '.with_array_order' do
+    context 'order by array' do
+      let!(:custom_button_1) { FactoryGirl.create(:custom_button, :name => 'AAA', :applies_to_id => 100, :applies_to_class => Vm) }
+      let!(:custom_button_2) { FactoryGirl.create(:custom_button, :name => 'BBB', :applies_to_id => 200, :applies_to_class => Vm) }
+      let!(:custom_button_3) { FactoryGirl.create(:custom_button, :name => 'CCC', :applies_to_id => 300, :applies_to_class => Vm) }
 
+      context 'by bigint column' do
+        it 'orders by memory_shares column' do
+          expect(CustomButton.with_array_order(%w(300 100 200), :applies_to_id).ids).to eq([custom_button_3.id, custom_button_1.id, custom_button_2.id])
+        end
+      end
+
+      context 'by string column' do
+        it 'orders by name column' do
+          expect(CustomButton.with_array_order(%w(BBB AAA CCC), :name, :text).ids).to eq([custom_button_2.id, custom_button_1.id, custom_button_3.id])
+        end
+      end
+    end
+  end
+
+  context "with no buttons" do
     describe '#evaluate_enablement_expression_for' do
       let(:miq_expression) { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => 'vm_1'}) }
       let(:vm)             { FactoryGirl.create(:vm_vmware, :name => 'vm_1') }
