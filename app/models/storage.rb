@@ -834,16 +834,6 @@ class Storage < ApplicationRecord
     with_relationship_type("vm_scan_storage_affinity") { parents }
   end
 
-  def self.batch_operation_supported?(operation, ids)
-    Storage.where(:id => ids).all? do |s|
-      if s.respond_to?("supports_#{operation}?")
-        s.public_send("supports_#{operation}?")
-      else
-        s.public_send("validate_#{operation}")[:available]
-      end
-    end
-  end
-
   # @param [String, Storage] store_type upcased version of the storage type
   def self.supports?(store_type)
     Storage::SUPPORTED_STORAGE_TYPES.include?(store_type)
