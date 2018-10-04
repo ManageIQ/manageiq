@@ -1098,7 +1098,9 @@
   :history:
     :keep_tasks: 1.week
     :purge_window_size: 1000
-
+:transformation:
+  :limits:
+    :max_concurrent_tasks_per_host: 10
 :ui:
   :mark_translated_strings: false
   :url:

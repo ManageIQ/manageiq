@@ -50,12 +50,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def source_ems
-    options[:source_ems_id] ||= source.ext_management_system.id
     source.ext_management_system
   end
 
   def destination_ems
-    options[:destination_ems_id] ||= transformation_destination(source.ems_cluster).ext_management_system.id
     transformation_destination(source.ems_cluster).ext_management_system
   end
 

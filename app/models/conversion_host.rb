@@ -8,9 +8,8 @@ class ConversionHost < ApplicationRecord
   has_many :active_tasks, -> { where(:state => 'active') }, :class_name => ServiceTemplateTransformationPlanTask
 
   def eligible?
-    return true if concurrent_transformation_limit.nil?
-    puts "Active tasks: #{active_tasks}"
-    active_tasks.size < concurrent_transformation_limit.to_i
+    max_tasks = max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
+    active_tasks.size < max_tasks
   end
 
   def source_transport_method
