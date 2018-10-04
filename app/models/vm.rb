@@ -1,7 +1,7 @@
 class Vm < VmOrTemplate
   default_scope { where(:template => false) }
-  has_one :container_deployment, :through => :container_deployment_node
   has_one :container_deployment_node
+  has_one :container_deployment, :through => :container_deployment_node
 
   virtual_has_one :supported_consoles, :class_name => "Hash"
 
