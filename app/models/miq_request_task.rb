@@ -22,8 +22,6 @@ class MiqRequestTask < ApplicationRecord
 
   validates_inclusion_of :status, :in => %w( Ok Warn Error Timeout )
 
-  scope :active, -> { where(:state => "active") }
-
   include MiqRequestMixin
   include TenancyMixin
 
