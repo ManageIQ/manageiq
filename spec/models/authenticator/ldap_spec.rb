@@ -278,6 +278,21 @@ describe Authenticator::Ldap do
           expect(User.find_by_userid(task.userid)).to eq(alice)
         end
 
+        context "new user creation" do
+          let(:username) { 'bob' }
+          it "logs the success" do
+            authenticate
+            expect(MiqQueue.count).to eq 1
+            expect(MiqQueue.first.args.last(2)).to eq(
+              ["user_created",
+                {
+                  :event_details => "User creation successful for User: Bob Builderson with ID: bob"
+                }
+              ]
+            )
+          end
+        end
+
         context "with no corresponding LDAP user" do
           let(:alice_data) { nil }
           it "fails" do

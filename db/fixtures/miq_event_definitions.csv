@@ -4,6 +4,9 @@ name,description,event_type,set_type
 #
 login_failed,Login failed,Default,authentication
 
+# Authorization
+user_created,User created,Default,authorization
+
 #
 # EVM Server operations
 #
