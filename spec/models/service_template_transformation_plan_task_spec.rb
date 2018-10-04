@@ -346,7 +346,7 @@ describe ServiceTemplateTransformationPlanTask do
           end
 
           it "generates conversion options hash" do
-            expect(task_1.conversion_options).to eq( 
+            expect(task_1.conversion_options).to eq(
               :vm_name             => src_vm_1.name,
               :transport_method    => 'vddk',
               :vmware_fingerprint  => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
@@ -362,7 +362,7 @@ describe ServiceTemplateTransformationPlanTask do
               :insecure_connection => true
             )
           end
-        end 
+        end
 
         context "transport method is ssh" do
           before do
@@ -371,7 +371,7 @@ describe ServiceTemplateTransformationPlanTask do
           end
 
           it "generates conversion options hash" do
-            expect(task_1.conversion_options).to eq( 
+            expect(task_1.conversion_options).to eq(
               :vm_name             => "ssh://root@10.0.0.1/vmfs/volumes/#{src_storage.name}/#{src_vm_1.location}",
               :transport_method    => 'ssh',
               :rhv_url             => "https://#{dst_ems.hostname}/ovirt-engine/api",
@@ -384,7 +384,7 @@ describe ServiceTemplateTransformationPlanTask do
               :insecure_connection => true
             )
           end
-        end 
+        end
       end
 
       context 'destination is openstack' do
