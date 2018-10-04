@@ -5,7 +5,6 @@ require 'cgi'               # Used for URL encoding/decoding
 require 'metadata/linux/LinuxUsers'
 require 'metadata/linux/LinuxUtils'
 require 'metadata/ScanProfile/HostScanProfiles'
-require 'VMwareWebService/esx_thumb_print'
 
 class Host < ApplicationRecord
   include SupportsFeatureMixin
@@ -499,10 +498,6 @@ class Host < ApplicationRecord
 
   def mac_addresses
     hardware.nil? ? [] : hardware.mac_addresses
-  end
-
-  def thumbprint_sha1
-    ESXThumbPrint.new(ipaddress, authentication_userid, authentication_password).to_sha1
   end
 
   def has_config_data?

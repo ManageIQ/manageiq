@@ -176,14 +176,15 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_cluster = transformation_destination(source_cluster)
     destination_storage = transformation_destination(source_storage)
 
-    [
-      {
-        :source_disks     => source_disks.map { |disk| disk[:path] },
-        :network_mappings => network_mappings
-      },
-      send("conversion_options_source_provider_#{source_ems.emstype}_#{source_transport_method}", source_storage),
-      send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage)
-    ].inject(&:merge)
+    options = {
+      :source_disks     => source_disks.map { |disk| disk[:path] },
+      :network_mappings => network_mappings
+    }
+
+    options.merge!(send("conversion_options_source_provider_#{source_ems.emstype}_#{source_transport_method}", source_storage))
+    options.merge!(send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage))
+
+    options
   end
 
   private

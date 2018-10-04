@@ -5,10 +5,7 @@ class ConversionHost < ApplicationRecord
 
   belongs_to :resource, :polymorphic => true
   has_many :service_template_transformation_plan_tasks, :dependent => :nullify
-
-  def active_tasks
-    service_template_transformation_plan_tasks { active }
-  end
+  has_many :active_tasks, -> { active }, :class_name => ServiceTemplateTransformationPlanTask
 
   def eligible?
     return true if concurrent_transformation_limit.nil?
