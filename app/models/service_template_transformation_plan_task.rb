@@ -206,7 +206,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     {   
       :vm_name            => source.name,
       :transport_method   => 'vddk',
-      :vmware_fingerprint => source.host.fingerprint,
+      :vmware_fingerprint => source.host.thumbprint_sha1,
       :vmware_uri         => URI::Generic.build(
         :scheme   => 'esx',
         :userinfo => CGI.escape(source.host.authentication_userid),

@@ -283,7 +283,7 @@ describe ServiceTemplateTransformationPlanTask do
         allow(src_disk_1).to receive(:storage).and_return(src_storage)
         allow(src_disk_2).to receive(:storage).and_return(src_storage)
         allow(src_vm_1).to receive(:allocated_disk_storage).and_return(34_359_738_368)
-        allow(src_host).to receive(:fingerprint).and_return('01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67')
+        allow(src_host).to receive(:thumbprint_sha1).and_return('01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67')
         allow(src_host).to receive(:authentication_userid).and_return('esx_user')
         allow(src_host).to receive(:authentication_password).and_return('esx_passwd')
         task_1.options[:transformation_host_id] = conversion_host.id

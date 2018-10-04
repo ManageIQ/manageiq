@@ -5,6 +5,7 @@ require 'cgi'               # Used for URL encoding/decoding
 require 'metadata/linux/LinuxUsers'
 require 'metadata/linux/LinuxUtils'
 require 'metadata/ScanProfile/HostScanProfiles'
+require 'VMwareWebService/esx_thumb_print'
 
 class Host < ApplicationRecord
   include SupportsFeatureMixin
@@ -500,22 +501,8 @@ class Host < ApplicationRecord
     hardware.nil? ? [] : hardware.mac_addresses
   end
 
-  def fingerprint
-    require 'socket'
-    require 'openssl'
-
-    tcp_client = TCPSocket.new(host.ipaddress, 443)
-    ssl_context = OpenSSL::SSL::SSLContext('SSLv23_client')
-    ssl_content.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    ssl_client = OpenSSL::SSL::SSLSocker.new(tcp_client, ssl_context)
-    cert = OpenSSL::X509::Certificate.new(ssl_client.peer_cert)
-
-    Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
-  rescue => err
-    _log.log_backtrace(err)
-  ensure
-    ssl_client.sysclose
-    tcp_client.close
+  def thumbprint_sha1
+    ESXThumbPrint.new(ipaddress, authentication_userid, authentication_password).to_sha1
   end
 
   def has_config_data?
