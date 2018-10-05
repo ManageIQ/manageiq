@@ -291,12 +291,10 @@ describe ServiceTemplateTransformationPlanTask do
 
       it "finds the source ems based on source vm" do
         expect(task_1.source_ems).to eq(src_ems)
-        expect(task_1.options[:source_ems_id]).to eq(src_ems.id)
       end
 
       it 'find the destination ems based on mapping' do
         expect(task_1.destination_ems).to eq(dst_ems)
-        expect(task_1.options[:destination_ems_id]).to eq(dst_ems.id)
       end
 
       context 'destination is rhevm' do
