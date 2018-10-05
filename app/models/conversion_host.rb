@@ -37,8 +37,8 @@ class ConversionHost < ApplicationRecord
 
   def check_resource_credentials_openstack
     ssh_authentications = resource.ext_management_system.authentications
-                          .where(:authtype => 'ssh_keypair')
-                          .where.not(:userid => nil, :auth_key => nil)
+                                  .where(:authtype => 'ssh_keypair')
+                                  .where.not(:userid => nil, :auth_key => nil)
     !ssh_authentications.empty?
   end
 end
