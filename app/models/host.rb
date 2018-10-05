@@ -1091,9 +1091,7 @@ class Host < ApplicationRecord
     Patch.refresh_patches(self, patches)
   end
 
-  def refresh_services(ssu)
-    xml = MiqXml.createDoc(:miq).root.add_element(:services)
-
+  def collect_services(ssu)
     services = ssu.shell_exec("systemctl -a --type service --no-legend")
     if services
       # If there is a systemd use only that, chconfig is calling systemd on the background, but has misleading results
@@ -1102,6 +1100,12 @@ class Host < ApplicationRecord
       services = ssu.shell_exec("chkconfig --list")
       services = MiqLinux::Utils.parse_chkconfig_list(services)
     end
+  end
+
+  def refresh_services(ssu)
+    xml = MiqXml.createDoc(:miq).root.add_element(:services)
+
+    services = collect_services(ssu)
 
     services.each do |service|
       s = xml.add_element(:service,
