@@ -39,7 +39,6 @@ class ConversionHost < ApplicationRecord
     ssh_authentications = resource.ext_management_system.authentications.
       where(:authtype => 'ssh_keypair').
       where.not(:userid => nil, :auth_key => nil)
-    puts "Auth: #{ssh_authentications.inspect}"
     not ssh_authentications.empty?
   end
 end
