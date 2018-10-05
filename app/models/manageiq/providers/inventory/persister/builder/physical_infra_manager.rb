@@ -48,8 +48,14 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
-        def canisters
+        def physical_switches
+          add_properties(:manager_ref => %i(uid_ems))
           add_common_default_values
+        end
+
+        def customization_scripts
+          add_properties(:manager_ref => %i(manager_ref))
+          add_default_values(:manager_id => ->(persister) { persister.manager.id })
         end
       end
     end
