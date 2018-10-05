@@ -71,8 +71,8 @@ describe ConversionHost do
       end
 
       context "and host password is set" do
-          before { allow(host).to receive(:authentication_password).and_return('password') }
-          it { expect(conversion_host.check_resource_credentials).to eq(true) }
+        before { allow(host).to receive(:authentication_password).and_return('password') }
+        it { expect(conversion_host.check_resource_credentials).to eq(true) }
       end
     end
   end

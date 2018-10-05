@@ -32,13 +32,13 @@ class ConversionHost < ApplicationRecord
   private
 
   def check_resource_credentials_rhevm
-    not(resource.authentication_userid.nil? || resource.authentication_password.nil?)
+    !(resource.authentication_userid.nil? || resource.authentication_password.nil?)
   end
 
   def check_resource_credentials_openstack
-    ssh_authentications = resource.ext_management_system.authentications.
-      where(:authtype => 'ssh_keypair').
-      where.not(:userid => nil, :auth_key => nil)
-    not ssh_authentications.empty?
+    ssh_authentications = resource.ext_management_system.authentications
+                          .where(:authtype => 'ssh_keypair')
+                          .where.not(:userid => nil, :auth_key => nil)
+    !ssh_authentications.empty?
   end
 end
