@@ -31,6 +31,7 @@ describe TransformationMapping do
 
   describe '#search_vms_and_validate' do
     let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryGirl.create(:ext_management_system)) }
+    let(:vm2) { FactoryGirl.create(:vm_vmware, :ems_cluster => src, :ext_management_system => FactoryGirl.create(:ext_management_system)) }
     let(:inactive_vm) { FactoryGirl.create(:vm_vmware, :name => 'test_vm_inactive', :ems_cluster => src, :ext_management_system => nil) }
     let(:storage) { FactoryGirl.create(:storage) }
     let(:lan) { FactoryGirl.create(:lan) }
@@ -123,6 +124,35 @@ describe TransformationMapping do
         FactoryGirl.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryGirl.create(:ext_management_system))
         result = mapping.search_vms_and_validate(['name' => vm.name])
         expect(result['conflicted'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_CONFLICT)
+      end
+    end
+
+    context 'with VM list and service_template_id' do
+      it 'returns valid vms when a ServiceTemplate record is edited with CSV containing the same VM already included in the ServiceTemplate record' do
+        service_template = FactoryGirl.create(:service_template_transformation_plan)
+
+        FactoryGirl.create(
+          :service_resource,
+          :resource         => vm2,
+          :service_template => service_template,
+          :status           => "Active"
+        )
+        result = mapping.search_vms_and_validate(['name' => vm2.name], service_template.id.to_s)
+        expect(result['valid'].first.reason).to match(/ok/)
+      end
+
+      it 'returns invalid vms when the Service Template record is edited with CSV containing a different VM that belongs to a different ServiceTemplate record' do
+        service_template = FactoryGirl.create(:service_template_transformation_plan)
+        service_template2 = FactoryGirl.create(:service_template_transformation_plan)
+
+        FactoryGirl.create(
+          :service_resource,
+          :resource         => vm2,
+          :service_template => service_template,
+          :status           => "Active"
+        )
+        result = mapping.search_vms_and_validate(['name' => vm2.name], service_template2.id.to_s)
+        expect(result['invalid'].first.reason).to match(/in_other_plan/)
       end
     end
 
