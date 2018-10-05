@@ -27,7 +27,8 @@ module MiqPreloader
     if (inverse_association = association.inverse_of)
       target_klass.where(inverse_association.name.to_sym => records).where(association.scope)
     else # assume it is a belongs_to
-      join_key = association.join_keys(target_klass)
+      # Rails ~5.1 changed arity from 1 to 0 in commit: a5533028e11bb21486aa2a8efbe2a0b3007f7711
+      join_key = association.method(:join_keys).arity == 1 ? association.join_keys(target_klass) : association.join_keys
       target_klass.where(join_key.key.to_sym => records.select(join_key.foreign_key.to_sym))
     end
   end
