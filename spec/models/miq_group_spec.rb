@@ -112,7 +112,7 @@ describe MiqGroup do
 
   describe "#get_ldap_groups_by_user" do
     before do
-      stub_server_configuration(:authentication => {:group_memberships_max_depth => 1})
+      stub_settings(:authentication => {:group_memberships_max_depth => 1})
 
       miq_ldap = double('miq_ldap',
                         :fqusername      => 'fred',

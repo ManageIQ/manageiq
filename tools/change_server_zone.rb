@@ -25,7 +25,7 @@ server.save!
 
 settings = server.settings
 settings[:server][:zone] = zone.name
-server.set_config(settings)
+server.add_settings_for_resource(settings)
 
 server.save!
 

@@ -37,7 +37,6 @@ module VMDB
   end
 end
 
-require 'vmdb/config'
 require 'vmdb/initializer'
 require 'vmdb/util'
 
