@@ -134,13 +134,8 @@ module EmsRefresh::SaveInventoryPhysicalInfra
   def save_canisters_inventory(physical_storage, hashes)
     return if hashes.nil?
 
-    # Update the associated ids
-    hashes.each do |h|
-      h[:physical_storage_id] = h.delete(:physical_storage).try(:[], :id)
-    end
-
     child_keys = %i(computer_system)
-    save_inventory_multi(physical_storage.canisters, hashes, :use_association, [:physical_storage_id], child_keys)
+    save_inventory_multi(physical_storage.canisters, hashes, :use_association, [:ems_ref], child_keys)
   end
 
   def save_physical_network_ports_inventory(guest_device, hashes, target = nil)
