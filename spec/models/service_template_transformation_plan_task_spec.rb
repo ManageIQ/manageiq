@@ -151,20 +151,9 @@ describe ServiceTemplateTransformationPlanTask do
 
     describe '#transformation_log' do
       before do
-        EvmSpecHelper.create_guid_miq_server_zone
         task.conversion_host = conversion_host
         task.options.store_path(:virtv2v_wrapper, "v2v_log", "/path/to/log.file")
         task.save!
-
-        host.update_authentication(:default => {:userid => 'root', :password => 'v2v'})
-        allow(described_class).to receive(:find).and_return(task)
-
-        require 'net/scp'
-      end
-
-      it 'requires host credential' do
-        host.update_authentication(:default => {:userid => 'root', :password => ''})
-        expect { task.transformation_log }.to raise_error(MiqException::Error)
       end
 
       it 'requires transformation log location in options' do
@@ -172,14 +161,9 @@ describe ServiceTemplateTransformationPlanTask do
         expect { task.transformation_log }.to raise_error(MiqException::Error)
       end
 
-      it 'catches errors from net/scp' do
-        expect(Net::SCP).to receive(:download!).and_raise('something is wrong')
-        expect { task.transformation_log }.to raise_error(RuntimeError)
-      end
-
       it 'gets the transformation log content' do
         msg = 'my transformation migration log'
-        expect(Net::SCP).to receive(:download!).and_return(msg)
+        allow(conversion_host).to receive(:get_conversion_log).with(task.options[:virtv2v_wrapper]['v2v_log']).and_return(msg)
         expect(task.transformation_log).to eq(msg)
       end
     end
@@ -196,6 +180,29 @@ describe ServiceTemplateTransformationPlanTask do
         task.cancel
         expect(task.cancelation_status).to eq(MiqRequestTask::CANCEL_STATUS_REQUESTED)
         expect(task.cancel_requested?).to be_truthy
+      end
+    end
+
+    describe '#kill_virtv2v' do
+      before do
+        task.conversion_host = conversion_host
+        task.options = { :virtv2v_wrapper => {}}
+      end
+
+      it "does nothing if pid not present in options[:virtv2v_wrapper]" do
+        expect(task.kill_virtv2v('KILL')).to eq(false)
+      end
+
+      it "returns false if if kill command failed" do
+        task.options[:virtv2v_wrapper]['pid'] = '1234'
+        allow(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(false)
+        expect(task.kill_virtv2v('KILL')).to eq(false)
+      end
+
+      it "returns true if if kill command succeeded" do
+        task.options[:virtv2v_wrapper]['pid'] = '1234'
+        allow(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(true)
+        expect(task.kill_virtv2v('KILL')).to eq(true)
       end
     end
   end
@@ -243,6 +250,8 @@ describe ServiceTemplateTransformationPlanTask do
     let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm_1) }
     let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm_2) }
 
+    let(:conversion_host) { FactoryGirl.create(:conversion_host) }
+
     describe '#transformation_destination' do
       it { expect(task_1.transformation_destination(src_cluster)).to eq(dst_cluster) }
     end
@@ -255,6 +264,33 @@ describe ServiceTemplateTransformationPlanTask do
     describe '#post_ansible_playbook_service_template' do
       it { expect(task_1.post_ansible_playbook_service_template).to eq(apst) }
       it { expect(task_2.post_ansible_playbook_service_template).to be_nil }
+    end
+
+    shared_examples_for "#run_conversion" do
+      let(:time_now) { Time.now.utc }
+      before do
+        allow(Time).to receive(:now).and_return(time_now)
+        allow(conversion_host).to receive(:run_conversion).with(task_1.conversion_options).and_return(
+          {
+            "wrapper_log" => "/tmp/wrapper.log",
+            "v2v_log"     => "/tmp/v2v.log",
+            "state_file"  => "/tmp/v2v.state"
+          }
+        )
+      end
+
+      it "collects the wrapper state hash" do
+        task_1.run_conversion
+        expect(task_1.options[:virtv2v_wrapper]).to eq(
+          {
+            "wrapper_log" => "/tmp/wrapper.log",
+            "v2v_log"     => "/tmp/v2v.log",
+            "state_file"  => "/tmp/v2v.state"
+          }
+        )
+       expect(task_1.options[:virtv2v_started_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
+       expect(task_1.options[:virtv2v_status]).to eq('active')
+      end
     end
 
     context 'source is vmwarews' do
@@ -275,8 +311,6 @@ describe ServiceTemplateTransformationPlanTask do
       let(:src_vm_1) { FactoryGirl.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host, :hardware => src_hardware) }
       let(:src_vm_2) { FactoryGirl.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
 
-      let(:conversion_host) { FactoryGirl.create(:conversion_host) }
-
       # Disks have to be stubbed because there's no factory for Disk class
       before do
         allow(src_hardware).to receive(:disks).and_return([src_disk_1, src_disk_2])
@@ -295,6 +329,91 @@ describe ServiceTemplateTransformationPlanTask do
 
       it 'find the destination ems based on mapping' do
         expect(task_1.destination_ems).to eq(dst_ems)
+      end
+
+      shared_examples_for "get_conversion_state" do
+        let(:time_now) { Time.now.utc }
+        before do
+          allow(Time).to receive(:now).and_return(time_now)
+        end
+
+        it "raises when conversion is failed" do
+          allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return(
+            {
+              "failed"      => true,
+              "finished"    => true,
+              "started"     => true,
+              "disks"       => [
+                { "path" => src_disk_1.filename, "progress" => 23.0 },
+                { "path" => src_disk_1.filename, "progress" => 0.0 }
+              ],
+              "pid"         => 5855,
+              "return_code" => 1,
+              "disk_count"  => 2
+            }
+          )
+          expect { task_1.get_conversion_state }.to raise_error("Disks transformation failed.")
+          expect(task_1.options[:virtv2v_status]).to eq('failed')
+          epxect(task_1.options[:virtv2v_finished_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
+        end
+
+        it "updates disks progress" do
+          allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return(
+            {
+              "started"     => true,
+              "disks"       => [
+                { "path" => src_disk_1.filename, "progress" => 100.0 },
+                { "path" => src_disk_1.filename, "progress" => 50.0 }
+              ],
+              "pid"         => 5855,
+              "disk_count"  => 2
+            }
+          )
+          task_1.get_conversion_state
+          expect(task_1.options[:virtv2v_disks]).to eq(
+            [
+              { :path => src_disk_1.filename, :size => disk.size, :percent => 100, :weight  => 50 },
+              { :path => src_disk_2.filename, :size => disk.size, :percent => 50, :weight  => 50 }
+            ]
+          )
+          expect(task_1.options[:virtv2v_status]).to eq('active')
+        end
+
+        it "sets disks progress to 100% when conversion is finished and successful" do
+          allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return(
+            {
+              "finished"    => true,
+              "started"     => true,
+              "disks"       => [
+                { "path" => src_disk_1.filename, "progress" => 100.0},
+                { "path" => src_disk_1.filename, "progress" => 100.0}
+              ],
+              "pid"         => 5855,
+              "return_code" => 0,
+              "disk_count"  => 1
+            }
+          )
+          task_1.get_conversion_state
+          expect(task.options[:virtv2v_disks]).to eq(
+            [
+              { :path => src_disk_1.filename, :size => disk.size, :percent => 100, :weight  => 50 },
+              { :path => src_disk_2.filename, :size => disk.size, :percent => 100, :weight  => 50 }
+            ]
+          )
+          expect(task_1.options[:virtv2v_status]).to eq('finished')
+          epxect(task_1.options[:virtv2v_finished_on]).to eq(time)
+        end
+      end
+
+      shared_examples_for "#virtv2v_disks" do
+        it "checks mapping and generates virtv2v_disks hash" do
+          expect(task_1.virtv2v_disks).to eq(
+            [
+              { :path => src_disk_1.filename, :size => src_disk_1.size, :percent => 0, :weight  => 50.0 },
+              { :path => src_disk_2.filename, :size => src_disk_2.size, :percent => 0, :weight  => 50.0 }
+            ]
+          )
+        end
       end
 
       context 'destination is rhevm' do
@@ -320,14 +439,7 @@ describe ServiceTemplateTransformationPlanTask do
           task_1.conversion_host = conversion_host
         end
 
-        it "checks mapping and generates source_disks hash" do
-          expect(task_1.source_disks).to eq(
-            [
-              { :path => src_disk_1.filename, :size => src_disk_1.size, :percent => 0, :weight  => 50.0 },
-              { :path => src_disk_2.filename, :size => src_disk_2.size, :percent => 0, :weight  => 50.0 }
-            ]
-          )
-        end
+        it_behaves_like "#virtv2v_disks"
 
         it "checks network mappings and generates network_mappings hash" do
           expect(task_1.network_mappings).to eq(
@@ -360,6 +472,8 @@ describe ServiceTemplateTransformationPlanTask do
               :insecure_connection => true
             )
           end
+
+          it_behaves_like "#run_conversion"
         end
 
         context "transport method is ssh" do
@@ -411,14 +525,7 @@ describe ServiceTemplateTransformationPlanTask do
           task_1.conversion_host = conversion_host
         end
 
-        it "checks mapping and generates source_disks hash" do
-          expect(task_1.source_disks).to eq(
-            [
-              { :path => src_disk_1.filename, :size => src_disk_1.size, :percent => 0, :weight  => 50.0 },
-              { :path => src_disk_2.filename, :size => src_disk_2.size, :percent => 0, :weight  => 50.0 }
-            ]
-          )
-        end
+        it_behaves_like "#virtv2v_disks"
 
         it "checks network mappings and generates network_mappings hash" do
           expect(task_1.network_mappings).to eq(

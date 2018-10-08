@@ -57,8 +57,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     transformation_destination(source.ems_cluster).ext_management_system
   end
 
-  def source_disks
-    options[:source_disks] ||= source.hardware.disks.select { |d| d.device_type == 'disk' }.collect do |disk|
+  def virtv2v_disks
+    options[:virtv2v_disks] ||= source.hardware.disks.select { |d| d.device_type == 'disk' }.collect do |disk|
       source_storage = disk.storage
       destination_storage = transformation_destination(disk.storage)
       raise "[#{source.name}] Disk #{disk.device_name} [#{source_storage.name}] has no mapping. Aborting." if destination_storage.nil?
@@ -105,16 +105,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def transformation_log
-    host = conversion_host
-    if host.nil?
+    if conversion_host.nil?
       msg = "Conversion host was not found. Download of transformation log aborted."
-      _log.error(msg)
-      raise MiqException::Error, msg
-    end
-
-    userid, password = host.resource.auth_user_pwd(:remote)
-    if userid.blank? || password.blank?
-      msg = "Credential was not found for host #{host.resource.name}. Download of transformation log aborted."
       _log.error(msg)
       raise MiqException::Error, msg
     end
@@ -126,21 +118,14 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       raise MiqException::Error, msg
     end
 
-    begin
-      require 'net/scp'
-      Net::SCP.download!(host.resource.ipaddress, userid, logfile, nil, :ssh => {:password => password})
-    rescue Net::SCP::Error => scp_err
-      _log.error("Download of transformation log for #{description} with ID [#{id}] failed with error: #{scp_err.message}")
-      raise scp_err
-    end
+    conversion_host.get_conversion_log(logfile)
   end
 
   # Intend to be called by UI to display transformation log. The log is stored in MiqTask#task_results
   # Since the task_results may contain a large block of data, it is desired to remove the task upon receiving the data
   def transformation_log_queue(userid = nil)
     userid ||= User.current_userid || 'system'
-    host = conversion_host
-    if host.nil?
+    if conversion_host.nil?
       msg = "Conversion host was not found. Cannot queue the download of transformation log."
       return create_error_status_task(userid, msg).id
     end
@@ -152,7 +137,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
                      :instance_id => id,
                      :priority    => MiqQueue::HIGH_PRIORITY,
                      :args        => [],
-                     :zone        => host.resource.my_zone}
+                     :zone        => conversion_host.resource.my_zone}
     MiqTask.generic_action_with_callback(options, queue_options)
   end
 
@@ -175,7 +160,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_storage = transformation_destination(source_storage)
 
     options = {
-      :source_disks     => source_disks.map { |disk| disk[:path] },
+      :source_disks     => virtv2v_disks.map { |disk| disk[:path] },
       :network_mappings => network_mappings
     }
 
@@ -183,6 +168,41 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     options.merge!(send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage))
 
     options
+  end
+
+  def run_conversion
+    start_timestamp = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+    options[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
+    options[:virtv2v_started_on] = start_timestamp
+    options[:virtv2v_status] = 'active'
+  end
+
+  def get_conversion_state
+    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
+    updated_disks = virtv2v_disks
+    if virtv2v_state['finished'].nil?
+      updated_disks.each do |disk|
+        matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
+        raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
+        raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1 
+        disk[:percent] = matching_disks.first['progress']
+      end
+    else
+      options[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+      if virtv2v_state['failed']
+        options[:virtv2v_status] = 'failed'
+        raise "Disks transformation failed."
+      else
+        options[:virtv2v_status] = 'succeeded'
+        updated_disks.each { |d| d[:percent] = 100 }
+      end
+    end
+    options[:virtv2v_disks] = updated_disks
+  end 
+
+  def kill_virtv2v(signal = 'TERM')
+    return false unless options[:virtv2v_wrapper]['pid']
+    conversion_host.kill_process(options[:virtv2v_wrapper]['pid'], signal)
   end
 
   private
