@@ -9,7 +9,7 @@ class FileDepot < ApplicationRecord
   attr_accessor         :file
 
   def self.supported_depots
-    @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize) }.freeze
+    @supported_depots ||= descendants.each_with_object({}) { |klass, hash| hash[klass.name] = Dictionary.gettext(klass.name, :type => :model, :notfound => :titleize, :translate => false) }.freeze
   end
 
   def self.supported_protocols
