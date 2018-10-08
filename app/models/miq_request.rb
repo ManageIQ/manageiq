@@ -601,7 +601,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def cancel
-    raise _("Cancel operation is not supported for #{self.class.name}")
+    raise _("Cancel operation is not supported for %{class}") % {:class => self.class.name}
   end
 
   def cancel_requested?
