@@ -10,16 +10,7 @@ class FileDepotSwift < FileDepot
   end
 
   def connect(options = {})
-    uri  = options[:uri]
-    host = URI(uri).host
     openstack_handle(options).connect(options)
-  rescue Excon::Errors::Unauthorized => err
-    logger.error("Access to Swift host #{host} failed due to a bad username or password. #{err}")
-    nil
-  rescue => err
-    logger.error("Error connecting to Swift host #{host}. #{err}")
-    msg = "Error connecting to Swift host #{host}. #{err}"
-    raise err, msg, err.backtrace
   end
 
   def openstack_handle(options = {})
@@ -51,8 +42,13 @@ class FileDepotSwift < FileDepot
   end
 
   def verify_credentials(auth_type = 'default', options = {})
+    host = URI(options[:uri]).host
     options[:auth_type] = auth_type
     connect(options.merge(:auth_type => auth_type))
+  rescue Excon::Errors::Unauthorized => err
+    msg = "Access to Swift host #{host} failed due to a bad username or password."
+    logger.error("Access to Swift host #{host} failed due to a bad username or password. #{err}")
+    raise msg
   rescue => err
     logger.error("Error connecting to Swift host #{host}. #{err}")
     msg = "Error connecting to Swift host #{host}. #{err}"

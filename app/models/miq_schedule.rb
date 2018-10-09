@@ -342,7 +342,6 @@ class MiqSchedule < ApplicationRecord
     depot.v3_domain_ident      = params[:v3_domain_ident]
     depot.security_protocol    = params[:security_protocol]
     depot.uri                  = api_port.blank? ? uri : depot.merged_uri(uri, api_port)
-    _log.debug("uri is [#{uri}]")
     if params[:save]
       file_depot.save!
       file_depot.update_authentication(:default => {:userid => params[:username], :password => params[:password]}) if (params[:username] || params[:password]) && depot.class.requires_credentials?
