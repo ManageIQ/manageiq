@@ -42,7 +42,7 @@ class ConversionHost < ApplicationRecord
   end 
 
   def run_conversion(conversion_options)
-    res = remote_command('/usr/bin/virt-v2v-wrapper.py', conversion_options.to_json)
+    res = remote_command('/usr/bin/virt-v2v-wrapper.py', conversion_options.to_json, true)
     raise "Starting conversion failed with error: #{res[:stderr]}" unless res[:rc].zero?
     res[:stdout]
   end
@@ -148,7 +148,7 @@ class ConversionHost < ApplicationRecord
                              .where(:authtype => 'ssh_keypair')
                              .where.not(:userid => nil, :auth_key => nil)
                              .first
-    [ ipaddress, authentication.userid, { :key_data => authentication.auth_key, :keys_only => true, :passwordless_sudo => true }]
+    [ ipaddress, authentication.userid, { :key_data => authentication.auth_key, :keys => [], :keys_only => true }]
   end
 
   def file_exists?(path)
