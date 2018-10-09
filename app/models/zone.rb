@@ -56,36 +56,27 @@ class Zone < ApplicationRecord
   end
 
   def self.create_maintenance_zone
-    if maintenance_zone.nil?
-      # 1) Create region, if not exists
-      MiqRegion.seed
+    begin
+      # 1) Create Maintenance zone
+      zone = new(:name        => "#{MAINTENANCE_ZONE_NAME_PREFIX}#{SecureRandom.uuid}",
+                 :description => "Maintenance Zone",
+                 :visible     => false)
 
-      # 2) Create Maintenance zone
-      threshold = 100 # avoiding infinite loop
-      zone = nil
-      (1..threshold).each do |idx|
-        zone = create(:name        => "#{MAINTENANCE_ZONE_NAME_PREFIX}#{idx}",
-                      :description => "Maintenance Zone",
-                      :visible     => false)
-        break if zone.valid?
-      end
+      zone.save!
 
-      # 3) Assign zone to region
-      if zone&.valid?
-        region = zone.miq_region
-        region&.maintenance_zone = zone
-        unless region&.save
-          _log.error("Saving Maintenance zone to region failed with: #{region&.errors&.messages.inspect}")
-        end
-        _log.info("Creating maintenance zone...")
-      else
-        _log.error("Maintenance zone not created in #{threshold} attempts")
-      end
+      # 2) Assign to MiqRegion
+      MiqRegion.seed if MiqRegion.my_region.nil?
+      MiqRegion.my_region.update_attributes(:maintenance_zone => zone)
+    rescue ActiveRecord::RecordInvalid
+      raise if zone.errors[:name].blank?
+      retry
     end
+    _log.info("Creating maintenance zone...")
+    zone
   end
 
   def self.seed
-    create_maintenance_zone
+    maintenance_zone
 
     create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
       _log.info("Creating default zone...")
@@ -117,8 +108,8 @@ class Zone < ApplicationRecord
   end
 
   # Zone for paused providers (no servers in it), not visible by default
-  def self.maintenance_zone
-    MiqRegion.find_by(:region => my_region_number)&.maintenance_zone
+  cache_with_timeout(:maintenance_zone) do
+    MiqRegion.my_region&.maintenance_zone || create_maintenance_zone
   end
 
   def remote_cockpit_ws_miq_server

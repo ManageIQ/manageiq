@@ -39,7 +39,7 @@ class MiqServer < ApplicationRecord
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
   virtual_delegate :description, :to => :zone, :prefix => true
 
-  validate :validate_zone_visible?, :if => proc { |server| server.zone.present? }
+  validate :validate_zone_visible?
 
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze

@@ -436,6 +436,19 @@ describe ExtManagementSystem do
       child.reload
       expect(child.enabled).to be_truthy
     end
+
+    it "doesn't change zone when current is visible" do
+      zone = FactoryGirl.create(:zone)
+      ems = FactoryGirl.create(:ext_management_system,
+                               :zone_before_pause => nil,
+                               :zone              => zone,
+                               :enabled           => false)
+
+      ems.resume!
+
+      expect(ems.enabled).to be_truthy
+      expect(ems.zone).to eq(zone)
+    end
   end
 
   context "changing zone" do

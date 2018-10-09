@@ -236,9 +236,16 @@ class ExtManagementSystem < ApplicationRecord
   # Move ems to original zone, reschedule task/jobs/.. collected during maintenance
   def resume!
     _log.info("Resuming EMS [#{name}] id [#{id}].")
+
+    new_zone = if zone_before_pause.nil?
+                 zone.visible? ? zone : Zone.default_zone
+               else
+                 zone_before_pause
+               end
+
     update!(
       :zone_before_pause => nil,
-      :zone              => zone_before_pause || Zone.default_zone,
+      :zone              => new_zone,
       :enabled           => true
     )
     _log.info("Resuming EMS [#{name}] id [#{id}] successful.")

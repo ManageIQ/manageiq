@@ -194,9 +194,9 @@ describe Zone do
 
   context "maintenance zone" do
     it "creates missing region during seed" do
-      expect(MiqRegion.find_by(:region => MiqRegion.my_region_number)).to be_nil
+      expect(MiqRegion.my_region).to be_nil
       described_class.seed
-      expect(MiqRegion.find_by(:region => MiqRegion.my_region_number)).to be_present
+      expect(MiqRegion.my_region).to be_present
     end
 
     it "is seeded with relation to region" do
@@ -205,21 +205,12 @@ describe Zone do
 
       expect(described_class.maintenance_zone).to be_present
       expect(described_class.maintenance_zone.id).to eq(zone.id)
-      expect(MiqRegion.find_by(:region => MiqRegion.my_region_number)&.maintenance_zone).to eq(zone)
+      expect(MiqRegion.my_region&.maintenance_zone).to eq(zone)
     end
 
     it "is not visible" do
       described_class.seed
       expect(described_class.maintenance_zone.visible).to be_falsey
-    end
-
-    it "is created when default name exists" do
-      (1..5).each do |idx|
-        FactoryGirl.create(:zone, :name => "#{Zone::MAINTENANCE_ZONE_NAME_PREFIX}#{idx}")
-      end
-      described_class.seed
-
-      expect(Zone.maintenance_zone.name).to eq("#{Zone::MAINTENANCE_ZONE_NAME_PREFIX}6")
     end
   end
 
