@@ -15,7 +15,7 @@ before_script:
 test:vmdb:
   script:
   - bundle update
-  - bundle exec rake update:bower
+  - bundle exec rake update:ui
   - bundle exec rake test:vmdb:setup
   - bundle exec rake test:vmdb
 test:brakeman:

@@ -44,18 +44,20 @@ module ManageIQ
       Dir.mkdir(logdir) unless Dir.exist?(logdir)
     end
 
-    def self.while_updating_bower
-      # Run bower in a thread and continue to do the non-js stuff
-      puts "\n== Updating bower assets in parallel =="
-      bower_thread = Thread.new do
+    def self.while_updating_ui
+      # Run update:ui in a thread and continue to do the non-js stuff
+      puts "\n== Updating UI assets (in parallel) =="
+
+      ui_thread = Thread.new do
         update_ui
-        puts "\n== Updating bower assets complete =="
+        puts "\n== Updating UI assets complete =="
       end
-      bower_thread.abort_on_exception = true
+
+      ui_thread.abort_on_exception = true
 
       yield
 
-      bower_thread.join
+      ui_thread.join
     end
 
     def self.install_bundler(root = APP_ROOT)
