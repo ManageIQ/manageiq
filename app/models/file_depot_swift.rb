@@ -56,8 +56,7 @@ class FileDepotSwift < FileDepot
   end
 
   def merged_uri(uri, api_port)
-    port           = api_port.presence || 5000
-    uri            = URI.parse("#{URI(uri).scheme}://#{URI(uri).host}:#{port}#{URI(uri).path}")
+    uri.port       = api_port.presence || 5000
     query_elements = []
     query_elements << "region=#{openstack_region}"              if openstack_region.present?
     query_elements << "api_version=#{keystone_api_version}"     if keystone_api_version.present?
