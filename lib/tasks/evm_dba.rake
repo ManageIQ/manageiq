@@ -58,7 +58,7 @@ module EvmDba
     db_opts
   end
 
-  CONNECT_OPT_KEYS = [:uri, :uri_username, :uri_password, :aws_region, :remote_file_name, :skip_directory].freeze
+  CONNECT_OPT_KEYS = %i(uri uri_username uri_password aws_region remote_file_name skip_directory).freeze
   def self.collect_connect_opts(opts)
     connect_opts = {}
     CONNECT_OPT_KEYS.each { |k| connect_opts[k] = opts[k] if opts[k] }
