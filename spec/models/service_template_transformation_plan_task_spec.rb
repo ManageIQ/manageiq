@@ -323,6 +323,11 @@ describe ServiceTemplateTransformationPlanTask do
         task_1.options[:transformation_host_id] = conversion_host.id
       end
 
+      it "fails when cluster is not mapped" do
+        allow(task_1).to receive(:transformation_destination).with(src_cluster).and_return(nil)
+        expect { task_1.destination_cluster }.to raise_error("[#{src_vm_1.name}] Cluster #{src_cluster} has no mapping.")
+      end
+
       it "finds the source ems based on source vm" do
         expect(task_1.source_ems).to eq(src_ems)
       end
@@ -439,6 +444,8 @@ describe ServiceTemplateTransformationPlanTask do
           task_1.conversion_host = conversion_host
         end
 
+        it { expect(task_1.destination_cluster).to eq(dst_cluster) }
+
         it_behaves_like "#virtv2v_disks"
 
         it "checks network mappings and generates network_mappings hash" do
@@ -524,6 +531,8 @@ describe ServiceTemplateTransformationPlanTask do
         before do
           task_1.conversion_host = conversion_host
         end
+
+        it { expect(task_1.destination_cluster).to eq(dst_cloud_tenant) }
 
         it_behaves_like "#virtv2v_disks"
 

@@ -49,19 +49,44 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     vm_resource.update_attributes(:status => ServiceResource::STATUS_ACTIVE)
   end
 
+  # This method returns true if all mappings are ok. It also preload
+  #  virtv2v_disks and network_mappings in task options
+  def preflight_check
+    destination_cluster
+    virtv2v_disks
+    network_mappings
+    true
+  rescue
+    false
+  end
+
+  def source_cluster
+    source.ems_cluster
+  end
+
+  def destination_cluster
+    dst_cluster = transformation_destination(source_cluster)
+    raise "[#{source.name}] Cluster #{source_cluster} has no mapping." if dst_cluster.nil?
+    dst_cluster
+  end
+
   def source_ems
     source.ext_management_system
   end
 
   def destination_ems
-    transformation_destination(source.ems_cluster).ext_management_system
+    destination_cluster.ext_management_system
+  end
+
+  def transformation_type
+    "#{source_ems.emstype}2#{destination_ems.emstype}"
   end
 
   def virtv2v_disks
     options[:virtv2v_disks] ||= source.hardware.disks.select { |d| d.device_type == 'disk' }.collect do |disk|
       source_storage = disk.storage
       destination_storage = transformation_destination(disk.storage)
-      raise "[#{source.name}] Disk #{disk.device_name} [#{source_storage.name}] has no mapping. Aborting." if destination_storage.nil?
+      raise "[#{source.name}] Disk #{disk.device_name} [#{source_storage.name}] has no mapping." if destination_storage.nil?
       {
         :path    => disk.filename,
         :size    => disk.size,
@@ -75,7 +100,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     options[:network_mappings] ||= source.hardware.nics.select { |n| n.device_type == 'ethernet' }.collect do |nic|
       source_network = nic.lan
       destination_network = transformation_destination(source_network)
-      raise "[#{source.name}] NIC #{nic.device_name} [#{source_network.name}] has no mapping. Aborting." if destination_network.nil?
+      raise "[#{source.name}] NIC #{nic.device_name} [#{source_network.name}] has no mapping." if destination_network.nil?
       {
         :source      => source_network.name,
         :destination => destination_network_ref(destination_network),
