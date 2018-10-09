@@ -1,6 +1,4 @@
 class FileDepotSwift < FileDepot
-  attr_accessor :swift
-
   def self.uri_prefix
     "swift"
   end
