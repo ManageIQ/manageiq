@@ -106,19 +106,6 @@ module ManageIQ
       run_rake_task("log:clear tmp:clear")
     end
 
-    # In development, when switching branches to old versions prior to the
-    # ui-classic split, it's possible that bower_components end up cached in
-    # manageiq proper as well as manageiq-ui-classic, which causes duplicate
-    # sets of dependencies, with different versions, that bower can't handle.
-    #
-    # Once we no longer support versions of manageiq prior to the ui-classic
-    # split, this can be removed.
-    def self.clear_obsolete
-      return unless APP_ROOT.join("vendor/assets/bower_components").exist?
-      puts "\n== Removing obsolete bower install =="
-      FileUtils.rm_rf(APP_ROOT.join("vendor/assets/bower_components"))
-    end
-
     def self.create_database_user
       system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
     end
