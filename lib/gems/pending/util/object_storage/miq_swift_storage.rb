@@ -101,7 +101,6 @@ class MiqSwiftStorage < MiqObjectStorage
     extra_options[:domain_id] = @domain_id
     extra_options[:service] = "Compute"
      @osh ||= OpenstackHandle::Handle.new(@username, @password, @host, @port, @api_version, @security_protocol, extra_options)
-    @osh.connection_options = {:instrumentor => $fog_log}
     begin
       @swift ||= @osh.swift_service
     rescue Excon::Errors::Unauthorized => err
