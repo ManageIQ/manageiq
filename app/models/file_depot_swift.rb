@@ -32,8 +32,8 @@ class FileDepotSwift < FileDepot
       begin
         OpenstackHandle::Handle.new(username, password, address, port, keystone_api_version, security_protocol, extra_options)
       rescue => err
-        logger.error("Error connecting to Swift host #{address}. #{err}")
         msg = "Error connecting to Swift host #{address}. #{err}"
+        logger.error(msg)
         raise err, msg, err.backtrace
       end
     end
@@ -45,11 +45,11 @@ class FileDepotSwift < FileDepot
     connect(options.merge(:auth_type => auth_type))
   rescue Excon::Errors::Unauthorized => err
     msg = "Access to Swift host #{host} failed due to a bad username or password."
-    logger.error("Access to Swift host #{host} failed due to a bad username or password. #{err}")
+    logger.error("#{msg} #{err}")
     raise msg
   rescue => err
-    logger.error("Error connecting to Swift host #{host}. #{err}")
     msg = "Error connecting to Swift host #{host}. #{err}"
+    logger.error(msg)
     raise err, msg, err.backtrace
   end
 

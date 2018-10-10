@@ -1,6 +1,7 @@
 describe FileDepotSwift do
   let(:uri) { URI("swift://server.example.com/bucket") }
-  let(:merged_uri) { URI("swift://server.example.com:5000/bucket?region=test_openstack_region&api_version=v3&domain_id=default") }
+  let(:merged_uri) { URI("swift://server.example.com:5678/bucket?region=test_openstack_region&api_version=v3&domain_id=default") }
+  let(:merged_default_uri) { URI("swift://server.example.com:5000/bucket?region=test_openstack_region&api_version=v3&domain_id=default") }
   let(:file_depot_swift) { FileDepotSwift.new(:uri => uri) }
   it "should require credentials" do
     expect(FileDepotSwift.requires_credentials?).to eq true
@@ -18,11 +19,11 @@ describe FileDepotSwift do
     end
 
     it "should return a merged uri with query strings given an empty port" do
-      expect(file_depot_swift.merged_uri(uri, nil)).to eq merged_uri
+      expect(file_depot_swift.merged_uri(uri, nil)).to eq merged_default_uri
     end 
 
     it "should return a merged uri with query strings when given a valid port" do
-      expect(file_depot_swift.merged_uri(uri, "5000")).to eq merged_uri
+      expect(file_depot_swift.merged_uri(uri, "5678")).to eq merged_uri
     end 
   end
 end
