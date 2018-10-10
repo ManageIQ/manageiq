@@ -1,4 +1,5 @@
 class ServiceTemplateTransformationPlan < ServiceTemplate
+  virtual_has_one :transformation_mapping, :uses => :transformation_mapping
   def request_class
     ServiceTemplateTransformationPlanRequest
   end
