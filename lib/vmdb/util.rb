@@ -4,7 +4,7 @@ module VMDB
       # TODO: (julian) This looks really messy. Need to make it look nicer.
 
       proxy = (::Settings.http_proxy[proxy_config] || ::Settings.http_proxy).to_h
-      return nil unless proxy[:host]
+      return nil if proxy[:host].blank?
 
       user     = proxy.delete(:user)
       user &&= CGI.escape(user)
