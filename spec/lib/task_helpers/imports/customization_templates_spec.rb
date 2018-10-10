@@ -1,4 +1,4 @@
-describe TaskHelpers::Imports::CustomizationTemplate do
+describe TaskHelpers::Imports::CustomizationTemplates do
   describe "#import" do
     let(:data_dir) { File.join(File.expand_path(__dir__), 'data', 'customization_templates') }
     let(:ct_file) { "existing_ct_and_pit.yaml" }
