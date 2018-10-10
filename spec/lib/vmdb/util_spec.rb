@@ -15,6 +15,12 @@ describe VMDB::Util do
       expect(described_class.http_proxy_uri).to be_nil
     end
 
+    it "with a blank host" do
+      # We couldn't save nil http_proxy host, so some host values will be ''
+      stub_settings_merge(:http_proxy => {:default => {:host => ''}})
+      expect(described_class.http_proxy_uri).to be_nil
+    end
+
     it "with host" do
       stub_settings_merge(:http_proxy => {:default => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil}})
       expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4"))
