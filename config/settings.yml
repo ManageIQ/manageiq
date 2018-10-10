@@ -222,6 +222,7 @@
       - VmCreatedEvent
       - VmDeployedEvent
       - VmRegisteredEvent
+      - VmClonedEvent
       :detail:
       - CloneVM_Task
       - CloneVM_Task_Complete
