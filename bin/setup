@@ -21,7 +21,7 @@ Dir.chdir(ManageIQ::Environment::APP_ROOT) do
   ManageIQ::Environment.install_bundler
   ManageIQ::Environment.bundle_update
 
-  ManageIQ::Environment.while_updating_bower do
+  ManageIQ::Environment.while_updating_ui do
     unless ENV["SKIP_DATABASE_SETUP"]
       ManageIQ::Environment.create_database
       ManageIQ::Environment.migrate_database

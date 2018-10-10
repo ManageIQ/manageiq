@@ -44,18 +44,20 @@ module ManageIQ
       Dir.mkdir(logdir) unless Dir.exist?(logdir)
     end
 
-    def self.while_updating_bower
-      # Run bower in a thread and continue to do the non-js stuff
-      puts "\n== Updating bower assets in parallel =="
-      bower_thread = Thread.new do
+    def self.while_updating_ui
+      # Run update:ui in a thread and continue to do the non-js stuff
+      puts "\n== Updating UI assets (in parallel) =="
+
+      ui_thread = Thread.new do
         update_ui
-        puts "\n== Updating bower assets complete =="
+        puts "\n== Updating UI assets complete =="
       end
-      bower_thread.abort_on_exception = true
+
+      ui_thread.abort_on_exception = true
 
       yield
 
-      bower_thread.join
+      ui_thread.join
     end
 
     def self.install_bundler(root = APP_ROOT)
@@ -104,19 +106,6 @@ module ManageIQ
     def self.clear_logs_and_temp
       puts "\n== Removing old logs and tempfiles =="
       run_rake_task("log:clear tmp:clear")
-    end
-
-    # In development, when switching branches to old versions prior to the
-    # ui-classic split, it's possible that bower_components end up cached in
-    # manageiq proper as well as manageiq-ui-classic, which causes duplicate
-    # sets of dependencies, with different versions, that bower can't handle.
-    #
-    # Once we no longer support versions of manageiq prior to the ui-classic
-    # split, this can be removed.
-    def self.clear_obsolete
-      return unless APP_ROOT.join("vendor/assets/bower_components").exist?
-      puts "\n== Removing obsolete bower install =="
-      FileUtils.rm_rf(APP_ROOT.join("vendor/assets/bower_components"))
     end
 
     def self.create_database_user
