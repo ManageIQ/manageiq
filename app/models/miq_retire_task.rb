@@ -34,7 +34,7 @@ class MiqRetireTask < MiqRequestTask
         :tenant_id     => 1,
       }
 
-      args[:attrs].merge!(MiqAeEngine.create_automation_attributes(source.class.base_model.name => source))
+      MiqAeEngine::set_automation_attributes_from_objects(source, args[:attrs])
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
