@@ -32,10 +32,9 @@ class ConversionHost < ApplicationRecord
     return 'ssh' if ssh_transport_supported
   end
 
-  def ipaddress(family = nil)
-    ips = ipaddresses
-    return ips.first unless %w(ipv4 ipv6).include?(family)
-    ips.select { |ip| IPAddr.new(ip).send("#{family}?") }.first
+  def ipaddress(family = 'ipv4')
+    return address if address && IPAddr.new(address).send("#{family}?")
+    resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
   end 
 
   def run_conversion(conversion_options)
@@ -96,10 +95,6 @@ class ConversionHost < ApplicationRecord
   end
 
   private
-
-  def ipaddresses
-    resource.ipaddresses.unshift(address).unshift(resource.try(:ipaddress)).reject(&:blank?)
-  end 
 
   def check_resource_credentials(fatal = false, extra_msg = nil)
     success = send("check_resource_credentials_#{resource.ext_management_system.emstype}")

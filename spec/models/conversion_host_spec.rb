@@ -88,11 +88,9 @@ describe ConversionHost do
     end
 
     context "#ipaddress" do
-      it "it returns first IP addess if 'address' is nil" do
+      it "returns first IP address if 'address' is nil" do
         expect(conversion_host_1.ipaddress).to eq('10.0.0.1')
         expect(conversion_host_2.ipaddress).to eq('10.0.1.1')
-        expect(conversion_host_1.ipaddress('invalid')).to eq('10.0.0.1')
-        expect(conversion_host_2.ipaddress('invalid')).to eq('10.0.1.1')
         expect(conversion_host_1.ipaddress('ipv4')).to eq('10.0.0.1')
         expect(conversion_host_2.ipaddress('ipv4')).to eq('10.0.1.1')
         expect(conversion_host_1.ipaddress('ipv6')).to eq('FE80:0000:0000:0000:0202:B3FF:FE1E:8329')
@@ -107,30 +105,11 @@ describe ConversionHost do
 
         it "returns 'address' if family matches, is invalid or is nil" do
           expect(conversion_host_1.ipaddress).to eq('172.16.0.1')
-          expect(conversion_host_2.ipaddress).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
-          expect(conversion_host_1.ipaddress('invalid')).to eq('172.16.0.1')
-          expect(conversion_host_2.ipaddress('invalid')).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
+          expect(conversion_host_2.ipaddress).to eq('10.0.1.1')
           expect(conversion_host_1.ipaddress('ipv4')).to eq('172.16.0.1')
           expect(conversion_host_2.ipaddress('ipv4')).to eq('10.0.1.1')
           expect(conversion_host_1.ipaddress('ipv6')).to eq('FE80:0000:0000:0000:0202:B3FF:FE1E:8329')
           expect(conversion_host_2.ipaddress('ipv6')).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
-        end
-
-        context "when resource.ipaddress is set" do
-          before do
-            allow(host).to receive(:ipaddress).and_return('192.168.0.1')
-          end
-
-          it "returns resource.ipaddress when resource is a Host" do
-            expect(conversion_host_1.ipaddress).to eq('192.168.0.1')
-            expect(conversion_host_2.ipaddress).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
-            expect(conversion_host_1.ipaddress('invalid')).to eq('192.168.0.1')
-            expect(conversion_host_2.ipaddress('invalid')).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
-            expect(conversion_host_1.ipaddress('ipv4')).to eq('192.168.0.1')
-            expect(conversion_host_2.ipaddress('ipv4')).to eq('10.0.1.1')
-            expect(conversion_host_1.ipaddress('ipv6')).to eq('FE80:0000:0000:0000:0202:B3FF:FE1E:8329')
-            expect(conversion_host_2.ipaddress('ipv6')).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
-          end
         end
       end
     end
