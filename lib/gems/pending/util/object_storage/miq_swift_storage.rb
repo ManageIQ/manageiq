@@ -35,7 +35,7 @@ class MiqSwiftStorage < MiqObjectStorage
 
   def uri_to_object_path(remote_file)
     # Strip off the leading "swift://" and the container name from the URI"
-    # Also remove teh leading delimiter.
+    # Also remove the leading delimiter.
     object_file_with_bucket = URI.split(URI.encode(remote_file))[5]
     object_file_with_bucket.split(File::Separator)[2..-1].join(File::Separator)
   end
@@ -62,12 +62,12 @@ class MiqSwiftStorage < MiqObjectStorage
       swift_file.service.send(:request, params)
       clear_split_vars
     rescue Excon::Errors::Unauthorized => err
-      logger.error("Access to Swift container #{@container_name} failed due to a bad username or password. #{err}")
       msg = "Access to Swift container #{@container_name} failed due to a bad username or password. #{err}"
+      logger.error(msg)
       raise err, msg, err.backtrace
     rescue => err
-      logger.error("Error uploading #{source_input} to Swift container #{@container_name}. #{err}")
       msg = "Error uploading #{source_input} to Swift container #{@container_name}. #{err}"
+      logger.error(msg)
       raise err, msg, err.backtrace
     end
   end
@@ -76,6 +76,16 @@ class MiqSwiftStorage < MiqObjectStorage
     container
   end
 
+
+  #
+  # Some calls to Fog::Storage::OpenStack::Directories#get will
+  # return 'nil', and not return an error.  This would cause errors down the
+  # line.
+  #
+  # Instead of investigating further, we created a new method that is in charge of
+  # OpenStack container creation, and that is called from '#container' if 'nil' is
+  # returned, or the error for 'NotFound' is called to cover both cases.
+  #
   def container
     @container ||= begin
                      container   = swift.directories.get(container_name)
@@ -86,8 +96,8 @@ class MiqSwiftStorage < MiqObjectStorage
                      logger.debug("Swift container #{container_name} does not exist.  Creating.")
                      create_container
                    rescue => err
-                     logger.error("Error getting Swift container #{container_name}. #{err}")
                      msg = "Error getting Swift container #{container_name}. #{err}"
+                     logger.error(msg)
                      raise err, msg, err.backtrace
                    end
   end
@@ -96,31 +106,35 @@ class MiqSwiftStorage < MiqObjectStorage
 
   def swift
     return @swift if @swift
-    require 'manageiq/providers/openstack/legacy/openstack_handle'
-    extra_options = {}
-    extra_options[:domain_id] = @domain_id
-    extra_options[:service] = "Compute"
-     @osh ||= OpenstackHandle::Handle.new(@username, @password, @host, @port, @api_version, @security_protocol, extra_options)
-    begin
-      @swift ||= @osh.swift_service
-    rescue Excon::Errors::Unauthorized => err
-      logger.error("Access to Swift host #{@host} failed due to a bad username or password. #{err}")
-      msg = "Access to Swift host #{@host} failed due to a bad username or password. #{err}"
-      raise err, msg, err.backtrace
-    rescue => err
-      logger.error("Error connecting to Swift host #{@host}. #{err}")
-      msg = "Error connecting to Swift host #{@host}. #{err}"
-      raise err, msg, err.backtrace
-    end
+    require 'fog/openstack'
+
+    auth_url = URI::Generic.build(
+      :scheme => @security_protocol == 'non-ssl' ? "http" : "https",
+      :host   => @host,
+      :port   => @port.to_i,
+      :path   => "/#{@api_version}#{@api_version == "v3" ? "/auth" : ".0"}/tokens"
+    ).to_s
+
+    connection_params = {
+      :openstack_auth_url          => auth_url,
+      :openstack_username          => @username,
+      :openstack_api_key           => @password,
+      :openstack_project_domain_id => @domain_id,
+      :openstack_user_domain_id    => @domain_id,
+      :openstack_region            => @region,
+      :connection_options          => { :debug_request => true }
+    }
+
+    @swift = Fog::Storage::OpenStack.new(connection_params)
   end
 
   def create_container
     container = swift.directories.create(:key => container_name)
-    logger.debug("Swift container [#{container}] created")
+    logger.debug("Swift container [#{container_name}] created")
     container
   rescue => err
-    logger.error("Error creating Swift container #{container_name}. #{err}")
     msg = "Error creating Swift container #{container_name}. #{err}"
+    logger.error(msg)
     raise err, msg, err.backtrace
   end
 

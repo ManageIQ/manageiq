@@ -68,8 +68,6 @@ class MiqGenericMountSession < MiqFileStorage::Interface
     require 'uri'
     scheme, userinfo, host, port, registry, share, opaque, query, fragment = URI.split(URI.encode(uri))
     case scheme
-    when 'swift'
-      MiqSwiftSession
     when 'smb'
       MiqSmbSession
     when 'nfs'
