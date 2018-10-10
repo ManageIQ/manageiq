@@ -54,6 +54,7 @@ class FileDepotSwift < FileDepot
   end
 
   def merged_uri(uri, api_port)
+    uri            = URI(uri)
     uri.port       = api_port.presence || 5000
     query_elements = []
     query_elements << "region=#{openstack_region}"              if openstack_region.present?
@@ -61,6 +62,6 @@ class FileDepotSwift < FileDepot
     query_elements << "domain_id=#{v3_domain_ident}"            if v3_domain_ident.present?
     query_elements << "security_protocol=#{security_protocol}"  if security_protocol.present?
     uri.query = query_elements.join('&').presence
-    uri
+    uri.to_s
   end
 end

@@ -1,7 +1,7 @@
 describe FileDepotSwift do
-  let(:uri) { URI("swift://server.example.com/bucket") }
-  let(:merged_uri) { URI("swift://server.example.com:5678/bucket?region=test_openstack_region&api_version=v3&domain_id=default") }
-  let(:merged_default_uri) { URI("swift://server.example.com:5000/bucket?region=test_openstack_region&api_version=v3&domain_id=default") }
+  let(:uri) { "swift://server.example.com/bucket" }
+  let(:merged_uri) { "swift://server.example.com:5678/bucket?region=test_openstack_region&api_version=v3&domain_id=default" }
+  let(:merged_default_uri) { "swift://server.example.com:5000/bucket?region=test_openstack_region&api_version=v3&domain_id=default" }
   let(:file_depot_swift) { FileDepotSwift.new(:uri => uri) }
   it "should require credentials" do
     expect(FileDepotSwift.requires_credentials?).to eq true
