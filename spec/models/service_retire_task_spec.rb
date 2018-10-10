@@ -3,8 +3,7 @@ describe ServiceRetireTask do
   let(:vm) { FactoryGirl.create(:vm) }
   let(:service) { FactoryGirl.create(:service) }
   let(:miq_request) { FactoryGirl.create(:service_retire_request, :requester => user) }
-  let(:miq_request_task) { FactoryGirl.create(:miq_request_task, :miq_request_id => miq_request.id) }
-  let(:service_retire_task) { FactoryGirl.create(:service_retire_task, :source => service, :miq_request_task_id => miq_request_task.id, :miq_request_id => miq_request.id, :options => {:src_ids => [service.id] }) }
+  let(:service_retire_task) { FactoryGirl.create(:service_retire_task, :source => service, :miq_request => miq_request, :options => {:src_ids => [service.id] }) }
   let(:reason) { "Why Not?" }
   let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
   let(:zone) { FactoryGirl.create(:zone, :name => "fred") }
@@ -21,8 +20,7 @@ describe ServiceRetireTask do
   end
 
   it "should initialize properly" do
-    expect(service_retire_task.state).to eq('pending')
-    expect(service_retire_task.status).to eq('Ok')
+    expect(service_retire_task).to have_attributes(:state => 'pending', :status => 'Ok')
   end
 
   describe "respond to update_and_notify_parent" do
@@ -104,7 +102,6 @@ describe ServiceRetireTask do
     end
 
     it "updates the task state to pending" do
-      allow(MiqQueue).to receive(:put)
       expect(service_retire_task).to receive(:update_and_notify_parent).with(
         :state   => 'pending',
         :status  => 'Ok',

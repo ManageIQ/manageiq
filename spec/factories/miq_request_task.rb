@@ -38,12 +38,19 @@ FactoryGirl.define do
     state        'pending'
     request_type 'clone_to_service'
   end
-  factory :service_retire_task,             :parent => :miq_retire_task,  :class => "ServiceRetireTask" do
-    request_type 'service_retire'
-    state        'pending'
-  end
 
   factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask' do
     request_type 'transformation_plan'
+  end
+
+  # Retire Tasks
+  factory :service_retire_task,             :parent => :miq_retire_task, :class => "ServiceRetireTask" do
+    state        'pending'
+  end
+  factory :vm_retire_task,                  :parent => :miq_retire_task, :class => "VmRetireTask" do
+    state        'pending'
+  end
+  factory :orchestration_stack_retire_task, :parent => :miq_retire_task, :class => "OrchestrationStackRetireTask" do
+    state        'pending'
   end
 end
