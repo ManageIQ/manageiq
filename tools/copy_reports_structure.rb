@@ -65,28 +65,28 @@ opts = Trollop.options(ARGV) do
          "  - make report structure configured for a group available to another group\n" \
          "  - make report structure configured for a group available to role\n" \
          "  - reset report access to default for group or role\n" \
-         "Example (Duplicate for Group): bundle exec ruby #{__FILE__} -s EvmGroup -g SomeGroup\n" \
-         "Example (Duplicate for Role): bundle exec ruby #{__FILE__} -s EvmGroup  -r SomeRole\n" \
-         "Example (Reset to Default for Group): bundle exec ruby #{__FILE__} -d SomeGroup\n" \
-         "Example (Reset to Default for Role):  bundle exec ruby #{__FILE__} -p SomeRole\n"
-  opt :source_group, "Source group to take report structure from", :short => "s", :type => :string
-  opt :group, "Destination group", :short => "g", :type => :string
-  opt :role, "Destination role", :short => "r", :type => :string
-  opt :delete_group, "Group to reset reports structure to default", :short => "d", :type => :string
-  opt :delete_role, "Role to reset reports structure to default", :short => "p", :type => :string
+         "Example (Duplicate for Group): bundle exec ruby #{__FILE__} --source-group=EvmGroup --target-group=SomeGroup\n" \
+         "Example (Duplicate for Role): bundle exec ruby #{__FILE__} --source-group=EvmGroup  --target-role=SomeRole\n" \
+         "Example (Reset to Default for Group): bundle exec ruby #{__FILE__} --reset-group=SomeGroup\n" \
+         "Example (Reset to Default for Role):  bundle exec ruby #{__FILE__} --reset-role=SomeRole\n"
+  opt :source_group, "Source group to take report structure from", :short => :none, :type => :string
+  opt :target_group, "Target group to get report menue from source group", :short => :none, :type => :string
+  opt :target_role, "Target role to get report menue from source group", :short => :none, :type => :string
+  opt :reset_group, "Group to reset reports structure to default", :short => :none, :type => :string
+  opt :reset_role, "Role to reset reports structure to default", :short => :none, :type => :string
 end
 
 if opts[:source_group_given]
-  msg = ":source_group argument can not be used with :delete_group" if opts[:delete_group_given]
-  msg ||= ":source_group argument can not be used with :delete_role" if opts[:delete_role_given]
-  msg ||= "either :group or :role arguments requiered" unless opts[:group_given] || opts[:role_given]
+  msg = ":source-group argument can not be used with :reset-group" if opts[:reset_group_given]
+  msg ||= ":source-group argument can not be used with :reset-role" if opts[:reset_role_given]
+  msg ||= "either :target-group or :target-role arguments requiered" unless opts[:target_group_given] || opts[:target_role_given]
   abort(msg) unless msg.nil?
-  duplicate_for_group(opts[:source_group], opts[:group]) if opts[:group_given]
-  duplicate_for_role(opts[:source_group], opts[:role]) if opts[:role_given]
+  duplicate_for_group(opts[:source_group], opts[:target_group]) if opts[:target_group_given]
+  duplicate_for_role(opts[:source_group], opts[:target_role]) if opts[:target_role_given]
 else
-  unless opts[:delete_group_given] || opts[:delete_role_given]
-    abort("use either :delete_group or :delete_role parameter for resetting report structure to default")
+  unless opts[:reset_group_given] || opts[:reset_role_given]
+    abort("use either :reset_group or :reset_role parameter for resetting report structure to default")
   end
-  reset_for_group(opts[:delete_group]) if opts[:delete_group_given]
-  reset_for_role(opts[:delete_role]) if opts[:delete_role_given]
+  reset_for_group(opts[:reset_group]) if opts[:reset_group_given]
+  reset_for_role(opts[:reset_role]) if opts[:reset_role_given]
 end
