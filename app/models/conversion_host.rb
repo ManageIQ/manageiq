@@ -39,7 +39,7 @@ class ConversionHost < ApplicationRecord
   end 
 
   def run_conversion(conversion_options)
-    connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', conversion_options.to_json, true) }
+    connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', nil, nil, conversion_options.to_json) }
   rescue => e
     raise "Starting conversion failed on '#{resource.name}' with [#{e.class}: #{e}]"
   end
@@ -146,7 +146,7 @@ class ConversionHost < ApplicationRecord
                              .where(:authtype => 'ssh_keypair')
                              .where.not(:userid => nil, :auth_key => nil)
                              .first
-    [ ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key }]
+    [ ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
   end
 
   def ansible_playbook(playbook, extra_vars, connection)
