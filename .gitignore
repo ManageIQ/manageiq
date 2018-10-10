@@ -79,7 +79,6 @@ tmp/*
 
 # vendor/
 vendor/bundle
-vendor/assets/bower_components/
 vendor/node_root/
 
 # npm
