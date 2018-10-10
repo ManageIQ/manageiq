@@ -1,5 +1,4 @@
-require "net/ssh"
-require "net/sftp"
+require "MiqSshUtil"
 
 describe ConversionHost do
   let(:apst) { FactoryGirl.create(:service_template_ansible_playbook) }
@@ -138,12 +137,12 @@ describe ConversionHost do
 
     context "#kill_process" do
       it "returns false if if kill command failed" do
-        allow(conversion_host_1).to receive(:remote_command).with('/bin/kill -s KILL 1234').and_return(:rc => 1, :stdout => '', :stderr => 'failed')
+        allow(conversion_host_1).to receive(:connect_ssh).and_raise('Unexpected failure')
         expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(false)
       end 
 
       it "returns true if if kill command succeeded" do
-        allow(conversion_host_1).to receive(:remote_command).with('/bin/kill -s KILL 1234').and_return(:rc => 0, :stdout => 'killed', :stderr => '') 
+        allow(conversion_host_1).to receive(:connect_ssh)
         expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(true)
       end 
     end
@@ -151,19 +150,13 @@ describe ConversionHost do
 
   shared_examples_for "#check_ssh_connection" do
     it "fails when SSH send an error" do
-      allow(Net::SSH).to receive(:start).and_raise(Net::SSH::Exception, 'Unexpected failure')
+      allow(conversion_host).to receive(:connect).and_raise('Unexpected failure')
       expect(conversion_host.check_ssh_connection).to eq(false)
     end
 
-    it "fails because SSH key is not known and :remember_host is false" do
-      allow(Net::SSH).to receive(:start).once.and_raise(Net::SSH::HostKeyMismatch)
-      allow(Net::SSH::HostKeyMismatch).to receive(:remember_host!).and_return(true)
-      expect(conversion_host.check_ssh_connection).to eq(false)
-    end
-
-    it "succeeds because :remember_host is true" do
-      allow(Net::SSH).to receive(:start).and_return(true)
-      expect(conversion_host.check_ssh_connection(true)).to eq(true)
+    it "succeeds when SSH command succeeds" do
+      allow(conversion_host).to receive(:connect_ssh)
+      expect(conversion_host.check_ssh_connection).to eq(true)
     end
   end
 
