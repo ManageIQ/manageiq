@@ -11,7 +11,7 @@ describe FileDepotSwift do
     expect(FileDepotSwift.uri_prefix).to eq "swift"
   end
 
-  context "valid merged uri" do
+  describe "#merged_uri" do
     before do
       file_depot_swift.openstack_region = "test_openstack_region"
       file_depot_swift.keystone_api_version = "v3"
