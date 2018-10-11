@@ -32,4 +32,8 @@ class FileDepot < ApplicationRecord
   def upload_file(file)
     @file = file
   end
+
+  def merged_uri
+    uri
+  end
 end
