@@ -62,8 +62,7 @@ describe ResourceAction do
       it "validates queue entry" do
         targets = [FactoryGirl.create(:vm_vmware), FactoryGirl.create(:vm_vmware)]
         ae_attributes[:target_object_type] = targets.first.class.base_class.name
-        klass = targets.first.id.class
-        ae_attributes['Array::target_object_ids'] = targets.collect { |t| "#{klass}::#{t.id}" }.join(",")
+        ae_attributes['Array::target_object_ids'] = targets.collect { |t| "#{t.class.name.demodulize}::#{t.id}" }.join(",")
         expect(MiqQueue).to receive(:put).with(q_options).once
         ra.deliver_to_automate_from_dialog({}, targets, user)
       end
