@@ -1,9 +1,8 @@
 class CustomButton < ApplicationRecord
   has_one :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
-  scope :with_array_order, lambda { |ids, column = :id, column_type = :bigint|
-    order = sanitize_sql_array(["array_position(ARRAY[?]::#{column_type}[], #{table_name}.#{column}::#{column_type})", ids])
-    order(order)
+  scope :with_array_order, lambda { |ids, column = :id|
+    order(sanitize_sql_array(["position(#{column}::text in ?)", ids.join(',')]))
   }
 
   serialize :options, Hash
