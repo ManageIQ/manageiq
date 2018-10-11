@@ -1,64 +1,12 @@
 #!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
-require 'bundler/setup'
+
+if __FILE__ == $PROGRAM_NAME
+  $LOAD_PATH.push(File.expand_path(__dir__))
+end
+
 require 'trollop'
-
-def find_group(group_name)
-  group = MiqGroup.where(:description => group_name).first
-  abort("MiqGroup  '#{group_name}' not found") if group.nil?
-  group
-end
-
-def find_role(role_name)
-  role = MiqUserRole.where(:name => role_name).first
-  abort("MiqUserRole  '#{role_name}' not found") if role.nil?
-  role
-end
-
-def duplicate_for_group(source_group_name, destination_group_name, dry_run)
-  puts "Copying report structure from group '#{source_group_name}' to group ' #{destination_group_name}' ..."
-  destination_group = find_group(destination_group_name)
-  destination_group.update!(:settings => find_group(source_group_name).settings) unless dry_run
-  puts "Reports structure was successfully copied from '#{source_group_name}' to '#{destination_group_name}'"
-rescue StandardError => e
-  $stderr.puts "Copying failed: #{e.message}"
-end
-
-def duplicate_for_role(source_group_name, destination_role_name, dry_run)
-  puts "Copying report structure from group '#{source_group_name}' to role ' #{destination_role_name}' ..."
-  source_group = find_group(source_group_name)
-  find_role(destination_role_name).miq_groups.each do |destination_group|
-    begin
-      destination_group.update!(:settings => source_group.settings) unless dry_run
-      puts "  Reports structure was successfully copied from '#{source_group_name}' to '#{destination_group.description}'"
-    rescue StandardError => e
-      $stderr.puts "Copying failed: #{e.message}"
-    end
-  end
-end
-
-def reset_for_group(group_name, dry_run)
-  puts "Removing custom report structure for group '#{group_name}'..."
-  group = find_group(group_name)
-  begin
-    group.update!(:settings => nil) unless dry_run
-    puts "Successfully removed custom report structure for group '#{group_name}'"
-  rescue StandardError => e
-    $stderr.puts "Removing failed: #{e.message}"
-  end
-end
-
-def reset_for_role(role_name, dry_run)
-  puts "Removing custom report structure for role '#{role_name}'..."
-  find_role(role_name).miq_groups.each do |group|
-    begin
-      group.update!(:settings => nil) unless dry_run
-      puts "Successfully removed custom report structure for group '#{group.description}'"
-    rescue  StandardError => e
-      $stderr.puts "Removing failed: #{e.message}"
-    end
-  end
-end
+require 'copy_reports_structure/report_structure'
 
 opts = Trollop.options(ARGV) do
   banner "Utility to: \n" \
@@ -82,14 +30,14 @@ if opts[:source_group_given]
   msg ||= ":source-group argument can not be used with :reset-role" if opts[:reset_role_given]
   msg ||= "either :target-group or :target-role arguments requiered" unless opts[:target_group_given] || opts[:target_role_given]
   abort(msg) unless msg.nil?
-  duplicate_for_group(opts[:source_group], opts[:target_group], opts[:dry_run]) if opts[:target_group_given]
-  duplicate_for_role(opts[:source_group], opts[:target_role], opts[:dry_run]) if opts[:target_role_given]
+  ReportStructure.duplicate_for_group(opts[:source_group], opts[:target_group], opts[:dry_run]) if opts[:target_group_given]
+  ReportStructure.duplicate_for_role(opts[:source_group], opts[:target_role], opts[:dry_run]) if opts[:target_role_given]
 else
   unless opts[:reset_group_given] || opts[:reset_role_given]
     abort("use either :reset_group or :reset_role parameter for resetting report structure to default")
   end
-  reset_for_group(opts[:reset_group], opts[:dry_run]) if opts[:reset_group_given]
-  reset_for_role(opts[:reset_role], opts[:dry_run]) if opts[:reset_role_given]
+  ReportStructure.reset_for_group(opts[:reset_group], opts[:dry_run]) if opts[:reset_group_given]
+  ReportStructure.reset_for_role(opts[:reset_role], opts[:dry_run]) if opts[:reset_role_given]
 end
 
 puts "**** Dry run, no updates have been made" if opts[:dry_run]
