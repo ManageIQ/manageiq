@@ -61,4 +61,37 @@ describe ReportStructure do
       end
     end
   end
+
+  context "reset reports structure" do
+    describe ".reset_for_group" do
+      it "reset report structure to default for group" do
+        ReportStructure.reset_for_group(source_group.description)
+        source_group.reload
+        expect(source_group.settings).to be nil
+      end
+    end
+
+    describe ".reset_for_role" do
+      before do
+        source_group.update(:miq_user_role => role)
+        destination_group.update(:settings => settings)
+      end
+
+      it "reset reports structure to default for role" do
+        ReportStructure.reset_for_role(role.name)
+        source_group.reload
+        destination_group.reload
+        expect(source_group.settings).to be nil
+        expect(destination_group.settings).to be nil
+      end
+
+      it "does not reset reports if dry_run is set to true" do
+        ReportStructure.reset_for_role(role.name, true)
+        source_group.reload
+        destination_group.reload
+        expect(source_group.settings).to eq(settings)
+        expect(destination_group.settings).to eq(settings)
+      end
+    end
+  end
 end
