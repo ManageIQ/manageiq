@@ -1,16 +1,12 @@
 require "concurrent/atomic/event"
 
 describe VmdbDatabaseConnection do
-  before do
-    @db = FactoryGirl.create(:vmdb_database)
-  end
-
+  self.use_transactional_tests = false
   after :all do
     # HACK: Some other tests (around Automate) rely on the fact there's
     # only one connection in the pool. It's totally unfair to blame this
     # spec for using the API in a perfectly ordinary way.. but it solves
     # the immediate problem.
-
     VmdbDatabaseConnection.connection_pool.disconnect!
   end
 
