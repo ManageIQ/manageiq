@@ -1,6 +1,5 @@
 require 'pp'
-# require 'util/miq_object_storage'
-require 'util/mount/miq_generic_mount_session'
+require 'util/miq_object_storage'
 
 class MiqSwiftStorage < MiqObjectStorage
   attr_reader :container_name
@@ -21,7 +20,7 @@ class MiqSwiftStorage < MiqObjectStorage
 
     raise "username and password are required values!" if @settings[:username].nil? || @settings[:password].nil?
     _scheme, _userinfo, @host, @port, _registry, @mount_path, _opaque, query, _fragment = URI.split(URI.encode(@settings[:uri]))
-    query_params(query)
+    query_params(query) if query
     @swift          = nil
     @username       = @settings[:username]
     @password       = @settings[:password]
@@ -80,21 +79,28 @@ class MiqSwiftStorage < MiqObjectStorage
   #
   # Some calls to Fog::Storage::OpenStack::Directories#get will
   # return 'nil', and not return an error.  This would cause errors down the
-  # line.
+  # line in '#upload' or '#download'.
   #
   # Instead of investigating further, we created a new method that is in charge of
   # OpenStack container creation, and that is called from '#container' if 'nil' is
-  # returned, or the error for 'NotFound' is called to cover both cases.
+  # returned from 'swift.directories.get(container_name)', or  call '#create_container' 
+  # in the rescue case for 'NotFound' to cover that scenario as well
   #
-  def container
+  def container(create_if_missing = true)
     @container ||= begin
                      container   = swift.directories.get(container_name)
                      logger.debug("Swift container [#{container}] found") if container
                      container ||= create_container
                      container
                    rescue Fog::Storage::OpenStack::NotFound
-                     logger.debug("Swift container #{container_name} does not exist.  Creating.")
-                     create_container
+                     if create_if_missing
+                       logger.debug("Swift container #{container_name} does not exist.  Creating.")
+                       create_container
+                     else
+                       msg = ("Swift container #{container_name} does not exist.  #{err}")
+                       logger.error(msg)
+                       raise err, msg, err.backtrace
+                     end
                    rescue => err
                      msg = "Error getting Swift container #{container_name}. #{err}"
                      logger.error(msg)
@@ -138,20 +144,8 @@ class MiqSwiftStorage < MiqObjectStorage
     raise err, msg, err.backtrace
   end
 
-  def download_single(source, destination)
-    object_key = @container_name
-    logger.debug("Downloading [#{source}] from bucket [#{bucket_name}] to local file [#{destination}]")
-
-    with_standard_s3_error_handling("downloading", source) do
-      if destination.kind_of?(IO)
-        s3.client.get_object(:bucket => bucket_name, :key => object_key) do |chunk|
-          destination.write(chunk)
-        end
-      else # assume file path
-        bucket.object(source).download_file(destination)
-      end
-    end
-    local_file
+  def download_single(_source, _destination)
+    raise NotImplementedError, "MiqSwiftStorage.download_single Not Yet Implemented"
   end
 
   def query_params(query_string)
