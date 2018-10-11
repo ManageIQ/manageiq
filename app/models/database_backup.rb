@@ -1,8 +1,9 @@
 class DatabaseBackup < ApplicationRecord
   SUPPORTED_DEPOTS = {
-    'smb' => 'Samba',
-    'nfs' => 'Network File System',
-    's3'  => 'AWS S3'
+    'smb'   => 'Samba',
+    'nfs'   => 'Network File System',
+    's3'    => 'AWS S3',
+    'swift' => 'OpenStack Swift'
   }.freeze
 
   def self.supported_depots
