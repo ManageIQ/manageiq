@@ -13,7 +13,7 @@ describe CustomButton do
 
       context 'by string column' do
         it 'orders by name column' do
-          expect(CustomButton.with_array_order(%w(BBB AAA CCC), :name, :text).ids).to eq([custom_button_2.id, custom_button_1.id, custom_button_3.id])
+          expect(CustomButton.with_array_order(%w(BBB AAA CCC), :name).ids).to eq([custom_button_2.id, custom_button_1.id, custom_button_3.id])
         end
       end
     end
