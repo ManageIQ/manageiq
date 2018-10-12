@@ -99,7 +99,7 @@ class EmbeddedAnsible
   end
 
   def generate_password
-    SecureRandom.base64(18).tr("+/", "-_")
+    SecureRandom.hex(18)
   end
 
   def miq_database

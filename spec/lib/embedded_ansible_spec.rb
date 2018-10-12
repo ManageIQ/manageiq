@@ -231,5 +231,14 @@ describe EmbeddedAnsible do
         expect(auth).to have_attributes(:userid => "awx", :password => "mypassword")
       end
     end
+
+    describe "#generate_password (private)" do
+      it "doesn't include special characters" do
+        100.times do
+          pass = subject.send(:generate_password)
+          expect(pass).to match(/^[a-zA-Z0-9]+$/)
+        end
+      end
+    end
   end
 end
