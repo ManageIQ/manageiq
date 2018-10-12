@@ -73,7 +73,6 @@ describe VmdbDatabase do
 
   context ".report_client_connections" do
     it "will return an array of hashes and verify hash keys for client connections query" do
-      skip("awaiting CI database upgrade to 9.2.4") if (described_class.connection.send(:postgresql_version) rescue nil).to_i < 90200
       connections = described_class.report_client_connections
       expect(connections).to be_kind_of(Array)
 
