@@ -3,7 +3,7 @@ require "util/mount/miq_generic_mount_session"
 require "util/miq_object_storage"
 
 class MockLocalFileStorage < MiqObjectStorage
-  def initialize source_path = nil, byte_count = 2.megabytes
+  def initialize(source_path = nil, byte_count = 2.megabytes)
     @byte_count   = byte_count
     @source_input = File.open(source_path, "rb") if source_path
     @root_dir     = Dir.tmpdir
@@ -62,7 +62,6 @@ describe MiqObjectStorage do
 
     context "non-split files (byte_count == nil)" do
       subject          { MockLocalFileStorage.new source_path, byte_count }
-
       let(:byte_count) { nil }
 
       it "streams the whole file over" do

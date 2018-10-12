@@ -90,11 +90,14 @@ describe MiqFileStorage do
 
     context "with an swift:// uri" do
       before { opts_for_swift_with_params }
-       include_examples ".with_interface_class implementation", "MiqSwiftStorage"
+
+      include_examples ".with_interface_class implementation", "MiqSwiftStorage"
     end
-     context "with an swift:// uri and no query params" do
+
+    context "with an swift:// uri and no query params" do
       before { opts_for_swift_without_params }
-       include_examples ".with_interface_class implementation", "MiqSwiftStorage"
+
+      include_examples ".with_interface_class implementation", "MiqSwiftStorage"
     end
 
     context "with an unknown uri scheme" do
