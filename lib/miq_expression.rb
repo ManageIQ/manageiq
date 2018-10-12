@@ -1448,7 +1448,7 @@ class MiqExpression
 
       arel  = relation.arel
       binds = relation.bound_attributes
-      binds = connection.prepare_binds_for_database(binds)
+      binds = binds.collect(&:value_for_database)
       binds.map! { |value| connection.quote(value) }
       collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
       collect.substitute_binds(binds).join
