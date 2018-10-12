@@ -22,11 +22,11 @@ class MiqObjectStorage < MiqFileStorage::Interface
 
   private
 
-  DONE_READING = ""
+  DONE_READING = "".freeze
   def read_single_chunk(chunksize = DEFAULT_CHUNKSIZE)
     @buf_left ||= byte_count
     return DONE_READING unless @buf_left.nil? || @buf_left.positive?
-    cur_readsize = if (@buf_left.nil? || @buf_left - chunksize >= 0)
+    cur_readsize = if @buf_left.nil? || @buf_left - chunksize >= 0
                      chunksize
                    else
                      @buf_left

@@ -1,4 +1,3 @@
-require 'pp'
 require 'util/miq_object_storage'
 
 class MiqSwiftStorage < MiqObjectStorage
@@ -16,7 +15,7 @@ class MiqSwiftStorage < MiqObjectStorage
     super(settings)
 
     # NOTE: This line to be removed once manageiq-ui-class region change implemented.
-    @bucket_name         = URI(@settings[:uri]).host
+    @bucket_name = URI(@settings[:uri]).host
 
     raise "username and password are required values!" if @settings[:username].nil? || @settings[:password].nil?
     _scheme, _userinfo, @host, @port, _registry, @mount_path, _opaque, query, _fragment = URI.split(URI.encode(@settings[:uri]))
@@ -58,6 +57,16 @@ class MiqSwiftStorage < MiqObjectStorage
         :method        => "PUT",
         :path          => "#{Fog::OpenStack.escape(swift_file.directory.key)}/#{Fog::OpenStack.escape(swift_file.key)}"
       }
+      #
+      # Because of how `Fog::OpenStack` (and probably `Fog::Core`) is designed,
+      # it has hidden the functionality to provide a block for streaming uploads
+      # that is available out of the box with Excon.
+      #
+      # we use .send here because #request is private
+      # we can't use #put_object (public) directly because it doesn't allow a 202 response code,
+      # which is what swift responds with when we pass it the :request_block
+      # (This allows us to stream the response in chunks)
+      #
       swift_file.service.send(:request, params)
       clear_split_vars
     rescue Excon::Errors::Unauthorized => err
@@ -75,29 +84,29 @@ class MiqSwiftStorage < MiqObjectStorage
     container
   end
 
-
   #
   # Some calls to Fog::Storage::OpenStack::Directories#get will
   # return 'nil', and not return an error.  This would cause errors down the
   # line in '#upload' or '#download'.
   #
   # Instead of investigating further, we created a new method that is in charge of
-  # OpenStack container creation, and that is called from '#container' if 'nil' is
-  # returned from 'swift.directories.get(container_name)', or  call '#create_container' 
-  # in the rescue case for 'NotFound' to cover that scenario as well
+  # OpenStack container creation, '#create_container', and that is called from '#container'
+  # if 'nil' is returned from 'swift.directories.get(container_name)', or in the rescue case
+  # for 'NotFound' to cover that scenario as well
   #
+
   def container(create_if_missing = true)
     @container ||= begin
-                     container   = swift.directories.get(container_name)
+                     container = swift.directories.get(container_name)
                      logger.debug("Swift container [#{container}] found") if container
-                     container ||= create_container
+                     unless container raise Fog::Storage::OpenStack::NotFound
                      container
                    rescue Fog::Storage::OpenStack::NotFound
                      if create_if_missing
                        logger.debug("Swift container #{container_name} does not exist.  Creating.")
                        create_container
                      else
-                       msg = ("Swift container #{container_name} does not exist.  #{err}")
+                       msg = "Swift container #{container_name} does not exist.  #{err}"
                        logger.error(msg)
                        raise err, msg, err.backtrace
                      end
