@@ -6,6 +6,16 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::AuthPrivateKey
 
   include_concern 'Operations'
 
+  # TODO(aveselov): remove this method and add filtering of keypairs with rbac
+  # This validation considers that default user in CF has no openstack_user_id assigned to it
+  def self.filter_key_pairs
+    if User.current_user.settings[:openstack_user_id].nil?
+      self.all
+    else
+      where(:userid => User.current_user.settings[:openstack_user_id])
+    end
+  end
+
   def self.class_by_ems(ext_management_system)
     ext_management_system.class::AuthKeyPair
   end
