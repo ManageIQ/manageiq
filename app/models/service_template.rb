@@ -422,13 +422,7 @@ class ServiceTemplate < ApplicationRecord
   def provision_workflow(user, dialog_options = nil, request_options = {})
     dialog_options ||= {}
     request_options.delete(:provision_workflow) if request_options[:submit_workflow]
-
-    ra_options = {
-      :target             => self,
-      :initiator          => request_options[:initiator],
-      :submit_workflow    => request_options[:submit_workflow],
-      :provision_workflow => request_options[:provision_workflow]
-    }
+    ra_options = request_options.slice(:initiator, :init_defaults, :provision_workflow, :submit_workflow).merge(:target => self)
 
     ResourceActionWorkflow.new(dialog_options, user, provision_action, ra_options).tap do |wf|
       wf.request_options = request_options

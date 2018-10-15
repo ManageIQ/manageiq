@@ -979,6 +979,7 @@
   :name:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
+  :run_automate_methods_on_service_api_submit: false
 :prototype:
   :queue_type: miq_queue
   :artemis:
