@@ -12,10 +12,10 @@ shared_context "generated tmp files" do
     # When source_file.unlink is called, it will make it so `source_file.path`
     # returns `nil`.  Cache it's value incase it hasn't been accessed in the
     # tests so we can clear out the generated files properly.
-    _source_path = source_path
+    tmp_source_path = source_path
 
     source_file.unlink
-    Dir["#{_source_path.expand_path}.*"].each do |file|
+    Dir["#{tmp_source_path.expand_path}.*"].each do |file|
       File.delete(file)
     end
 
