@@ -7,6 +7,10 @@ class ConversionHost < ApplicationRecord
   has_many :service_template_transformation_plan_tasks, :dependent => :nullify
   has_many :active_tasks, -> { where(:state => 'active') }, :class_name => ServiceTemplateTransformationPlanTask, :inverse_of => :conversion_host
 
+  def ext_management_system
+    resource.ext_management_system
+  end
+
   # To be eligible, a conversion host must have the following properties
   #  - A transport mechanism is configured for source (set by 3rd party)
   #  - Credentials are set on the resource and SSH connection works
