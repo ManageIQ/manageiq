@@ -25,7 +25,7 @@ class MiqObjectStorage < MiqFileStorage::Interface
   DONE_READING = "".freeze
   def read_single_chunk(chunksize = DEFAULT_CHUNKSIZE)
     @buf_left ||= byte_count
-    return DONE_READING unless @buf_left.nil? || @buf_left.positive?
+    return DONE_READING.dup unless @buf_left.nil? || @buf_left.positive?
     cur_readsize = if @buf_left.nil? || @buf_left - chunksize >= 0
                      chunksize
                    else

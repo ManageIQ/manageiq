@@ -26,11 +26,6 @@ class MiqSwiftStorage < MiqObjectStorage
     @container_name = @mount_path[0] == File::Separator ? @mount_path[1..-1] : @mount_path
   end
 
-  def uri_to_local_path(remote_file)
-    # Strip off the leading "swift:/" from the URI"
-    File.join(@mnt_point, URI(remote_file).host, URI(remote_file).path)
-  end
-
   def uri_to_object_path(remote_file)
     # Strip off the leading "swift://" and the container name from the URI"
     # Also remove the leading delimiter.
@@ -99,7 +94,7 @@ class MiqSwiftStorage < MiqObjectStorage
     @container ||= begin
                      container = swift.directories.get(container_name)
                      logger.debug("Swift container [#{container}] found") if container
-                     unless container raise Fog::Storage::OpenStack::NotFound
+                     raise Fog::Storage::OpenStack::NotFound unless container
                      container
                    rescue Fog::Storage::OpenStack::NotFound
                      if create_if_missing
