@@ -127,12 +127,6 @@ describe ConversionHost do
     end
   end
 
-  shared_examples_for "#ext_management_system" do
-    it "returns the EMS of resource" do
-      expect(conversion_host.ext_management_system).to eq(ems)
-    end
-  end
-
   shared_examples_for "#check_ssh_connection" do
     it "fails when SSH send an error" do
       allow(conversion_host).to receive(:connect).and_raise('Unexpected failure')
@@ -149,8 +143,6 @@ describe ConversionHost do
     let(:ems) { FactoryGirl.create(:ems_redhat, :zone => FactoryGirl.create(:zone)) }
     let(:host) { FactoryGirl.create(:host_redhat, :ext_management_system => ems) }
     let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host, :vddk_transport_supported => true) }
-
-    it_behaves_like "#ext_management_system"
 
     context "host userid is nil" do
       before { allow(host).to receive(:authentication_userid).and_return(nil) }
@@ -176,8 +168,6 @@ describe ConversionHost do
     let(:ems) { FactoryGirl.create(:ems_openstack, :zone => FactoryGirl.create(:zone)) }
     let(:vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
     let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => vm, :vddk_transport_supported => true) }
-
-    it_behaves_like "#ext_management_system"
 
     context "ems authentications is empty" do
       it { expect(conversion_host.check_ssh_connection).to be(false) }
