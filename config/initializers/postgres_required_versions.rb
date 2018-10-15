@@ -2,8 +2,8 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.prepend Module.new {
   def initialize(*args)
     super
 
-    if postgresql_version < 90400
-      raise "The version of PostgreSQL being connected to is incompatible with #{Vmdb::Appliance.PRODUCT_NAME} (9.4+ required)"
+    if postgresql_version < 90500
+      raise "The version of PostgreSQL being connected to is incompatible with #{Vmdb::Appliance.PRODUCT_NAME} (9.5 required)"
     end
 
     if postgresql_version >= 90600
