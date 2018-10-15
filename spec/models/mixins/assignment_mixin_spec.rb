@@ -46,6 +46,32 @@ describe AssignmentMixin do
     end
   end
 
+  describe "#get_assigned_tos" do
+    let(:cc_classification)  { FactoryGirl.create(:classification_cost_center) }
+    let(:classification_tag) { FactoryGirl.create(:classification_tag, :parent => cc_classification) }
+    let(:vm)                 { FactoryGirl.create(:vm) }
+    let(:alert_set)          { FactoryGirl.create(:miq_alert_set) }
+
+    before do
+      alert_set.assign_to_objects([vm])
+      alert_set.assign_to_tags([classification_tag], "vms")
+    end
+
+    it "returns objects and tags" do
+      assigned_tos = alert_set.get_assigned_tos
+      expect(assigned_tos[:objects]).to include(vm)
+      expect(assigned_tos[:tags]).to include([classification_tag, "vms"])
+    end
+
+    it "doesn't return tags when classification is missing" do
+      classification_tag.destroy
+
+      assigned_tos = alert_set.get_assigned_tos
+      expect(assigned_tos[:objects]).to include(vm)
+      expect(alert_set.get_assigned_tos[:tags]).to be_empty
+    end
+  end
+
   describe ".all_assignments" do
     it "returns only tags representing assignments" do
       t1 = Tag.create(:name => "/chargeback_rate/assigned_to/vm/tag/managed/environment/any1")
