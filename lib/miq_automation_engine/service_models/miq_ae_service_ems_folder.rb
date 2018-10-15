@@ -1,7 +1,8 @@
 module MiqAeMethodService
   class MiqAeServiceEmsFolder < MiqAeServiceModelBase
-    expose :hosts, :association => true
-    expose :vms,   :association => true
+    expose :hosts,   :association => true
+    expose :vms,     :association => true
+    expose :folders, :association => true
 
     def register_host(host)
       ar_method do
