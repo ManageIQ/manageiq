@@ -35,7 +35,6 @@
   - event_streams
   - container_dashboard
   - ems_container
-  - ems_container_deployment
   - configuration_job
   - container_project
   - container_route
