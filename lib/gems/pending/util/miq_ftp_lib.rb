@@ -56,7 +56,11 @@ module MiqFtpLib
       end
       ftp.chdir(directory)
     end
-    ftp.chdir(pwd)
+  rescue Net::FTPPermError
+    raise unless @username.nil? && @password.nil?
+    _log.info("introspection of directories disabled. skipping create_directory_structure")
+  ensure
+    ftp.chdir(pwd) if pwd
   end
 
   def with_connection(cred_hash = nil)
