@@ -295,6 +295,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :os_password         => destination_ems.authentication_password,
         :os_project_name     => cluster.name
       },
+      :osp_server_id              => conversion_host.ems_ref,
       :osp_destination_project_id => cluster.ems_ref,
       :osp_volume_type_id         => storage.ems_ref,
       :osp_flavor_id              => destination_flavor.ems_ref,

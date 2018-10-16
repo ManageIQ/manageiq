@@ -570,6 +570,7 @@ describe ServiceTemplateTransformationPlanTask do
                 :os_password         => dst_ems.authentication_password,
                 :os_project_name     => dst_cloud_tenant.name
               },
+              :osp_server_id              => conversion_host.ems_ref,
               :osp_destination_project_id => dst_cloud_tenant.ems_ref,
               :osp_volume_type_id         => dst_cloud_volume_type.ems_ref,
               :osp_flavor_id              => dst_flavor.ems_ref,
@@ -603,6 +604,7 @@ describe ServiceTemplateTransformationPlanTask do
                 :os_password         => dst_ems.authentication_password,
                 :os_project_name     => dst_cloud_tenant.name
               },
+              :osp_server_id              => conversion_host.ems_ref,
               :osp_destination_project_id => dst_cloud_tenant.ems_ref,
               :osp_volume_type_id         => dst_cloud_volume_type.ems_ref,
               :osp_flavor_id              => dst_flavor.ems_ref,
