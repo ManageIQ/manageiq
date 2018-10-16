@@ -13,8 +13,6 @@ class MiqSwiftStorage < MiqObjectStorage
 
   def initialize(settings)
     super(settings)
-
-    # NOTE: This line to be removed once manageiq-ui-class region change implemented.
     @bucket_name = URI(@settings[:uri]).host
 
     raise "username and password are required values!" if @settings[:username].nil? || @settings[:password].nil?
@@ -114,16 +112,18 @@ class MiqSwiftStorage < MiqObjectStorage
 
   private
 
-  def swift
-    return @swift if @swift
-    require 'fog/openstack'
-
-    auth_url = URI::Generic.build(
+  def auth_url
+    URI::Generic.build(
       :scheme => @security_protocol == 'non-ssl' ? "http" : "https",
       :host   => @host,
       :port   => @port.to_i,
       :path   => "/#{@api_version}#{@api_version == "v3" ? "/auth" : ".0"}/tokens"
     ).to_s
+  end
+
+  def swift
+    return @swift if @swift
+    require 'fog/openstack'
 
     connection_params = {
       :openstack_auth_url          => auth_url,
