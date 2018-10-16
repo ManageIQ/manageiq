@@ -22,6 +22,8 @@ module Rbac
 
       any     = options[:any]
 
+      identifier = MiqProductFeature.current_tenant_identifier(identifier)
+
       auth = if any.present?
                user_role_allows_any?(user, :identifiers => (identifiers || [identifier]))
              else

@@ -2,6 +2,18 @@ require 'tmpdir'
 require 'pathname'
 
 describe MiqProductFeature do
+  let(:miq_product_feature_class) do
+    Class.new(described_class) do
+      def self.with_parent_tenant_nodes
+        includes(:parent).where(:parents_miq_product_features => {:identifier => self::TENANT_FEATURE_ROOT_IDENTIFIERS})
+      end
+
+      def self.tenant_features_in_hash
+        with_parent_tenant_nodes.map { |x| x.slice(:name, :description, :identifier, :tenant_id) }
+      end
+    end
+  end
+
   # - container_dashboard
   # - miq_report_widget_editor
   #   - miq_report_widget_admin
@@ -55,7 +67,7 @@ describe MiqProductFeature do
         :children     => [
           {
             :feature_type => "node",
-            :identifier   => "one",
+            :identifier   => "dialog_new_editor",
             :name         => "One",
             :children     => []
           }
@@ -77,7 +89,7 @@ describe MiqProductFeature do
 
     it "existing records" do
       deleted   = FactoryGirl.create(:miq_product_feature, :identifier => "xxx")
-      changed   = FactoryGirl.create(:miq_product_feature, :identifier => "one", :name => "XXX")
+      changed   = FactoryGirl.create(:miq_product_feature, :identifier => "dialog_new_editor", :name => "XXX")
       unchanged = FactoryGirl.create(:miq_product_feature_everything)
       unchanged_orig_updated_at = unchanged.updated_at
 
@@ -90,7 +102,7 @@ describe MiqProductFeature do
     it "additional yaml feature" do
       additional = {
         :feature_type => "node",
-        :identifier   => "two",
+        :identifier   => "dialog_edit_editor",
         :children     => []
       }
 
@@ -101,10 +113,136 @@ describe MiqProductFeature do
 
       status_seed = MiqProductFeature.seed_features(feature_path)
       expect(MiqProductFeature.count).to eq(3)
-      expect(status_seed[:created]).to match_array %w(everything one two)
+      expect(status_seed[:created]).to match_array %w(everything dialog_new_editor dialog_edit_editor)
 
       additional_file.unlink
       Dir.rmdir(feature_path)
+    end
+
+    context 'dynamic product features' do
+      context 'add new' do
+        let(:base) do
+          {
+            :feature_type => "node",
+            :identifier   => "everything",
+            :children     => [
+              {
+                :feature_type => "node",
+                :identifier   => "one",
+                :name         => "One",
+                :children     => [
+                  {
+                    :feature_type => "admin",
+                    :identifier   => "dialog_copy_editor",
+                    :name         => "Edit",
+                    :description  => "XXX"
+                  }
+                ]
+              }
+            ]
+          }
+        end
+
+        let(:root_tenant) do
+          Tenant.seed
+          Tenant.default_tenant
+        end
+
+        let!(:tenant) { FactoryGirl.create(:tenant, :parent => root_tenant) }
+
+        before do
+          MiqProductFeature.seed_features(feature_path)
+        end
+
+        it "creates tenant features" do
+          features = miq_product_feature_class.tenant_features_in_hash
+          expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+                                               "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
+                                           {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
+                                            "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id}])
+
+          expect(MiqProductFeature.where(:identifier => "dialog_copy_editor", :name => "Edit").count).to eq(1)
+        end
+
+        context "add tenant node product features" do
+          let(:base) do
+            {
+              :feature_type => "node",
+              :identifier   => "everything",
+              :children     => [
+                {
+                  :feature_type => "node",
+                  :identifier   => "one",
+                  :name         => "One",
+                  :children     => [
+                    {
+                      :feature_type => "admin",
+                      :identifier   => "dialog_copy_editor",
+                      :name         => "Edit",
+                      :description  => "XXX"
+                    }
+                  ]
+                },
+                {
+                  :feature_type => "admin",
+                  :identifier   => "dialog_delete",
+                  :name         => "Add",
+                  :description  => "YYY"
+                }
+              ]
+            }
+          end
+
+          it "add new tenant feature" do
+            features = miq_product_feature_class.tenant_features_in_hash
+            expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+                                               "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
+                                             {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
+                                              "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id},
+                                             {"name" => "Add (#{root_tenant.name})", "description" => "YYY for tenant #{root_tenant.name}",
+                                              "identifier" => "dialog_delete_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
+                                             {"name" => "Add (#{tenant.name})", "description" => "YYY for tenant #{tenant.name}",
+                                              "identifier" => "dialog_delete_tenant_#{tenant.id}", "tenant_id" => tenant.id}])
+
+            expect(MiqProductFeature.where(:identifier => "dialog_delete", :name => "Add").count).to eq(1)
+          end
+
+          context "remove added tenant feaure" do
+            let(:base) do
+              {
+                :feature_type => "node",
+                :identifier   => "everything",
+                :children     => [
+                  {
+                    :feature_type => "node",
+                    :identifier   => "one",
+                    :name         => "One",
+                    :children     => [
+                      {
+                        :feature_type => "admin",
+                        :identifier   => "dialog_copy_editor",
+                        :name         => "Edit",
+                        :description  => "XXX"
+                      }
+                    ]
+                  }
+                ]
+              }
+            end
+
+            it "removes tenant features" do
+              features = miq_product_feature_class.tenant_features_in_hash
+
+              expect(features).to match_array([{ "name" => "Edit (#{root_tenant.name})", "description" => "XXX for tenant #{root_tenant.name}",
+                                                 "identifier" => "dialog_copy_editor_tenant_#{root_tenant.id}", "tenant_id" => root_tenant.id},
+                                               {"name" => "Edit (#{tenant.name})", "description" => "XXX for tenant #{tenant.name}",
+                                                "identifier" => "dialog_copy_editor_tenant_#{tenant.id}", "tenant_id" => tenant.id}])
+
+              expect(MiqProductFeature.where(:identifier => "dialog_copy_editor", :name => "Edit").count).to eq(1)
+            end
+          end
+        end
+      end
     end
   end
 
