@@ -9,6 +9,7 @@ class MiqProductFeature < ApplicationRecord
   has_and_belongs_to_many :miq_user_roles, :join_table => :miq_roles_features
   has_many :miq_product_features_shares
   has_many :shares, :through => :miq_product_features_shares
+  belongs_to :tenant, :dependent => :destroy
 
   virtual_delegate :identifier, :to => :parent, :prefix => true, :allow_nil => true
 
