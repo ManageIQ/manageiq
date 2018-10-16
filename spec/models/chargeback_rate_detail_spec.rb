@@ -103,7 +103,7 @@ describe ChargebackRateDetail do
     end
   end
 
-  let(:consumption) { instance_double('Consumption', :hours_in_month => (1.month / 1.hour)) }
+  let(:consumption) { instance_double('Consumption', :hours_in_month => (30.days / 1.hour)) }
 
   it '#hourly_cost' do
     cvalue   = 42.0
@@ -169,7 +169,7 @@ describe ChargebackRateDetail do
     let(:monthly_rate) { FactoryBot.build(:chargeback_rate_detail, :per_time => 'monthly') }
     let(:weekly_consumption) { Chargeback::ConsumptionWithRollups.new([], Time.current - 1.week, Time.current) }
     it 'monhtly rate returns correct hourly(_rate) when consumption slice is weekly' do
-      expect(monthly_rate.hourly(rate, weekly_consumption)).to eq(rate / (1.month / 1.hour))
+      expect(monthly_rate.hourly(rate, weekly_consumption)).to eq(rate / (30.days / 1.hour))
     end
   end
 
