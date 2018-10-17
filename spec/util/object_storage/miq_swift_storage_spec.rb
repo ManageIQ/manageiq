@@ -28,6 +28,10 @@ describe MiqSwiftStorage do
       it "sets the host to foo.com" do
         expect(URI(object_storage.send(:auth_url)).host).to eq("foo.com")
       end
+
+      it "unsets the query string" do
+        expect(URI(object_storage.send(:auth_url)).query).to eq(nil)
+      end
     end
 
     context "with ssl security protocol" do
@@ -39,6 +43,10 @@ describe MiqSwiftStorage do
 
       it "sets the host to foo.com" do
         expect(URI(object_storage.send(:auth_url)).host).to eq("foo.com")
+      end
+
+      it "unsets the query string" do
+        expect(URI(object_storage.send(:auth_url)).query).to eq(nil)
       end
     end
 
