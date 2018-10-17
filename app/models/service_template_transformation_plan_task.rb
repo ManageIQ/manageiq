@@ -104,7 +104,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       {
         :source      => source_network.name,
         :destination => destination_network_ref(destination_network),
-        :mac_address => nic.address
+        :mac_address => nic.address,
+        :ip_address  => nic.network.try(:ipaddress)
       }
     end
   end

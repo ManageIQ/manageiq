@@ -311,12 +311,15 @@ describe ServiceTemplateTransformationPlanTask do
       let(:src_vm_1) { FactoryGirl.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host, :hardware => src_hardware) }
       let(:src_vm_2) { FactoryGirl.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
 
+      let(:src_network) { FactoryGirl.create(:network, :ipaddress => '10.0.0.1') }
+
       # Disks have to be stubbed because there's no factory for Disk class
       before do
         allow(src_hardware).to receive(:disks).and_return([src_disk_1, src_disk_2])
         allow(src_disk_1).to receive(:storage).and_return(src_storage)
         allow(src_disk_2).to receive(:storage).and_return(src_storage)
         allow(src_vm_1).to receive(:allocated_disk_storage).and_return(34_359_738_368)
+        allow(src_nic_1).to receive(:network).and_return(src_network)
         allow(src_host).to receive(:thumbprint_sha1).and_return('01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67')
         allow(src_host).to receive(:authentication_userid).and_return('esx_user')
         allow(src_host).to receive(:authentication_password).and_return('esx_passwd')
@@ -451,8 +454,8 @@ describe ServiceTemplateTransformationPlanTask do
         it "checks network mappings and generates network_mappings hash" do
           expect(task_1.network_mappings).to eq(
             [
-              { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address },
-              { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address }
+              { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.0.1' },
+              { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address, :ip_address => nil }
             ]
           )
         end
@@ -540,8 +543,8 @@ describe ServiceTemplateTransformationPlanTask do
         it "checks network mappings and generates network_mappings hash" do
           expect(task_1.network_mappings).to eq(
             [
-              { :source => src_lan_1.name, :destination => dst_cloud_network_1.ems_ref, :mac_address => src_nic_1.address },
-              { :source => src_lan_2.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address }
+              { :source => src_lan_1.name, :destination => dst_cloud_network_1.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.0.1' },
+              { :source => src_lan_2.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address, :ip_address => nil }
             ]
           )
         end
