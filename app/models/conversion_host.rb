@@ -136,7 +136,7 @@ class ConversionHost < ApplicationRecord
   end
 
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
-    [ hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil ]
+    [hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil]
   end 
 
   def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
@@ -144,7 +144,7 @@ class ConversionHost < ApplicationRecord
                              .where(:authtype => 'ssh_keypair')
                              .where.not(:userid => nil, :auth_key => nil)
                              .first
-    [ hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
+    [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
   end
 
   def ansible_playbook(playbook, extra_vars, connection)
