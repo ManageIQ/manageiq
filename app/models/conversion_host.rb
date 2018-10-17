@@ -122,7 +122,7 @@ class ConversionHost < ApplicationRecord
 
   def connect_ssh
     require 'MiqSshUtil'
-    MiqSshUtil.shell_with_su(miq_ssh_util_args) do |ssu, _shell|
+    MiqSshUtil.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
       yield(ssu)
     end  
   rescue Exception => e

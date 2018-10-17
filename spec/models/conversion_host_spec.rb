@@ -118,7 +118,6 @@ describe ConversionHost do
             expect(conversion_host_2.ipaddress('ipv6')).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
           end
         end
-
       end
 
       context "when hostname is set" do
