@@ -7,7 +7,7 @@ module ProcessTasksMixin
     def process_tasks(options)
       raise _("No ids given to process_tasks") if options[:ids].blank?
       if options[:task] == 'retire_now'
-        name.constantize.make_retire_request(*options[:ids])
+        name.constantize.make_retire_request(*options[:ids], User.current_user)
       elsif options[:task] == "refresh_ems" && respond_to?("refresh_ems")
         refresh_ems(options[:ids])
         msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
