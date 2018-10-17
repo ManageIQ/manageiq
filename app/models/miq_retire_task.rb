@@ -29,9 +29,9 @@ class MiqRetireTask < MiqRequestTask
         :object_id     => id,
         :attrs         => {"request" => req_type},
         :instance_name => "AUTOMATION",
-        :user_id       => 1,
-        :miq_group_id  => 2,
-        :tenant_id     => 1,
+        :user_id       => miq_request.requester.id,
+        :miq_group_id  => miq_request.requester.current_group_id,
+        :tenant_id     => miq_request.requester.current_group.tenant_id,
       }
 
       MiqAeEngine::set_automation_attributes_from_objects(source, args[:attrs])
