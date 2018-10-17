@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 96 ending 2018-10-08
+
+### Added
+- Get container statuses during refresh [(#18016)](https://github.com/ManageIQ/manageiq/pull/18016)
+- Move from apache module mod_auth_kerb to mod_auth_gssapi [(#18014)](https://github.com/ManageIQ/manageiq/pull/18014)
+- Add Redfish event catcher [(#18013)](https://github.com/ManageIQ/manageiq/pull/18013)
+- Detect and log long running http(s) requests [(#17842)](https://github.com/ManageIQ/manageiq/pull/17842)
+
+### Fixed
+- Don't translate FileDepot types [(#18069)](https://github.com/ManageIQ/manageiq/pull/18069)
+- Don't use interpolation in gettext strings [(#18067)](https://github.com/ManageIQ/manageiq/pull/18067)
+- Force targets to be an array so we can each them in cb run on multiple objects [(#18056)](https://github.com/ManageIQ/manageiq/pull/18056)
+- Don't start memcached in any container runtime [(#18051)](https://github.com/ManageIQ/manageiq/pull/18051)
+- Fix ordering in list of custom buttons [(#18049)](https://github.com/ManageIQ/manageiq/pull/18049)
+- Fix typo in message if VM has no provider [(#18047)](https://github.com/ManageIQ/manageiq/pull/18047)
+- Create custom button events for each object in target list [(#18042)](https://github.com/ManageIQ/manageiq/pull/18042)
+- Queue reporting work for any zone [(#18041)](https://github.com/ManageIQ/manageiq/pull/18041)
+- Currently on a successful ActionResult (start / stop) we return nil [(#18036)](https://github.com/ManageIQ/manageiq/pull/18036)
+- Fix Notifications None [(#18035)](https://github.com/ManageIQ/manageiq/pull/18035)
+- Validate towhat policy field [(#18032)](https://github.com/ManageIQ/manageiq/pull/18032)
+- Do not double encrypt a protected password dialog text field [(#18031)](https://github.com/ManageIQ/manageiq/pull/18031)
+- Hide the password values in the log messages. [(#18028)](https://github.com/ManageIQ/manageiq/pull/18028)
+- Properly create tenant default group for population [(#18025)](https://github.com/ManageIQ/manageiq/pull/18025)
+- Properly serialize OrchestrationStack class name for MiqRetireTask.request_type [(#18023)](https://github.com/ManageIQ/manageiq/pull/18023)
+- Fixed MiqExpression evaluation on tagged Services  [(#18020)](https://github.com/ManageIQ/manageiq/pull/18020)
+- Rescue NoMethodError to prevent requeueing something that won't work [(#18017)](https://github.com/ManageIQ/manageiq/pull/18017)
+- update attribute_builder for rails change [(#17996)](https://github.com/ManageIQ/manageiq/pull/17996)
+- Add a patch to ActiveRecord::Migration for tracking replicated migrations [(#17919)](https://github.com/ManageIQ/manageiq/pull/17919)
+
 ## Unreleased as of Sprint 95 ending 2018-09-24
 
 ### Added
