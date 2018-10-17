@@ -34,6 +34,7 @@ class ConversionHost < ApplicationRecord
   end
 
   def ipaddress(family = 'ipv4')
+    return resource.hostname if resource.hostname
     return address if address && IPAddr.new(address).send("#{family}?")
     resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
   end 
