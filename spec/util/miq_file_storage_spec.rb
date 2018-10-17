@@ -20,6 +20,18 @@ describe MiqFileStorage do
     opts[:uri] = "ftp://example.com/share/path/to/file.txt"
   end
 
+  def opts_for_swift_without_params
+    opts[:uri]      = "swift://example.com/share/path/to/file.txt"
+    opts[:username] = "user"
+    opts[:password] = "pass"
+  end
+
+  def opts_for_swift_with_params
+    opts[:uri]      = "swift://example.com/share/path/to/file.txt?region=foo"
+    opts[:username] = "user"
+    opts[:password] = "pass"
+  end
+
   def opts_for_fakefs
     opts[:uri] = "foo://example.com/share/path/to/file.txt"
   end
@@ -74,6 +86,18 @@ describe MiqFileStorage do
       before { opts_for_ftp }
 
       include_examples ".with_interface_class implementation", "MiqFtpStorage"
+    end
+
+    context "with an swift:// uri" do
+      before { opts_for_swift_with_params }
+
+      include_examples ".with_interface_class implementation", "MiqSwiftStorage"
+    end
+
+    context "with an swift:// uri and no query params" do
+      before { opts_for_swift_without_params }
+
+      include_examples ".with_interface_class implementation", "MiqSwiftStorage"
     end
 
     context "with an unknown uri scheme" do
