@@ -42,6 +42,8 @@ module ManageIQ::Providers
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
 
+    after_destroy :destroy_mapped_tenants
+
     # Development helper method for Rails console for opening a browser to the EMS.
     #
     # This method is NOT meant to be called from production code.
@@ -141,6 +143,14 @@ module ManageIQ::Providers
 
     def self.display_name(number = 1)
       n_('Cloud Manager', 'Cloud Managers', number)
+    end
+
+    def destroy_mapped_tenants
+      if source_tenant
+        source_tenant.all_subtenants.destroy_all
+        source_tenant.all_subprojects.destroy_all
+        source_tenant.destroy
+      end
     end
   end
 end
