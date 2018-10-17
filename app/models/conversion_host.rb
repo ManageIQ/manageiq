@@ -7,6 +7,7 @@ class ConversionHost < ApplicationRecord
   has_many :service_template_transformation_plan_tasks, :dependent => :nullify
   has_many :active_tasks, -> { where(:state => 'active') }, :class_name => ServiceTemplateTransformationPlanTask, :inverse_of => :conversion_host
   delegate :ext_management_system, :to => :resource, :allow_nil => true
+  delegate :hostname, :to => :resource, :allow_nil => true
 
   # To be eligible, a conversion host must have the following properties
   #  - A transport mechanism is configured for source (set by 3rd party)
@@ -34,13 +35,13 @@ class ConversionHost < ApplicationRecord
   end
 
   def ipaddress(family = 'ipv4')
-    return resource.hostname if resource.hostname
     return address if address && IPAddr.new(address).send("#{family}?")
     resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
   end 
 
   def run_conversion(conversion_options)
-    connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', nil, nil, conversion_options.to_json) }
+    result = connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', nil, nil, conversion_options.to_json) }
+    JSON.parse(result)
   rescue => e
     raise "Starting conversion failed on '#{resource.name}' with [#{e.class}: #{e}]"
   end
@@ -135,7 +136,7 @@ class ConversionHost < ApplicationRecord
   end
 
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
-    [ ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil ]
+    [ hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil ]
   end 
 
   def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
@@ -143,7 +144,7 @@ class ConversionHost < ApplicationRecord
                              .where(:authtype => 'ssh_keypair')
                              .where.not(:userid => nil, :auth_key => nil)
                              .first
-    [ ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
+    [ hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
   end
 
   def ansible_playbook(playbook, extra_vars, connection)

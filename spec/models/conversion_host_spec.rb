@@ -88,41 +88,28 @@ describe ConversionHost do
     end
 
     context "#ipaddress" do
-      context "when hostname is not set" do
-        before do
-          allow(host).to receive(:hostname).and_return(nil)
-          allow(vm).to receive(:hostname).and_return(nil)
-        end
-
-        it "returns first IP address if 'address' is nil" do
-          expect(conversion_host_1.ipaddress).to eq('10.0.0.1')
-          expect(conversion_host_2.ipaddress).to eq('10.0.1.1')
-          expect(conversion_host_1.ipaddress('ipv4')).to eq('10.0.0.1')
-          expect(conversion_host_2.ipaddress('ipv4')).to eq('10.0.1.1')
-          expect(conversion_host_1.ipaddress('ipv6')).to eq('FE80:0000:0000:0000:0202:B3FF:FE1E:8329')
-          expect(conversion_host_2.ipaddress('ipv6')).to eq('FE80::0202:B3FF:FE1E:3267')
-        end
-
-        context "when address is set" do
-          before do
-            allow(conversion_host_1).to receive(:address).and_return('172.16.0.1')
-            allow(conversion_host_2).to receive(:address).and_return('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
-          end
-
-          it "returns 'address' if family matches, is invalid or is nil" do
-            expect(conversion_host_1.ipaddress).to eq('172.16.0.1')
-            expect(conversion_host_2.ipaddress).to eq('10.0.1.1')
-            expect(conversion_host_1.ipaddress('ipv4')).to eq('172.16.0.1')
-            expect(conversion_host_2.ipaddress('ipv4')).to eq('10.0.1.1')
-            expect(conversion_host_1.ipaddress('ipv6')).to eq('FE80:0000:0000:0000:0202:B3FF:FE1E:8329')
-            expect(conversion_host_2.ipaddress('ipv6')).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
-          end
-        end
+      it "returns first IP address if 'address' is nil" do
+        expect(conversion_host_1.ipaddress).to eq('10.0.0.1')
+        expect(conversion_host_2.ipaddress).to eq('10.0.1.1')
+        expect(conversion_host_1.ipaddress('ipv4')).to eq('10.0.0.1')
+        expect(conversion_host_2.ipaddress('ipv4')).to eq('10.0.1.1')
+        expect(conversion_host_1.ipaddress('ipv6')).to eq('FE80:0000:0000:0000:0202:B3FF:FE1E:8329')
+        expect(conversion_host_2.ipaddress('ipv6')).to eq('FE80::0202:B3FF:FE1E:3267')
       end
 
-      context "when hostname is set" do
-        it "returns hostname" do
-          expect(conversion_host_1.ipaddress).to eq(host.hostname)
+      context "when address is set" do
+        before do
+          allow(conversion_host_1).to receive(:address).and_return('172.16.0.1')
+          allow(conversion_host_2).to receive(:address).and_return('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
+        end
+
+        it "returns 'address' if family matches, is invalid or is nil" do
+          expect(conversion_host_1.ipaddress).to eq('172.16.0.1')
+          expect(conversion_host_2.ipaddress).to eq('10.0.1.1')
+          expect(conversion_host_1.ipaddress('ipv4')).to eq('172.16.0.1')
+          expect(conversion_host_2.ipaddress('ipv4')).to eq('10.0.1.1')
+          expect(conversion_host_1.ipaddress('ipv6')).to eq('FE80:0000:0000:0000:0202:B3FF:FE1E:8329')
+          expect(conversion_host_2.ipaddress('ipv6')).to eq('2001:0DB8:85A3:0000:0000:8A2E:0370:7334')
         end
       end
     end
