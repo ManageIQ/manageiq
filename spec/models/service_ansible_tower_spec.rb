@@ -61,11 +61,26 @@ describe ServiceAnsibleTower do
   end
 
   describe '#launch_job' do
+    let(:control_extras) { {'a' => 'A', 'b' => 'B', 'c' => 'C'} }
+    before do
+      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      miq_request_task = FactoryGirl.create(:miq_request_task, :miq_request => FactoryGirl.create(:service_template_provision_request))
+      miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
+      service.update_attributes(:evm_owner        => FactoryGirl.create(:user_with_group),
+                                :miq_group        => FactoryGirl.create(:miq_group),
+                                :miq_request_task => miq_request_task)
+    end
+
     it 'launches a job through ansible tower provider' do
       allow(ManageIQ::Providers::AnsibleTower::AutomationManager::Job).to receive(:raw_create_stack) do |template, opts|
         expect(template).to be_kind_of ConfigurationScript
         expect(opts).to have_key(:limit)
         expect(opts).to have_key(:extra_vars)
+
+        exposed_miq = %w(api_url api_token service user group X_MIQ_Group request_task request) + control_extras.keys
+        exposed_connection = %w(url token X_MIQ_Group)
+        expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
+        expect(opts[:extra_vars].delete('manageiq_connection').keys).to include(*exposed_connection)
       end.and_return(double(:raw_job,
                             :id              => 1,
                             :status          => "completed",
