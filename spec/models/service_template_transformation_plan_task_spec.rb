@@ -311,12 +311,15 @@ describe ServiceTemplateTransformationPlanTask do
       let(:src_vm_1) { FactoryGirl.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host, :hardware => src_hardware) }
       let(:src_vm_2) { FactoryGirl.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
 
+      let(:src_network) { FactoryGirl.create(:network, :ipaddress => '10.0.0.1') }
+
       # Disks have to be stubbed because there's no factory for Disk class
       before do
         allow(src_hardware).to receive(:disks).and_return([src_disk_1, src_disk_2])
         allow(src_disk_1).to receive(:storage).and_return(src_storage)
         allow(src_disk_2).to receive(:storage).and_return(src_storage)
         allow(src_vm_1).to receive(:allocated_disk_storage).and_return(34_359_738_368)
+        allow(src_nic_1).to receive(:network).and_return(src_network)
         allow(src_host).to receive(:thumbprint_sha1).and_return('01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67')
         allow(src_host).to receive(:authentication_userid).and_return('esx_user')
         allow(src_host).to receive(:authentication_password).and_return('esx_passwd')
@@ -451,8 +454,8 @@ describe ServiceTemplateTransformationPlanTask do
         it "checks network mappings and generates network_mappings hash" do
           expect(task_1.network_mappings).to eq(
             [
-              { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address },
-              { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address }
+              { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.0.1' },
+              { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address, :ip_address => nil }
             ]
           )
         end
@@ -507,14 +510,15 @@ describe ServiceTemplateTransformationPlanTask do
       end
 
       context 'destination is openstack' do
-        let(:dst_ems) { FactoryGirl.create(:ems_openstack, :zone => FactoryGirl.create(:zone)) }
+        let(:dst_ems) { FactoryGirl.create(:ems_openstack, :api_version => 'v3', :zone => FactoryGirl.create(:zone)) }
         let(:dst_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :ext_management_system => dst_ems) }
         let(:dst_cloud_volume_type) { FactoryGirl.create(:cloud_volume_type) }
         let(:dst_cloud_network_1) { FactoryGirl.create(:cloud_network) }
         let(:dst_cloud_network_2) { FactoryGirl.create(:cloud_network) }
         let(:dst_flavor) { FactoryGirl.create(:flavor) }
         let(:dst_security_group) { FactoryGirl.create(:security_group) }
-        let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => FactoryGirl.create(:vm, :ext_management_system => dst_ems)) }
+        let(:conversion_host_vm) { FactoryGirl.create(:vm, :ext_management_system => dst_ems) }
+        let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => conversion_host_vm) }
 
         let(:mapping) do
           FactoryGirl.create(
@@ -539,8 +543,8 @@ describe ServiceTemplateTransformationPlanTask do
         it "checks network mappings and generates network_mappings hash" do
           expect(task_1.network_mappings).to eq(
             [
-              { :source => src_lan_1.name, :destination => dst_cloud_network_1.ems_ref, :mac_address => src_nic_1.address },
-              { :source => src_lan_2.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address }
+              { :source => src_lan_1.name, :destination => dst_cloud_network_1.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.0.1' },
+              { :source => src_lan_2.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address, :ip_address => nil }
             ]
           )
         end
@@ -558,18 +562,19 @@ describe ServiceTemplateTransformationPlanTask do
               :vmware_uri                 => "esx://esx_user@10.0.0.1/?no_verify=1",
               :vmware_password            => 'esx_passwd',
               :osp_environment            => {
-                :os_no_cache         => true,
-                :os_auth_url         => URI::Generic.build(
+                :os_auth_url             => URI::Generic.build(
                   :scheme => dst_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
                   :host   => dst_ems.hostname,
                   :port   => dst_ems.port,
-                  :path   => dst_ems.api_version
+                  :path   => '/v3'
                 ),
-                :os_user_domain_name => dst_ems.uid_ems,
-                :os_username         => dst_ems.authentication_userid,
-                :os_password         => dst_ems.authentication_password,
-                :os_project_name     => dst_cloud_tenant.name
+                :os_identity_api_version => '3',
+                :os_user_domain_name     => dst_ems.uid_ems,
+                :os_username             => dst_ems.authentication_userid,
+                :os_password             => dst_ems.authentication_password,
+                :os_project_name         => dst_cloud_tenant.name
               },
+              :osp_server_id              => conversion_host_vm.ems_ref,
               :osp_destination_project_id => dst_cloud_tenant.ems_ref,
               :osp_volume_type_id         => dst_cloud_volume_type.ems_ref,
               :osp_flavor_id              => dst_flavor.ems_ref,
@@ -591,18 +596,19 @@ describe ServiceTemplateTransformationPlanTask do
               :vm_name                    => "ssh://root@10.0.0.1/vmfs/volumes/#{src_storage.name}/#{src_vm_1.location}",
               :transport_method           => 'ssh',
               :osp_environment            => {
-                :os_no_cache         => true,
-                :os_auth_url         => URI::Generic.build(
+                :os_auth_url             => URI::Generic.build(
                   :scheme => dst_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
                   :host   => dst_ems.hostname,
                   :port   => dst_ems.port,
-                  :path   => dst_ems.api_version
+                  :path   => '/v3'
                 ),
-                :os_user_domain_name => dst_ems.uid_ems,
-                :os_username         => dst_ems.authentication_userid,
-                :os_password         => dst_ems.authentication_password,
-                :os_project_name     => dst_cloud_tenant.name
+                :os_identity_api_version => '3',
+                :os_user_domain_name     => dst_ems.uid_ems,
+                :os_username             => dst_ems.authentication_userid,
+                :os_password             => dst_ems.authentication_password,
+                :os_project_name         => dst_cloud_tenant.name
               },
+              :osp_server_id              => conversion_host_vm.ems_ref,
               :osp_destination_project_id => dst_cloud_tenant.ems_ref,
               :osp_volume_type_id         => dst_cloud_volume_type.ems_ref,
               :osp_flavor_id              => dst_flavor.ems_ref,

@@ -55,6 +55,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_cluster
     virtv2v_disks
     network_mappings
+    raise if destination_ems.emstype == 'openstack' && source.power_state == 'off'
     true
   rescue
     false
@@ -104,7 +105,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       {
         :source      => source_network.name,
         :destination => destination_network_ref(destination_network),
-        :mac_address => nic.address
+        :mac_address => nic.address,
+        :ip_address  => nic.network.try(:ipaddress)
       }
     end
   end
@@ -283,18 +285,19 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def conversion_options_destination_provider_openstack(cluster, storage)
     {
       :osp_environment            => {
-        :os_no_cache         => true,
-        :os_auth_url         => URI::Generic.build(
+        :os_auth_url             => URI::Generic.build(
           :scheme => destination_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
           :host   => destination_ems.hostname,
           :port   => destination_ems.port,
-          :path   => destination_ems.api_version
+          :path   => '/' + destination_ems.api_version
         ),
-        :os_user_domain_name => destination_ems.uid_ems,
-        :os_username         => destination_ems.authentication_userid,
-        :os_password         => destination_ems.authentication_password,
-        :os_project_name     => cluster.name
+        :os_identity_api_version => '3',
+        :os_user_domain_name     => destination_ems.uid_ems,
+        :os_username             => destination_ems.authentication_userid,
+        :os_password             => destination_ems.authentication_password,
+        :os_project_name         => cluster.name
       },
+      :osp_server_id              => conversion_host.ems_ref,
       :osp_destination_project_id => cluster.ems_ref,
       :osp_volume_type_id         => storage.ems_ref,
       :osp_flavor_id              => destination_flavor.ems_ref,
