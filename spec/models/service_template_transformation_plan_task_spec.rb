@@ -510,7 +510,7 @@ describe ServiceTemplateTransformationPlanTask do
       end
 
       context 'destination is openstack' do
-        let(:dst_ems) { FactoryGirl.create(:ems_openstack, :zone => FactoryGirl.create(:zone)) }
+        let(:dst_ems) { FactoryGirl.create(:ems_openstack, :api_version => 'v3', :zone => FactoryGirl.create(:zone)) }
         let(:dst_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :ext_management_system => dst_ems) }
         let(:dst_cloud_volume_type) { FactoryGirl.create(:cloud_volume_type) }
         let(:dst_cloud_network_1) { FactoryGirl.create(:cloud_network) }
@@ -562,17 +562,19 @@ describe ServiceTemplateTransformationPlanTask do
               :vmware_uri                 => "esx://esx_user@10.0.0.1/?no_verify=1",
               :vmware_password            => 'esx_passwd',
               :osp_environment            => {
-                :os_no_cache         => true,
-                :os_auth_url         => URI::Generic.build(
+                :os_auth_url             => URI::Generic.build(
                   :scheme => dst_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
                   :host   => dst_ems.hostname,
                   :port   => dst_ems.port,
-                  :path   => dst_ems.api_version
+                  :path   => '/v3'
                 ),
-                :os_user_domain_name => dst_ems.uid_ems,
-                :os_username         => dst_ems.authentication_userid,
-                :os_password         => dst_ems.authentication_password,
-                :os_project_name     => dst_cloud_tenant.name
+                :os_identity_api_version => '3',
+                :os_volume_api_version   => '3',
+                :os_user_domain_name     => dst_ems.uid_ems,
+                :os_project_domain_name  => dst_ems.uid_ems,
+                :os_username             => dst_ems.authentication_userid,
+                :os_password             => dst_ems.authentication_password,
+                :os_project_name         => dst_cloud_tenant.name
               },
               :osp_server_id              => conversion_host_vm.ems_ref,
               :osp_destination_project_id => dst_cloud_tenant.ems_ref,
@@ -596,17 +598,19 @@ describe ServiceTemplateTransformationPlanTask do
               :vm_name                    => "ssh://root@10.0.0.1/vmfs/volumes/#{src_storage.name}/#{src_vm_1.location}",
               :transport_method           => 'ssh',
               :osp_environment            => {
-                :os_no_cache         => true,
-                :os_auth_url         => URI::Generic.build(
+                :os_auth_url             => URI::Generic.build(
                   :scheme => dst_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
                   :host   => dst_ems.hostname,
                   :port   => dst_ems.port,
-                  :path   => dst_ems.api_version
+                  :path   => '/v3'
                 ),
-                :os_user_domain_name => dst_ems.uid_ems,
-                :os_username         => dst_ems.authentication_userid,
-                :os_password         => dst_ems.authentication_password,
-                :os_project_name     => dst_cloud_tenant.name
+                :os_identity_api_version => '3',
+                :os_volume_api_version   => '3',
+                :os_user_domain_name     => dst_ems.uid_ems,
+                :os_project_domain_name  => dst_ems.uid_ems,
+                :os_username             => dst_ems.authentication_userid,
+                :os_password             => dst_ems.authentication_password,
+                :os_project_name         => dst_cloud_tenant.name
               },
               :osp_server_id              => conversion_host_vm.ems_ref,
               :osp_destination_project_id => dst_cloud_tenant.ems_ref,
