@@ -858,7 +858,7 @@
   :product:
     :type: new_window
   :about:
-    :type: modal
+    :type: rxjs
 :host_delete:
   :queue_timeout: 20.minutes
 :host_introspect:
