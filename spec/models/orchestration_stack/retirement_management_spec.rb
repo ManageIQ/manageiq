@@ -15,6 +15,7 @@ describe "Service Retirement Management" do
       @stack.retirement_check
       @stack.reload
       expect(@stack.retirement_last_warn).not_to be_nil
+      expect(@stack.retirement_requester).to eq(user.userid)
     end
 
     it "#start_retirement" do
