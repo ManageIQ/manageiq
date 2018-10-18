@@ -569,9 +569,7 @@ describe ServiceTemplateTransformationPlanTask do
                   :path   => '/v3'
                 ),
                 :os_identity_api_version => '3',
-                :os_volume_api_version   => '3',
                 :os_user_domain_name     => dst_ems.uid_ems,
-                :os_project_domain_name  => dst_ems.uid_ems,
                 :os_username             => dst_ems.authentication_userid,
                 :os_password             => dst_ems.authentication_password,
                 :os_project_name         => dst_cloud_tenant.name
@@ -605,9 +603,7 @@ describe ServiceTemplateTransformationPlanTask do
                   :path   => '/v3'
                 ),
                 :os_identity_api_version => '3',
-                :os_volume_api_version   => '3',
                 :os_user_domain_name     => dst_ems.uid_ems,
-                :os_project_domain_name  => dst_ems.uid_ems,
                 :os_username             => dst_ems.authentication_userid,
                 :os_password             => dst_ems.authentication_password,
                 :os_project_name         => dst_cloud_tenant.name

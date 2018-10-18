@@ -292,9 +292,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
           :path   => '/' + destination_ems.api_version
         ),
         :os_identity_api_version => '3',
-        :os_volume_api_version   => '3',
         :os_user_domain_name     => destination_ems.uid_ems,
-        :os_project_domain_name  => destination_ems.uid_ems,
         :os_username             => destination_ems.authentication_userid,
         :os_password             => destination_ems.authentication_password,
         :os_project_name         => cluster.name
