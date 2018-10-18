@@ -10,7 +10,7 @@ module RetirementMixin
   end
 
   module ClassMethods
-    def make_retire_request(*src_ids, requester)
+    def make_retire_request(*src_ids, requester = User.find_by(:userid => 'admin'))
       klass = (name.demodulize + "RetireRequest").constantize
       options = {:src_ids => src_ids.presence, :__request_type__ => klass.request_types.first}
       klass.make_request(nil, options, requester, true)
