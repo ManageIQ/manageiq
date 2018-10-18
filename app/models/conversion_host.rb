@@ -6,9 +6,7 @@ class ConversionHost < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   has_many :service_template_transformation_plan_tasks, :dependent => :nullify
   has_many :active_tasks, -> { where(:state => 'active') }, :class_name => ServiceTemplateTransformationPlanTask, :inverse_of => :conversion_host
-  delegate :ext_management_system, :to => :resource, :allow_nil => true
-  delegate :hostname, :to => :resource, :allow_nil => true
-  delegate :ems_ref, :to => :resource, :allow_nil => true
+  delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
   # To be eligible, a conversion host must have the following properties
   #  - A transport mechanism is configured for source (set by 3rd party)
