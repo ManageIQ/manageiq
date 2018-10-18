@@ -1,36 +1,14 @@
 class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
-  def self.create_job(env_vars, extra_vars, playbook_path, timeout: 1.hour, poll_interval: 1.second)
-    options = {
-      :env_vars      => env_vars,
-      :extra_vars    => extra_vars,
-      :playbook_path => playbook_path,
-      :timeout       => timeout,
-      :poll_interval => poll_interval,
-    }
-
-    super(name, options)
+  def self.create_job(env_vars, extra_vars, role_or_playbook_options, timeout: 1.hour, poll_interval: 1.second)
+    super(name, job_options(env_vars, extra_vars, role_or_playbook_options, timeout, poll_interval))
   end
 
-  def pre_playbook
-    # A step before running the playbook for any optional setup tasks
-    queue_signal(:run_playbook)
+  def current_job_timeout(_timeout_adjustment = 1)
+    options[:timeout] || super
   end
 
-  def run_playbook
-    env_vars, extra_vars, playbook_path = options.values_at(:env_vars, :extra_vars, :playbook_path)
-
-    response = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path)
-    if response.nil?
-      queue_signal(:abort, "Failed to run ansible playbook", "error")
-    else
-      context[:ansible_runner_response] = response.dump
-
-      started_on = Time.now.utc
-      update_attributes!(:context => context, :started_on => started_on)
-      miq_task.update_attributes!(:started_on => started_on)
-
-      queue_signal(:poll_runner)
-    end
+  def job_options(options)
+    raise(NotImplementedError, 'abstract')
   end
 
   def poll_runner
@@ -52,19 +30,24 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       if result.return_code != 0
         set_status("Playbook failed", "error")
         _log.warn("Playbook failed:\n#{result.parsed_stdout.join("\n")}")
+      else
+        set_status("Playbook completed with no errors", "ok")
       end
-
       queue_signal(:post_playbook)
     end
   end
 
   def post_playbook
     # A step after running the playbook for any optional cleanup tasks
-    queue_signal(:finish)
+    queue_signal(:finish, message, status)
+  end
+
+  def fail_unimplamented
+    raise(NotImplementedError, "this is an abstract class, use a subclass that implaments a 'start' method")
   end
 
   alias initializing dispatch_start
-  alias start        pre_playbook
+  alias start        fail_unimplamented
   alias finish       process_finished
   alias abort_job    process_abort
   alias cancel       process_cancel
@@ -99,8 +82,6 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
 
     {
       :initializing  => {'initialize'       => 'waiting_to_start'},
-      :start         => {'waiting_to_start' => 'pre_playbook'},
-      :run_playbook  => {'pre_playbook'     => 'running'},
       :poll_runner   => {'running'          => 'running'},
       :post_playbook => {'running'          => 'post_playbook'},
       :finish        => {'*'                => 'finished'},
