@@ -971,6 +971,7 @@
   :container_deployment_wizard: false
   :transformation: true
   :run_automate_methods_on_service_api_submit: false
+  :allow_api_service_ordering: true
 :prototype:
   :queue_type: miq_queue
   :artemis:
