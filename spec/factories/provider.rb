@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :provider do
     sequence(:name) { |n| "provider_#{seq_padded_for_sorting(n)}" }
     guid            { SecureRandom.uuid }
-    zone            { Zone.first || FactoryGirl.create(:zone) }
+    zone            { FactoryGirl.create(:zone) }
   end
 
   factory :provider_foreman, :class => "ManageIQ::Providers::Foreman::Provider", :parent => :provider do

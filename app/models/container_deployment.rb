@@ -57,7 +57,8 @@ class ContainerDeployment < ApplicationRecord
       :port      => options[:provider_port],
       :hostname  => options[:provider_hostname],
       :ipaddress => options[:provider_ipaddress],
-      :zone      => Zone.first)
+      :zone      => Zone.default_zone
+    )
     provider.save!
     provider.update_authentication(:bearer => {:auth_key => options[:auth_key], :save => true})
     valid_provider = provider.authentication_check.first
