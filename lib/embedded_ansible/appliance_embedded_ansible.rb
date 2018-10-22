@@ -29,12 +29,12 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   end
 
   def start
-    if configured? && !upgrade?
-      update_proxy_settings
-      services.each { |service| LinuxAdmin::Service.new(service).start.enable }
-    else
+    if run_setup_script?
       configure_secret_key
       run_setup_script(EXCLUDE_TAGS)
+    else
+      update_proxy_settings
+      services.each { |service| LinuxAdmin::Service.new(service).start.enable }
     end
 
     5.times do
@@ -98,6 +98,10 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   end
 
   private
+
+  def run_setup_script?
+    !configured? || upgrade?
+  end
 
   def upgrade?
     local_tower_version != tower_rpm_version
