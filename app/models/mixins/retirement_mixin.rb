@@ -13,7 +13,7 @@ module RetirementMixin
     def make_retire_request(*src_ids, requester)
       klass = (name.demodulize + "RetireRequest").constantize
       options = {:src_ids => src_ids.presence, :__request_type__ => klass.request_types.first}
-      set_retirement_requester(name, options[:src_ids], requester)
+      set_retirement_requester(options[:src_ids], requester)
       klass.make_request(nil, options, requester, true)
     end
 
@@ -28,13 +28,13 @@ module RetirementMixin
       MiqQueue.put(q_options)
     end
 
-    def set_retirement_requester(klass, obj_ids, requester)
-      existing_objects = klass.where(:id => obj_ids)
+    def set_retirement_requester(obj_ids, requester)
+      existing_objects = where(:id => obj_ids)
       updated_count = existing_objects.update_all(:retirement_requester => requester.userid)
       if updated_count != obj_ids.count
-        _log.info("Retirement requester for #{klass}.pluralize #{(obj_ids - existing_objects.pluck(:id))} not set because objects not found")
+        _log.info("Retirement requester for #{self.name} #{(obj_ids - existing_objects.pluck(:id))} not set because objects not found")
       else
-        _log.info("Retirement requester for #{klass}.pluralize #{obj_ids} being set to #{requester.userid}")
+        _log.info("Retirement requester for #{self.name} #{obj_ids} being set to #{requester.userid}")
       end
     end
   end
