@@ -10,15 +10,15 @@ class ServiceAnsibleTower < Service
 
   def launch_job
     job_class = "#{job_template.class.parent.name}::#{job_template.class.stack_type}".constantize
-    job_options.deep_merge!(
+    options = job_options.with_indifferent_access.deep_merge(
       :extra_vars => {
         'manageiq'            => service_manageiq_env,
         'manageiq_connection' => manageiq_connection_env(evm_owner)
       }
     )
     _log.info("Launching Ansible Tower job with options:")
-    $log.log_hashes(job_options)
-    @job = job_class.create_job(job_template, job_options)
+    $log.log_hashes(options)
+    @job = job_class.create_job(job_template, options)
     add_resource(@job)
     @job
   ensure
@@ -49,7 +49,7 @@ class ServiceAnsibleTower < Service
 
     raise _("job template was not set") if job_template.nil?
 
-    build_stack_options_from_dialog(dialog_options).with_indifferent_access
+    build_stack_options_from_dialog(dialog_options)
   end
 
   def save_launch_options
