@@ -100,7 +100,7 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   private
 
   def run_setup_script?
-    !configured? || upgrade?
+    force_setup_run? || !configured? || upgrade?
   end
 
   def upgrade?
@@ -130,6 +130,7 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
       AwesomeSpawn.run!(SETUP_SCRIPT, :params => params)
     end
     write_setup_complete_file
+    remove_force_setup_marker_file
   rescue AwesomeSpawn::CommandResultError => e
     _log.error("EmbeddedAnsible setup script failed with: #{e.message}")
     miq_database.ansible_secret_key = nil
@@ -216,5 +217,17 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
 
   def setup_complete_file
     Rails.root.join("tmp", "embedded_ansible_setup_complete")
+  end
+
+  def remove_force_setup_marker_file
+    FileUtils.rm_f(force_setup_run_marker_file)
+  end
+
+  def force_setup_run?
+    File.exist?(force_setup_run_marker_file)
+  end
+
+  def force_setup_run_marker_file
+    Rails.root.join("tmp", "embedded_ansible_force_setup_run")
   end
 end
