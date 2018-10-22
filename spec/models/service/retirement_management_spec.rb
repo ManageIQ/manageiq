@@ -1,6 +1,7 @@
 describe "Service Retirement Management" do
   let!(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => 'admin') }
   let(:service_without_owner) { FactoryGirl.create(:service) }
+  let(:service3) { FactoryGirl.create(:service) }
   before do
     @server = EvmSpecHelper.local_miq_server
     @service = FactoryGirl.create(:service, :evm_owner_id => user.id)
@@ -16,6 +17,7 @@ describe "Service Retirement Management" do
         @service.retirement_check
         @service.reload
         expect(@service.retirement_last_warn).not_to be_nil
+        expect(@service.retirement_requester).to eq(user.userid)
       end
     end
   end
@@ -28,6 +30,7 @@ describe "Service Retirement Management" do
       service_without_owner.retirement_check
       service_without_owner.reload
       expect(service_without_owner.retirement_last_warn).not_to be_nil
+      expect(service_without_owner.retirement_requester).to eq(user.userid)
       expect(MiqRequest.first.userid).to eq("admin")
     end
   end
@@ -96,15 +99,13 @@ describe "Service Retirement Management" do
   end
 
   it "with one src_id" do
-    User.current_user = user
-    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => ['yabadabadoo'], :__request_type__ => "service_retire"}, User.current_user, true)
-    @service.class.to_s.demodulize.constantize.make_retire_request('yabadabadoo', User.current_user)
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [service3.id], :__request_type__ => "service_retire"}, user, true)
+    @service.class.to_s.demodulize.constantize.make_retire_request(service3.id, user)
   end
 
   it "with many src_ids" do
-    User.current_user = user
-    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [1, 2, 3], :__request_type__ => "service_retire"}, User.current_user, true)
-    @service.class.to_s.demodulize.constantize.make_retire_request(1, 2, 3, User.current_user)
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@service.id, service3.id, service_without_owner.id], :__request_type__ => "service_retire"}, user, true)
+    @service.class.to_s.demodulize.constantize.make_retire_request(@service.id, service3.id, service_without_owner.id, user)
   end
 
   it "#retire date" do
