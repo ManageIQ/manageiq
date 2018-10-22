@@ -1,25 +1,21 @@
 describe JobProxyDispatcher do
   include Spec::Support::JobProxyDispatcherHelper
 
-  DISPATCH_ONLY = false
-  if DISPATCH_ONLY
-    NUM_VMS = 200
-    NUM_REPO_VMS = 200
-    NUM_HOSTS = 10
-    NUM_SERVERS = 10
-    NUM_STORAGES = 30
-  else
-    NUM_VMS = 3
-    NUM_REPO_VMS = 3
-    NUM_HOSTS = 3
-    NUM_SERVERS = 3
-    NUM_STORAGES = 3
+  NUM_VMS = 3
+  NUM_REPO_VMS = 3
+  NUM_HOSTS = 3
+  NUM_SERVERS = 3
+  NUM_STORAGES = 3
+
+  let(:zone) { FactoryGirl.create(:zone) }
+  let(:dispatcher) do
+    JobProxyDispatcher.new.tap do |dispatcher|
+      dispatcher.instance_variable_set(:@zone, zone.name)
+    end
   end
 
-  let(:dispatcher) { JobProxyDispatcher.new }
-
   before do
-    @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server")
+    @server = EvmSpecHelper.local_miq_server(:name => "test_server_main_server", :zone => zone)
   end
 
   context "With a default zone, server, with hosts with a miq_proxy, vmware vms on storages" do
@@ -36,94 +32,91 @@ describe JobProxyDispatcher do
       allow_any_instance_of(Host).to receive_messages(:missing_credentials? => false)
 
       @hosts, @proxies, @storages, @vms, @repo_vms, @container_providers = build_entities(
-        :hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS
+        :hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS, :zone => zone
       )
       @container_images = @container_providers.collect(&:container_images).flatten
     end
 
     describe "#dispatch" do
-      # Don't run these tests if we only want to run dispatch for load testing
-      unless DISPATCH_ONLY
-        it "should have a server in default zone" do
-          expect(@server.zone).not_to be_nil
-          expect(@server).not_to be_nil
+      it "should have a server in default zone" do
+        expect(@server.zone).not_to be_nil
+        expect(@server).not_to be_nil
+      end
+
+      it "should have #{NUM_HOSTS} hosts" do
+        expect(NUM_HOSTS).to eq(@hosts.length)
+      end
+
+      it "should have #{NUM_VMS} vms and #{NUM_REPO_VMS} repo vms" do
+        expect(NUM_VMS).to eq(@vms.length)
+      end
+
+      it "should have #{NUM_REPO_VMS} repo vms" do
+        expect(NUM_REPO_VMS).to eq(@repo_vms.length)
+      end
+
+      context "with a vm without a storage" do
+        before do
+          # Test a vm without a storage (ie, removed from VC but retained in the VMDB)
+          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+          @vm = @vms.first
+          @vm.storage = nil
+          @vm.save
+          @vm.raw_scan
         end
 
-        it "should have #{NUM_HOSTS} hosts" do
-          expect(NUM_HOSTS).to eq(@hosts.length)
+        it "should expect queue_signal and dispatch without errors" do
+          expect(dispatcher).to receive(:queue_signal)
+          expect { dispatcher.dispatch }.not_to raise_error
+        end
+      end
+
+      context "with a Microsoft vm without a storage" do
+        before do
+          # Test a Microsoft vm without a storage
+          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+          @vm = @vms.first
+          @vm.storage = nil
+          @vm.vendor = "microsoft"
+          @vm.save
+          @vm.raw_scan
         end
 
-        it "should have #{NUM_VMS} vms and #{NUM_REPO_VMS} repo vms" do
-          expect(NUM_VMS).to eq(@vms.length)
+        it "should run dispatch without calling queue_signal" do
+          expect(dispatcher).not_to receive(:queue_signal)
+        end
+      end
+
+      context "with a Microsoft vm with a Microsoft storage" do
+        before do
+          # Test a Microsoft vm without a storage
+          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+          @vm = @vms.first
+          @vm.storage.store_type = "CSVFS"
+          @vm.vendor = "microsoft"
+          @vm.save
+          @vm.raw_scan
         end
 
-        it "should have #{NUM_REPO_VMS} repo vms" do
-          expect(NUM_REPO_VMS).to eq(@repo_vms.length)
+        it "should run dispatch without calling queue_signal" do
+          expect(dispatcher).not_to receive(:queue_signal)
+        end
+      end
+
+      context "with a Microsoft vm with an invalid storage" do
+        before do
+          # Test a Microsoft vm without a storage
+          allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
+          @vm = @vms.first
+          @vm.storage.store_type = "XFS"
+          @vm.vendor = "microsoft"
+          @vm.save
+          @vm.raw_scan
         end
 
-        context "with a vm without a storage" do
-          before do
-            # Test a vm without a storage (ie, removed from VC but retained in the VMDB)
-            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
-            @vm = @vms.first
-            @vm.storage = nil
-            @vm.save
-            @vm.raw_scan
-          end
-
-          it "should expect queue_signal and dispatch without errors" do
-            expect(dispatcher).to receive(:queue_signal)
-            expect { dispatcher.dispatch }.not_to raise_error
-          end
-        end
-
-        context "with a Microsoft vm without a storage" do
-          before do
-            # Test a Microsoft vm without a storage
-            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
-            @vm = @vms.first
-            @vm.storage = nil
-            @vm.vendor = "microsoft"
-            @vm.save
-            @vm.raw_scan
-          end
-
-          it "should run dispatch without calling queue_signal" do
-            expect(dispatcher).not_to receive(:queue_signal)
-          end
-        end
-
-        context "with a Microsoft vm with a Microsoft storage" do
-          before do
-            # Test a Microsoft vm without a storage
-            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
-            @vm = @vms.first
-            @vm.storage.store_type = "CSVFS"
-            @vm.vendor = "microsoft"
-            @vm.save
-            @vm.raw_scan
-          end
-
-          it "should run dispatch without calling queue_signal" do
-            expect(dispatcher).not_to receive(:queue_signal)
-          end
-        end
-
-        context "with a Microsoft vm with an invalid storage" do
-          before do
-            # Test a Microsoft vm without a storage
-            allow(MiqVimBrokerWorker).to receive(:available_in_zone?).and_return(true)
-            @vm = @vms.first
-            @vm.storage.store_type = "XFS"
-            @vm.vendor = "microsoft"
-            @vm.save
-            @vm.raw_scan
-          end
-
-          it "should expect queue_signal and dispatch without errors" do
-            expect(dispatcher).to receive(:queue_signal)
-            expect { dispatcher.dispatch }.not_to raise_error
-          end
+        it "should expect queue_signal and dispatch without errors" do
+          expect(dispatcher).to receive(:queue_signal)
+          expect { dispatcher.dispatch }.not_to raise_error
         end
       end
 
@@ -142,17 +135,15 @@ describe JobProxyDispatcher do
         end
 
         # Don't run these tests if we only want to run dispatch for load testing
-        unless DISPATCH_ONLY
-          if @repo_proxy
-            it "should have repository host set" do
-              expect(@repo_vms.first.myhost.id).to eq(@repo_proxy.host_id)
-            end
+        if @repo_proxy
+          it "should have repository host set" do
+            expect(@repo_vms.first.myhost.id).to eq(@repo_proxy.host_id)
           end
+        end
 
-          it "should have #{NUM_VMS + NUM_REPO_VMS} jobs" do
-            total = NUM_VMS + NUM_REPO_VMS
-            expect(@jobs.length).to eq(total)
-          end
+        it "should have #{NUM_VMS + NUM_REPO_VMS} jobs" do
+          total = NUM_VMS + NUM_REPO_VMS
+          expect(@jobs.length).to eq(total)
         end
 
         it "should run dispatch" do
@@ -214,7 +205,6 @@ describe JobProxyDispatcher do
           job = @jobs.find { |j| container_image_classes.include?(j.target_class) }
           job.update(:dispatch_status => "active")
           provider = ExtManagementSystem.find(job.options[:ems_id])
-          dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
           expect(dispatcher.active_container_scans_by_zone_and_ems).to eq(
             job.zone => {provider.id => 1}
           )
@@ -262,14 +252,12 @@ describe JobProxyDispatcher do
     describe "#active_vm_scans_by_zone" do
       it "returns active vm scans for this zone" do
         job = @vms.first.raw_scan
-        dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")
         expect(dispatcher.active_vm_scans_by_zone[job.zone]).to eq(1)
       end
 
       it "returns 0 for active vm scan for other zones" do
         job = @vms.first.raw_scan
-        dispatcher.instance_variable_set(:@zone, MiqServer.my_zone) # memoized during pending_jobs call
         job.update(:dispatch_status => "active")
         expect(dispatcher.active_vm_scans_by_zone['defult']).to eq(0)
       end
@@ -330,7 +318,6 @@ describe JobProxyDispatcher do
     let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
 
     before do
-      dispatcher.instance_variable_set(:@zone, @server.my_zone)
       dispatcher.instance_variable_set(:@active_container_scans_by_zone_and_ems, @server.my_zone => {ems_id => 0})
     end
 

@@ -2,7 +2,7 @@ module Spec
   module Support
     module JobProxyDispatcherHelper
       def build_entities(options = {})
-        options = {:hosts => 2, :storages => 2, :vms => 3, :repo_vms => 3, :container_providers => [1, 2]}.merge(options)
+        options = {:hosts => 2, :storages => 2, :vms => 3, :repo_vms => 3, :container_providers => [1, 2], :zone => FactoryGirl.create(:zone)}.merge(options)
 
         proxies = []
         storages = []
@@ -11,7 +11,7 @@ module Spec
           storages << storage
         end
 
-        ems = FactoryGirl.create(:ems_vmware, :name => "ems1")
+        ems = FactoryGirl.create(:ems_vmware, :name => "ems1", :zone => options[:zone])
         hosts = []
         options[:hosts].times do |i|
           host = FactoryGirl.create(:host, :name => "test_host_#{i}", :hostname => "test_host_#{i}")
@@ -48,7 +48,7 @@ module Spec
 
         container_providers = []
         options[:container_providers].each_with_index do |images_count, i|
-          ems_openshift = FactoryGirl.create(:ems_openshift, :name => "test_container_provider_#{i}")
+          ems_openshift = FactoryGirl.create(:ems_openshift, :name => "test_container_provider_#{i}", :zone => options[:zone])
           container_providers << ems_openshift
           container_image_classes = ContainerImage.descendants.append(ContainerImage)
           images_count.times do |idx|
