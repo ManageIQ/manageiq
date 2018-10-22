@@ -979,7 +979,6 @@
 :product:
   :name:
   :maindb: ExtManagementSystem
-  :container_deployment_wizard: false
   :run_automate_methods_on_service_api_submit: false
   :allow_api_service_ordering: true
 :prototype:
