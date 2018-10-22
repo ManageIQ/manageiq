@@ -39,6 +39,24 @@ describe Rbac::Filterer do
       expect(actual).to match(expected)
     end
 
+    it "doesn't filter by tags on classes that are not taggable" do
+      filter = MiqExpression.new(
+        "AND" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "test"}}
+        ]
+      )
+      group = create_group_with_expression(filter)
+      user = FactoryGirl.create(:user, :miq_groups => [group])
+      request = FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => user)
+
+      actual, = Rbac::Filterer.search(:targets => MiqProvisionRequest, :user => user)
+
+      expect(request.class.include?(ActsAsTaggable)).to be_falsey
+      expected = [request]
+      expect(actual).to match(expected)
+    end
+
     def create_group_with_expression(expression)
       role = FactoryGirl.create(:miq_user_role)
       group = FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role)
