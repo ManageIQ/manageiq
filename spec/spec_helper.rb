@@ -1,7 +1,8 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-
-if ENV["TRAVIS"]
+if ENV["TRAVIS"] || ENV['CI']
   require 'coveralls'
+  require 'simplecov'
+  SimpleCov.start
   Coveralls.wear!('rails') { add_filter("/spec/") }
 end
 
