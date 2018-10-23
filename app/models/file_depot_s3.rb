@@ -13,8 +13,6 @@ class FileDepotS3 < FileDepot
     require 'aws-sdk'
     username = options[:username] || authentication_userid(options[:auth_type])
     password = options[:password] || authentication_password(options[:auth_type])
-    # Note: The hard-coded aws_region will be removed after manageiq-ui-class implements region selection
-    aws_region = options[:region] || "us-east-1"
 
     Aws::S3::Resource.new(
       :access_key_id     => username,
