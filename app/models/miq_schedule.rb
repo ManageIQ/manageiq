@@ -240,7 +240,8 @@ class MiqSchedule < ApplicationRecord
     opts = self.sched_action[:options]
     opts[:file_depot_id]   = file_depot.id
     opts[:miq_schedule_id] = id
-    queue_opts = {:class_name => klass.name, :method_name => "backup", :msg_timeout => 3600, :args => [opts], :role => "database_operations"}
+    queue_opts = {:class_name  => klass.name, :method_name => "backup", :args => [opts], :role => "database_operations",
+                  :msg_timeout => ::Settings.task.active_task_timeout.to_i_with_method}
     task_opts  = {:action => "Database backup", :userid => self.sched_action[:options][:userid]}
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
