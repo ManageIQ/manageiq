@@ -28,4 +28,13 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
     update_attributes(:cancelation_status => MiqRequest::CANCEL_STATUS_REQUESTED)
     miq_request_tasks.each(&:cancel)
   end
+
+  def update_request_status
+    super
+    if request_state == 'finished' && status == 'Ok'
+      Notification.create(:type => "transformation_plan_request_succeeded", :options => {:plan_name => description})
+    elsif request_state == 'finished' && status != 'Ok'
+      Notification.create(:type => "transformation_plan_request_failed", :options => {:plan_name => description}, :subject => self)
+    end
+  end
 end
