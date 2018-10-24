@@ -39,6 +39,17 @@
   :expires_in: 14.days
   :level: :warning
   :audience: group
+- :name: transformation_plan_request_succeeded
+  :message: Plan %{plan_name} has completed successfully
+  :expires_in: 14.days
+  :level: :success
+  :audience: global
+- :name: transformation_plan_request_failed
+  :message: Plan %{plan_name} has completed with errors
+  :expires_in: 14.days
+  :level: :error
+  :audience: global
+  :link_to: "subject"
 - :name: automate_user_success
   :message: '%{message}'
   :expires_in: 24.hours
