@@ -10,9 +10,10 @@ class TransformationMapping::VmMigrationValidator
   VM_NOT_EXIST = "not_exist".freeze
   VM_VALID = "ok".freeze
 
-  def initialize(mapping, vm_list = nil)
+  def initialize(mapping, vm_list = nil, service_template_id = nil)
     @mapping = mapping
     @vm_list = vm_list
+    @service_template_id = service_template_id.try(:to_i)
   end
 
   def validate
@@ -98,7 +99,7 @@ class TransformationMapping::VmMigrationValidator
     return VM_MIGRATED unless vm_as_resources.where(:status => ServiceResource::STATUS_COMPLETED).empty?
 
     # VM failed in previous migration
-    vm_as_resources.all? { |rsc| rsc.status == ServiceResource::STATUS_FAILED } ? VM_VALID : VM_IN_OTHER_PLAN
+    vm_as_resources.all? { |rsc| rsc.status == ServiceResource::STATUS_FAILED || rsc.service_template_id == @service_template_id  } ? VM_VALID : VM_IN_OTHER_PLAN
   end
 
   def no_mapping_list(invalid_list, data_type, new_records)

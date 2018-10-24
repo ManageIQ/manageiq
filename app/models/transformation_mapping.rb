@@ -12,7 +12,7 @@ class TransformationMapping < ApplicationRecord
   end
 
   # vm_list: collection of hashes, each descriping a VM.
-  def search_vms_and_validate(vm_list = nil)
-    VmMigrationValidator.new(self, vm_list).validate
+  def search_vms_and_validate(vm_list = nil, service_template_id = nil)
+    VmMigrationValidator.new(self, vm_list, service_template_id).validate
   end
 end
