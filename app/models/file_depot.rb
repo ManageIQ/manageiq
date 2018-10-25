@@ -33,7 +33,7 @@ class FileDepot < ApplicationRecord
     @file = file
   end
 
-  def merged_uri
+  def merged_uri(_uri, _api_port)
     uri
   end
 end
