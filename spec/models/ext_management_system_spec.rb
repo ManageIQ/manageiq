@@ -397,6 +397,11 @@ describe ExtManagementSystem do
   end
 
   context "#pause!" do
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
+
     it 'disables an ems with child managers and moves parent to maintenance zone' do
       zone  = FactoryGirl.create(:zone)
       ems   = FactoryGirl.create(:ext_management_system, :zone => zone)
@@ -405,16 +410,28 @@ describe ExtManagementSystem do
 
       ems.pause!
 
-      expect(ems.enabled).to be_falsy
+      expect(ems.enabled).to eq(false)
       expect(ems.zone).to eq(Zone.maintenance_zone)
       expect(ems.zone_before_pause).to eq(zone)
 
       child.reload
-      expect(child.enabled).to be_falsy
+      expect(child.enabled).to eq(false)
+    end
+
+    it 'disables a cloud ems and moves child network manager to maintenance zone' do
+      zone          = FactoryGirl.create(:zone)
+      ems_cloud     = FactoryGirl.create(:ems_openstack, :zone => zone)
+
+      ems_cloud.pause!
+
+      ems_cloud.reload
+      expect(ems_cloud.network_manager.zone).to eq(Zone.maintenance_zone)
     end
   end
 
   context "#resume" do
+    before { Zone.seed }
+
     it "enables an ems with child managers and move parent from maintenance zone" do
       zone = FactoryGirl.create(:zone)
       ems = FactoryGirl.create(:ext_management_system,
@@ -429,15 +446,15 @@ describe ExtManagementSystem do
 
       ems.resume!
 
-      expect(ems.enabled).to be_truthy
+      expect(ems.enabled).to eq(true)
       expect(ems.zone).to eq(zone)
       expect(ems.zone_before_pause).to be_nil
 
       child.reload
-      expect(child.enabled).to be_truthy
+      expect(child.enabled).to eq(true)
     end
 
-    it "doesn't change zone when current is visible" do
+    it "doesn't change zone when ems was disabled before" do
       zone = FactoryGirl.create(:zone)
       ems = FactoryGirl.create(:ext_management_system,
                                :zone_before_pause => nil,
@@ -446,37 +463,38 @@ describe ExtManagementSystem do
 
       ems.resume!
 
-      expect(ems.enabled).to be_truthy
+      expect(ems.enabled).to eq(true)
       expect(ems.zone).to eq(zone)
     end
   end
 
   context "changing zone" do
+    before { Zone.seed }
+
     it 'is allowed when enabled' do
-      zones = (1..2).collect { FactoryGirl.create(:zone) }
+      zones = FactoryGirl.create_list(:zone, 2)
       ems   = FactoryGirl.create(:ext_management_system, :zone => zones[0])
 
       ems.zone = zones[1]
-      expect(ems.save).to be_truthy
+      expect(ems.save).to eq(true)
     end
 
     it 'is denied when disabled' do
-      zones = (1..2).collect { FactoryGirl.create(:zone) }
+      zones = FactoryGirl.create_list(:zone, 2)
       ems   = FactoryGirl.create(:ext_management_system, :zone => zones[0], :enabled => false)
 
       ems.zone = zones[1]
-      expect(ems.save).to be_falsy
+      expect(ems.save).to eq(false)
       expect(ems.errors.messages[:zone]).to be_present
     end
 
-    it 'to invisible is not possible when provider enabled' do
+    it 'to maintenance is not possible when provider enabled' do
       zone_visible = FactoryGirl.create(:zone)
-      zone_invisible = FactoryGirl.create(:zone, :visible => false)
 
       ems = FactoryGirl.create(:ext_management_system, :zone => zone_visible, :enabled => true)
 
-      ems.zone = zone_invisible
-      expect(ems.save).to be_falsy
+      ems.zone = Zone.maintenance_zone
+      expect(ems.save).to eq(false)
       expect(ems.errors.messages[:zone]).to be_present
     end
   end
@@ -493,7 +511,7 @@ describe ExtManagementSystem do
       worker = FactoryBot.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
       ems.destroy
       expect(ExtManagementSystem.count).to eq(0)
-      expect(worker.class.exists?(worker.id)).to be_falsy
+      expect(worker.class.exists?(worker.id)).to eq(false)
     end
   end
 

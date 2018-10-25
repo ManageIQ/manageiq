@@ -92,7 +92,7 @@ class ExtManagementSystem < ApplicationRecord
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
 
-  validate :validate_ems_enabled_when_zone_changed?, :validate_zone_visible_when_ems_enabled?
+  validate :validate_ems_enabled_when_zone_changed?, :validate_zone_not_maintenance_when_ems_enabled?
 
   scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
 
@@ -117,17 +117,17 @@ class ExtManagementSystem < ApplicationRecord
 
   # validation - Zone cannot be changed when enabled == false
   def validate_ems_enabled_when_zone_changed?
-    return if changed_attributes.include?('enabled')
+    return if enabled_changed?
 
-    if changed_attributes.include?('zone_id') && !enabled?
-      errors.add(:zone, N_("cannot be changed when provider paused"))
+    if zone_id_changed? && !enabled?
+      errors.add(:zone, N_("cannot be changed because the provider is paused"))
     end
   end
 
-  # validation - Zone has to be visible when enabled == true
-  def validate_zone_visible_when_ems_enabled?
-    if enabled? && zone.present? && !zone.visible?
-      errors.add(:zone, N_("cannot be invisible when provider active"))
+  # validation - Zone cannot be maintenance_zone when enabled == true
+  def validate_zone_not_maintenance_when_ems_enabled?
+    if enabled? && zone == Zone.maintenance_zone
+      errors.add(:zone, N_("cannot be the maintenance zone when provider is active"))
     end
   end
 
@@ -208,7 +208,7 @@ class ExtManagementSystem < ApplicationRecord
 
   default_value_for :enabled, true
 
-  after_save :change_maintenance_for_child_managers, :if => proc { |ems| ems.changed_attributes.include?('enabled') }
+  after_save :change_maintenance_for_child_managers, :if => proc { |ems| ems.enabled_changed? }
 
   def disable!
     _log.info("Disabling EMS [#{name}] id [#{id}].")
@@ -238,7 +238,7 @@ class ExtManagementSystem < ApplicationRecord
     _log.info("Resuming EMS [#{name}] id [#{id}].")
 
     new_zone = if zone_before_pause.nil?
-                 zone.visible? ? zone : Zone.default_zone
+                 zone == Zone.maintenance_zone ? Zone.default_zone : zone
                else
                  zone_before_pause
                end

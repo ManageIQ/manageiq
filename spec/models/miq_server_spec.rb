@@ -94,11 +94,12 @@ describe MiqServer do
       expect(@miq_server.zone.name).to eq(@zone.name)
     end
 
-    it "cannot have invisible zone" do
-      zone = FactoryGirl.create(:zone, :visible => false)
+    it "cannot assign to maintenance zone" do
+      MiqRegion.seed
+      Zone.seed
 
-      @miq_server.zone = zone
-      expect(@miq_server.save).to be_falsy
+      @miq_server.zone = Zone.maintenance_zone
+      expect(@miq_server.save).to eq(false)
       expect(@miq_server.errors.messages[:zone]).to be_present
     end
 

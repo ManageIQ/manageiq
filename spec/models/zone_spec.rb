@@ -137,7 +137,7 @@ describe Zone do
     it "false" do
       allow(miq_server).to receive(:active?).and_return(false)
 
-      expect(zone.active?).to be_falsey
+      expect(zone.active?).to eq(false)
     end
   end
 
@@ -201,16 +201,16 @@ describe Zone do
 
     it "is seeded with relation to region" do
       described_class.seed
-      zone = Zone.where("name LIKE ?", "#{Zone::MAINTENANCE_ZONE_NAME_PREFIX}%").first
+      expect(Zone.maintenance_zone).to have_attributes(
+        :name => a_string_starting_with("__maintenance__")
+      )
 
-      expect(described_class.maintenance_zone).to be_present
-      expect(described_class.maintenance_zone.id).to eq(zone.id)
-      expect(MiqRegion.my_region&.maintenance_zone).to eq(zone)
+      expect(MiqRegion.my_region&.maintenance_zone).to eq(Zone.maintenance_zone)
     end
 
     it "is not visible" do
       described_class.seed
-      expect(described_class.maintenance_zone.visible).to be_falsey
+      expect(described_class.maintenance_zone.visible).to eq(false)
     end
   end
 
@@ -225,6 +225,7 @@ describe Zone do
   end
 
   it "removes queued items on destroy" do
+    Zone.seed
     zone = FactoryBot.create(:zone)
     FactoryBot.create(:miq_queue, :zone => zone.name)
     expect(MiqQueue.where(:zone => zone.name).count).to eq(1)
