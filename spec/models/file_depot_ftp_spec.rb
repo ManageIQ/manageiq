@@ -4,7 +4,8 @@ describe FileDepotFtp do
   end
 
   let(:connection)     { double("FtpConnection") }
-  let(:file_depot_ftp) { FileDepotFtp.new(:uri => "ftp://server.example.com/uploads") }
+  let(:uri)            { "ftp://server.example.com/uploads" }
+  let(:file_depot_ftp) { FileDepotFtp.new(:uri => uri) }
   let(:log_file)       { LogFile.new(:resource => @miq_server, :local_file => "/tmp/file.txt") }
   let(:ftp_mock) do
     Class.new do
@@ -113,6 +114,16 @@ describe FileDepotFtp do
       expect(connection).to receive(:close)
 
       file_depot_ftp.upload_file(log_file)
+    end
+  end
+
+  context "#merged_uri" do
+    before do
+      file_depot_ftp.uri = uri
+    end
+
+    it "should return the uri attribute from the file depot object and ignore the parameter" do
+      expect(file_depot_ftp.merged_uri(nil, nil)).to eq uri
     end
   end
 end
