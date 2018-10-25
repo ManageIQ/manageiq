@@ -118,8 +118,12 @@ describe FileDepotFtp do
   end
 
   context "#merged_uri" do
-    it "should return the same uri" do
-      expect(file_depot_ftp.merged_uri(uri, nil)).to eq uri
+    before do
+      file_depot_ftp.uri = uri
+    end
+
+    it "should return the uri attribute from the file depot object and ignore the parameter" do
+      expect(file_depot_ftp.merged_uri(nil, nil)).to eq uri
     end
   end
 end
