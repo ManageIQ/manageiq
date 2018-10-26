@@ -11,9 +11,13 @@ gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => 
 gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
-def manageiq_plugin(plugin_name)
+def manageiq_plugin(plugin_name, git = nil)
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    if git
+      gem plugin_name, :git => "https://github.com/lpichler/manageiq-consumption", :branch => "remove_deprecation_warning"
+    else
+      gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    end
   end
 end
 
@@ -188,7 +192,7 @@ group :smartstate, :manageiq_default do
 end
 
 group :consumption, :manageiq_default do
-  manageiq_plugin "manageiq-consumption"
+  manageiq_plugin "manageiq-consumption", true
   gem 'hashdiff'
 end
 
