@@ -5,6 +5,32 @@ describe ServiceTemplateTransformationPlanRequest do
       ServiceResource.new(:resource => vm, :status => status)
     end
   end
+
+  let(:dst_ems) { FactoryGirl.create(:ext_management_system) }
+  let(:src_cluster) { FactoryGirl.create(:ems_cluster) }
+  let(:dst_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => dst_ems) }
+
+  let(:mapping) do
+    FactoryGirl.create(
+      :transformation_mapping,
+      :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
+    )   
+  end 
+
+  let(:catalog_item_options) do
+    {   
+      :name        => 'Transformation Plan',
+      :description => 'a description',
+      :config_info => {
+        :transformation_mapping_id => mapping.id,
+        :actions                   => [
+          {:vm_id => vms.first.id.to_s, :pre_service => false, :post_service => false},
+          {:vm_id => vms.last.id.to_s, :pre_service => false, :post_service => false},
+        ],
+      }
+    }   
+  end 
+
   let(:plan) { FactoryGirl.create(:service_template_transformation_plan, :service_resources => vm_requests) }
   let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
 
@@ -25,6 +51,25 @@ describe ServiceTemplateTransformationPlanRequest do
   describe '#source_vms' do
     it 'selects queued and failed vm in the request' do
       expect(request.source_vms).to match_array([vms[0].id, vms[1].id])
+    end
+  end
+
+  describe '#validate_conversion_hosts' do
+    let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
+    let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
+
+    context 'no conversion host exists in EMS' do
+      let(:host) { FactoryGirl.create(:host, :ext_management_system => FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone))) }
+      let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host) }
+
+      it { expect(request.validate_conversion_hosts).to eq(false) }
+    end
+
+    context 'conversion host exists in EMS' do
+      let(:host) { FactoryGirl.create(:host, :ext_management_system => dst_ems) }
+      let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host) }
+
+      it { expect(request.validate_conversion_hosts).to eq(false) }
     end
   end
 

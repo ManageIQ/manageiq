@@ -15,6 +15,16 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
     vm_resources.where(:status => [ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_FAILED]).pluck(:resource_id)
   end
 
+  def validate_conversion_hosts
+    transformation_mapping.transformation_mapping_items.each do |item|
+      next unless %w(EmsCluster CloudTenant).include?(item.source_type)
+      ems = item.destination_type.constantize.find(item.destination_id).ext_management_system
+      conversion_hosts = ConversionHost.all.select { |ch| ch.ext_management_system == ems }
+      return false if conversion_hosts.empty?
+    end
+    true
+  end
+
   def validate_vm(_vm_id)
     # TODO: enhance the logic to determine whether this VM can be included in this request
     true
