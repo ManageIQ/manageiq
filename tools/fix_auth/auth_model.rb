@@ -1,4 +1,4 @@
-require 'util/miq-password'
+require 'manageiq/password'
 
 module FixAuth
   module AuthModel

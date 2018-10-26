@@ -8,7 +8,7 @@ end
 
 require 'yaml'
 require 'manageiq-gems-pending'
-require 'util/miq-password'
+require 'manageiq/password'
 
 BASE_DIR = __dir__
 LOG_DIR = '/var/www/miq/vmdb/log'.freeze
