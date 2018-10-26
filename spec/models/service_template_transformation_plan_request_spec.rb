@@ -14,11 +14,11 @@ describe ServiceTemplateTransformationPlanRequest do
     FactoryGirl.create(
       :transformation_mapping,
       :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
-    )   
-  end 
+    )
+  end
 
   let(:catalog_item_options) do
-    {   
+    {
       :name        => 'Transformation Plan',
       :description => 'a description',
       :config_info => {
@@ -28,8 +28,8 @@ describe ServiceTemplateTransformationPlanRequest do
           {:vm_id => vms.last.id.to_s, :pre_service => false, :post_service => false},
         ],
       }
-    }   
-  end 
+    }
+  end
 
   let(:plan) { FactoryGirl.create(:service_template_transformation_plan, :service_resources => vm_requests) }
   let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
