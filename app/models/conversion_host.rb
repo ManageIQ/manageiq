@@ -60,7 +60,7 @@ class ConversionHost < ApplicationRecord
   end
 
   def get_conversion_log(path)
-    connect_ssh { |ssu| ssu.get_file_file(path, nil) }
+    connect_ssh { |ssu| ssu.get_file(path, nil) }
   rescue => e
     raise "Could not get conversion log '#{path}' from '#{resource.name}' with [#{e.class}: #{e}"
   end 
