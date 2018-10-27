@@ -113,7 +113,7 @@ class VimPerformanceTrend < ActsAsArModel
       row[:count_of_trend] = trend_data[name][:count]
 
       # trend direction
-      row[:direction_of_trend] = row[:slope] ? row[:slope] > 0 ? "Up" : row[:slope] < 0 ? "Down" : "Flat" : nil
+      row[:direction_of_trend] = (row[:slope] > 0 ? "Up" : row[:slope] < 0 ? "Down" : "Flat") if row[:slope]
 
       # value of limit column
       row[:limit_col_value] = limit if options[:limit_col]

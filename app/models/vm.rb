@@ -69,7 +69,7 @@ class Vm < VmOrTemplate
     Hardware.includes(include.uniq)
       .references(references.uniq)
       .where(conds)
-      .collect { |h|  h.vm_or_template.kind_of?(Vm) ? h.vm_or_template : nil }.compact
+      .collect { |h| h.vm_or_template if h.vm_or_template.kind_of?(Vm) }.compact
   end
 
   def running_processes

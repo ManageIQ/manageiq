@@ -342,7 +342,7 @@ class MiqQueue < ApplicationRecord
     loop do
       msg = where_scope.order("priority, id").first
 
-      save_options = block_given? ? yield(msg, find_options) : nil
+      save_options = yield(msg, find_options) if block_given?
 
       # Add a new queue item based on the returned save options, or the find
       #   options if no save options were given.

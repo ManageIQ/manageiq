@@ -32,7 +32,7 @@ class Condition < ApplicationRecord
 
   def self.evaluate(cond, rec, inputs = {}, attr = :expression)
     expression = cond.send(attr)
-    name = cond.respond_to?(:description) ? cond.description : cond.respond_to?(:name) ? cond.name : nil
+    name = cond.try(:description) || cond.try(:name)
     if expression.kind_of?(MiqExpression)
       mode = "object"
     else

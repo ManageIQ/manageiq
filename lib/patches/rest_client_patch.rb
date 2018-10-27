@@ -12,8 +12,8 @@ if RestClient::VERSION >= "2.0.0" && RestClient::VERSION <= "2.1.0"
         # proxy explicitly set to none
         Net::HTTP.new(hostname, port, nil, nil, nil, nil)
       else
-        pass = p_uri.password ? CGI.unescape(p_uri.password) : nil
-        user = p_uri.user     ? CGI.unescape(p_uri.user)     : nil
+        pass = CGI.unescape(p_uri.password) if p_uri.password
+        user = CGI.unescape(p_uri.user) if p_uri.user
         Net::HTTP.new(hostname, port,
                       p_uri.hostname, p_uri.port, user, pass)
 

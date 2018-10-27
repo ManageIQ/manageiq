@@ -655,7 +655,7 @@ module Rbac
     end
 
     def apply_select(klass, scope, extra_cols)
-      scope.select(scope.select_values.blank? ? klass.arel_table[Arel.star] : nil).select(extra_cols)
+      scope.select(klass.arel_table[Arel.star] if scope.select_values.blank?).select(extra_cols)
     end
 
     def get_belongsto_matches(blist, klass)

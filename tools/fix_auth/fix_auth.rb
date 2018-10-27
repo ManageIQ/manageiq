@@ -17,7 +17,7 @@ module FixAuth
     end
 
     def cert_dir
-      options[:root] ? options[:root] + "/certs" : nil
+      (options[:root] + "/certs") if options[:root]
     end
 
     def db_attributes(database)

@@ -12,7 +12,7 @@ class PolicyEvent < ApplicationRecord
     event = MiqEventDefinition.find_by(:name => event) if event.kind_of?(String)
     chain_id = nil
     result.each do |r|
-      miq_policy_id = r[:miq_policy].kind_of?(MiqPolicy) ? r[:miq_policy].id : nil # handle built-in policies too
+      miq_policy_id = r[:miq_policy].id if r[:miq_policy].kind_of?(MiqPolicy) # handle built-in policies too
       pe = new(
         :event_type                       => event.name,
         :miq_event_definition_id          => event.id,
@@ -28,9 +28,9 @@ class PolicyEvent < ApplicationRecord
       # TODO: username,
       )
 
-      pe.host_id = target.respond_to?(:host) && !target.host.nil? ? target.host.id : nil
-      pe.ems_id = target.respond_to?(:ext_management_system) && !target.ext_management_system.nil? ? target.ext_management_system.id : nil
-      pe.ems_cluster_id = target.respond_to?(:owning_cluster) && !target.owning_cluster.nil? ? target.owning_cluster.id : nil
+      pe.host_id = target.try(:host)&.id
+      pe.ems_id = target.try(:ext_management_system)&.id
+      pe.ems_cluster_id = target.try(:owning_cluster)&.id
 
       if chain_id.nil?
         pe.save

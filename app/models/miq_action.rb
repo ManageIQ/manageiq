@@ -123,7 +123,7 @@ class MiqAction < ApplicationRecord
 
           name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
           results[name] ||= []
-          results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
+          results[name] << {:policy_id => (p.id if p.kind_of?(MiqPolicy)), :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
         end
       end
 

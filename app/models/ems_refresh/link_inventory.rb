@@ -47,7 +47,7 @@ module EmsRefresh::LinkInventory
     update_relats(:folders_to_hosts, prev_relats, new_relats) do |f|
       folder = instance_with_id(EmsFolder, f)
       break if folder.nil?
-      disconnect_proc = do_disconnect ? proc { |h| folder.remove_host(instance_with_id(Host, h)) } : nil
+      disconnect_proc = proc { |h| folder.remove_host(instance_with_id(Host, h)) } if do_disconnect
       connect_proc = proc do |h|
         host = instance_with_id(Host, h)
         host.replace_parent(folder) unless host.nil?

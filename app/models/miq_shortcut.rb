@@ -37,7 +37,7 @@ class MiqShortcut < ApplicationRecord
   def self.fixture_file_names
     shortcuts_dir = FIXTURE_DIR.join("miq_shortcuts")
     main_shortcuts = FIXTURE_DIR.join("miq_shortcuts.yml")
-    [main_shortcuts, (shortcuts_dir.directory? ? shortcuts_dir : nil)]
+    [main_shortcuts, (shortcuts_dir if shortcuts_dir.directory?)]
   end
 
   def self.seed_data

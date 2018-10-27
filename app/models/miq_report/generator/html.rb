@@ -68,7 +68,7 @@ module MiqReport::Generator::Html
 
   def build_html_col(output, col_name, col_format, row_data)
     style = get_style_class(col_name, row_data, tz)
-    style_class = !style.nil? ? " class='#{style}'" : nil
+    style_class = " class='#{style}'" if style
     if col_name == 'resource_type'
       output << "<td#{style_class}>"
       output << ui_lookup(:model => row_data[col_name]) # Lookup models in resource_type col

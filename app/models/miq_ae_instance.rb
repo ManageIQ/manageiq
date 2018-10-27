@@ -22,7 +22,7 @@ class MiqAeInstance < ApplicationRecord
     end
 
     val = ae_values.detect { |v| v.field_id == field.id }
-    val.respond_to?(attribute) ? val.send(attribute) : nil
+    val.try(attribute)
   end
 
   def set_field_attribute(field, value, attribute)

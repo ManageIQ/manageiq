@@ -205,7 +205,7 @@ module MiqProvisionQuotaMixin
   def quota_find_provision_by_owner(options)
     email = get_option(:owner_email).to_s.strip
     sched_type = get_option(:schedule_type).to_s.strip
-    options[:scheduled_time] = sched_type == 'schedule' ? get_option(:schedule_time) : nil
+    options[:scheduled_time] = get_option(:schedule_time) if sched_type == 'schedule'
     quota_find_provisions(options).delete_if { |p| email.casecmp(p.get_option(:owner_email).to_s.strip) != 0 }
   end
 
@@ -215,7 +215,7 @@ module MiqProvisionQuotaMixin
     unless prov_owner.nil?
       group = prov_owner.ldap_group
       sched_type = get_option(:schedule_type).to_s.strip
-      options[:scheduled_time] = sched_type == 'schedule' ? get_option(:schedule_time) : nil
+      options[:scheduled_time] = get_option(:schedule_time) if sched_type == 'schedule'
       prov_requests = quota_find_provisions(options).delete_if do |p|
         prov_req_owner = p.get_owner
         prov_req_owner.nil? ? true : group.casecmp(prov_req_owner.ldap_group) != 0

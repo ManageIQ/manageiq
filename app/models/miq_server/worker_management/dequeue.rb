@@ -52,7 +52,7 @@ module MiqServer::WorkerManagement::Dequeue
       w = @workers[pid]
 
       msg = get_queue_message_for_worker(w)
-      msg ? [msg[:id], msg[:lock_version]] : nil
+      [msg[:id], msg[:lock_version]] if msg
     end unless @workers_lock.nil?
   end
 

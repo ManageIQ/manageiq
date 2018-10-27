@@ -3,7 +3,7 @@ class FirewallRule < ApplicationRecord
   belongs_to :source_security_group, :class_name => "SecurityGroup"
 
   def operating_system
-    resource.kind_of?(OperatingSystem) ? resource : nil
+    resource if resource.kind_of?(OperatingSystem)
   end
 
   def operating_system=(os)

@@ -71,11 +71,11 @@ module VirtualTotal
     def define_virtual_aggregate_method(name, relation, method_name, column)
       if method_name == :size
         define_method(name) do
-          (attribute_present?(name) ? self[name] : nil) || send(relation).try(:size) || 0
+          (self[name] if attribute_present?(name)) || send(relation).try(:size) || 0
         end
       else
         define_method(name) do
-          (attribute_present?(name) ? self[name] : nil) ||
+          (self[name] if attribute_present?(name)) ||
             begin
               rel = send(relation)
               if rel.loaded?
