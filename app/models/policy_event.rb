@@ -28,9 +28,9 @@ class PolicyEvent < ApplicationRecord
       # TODO: username,
       )
 
-      pe.host_id = target.respond_to?(:host) && !target.host.nil? ? target.host.id : nil
-      pe.ems_id = target.respond_to?(:ext_management_system) && !target.ext_management_system.nil? ? target.ext_management_system.id : nil
-      pe.ems_cluster_id = target.respond_to?(:owning_cluster) && !target.owning_cluster.nil? ? target.owning_cluster.id : nil
+      pe.host_id = target.try(:host)&.id
+      pe.ems_id = target.try(:ext_management_system)&.id
+      pe.ems_cluster_id = target.try(:owning_cluster)&.id
 
       if chain_id.nil?
         pe.save

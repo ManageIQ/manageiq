@@ -126,12 +126,12 @@ class ResourcePool < ApplicationRecord
 
   def parent_cluster
     p = parent_cluster_or_host
-    p.kind_of?(EmsCluster) ? p : nil
+    p if p.kind_of?(EmsCluster)
   end
 
   def parent_host
     p = parent_cluster_or_host
-    p.kind_of?(Host) ? p : nil
+    p if p.kind_of?(Host)
   end
 
   def parent_datacenter

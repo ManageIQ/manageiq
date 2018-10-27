@@ -49,7 +49,7 @@ class DialogFieldImporter
   def adjust_category(opts)
     return nil if opts[:category_description].nil?
     category = find_category(opts)
-    category.try(:description) == opts[:category_description] ? category.try(:id).to_s : nil
+    category.try(:id).to_s if category.try(:description) == opts[:category_description]
   end
 
   def find_category(opts)

@@ -29,7 +29,7 @@ module MiqPolicyMixin
       klass, id = t.split("/")
       next unless ["miq_policy", "miq_policy_set"].include?(klass)
       policy = klass.camelize.constantize.find_by(:id => id.to_i)
-      mode.nil? || policy.mode == mode ? policy : nil
+      policy if mode.nil? || policy.mode == mode
     end.compact
   end
 

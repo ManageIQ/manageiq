@@ -178,7 +178,7 @@ class EvmApplication
   end
 
   def self.set_region_file(region_file, new_region)
-    old_region = region_file.exist? ? region_file.read.to_i : nil
+    old_region = region_file.read.to_i if region_file.exist?
 
     return if new_region == old_region
 
