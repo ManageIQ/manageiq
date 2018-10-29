@@ -136,6 +136,13 @@ class EvmDatabaseOps
     MiqFileStorage.with_interface_class(connect_opts) do |file_storage|
       send_args = [uri, db_opts[:byte_count]].compact
 
+      # Okay, this probably seems a bit silly seeing that we just went to the
+      # trouble of doing a `.compact)`.  The intent is that with a restore, we
+      # are doing a `MiqFileStorage.download`, and the interface for that
+      # method is to pass a `nil` for the block form since we are streaming the
+      # data from the command that we are writting as part of the block.
+      send_args.unshift(nil) if action == :restore
+
       # Note:  `input_path` will always be a fifo stream (input coming from
       # PostgresAdmin, and the output going to the `uri`), since we want to
       # maintain the same interface for all backup types.
