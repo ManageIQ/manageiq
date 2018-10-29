@@ -563,7 +563,7 @@ describe ServiceTemplateTransformationPlanTask do
                   :host   => dst_ems.hostname,
                   :port   => dst_ems.port,
                   :path   => '/v3'
-                ),
+                ).to_s,
                 :os_identity_api_version => '3',
                 :os_user_domain_name     => dst_ems.uid_ems,
                 :os_username             => dst_ems.authentication_userid,
@@ -597,7 +597,7 @@ describe ServiceTemplateTransformationPlanTask do
                   :host   => dst_ems.hostname,
                   :port   => dst_ems.port,
                   :path   => '/v3'
-                ),
+                ).to_s,
                 :os_identity_api_version => '3',
                 :os_user_domain_name     => dst_ems.uid_ems,
                 :os_username             => dst_ems.authentication_userid,
