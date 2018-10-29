@@ -152,10 +152,6 @@ group :google, :openshift, :manageiq_default do
   gem "sshkey",                         "~>1.8.0",       :require => false
 end
 
-group :automate, :cockpit, :manageiq_default do
-  gem "open4",                          "~>1.3.0",       :require => false
-end
-
 ### end of provider bundler groups
 
 group :automate, :seed, :manageiq_default do
