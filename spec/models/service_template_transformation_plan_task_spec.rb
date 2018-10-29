@@ -509,11 +509,13 @@ describe ServiceTemplateTransformationPlanTask do
 
       context 'destination is openstack' do
         let(:dst_ems) { FactoryGirl.create(:ems_openstack, :api_version => 'v3', :zone => FactoryGirl.create(:zone)) }
-        let(:dst_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :ext_management_system => dst_ems) }
+        let(:dst_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :name => 'fake tenant', :ext_management_system => dst_ems) }
         let(:dst_cloud_volume_type) { FactoryGirl.create(:cloud_volume_type) }
         let(:dst_cloud_network_1) { FactoryGirl.create(:cloud_network) }
         let(:dst_cloud_network_2) { FactoryGirl.create(:cloud_network) }
-        let(:conversion_host_vm) { FactoryGirl.create(:vm, :ext_management_system => dst_ems) }
+        let(:dst_flavor) { FactoryGirl.create(:flavor) }
+        let(:dst_security_group) { FactoryGirl.create(:security_group) }
+        let(:conversion_host_vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant) }
         let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => conversion_host_vm) }
 
         let(:mapping) do
