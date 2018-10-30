@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Gaprindashvili-6
+
+### Added
+- Add possibility to group by date only in chargeback [(#17893)](https://github.com/ManageIQ/manageiq/pull/17893)
+- Service retirement values from dialog [(#16799)](https://github.com/ManageIQ/manageiq/pull/16799)
+- Added 64 and 128gb to provision dialogs [(#17622)](https://github.com/ManageIQ/manageiq/pull/17622)
+- Add log messages to Chargeback [(#17874)](https://github.com/ManageIQ/manageiq/pull/17874)
+- Add tenant filtering for templates in provisioning and summary pages [(#17851)](https://github.com/ManageIQ/manageiq/pull/17851)
+
+### Fixed
+- Always return 0 for missing num_cpu [(#17937)](https://github.com/ManageIQ/manageiq/pull/17937)
+- Maintenance must run VACUUM to avoid long held locks [(#17713)](https://github.com/ManageIQ/manageiq/pull/17713)
+- Allow for empty strings in the execution_ttl field [(#17715)](https://github.com/ManageIQ/manageiq/pull/17715)
+- New and improved Field.is_field?() [(#17801)](https://github.com/ManageIQ/manageiq/pull/17801)
+- Don't queue metrics capture if metrics unsupported [(#17820)](https://github.com/ManageIQ/manageiq/pull/17820)
+- Add support for load_values_on_init to text boxes. [(#17814)](https://github.com/ManageIQ/manageiq/pull/17814)
+- Fix metering report for resources without rollups [(#17836)](https://github.com/ManageIQ/manageiq/pull/17836)
+- Fix counts in log message in ConsumptionHistory [(#17868)](https://github.com/ManageIQ/manageiq/pull/17868)
+- Creating miq_request for CustomButton request call with open_url. [(#17802)](https://github.com/ManageIQ/manageiq/pull/17802)
+- Ensure Zone data is Valid [(#17892)](https://github.com/ManageIQ/manageiq/pull/17892)
+- Ensure options is always a hash [(#17917)](https://github.com/ManageIQ/manageiq/pull/17917)
+- L10N - Add the missing pb and eb types for storage_units [(#17800)](https://github.com/ManageIQ/manageiq/pull/17800)
+- Added access to MyTasks to self_service roles [(#18006)](https://github.com/ManageIQ/manageiq/pull/18006)
+- Scope ui and api server searches to recently active servers [(#17670)](https://github.com/ManageIQ/manageiq/pull/17670)
+- Add regex for dialog password fields. [(#17986)](https://github.com/ManageIQ/manageiq/pull/17986)
+- Hide the password values in the log messages. [(#18028)](https://github.com/ManageIQ/manageiq/pull/18028)
+- Scope ui and api server searches to recently active servers [(#17670)](https://github.com/ManageIQ/manageiq/pull/17670)
+- Prevent queueing things for a zone that doesn't exist in the region [(#17987)](https://github.com/ManageIQ/manageiq/pull/17987)
+- Currently on a successful ActionResult (start / stop) we return nil [(#18036)](https://github.com/ManageIQ/manageiq/pull/18036)
+- Skip tags without classification in assigments [(#17883)](https://github.com/ManageIQ/manageiq/pull/17883)
+- Add flag for init of defaults in fields [(#18061)](https://github.com/ManageIQ/manageiq/pull/18061)
+- Check if class is taggable before attempting to process tag expression [(#18114)](https://github.com/ManageIQ/manageiq/pull/18114)
+
 ## Gaprindashvili-5
 
 ### Added
