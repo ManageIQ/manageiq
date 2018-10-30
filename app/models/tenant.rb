@@ -36,6 +36,7 @@ class Tenant < ApplicationRecord
   has_many :services, :dependent => :destroy
   has_many :shares
   has_many :authentications, :dependent => :nullify
+  has_many :miq_product_features, :dependent => :destroy
 
   belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy
   belongs_to :source, :polymorphic => true
@@ -57,7 +58,7 @@ class Tenant < ApplicationRecord
   virtual_column :display_type, :type => :string
 
   before_save :nil_blanks
-  after_create :create_tenant_group
+  after_create :create_tenant_group, :create_miq_product_features_for_tenant_nodes
   before_destroy :ensure_can_be_destroyed
 
   def self.scope_by_tenant?
@@ -288,6 +289,30 @@ class Tenant < ApplicationRecord
 
   def allowed?
     Rbac::Filterer.filtered_object(self).present?
+  end
+
+  def create_miq_product_features_for_tenant_nodes
+    result = MiqProductFeature.with_tenant_feature_root_features.map.each do |tenant_miq_product_feature|
+      build_miq_product_feature(tenant_miq_product_feature)
+    end.flatten
+
+    result = MiqProductFeature.create(result).map(&:identifier)
+
+    MiqProductFeature.invalidate_caches
+    result
+  end
+
+  def build_miq_product_feature(miq_product_feature)
+    attrs = {
+      :name => miq_product_feature.name, :description => miq_product_feature.description,
+      :feature_type  => 'admin',
+      :hidden        => false,
+      :identifier    => MiqProductFeature.tenant_identifier(miq_product_feature.identifier, id),
+      :tenant_id     => id,
+      :parent_id     => miq_product_feature.id
+    }
+
+    attrs
   end
 
   private
