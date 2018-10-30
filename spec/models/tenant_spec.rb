@@ -850,5 +850,37 @@ describe Tenant do
       expect(tenant.default_miq_group).not_to eq(false_group)
       expect(tenant.default_miq_group).to be_tenant_group
     end
+
+    context 'dynamic product features' do
+      let!(:miq_product_feature_1) { FactoryGirl.create(:miq_product_feature, :name => "Edit1", :description => "XXX1", :identifier => 'dialog_edit_editor') }
+      let!(:miq_product_feature_2) { FactoryGirl.create(:miq_product_feature, :name => "Edit2", :description => "XXX2", :identifier => 'dialog_new_editor') }
+
+      let(:tenant_product_feature) { FactoryGirl.create(:tenant) }
+
+      it "properly creates a related product feature" do
+        features = tenant_product_feature.miq_product_features.map { |x| x.slice(:name, :description, :identifier, :feature_type) }
+        expect(features).to match_array([{"name" => "#{miq_product_feature_1.name} (#{tenant_product_feature.name})", "description" => "#{miq_product_feature_1.description} for tenant #{tenant_product_feature.name}",
+                                          "identifier" => "dialog_edit_editor_tenant_#{tenant_product_feature.id}", "feature_type" => "admin"},
+                                         {"name" => "#{miq_product_feature_2.name} (#{tenant_product_feature.name})",
+                                          "description" => "#{miq_product_feature_2.description} for tenant #{tenant_product_feature.name}",
+                                          "identifier" => "dialog_new_editor_tenant_#{tenant_product_feature.id}", "feature_type" => "admin"}])
+      end
+
+      describe "#create_miq_product_features_for_tenant_nodes" do
+        let(:tenant_product_feature) { FactoryGirl.create(:tenant) }
+
+        it "creates product features for tenant nodes" do
+          expect(tenant_product_feature.create_miq_product_features_for_tenant_nodes).to match_array(["dialog_edit_editor_tenant_#{tenant_product_feature.id}", "dialog_new_editor_tenant_#{tenant_product_feature.id}"])
+        end
+      end
+
+      describe "#destroy_tenant_feature_for_tenant_node" do
+        it "destroys product features" do
+          tenant_product_feature.destroy
+
+          expect(MiqProductFeature.where(:identifier => ["dialog_edit_editor_tenant_#{tenant_product_feature.id}", "ab_group_admin_tenant_#{tenant_product_feature.id}"], :feature_type => 'tenant').count).to be_zero
+        end
+      end
+    end
   end
 end

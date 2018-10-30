@@ -2440,34 +2440,34 @@
   - :name: Dialogs
     :description: Dialogs Accordion
     :feature_type: node
-    :hidden: true
+    :hidden: false
     :identifier: dialog_accord
     :children:
     - :name: Modify
       :description: Modify Dialogs
       :feature_type: admin
       :identifier: dialog_admin
-      :hidden: true
+      :hidden: false
       :children:
       - :name: Add
         :description: Add Dialog in the Dialog Editor
         :feature_type: admin
-        :hidden: true
+        :hidden: false
         :identifier: dialog_new_editor
       - :name: Edit
         :description: Edit Dialog in the Dialog Editor
         :feature_type: admin
-        :hidden: true
+        :hidden: false
         :identifier: dialog_edit_editor
       - :name: Copy
         :description: Copy Dialog
         :feature_type: admin
-        :hidden: true
+        :hidden: false
         :identifier: dialog_copy_editor
       - :name: Delete
         :description: Delete Dialog
         :feature_type: admin
-        :hidden: true
+        :hidden: false
         :identifier: dialog_delete
   - :name: Provisioning Dialogs
     :description: Provisioning Dialogs Accordion
