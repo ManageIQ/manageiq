@@ -16,11 +16,8 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def validate_conversion_hosts
-    transformation_mapping.transformation_mapping_items.each do |item|
-      next unless %w(EmsCluster CloudTenant).include?(item.source_type)
-      ems = item.destination_type.constantize.find(item.destination_id).ext_management_system
-      conversion_hosts = ConversionHost.all.select { |ch| ch.ext_management_system == ems }
-      return false if conversion_hosts.empty?
+    transformation_mapping.transformation_mapping_items.select { |item| %w(EmsCluster CloudTenant).include?(item.source_type) }.each do |item|
+      return false if item.destination.ext_management_system.conversion_hosts.empty?
     end
     true
   end
