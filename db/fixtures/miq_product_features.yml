@@ -6324,6 +6324,10 @@
     :description: Apply Config Pattern
     :feature_type: control
     :identifier: physical_server_apply_config_pattern
+  - :name: Execute Ansible Playbook
+    :description: Execute Ansible Playbook
+    :feature_type: control
+    :identifier: physical_infra_ansible
   - :name: Event Streams
     :description: Everything under Event Streams
     :feature_type: node
