@@ -1295,4 +1295,66 @@ describe VmOrTemplate do
       expect(vm.policy_events).to eq([policy_event])
     end
   end
+
+  describe '#normalized_state' do
+    let(:klass) { :vm_vmware }
+    let(:storage) { FactoryGirl.create(:storage_vmware) }
+    let(:ems) { FactoryGirl.create(:ems_vmware) }
+    let(:connection_state) { nil }
+    let(:retired) { false }
+
+    let!(:vm) do
+      FactoryGirl.create(klass, :storage          => storage,
+                                :ems_id           => ems.try(:id),
+                                :connection_state => connection_state,
+                                :retired          => retired)
+    end
+
+    subject { vm.normalized_state }
+
+    shared_examples 'normalized_state return value' do |value|
+      let(:virtual_attribute) { virtual_column_sql_value(VmOrTemplate, "normalized_state") }
+
+      it { is_expected.to eq(value) }
+
+      it 'virtual column' do
+        expect(virtual_attribute).to eq(value)
+      end
+    end
+
+    context 'no ems and no storage attached' do
+      let(:ems) { nil }
+      let(:storage) { nil }
+
+      include_examples "normalized_state return value", "archived"
+    end
+
+    context 'no ems attached' do
+      let(:ems) { nil }
+
+      include_examples "normalized_state return value", "orphaned"
+    end
+
+    context 'template' do
+      let(:klass) { :template_vmware }
+
+      include_examples "normalized_state return value", "template"
+    end
+
+    context 'retired' do
+      let(:retired) { true }
+
+      include_examples "normalized_state return value", "retired"
+    end
+
+    context 'disconnected' do
+      include_examples "normalized_state return value", "disconnected"
+    end
+
+    context 'valid powerstate' do
+      let(:connection_state) { 'connected' }
+
+      include_examples "normalized_state return value", "on"
+    end
+  end
 end
