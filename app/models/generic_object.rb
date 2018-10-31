@@ -125,6 +125,19 @@ class GenericObject < ApplicationRecord
     @tenant ||= @user.current_tenant
   end
 
+  def public_send(method_name, *args)
+    m = method_name.to_s.chomp("=")
+
+    return _call_automate(m, *args) if property_method_defined?(m)
+
+    if property_attribute_defined?(m) || property_association_defined?(m)
+      return method_name.to_s.end_with?('=') ? _property_setter(m, args.first) : _property_getter(m)
+    end
+
+    super
+  end
+  alias go_send public_send
+
   private
 
   # The properties column contains raw data that are converted during read/write.
@@ -135,18 +148,6 @@ class GenericObject < ApplicationRecord
   end
 
   def properties=(options)
-    super
-  end
-
-  def method_missing(method_name, *args)
-    m = method_name.to_s.chomp("=")
-
-    return _call_automate(m, *args) if property_method_defined?(m)
-
-    if property_attribute_defined?(m) || property_association_defined?(m)
-      return method_name.to_s.end_with?('=') ? _property_setter(m, args.first) : _property_getter(m)
-    end
-
     super
   end
 
