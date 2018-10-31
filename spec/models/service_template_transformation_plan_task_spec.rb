@@ -235,10 +235,8 @@ describe ServiceTemplateTransformationPlanTask do
           :transformation_mapping_id => mapping.id,
           :pre_service_id            => apst.id,
           :post_service_id           => apst.id,
-          :osp_flavor                => dst_flavor.id,
-          :osp_security_group        => dst_security_group.id,
           :actions                   => [
-            {:vm_id => src_vm_1.id.to_s, :pre_service => true, :post_service => true},
+            {:vm_id => src_vm_1.id.to_s, :pre_service => true, :post_service => true, :osp_flavor_id => dst_flavor.id, :osp_security_group_id => dst_security_group.id},
             {:vm_id => src_vm_2.id.to_s, :pre_service => false, :post_service => false},
           ],
         }
@@ -515,8 +513,6 @@ describe ServiceTemplateTransformationPlanTask do
         let(:dst_cloud_volume_type) { FactoryGirl.create(:cloud_volume_type) }
         let(:dst_cloud_network_1) { FactoryGirl.create(:cloud_network) }
         let(:dst_cloud_network_2) { FactoryGirl.create(:cloud_network) }
-        let(:dst_flavor) { FactoryGirl.create(:flavor) }
-        let(:dst_security_group) { FactoryGirl.create(:security_group) }
         let(:conversion_host_vm) { FactoryGirl.create(:vm, :ext_management_system => dst_ems) }
         let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => conversion_host_vm) }
 

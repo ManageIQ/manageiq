@@ -124,11 +124,11 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def destination_flavor
-    Flavor.find_by(:id => miq_request.source.options[:config_info][:osp_flavor])
+    Flavor.find_by(:id => vm_resource.options["osp_flavor_id"])
   end
 
   def destination_security_group
-    SecurityGroup.find_by(:id => miq_request.source.options[:config_info][:osp_security_group])
+    SecurityGroup.find_by(:id => vm_resource.options["osp_security_group_id"])
   end
 
   def transformation_log
