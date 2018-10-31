@@ -40,7 +40,7 @@ class MiqS3Storage < MiqObjectStorage
   end
 
   def download_single(source, destination)
-    object_key = uri_to_object_key(remote_file)
+    object_key = uri_to_object_key(source)
     logger.debug("Downloading [#{source}] from bucket [#{bucket_name}] to local file [#{destination}]")
 
     with_standard_s3_error_handling("downloading", source) do
