@@ -6,31 +6,6 @@ describe ServiceTemplateTransformationPlanRequest do
     end
   end
 
-  let(:dst_ems) { FactoryGirl.create(:ext_management_system) }
-  let(:src_cluster) { FactoryGirl.create(:ems_cluster) }
-  let(:dst_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => dst_ems) }
-
-  let(:mapping) do
-    FactoryGirl.create(
-      :transformation_mapping,
-      :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
-    )
-  end
-
-  let(:catalog_item_options) do
-    {
-      :name        => 'Transformation Plan',
-      :description => 'a description',
-      :config_info => {
-        :transformation_mapping_id => mapping.id,
-        :actions                   => [
-          {:vm_id => vms.first.id.to_s, :pre_service => false, :post_service => false},
-          {:vm_id => vms.last.id.to_s, :pre_service => false, :post_service => false},
-        ],
-      }
-    }
-  end
-
   let(:plan) { FactoryGirl.create(:service_template_transformation_plan, :service_resources => vm_requests) }
   let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
 
@@ -55,21 +30,112 @@ describe ServiceTemplateTransformationPlanRequest do
   end
 
   describe '#validate_conversion_hosts' do
-    let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
-    let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
-
     context 'no conversion host exists in EMS' do
-      let(:host) { FactoryGirl.create(:host, :ext_management_system => FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone))) }
-      let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host) }
+      let(:dst_ems) { FactoryGirl.create(:ext_management_system) }
+      let(:src_cluster) { FactoryGirl.create(:ems_cluster) }
+      let(:dst_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => dst_ems) }
 
-      it { expect(request.validate_conversion_hosts).to eq(false) }
+      let(:mapping) do
+        FactoryGirl.create(
+          :transformation_mapping,
+          :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
+        )
+      end
+
+      let(:catalog_item_options) do
+        {
+          :name        => 'Transformation Plan',
+          :description => 'a description',
+          :config_info => {
+            :transformation_mapping_id => mapping.id,
+            :actions                   => [
+              {:vm_id => vms.first.id.to_s, :pre_service => false, :post_service => false},
+              {:vm_id => vms.last.id.to_s, :pre_service => false, :post_service => false},
+            ],
+          }
+        }
+      end
+
+      let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
+      let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
+
+      it 'returns false' do
+        host = FactoryGirl.create(:host, :ext_management_system => FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone)))
+        conversion_host = FactoryGirl.create(:conversion_host, :resource => host)
+        expect(request.validate_conversion_hosts).to be false
+      end
     end
 
-    context 'conversion host exists in EMS' do
-      let(:host) { FactoryGirl.create(:host, :ext_management_system => dst_ems) }
-      let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host) }
+    context 'conversion host exists in EMS and resource is a Host' do
+      let(:dst_ems) { FactoryGirl.create(:ems_redhat) }
+      let(:src_cluster) { FactoryGirl.create(:ems_cluster) }
+      let(:dst_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => dst_ems) }
 
-      it { expect(request.validate_conversion_hosts).to eq(false) }
+      let(:mapping) do
+        FactoryGirl.create(
+          :transformation_mapping,
+          :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
+        )
+      end
+
+      let(:catalog_item_options) do
+        {
+          :name        => 'Transformation Plan',
+          :description => 'a description',
+          :config_info => {
+            :transformation_mapping_id => mapping.id,
+            :actions                   => [
+              {:vm_id => vms.first.id.to_s, :pre_service => false, :post_service => false},
+              {:vm_id => vms.last.id.to_s, :pre_service => false, :post_service => false},
+            ],
+          }
+        }
+      end
+
+      let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
+      let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
+
+      it 'returns true' do
+        host = FactoryGirl.create(:host, :ext_management_system => dst_ems, :ems_cluster => dst_cluster)
+        conversion_host = FactoryGirl.create(:conversion_host, :resource => host)
+        expect(request.validate_conversion_hosts).to be true
+      end
+    end
+
+    context 'conversion host exists in EMS and resource is a Vm' do
+      let(:dst_ems) { FactoryGirl.create(:ems_openstack) }
+      let(:src_cluster) { FactoryGirl.create(:ems_cluster) }
+      let(:dst_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :ext_management_system => dst_ems) }
+
+      let(:mapping) do
+        FactoryGirl.create(
+          :transformation_mapping,
+          :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cloud_tenant)]
+        )
+      end
+
+      let(:catalog_item_options) do
+        {
+          :name        => 'Transformation Plan',
+          :description => 'a description',
+          :config_info => {
+            :transformation_mapping_id => mapping.id,
+            :actions                   => [
+              {:vm_id => vms.first.id.to_s, :pre_service => false, :post_service => false},
+              {:vm_id => vms.last.id.to_s, :pre_service => false, :post_service => false},
+            ],
+          }
+        }
+      end
+
+      let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
+      let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
+
+      it 'returns true' do
+        vm = FactoryGirl.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant)
+        conversion_host = FactoryGirl.create(:conversion_host, :resource => vm)
+        expect(request.validate_conversion_hosts).to be true
+      end
     end
   end
 

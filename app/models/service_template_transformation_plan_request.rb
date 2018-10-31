@@ -16,10 +16,11 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def validate_conversion_hosts
-    transformation_mapping.transformation_mapping_items.select { |item| %w(EmsCluster CloudTenant).include?(item.source_type) }.each do |item|
-      return false if item.destination.ext_management_system.conversion_hosts.empty?
+    transformation_mapping.transformation_mapping_items.select do |item|
+      %w(EmsCluster CloudTenant).include?(item.source_type)
+    end.all? do |item|
+      item.destination.ext_management_system.conversion_hosts.present?
     end
-    true
   end
 
   def validate_vm(_vm_id)
