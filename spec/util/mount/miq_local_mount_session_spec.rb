@@ -88,5 +88,18 @@ describe MiqLocalMountSession do
       expect(source_data.size).to eq(10.megabytes)
       expect(source_data).to eq(File.read(source_path))
     end
+
+    # Note, we are using `#download` in the spec, but really, this is a feature
+    # for `#download_single`.  `#download` really doesn't make use of this
+    # directly.
+    it "respects the `byte_count` attribute" do
+      downloaded_data = StringIO.new
+
+      subject.instance_variable_set(:@byte_count, 42)
+      subject.download(downloaded_data, source_path)
+
+      expect(downloaded_data.string.size).to eq(42)
+      expect(downloaded_data.string).to      eq("0" * 42)
+    end
   end
 end
