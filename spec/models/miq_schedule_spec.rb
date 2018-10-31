@@ -569,6 +569,10 @@ describe MiqSchedule do
         it "should create one backup queue message for our db backup instance for the database role" do
           expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count).to eq(1)
         end
+
+        it "sets backup tasks's timeout to ::Settings.task.active_task_timeout" do
+          expect(@backup_message.msg_timeout).to eq ::Settings.task.active_task_timeout.to_i_with_method
+        end
       end
 
       context "calling queue scheduled work via a db_backup schedule firing" do
