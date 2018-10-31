@@ -52,7 +52,6 @@ class MiqS3Storage < MiqObjectStorage
         bucket.object(source).download_file(destination)
       end
     end
-    local_file
   end
 
   # no-op mostly
