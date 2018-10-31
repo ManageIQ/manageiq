@@ -88,18 +88,25 @@ describe MiqLocalMountSession do
       expect(source_data.size).to eq(10.megabytes)
       expect(source_data).to eq(File.read(source_path))
     end
+  end
 
-    # Note, we are using `#download` in the spec, but really, this is a feature
-    # for `#download_single`.  `#download` really doesn't make use of this
-    # directly.
-    it "respects the `byte_count` attribute" do
-      downloaded_data = StringIO.new
+  describe "#magic_number_for" do
+    include_context "generated tmp files"
 
-      subject.instance_variable_set(:@byte_count, 42)
-      subject.download(downloaded_data, source_path)
+    it "returns 256 bytes by default" do
+      result = subject.magic_number_for(source_path)
 
-      expect(downloaded_data.string.size).to eq(42)
-      expect(downloaded_data.string).to      eq("0" * 42)
+      expect(result.size).to eq(256)
+      expect(result).to      eq("0" * 256)
+    end
+
+    describe "with a hash of accepted magics" do
+      it "returns key for the passed in magic number value" do
+        magics = { :zero => "000", :one => "1", :foo => "bar" }
+        result = subject.magic_number_for(source_path, :accepted => magics)
+
+        expect(result).to eq(:zero)
+      end
     end
   end
 end

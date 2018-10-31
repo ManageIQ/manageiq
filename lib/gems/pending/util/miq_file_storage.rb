@@ -152,6 +152,50 @@ class MiqFileStorage
       reset_vars
     end
 
+    # :call-seq:
+    #   magic_number_for( remote_uri )
+    #   magic_number_for( remote_uri, {:accepted => {:key => "magic_str", ...} } )
+    #
+    # Determine a magic number for a remote file.
+    #
+    # If no options[:accepted] is passed, then only the first 256 bytes of the
+    # file are downloaded, and just that data is returned.
+    #
+    # If a hash of magic number keys and values for those magic numbers is
+    # passed, then it will download the largest byte size for the magic number
+    # values, and compare against the list, returning the first match.
+    #
+    # Example:
+    #
+    #   magics = { :pgdump => PostgresAdmin::PG_DUMP_MAGIC }
+    #
+    #   magic_number_for("example.org/my_dump.gz", :accepted => magics)
+    #   #=> :pgdump
+    #   magic_number_for("example.org/my_file.rb", :accepted => magics)
+    #   #=> nil
+    #
+    # NOTE:  This is an extremely niave implementation for remote magic number
+    # checking, and is only really meant for working with the known magics
+    # PostgresAdmin.  Many other use cases would need to be considered, since
+    # magic numbers can also checked against the tail of the file, and are not
+    # limited to the first 256 bytes as has been arbitrarily decided on here.
+    def magic_number_for(uri, options = {})
+      # Amount of bytes to download for checking magic
+      @byte_count = options.fetch(:accepted, {}).values.map(&:length).max || 256
+      uri_data_io = StringIO.new
+      download_single(uri, uri_data_io)
+      uri_data    = uri_data_io.string
+
+      if (magics = options[:accepted])
+        result = magics.detect { |_, magic| uri_data.force_encoding(magic.encoding).start_with?(magic) }
+        result && result.first
+      else
+        uri_data
+      end
+    ensure
+      reset_vars
+    end
+
     private
 
     # NOTE:  Needs to be overwritten in the subclass!
