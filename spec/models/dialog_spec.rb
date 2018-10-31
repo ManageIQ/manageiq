@@ -89,9 +89,9 @@ describe Dialog do
 
     it "destroy with resource_action association" do
       dialog = FactoryGirl.create(:dialog)
-      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog)
+      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog, :resource_type => Dialog, :resource_id => dialog.id)
       expect { dialog.destroy }
-        .to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
+      .to raise_error(RuntimeError, "Dialog cannot be deleted because it is connected to other components: [\"Dialog:#{dialog.id} - #{dialog.name}\"]")
       expect(Dialog.count).to eq(1)
     end
   end
