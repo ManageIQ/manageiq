@@ -1,6 +1,6 @@
-describe ManageIQ::Providers::AnsibleRunnerWorkflow do
+describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
   let(:job)     { described_class.create_job(*options).tap { |job| job.state = state } }
-  let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), "/path/to/playbook"] }
+  let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), {:playbook_path => "/path/to/playbook"}] }
   let(:state)   { "waiting_to_start" }
 
   context ".create_job" do
@@ -151,7 +151,7 @@ describe ManageIQ::Providers::AnsibleRunnerWorkflow do
     end
 
     context ".deliver_on" do
-      let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), "/path/to/playbook", :poll_interval => 5.minutes] }
+      let(:options) { [{"ENV" => "VAR"}, %w(arg1 arg2), {:playbook_path => "/path/to/playbook"}, :poll_interval => 5.minutes] }
 
       it "uses the option to queue poll_runner" do
         now = Time.now.utc
