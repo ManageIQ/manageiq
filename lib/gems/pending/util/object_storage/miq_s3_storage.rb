@@ -44,7 +44,7 @@ class MiqS3Storage < MiqObjectStorage
     logger.debug("Downloading [#{source}] from bucket [#{bucket_name}] to local file [#{destination}]")
 
     with_standard_s3_error_handling("downloading", source) do
-      if destination.kind_of?(IO)
+      if destination.kind_of?(IO) || destination.kind_of?(StringIO)
         s3.client.get_object(:bucket => bucket_name, :key => object_key) do |chunk|
           destination.write(chunk.force_encoding(destination.external_encoding))
         end
