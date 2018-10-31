@@ -252,7 +252,7 @@ module RetirementMixin
       User.find(evm_owner_id)
     else
       $log.info("System context defaulting to admin user because owner of #{name} not set.")
-      User.find_by(:userid => 'admin')
+      User.super_admin
     end
   end
 
