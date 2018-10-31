@@ -115,5 +115,21 @@ describe MiqFtpStorage, :with_ftp_server do
       # Nothing written, just printed the streamed file in the above command
       expect(source_data.size).to eq(10.megabytes)
     end
+
+    # Note, we are using `#download` in the spec, but really, this is a feature
+    # for `#download_single`.  `#download` really doesn't make use of this
+    # directly.
+    it "respects the `byte_count` attribute" do
+      downloaded_data = StringIO.new
+      subject.instance_variable_set(:@byte_count, 42)
+      subject.download(downloaded_data, source_path)
+
+      # Sanity check that what we are downloading is the size we expect
+      expect(source_path).to exist_on_ftp_server
+      expect(source_path).to have_size_on_ftp_server_of(10.megabytes)
+
+      expect(downloaded_data.string.size).to eq(42)
+      expect(downloaded_data.string).to      eq("0" * 42)
+    end
   end
 end
