@@ -3,7 +3,7 @@ class ContainerImageRegistry < ApplicationRecord
   has_many :container_images, :dependent => :nullify
   has_many :containers, :through => :container_images
   has_many :container_services
-  has_many :container_groups, :through => :container_services
+  has_many :container_groups, :through => :container_images
 
   acts_as_miq_taggable
   virtual_column :full_name, :type => :string
