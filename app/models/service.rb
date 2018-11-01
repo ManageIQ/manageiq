@@ -69,6 +69,9 @@ class Service < ApplicationRecord
   include CiFeatureMixin
   include Metric::CiMixin
 
+  extend InterRegionApiMethodRelay
+
+  include_concern 'Operations'
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
   include_concern 'ResourceLinking'
