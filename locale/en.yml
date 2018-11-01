@@ -868,6 +868,7 @@ en:
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack:      Physical Rack (Lenovo)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalChassis:   Physical Chassis (Lenovo)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage:    Physical Storage (Lenovo)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalSwitch:    Physical Switch (Lenovo)
       ManageIQ::Providers::Redfish::PhysicalInfraManager::PhysicalServer:   Physical Server (Redfish)
       MeteringContainerImage:   Metering for Image
