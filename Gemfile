@@ -6,14 +6,14 @@ source 'https://rubygems.org'
 # VMDB specific gems
 #
 
-gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "gaprindashvili"
+gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :tag => "gaprindashvili-6"
 # Modified gems for gems-pending.  Setting sources here since they are git references
 gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "gaprindashvili"
+    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :tag => "gaprindashvili-6"
   end
 end
 
@@ -192,7 +192,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 end
 
 group :v2v, :ui_dependencies do
-  gem "miq_v2v_ui", :git => "https://github.com/ManageIQ/manageiq-v2v.git", :branch => "gaprindashvili"
+  gem "miq_v2v_ui", :git => "https://github.com/ManageIQ/manageiq-v2v.git", :tag => "gaprindashvili-6"
 end
 
 group :web_server, :manageiq_default do
