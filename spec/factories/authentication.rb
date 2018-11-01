@@ -98,40 +98,48 @@ FactoryGirl.define do
           :parent => :authentication,
           :class  => "ManageIQ::Providers::EmbeddedAutomationManager::Authentication"
 
-  factory :ansible_cloud_credential,
+  factory :ansible_credential,
           :parent => :automation_manager_authentication,
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Credential"
+
+  factory :ansible_cloud_credential,
+          :parent => :ansible_credential,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::CloudCredential"
 
   factory :ansible_machine_credential,
-          :parent => :automation_manager_authentication,
+          :parent => :ansible_credential,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential"
 
   factory :ansible_vault_credential,
-          :parent => :automation_manager_authentication,
+          :parent => :ansible_credential,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::VaultCredential"
 
   factory :ansible_network_credential,
-          :parent => :automation_manager_authentication,
+          :parent => :ansible_credential,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential"
 
   factory :ansible_scm_credential,
-          :parent => :automation_manager_authentication,
+          :parent => :ansible_credential,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential"
 
+  factory :embedded_ansible_credential,
+          :parent => :embedded_automation_manager_authentication,
+          :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential"
+
   factory :embedded_ansible_amazon_credential,
-          :parent => :automation_manager_authentication,
+          :parent => :embedded_ansible_credential,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential"
 
   factory :embedded_ansible_machine_credential,
-          :parent => :automation_manager_authentication,
+          :parent => :embedded_ansible_credential,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential"
 
   factory :embedded_ansible_vault_credential,
-          :parent => :automation_manager_authentication,
+          :parent => :embedded_ansible_credential,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential"
 
   factory :embedded_ansible_scm_credential,
-          :parent => :automation_manager_authentication,
+          :parent => :embedded_ansible_credential,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential"
 
   factory :auth_key_pair_cloud,     :class => "ManageIQ::Providers::CloudManager::AuthKeyPair"
