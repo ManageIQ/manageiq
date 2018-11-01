@@ -46,7 +46,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook <
 
     %i(credential vault_credential cloud_credential network_credential).each do |credential|
       cred_sym = "#{credential}_id".to_sym
-      params[credential] = Authentication.find(options[cred_sym]).manager_ref if options[cred_sym].present?
+      params[credential] = Authentication.find(options[cred_sym]).native_ref if options[cred_sym].present?
     end
 
     params.compact
