@@ -125,6 +125,11 @@ class Authentication < ApplicationRecord
     end
   end
 
+  def native_ref
+    # to be overridden by individual provider/manager
+    manager_ref
+  end
+
   private
 
   def set_credentials_changed_on
