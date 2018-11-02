@@ -3,17 +3,33 @@ require "util/object_storage/miq_swift_storage"
 describe MiqSwiftStorage do
   let(:object_storage) { described_class.new(:uri => uri, :username => 'user', :password => 'pass') }
 
-  context "using a uri without query parameters" do
-    let(:uri) { "swift://foo.com/abc/def" }
+  describe "#initialize" do
+    context "using a uri with query parameters" do
+      let(:uri) { "swift://foo.com:5678/abc/def?region=region&api_version=v3&security_protocol=non-ssl" }
 
-    it "#initialize sets the container_name" do
-      container_name = object_storage.container_name
-      expect(container_name).to eq("abc/def")
+      it "#initialize sets the container_name" do
+        container_name = object_storage.container_name
+        expect(container_name).to eq("abc")
+      end
+
+      it "#uri_to_object_path returns a new object path" do
+        result = object_storage.uri_to_object_path(uri)
+        expect(result).to eq("def")
+      end
     end
 
-    it "#uri_to_object_path returns a new object path" do
-      result = object_storage.uri_to_object_path(uri)
-      expect(result).to eq("def")
+    context "using a uri without query parameters" do
+      let(:uri) { "swift://foo.com/abc/def/my_file.tar.gz" }
+
+      it "#initialize sets the container_name" do
+        container_name = object_storage.container_name
+        expect(container_name).to eq("abc")
+      end
+
+      it "#uri_to_object_path returns a new object path" do
+        result = object_storage.uri_to_object_path(uri)
+        expect(result).to eq("def/my_file.tar.gz")
+      end
     end
   end
 
