@@ -85,12 +85,14 @@ class MiqSwiftStorage < MiqObjectStorage
     with_standard_swift_error_handling("downloading") do
       container_key = container.key # also makes sure 'fog/openstack' is loaded
       params        = {
-        :expects        => 200,
+        :expects        => [200, 206],
         :headers        => {},
         :response_block => write_chunk_proc(destination),
         :method         => "GET",
         :path           => "#{Fog::OpenStack.escape(container_key)}/#{Fog::OpenStack.escape(object_file)}"
       }
+      # Range is indexed starting at zero
+      params[:headers]['Range'] = "bytes=0-#{byte_count - 1}" if byte_count
       swift.send(:request, params)
     end
   end
