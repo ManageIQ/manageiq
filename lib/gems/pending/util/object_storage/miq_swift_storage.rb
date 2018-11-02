@@ -55,15 +55,17 @@ class MiqSwiftStorage < MiqObjectStorage
       }
       #
       # Because of how `Fog::OpenStack` (and probably `Fog::Core`) is designed,
-      # it has hidden the functionality to provide a block for streaming uploads
-      # that is available out of the box with Excon.
+      # it has hidden the functionality to provide a block for streaming
+      # uploads that is available out of the box with Excon.
       #
       # we use .send here because #request is private
-      # we can't use #put_object (public) directly because it doesn't allow a 202 response code,
-      # which is what swift responds with when we pass it the :request_block
-      # (This allows us to stream the response in chunks)
+      #
+      # we can't use #put_object (public) directly because it doesn't allow a
+      # 202 response code, which is what swift responds with when we pass it
+      # the :request_block (This allows us to stream the response in chunks)
       #
       swift_file.service.send(:request, params)
+
       clear_split_vars
     rescue Excon::Errors::Unauthorized => err
       msg = "Access to Swift container #{@container_name} failed due to a bad username or password. #{err}"
