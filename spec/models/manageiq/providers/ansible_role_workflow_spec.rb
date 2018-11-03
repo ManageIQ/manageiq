@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::AnsibleRoleWorkflow do
   let(:job)          { described_class.create_job(*options).tap { |job| job.state = state } }
-  let(:role_options) { {:role_name => 'role_name', :roles_path => 'path/role', :role_skip_facts => true } }
+  let(:role_options) { {:role_name => 'role_name', :roles_path => 'path/role', :role_skip_facts => true, :hook_object => nil } }
   let(:options)      { [{"ENV" => "VAR"}, %w(arg1 arg2), role_options] }
   let(:state)        { "waiting_to_start" }
 
@@ -93,7 +93,7 @@ describe ManageIQ::Providers::AnsibleRoleWorkflow do
       response_async = Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results")
 
       expect(Ansible::Runner).to receive(:run_role_async)
-        .with({"ENV"=>"VAR"}, %w(arg1 arg2), "role_name", :roles_path => "path/role", :role_skip_facts => true).and_return(response_async)
+        .with({"ENV"=>"VAR"}, %w(arg1 arg2), "role_name", :roles_path => "path/role", :role_skip_facts => true, :hook_object => nil).and_return(response_async)
       expect(job).to receive(:queue_signal).with(:poll_runner)
 
       job.signal(:run_role)

@@ -138,10 +138,13 @@ module Ansible
       #        "run", which is sync call, or "start" which is async call.  Default is "run"
       # @param playbook_or_role_args [Hash] Hash that includes the :playbook key or :role keys
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_via_cli(env_vars, extra_vars, tags: nil, ansible_runner_method: "run", **playbook_or_role_args)
+      def run_via_cli(env_vars, extra_vars, tags: nil, ansible_runner_method: "run", hook_object: nil, **playbook_or_role_args)
         validate_params!(env_vars, extra_vars, tags, ansible_runner_method, playbook_or_role_args)
 
         base_dir = Dir.mktmpdir("ansible-runner")
+        if hook_object&.responds_to?(:after_dir_create)
+          hook_object.after_dir_create(base_dir, env_vars, extra_vars, ansible_runner_method, playbook_or_role_args)
+        end
         params = runner_params(base_dir, ansible_runner_method, extra_vars, tags, playbook_or_role_args)
 
         begin

@@ -1,5 +1,5 @@
 class ManageIQ::Providers::AnsibleRoleWorkflow < ManageIQ::Providers::AnsibleRunnerWorkflow
-  def self.job_options(env_vars, extra_vars, role_options, timeout, poll_interval)
+  def self.job_options(env_vars, extra_vars, role_options, timeout, poll_interval, hook_object)
     {
       :env_vars        => env_vars,
       :extra_vars      => extra_vars,
@@ -7,7 +7,8 @@ class ManageIQ::Providers::AnsibleRoleWorkflow < ManageIQ::Providers::AnsibleRun
       :roles_path      => role_options[:roles_path],
       :role_skip_facts => role_options[:role_skip_facts],
       :timeout         => timeout,
-      :poll_interval   => poll_interval
+      :poll_interval   => poll_interval,
+      :hook_object     => hook_object
     }
   end
 
@@ -17,9 +18,9 @@ class ManageIQ::Providers::AnsibleRoleWorkflow < ManageIQ::Providers::AnsibleRun
   end
 
   def run_role
-    env_vars, extra_vars, role_name, roles_path, role_skip_facts = options.values_at(:env_vars, :extra_vars, :role_name, :roles_path, :role_skip_facts)
+    env_vars, extra_vars, role_name, roles_path, role_skip_facts, hook_object = options.values_at(:env_vars, :extra_vars, :role_name, :roles_path, :role_skip_facts, :hook_object)
     role_skip_facts = true if role_skip_facts.nil?
-    response = Ansible::Runner.run_role_async(env_vars, extra_vars, role_name, :roles_path => roles_path, :role_skip_facts => role_skip_facts)
+    response = Ansible::Runner.run_role_async(env_vars, extra_vars, role_name, :roles_path => roles_path, :role_skip_facts => role_skip_facts, :hook_object => hook_object)
     if response.nil?
       queue_signal(:abort, "Failed to run ansible role", "error")
     else
