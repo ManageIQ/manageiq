@@ -287,7 +287,7 @@ describe EvmDatabaseOps do
 
       context "for a restore action" do
         it "updates db_opts[:local_file] in the method context" do
-          expect(file_storage).to receive(:send).with(:download, "smb://tmp/foo")
+          expect(file_storage).to receive(:send).with(:download, nil, "smb://tmp/foo")
           execute_with_file_storage(:restore)
         end
 
