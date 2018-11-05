@@ -301,7 +301,7 @@ class MiqGenericMountSession < MiqFileStorage::Interface
       end
 
       logger.info("#{log_header} Copying file [#{relpath}] to [#{local_file}]...")
-      IO.copy_stream(relpath, local_file)
+      IO.copy_stream(relpath, local_file, byte_count)
       logger.info("#{log_header} Copying file [#{relpath}] to [#{local_file}] complete")
     rescue => err
       msg = "Downloading [#{remote_file}] to [#{local_file}], failed due to error: '#{err.message}'"
