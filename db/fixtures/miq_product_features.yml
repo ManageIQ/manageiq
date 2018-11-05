@@ -6324,6 +6324,14 @@
     :description: Apply Config Pattern
     :feature_type: control
     :identifier: physical_server_apply_config_pattern
+  - :name: Apply Config Pattern Playbook
+    :description: Apply Config Pattern through Ansible
+    :feature_type: control
+    :identifier: physical_server_apply_config_pattern_ansible
+  - :name: Apply Firmware Update Playbook
+    :description: Apply Firmware Update through Ansible
+    :feature_type: control
+    :identifier: physical_server_apply_firmware_update_ansible
   - :name: Execute Ansible Playbook
     :description: Execute Ansible Playbook
     :feature_type: control
