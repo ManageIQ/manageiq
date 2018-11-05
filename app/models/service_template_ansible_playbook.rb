@@ -107,7 +107,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
     %i(credential vault_credential cloud_credential network_credential).each do |credential|
       cred_sym = "#{credential}_id".to_sym
-      params[credential] = Authentication.find(info[cred_sym]).manager_ref if info[cred_sym]
+      params[credential] = Authentication.find(info[cred_sym]).native_ref if info[cred_sym]
     end
 
     [tower, params.compact]

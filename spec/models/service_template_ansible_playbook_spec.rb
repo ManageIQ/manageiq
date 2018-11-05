@@ -1,8 +1,8 @@
 describe ServiceTemplateAnsiblePlaybook do
   let(:user)     { FactoryGirl.create(:user_with_group) }
-  let(:auth_one) { FactoryGirl.create(:authentication, :manager_ref => 6) }
-  let(:auth_two) { FactoryGirl.create(:authentication, :manager_ref => 10) }
-  let(:auth_three) { FactoryGirl.create(:authentication, :manager_ref => 14) }
+  let(:auth_one) { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '6') }
+  let(:auth_two) { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '10') }
+  let(:auth_three) { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '14') }
 
   let(:script_source) { FactoryGirl.create(:configuration_script_source, :manager => ems) }
 
@@ -135,9 +135,9 @@ describe ServiceTemplateAnsiblePlaybook do
         :description        => description,
         :become_enabled     => true,
         :verbosity          => 3,
-        :credential         => '6',
-        :network_credential => '10',
-        :vault_credential   => '14'
+        :credential         => 6,
+        :network_credential => 10,
+        :vault_credential   => 14
       )
 
       expect(params.keys).to_not include(:extra_vars, :cloud_credentials)
