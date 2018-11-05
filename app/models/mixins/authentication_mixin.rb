@@ -433,7 +433,7 @@ module AuthenticationMixin
   end
 
   def authentication_types
-    available_authentications.collect(&:authentication_type).uniq
+    available_authentications.collect(&:authentication_type).distinct
   end
 
   def authentication_delete(type)

@@ -26,7 +26,7 @@ class MiqEventDefinition < ApplicationRecord
   end
 
   def miq_policies
-    p_ids = MiqPolicyContent.where(:miq_event_definition_id => id).uniq.pluck(:miq_policy_id)
+    p_ids = MiqPolicyContent.where(:miq_event_definition_id => id).distinct.pluck(:miq_policy_id)
     MiqPolicy.where(:id => p_ids).to_a
   end
 

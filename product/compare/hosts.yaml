@@ -208,7 +208,7 @@ col_order:
 - filesystems.owner
 - filesystems.group
 - filesystems.mtime
-- filesystems_custom_attributes.unique_name
+- filesystems_custom_attributes.distinctue_name
 - filesystems_custom_attributes.name
 - filesystems_custom_attributes.section
 - filesystems_custom_attributes.value

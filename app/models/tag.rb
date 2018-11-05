@@ -86,7 +86,7 @@ class Tag < ApplicationRecord
       # delete any blank tag names
       tag_names = tag_names.delete_if(&:empty?)
 
-      return tag_names.uniq
+      return tag_names.distinct
     end
   end
 

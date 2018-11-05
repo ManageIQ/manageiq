@@ -20,7 +20,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def self.all_timezones
-    select(%w(id profile)).collect(&:tz).uniq
+    select(%w(id profile)).collect(&:tz).distinct
   end
 
   def self.seed

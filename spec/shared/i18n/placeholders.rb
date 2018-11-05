@@ -15,7 +15,7 @@ shared_examples :placeholders do |dir|
         next if placeholders.empty?
         translated_placeholders = translation.scan(/%{\w+}/)
         translated_placeholders.sort!
-        if placeholders.uniq != translated_placeholders.uniq
+        if placeholders.distinct != translated_placeholders.distinct
           errors.store_path(po_file.to_s, original, translation)
         end
       end

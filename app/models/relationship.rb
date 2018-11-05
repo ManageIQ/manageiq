@@ -61,7 +61,7 @@ class Relationship < ApplicationRecord
   end
 
   def self.resource_types(relationships)
-    relationships.collect(&:resource_type).uniq
+    relationships.collect(&:resource_type).distinct
   end
 
   def self.resource_pairs_to_ids(resource_pairs)

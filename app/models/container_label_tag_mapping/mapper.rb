@@ -45,7 +45,7 @@ class ContainerLabelTagMapping
     # @param labels [Array] array of {:name, :value} hashes.
     # @return [Array<InventoryObject>] representing desired tags.
     def map_labels(type, labels)
-      labels.collect_concat { |label| map_label(type, label) }.uniq
+      labels.collect_concat { |label| map_label(type, label) }.distinct
     end
 
     # Convert "tag references" to actual Tag objects.  Must have been resolved to known id first.

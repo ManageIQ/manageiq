@@ -69,7 +69,7 @@ class VimPerformanceTagValue
     perf_data[:perf_recs] = recs
     perf_data[:categories] = perf_data[:perf_recs].collect do |perf|
       perf.tag_names.split(TAG_SEP).collect { |t| t.split("/").first } unless perf.tag_names.nil?
-    end.flatten.compact.uniq
+    end.flatten.compact.distinct
 
     cats_to_process = (eligible_cats & perf_data[:categories]) # Process subset of perf_data[:categories] that are eligible for tag grouping
     return [] if cats_to_process.empty?

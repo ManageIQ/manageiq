@@ -243,7 +243,7 @@ describe AutomationRequest do
 
     def check_zone(zone_name)
       expect(MiqQueue.count).to eq(4)
-      expect(MiqQueue.pluck(:zone).uniq).to eq([zone_name])
+      expect(MiqQueue.pluck(:zone).distinct).to eq([zone_name])
     end
 
     it "zone specified" do

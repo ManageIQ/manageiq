@@ -98,7 +98,7 @@ class MiqAction < ApplicationRecord
   end
 
   def miq_policies
-    miq_policy_contents.collect(&:miq_policy).uniq
+    miq_policy_contents.collect(&:miq_policy).distinct
   end
 
   def self.invoke_actions(apply_policies_to, inputs, succeeded, failed)
@@ -108,7 +108,7 @@ class MiqAction < ApplicationRecord
     begin
       succeeded.each do |p|
         actions = case p
-                  when MiqPolicy then p.actions_for_event(inputs[:event], :success).uniq
+                  when MiqPolicy then p.actions_for_event(inputs[:event], :success).distinct
                   else            p.actions_for_event
                   end
 
@@ -129,7 +129,7 @@ class MiqAction < ApplicationRecord
 
       failed.each do |p|
         next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on success
-        actions = p.actions_for_event(inputs[:event], :failure).uniq
+        actions = p.actions_for_event(inputs[:event], :failure).distinct
 
         actions.each do |a|
           # merge in the synchronous flag and possibly the sequence if not already sorted by this

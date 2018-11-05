@@ -328,7 +328,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def delete_unused_connection_configurations(options)
-    chosen_endpoints = options.map { |x| x.deep_symbolize_keys.fetch_path(:endpoint, :role).try(:to_sym) }.compact.uniq
+    chosen_endpoints = options.map { |x| x.deep_symbolize_keys.fetch_path(:endpoint, :role).try(:to_sym) }.compact.distinct
     existing_endpoints = endpoints.pluck(:role).map(&:to_sym)
     # Delete endpoint that were not picked
     roles_for_deletion = existing_endpoints - chosen_endpoints
@@ -693,7 +693,7 @@ class ExtManagementSystem < ApplicationRecord
     (
       self.class.blacklisted_events.where(:enabled => true).pluck(:event_name) +
       blacklisted_events.where(:enabled => true).pluck(:event_name)
-    ).uniq.sort
+    ).distinct.sort
   end
 
   def self.blacklisted_events

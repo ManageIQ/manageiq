@@ -104,12 +104,12 @@ class MiqPolicy < ApplicationRecord
   end
 
   def miq_event_definitions
-    miq_policy_contents.collect(&:miq_event_definition).compact.uniq
+    miq_policy_contents.collect(&:miq_event_definition).compact.distinct
   end
   alias_method :events, :miq_event_definitions
 
   def miq_actions
-    miq_policy_contents.collect(&:miq_action).compact.uniq
+    miq_policy_contents.collect(&:miq_action).compact.distinct
   end
   alias_method :actions, :miq_actions
 
@@ -225,7 +225,7 @@ class MiqPolicy < ApplicationRecord
   def self.evaluate_conditions_for_policy(target, policy, mode, inputs)
     cond_result = "allow"
     clist = []
-    policy.conditions.uniq.each do |c|
+    policy.conditions.distinct.each do |c|
       unless c.applies_to?(target, inputs)
         # skip conditions that do not apply based on applies_to_exp
         logger.info("MIQ(policy-enforce_policy): Resolving policy [#{policy.description}], Condition: [#{c.description}] does not apply, skipping...")
@@ -267,7 +267,7 @@ class MiqPolicy < ApplicationRecord
       {
         :miq_policy      => p,
         :result          => status.to_s,
-        :miq_actions     => p.actions_for_event(event, status).uniq,
+        :miq_actions     => p.actions_for_event(event, status).distinct,
         :miq_policy_sets => p.memberof.select { |ps| profiles.include?(ps) }
       }
     end.compact
@@ -287,7 +287,7 @@ class MiqPolicy < ApplicationRecord
 
         action_on = policy_hash["result"] == "deny" ? :failure : :success
         policy_hash["actions"] =
-          p.actions_for_event(event, action_on).uniq.collect do |a|
+          p.actions_for_event(event, action_on).distinct.collect do |a|
             {"id" => a.id, "name" => a.name, "description" => a.description, "result" => policy_hash["result"]}
           end unless event.nil?
       end
@@ -309,7 +309,7 @@ class MiqPolicy < ApplicationRecord
       end.compact
 
     if policy.active == true
-      result_list = conditions.collect { |c| c["result"] }.uniq
+      result_list = conditions.collect { |c| c["result"] }.distinct
       policy_result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
     else
       policy_result = "N/A" # Ignore condition result if policy is inactive
@@ -375,7 +375,7 @@ class MiqPolicy < ApplicationRecord
 
     # collect policies expand profiles (sets)
     profiles, plist = get_expanded_profiles_and_policies(target)
-    plist = built_in_policies.concat(plist).uniq
+    plist = built_in_policies.concat(plist).distinct
 
     towhat = target.class.base_model.name
     towhat = "Vm" if towhat.downcase.match("template")
@@ -428,7 +428,7 @@ class MiqPolicy < ApplicationRecord
       end.compact.flatten
     assoc_profiles = separate_profiles_from_policies(assoc_policies)
 
-    [target_profiles.concat(assoc_profiles), target_policies.concat(assoc_policies).flatten.compact.uniq]
+    [target_profiles.concat(assoc_profiles), target_policies.concat(assoc_policies).flatten.compact.distinct]
   end
   private_class_method :get_expanded_profiles_and_policies
 

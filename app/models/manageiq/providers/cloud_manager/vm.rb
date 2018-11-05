@@ -65,15 +65,15 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def ipaddresses
-    @ipaddresses ||= network_ports.collect(&:ipaddresses).flatten.compact.uniq
+    @ipaddresses ||= network_ports.collect(&:ipaddresses).flatten.compact.distinct
   end
 
   def floating_ip_addresses
-    @floating_ip_addresses ||= network_ports.collect(&:floating_ip_addresses).flatten.compact.uniq
+    @floating_ip_addresses ||= network_ports.collect(&:floating_ip_addresses).flatten.compact.distinct
   end
 
   def fixed_ip_addresses
-    @fixed_ip_addresses ||= network_ports.collect(&:fixed_ip_addresses).flatten.compact.uniq
+    @fixed_ip_addresses ||= network_ports.collect(&:fixed_ip_addresses).flatten.compact.distinct
   end
 
   def cloud_network
@@ -87,7 +87,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def mac_addresses
-    @mac_addresses ||= network_ports.collect(&:mac_address).compact.uniq
+    @mac_addresses ||= network_ports.collect(&:mac_address).compact.distinct
   end
 
   def perf_rollup_parents(interval_name = nil)

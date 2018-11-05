@@ -145,6 +145,6 @@ class VimPerformanceDaily < MetricRollup
     end
     only_cols += [:derived_storage_total, :derived_storage_free] if only_cols.include?(:v_derived_storage_used)
     only_cols += Metric::BASE_COLS.collect(&:to_sym)
-    only_cols.uniq
+    only_cols.distinct
   end
 end # class VimPerformanceDaily

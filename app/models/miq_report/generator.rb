@@ -392,9 +392,9 @@ module MiqReport::Generator
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support
     if db_klass.to_s.ends_with?("Performance")
       res_cols = ['resource_name', 'resource_type', 'resource_id']
-      self.cols = (cols + res_cols).uniq
+      self.cols = (cols + res_cols).distinct
       orig_col_order = col_order.dup
-      self.col_order = (col_order + res_cols).uniq
+      self.col_order = (col_order + res_cols).distinct
     end
 
     only_cols = options[:only] || cols_for_report(['id'])
@@ -617,7 +617,7 @@ module MiqReport::Generator
     return data if data.blank?
 
     # Build a tempory table so that ruport sorting can be used to sort data before summarizing pivot data
-    column_names = (data.first.keys.collect(&:to_s) + col_order).uniq
+    column_names = (data.first.keys.collect(&:to_s) + col_order).distinct
     data = Ruport::Data::Table.new(:data => data, :column_names => column_names)
     data = sort_table(data, rpt_options[:pivot][:group_cols].collect(&:to_s), :order => :ascending)
 
@@ -653,7 +653,7 @@ module MiqReport::Generator
   # there may be some columns that are used to derive columns,
   # so we currently include '*'
   def cols_for_report(extra_cols = [])
-    ((cols || []) + (col_order || []) + (extra_cols || []) + build_cols_from_include(include)).uniq
+    ((cols || []) + (col_order || []) + (extra_cols || []) + build_cols_from_include(include)).distinct
   end
 
   def build_cols_from_include(hash, parent_association = nil)

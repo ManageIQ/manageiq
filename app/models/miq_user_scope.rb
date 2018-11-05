@@ -48,7 +48,7 @@ class MiqUserScope
 
   def merge_belongsto(*args)
     # TODO: Optimize to remove items that are descendants of others in the list.
-    args.flatten.compact.uniq
+    args.flatten.compact.distinct
   end
 
   def merge_expression(*args)

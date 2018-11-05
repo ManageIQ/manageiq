@@ -93,7 +93,7 @@ class ChargeableField < ApplicationRecord
   end
 
   def self.cols_on_metric_rollup
-    (%w(id tag_names resource_id) + chargeable_cols_on_metric_rollup).uniq
+    (%w(id tag_names resource_id) + chargeable_cols_on_metric_rollup).distinct
   end
 
   def self.col_index(column)

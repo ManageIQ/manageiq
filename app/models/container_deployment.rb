@@ -103,7 +103,7 @@ EOS
       "variant_version"        => kind.include?("origin") ? '1.2' : '3.2',
       "variant"                => kind
     }
-    if container_deployment_nodes.collect(&:roles).flatten.uniq.include?("master_lb")
+    if container_deployment_nodes.collect(&:roles).flatten.distinct.include?("master_lb")
       config["deployment"].merge!(
         "openshift_master_cluster_method"          => "native",
         "openshift_master_cluster_hostname"        => roles_addresses("master_lb").first,
@@ -249,7 +249,7 @@ EOS
 
   def generate_roles
     result = {}
-    roles = container_deployment_nodes.collect(&:roles).flatten.uniq
+    roles = container_deployment_nodes.collect(&:roles).flatten.distinct
     result["master"] = {"osm_use_cockpit"                     => "false",
                         "openshift_master_identity_providers" => [identity_ansible_config_format]} if roles.include?("master")
     unless identity_provider_auth.first.htpassd_users.empty?

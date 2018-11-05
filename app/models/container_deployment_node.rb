@@ -15,7 +15,7 @@ class ContainerDeploymentNode < ApplicationRecord
 
   def roles
     tags.reset
-    tags.collect { |tag| tag.name.gsub("/user/", "").gsub("deployment_master", "master") }.uniq
+    tags.collect { |tag| tag.name.gsub("/user/", "").gsub("deployment_master", "master") }.distinct
   end
 
   def to_ansible_config_format

@@ -41,7 +41,7 @@ module PerEmsWorkerMixin
       unless compare_queues(current, desired)
         _log.info("Workers are being synchronized: Current: #{current.inspect}, Desired: #{desired.inspect}")
 
-        dups = current.uniq.find_all { |u| current.find_all { |c| c == u }.length > 1 }
+        dups = current.distinct.find_all { |u| current.find_all { |c| c == u }.length > 1 }
         _log.info("Duplicate workers found: Current: #{current.inspect}, Desired: #{desired.inspect}, Dups: #{dups.inspect}") unless dups.empty?
         current -= dups
 

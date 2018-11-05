@@ -46,7 +46,7 @@ class Chargeback < ActsAsArModel
         data[key] ||= new(options, consumption, region.region)
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
-        data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
+        data[key]["chargeback_rates"] = chargeback_rates.distinct.join(', ')
 
         # we are getting hash with metrics and costs for metrics defined for chargeback
         if Settings[:new_chargeback]

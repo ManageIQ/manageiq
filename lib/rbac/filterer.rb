@@ -616,7 +616,7 @@ module Rbac
           klass.where(klass_id => descendants.select(descendant_id)).distinct
         else
           MiqPreloader.preload(descendants, method_name)
-          descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
+          descendants.flat_map { |object| object.send(method_name) }.grep(klass).distinct
         end
       end
     end
@@ -675,7 +675,7 @@ module Rbac
         else
           vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)
         end
-      end.uniq
+      end.distinct
     end
 
     def get_belongsto_matches_for_host(blist)

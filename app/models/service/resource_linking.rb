@@ -2,7 +2,7 @@ module Service::ResourceLinking
   extend ActiveSupport::Concern
 
   def add_provider_vms(provider, uid_ems_array)
-    vm_uid_array = Array(uid_ems_array).compact.uniq
+    vm_uid_array = Array(uid_ems_array).compact.distinct
     raise _("no uid_ems_array defined for linking to service") if vm_uid_array.blank?
 
     options = {

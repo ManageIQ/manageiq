@@ -295,7 +295,7 @@ describe Metric do
         it "queues service rollups" do
           @vm.perf_rollup_to_parents("hourly", "2010-04-14T21:51:10Z", "2010-04-14T22:50:50Z")
 
-          expect(MiqQueue.all.pluck(:class_name).uniq).to eq(%w(Service))
+          expect(MiqQueue.all.pluck(:class_name).distinct).to eq(%w(Service))
         end
       end
     end
@@ -407,7 +407,7 @@ describe Metric do
                                                       :resource  => @host1,
                                                       :timestamp => "2010-04-14T22:00:00Z")
           metrics = Metric::Finders.find_all_by_day([@vm1, @host1], "2010-04-14T00:00:00Z", 'hourly', @time_profile)
-          expect(metrics.collect(&:resource_type).uniq).to match_array(%w(VmOrTemplate Host))
+          expect(metrics.collect(&:resource_type).distinct).to match_array(%w(VmOrTemplate Host))
         end
 
         context "calling perf_rollup to daily on the Vm" do

@@ -10,7 +10,7 @@ module Vmdb
       end
 
       def self.diff(h1, h2)
-        keys = (h1.keys + h2.keys).uniq
+        keys = (h1.keys + h2.keys).distinct
         keys.each_with_object({}) do |k, result|
           v1 = h1.key?(k) ? h1[k] : MissingKey
           v2 = h2.key?(k) ? h2[k] : MissingKey

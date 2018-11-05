@@ -39,7 +39,7 @@ class PhysicalServerProvisionWorkflow < MiqProvisionConfiguredSystemWorkflow
   private
 
   def get_customization_scripts
-    ems_ids = PhysicalServer.where(:id => @values[:src_configured_system_ids]).pluck(:ems_id).uniq
+    ems_ids = PhysicalServer.where(:id => @values[:src_configured_system_ids]).pluck(:ems_id).distinct
     CustomizationScript.where(:manager_id => ems_ids)
   end
 end

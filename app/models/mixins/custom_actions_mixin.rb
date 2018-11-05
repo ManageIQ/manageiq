@@ -29,7 +29,7 @@ module CustomActionsMixin
   end
 
   def custom_button_sets_with_generics
-    custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
+    custom_button_sets + generic_button_group.map(&:parent).distinct.flatten
   end
 
   def custom_buttons

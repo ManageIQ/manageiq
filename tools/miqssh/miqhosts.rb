@@ -29,7 +29,7 @@ def load_file(file)
   end
   # Sort and uniq the arrays of hosts.
   data.each_key do |k|
-    data[k].uniq!
+    data[k].distinct!
     data[k].sort!
   end
 end
@@ -46,7 +46,7 @@ def list_servers(data, group)
   groups = group.split(',')
   servers = []
   groups.each { |g| servers.push(data[g.to_sym]) }
-  puts servers.uniq.sort.join(" ")
+  puts servers.distinct.sort.join(" ")
 end
 
 file = ARGV[0]

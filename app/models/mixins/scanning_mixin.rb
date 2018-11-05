@@ -189,7 +189,7 @@ module ScanningMixin
 
     # If we get through the profile check and do not have anything pass the default list
 
-    cat_scan_list.uniq!
+    cat_scan_list.distinct!
     cat_scan_list = self.class.default_scan_categories_no_profile if cat_scan_list.empty?
     cat_scan_list
   end

@@ -10,7 +10,7 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
 
     def assert_at_most_x_scan_jobs_per_y_resource(x_scans, y_resource)
       vms_in_embedded_scanning = Job.where(["dispatch_status = ? AND state != ? AND target_class = ?", "active", "finished", "VmOrTemplate"])
-                                    .pluck(:target_id).compact.uniq
+                                    .pluck(:target_id).compact.distinct
       expect(vms_in_embedded_scanning.length).to be > 0
 
       method = case y_resource

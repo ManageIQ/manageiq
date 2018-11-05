@@ -10,7 +10,7 @@ class MiqWidget::ContentOptionGenerator
   private
 
   def timezones_for_users(users)
-    users.collect { |user| user.try(:get_timezone) }.compact.uniq.sort
+    users.collect { |user| user.try(:get_timezone) }.compact.distinct.sort
   end
 
   def userids_for_users(users)

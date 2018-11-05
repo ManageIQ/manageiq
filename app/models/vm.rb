@@ -66,8 +66,8 @@ class Vm < VmOrTemplate
     end
     conds[0] = "(#{conds[0].join(" AND ")})"
 
-    Hardware.includes(include.uniq)
-      .references(references.uniq)
+    Hardware.includes(include.distinct)
+      .references(references.distinct)
       .where(conds)
       .collect { |h|  h.vm_or_template.kind_of?(Vm) ? h.vm_or_template : nil }.compact
   end

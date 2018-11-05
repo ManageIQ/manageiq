@@ -22,7 +22,7 @@ module ActsAsTaggable
       tags.split(separator)
     else
       []
-    end.map(&:strip).uniq
+    end.map(&:strip).distinct
   end
 
   def writable_classification_tags

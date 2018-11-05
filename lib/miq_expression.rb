@@ -688,11 +688,11 @@ class MiqExpression
               end
         end
         v.kind_of?(Range) ? v.to_a : v
-      end.compact.uniq.sort
+      end.compact.distinct.sort
       "[#{v_arr.join(",")}]"
     when "string_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
+      v_arr = val.to_miq_a.flat_map { |v| "'#{v.to_s.strip}'" }.distinct.sort
       "[#{v_arr.join(",")}]"
     else
       val

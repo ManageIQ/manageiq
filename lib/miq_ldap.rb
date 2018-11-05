@@ -417,8 +417,8 @@ class MiqLdap
         result.concat(get_memberships(gobj, max_depth, attr, followed, current_depth)) unless max_depth > 0 && current_depth >= max_depth
       end
     end
-    _log.debug("Exit get_memberships: #{obj.dn}, result: #{result.uniq.inspect}")
-    result.uniq
+    _log.debug("Exit get_memberships: #{obj.dn}, result: #{result.distinct.inspect}")
+    result.distinct
   end
 
   def get_organizationalunits(basedn = nil, filter = nil)

@@ -287,7 +287,7 @@ class JobProxyDispatcher
       Job.where(:dispatch_status => "active")
       .where(:target_class     => "VmOrTemplate")
       .where("state != ?", "finished")
-      .pluck(:target_id).compact.uniq
+      .pluck(:target_id).compact.distinct
     return @busy_resources_for_embedded_scanning_hash if vms_in_embedded_scanning.blank?
 
     embedded_scans_by_resource = Hash.new { |h, k| h[k] = 0 }

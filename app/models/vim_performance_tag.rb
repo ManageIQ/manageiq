@@ -35,8 +35,8 @@ class VimPerformanceTag < MetricRollup
         c = [tv.column_name, tv.tag_name].join("_").to_sym
         rec.class.class_eval("attr_accessor #{c.inspect}")
         rec.send(c.to_s + "=", tv.column_name == "assoc_ids" ? tv.assoc_ids : tv.value)
-        h[:tags].push(tv.tag_name).uniq!
-        h[:tcols].push(c.to_s).uniq!
+        h[:tags].push(tv.tag_name).distinct!
+        h[:tcols].push(c.to_s).distinct!
       end
 
       h[:res].push(rec)

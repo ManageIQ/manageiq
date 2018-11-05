@@ -732,7 +732,7 @@ class VmOrTemplate < ApplicationRecord
 
   def disconnect_storage(s = nil)
     if s.nil? || storage == s || storages.include?(s)
-      stores = s.nil? ? ([storage] + storages).compact.uniq : [s]
+      stores = s.nil? ? ([storage] + storages).compact.distinct : [s]
       log_text = stores.collect { |x| "Datastore [#{x.name}] id [#{x.id}]" }.join(", ")
       _log.info("Disconnecting Vm [#{name}] id [#{id}] from #{log_text}")
 
@@ -1144,7 +1144,7 @@ class VmOrTemplate < ApplicationRecord
 
     updated_vms  = VmOrTemplate.where(:id => updated_vm_rels.collect(&:resource_id))
     updated_vms += updated_folders.flat_map(&:all_vms_and_templates)
-    updated_vms  = updated_vms.uniq - added_vms
+    updated_vms  = updated_vms.distinct - added_vms
     updated_vms.each(&:classify_with_parent_folder_path_queue)
   end
   private_class_method :post_refresh_ems_folder_updates
