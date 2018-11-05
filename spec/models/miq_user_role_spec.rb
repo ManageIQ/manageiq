@@ -53,6 +53,7 @@ describe MiqUserRole do
         policy
         vm
         dialog_edit_editor
+        rbac_tenant_manage_quotas
       ))
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
@@ -80,7 +81,7 @@ describe MiqUserRole do
       let!(:tenant_1) { FactoryGirl.create(:tenant, :parent => root_tenant) }
       let!(:tenant_2) { FactoryGirl.create(:tenant, :parent => root_tenant) }
 
-      let(:feature) { MiqProductFeature.find_all_by_identifier(["dialog_edit_editor_tenant_#{tenant_2.id}"]) }
+      let(:feature) { MiqProductFeature.find_all_by_identifier(["dialog_edit_editor_tenant_#{tenant_2.id}", "rbac_tenant_manage_quotas_tenant_#{tenant_2.id}"]) }
       let(:role)           { FactoryGirl.create(:miq_user_role, :miq_product_features => feature) }
       let(:group_tenant_1) { FactoryGirl.create(:miq_group, :miq_user_role => role, :tenant => tenant_1) }
       let(:group_tenant_2) { FactoryGirl.create(:miq_group, :miq_user_role => role, :tenant => tenant_2) }
@@ -90,12 +91,14 @@ describe MiqUserRole do
       it "doesn't authorise user without dynamic product feature" do
         User.with_user(user_1) do
           expect(user_1.role_allows?(:identifier => "dialog_edit_editor")).to be_falsey
+          expect(user_1.role_allows?(:identifier => "rbac_tenant_manage_quotas")).to be_falsey
         end
       end
 
       it "authorise user with dynamic product feature" do
         User.with_user(user_2) do
           expect(user_2.role_allows?(:identifier => "dialog_edit_editor")).to be_truthy
+          expect(user_2.role_allows?(:identifier => "rbac_tenant_manage_quotas")).to be_truthy
         end
       end
     end
