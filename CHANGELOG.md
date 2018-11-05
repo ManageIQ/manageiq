@@ -5,7 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer Beta-1
+## Hammer Beta-2
+
+### Added
+- Conversion script for mapped tags/classification from remote regions to global [(#17971)](https://github.com/ManageIQ/manageiq/pull/17971)
+- Add tenant filtering for templates in provisioning and summary pages [(#17851)](https://github.com/ManageIQ/manageiq/pull/17851)
+- Add `virtual_has_one` for `transformation_mapping` for API accessibility [(#18070)](https://github.com/ManageIQ/manageiq/pull/18070)
+- Order custom buttons by array of ids [(#18060)](https://github.com/ManageIQ/manageiq/pull/18060)
+- Openstack Swift DB Backups [(#17967)](https://github.com/ManageIQ/manageiq/pull/17967)
+- Script to copy reports access from group to role [(#18066)](https://github.com/ManageIQ/manageiq/pull/18066)
+- For database dumps don't modify the directory name [(#18058)](https://github.com/ManageIQ/manageiq/pull/18058)
+- Add ext_management_system method to conversion host [(#18097)](https://github.com/ManageIQ/manageiq/pull/18097)
+- Clean up mapped tenants after a CloudManager is destroyed [(#17866)](https://github.com/ManageIQ/manageiq/pull/17866)
+- Conversion Host - Try hostname for SSH and fix MiqSshUtil args [(#18103)](https://github.com/ManageIQ/manageiq/pull/18103)
+- Add resource ems_ref and ip addresses to virt-v2v options hash [(#18101)](https://github.com/ManageIQ/manageiq/pull/18101)
+
+### Fixed
+- Parse automation attrs correctly [(#18084)](https://github.com/ManageIQ/manageiq/pull/18084)
+- Don't use special characters in ansible passwords [(#18092)](https://github.com/ManageIQ/manageiq/pull/18092)
+- Add flag for init of defaults in fields [(#18061)](https://github.com/ManageIQ/manageiq/pull/18061)
+- Handle a blank value for the http_proxy host [(#18073)](https://github.com/ManageIQ/manageiq/pull/18073)
+- Add retirement initiator context [(#17951)](https://github.com/ManageIQ/manageiq/pull/17951)
+- RestClient: Support percent encoded proxy user/pass [(#18105)](https://github.com/ManageIQ/manageiq/pull/18105)
+- Add product setting default for allowing API service ordering [(#18029)](https://github.com/ManageIQ/manageiq/pull/18029)
+- Check if class is taggable before attempting to process tag expression [(#18114)](https://github.com/ManageIQ/manageiq/pull/18114)
+- Add object retirement_requester [(#18113)](https://github.com/ManageIQ/manageiq/pull/18113)
+- Don't need the name, since it's mixed in... [(#18117)](https://github.com/ManageIQ/manageiq/pull/18117)
+
+## Hammer Beta-1 - Released 2018-10-12
 
 ### Added
 - Add an alias for InventoryRefresh -> ManagerRefresh [(#17965)](https://github.com/ManageIQ/manageiq/pull/17965)
