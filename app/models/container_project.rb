@@ -24,6 +24,7 @@ class ContainerProject < ApplicationRecord
   has_many :archived_container_groups, :foreign_key => "old_container_project_id", :class_name => "ContainerGroup"
   has_many :persistent_volume_claims
   has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy
+  has_many :computer_systems, :through => :container_nodes
 
   # Needed for metrics
   has_many :metrics,                :as => :resource
@@ -43,6 +44,7 @@ class ContainerProject < ApplicationRecord
 
   include EventMixin
   include Metric::CiMixin
+  include AggregationMixin::Methods
 
   PERF_ROLLUP_CHILDREN = :all_container_groups
 
@@ -67,6 +69,21 @@ class ContainerProject < ApplicationRecord
 
   def perf_rollup_parents(interval_name = nil)
     []
+  end
+
+  # required by aggregate_hardware
+  alias all_computer_system_ids computer_system_ids
+
+  def aggregate_memory(targets = nil)
+    aggregate_hardware(:computer_systems, :memory_mb, targets)
+  end
+
+  def aggregate_cpu_speed(targets = nil)
+    aggregate_hardware(:computer_systems, :cpu_speed, targets)
+  end
+
+  def aggregate_cpu_total_cores(targets = nil)
+    aggregate_hardware(:computer_systems, :cpu_total_cores, targets)
   end
 
   def disconnect_inv
