@@ -17,9 +17,11 @@ class MiqPolicy < ApplicationRecord
 
   include UuidMixin
   include YAMLImportExportMixin
+  include DeprecationMixin
+  deprecate_attribute :towhat, :resource_type
   before_validation :default_name_to_guid, :on => :create
 
-  default_value_for :towhat, 'Vm'
+  default_value_for :resource_type, 'Vm'
   default_value_for :active, true
   default_value_for :mode,   'control'
 
@@ -39,11 +41,11 @@ class MiqPolicy < ApplicationRecord
   validates :description, :presence => true, :uniqueness => true
   validates :name, :presence => true, :uniqueness => true
   validates :mode, :inclusion => { :in => %w(compliance control) }
-  validates :towhat, :inclusion => { :in      => TOWHAT_APPLIES_TO_CLASSES,
-                                     :message => "should be one of #{TOWHAT_APPLIES_TO_CLASSES.join(", ")}" }
+  validates :resource_type, :inclusion => { :in      => TOWHAT_APPLIES_TO_CLASSES,
+                                            :message => "should be one of #{TOWHAT_APPLIES_TO_CLASSES.join(", ")}" }
 
   scope :with_mode,   ->(mode)   { where(:mode => mode) }
-  scope :with_towhat, ->(towhat) { where(:towhat => towhat) }
+  scope :with_towhat, ->(resource_type) { where(:resource_type => resource_type) }
 
   serialize :expression
 
@@ -72,10 +74,10 @@ class MiqPolicy < ApplicationRecord
       policy.conditions =
         if policy.condition
           [Condition.new(
-            :name        => policy.attributes["name"],
-            :description => policy.attributes["description"],
-            :expression  => MiqExpression.new(policy.condition),
-            :towhat      => "Vm"
+            :name          => policy.attributes["name"],
+            :description   => policy.attributes["description"],
+            :expression    => MiqExpression.new(policy.condition),
+            :resource_type => "Vm"
           )]
         else
           []
@@ -302,7 +304,7 @@ class MiqPolicy < ApplicationRecord
       policy.conditions.collect do |c|
         rec_model = rec.class.base_model.name
         rec_model = "Vm" if rec_model.downcase.match("template")
-        next unless rec_model == c["towhat"]
+        next unless rec_model == c["resource_type"]
 
         resolve_condition(c, rec).tap do |cond_hash|
           policy_result = cond_hash["result"] if cond_hash["result"] == "deny"
@@ -337,7 +339,7 @@ class MiqPolicy < ApplicationRecord
     rec_model = rec.class.base_model.name
     rec_model = "Vm" if rec_model.downcase.match("template")
 
-    return false if towhat && rec_model != towhat
+    return false if resource_type && rec_model != resource_type
     return true  if expression.nil?
 
     Condition.evaluate(self, rec, inputs)
@@ -378,11 +380,11 @@ class MiqPolicy < ApplicationRecord
     profiles, plist = get_expanded_profiles_and_policies(target)
     plist = built_in_policies.concat(plist).uniq
 
-    towhat = target.class.base_model.name
-    towhat = "Vm" if towhat.downcase.match("template")
+    resource_type = target.class.base_model.name
+    resource_type = "Vm" if resource_type.downcase.match("template")
     plist.keep_if do |p|
       p.mode == mode &&
-      p.towhat == towhat &&
+        p.resource_type == resource_type &&
       policy_for_event?(p, event) &&
       policy_active?(p) &&
       policy_applicable?(p, target, inputs)

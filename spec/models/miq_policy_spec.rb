@@ -177,11 +177,11 @@ RSpec.describe MiqPolicy do
         expect(results.size).to eq(1)
         result = results[0]
         expect(result).to include(
-          'name'        => policies[1].name,
-          'description' => policies[1].description,
-          'towhat'      => policies[1].towhat,
-          'expression'  => policies[1].expression,
-          'result'      => 'N/A'
+          'name'          => policies[1].name,
+          'description'   => policies[1].description,
+          'resource_type' => policies[1].resource_type,
+          'expression'    => policies[1].expression,
+          'result'        => 'N/A'
         )
         expect(result['conditions'][0]).to include(
           'name'        => conds[1].name,
@@ -249,7 +249,7 @@ RSpec.describe MiqPolicy do
   describe ".built_in_policies" do
     it 'creates built in policies' do
       policy = described_class.built_in_policies[0]
-      %w(name description towhat active mode conditions).each do |m|
+      %w(name description resource_type active mode conditions).each do |m|
         expect(policy.send(m)).not_to be_nil
       end
       expect(policy.events).not_to                      be_empty
@@ -291,36 +291,36 @@ RSpec.describe MiqPolicy do
   context '.default_value_for' do
     it 'sets defaults' do
       expect(described_class.create!(:description => 'x')).to have_attributes(
-        :towhat => "Vm",
-        :active => true,
-        :mode   => "control",
+        :resource_type => "Vm",
+        :active        => true,
+        :mode          => "control",
       )
     end
 
     it 'allows override of defaults' do
       expect(described_class.create!(
-        :towhat => "Host", :mode => "compliance", :active => false, :description => 'x',
+              :resource_type => "Host", :mode => "compliance", :active => false, :description => 'x',
       )).to have_attributes(
-        :towhat => "Host",
-        :active => false,
-        :mode   => "compliance",
+        :resource_type => "Host",
+        :active        => false,
+        :mode          => "compliance",
       )
     end
   end
 
   context '.validates' do
-    it 'validates towhat' do
-      expect(FactoryBot.build(:miq_policy, :towhat => "Host")).to be_valid
+    it 'validates resource_type' do
+      expect(FactoryBot.build(:miq_policy, :resource_type => "Host")).to be_valid
     end
 
     it 'reports invalid towhat' do
-      policy = FactoryBot.build(:miq_policy, :towhat => "BobsYourUncle")
-      towhat_error = "should be one of ContainerGroup, ContainerImage, "\
-                     "ContainerNode, ContainerProject, ContainerReplicator, "\
-                     "ExtManagementSystem, Host, PhysicalServer, Vm"
+      policy = FactoryBot.build(:miq_policy, :resource_type => "BobsYourUncle")
+      resource_type_error = "should be one of ContainerGroup, ContainerImage, "\
+                            "ContainerNode, ContainerProject, ContainerReplicator, "\
+                            "ExtManagementSystem, Host, PhysicalServer, Vm"
 
       expect(policy).not_to be_valid
-      expect(policy.errors.messages).to include(:towhat => [towhat_error])
+      expect(policy.errors.messages).to include(:resource_type => [resource_type_error])
     end
   end
 end

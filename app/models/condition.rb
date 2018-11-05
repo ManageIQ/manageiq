@@ -1,8 +1,10 @@
 class Condition < ApplicationRecord
   include UuidMixin
+  include DeprecationMixin
+  deprecate_attribute :towhat, :resource_type
   before_validation :default_name_to_guid, :on => :create
 
-  validates :name, :description, :expression, :towhat, :presence => true
+  validates :name, :description, :expression, :resource_type, :presence => true
   validates :name, :description, :uniqueness => true
 
   acts_as_miq_taggable
@@ -20,7 +22,7 @@ class Condition < ApplicationRecord
     rec_model = rec.class.base_model.name
     rec_model = "Vm" if rec_model.downcase.match("template")
 
-    return false if towhat && rec_model != towhat
+    return false if resource_type && rec_model != resource_type
     return true  if applies_to_exp.nil?
 
     Condition.evaluate(self, rec, inputs, :applies_to_exp)

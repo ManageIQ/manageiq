@@ -9,7 +9,7 @@ RSpec.describe TaskHelpers::Exports::Policies do
           "name"             => "a61314d5-67bd-435f-9c82-b82226e0a7fe",
           "description"      => "Test Compliance Policy",
           "expression"       => nil,
-          "towhat"           => "Vm",
+          "resource_type"    => "Vm",
           "guid"             => "a61314d5-67bd-435f-9c82-b82226e0a7fe",
           "created_by"       => nil,
           "updated_by"       => nil,
@@ -40,7 +40,7 @@ RSpec.describe TaskHelpers::Exports::Policies do
           "name"             => "ac7e2972-f2b2-4ebe-b29d-97eefaac7615",
           "description"      => "Test Compliance Policy 2",
           "expression"       => nil,
-          "towhat"           => "Host",
+          "resource_type"    => "Host",
           "guid"             => "ac7e2972-f2b2-4ebe-b29d-97eefaac7615",
           "created_by"       => nil,
           "updated_by"       => nil,
@@ -57,10 +57,10 @@ RSpec.describe TaskHelpers::Exports::Policies do
 
   let(:policy2_create_attrs) do
     {
-      :description => "Test Compliance Policy 2",
-      :name        => guid2,
-      :guid        => guid2,
-      :towhat      => "Host"
+      :description   => "Test Compliance Policy 2",
+      :name          => guid2,
+      :guid          => guid2,
+      :resource_type => "Host"
     }
   end
 

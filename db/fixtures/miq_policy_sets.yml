@@ -15,7 +15,7 @@
     - name: openscap policy
       description: OpenSCAP
       expression:
-      towhat: ContainerImage
+      resource_type: ContainerImage
       guid: 14c7b8ee-120f-11e6-aa9c-02424d459b45
       created_by: admin
       updated_by: admin
@@ -85,7 +85,7 @@
                     field: ContainerImage.openscap_rule_results-severity
                     value: High
           context_type:
-        towhat: ContainerImage
+        resource_type: ContainerImage
         file_mtime:
         guid: 92b1949a-1210-11e6-aa9c-02424d459b45
         filename:
@@ -96,7 +96,7 @@
     - name: analyse incoming container images
       description: Analyse incoming container images
       expression:
-      towhat: ContainerImage
+      resource_type: ContainerImage
       guid: e7a270bc-109b-11e6-86ba-02424d459b45
       created_by: admin
       updated_by: admin
@@ -130,7 +130,7 @@
                 field: ContainerImage-name
                 value: "/image-inspector"
           context_type:
-        towhat: ContainerImage
+        resource_type: ContainerImage
         file_mtime:
         guid: e744245a-3d08-11e6-8d39-02422087d789
         filename:
@@ -141,7 +141,7 @@
     - name: schedule compliance after smart state analysis
       description: Schedule compliance after smart state analysis
       expression:
-      towhat: ContainerImage
+      resource_type: ContainerImage
       guid: bae4a2b0-1cfe-11e6-a243-02424d459b45
       created_by: admin
       updated_by: admin
@@ -182,7 +182,7 @@
     - name: power on servers that were powered off
       description: Power on servers that were powered off
       expression:
-      towhat: PhysicalServer
+      resource_type: PhysicalServer
       guid: 6220e15b-01a4-430c-9e70-d67af4798708
       created_by: admin
       updated_by: admin
