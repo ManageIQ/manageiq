@@ -40,19 +40,18 @@ class MiqS3Storage < MiqObjectStorage
   end
 
   def download_single(source, destination)
-    object_key = uri_to_object_key(remote_file)
+    object_key = uri_to_object_key(source)
     logger.debug("Downloading [#{source}] from bucket [#{bucket_name}] to local file [#{destination}]")
 
     with_standard_s3_error_handling("downloading", source) do
       if destination.kind_of?(IO)
         s3.client.get_object(:bucket => bucket_name, :key => object_key) do |chunk|
-          destination.write(chunk)
+          destination.write(chunk.force_encoding(destination.external_encoding))
         end
       else # assume file path
         bucket.object(source).download_file(destination)
       end
     end
-    local_file
   end
 
   # no-op mostly
