@@ -213,12 +213,12 @@ namespace :locale do
 
       js_plugins = {
         'ui-components' => {
-          'en'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/en/ui-components.po',
-          'es'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/es/ui-components.po',
-          'fr'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/fr/ui-components.po',
-          'ja'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/ja/ui-components.po',
-          'pt_BR' => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/pt_BR/ui-components.po',
-          'zh_CN' => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/zh_CN/ui-components.po',
+          'en'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/hammer/locale/en/ui-components.po',
+          'es'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/hammer/locale/es/ui-components.po',
+          'fr'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/hammer/locale/fr/ui-components.po',
+          'ja'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/hammer/locale/ja/ui-components.po',
+          'pt_BR' => 'https://raw.githubusercontent.com/ManageIQ/ui-components/hammer/locale/pt_BR/ui-components.po',
+          'zh_CN' => 'https://raw.githubusercontent.com/ManageIQ/ui-components/hammer/locale/zh_CN/ui-components.po',
         }
       }
 
