@@ -402,7 +402,7 @@ describe ExtManagementSystem do
       Zone.seed
     end
 
-    it 'disables an ems with child managers and moves parent to maintenance zone' do
+    it 'disables an ems with child managers and moves them to maintenance zone' do
       zone  = FactoryGirl.create(:zone)
       ems   = FactoryGirl.create(:ext_management_system, :zone => zone)
       child = FactoryGirl.create(:ext_management_system, :zone => zone)
@@ -416,23 +416,45 @@ describe ExtManagementSystem do
 
       child.reload
       expect(child.enabled).to eq(false)
+      expect(child.zone).to eq(Zone.maintenance_zone)
+      expect(child.zone_before_pause).to eq(zone)
     end
 
-    it 'disables a cloud ems and moves child network manager to maintenance zone' do
-      zone          = FactoryGirl.create(:zone)
-      ems_cloud     = FactoryGirl.create(:ems_openstack, :zone => zone)
+    it 'disables an ems and moves child managers created by ensure_managers() to maintenance zone' do
+      zone  = FactoryGirl.create(:zone)
+      emses = {
+        :amazon_cloud    => FactoryGirl.create(:ems_amazon,          :zone => zone),
+        :azure_cloud     => FactoryGirl.create(:ems_azure,           :zone => zone),
+        :google_cloud    => FactoryGirl.create(:ems_google,          :zone => zone),
+        :openstack_cloud => FactoryGirl.create(:ems_openstack,       :zone => zone),
+        :openstack_infra => FactoryGirl.create(:ems_openstack_infra, :zone => zone),
+        :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
+      }
 
-      ems_cloud.pause!
+      # managers with child managers created with ensure_managers() callback has own callback to change zone
+      # so it should be tested separately
+      emses.each_value do |manager|
+        manager.pause!
 
-      ems_cloud.reload
-      expect(ems_cloud.network_manager.zone).to eq(Zone.maintenance_zone)
+        manager.reload
+        expect(manager.network_manager.zone_before_pause).to eq(zone)
+        expect(manager.network_manager.zone).to eq(Zone.maintenance_zone)
+      end
+
+      # The same for storage managers, i.e. amazon
+      %i(amazon_cloud openstack_cloud).each do |manager_type|
+        emses[manager_type].storage_managers.each do |storage_manager|
+          expect(storage_manager.zone_before_pause).to eq(zone)
+          expect(storage_manager.zone).to eq(Zone.maintenance_zone)
+        end
+      end
     end
   end
 
   context "#resume" do
     before { Zone.seed }
 
-    it "enables an ems with child managers and move parent from maintenance zone" do
+    it "enables an ems with child managers and move them from maintenance zone" do
       zone = FactoryGirl.create(:zone)
       ems = FactoryGirl.create(:ext_management_system,
                                :zone_before_pause => zone,
@@ -440,8 +462,9 @@ describe ExtManagementSystem do
                                :enabled           => false)
 
       child = FactoryGirl.create(:ext_management_system,
-                                 :zone    => zone,
-                                 :enabled => false)
+                                 :zone_before_pause => zone,
+                                 :zone              => Zone.maintenance_zone,
+                                 :enabled           => false)
       ems.child_managers << child
 
       ems.resume!
@@ -452,6 +475,8 @@ describe ExtManagementSystem do
 
       child.reload
       expect(child.enabled).to eq(true)
+      expect(child.zone).to eq(zone)
+      expect(child.zone_before_pause).to be_nil
     end
 
     it "doesn't change zone when ems was disabled before" do
@@ -465,6 +490,40 @@ describe ExtManagementSystem do
 
       expect(ems.enabled).to eq(true)
       expect(ems.zone).to eq(zone)
+    end
+
+    it 'enables an ems and moves child managers created by ensure_managers() to original zone' do
+      zone  = FactoryGirl.create(:zone)
+      # Cannot create paused child managers this way, so we first pause! (tested yet) and then resume!
+      emses = {
+        :amazon_cloud    => FactoryGirl.create(:ems_amazon,          :zone => zone),
+        :azure_cloud     => FactoryGirl.create(:ems_azure,           :zone => zone),
+        :google_cloud    => FactoryGirl.create(:ems_google,          :zone => zone),
+        :openstack_cloud => FactoryGirl.create(:ems_openstack,       :zone => zone),
+        :openstack_infra => FactoryGirl.create(:ems_openstack_infra, :zone => zone),
+        :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
+      }
+
+      # managers with child managers created with ensure_managers() callback has own callback to change zone
+      # so it should be tested separately
+      emses.each_value do |manager|
+        manager.pause!
+        manager.reload
+
+        manager.resume!
+        manager.reload
+
+        expect(manager.network_manager.zone_before_pause).to be_nil
+        expect(manager.network_manager.zone).to eq(zone)
+      end
+
+      # The same for storage managers, i.e. amazon
+      %i(amazon_cloud openstack_cloud).each do |manager_type|
+        emses[manager_type].storage_managers.each do |storage_manager|
+          expect(storage_manager.zone_before_pause).to be_nil
+          expect(storage_manager.zone).to eq(zone)
+        end
+      end
     end
   end
 

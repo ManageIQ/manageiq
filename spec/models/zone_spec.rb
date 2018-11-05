@@ -205,7 +205,7 @@ describe Zone do
         :name => a_string_starting_with("__maintenance__")
       )
 
-      expect(MiqRegion.my_region&.maintenance_zone).to eq(Zone.maintenance_zone)
+      expect(MiqRegion.my_region.maintenance_zone).to eq(Zone.maintenance_zone)
     end
 
     it "is not visible" do

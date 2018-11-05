@@ -223,10 +223,12 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   # Move ems to maintenance zone and backup current one
-  def pause!
+  # @param orig_zone [Integer] because of zone of child manager can be changed by parent manager's ensure_managers() callback
+  #                            we need to specify original zone for children explicitly
+  def pause!(orig_zone = nil)
     _log.info("Pausing EMS [#{name}] id [#{id}].")
     update!(
-      :zone_before_pause => zone,
+      :zone_before_pause => orig_zone || zone,
       :zone              => Zone.maintenance_zone,
       :enabled           => false
     )
@@ -806,10 +808,12 @@ class ExtManagementSystem < ApplicationRecord
 
   # Child managers went to/from maintenance mode with parent
   def change_maintenance_for_child_managers
-    if enabled?
-      child_managers.each(&:enable!)
-    else
-      child_managers.each(&:disable!)
+    child_managers.each do |child_manager|
+      if enabled?
+        child_manager.resume!
+      else
+        child_manager.pause!(zone_before_pause)
+      end
     end
   end
 
