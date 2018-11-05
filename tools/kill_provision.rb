@@ -14,7 +14,7 @@ def kill_provision_task(prov_id, queue)
   @processed << prov_id unless @processed.include?(prov_id)
 end
 
-args = $ARGV.join(',').gsub(',,', ',').split(',').uniq
+args = $ARGV.join(',').gsub(',,', ',').split(',').distinct
 provisions = args.collect { |a| a =~ /miq_provision_(\d*)/ ? $1.to_i : a.to_i }
 
 puts "Checking for provisions IDs:<#{provisions.inspect}>"

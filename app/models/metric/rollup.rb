@@ -346,7 +346,7 @@ module Metric::Rollup
       [:on, :off].each do |mode|
         next if value[assoc][mode].nil?
         result[c][assoc][mode] ||= []
-        result[c][assoc][mode].concat(value[assoc][mode]).uniq!
+        result[c][assoc][mode].concat(value[assoc][mode]).distinct!
       end
     end
   end
@@ -354,7 +354,7 @@ module Metric::Rollup
   def self.rollup_tags(c, result, value)
     return if value.blank?
     result[c] ||= ""
-    result[c] = result[c].split(TAG_SEP).concat(value.split(TAG_SEP)).uniq.join(TAG_SEP)
+    result[c] = result[c].split(TAG_SEP).concat(value.split(TAG_SEP)).distinct.join(TAG_SEP)
   end
 
   #

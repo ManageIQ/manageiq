@@ -612,7 +612,7 @@ module MiqReport::Generator
     return data if data.blank?
 
     # Build a tempory table so that ruport sorting can be used to sort data before summarizing pivot data
-    column_names = (data.first.keys.collect(&:to_s) + col_order).uniq
+    column_names = (data.first.keys.collect(&:to_s) + col_order).distinct
     data = Ruport::Data::Table.new(:data => data, :column_names => column_names)
     data = sort_table(data, rpt_options[:pivot][:group_cols].collect(&:to_s), :order => :ascending)
 

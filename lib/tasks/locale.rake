@@ -89,7 +89,7 @@ namespace :locale do
       f.puts "# This is automatically generated file (rake locale:extract_yaml_strings)."
       f.puts "# The file contains strings extracted from various yaml files for gettext to find."
       output.each_key do |key|
-        output[key].sort.uniq.each do |file|
+        output[key].sort.distinct.each do |file|
           f.puts "# TRANSLATORS: file: #{file}"
         end
         f.puts '_("%s")' % key

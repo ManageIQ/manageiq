@@ -38,7 +38,7 @@ class ContainerLabelTagMapping < ApplicationRecord
   # TODO: expensive.
   def self.controls_tag?(tag)
     return false unless tag.classification.try(:read_only) # never touch user-assignable tags.
-    tag_ids = [tag.id, tag.category.tag_id].uniq
+    tag_ids = [tag.id, tag.category.tag_id].distinct
     where(:tag_id => tag_ids).any?
   end
 

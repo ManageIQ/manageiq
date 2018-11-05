@@ -87,7 +87,7 @@ class Zone < ApplicationRecord
   end
 
   def assigned_roles
-    miq_servers.flat_map(&:assigned_roles).uniq.compact
+    miq_servers.flat_map(&:assigned_roles).distinct.compact
   end
 
   def role_active?(role_name)
@@ -99,7 +99,7 @@ class Zone < ApplicationRecord
   end
 
   def active_role_names
-    miq_servers.flat_map(&:active_role_names).uniq
+    miq_servers.flat_map(&:active_role_names).distinct
   end
 
   def self.default_zone

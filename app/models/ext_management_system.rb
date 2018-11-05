@@ -753,7 +753,7 @@ class ExtManagementSystem < ApplicationRecord
     (
       self.class.blacklisted_events.where(:enabled => true).pluck(:event_name) +
       blacklisted_events.where(:enabled => true).pluck(:event_name)
-    ).uniq.sort
+    ).distinct.sort
   end
 
   def self.blacklisted_events

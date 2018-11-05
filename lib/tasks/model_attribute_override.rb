@@ -5,7 +5,7 @@ module GettextI18nRails
 
       if model.abstract_class?
         model.direct_descendants.reject {|m| ignored?(m.table_name, ignored_tables)}.inject([]) do |attrs, m|
-          attrs.push(model_attributes(m, ignored_tables, ignored_cols)).flatten.uniq
+          attrs.push(model_attributes(m, ignored_tables, ignored_cols)).flatten.distinct
         end
       elsif !ignored?(model.table_name, ignored_tables) && @existing_tables.include?(model.table_name)
         list = model.virtual_attribute_names +

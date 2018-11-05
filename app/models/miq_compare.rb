@@ -246,7 +246,7 @@ class MiqCompare
       if self.class.tag_section?(section)
         # Get just the tag names from the results
         @results.each_value { |result| columns.concat(result[section].collect { |k, v| k if k.to_s[0, 1] != '_' && v[:_value_] }.compact) }
-        columns.uniq!
+        columns.distinct!
 
         # Remove unused tags from the results
         @results.each_value { |result| result[section].delete_if { |k, _v| !columns.include?(k) && k.to_s[0, 1] != '_' } }
@@ -258,7 +258,7 @@ class MiqCompare
         columns.sort! { |x, y| x[:header].to_s.downcase <=> y[:header].to_s.downcase }
       elsif !sub_sections.nil?
         @results.each_value { |result| sub_sections.concat(result[section].keys.reject { |k| k.to_s[0, 1] == '_' }) }
-        sub_sections.uniq! # uniq! returns nil if no action taken, so can't chain with sort
+        sub_sections.distinct! # uniq! returns nil if no action taken, so can't chain with sort
         sub_sections.sort! { |x, y| x.to_s.downcase <=> y.to_s.downcase }
       end
     end

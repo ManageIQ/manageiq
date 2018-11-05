@@ -98,7 +98,7 @@ class MiqAction < ApplicationRecord
   end
 
   def miq_policies
-    miq_policy_contents.collect(&:miq_policy).uniq
+    miq_policy_contents.collect(&:miq_policy).distinct
   end
 
   def self.invoke_actions(apply_policies_to, inputs, succeeded, failed)
@@ -108,7 +108,7 @@ class MiqAction < ApplicationRecord
     begin
       succeeded.each do |p|
         actions = case p
-                  when MiqPolicy then p.actions_for_event(inputs[:event], :success).uniq
+        when MiqPolicy then p.actions_for_event(inputs[:event], :success).uniq
                   else            p.actions_for_event
                   end
 

@@ -283,7 +283,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def selected_tags_by_cat_and_name
-    tag_ids = (@values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags].to_miq_a).uniq
+    tag_ids = (@values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags].to_miq_a).distinct
     return {} if tag_ids.blank?
 
     # Collect the filter tags by category
@@ -316,7 +316,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     unless options[:tag_filters].blank?
       tag_filters = options[:tag_filters].collect(&:to_s)
-      selected_tags = (@values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags].to_miq_a).uniq
+      selected_tags = (@values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags].to_miq_a).distinct
       tag_conditions = []
 
       # Collect the filter tags by category

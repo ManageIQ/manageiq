@@ -16,7 +16,7 @@ type = $1
 ids  = $2.split(',').collect do |id|
   id.strip!
   id.blank? ? nil : id.to_i
-end.compact.uniq
+end.compact.distinct
 
 case type
 when 'vm'

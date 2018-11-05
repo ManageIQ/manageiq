@@ -31,7 +31,7 @@ class MiqRequestWorkflow
   end
 
   def self.all_encrypted_options_fields
-    descendants.flat_map(&:encrypted_options_fields).uniq
+    descendants.flat_map(&:encrypted_options_fields).distinct
   end
 
   def self.update_requester_from_parameters(data, user)
@@ -84,7 +84,7 @@ class MiqRequestWorkflow
     return false unless validate(values)
     password_helper(values, true)
     # Ensure that tags selected in the pre-dialog get applied to the request
-    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq if @values.try(:[], :pre_dialog_vm_tags).present?
+    values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).distinct if @values.try(:[], :pre_dialog_vm_tags).present?
 
     set_request_values(values)
     if request
@@ -1206,7 +1206,7 @@ class MiqRequestWorkflow
       result = find_datacenter_for_ci(h)
       rails_logger("host_to_folder for host #{h.name}", 1)
       result
-    end.compact.uniq
+    end.compact.distinct
     datacenters.each_with_object({}) do |dc, folders|
       rails_logger("host_to_folder for dc #{dc.name}", 0)
       folders.merge!(get_ems_folders(dc))

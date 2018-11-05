@@ -52,7 +52,7 @@ module ServiceMixin
   end
 
   def combined_group_delay(action)
-    group_idxs = service_resources.map(&:group_idx).uniq
+    group_idxs = service_resources.map(&:group_idx).distinct
     [].tap do |results|
       group_idxs.each { |idx| results << max_group_delay(idx, delay_type(action)) }
     end.sum

@@ -22,7 +22,7 @@ puts "Object Counts:"
 counts.keys.sort.each do |type|
   object_ids = counts[type]
 
-  incorrect = object_ids.reject { |_object_id, modes| modes.length == 3 && modes.uniq.sort == %w(registerBrokerObj release unregisterBrokerObj) }
+  incorrect = object_ids.reject { |_object_id, modes| modes.length == 3 && modes.distinct.sort == %w(registerBrokerObj release unregisterBrokerObj) }
   incorrect = incorrect.reject { |_object_id, modes| (c = modes.count('registerBrokerObj')) == modes.count('release') && c == modes.count('unregisterBrokerObj') }
   unreleased, overreleased = incorrect.partition { |_object_id, modes| modes.count('registerBrokerObj') > modes.count('unregisterBrokerObj') }
 

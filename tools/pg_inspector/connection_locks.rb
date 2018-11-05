@@ -87,7 +87,7 @@ module PgInspector
         lock["spid"] != l["spid"] &&
           l["granted"] == "t"
       end
-      blocking_locks.collect { |l| l["spid"] }.uniq
+      blocking_locks.collect { |l| l["spid"] }.distinct
     end
 
     def blocking_lock_relation(lock)
@@ -114,7 +114,7 @@ module PgInspector
     end
 
     def find_lock_blocking_spid(spid)
-      locks_owned_by_spid(spid).collect { |lock| lock["blocked_by"] }.compact.flatten.uniq
+      locks_owned_by_spid(spid).collect { |lock| lock["blocked_by"] }.compact.flatten.distinct
     end
   end
 end

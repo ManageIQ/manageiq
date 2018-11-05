@@ -17,7 +17,7 @@ else
     vm_ids += obj.send(meth).collect(&:id)
   end
 end
-vm_ids.uniq!
+vm_ids.distinct!
 
 time_cond = {:timestamp => (start_ts.to_time.utc.beginning_of_day..end_ts.to_time.utc.end_of_day)}
 puts "Processing VM IDs: #{vm_ids.sort.inspect} for time range: #{time_cond.inspect}"

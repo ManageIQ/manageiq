@@ -11,7 +11,7 @@ Vmdb::Application.configure do
   config.eager_load = false
 
   # Print deprecation notices to the stderr
-  #ActiveSupport::Deprecation.behavior = :stderr
+  ActiveSupport::Deprecation.behavior = :stderr
 
   # Configure static asset server for tests with Cache-Control for performance
   config.public_file_server.enabled = true

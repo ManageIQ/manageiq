@@ -617,7 +617,7 @@ module Rbac
           klass.where(klass_id => descendants.select(descendant_id)).distinct
         else
           MiqPreloader.preload(descendants, method_name)
-          descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
+          descendants.flat_map { |object| object.send(method_name) }.grep(klass).distinct
         end
       end
     end

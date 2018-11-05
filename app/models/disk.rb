@@ -47,7 +47,7 @@ class Disk < ApplicationRecord
   end
 
   def volumes
-    partitions.collect(&:volumes).flatten.uniq
+    partitions.collect(&:volumes).flatten.distinct
   end
 
   def used_percent_of_provisioned

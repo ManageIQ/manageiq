@@ -60,7 +60,7 @@ module MiqPolicyMixin
         end
       end
 
-      result_list = presults.collect { |r| r["result"] }.uniq
+      result_list = presults.collect { |r| r["result"] }.distinct
       prof_result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
       result.push(prof.attributes.merge("result" => prof_result, "policies" => presults))
     end
@@ -73,7 +73,7 @@ module MiqPolicyMixin
     plist.each do |policy|
       result = false if policy["result"] == "deny"
     end
-    result_list = plist.collect { |r| r["result"] }.uniq
+    result_list = plist.collect { |r| r["result"] }.distinct
     result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
     result
   end
@@ -84,7 +84,7 @@ module MiqPolicyMixin
     plist.each do |prof|
       result = false if prof["result"] == "deny"
     end
-    result_list = plist.collect { |r| r["result"] }.uniq
+    result_list = plist.collect { |r| r["result"] }.distinct
     result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
     result
   end
@@ -127,14 +127,14 @@ module MiqPolicyMixin
         profiles = (t.get_policies + MiqPolicy.associations_to_get_policies.collect do |assoc|
           next unless t.respond_to?(assoc)
           t.send(assoc).get_policies unless t.send(assoc).nil?
-        end).compact.flatten.uniq
+        end).compact.flatten.distinct
         presults = t.resolve_profiles(profiles.collect(&:id), eventobj)
         target_result = presults.inject("allow") do |s, r|
           break "deny" if r["result"] == "deny"
           s
         end
 
-        result_list = presults.collect { |r| r["result"] }.uniq
+        result_list = presults.collect { |r| r["result"] }.distinct
         target_result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
         result.push("id" => t.id, "name" => t.name, "result" => target_result, "profiles" => presults)
       end

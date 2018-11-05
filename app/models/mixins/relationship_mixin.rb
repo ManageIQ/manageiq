@@ -285,7 +285,7 @@ module RelationshipMixin
   # Returns a list of sibling relationships
   def sibling_rels(*args)
     options = args.extract_options!
-    rels = relationships.flat_map(&:siblings).uniq
+    rels = relationships.flat_map(&:siblings).distinct
     Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -484,7 +484,7 @@ module RelationshipMixin
   def fulltree_rels(*args)
     options = args.extract_options!
     root_id = relationship.try(:root_id)
-    rels = root_id ? Relationship.subtree_of(root_id).uniq : [relationship_for_isolated_root]
+    rels = root_id ? Relationship.subtree_of(root_id).distinct : [relationship_for_isolated_root]
     Relationship.filter_by_resource_type(rels, options)
   end
 

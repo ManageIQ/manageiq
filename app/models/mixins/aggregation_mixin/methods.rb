@@ -51,7 +51,7 @@ module AggregationMixin
     def lans
       hosts = all_hosts
       MiqPreloader.preload(hosts, :lans)
-      hosts.flat_map(&:lans).compact.uniq
+      hosts.flat_map(&:lans).compact.distinct
     end
   end
 end
