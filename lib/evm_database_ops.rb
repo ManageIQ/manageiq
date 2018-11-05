@@ -111,7 +111,10 @@ class EvmDatabaseOps
     if db_opts[:local_file].nil?
       if action == :restore
         uri = connect_opts[:uri]
-        connect_opts[:uri] = File.dirname(connect_opts[:uri])
+
+        connect_uri        = URI::Generic.new(*URI.split(uri))
+        connect_uri.path   = File.dirname(connect_uri.path)
+        connect_opts[:uri] = connect_uri.to_s
       else
         connect_opts[:remote_file_name] ||= File.basename(backup_file_name(action))
         #

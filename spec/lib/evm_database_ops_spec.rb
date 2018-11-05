@@ -291,9 +291,27 @@ describe EvmDatabaseOps do
           execute_with_file_storage(:restore)
         end
 
+        it "parses the dirname of the `uri` and passes that in `connect_opts`" do
+          expected_connect_opts = { :uri => "smb://tmp/" }
+          allow(file_storage).to receive(:download)
+          expect(MiqFileStorage).to receive(:with_interface_class).with(expected_connect_opts)
+          execute_with_file_storage(:restore)
+        end
+
         it "returns calculated uri" do
           allow(file_storage).to receive(:download).and_yield(input_path)
           expect(execute_with_file_storage(:restore) { "block result" }).to eq("smb://tmp/foo")
+        end
+
+        context "with query_params in the URI" do
+          let(:connect_opts) { { :uri => "swift://container/foo.gz?2plus2=5" } }
+
+          it "retains query_params when parsing dirname" do
+            expected_connect_opts = { :uri => "swift://container/?2plus2=5" }
+            allow(file_storage).to receive(:download)
+            expect(MiqFileStorage).to receive(:with_interface_class).with(expected_connect_opts)
+            execute_with_file_storage(:restore)
+          end
         end
       end
     end
