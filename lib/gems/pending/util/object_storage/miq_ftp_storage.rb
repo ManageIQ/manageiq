@@ -54,7 +54,18 @@ class MiqFtpStorage < MiqObjectStorage
   end
 
   def download_single(source, destination)
-    ftp.getbinaryfile(uri_to_relative(source), destination)
+    ftp.synchronize do
+      ftp.send(:with_binary, true) do
+        begin
+          conn = ftp.send(:transfercmd, "RETR #{uri_to_relative(source)}")
+          IO.copy_stream(conn.io, destination, byte_count)
+          conn.shutdown(Socket::SHUT_WR)
+          conn.read_timeout = 1
+        ensure
+          conn.close if conn
+        end
+      end
+    end
   end
 
   def mkdir(dir)
