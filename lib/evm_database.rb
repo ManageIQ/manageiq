@@ -156,6 +156,7 @@ class EvmDatabase
       ActiveRecord::Base.establish_connection(Rails.application.config.database_configuration[Rails.env])
 
       raise_server_event("db_failover_executed")
+      FileUtils.touch(Rails.root.join("tmp", "embedded_ansible_force_setup_run"))
       LinuxAdmin::Service.new("evmserverd").restart
     end
 
