@@ -1,4 +1,5 @@
 describe "VM Retirement Management" do
+  let(:user) { FactoryGirl.create(:user) }
   before(:each) do
     miq_server = EvmSpecHelper.local_miq_server
     @zone = miq_server.zone
@@ -52,19 +53,17 @@ describe "VM Retirement Management" do
 
   it "#retire_now with userid" do
     event_name = 'request_vm_retire'
-    event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-                  :retirement_initiator => "user", :userid => 'freddy'}
-    options = {:zone => @zone.name}
+    event_hash = {:userid => user.userid, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
+    options = {:zone => @zone.name, :user_id => user.id}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
 
-    @vm.retire_now('freddy')
+    @vm.retire_now(user.userid)
   end
 
   it "#retire_now without userid" do
     event_name = 'request_vm_retire'
-    event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-                  :retirement_initiator => "system"}
+    event_hash = {:userid => nil, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
     options = {:zone => @zone.name}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
@@ -153,8 +152,7 @@ describe "VM Retirement Management" do
 
   it "#raise_retirement_event without current user" do
     event_name = 'foo'
-    event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-                  :retirement_initiator => "system"}
+    event_hash = {:userid => nil, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
     options = {:zone => @vm.my_zone}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
@@ -163,16 +161,12 @@ describe "VM Retirement Management" do
   end
 
   it "#raise_retirement_event with current user" do
-    user = FactoryGirl.create(:user_with_group, :userid => 'freddy')
     event_name = 'foo'
-    event_hash = {:vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-                  :retirement_initiator => "user", :userid => 'freddy'}
-    options = {:zone => @vm.my_zone}
+    event_hash = {:userid => user.userid, :vm => @vm, :host => @vm.host, :type => "ManageIQ::Providers::Vmware::InfraManager::Vm"}
+    options = {:zone => @vm.my_zone, :user_id => user.id}
 
-    User.with_user(user) do
-      expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
-      @vm.raise_retirement_event(event_name)
-    end
+    expect(MiqEvent).to receive(:raise_evm_event).with(@vm, event_name, event_hash, options).once
+    @vm.raise_retirement_event(event_name, user.userid)
   end
 
   it "#raise_audit_event" do

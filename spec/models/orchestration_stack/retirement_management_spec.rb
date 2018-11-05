@@ -1,4 +1,5 @@
 describe "Service Retirement Management" do
+  let(:user) { FactoryGirl.create(:user) }
   before(:each) do
     @miq_server = EvmSpecHelper.local_miq_server
     @stack = FactoryGirl.create(:orchestration_stack)
@@ -32,20 +33,18 @@ describe "Service Retirement Management" do
   it "#retire_now with userid" do
     expect(@stack.retirement_state).to be_nil
     event_name = 'request_orchestration_stack_retire'
-    event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
-                  :retirement_initiator => "user", :userid => "freddy"}
+    event_hash = {:userid => user.userid, :orchestration_stack => @stack, :type => "OrchestrationStack"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {}).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, :user_id => user.id).once
 
-    @stack.retire_now('freddy')
+    @stack.retire_now(user.userid)
     @stack.reload
   end
 
   it "#retire_now without userid" do
     expect(@stack.retirement_state).to be_nil
     event_name = 'request_orchestration_stack_retire'
-    event_hash = {:orchestration_stack => @stack, :type => "OrchestrationStack",
-                  :retirement_initiator => "system"}
+    event_hash = {:userid => nil, :orchestration_stack => @stack, :type => "OrchestrationStack"}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {}).once
 
@@ -128,9 +127,9 @@ describe "Service Retirement Management" do
   it "#raise_retirement_event" do
     event_name = 'foo'
     event_hash = {
-      :orchestration_stack  => @stack,
-      :type                 => "OrchestrationStack",
-      :retirement_initiator => "system"
+      :userid              => nil,
+      :orchestration_stack => @stack,
+      :type                => "OrchestrationStack",
     }
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, {})
