@@ -31,7 +31,7 @@ class MiqProductFeature < ApplicationRecord
   REQUIRED_ATTRIBUTES = [:identifier].freeze
   OPTIONAL_ATTRIBUTES = %i(name feature_type description children hidden protected).freeze
   ALLOWED_ATTRIBUTES = (REQUIRED_ATTRIBUTES + OPTIONAL_ATTRIBUTES).freeze
-  TENANT_FEATURE_ROOT_IDENTIFIERS = %w(dialog_new_editor dialog_edit_editor dialog_copy_editor dialog_delete).freeze
+  TENANT_FEATURE_ROOT_IDENTIFIERS = %w(dialog_new_editor dialog_edit_editor dialog_copy_editor dialog_delete rbac_tenant_manage_quotas).freeze
 
   def name
     value = self[:name]
