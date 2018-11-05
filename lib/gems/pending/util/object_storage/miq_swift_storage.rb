@@ -16,12 +16,15 @@ class MiqSwiftStorage < MiqObjectStorage
     @bucket_name = URI(@settings[:uri]).host
 
     raise "username and password are required values!" if @settings[:username].nil? || @settings[:password].nil?
-    _scheme, _userinfo, @host, @port, _registry, @mount_path, _opaque, query, _fragment = URI.split(URI.encode(@settings[:uri]))
+    _scheme, _userinfo, @host, @port, _registry, path, _opaque, query, _fragment = URI.split(URI.encode(@settings[:uri]))
     query_params(query) if query
     @swift          = nil
     @username       = @settings[:username]
     @password       = @settings[:password]
-    @container_name = @mount_path[0] == File::Separator ? @mount_path[1..-1] : @mount_path
+
+    # Omit leading slash (if it exists), and grab the rest of the characters
+    # before the next file separator
+    @container_name = path.gsub(/^\/?([^\/]+)\/.*/, '\1')
   end
 
   def uri_to_object_path(remote_file)
@@ -52,15 +55,17 @@ class MiqSwiftStorage < MiqObjectStorage
       }
       #
       # Because of how `Fog::OpenStack` (and probably `Fog::Core`) is designed,
-      # it has hidden the functionality to provide a block for streaming uploads
-      # that is available out of the box with Excon.
+      # it has hidden the functionality to provide a block for streaming
+      # uploads that is available out of the box with Excon.
       #
       # we use .send here because #request is private
-      # we can't use #put_object (public) directly because it doesn't allow a 202 response code,
-      # which is what swift responds with when we pass it the :request_block
-      # (This allows us to stream the response in chunks)
+      #
+      # we can't use #put_object (public) directly because it doesn't allow a
+      # 202 response code, which is what swift responds with when we pass it
+      # the :request_block (This allows us to stream the response in chunks)
       #
       swift_file.service.send(:request, params)
+
       clear_split_vars
     rescue Excon::Errors::Unauthorized => err
       msg = "Access to Swift container #{@container_name} failed due to a bad username or password. #{err}"
