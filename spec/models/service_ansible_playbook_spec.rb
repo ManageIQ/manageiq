@@ -4,10 +4,10 @@ describe(ServiceAnsiblePlaybook) do
   let(:basic_service)  { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options) }
   let(:service)        { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
   let(:action)         { ResourceAction::PROVISION }
-  let(:credential_0)   { FactoryGirl.create(:authentication, :manager_ref => '1') }
-  let(:credential_1)   { FactoryGirl.create(:authentication, :manager_ref => 'a') }
-  let(:credential_2)   { FactoryGirl.create(:authentication, :manager_ref => 'b') }
-  let(:credential_3)   { FactoryGirl.create(:authentication, :manager_ref => '2') }
+  let(:credential_0)   { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '1') }
+  let(:credential_1)   { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '2') }
+  let(:credential_2)   { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '3') }
+  let(:credential_3)   { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '4') }
   let(:decrpyted_val)  { 'my secret' }
   let(:encrypted_val)  { MiqPassword.encrypt(decrpyted_val) }
   let(:encrypted_val2) { MiqPassword.encrypt(decrpyted_val + "new") }
@@ -97,7 +97,7 @@ describe(ServiceAnsiblePlaybook) do
         service.reload
         expect(service.options[:provision_job_options]).to include(
           :inventory  => 20,
-          :credential => credential_1.manager_ref,
+          :credential => credential_1.native_ref,
           :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val}
         )
       end
@@ -133,7 +133,7 @@ describe(ServiceAnsiblePlaybook) do
         service.reload
         expect(service.options[:provision_job_options]).to include(
           :inventory  => 30,
-          :credential => credential_2.manager_ref,
+          :credential => credential_2.native_ref,
           :extra_vars => {'var1' => 'new_val1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val2}
         )
       end
