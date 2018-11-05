@@ -63,11 +63,11 @@ class Chargeback
     end
 
     def tag_list_with_prefix_for(rollup)
-      (all_tag_names(rollup) + container_tag_list_with_prefix).uniq.reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + chargeback_container_labels
+      (all_tag_names(rollup) + container_tag_list_with_prefix).distinct.reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + chargeback_container_labels
     end
 
     def tag_list_with_prefix
-      @tag_list_with_prefix ||= @rollup_array.map { |rollup| tag_list_with_prefix_for(rollup) }.flatten.uniq
+      @tag_list_with_prefix ||= @rollup_array.map { |rollup| tag_list_with_prefix_for(rollup) }.flatten.distinct
     end
 
     def sum(metric, sub_metric = nil)

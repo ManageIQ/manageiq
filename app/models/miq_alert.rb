@@ -125,7 +125,7 @@ class MiqAlert < ApplicationRecord
 
     alert_assignments[key] ||= begin
       profiles  = MiqAlertSet.assigned_to_target(target)
-      alert_ids = profiles.flat_map { |p| p.members.pluck(:id) }.uniq
+      alert_ids = profiles.flat_map { |p| p.members.pluck(:id) }.distinct
 
       if alert_ids.empty?
         none
@@ -177,7 +177,7 @@ class MiqAlert < ApplicationRecord
 
     # Get list of targets from assigned profiles
     targets = []
-    assignments.values.flatten.uniq.each do |prof|
+    assignments.values.flatten.distinct.each do |prof|
       prof.miq_alerts.each do |a|
         next unless a.enabled? && a.responds_to_events && a.responds_to_events.include?(HOURLY_TIMER_EVENT)
 
@@ -190,7 +190,7 @@ class MiqAlert < ApplicationRecord
     end
 
     # Call evaluate_queue for each alert/target
-    targets.uniq.each { |t| evaluate_alerts(t, HOURLY_TIMER_EVENT) }
+    targets.distinct.each { |t| evaluate_alerts(t, HOURLY_TIMER_EVENT) }
 
     _log.info("Complete")
   end

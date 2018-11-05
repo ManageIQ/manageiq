@@ -59,7 +59,7 @@ class Zone < ApplicationRecord
   end
 
   def assigned_roles
-    miq_servers.flat_map(&:assigned_roles).uniq.compact
+    miq_servers.flat_map(&:assigned_roles).distinct.compact
   end
 
   def role_active?(role_name)
@@ -71,7 +71,7 @@ class Zone < ApplicationRecord
   end
 
   def active_role_names
-    miq_servers.flat_map(&:active_role_names).uniq
+    miq_servers.flat_map(&:active_role_names).distinct
   end
 
   def self.default_zone
@@ -176,12 +176,12 @@ class Zone < ApplicationRecord
 
   def storages
     MiqPreloader.preload(self, :ext_management_systems => {:hosts => :storages})
-    ext_management_systems.flat_map(&:storages).uniq
+    ext_management_systems.flat_map(&:storages).distinct
   end
 
   def self.storages_without_a_zone
     storage_without_hosts = Storage.includes(:hosts).where(:host_storages => {:storage_id => nil}).to_a
-    storage_without_ems = Host.where(:ems_id => nil).includes(:storages).flat_map(&:storages).uniq
+    storage_without_ems = Host.where(:ems_id => nil).includes(:storages).flat_map(&:storages).distinct
     storage_without_hosts + storage_without_ems
   end
 

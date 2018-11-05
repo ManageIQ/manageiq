@@ -579,7 +579,7 @@ class MiqQueue < ApplicationRecord
   def self.optional_values(options, keys = [:zone])
     options = options.dup
     Array(keys).each do |key|
-      options[key] = [nil, options[key]].uniq if options.key?(key)
+      options[key] = [nil, options[key]].distinct if options.key?(key)
     end
     options
   end

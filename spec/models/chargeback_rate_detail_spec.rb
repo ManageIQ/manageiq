@@ -52,7 +52,7 @@ describe ChargebackRateDetail do
 
       it 'loads chargeback rates with sub metric from CloudVolumes' do
         rates = ChargebackRateDetail.default_rate_details_for('Storage')
-        expect(rates.map(&:sub_metric).compact).to match_array(cloud_volumes.map(&:volume_type) + ['unclassified'].uniq.compact)
+        expect(rates.map(&:sub_metric).compact).to match_array(cloud_volumes.map(&:volume_type) + ['unclassified'].distinct.compact)
       end
     end
 

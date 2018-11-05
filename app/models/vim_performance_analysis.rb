@@ -82,7 +82,7 @@ module VimPerformanceAnalysis
         @compute = Rbac.filtered(nil, search_options)
 
         MiqPreloader.preload(@compute, :storages)
-        stores = @compute.collect { |c| storages_for_compute_target(c) }.flatten.uniq
+        stores = @compute.collect { |c| storages_for_compute_target(c) }.flatten.distinct
 
         filter_options = {:class => Storage, :userid => @options[:userid], :miq_group_id => @options[:miq_group_id]}
         if topts[:storage_filter]

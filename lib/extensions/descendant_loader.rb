@@ -153,7 +153,7 @@ class DescendantLoader
           combo[0] = combo[0].sub(/^::/, '')
         end
       end
-      combos.map { |c| c.join('::') }.uniq.reverse
+      combos.map { |c| c.join('::') }.distinct.reverse
     end
   end
 

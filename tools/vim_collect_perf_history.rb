@@ -54,7 +54,7 @@ targets.each do |t|
            exit 1
          end
 end
-mors = targets.collect { |t| t[0] }.uniq
+mors = targets.collect { |t| t[0] }.distinct
 
 def process(accessor, dir)
   puts "Reading #{accessor}..."

@@ -24,7 +24,7 @@ module VmdbDatabase::MetricCollection
 
     def collect_number_pg_processes
       require 'miq-process'
-      (MiqProcess.get_active_process_by_name('postmaster') + MiqProcess.get_active_process_by_name('postgres')).uniq.length
+      (MiqProcess.get_active_process_by_name('postmaster') + MiqProcess.get_active_process_by_name('postgres')).distinct.length
     end
 
     def collect_number_connections

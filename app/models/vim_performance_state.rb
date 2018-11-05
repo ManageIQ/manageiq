@@ -145,7 +145,7 @@ class VimPerformanceState < ApplicationRecord
     return [] if assoc.nil?
 
     ids = mode.nil? ? (assoc[:on] || []) + (assoc[:off] || []) : assoc[mode.to_sym]
-    ids.nil? ? [] : ids.uniq.sort
+    ids.nil? ? [] : ids.distinct.sort
   end
 
   private
@@ -200,9 +200,9 @@ class VimPerformanceState < ApplicationRecord
         end
       end
 
-      r_on.uniq!
+      r_on.distinct!
       r_on.sort!
-      r_off.uniq!
+      r_off.distinct!
       r_off.sort!
     end
     self.assoc_ids = result.presence

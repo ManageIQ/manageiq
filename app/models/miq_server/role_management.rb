@@ -224,7 +224,7 @@ module MiqServer::RoleManagement
       end
     end
 
-    assigned_roles = servers.collect(&:assigned_roles).flatten.uniq.compact
+    assigned_roles = servers.collect(&:assigned_roles).flatten.distinct.compact
     assigned_roles.each do |r|
       next unless roles_to_sync.include?(r)
       role_name = r.name

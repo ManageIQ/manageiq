@@ -85,7 +85,7 @@ class EvmApplication
     return dups if data.size <= 1
     column_names ||= data.first.keys
     column_names.each do |col_header|
-      values = data.collect { |row| row[col_header] }.uniq
+      values = data.collect { |row| row[col_header] }.distinct
       dups[col_header] = values.first if values.size < 2
     end
     dups
@@ -126,7 +126,7 @@ class EvmApplication
         "Version"   => s.version,
         "Started"   => compact_date(s.started_on),
         "Heartbeat" => compact_date(s.last_heartbeat),
-        "MB Usage"  => (mem = (s.unique_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
+        "MB Usage"  => (mem = (s.distinctue_set_size || s.memory_usage)).nil? ? "" : mem / 1.megabyte,
         "Roles"     => s.active_role_names.join(':'),
       }
     end

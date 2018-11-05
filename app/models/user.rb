@@ -237,7 +237,7 @@ class User < ApplicationRecord
     if limited_self_service?
       vms
     elsif self_service?
-      (vms + miq_groups.includes(:vms).collect(&:vms).flatten).uniq
+      (vms + miq_groups.includes(:vms).collect(&:vms).flatten).distinct
     else
       Vm.all
     end

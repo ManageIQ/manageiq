@@ -204,7 +204,7 @@ module AssignmentMixin
 
       _log.debug("Directly assigned to parents: #{tlist.join(', ')}")
 
-      individually_assigned_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
+      individually_assigned_resources = tlist.flat_map { |t| assignments_cached[t] }.distinct
 
       _log.debug("Individually assigned resources: #{individually_assigned_resources.map { |x| "id:#{x.id} class:#{x.class}" }.join(', ')}")
 
@@ -217,10 +217,10 @@ module AssignmentMixin
       end
 
       _log.debug("Tags assigned to parents: #{tlist.join(', ')}")
-      tagged_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
+      tagged_resources = tlist.flat_map { |t| assignments_cached[t] }.distinct
 
       _log.debug("Tagged resources: #{individually_assigned_resources.map { |x| "id:#{x.id} class:#{x.class}" }.join(', ')}")
-      (individually_assigned_resources + tagged_resources).uniq
+      (individually_assigned_resources + tagged_resources).distinct
     end
 
     def namespace

@@ -249,7 +249,7 @@ module EmsRefresh::SaveInventoryNetwork
         h[:device_type] = device[:type].constantize.base_class.name
       end
 
-      h[:security_group_ids] = (h.delete(:security_groups) || []).map { |x| x.try(:[], :id) }.compact.uniq
+      h[:security_group_ids] = (h.delete(:security_groups) || []).map { |x| x.try(:[], :id) }.compact.distinct
       h[:source] = mode
     end
 

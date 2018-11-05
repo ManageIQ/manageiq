@@ -19,7 +19,7 @@ module Authenticator
   end
 
   private_class_method def self.valid_modes
-    Base.subclasses.flat_map(&:authenticates_for).uniq << "none"
+    Base.subclasses.flat_map(&:authenticates_for).distinct << "none"
   end
 
   private_class_method def self.authenticator_class(name)

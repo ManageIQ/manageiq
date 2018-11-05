@@ -64,7 +64,7 @@ module EmsRefresh::SaveInventory
     vms = VmOrTemplate.where(:uid_ems => vms_uids).to_a
     disconnects_index = disconnects.index_by { |vm| vm }
     vms_by_uid_ems = vms.group_by(&:uid_ems)
-    dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
+    dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).distinct.sort
     _log.info("#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}") unless dup_vms_uids.empty?
 
     invalids_found = false
@@ -161,7 +161,7 @@ module EmsRefresh::SaveInventory
 
     # Handle genealogy link ups
     # TODO: can we use _object
-    vm_ids = hashes.flat_map { |h| !h[:invalid] && h.has_key_path?(:parent_vm, :id) ? [h[:id], h.fetch_path(:parent_vm, :id)] : [] }.uniq
+    vm_ids = hashes.flat_map { |h| !h[:invalid] && h.has_key_path?(:parent_vm, :id) ? [h[:id], h.fetch_path(:parent_vm, :id)] : [] }.distinct
     unless vm_ids.empty?
       _log.info("#{log_header} Updating genealogy connections.")
       vms = VmOrTemplate.where(:id => vm_ids).index_by(&:id)

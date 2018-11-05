@@ -104,7 +104,7 @@ module Metric::Targets
         end
       end
       host_ids = ems.hosts.index_by(&:id)
-      clusters = ems.hosts.flat_map(&:ems_cluster).uniq.compact.index_by(&:id)
+      clusters = ems.hosts.flat_map(&:ems_cluster).distinct.compact.index_by(&:id)
       ems.vms.each do |vm|
         vm.association(:ext_management_system).target = ems if vm.ems_id
         vm.association(:ems_cluster).target = clusters[vm.ems_cluster_id] if vm.ems_cluster_id
@@ -124,7 +124,7 @@ module Metric::Targets
   # @return [Array<Storage>] supported storages
   # hosts preloaded storages and tags
   def self.capture_storage_targets(hosts)
-    hosts.flat_map(&:storages).uniq.select { |s| Storage.supports?(s.store_type) & s.perf_capture_enabled? }
+    hosts.flat_map(&:storages).distinct.select { |s| Storage.supports?(s.store_type) & s.perf_capture_enabled? }
   end
 
   # @param [Array<ExtManagementSystem>] emses Typically 1 ems for this zone

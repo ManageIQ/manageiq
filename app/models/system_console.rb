@@ -27,7 +27,7 @@ class SystemConsole < ApplicationRecord
     port_range_start = ::Settings.server.console_proxy_port.start
     port_range_end   = ::Settings.server.console_proxy_port.end
 
-    used_ports = SystemConsole.where.not(:proxy_pid => nil).where(:host_name => local_address).order(:port).pluck(:port).uniq
+    used_ports = SystemConsole.where.not(:proxy_pid => nil).where(:host_name => local_address).order(:port).pluck(:port).distinct
 
     (port_range_start..port_range_end).each do |port_number|
       return port_number if used_ports[0].nil? || used_ports[0] > port_number

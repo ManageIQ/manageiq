@@ -46,7 +46,7 @@ describe MiqProductFeature do
     it "creates feature identifiers once on first seed, changes nothing on second seed" do
       status_seed1 = nil
       expect { status_seed1 = MiqProductFeature.seed }.to change(MiqProductFeature, :count)
-      expect(status_seed1[:created]).to match_array status_seed1[:created].uniq
+      expect(status_seed1[:created]).to match_array status_seed1[:created].distinct
       expect(status_seed1[:updated]).to match_array []
       expect(status_seed1[:unchanged]).to match_array []
 

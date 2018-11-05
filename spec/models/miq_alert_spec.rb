@@ -47,7 +47,7 @@ describe MiqAlert do
       end
 
       it "should queue up the correct alert for each event" do
-        guids = @events_to_alerts.collect(&:last).uniq
+        guids = @events_to_alerts.collect(&:last).distinct
         messages = MiqQueue.order("id")
         expect(messages.length).to eq(@events_to_alerts.length)
 

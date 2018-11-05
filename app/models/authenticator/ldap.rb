@@ -112,7 +112,7 @@ module Authenticator
         end
       end
 
-      groups.uniq
+      groups.distinct
     end
 
     def update_user_attributes(user, _username, lobj)

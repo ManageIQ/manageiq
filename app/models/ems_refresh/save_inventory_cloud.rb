@@ -90,7 +90,7 @@ module EmsRefresh::SaveInventoryCloud
     deletes = determine_deletes_using_association(ems, target, disconnect)
 
     hashes.each do |h|
-      h[:cloud_tenant_ids] = (h.delete(:cloud_tenants) || []).compact.map { |x| x[:id] }.uniq
+      h[:cloud_tenant_ids] = (h.delete(:cloud_tenants) || []).compact.map { |x| x[:id] }.distinct
     end
 
     save_inventory_multi(ems.flavors, hashes, deletes, [:ems_ref])

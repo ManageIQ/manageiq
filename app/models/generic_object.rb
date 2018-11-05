@@ -77,7 +77,7 @@ class GenericObject < ApplicationRecord
 
     klass = generic_object_definition.property_associations[name].constantize
     selected = objs.select { |obj| obj.kind_of?(klass) }
-    properties[name] = (properties[name] + selected.pluck(:id)).uniq if selected
+    properties[name] = (properties[name] + selected.pluck(:id)).distinct if selected
     save!
   end
 
@@ -168,7 +168,7 @@ class GenericObject < ApplicationRecord
         type_cast(name, value)
       elsif property_association_defined?(name)
         # property association is of multiple values
-        value.select { |v| v.kind_of?(generic_object_definition.property_associations[name].constantize) }.uniq.map(&:id)
+        value.select { |v| v.kind_of?(generic_object_definition.property_associations[name].constantize) }.distinct.map(&:id)
       end
 
     self.properties = properties.merge(name => val)

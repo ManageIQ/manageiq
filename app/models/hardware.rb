@@ -33,18 +33,18 @@ class Hardware < ApplicationRecord
 
   def ipaddresses
     @ipaddresses ||= if networks.loaded?
-                       networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
+                       networks.collect(&:ipaddress).compact.distinct + networks.collect(&:ipv6address).compact.distinct
                      else
-                       networks.pluck(:ipaddress, :ipv6address).flatten.tap(&:compact!).tap(&:uniq!)
+                       networks.pluck(:ipaddress, :ipv6address).flatten.tap(&:compact!).tap(&:distinct!)
                      end
   end
 
   def hostnames
-    @hostnames ||= networks.collect(&:hostname).compact.uniq
+    @hostnames ||= networks.collect(&:hostname).compact.distinct
   end
 
   def mac_addresses
-    @mac_addresses ||= nics.collect(&:address).compact.uniq
+    @mac_addresses ||= nics.collect(&:address).compact.distinct
   end
 
   def ram_size_in_bytes

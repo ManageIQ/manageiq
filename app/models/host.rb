@@ -1486,11 +1486,11 @@ class Host < ApplicationRecord
 
     operating_system.firewall_rules.where(conditions)
       .flat_map { |rule| rule.port_range.to_a }
-      .uniq.sort
+      .distinct.sort
   end
 
   def service_names
-    system_services.collect(&:name).uniq.sort
+    system_services.collect(&:name).distinct.sort
   end
 
   def enabled_run_level_0_services
@@ -1527,7 +1527,7 @@ class Host < ApplicationRecord
     elsif args.length == 1
       services = host_services.where("enable_run_levels LIKE ?", "%#{args.first}%")
     end
-    services.order(:name).uniq.pluck(:name)
+    services.order(:name).distinct.pluck(:name)
   end
 
   def control_supported?

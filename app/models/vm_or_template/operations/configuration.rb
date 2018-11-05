@@ -76,7 +76,7 @@ module VmOrTemplate::Operations::Configuration
     if options[:datastore]
       datastore = ext_management_system.hosts.collect do |h|
         h.writable_storages.find_by(:name => options[:datastore])
-      end.uniq.compact.first
+      end.distinct.compact.first
       raise _("Datastore does not exist or cannot be accessed, unable to add disk") unless datastore
     end
 

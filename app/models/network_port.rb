@@ -34,11 +34,11 @@ class NetworkPort < ApplicationRecord
   virtual_column :cloud_subnets_names, :type => :string_set, :uses => :cloud_subnets
 
   def floating_ip_addresses
-    @floating_ip_addresses ||= floating_ips.collect(&:address).compact.uniq
+    @floating_ip_addresses ||= floating_ips.collect(&:address).compact.distinct
   end
 
   def fixed_ip_addresses
-    @fixed_ip_addresses ||= cloud_subnet_network_ports.collect(&:address).compact.uniq
+    @fixed_ip_addresses ||= cloud_subnet_network_ports.collect(&:address).compact.distinct
   end
 
   def ipaddresses
@@ -46,7 +46,7 @@ class NetworkPort < ApplicationRecord
   end
 
   def cloud_subnets_names
-    @cloud_subnets_names ||= cloud_subnets.collect(&:name).compact.uniq
+    @cloud_subnets_names ||= cloud_subnets.collect(&:name).compact.distinct
   end
 
   # Define all getters and setters for extra_attributes related virtual columns

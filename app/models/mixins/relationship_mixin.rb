@@ -253,7 +253,7 @@ module RelationshipMixin
   # Returns a list of child relationships
   def child_rels(*args)
     options = args.extract_options!
-    rels = relationships.flat_map(&:children).uniq
+    rels = relationships.flat_map(&:children).distinct
     Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -285,7 +285,7 @@ module RelationshipMixin
   # Returns a list of sibling relationships
   def sibling_rels(*args)
     options = args.extract_options!
-    rels = relationships.flat_map(&:siblings).uniq
+    rels = relationships.flat_map(&:siblings).distinct
     Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -317,7 +317,7 @@ module RelationshipMixin
   # Returns a list of descendant relationships
   def descendant_rels(*args)
     options = args.extract_options!
-    rels = relationships.flat_map(&:descendants).uniq
+    rels = relationships.flat_map(&:descendants).distinct
     Relationship.filter_by_resource_type(rels, options)
   end
 
@@ -359,7 +359,7 @@ module RelationshipMixin
     options = args.extract_options!
     # TODO: make this a single query (vs 3)
     # thus making filter_by_resource_type into a query
-    rels = relationships.flat_map(&:subtree).uniq
+    rels = relationships.flat_map(&:subtree).distinct
     rels = [relationship_for_isolated_root] if rels.empty?
     Relationship.filter_by_resource_type(rels, options)
   end
@@ -480,7 +480,7 @@ module RelationshipMixin
   def fulltree_rels(*args)
     options = args.extract_options!
     root_id = relationship.try(:root_id)
-    rels = root_id ? Relationship.subtree_of(root_id).uniq : [relationship_for_isolated_root]
+    rels = root_id ? Relationship.subtree_of(root_id).distinct : [relationship_for_isolated_root]
     Relationship.filter_by_resource_type(rels, options)
   end
 

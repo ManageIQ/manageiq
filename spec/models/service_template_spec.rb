@@ -347,7 +347,7 @@ describe ServiceTemplate do
       expect(sub_svc).to include(@svc_c)
       expect(sub_svc).to include(@svc_d)
 
-      sub_svc.uniq!
+      sub_svc.distinct!
       expect(sub_svc.size).to eq(3)
       expect(sub_svc).not_to include(@svc_a)
       expect(sub_svc).to include(@svc_b)

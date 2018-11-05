@@ -106,7 +106,7 @@ class ContainerNode < ApplicationRecord
   def external_logging_path
     node_hostnames = [kubernetes_hostname || name] # node name cannot be empty, it's an ID
     node_hostnames.push(node_hostnames.first.split('.').first).compact!
-    node_hostnames_query = node_hostnames.uniq.map { |x| "(term:(hostname:'#{x}'))" }.join(",")
+    node_hostnames_query = node_hostnames.distinct.map { |x| "(term:(hostname:'#{x}'))" }.join(",")
     query = "bool:(filter:(or:!(#{node_hostnames_query})))"
     index = ".operations.*"
     EXTERNAL_LOGGING_PATH % {:index => index, :query => query}

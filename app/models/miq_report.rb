@@ -208,7 +208,7 @@ class MiqReport < ApplicationRecord
   def load_custom_attributes
     return unless db_klass < CustomAttributeMixin || Chargeback.db_is_chargeback?(db)
 
-    db_klass.load_custom_attributes_for(cols.uniq)
+    db_klass.load_custom_attributes_for(cols.distinct)
   end
 
   # this method adds :custom_attributes => {} to MiqReport#include

@@ -56,7 +56,7 @@ module EmsRefresh
 
     # Queue the refreshes
     task_ids = targets_by_ems.collect do |ems, ts|
-      ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq
+      ts = ts.collect { |t| [t.class.to_s, t.id] }.distinct
       queue_merge(ts, ems, opts[:create_task])
     end
 
@@ -82,7 +82,7 @@ module EmsRefresh
     EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
-    targets = get_target_objects(target, id).uniq
+    targets = get_target_objects(target, id).distinct
 
     # Store manager records to avoid n+1 queries
     manager_by_manager_id = {}
@@ -143,7 +143,7 @@ module EmsRefresh
 
     # Do lookups to get ActiveRecord objects or initialize InventoryRefresh::Target for ids that are Hash
     targets_by_type.each_with_object([]) do |(target_class, ids), target_objects|
-      ids.uniq!
+      ids.distinct!
 
       recs = if target_class <= InventoryRefresh::Target
                ids.map { |x| InventoryRefresh::Target.load(x) }
@@ -229,8 +229,8 @@ module EmsRefresh
   def self.uniq_targets(targets)
     if targets.size > 1_000
       manager_refresh_targets, application_record_targets = targets.partition { |key, _| key == "InventoryRefresh::Target" }
-      application_record_targets.uniq!
-      manager_refresh_targets.uniq! { |_, value| value.values_at(:manager_id, :association, :manager_ref) }
+      application_record_targets.distinct!
+      manager_refresh_targets.distinct! { |_, value| value.values_at(:manager_id, :association, :manager_ref) }
 
       application_record_targets + manager_refresh_targets
     else

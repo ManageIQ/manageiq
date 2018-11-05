@@ -51,7 +51,7 @@ module EmsRefresh::MetadataRelats
 
               next unless x.respond_to?(c_meth)
 
-              ids = x.send(c_meth).collect(&:id).uniq
+              ids = x.send(c_meth).collect(&:id).distinct
               relats["#{p_type}_to_#{c_type}".to_sym][x.id] |= ids unless ids.empty?
             end
           end
@@ -130,7 +130,7 @@ module EmsRefresh::MetadataRelats
           next if p_type == :clusters && c_type == :vms
           next if p_type == :hosts && c_type == :vms
 
-          ids = children.collect { |c| c[:id] }.compact.uniq
+          ids = children.collect { |c| c[:id] }.compact.distinct
           relats["#{p_type}_to_#{c_type}".to_sym][p_id] |= ids unless ids.empty?
         end
       end

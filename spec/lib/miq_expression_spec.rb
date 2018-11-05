@@ -2188,7 +2188,7 @@ describe MiqExpression do
                                          :include_model   => true,
                                          :include_my_tags => false,
                                          :userid          => 'admin')
-      expect(tags.uniq.length).to eq(tags.length)
+      expect(tags.distinct.length).to eq(tags.length)
     end
   end
 

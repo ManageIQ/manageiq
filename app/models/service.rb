@@ -209,7 +209,7 @@ class Service < ApplicationRecord
   end
 
   def all_states_match?(action)
-    return true if composite? && (power_states.uniq == map_power_states(action))
+    return true if composite? && (power_states.distinct == map_power_states(action))
     return true if atomic? && (power_states[0] == POWER_STATE_MAP[action])
     false
   end
@@ -239,7 +239,7 @@ class Service < ApplicationRecord
       each_group_resource do |svc_rsc|
         sa << svc_rsc
       end
-    end.map(&action_name).uniq
+    end.map(&action_name).distinct
   end
 
   def map_power_states(action)

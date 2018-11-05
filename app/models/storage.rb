@@ -593,7 +593,7 @@ class Storage < ApplicationRecord
       obj = s.hosts.order(:id).first if obj.nil?
       obj
     end
-    objs.compact.uniq
+    objs.compact.distinct
   end
 
   def used_space

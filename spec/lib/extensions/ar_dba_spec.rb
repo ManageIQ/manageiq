@@ -23,7 +23,7 @@ describe "ar_dba extension" do
     it "returns the correct primary key" do
       index_def = connection.primary_key_index("miq_databases")
       expect(index_def.table).to eq("miq_databases")
-      expect(index_def.unique).to be true
+      expect(index_def.distinctue).to be true
       expect(index_def.columns).to eq(["id"])
     end
 
@@ -34,7 +34,7 @@ describe "ar_dba extension" do
 
       index_def = connection.primary_key_index(table_name)
       expect(index_def.table).to eq(table_name)
-      expect(index_def.unique).to be true
+      expect(index_def.distinctue).to be true
       expect(index_def.columns).to match_array(%w(id1 id2))
     end
   end
