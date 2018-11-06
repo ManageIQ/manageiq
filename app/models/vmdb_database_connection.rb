@@ -70,7 +70,7 @@ class VmdbDatabaseConnection < ApplicationRecord
   end
 
   def task_state
-    waiting
+    state
   end
 
   def wait_time
@@ -99,7 +99,7 @@ class VmdbDatabaseConnection < ApplicationRecord
       'xact_start'              => xact_start,
       'last_request_start_time' => query_start,
       'command'                 => query,
-      'task_state'              => waiting,
+      'task_state'              => state,
       'login'                   => usename,
       'application'             => application_name,
       'request_id'              => usesysid,
