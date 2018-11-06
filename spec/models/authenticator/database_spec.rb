@@ -46,6 +46,7 @@ describe Authenticator::Database do
         expect(AuditEvent).not_to receive(:failure)
         authenticate
       end
+
       it "updates lastlogon" do
         expect(-> { authenticate }).to change { alice.reload.lastlogon }
       end
