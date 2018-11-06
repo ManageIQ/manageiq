@@ -24,11 +24,7 @@ module Ancestry
   module InstanceMethods
     prepend AncestryInstanceMethodsPatch
 
-    ANCESTRY_DELIMITER = '/'.freeze
-
-    def parse_ancestry_column(obj)
-      obj.to_s.split(ANCESTRY_DELIMITER).map! { |id| cast_primary_key(id) }
-    end
+    ANCESTRY_DELIMITER = '/'.freeze unless defined?(ANCESTRY_DELIMITER)
 
     def ancestor_ids
       @_ancestor_ids ||= parse_ancestry_column(read_attribute(ancestry_base_class.ancestry_column))
@@ -60,13 +56,8 @@ module Ancestry
                   end
     end
 
-    STRING_BASED_KEYS = %i[string uuid text].freeze
     def cast_primary_key(key)
-      if STRING_BASED_KEYS.include?(primary_key_type)
-        key
-      else
-        key.to_i
-      end
+      self.class.primary_key_is_an_integer? ? key.to_i : key
     end
 
     def clear_memoized_instance_variables
