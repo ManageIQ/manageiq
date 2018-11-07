@@ -531,18 +531,18 @@ describe ExtManagementSystem do
     before { Zone.seed }
 
     it 'is allowed when enabled' do
-      zones = FactoryGirl.create_list(:zone, 2)
-      ems   = FactoryGirl.create(:ext_management_system, :zone => zones[0])
+      zone = FactoryGirl.create(:zone)
+      ems  = FactoryGirl.create(:ext_management_system, :zone => Zone.default_zone)
 
-      ems.zone = zones[1]
+      ems.zone = zone
       expect(ems.save).to eq(true)
     end
 
     it 'is denied when disabled' do
-      zones = FactoryGirl.create_list(:zone, 2)
-      ems   = FactoryGirl.create(:ext_management_system, :zone => zones[0], :enabled => false)
+      zone = FactoryGirl.create(:zone)
+      ems  = FactoryGirl.create(:ext_management_system, :zone => Zone.default_zone, :enabled => false)
 
-      ems.zone = zones[1]
+      ems.zone = zone
       expect(ems.save).to eq(false)
       expect(ems.errors.messages[:zone]).to be_present
     end

@@ -52,29 +52,27 @@ class Zone < ApplicationRecord
     active_miq_servers.detect(&:is_master?)
   end
 
-  class << self
-    private
+  def self.create_maintenance_zone
+    MiqRegion.seed
+    return MiqRegion.my_region.maintenance_zone if MiqRegion.my_region.maintenance_zone.present?
 
-    def create_maintenance_zone
-      MiqRegion.seed
-      return Zone.maintenance_zone if MiqRegion.my_region.maintenance_zone.present?
+    begin
+      # 1) Create Maintenance zone
+      zone = create!(:name        => "__maintenance__#{SecureRandom.uuid}",
+                     :description => "Maintenance Zone",
+                     :visible     => false)
 
-      begin
-        # 1) Create Maintenance zone
-        zone = create!(:name        => "__maintenance__#{SecureRandom.uuid}",
-                       :description => "Maintenance Zone",
-                       :visible     => false)
-
-        # 2) Assign to MiqRegion
-        MiqRegion.my_region.update_attributes(:maintenance_zone => zone)
-      rescue ActiveRecord::RecordInvalid
-        raise if zone.errors[:name].blank?
-        retry
-      end
-      _log.info("Creating maintenance zone...")
-      zone
+      # 2) Assign to MiqRegion
+      MiqRegion.my_region.update_attributes(:maintenance_zone => zone)
+    rescue ActiveRecord::RecordInvalid
+      raise if zone.errors[:name].blank?
+      retry
     end
+    _log.info("Creating maintenance zone...")
+    zone
   end
+
+  private_class_method :create_maintenance_zone
 
   def self.seed
     create_maintenance_zone
