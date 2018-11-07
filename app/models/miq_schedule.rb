@@ -43,6 +43,10 @@ class MiqSchedule < ApplicationRecord
   default_value_for :enabled, true
   default_value_for(:zone_id) { MiqServer.my_server.zone_id }
 
+  def self.rbac_scope_for_model(user)
+    user.super_admin_user? ? all : where(:userid => user.userid)
+  end
+
   def set_start_time_and_prod_default
     run_at # Internally this will correct :start_time to UTC
     self.prod_default = "system" if SYSTEM_SCHEDULE_CLASSES.include?(resource_type.to_s)

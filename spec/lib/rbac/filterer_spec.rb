@@ -883,6 +883,29 @@ describe Rbac::Filterer do
       end
     end
 
+    context 'searching for MiqSchedules' do
+      before { EvmSpecHelper.create_guid_miq_server_zone }
+
+      let!(:miq_schedule_1) { FactoryGirl.create(:miq_schedule, :resource_type => 'VmOrTemplate', :userid => other_user.userid) }
+      let!(:miq_schedule_2) { FactoryGirl.create(:miq_schedule, :resource_type => 'VmOrTemplate', :userid => admin_user.userid) }
+
+      it "returns all MiqSchedules for super admin user" do
+        User.with_user(admin_user) do
+          result = Rbac::Filterer.filtered(MiqSchedule.where(:resource_type => 'VmOrTemplate'))
+          expect(result).to match_array([miq_schedule_1, miq_schedule_2])
+        end
+      end
+
+      context "when user is non-super admin user" do
+        it "returns all custom button events" do
+          User.with_user(other_user) do
+            result = Rbac::Filterer.filtered(MiqSchedule.where(:resource_type => 'VmOrTemplate'))
+            expect(result).to eq([miq_schedule_1])
+          end
+        end
+      end
+    end
+
     context "searching for hosts" do
       it "can filter results by vmm_vendor" do
         host = FactoryGirl.create(:host, :vmm_vendor => "vmware")
