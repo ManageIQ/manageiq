@@ -122,10 +122,10 @@ module EmsRefresh::SaveInventoryPhysicalInfra
 
     # Update the associated ids
     hashes.each do |h|
-      h[:physical_storage_id] = h.delete(:physical_storage).try(:[], :id)
+      h[:canister_id] = h.delete(:canister).try(:[], :id)
     end
 
-    save_inventory_multi(physical_storage.physical_disks, hashes, :use_association, [:physical_storage_id])
+    save_inventory_multi(physical_storage.physical_disks, hashes, :use_association, [:ems_ref])
   end
 
   #
