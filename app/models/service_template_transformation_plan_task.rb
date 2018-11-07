@@ -290,12 +290,12 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
           :host   => destination_ems.hostname,
           :port   => destination_ems.port,
           :path   => '/' + destination_ems.api_version
-        ),
+        ).to_s,
         :os_identity_api_version => '3',
         :os_user_domain_name     => destination_ems.uid_ems,
         :os_username             => destination_ems.authentication_userid,
         :os_password             => destination_ems.authentication_password,
-        :os_project_name         => cluster.name
+        :os_project_name         => conversion_host.resource.cloud_tenant.name
       },
       :osp_server_id              => conversion_host.ems_ref,
       :osp_destination_project_id => cluster.ems_ref,
