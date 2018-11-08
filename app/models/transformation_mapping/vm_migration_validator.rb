@@ -37,7 +37,7 @@ class TransformationMapping::VmMigrationValidator
     conflict_list = []
 
     vm_names = @vm_list.collect { |row| row['name'] }
-    vm_objects = Vm.where(:name => vm_names, :ems_cluster => mapped_clusters).includes(:lans, :storages, :host, :ext_management_system)
+    vm_objects = Vm.where(:name => vm_names).includes(:ems_cluster, :lans, :storages, :host, :ext_management_system)
 
     @vm_list.each do |row|
       vm_name = row['name']
@@ -47,7 +47,8 @@ class TransformationMapping::VmMigrationValidator
         next
       end
 
-      vms = vm_objects.select { |vm| vm.name == vm_name }
+      vms = vm_objects.includes(:lans, :storages, :host, :ext_management_system).select { |vm| mapped_clusters.include?(vm.ems_cluster) }
+      vms = vms.select { |vm| vm.name == vm_name }
       vms = vms.select { |vm| vm.uid_ems == row['uid_ems'] } if row['uid_ems'].present?
       vms = vms.select { |vm| vm.host.name == row['host'] } if row['host'].present?
       vms = vms.select { |vm| vm.ext_management_system.name == row['provider'] } if row['provider'].present?
