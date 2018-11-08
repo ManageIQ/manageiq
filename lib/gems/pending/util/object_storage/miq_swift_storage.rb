@@ -78,6 +78,25 @@ class MiqSwiftStorage < MiqObjectStorage
     end
   end
 
+  def download_single(source, destination)
+    object_file = uri_to_object_path(source)
+    logger.debug("Downloading [#{source}] from Container [#{container_name}] to local file [#{destination}]")
+
+    with_standard_swift_error_handling("downloading") do
+      container_key = container.key # also makes sure 'fog/openstack' is loaded
+      params        = {
+        :expects        => [200, 206],
+        :headers        => {},
+        :response_block => write_chunk_proc(destination),
+        :method         => "GET",
+        :path           => "#{Fog::OpenStack.escape(container_key)}/#{Fog::OpenStack.escape(object_file)}"
+      }
+      # Range is indexed starting at zero
+      params[:headers]['Range'] = "bytes=0-#{byte_count - 1}" if byte_count
+      swift.send(:request, params)
+    end
+  end
+
   def mkdir(_dir)
     container
   end
@@ -151,10 +170,6 @@ class MiqSwiftStorage < MiqObjectStorage
     msg = "Error creating Swift container #{container_name}. #{err}"
     logger.error(msg)
     raise err, msg, err.backtrace
-  end
-
-  def download_single(_source, _destination)
-    raise NotImplementedError, "MiqSwiftStorage.download_single Not Yet Implemented"
   end
 
   def query_params(query_string)
