@@ -384,5 +384,23 @@ describe CustomButton do
         end
       end
     end
+
+    describe "publish event" do
+      context "with blank args" do
+        it "resource action calls automate_queue_hash" do
+          expect(resource_action).to receive(:automate_queue_hash).with(vm, {}, user).and_return(:username => "foo")
+
+          User.with_user(user) { custom_button.publish_event('UI', vm) }
+        end
+      end
+
+      context "with args" do
+        it "resource action doesn't call automate_queue_hash" do
+          expect(resource_action).not_to receive(:automate_queue_hash)
+
+          User.with_user(user) { custom_button.publish_event('UI', vm, :username => "foo") }
+        end
+      end
+    end
   end
 end
