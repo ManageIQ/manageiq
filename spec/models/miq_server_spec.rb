@@ -1,5 +1,8 @@
 describe MiqServer do
-  include_examples ".seed called multiple times"
+  context ".seed" do
+    before { Zone.seed }
+    include_examples ".seed called multiple times"
+  end
 
   context "#hostname" do
     it("with a valid hostname")    { expect(MiqServer.new(:hostname => "test").hostname).to eq("test") }
