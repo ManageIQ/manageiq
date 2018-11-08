@@ -91,6 +91,7 @@ describe CustomButton do
 
       context "when invoking for a particular VM" do
         before do
+          MiqRegion.seed
           @vm    = FactoryBot.create(:vm_vmware)
           @user2 = FactoryBot.create(:user_with_group)
           EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
@@ -321,6 +322,7 @@ describe CustomButton do
     let(:custom_button)   { FactoryBot.create(:custom_button, :applies_to => vm.class, :resource_action => resource_action) }
 
     before do
+      MiqRegion.seed
       EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
     end
 

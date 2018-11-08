@@ -53,6 +53,7 @@ describe ServiceRetireTask do
 
     context "with resource" do
       before do
+        MiqRegion.seed
         allow(MiqServer).to receive(:my_zone).and_return(Zone.seed.name)
         miq_request.approve(approver, reason)
       end
@@ -116,6 +117,7 @@ describe ServiceRetireTask do
 
   describe "deliver_to_automate" do
     before do
+      MiqRegion.seed
       allow(MiqServer).to receive(:my_zone).and_return(Zone.seed.name)
       miq_request.approve(approver, reason)
     end

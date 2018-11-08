@@ -1,5 +1,8 @@
 describe Zone do
-  include_examples ".seed called multiple times", 2
+  context ".seed" do
+    before { MiqRegion.seed }
+    include_examples ".seed called multiple times", 2
+  end
 
   context "with two small envs" do
     before do
@@ -193,11 +196,7 @@ describe Zone do
   end
 
   context "maintenance zone" do
-    it "creates missing region during seed" do
-      expect(MiqRegion.my_region).to be_nil
-      described_class.seed
-      expect(MiqRegion.my_region).to be_present
-    end
+    before { MiqRegion.seed }
 
     it "is seeded with relation to region" do
       described_class.seed
@@ -225,6 +224,7 @@ describe Zone do
   end
 
   it "removes queued items on destroy" do
+    MiqRegion.seed
     Zone.seed
     zone = FactoryBot.create(:zone)
     FactoryBot.create(:miq_queue, :zone => zone.name)

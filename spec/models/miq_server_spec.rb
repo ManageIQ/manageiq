@@ -1,6 +1,10 @@
 describe MiqServer do
   context ".seed" do
-    before { Zone.seed }
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
+
     include_examples ".seed called multiple times"
   end
 

@@ -53,7 +53,6 @@ class Zone < ApplicationRecord
   end
 
   def self.create_maintenance_zone
-    MiqRegion.seed
     return MiqRegion.my_region.maintenance_zone if MiqRegion.my_region.maintenance_zone.present?
 
     begin

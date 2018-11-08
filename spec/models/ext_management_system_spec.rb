@@ -452,7 +452,10 @@ describe ExtManagementSystem do
   end
 
   context "#resume" do
-    before { Zone.seed }
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
 
     it "enables an ems with child managers and move them from maintenance zone" do
       zone = FactoryGirl.create(:zone)
@@ -528,7 +531,10 @@ describe ExtManagementSystem do
   end
 
   context "changing zone" do
-    before { Zone.seed }
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
 
     it 'is allowed when enabled' do
       zone = FactoryGirl.create(:zone)

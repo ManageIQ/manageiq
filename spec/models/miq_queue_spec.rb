@@ -354,6 +354,7 @@ describe MiqQueue do
 
   context "#put" do
     before do
+      MiqRegion.seed
       Zone.seed
       _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
     end
