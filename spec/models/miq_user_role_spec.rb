@@ -81,24 +81,35 @@ describe MiqUserRole do
       let!(:tenant_1) { FactoryGirl.create(:tenant, :parent => root_tenant) }
       let!(:tenant_2) { FactoryGirl.create(:tenant, :parent => root_tenant) }
 
-      let(:feature) { MiqProductFeature.find_all_by_identifier(["dialog_edit_editor_tenant_#{tenant_2.id}", "rbac_tenant_manage_quotas_tenant_#{tenant_2.id}"]) }
-      let(:role)           { FactoryGirl.create(:miq_user_role, :miq_product_features => feature) }
+      let(:feature)             { MiqProductFeature.find_all_by_identifier(["dialog_edit_editor_tenant_#{tenant_2.id}", "rbac_tenant_manage_quotas_tenant_#{tenant_2.id}"]) }
+      let(:non_dynamic_feature) { MiqProductFeature.find_all_by_identifier(["dialog_edit_editor", "rbac_tenant_manage_quotas"]) }
+      let(:role)            { FactoryGirl.create(:miq_user_role, :miq_product_features => feature) }
+      let(:role_no_dynamic) { FactoryGirl.create(:miq_user_role, :miq_product_features => non_dynamic_feature) }
       let(:group_tenant_1) { FactoryGirl.create(:miq_group, :miq_user_role => role, :tenant => tenant_1) }
       let(:group_tenant_2) { FactoryGirl.create(:miq_group, :miq_user_role => role, :tenant => tenant_2) }
+      let(:group_3)        { FactoryGirl.create(:miq_group, :miq_user_role => role_no_dynamic, :tenant => tenant_2) }
       let!(:user_1) { FactoryGirl.create(:user, :userid => "user_1", :miq_groups => [group_tenant_1]) }
       let!(:user_2) { FactoryGirl.create(:user, :userid => "user_2", :miq_groups => [group_tenant_2]) }
+      let!(:user_3) { FactoryGirl.create(:user, :userid => "user_3", :miq_groups => [group_3]) }
 
-      it "doesn't authorise user without dynamic product feature" do
+      it "doesn't authorize user without dynamic product feature" do
         User.with_user(user_1) do
           expect(user_1.role_allows?(:identifier => "dialog_edit_editor")).to be_falsey
           expect(user_1.role_allows?(:identifier => "rbac_tenant_manage_quotas")).to be_falsey
         end
       end
 
-      it "authorise user with dynamic product feature" do
+      it "authorize user with dynamic product feature" do
         User.with_user(user_2) do
           expect(user_2.role_allows?(:identifier => "dialog_edit_editor")).to be_truthy
           expect(user_2.role_allows?(:identifier => "rbac_tenant_manage_quotas")).to be_truthy
+        end
+      end
+
+      it "authorize user with non-dynamic product feature" do
+        User.with_user(user_3) do
+          expect(user_3.role_allows?(:identifier => "dialog_edit_editor")).to be_truthy
+          expect(user_3.role_allows?(:identifier => "rbac_tenant_manage_quotas")).to be_truthy
         end
       end
     end
