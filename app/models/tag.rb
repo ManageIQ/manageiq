@@ -147,10 +147,10 @@ class Tag < ApplicationRecord
         {}
       else
         {
-          "name"         => classification.name,
-          "description"  => classification.description,
-          "category"     => {"name" => category.name, "description" => category.description},
-          "display_name" => "#{category.description}: #{classification.description}"
+          "name"         => classification.try(:name),
+          "description"  => classification.try(:description),
+          "category"     => {"name" => category.try(:name), "description" => category.try(:description)},
+          "display_name" => "#{category.try(:description)}: #{classification.try(:description)}"
         }
       end
   end
