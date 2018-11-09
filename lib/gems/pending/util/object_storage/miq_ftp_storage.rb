@@ -32,6 +32,11 @@ class MiqFtpStorage < MiqObjectStorage
     with_connection { super }
   end
 
+  # Override for connection handling
+  def magic_number_for(*magic_number_for_args)
+    with_connection { super }
+  end
+
   # Specific version of Net::FTP#storbinary that doesn't use an existing local
   # file, and only uploads a specific size (byte_count) from the input_file
   def upload_single(dest_uri)
