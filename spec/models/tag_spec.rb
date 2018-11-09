@@ -103,6 +103,18 @@ describe Tag do
       expect(categorization).to eq(expected_categorization)
     end
 
+    it "tag with nil classification" do
+      @tag.classification = nil
+      categorization = @tag.categorization
+
+      expected_categorization = {"name"         => nil,
+                                 "description"  => nil,
+                                 "category"     => {"name" => @category.name, "description" => @category.description},
+                                 "display_name" => "#{@category.description}: "}
+      expect(@tag.show).to eq(true)
+      expect(categorization).to eq(expected_categorization)
+    end
+
     it "category tags have no category" do
       category_tag = @tag.category.tag
       expect(category_tag.category).to be_nil
