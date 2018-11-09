@@ -5,7 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer Beta-2
+## Hammer RC-1
+
+### Added
+- Add template methods needed for provision report [(#17884)](https://github.com/ManageIQ/manageiq/pull/17884)
+- Add a validation for conversion hosts [(#18135)](https://github.com/ManageIQ/manageiq/pull/18135)
+- Include resource_action type and ID in linked components error message [(#18152)](https://github.com/ManageIQ/manageiq/pull/18152)
+
+### Fixed
+- Adjust VM validity correctly while editing a ServiceTemplate record [(#18065)](https://github.com/ManageIQ/manageiq/pull/18065)
+- Backend-initiated notifications in v2v for Successful and Failed Requests [(#18012)](https://github.com/ManageIQ/manageiq/pull/18012)
+- Retire Task deliver_to_automate now uses tenant_identity [(#18104)](https://github.com/ManageIQ/manageiq/pull/18104)
+- Fix Exception due to missing #merged_uri parameters in FileDepot parent class [(#18131)](https://github.com/ManageIQ/manageiq/pull/18131)
+- Fix flavor and security group collection [(#18147)](https://github.com/ManageIQ/manageiq/pull/18147)
+- Use Settings.active_task_timeout for db backup task instead of hardcoded value [(#18124)](https://github.com/ManageIQ/manageiq/pull/18124)
+- Use images to get registry pods using the registry instead of running it. [(#18148)](https://github.com/ManageIQ/manageiq/pull/18148)
+- Allow to set retirement date for service via Centralized Administration [(#18137)](https://github.com/ManageIQ/manageiq/pull/18137)
+- Credential.manager_ref needs to be an integer for Tower 3.3 [(#18154)](https://github.com/ManageIQ/manageiq/pull/18154)
+- Force a run of the setup playbook after a db failover [(#18120)](https://github.com/ManageIQ/manageiq/pull/18120)
+- Add aggregate_memory to container project [(#18159)](https://github.com/ManageIQ/manageiq/pull/18159)
+- Fix send_args for EvmDatabaseOps.restore [(#18144)](https://github.com/ManageIQ/manageiq/pull/18144)
+
+## Hammer Beta-2 - Released 2018-10-29
 
 ### Added
 - Conversion script for mapped tags/classification from remote regions to global [(#17971)](https://github.com/ManageIQ/manageiq/pull/17971)
