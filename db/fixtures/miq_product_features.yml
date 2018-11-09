@@ -6399,6 +6399,14 @@
       :description: Display notifications
       :feature_type: view
       :identifier: sui_notifications
+    - :name: Metrics
+      :description: Display metrics
+      :feature_type: view
+      :identifier: sui_metrics
+    - :name: Tags
+      :description: Display tags
+      :feature_type: view
+      :identifier: sui_tags
   - :name: Dashboard
     :description: Dashboard features
     :feature_type: node
