@@ -24,7 +24,7 @@ class MiqSwiftStorage < MiqObjectStorage
 
     # Omit leading slash (if it exists), and grab the rest of the characters
     # before the next file separator
-    @container_name = path.gsub(/^\/?([^\/]+)\/.*/, '\1')
+    @container_name = path.gsub(/^\/?([^\/]+).*/, '\1')
   end
 
   def uri_to_object_path(remote_file)
