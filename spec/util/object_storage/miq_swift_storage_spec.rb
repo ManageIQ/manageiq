@@ -7,9 +7,8 @@ describe MiqSwiftStorage do
     context "using a uri with query parameters" do
       let(:uri) { "swift://foo.com:5678/abc/def?region=region&api_version=v3&security_protocol=non-ssl" }
 
-      it "#initialize sets the container_name" do
-        container_name = object_storage.container_name
-        expect(container_name).to eq("abc")
+      it "sets the container_name" do
+        expect(object_storage.container_name).to eq("abc")
       end
 
       it "#uri_to_object_path returns a new object path" do
@@ -21,9 +20,8 @@ describe MiqSwiftStorage do
     context "using a uri without query parameters" do
       let(:uri) { "swift://foo.com/abc/def/my_file.tar.gz" }
 
-      it "#initialize sets the container_name" do
-        container_name = object_storage.container_name
-        expect(container_name).to eq("abc")
+      it "sets the container_name" do
+        expect(object_storage.container_name).to eq("abc")
       end
 
       it "#uri_to_object_path returns a new object path" do
