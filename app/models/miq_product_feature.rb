@@ -52,7 +52,7 @@ class MiqProductFeature < ApplicationRecord
   end
 
   def self.current_tenant_identifier(identifier)
-    identifier && feature_details(identifier) && root_tenant_identifier?(identifier) ? tenant_identifier(identifier, User.current_tenant.id) : identifier
+    tenant_identifier(identifier, User.current_tenant.id) if identifier && feature_details(identifier) && root_tenant_identifier?(identifier)
   end
 
   def self.feature_yaml(path = FIXTURE_PATH)
