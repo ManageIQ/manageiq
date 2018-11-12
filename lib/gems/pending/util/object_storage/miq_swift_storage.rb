@@ -24,7 +24,7 @@ class MiqSwiftStorage < MiqObjectStorage
 
     # Omit leading slash (if it exists), and grab the rest of the characters
     # before the next file separator
-    @container_name = path.gsub(/^\/?([^\/]+)\/.*/, '\1')
+    @container_name = path.gsub(/^\/?([^\/]+).*/, '\1')
   end
 
   def uri_to_object_path(remote_file)
@@ -43,7 +43,8 @@ class MiqSwiftStorage < MiqObjectStorage
     # write dump file to swift
     #
     logger.debug("Writing [#{source_input}] to => Bucket [#{container_name}] using object file name [#{object_file}]")
-    begin
+
+    with_standard_swift_error_handling("uploading") do
       swift_file = container.files.new(:key => object_file)
       params     = {
         :expects       => [201, 202],
@@ -67,14 +68,6 @@ class MiqSwiftStorage < MiqObjectStorage
       swift_file.service.send(:request, params)
 
       clear_split_vars
-    rescue Excon::Errors::Unauthorized => err
-      msg = "Access to Swift container #{@container_name} failed due to a bad username or password. #{err}"
-      logger.error(msg)
-      raise err, msg, err.backtrace
-    rescue => err
-      msg = "Error uploading #{source_input} to Swift container #{@container_name}. #{err}"
-      logger.error(msg)
-      raise err, msg, err.backtrace
     end
   end
 
@@ -175,5 +168,17 @@ class MiqSwiftStorage < MiqObjectStorage
   def query_params(query_string)
     parts = URI.decode_www_form(query_string).to_h
     @region, @api_version, @domain_id, @security_protocol = parts.values_at("region", "api_version", "domain_id", "security_protocol")
+  end
+
+  def with_standard_swift_error_handling(action)
+    yield
+  rescue Excon::Errors::Unauthorized => err
+    msg = "Access to Swift container #{@container_name} failed due to a bad username or password. #{err}"
+    logger.error(msg)
+    raise err, msg, err.backtrace
+  rescue => err
+    msg = "Error #{action} #{source_input} to Swift container #{@container_name}. #{err}"
+    logger.error(msg)
+    raise err, msg, err.backtrace
   end
 end
