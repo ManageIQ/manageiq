@@ -152,11 +152,10 @@ describe EvmDatabaseOps do
       allow(MiqSmbSession).to receive(:runcmd)
       allow(MiqSmbSession).to receive(:raw_disconnect)
       allow(file_storage).to  receive(:settings_mount_point).and_return(tmpdir)
+      allow(file_storage).to  receive(:magic_number_for).and_return(:pgdump)
       allow(file_storage).to  receive(:download).and_yield(input_path)
 
       allow(PostgresAdmin).to receive(:runcmd_with_logging)
-      allow(PostgresAdmin).to receive(:pg_dump_file?).and_return(true)
-      allow(PostgresAdmin).to receive(:base_backup_file?).and_return(false)
 
       allow(VmdbDatabaseConnection).to receive(:count).and_return(1)
     end
@@ -283,9 +282,18 @@ describe EvmDatabaseOps do
         it "returns calculated uri" do
           expect(execute_with_file_storage { "block result" }).to eq("smb://tmp/foo/db_backup/baz")
         end
+
+        it "yields `db_opt`s only" do
+          allow(file_storage).to receive(:download) { |&block| block.call(input_path) }
+          expect do |rspec_probe|
+            described_class.send(:with_file_storage, :backup, db_opts, connect_opts, &rspec_probe)
+          end.to yield_with_args(:dbname => "vmdb_production", :local_file => input_path)
+        end
       end
 
       context "for a restore action" do
+        before { expect(file_storage).to receive(:magic_number_for).and_return(:pgdump) }
+
         it "updates db_opts[:local_file] in the method context" do
           expect(file_storage).to receive(:send).with(:download, nil, "smb://tmp/foo")
           execute_with_file_storage(:restore)
@@ -301,6 +309,17 @@ describe EvmDatabaseOps do
         it "returns calculated uri" do
           allow(file_storage).to receive(:download).and_yield(input_path)
           expect(execute_with_file_storage(:restore) { "block result" }).to eq("smb://tmp/foo")
+        end
+
+        it "yields `backup_type` along with `db_opt`s" do
+          allow(file_storage).to receive(:download) { |&block| block.call(input_path) }
+          expected_yield_args = [
+            { :dbname => "vmdb_production", :local_file => input_path },
+            :pgdump
+          ]
+          expect do |rspec_probe|
+            described_class.send(:with_file_storage, :restore, db_opts, connect_opts, &rspec_probe)
+          end.to yield_with_args(*expected_yield_args)
         end
 
         context "with query_params in the URI" do
