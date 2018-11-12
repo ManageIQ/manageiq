@@ -130,7 +130,7 @@ describe Endpoint do
 
   context "to_s" do
     it "returns the url if set" do
-      allow(endpoint).to receive(:url).and_return('https://www.foo.bar')
+      endpoint.url = 'https://www.foo.bar'
       expect(endpoint.to_s).to eql('https://www.foo.bar')
     end
 
