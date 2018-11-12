@@ -89,12 +89,12 @@ class EvmDatabaseOps
     #   :username => 'samba_one',
     #   :password => 'Zug-drep5s',
 
-    uri = with_file_storage(:restore, db_opts, connect_opts) do |database_opts|
-      prepare_for_restore(database_opts[:local_file])
+    uri = with_file_storage(:restore, db_opts, connect_opts) do |database_opts, backup_type|
+      prepare_for_restore(database_opts[:local_file], backup_type)
 
       # remove all the connections before we restore; AR will reconnect on the next query
       ActiveRecord::Base.connection_pool.disconnect!
-      PostgresAdmin.restore(database_opts)
+      PostgresAdmin.restore(database_opts.merge(:backup_type => backup_type))
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been restored from file: [#{uri}]")
     uri
@@ -139,12 +139,16 @@ class EvmDatabaseOps
     MiqFileStorage.with_interface_class(connect_opts) do |file_storage|
       send_args = [uri, db_opts[:byte_count]].compact
 
-      # Okay, this probably seems a bit silly seeing that we just went to the
-      # trouble of doing a `.compact)`.  The intent is that with a restore, we
-      # are doing a `MiqFileStorage.download`, and the interface for that
-      # method is to pass a `nil` for the block form since we are streaming the
-      # data from the command that we are writting as part of the block.
-      send_args.unshift(nil) if action == :restore
+      if action == :restore
+        # `MiqFileStorage#download` requires a `nil` passed to the block form
+        # to accommodate streaming
+        send_args.unshift(nil)
+        magic_numbers = {
+          :pgdump     => PostgresAdmin::PG_DUMP_MAGIC,
+          :basebackup => PostgresAdmin::BASE_BACKUP_MAGIC
+        }
+        backup_type = file_storage.magic_number_for(uri, :accepted => magic_numbers)
+      end
 
       # Note:  `input_path` will always be a fifo stream (input coming from
       # PostgresAdmin, and the output going to the `uri`), since we want to
@@ -161,15 +165,19 @@ class EvmDatabaseOps
       # set `db_opts` local file to that stream.
       file_storage.send(STORAGE_ACTIONS_TO_METHODS[action], *send_args) do |input_path|
         db_opts[:local_file] = input_path
-        yield(db_opts)
+        if action == :restore
+          yield(db_opts, backup_type)
+        else
+          yield(db_opts)
+        end
       end
     end
 
     uri
   end
 
-  private_class_method def self.prepare_for_restore(filename)
-    backup_type = validate_backup_file_type(filename)
+  private_class_method def self.prepare_for_restore(filename, backup_type = nil)
+    backup_type ||= validate_backup_file_type(filename)
 
     if application_connections?
       message = "Database restore failed. Shut down all evmserverd processes before attempting a database restore"
