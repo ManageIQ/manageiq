@@ -29,6 +29,7 @@ module EvmDba
           opt :username,           "Username",                     :type => :string
           opt :password,           "Password",                     :type => :string
           opt :hostname,           "Hostname",                     :type => :string
+          opt :port,               "Port",                         :type => :string
           opt :dbname,             "Database name",                :type => :string
         when :local_file
           opt :local_file,         "Destination file",             :type => :string, :required => true
@@ -51,7 +52,7 @@ module EvmDba
     end.delete_nils
   end
 
-  DB_OPT_KEYS = [:dbname, :username, :password, :hostname, :exclude_table_data, :byte_count].freeze
+  DB_OPT_KEYS = [:dbname, :username, :password, :hostname, :port, :exclude_table_data, :byte_count].freeze
   def self.collect_db_opts(opts)
     db_opts = {}
     DB_OPT_KEYS.each { |k| db_opts[k] = opts[k] if opts[k] }
