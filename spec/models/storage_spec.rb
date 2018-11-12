@@ -430,23 +430,6 @@ describe Storage do
     end
   end
 
-  context ".batch_operation_supported?" do
-    before do
-      @storage =  FactoryGirl.create(:storage)
-    end
-
-    it "returns false when queried whether the storage supports smarstate analysis" do
-      expect(Storage.batch_operation_supported?(:smartstate_analysis, [@storage.id])).to eq(false)
-    end
-
-    it "returns true when queried whether the storage supports smarstate analysis" do
-      FactoryGirl.create(:host_vmware,
-                         :ext_management_system => FactoryGirl.create(:ems_vmware_with_valid_authentication),
-                         :storages              => [@storage])
-      expect(Storage.batch_operation_supported?(:smartstate_analysis, [@storage.id])).to eq(true)
-    end
-  end
-
   describe "#update_vm_perf" do
     it "will update a vm_perf with an attributes hash keyed with symbols" do
       storage = FactoryGirl.create(:storage)

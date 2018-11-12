@@ -12,12 +12,14 @@ module ManageIQ::Providers
     has_many :host_storages,              :through => :hosts
     has_many :host_switches,              :through => :hosts
     has_many :host_networks,              :through => :hosts, :source => :networks
+    has_many :host_guest_devices,         :through => :host_hardwares, :source => :guest_devices
     has_many :snapshots,                  :through => :vms_and_templates
     has_many :switches, -> { distinct },  :through => :hosts
     has_many :lans, -> { distinct },      :through => :hosts
     has_many :subnets, -> { distinct },   :through => :lans
     has_many :networks,                   :through => :hardwares
     has_many :guest_devices,              :through => :hardwares
+    has_many :ems_custom_attributes,      :through => :vms_and_templates
 
     class << model_name
       define_method(:route_key) { "ems_infras" }
@@ -53,5 +55,9 @@ module ManageIQ::Providers
     def clusterless_hosts
       hosts.where(:ems_cluster => nil)
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Infrastructure Manager', 'Infrastructure Managers', number)
   end
 end

@@ -11,10 +11,10 @@ class GitWorktree
     raise ArgumentError, "Must specify path" unless options.key?(:path)
     @path          = options[:path]
     @email         = options[:email]
-    @username      = options[:username]
+    @username      = options[:username] || ""
     @bare          = options[:bare]
     @commit_sha    = options[:commit_sha]
-    @password      = options[:password]
+    @password      = options[:password] || ""
     @fast_forward_merge = options[:ff] || true
     @remote_name   = 'origin'
     @cred          = Rugged::Credentials::UserPassword.new(:username => @username,
@@ -168,7 +168,10 @@ class GitWorktree
   end
 
   def credentials_cb(url, _username, _types)
-    raise GitWorktreeException::InvalidCredentials, "Invalid credentials for URL #{url}" if @credentials_set
+    if @credentials_set
+      raise GitWorktreeException::InvalidCredentials, "Please provide username and password for URL #{url}" if @username.blank? || @password.blank?
+      raise GitWorktreeException::InvalidCredentials, "Invalid credentials for URL #{url}"
+    end
     @credentials_set = true
     @cred
   end

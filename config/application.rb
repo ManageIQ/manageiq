@@ -109,6 +109,9 @@ module Vmdb
 
     config.autoload_once_paths << Rails.root.join("lib", "vmdb", "console_methods.rb").to_s
 
+    require_relative '../lib/request_started_on_middleware'
+    config.middleware.use RequestStartedOnMiddleware
+
     # config.eager_load_paths accepts an array of paths from which Rails will eager load on boot if cache classes is enabled.
     # Defaults to every folder in the app directory of the application.
 
@@ -133,16 +136,15 @@ module Vmdb
       require 'vmdb_helper'
     end
 
-    initializer :load_inflections, :before => :load_vmdb_settings do
-      Vmdb::Inflections.load_inflections
-    end
-
     # Note: If an initializer doesn't have an after, Rails will add one based
     # on the top to bottom order of initializer calls in the file.
     # Because this is easy to mess up, keep your initializers in order.
-    # register plugins even before loading settings, as plugins can bring their own settings
-    initializer :register_vmdb_plugins, :before => :load_vmdb_settings do
-      Vmdb::Plugins.instance.register_vmdb_plugins
+    initializer :load_inflections, :before => :init_vmdb_plugins do
+      Vmdb::Inflections.load_inflections
+    end
+
+    initializer :init_vmdb_plugins, :before => :load_vmdb_settings do
+      Vmdb::Plugins.init
     end
 
     initializer :load_vmdb_settings, :before => :load_config_initializers do
@@ -157,6 +159,7 @@ module Vmdb
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection
+      puts "** #{Vmdb::Appliance.BANNER}"
     end
 
     console do

@@ -352,6 +352,14 @@ describe GenericObject do
       go.remove_from_service(service)
       expect(service.generic_objects).to be_blank
     end
+
+    it 'removes the generic object from all related services before destroy' do
+      go.add_to_service(service)
+      expect(service.generic_objects).to include(go)
+
+      go.destroy
+      expect(service.generic_objects).to be_blank
+    end
   end
 
   context "custom buttons" do
@@ -366,6 +374,14 @@ describe GenericObject do
       it "returns list of custom action buttons retrived from linked GenericObjectDefinition" do
         expect(definition).to receive(:custom_action_buttons).with(go)
         go.custom_action_buttons
+      end
+    end
+
+    describe '#custom_button_events' do
+      let(:cb_event) { FactoryGirl.create(:custom_button_event, :target => go) }
+
+      it 'returns list of custom button events' do
+        expect(go.custom_button_events).to match_array([cb_event])
       end
     end
   end

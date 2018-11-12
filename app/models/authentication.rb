@@ -34,6 +34,11 @@ class Authentication < ApplicationRecord
 
   serialize :options
 
+  include OwnershipMixin
+  include TenancyMixin
+
+  belongs_to :tenant
+
   # TODO: DELETE ME!!!!
   ERRORS = {
     :incomplete => "Incomplete credentials",
@@ -118,6 +123,11 @@ class Authentication < ApplicationRecord
         fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
       end
     end
+  end
+
+  def native_ref
+    # to be overridden by individual provider/manager
+    manager_ref
   end
 
   private

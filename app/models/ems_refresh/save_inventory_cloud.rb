@@ -46,7 +46,7 @@ module EmsRefresh::SaveInventoryCloud
     end
 
     if hashes[:tag_mapper]
-      ManagerRefresh::SaveInventory.save_inventory(ems, [hashes[:tag_mapper].tags_to_resolve_collection])
+      InventoryRefresh::SaveInventory.save_inventory(ems, [hashes[:tag_mapper].tags_to_resolve_collection])
     end
 
     child_keys = [

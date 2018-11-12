@@ -23,4 +23,9 @@ class ApplicationRecord < ActiveRecord::Base
   def self.display_name(number = 1)
     n_(model_name.singular.titleize, model_name.plural.titleize, number)
   end
+
+  def self.human_attribute_name(attribute, options = {})
+    return super if options.delete(:ui) == true
+    "#{name}: #{super}"
+  end
 end

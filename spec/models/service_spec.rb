@@ -826,22 +826,73 @@ describe Service do
     let(:service_template) { FactoryGirl.create(:service_template) }
     let(:service) { FactoryGirl.create(:service, :service_template => service_template) }
 
-    describe "#custom_actions" do
-      it "get list of custom actions from linked service template" do
-        expect(service_template).to receive(:custom_actions)
-        service.custom_actions
+    context "with template" do
+      describe "#custom_actions" do
+        it "get list of custom actions from linked service template" do
+          expect(service_template).to receive(:custom_actions)
+          service.custom_actions
+        end
+      end
+
+      describe "#custom_action_buttons" do
+        it "get list of custom action buttons from linked service template" do
+          expect(service_template).to receive(:custom_action_buttons)
+          service.custom_action_buttons
+        end
       end
     end
 
-    describe "#custom_action_buttons" do
-      it "get list of custom action buttons from linked service template" do
-        expect(service_template).to receive(:custom_action_buttons)
-        service.custom_action_buttons
+    context "without template" do
+      let!(:custom_button) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
+      let(:service) { FactoryGirl.create(:service, :service_template_id => -1) }
+
+      describe "#custom_action_buttons" do
+        it "get list of custom action buttons on services" do
+          expect(service.custom_action_buttons).to include(custom_button)
+        end
+      end
+
+      describe "#custom_actions" do
+        it "get list of custom actions on services" do
+          expect(service.custom_actions).to include(:buttons => [a_hash_including("id" => custom_button.id)], :button_groups => [])
+        end
       end
     end
   end
 
   describe '#configuration_script' do
     it { expect(subject.configuration_script).to be_nil }
+  end
+
+  describe "#reconfigure_dialog" do
+    let(:service) { described_class.new(:options => {:dialog => "dialog_options"}) }
+    let(:dialog_serializer) { instance_double("DialogSerializer") }
+    let(:workflow) { instance_double("ResourceActionWorkflow", :dialog => "workflow_dialog") }
+
+    before do
+      allow(DialogSerializer).to receive(:new).and_return(dialog_serializer)
+      allow(dialog_serializer).to receive(:serialize).and_return("serialized_reconfigure_dialog")
+      allow(ResourceActionWorkflow).to receive(:new).and_return(workflow)
+      allow(service).to receive(:reconfigure_resource_action).and_return("reconfigure_resource_action")
+    end
+
+    it "creates a new resource action workflow" do
+      expect(ResourceActionWorkflow).to receive(:new).with(
+        "dialog_options",
+        User.current_user,
+        "reconfigure_resource_action",
+        :target => service, :reconfigure => true
+      )
+      service.reconfigure_dialog
+    end
+
+    it "serializes the dialog returned by the workflow with all attributes" do
+      expect(dialog_serializer).to receive(:serialize).with(Array["workflow_dialog"], true)
+      service.reconfigure_dialog
+    end
+
+    it "returns a serialized dialog" do
+      expect(service.reconfigure_dialog).to eq("serialized_reconfigure_dialog")
+    end
   end
 end

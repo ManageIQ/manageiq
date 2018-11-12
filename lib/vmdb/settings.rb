@@ -21,6 +21,10 @@ module Vmdb
     PASSWORD_FIELDS = Vmdb::SettingsWalker::PASSWORD_FIELDS
     DUMP_LOG_FILE   = Rails.root.join("log/last_settings.txt").freeze
 
+    # Magic value to reset a resource's setting to the parent's value
+    RESET_COMMAND = "<<reset>>".freeze
+    RESET_VALUE = HashDiffer::MissingKey
+
     cattr_accessor :last_loaded
 
     def self.init
@@ -44,11 +48,11 @@ module Vmdb
     end
 
     def self.activate
-      VMDB::Config::Activator.new(::Settings).activate
+      Vmdb::Settings::Activator.new(::Settings).activate
     end
 
     def self.validator(settings = ::Settings)
-      VMDB::Config::Validator.new(settings)
+      Vmdb::Settings::Validator.new(settings)
     end
     private_class_method :validator
 
@@ -61,13 +65,14 @@ module Vmdb
     end
 
     def self.save!(resource, hash)
-      new_settings = build_without_local(resource).load!.merge!(hash).to_hash
+      new_settings = build_without_local(resource).load!.merge!(hash.deep_symbolize_keys).to_hash
+      replace_magic_values!(new_settings, resource)
 
       valid, errors = validate(new_settings)
       raise ConfigurationInvalid.new(errors) unless valid # rubocop:disable Style/RaiseArgs
 
-      hash_for_parent = parent_settings_without_local(resource).load!.to_hash
-      diff = HashDiffer.diff(hash_for_parent, new_settings)
+      parent_settings = parent_settings_without_local(resource).load!.to_hash
+      diff = HashDiffer.diff(parent_settings, new_settings)
       encrypt_passwords!(diff)
       deltas = HashDiffer.diff_to_deltas(diff)
       apply_settings_changes(resource, deltas)
@@ -146,7 +151,7 @@ module Vmdb
     private_class_method :build_without_local
 
     def self.template_roots
-      Vmdb::Plugins.instance.vmdb_plugins.collect { |p| p.root.join('config') } << Rails.root.join('config')
+      Vmdb::Plugins.collect { |p| p.root.join('config') } << Rails.root.join('config')
     end
     private_class_method :template_roots
 
@@ -181,6 +186,18 @@ module Vmdb
       Kernel.const_set(::Config.const_name, settings)
     end
     private_class_method :reset_settings_constant
+
+    def self.replace_magic_values!(settings, resource)
+      parent_settings = nil
+
+      walk(settings) do |key, value, path, owner|
+        next unless value == RESET_COMMAND
+
+        parent_settings ||= parent_settings_without_local(resource).load!.to_hash
+        owner[key] = parent_settings.key_path?(path) ? parent_settings.fetch_path(path) : RESET_VALUE
+      end
+    end
+    private_class_method :replace_magic_values!
 
     def self.apply_settings_changes(resource, deltas)
       resource.transaction do

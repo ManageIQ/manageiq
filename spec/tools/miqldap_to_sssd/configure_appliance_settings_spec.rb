@@ -30,10 +30,10 @@ describe MiqLdapToSssd::ConfigureApplianceSettings do
 
       described_class.new.configure
 
-      config = miq_server.get_config("vmdb")
-      expect(config.config.fetch_path(:authentication, :mode)).to eq("httpd")
-      expect(config.config.fetch_path(:authentication, :ldap_role)).to eq(false)
-      expect(config.config.fetch_path(:authentication, :httpd_role)).to eq(true)
+      settings = miq_server.settings
+      expect(settings.fetch_path(:authentication, :mode)).to eq("httpd")
+      expect(settings.fetch_path(:authentication, :ldap_role)).to eq(false)
+      expect(settings.fetch_path(:authentication, :httpd_role)).to eq(true)
     end
   end
 end

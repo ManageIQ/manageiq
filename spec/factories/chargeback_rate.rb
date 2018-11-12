@@ -42,7 +42,6 @@ FactoryGirl.define do
           chargeback_rate_detail_memory_allocated
           chargeback_rate_detail_memory_used
           chargeback_rate_detail_net_io_used
-          chargeback_rate_detail_metering_used
         ).each do |factory_name|
           chargeback_rate.chargeback_rate_details << FactoryGirl.create(factory_name,
                                                                         :tiers_with_three_intervals,

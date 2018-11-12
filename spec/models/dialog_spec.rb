@@ -10,7 +10,7 @@ describe Dialog do
 
     it "seed files from plugins" do
       mock_engine = double(:root => Rails.root)
-      expect(Vmdb::Plugins.instance).to receive(:vmdb_plugins).and_return([mock_engine])
+      expect(Vmdb::Plugins).to receive(:each).and_yield(mock_engine)
 
       stub_const('Dialog::DIALOG_DIR_PLUGIN', test_file_path)
       stub_const('Dialog::DIALOG_DIR_CORE', 'non-existent-dir')
@@ -19,6 +19,43 @@ describe Dialog do
       )
       expect(mock_engine).to receive(:root)
       described_class.seed
+    end
+  end
+
+  describe "#initialize_with_given_values" do
+    let(:dialog) { described_class.new }
+    let(:field1) { DialogField.new(:name => "name1") }
+    let(:field2) { DialogField.new(:name => "name2") }
+
+    let(:given_values) do
+      {
+        "name1" => "One",
+        "name2" => "Two"
+      }
+    end
+
+    before do
+      allow(dialog).to receive(:dialog_fields).and_return([field1, field2])
+      allow(field1).to receive(:initialize_with_given_value)
+      allow(field2).to receive(:initialize_with_given_value)
+    end
+
+    it "sets the current dialog to each field" do
+      dialog.initialize_with_given_values(given_values)
+      expect(field1.dialog).to eq(dialog)
+      expect(field2.dialog).to eq(dialog)
+    end
+
+    it "sets the value from the given values to the value property for automate processing" do
+      dialog.initialize_with_given_values(given_values)
+      expect(field1.value).to eq("One")
+      expect(field2.value).to eq("Two")
+    end
+
+    it "calls initialize_with_given_value on each field" do
+      expect(field1).to receive(:initialize_with_given_value).with("One")
+      expect(field2).to receive(:initialize_with_given_value).with("Two")
+      dialog.initialize_with_given_values(given_values)
     end
   end
 
@@ -31,51 +68,30 @@ describe Dialog do
 
   context "validate label uniqueness" do
     it "with same label" do
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
+      dialog = FactoryGirl.create(:dialog)
+
+      expect { FactoryGirl.create(:dialog, :name => dialog.name) }
         .to raise_error(ActiveRecord::RecordInvalid, /Name is not unique within region/)
     end
 
     it "with different labels" do
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog')   }.to_not raise_error
-      expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog 1') }.to_not raise_error
-    end
-  end
+      FactoryGirl.create(:dialog)
 
-  context "#create" do
-    it "validates_presence_of name" do
-      expect do
-        FactoryGirl.create(:dialog, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog, :label => 'dialog') }.not_to raise_error
-
-      expect do
-        FactoryGirl.create(:dialog_tab, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog_tab, :label => 'tab') }.not_to raise_error
-
-      expect do
-        FactoryGirl.create(:dialog_group, :label => nil)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
-      expect { FactoryGirl.create(:dialog_group, :label => 'group') }.not_to raise_error
+      expect { FactoryGirl.create(:dialog) }.to_not raise_error
     end
   end
 
   context "#destroy" do
-    before do
-      @dialog = FactoryGirl.create(:dialog, :label => 'dialog')
-    end
-
     it "destroy without resource_action association" do
-      expect(@dialog.destroy).to be_truthy
+      expect(FactoryGirl.create(:dialog).destroy).to be_truthy
       expect(Dialog.count).to eq(0)
     end
 
     it "destroy with resource_action association" do
-      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
-      @dialog.reload
-      expect { @dialog.destroy }
-        .to raise_error(RuntimeError, /Dialog cannot be deleted.*connected to other components/)
+      dialog = FactoryGirl.create(:dialog)
+      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog, :resource_type => Dialog, :resource_id => dialog.id)
+      expect { dialog.destroy }
+      .to raise_error(RuntimeError, "Dialog cannot be deleted because it is connected to other components: [\"Dialog:#{dialog.id} - #{dialog.name}\"]")
       expect(Dialog.count).to eq(1)
     end
   end
@@ -418,6 +434,81 @@ describe Dialog do
       expect(DialogGroup.count).to eq(num_groups * 2)
       expect(DialogField.count).to eq(num_fields * 2)
       expect(ResourceAction.count).to eq(num_actions * 2)
+    end
+  end
+
+  describe "#load_values_into_fields" do
+    let(:dialog) { described_class.new(:dialog_tabs => [dialog_tab]) }
+    let(:dialog_tab) { DialogTab.new(:dialog_groups => [dialog_group]) }
+    let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1]) }
+    let(:dialog_field1) { DialogField.new(:value => "123", :name => "field1") }
+
+    context "string values" do
+      it "sets field value" do
+        vars = {"field1" => "10.8.99.248"}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+
+      it "sets field value when prefixed with 'dialog'" do
+        vars = {"dialog_field1" => "10.8.99.248"}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+
+      it "sets field value when in a hash with a key of 'parameters'" do
+        vars = {"parameters" => {"field1" => "10.8.99.248"}}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+
+      context "with multiple fields" do
+        let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1, dialog_field2]) }
+        let(:dialog_field1) { DialogField.new(:value => "123", :name => "field1") }
+        let(:dialog_field2) { DialogField.new(:value => "12", :name => "field2") }
+
+        it "sets multiple field values" do
+          vars = {"field1" => "10.8.99.248", "field2" => "new_value"}
+          dialog.load_values_into_fields(vars)
+          expect(dialog_field1.value).to eq("10.8.99.248")
+          expect(dialog_field2.value).to eq("new_value")
+        end
+      end
+    end
+
+    context "symbol values" do
+      it "sets field value" do
+        vars = {:field1 => "10.8.99.248"}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+
+      it "sets field value when prefixed with 'dialog'" do
+        vars = {:dialog_field1 => "10.8.99.248"}
+        dialog.load_values_into_fields(vars)
+        expect(dialog_field1.value).to eq("10.8.99.248")
+      end
+    end
+
+    context "when the incoming values are missing keys" do
+      let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1, dialog_field2]) }
+      let(:dialog_field2) { DialogField.new(:value => "321", :name => "field2") }
+
+      context "when overwrite is true" do
+        it "sets nil values" do
+          vars = {:field1 => "10.8.99.248"}
+          dialog.load_values_into_fields(vars)
+          expect(dialog_field2.value).to eq(nil)
+        end
+      end
+
+      context "when overwrite is false" do
+        it "does not set nil values" do
+          vars = {:field1 => "10.8.99.248"}
+          dialog.load_values_into_fields(vars, false)
+          expect(dialog_field2.value).to eq("321")
+        end
+      end
     end
   end
 

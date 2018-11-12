@@ -25,6 +25,15 @@ class MiqRequestTask < ApplicationRecord
   include MiqRequestMixin
   include TenancyMixin
 
+  CANCEL_STATUS_REQUESTED  = "cancel_requested".freeze
+  CANCEL_STATUS_PROCESSING = "canceling".freeze
+  CANCEL_STATUS_FINISHED   = "canceled".freeze
+  CANCEL_STATUS            = [CANCEL_STATUS_REQUESTED, CANCEL_STATUS_PROCESSING, CANCEL_STATUS_FINISHED].freeze
+
+  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
+                                                 :allow_nil => true,
+                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
+
   def approved?
     if miq_request.class.name.include?('Template') && miq_request_task
       miq_request_task.miq_request.approved?
@@ -94,8 +103,6 @@ class MiqRequestTask < ApplicationRecord
   def self.request_class
     if self <= MiqProvision
       MiqProvisionRequest
-    elsif self <= MiqHostProvision
-      MiqHostProvisionRequest
     else
       name.underscore.gsub(/_task$/, "_request").camelize.constantize
     end
@@ -200,6 +207,26 @@ class MiqRequestTask < ApplicationRecord
       update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
       return
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Request Task', 'Request Tasks', number)
+  end
+
+  def cancel
+    raise _("Cancel operation is not supported for %{class}") % {:class => self.class.name}
+  end
+
+  def cancel_requested?
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_REQUESTED
+  end
+
+  def canceling?
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_PROCESSING
+  end
+
+  def canceled?
+    cancelation_status == MiqRequestTask::CANCEL_STATUS_FINISHED
   end
 
   private

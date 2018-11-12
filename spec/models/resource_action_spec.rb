@@ -14,7 +14,9 @@ describe ResourceAction do
         :user_id          => user.id,
         :miq_group_id     => user.current_group.id,
         :tenant_id        => user.current_tenant.id,
+        :username         => user.userid,
         :attrs            => ae_attributes,
+        :open_url_task_id => nil
       }
     end
     let(:q_options) do
@@ -64,6 +66,16 @@ describe ResourceAction do
         ae_attributes['Array::target_object_ids'] = targets.collect { |t| "#{klass}::#{t.id}" }.join(",")
         expect(MiqQueue).to receive(:put).with(q_options).once
         ra.deliver_to_automate_from_dialog({}, targets, user)
+      end
+    end
+
+    context '#deliver_to_automate_from_dialog_with_miq_task' do
+      it '' do
+        allow(ra).to(receive(:deliver_to_automate_from_dialog))
+        miq_task = MiqTask.find(ra.deliver_to_automate_from_dialog_with_miq_task({}, nil, user))
+        expect(miq_task.state).to(eq(MiqTask::STATE_QUEUED))
+        expect(miq_task.status).to(eq(MiqTask::STATUS_OK))
+        expect(miq_task.message).to(eq('MiqTask has been queued.'))
       end
     end
   end

@@ -46,7 +46,7 @@ FactoryGirl.define do
 
   factory :chargeable_field_cpu_cores_used, :parent => :chargeable_field do
     description 'Used CPU in Cores'
-    metric      'cpu_usage_rate_average'
+    metric      'v_derived_cpu_total_cores_used'
     group       'cpu_cores'
     source      'used'
   end

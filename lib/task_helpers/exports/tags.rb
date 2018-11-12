@@ -27,10 +27,13 @@ module TaskHelpers
                end
 
         tags.each do |category|
-          fname = Exports.safe_filename(category.description, options[:keep_spaces])
-          cat = category.export_to_array
-          cat.first["ns"] = category.ns unless category.ns == '/managed'
-          File.write("#{export_dir}/#{fname}.yaml", cat.to_yaml)
+          $log.info("Exporting Tag Category: #{category.description} (ID: #{category.id})")
+
+          category_array = category.export_to_array
+          category_array.first["ns"] = category.ns unless category.ns == '/managed'
+
+          filename = Exports.safe_filename(category.description, options[:keep_spaces])
+          File.write("#{export_dir}/#{filename}.yaml", category_array.to_yaml)
         end
       end
     end

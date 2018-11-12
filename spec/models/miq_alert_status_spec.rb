@@ -22,7 +22,7 @@ describe MiqAlertStatus do
     it "should reject unexpected severities" do
       expect do
         FactoryGirl.create(:miq_alert_status, :severity => 'awesome')
-      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Severity must be accepted")
+      end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatus: Severity must be accepted")
     end
   end
 

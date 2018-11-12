@@ -64,7 +64,7 @@ describe MiqReportResult do
       end
 
       it "returns report all results, admin user logged" do
-        admin_role = FactoryGirl.create(:miq_user_role, :name => "EvmRole-administrator", :read_only => false)
+        admin_role = FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REPORT_ADMIN_FEATURE, :read_only => false)
         User.current_user.current_group.miq_user_role = admin_role
         report_result = MiqReportResult.with_current_user_groups
         expected_reports = [@report_result1, @report_result2, @report_result3, @report_result_nil_report_id]
@@ -103,6 +103,23 @@ describe MiqReportResult do
       expect(report_result.report_results.kind_of?(MiqReport)).to be_truthy
       expect(report_result.report_results.table).not_to be_nil
       expect(report_result.report_results.table.data).not_to be_nil
+    end
+
+    it "should not include `extras[:grouping]` in the report column" do
+      MiqReport.seed_report(name = "Vendor and Guest OS")
+      rpt = MiqReport.where(:name => name).last
+      rpt.generate_table(:userid => "test")
+      report_result = rpt.build_create_results(:userid => "test")
+
+      report_result.report
+      report_result.report.extras[:grouping] = { "extra data" => "not saved" }
+      report_result.save
+
+      result_reload = MiqReportResult.last
+
+      expect(report_result.report.kind_of?(MiqReport)).to be_truthy
+      expect(result_reload.report.extras[:grouping]).to be_nil
+      expect(report_result.report.extras[:grouping]).to eq("extra data" => "not saved")
     end
 
     context "for miq_report_result is used different miq_group_id than user's current id" do

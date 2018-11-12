@@ -1,4 +1,6 @@
 describe MiqGroup do
+  include Spec::Support::ArelHelper
+
   describe "#settings" do
     subject { FactoryGirl.create(:miq_group) }
 
@@ -110,7 +112,7 @@ describe MiqGroup do
 
   describe "#get_ldap_groups_by_user" do
     before do
-      stub_server_configuration(:authentication => {:group_memberships_max_depth => 1})
+      stub_settings(:authentication => {:group_memberships_max_depth => 1})
 
       miq_ldap = double('miq_ldap',
                         :fqusername      => 'fred',
@@ -566,6 +568,29 @@ describe MiqGroup do
       allow(role).to receive(:allows?).with(:identifier => 'sui_role_b').and_return(false)
 
       expect(subject.sui_product_features).to eq(%w(sui_role_a sui_role_c))
+    end
+  end
+
+  describe "#miq_user_role_name" do
+    let(:group) { FactoryGirl.build(:miq_group, :role => "the_role") }
+
+    it "calculates in ruby" do
+      expect(group.miq_user_role_name).to eq("EvmRole-the_role")
+    end
+
+    it "calculates in the database" do
+      group.save
+      expect(virtual_column_sql_value(MiqGroup.where(:id => group.id), "miq_user_role_name")).to eq("EvmRole-the_role")
+    end
+  end
+
+  describe ".with_roles_excluding" do
+    it "handles multiple columns" do
+      a = FactoryGirl.create(:miq_group, :features => "good")
+      FactoryGirl.create(:miq_group, :features => %w(good everything))
+      FactoryGirl.create(:miq_group, :features => "everything")
+
+      expect(MiqGroup.select(:id, :description).with_roles_excluding("everything")).to match_array([a])
     end
   end
 end

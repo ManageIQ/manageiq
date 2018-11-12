@@ -11,31 +11,40 @@ describe MiqLdapToSssd::ConfigureApache do
 
   describe '#onfigure' do
     let(:manageiq_pam_conf) do
-      <<-EOT.strip_heredoc
+      <<-PAM_CONF.strip_heredoc
         manageiq pam conf data
-      EOT
+      PAM_CONF
     end
 
     let(:manageiq_remote_user_conf) do
-      <<-EOT.strip_heredoc
+      <<-REMOTE_USER_CONF.strip_heredoc
         manageiq remote user conf data
-      EOT
+      REMOTE_USER_CONF
     end
 
     let(:manageiq_external_auth_conf) do
-      <<-EOT.strip_heredoc
+      <<-EXTERNAL_AUTH_KERB_CONF.strip_heredoc
         KrbMethodK5Passwd  Off
         KrbAuthRealms      <%= realm %>
         Krb5KeyTab         /etc/http.keytab
-      EOT
+      EXTERNAL_AUTH_KERB_CONF
     end
 
     let(:expected_manageiq_external_auth_conf) do
-      <<-EOT.strip_heredoc
+      <<-EXPECTED_EXTERNAL_AUTH_KERB_CONF.strip_heredoc
         KrbMethodK5Passwd  Off
         KrbAuthRealms      bob.your.uncle.com
         Krb5KeyTab         /etc/http.keytab
-      EOT
+      EXPECTED_EXTERNAL_AUTH_KERB_CONF
+    end
+
+    let(:manageiq_external_auth_gssapi_conf) do
+      <<-EXTERNAL_AUTH_GSSAPI_CONF.strip_heredoc
+        AuthType           GSSAPI
+        AuthName           "GSSAPI Single Sign On Login"
+        GssapiCredStore    keytab:/etc/http.keytab
+        GssapiLocalName    on
+      EXTERNAL_AUTH_GSSAPI_CONF
     end
 
     before do
@@ -73,14 +82,17 @@ describe MiqLdapToSssd::ConfigureApache do
       expect(File.read("#{@httpd_conf_dir}/manageiq-external-auth.conf")).to eq(expected_manageiq_external_auth_conf)
     end
 
-    it 'raises an error when a TEMPLATE file is missing' do
-      FileUtils.rm_f("#{@pam_template_dir}/httpd-auth")
-      expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
-      expect { described_class.new(@initial_settings).configure }.to raise_error(MiqLdapToSssd::ConfigureApacheError)
+    it 'silently ignores missing KrbAuthRealms when creating the gssapi httpd config file' do
+      File.open("#{@httpd_template_dir}/manageiq-external-auth.conf.erb", "w") do |f|
+        f.write(manageiq_external_auth_gssapi_conf)
+      end
+
+      described_class.new(@initial_settings).configure
+      expect(File.read("#{@httpd_conf_dir}/manageiq-external-auth.conf")).to eq(manageiq_external_auth_gssapi_conf)
     end
 
-    it 'raises an error when KrbAuthRealms is missing from manageiq-external-auth.conf' do
-      File.open("#{@httpd_template_dir}/manageiq-external-auth.conf.erb", "w") { |f| f.write("hello walls") }
+    it 'raises an error when a TEMPLATE file is missing' do
+      FileUtils.rm_f("#{@pam_template_dir}/httpd-auth")
       expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
       expect { described_class.new(@initial_settings).configure }.to raise_error(MiqLdapToSssd::ConfigureApacheError)
     end

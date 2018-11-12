@@ -88,4 +88,8 @@ class MiqDatabase < ApplicationRecord
   def registration_organization_name
     registration_organization_display_name || registration_organization
   end
+
+  def self.display_name(number = 1)
+    n_('Database', 'Databases', number)
+  end
 end

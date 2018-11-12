@@ -54,6 +54,49 @@ describe MeteringVm do
       :parent_storage_id     => storage.id,
     }
   end
+  context 'without metric rollups' do
+    let(:cores)               { 7 }
+    let(:mem_mb)              { 1777 }
+    let(:disk_gb)             { 7 }
+    let(:disk_b)              { disk_gb * 1024**3 }
+    let(:metering_used_hours) { 24 }
+
+    let(:hardware) do
+      FactoryGirl.create(:hardware,
+                         :cpu_total_cores => cores,
+                         :memory_mb       => mem_mb,
+                         :disks           => [FactoryGirl.create(:disk, :size => disk_b)])
+    end
+
+    context 'for SCVMM (hyper-v)' do
+      before do
+        cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
+        FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+        @tag = Tag.find_by(:name => "/managed/environment/prod")
+      end
+
+      let!(:vm1) do
+        vm = FactoryGirl.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day)
+        vm.tag_with(@tag.name, :ns => '*')
+        vm
+      end
+
+      let(:options) { base_options.merge(:interval => 'daily', :tag => '/managed/environment/prod') }
+
+      subject { MeteringVm.build_results_for_report_ChargebackVm(options).first.first }
+
+      it 'fixed compute is calculated properly' do
+        expect(subject.fixed_compute_metric).to eq(1) # One day of fixed compute metric
+      end
+
+      it 'allocated metrics are calculated properly' do
+        expect(subject.memory_allocated_metric).to  eq(mem_mb)
+        expect(subject.metering_used_metric).to     eq(0) # metric rollups are not used
+        expect(subject.cpu_allocated_metric).to     eq(cores)
+        expect(subject.storage_allocated_metric).to eq(disk_b)
+      end
+    end
+  end
 
   context 'monthly' do
     subject { MeteringVm.build_results_for_report_MeteringVm(options).first.first }
@@ -127,6 +170,23 @@ describe MeteringVm do
         expect(subject.metering_used_metric).to eq(40)
         expect(subject.metering_used_metric).not_to eq(subject.fixed_compute_metric)
       end
+
+      it 'calculates metering used hours only from allocated metrics' do
+        expect(subject.metering_allocated_cpu_metric).to eq(60)
+        expect(subject.metering_allocated_memory_metric).to eq(60)
+      end
+
+      context 'with uncompleted allocation of cpu and mem' do
+        before do
+          vm.metric_rollups.limit(20).each { |record| record.update(:derived_vm_numvcpus => 0) }
+          vm.metric_rollups.limit(25).each { |record| record.update(:derived_memory_available => 0) }
+        end
+
+        it 'calculates metering used hours only from allocated metrics' do
+          expect(subject.metering_allocated_cpu_metric).to eq(40)
+          expect(subject.metering_allocated_memory_metric).to eq(35)
+        end
+      end
     end
   end
 
@@ -155,6 +215,8 @@ describe MeteringVm do
        net_io_used_metric
        storage_allocated_metric
        storage_used_metric
+       metering_allocated_cpu_metric
+       metering_allocated_memory_metric
        metering_used_metric
        existence_hours_metric
        tenant_name
@@ -169,17 +231,19 @@ describe MeteringVm do
 
   let(:report_col_options) do
     {
-      "cpu_allocated_metric"     => {:grouping => [:total]},
-      "cpu_used_metric"          => {:grouping => [:total]},
-      "disk_io_used_metric"      => {:grouping => [:total]},
-      "existence_hours_metric"   => {:grouping => [:total]},
-      "fixed_compute_metric"     => {:grouping => [:total]},
-      "memory_allocated_metric"  => {:grouping => [:total]},
-      "memory_used_metric"       => {:grouping => [:total]},
-      "metering_used_metric"     => {:grouping => [:total]},
-      "net_io_used_metric"       => {:grouping => [:total]},
-      "storage_allocated_metric" => {:grouping => [:total]},
-      "storage_used_metric"      => {:grouping => [:total]},
+      "cpu_allocated_metric"             => {:grouping => [:total]},
+      "cpu_used_metric"                  => {:grouping => [:total]},
+      "disk_io_used_metric"              => {:grouping => [:total]},
+      "existence_hours_metric"           => {:grouping => [:total]},
+      "fixed_compute_metric"             => {:grouping => [:total]},
+      "memory_allocated_metric"          => {:grouping => [:total]},
+      "metering_allocated_cpu_metric"    => {:grouping => [:total]},
+      "metering_allocated_memory_metric" => {:grouping => [:total]},
+      "memory_used_metric"               => {:grouping => [:total]},
+      "metering_used_metric"             => {:grouping => [:total]},
+      "net_io_used_metric"               => {:grouping => [:total]},
+      "storage_allocated_metric"         => {:grouping => [:total]},
+      "storage_used_metric"              => {:grouping => [:total]},
     }
   end
 

@@ -4,9 +4,11 @@ module TaskHelpers
       def export(options = {})
         export_dir = options[:directory]
 
-        MiqAlert.order(:id).all.each do |a|
-          fname = Exports.safe_filename(a.description, options[:keep_spaces])
-          File.write("#{export_dir}/#{fname}.yaml", a.export_to_yaml)
+        MiqAlert.order(:id).all.each do |alert|
+          $log.info("Exporting Alert: #{alert.description} (ID: #{alert.id})")
+
+          filename = Exports.safe_filename(alert.description, options[:keep_spaces])
+          File.write("#{export_dir}/#{filename}.yaml", alert.export_to_yaml)
         end
       end
     end

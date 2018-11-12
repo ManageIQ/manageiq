@@ -29,12 +29,12 @@ class MiqRetireTask < MiqRequestTask
         :object_id     => id,
         :attrs         => {"request" => req_type},
         :instance_name => "AUTOMATION",
-        :user_id       => 1,
-        :miq_group_id  => 2,
-        :tenant_id     => 1,
+        :user_id       => miq_request.requester.id,
+        :miq_group_id  => miq_request.requester.current_group_id,
+        :tenant_id     => miq_request.requester.current_group.tenant_id,
       }
 
-      args[:attrs].merge!(MiqAeEngine.create_automation_attributes(source.class.base_model.name => source))
+      MiqAeEngine::set_automation_attributes_from_objects(source, args[:attrs])
 
       zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
@@ -84,5 +84,9 @@ class MiqRetireTask < MiqRequestTask
         s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.") unless id == s.id
       end
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Retire Task', 'Retire Tasks', number)
   end
 end

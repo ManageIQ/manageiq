@@ -32,7 +32,7 @@ class ChargebackContainerProject < Chargeback
                 elsif provider_id == "all"
                   ContainerProject.all
                 elsif provider_id.present? && project_id == "all"
-                  ContainerProject.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+                  ContainerProject.where(:ems_id => provider_id)
                 elsif project_id.present?
                   ContainerProject.where(:id => project_id)
                 elsif project_id.nil? && provider_id.nil? && filter_tag.nil?
@@ -64,12 +64,14 @@ class ChargebackContainerProject < Chargeback
       "fixed_cost"            => {:grouping => [:total]},
       "memory_used_cost"      => {:grouping => [:total]},
       "memory_used_metric"    => {:grouping => [:total]},
-      "metering_used_metric"  => {:grouping => [:total]},
-      "metering_used_cost"    => {:grouping => [:total]},
       "net_io_used_cost"      => {:grouping => [:total]},
       "net_io_used_metric"    => {:grouping => [:total]},
       "total_cost"            => {:grouping => [:total]}
     }
+  end
+
+  def self.display_name(number = 1)
+    n_('Chargeback for Projects', 'Chargebacks for Projects', number)
   end
 
   private

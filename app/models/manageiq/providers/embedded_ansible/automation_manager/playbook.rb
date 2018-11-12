@@ -16,8 +16,13 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook <
   def raw_create_job_template(options)
     job_template_klass = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript
     jt_options = build_parameter_list(options)
-    _log.info("Creating job template with options (#{jt_options})")
+    _log.info("Creating job template with options:")
+    $log.log_hashes(jt_options)
     job_template_klass.raw_create_in_provider(manager, jt_options)
+  end
+
+  def self.display_name(number = 1)
+    n_('Playbook (Embedded Ansible)', 'Playbooks (Embedded Ansible)', number)
   end
 
   private
@@ -41,7 +46,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook <
 
     %i(credential vault_credential cloud_credential network_credential).each do |credential|
       cred_sym = "#{credential}_id".to_sym
-      params[credential] = Authentication.find(options[cred_sym]).manager_ref if options[cred_sym].present?
+      params[credential] = Authentication.find(options[cred_sym]).native_ref if options[cred_sym].present?
     end
 
     params.compact

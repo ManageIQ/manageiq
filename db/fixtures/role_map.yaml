@@ -17,3 +17,4 @@ EvmGroup-consumption_administrator: consumption_administrator
 EvmGroup-container_administrator: container_administrator
 EvmGroup-container_operator: container_operator
 EvmGroup-reader: reader
+EvmGroup-physical_infrastructure: physical_infrastructure

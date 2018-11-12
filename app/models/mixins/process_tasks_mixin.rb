@@ -7,7 +7,7 @@ module ProcessTasksMixin
     def process_tasks(options)
       raise _("No ids given to process_tasks") if options[:ids].blank?
       if options[:task] == 'retire_now'
-        name.constantize.make_retire_request(*options[:ids])
+        name.constantize.make_retire_request(*options[:ids], User.current_user)
       elsif options[:task] == "refresh_ems" && respond_to?("refresh_ems")
         refresh_ems(options[:ids])
         msg = "'#{options[:task]}' initiated for #{options[:ids].length} #{ui_lookup(:table => base_class.name).pluralize}"
@@ -54,6 +54,8 @@ module ProcessTasksMixin
         invoke_task_local(task, instance, options, args)
 
         msg = "#{instance.name}: '#{options[:task]}' initiated"
+        msg = "[Name: #{instance.name},Id: #{instance.id}, Ems_ref: #{instance.ems_ref}] Record destroyed" if options[:task] == 'destroy'
+
         task_audit_event(:success, options, :target_id => instance.id, :message => msg)
         task.update_status("Queued", "Ok", "Task has been queued") if task
       end
@@ -117,13 +119,26 @@ module ProcessTasksMixin
 
       if resource_ids.present?
         resource_ids.each do |id|
-          obj = collection.find(id)
-          _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
-          obj.send(action, post_args)
+          begin
+            obj = collection.find(id)
+          rescue ManageIQ::API::Client::ResourceNotFound => err
+            _log.error(err.message)
+          else
+            _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
+            begin
+              obj.send(action, post_args)
+            rescue NoMethodError => err
+              _log.error(err.message)
+            end
+          end
         end
       else
         _log.info("Invoking task #{action} on collection #{collection_name}, with args #{post_args}")
-        collection.send(action, post_args)
+        begin
+          collection.send(action, post_args)
+        rescue NoMethodError => err
+          _log.error(err.message)
+        end
       end
     end
 

@@ -1,4 +1,4 @@
-require 'manager_refresh/inventory_object'
+require 'inventory_refresh/inventory_object'
 
 context "save_tags_inventory" do
   # @return [Tag] a tag in a category linked to a mapping.
@@ -6,7 +6,7 @@ context "save_tags_inventory" do
     mapping = FactoryGirl.create(:tag_mapping_with_category,
                                  :category_name        => category_name,
                                  :category_description => category_name)
-    category = mapping.tag.category
+    category = mapping.tag.classification
     entry = category.add_entry(:name => tag_name, :description => tag_name)
     entry.tag
   end
@@ -29,16 +29,16 @@ context "save_tags_inventory" do
   let(:data) do
     {
       :tags => [
-        instance_double(ManagerRefresh::InventoryObject, :id => @tag1.id),
-        instance_double(ManagerRefresh::InventoryObject, :id => @tag2.id),
-        instance_double(ManagerRefresh::InventoryObject, :id => @tag3.id),
+        instance_double(InventoryRefresh::InventoryObject, :id => @tag1.id),
+        instance_double(InventoryRefresh::InventoryObject, :id => @tag2.id),
+        instance_double(InventoryRefresh::InventoryObject, :id => @tag3.id),
       ]
     }
   end
   let(:data2) do
     {
       :tags => [
-        instance_double(ManagerRefresh::InventoryObject, :id => @tag2.id),
+        instance_double(InventoryRefresh::InventoryObject, :id => @tag2.id),
       ]
     }
   end

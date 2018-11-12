@@ -168,6 +168,29 @@ describe PglogicalSubscription do
   end
 
   describe "#save!" do
+    context "failover monitor reloading" do
+      let(:sub) { described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234") }
+      before do
+        allow(pglogical).to receive(:subscriptions).and_return([])
+        allow(pglogical).to receive(:enabled?).and_return(true)
+        allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
+        allow(pglogical).to receive(:subscription_create).and_return(double(:check => nil))
+        allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+        allow(sub).to receive(:remote_region_number).and_return(remote_region1)
+        allow(sub).to receive(:ensure_node_created).and_return(true)
+      end
+
+      it "doesn't queue a message to restart the failover monitor service when passed 'false'" do
+        sub.save!(false)
+        expect(MiqQueue.where(:method_name => "restart_failover_monitor_service")).to be_empty
+      end
+
+      it "queues a message to restart the failover monitor when called without args" do
+        sub.save!
+        expect(MiqQueue.where(:method_name => "restart_failover_monitor_service").count).to eq(1)
+      end
+    end
+
     it "raises when subscribing to the same region" do
       allow(pglogical).to receive(:subscriptions).and_return([])
       allow(pglogical).to receive(:enabled?).and_return(true)
@@ -290,7 +313,33 @@ describe PglogicalSubscription do
     end
   end
 
+  describe ".delete_all" do
+    let(:subscription1) { double }
+    let(:subscription2) { double }
+
+    after do
+      expect(MiqQueue.where(:method_name => "restart_failover_monitor_service").count).to eq(1)
+    end
+
+    it "deletes all subscriptions if no parameter passed" do
+      allow(described_class).to receive(:find).with(:all).and_return([subscription1, subscription2])
+      expect(subscription1).to receive(:delete)
+      expect(subscription2).to receive(:delete)
+      described_class.delete_all
+    end
+
+    it "only deletes subscriptions listed in parameter if parameter passed" do
+      expect(subscription1).to receive(:delete)
+      expect(subscription2).not_to receive(:delete)
+      described_class.delete_all([subscription1])
+    end
+  end
+
   describe ".save_all!" do
+    after do
+      expect(MiqQueue.where(:method_name => "restart_failover_monitor_service").count).to eq(1)
+    end
+
     it "saves each of the objects" do
       allow(pglogical).to receive(:subscriptions).and_return([])
       allow(pglogical).to receive(:enabled?).and_return(true)
@@ -375,6 +424,15 @@ describe PglogicalSubscription do
       expect(pglogical).to receive(:disable)
 
       sub.delete
+    end
+
+    it "doesn't queue a failover monitor restart when passed false" do
+      allow(pglogical).to receive(:subscriptions).and_return(subscriptions, [subscriptions.last])
+
+      expect(pglogical).to receive(:subscription_drop).with("region_#{remote_region1}_subscription", true)
+      expect(MiqQueue.where(:method_name => "restart_failover_monitor_service")).to be_empty
+
+      sub.delete(false)
     end
   end
 

@@ -1,4 +1,9 @@
 class DialogFieldDropDownList < DialogFieldSortedItem
+  def initialize_with_given_value(given_value)
+    super
+    coerce_default_value_into_proper_format if force_multi_value
+  end
+
   def show_refresh_button?
     !!show_refresh_button
   end
@@ -14,7 +19,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def initial_values
-    [[nil, "<None>"]]
+    [[nil, N_("<None>")]]
   end
 
   def refresh_json_value(checked_value)

@@ -178,8 +178,8 @@ describe MiqAction do
 
     it "asynchronous" do
       input = {:synchronous => false}
-      zone  = 'Test Zone'
-      allow(@vm).to receive_messages(:my_zone => zone)
+      zone  = FactoryGirl.create(:zone)
+      allow(@vm).to receive_messages(:my_zone => zone.name)
 
       Timecop.freeze do
         date   = Time.now.utc - 1.day
@@ -190,7 +190,7 @@ describe MiqAction do
         expect(msg.class_name).to eq(@vm.class.name)
         expect(msg.method_name).to eq('retire')
         expect(msg.args).to eq([[@vm], :date => date])
-        expect(msg.zone).to eq(zone)
+        expect(msg.zone).to eq(zone.name)
       end
     end
   end
@@ -419,6 +419,52 @@ describe MiqAction do
       it 'should generate a MiqAction invoking action_email' do
         expect(MiqQueue).to receive(:put).with(q_options).once
         action.action_email(action, nil, inputs)
+      end
+
+      context 'when alerting' do
+        before do
+          NotificationType.instance_variable_set(:@names, nil)
+          NotificationType.seed if NotificationType.all.empty?
+        end
+
+        let(:description) { 'my alert' }
+        let(:alert) { MiqAlert.new(:description => description) }
+        let(:event) { MiqEventDefinition.new(:name => "AlertEvent", :description => "Alert condition met") }
+        let(:vm) { Vm.new(:name => "vm1") }
+        let(:inputs) do
+          {
+            :policy          => alert,
+            :event           => event,
+            :synchronous     => false,
+            :results         => true,
+            :sequence        => 1,
+            :triggering_type => "vm_retired",
+            :triggering_data => {:subject => 'vm1'},
+          }
+        end
+
+        let(:args) do
+          [{
+            :to              => nil,
+            :from            => "cfadmin@cfserver.com",
+            :subject         => "Alert Triggered: my alert, for (VM) vm1",
+            :miq_action_hash => {
+              :header            => "Alert Triggered",
+              :policy_detail     => "Alert 'my alert', triggered",
+              :event_description => "Alert condition met",
+              :event_details     => "Virtual Machine vm1 has been retired.",
+              :entity_type       => "Vm",
+              :entity_name       => "vm1",
+            }
+          }]
+        end
+
+        it 'generates an MiqAlert email' do
+          q_options[:args] = args
+
+          expect(MiqQueue).to receive(:put).with(q_options).once
+          action.action_email(action, vm, inputs)
+        end
       end
     end
   end

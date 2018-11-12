@@ -10,8 +10,6 @@ module Metric::CiMixin::Capture
       self
     elsif respond_to?(:ext_management_system) && ext_management_system.present?
       ext_management_system
-    elsif respond_to?(:old_ext_management_system) && old_ext_management_system.present?
-      old_ext_management_system
     end
   end
 
@@ -132,6 +130,12 @@ module Metric::CiMixin::Capture
       raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
     end
     raise ArgumentError, _("end_time cannot be specified if start_time is nil") if start_time.nil? && !end_time.nil?
+
+    # if target (== self) is archived, skip it
+    if respond_to?(:ems_id) && ems_id.nil?
+      _log.warn("C&U collection's target is archived (no EMS associated), skipping. Target: #{log_target}")
+      return
+    end
 
     start_time, end_time = fix_capture_start_end_time(interval_name, start_time, end_time)
     start_range, end_range, counters_data = just_perf_capture(interval_name, start_time, end_time)

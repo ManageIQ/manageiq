@@ -90,7 +90,8 @@ describe AuthenticationMixin do
 
   context "authorization event and check for container providers" do
     before do
-      allow(MiqServer).to receive(:my_zone).and_return("default")
+      zone = FactoryGirl.create(:zone)
+      allow(MiqServer).to receive(:my_zone).and_return(zone.name)
     end
 
     it "should be triggered for kubernetes" do

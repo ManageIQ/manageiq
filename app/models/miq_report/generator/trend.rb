@@ -42,14 +42,13 @@ module MiqReport::Generator::Trend
                                   :filter       => db_options[:trend_filter],
                                   :userid       => options[:userid],
                                   :miq_group_id => options[:miq_group_id])
-    klass = db.kind_of?(Class) ? db : Object.const_get(db)
-    self.title = klass.report_title(db_options)
-    self.cols, self.headers = klass.report_cols(db_options)
+    self.title = db_klass.report_title(db_options)
+    self.cols, self.headers = db_klass.report_cols(db_options)
     options[:only] ||= cols_for_report
 
     # Build and filter trend data from performance data
     build_apply_time_profile(results)
-    results = klass.build(results, db_options)
+    results = db_klass.build(results, db_options)
 
      if conditions
       tz = User.find_by_userid(options[:userid]).get_timezone if options[:userid]

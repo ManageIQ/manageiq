@@ -168,8 +168,17 @@ class MiqCockpitWsWorker::Runner < MiqWorker::Runner
 
     stop_drb_service
     acl = ACL.new(%w(deny all allow 127.0.0.1/32))
-    @drb_server = DRb::DRbServer.new(@drb_uri || "druby://127.0.0.1:0",
-                                     MiqCockpitWsWorker::Authenticator, acl)
+
+    if @drb_uri
+      @drb_server = DRb::DRbServer.new(@drb_uri, MiqCockpitWsWorker::Authenticator, acl)
+    else
+      require 'tmpdir'
+      Dir::Tmpname.create("cockpit", nil) do |path|
+        @drb_server = DRb::DRbServer.new("drbunix://#{path}", MiqCockpitWsWorker::Authenticator, acl)
+        FileUtils.chmod(0o750, path)
+      end
+    end
+
     @drb_uri = @drb_server.uri
     _log.info("#{log_prefix} Started drb Process at #{@drb_uri}")
   end

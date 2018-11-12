@@ -4,11 +4,14 @@ class NotificationType < ApplicationRecord
   AUDIENCE_TENANT = 'tenant'.freeze
   AUDIENCE_GLOBAL = 'global'.freeze
   AUDIENCE_SUPERADMIN = 'superadmin'.freeze
+  # don't send out notifications, but keep the template around
+  AUDIENCE_NONE = 'none'.freeze
   has_many :notifications
   validates :message, :presence => true
   validates :level, :inclusion => { :in => %w(success error warning info) }
+  validates :link_to, :inclusion => { :in => %w(subject initiator cause) }, :allow_blank => true
   validates :audience, :inclusion => {
-    :in => [AUDIENCE_USER, AUDIENCE_GROUP, AUDIENCE_TENANT, AUDIENCE_GLOBAL, AUDIENCE_SUPERADMIN]
+    :in => [AUDIENCE_USER, AUDIENCE_GROUP, AUDIENCE_TENANT, AUDIENCE_GLOBAL, AUDIENCE_SUPERADMIN, AUDIENCE_NONE]
   }
 
   def subscriber_ids(subject, initiator)
@@ -24,10 +27,18 @@ class NotificationType < ApplicationRecord
         subject.tenant
       elsif initiator.kind_of?(User)
         initiator.current_tenant
-      end.try(:user_ids)
+      end.try(:user_ids).try(:uniq)
     when AUDIENCE_SUPERADMIN
       User.superadmins.pluck(:id)
+    when AUDIENCE_NONE
+      []
     end
+  end
+
+  # this disables notifications, but allows the notification to still exist
+  # this notification template can be used for emails
+  def enabled?
+    audience != AUDIENCE_NONE
   end
 
   def self.names

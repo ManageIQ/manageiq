@@ -7,7 +7,6 @@ class MiqDialog < ApplicationRecord
   DIALOG_TYPES = [
     [_("VM Provision"),                "MiqProvisionWorkflow"],
     [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
-    [_("Host Provision"),              "MiqHostProvisionWorkflow"],
     [_("VM Migrate"),                  "VmMigrateWorkflow"],
     [_("Physical Server Provision"),   "PhysicalServerProvisionWorkflow"]
   ].freeze
@@ -24,7 +23,7 @@ class MiqDialog < ApplicationRecord
   end
 
   def self.sync_from_plugins
-    Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
+    Vmdb::Plugins.each do |plugin|
       sync_from_dir(plugin.root.join('content', 'miq_dialogs'))
     end
   end
@@ -48,5 +47,9 @@ class MiqDialog < ApplicationRecord
       _log.info("[#{item[:name]}] file has been added to disk, adding to model")
       create(item)
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Dialog', 'Dialogs', number)
   end
 end

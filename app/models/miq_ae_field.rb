@@ -102,6 +102,10 @@ class MiqAeField < ApplicationRecord
 
   delegate :editable?, :to => :ae_class
 
+  def self.display_name(number = 1)
+    n_('Automation Field', 'Automation Fields', number)
+  end
+
   private
 
   def set_default_value(value)

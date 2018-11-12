@@ -1,5 +1,8 @@
 describe MiqServer do
-  include_examples ".seed called multiple times"
+  context ".seed" do
+    before { Zone.seed }
+    include_examples ".seed called multiple times"
+  end
 
   context "#hostname" do
     it("with a valid hostname")    { expect(MiqServer.new(:hostname => "test").hostname).to eq("test") }
@@ -447,6 +450,20 @@ describe MiqServer do
 
     it "Inactive status returns false" do
       expect(described_class.new(:status => "stopped").active?).to be_falsey
+    end
+  end
+
+  describe "#zone_description" do
+    it "delegates to zone" do
+      _, miq_server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      expect(miq_server.zone_description).to eq(zone.description)
+    end
+  end
+
+  describe "#description" do
+    it "doesnt blowup" do
+      s = described_class.new(:name => "name")
+      expect(s.description).to eq(s.name)
     end
   end
 end

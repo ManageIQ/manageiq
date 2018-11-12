@@ -1,12 +1,13 @@
 describe MetricRollup do
   describe '#parents_determining_rate' do
+    let(:ems) { FactoryGirl.build(:ems_vmware) }
+
     before do
       MiqRegion.seed
       MiqEnterprise.seed
     end
 
     context 'VmOrTemplate' do
-      let(:ems) { FactoryGirl.build(:ems_vmware) }
       let(:ems_cluster) { FactoryGirl.build(:ems_cluster, :ext_management_system => ems) }
       let(:storage) { FactoryGirl.build(:storage_target_vmware) }
       let(:host) { FactoryGirl.build(:host) }

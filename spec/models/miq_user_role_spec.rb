@@ -1,6 +1,6 @@
 describe MiqUserRole do
   before do
-    @expected_user_role_count = 18
+    @expected_user_role_count = 19
   end
 
   context ".seed" do
@@ -16,6 +16,8 @@ describe MiqUserRole do
     end
 
     it "with existing records" do
+      # administrator is a role that we know is provide with the product
+      # this is not testing administrator privileges
       changed   = FactoryGirl.create(:miq_user_role, :name => "EvmRole-administrator", :read_only => false)
       unchanged = FactoryGirl.create(:miq_user_role, :name => "xxx", :read_only => false)
       unchanged_orig_updated_at = unchanged.updated_at
@@ -50,6 +52,8 @@ describe MiqUserRole do
         host_show_list
         policy
         vm
+        dialog_edit_editor
+        rbac_tenant_manage_quotas
       ))
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
@@ -66,6 +70,37 @@ describe MiqUserRole do
       @role3   = FactoryGirl.create(:miq_user_role, :name => "Role3", :miq_product_features => feature3)
       @group3  = FactoryGirl.create(:miq_group, :description => "Group3", :miq_user_role => @role3)
       @user3   = FactoryGirl.create(:user, :userid => "user3", :miq_groups => [@group3])
+    end
+
+    context "dynamic tenant product features" do
+      let(:root_tenant) do
+        Tenant.seed
+        Tenant.default_tenant
+      end
+
+      let!(:tenant_1) { FactoryGirl.create(:tenant, :parent => root_tenant) }
+      let!(:tenant_2) { FactoryGirl.create(:tenant, :parent => root_tenant) }
+
+      let(:feature) { MiqProductFeature.find_all_by_identifier(["dialog_edit_editor_tenant_#{tenant_2.id}", "rbac_tenant_manage_quotas_tenant_#{tenant_2.id}"]) }
+      let(:role)           { FactoryGirl.create(:miq_user_role, :miq_product_features => feature) }
+      let(:group_tenant_1) { FactoryGirl.create(:miq_group, :miq_user_role => role, :tenant => tenant_1) }
+      let(:group_tenant_2) { FactoryGirl.create(:miq_group, :miq_user_role => role, :tenant => tenant_2) }
+      let!(:user_1) { FactoryGirl.create(:user, :userid => "user_1", :miq_groups => [group_tenant_1]) }
+      let!(:user_2) { FactoryGirl.create(:user, :userid => "user_2", :miq_groups => [group_tenant_2]) }
+
+      it "doesn't authorise user without dynamic product feature" do
+        User.with_user(user_1) do
+          expect(user_1.role_allows?(:identifier => "dialog_edit_editor")).to be_falsey
+          expect(user_1.role_allows?(:identifier => "rbac_tenant_manage_quotas")).to be_falsey
+        end
+      end
+
+      it "authorise user with dynamic product feature" do
+        User.with_user(user_2) do
+          expect(user_2.role_allows?(:identifier => "dialog_edit_editor")).to be_truthy
+          expect(user_2.role_allows?(:identifier => "rbac_tenant_manage_quotas")).to be_truthy
+        end
+      end
     end
 
     it "should return the correct answer calling allows? when requested feature is directly assigned or a descendant of a feature in a role" do
@@ -172,31 +207,51 @@ describe MiqUserRole do
     expect(MiqUserRole.count).to eq(1)
   end
 
+  let(:super_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::SUPER_ADMIN_FEATURE) }
+  let(:tenant_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::TENANT_ADMIN_FEATURE) }
+  let(:report_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REPORT_ADMIN_FEATURE) }
+  let(:request_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REQUEST_ADMIN_FEATURE) }
+  let(:regular_role) { FactoryGirl.create(:miq_user_role) }
+
   describe "#super_admin_user?" do
     it "detects super admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_super_admin_user
+      expect(super_admin_role).to be_super_admin_user
     end
 
     it "detects admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).not_to be_super_admin_user
+      expect(report_admin_role).not_to be_super_admin_user
     end
 
     it "detects non-admin" do
-      expect(FactoryGirl.build(:miq_user_role)).not_to be_super_admin_user
+      expect(regular_role).not_to be_super_admin_user
     end
   end
 
-  describe "#admin_user?" do
+  describe "#report_admin_user?" do
     it "detects super admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "super_administrator")).to be_admin_user
+      expect(super_admin_role).to be_report_admin_user
     end
 
     it "detects admin" do
-      expect(FactoryGirl.build(:miq_user_role, :role => "administrator")).to be_admin_user
+      expect(report_admin_role).to be_report_admin_user
     end
 
     it "detects non-admin" do
-      expect(FactoryGirl.build(:miq_user_role)).not_to be_admin_user
+      expect(regular_role).not_to be_report_admin_user
+    end
+  end
+
+  describe "#tenant_admin" do
+    it "detects tenant_admin" do
+      expect(tenant_admin_role).to be_tenant_admin_user
+    end
+
+    it "detects super_admin" do
+      expect(super_admin_role).to be_tenant_admin_user
+    end
+
+    it "does not detect regular role" do
+      expect(regular_role).not_to be_tenant_admin_user
     end
   end
 
@@ -237,6 +292,16 @@ describe MiqUserRole do
       role = FactoryGirl.create(:miq_user_role)
       FactoryGirl.create_list(:miq_group, 2, :miq_user_role => role)
       expect(role.group_count).to eq(2)
+    end
+  end
+
+  describe ".with_roles_excluding" do
+    it "handles multiple columns" do
+      a = FactoryGirl.create(:miq_user_role, :features => "good")
+      FactoryGirl.create(:miq_user_role, :features => %w(good everything))
+      FactoryGirl.create(:miq_user_role, :features => "everything")
+
+      expect(MiqUserRole.select(:id, :name).with_roles_excluding("everything")).to match_array([a])
     end
   end
 end

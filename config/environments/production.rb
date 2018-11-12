@@ -18,9 +18,8 @@ Vmdb::Application.configure do
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
-  # Fallback to the asset pipeline if a precompiled asset is missed.
-  # TODO: Once everything is in the asset pipeline, this should be set back to false.
-  config.assets.compile = true
+  # Do not fallback to assets pipeline if a precompiled asset is missed.
+  config.assets.compile = false
 
   # Generate digests for assets URLs
   config.assets.digest = true

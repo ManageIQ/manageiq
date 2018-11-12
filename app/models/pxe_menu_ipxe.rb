@@ -65,4 +65,8 @@ class PxeMenuIpxe < PxeMenu
     end
     items
   end
+
+  def self.display_name(number = 1)
+    n_('PXE Menu (iPXE)', 'PXE Menus (iPXE)', number)
+  end
 end

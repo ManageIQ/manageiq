@@ -514,7 +514,7 @@ describe MiqSchedule do
     context "valid action_automation_request" do
       let(:admin) { FactoryGirl.create(:user_miq_request_approver) }
       let(:automate_sched) do
-        MiqSchedule.create(:name          => "test_method", :towhat => "AutomationRequest",
+        MiqSchedule.create(:name          => "test_method", :resource_type => "AutomationRequest",
                            :userid        => admin.userid, :enabled => true,
                            :run_at        => {:interval   => {:value => "1", :unit => "daily"},
                                               :start_time => 2.hours.from_now.utc.to_i},
@@ -541,7 +541,7 @@ describe MiqSchedule do
       before do
         @valid_schedules = []
         @valid_run_ats.each do |run_at|
-          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :towhat => "DatabaseBackup")
+          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :resource_type => "DatabaseBackup")
         end
         @schedule = @valid_schedules.first
       end
@@ -568,6 +568,10 @@ describe MiqSchedule do
 
         it "should create one backup queue message for our db backup instance for the database role" do
           expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count).to eq(1)
+        end
+
+        it "sets backup tasks's timeout to ::Settings.task.active_task_timeout" do
+          expect(@backup_message.msg_timeout).to eq ::Settings.task.active_task_timeout.to_i_with_method
         end
       end
 
@@ -693,6 +697,67 @@ describe MiqSchedule do
       FactoryGirl.create(:miq_schedule, :updated_at => 1.year.ago)
       s = FactoryGirl.create(:miq_schedule, :updated_at => 1.day.ago)
       expect(MiqSchedule.updated_since(1.month.ago)).to eq([s])
+    end
+  end
+
+  context ".queue_scheduled_work" do
+    it "When action exists" do
+      schedule = FactoryGirl.create(:miq_schedule, :sched_action => {:method => "scan"})
+      MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => "MiqSchedule",
+        :instance_id => schedule.id,
+        :method_name => "invoke_actions",
+        :args        => ["action_scan", "abc"],
+        :msg_timeout => 1200
+      )
+    end
+
+    context "no action method" do
+      it "no resource" do
+        schedule = FactoryGirl.create(:miq_schedule, :sched_action => {:method => "test_method"})
+
+        expect($log).to receive(:warn) do |message|
+          expect(message).to include("no such action: [test_method], aborting schedule")
+        end
+
+        MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+      end
+
+      context "resource exists" do
+        let(:resource) { FactoryGirl.create(:host) }
+
+        before do
+          allow(Host).to receive(:find_by).with(:id => resource.id).and_return(resource)
+        end
+
+        it "and does not respond to the method" do
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method"})
+
+          expect($log).to receive(:warn) do |message|
+            expect(message).to include("no such action: [test_method], aborting schedule")
+          end
+
+          MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+        end
+
+        it "and responds to the method" do
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name"})
+
+          expect_any_instance_of(Host).to receive("name").once
+
+          MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+        end
+
+        it "and responds to the method with arguments" do
+          schedule = FactoryGirl.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name", :args => ["abc", 123, :a => 1]})
+
+          expect_any_instance_of(Host).to receive("name").once.with("abc", 123, :a => 1)
+
+          MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+        end
+      end
     end
   end
 end

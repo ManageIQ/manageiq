@@ -23,7 +23,7 @@ Dir.chdir(ManageIQ::Environment::APP_ROOT) do
   ManageIQ::Environment.install_bundler
   ManageIQ::Environment.bundle_update
 
-  ManageIQ::Environment.while_updating_bower do
+  ManageIQ::Environment.while_updating_ui do
     unless ENV["SKIP_DATABASE_SETUP"]
       ManageIQ::Environment.migrate_database
       ManageIQ::Environment.seed_database
@@ -33,8 +33,8 @@ Dir.chdir(ManageIQ::Environment::APP_ROOT) do
     ManageIQ::Environment.reset_automate_domain  unless ENV["SKIP_AUTOMATE_RESET"]
   end
 
-  # Make sure bower is done before compiling assets
+  # Make sure update_ui is done before compiling assets
   ManageIQ::Environment.compile_assets if ENV['RAILS_ENV'] == 'production'
+
   ManageIQ::Environment.clear_logs_and_temp
-  ManageIQ::Environment.clear_obsolete
 end

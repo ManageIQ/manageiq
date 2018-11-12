@@ -10,6 +10,8 @@ class OrchestrationStack < ApplicationRecord
   include RetirementMixin
   include TenantIdentityMixin
   include CustomActionsMixin
+  include SupportsFeatureMixin
+  include CiFeatureMixin
 
   acts_as_miq_taggable
 
@@ -51,6 +53,9 @@ class OrchestrationStack < ApplicationRecord
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
+
+  supports :refresh_ems
+  supports :retire
 
   def orchestration_stacks
     children
@@ -162,12 +167,11 @@ class OrchestrationStack < ApplicationRecord
       raise _("Provider failed last authentication check")
     end
 
-    manager_settings = Settings.ems_refresh[manager.class.ems_type]
-    if manager_settings && manager_settings[:inventory_object_refresh] && manager_settings[:allow_targeted_refresh]
+    if manager.inventory_object_refresh? && manager.allow_targeted_refresh?
       # Queue new targeted refresh if allowed
-      orchestration_stack_target = ManagerRefresh::Target.new(:manager     => manager,
-                                                              :association => :orchestration_stacks,
-                                                              :manager_ref => {:ems_ref => manager_ref})
+      orchestration_stack_target = InventoryRefresh::Target.new(:manager     => manager,
+                                                                :association => :orchestration_stacks,
+                                                                :manager_ref => {:ems_ref => manager_ref})
       EmsRefresh.queue_refresh(orchestration_stack_target)
     else
       # Otherwise queue a full refresh

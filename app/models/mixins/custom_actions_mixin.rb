@@ -3,6 +3,7 @@ module CustomActionsMixin
 
   included do
     has_many :custom_button_sets, :as => :owner, :dependent => :destroy
+    has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
     virtual_has_many :custom_buttons
     virtual_has_one :custom_actions, :class_name => "Hash"
     virtual_has_one :custom_action_buttons, :class_name => "Array"
@@ -15,7 +16,7 @@ module CustomActionsMixin
         button_set.serializable_hash.merge(
           :buttons => serialize_buttons_if_visible(button_set.children, applies_to)
         )
-      end
+      end.reject { |button_group| button_group[:buttons].empty? }
     }
   end
 

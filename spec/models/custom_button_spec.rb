@@ -1,6 +1,25 @@
 describe CustomButton do
-  context "with no buttons" do
+  describe '.with_array_order' do
+    context 'order by array' do
+      let!(:custom_button_1) { FactoryGirl.create(:custom_button, :name => 'AAA', :applies_to_id => 100, :applies_to_class => Vm) }
+      let!(:custom_button_2) { FactoryGirl.create(:custom_button, :name => 'BBB', :applies_to_id => 200, :applies_to_class => Vm) }
+      let!(:custom_button_3) { FactoryGirl.create(:custom_button, :name => 'CCC', :applies_to_id => 300, :applies_to_class => Vm) }
 
+      context 'by bigint column' do
+        it 'orders by memory_shares column' do
+          expect(CustomButton.with_array_order(%w(300 100 200), :applies_to_id).ids).to eq([custom_button_3.id, custom_button_1.id, custom_button_2.id])
+        end
+      end
+
+      context 'by string column' do
+        it 'orders by name column' do
+          expect(CustomButton.with_array_order(%w(BBB AAA CCC), :name, :text).ids).to eq([custom_button_2.id, custom_button_1.id, custom_button_3.id])
+        end
+      end
+    end
+  end
+
+  context "with no buttons" do
     describe '#evaluate_enablement_expression_for' do
       let(:miq_expression) { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => 'vm_1'}) }
       let(:vm)             { FactoryGirl.create(:vm_vmware, :name => 'vm_1') }
@@ -251,7 +270,7 @@ describe CustomButton do
         "disabled_text"         => nil,
         "enablement_expression" => nil,
         "applies_to_class"      => nil,
-        "options"               => nil,
+        "options"               => {},
         "userid"                => nil,
         "wait_for_complete"     => nil,
         "created_on"            => nil,
@@ -291,5 +310,79 @@ describe CustomButton do
     service_template2 = FactoryGirl.create(:service_template)
     button = FactoryGirl.create(:custom_button, :applies_to => service_template1)
     expect { button.copy(:applies_to => service_template2) }.to change { CustomButton.count }.by(1)
+  end
+
+  describe "publish custom button event" do
+    let(:vm)              { FactoryGirl.create(:vm_vmware) }
+    let(:vm2)             { FactoryGirl.create(:vm_vmware) }
+    let(:vm3)             { FactoryGirl.create(:vm_vmware) }
+    let(:user)            { FactoryGirl.create(:user_with_group) }
+    let(:resource_action) { FactoryGirl.create(:resource_action, :ae_namespace => 'SYSTEM', :ae_class => 'PROCESS', :ae_instance => 'Request') }
+    let(:custom_button)   { FactoryGirl.create(:custom_button, :applies_to => vm.class, :resource_action => resource_action) }
+
+    before do
+      EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
+    end
+
+    %i(invoke invoke_async).each do |method|
+      describe "##{method}", "publishes CustomButtonEvent(s)" do
+        it "with a single VM" do
+          Timecop.freeze(Time.now.utc) do
+            User.with_user(user) { custom_button.send(method, vm, 'UI') }
+            expect(CustomButtonEvent.first.timestamp).to be_within(0.01).of(Time.now.utc)
+          end
+
+          expect(CustomButtonEvent.count).to eq(1)
+          expect(CustomButtonEvent.first).to have_attributes(
+            :source      => 'UI',
+            :target_id   => vm.id,
+            :target_type => 'VmOrTemplate',
+            :type        => 'CustomButtonEvent',
+            :event_type  => 'button.trigger.start',
+            :user_id     => user.id,
+            :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+          )
+        end
+
+        describe "multiple vms" do
+          it "with an array" do
+            Timecop.freeze(Time.now.utc) do
+              User.with_user(user) { custom_button.send(method, [vm, vm2, vm3], 'UI') }
+              expect(CustomButtonEvent.first.timestamp).to be_within(0.01).of(Time.now.utc)
+            end
+
+            expect(CustomButtonEvent.count).to eq(3)
+            expect(CustomButtonEvent.first).to have_attributes(
+              :source      => 'UI',
+              :target_id   => vm.id,
+              :target_type => 'VmOrTemplate',
+              :type        => 'CustomButtonEvent',
+              :event_type  => 'button.trigger.start',
+              :user_id     => user.id,
+              :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+            )
+          end
+
+          it "with an ActiveRecord::Relation" do
+            vm && vm2 && vm3
+            Timecop.freeze(Time.now.utc) do
+              User.with_user(user) { custom_button.send(method, Vm.all, 'UI') }
+              expect(CustomButtonEvent.first.timestamp).to be_within(0.01).of(Time.now.utc)
+            end
+
+            expect(CustomButtonEvent.count).to eq(3)
+            expect(CustomButtonEvent.first).to have_attributes(
+              :source      => 'UI',
+              :target_id   => vm.id,
+              :target_type => 'VmOrTemplate',
+              :type        => 'CustomButtonEvent',
+              :event_type  => 'button.trigger.start',
+              :user_id     => user.id,
+              :full_data   => a_hash_including(:automate_entry_point => "/SYSTEM/PROCESS/Request")
+            )
+          end
+        end
+      end
+    end
   end
 end

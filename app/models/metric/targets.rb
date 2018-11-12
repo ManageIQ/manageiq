@@ -55,6 +55,8 @@ module Metric::Targets
 
     targets = []
     emses.each do |ems|
+      next unless ems.supports_metrics?
+
       targets += with_archived(ems.all_container_nodes)
       targets += with_archived(ems.all_container_groups)
       targets += with_archived(ems.all_containers)

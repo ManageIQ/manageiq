@@ -35,7 +35,7 @@ class DialogFieldDateControl < DialogField
   end
 
   def script_error_values
-    "<Script error>"
+    N_("<Script error>")
   end
 
   def refresh_json_value

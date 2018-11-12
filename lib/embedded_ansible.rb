@@ -33,7 +33,7 @@ class EmbeddedAnsible
     FileUtils.rm_rf(dir)
     FileUtils.mkdir_p(dir)
 
-    Vmdb::Plugins.instance.registered_ansible_content.each do |content|
+    Vmdb::Plugins.ansible_content.each do |content|
       FileUtils.cp_r(Dir.glob("#{content.path}/*"), dir)
     end
   end
@@ -99,7 +99,7 @@ class EmbeddedAnsible
   end
 
   def generate_password
-    SecureRandom.base64(18).tr("+/", "-_")
+    SecureRandom.hex(18)
   end
 
   def miq_database

@@ -91,6 +91,7 @@ class Host < ApplicationRecord
                             :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
+  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   # Physical server reference
   belongs_to :physical_server, :inverse_of => :host
@@ -139,6 +140,7 @@ class Host < ApplicationRecord
   virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true
   virtual_column :vmm_vendor_display,           :type => :string
   virtual_column :ipmi_enabled,                 :type => :boolean
+  virtual_column :archived, :type => :boolean
 
   virtual_has_many   :resource_pools,                               :uses => :all_relationships
   virtual_has_many   :miq_scsi_luns,                                :uses => {:hardware => {:storage_adapters => {:miq_scsi_targets => :miq_scsi_luns}}}
@@ -181,6 +183,7 @@ class Host < ApplicationRecord
       unsupported_reason_add(:reset, _("The Host has invalid IPMI credentials"))
     end
   end
+  supports :refresh_ems
 
   def self.non_clustered
     where(:ems_cluster_id => nil)
@@ -1088,9 +1091,7 @@ class Host < ApplicationRecord
     Patch.refresh_patches(self, patches)
   end
 
-  def refresh_services(ssu)
-    xml = MiqXml.createDoc(:miq).root.add_element(:services)
-
+  def collect_services(ssu)
     services = ssu.shell_exec("systemctl -a --type service --no-legend")
     if services
       # If there is a systemd use only that, chconfig is calling systemd on the background, but has misleading results
@@ -1099,6 +1100,12 @@ class Host < ApplicationRecord
       services = ssu.shell_exec("chkconfig --list")
       services = MiqLinux::Utils.parse_chkconfig_list(services)
     end
+  end
+
+  def refresh_services(ssu)
+    xml = MiqXml.createDoc(:miq).root.add_element(:services)
+
+    services = collect_services(ssu)
 
     services.each do |service|
       s = xml.add_element(:service,
@@ -1220,26 +1227,6 @@ class Host < ApplicationRecord
     include_mac_addr == true ? mac_address.present? : true
   end
   alias_method :ipmi_enabled, :ipmi_config_valid?
-
-  def self.ready_for_provisioning?(ids)
-    errors = ActiveModel::Errors.new(self)
-    hosts = where(:id => ids)
-    missing = ids - hosts.collect(&:id)
-    errors.add(:missing_ids, "Unable to find Hosts with the following ids #{missing.inspect}") unless missing.empty?
-
-    hosts.each do |host|
-      begin
-        if host.ipmi_config_valid?(true) == false
-          errors.add(:"Error -", _("Host not available for provisioning. Name: [%{host_name}]") % {:host_name => host.name})
-        end
-      rescue => err
-        errors.add(:error_checking, _("Error, '%{error_message}, checking Host for provisioning: Name: [%{host_name}]") %
-          {:error_message => err.message, :host_name => host.name})
-      end
-    end
-
-    errors.empty? ? true : errors
-  end
 
   def set_custom_field(attribute, value)
     return unless is_vmware?
@@ -1768,6 +1755,7 @@ class Host < ApplicationRecord
   def archived?
     ems_id.nil?
   end
+  alias archived archived?
 
   def normalized_state
     return 'archived' if archived?
@@ -1777,5 +1765,9 @@ class Host < ApplicationRecord
 
   def validate_destroy
     {:available => true, :message => nil}
+  end
+
+  def self.display_name(number = 1)
+    n_('Host / Node', 'Hosts / Nodes', number)
   end
 end

@@ -177,8 +177,8 @@ describe MiqTask do
     end
 
     it "should properly process MiqTask#generic_action_with_callback" do
-      zone = 'New York'
-      allow(MiqServer).to receive(:my_zone).and_return(zone)
+      zone = FactoryGirl.create(:zone)
+      allow(MiqServer).to receive(:my_zone).and_return(zone.name)
       opts = {
         :action => 'Feed',
         :userid => 'Flintstone'
@@ -201,7 +201,7 @@ describe MiqTask do
       expect(message.class_name).to eq("MyClass")
       expect(message.method_name).to eq("my_method")
       expect(message.args).to eq([1, 2, 3])
-      expect(message.zone).to eq(zone)
+      expect(message.zone).to eq(zone.name)
       expect(message.miq_task_id).to eq(tid)
     end
   end
@@ -210,9 +210,9 @@ describe MiqTask do
     let(:miq_task1) { FactoryGirl.create(:miq_task_plain) }
     let(:miq_task2) { FactoryGirl.create(:miq_task_plain) }
     let(:miq_task3) { FactoryGirl.create(:miq_task_plain) }
-    let(:zone) { 'New York' }
+    let(:zone)      { FactoryGirl.create(:zone) }
     before do
-      allow(MiqServer).to receive(:my_zone).and_return(zone)
+      allow(MiqServer).to receive(:my_zone).and_return(zone.name)
     end
 
     it "should queue up deletes when calling MiqTask.delete_by_id" do
@@ -225,7 +225,7 @@ describe MiqTask do
       expect(message.args).to        be_kind_of(Array)
       expect(message.args.length).to eq(1)
       expect(message.args.first).to match_array([miq_task1.id, miq_task3.id])
-      expect(message.zone).to eq(zone)
+      expect(message.zone).to eq(zone.name)
     end
 
     it "should queue up proper deletes when calling MiqTask.delete_older" do
@@ -244,7 +244,7 @@ describe MiqTask do
       expect(message.args.length).to eq(2)
       expect(message.args.first).to eq(date_5_minutes_ago)
       expect(message.args.second).to eq(condition)
-      expect(message.zone).to eq(zone)
+      expect(message.zone).to eq(zone.name)
 
       message.destroy
 
@@ -260,7 +260,7 @@ describe MiqTask do
       expect(message.args.length).to eq(2)
       expect(message.args.first).to eq(date_11_minutes_ago)
       expect(message.args.second).to be nil
-      expect(message.zone).to eq(zone)
+      expect(message.zone).to eq(zone.name)
     end
   end
 

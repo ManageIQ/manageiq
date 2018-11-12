@@ -265,6 +265,100 @@ describe Vmdb::Settings do
       miq_server.zone.reload
       expect(miq_server.zone.settings_changes.count).to eq 0
     end
+
+    describe described_class::RESET_COMMAND do
+      let(:server_value) { "server" }
+      let(:zone_value)   { "zone" }
+      let(:region_value) { "region" }
+      let(:server_array_value) { [{:key1 => server_value}, {:key1 => server_value}] }
+      let(:zone_array_value)   { [{:key1 => zone_value},   {:key1 => zone_value}] }
+
+      let(:reset) { described_class::RESET_COMMAND }
+
+      before do
+        MiqRegion.seed
+
+        described_class.save!(
+          MiqRegion.first,
+          :api     => {
+            :token_ttl              => region_value,
+            :authentication_timeout => region_value
+          },
+          :session => {:timeout => 2}
+        )
+        described_class.save!(
+          miq_server.zone,
+          :api   => {
+            :token_ttl => zone_value
+          },
+          :array => zone_array_value
+        )
+        described_class.save!(
+          miq_server,
+          :api     => {
+            :token_ttl              => server_value,
+            :authentication_timeout => server_value,
+            :new_key                => "new value"
+          },
+          :session => {:timeout => 1},
+          :array   => server_array_value
+        )
+      end
+
+      it "inherits a leaf-level value from the parent" do
+        described_class.save!(miq_server, :api => {:token_ttl => reset})
+
+        expect(described_class.for_resource(miq_server).api.token_ttl).to eq zone_value
+      end
+
+      it "inherits a node-level value from the parent" do
+        described_class.save!(miq_server, :api => reset)
+
+        expect(described_class.for_resource(miq_server).api.token_ttl).to eq zone_value
+        expect(described_class.for_resource(miq_server).api.authentication_timeout).to eq region_value
+      end
+
+      it "inherits an array from the parent" do
+        described_class.save!(miq_server, :array => reset)
+
+        expect(described_class.for_resource(miq_server).to_hash[:array]).to eq zone_array_value
+      end
+
+      it "deletes a leaf-level value not present in the parent" do
+        described_class.save!(miq_server, :api => {:new_key => reset})
+
+        expect(described_class.for_resource(miq_server).api.new_key).to be_nil
+        expect(miq_server.reload.settings_changes.where(:key => "/api/new_key")).to_not exist
+      end
+
+      it "deletes a leaf-level value not present in the parent when reset at the node level" do
+        described_class.save!(miq_server, :api => reset)
+
+        expect(described_class.for_resource(miq_server).api.new_key).to be_nil
+        expect(described_class.for_resource(miq_server).api.token_ttl).to eq zone_value
+        expect(miq_server.reload.settings_changes.where(:key => "/api/new_key")).to_not exist
+      end
+
+      it "deletes an array value not present in the parent" do
+        described_class.save!(miq_server.zone, :array => reset)
+
+        expect(described_class.for_resource(miq_server.zone).array).to be_nil
+        expect(miq_server.zone.reload.settings_changes.where(:key => "/array")).to_not exist
+      end
+
+      it "at a parent level does not push down changes to children" do
+        described_class.save!(miq_server.zone, :api => {:token_ttl => reset})
+
+        expect(described_class.for_resource(miq_server.zone).api.token_ttl).to eq region_value
+        expect(described_class.for_resource(miq_server).api.token_ttl).to eq server_value
+      end
+
+      it "passes validation" do
+        described_class.save!(miq_server, :session => {:timeout => reset})
+
+        expect(described_class.for_resource(miq_server).session.timeout).to eq 2
+      end
+    end
   end
 
   describe "save_yaml!" do

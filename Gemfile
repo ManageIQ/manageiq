@@ -25,7 +25,7 @@ gem "activerecord-id_regions",        "~>0.2.0"
 gem "activerecord-session_store",     "~>1.1"
 gem "acts_as_tree",                   "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "addressable",                    "~>2.5"
-gem "ancestry",                       "~>2.2.1",       :require => false
+gem "ancestry",                       "~>3.0.4",       :require => false
 gem "bcrypt",                         "~> 3.1.10",     :require => false
 gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"
@@ -40,18 +40,20 @@ gem "gettext_i18n_rails_js",          "~>1.3.0"
 gem "hamlit",                         "~>2.8.5"
 gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
+gem "inventory_refresh",              "~>0.1.1",       :require => false
 gem "kubeclient",                     "~>2.4",         :require => false # For scaling pods at runtime
 gem "linux_admin",                    "~>1.2.1",       :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
-gem "manageiq-api-client",            "~>0.3.0",       :require => false
+gem "manageiq-api-client",            "~>0.3.2",       :require => false
 gem "manageiq-messaging",                              :require => false, :git => "https://github.com/ManageIQ/manageiq-messaging", :branch => "master"
+gem "manageiq-postgres_ha_admin",     "~>3.0",         :require => false
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>3.0",         :path => File.expand_path("mime-types-redirector", __dir__)
 gem "more_core_extensions",           "~>3.5"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.16.1",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
-gem "openscap",                       "~>0.4.3",       :require => false
+gem "openscap",                       "~>0.4.8",       :require => false
 gem "pg",                             "~>0.18.2",      :require => false
 gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
@@ -61,12 +63,12 @@ gem "rake",                           ">=11.0",        :require => false
 gem "rest-client",                    "~>2.0.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.2.0",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
-gem "rubyzip",                        "~>1.2.1",       :require => false
-gem "rugged",                         "~>0.25.0",      :require => false
+gem "rubyzip",                        "~>1.2.2",       :require => false
+gem "rugged",                         "~>0.27.0",      :require => false
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sqlite3",                                         :require => false
-gem "trollop",                        "~>2.0",         :require => false
+gem "trollop",                        "~>2.1.3",       :require => false
 
 # Modified gems (forked on Github)
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
@@ -84,10 +86,6 @@ gem "american_date"
 group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
   gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
-end
-
-group :ansible, :manageiq_default do
-  gem "ansible_tower_client",           "~>0.13.0",      :require => false
 end
 
 group :azure, :manageiq_default do
@@ -147,7 +145,7 @@ end
 
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
-  gem "vmware_web_service",             "~>0.2.0"
+  gem "vmware_web_service",             "~>0.3.0"
 end
 
 ### shared dependencies
@@ -187,7 +185,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.2.10",       :require => false
+  gem "manageiq-smartstate",            "~>0.2.14",       :require => false
 end
 
 group :consumption, :manageiq_default do
@@ -202,7 +200,7 @@ group :ui_dependencies do # Added to Bundler.require in config/application.rb
 end
 
 group :v2v, :ui_dependencies do
-  gem "miq_v2v_ui", :git => "https://github.com/ManageIQ/miq_v2v_ui_plugin.git", :branch => "master"
+  manageiq_plugin "manageiq-v2v"
 end
 
 group :web_server, :manageiq_default do

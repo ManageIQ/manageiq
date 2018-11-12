@@ -23,7 +23,7 @@ class ContainerLabelTagMapping < ApplicationRecord
 
   require_nested :Mapper
 
-  TAG_PREFIXES = %w(amazon azure kubernetes).map { |name| "/managed/#{name}:" }.freeze
+  TAG_PREFIXES = %w(amazon azure kubernetes openstack).map { |name| "/managed/#{name}:" }.freeze
   validate :validate_tag_prefix
 
   # Return ContainerLabelTagMapping::Mapper instance that holds all current mappings,

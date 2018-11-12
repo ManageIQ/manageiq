@@ -56,7 +56,6 @@
     :memory_used_cost: :currency_precision_2
     :memory_allocated_cost: :currency_precision_2
     :memory_cost: :currency_precision_2
-    :metering_used_cost: :currency_precision_2
     :storage_used_cost: :currency_precision_2
     :storage_allocated_cost: :currency_precision_2
     :storage_cost: :currency_precision_2

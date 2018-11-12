@@ -45,7 +45,10 @@ module YAMLImportExportMixin
       data_class_name = data.first.keys.first
 
       unless self::IMPORT_CLASS_NAMES.include?(data_class_name)
-        raise _("Incorrect format: Expected #{self::IMPORT_CLASS_NAMES.join(", ")} and received #{data_class_name}.")
+        raise _("Incorrect format: Expected %{expected_class} and received %{received_class}.") % {
+          :expected_class => self::IMPORT_CLASS_NAMES.join(", "),
+          :received_class => data_class_name
+        }
       end
     end
 

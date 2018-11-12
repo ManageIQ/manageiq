@@ -60,4 +60,8 @@ class ManageIQ::Providers::CloudManager::AuthKeyPair < ::AuthPrivateKey
   def delete_key_pair
     raw_delete_key_pair
   end
+
+  def self.display_name(number = 1)
+    n_('Key Pair', 'Key Pairs', number)
+  end
 end

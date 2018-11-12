@@ -55,4 +55,8 @@ class MiqShortcut < ApplicationRecord
   def self.start_pages
     where(:startup => true).sort_by { |s| s.sequence.to_i }.collect { |s| [s.url, s.description, s.rbac_feature_name] }
   end
+
+  def self.display_name(number = 1)
+    n_('Shortcut', 'Shortcuts', number)
+  end
 end

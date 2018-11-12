@@ -8,6 +8,10 @@ class VmdbDatabaseLock < ApplicationRecord
       .find_by(['pid != ?', pid])
   end
 
+  def self.display_name(number = 1)
+    n_('Database Lock', 'Database Locks', number)
+  end
+
   private
 
   def blocking_lock_relation

@@ -143,18 +143,6 @@ describe User do
         expect(user.super_admin_user?).to be_falsey
       end
     end
-
-    describe "#admin_user?" do
-      let(:role_name) { "administrator" }
-
-      it "should check Admin Roles" do
-        expect(user.admin_user?).to be_truthy
-        expect(user.super_admin_user?).to be_falsey
-
-        user.current_group = nil
-        expect(user.admin_user?).to be_falsey
-      end
-    end
   end
 
   context "#authorize_ldap" do
@@ -175,9 +163,11 @@ describe User do
                              :group_memberships_max_depth => 2,
                              :ldaphost => ["192.168.254.15"]}
         }
-      stub_server_configuration(@auth_config)
+      stub_settings(@auth_config)
       @miq_ldap = double('miq_ldap')
       allow(@miq_ldap).to receive_messages(:bind => false)
+
+      EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "will fail task if user object not found in ldap" do
@@ -347,6 +337,10 @@ describe User do
 
   context ".authenticate_with_http_basic" do
     let(:user) { FactoryGirl.create(:user, :password => "dummy") }
+
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
 
     it "should login with good username/password" do
       expect(User.authenticate_with_http_basic(user.userid, user.password)).to eq([true, user.userid])
@@ -589,6 +583,30 @@ describe User do
 
     it "returns nil with admin userid" do
       expect(User.authorize_user("admin")).to be_nil
+    end
+  end
+
+  describe ".with_same_userid" do
+    # this is testing the select does not break and in general, the scope works
+    it "properly handles select clause" do
+      u = FactoryGirl.create(:user)
+      expect(User.select(:id, :email).with_same_userid(u.id)).to eq([u])
+    end
+  end
+
+  describe ".with_roles_excluding" do
+    it "handles multiple columns" do
+      a1 = FactoryGirl.create(:miq_group, :features => "good")
+      a2 = FactoryGirl.create(:miq_group, :features => "something")
+      b = FactoryGirl.create(:miq_group, :features => %w(good everything))
+      c = FactoryGirl.create(:miq_group, :features => "everything")
+
+      u1 = FactoryGirl.create(:user, :miq_groups => [a1])
+      u2 = FactoryGirl.create(:user, :miq_groups => [a1, a2])
+      FactoryGirl.create(:user, :miq_groups => [a1, b])
+      FactoryGirl.create(:user, :miq_groups => [c])
+
+      expect(User.with_roles_excluding("everything").select(:id, :name)).to match_array([u1, u2])
     end
   end
 end

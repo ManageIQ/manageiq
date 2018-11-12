@@ -103,4 +103,8 @@ class MiqEnterprise < ApplicationRecord
   end
   alias_method :perf_capture_enabled, :perf_capture_enabled?
   Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
+
+  def self.display_name(number = 1)
+    n_('Enterprise', 'Enterprises', number)
+  end
 end # class MiqEnterprise

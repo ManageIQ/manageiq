@@ -21,8 +21,8 @@ module EmbeddedAnsibleWorker::ObjectManagement
     return if provider.default_organization
 
     provider.default_organization = connection.api.organizations.create!(
-      :name        => I18n.t("product.name"),
-      :description => "#{I18n.t("product.name")} Default Organization"
+      :name        => Vmdb::Appliance.PRODUCT_NAME,
+      :description => "#{Vmdb::Appliance.PRODUCT_NAME} Default Organization"
     ).id
   end
 
@@ -30,7 +30,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     return if provider.default_credential
 
     provider.default_credential = connection.api.credentials.create!(
-      :name         => "#{I18n.t("product.name")} Default Credential",
+      :name         => "#{Vmdb::Appliance.PRODUCT_NAME} Default Credential",
       :kind         => "ssh",
       :organization => provider.default_organization
     ).id
@@ -40,7 +40,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
     return if provider.default_inventory
 
     provider.default_inventory = connection.api.inventories.create!(
-      :name         => "#{I18n.t("product.name")} Default Inventory",
+      :name         => "#{Vmdb::Appliance.PRODUCT_NAME} Default Inventory",
       :organization => provider.default_organization
     ).id
   end
@@ -97,7 +97,7 @@ module EmbeddedAnsibleWorker::ObjectManagement
 
     def playbook_project_attributes
       {
-        :name                 => "#{I18n.t('product.name')} Default Project".freeze,
+        :name                 => "#{Vmdb::Appliance.PRODUCT_NAME} Default Project".freeze,
         :scm_type             => "git".freeze,
         :scm_url              => "file://#{consolidated_plugin_directory}".freeze,
         :scm_update_on_launch => false

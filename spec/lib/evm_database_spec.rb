@@ -1,3 +1,5 @@
+require 'manageiq-postgres_ha_admin'
+
 describe EvmDatabase do
   subject { described_class }
   context "#local?" do
@@ -38,6 +40,83 @@ describe EvmDatabase do
       expect(record.class_name). to eq "MiqEvent"
       expect(record.method_name).to eq "raise_evm_event"
       expect(record.args[1]).to eq "db_failover_executed"
+    end
+  end
+
+  describe ".restart_failover_monitor_service" do
+    let(:service) { instance_double(LinuxAdmin::SystemdService) }
+
+    before do
+      expect(LinuxAdmin::Service).to receive(:new).and_return(service)
+    end
+
+    it "restarts the service when running" do
+      expect(service).to receive(:running?).and_return(true)
+      expect(service).to receive(:restart)
+      described_class.restart_failover_monitor_service
+    end
+
+    it "doesn't restart the service when it isn't running" do
+      expect(service).to receive(:running?).and_return(false)
+      expect(service).not_to receive(:restart)
+      described_class.restart_failover_monitor_service
+    end
+  end
+
+  describe ".restart_failover_monitor_service_queue" do
+    it "queues a message for the correct role and zone" do
+      subject.restart_failover_monitor_service_queue
+
+      messages = MiqQueue.where(:method_name => 'restart_failover_monitor_service')
+      expect(messages.count).to eq(1)
+
+      message = messages.first
+      expect(message.class_name).to eq(described_class.name)
+      expect(message.role).to eq('database_operations')
+      expect(message.zone).to be_nil
+    end
+  end
+
+  describe ".run_failover_monitor" do
+    let!(:server) { EvmSpecHelper.local_guid_miq_server_zone[1] }
+    let(:monitor) { ManageIQ::PostgresHaAdmin::FailoverMonitor.new }
+    let(:subscriptions) do
+      [
+        PglogicalSubscription.new(:id => "sub_id_1"),
+        PglogicalSubscription.new(:id => "sub_id_2")
+      ]
+    end
+
+    before do
+      allow(PglogicalSubscription).to receive(:all).and_return(subscriptions)
+      expect(monitor).to receive(:monitor_loop)
+    end
+
+    it "adds a rails handler for the environment in database.yml" do
+      subject.run_failover_monitor(monitor)
+      handlers = monitor.config_handlers.map(&:first)
+
+      expect(handlers.count).to eq(1)
+      h = handlers.first
+      expect(h).to be_an_instance_of(ManageIQ::PostgresHaAdmin::RailsConfigHandler)
+      expect(h.file_path.to_s.split('/').last).to eq("database.yml")
+      expect(h.environment).to eq("test")
+    end
+
+    it "adds a pglogical config handler for every subscription when our server has the database_operations role" do
+      ServerRole.seed
+      server.role = "database_operations"
+      server.activate_all_roles
+
+      subject.run_failover_monitor(monitor)
+      handlers = monitor.config_handlers.map(&:first)
+
+      expect(handlers.count).to eq(3)
+      handlers.delete_if { |h| h.kind_of?(ManageIQ::PostgresHaAdmin::RailsConfigHandler) }
+      expect(handlers.count).to eq(2)
+      expect(%w(sub_id_1 sub_id_2)).to include(handlers.first.subscription)
+      expect(%w(sub_id_1 sub_id_2)).to include(handlers.last.subscription)
+      expect(handlers.first.subscription).not_to eq(handlers.last.subscription)
     end
   end
 end

@@ -14,15 +14,21 @@ module MiqServer::RoleManagement
     before_save    :check_server_roles
   end
 
-  def log_role_changes
-    _log.info("Server's roles have changed:")
+  def role_changes
     o = @active_role_names
     n = active_role_names
     adds      = (n - o)
     deletes   = (o - n)
     unchanged = (o & n)
-    _log.info("  Old roles:       #{o.inspect}")
-    _log.info("  New roles:       #{n.inspect}")
+
+    return adds, deletes, unchanged
+  end
+
+  def log_role_changes
+    _log.info("Server's roles have changed:")
+    adds, deletes, unchanged = role_changes
+    _log.info("  Old roles:       #{@active_role_names.inspect}")
+    _log.info("  New roles:       #{active_role_names.inspect}")
     _log.info("  Roles removed:   #{deletes.inspect}")
     _log.info("  Roles added:     #{adds.inspect}")
     _log.info("  Roles unchanged: #{unchanged.inspect}")

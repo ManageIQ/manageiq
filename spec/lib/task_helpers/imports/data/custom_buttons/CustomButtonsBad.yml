@@ -1,0 +1,35 @@
+custom_button:
+- attributes:
+guid: f059931f-8703-4bcf-b876-e482d38ce8ea
+description: button 1
+applies_to_class: Vm
+visibility_expression:
+options:
+:button_icon: pficon pficon-cpu
+:button_type: default
+:display: true
+:open_url: false
+:display_for: single
+:submit_how: one
+userid: admin
+wait_for_complete:
+name: button 1
+visibility:
+:roles:
+- _ALL_
+applies_to_id:
+enablement_expression:
+disabled_text:
+associations:
+resource_action:
+- attributes:
+action:
+resource_type: CustomButton
+ae_namespace: SYSTEM
+ae_class: PROCESS
+ae_instance: Request
+ae_message:
+ae_attributes:
+request: test1
+configuration_template_id:
+configuration_template_type:

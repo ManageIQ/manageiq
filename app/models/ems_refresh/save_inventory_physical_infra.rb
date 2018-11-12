@@ -3,6 +3,7 @@
 # - ems
 #   - physical_racks
 #   - physical_chassis
+#   - physical_storages
 #   - physical_servers
 #   - physical_switches
 #
@@ -24,7 +25,7 @@ module EmsRefresh::SaveInventoryPhysicalInfra
       _log.debug("#{log_header} hashes:\n#{YAML.dump(hashes)}")
     end
 
-    child_keys = %i(physical_racks physical_chassis physical_servers physical_switches customization_scripts)
+    child_keys = %i(physical_racks physical_chassis physical_storages physical_servers physical_switches customization_scripts)
 
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
@@ -91,12 +92,55 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     store_ids_for_new_records(ems.physical_chassis, hashes, :ems_ref)
   end
 
+  def save_physical_storages_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+    deletes = target == ems ? :use_association : []
+
+    hashes.each do |h|
+      h[:physical_rack_id] = h.delete(:physical_rack).try(:[], :id)
+      h[:physical_chassis_id] = h.delete(:physical_chassis).try(:[], :id)
+    end
+
+    child_keys = %i(computer_system asset_detail physical_disks canisters)
+    save_inventory_multi(ems.physical_storages, hashes, deletes, [:ems_ref], child_keys)
+    store_ids_for_new_records(ems.physical_storages, hashes, :ems_ref)
+  end
+
   #
   # Saves asset details information of a resource
   #
   def save_asset_detail_inventory(parent, hash)
     return if hash.nil?
     save_inventory_single(:asset_detail, parent, hash)
+  end
+
+  #
+  # Saves the disks information of a storage
+  #
+  def save_physical_disks_inventory(physical_storage, hashes)
+    return if hashes.nil?
+
+    # Update the associated ids
+    hashes.each do |h|
+      h[:canister_id] = h.delete(:canister).try(:[], :id)
+    end
+
+    save_inventory_multi(physical_storage.physical_disks, hashes, :use_association, [:ems_ref])
+  end
+
+  #
+  # Saves the canisters information of a storage
+  #
+  def save_canisters_inventory(physical_storage, hashes)
+    return if hashes.nil?
+
+    # Update the associated ids
+    hashes.each do |h|
+      h[:physical_storage_id] = h.delete(:physical_storage).try(:[], :id)
+    end
+
+    child_keys = %i(computer_system)
+    save_inventory_multi(physical_storage.canisters, hashes, :use_association, [:physical_storage_id], child_keys)
   end
 
   def save_physical_network_ports_inventory(guest_device, hashes, target = nil)

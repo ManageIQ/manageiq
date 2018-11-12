@@ -99,6 +99,7 @@ module EvmSpecHelper
     hashes   = YAML.load_file(MiqProductFeature.feature_yaml)
     filtered = filter_specific_features([hashes], features).first
     MiqProductFeature.seed_from_hash(filtered)
+    MiqProductFeature.seed_tenant_miq_product_features
   end
 
   def self.filter_specific_features(hashes, features)

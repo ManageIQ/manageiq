@@ -1,13 +1,11 @@
 describe Metric::Statistic do
   context ".calculate_stat_columns" do
     let(:ems_openshift) do
-      FactoryGirl.create(:ems_openshift, :hostname => 't', :port => 8443, :name => 't',
-                         :zone => Zone.first)
+      FactoryGirl.create(:ems_openshift, :hostname => 't', :port => 8443, :name => 't')
     end
 
     let(:project) do
-      FactoryGirl.create(:container_project,
-                         :name => "project")
+      FactoryGirl.create(:container_project, :name => "project")
     end
 
     hour = Time.parse(Metric::Helper.nearest_hourly_timestamp(Time.now)).utc

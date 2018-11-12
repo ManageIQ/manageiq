@@ -1,6 +1,12 @@
 class DialogFieldTextBox < DialogField
   AUTOMATE_VALUE_FIELDS = %w(data_type protected required validator_rule validator_type read_only visible description).freeze
 
+  def initialize_value_context
+    if @value.blank?
+      @value = dynamic && load_values_on_init? ? values_from_automate : default_value
+    end
+  end
+
   def value
     return nil if @value.nil?
     convert_value_to_type
@@ -25,7 +31,7 @@ class DialogFieldTextBox < DialogField
 
   def automate_output_value
     return nil if @value.nil?
-    return MiqPassword.encrypt(@value) if self.protected?
+    return MiqPassword.try_encrypt(@value) if self.protected?
     convert_value_to_type
   end
 
@@ -48,7 +54,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def script_error_values
-    "<Script error>"
+    N_("<Script error>")
   end
 
   def sample_text
@@ -77,5 +83,10 @@ class DialogFieldTextBox < DialogField
 
   def value_supposed_to_be_int?
     data_type == "integer" && @value.to_s !~ /^[0-9]+$/
+  end
+
+  def load_values_on_init?
+    return true unless show_refresh_button
+    load_values_on_init
   end
 end

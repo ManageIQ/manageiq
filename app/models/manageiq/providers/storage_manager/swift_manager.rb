@@ -67,4 +67,8 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
   def self.event_monitor_class
     ManageIQ::Providers::StorageManager::SwiftManager::EventCatcher
   end
+
+  def self.display_name(number = 1)
+    n_('Storage Manager (Swift)', 'Storage Managers (Swift)', number)
+  end
 end

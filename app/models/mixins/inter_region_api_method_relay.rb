@@ -77,6 +77,7 @@ module InterRegionApiMethodRelay
     case result
     when ManageIQ::API::Client::ActionResult
       raise InterRegionApiMethodRelayError, result.message if result.failed?
+      result.attributes
     when ManageIQ::API::Client::Resource
       instance_for_resource(result)
     else

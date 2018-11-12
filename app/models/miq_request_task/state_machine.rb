@@ -69,6 +69,7 @@ module MiqRequestTask::StateMachine
   end
 
   def requeue_phase
+    mark_execution_servers
     save # Save current phase_context
     MiqQueue.put(
       :class_name     => self.class.name,

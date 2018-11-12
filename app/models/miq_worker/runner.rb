@@ -293,7 +293,7 @@ class MiqWorker::Runner
   end
 
   def sync_log_level
-    # TODO: Can this be removed since the VMDB::Config::Activator will do this anyway?
+    # TODO: Can this be removed since the Vmdb::Settings::Activator will do this anyway?
     Vmdb::Loggers.apply_config(::Settings.log)
   end
 

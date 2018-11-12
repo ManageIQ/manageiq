@@ -7,11 +7,11 @@ namespace :locale do
     ]
     no_plurals = %w(NFS OS) # strings which we don't want to create automatic plurals for
 
-    dict = YAML.load(File.open(Rails.root.join("locale/en.yml")))["en"]["dictionary"]
-    dict.keys.each do |tree|
+    dict = YAML.safe_load(File.open(Rails.root.join("locale/en.yml")))["en"]["dictionary"]
+    dict.each_key do |tree|
       next unless %w(column model table).include?(tree) # subtrees of interest
 
-      dict[tree].keys.each do |item|
+      dict[tree].each_key do |item|
         if dict[tree][item].kind_of?(String) # leaf node
           output_strings.push("# TRANSLATORS: en.yml key: dictionary.#{tree}.#{item}")
           value = dict[tree][item]
@@ -27,7 +27,7 @@ namespace :locale do
             end
           end
         elsif dict[tree][item].kind_of?(Hash) # subtree
-          dict[tree][item].keys.each do |subitem|
+          dict[tree][item].each_key do |subitem|
             output_strings.push("# TRANSLATORS: en.yml key: dictionary.#{tree}.#{item}.#{subitem}")
             output_strings.push('_("%s")' % dict[tree][item][subitem])
           end
@@ -44,7 +44,7 @@ namespace :locale do
   task :extract_yaml_strings, [:root] => :environment do |_t, args|
     def update_output(string, file, output, root)
       file.gsub!(root + '/', "")
-      return if string.nil? || string.empty?
+      return if string.blank?
       if output.key?(string)
         output[string].append(file)
       else
@@ -54,7 +54,7 @@ namespace :locale do
 
     def parse_object(object, keys, file, output, root)
       if object.kind_of?(Hash)
-        object.keys.each do |key|
+        object.each_key do |key|
           if keys.include?(key) || keys.include?(key.to_s)
             if object[key].kind_of?(Array)
               object[key].each { |i| update_output(i, file, output, root) }
@@ -77,7 +77,7 @@ namespace :locale do
     yamls = YAML.load_file(config_file)['yaml_strings_to_extract']
     output = {}
 
-    yamls.keys.each do |yaml_glob|
+    yamls.each_key do |yaml_glob|
       yaml_glob_full = args[:root].join(yaml_glob)
       Dir.glob(yaml_glob_full).each do |file|
         yml = YAML.load_file(file)
@@ -88,7 +88,7 @@ namespace :locale do
     File.open(args[:root].join("config/yaml_strings.rb"), "w+") do |f|
       f.puts "# This is automatically generated file (rake locale:extract_yaml_strings)."
       f.puts "# The file contains strings extracted from various yaml files for gettext to find."
-      output.keys.each do |key|
+      output.each_key do |key|
         output[key].sort.uniq.each do |file|
           f.puts "# TRANSLATORS: file: #{file}"
         end
@@ -142,21 +142,27 @@ namespace :locale do
     Rake::Task['locale:store_dictionary_strings'].invoke
     Rake::Task['locale:run_store_model_attributes'].invoke
     Rake::Task['locale:extract_yaml_strings'].invoke(Rails.root)
+    Rake::Task['locale:model_display_names'].invoke
     Rake::Task['gettext:find'].invoke
 
-    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
+    Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/model_display_names.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
       File.unlink(file)
     end
   end
 
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
   task "plugin:find", :engine do |_, args|
-    unless args.has_key?(:engine)
+    unless args[:engine]
       $stderr.puts "You need to specify a plugin name: rake locale:plugin:find[plugin_name]"
       exit 1
     end
     @domain = args[:engine].gsub('::', '_')
-    @engine = "#{args[:engine].camelize}::Engine".constantize
+    begin
+      @engine = "#{args[:engine].camelize}::Engine".constantize
+    rescue NameError
+      warn "The specified plugin #{args[:engine]} does not exist."
+      exit 1
+    end
     @engine_root = @engine.root
 
     # extract plugin's yaml strings
@@ -190,29 +196,70 @@ namespace :locale do
 
   desc "Convert PO files from all plugins to JS files"
   task "po_to_json" => :environment do
-    require_relative 'gettext_task_override.rb'
-    require Rails.root.join("lib/vmdb/gettext/domains")
+    begin
+      require_relative 'gettext_task_override.rb'
+      require Rails.root.join('lib/manageiq/environment')
+      require Rails.root.join("lib/vmdb/gettext/domains")
 
-    po_files = {}
-    Vmdb::Gettext::Domains.paths.each do |path|
-      files = ::Pathname.glob(::File.join(path, "**", "*.po"))
-      files.each do |file|
-        locale = file.dirname.basename.to_s
-        po_files[locale] ||= []
-        po_files[locale].push(file)
+      po_files = {}
+      Vmdb::Gettext::Domains.paths.each do |path|
+        files = ::Pathname.glob(::File.join(path, "**", "*.po"))
+        files.each do |file|
+          locale = file.dirname.basename.to_s
+          po_files[locale] ||= []
+          po_files[locale].push(file)
+        end
       end
-    end
 
-    combined_dir = File.join(Rails.root, "locale/combined")
-    Dir.mkdir(combined_dir, 0700)
-    po_files.keys.each do |locale|
-      dir = File.join(combined_dir, locale)
-      po = File.join(dir, 'manageiq.po')
-      Dir.mkdir(dir, 0700)
-      system "rmsgcat -o #{po} #{po_files[locale].join(' ')}"
-    end
+      js_plugins = {
+        'ui-components' => {
+          'en'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/en/ui-components.po',
+          'es'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/es/ui-components.po',
+          'fr'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/fr/ui-components.po',
+          'ja'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/ja/ui-components.po',
+          'pt_BR' => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/pt_BR/ui-components.po',
+          'zh_CN' => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/zh_CN/ui-components.po',
+        }
+      }
 
-    Rake::Task['gettext:po_to_json'].invoke
-    system "rm -rf #{combined_dir}"
+      plugins_dir = File.join(Rails.root, 'locale/plugins')
+      Dir.mkdir(plugins_dir, 0700)
+      js_plugins.each do |plugin, content|
+        plugin_dir = File.join(plugins_dir, plugin)
+        Dir.mkdir(plugin_dir)
+        content.each do |lang, url|
+          lang_dir = File.join(plugin_dir, lang)
+          Dir.mkdir(lang_dir)
+          lang_file = "#{lang_dir}/#{url.split('/')[-1]}"
+          ManageIQ::Environment.system! "curl -f -o #{lang_file} #{url}"
+          po_files[lang] ||= []
+          po_files[lang].push(Pathname(lang_file))
+        end
+      end
+
+      combined_dir = File.join(Rails.root, "locale/combined")
+      Dir.mkdir(combined_dir, 0700)
+      po_files.each_key do |locale|
+        dir = File.join(combined_dir, locale)
+        po = File.join(dir, 'manageiq.po')
+        Dir.mkdir(dir, 0700)
+        system "rmsgcat -o #{po} #{po_files[locale].join(' ')}"
+      end
+
+      Rake::Task['gettext:po_to_json'].invoke
+    ensure
+      system "rm -rf #{combined_dir} #{plugins_dir}"
+    end
+  end
+
+  desc "Create display names for models"
+  task "model_display_names" => :environment do
+    f = File.open(Rails.root.join("config/model_display_names.rb"), "w+")
+    Rails.application.eager_load!
+    ApplicationRecord.descendants.sort_by(&:display_name).collect do |model|
+      next if model.model_name.singular.titleize != model.display_name || model.display_name.start_with?('ManageIQ')
+      f.puts "n_('#{model.display_name}', '#{model.display_name 2}', n)"
+    end
+    f.close
   end
 end

@@ -6,4 +6,8 @@ class ConfigurationScriptSource < ApplicationRecord
   belongs_to  :manager, :class_name => "ExtManagementSystem"
 
   virtual_total :total_payloads, :configuration_script_payloads
+
+  def self.display_name(number = 1)
+    n_('Repository', 'Repositories', number)
+  end
 end

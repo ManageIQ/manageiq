@@ -365,6 +365,14 @@ describe Tenant do
                            :tenant_id => t2_2.id)
       end
 
+      # This spec is here to confirm that we don't mutate the memoized
+      # ancestor_ids value when calling `Tenant#visible_domains`.
+      it "does not affect the memoized ancestor_ids variable" do
+        expected_ancestor_ids = t1_1.ancestor_ids.dup  # dup required, don't remove
+        t1_1.visible_domains
+        expect(t1_1.ancestor_ids).to eq(expected_ancestor_ids)
+      end
+
       it "#visibile_domains sub_tenant" do
         t1_1
         expect(t1_1.visible_domains.collect(&:name)).to eq(%w(DOM5 DOM3 DOM1 DOM15 DOM10))
@@ -804,6 +812,75 @@ describe Tenant do
 
     it "returns [] of a tenant without subtenants" do
       expect(tenantA1.build_tenant_tree).to be_empty
+    end
+  end
+
+  describe "setting a parent for a new record" do
+    it "passes back the parent assigned" do
+      tenant.save!
+      sub_tenant = FactoryGirl.build(:tenant, :parent => Tenant.root_tenant)
+
+      expect(sub_tenant.parent = tenant).to eq(tenant)
+    end
+
+    it "passes back the parent_id assigned" do
+      tenant.save!
+      sub_tenant = FactoryGirl.build(:tenant, :parent => Tenant.root_tenant)
+
+      expect(sub_tenant.parent_id = tenant.id).to eq(tenant.id)
+    end
+  end
+
+  describe "#create" do
+    it "properly creates a default group" do
+      # create a tenant, but one that doesn't have a default_miq_group
+      # this is only possibly during an upgrade
+      tenant.save!
+      tenant.default_miq_group.delete
+      # We are using update_attribute to create an invalid tenant.
+      # rubocop:disable Rails/SkipsModelValidations
+      tenant.update_attribute(:default_miq_group_id, nil)
+      # rubocop:enable Rails/SkipsModelValidations
+      # lets make sure the tenant doesn't get assigned this user created group (the bug)
+      false_group = FactoryGirl.create(:miq_group, :tenant_id => tenant.id)
+
+      # 20151021174140_assign_tenant_default_group.rb
+      tenant.send(:create_tenant_group)
+
+      expect(tenant.default_miq_group).not_to eq(false_group)
+      expect(tenant.default_miq_group).to be_tenant_group
+    end
+
+    context 'dynamic product features' do
+      let!(:miq_product_feature_1) { FactoryGirl.create(:miq_product_feature, :name => "Edit1", :description => "XXX1", :identifier => 'dialog_edit_editor') }
+      let!(:miq_product_feature_2) { FactoryGirl.create(:miq_product_feature, :name => "Edit2", :description => "XXX2", :identifier => 'dialog_new_editor') }
+
+      let(:tenant_product_feature) { FactoryGirl.create(:tenant) }
+
+      it "properly creates a related product feature" do
+        features = tenant_product_feature.miq_product_features.map { |x| x.slice(:name, :description, :identifier, :feature_type) }
+        expect(features).to match_array([{"name" => "#{miq_product_feature_1.name} (#{tenant_product_feature.name})", "description" => "#{miq_product_feature_1.description} for tenant #{tenant_product_feature.name}",
+                                          "identifier" => "dialog_edit_editor_tenant_#{tenant_product_feature.id}", "feature_type" => "admin"},
+                                         {"name" => "#{miq_product_feature_2.name} (#{tenant_product_feature.name})",
+                                          "description" => "#{miq_product_feature_2.description} for tenant #{tenant_product_feature.name}",
+                                          "identifier" => "dialog_new_editor_tenant_#{tenant_product_feature.id}", "feature_type" => "admin"}])
+      end
+
+      describe "#create_miq_product_features_for_tenant_nodes" do
+        let(:tenant_product_feature) { FactoryGirl.create(:tenant) }
+
+        it "creates product features for tenant nodes" do
+          expect(tenant_product_feature.create_miq_product_features_for_tenant_nodes).to match_array(["dialog_edit_editor_tenant_#{tenant_product_feature.id}", "dialog_new_editor_tenant_#{tenant_product_feature.id}"])
+        end
+      end
+
+      describe "#destroy_tenant_feature_for_tenant_node" do
+        it "destroys product features" do
+          tenant_product_feature.destroy
+
+          expect(MiqProductFeature.where(:identifier => ["dialog_edit_editor_tenant_#{tenant_product_feature.id}", "ab_group_admin_tenant_#{tenant_product_feature.id}"], :feature_type => 'tenant').count).to be_zero
+        end
+      end
     end
   end
 end

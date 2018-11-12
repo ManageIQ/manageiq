@@ -15,7 +15,7 @@ class ContainerEmbeddedAnsible < EmbeddedAnsible
     create_ansible_service
     create_ansible_deployment_config
 
-    loop do
+    settings.setup_wait_seconds.times do
       break if alive?
 
       _log.info("Waiting for Ansible container to respond")
@@ -77,30 +77,13 @@ class ContainerEmbeddedAnsible < EmbeddedAnsible
       dc[:spec][:template][:spec][:serviceAccountName] = settings.service_account
 
       container = dc[:spec][:template][:spec][:containers].first
-      container[:ports]          = [{:containerPort => 443}, {:containerPort => 80}]
-      container[:livenessProbe]  = liveness_probe
-      container[:readinessProbe] = readiness_probe
-      container[:env]            = container_environment
-      container[:image]          = image
-
+      container[:ports]           = [{:containerPort => 443}, {:containerPort => 80}]
+      container[:env]             = container_environment
+      container[:image]           = image
       container[:securityContext] = {:privileged => true}
+
+      container.delete(:livenessProbe)
     end
-  end
-
-  def liveness_probe
-    {
-      :tcpSocket           => {:port => 443},
-      :initialDelaySeconds => 480,
-      :timeoutSeconds      => 3
-    }
-  end
-
-  def readiness_probe
-    {
-      :httpGet             => {:path => "/", :port => 443, :scheme => "HTTPS"},
-      :initialDelaySeconds => 200,
-      :timeoutSeconds      => 3
-    }
   end
 
   def container_environment

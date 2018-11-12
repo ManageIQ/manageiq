@@ -108,6 +108,7 @@ class MiqWidget < ApplicationRecord
     MiqQueue.create_with(callback).put_unless_exists(
       :queue_name  => "reporting",
       :role        => "reporting",
+      :zone        => nil, # any zone
       :class_name  => self.class.to_s,
       :instance_id => id,
       :msg_timeout => 3600,
@@ -521,12 +522,12 @@ class MiqWidget < ApplicationRecord
     end
 
     sched = MiqSchedule.create!(
-      :name         => description,
-      :description  => description,
-      :sched_action => {:method => "generate_widget"},
-      :filter       => MiqExpression.new("=" => {"field" => "MiqWidget-id", "value" => id}),
-      :towhat       => self.class.name,
-      :run_at       => {
+      :name          => description,
+      :description   => description,
+      :sched_action  => {:method => "generate_widget"},
+      :filter        => MiqExpression.new("=" => {"field" => "MiqWidget-id", "value" => id}),
+      :resource_type => self.class.name,
+      :run_at        => {
         :interval   => {:value => value, :unit  => unit},
         :tz         => server_tz,
         :start_time => sched_time
@@ -574,6 +575,10 @@ class MiqWidget < ApplicationRecord
   def timezone_matters?
     return true unless options
     options.fetch(:timezone_matters, true)
+  end
+
+  def self.display_name(number = 1)
+    n_('Widget', 'Widgets', number)
   end
 
   private

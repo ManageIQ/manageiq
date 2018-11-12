@@ -18,7 +18,6 @@ class Storage < ApplicationRecord
   has_many :storage_files,       :dependent => :destroy
   has_many :storage_files_files, -> { where("rsc_type = 'file'") }, :class_name => "StorageFile", :foreign_key => "storage_id"
   has_many :files,               -> { where("rsc_type = 'file'") }, :class_name => "StorageFile", :foreign_key => "storage_id"
-  has_many :host_storages
 
   has_many :miq_events, :as => :target, :dependent => :destroy
 
@@ -540,7 +539,7 @@ class Storage < ApplicationRecord
               {:name => name, :zone => MiqServer.my_zone}
     end
 
-    ems = emss.detect { |e| smartstate_analysis_count_for_ems_id(e.id) >= ::Settings.storage.max_parallel_scans_per_ems }
+    ems = emss.detect { |e| smartstate_analysis_count_for_ems_id(e.id) < ::Settings.storage.max_parallel_scans_per_ems }
     if ems.nil?
       raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) if qmessage?(method_name)
       ems = emss.random_element
@@ -834,18 +833,12 @@ class Storage < ApplicationRecord
     with_relationship_type("vm_scan_storage_affinity") { parents }
   end
 
-  def self.batch_operation_supported?(operation, ids)
-    Storage.where(:id => ids).all? do |s|
-      if s.respond_to?("supports_#{operation}?")
-        s.public_send("supports_#{operation}?")
-      else
-        s.public_send("validate_#{operation}")[:available]
-      end
-    end
-  end
-
   # @param [String, Storage] store_type upcased version of the storage type
   def self.supports?(store_type)
     Storage::SUPPORTED_STORAGE_TYPES.include?(store_type)
+  end
+
+  def self.display_name(number = 1)
+    n_('Datastore', 'Datastores', number)
   end
 end

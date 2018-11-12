@@ -51,10 +51,11 @@ module Rbac
       Service
       ServiceTemplate
       Storage
+      Switch
       VmOrTemplate
     )
 
-    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder) + %w(MiqGroup User Tenant)
+    TAGGABLE_FILTER_CLASSES = CLASSES_THAT_PARTICIPATE_IN_RBAC - %w(EmsFolder MiqRequest) + %w(MiqGroup User Tenant)
 
     NETWORK_MODELS_FOR_BELONGSTO_FILTER = %w(
       CloudNetwork
@@ -75,13 +76,6 @@ module Rbac
       Storage
       VmOrTemplate
     ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
-
-    # key: MiqUserRole#name - user's role
-    # value:
-    #   array - disallowed roles for the user's role
-    DISALLOWED_ROLES_FOR_USER_ROLE = {
-      'EvmRole-tenant_administrator' => %w(EvmRole-super_administrator EvmRole-administrator)
-    }.freeze
 
     # key: descendant::klass
     # value:
@@ -164,7 +158,7 @@ module Rbac
     # @option options :where_clause  []
     # @option options :sub_filter
     # @option options :include_for_find [Array<Symbol>]
-    # @option options :filter
+    # @option options :filter       [MiqExpression] (optional)
 
     # @option options :user         [User]     (default: current_user)
     # @option options :userid       [String]   User#userid (not user_id)
@@ -495,9 +489,9 @@ module Rbac
     end
 
     def get_managed_filter_object_ids(scope, filter)
-      return scope.where(filter.to_sql.first) if filter.kind_of?(MiqExpression)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
+      return scope.where(filter.to_sql.first) if filter.kind_of?(MiqExpression)
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
@@ -521,13 +515,16 @@ module Rbac
       if user_or_group.try!(:self_service?) && MiqUserRole != klass
         scope.where(:id => klass == User ? user.id : miq_group.id)
       else
-        if user_or_group.disallowed_roles
-          scope = scope.with_allowed_roles_for(user_or_group)
+        role = user_or_group.miq_user_role
+        # hide creating admin group / roles from non-super administrators
+        unless role&.super_admin_user?
+          scope = scope.with_roles_excluding(MiqProductFeature::SUPER_ADMIN_FEATURE)
         end
 
         if MiqUserRole != klass
           filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, managed_filters))
-          scope = scope.with_current_user_groups(user)
+          # Non tenant admins can only see their own groups. Note - a super admin is also a tenant admin
+          scope = scope.with_groups(user.miq_group_ids) unless role&.tenant_admin_user?
         end
 
         scope_by_ids(scope, filtered_ids)
@@ -545,6 +542,10 @@ module Rbac
         scope = scope_to_tenant(scope, user, miq_group)
       elsif klass.respond_to?(:scope_by_cloud_tenant?) && klass.scope_by_cloud_tenant?
         scope = scope_to_cloud_tenant(scope, user, miq_group)
+      end
+
+      if klass.respond_to?(:rbac_scope_for_model)
+        scope = scope.rbac_scope_for_model(user)
       end
 
       if apply_rbac_directly?(klass)

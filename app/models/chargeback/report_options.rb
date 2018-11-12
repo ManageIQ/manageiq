@@ -18,10 +18,25 @@ class Chargeback
     :ext_options,
     :include_metrics,      # enable charging allocated resources with C & U
     :method_for_allocated_metrics,
-    :group_by_tenant?
+    :group_by_tenant?,
+    :group_by_date_only?,
+    :cumulative_rate_calculation,
   ) do
     def self.new_from_h(hash)
       new(*hash.values_at(*members))
+    end
+
+    # skip metric value field because we don't want
+    # to accumulate metric values(only costs)
+    def skip_field_accumulation?(field, value)
+      return false if cumulative_rate_calculation? == false
+      return false unless field.ends_with?("_metric") && value
+
+      true
+    end
+
+    def cumulative_rate_calculation?
+      !!self[:cumulative_rate_calculation]
     end
 
     ALLOCATED_METHODS_WHITELIST = %i(max avg current_value).freeze
@@ -62,14 +77,14 @@ class Chargeback
       ts = Time.now.in_time_zone(tz)
       case interval
       when 'daily'
-        start_time = (ts - start_interval_offset.days).beginning_of_day.utc
-        end_time   = (ts - end_interval_offset.days).end_of_day.utc
+        start_time = (ts - start_interval_offset.days).beginning_of_day
+        end_time   = (ts - end_interval_offset.days).end_of_day
       when 'weekly'
-        start_time = (ts - start_interval_offset.weeks).beginning_of_week.utc
-        end_time   = (ts - end_interval_offset.weeks).end_of_week.utc
+        start_time = (ts - start_interval_offset.weeks).beginning_of_week
+        end_time   = (ts - end_interval_offset.weeks).end_of_week
       when 'monthly'
-        start_time = (ts - start_interval_offset.months).beginning_of_month.utc
-        end_time   = (ts - end_interval_offset.months).end_of_month.utc
+        start_time = (ts - start_interval_offset.months).beginning_of_month
+        end_time   = (ts - end_interval_offset.months).end_of_month
       else
         raise _("interval '%{interval}' is not supported") % {:interval => interval}
       end
@@ -121,10 +136,6 @@ class Chargeback
       consumption.resource.tenant
     end
 
-    def group_with(records)
-      group_by_tenant? ? records.group_by { |x| x.resource.tenant.id } : records.group_by(&:resource_id)
-    end
-
     def classification_for(consumption)
       tag = consumption.tag_names.find { |x| x.starts_with?(groupby_tag) } # 'department/*'
       tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
@@ -133,6 +144,10 @@ class Chargeback
 
     def group_by_tenant?
       self[:groupby] == 'tenant'
+    end
+
+    def group_by_date_only?
+      self[:groupby] == 'date-only'
     end
 
     private

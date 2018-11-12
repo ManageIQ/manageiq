@@ -10,9 +10,11 @@ module RetirementMixin
   end
 
   module ClassMethods
-    def make_retire_request(*src_ids)
-      options = {:src_ids => src_ids.presence || id}
-      (name + "RetireRequest").constantize.make_request(nil, options, User.current_user, true)
+    def make_retire_request(*src_ids, requester)
+      klass = (name.demodulize + "RetireRequest").constantize
+      options = {:src_ids => src_ids.presence, :__request_type__ => klass.request_types.first}
+      set_retirement_requester(options[:src_ids], requester)
+      klass.make_request(nil, options, requester, true)
     end
 
     def retire(ids, options = {})
@@ -24,6 +26,16 @@ module RetirementMixin
       user = User.current_user
       q_options.merge!(:user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id) if user
       MiqQueue.put(q_options)
+    end
+
+    def set_retirement_requester(obj_ids, requester)
+      existing_objects = where(:id => obj_ids)
+      updated_count = existing_objects.update_all(:retirement_requester => requester.userid)
+      if updated_count != obj_ids.count
+        _log.info("Retirement requester for #{self.name} #{(obj_ids - existing_objects.pluck(:id))} not set because objects not found")
+      else
+        _log.info("Retirement requester for #{self.name} #{obj_ids} being set to #{requester.userid}")
+      end
     end
   end
 
@@ -111,18 +123,19 @@ module RetirementMixin
 
   def retirement_check
     return if retired? || retiring? || retirement_initialized?
+    requester = system_context_requester
 
     if !retirement_warned? && retirement_warning_due?
       begin
         self.retirement_last_warn = Time.now.utc
         save
-        raise_retirement_event(retire_warn_event_name)
+        raise_retirement_event(retire_warn_event_name, requester)
       rescue => err
         _log.log_backtrace(err)
       end
     end
 
-    make_retire_request if retirement_due?
+    self.class.make_retire_request(id, requester) if retirement_due?
   end
 
   def retire_now(requester = nil)
@@ -139,7 +152,7 @@ module RetirementMixin
           event_name = "request_#{retirement_event_prefix}_retire"
           _log.info("calling #{event_name}")
           begin
-            raise_retirement_event(event_name, requester)
+            raise_retirement_event(event_name, requester ||= current_user)
           rescue => err
             _log.log_backtrace(err)
           end
@@ -200,14 +213,12 @@ module RetirementMixin
   end
 
   def raise_retirement_event(event_name, requester = nil)
-    requester ||= User.current_user.try(:userid)
-    q_options = retire_queue_options
+    q_options = q_user_info(retire_queue_options, requester)
     $log.info("Raising Retirement Event for [#{name}] with queue options: #{q_options.inspect}")
     MiqEvent.raise_evm_event(self, event_name, setup_event_hash(requester), q_options)
   end
 
   def raise_audit_event(event_name, message, requester = nil)
-    requester ||= User.current_user.try(:userid)
     event_hash = {
       :target_class => retirement_base_model_name,
       :target_id    => id.to_s,
@@ -236,15 +247,39 @@ module RetirementMixin
     respond_to?(:my_zone) && my_zone.present?
   end
 
-  def setup_event_hash(requester)
-    event_hash = {:retirement_initiator => "system"}
-    event_hash[retirement_base_model_name.underscore.to_sym] = self
-    event_hash[:host] = host if self.respond_to?(:host)
-    if requester
-      event_hash[:userid] = requester
-      event_hash[:retirement_initiator] = "user"
+  def system_context_requester
+    if try(:evm_owner_id).present?
+      User.find(evm_owner_id)
+    else
+      $log.info("System context defaulting to admin user because owner of #{name} not set.")
+      User.super_admin
     end
-    event_hash[:type] ||= self.class.name
-    event_hash
+  end
+
+  def current_user
+    User.find_by(:userid => User.current_user.try(:userid))
+  end
+
+  def q_user_info(q_options, requester)
+    if requester.present?
+      if requester.kind_of?(String)
+        requester = User.find_by(:userid => requester)
+      end
+      q_options[:user_id] = requester.id
+      if requester.current_group.present? && requester.current_tenant.present?
+        q_options[:group_id] = requester.current_group.id
+        q_options[:tenant_id] = requester.current_tenant.id
+      end
+    end
+    q_options
+  end
+
+  def setup_event_hash(requester)
+    {}.tap do |event|
+      event[:userid] = requester
+      event[retirement_base_model_name.underscore.to_sym] = self
+      event[:host] = host if respond_to?(:host)
+      event[:type] ||= self.class.name
+    end
   end
 end

@@ -65,6 +65,7 @@ class VmOrTemplate < ApplicationRecord
   has_many                  :disks, :through => :hardware
   belongs_to                :host
   belongs_to                :ems_cluster
+  belongs_to                :flavor
 
   belongs_to                :storage
   has_and_belongs_to_many   :storages, :join_table => 'storages_vms_and_templates'
@@ -80,6 +81,8 @@ class VmOrTemplate < ApplicationRecord
 
   has_many                  :guest_applications, :dependent => :destroy
   has_many                  :patches, :dependent => :destroy
+
+  has_one                   :conversion_host, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   belongs_to                :resource_group
 
@@ -148,6 +151,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :v_owning_blue_folder,                 :type => :string,     :uses => :all_relationships
   virtual_column :v_owning_blue_folder_path,            :type => :string,     :uses => :all_relationships
   virtual_column :v_datastore_path,                     :type => :string,     :uses => :storage
+  virtual_column :v_parent_blue_folder_display_path,    :type => :string,     :uses => :all_relationships
   virtual_column :thin_provisioned,                     :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
@@ -800,6 +804,11 @@ class VmOrTemplate < ApplicationRecord
   end
   alias_method :owning_datacenter, :parent_datacenter
 
+  def parent_blue_folder_display_path
+    parent_blue_folder_path(:exclude_non_display_folders => true)
+  end
+  alias_method :v_parent_blue_folder_display_path, :parent_blue_folder_display_path
+
   def lans
     !hardware.nil? ? hardware.nics.collect(&:lan).compact : []
   end
@@ -1324,6 +1333,20 @@ class VmOrTemplate < ApplicationRecord
     return power_state.downcase unless power_state.nil?
     "unknown"
   end
+  virtual_attribute :normalized_state, :string, :arel => (lambda do |t|
+    t.grouping(
+      Arel::Nodes::Case.new
+      .when(arel_attribute(:archived)).then(Arel::Nodes::SqlLiteral.new("\'archived\'"))
+      .when(arel_attribute(:orphaned)).then(Arel::Nodes::SqlLiteral.new("\'orphaned\'"))
+      .when(t[:template].eq(t.create_true)).then(Arel::Nodes::SqlLiteral.new("\'template\'"))
+      .when(t[:retired].eq(t.create_true)).then(Arel::Nodes::SqlLiteral.new("\'retired\'"))
+      .when(arel_attribute(:disconnected)).then(Arel::Nodes::SqlLiteral.new("\'disconnected\'"))
+      .else(t.lower(
+              Arel::Nodes::NamedFunction.new('COALESCE', [t[:power_state], Arel::Nodes::SqlLiteral.new("\'unknown\'")])
+      ))
+    )
+  end)
+
 
   def has_compliance_policies?
     _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "vm_compliance_check")
@@ -1523,7 +1546,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def num_cpu
-    hardware.nil? ? 0 : hardware.cpu_sockets
+    hardware.try(:cpu_sockets) || 0
   end
 
   def num_disks
@@ -1618,6 +1641,39 @@ class VmOrTemplate < ApplicationRecord
     end
   end
 
+  # This creates the following SQL conditional:
+  #
+  #   1 = (SELECT 1
+  #        FROM hardwares
+  #        JOIN networks ON networks.hardware_id = hardwares.id
+  #        WHERE hardwares.vm_or_template_id = vms.id
+  #          AND (networks.ipaddress LIKE "%IPADDRESS%"
+  #               OR networks.ipv6address LIKE "%IPADDRESS%")
+  #        LIMIT 1
+  #       )
+  #
+  # This is simply an existance check, so when one record is found matching the
+  # following conditions:
+  #
+  #   - It is a hardware record that is associated with the vm
+  #   - It has an ipaddress or ipv6address that matches the search
+  #
+  # It will return the VM record.
+  def self.miq_expression_includes_any_ipaddresses_arel(ipaddress)
+    vms       = arel_table
+    networks  = Network.arel_table
+    hardwares = Hardware.arel_table
+
+    match_grouping = networks[:ipaddress].matches("%#{ipaddress}%")
+                       .or(networks[:ipv6address].matches("%#{ipaddress}%"))
+
+    query = hardwares.project(1)
+                     .join(networks).on(networks[:hardware_id].eq(hardwares[:id]))
+                     .where(hardwares[:vm_or_template_id].eq(vms[:id]).and(match_grouping))
+                     .take(1)
+    Arel::Nodes::SqlLiteral.new("1").eq(query)
+  end
+
   def self.scan_by_property(property, value, _options = {})
     _log.info("scan_vm_by_property called with property:[#{property}] value:[#{value}]")
     case property
@@ -1691,16 +1747,8 @@ class VmOrTemplate < ApplicationRecord
   end
 
   supports_not :snapshots
-
-  def self.batch_operation_supported?(operation, ids)
-    VmOrTemplate.where(:id => ids).all? do |vm_or_template|
-      if vm_or_template.respond_to?("supports_#{operation}?")
-        vm_or_template.public_send("supports_#{operation}?")
-      else
-        vm_or_template.public_send("validate_#{operation}")[:available]
-      end
-    end
-  end
+  supports :destroy
+  supports :refresh_ems
 
   # Stop showing Reconfigure VM task unless the subclass allows
   def reconfigurable?
@@ -1746,6 +1794,10 @@ class VmOrTemplate < ApplicationRecord
     parent
   end
 
+  def self.display_name(number = 1)
+    n_('VM or Template', 'VMs or Templates', number)
+  end
+
   private
 
   def set_tenant_from_group
@@ -1785,4 +1837,6 @@ class VmOrTemplate < ApplicationRecord
   def self.arel_coalesce(values)
     Arel::Nodes::NamedFunction.new('COALESCE', values)
   end
+
+  private_class_method :arel_coalesce
 end

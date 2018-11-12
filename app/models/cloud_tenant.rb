@@ -25,6 +25,7 @@ class CloudTenant < ApplicationRecord
   has_many   :cloud_resource_quotas
   has_many   :cloud_tenant_flavors, :dependent => :destroy
   has_many   :flavors, :through => :cloud_tenant_flavors
+  has_many   :cloud_volume_types, :through => :ext_management_system
 
   alias_method :direct_cloud_networks, :cloud_networks
 

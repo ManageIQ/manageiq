@@ -349,7 +349,9 @@ module AuthenticationMixin
   # @return [Boolean] true if the routine is executed successfully
   #
   def change_password(current_password, new_password, auth_type = :default)
-    raise MiqException::Error, _("Change Password is not supported for #{self.class.description} provider") unless supports?(:change_password)
+    unless supports?(:change_password)
+      raise MiqException::Error, _("Change Password is not supported for %{class_description} provider") % {:class_description => self.class.description}
+    end
     if change_password_params_valid?(current_password, new_password)
       raw_change_password(current_password, new_password)
       update_authentication(auth_type => {:userid => authentication_userid, :password => new_password})

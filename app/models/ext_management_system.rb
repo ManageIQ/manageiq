@@ -1,5 +1,6 @@
 class ExtManagementSystem < ApplicationRecord
   include CustomActionsMixin
+  include SupportsFeatureMixin
 
   def self.types
     leaf_subclasses.collect(&:ems_type)
@@ -49,6 +50,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :hardwares,         :through => :vms_and_templates
   has_many :networks,          :through => :hardwares
   has_many :disks,             :through => :hardwares
+  has_many :physical_servers,  :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
 
   has_many :storages,       -> { distinct },          :through => :hosts
   has_many :ems_events,     -> { order("timestamp") }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
@@ -60,6 +62,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :miq_alert_statuses, :foreign_key => "ems_id", :dependent => :destroy
   has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :datacenters,    :foreign_key => "ems_id", :class_name => "Datacenter", :inverse_of => :ext_management_system
   has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
   has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
@@ -76,6 +79,14 @@ class ExtManagementSystem < ApplicationRecord
   has_many :miq_events,             :as => :target, :dependent => :destroy
   has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
 
+  has_many :vms_and_templates_advanced_settings, :through => :vms_and_templates, :source => :advanced_settings
+  has_many :service_instances, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :service_offerings, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :service_parameters_sets, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
+
+  has_many :host_conversion_hosts, :through => :hosts, :source => :conversion_host
+  has_many :vm_conversion_hosts, :through => :vms, :source => :conversion_host
+
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
@@ -83,6 +94,8 @@ class ExtManagementSystem < ApplicationRecord
   scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
 
   serialize :options
+
+  supports :refresh_ems
 
   def hostname_uniqueness_valid?
     return unless hostname_required?
@@ -132,6 +145,8 @@ class ExtManagementSystem < ApplicationRecord
            :port=,
            :security_protocol,
            :security_protocol=,
+           :verify_ssl,
+           :verify_ssl=,
            :certificate_authority,
            :certificate_authority=,
            :to => :default_endpoint,
@@ -162,6 +177,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_total  :total_subnets,           :cloud_subnets
   virtual_column :supports_block_storage,  :type => :boolean
   virtual_column :supports_cloud_object_store_container_create, :type => :boolean
+  virtual_column :supports_cinder_volume_types, :type => :boolean
 
   virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
   virtual_aggregate :total_memory, :hosts, :sum, :ram_size
@@ -393,7 +409,13 @@ class ExtManagementSystem < ApplicationRecord
   def with_provider_connection(options = {})
     raise _("no block given") unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
-    yield connect(options)
+    connection = connect(options)
+    yield connection
+  ensure
+    disconnect(connection) if connection
+  end
+
+  def disconnect(_connection)
   end
 
   def self.refresh_all_ems_timer
@@ -571,6 +593,10 @@ class ExtManagementSystem < ApplicationRecord
     supports_cloud_object_store_container_create?
   end
 
+  def supports_cinder_volume_types
+    supports_cinder_volume_types?
+  end
+
   def get_reserve(field)
     (hosts + ems_clusters).inject(0) { |v, obj| v + (obj.send(field) || 0) }
   end
@@ -586,6 +612,10 @@ class ExtManagementSystem < ApplicationRecord
   def vm_log_user_event(_vm, user_event)
     $log.info(user_event)
     $log.warn("User event logging is not available on [#{self.class.name}] Name:[#{name}]")
+  end
+
+  def conversion_hosts
+    host_conversion_hosts + vm_conversion_hosts
   end
 
   #
@@ -706,6 +736,18 @@ class ExtManagementSystem < ApplicationRecord
       end
     end
     data
+  end
+
+  def self.display_name(number = 1)
+    n_('Manager', 'Managers', number)
+  end
+
+  def inventory_object_refresh?
+    Settings.ems_refresh.fetch_path(emstype, :inventory_object_refresh)
+  end
+
+  def allow_targeted_refresh?
+    Settings.ems_refresh.fetch_path(emstype, :allow_targeted_refresh)
   end
 
   private

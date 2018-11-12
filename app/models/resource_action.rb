@@ -14,7 +14,7 @@ class ResourceAction < ApplicationRecord
     resource.readonly? if resource.kind_of?(ServiceTemplate)
   end
 
-  def automate_queue_hash(target, override_attrs, user)
+  def automate_queue_hash(target, override_attrs, user, open_url_task_id = nil)
     if target.nil?
       override_values = {}
     elsif target.kind_of?(Hash)
@@ -33,11 +33,13 @@ class ResourceAction < ApplicationRecord
       :class_name       => ae_class,
       :instance_name    => ae_instance,
       :automate_message => ae_message,
+      :open_url_task_id => open_url_task_id,
       :attrs            => (ae_attributes || {}).merge(override_attrs || {}),
     }.merge(override_values).tap do |args|
       args[:user_id] ||= user.id
       args[:miq_group_id] ||= user.current_group.id
       args[:tenant_id] ||= user.current_tenant.id
+      args[:username] ||= user.userid
     end
   end
 
@@ -66,12 +68,19 @@ class ResourceAction < ApplicationRecord
     uri
   end
 
-  def deliver_to_automate_from_dialog(dialog_hash_values, target, user)
+  def deliver_to_automate_from_dialog(dialog_hash_values, target, user, task_id = nil)
     _log.info("Queuing <#{self.class.name}:#{id}> for <#{resource_type}:#{resource_id}>")
-    MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user),
+    MiqAeEngine.deliver_queue(automate_queue_hash(target, dialog_hash_values[:dialog], user, task_id),
                               :zone     => target.try(:my_zone),
                               :priority => MiqQueue::HIGH_PRIORITY,
                               :task_id  => "#{self.class.name.underscore}_#{id}")
+  end
+
+  def deliver_to_automate_from_dialog_with_miq_task(dialog_hash_values, target, user)
+    task = MiqTask.create(:name => "Automate method task for open_url", :userid => user.userid)
+    deliver_to_automate_from_dialog(dialog_hash_values, target, user, task.id)
+    task.update_status(MiqTask::STATE_QUEUED, MiqTask::STATUS_OK, 'MiqTask has been queued.')
+    task.id
   end
 
   def deliver_to_automate_from_dialog_field(dialog_hash_values, target, user)

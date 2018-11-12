@@ -27,19 +27,16 @@ class MiqAlert < ApplicationRecord
     MiqServer
     ContainerNode
     ContainerProject
+    PhysicalServer
   )
 
   def self.base_tables
     BASE_TABLES
   end
 
-  def self.display_name
-    "Alert"
-  end
-
   acts_as_miq_set_member
 
-  ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :ext_management_system, :my_enterprise]
+  ASSIGNMENT_PARENT_ASSOCIATIONS = %i(host ems_cluster ext_management_system my_enterprise physical_server).freeze
 
   HOURLY_TIMER_EVENT   = "_hourly_timer_"
 
@@ -375,7 +372,8 @@ class MiqAlert < ApplicationRecord
   def self.rt_perf_model_details(dbs)
     dbs.inject({}) do |h, db|
       h[db] = Metric::Rollup.const_get("#{db.underscore.upcase}_REALTIME_COLS").inject({}) do |hh, c|
-        hh[c.to_s] = Dictionary.gettext("#{db}Performance.#{c}")
+        db_column = "#{db}Performance.#{c}" # this is to prevent the string from being collected during string extraction
+        hh[c.to_s] = Dictionary.gettext(db_column)
         hh
       end
       h
@@ -385,7 +383,8 @@ class MiqAlert < ApplicationRecord
   def self.operating_range_perf_model_details(dbs)
     dbs.inject({}) do |h, db|
       h[db] = Metric::LongTermAverages::AVG_COLS.inject({}) do |hh, c|
-        hh[c.to_s] = Dictionary.gettext("#{db}Performance.#{c}")
+        db_column = "#{db}Performance.#{c}" # this is to prevent the string from being collected during string extraction
+        hh[c.to_s] = Dictionary.gettext(db_column)
         hh
       end
       h
@@ -859,5 +858,9 @@ class MiqAlert < ApplicationRecord
       _a, stat = import_from_hash(e[name])
       stat
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Alert', 'Alerts', number)
   end
 end

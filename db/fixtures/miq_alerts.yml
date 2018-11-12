@@ -321,3 +321,18 @@
             value: prod
   :db: Vm
   :guid: 89db0be8-c240-11de-a3be-000c290de4f9
+- :description: Physical server has critical health state
+  :options:
+    :notifications:
+      :delay_next_evaluation: 3600
+      :email:
+        :from: ''
+        :to: []
+  :miq_expression: !ruby/object:MiqExpression
+    exp:
+      =:
+        field: PhysicalServer-health_state
+        value: "Critical"
+  :db: PhysicalServer
+  :guid: 15feb65a-1f36-44db-84ee-0e71d9f497c8
+  :responds_to_events: _hourly_timer_

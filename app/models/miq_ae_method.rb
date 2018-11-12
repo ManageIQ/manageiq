@@ -17,7 +17,7 @@ class MiqAeMethod < ApplicationRecord
 
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
-  AVAILABLE_LOCATIONS = %w(builtin inline uri expression playbook).freeze
+  AVAILABLE_LOCATIONS = %w(builtin inline expression playbook).freeze
   validates_inclusion_of  :location,  :in => AVAILABLE_LOCATIONS
   AVAILABLE_SCOPES     = ["class", "instance"]
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
@@ -127,5 +127,9 @@ class MiqAeMethod < ApplicationRecord
   def self.find_by_class_id_and_name(class_id, name)
     ae_method_filter = ::MiqAeMethod.arel_table[:name].lower.matches(name)
     ::MiqAeMethod.where(ae_method_filter).where(:class_id => class_id).first
+  end
+
+  def self.display_name(number = 1)
+    n_('Automate Method', 'Automate Methods', number)
   end
 end

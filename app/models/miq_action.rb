@@ -106,11 +106,30 @@ class MiqAction < ApplicationRecord
     results = {}
 
     begin
-      failed.each do |p|
+      succeeded.each do |p|
         actions = case p
-                  when MiqPolicy then p.actions_for_event(inputs[:event], :failure).uniq
+                  when MiqPolicy then p.actions_for_event(inputs[:event], :success).uniq
                   else            p.actions_for_event
                   end
+
+        actions.each do |a|
+          inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
+          _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
+
+          if a.name == "prevent"
+            deferred.push([a, apply_policies_to, inputs])
+            next
+          end
+
+          name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
+          results[name] ||= []
+          results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
+        end
+      end
+
+      failed.each do |p|
+        next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on success
+        actions = p.actions_for_event(inputs[:event], :failure).uniq
 
         actions.each do |a|
           # merge in the synchronous flag and possibly the sequence if not already sorted by this
@@ -125,24 +144,6 @@ class MiqAction < ApplicationRecord
           name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
           results[name] ||= []
           results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :failure, :result => a.invoke(apply_policies_to, inputs)}
-        end
-      end
-
-      succeeded.each do |p|
-        next unless p.kind_of?(MiqPolicy) # built-in policies are OpenStructs whose actions will be invoked only on failure
-        actions = p.actions_for_event(inputs[:event], :success).uniq
-        actions.each do |a|
-          inputs = inputs.merge(:policy => p, :result => true, :sequence => a.sequence, :synchronous => a.synchronous)
-          _log.debug("action: [#{a.name}], seq: [#{a.sequence}], sync: [#{a.synchronous}], inputs to action: seq: [#{inputs[:sequence]}], sync: [#{inputs[:synchronous]}]")
-
-          if a.name == "prevent"
-            deferred.push([a, apply_policies_to, inputs])
-            next
-          end
-
-          name = a.action_type == "default" ? a.name.to_sym : a.action_type.to_sym
-          results[name] ||= []
-          results[name] << {:policy_id => p.kind_of?(MiqPolicy) ? p.id : nil, :policy_status => :success, :result => a.invoke(apply_policies_to, inputs)}
         end
       end
 
@@ -309,6 +310,7 @@ class MiqAction < ApplicationRecord
         :header            => "Alert Triggered",
         :policy_detail     => "Alert '#{inputs[:policy].description}', triggered",
         :event_description => inputs[:event].description,
+        :event_details     => Notification.notification_text(inputs[:triggering_type], inputs[:triggering_data]),
         :entity_type       => rec.class.to_s,
         :entity_name       => rec.name
       }
@@ -524,6 +526,16 @@ class MiqAction < ApplicationRecord
         inputs[:synchronous], action_method, vm_method == "scan" ? "smartstate" : "ems_operations", rec.my_zone,
         rec, vm_method, [], "[#{action.description}] of VM [#{rec.name}]")
     end
+  end
+
+  def action_physical_server_power_on(action, rec, inputs)
+    unless rec.kind_of?(PhysicalServer)
+      MiqPolicy.logger.error("MIQ(physical_server_power_on): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a physical server")
+      return
+    end
+
+    invoke_or_queue(inputs[:synchronous], __method__, "ems_operations", rec.my_zone, rec, 'power_on',
+                    [], "[#{action.description}] of physical server [#{rec.name}]")
   end
 
   def action_vm_mark_as_vm(action, rec, inputs)
@@ -984,6 +996,10 @@ class MiqAction < ApplicationRecord
 
   def self.fixture_path
     FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
+  end
+
+  def self.display_name(number = 1)
+    n_('Action', 'Actions', number)
   end
 
   private

@@ -189,8 +189,7 @@ class MiqWorker < ApplicationRecord
     settings = {}
 
     unless miq_server.nil?
-      server_config = options[:config] || miq_server.get_config("vmdb")
-      server_config = server_config.config if server_config.respond_to?(:config)
+      server_config = options[:config] || miq_server.settings
       # Get the configuration values
       section = server_config[:workers]
       unless section.nil?
@@ -372,6 +371,8 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.containerized_worker?
+    # un-rearch containers until further notice
+    return false
     MiqEnvironment::Command.is_podified? && supports_container?
   end
 
@@ -527,8 +528,6 @@ class MiqWorker < ApplicationRecord
   end
 
   def status_update
-    return if MiqEnvironment::Command.is_podified?
-
     begin
       pinfo = MiqProcess.processInfo(pid)
     rescue Errno::ESRCH
@@ -633,5 +632,10 @@ class MiqWorker < ApplicationRecord
     delta = worker_settings[:nice_delta]
     delta.kind_of?(Integer) ? delta.to_s : "+10"
   end
+
+  def self.display_name(number = 1)
+    n_('Worker', 'Workers', number)
+  end
+
   private_class_method :nice_increment
 end

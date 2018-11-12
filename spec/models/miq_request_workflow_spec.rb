@@ -638,4 +638,10 @@ describe MiqRequestWorkflow do
       expect(workflow.storage_to_hash_struct(storage).storage_clusters).to be_nil
     end
   end
+
+  context '.encrypted_options_field_regs' do
+    it 'includes "password::"' do
+      expect(MiqRequestWorkflow.encrypted_options_field_regs).to include(/password::/)
+    end
+  end
 end

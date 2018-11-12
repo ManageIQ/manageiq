@@ -15,6 +15,14 @@ module RequireNested
       Object.require_nested name
     end
   end
+
+  def require_nested_all
+    path = File.join(caller(1, 1).first.split('.rb').first, "*.rb") # determining caller file location
+    Dir.glob(path).sort.each do |full_path|
+      name = File.basename(full_path, '.rb')
+      require_nested(name.classify.to_sym)
+    end
+  end
 end
 
 Module.include RequireNested

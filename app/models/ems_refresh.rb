@@ -51,6 +51,9 @@ module EmsRefresh
       h[e] << t unless e.nil?
     end
 
+    # Drop targets on EMSs which are using streaming refresh
+    targets_by_ems.reject! { |ems, _| ems.supports_streaming_refresh? }
+
     # Queue the refreshes
     task_ids = targets_by_ems.collect do |ems, ts|
       ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq
@@ -74,6 +77,8 @@ module EmsRefresh
   end
 
   def self.refresh(target, id = nil)
+    require "inventory_refresh"
+
     EmsRefresh.init_console if defined?(Rails::Console)
 
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
@@ -127,8 +132,8 @@ module EmsRefresh
       # Take care of both String or Class type being passed in
       target_class = target_class.to_s.constantize unless target_class.kind_of?(Class)
 
-      if ManagerRefresh::Inventory.persister_class_for(target_class).blank? &&
-         [VmOrTemplate, Host, PhysicalServer, ExtManagementSystem, ManagerRefresh::Target].none? { |k| target_class <= k }
+      if ManageIQ::Providers::Inventory.persister_class_for(target_class).blank? &&
+         [VmOrTemplate, Host, PhysicalServer, ExtManagementSystem, InventoryRefresh::Target].none? { |k| target_class <= k }
         _log.warn("Unknown target type: [#{target_class}].")
         next
       end
@@ -136,12 +141,12 @@ module EmsRefresh
       hash[target_class] << id
     end
 
-    # Do lookups to get ActiveRecord objects or initialize ManagerRefresh::Target for ids that are Hash
+    # Do lookups to get ActiveRecord objects or initialize InventoryRefresh::Target for ids that are Hash
     targets_by_type.each_with_object([]) do |(target_class, ids), target_objects|
       ids.uniq!
 
-      recs = if target_class <= ManagerRefresh::Target
-               ids.map { |x| ManagerRefresh::Target.load(x) }
+      recs = if target_class <= InventoryRefresh::Target
+               ids.map { |x| InventoryRefresh::Target.load(x) }
              else
                active_record_recs = target_class.where(:id => ids)
                active_record_recs = active_record_recs.includes(:ext_management_system) unless target_class <= ExtManagementSystem
@@ -223,7 +228,7 @@ module EmsRefresh
 
   def self.uniq_targets(targets)
     if targets.size > 1_000
-      manager_refresh_targets, application_record_targets = targets.partition { |key, _| key == "ManagerRefresh::Target" }
+      manager_refresh_targets, application_record_targets = targets.partition { |key, _| key == "InventoryRefresh::Target" }
       application_record_targets.uniq!
       manager_refresh_targets.uniq! { |_, value| value.values_at(:manager_id, :association, :manager_ref) }
 

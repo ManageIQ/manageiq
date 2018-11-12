@@ -2,7 +2,7 @@ module EmsRefresh::SaveInventory
   # Parsed inventory can come as hash of hashes or array of InventoryCollection's.
   def save_ems_inventory(ems, hashes_or_collections, target = nil, disconnect = true)
     if hashes_or_collections.kind_of?(Array)
-      ManagerRefresh::SaveInventory.save_inventory(ems, hashes_or_collections) # InventoryCollections.
+      InventoryRefresh::SaveInventory.save_inventory(ems, hashes_or_collections) # InventoryCollections.
       return
     end
     hashes = hashes_or_collections
@@ -132,6 +132,12 @@ module EmsRefresh::SaveInventory
 
           link_habtm(found, key_backup[:storages], :storages, Storage)
           link_habtm(found, key_backup[:key_pairs], :key_pairs, ManageIQ::Providers::CloudManager::AuthKeyPair)
+          # Habtm somehow saves and caches incomplete object. So found.key_pairs.first.attributes returns e.g.
+          # {"id"=>23, "name"=>"EmsRefreshSpec-KeyPair-OtherRegion"} and that fails later on e.g. set_tenant. The
+          # behaviour is that the key_pair.respond_to(:group) returns true, but when we call it, it returns
+          # missing attribute: miq_group_id.
+          found.try(:key_pairs).try(:reload)
+
           save_child_inventory(found, key_backup, child_keys)
 
           found.save!

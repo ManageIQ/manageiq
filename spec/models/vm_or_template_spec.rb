@@ -82,6 +82,30 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".miq_expression_includes_any_ipaddresses_arel" do
+    subject              { FactoryGirl.create(:vm) }
+    let(:no_hardware_vm) { FactoryGirl.create(:vm) }
+    let(:wrong_ip_vm)    { FactoryGirl.create(:vm) }
+
+    before do
+      hw1 = FactoryGirl.create(:hardware, :vm => subject)
+      FactoryGirl.create(:network, :hardware => hw1, :ipaddress => "10.11.11.11")
+      FactoryGirl.create(:network, :hardware => hw1, :ipaddress => "10.10.10.10")
+      FactoryGirl.create(:network, :hardware => hw1, :ipaddress => "10.10.10.11")
+
+      hw2 = FactoryGirl.create(:hardware, :vm => wrong_ip_vm)
+      FactoryGirl.create(:network, :hardware => hw2, :ipaddress => "11.11.11.11")
+    end
+
+    it "runs a single query, returning only the valid vm" do
+      expect do
+        query  = Vm.miq_expression_includes_any_ipaddresses_arel("10.10.10")
+        result = Vm.where(query)
+        expect(result.to_a).to eq([subject])
+      end.to match_query_limit_of(1)
+    end
+  end
+
   context ".event_by_property" do
     context "should add an EMS event" do
       before do
@@ -564,32 +588,6 @@ describe VmOrTemplate do
     end
   end
 
-  context "#self.batch_operation_supported?" do
-    let(:ems)     { FactoryGirl.create(:ext_management_system) }
-    let(:storage) { FactoryGirl.create(:storage) }
-    let(:host) { FactoryGirl.create(:host) }
-
-    it "when the vm_or_template supports migrate,  returns false" do
-      vm1 =  FactoryGirl.create(:vm_microsoft)
-      vm2 =  FactoryGirl.create(:vm_vmware)
-      expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(false)
-    end
-
-    it "when the vm_or_template exists and can be migrated, returns true" do
-      vm1 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
-      vm2 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
-      expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
-    end
-
-    it "when the vm_or_template supports terminate, returns true" do
-      ems_vmware = FactoryGirl.create(:ems_vmware)
-      ems_ms = FactoryGirl.create(:ems_microsoft)
-      vm1 =  FactoryGirl.create(:vm_microsoft, :host => host, :ext_management_system => ems_ms)
-      vm2 =  FactoryGirl.create(:vm_vmware, :host => host, :ext_management_system => ems_vmware)
-      expect(VmOrTemplate.batch_operation_supported?(:terminate, [vm1.id, vm2.id])).to eq(true)
-    end
-  end
-
   context ".set_tenant_from_group" do
     before { Tenant.seed }
     let(:tenant1) { FactoryGirl.create(:tenant) }
@@ -712,19 +710,47 @@ describe VmOrTemplate do
     end
   end
 
+  describe "#used_storage" do
+    it "calculates in ruby with null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.used_storage).to eq(0.0)
+    end
+
+    it "calculates in ruby" do
+      hardware = FactoryGirl.create(:hardware, :memory_mb => 10)
+      vm = FactoryGirl.create(:vm_vmware, :hardware => hardware)
+      disk = FactoryGirl.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
+      expect(vm.used_storage).to eq(10 * 1024 * 1024 + 1024) # memory_mb + size on disk
+    end
+  end
+
+  # allocated_disk_storage.to_i + ram_size_in_bytes
   describe "#provisioned_storage" do
-    context "with no hardware" do
-      let(:vm) { FactoryGirl.create(:vm_vmware) }
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
+    let(:disk) { FactoryGirl.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware) }
 
-      it "calculates in ruby" do
-        expect(vm.provisioned_storage).to eq(0.0)
-      end
+    it "calculates in ruby with null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.provisioned_storage).to eq(0.0)
+    end
 
-      it "uses calculated (inline) attribute" do
-        vm # make sure the record is created
-        vm2 = VmOrTemplate.select(:id, :provisioned_storage).first
-        expect { expect(vm2.provisioned_storage).to eq(0) }.to match_query_limit_of(0)
-      end
+    it "uses calculated (inline) attribute with null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      vm2 = VmOrTemplate.select(:id, :provisioned_storage).first
+      expect { expect(vm2.provisioned_storage).to eq(0) }.to match_query_limit_of(0)
+    end
+
+    it "calculates in ruby" do
+      vm
+      disk # make sure the record is created
+      expect(vm.provisioned_storage).to eq(10_496_000)
+    end
+
+    it "uses calculated (inline) attribute" do
+      vm
+      disk # make sure the record is created
+      expect(virtual_column_sql_value(VmOrTemplate, "provisioned_storage")).to eq(10_496_000)
     end
   end
 
@@ -777,6 +803,7 @@ describe VmOrTemplate do
       tp_id = TimeProfile.seed.id
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
+                         :timestamp       => 1.day.ago,
                          :time_profile_id => tp_id,
                          :resource_id     => vm.id,
                          :min_max         => {
@@ -786,6 +813,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :cpu_usagemhz_rate_average => 10.0,
+                         :timestamp                 => 1.day.ago,
                          :time_profile_id           => tp_id,
                          :resource_id               => vm.id,
                          :min_max                   => {
@@ -794,6 +822,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :cpu_usagemhz_rate_average => 100.0,
+                         :timestamp                 => 1.day.ago,
                          :time_profile_id           => tp_id,
                          :resource_id               => vm.id,
                          :min_max                   => {
@@ -824,6 +853,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :time_profile_id => tp_id,
+                         :timestamp       => 1.day.ago,
                          :resource_id     => vm.id,
                          :min_max         => {
                            :abs_max_derived_memory_used_value => 100.00
@@ -831,6 +861,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :derived_memory_used => 10.0,
+                         :timestamp           => 1.day.ago,
                          :time_profile_id     => tp_id,
                          :resource_id         => vm.id,
                          :min_max             => {
@@ -839,6 +870,7 @@ describe VmOrTemplate do
       FactoryGirl.create :metric_rollup_vm_daily,
                          :with_data,
                          :derived_memory_used => 1000.0,
+                         :timestamp           => 1.day.ago,
                          :time_profile_id     => tp_id,
                          :resource_id         => vm.id,
                          :min_max             => {
@@ -1261,6 +1293,68 @@ describe VmOrTemplate do
       policy_event = FactoryGirl.create(:policy_event, :target_class => "VmOrTemplate", :target_id => vm.id)
 
       expect(vm.policy_events).to eq([policy_event])
+    end
+  end
+
+  describe '#normalized_state' do
+    let(:klass) { :vm_vmware }
+    let(:storage) { FactoryGirl.create(:storage_vmware) }
+    let(:ems) { FactoryGirl.create(:ems_vmware) }
+    let(:connection_state) { nil }
+    let(:retired) { false }
+
+    let!(:vm) do
+      FactoryGirl.create(klass, :storage          => storage,
+                                :ems_id           => ems.try(:id),
+                                :connection_state => connection_state,
+                                :retired          => retired)
+    end
+
+    subject { vm.normalized_state }
+
+    shared_examples 'normalized_state return value' do |value|
+      let(:virtual_attribute) { virtual_column_sql_value(VmOrTemplate, "normalized_state") }
+
+      it { is_expected.to eq(value) }
+
+      it 'virtual column' do
+        expect(virtual_attribute).to eq(value)
+      end
+    end
+
+    context 'no ems and no storage attached' do
+      let(:ems) { nil }
+      let(:storage) { nil }
+
+      include_examples "normalized_state return value", "archived"
+    end
+
+    context 'no ems attached' do
+      let(:ems) { nil }
+
+      include_examples "normalized_state return value", "orphaned"
+    end
+
+    context 'template' do
+      let(:klass) { :template_vmware }
+
+      include_examples "normalized_state return value", "template"
+    end
+
+    context 'retired' do
+      let(:retired) { true }
+
+      include_examples "normalized_state return value", "retired"
+    end
+
+    context 'disconnected' do
+      include_examples "normalized_state return value", "disconnected"
+    end
+
+    context 'valid powerstate' do
+      let(:connection_state) { 'connected' }
+
+      include_examples "normalized_state return value", "on"
     end
   end
 end

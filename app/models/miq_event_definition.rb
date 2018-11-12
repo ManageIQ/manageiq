@@ -170,4 +170,8 @@ class MiqEventDefinition < ApplicationRecord
       end
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Event Definition', 'Event Definitions', number)
+  end
 end # class MiqEventDefinition

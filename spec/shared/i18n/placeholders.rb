@@ -32,4 +32,20 @@ shared_examples :placeholders do |dir|
     end
     expect(errors).to be_empty
   end
+
+  it "gettext strings do not contain interpolations" do
+    errors = []
+    Pathname.glob(File.join(dir, "**", "*.pot")).each do |pot_file|
+      File.open(pot_file).each do |line|
+        next unless line =~ /^.*(".*\#\{[.\w]+\}.*")$/
+        errors.push($1)
+      end
+    end
+
+    if errors.present?
+      puts "Interpolations found in the catalog:\n"
+      puts errors
+    end
+    expect(errors).to be_empty
+  end
 end

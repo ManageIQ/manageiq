@@ -31,4 +31,8 @@ class VmdbMetric < ApplicationRecord
     # Create new daily record...
     metric.update_attributes(:rows => rows, :size => size, :wasted_bytes => wasted_bytes, :percent_bloat => percent_bloat)
   end
+
+  def self.display_name(number = 1)
+    n_('Metric', 'Metrics', number)
+  end
 end

@@ -41,6 +41,12 @@ class ChargebackVm < Chargeback
     storage_allocated_cost
   ).freeze
 
+  cache_with_timeout(:current_volume_types) do
+    volume_types = CloudVolume.volume_types
+    volume_types.push(nil) if volume_types.present?
+    volume_types
+  end
+
   def self.attribute_names
     loaded_attribute_names = super
     loaded_storage_allocated_attributes = loaded_attribute_names.select { |x| x.starts_with?('storage_allocated_') }
@@ -57,9 +63,7 @@ class ChargebackVm < Chargeback
   #   'storage_allocated_volume_type1_cost'   => {:group => [:total]},
   # }
   def self.dynamic_columns_for(column_type)
-    volume_types = CloudVolume.volume_types
-    volume_types.push(nil) if volume_types.present?
-    volume_types.each_with_object({}) do |volume_type, result|
+    current_volume_types.each_with_object({}) do |volume_type, result|
       %i(metric cost rate).collect do |type|
         result["storage_allocated_#{volume_type || 'unclassified'}_#{type}"] = column_type
       end
@@ -73,6 +77,9 @@ class ChargebackVm < Chargeback
 
   def self.build_results_for_report_ChargebackVm(options)
     # Options: a hash transformable to Chargeback::ReportOptions
+
+    # Get the most up to date types from the DB
+    current_volume_types(true)
 
     @report_user = User.find_by(:userid => options[:userid])
 
@@ -131,8 +138,6 @@ class ChargebackVm < Chargeback
       "memory_cost"              => {:grouping => [:total]},
       "memory_used_cost"         => {:grouping => [:total]},
       "memory_used_metric"       => {:grouping => [:total]},
-      "metering_used_cost"       => {:grouping => [:total]},
-      "metering_used_metric"     => {:grouping => [:total]},
       "net_io_used_cost"         => {:grouping => [:total]},
       "net_io_used_metric"       => {:grouping => [:total]},
       "storage_allocated_cost"   => {:grouping => [:total]},
@@ -186,6 +191,10 @@ class ChargebackVm < Chargeback
           raise _('Unable to find strategy for VM selection')
         end
       end
+  end
+
+  def self.display_name(number = 1)
+    n_('Chargeback for VMs', 'Chargebacks for VMs', number)
   end
 
   private

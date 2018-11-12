@@ -4,7 +4,7 @@ FactoryGirl.define do
     sequence(:hostname)  { |n| "ems-#{seq_padded_for_sorting(n)}" }
     sequence(:ipaddress) { |n| ip_from_seq(n) }
     guid                 { SecureRandom.uuid }
-    zone                 { Zone.first || FactoryGirl.create(:zone) }
+    zone                 { FactoryGirl.create(:zone) }
     storage_profiles     { [] }
 
     # Traits
@@ -341,6 +341,13 @@ FactoryGirl.define do
     after(:create) do |x|
       type = (x.type.split("::")[0..2] + ["AutomationManager", "ConfigurationScript"]).join("::")
       x.configuration_scripts << FactoryGirl.create(:configuration_script, :type => type)
+    end
+  end
+
+  trait(:configuration_workflow) do
+    after(:create) do |x|
+      type = (x.type.split("::")[0..2] + %w(AutomationManager ConfigurationWorkflow)).join("::")
+      x.configuration_scripts << FactoryGirl.create(:configuration_workflow, :type => type)
     end
   end
 

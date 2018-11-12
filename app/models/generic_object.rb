@@ -6,6 +6,7 @@ class GenericObject < ApplicationRecord
 
   belongs_to :generic_object_definition
   has_one :picture, :through => :generic_object_definition
+  has_many :custom_button_events, :foreign_key => :target_id, :dependent => :destroy
 
   validates :name, :presence => true
 
@@ -18,6 +19,7 @@ class GenericObject < ApplicationRecord
 
   delegate :name, :to => :generic_object_definition, :prefix => true, :allow_nil => false
   virtual_column :generic_object_definition_name, :type => :string
+  before_destroy :remove_go_from_all_related_services
 
   def initialize(attributes = {})
     # generic_object_definition will be set first since hash iteration is based on the order of key insertion
@@ -199,5 +201,11 @@ class GenericObject < ApplicationRecord
 
     ws = MiqAeEngine.deliver(options)
     ws.root['method_result']
+  end
+
+  def remove_go_from_all_related_services
+    ServiceResource.where(:resource => self).each do |resource|
+      remove_from_service(resource.service) if resource.service
+    end
   end
 end
