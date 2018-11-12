@@ -6305,6 +6305,34 @@
       :identifier: transformation_mapping_delete
       :feature_type: admin
 
+- :name: Conversion Hosts
+  :description: Conversion Hosts
+  :feature_type: node
+  :identifier: conversion_host
+  :children:
+  - :name: View
+    :description: View Conversion Hosts
+    :feature_type: view
+    :identifier: conversion_host_view
+    :children:
+    - :name: List
+      :description: Display Lists of Conversion Hosts
+      :feature_type: view
+      :identifier: conversion_host_show_list
+    - :name: Show
+      :description: Display Individual Conversion Hosts
+      :feature_type: view
+      :identifier: conversion_host_show
+  - :name: Operate
+    :description: Perform Operations on Conversion Hosts
+    :feature_type: control
+    :identifier: conversion_host_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Conversion Hosts
+      :feature_type: control
+:identifier: conversion_host_tag
+
 # API
 - :name: API
   :description: Features Exclusive to the API
