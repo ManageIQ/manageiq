@@ -70,8 +70,8 @@
           action_type: default
           options: {}
       Condition:
-      - name: if container image has high severity openscap rule results
-        description: Has high severity OpenSCAP rule results
+      - name: if container image has no high severity failure in openscap rule results
+        description: No high severity failure in OpenSCAP rule results
         expression: !ruby/object:MiqExpression
           exp:
             not:
