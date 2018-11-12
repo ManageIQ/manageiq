@@ -146,9 +146,25 @@ describe DialogFieldDropDownList do
         allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(values)
       end
 
-      it "uses the given value as the default" do
-        dialog_field.initialize_with_given_value("test")
-        expect(dialog_field.default_value).to eq(["test"].to_json)
+      context "given value is a string" do
+        it "uses the given value as the default" do
+          dialog_field.initialize_with_given_value("test")
+          expect(dialog_field.default_value).to eq(["test"].to_json)
+        end
+      end
+
+      context "given value is an array" do
+        it "uses the given value as the default" do
+          dialog_field.initialize_with_given_value(["test"])
+          expect(dialog_field.default_value).to eq(["test"].to_json)
+        end
+      end
+
+      context "given value is nil" do
+        it "uses the given value as the default" do
+          dialog_field.initialize_with_given_value(nil)
+          expect(dialog_field.default_value).to eq(nil)
+        end
       end
     end
   end
