@@ -7,9 +7,8 @@ describe MiqSwiftStorage do
     context "using a uri with query parameters" do
       let(:uri) { "swift://foo.com:5678/abc/def?region=region&api_version=v3&security_protocol=non-ssl" }
 
-      it "#initialize sets the container_name" do
-        container_name = object_storage.container_name
-        expect(container_name).to eq("abc")
+      it "sets the container_name" do
+        expect(object_storage.container_name).to eq("abc")
       end
 
       it "#uri_to_object_path returns a new object path" do
@@ -21,14 +20,41 @@ describe MiqSwiftStorage do
     context "using a uri without query parameters" do
       let(:uri) { "swift://foo.com/abc/def/my_file.tar.gz" }
 
-      it "#initialize sets the container_name" do
-        container_name = object_storage.container_name
-        expect(container_name).to eq("abc")
+      it "sets the container_name" do
+        expect(object_storage.container_name).to eq("abc")
       end
 
       it "#uri_to_object_path returns a new object path" do
         result = object_storage.uri_to_object_path(uri)
         expect(result).to eq("def/my_file.tar.gz")
+      end
+    end
+
+    context "using a uri with only a container_name" do
+      let(:uri) { "swift://foo.com/container_name" }
+
+      it "sets the container_name" do
+        expect(object_storage.container_name).to eq("container_name")
+      end
+    end
+
+    context "using a uri with only a container_name and params" do
+      let(:uri) { "swift://foo.com/container_name?region=region&api_version=v3&security_protocol=non-ssl" }
+
+      it "sets the container_name" do
+        expect(object_storage.container_name).to eq("container_name")
+      end
+
+      it "sets the region" do
+        expect(object_storage.instance_variable_get(:@region)).to eq("region")
+      end
+
+      it "sets the api_version" do
+        expect(object_storage.instance_variable_get(:@api_version)).to eq("v3")
+      end
+
+      it "sets the security_protocol" do
+        expect(object_storage.instance_variable_get(:@security_protocol)).to eq("non-ssl")
       end
     end
   end
