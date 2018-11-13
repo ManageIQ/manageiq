@@ -106,8 +106,7 @@ module RetirementMixin
 
   def retirement_check
     return if retired? || retiring? || retirement_initialized?
-    requester = system_context_requester
-
+    requester = system_context_requester&.userid
     if !retirement_warned? && retirement_warning_due?
       begin
         self.retirement_last_warn = Time.now.utc
