@@ -80,7 +80,7 @@ class ConversionHost < ApplicationRecord
       :type    => success ? :conversion_host_config_success : :conversion_host_config_failure,
       :options => {
         :op_name => op,
-        :op_arg  => "#{resource_info}",
+        :op_arg  => resource_info,
       }
     )
   end
@@ -110,17 +110,18 @@ class ConversionHost < ApplicationRecord
   end
 
   def self.enable(params)
+    op_arg = params.each_with_object([]) { |(k, v), l| l.push("#{k}=#{v}") }.join(', ')
+    _log.info("Enabling a conversion_host with parameters: #{op_arg}")
+
     success = false
     resource_info = 'not found/invalid'
 
-    op_arg = params.each_with_object([]) { |(k, v), l| l.push("#{k}=#{v}") }.join(', ')
-    _log.info "Enabling a conversion_host with parameters: #{op_arg}"
-
-    resource_type = params[:resource_type]
+    vddk_url = params.delete("param_v2v_vddk_package_url")
     resource_id = params[:resource_id]
+    resource_type = params[:resource_type]
     resource = resource_type.constantize.find(resource_id)
 
-    success = create!(:resource => resource)
+    success = create!(params)
     resource_info = "type=#{params[:resource_type]} id=#{params[:resource_id]}"
   ensure
     notify_configuration_result('enable', success, resource_info)
@@ -137,7 +138,7 @@ class ConversionHost < ApplicationRecord
     resource_info = "type=#{resource.class.name} id=#{resource.id}"
 
     op_arg = params.each_with_object([]) { |(k, v), l| l.push("#{k}=#{v}") }.join(', ')
-    _log.info "Disabling a conversion_host with parameters: #{op_arg}"
+    _log.info("Disabling a conversion_host with parameters: #{op_arg}")
 
     success = destroy
   ensure
