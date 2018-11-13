@@ -1,5 +1,5 @@
 describe "Service Retirement Management" do
-  let(:user) { FactoryGirl.create(:user) }
+  let!(:user) { FactoryGirl.create(:user_miq_request_approver) }
   before(:each) do
     @miq_server = EvmSpecHelper.local_miq_server
     @stack = FactoryGirl.create(:orchestration_stack)
@@ -35,7 +35,7 @@ describe "Service Retirement Management" do
     event_name = 'request_orchestration_stack_retire'
     event_hash = {:userid => user.userid, :orchestration_stack => @stack, :type => "OrchestrationStack"}
 
-    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, :user_id => user.id).once
+    expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, :user_id => user.id, :tenant_id => user.current_tenant.id, :group_id => user.current_group.id).once
 
     @stack.retire_now(user.userid)
     @stack.reload
