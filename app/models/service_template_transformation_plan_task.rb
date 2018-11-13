@@ -84,15 +84,21 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def virtv2v_disks
-    options[:virtv2v_disks] ||= calculate_virtv2v_disks.tap do |disks|
-      update_attributes(:options => options.merge(:virtv2v_disks => disks))
-    end
+    return options[:virtv2v_disks] if options[:virtv2v_disks].present?
+
+    options[:virtv2v_disks] = calculate_virtv2v_disks
+    save!
+
+    options[:virtv2v_disks]
   end
 
   def network_mappings
-    options[:network_mappings] ||= calculate_network_mappings.tap do |mappings|
-      update_attributes(:options => options.merge(:network_mappings => mappings))
-    end
+    return options[:network_mappings] if options[:network_mappings].present?
+
+    options[:network_mappings] = calculate_network_mappings
+    save!
+
+    options[:network_mappings]
   end
 
   def destination_network_ref(network)
