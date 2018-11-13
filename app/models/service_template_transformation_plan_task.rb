@@ -84,31 +84,21 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def virtv2v_disks
-    options[:virtv2v_disks] ||= source.hardware.disks.select { |d| d.device_type == 'disk' }.collect do |disk|
-      source_storage = disk.storage
-      destination_storage = transformation_destination(disk.storage)
-      raise "[#{source.name}] Disk #{disk.device_name} [#{source_storage.name}] has no mapping." if destination_storage.nil?
-      {
-        :path    => disk.filename,
-        :size    => disk.size,
-        :percent => 0,
-        :weight  => disk.size.to_f / source.allocated_disk_storage.to_f * 100
-      }
-    end
+    return options[:virtv2v_disks] if options[:virtv2v_disks].present?
+
+    options[:virtv2v_disks] = calculate_virtv2v_disks
+    save!
+
+    options[:virtv2v_disks]
   end
 
   def network_mappings
-    options[:network_mappings] ||= source.hardware.nics.select { |n| n.device_type == 'ethernet' }.collect do |nic|
-      source_network = nic.lan
-      destination_network = transformation_destination(source_network)
-      raise "[#{source.name}] NIC #{nic.device_name} [#{source_network.name}] has no mapping." if destination_network.nil?
-      {
-        :source      => source_network.name,
-        :destination => destination_network_ref(destination_network),
-        :mac_address => nic.address,
-        :ip_address  => nic.network.try(:ipaddress)
-      }
-    end
+    return options[:network_mappings] if options[:network_mappings].present?
+
+    options[:network_mappings] = calculate_network_mappings
+    save!
+
+    options[:network_mappings]
   end
 
   def destination_network_ref(network)
@@ -246,6 +236,34 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :status  => MiqTask::STATUS_ERROR,
       :message => msg
     )
+  end
+
+  def calculate_virtv2v_disks
+    source.hardware.disks.select { |d| d.device_type == 'disk' }.collect do |disk|
+      source_storage = disk.storage
+      destination_storage = transformation_destination(disk.storage)
+      raise "[#{source.name}] Disk #{disk.device_name} [#{source_storage.name}] has no mapping." if destination_storage.nil?
+      {
+        :path    => disk.filename,
+        :size    => disk.size,
+        :percent => 0,
+        :weight  => disk.size.to_f / source.allocated_disk_storage.to_f * 100
+      }
+    end
+  end
+
+  def calculate_network_mappings
+    source.hardware.nics.select { |n| n.device_type == 'ethernet' }.collect do |nic|
+      source_network = nic.lan
+      destination_network = transformation_destination(source_network)
+      raise "[#{source.name}] NIC #{nic.device_name} [#{source_network.name}] has no mapping." if destination_network.nil?
+      {
+        :source      => source_network.name,
+        :destination => destination_network_ref(destination_network),
+        :mac_address => nic.address,
+        :ip_address  => nic.network.try(:ipaddress)
+      }
+    end
   end
 
   def conversion_options_source_provider_vmwarews_vddk(_storage)
