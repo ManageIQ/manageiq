@@ -612,6 +612,22 @@ describe VirtualFields do
         end
       end
 
+      context "with has_many and select" do
+        before do
+          TestClass.has_one :ref2, -> { select(:col1) }, :class_name => 'TestClass', :foreign_key => :col1
+        end
+        # child.col1 will be getting parent's (aka tc's) id
+        let(:child) { TestClass.create(:id => 1) }
+
+        # ensure virtual attribute referencing a relation with a select()
+        # does not throw an exception due to multi-column select
+        it "properly generates sub select" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          TestClass.create(:id => 2, :ref2 => child)
+          expect { TestClass.all.select(:id, :col1, :child_col1).to_a }.to_not raise_error
+        end
+      end
+
       context "with relation in foreign table" do
         before do
           class TestOtherClass < ActiveRecord::Base

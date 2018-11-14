@@ -298,7 +298,7 @@ module VirtualDelegates
     to_table    = select_from_alias_table(to_ref.klass, src_model_id.relation)
     to_model_id = to_ref.klass.arel_attribute(to_model_col_name, to_table)
     to_column   = to_ref.klass.arel_attribute(col, to_table)
-    arel        = query.select(to_column).arel
+    arel        = query.except(:select).select(to_column).arel
                        .from(to_table)
                        .where(to_model_id.eq(src_model_id))
 
