@@ -1,4 +1,11 @@
 describe AuthenticationMixin do
+  include Spec::Support::ArelHelper
+
+  let(:host)            { FactoryGirl.create(:host) }
+  let(:invalid_auth)    { FactoryGirl.create(:authentication, :resource => host, :status => "Invalid") }
+  let(:valid_auth)      { FactoryGirl.create(:authentication, :resource => host, :status => "Valid") }
+  let(:authentications) { [invalid_auth, valid_auth] }
+
   let(:test_class_instance) do
     Class.new(ActiveRecord::Base) do
       def self.name; "TestClass"; end
@@ -718,6 +725,78 @@ describe AuthenticationMixin do
 
           expect(@ems.change_password(current_password, new_password, confirm_password)).to be_truthy
         end
+      end
+    end
+  end
+
+  describe "#authentication_status_severity_level" do
+    it "uses the least valid status" do
+      EvmSpecHelper.local_miq_server
+      authentications
+      expect(host.authentication_status_severity_level.status).to eq("Invalid")
+    end
+  end
+
+  describe "#authentication_status" do
+    before do
+      EvmSpecHelper.local_miq_server
+    end
+
+    context "with no authentications" do
+      before { host }
+
+      it "is nil with sql" do
+        expect(virtual_column_sql_value(Host, "authentication_status")).to be_nil
+      end
+
+      it "is 'None' with pure ruby (via relations)" do
+        expect(host.authentication_status).to eq("None")
+      end
+
+      it "is 'None' when accessed via ruby, but fetched via sql" do
+        fetched_host = Host.select(:id, :authentication_status).first
+        expect(fetched_host.attributes[:authentication_status]).to be_nil
+        expect(fetched_host.authentication_status).to eq("None")
+      end
+    end
+
+    context "with a valid authentication" do
+      before { valid_auth }
+
+      it "is 'Valid' with sql" do
+        h = Host.select(:id, :authentication_status).first
+
+        expect do
+          expect(h.authentication_status).to eq("Valid")
+        end.to match_query_limit_of(0)
+        expect(h.association(:authentication_status_severity_level)).not_to be_loaded
+      end
+
+      it "is 'Valid' with ruby" do
+        h = Host.first # clean host record
+
+        expect(h.authentication_status).to eq("Valid")
+        expect(h.association(:authentication_status_severity_level)).to be_loaded
+      end
+    end
+
+    context "with a valid and invalid authentication" do
+      before { authentications }
+
+      it "is 'Invalid' with sql" do
+        h = Host.select(:id, :authentication_status).first
+
+        expect do
+          expect(h.authentication_status).to eq("Invalid")
+        end.to match_query_limit_of(0)
+        expect(h.association(:authentication_status_severity_level)).not_to be_loaded
+      end
+
+      it "is 'Valid' with ruby" do
+        h = Host.first # clean host record
+
+        expect(h.authentication_status).to eq("Invalid")
+        expect(h.association(:authentication_status_severity_level)).to be_loaded
       end
     end
   end
