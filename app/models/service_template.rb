@@ -167,6 +167,10 @@ class ServiceTemplate < ApplicationRecord
     archive!
   end
 
+  def retireable?
+    false
+  end
+
   def request_class
     ServiceTemplateProvisionRequest
   end
