@@ -15,6 +15,7 @@ class ChargeableField < ApplicationRecord
   }.freeze
 
   belongs_to :detail_measure, :class_name => 'ChargebackRateDetailMeasure', :foreign_key => :chargeback_rate_detail_measure_id
+  has_many :report_types, :as => :resource, :dependent => :destroy, :inverse_of => :report_types
 
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
@@ -120,13 +121,23 @@ class ChargeableField < ApplicationRecord
       if measure
         f[:chargeback_rate_detail_measure_id] = measures[measure].id
       end
+
+      report_types = f.delete(:report_types)
       rec = existing[f[:metric]]
+
       if rec.nil?
-        create(f)
+        rec = create(f)
       else
         rec.attributes = f
         rec.save! if rec.changed?
       end
+
+      report_types&.each do |report_type|
+        ReportType.find_or_create_by(:resource => rec, :name => report_type[:name])
+      end
+
+      report_type_names = report_types ? report_types.map { |report_type| report_type[:name] } : []
+      ReportType.where(:resource => rec).where.not(:name => report_type_names).destroy_all if report_type_names
     end
   end
 
