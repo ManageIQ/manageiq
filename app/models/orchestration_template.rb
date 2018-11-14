@@ -103,20 +103,6 @@ class OrchestrationTemplate < ApplicationRecord
   # Basic options for all templates, each subclass should add more type/provider specific deployment options
   # Return array of OrchestrationParameters. (Deployment options are different from parameters, but they use same class)
   def deployment_options(_manager_class = nil)
-    tenant_opt = OrchestrationTemplate::OrchestrationParameter.new(
-      :name           => "tenant_name",
-      :label          => "Tenant",
-      :data_type      => "string",
-      :description    => "Tenant where the stack will be deployed",
-      :required       => true,
-      :reconfigurable => false,
-      :constraints => [
-        OrchestrationTemplate::OrchestrationParameterAllowedDynamic.new(
-          :fqname => "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
-        )
-      ]
-    )
-
     stack_name_opt = OrchestrationTemplate::OrchestrationParameter.new(
       :name           => "stack_name",
       :label          => "Stack Name",
@@ -130,7 +116,7 @@ class OrchestrationTemplate < ApplicationRecord
         )
       ]
     )
-    [tenant_opt, stack_name_opt]
+    [stack_name_opt]
   end
 
   # List managers that may be able to deploy this template
