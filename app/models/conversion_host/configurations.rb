@@ -36,20 +36,18 @@ module ConversionHost::Configurations
     end
 
     def enable(params)
-      op_arg = params.each_with_object([]) { |(k, v), l| l.push("#{k}=#{v}") }.join(', ')
-      _log.info("Enabling a conversion_host with parameters: #{op_arg}")
-
-      success = false
-      resource_info = 'not found/invalid'
+      _log.info("Enabling a conversion_host with parameters: #{params}")
 
       vddk_url = params.delete("param_v2v_vddk_package_url")
       resource_id = params[:resource_id]
       resource_type = params[:resource_type]
       resource = resource_type.constantize.find(resource_id)
 
-      success = create!(params)
-      resource_info = "type=#{params[:resource_type]} id=#{params[:resource_id]}"
+      conversion_host = new(params.merge(:resource => resource))
+      conversion_host.enable_conversion_host_role
+      success = conversion_host.save!
     ensure
+      resource_info = "type=#{params[:resource_type]} id=#{params[:resource_id]}"
       notify_configuration_result('enable', success, resource_info)
     end
 
@@ -61,13 +59,11 @@ module ConversionHost::Configurations
   end
 
   def disable(params)
-    success = false
     resource_info = "type=#{resource.class.name} id=#{resource.id}"
+    _log.info("Disabling a conversion_host #{resource_info} with parameters: #{params}")
 
-    op_arg = params.each_with_object([]) { |(k, v), l| l.push("#{k}=#{v}") }.join(', ')
-    _log.info("Disabling a conversion_host with parameters: #{op_arg}")
-
-    success = destroy
+    disable_conversion_host_role
+    success = destroy!
   ensure
     self.class.notify_configuration_result('disable', success, resource_info)
   end
