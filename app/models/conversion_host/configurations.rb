@@ -22,7 +22,7 @@ module ConversionHost::Configurations
         :instance_id => instance_id,
         :role        => 'ems_operations',
         :zone        => resource.ext_management_system.my_zone,
-        :args        => [params]
+        :args        => params
       }
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
     end
@@ -32,11 +32,13 @@ module ConversionHost::Configurations
       resource_id = params[:resource_id]
       resource = resource_type.constantize.find(resource_id)
 
-      queue_configuration('enable', nil, resource, params, auth_user)
+      queue_configuration('enable', nil, resource, [params], auth_user)
     end
 
     def enable(params)
       _log.info("Enabling a conversion_host with parameters: #{params}")
+      params.delete(:task_id) # in case this is being called through *_queue which will stick in a :task_id
+      params.delete(:miq_task_id) # miq_queue.activate_miq_task will stick in a :miq_task_id
 
       vddk_url = params.delete("param_v2v_vddk_package_url")
       resource_id = params[:resource_id]
@@ -44,27 +46,30 @@ module ConversionHost::Configurations
       resource = resource_type.constantize.find(resource_id)
 
       conversion_host = new(params.merge(:resource => resource))
-      conversion_host.enable_conversion_host_role
-      success = conversion_host.save!
+      conversion_host.enable_conversion_host_role(vddk_url)
+      conversion_host.save!
+      conversion_host
+    rescue StandardError => error
+      raise
     ensure
       resource_info = "type=#{params[:resource_type]} id=#{params[:resource_id]}"
-      notify_configuration_result('enable', success, resource_info)
-    end
-
-    def self.disable_queue(params, auth_user = nil)
-      id = params[:id]
-      resource = find(id).resource
-      queue_configuration('disable', id, resource, params, auth_user)
+      notify_configuration_result('enable', error.nil?, resource_info)
     end
   end
 
-  def disable(params)
+  def disable_queue(auth_user = nil)
+    self.class.queue_configuration('disable', id, resource, [], auth_user)
+  end
+
+  def disable
     resource_info = "type=#{resource.class.name} id=#{resource.id}"
-    _log.info("Disabling a conversion_host #{resource_info} with parameters: #{params}")
+    _log.info("Disabling a conversion_host #{resource_info}")
 
     disable_conversion_host_role
-    success = destroy!
+    destroy!
+  rescue StandardError => error
+    raise
   ensure
-    self.class.notify_configuration_result('disable', success, resource_info)
+    self.class.notify_configuration_result('disable', error.nil?, resource_info)
   end
 end
