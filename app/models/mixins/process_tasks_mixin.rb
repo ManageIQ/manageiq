@@ -58,7 +58,8 @@ module ProcessTasksMixin
 
     def invoke_tasks_remote(options)
       if name == "Service" && options[:task] == "retire_now"
-        Service.retire(options[:ids])
+        ids = options.delete(:ids)
+        Service.retire(ids, options)
         return
       end
 
