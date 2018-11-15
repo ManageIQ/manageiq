@@ -582,4 +582,15 @@ describe Vmdb::Settings do
 
     expect(::Settings.api.token_ttl).to eq("2.minutes")
   end
+
+  describe "Full settings values" do
+    # Important for being able to safely modify settings through the REST API.
+    it "can be round-tripped through JSON" do
+      orig = Settings.to_hash
+      tripped = JSON.parse(orig.to_json, :symbolize_names => true)
+
+      expect(tripped.pretty_inspect).to eq(orig.pretty_inspect)
+      expect(tripped).to eq(orig)
+    end
+  end
 end
