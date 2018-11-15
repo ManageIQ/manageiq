@@ -1112,11 +1112,23 @@
       :feature_type: admin
       :identifier: ems_infra_change_password
 
-# Migration
-- :name: Migration
-  :description: Everything under Migration
+# V2V
+- :name: Migration Overview
+  :description: Migration Overview
   :feature_type: node
   :identifier: migration
+
+# V2V
+- :name: Infrastructure Mappings
+  :description: Infrastructure Mappings
+  :feature_type: node
+  :identifier: mappings
+
+# V2V
+- :name: Migration Settings
+  :description: Migration Settings
+  :feature_type: node
+  :identifier: migration_settings
 
 # Datacenters
 - :name: Datacenters
