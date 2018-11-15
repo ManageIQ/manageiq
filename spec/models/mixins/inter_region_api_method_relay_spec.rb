@@ -228,6 +228,11 @@ describe InterRegionApiMethodRelay do
         }.to raise_error(described_class::InterRegionApiMethodRelayError)
       end
 
+      it "accepts Hash object as api result" do
+        expect(api_collection).to receive(action).and_return({})
+        expect { described_class.exec_api_call(region, collection_name, action) }.not_to raise_error
+      end
+
       it "calls the given action with the given args" do
         args = {:my => "args", :here => 123}
         expect(api_collection).to receive(action).with(args).and_return(api_success_result)
