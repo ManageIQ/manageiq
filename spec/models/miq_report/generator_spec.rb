@@ -163,4 +163,50 @@ describe MiqReport::Generator do
       expect(rpt.cols_for_report).to match_array(%w(vendor host.name host.hostname))
     end
   end
+
+  describe "#get_include_for_find (private)" do
+    it "returns nil with empty include" do
+      rpt = MiqReport.new(:db      => "VmOrTemplate",
+                          :include => {})
+      expect(rpt.get_include_for_find).to be_nil
+    end
+
+    it "includes virtual_includes from virtual_attributes that are not sql friendly" do
+      rpt = MiqReport.new(:db   => "VmOrTemplate",
+                          :cols => %w(name platform))
+      expect(rpt.get_include_for_find).to eq(:platform => {})
+    end
+
+    it "does not include sql friendly virtual_attributes" do
+      rpt = MiqReport.new(:db   => "VmOrTemplate",
+                          :cols => %w(name v_total_snapshots))
+      expect(rpt.get_include_for_find).to be_nil
+    end
+
+    it "uses include and include_as_hash" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :cols             => %w(name platform),
+                          :include          => {:host => {:columns => %w(name)}, :storage => {:columns => %w(name)}},
+                          :include_for_find => {:snapshots => {}})
+      expect(rpt.get_include_for_find).to eq(:platform => {}, :host => {}, :storage => {}, :snapshots => {})
+    end
+
+    it "uses col, col_order, and virtual attributes and ignores empty include" do
+      # it also allows cols to override col_order for requesting extra columns
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :include          => {},
+                          :cols             => %w(name num_cpu),
+                          :col_order        => %w(name host.name storage.name),
+                          :include_for_find => {:snapshots => {}})
+      expect(rpt.get_include_for_find).to eq(:num_cpu => {}, :host => {}, :storage => {}, :snapshots => {})
+    end
+
+    it "uses col_order and virtual attributes" do
+      rpt = MiqReport.new(:db               => "VmOrTemplate",
+                          :include          => {},
+                          :col_order        => %w(name num_cpu host.name storage.name),
+                          :include_for_find => {:snapshots => {}})
+      expect(rpt.get_include_for_find).to eq(:num_cpu => {}, :host => {}, :storage => {}, :snapshots => {})
+    end
+  end
 end
