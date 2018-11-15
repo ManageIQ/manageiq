@@ -129,13 +129,19 @@ describe Endpoint do
   end
 
   context "to_s" do
-    it "returns the url if set" do
+    it "returns the url with url set" do
       endpoint.url = 'https://www.foo.bar'
       expect(endpoint.to_s).to eql('https://www.foo.bar')
     end
 
-    it "returns a blank string if the url is not set" do
-      expect(endpoint.to_s).to eql('')
+    it "returns a blank string with no ems and no url" do
+      expect(endpoint.to_s).to eql("")
+    end
+
+    it "returns a custom url with vmware uri set" do
+      ems = FactoryGirl.create(:ems_vmware, :hostname => 'example.com', :port => 443, :api_version => 5.5)
+      endpoint = FactoryGirl.create(:endpoint, :resource => ems)
+      expect(endpoint.to_s).to eql("vmwarews://example.com:443/5.5/?verify_ssl=true")
     end
   end
 end

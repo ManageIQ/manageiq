@@ -12,8 +12,6 @@ class Endpoint < ApplicationRecord
   after_create  :endpoint_created
   after_destroy :endpoint_destroyed
 
-  delegate :to_s, :to => :url, :allow_nil => true
-
   def endpoint_created
     resource.endpoint_created(role) if resource.respond_to?(:endpoint_created)
   end
@@ -54,7 +52,19 @@ class Endpoint < ApplicationRecord
     nil # use system defaults
   end
 
+  def to_s
+    (url || generate_uri).to_s
+  end
+
   private
+
+  def generate_uri
+    return unless resource.kind_of?(ExtManagementSystem)
+    host = hostname || ipaddress || resource.hostname
+    path = ["", resource.try(:api_version) || api_version, ""].compact.join("/")
+    query = {:verify_ssl => verify_ssl?, :security_protocol => security_protocol }.delete_blanks.to_query
+    URI::Generic.new(resource.emstype, nil, host, port, nil, path, nil, query, nil)
+  end
 
   def resolve_verify_ssl_value(val)
     case val
