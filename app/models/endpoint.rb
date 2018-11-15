@@ -12,6 +12,8 @@ class Endpoint < ApplicationRecord
   after_create  :endpoint_created
   after_destroy :endpoint_destroyed
 
+  delegate :to_s, :to => :url, :allow_nil => true
+
   def endpoint_created
     resource.endpoint_created(role) if resource.respond_to?(:endpoint_created)
   end

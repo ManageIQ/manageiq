@@ -127,4 +127,15 @@ describe Endpoint do
       expect(endpoint.ssl_cert_store).to be_a(OpenSSL::X509::Store)
     end
   end
+
+  context "to_s" do
+    it "returns the url if set" do
+      endpoint.url = 'https://www.foo.bar'
+      expect(endpoint.to_s).to eql('https://www.foo.bar')
+    end
+
+    it "returns a blank string if the url is not set" do
+      expect(endpoint.to_s).to eql('')
+    end
+  end
 end
