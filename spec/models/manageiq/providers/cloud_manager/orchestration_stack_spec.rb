@@ -15,6 +15,32 @@ describe ManageIQ::Providers::CloudManager::OrchestrationStack do
     end
   end
 
+  describe 'set_tenant_from_group' do
+    before { Tenant.seed }
+    let(:tenant1) { FactoryGirl.create(:tenant) }
+    let(:tenant2) { FactoryGirl.create(:tenant) }
+    let(:group1) { FactoryGirl.create(:miq_group, :tenant => tenant1) }
+    let(:group2) { FactoryGirl.create(:miq_group, :tenant => tenant2) }
+
+    it "assigns the tenant from the group" do
+      expect(FactoryGirl.create(:orchestration_stack, :miq_group => group1).tenant_id).to eq(tenant1.id)
+    end
+
+    it "assigns the tenant from the group_id" do
+      expect(FactoryGirl.create(:orchestration_stack, :miq_group_id => group1.id).tenant_id).to eq(tenant1.id)
+    end
+
+    it "assigns the tenant from the group over the tenant" do
+      expect(FactoryGirl.create(:orchestration_stack, :miq_group => group1, :tenant_id => tenant2.id).tenant_id).to eq(tenant1.id)
+    end
+
+    it "changes the tenant after changing the group" do
+      vm = FactoryGirl.create(:orchestration_stack, :miq_group => group1)
+      vm.update_attributes(:miq_group_id => group2.id)
+      expect(vm.tenant_id).to eq(tenant2.id)
+    end
+  end
+
   describe 'direct_<resource> methods' do
     it 'defines a set of methods for vms' do
       expect(root_stack.direct_vms.size).to eq(1)
