@@ -7,6 +7,7 @@ class OrchestrationStack < ApplicationRecord
   include NewWithTypeStiMixin
   include AsyncDeleteMixin
   include ProcessTasksMixin
+  include OwnershipMixin
   include RetirementMixin
   include TenantIdentityMixin
   include CustomActionsMixin
@@ -18,6 +19,7 @@ class OrchestrationStack < ApplicationRecord
   has_ancestry
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
+  belongs_to :tenant
 
   has_many   :authentication_orchestration_stacks
   has_many   :authentications, :through => :authentication_orchestration_stacks
@@ -47,6 +49,8 @@ class OrchestrationStack < ApplicationRecord
   virtual_total :total_cloud_networks, :cloud_networks
 
   virtual_column :stdout, :type => :string
+
+  before_validation :set_tenant_from_group
 
   scope :without_type, ->(type) { where.not(:type => type) }
 
@@ -91,6 +95,10 @@ class OrchestrationStack < ApplicationRecord
 
   def stdout(format = nil)
     format.nil? ? try(:raw_stdout) : try(:raw_stdout, format)
+  end
+
+  def set_tenant_from_group
+    self.tenant_id = miq_group.tenant_id if miq_group
   end
 
   private :directs_and_indirects
