@@ -44,4 +44,12 @@ describe VmCloud do
       end
     end
   end
+
+  it '.disconnected' do
+    expect(subject.disconnected).to be_falsey
+  end
+
+  it '.disconnected?' do
+    expect(subject.disconnected?).to be_falsey
+  end
 end
