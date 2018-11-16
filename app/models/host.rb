@@ -1770,4 +1770,22 @@ class Host < ApplicationRecord
   def self.display_name(number = 1)
     n_('Host / Node', 'Hosts / Nodes', number)
   end
+
+  def self.post_refresh_ems(ems_id, _update_start_time)
+    ems = ExtManagementSystem.find(ems_id)
+    hosts = ems.hosts
+    unless hosts.empty?
+    hosts.find_each do |h|
+      begin
+        h.post_create_actions_queue
+      rescue NotImplementedError
+        _log.debug("Skipping Host [#{name}] id [#{id}], post_create_actions_queue not implemented in a subclass")
+      end
+    end
+    end
+  end
+
+  def post_create_actions_queue
+    raise NotImplementedError, _("post_create_actions_queue must be implemented in a subclass")
+  end
 end
