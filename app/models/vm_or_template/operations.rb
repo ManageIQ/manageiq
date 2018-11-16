@@ -125,7 +125,7 @@ module VmOrTemplate::Operations
               _('The VM is terminated')
             elsif !has_required_host?
               _('The VM is not connected to a Host')
-            elsif !connection_state.nil? && !connected_to_ems?
+            elsif disconnected?
               _('The VM does not have a valid connection state')
             elsif !has_active_ems?
               _("The VM is not connected to an active Provider")
