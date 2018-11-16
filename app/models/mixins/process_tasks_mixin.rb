@@ -57,6 +57,12 @@ module ProcessTasksMixin
     end
 
     def invoke_tasks_remote(options)
+      if name == "Service" && options[:task] == "retire_now"
+        ids = options.delete(:ids)
+        Service.retire(ids, options)
+        return
+      end
+
       ApplicationRecord.group_ids_by_region(options[:ids]).each do |region, ids|
         remote_options = options.merge(:ids => ids)
 

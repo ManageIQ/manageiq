@@ -126,6 +126,12 @@ describe ProcessTasksMixin do
         :args        => [test_options]
       )
     end
+
+    it "invokes Service.retire if task is 'retire_now'" do
+      options = {:task => "retire_now", :ids => [1], :userid => "some_user"}
+      expect(Service).to receive(:retire).with([1], :task => "retire_now", :userid => "some_user")
+      Service.invoke_tasks_remote(options)
+    end
   end
 
   describe ".invoke_api_tasks" do
