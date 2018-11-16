@@ -94,6 +94,14 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     [availability_zone, host_aggregates, service].compact.flatten unless interval_name == 'realtime'
   end
 
+  def disconnected
+    false
+  end
+
+  def disconnected?
+    false
+  end
+
   #
   # UI Button Validation Methods
   #
