@@ -114,6 +114,8 @@ class ExtManagementSystem < ApplicationRecord
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
+  validates :zone,     :presence => true
+
   validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
   validate :validate_ems_enabled_when_zone_changed?, :validate_zone_not_maintenance_when_ems_enabled?
   validate :validate_ems_type, :on => :create
