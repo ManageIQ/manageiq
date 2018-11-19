@@ -126,7 +126,7 @@ class ExtManagementSystem < ApplicationRecord
 
   # validation - Zone cannot be maintenance_zone when enabled == true
   def validate_zone_not_maintenance_when_ems_enabled?
-    if enabled? && zone == Zone.maintenance_zone
+    if enabled? && zone.present? && zone == Zone.maintenance_zone
       errors.add(:zone, N_("cannot be the maintenance zone when provider is active"))
     end
   end

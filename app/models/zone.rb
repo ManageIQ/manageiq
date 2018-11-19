@@ -74,6 +74,7 @@ class Zone < ApplicationRecord
   private_class_method :create_maintenance_zone
 
   def self.seed
+    MiqRegion.seed
     create_maintenance_zone
 
     create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
