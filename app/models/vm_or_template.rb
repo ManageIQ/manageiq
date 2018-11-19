@@ -316,7 +316,7 @@ class VmOrTemplate < ApplicationRecord
 
   # TODO: Vmware specific, and is this even being used anywhere?
   def connected_to_ems?
-    connection_state == 'connected'
+    connection_state == 'connected' || connection_state.nil?
   end
 
   def terminated?
@@ -1319,10 +1319,10 @@ class VmOrTemplate < ApplicationRecord
   end)
 
   def disconnected?
-    connection_state != "connected"
+    !connected_to_ems?
   end
   virtual_attribute :disconnected, :boolean, :arel => (lambda do |t|
-    t.grouping(t[:connection_state].eq(nil).or(t[:connection_state].not_eq("connected")))
+    t.grouping(t[:connection_state].not_eq(nil).and(t[:connection_state].not_eq("connected")))
   end)
   alias_method :disconnected, :disconnected?
 

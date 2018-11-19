@@ -982,24 +982,41 @@ describe VmOrTemplate do
     end
   end
 
-  describe ".disconnected" do
+  describe "connected_to_ems?" do
     let(:vm) { FactoryGirl.create(:vm_vmware, :connection_state => "connected") }
     let(:vm2) { FactoryGirl.create(:vm_vmware, :connection_state => "disconnected") }
+    let(:vm3) { FactoryGirl.create(:vm_vmware, :connection_state => nil) }
 
     it "detects nil" do
-      vm.update_attributes(:connection_state => nil)
-      expect(vm.disconnected).to be_truthy
-      expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_truthy
+      expect(vm3).to be_connected_to_ems
     end
 
     it "detects connected" do
-      expect(vm.disconnected).to be_falsey
+      expect(vm).to be_connected_to_ems
+    end
+
+    it "detects disconnected" do
+      expect(vm2).not_to be_connected_to_ems
+    end
+  end
+
+  describe ".disconnected?" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :connection_state => "connected") }
+    let(:vm2) { FactoryGirl.create(:vm_vmware, :connection_state => "disconnected") }
+    let(:vm3) { FactoryGirl.create(:vm_vmware, :connection_state => nil) }
+
+    it "detects nil" do
+      expect(vm3).not_to be_disconnected
+      expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_falsey
+    end
+
+    it "detects connected" do
+      expect(vm).not_to be_disconnected
       expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_falsey
     end
 
     it "detects disconnected" do
-      vm2.save
-      expect(vm2.disconnected).to be_truthy
+      expect(vm2).to be_disconnected
       expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_truthy
     end
   end
@@ -1300,7 +1317,7 @@ describe VmOrTemplate do
     let(:klass) { :vm_vmware }
     let(:storage) { FactoryGirl.create(:storage_vmware) }
     let(:ems) { FactoryGirl.create(:ems_vmware) }
-    let(:connection_state) { nil }
+    let(:connection_state) { 'disconnected' }
     let(:retired) { false }
 
     let!(:vm) do
