@@ -143,16 +143,16 @@ class MiqCockpitWsWorker::Runner < MiqWorker::Runner
     cockpit_ws = MiqCockpit::WS.new(opts)
     cockpit_ws.save_config
 
-    require 'open4'
+    require "open3"
     env = {
       "XDG_CONFIG_DIRS" => cockpit_ws.config_dir,
       "DRB_URI"         => @drb_uri
     }
-    pid, stdin, stdout, stderr = Open4.popen4(env, *cockpit_ws.command(BINDING_ADDRESS))
+    stdin, stdout, stderr, wait_thr = Open3.popen3(env, *cockpit_ws.command(BINDING_ADDRESS))
     stdin.close
 
     _log.info("#{log_prefix} cockpit-ws process started - pid=#{pid}")
-    return pid, stdout, stderr
+    return wait_thr.pid, stdout, stderr
   end
 
   def check_drb_service
