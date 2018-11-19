@@ -304,8 +304,7 @@ describe OrchestrationTemplate do
   describe "#deployment_options" do
     it do
       options = subject.deployment_options
-      assert_deployment_option(options[0], "tenant_name", :OrchestrationParameterAllowedDynamic, true)
-      assert_deployment_option(options[1], "stack_name", :OrchestrationParameterPattern, true)
+      assert_deployment_option(options[0], "stack_name", :OrchestrationParameterPattern, true)
     end
   end
 
