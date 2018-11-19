@@ -319,7 +319,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :osp_destination_project_id => cluster.ems_ref,
       :osp_volume_type_id         => storage.ems_ref,
       :osp_flavor_id              => destination_flavor.ems_ref,
-      :osp_security_groups_ids    => [destination_security_group.ems_ref]
+      :osp_security_groups_ids    => [destination_security_group.ems_ref],
+      :insecure_connection        => true
     }
   end
 end

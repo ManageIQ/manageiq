@@ -578,7 +578,8 @@ describe ServiceTemplateTransformationPlanTask do
               :osp_flavor_id              => dst_flavor.ems_ref,
               :osp_security_groups_ids    => [dst_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
-              :network_mappings           => task_1.network_mappings
+              :network_mappings           => task_1.network_mappings,
+              :insecure_connection        => true
             )
           end
         end
@@ -612,7 +613,8 @@ describe ServiceTemplateTransformationPlanTask do
               :osp_flavor_id              => dst_flavor.ems_ref,
               :osp_security_groups_ids    => [dst_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
-              :network_mappings           => task_1.network_mappings
+              :network_mappings           => task_1.network_mappings,
+              :insecure_connection        => true
             )
           end
         end
