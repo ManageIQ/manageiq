@@ -5,6 +5,7 @@ class EmsCluster < ApplicationRecord
   include EventMixin
   include TenantIdentityMixin
   include CustomActionsMixin
+  include ClusterUpgrade
 
   acts_as_miq_taggable
 
