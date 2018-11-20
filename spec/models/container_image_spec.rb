@@ -14,13 +14,26 @@ describe ContainerImage do
     expect(image.full_name).to eq("registry/repo/name@id")
   end
 
-  it "#display_registry" do
-    image = ContainerImage.new(:name => "fedora")
-    expect(image.display_registry).to eq("Unknown image source")
+  context "#display_registry" do
+    it "finds unknown with unknown name" do
+      image = ContainerImage.new(:name => "fedora")
+      expect(image.display_registry).to eq("Unknown image source")
+    end
 
-    reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io", :port => "1234")
-    image.container_image_registry = reg
-    expect(image.display_registry).to eq("docker.io:1234")
+    it "localizes for unknown" do
+      I18n.with_locale(:es) do
+        image = ContainerImage.new(:name => "fedora")
+        reg = image.display_registry
+        expect(reg).to eq("Fuente de imagen desconocida")
+      end
+    end
+
+    it "finds name with valid name" do
+      image = ContainerImage.new(:name => "fedora")
+      reg = ContainerImageRegistry.new(:name => "docker.io", :host => "docker.io", :port => "1234")
+      image.container_image_registry = reg
+      expect(image.display_registry).to eq("docker.io:1234")
+    end
   end
 
   it "#docker_id" do
