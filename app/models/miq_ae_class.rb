@@ -15,6 +15,8 @@ class MiqAeClass < ApplicationRecord
   validates_format_of     :name, :with    => /\A[\w.-]+\z/i,
                                  :message => N_("may contain only alphanumeric and _ . - characters")
 
+  virtual_attribute :fqname, :string
+
   def self.find_by_fqname(fqname, args = {})
     ns, name = parse_fqname(fqname)
     find_by_namespace_and_name(ns, name, args)
