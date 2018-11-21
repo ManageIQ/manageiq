@@ -140,6 +140,7 @@ module SupportsFeatureMixin
     :update_floating_ip                  => 'Update Floating IP association',
     :ems_network_new                     => 'New EMS Network Provider',
     :update_security_group               => 'Security Group Update',
+    :upgrade_cluster                     => 'Cluster Upgrade',
     :block_storage                       => 'Block Storage',
     :object_storage                      => 'Object Storage',
     :vm_import                           => 'VM Import',
