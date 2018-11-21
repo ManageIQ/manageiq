@@ -883,4 +883,36 @@ describe Tenant do
       end
     end
   end
+
+  context "using more regions with factory" do
+    context "without MiqRegion.seed" do
+      let!(:other_region) { FactoryGirl.create(:miq_region) }
+
+      it "uses other region" do
+        expect(MiqRegion.count).to eq(1)
+        exception_message = "You need to seed default MiqRegion with MiqRegion.seed"
+        expect { FactoryGirl.create(:tenant, :in_other_region,  :other_region => other_region) }.to raise_error(exception_message)
+      end
+    end
+
+    context "with MiqRegion.seed" do
+      before do
+        MiqRegion.seed
+      end
+
+      let!(:other_region) { FactoryGirl.create(:miq_region) }
+      let!(:tenant) { FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region) }
+
+      it "uses other region" do
+        expect(MiqRegion.count).to eq(2)
+        expect(tenant.miq_region.region).to eq(other_region.region)
+      end
+
+      it "raises error when region is not passed" do
+        exception_message = "You need to pass specific region  with :other_region: \n"\
+                            "FactoryGirl.create(:tenant, :in_other_region, :other_region => <region>) "
+        expect { FactoryGirl.create(:tenant, :in_other_region) }.to raise_error(exception_message)
+      end
+    end
+  end
 end
