@@ -304,8 +304,9 @@ module Rbac
     # as done previously.
     def skip_references?(scope, options, attrs, exp_sql, exp_includes)
       return false if scope.singleton_class.included_modules.include?(ActiveRecord::NullRelation)
-      options[:extra_cols].blank? &&
-        (!attrs[:apply_limit_in_sql] && (exp_sql.nil? || exp_includes.nil?))
+      options[:skip_references] ||
+      (options[:extra_cols].blank? &&
+        (!attrs[:apply_limit_in_sql] && (exp_sql.nil? || exp_includes.nil?)))
     end
 
     def include_references(scope, klass, include_for_find, exp_includes, skip)
