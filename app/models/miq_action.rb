@@ -538,15 +538,15 @@ class MiqAction < ApplicationRecord
                     [], "[#{action.description}] of physical server [#{rec.name}]")
   end
 
-   def action_physical_server_firmware_update(action, rec, inputs)
+  def action_physical_server_firmware_update(action, rec, inputs)
     unless rec.kind_of?(PhysicalServer)
       MiqPolicy.logger.error("MIQ(physical_server_power_on): Unable to perform action [#{action.description}], object [#{rec.inspect}] is not a physical server")
       return
     end
 
-    #PhysicalInfraManager.run_ansible(param1, param2);
+    invoke_or_queue(inputs[:synchronous], __method__, "physical_server_operations", rec.my_zone,
+                    rec, 'ansible_update_firmware', [], "[#{action.description} of physical server [#{rec.name}]]")
   end
-
 
   def action_vm_mark_as_vm(action, rec, inputs)
     unless rec.kind_of?(VmOrTemplate)
