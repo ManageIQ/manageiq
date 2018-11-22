@@ -6,6 +6,10 @@ FactoryBot.define do
     vendor          "unknown"
     template        false
     raw_power_state "running"
+
+    trait :in_other_region do
+      other_region
+    end
   end
 
   factory :template, :class => "MiqTemplate", :parent => :vm_or_template do
