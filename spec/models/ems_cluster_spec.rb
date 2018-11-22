@@ -247,7 +247,7 @@ describe EmsCluster do
 
   context "#upgrade_cluster" do
     before do
-      @ems = FactoryGirl.create(:ems_redhat_with_authentication)
+      @ems = FactoryGirl.create(:ems_redhat_with_authentication_with_ca, :skip_validate)
       @cluster = FactoryGirl.create(:ems_cluster, :ems_id => @ems.id)
       my_server = double("my_server", :guid => "guid1")
       allow(MiqServer).to receive(:my_server).and_return(my_server)
@@ -259,7 +259,8 @@ describe EmsCluster do
                     :engine_user     => @ems.authentication_userid,
                     :engine_password => @ems.authentication_password,
                     :cluster_name    => @cluster.name,
-                    :hostname        => "localhost"}
+                    :hostname        => "localhost",
+                    :ca_string       => @ems.default_endpoint.certificate_authority}
       role_arg = {:role_name=>"oVirt.cluster-upgrade"}
       expect(ManageIQ::Providers::AnsibleRoleWorkflow).to receive(:create_job).with(env_vars, extra_args, role_arg).and_call_original
       @cluster.upgrade_cluster
