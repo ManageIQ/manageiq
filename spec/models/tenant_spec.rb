@@ -906,6 +906,7 @@ describe Tenant do
       it "uses other region" do
         expect(MiqRegion.count).to eq(2)
         expect(tenant.miq_region.region).to eq(other_region.region)
+        expect(tenant.default_miq_group.miq_region.region).to eq(other_region.region)
       end
 
       it "raises error when region is not passed" do
