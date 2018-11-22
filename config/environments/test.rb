@@ -23,6 +23,8 @@ Vmdb::Application.configure do
     env.cache = ActiveSupport::Cache.lookup_store(:memory_store)
   end
 
+  config.assets.compile = ENV['TEST_SUITE'] == 'spec:javascript'
+
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
 
