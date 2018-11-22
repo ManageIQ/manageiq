@@ -45,7 +45,7 @@ class PdfGenerator
   # Find stylesheet asset with short path and return filesystem path
   #
   def self.stylesheet_file_path(stylesheet)
-    Rails.application.assets.find_asset(stylesheet).try(:pathname).try(:to_s)
+    Rails.root.join('lib', 'pdf_generator', stylesheet).to_s
   end
 
   private_class_method :stylesheet_file_path
