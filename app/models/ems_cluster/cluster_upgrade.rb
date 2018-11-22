@@ -12,7 +12,7 @@ module EmsCluster::ClusterUpgrade
 
   def upgrade_cluster(options = {})
     role_options = {:role_name => "oVirt.cluster-upgrade"}
-    job = ManageIQ::Providers::AnsibleRoleWorkflow.create_job({}, extra_vars_for_upgrade(options), role_options)
+    job = ManageIQ::Providers::Redhat::AnsibleRoleWorkflow.create_job({}, extra_vars_for_upgrade(options), role_options)
     job.signal(:start)
     job.miq_task
   end
@@ -32,7 +32,8 @@ module EmsCluster::ClusterUpgrade
       :engine_user     => connect_options[:username],
       :engine_password => connect_options[:password],
       :cluster_name    => name,
-      :hostname        => "localhost"
-    }
+      :hostname        => "localhost",
+      :ca_string       => connect_options[:ca_certs]
+    }.compact
   end
 end
