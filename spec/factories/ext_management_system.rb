@@ -170,6 +170,18 @@ FactoryGirl.define do
     end
   end
 
+  trait :skip_validate do
+    to_create { |instance| instance.save(:validate => false) }
+  end
+
+  factory :ems_redhat_with_authentication_with_ca,
+          :parent => :ems_redhat do
+    certificate_authority "cert108"
+    after(:create) do |x|
+      x.authentications << FactoryGirl.create(:authentication)
+    end
+  end
+
   factory :ems_redhat_with_metrics_authentication,
           :parent => :ems_redhat do
     after(:create) do |x|
