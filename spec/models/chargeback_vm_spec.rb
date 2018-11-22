@@ -1179,10 +1179,6 @@ describe ChargebackVm do
           let(:vm_global)       { FactoryBot.create(:vm_vmware) }
           let!(:region_1) { FactoryBot.create(:miq_region) }
 
-          def region_id_for(klass, region)
-            klass.id_in_region(klass.count + 1_000_000, region)
-          end
-
           def find_result_by_vm_name_and_region(chargeback_result, vm_name, region)
             first_region_id, last_region_id = MiqRegion.region_to_array(region)
 
@@ -1221,23 +1217,22 @@ describe ChargebackVm do
           #   T3(vm_1, vm_2)
           #
           let!(:root_tenant_region_1) do
-            tenant = FactoryBot.create(:tenant, :id => region_id_for(Tenant, region_1.region))
-            tenant.parent = nil
-            tenant.save(:validate => false) # skip validate to set parent = nil
-            tenant
+            tenant_other_region = FactoryGirl.create(:tenant, :in_other_region, :other_region => region_1)
+            tenant_other_region.update_attribute(:parent, nil) # rubocop:disable Rails/SkipsModelValidations
+            tenant_other_region
           end
 
-          let!(:tenant_1_region_1) { FactoryBot.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_1, :parent => root_tenant_region_1, :description => tenant_name_1) }
-          let(:vm_1_region_1_t_1) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1, :name => vm_name_1) }
-          let(:vm_2_region_1_t_1) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
+          let!(:tenant_1_region_1) { FactoryBot.create(:tenant, :in_other_region, :other_region => region_1, :name => tenant_name_1, :parent => root_tenant_region_1, :description => tenant_name_1) }
+          let(:vm_1_region_1_t_1) { FactoryBot.create(:vm_vmware, :in_other_region, :other_region => region_1, :tenant => tenant_1_region_1, :name => vm_name_1) }
+          let(:vm_2_region_1_t_1) { FactoryBot.create(:vm_vmware, :in_other_region, :other_region => region_1, :tenant => tenant_1_region_1) }
 
-          let!(:tenant_2_region_1) { FactoryBot.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_2, :parent => tenant_1_region_1, :description => tenant_name_2) }
-          let(:vm_1_region_1_t_2) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
-          let(:vm_2_region_1_t_2) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
+          let!(:tenant_2_region_1) { FactoryBot.create(:tenant, :in_other_region, :other_region => region_1, :name => tenant_name_2, :parent => tenant_1_region_1, :description => tenant_name_2) }
+          let(:vm_1_region_1_t_2) { FactoryBot.create(:vm_vmware, :in_other_region, :other_region => region_1, :tenant => tenant_2_region_1) }
+          let(:vm_2_region_1_t_2) { FactoryBot.create(:vm_vmware, :in_other_region, :other_region => region_1, :tenant => tenant_2_region_1) }
 
-          let!(:tenant_3_region_1) { FactoryBot.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_3, :parent => tenant_1_region_1, :description => tenant_name_3) }
-          let(:vm_1_region_1_t_3) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_3_region_1) }
-          let(:vm_2_region_1_t_3) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_3_region_1) }
+          let!(:tenant_3_region_1) { FactoryBot.create(:tenant, :in_other_region, :other_region => region_1, :name => tenant_name_3, :parent => tenant_1_region_1, :description => tenant_name_3) }
+          let(:vm_1_region_1_t_3) { FactoryBot.create(:vm_vmware, :in_other_region, :other_region => region_1, :tenant => tenant_3_region_1) }
+          let(:vm_2_region_1_t_3) { FactoryBot.create(:vm_vmware, :in_other_region, :other_region => region_1, :tenant => tenant_3_region_1) }
 
           before do
             # default region
