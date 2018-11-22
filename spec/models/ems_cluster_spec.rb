@@ -261,8 +261,9 @@ describe EmsCluster do
                     :cluster_name    => @cluster.name,
                     :hostname        => "localhost",
                     :ca_string       => @ems.default_endpoint.certificate_authority}
-      role_arg = {:role_name=>"oVirt.cluster-upgrade"}
-      expect(ManageIQ::Providers::AnsibleRoleWorkflow).to receive(:create_job).with(env_vars, extra_args, role_arg).and_call_original
+      role_arg = { :role_name => "oVirt.cluster-upgrade" }
+      timeout = { :timeout => 1.year }
+      expect(ManageIQ::Providers::AnsibleRoleWorkflow).to receive(:create_job).with(env_vars, extra_args, role_arg, timeout).and_call_original
       @cluster.upgrade_cluster
     end
 
