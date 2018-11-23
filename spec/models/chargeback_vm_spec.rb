@@ -1241,20 +1241,22 @@ describe ChargebackVm do
 
           before do
             # default region
-            add_metric_rollups_for(vm_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
-            add_metric_rollups_for(vm_2_t_1, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
-            add_metric_rollups_for(vm_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
-            add_metric_rollups_for(vm_2_t_2, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
-            add_metric_rollups_for(vm_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
-            add_metric_rollups_for(vm_2_t_3, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data)
+            add_metric_rollups_for(vm_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params)
+            add_metric_rollups_for(vm_2_t_1, month_beginning...month_end, 12.hours, metric_rollup_params)
+            add_metric_rollups_for(vm_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params)
+            add_metric_rollups_for(vm_2_t_2, month_beginning...month_end, 12.hours, metric_rollup_params)
+            add_metric_rollups_for(vm_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params)
+            add_metric_rollups_for(vm_2_t_3, month_beginning...month_end, 12.hours, metric_rollup_params)
 
+            metric_rollup_params_with_other_region = metric_rollup_params
+            metric_rollup_params_with_other_region[:other_region] = region_1
             # region 1
-            add_metric_rollups_for(vm_1_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
-            add_metric_rollups_for(vm_2_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
-            add_metric_rollups_for(vm_1_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
-            add_metric_rollups_for(vm_2_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
-            add_metric_rollups_for(vm_1_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
-            add_metric_rollups_for(vm_2_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params, :with_data, region_1.region)
+            add_metric_rollups_for(vm_1_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
+            add_metric_rollups_for(vm_2_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
+            add_metric_rollups_for(vm_1_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
+            add_metric_rollups_for(vm_2_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
+            add_metric_rollups_for(vm_1_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
+            add_metric_rollups_for(vm_2_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
           end
 
           subject! { ChargebackVm.build_results_for_report_ChargebackVm(options_tenant).first }
