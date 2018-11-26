@@ -21,8 +21,9 @@ module Metric::CiMixin
     end
 
     supports :capture do
-      unless self.class.parent::MetricsCapture.instance_methods.include?(:perf_collect_metrics)
-        unsupported_reason_add(:metrics, _('This provider does not support metrics collection'))
+      metrics_capture_klass = "#{self.class.parent.name}::MetricsCapture".safe_constantize
+      unless metrics_capture_klass&.method_defined?(:perf_collect_metrics)
+        unsupported_reason_add(:capture, _('This provider does not support metrics collection'))
       end
     end
   end
