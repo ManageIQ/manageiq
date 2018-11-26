@@ -63,4 +63,26 @@ describe Metric::CiMixin do
       end
     end
   end
+
+  context "#supports_capture?" do
+    context "with a VM" do
+      let(:unsupported_vm) { FactoryGirl.create(:vm_microsoft) }
+      let(:supported_vm)   { FactoryGirl.create(:vm_vmware) }
+
+      it "correctly checks capture support" do
+        expect(unsupported_vm.supports_capture?).to be_falsy
+        expect(supported_vm.supports_capture?).to be_truthy
+      end
+    end
+
+    context "with a Host" do
+      let(:unsupported_host) { FactoryGirl.create(:host_microsoft) }
+      let(:supported_host)   { FactoryGirl.create(:vm_vmware) }
+
+      it "correctly checks capture support" do
+        expect(unsupported_host.supports_capture?).to be_falsy
+        expect(supported_host.supports_capture?).to be_truthy
+      end
+    end
+  end
 end
