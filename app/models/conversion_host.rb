@@ -8,6 +8,8 @@ class ConversionHost < ApplicationRecord
   has_many :active_tasks, -> { where(:state => 'active') }, :class_name => ServiceTemplateTransformationPlanTask, :inverse_of => :conversion_host
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
+  include_concern 'Configurations'
+
   # To be eligible, a conversion host must have the following properties
   #  - A transport mechanism is configured for source (set by 3rd party)
   #  - Credentials are set on the resource and SSH connection works
@@ -75,12 +77,13 @@ class ConversionHost < ApplicationRecord
     tag_resource_as('disabled')
   end
 
-  def enable_conversion_host_role
+  def enable_conversion_host_role(v2v_vddk_package_url = nil)
     install_conversion_host_module
+    v2v_vddk_package_url ||= "http://#{resource.ext_management_system.hostname}/vddk/VMware-vix-disklib-stable.tar.gz"
     playbook = "/usr/share/ovirt-ansible-v2v-conversion-host/playbooks/conversion_host_enable.yml"
     extra_vars = {
       :v2v_vddk_package_name => "VMware-vix-disklib-stable.tar.gz",
-      :v2v_vddk_package_url  => "http://#{resource.ext_management_system.hostname}/vddk/VMware-vix-disklib-stable.tar.gz"
+      :v2v_vddk_package_url  => v2v_vddk_package_url
     }
     ansible_playbook(playbook, extra_vars)
   ensure
