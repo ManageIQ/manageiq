@@ -667,7 +667,7 @@ class Host < ApplicationRecord
   # Vm relationship methods
   def direct_vms
     # Look for only the Vms at the second depth (default RP + 1)
-    rels = descendant_rels(:of_type => 'Vm').select { |r| (r.depth - depth) == 2 }
+    rels = grandchild_rels(:of_type => 'Vm')
     Relationship.resources(rels).sort_by { |r| r.name.downcase }
   end
 
