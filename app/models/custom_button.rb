@@ -100,7 +100,8 @@ class CustomButton < ApplicationRecord
     MiqQueue.put(queue_opts(target, args))
   end
 
-  def publish_event(source, target, args)
+  def publish_event(source, target, args = nil)
+    args ||= resource_action.automate_queue_hash(target, {}, User.current_user)
     Array(target).each { |t| create_event(source, t, args) }
   end
 
