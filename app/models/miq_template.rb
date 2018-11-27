@@ -6,11 +6,9 @@ class MiqTemplate < VmOrTemplate
   virtual_column :display_type,                         :type => :string
   virtual_column :display_operating_system,             :type => :string
   virtual_column :display_platform,                     :type => :string
-  virtual_column :display_cpu_cores,                    :type => :string
-  virtual_column :display_memory,                       :type => :string
-  virtual_column :display_snapshots,                    :type => :string
   virtual_column :display_tenant,                       :type => :string
   virtual_column :display_deprecated,                   :type => :string
+  virtual_column :display_memory,                       :type => :integer
 
   include_concern 'Operations'
 
@@ -83,28 +81,8 @@ class MiqTemplate < VmOrTemplate
     end
   end
 
-  def display_cpu_cores
-    if respond_to?(:volume_template?) || respond_to?(:volume_snapshot_template?)
-      _("N/A")
-    else
-      cpu_total_cores
-    end
-  end
-
   def display_memory
-    if respond_to?(:volume_template?) || respond_to?(:volume_snapshot_template?)
-      _("N/A")
-    else
-      mem_cpu.to_i * 1024 * 1024
-    end
-  end
-
-  def display_snapshots
-    if respond_to?(:volume_template?) || respond_to?(:volume_snapshot_template?)
-      _("N/A")
-    else
-      v_total_snapshots
-    end
+    mem_cpu.to_i * 1024 * 1024
   end
 
   def display_tenant
