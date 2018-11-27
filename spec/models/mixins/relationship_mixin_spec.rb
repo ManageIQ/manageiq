@@ -813,7 +813,7 @@ describe RelationshipMixin do
     end
   end
 
-  describe "#parent_rel_ids" do
+  describe "#parent_rels" do
     it "works with relationships" do
       pars = vms[8].with_relationship_type(test_rel_type, &:parent_rels)
       pars_vms = pars.map(&:resource)
@@ -836,6 +836,24 @@ describe RelationshipMixin do
       end
       parent_vms = Relationship.where(:id => ids).map(&:resource)
       expect(parent_vms).to eq([vms[7]])
+    end
+  end
+
+  describe "#grandchild_rels" do
+    it "works with relationships" do
+      vms[0].with_relationship_type(test_rel_type) do
+        rels = vms[0].grandchild_rels
+        expect(rels.map(&:resource)).to match_array([vms[3], vms[4], vms[5], vms[6], vms[7]])
+      end
+    end
+  end
+
+  describe "#child_and_grandchild_rels" do
+    it "works with relationships" do
+      vms[0].with_relationship_type(test_rel_type) do
+        rels = vms[0].child_and_grandchild_rels
+        expect(rels.map(&:resource)).to match_array([vms[1], vms[2], vms[3], vms[4], vms[5], vms[6], vms[7]])
+      end
     end
   end
 
