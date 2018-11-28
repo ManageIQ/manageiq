@@ -17,7 +17,7 @@ class PrincePdfGenerator < PdfGenerator
     options = {
       :params  => {
         :input  => "html",
-        :style  => processed_stylesheet(stylesheet),
+        :style  => stylesheet,
         :log    => Rails.root.join("log", "prince.log"),
         :output => "-", # Write to stdout
         "-"     => nil  # Read from stdin
@@ -31,14 +31,5 @@ class PrincePdfGenerator < PdfGenerator
       "Executing: #{command}"
     end
     AwesomeSpawn.run!(executable, options).output
-  end
-
-  private
-
-  # Writes the stylesheet Sprocket::Asset to a file and returns the path
-  # Relies on the digest_path to keep the file fresh
-  #
-  def processed_stylesheet(stylesheet_path)
-    AssetWriter.new(stylesheet_path, 'tmp/cache/pdf').write
   end
 end
