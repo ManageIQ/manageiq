@@ -224,6 +224,14 @@ class MiqGroup < ApplicationRecord
     end
   end
 
+  def regional_groups
+    self.class.regional_groups(self)
+  end
+
+  def self.regional_groups(group)
+    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:description)]).eq(group.description.downcase)))
+  end
+
   def self.create_tenant_group(tenant)
     tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
 
