@@ -93,7 +93,7 @@ class MiqTemplate < VmOrTemplate
     if respond_to?(:volume_template?) || respond_to?(:volume_snapshot_template?)
       _("N/A")
     elsif respond_to?(:deprecated)
-      _(deprecated.to_s)
+      deprecated ? _("true") : _("false")
     else
       _("N/A")
     end
