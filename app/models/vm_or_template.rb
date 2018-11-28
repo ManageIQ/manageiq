@@ -655,7 +655,7 @@ class VmOrTemplate < ApplicationRecord
     end
 
     disconnect_host
-
+    disconnect_storage
     disconnect_stack if respond_to?(:orchestration_stack)
   end
 
