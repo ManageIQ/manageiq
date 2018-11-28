@@ -95,10 +95,6 @@ class EmsEvent
       call("src_vm", "snapshots.destroy_all")
     end
 
-    def src_vm_disconnect_storage
-      call("src_vm", "disconnect_storage")
-    end
-
     private
 
     def parse_policy_parameters(target_str, policy_event, param)
