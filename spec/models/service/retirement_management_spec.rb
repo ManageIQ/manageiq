@@ -87,13 +87,33 @@ describe "Service Retirement Management" do
     expect(@service.retires_on).to eq(options[:date])
   end
 
-  it "#retire_service_resources" do
-    ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
-    @service << vm
-    expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to receive(:retire_now).once
-    @service.retire_service_resources
+  describe "#retire_service_resources" do
+    context "without direct service children" do
+      it "retires the service_resource resource" do
+        ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
+        vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+        @service << vm
+        expect(@service.service_resources.size).to eq(1)
+        expect(@service.service_resources.first.resource).to receive(:retire_now).once
+        @service.retire_service_resources
+      end
+    end
+
+    context "with direct service children" do
+      it "retires the service resource resource of the dsc" do
+        @vm         = FactoryGirl.create(:vm)
+        @service    = FactoryGirl.create(:service)
+        @service_c1 = FactoryGirl.create(:service, :service => @service)
+        @service_c1.service_resources << FactoryGirl.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => @service_c1.id, :resource_id => @vm.id)
+
+        expect(@service.direct_service_children.size).to eq(1)
+
+        @service.retire_service_resources
+
+        @vm.reload
+        expect(@vm.retirement_state).to eq("initializing")
+      end
+    end
   end
 
   context "bundled service retires all children" do
