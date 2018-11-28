@@ -27,6 +27,14 @@ describe "VM Retirement Management" do
     expect(@vm.retirement_state).to eq("retiring")
   end
 
+  it "#make_retire_request" do
+    expect(@vm.retirement_state).to be_nil
+    expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids=>[@vm.id], :__request_type__=>"vm_retire"}, user, true)
+    Vm.make_retire_request(@vm.id, user)
+    @vm.reload
+    expect(@vm.retirement_requester).to eq(user.userid)
+  end
+
   it "#retire_now" do
     expect(MiqEvent).to receive(:raise_evm_event).once
     @vm.retire_now

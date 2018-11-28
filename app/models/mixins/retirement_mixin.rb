@@ -70,7 +70,6 @@ module RetirementMixin
 
     self.retirement_last_warn = nil # Reset so that a new warning can be sent out when the time is right
     self[:retires_on] = timestamp
-    self.retirement_requester = nil
   end
 
   def extend_retires_on(days, date = Time.zone.now)

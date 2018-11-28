@@ -32,6 +32,14 @@ describe "Service Retirement Management" do
       @stack.reload
     end
 
+    it "#make_retire_request" do
+      expect(@stack.retirement_state).to be_nil
+      expect(OrchestrationStackRetireRequest).to receive(:make_request).with(nil, {:src_ids=>[@stack.id], :__request_type__=>"orchestration_stack_retire"}, user, true)
+      OrchestrationStack.make_retire_request(@stack.id, user)
+      @stack.reload
+      expect(@stack.retirement_requester).to eq(user.userid)
+    end
+
     it "#retire_now with userid" do
       expect(@stack.retirement_state).to be_nil
       expect(OrchestrationStackRetireRequest).to_not receive(:make_request)

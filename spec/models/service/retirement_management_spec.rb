@@ -42,6 +42,14 @@ describe "Service Retirement Management" do
     expect(@service.retirement_state).to eq("retiring")
   end
 
+  it "#make_retire_request" do
+    expect(@service.retirement_state).to be_nil
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids=>[@service.id], :__request_type__=>"service_retire"}, user, true)
+    Service.make_retire_request(@service.id, user)
+    @service.reload
+    expect(@service.retirement_requester).to eq(user.userid)
+  end
+
   it "#retire_now" do
     expect(@service.retirement_state).to be_nil
     expect(MiqEvent).to receive(:raise_evm_event).once
