@@ -1,25 +1,25 @@
 #!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
-require 'trollop'
+require 'optimist'
 
 MODES = %w(count purge)
 
 ARGV.shift if ARGV[0] == '--' # if invoked with rails runner
-opts = Trollop.options do
+opts = Optimist.options do
   banner "Purge miq_report_results records.\n\nUsage: ruby #{$0} [options]\n\nOptions:\n\t"
   opt :mode,      "Mode (#{MODES.join(", ")})",          :default => "count"
   opt :window,    "Window of records to delete at once", :default => 100
   opt :date,      "Range of reports to keep by date (default: VMDB configuration)",     :type => :string
   opt :remaining, "Number of results to keep per report (default: VMDB configuration)", :type => :int
 end
-Trollop.die :mode,   "must be one of #{MODES.join(", ")}" unless MODES.include?(opts[:mode])
-Trollop.die :window, "must be a number greater than 0"    if opts[:window] <= 0
+Optimist.die :mode,   "must be one of #{MODES.join(", ")}" unless MODES.include?(opts[:mode])
+Optimist.die :window, "must be a number greater than 0"    if opts[:window] <= 0
 if opts[:remaining_given]
-  Trollop.die :remaining, "must be a number greater than 0" if opts[:remaining] <= 0
+  Optimist.die :remaining, "must be a number greater than 0" if opts[:remaining] <= 0
   purge_mode  = :remaining
   purge_value = opts[:remaining]
 elsif opts[:date_given]
-  Trollop.die :date, "must be a number with method (e.g. 6.months)" unless opts[:date].number_with_method?
+  Optimist.die :date, "must be a number with method (e.g. 6.months)" unless opts[:date].number_with_method?
   purge_mode  = :date
   purge_value = opts[:date].to_i_with_method.seconds.ago.utc
 else

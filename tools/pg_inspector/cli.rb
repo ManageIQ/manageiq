@@ -1,4 +1,4 @@
-require 'trollop'
+require 'optimist'
 require 'pg_inspector/util'
 require 'pg_inspector/active_connections_to_yaml'
 require 'pg_inspector/servers_to_yaml'
@@ -22,7 +22,7 @@ module PgInspector
     def parse(args)
       args.shift if args.first == "--" # Handle when called through script/runner
       op_help = operation_help
-      Trollop.options(args) do
+      Optimist.options(args) do
         banner <<-BANNER
 pg_inspector is a tool to inspect ManageIQ process caused deadlock in PostgreSQL.
 
@@ -42,7 +42,7 @@ BANNER
       if current_operation && SUB_COMMANDS[current_operation.to_sym]
         self.cmd = SUB_COMMANDS[current_operation.to_sym].new
       else
-        Trollop.educate
+        Optimist.educate
       end
       cmd.parse_options(args)
       self

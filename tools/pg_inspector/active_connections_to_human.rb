@@ -1,4 +1,4 @@
-require 'trollop'
+require 'optimist'
 require 'yaml'
 require 'time'
 begin
@@ -18,7 +18,7 @@ module PgInspector
 
     HELP_MSG_SHORT = "Dump active connections to human readable YAML file".freeze
     def parse_options(args)
-      self.options = Trollop.options(args) do
+      self.options = Optimist.options(args) do
         opt(:connections, "Active connections file",
             :type => :string, :short => "c", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}active_connections.yml").to_s)
         opt(:servers, "Servers information file",

@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 require File.expand_path("../../config/environment", __dir__)
-require 'trollop'
+require 'optimist'
 require './tools/radar/rollup_radar_mixin'
 include RollupRadarMixin
 
-opts = Trollop.options(ARGV) do
+opts = Optimist.options(ARGV) do
   banner "USAGE:   #{__FILE__} -h <number of hours back to query metrics>\n" \
          "Example: #{__FILE__} -d <number of days back to query metrics>"
 
@@ -12,7 +12,7 @@ opts = Trollop.options(ARGV) do
   opt :days,  "Days",  :short => "d", :type => :int
   opt :label, "Label", :short => "l", :type => :string, :default => "com.redhat.component"
 end
-Trollop.die :hours, "is required" unless opts[:hours] || opts[:days_given]
+Optimist.die :hours, "is required" unless opts[:hours] || opts[:days_given]
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 

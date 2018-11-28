@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
-require 'trollop'
+require 'optimist'
 require 'rest-client'
 #
 # Helper Script to show the json / hash output of an
@@ -20,7 +20,7 @@ end
 
 ARGV.shift if ARGV[0] == '--'
 
-opts = Trollop.options do
+opts = Optimist.options do
   banner <<-EOS
 
 Reconstruct provision request parameters based on an existing request
@@ -62,12 +62,12 @@ Usage: #{PROGRAM_STRING} [--options]\n\nOptions:\n\t
 end
 
 if opts[:request_id].nil? && opts[:last_requests].nil?
-  Trollop.die :request_id, "must exist as an option"
+  Optimist.die :request_id, "must exist as an option"
 elsif opts[:last_requests_given] && opts[:count]
-  Trollop.die :count, "must be greater than 0" if opts[:count] <= 0
+  Optimist.die :count, "must be greater than 0" if opts[:count] <= 0
 else
-  Trollop.die :request_id, "must be a number greater than 0" if opts[:request_id] <= 0
-  Trollop.die :output, "must be either hash or json" unless %w(hash json).include?(opts[:output])
+  Optimist.die :request_id, "must be a number greater than 0" if opts[:request_id] <= 0
+  Optimist.die :output, "must be either hash or json" unless %w(hash json).include?(opts[:output])
 end
 
 class Tab

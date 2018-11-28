@@ -20,9 +20,9 @@ module EvmDba
   end
 
   def self.with_options(*option_types, &block)
-    require 'trollop'
+    require 'optimist'
 
-    Trollop.options(EvmRakeHelper.extract_command_options) do
+    Optimist.options(EvmRakeHelper.extract_command_options) do
       option_types.each do |type|
         case type
         when :db_credentials

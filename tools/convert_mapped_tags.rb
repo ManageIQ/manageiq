@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
 
-require 'trollop'
+require 'optimist'
 
-options = Trollop.options(ARGV) do
+options = Optimist.options(ARGV) do
   banner "USAGE:  #{__FILE__} -c|--commit\n" \
          "Example (Commit):  #{__FILE__} --commit\n" \
          "Example (Dry Run): #{__FILE__}         \n" \
@@ -70,4 +70,4 @@ end
 
 puts
 
-Trollop.educate if !options[:help] && !options[:commit] # display help message only in Dry Run
+Optimist.educate if !options[:help] && !options[:commit] # display help message only in Dry Run

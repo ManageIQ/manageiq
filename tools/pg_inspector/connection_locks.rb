@@ -1,4 +1,4 @@
-require 'trollop'
+require 'optimist'
 require 'yaml'
 require 'pg_inspector/error'
 require 'pg_inspector/pg_inspector_operation'
@@ -10,7 +10,7 @@ module PgInspector
     attr_accessor :locks, :connections, :blocked_connections
 
     def parse_options(args)
-      self.options = Trollop.options(args) do
+      self.options = Optimist.options(args) do
         opt(:locks, "Lock file",
             :type => :string, :short => "l", :default => DEFAULT_OUTPUT_PATH.join("#{PREFIX}locks.yml").to_s)
         opt(:connections, "Human readable active connections file",

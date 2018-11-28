@@ -1,4 +1,4 @@
-require 'trollop'
+require 'optimist'
 
 module MiqLdapToSssd
   class Cli
@@ -9,7 +9,7 @@ module MiqLdapToSssd
 
       LOGGER.debug("Invoked #{self.class}\##{__method__}")
 
-      self.options = Trollop.options(args) do
+      self.options = Optimist.options(args) do
         banner "Usage: ruby #{$PROGRAM_NAME} [options]\n"
 
         opt :domain,
