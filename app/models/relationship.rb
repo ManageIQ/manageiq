@@ -196,8 +196,8 @@ class Relationship < ApplicationRecord
   #
   def grandchild_conditions
     t = self.class.arel_table
-    t.grouping(t[:ancestry].matches("#{child_ancestry}/%", nil, true).and(
-                 t[:ancestry].does_not_match("#{child_ancestry}/%", nil, true)))
+    t.grouping(t[:ancestry].matches("#{child_ancestry}/%", nil, true)
+                           .and(t[:ancestry].does_not_match("#{child_ancestry}/%/%", nil, true)))
   end
 
   def child_and_grandchild_conditions
