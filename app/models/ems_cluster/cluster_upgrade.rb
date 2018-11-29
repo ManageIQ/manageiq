@@ -10,9 +10,9 @@ module EmsCluster::ClusterUpgrade
     end
   end
 
-  def upgrade_cluster(options = {})
+  def upgrade_cluster(ansible_extra_vars = {}, job_timeout = 1.year)
     role_options = {:role_name => "oVirt.cluster-upgrade"}
-    job = ManageIQ::Providers::Redhat::AnsibleRoleWorkflow.create_job({}, extra_vars_for_upgrade(options), role_options)
+    job = ManageIQ::Providers::Redhat::AnsibleRoleWorkflow.create_job({}, extra_vars_for_upgrade(ansible_extra_vars), role_options, :timeout => job_timeout)
     job.signal(:start)
     job.miq_task
   end
