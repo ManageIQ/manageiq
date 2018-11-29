@@ -68,29 +68,9 @@ class EvmApplication
 
   def self.output_status(data, footnote = nil)
     return if data.blank?
-    duplicate_columns = redundant_columns(data)
-    puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
-
-    # dont give headsup for empty values
-    heads_up = duplicate_columns.select { |n, v| n == "Region" || (v != 0 && v.present?) }
-    if heads_up.present?
-      puts "", "For all rows: #{heads_up.map { |n, v| "#{n}=#{v}" }.join(", ")}"
-      puts footnote if footnote
-    elsif footnote
-      puts "", footnote
-    end
+    puts data.tableize(:columns => data.first.keys)
+    puts "", footnote if footnote
   end
-
-  def self.redundant_columns(data, column_names = nil, dups = {})
-    return dups if data.size <= 1
-    column_names ||= data.first.keys
-    column_names.each do |col_header|
-      values = data.collect { |row| row[col_header] }.uniq
-      dups[col_header] = values.first if values.size < 2
-    end
-    dups
-  end
-  private_class_method :redundant_columns
 
   def self.compact_date(date)
     return "" unless date
