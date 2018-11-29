@@ -177,21 +177,21 @@ describe EvmApplication do
       it "displays server status for the all servers and workers" do
         expected_output = <<~SERVER_INFO
           Checking EVM status...
-           #{header(:Zone, :ljust)               } | Server                    | Workers | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust).rstrip}
-          -#{line_for(:Zone)                     }-+---------------------------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)}-
-           #{pad(local.zone.name, :Zone, :ljust) } | #{      local.name     }  |       1 | #{local_started_on          } | #{local_heartbeat}
-           #{pad(remote.zone.name, :Zone, :ljust)} | #{     remote.name     }* |       2 | #{remote_started_on         } |
+           #{header(:Zone, :ljust)               } | Server                    | Status  | Workers | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust).rstrip}
+          -#{line_for(:Zone)                     }-+---------------------------+---------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)}-
+           #{pad(local.zone.name, :Zone, :ljust) } | #{      local.name     }  | started |       1 | #{local_started_on          } | #{local_heartbeat}
+           #{pad(remote.zone.name, :Zone, :ljust)} | #{     remote.name     }* | started |       2 | #{remote_started_on         } |
 
-          For all rows: Region=#{rgn}, Status=started, Version=9.9.9.9
+          For all rows: Region=#{rgn}, Version=9.9.9.9
           * marks a master appliance
 
-           #{header(:Zone, :ljust)               } | Type          | #{header(:PID)          } | Server
-          -#{line_for(:Zone)                     }-+---------------+-#{line_for(:PID)        }-+--------------------------
-           #{pad(local.zone.name, :Zone, :ljust) } | Ui            | #{pad(ui.pid, :PID)     } | #{      local.name     }
-           #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | #{pad(refresh.pid, :PID)} | #{     remote.name     }
-           #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | #{pad(generic.pid, :PID)} | #{     remote.name     }
+           #{header(:Zone, :ljust)               } | Type          | Status | #{header(:PID)          } | Server
+          -#{line_for(:Zone)                     }-+---------------+--------+-#{line_for(:PID)        }-+--------------------------
+           #{pad(local.zone.name, :Zone, :ljust) } | Ui            | ready  | #{pad(ui.pid, :PID)     } | #{      local.name     }
+           #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | ready  | #{pad(refresh.pid, :PID)} | #{     remote.name     }
+           #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | ready  | #{pad(generic.pid, :PID)} | #{     remote.name     }
 
-          For all rows: Region=#{rgn}, Status=ready
+          For all rows: Region=#{rgn}
         SERVER_INFO
 
         expect { EvmApplication.status(true) }.to output(expected_output).to_stdout
