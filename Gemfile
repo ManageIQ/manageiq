@@ -11,9 +11,9 @@ gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => 
 gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
-def manageiq_plugin(plugin_name)
+def manageiq_plugin(plugin_name, branch_name = "master")
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => branch_name
   end
 end
 
