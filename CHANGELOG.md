@@ -5,7 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer RC-1
+## Hammer RC-2
+
+### Added
+- Add --port to evm:dba rake tasks [(#18186)](https://github.com/ManageIQ/manageiq/pull/18186)
+- Add support for magic check in EvmDatabaseOps [(#18167)](https://github.com/ManageIQ/manageiq/pull/18167)
+- Dynamic product features according to tenants [(#18102)](https://github.com/ManageIQ/manageiq/pull/18102)
+- ADD rbac_tenant_manage_quotas to tenant product features [(#18151)](https://github.com/ManageIQ/manageiq/pull/18151)
+- Add Conversion Host features [(#18190)](https://github.com/ManageIQ/manageiq/pull/18190)
+- Use MiqQueue for enabling/disabling a conversion_host [(#18191)](https://github.com/ManageIQ/manageiq/pull/18191)
+
+### Fixed
+- Raise event on new user creation [(#18052)](https://github.com/ManageIQ/manageiq/pull/18052)
+- Fix uri dirname parsing for swift restore [(#18166)](https://github.com/ManageIQ/manageiq/pull/18166)
+- Fix OpenStack virt-v2v-wrapper options hash [(#18143)](https://github.com/ManageIQ/manageiq/pull/18143)
+- Added metrics and tag permissions to SUI permission tree [(#18175)](https://github.com/ManageIQ/manageiq/pull/18175)
+- Tags without a classification cause errors [(#18177)](https://github.com/ManageIQ/manageiq/pull/18177)
+- Don't JSON.parse(nil) [(#18172)](https://github.com/ManageIQ/manageiq/pull/18172)
+- Fix issues with OpenSCAP policy [(#18189)](https://github.com/ManageIQ/manageiq/pull/18189)
+- Save mappings to options hash when calculated [(#18194)](https://github.com/ManageIQ/manageiq/pull/18194)
+- Authorize user with non-dynamic product feature if included in user's role [(#18179)](https://github.com/ManageIQ/manageiq/pull/18179)
+- Don't create retire subtasks for service templates [(#18184)](https://github.com/ManageIQ/manageiq/pull/18184)
+- Add missing V2V menu features. [(#18203)](https://github.com/ManageIQ/manageiq/pull/18203)
+- Accept Hash object as result of inter region api invocation [(#18210)](https://github.com/ManageIQ/manageiq/pull/18210)
+- Remove tenant selection from base deployment options [(#18202)](https://github.com/ManageIQ/manageiq/pull/18202)
+- Move the backend-generated PDF report's styling from the frontend [(#18226)](https://github.com/ManageIQ/manageiq/pull/18226)
+- Separate queue put from publish event so we don't queue put twice [(#18178)](https://github.com/ManageIQ/manageiq/pull/18178)
+- Dont return different types in virtual columns [(#18217)](https://github.com/ManageIQ/manageiq/pull/18217)
+- Fix supports_capture assuming MetricsCapture class [(#18233)](https://github.com/ManageIQ/manageiq/pull/18233)
+
+## Hammer RC-1 - Released 2018-11-16
 
 ### Added
 - Add template methods needed for provision report [(#17884)](https://github.com/ManageIQ/manageiq/pull/17884)
