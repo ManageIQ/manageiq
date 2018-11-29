@@ -199,7 +199,7 @@ class ServiceTemplate < ApplicationRecord
 
     nh['initiator'] = service_task.options[:initiator] if service_task.options[:initiator]
 
-    Service.create(nh) do |svc|
+    service = Service.create(nh) do |svc|
       svc.service_template = self
       set_ownership(svc, service_task.get_user)
 
@@ -208,7 +208,9 @@ class ServiceTemplate < ApplicationRecord
         %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
         svc.add_resource(sr.resource, nh) unless sr.resource.nil?
       end
+    end
 
+    service.tap do |svc|
       if parent_svc
         service_resource = ServiceResource.find_by(:id => service_task.options[:service_resource_id])
         parent_svc.add_resource!(svc, service_resource)
