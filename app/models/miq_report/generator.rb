@@ -81,16 +81,11 @@ module MiqReport::Generator
   end
 
   def get_include_for_find
-    (include_as_hash.presence || invent_includes).deep_merge(include_for_find || {}).presence
+    include_as_hash(include.presence || invent_report_includes).deep_merge(include_for_find || {}).presence
   end
 
   def invent_includes
-    return {} unless col_order
-    col_order.each_with_object({}) do |col, ret|
-      next unless col.include?(".")
-      *rels, _col = col.split(".")
-      rels.inject(ret) { |h, rel| h[rel.to_sym] ||= {} } unless col =~ /managed\./
-    end
+    include_as_hash(invent_report_includes)
   end
 
   # would like this format to go away
