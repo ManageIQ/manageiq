@@ -7,12 +7,10 @@ module Service::RetirementManagement
   end
 
   def retire_service_resources
-    # TODO: delete me per https://github.com/ManageIQ/manageiq/pull/16933#discussion_r175805070
-    return
     direct_service_children.each(&:retire_service_resources)
 
     service_resources.each do |sr|
-      if sr.resource.respond_to?(:retire_now)
+      if sr.resource.respond_to?(:retire_now) && sr.resource_type != "Service"
         $log.info("Retiring service resource for service: #{name} resource ID: #{sr.id}")
         sr.resource.retire_now(retirement_requester)
       end
