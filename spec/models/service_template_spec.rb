@@ -326,19 +326,41 @@ describe ServiceTemplate do
       expect(sub_svc).to include(@svc_d)
     end
 
-    it "should add_resource! only if a parent_svc exists" do
-      sub_svc = instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user)
-      parent_svc = instance_double("service_task", :options => {:dialog => {}})
-      expect(parent_svc).to receive(:add_resource!).once
+    describe "#create_service" do
+      let(:service_task) do
+        FactoryGirl.create(:service_template_provision_task,
+                           :miq_request => service_template_request,
+                           :options     => {:service_resource_id => service_resource.id})
+      end
+      let(:service_template_request) { FactoryGirl.create(:service_template_provision_request, :requester => user) }
+      let(:service_resource) do
+        FactoryGirl.create(:service_resource,
+                           :resource_type => 'MiqRequest',
+                           :resource_id   => service_template_request.id)
+      end
+      let(:user) { FactoryGirl.create(:user) }
+      let(:parent_service) { FactoryGirl.create(:service) }
 
-      @svc_a.create_service(sub_svc, parent_svc)
-    end
+      it "create service sets parent service resource resource id" do
+        @svc_a.create_service(service_task, parent_service)
+        parent_service.reload
+        expect(parent_service.service_resources.first.resource).to eq(parent_service.children.first)
+      end
 
-    it "should not call add_resource! if no parent_svc exists" do
-      sub_svc = instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user)
-      expect(sub_svc).to receive(:add_resource!).never
+      it "should add_resource! only if a parent_svc exists" do
+        sub_svc = instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user)
+        parent_svc = instance_double("service_task", :options => {:dialog => {}}, :service_resources => instance_double('service_resource'))
+        expect(parent_svc).to receive(:add_resource!).once
 
-      @svc_a.create_service(sub_svc)
+        @svc_a.create_service(sub_svc, parent_svc)
+      end
+
+      it "should not call add_resource! if no parent_svc exists" do
+        sub_svc = instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user)
+        expect(sub_svc).to receive(:add_resource!).never
+
+        @svc_a.create_service(sub_svc)
+      end
     end
 
     it "should pass display attribute to created top level service" do
