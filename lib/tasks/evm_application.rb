@@ -46,7 +46,7 @@ class EvmApplication
     :no_db if error.message =~ /Connection refused/i
   end
 
-  def self.status(include_remotes = false)
+  def self.status(include_remotes = false, collapse: false)
     puts "Checking EVM status..."
 
     server = MiqServer.my_server(true)
@@ -60,15 +60,15 @@ class EvmApplication
     if servers.empty?
       puts "Local EVM Server not Found"
     else
-      output_status(servers_status(servers), "* marks a master appliance")
+      output_status(servers_status(servers), "* marks a master appliance", collapse)
       puts "\n"
-      output_status(workers_status(servers))
+      output_status(workers_status(servers), nil, collapse)
     end
   end
 
-  def self.output_status(data, footnote = nil)
+  def self.output_status(data, footnote = nil, collapse = false)
     return if data.blank?
-    duplicate_columns = redundant_columns(data)
+    duplicate_columns = redundant_columns(data, collapse)
     puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
 
     # dont give headsup for empty values
@@ -81,12 +81,23 @@ class EvmApplication
     end
   end
 
-  def self.redundant_columns(data, column_names = nil, dups = {})
+  # A redundant column is a column that has all the same value
+  # This list is used to remove columns from the output table
+  #
+  # If collapse is true, then columns that have values can be considered redundant
+  # If collapse is false, then only columns with a blank value (or region) can be considered redundant
+  #
+  # @param data [Array<Hash{String=>Object}>] Data for the table
+  # @param collapse [Boolean] true if we purge out non-blank columns
+  # @returns [Hash{String => Object}] list of redundant columns and the common value
+  def self.redundant_columns(data, collapse = false)
+    dups = {}
     return dups if data.size <= 1
-    column_names ||= data.first.keys
+    column_names = data.first.keys
     column_names.each do |col_header|
       values = data.collect { |row| row[col_header] }.uniq
-      dups[col_header] = values.first if values.size < 2
+      val = values.first
+      dups[col_header] = val if values.size < 2 && (collapse || col_header == "Region" || val == 0 || val.blank?)
     end
     dups
   end

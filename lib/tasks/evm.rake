@@ -42,12 +42,22 @@ namespace :evm do
 
   desc "Report Status of the ManageIQ EVM Application"
   task :status => :environment do
-    EvmApplication.status
+    require 'trollop'
+    opts = Trollop.options(EvmRakeHelper.extract_command_options) do
+      opt :collapse, "Collapse columns with the same value", :type => :boolean
+    end
+
+    EvmApplication.status(false, :collapse => opts[:collapse])
   end
 
   desc "Report Status of the ManageIQ EVM Application"
   task :status_full => :environment do
-    EvmApplication.status(true)
+    require 'trollop'
+    opts = Trollop.options(EvmRakeHelper.extract_command_options) do
+      opt :collapse, "Collapse columns with the same value", :type => :boolean
+    end
+
+    EvmApplication.status(true, :collapse => opts[:collapse])
   end
 
   desc "Describe inventory of the ManageIQ EVM Application"
