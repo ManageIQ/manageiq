@@ -87,15 +87,6 @@ describe "Service Retirement Management" do
     expect(@service.retires_on).to eq(options[:date])
   end
 
-  it "#retire_service_resources" do
-    ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
-    @service << vm
-    expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to receive(:retire_now).once
-    @service.retire_service_resources
-  end
-
   context "bundled service retires all children" do
     let(:vm) { FactoryGirl.create(:vm_vmware) }
     let(:vm1) { FactoryGirl.create(:vm_vmware) }
@@ -117,29 +108,60 @@ describe "Service Retirement Management" do
       expect(@service.service_resources.size).to eq(3)
       expect(@service.service_resources.sort.first.resource).to receive(:retire_now).once
       expect(@service.service_resources.sort.second.resource).to receive(:retire_now).once
-      expect(@service.service_resources.sort.third.resource).to receive(:retire_now).once
+      expect(@service.service_resources.sort.third.resource).not_to receive(:retire_now)
       @service.retire_service_resources
     end
   end
 
-  it "#retire_service_resources should get service's retirement_requester" do
-    ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
-    userid = 'freddy'
-    @service.update_attributes(:retirement_requester => userid)
-    @service << vm
-    expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to receive(:retire_now).with(userid).once
-    @service.retire_service_resources
-  end
-
-  it "#retire_service_resources should get service's nil retirement_requester" do
-    ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
-    @service << vm
-    expect(@service.service_resources.size).to eq(1)
-    expect(@service.service_resources.first.resource).to receive(:retire_now).with(nil).once
-    @service.retire_service_resources
+  describe "#retire_service_resources" do
+    context "when service resource is not a service" do
+      it "retires the service resource" do
+        ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
+        @service << FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+        expect(@service.service_resources.size).to eq(1)
+        expect(@service.service_resources.first.resource).to receive(:retire_now)
+        @service.retire_service_resources
+      end
+    end
+    context "when service resource is a service" do
+      it "doesn't retire the service resource" do
+        service_c1 = FactoryGirl.create(:service)
+        @service.service_resources << FactoryGirl.create(:service_resource, :service_id => service_c1.id, :resource => service_c1)
+        expect(@service.service_resources.size).to eq(1)
+        expect(@service.service_resources.first.resource).not_to receive(:retire_now)
+        @service.retire_service_resources
+      end
+    end
+    context "when service resources are both service and vm_or_template" do
+      it "retires only the vm resource type service resource" do
+        service_c1 = FactoryGirl.create(:service)
+        vm = FactoryGirl.create(:vm)
+        @service.service_resources << FactoryGirl.create(:service_resource, :service_id => service_c1.id, :resource => vm)
+        @service.service_resources << FactoryGirl.create(:service_resource, :service_id => service_c1.id, :resource => service_c1)
+        expect(@service.service_resources.size).to eq(2)
+        expect(@service.service_resources.sort.first.resource).to receive(:retire_now)
+        expect(@service.service_resources.sort.second.resource).not_to receive(:retire_now)
+        @service.retire_service_resources
+      end
+    end
+    it "#retire_service_resources should get service's retirement_requester" do
+      ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
+      vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+      userid = 'freddy'
+      @service.update_attributes(:retirement_requester => userid)
+      @service << vm
+      expect(@service.service_resources.size).to eq(1)
+      expect(@service.service_resources.first.resource).to receive(:retire_now).with(userid)
+      @service.retire_service_resources
+    end
+    it "#retire_service_resources should get service's nil retirement_requester" do
+      ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
+      vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+      @service << vm
+      expect(@service.service_resources.size).to eq(1)
+      expect(@service.service_resources.first.resource).to receive(:retire_now).with(nil)
+      @service.retire_service_resources
+    end
   end
 
   it "#finish_retirement" do
