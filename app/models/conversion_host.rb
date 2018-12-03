@@ -153,9 +153,9 @@ class ConversionHost < ApplicationRecord
     JSON.parse(json_state)
   rescue Net::SSH::Exception => err
     raise "Failed to connect and retrieve conversion state data from file '#{path}' with [#{err.class}: #{err}"
-  rescue JSON::ParserError => err
+  rescue JSON::ParserError
     raise "Could not parse conversion state data from file '#{path}': #{json_state}"
-  rescue => err
+  rescue StandardError => err
     raise "Error retrieving and parsing conversion state file '#{path}' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 
