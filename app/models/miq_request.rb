@@ -148,11 +148,11 @@ class MiqRequest < ApplicationRecord
   end
 
   def self.user_owned(user)
-    where(:requester_id => user.id)
+    where(:requester_id => user.regional_users.select(:id))
   end
 
   def self.group_owned(miq_group)
-    where(:requester_id => miq_group.user_ids)
+    where(:requester_id => miq_group.regional_groups.joins(:users).select("users.id"))
   end
 
   # Supports old-style requests where specific request was a seperate table connected as a resource

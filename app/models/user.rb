@@ -243,6 +243,14 @@ class User < ApplicationRecord
     end
   end
 
+  def regional_users
+    self.class.regional_users(self)
+  end
+
+  def self.regional_users(user)
+    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:userid)]).eq(user.userid.downcase)))
+  end
+
   def self.super_admin
     in_my_region.find_by_userid("admin")
   end
