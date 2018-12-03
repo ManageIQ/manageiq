@@ -546,4 +546,17 @@ describe MiqGroup do
       expect(User.find_by(:id => user2).current_group.id).to eq(testgroup3.id)
     end
   end
+
+  describe "#regional_groups" do
+    let(:other_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let(:group) { FactoryGirl.create(:miq_group) }
+    let!(:regional_group) { FactoryGirl.create(:miq_group, :description => group.description.upcase, :id => other_id) }
+
+    it "finds regional groups" do
+      FactoryGirl.create(:miq_group) # ensure these doen't come back
+      FactoryGirl.create(:miq_group, :id => other_id + 1)
+
+      expect(group.regional_groups).to match_array([group, regional_group])
+    end
+  end
 end
