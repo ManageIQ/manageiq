@@ -563,4 +563,32 @@ describe MiqRequest do
       expect(orch_stack_request.class::SOURCE_CLASS_NAME).to eq('OrchestrationStack')
     end
   end
+
+  describe ".user_owned" do
+    let(:regional_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let(:user) { FactoryGirl.create(:user) }
+    let!(:regional_user) { FactoryGirl.create(:user, :userid => user.userid.upcase, :id => regional_id) }
+    let!(:request) { FactoryGirl.create(:vm_migrate_request, :requester => user) }
+    let!(:regional_request) { FactoryGirl.create(:vm_migrate_request, :requester => regional_user) }
+    it "finds request for cross region users" do
+      FactoryGirl.create(:vm_migrate_request, :requester => FactoryGirl.create(:user))
+      FactoryGirl.create(:vm_migrate_request, :requester => FactoryGirl.create(:user), :id => regional_id + 1)
+      expect(MiqRequest.user_owned(regional_user)).to match_array([request, regional_request])
+    end
+  end
+
+  describe ".group_owned" do
+    let(:regional_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let(:group) { FactoryGirl.create(:miq_group) }
+    let(:regional_group) { FactoryGirl.create(:miq_group, :id => regional_id) }
+    let(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
+    let!(:regional_user) { FactoryGirl.create(:user, :userid => user.userid.upcase, :id => regional_id, :miq_groups => [regional_group]) }
+    let!(:request) { FactoryGirl.create(:vm_migrate_request, :requester => user) }
+    let!(:regional_request) { FactoryGirl.create(:vm_migrate_request, :requester => regional_user) }
+    it "finds request for cross region groups" do
+      FactoryGirl.create(:vm_migrate_request, :requester => FactoryGirl.create(:user))
+      FactoryGirl.create(:vm_migrate_request, :requester => FactoryGirl.create(:user), :id => regional_id + 1)
+      expect(MiqRequest.user_owned(regional_user)).to match_array([request, regional_request])
+    end
+  end
 end
