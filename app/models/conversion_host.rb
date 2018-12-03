@@ -145,17 +145,18 @@ class ConversionHost < ApplicationRecord
     false
   end
 
-  # Get the conversion state by reading from a remote json file at +path+
-  # and return the parsed data.
-  #--
-  # TODO: This should be more clear on failure, since it could fail because
-  # it's not found or because the contents were invalid.
+  # Retrieve the conversion state information from a remote file as a stream.
+  # Then parse and return the stream data as a hash using JSON.parse.
   #
   def get_conversion_state(path)
     json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
     JSON.parse(json_state)
-  rescue => e
-    raise "Could not get state file '#{path}' from '#{resource.name}' with [#{e.class}: #{e}"
+  rescue JSON::ParserError => err
+    raise "Could not parse conversion state data from file '#{path}': #{json_state}"
+  rescue Net::SSH::Exception => err
+    raise "Failed to connect and retrieve conversion state data from file '#{path}' with [#{err.class}: #{err}"
+  rescue => err
+    raise "Error retrieving and parsing conversion state file '#{path}' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 
   # Get and return the contents of the remote conversion log at +path+.
@@ -253,8 +254,7 @@ class ConversionHost < ApplicationRecord
   # TODO: Move this to ManageIQ::Providers::Redhat::InfraManager::ConversionHost
   #
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
-    authentication = find_credentials
-    [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
+    [hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil]
   end
 
   # For the OpenStack provider, use the first authentication containing an ssh keypair that has
