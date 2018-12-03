@@ -609,4 +609,17 @@ describe User do
       expect(User.with_roles_excluding("everything").select(:id, :name)).to match_array([u1, u2])
     end
   end
+
+  describe "#regional_users" do
+    let(:other_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let(:user) { FactoryGirl.create(:user) }
+    let!(:regional_user) { FactoryGirl.create(:user, :userid => user.userid.upcase, :id => other_id) }
+
+    it "finds regional users" do
+      FactoryGirl.create(:user) # ensure these doen't come back
+      FactoryGirl.create(:user, :id => other_id + 1)
+
+      expect(user.regional_users).to match_array([user, regional_user])
+    end
+  end
 end
