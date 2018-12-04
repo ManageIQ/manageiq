@@ -3,7 +3,7 @@ class ConversionHost < ApplicationRecord
 
   acts_as_miq_taggable
 
-  VALID_RESOURCE_TYPES = %w[Vm Host]
+  VALID_RESOURCE_TYPES = %w(Vm Host).freeze
 
   belongs_to :resource, :polymorphic => true
   has_many :service_template_transformation_plan_tasks, :dependent => :nullify
