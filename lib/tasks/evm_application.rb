@@ -69,6 +69,7 @@ class EvmApplication
   def self.output_status(data, footnote = nil)
     return if data.blank?
     duplicate_columns = redundant_columns(data)
+    duplicate_columns.delete("Status") # always show status
     puts data.tableize(:columns => (data.first.keys - duplicate_columns.keys))
 
     # dont give headsup for empty values
