@@ -29,6 +29,18 @@ FactoryBot.define do
       end
     end
 
+    trait :with_authentication do
+      after(:create) do |x|
+        x.authentications << FactoryBot.create(:authentication)
+      end
+    end
+
+    trait :with_unvalidated_authentication do
+      after(:create) do |x|
+        x.authentications << FactoryBot.create(:authentication, :status => nil)
+      end
+    end
+
     trait :with_invalid_authentication do
       after(:create) do |x|
         x.authentications << FactoryBot.create(:authentication, :status => "invalid")
@@ -126,13 +138,6 @@ FactoryBot.define do
           :parent => :ems_vmware do
     after(:create) do |x|
       x.authentications << FactoryBot.create(:authentication)
-    end
-  end
-
-  factory :ems_vmware_with_valid_authentication,
-          :parent => :ems_vmware do
-    after(:create) do |x|
-      x.authentications << FactoryBot.create(:authentication, :status => "Valid")
     end
   end
 
