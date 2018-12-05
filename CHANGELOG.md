@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 100 ending 2018-12-03
+
+### Added
+- Add conversion_host option to the SupportsFeatureMixin module [(#18232)](https://github.com/ManageIQ/manageiq/pull/18232)
+- Pass CA when upgrading cluster through Ansible [(#18229)](https://github.com/ManageIQ/manageiq/pull/18229)
+- Upgrade Ovirt Cluster through Ansible [(#18220)](https://github.com/ManageIQ/manageiq/pull/18220)
+- Use MiqQueue for enabling/disabling a conversion_host [(#18191)](https://github.com/ManageIQ/manageiq/pull/18191)
+
+### Fixed
+- Fix miq request ownership [(#18257)](https://github.com/ManageIQ/manageiq/pull/18257)
+- Fix Relationship#grandchildren [(#18239)](https://github.com/ManageIQ/manageiq/pull/18239)
+- Display deprecated as a true/false string [(#18237)](https://github.com/ManageIQ/manageiq/pull/18237)
+- Fix supports_capture assuming MetricsCapture class [(#18233)](https://github.com/ManageIQ/manageiq/pull/18233)
+- Move the backend-generated PDF report's styling from the frontend [(#18226)](https://github.com/ManageIQ/manageiq/pull/18226)
+- Dont return different types in virtual columns [(#18217)](https://github.com/ManageIQ/manageiq/pull/18217)
+- Properly generate report yml include with virtual attributes [(#18205)](https://github.com/ManageIQ/manageiq/pull/18205)
+- Disconnect storage when disconnecting the VM [(#18200)](https://github.com/ManageIQ/manageiq/pull/18200)
+- Report accurate status on inactive VM [(#18181)](https://github.com/ManageIQ/manageiq/pull/18181)
+- Separate queue put from publish event so we don't queue put twice [(#18178)](https://github.com/ManageIQ/manageiq/pull/18178)
+
 ## Unreleased as of Sprint 99 ending 2018-11-19
 
 ### Added
