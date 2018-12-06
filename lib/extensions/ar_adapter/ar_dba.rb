@@ -495,33 +495,26 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
 
   # Returns an array of toast table indexes for the given toast table.
   def text_table_indexes(table_name, name = "Text Table Indexes")
+    all_indexes(table_name, name)
+  end
+
+  def all_indexes(table_name, name = "All Indexes")
     result = query(<<-SQL, name)
-       SELECT distinct i.relname, d.indisunique, d.indkey, i.oid
-       FROM pg_class t
-       INNER JOIN pg_index d ON t.oid = d.indrelid
-       INNER JOIN pg_class i ON d.indexrelid = i.oid
-       WHERE i.relkind = 'i'
-         AND t.relkind = 't'
-         AND i.oid = d.indexrelid
-         AND t.relname = '#{table_name}'
-         AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname = 'pg_toast' )
-      ORDER BY i.relname
-    SQL
-
+        SELECT
+          distinct ix.relname index_name,
+          indisunique,
+          regexp_replace(pg_get_indexdef(indexrelid), '^[^\\)]*\\(([^\\)]*)\\).*$', '\\1') columns
+        FROM pg_class t
+        INNER JOIN pg_index i ON t.oid = i.indrelid
+        INNER JOIN pg_class ix ON ix.oid = i.indexrelid
+        WHERE t.relname = '#{table_name}'
+        ORDER BY index_name
+        SQL
     result.map do |row|
-      index_name = row[0]
-      unique     = row[1] == 't'
-      indkey     = row[2].split(" ").map(&:to_i)
-      oid        = row[3]
+      index_name   = row[0]
+      unique       = row[1] == 't'
+      column_names = row[2].split(",").map(&:strip)
 
-      columns = Hash[query(<<-SQL, "Columns for index #{index_name} on #{table_name}")]
-      SELECT a.attnum, a.attname
-      FROM pg_attribute a
-      WHERE a.attrelid = #{oid}
-      AND a.attnum IN (#{indkey.join(",")})
-      SQL
-
-      column_names = columns.values_at(*indkey).compact
       column_names.empty? ? nil : ActiveRecord::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names)
     end.compact
   end
