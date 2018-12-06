@@ -68,7 +68,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     return true if @provider_server_last_synchronized.kind_of?(Time) && (@provider_server_last_synchronized + worker_settings[:sync_provider_with_server_interval]) >= now
 
     @provider_server_last_synchronized = now
-    provider.reload.zone == server.reload.zone
+    provider.reload.zone == server.reload.zone && provider.url == provider_url
   end
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.

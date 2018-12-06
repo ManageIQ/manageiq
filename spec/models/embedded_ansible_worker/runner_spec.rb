@@ -149,6 +149,14 @@ describe EmbeddedAnsibleWorker::Runner do
           expect(provider.reload.zone).to eq(miq_server.zone)
         end
 
+        it "updates provider URL if appliance hostname changes" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          miq_server.update(:hostname => "example42.com")
+
+          runner.do_work
+          expect(provider.reload.url).to include("example42.com")
+        end
+
         it "provider zone change is delayed 1 minute after appliance's zone changes" do
           allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
           runner.sync_worker_settings
