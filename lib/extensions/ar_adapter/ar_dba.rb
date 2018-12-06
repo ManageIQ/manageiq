@@ -511,7 +511,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     result.map do |row|
       index_name = row[0]
       unique     = row[1] == 't'
-      indkey     = row[2].split(" ")
+      indkey     = row[2].split(" ").map(&:to_i)
       oid        = row[3]
 
       columns = Hash[query(<<-SQL, "Columns for index #{index_name} on #{table_name}")]
@@ -522,7 +522,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       SQL
 
       column_names = columns.values_at(*indkey).compact
-      column_names.empty? ? nil : IndexDefinition.new(table_name, index_name, unique, column_names)
+      column_names.empty? ? nil : ActiveRecord::ConnectionAdapters::IndexDefinition.new(table_name, index_name, unique, column_names)
     end.compact
   end
 
