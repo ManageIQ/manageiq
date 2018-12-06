@@ -4,7 +4,7 @@ describe 'YAML reports' do
   CHART_DIRS   = [ApplicationController::Performance::CHARTS_REPORTS_FOLDER]
   CHART_YAMLS  = CHART_DIRS.collect { |dir| Dir.glob(File.join(dir, "**", "*.yaml")) }.flatten
 
-  before :each do
+  before do
     EvmSpecHelper.local_miq_server
     @user = FactoryGirl.create(:user_with_group)
   end
