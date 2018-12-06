@@ -38,14 +38,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def update_embedded_ansible_provider
-    server   = MiqServer.my_server(true)
-
-    provider.name = "Embedded Ansible"
-    provider.zone = server.zone
-    provider.url  = provider_url
-    provider.verify_ssl = 0
-
-    provider.save!
+    synchronize_provider_with_server
 
     api_connection = embedded_ansible.api_connection
     worker.remove_demo_data(api_connection)
@@ -55,6 +48,17 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
     provider.update_authentication(:default => {:userid => admin_auth.userid, :password => admin_auth.password})
     provider.authentication_check
+  end
+
+  def synchronize_provider_with_server
+    server = MiqServer.my_server(true)
+
+    provider.name = "Embedded Ansible"
+    provider.zone = server.zone
+    provider.url  = provider_url
+    provider.verify_ssl = 0
+
+    provider.save!
   end
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.
