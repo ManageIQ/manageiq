@@ -19,7 +19,7 @@ module VmdbTableEvm::Seeding
 
   def seed_texts
     mine   = text_tables.index_by(&:name)
-    actual = self.class.connection.respond_to?(:text_tables) ? self.class.connection.text_tables(name) : []
+    actual = actual_text_tables
 
     actual.sort.each do |table_name|
       table = mine.delete(table_name)

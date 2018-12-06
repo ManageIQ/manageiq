@@ -41,7 +41,16 @@ module VmdbDatabase::Seeding
   end
 
   def seed
-    mine = evm_tables.includes(:text_tables, :vmdb_indexes).index_by(&:name)
+    # loading both evm tables and text tables in one go
+    all_tables = vmdb_tables.select(:id, :name, :type, :vmdb_database_id, :parent_id, :actual_text_tables, :all_indexes)
+                            .includes(:vmdb_indexes).load
+    mine = all_tables.select { |t| t.kind_of?(VmdbTableEvm) }.index_by(&:name)
+    text_tables = all_tables.select { |t| t.kind_of?(VmdbTableText) }.group_by(&:parent_id)
+
+    # preload text_table associations
+    mine.each_value do |t|
+      t.association(:text_tables).target = text_tables[t.id] || []
+    end
 
     self.class.connection.tables.sort.each do |table_name|
       table = mine.delete(table_name)

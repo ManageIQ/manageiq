@@ -63,8 +63,9 @@ describe VmdbTableEvm do
     end
 
     it "adds new tables" do
-      table_names = ['flintstones']
-      allow(described_class.connection).to receive(:text_tables).and_return(table_names)
+      table_names = ['pg_toast_foo']
+      expect_any_instance_of(VmdbTable).to receive(:actual_text_tables).and_return(table_names)
+      expect_any_instance_of(VmdbTable).to receive(:sql_indexes).and_return([])
       @evm_table.seed_texts
       expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
       @evm_table.text_tables.each { |t| expect(t.vmdb_database).to eq(@db) }
@@ -76,7 +77,7 @@ describe VmdbTableEvm do
       @evm_table.reload
       expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
 
-      allow(described_class.connection).to receive(:text_tables).and_return([])
+      allow_any_instance_of(VmdbTable).to receive(:actual_text_tables).and_return([])
       @evm_table.seed_texts
       @evm_table.reload
       expect(@evm_table.text_tables.collect(&:name)).to eq([])
@@ -85,7 +86,8 @@ describe VmdbTableEvm do
     it "finds existing tables" do
       table_names = ['flintstones']
       table_names.each { |t| FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :evm_table => @evm_table, :name => t) }
-      allow(described_class.connection).to receive(:text_tables).and_return(table_names)
+      allow_any_instance_of(VmdbTable).to receive(:actual_text_tables).and_return(table_names)
+      allow_any_instance_of(VmdbTableText).to receive(:sql_indexes).and_return([])
       @evm_table.seed_texts
       @evm_table.reload
       expect(@evm_table.text_tables.collect(&:name)).to eq(table_names)
