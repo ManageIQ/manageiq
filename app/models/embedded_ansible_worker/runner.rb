@@ -1,4 +1,5 @@
 class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
+  attr_accessor :provider_server_last_synchronized
   def prepare
     ObjectSpace.garbage_collect
     # Overriding prepare so we can set started when we're ready
@@ -22,6 +23,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def do_work
+    synchronize_provider_with_server unless provider_in_sync_with_server?
     embedded_ansible.start if !embedded_ansible.alive? && !embedded_ansible.running?
     provider.authentication_check if embedded_ansible.alive? && !provider.authentication_status_ok?
     update_job_data_retention
@@ -59,6 +61,14 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     provider.verify_ssl = 0
 
     provider.save!
+  end
+
+  def provider_in_sync_with_server?
+    now = Time.now.utc
+    return true if @provider_server_last_synchronized.kind_of?(Time) && (@provider_server_last_synchronized + worker_settings[:sync_provider_with_server_interval]) >= now
+
+    @provider_server_last_synchronized = now
+    provider.reload.zone == server.reload.zone
   end
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.

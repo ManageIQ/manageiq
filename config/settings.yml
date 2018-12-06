@@ -1141,6 +1141,7 @@
       :starting_timeout: 20.minutes
       :poll: 10.seconds
       :memory_threshold: 0.megabytes
+      :sync_provider_with_server_interval: 1.minute
     :agent_coordinator_worker:
       :heartbeat_timeout: 30.minutes
       :poll: 30.seconds
