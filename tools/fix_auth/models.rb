@@ -87,13 +87,16 @@ module FixAuth
 
   class FixDatabaseYml
     attr_accessor :id
-    attr_accessor :yaml
+    attr_accessor :yml
     include FixAuth::AuthConfigModel
 
     class << self
       attr_accessor :available_columns
       attr_accessor :file_name
-      alias_method  :table_name, :file_name
+
+      def table_name
+        file_name.gsub(".yml", "")
+      end
     end
 
     def initialize(options = {})
@@ -101,7 +104,7 @@ module FixAuth
     end
 
     def load
-      @yaml = File.read(id)
+      @yml = File.read(id)
       self
     end
 
@@ -110,11 +113,11 @@ module FixAuth
     end
 
     def save!
-      File.write(id, @yaml)
+      File.write(id, @yml)
     end
 
     self.password_fields = %w(password)
-    self.available_columns = %w(yaml)
+    self.available_columns = %w(yml)
 
     def self.contenders
       [new(:id => file_name).load]
