@@ -61,7 +61,8 @@ describe ServiceTemplateTransformationPlanRequest do
 
       it 'returns false' do
         host = FactoryGirl.create(:host, :ext_management_system => FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone)))
-        conversion_host = FactoryGirl.create(:conversion_host, :resource => host)
+        allow(host).to receive(:ipaddresses).and_return(['127.0.0.1'])
+        conversion_host = FactoryGirl.create(:conversion_host, :resource => host, :resource_type => 'Host', :address => host.ipaddresses.first)
         expect(request.validate_conversion_hosts).to be false
       end
     end
@@ -97,7 +98,8 @@ describe ServiceTemplateTransformationPlanRequest do
 
       it 'returns true' do
         host = FactoryGirl.create(:host, :ext_management_system => dst_ems, :ems_cluster => dst_cluster)
-        conversion_host = FactoryGirl.create(:conversion_host, :resource => host)
+        allow(host).to receive(:ipaddresses).and_return(['127.0.0.1'])
+        conversion_host = FactoryGirl.create(:conversion_host, :resource => host, :address => host.ipaddresses.first)
         expect(request.validate_conversion_hosts).to be true
       end
     end
@@ -133,7 +135,8 @@ describe ServiceTemplateTransformationPlanRequest do
 
       it 'returns true' do
         vm = FactoryGirl.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant)
-        conversion_host = FactoryGirl.create(:conversion_host, :resource => vm)
+        allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
+        conversion_host = FactoryGirl.create(:conversion_host, :resource => vm, :resource_type => 'Vm', :address => vm.ipaddresses.first)
         expect(request.validate_conversion_hosts).to be true
       end
     end
