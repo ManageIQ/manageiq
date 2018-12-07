@@ -13,7 +13,9 @@ class ConversionHost < ApplicationRecord
   validates :name, :presence => true
   validates :resource_type, :presence => true, :inclusion => { :in => VALID_RESOURCE_TYPES }
   validates :resource_id, :presence => true
-  validates :address, :presence => true, :uniqueness => true, :format => { :with => Resolv::AddressRegex }
+
+  validates :address, :presence => true, :uniqueness => true, :format => { :with => Resolv::AddressRegex },
+    :inclusion => { :in => proc{ |record| record.resource.ipaddresses } }
 
   include_concern 'Configurations'
 
