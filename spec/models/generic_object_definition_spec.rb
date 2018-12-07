@@ -95,7 +95,7 @@ describe GenericObjectDefinition do
       obj = definition.create_object(:name => 'test', :max_number => 100)
       expect(obj).to be_a_kind_of(GenericObject)
       expect(obj.generic_object_definition).to eq(definition)
-      expect(obj.max_number).to eq(100)
+      expect(obj.go_send(:max_number)).to(eq(100))
     end
   end
 
@@ -239,7 +239,7 @@ describe GenericObjectDefinition do
       vm = FactoryGirl.create(:vm)
       go = FactoryGirl.create(:generic_object, :name => 'test', :generic_object_definition => definition)
       go.add_to_property_association('vms', vm)
-      expect(go.vms.size).to eq(1)
+      expect(go.go_send(:vms).size).to(eq(1))
 
       definition.delete_property_association(:vms)
       expect(go.reload.send(:properties)["vms"]).to be_nil
@@ -284,7 +284,7 @@ describe GenericObjectDefinition do
       3.times { vm << FactoryGirl.create(:vm_vmware) }
 
       definition.add_property_association(:vms, 'vm')
-      @g1.vms = [vm[0], vm[1], vm[2]]
+      @g1.go_send(:vms=, [vm[0], vm[1], vm[2]])
       @g1.save!
 
       @options = {:vms => [vm[0].id, vm[1].id]}

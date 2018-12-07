@@ -62,17 +62,17 @@ describe GenericObject do
       it "can be accessed as an attribute" do
         expect(go.generic_object_definition).to eq(definition)
         expect(go.name).to                      eq(go_object_name)
-        expect(go.flag).to                      eq(true)
-        expect(go.data_read).to                 eq(data_read)
-        expect(go.max_number).to                eq(max_number)
-        expect(go.server).to                    eq(server_name)
-        expect(go.s_time).to                    be_within(0.001).of s_time
+        expect(go.go_send(:flag)).to(eq(true))
+        expect(go.go_send(:data_read)).to(eq(data_read))
+        expect(go.go_send(:max_number)).to(eq(max_number))
+        expect(go.go_send(:server)).to(eq(server_name))
+        expect(go.go_send(:s_time)).to(be_within(0.001).of(s_time))
       end
 
       it "can be set as an attribute" do
-        go.max_number = max_number + 100
+        go.go_send(:max_number=, max_number + 100)
         go.save!
-        expect(go.reload.max_number).to eq(max_number + 100)
+        expect(go.reload.go_send(:max_number)).to(eq(max_number + 100))
       end
 
       it "can't set undefined property attribute" do
@@ -136,34 +136,34 @@ describe GenericObject do
     end
 
     it 'returns object' do
-      expect(go_assoc.vms.first).to be_kind_of(Vm)
+      expect(go_assoc.go_send(:vms).first).to(be_kind_of(Vm))
     end
 
     it 'can be accessed as an attribute' do
-      expect(go_assoc.vms.count).to eq(2)
+      expect(go_assoc.go_send('vms').count).to(eq(2))
     end
 
     it 'skips invalid object when saving to DB' do
-      go_assoc.vms = [vm1, vm2, FactoryGirl.create(:host)]
+      go_assoc.go_send(:vms=, [vm1, vm2, FactoryGirl.create(:host)])
       go_assoc.save!
 
-      expect(go_assoc.reload.vms.count).to eq(2)
+      expect(go_assoc.reload.go_send(:vms).count).to(eq(2))
     end
 
     it 'skips non-existing object when retrieving from DB' do
       vm2.destroy
-      expect(go_assoc.vms.count).to eq(1)
+      expect(go_assoc.go_send(:vms).count).to(eq(1))
     end
 
     it 'skips duplicate object' do
-      go_assoc.vms = [vm1, vm1]
+      go_assoc.go_send(:vms=, [vm1, vm1])
       go_assoc.save!
-      expect(go_assoc.vms.count).to eq(1)
+      expect(go_assoc.go_send(:vms).count).to(eq(1))
     end
 
     it 'method returns all associations' do
       host = FactoryGirl.create(:host)
-      go_assoc.hosts = [host]
+      go_assoc.go_send(:hosts=, [host])
 
       result = go_assoc.property_associations
       expect(result["vms"]).to match_array([vm1, vm2])
@@ -178,7 +178,7 @@ describe GenericObject do
 
     it 'sends defined method to automate' do
       expect(MiqAeEngine).to receive(:deliver).and_return(ws)
-      go.my_host
+      go.go_send(:my_host)
     end
 
     it 'raises an error for undefined method' do
@@ -192,7 +192,7 @@ describe GenericObject do
         :tenant_id    => user.current_tenant.id
       }
       expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
-      go.my_host
+      go.go_send(:my_host)
     end
 
     context 'passes parameters to automate' do
@@ -204,30 +204,30 @@ describe GenericObject do
                                          :param_2      => 'param2',
                                          :param_2_type => "String")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
-        go.my_host('param1', 'param2')
+        go.go_send(:my_host, 'param1', 'param2')
       end
 
       it 'no parameter' do
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(:attrs => attrs)).and_return(ws)
-        go.my_host
+        go.go_send(:my_host)
       end
 
       it 'one array parameter' do
         options = {:attrs => attrs.merge(:param_1 => %w(p1 p2), :param_1_type=>"Array")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
-        go.my_host(%w(p1 p2))
+        go.go_send(:my_host, %w(p1 p2))
       end
 
       it 'one hash parameter' do
         options = {:attrs => attrs.merge(:param_1 => {:p1 => 1, :p2 => 2}, :param_1_type=>"Hash")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
-        go.my_host(:p1 => 1, :p2 => 2)
+        go.go_send(:my_host, :p1 => 1, :p2 => 2)
       end
     end
 
     it 'returns value from automate' do
       allow(MiqAeEngine).to receive(:deliver).and_return(ws)
-      expect(go.my_host).to eq("some_return_value")
+      expect(go.go_send(:my_host)).to(eq("some_return_value"))
     end
   end
 
@@ -241,22 +241,22 @@ describe GenericObject do
         :tenant_id    => user.current_tenant.id
       }
       expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(workspace)
-      User.with_user_group(user, user.current_group) { go.my_host }
+      User.with_user_group(user, user.current_group) { go.go_send(:my_host) }
     end
   end
 
   describe '#delete_property' do
     it 'an attriute' do
-      max = go.max_number
-      expect(go.delete_property("max_number")).to eq(max)
-      expect(go.max_number).to be_nil
+      max = go.go_send(:max_number)
+      expect(go.delete_property("max_number")).to(eq(max))
+      expect(go.go_send(:max_number)).to(be_nil)
     end
 
     it 'an association' do
       vm2 = FactoryGirl.create(:vm_vmware)
-      go.vms = [vm1, vm2]
+      go.go_send(:vms=, [vm1, vm2])
       expect(go.delete_property("vms")).to match_array([vm1, vm2])
-      expect(go.vms).to be_empty
+      expect(go.go_send(:vms)).to(be_empty)
     end
 
     it 'a method' do
@@ -274,28 +274,28 @@ describe GenericObject do
 
     it 'adds objects into association' do
       subject
-      expect(go.vms.count).to eq(1)
+      expect(go.go_send(:vms).count).to(eq(1))
 
       go.add_to_property_association(:vms, [new_vm])
-      expect(go.vms.count).to eq(2)
+      expect(go.go_send(:vms).count).to(eq(2))
     end
 
     it 'does not add duplicate object' do
       subject
-      expect(go.vms.count).to eq(1)
+      expect(go.go_send(:vms).count).to(eq(1))
 
       subject
-      expect(go.vms.count).to eq(1)
+      expect(go.go_send(:vms).count).to(eq(1))
     end
 
     it 'does not add object from differnt class' do
       go.add_to_property_association("vms", FactoryGirl.create(:host))
-      expect(go.vms.count).to eq(0)
+      expect(go.go_send(:vms).count).to(eq(0))
     end
 
     it 'does not accept object id' do
       go.add_to_property_association(:vms, new_vm.id)
-      expect(go.vms.count).to eq(0)
+      expect(go.go_send(:vms).count).to(eq(0))
     end
   end
 
@@ -305,20 +305,20 @@ describe GenericObject do
 
     it 'deletes objects from association' do
       result = go.delete_from_property_association(:vms, [vm1])
-      expect(go.vms.count).to eq(0)
+      expect(go.go_send(:vms).count).to(eq(0))
       expect(result).to match_array([vm1])
     end
 
     it 'does not delete object that is not in association' do
-      expect(go.vms.count).to eq(1)
+      expect(go.go_send(:vms).count).to(eq(1))
       result = go.delete_from_property_association(:vms, [new_vm])
-      expect(go.vms).to match_array([vm1])
+      expect(go.go_send(:vms)).to(match_array([vm1]))
       expect(result).to be_nil
     end
 
     it 'does not delete object from differnt class' do
       result = go.delete_from_property_association(:vms, [FactoryGirl.create(:host)])
-      expect(go.vms).to match_array([vm1])
+      expect(go.go_send(:vms)).to(match_array([vm1]))
       expect(result).to be_nil
     end
 
