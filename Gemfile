@@ -206,7 +206,7 @@ group :web_server, :manageiq_default do
 end
 
 group :web_socket, :manageiq_default do
-  gem "surro-gate",                     "~>1.0.2"
+  gem "surro-gate", :git => "https://github.com/skateman/surro-gate"
   gem "websocket-driver",               "~>0.6.3"
 end
 
