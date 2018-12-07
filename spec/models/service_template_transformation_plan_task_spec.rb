@@ -19,7 +19,7 @@ describe ServiceTemplateTransformationPlanTask do
     let(:vm)  { FactoryGirl.create(:vm_or_template) }
     let(:vm2)  { FactoryGirl.create(:vm_or_template) }
     let(:apst) { FactoryGirl.create(:service_template_ansible_playbook) }
-    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host) }
+    let(:conversion_host){ FactoryGirl.create(:conversion_host, :resource => host, :resource_type => 'Host') }
 
     let(:mapping) do
       FactoryGirl.create(
@@ -247,8 +247,7 @@ describe ServiceTemplateTransformationPlanTask do
     let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
     let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm_1) }
     let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm_2) }
-
-    let(:conversion_host) { FactoryGirl.create(:conversion_host) }
+    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => src_vm_1, :resource_type => 'Vm') }
 
     describe '#transformation_destination' do
       it { expect(task_1.transformation_destination(src_cluster)).to eq(dst_cluster) }
@@ -516,7 +515,7 @@ describe ServiceTemplateTransformationPlanTask do
         let(:dst_flavor) { FactoryGirl.create(:flavor) }
         let(:dst_security_group) { FactoryGirl.create(:security_group) }
         let(:conversion_host_vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant) }
-        let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => conversion_host_vm) }
+        let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => conversion_host_vm, :resource_type => 'Vm') }
 
         let(:mapping) do
           FactoryGirl.create(
