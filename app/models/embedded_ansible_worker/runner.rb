@@ -1,4 +1,5 @@
 class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
+  attr_accessor :provider_server_last_synchronized
   def prepare
     ObjectSpace.garbage_collect
     # Overriding prepare so we can set started when we're ready
@@ -22,6 +23,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def do_work
+    synchronize_provider_with_server unless provider_in_sync_with_server?
     embedded_ansible.start if !embedded_ansible.alive? && !embedded_ansible.running?
     provider.authentication_check if embedded_ansible.alive? && !provider.authentication_status_ok?
     update_job_data_retention
@@ -38,14 +40,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def update_embedded_ansible_provider
-    server   = MiqServer.my_server(true)
-
-    provider.name = "Embedded Ansible"
-    provider.zone = server.zone
-    provider.url  = provider_url
-    provider.verify_ssl = 0
-
-    provider.save!
+    synchronize_provider_with_server
 
     api_connection = embedded_ansible.api_connection
     worker.remove_demo_data(api_connection)
@@ -55,6 +50,25 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
     provider.update_authentication(:default => {:userid => admin_auth.userid, :password => admin_auth.password})
     provider.authentication_check
+  end
+
+  def synchronize_provider_with_server
+    server = MiqServer.my_server(true)
+
+    provider.name = "Embedded Ansible"
+    provider.zone = server.zone
+    provider.url  = provider_url
+    provider.verify_ssl = 0
+
+    provider.save!
+  end
+
+  def provider_in_sync_with_server?
+    now = Time.now.utc
+    return true if @provider_server_last_synchronized.kind_of?(Time) && (@provider_server_last_synchronized + worker_settings[:sync_provider_with_server_interval]) >= now
+
+    @provider_server_last_synchronized = now
+    provider.reload.zone == server.reload.zone && provider.url == provider_url
   end
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.

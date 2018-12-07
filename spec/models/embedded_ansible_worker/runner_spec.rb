@@ -100,6 +100,7 @@ describe EmbeddedAnsibleWorker::Runner do
       end
 
       it "starts embedded ansible if it is not alive and not running" do
+        allow(runner).to receive(:provider_in_sync_with_server?).and_return(true)
         allow(embedded_ansible_instance).to receive(:alive?).and_return(false)
         allow(embedded_ansible_instance).to receive(:running?).and_return(false)
 
@@ -109,7 +110,7 @@ describe EmbeddedAnsibleWorker::Runner do
       end
 
       context "with a provider" do
-        let(:provider) { FactoryGirl.create(:provider_embedded_ansible, :with_authentication) }
+        let!(:provider) { FactoryGirl.create(:provider_embedded_ansible, :with_authentication) }
 
         it "runs an authentication check if embedded ansible is alive and the credentials are not valid" do
           auth = provider.authentications.first
@@ -138,6 +139,43 @@ describe EmbeddedAnsibleWorker::Runner do
 
           expect(embedded_ansible_instance).to receive(:set_job_data_retention)
           runner.do_work
+        end
+
+        it "updates provider zone if appliance zone changed" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          miq_server.update(:zone => FactoryGirl.create(:zone))
+
+          runner.do_work
+          expect(provider.reload.zone).to eq(miq_server.zone)
+        end
+
+        it "updates provider URL if appliance hostname changes" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          miq_server.update(:hostname => "example42.com")
+
+          runner.do_work
+          expect(provider.reload.url).to include("example42.com")
+        end
+
+        it "provider zone change is delayed 1 minute after appliance's zone changes" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          runner.sync_worker_settings
+
+          # provider zone is checked
+          runner.do_work
+
+          original_zone = miq_server.zone
+          miq_server.update(:zone => FactoryGirl.create(:zone))
+
+          # zone was just checked, doesn't do anything yet
+          runner.do_work
+          expect(provider.reload.zone).to eq(original_zone)
+
+          # wait at least 1 minute and try again, it now matches the server zone
+          Timecop.travel(65.seconds) do
+            runner.do_work
+            expect(provider.reload.zone).to eq(miq_server.zone)
+          end
         end
       end
     end
