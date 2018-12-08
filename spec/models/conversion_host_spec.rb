@@ -6,8 +6,8 @@ describe ConversionHost do
   context "provider independent methods" do
     let(:host) { FactoryGirl.create(:host) }
     let(:vm) { FactoryGirl.create(:vm_or_template) }
-    let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host) }
-    let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm) }
+    let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host, :resource_type => 'Host') }
+    let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm, :resource_type => 'Vm') }
     let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
     let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task, :conversion_host => conversion_host_1) }
     let(:task_3) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_2) }
@@ -118,12 +118,12 @@ describe ConversionHost do
       it "returns false if if kill command failed" do
         allow(conversion_host_1).to receive(:connect_ssh).and_raise('Unexpected failure')
         expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(false)
-      end 
+      end
 
       it "returns true if if kill command succeeded" do
         allow(conversion_host_1).to receive(:connect_ssh)
         expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(true)
-      end 
+      end
     end
   end
 
@@ -167,7 +167,7 @@ describe ConversionHost do
   context "resource provider is openstack" do
     let(:ems) { FactoryGirl.create(:ems_openstack, :zone => FactoryGirl.create(:zone)) }
     let(:vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
-    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => vm, :vddk_transport_supported => true) }
+    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => vm, :vddk_transport_supported => true, :resource_type => 'Vm') }
 
     context "ems authentications is empty" do
       it { expect(conversion_host.check_ssh_connection).to be(false) }
