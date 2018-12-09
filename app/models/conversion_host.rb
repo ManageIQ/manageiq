@@ -14,6 +14,12 @@ class ConversionHost < ApplicationRecord
   validates :resource_id, :presence => true
   validates :resource_type, :presence => true, :inclusion => { :in => VALID_RESOURCE_TYPES }
 
+  validates :address,
+    :uniqueness => true,
+    :format     => { :with => Resolv::AddressRegex },
+    :inclusion  => { :in => -> { resource.ipaddresses } },
+    :unless     => -> { resource.ipaddresses.blank? }
+
   include_concern 'Configurations'
 
   # To be eligible, a conversion host must have the following properties
