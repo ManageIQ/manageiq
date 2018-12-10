@@ -6,8 +6,8 @@ describe ConversionHost do
   context "provider independent methods" do
     let(:host) { FactoryGirl.create(:host) }
     let(:vm) { FactoryGirl.create(:vm) }
-    let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host, :resource_type => 'Host', :address => '10.0.0.1') }
-    let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm, :resource_type => 'Vm', :address => '10.0.1.1') }
+    let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host, :address => '10.0.0.1') }
+    let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm, :address => '10.0.1.1') }
     let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
     let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task, :conversion_host => conversion_host_1) }
     let(:task_3) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_2) }
@@ -168,7 +168,7 @@ describe ConversionHost do
   context "resource provider is openstack" do
     let(:ems) { FactoryGirl.create(:ems_openstack, :zone => FactoryGirl.create(:zone)) }
     let(:vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
-    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => vm, :vddk_transport_supported => true, :resource_type => 'Vm') }
+    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => vm, :vddk_transport_supported => true) }
 
     context "ems authentications is empty" do
       it { expect(conversion_host.check_ssh_connection).to be(false) }
