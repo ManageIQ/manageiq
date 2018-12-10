@@ -62,7 +62,7 @@ Vmdb::Application.configure do
 end
 
 require "minitest"
-require "factory_girl"
+require "factory_bot"
 require "timecop"
 require "vcr"
 require "webmock/rspec"
