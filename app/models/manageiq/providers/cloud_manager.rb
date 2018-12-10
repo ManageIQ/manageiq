@@ -42,8 +42,6 @@ module ManageIQ::Providers
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
 
-    after_destroy :destroy_mapped_tenants
-
     # These are availability zones that are available to be chosen
     # when creating a new cloud volume for providers that support it.
     # By default this is all AZs, individual cloud managers
@@ -138,11 +136,15 @@ module ManageIQ::Providers
     end
 
     def sync_root_tenant
-      ems_tenant = source_tenant || Tenant.new(:parent => tenant, :source => self)
-
       ems_tenant_name = "#{self.class.description} Cloud Provider #{name}"
 
-      ems_tenant.update_attributes!(:name => ems_tenant_name, :description => ems_tenant_name)
+      # does a tenant by this name already exist, perhaps because this provider
+      # was deleted and then recreated with the same name?
+      ems_tenant = source_tenant || Tenant.find_by(:name => ems_tenant_name)
+      if !ems_tenant
+        ems_tenant = Tenant.new(:parent => tenant, :source => self)
+      end
+      ems_tenant.update_attributes!(:name => ems_tenant_name, :description => ems_tenant_name, :source => self)
     end
 
     def create_cloud_tenant(options)
@@ -155,14 +157,6 @@ module ManageIQ::Providers
 
     def self.display_name(number = 1)
       n_('Cloud Manager', 'Cloud Managers', number)
-    end
-
-    def destroy_mapped_tenants
-      if source_tenant
-        source_tenant.all_subtenants.destroy_all
-        source_tenant.all_subprojects.destroy_all
-        source_tenant.destroy
-      end
     end
 
     define_method(:allow_duplicate_endpoint_url?) { true }

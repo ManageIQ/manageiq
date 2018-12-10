@@ -195,17 +195,6 @@ describe EmsCloud do
           expect_created_tenant_tree
         end
 
-        it "cleans up created tenant tree when the ems is destroyed" do
-          ems_cloud.sync_cloud_tenants_with_tenants
-          expect_created_tenant_tree
-          # 4 cloud tenants, plus the provider tenant and root tenant
-          expect(Tenant.count).to eq(6)
-          ems_cloud.destroy
-          # only the root tenant should remain after destroying the ems
-          expect(Tenant.count).to eq(1)
-          expect(Tenant.first.name).to eq("My Company")
-        end
-
         let(:vm_5) { FactoryBot.create(:vm_openstack) }
 
         let(:ct_5) do
@@ -738,6 +727,31 @@ describe EmsCloud do
             expect(old_tenant_first.source_id).to be_nil
             expect(old_tenant_first.source_type).to be_nil
           end
+        end
+      end
+
+      context "the provider is deleted" do
+        it "preserves the tenant tree if the provider is recreated" do
+          old_ems_cloud = FactoryBot.create(:ems_openstack_with_authentication, :tenant_mapping_enabled => true, :name => "ems_cloud")
+          old_ems_cloud.sync_cloud_tenants_with_tenants
+
+          old_ems_cloud.reload
+
+          expect(old_ems_cloud.source_tenant).not_to be_nil
+          expect(old_ems_cloud.source_tenant.name).to eq("OpenStack Cloud Provider ems_cloud")
+          expect(old_ems_cloud.source_tenant.description).to eq("OpenStack Cloud Provider ems_cloud")
+
+          source_tenant = old_ems_cloud.source_tenant
+
+          old_ems_cloud.destroy
+          expect(source_tenant.ext_management_systems.count).to eq(0)
+
+          new_ems_cloud = FactoryBot.create(:ems_openstack_with_authentication, :tenant_mapping_enabled => true, :name => "ems_cloud")
+          new_ems_cloud.sync_cloud_tenants_with_tenants
+
+          new_ems_cloud.reload
+          expect(new_ems_cloud.source_tenant).not_to be_nil
+          expect(new_ems_cloud.source_tenant.id).to eq(source_tenant.id)
         end
       end
     end
