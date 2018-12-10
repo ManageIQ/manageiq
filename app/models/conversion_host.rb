@@ -1,7 +1,7 @@
 class ConversionHost < ApplicationRecord
   include NewWithTypeStiMixin
 
-  VALID_RESOURCE_TYPES = %w(VmOrTemplate Vm Host).freeze
+  VALID_RESOURCE_TYPES = %w(VmOrTemplate Host).freeze
 
   acts_as_miq_taggable
 
