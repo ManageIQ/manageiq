@@ -9,6 +9,15 @@ describe ReportStructure do
   let(:source_group) {  FactoryGirl.create(:miq_group, :settings => settings) }
   let(:destination_group) { FactoryGirl.create(:miq_group, :miq_user_role => role) }
 
+  before do
+    @saved_stdout, @saved_stderr = $stdout, $stderr
+    $stdout = $stderr = StringIO.new
+  end
+
+  after do
+    $stdout, $stderr = @saved_stdout, @saved_stderr
+  end
+
   context "copy reports structure" do
     describe ".duplicate_for_group" do
       it "copies reports structure from one group to another" do
@@ -23,7 +32,7 @@ describe ReportStructure do
         expect(destination_group.settings).to be nil
       end
 
-      it "does not change reports structure on destination group is source group not found" do
+      it "does not change reports structure on destination group if source group not found" do
         expect(ReportStructure).to receive(:abort)
         ReportStructure.duplicate_for_group("Some_Not_existed_Group", source_group.description)
         source_group.reload
@@ -52,7 +61,7 @@ describe ReportStructure do
         expect(@destination_group2.settings).to be nil
       end
 
-      it "does not change reports structure on group with destination role is source group not found" do
+      it "does not change reports structure on group with destination role if source group not found" do
         destination_group.update(:settings => settings)
         expect(ReportStructure).to receive(:abort)
         ReportStructure.duplicate_for_role("Some_Not_existed_Group", role.name)
