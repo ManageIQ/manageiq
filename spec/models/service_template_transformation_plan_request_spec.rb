@@ -134,6 +134,7 @@ describe ServiceTemplateTransformationPlanRequest do
       it 'returns true' do
         vm = FactoryGirl.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant)
         conversion_host = FactoryGirl.create(:conversion_host, :resource => vm)
+        p conversion_host.errors
         expect(request.validate_conversion_hosts).to be true
       end
     end

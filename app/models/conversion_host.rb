@@ -1,7 +1,7 @@
 class ConversionHost < ApplicationRecord
   include NewWithTypeStiMixin
 
-  VALID_RESOURCE_TYPES = %w(Vm Host).freeze
+  VALID_RESOURCE_TYPES = %w(VmOrTemplate Vm Host).freeze
 
   acts_as_miq_taggable
 
@@ -18,7 +18,7 @@ class ConversionHost < ApplicationRecord
     :uniqueness => true,
     :format     => { :with => Resolv::AddressRegex },
     :inclusion  => { :in => -> { resource.ipaddresses } },
-    :unless     => -> { resource.ipaddresses.blank? }
+    :unless     => -> { resource.blank? || resource.ipaddresses.blank? }
 
   include_concern 'Configurations'
 
