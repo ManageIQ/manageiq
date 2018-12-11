@@ -18,7 +18,7 @@ def seq_padded_for_sorting(n)
 end
 
 require 'factory_bot'
-FactoryBot = FactoryBot # Alias until all associated repositories are updated
+FactoryGirl = FactoryBot # Alias until all associated repositories are updated
 
 # In case we are running as an engine, the factories are located in the dummy app
 FactoryBot.definition_file_paths << 'spec/manageiq/spec/factories'
