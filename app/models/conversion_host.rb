@@ -1,12 +1,24 @@
 class ConversionHost < ApplicationRecord
   include NewWithTypeStiMixin
 
+  VALID_RESOURCE_TYPES = %w(VmOrTemplate Host).freeze
+
   acts_as_miq_taggable
 
   belongs_to :resource, :polymorphic => true
   has_many :service_template_transformation_plan_tasks, :dependent => :nullify
   has_many :active_tasks, -> { where(:state => 'active') }, :class_name => ServiceTemplateTransformationPlanTask, :inverse_of => :conversion_host
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
+
+  validates :name, :presence => true
+  validates :resource_id, :presence => true
+  validates :resource_type, :presence => true, :inclusion => { :in => VALID_RESOURCE_TYPES }
+
+  validates :address,
+    :uniqueness => true,
+    :format     => { :with => Resolv::AddressRegex },
+    :inclusion  => { :in => -> { resource.ipaddresses } },
+    :unless     => -> { resource.blank? || resource.ipaddresses.blank? }
 
   include_concern 'Configurations'
 
@@ -36,9 +48,9 @@ class ConversionHost < ApplicationRecord
   end
 
   def ipaddress(family = 'ipv4')
-    return address if address && IPAddr.new(address).send("#{family}?")
+    return address if address.present? && IPAddr.new(address).send("#{family}?")
     resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
-  end 
+  end
 
   def run_conversion(conversion_options)
     result = connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', nil, nil, conversion_options.to_json) }
@@ -65,7 +77,7 @@ class ConversionHost < ApplicationRecord
     connect_ssh { |ssu| ssu.get_file(path, nil) }
   rescue => e
     raise "Could not get conversion log '#{path}' from '#{resource.name}' with [#{e.class}: #{e}"
-  end 
+  end
 
   def check_conversion_host_role
     install_conversion_host_module
@@ -127,7 +139,7 @@ class ConversionHost < ApplicationRecord
     require 'MiqSshUtil'
     MiqSshUtil.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
       yield(ssu)
-    end  
+    end
   rescue Exception => e
     _log.error("SSH connection failed for [#{ipaddress}] with [#{e.class}: #{e}]")
     raise e
@@ -139,7 +151,7 @@ class ConversionHost < ApplicationRecord
 
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
     [hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil]
-  end 
+  end
 
   def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
     authentication = resource.ext_management_system.authentications
