@@ -1,8 +1,8 @@
 describe ConfigurationManagementMixin do
-  let(:miq_server) { FactoryGirl.create(:miq_server, :zone => zone, :status => "started") }
-  let(:region)     { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
+  let(:miq_server) { FactoryBot.create(:miq_server, :zone => zone, :status => "started") }
+  let(:region)     { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number) }
   let(:settings)   { {:some_test_setting => {:setting => {:deeper => 1}, :other => 2}} }
-  let(:zone)       { FactoryGirl.create(:zone) }
+  let(:zone)       { FactoryBot.create(:zone) }
 
   [:miq_server, :region, :zone].each do |i|
     context "On a #{i.capitalize}" do
@@ -47,8 +47,8 @@ describe ConfigurationManagementMixin do
           remote_region_number = ApplicationRecord.my_region_number + 1
           external_region_id   = ApplicationRecord.region_to_range(remote_region_number).first
 
-          FactoryGirl.create(:miq_server, :status => "started", :id => external_region_id)
-          FactoryGirl.create(:miq_server, :status => "stopped")
+          FactoryBot.create(:miq_server, :status => "started", :id => external_region_id)
+          FactoryBot.create(:miq_server, :status => "stopped")
 
           subject.reload_all_server_settings
 

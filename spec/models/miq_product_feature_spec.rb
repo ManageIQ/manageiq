@@ -88,9 +88,9 @@ describe MiqProductFeature do
     end
 
     it "existing records" do
-      deleted   = FactoryGirl.create(:miq_product_feature, :identifier => "xxx")
-      changed   = FactoryGirl.create(:miq_product_feature, :identifier => "dialog_new_editor", :name => "XXX")
-      unchanged = FactoryGirl.create(:miq_product_feature_everything)
+      deleted   = FactoryBot.create(:miq_product_feature, :identifier => "xxx")
+      changed   = FactoryBot.create(:miq_product_feature, :identifier => "dialog_new_editor", :name => "XXX")
+      unchanged = FactoryBot.create(:miq_product_feature_everything)
       unchanged_orig_updated_at = unchanged.updated_at
 
       MiqProductFeature.seed_features(feature_path)
@@ -148,7 +148,7 @@ describe MiqProductFeature do
           Tenant.default_tenant
         end
 
-        let!(:tenant) { FactoryGirl.create(:tenant, :parent => root_tenant) }
+        let!(:tenant) { FactoryBot.create(:tenant, :parent => root_tenant) }
 
         before do
           MiqProductFeature.seed_features(feature_path)
@@ -313,11 +313,11 @@ describe MiqProductFeature do
     #    2    3
     #        4 5
     it "populates parent and children" do
-      f1 = FactoryGirl.create(:miq_product_feature, :identifier => "f1", :name => "F1n")
-      FactoryGirl.create(:miq_product_feature, :identifier => "f2", :name => "F2n", :parent_id => f1.id)
-      f3 = FactoryGirl.create(:miq_product_feature, :identifier => "f3", :name => "F3n", :parent_id => f1.id)
-      FactoryGirl.create(:miq_product_feature, :identifier => "f4", :name => "F4n", :parent_id => f3.id)
-      FactoryGirl.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id)
+      f1 = FactoryBot.create(:miq_product_feature, :identifier => "f1", :name => "F1n")
+      FactoryBot.create(:miq_product_feature, :identifier => "f2", :name => "F2n", :parent_id => f1.id)
+      f3 = FactoryBot.create(:miq_product_feature, :identifier => "f3", :name => "F3n", :parent_id => f1.id)
+      FactoryBot.create(:miq_product_feature, :identifier => "f4", :name => "F4n", :parent_id => f3.id)
+      FactoryBot.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id)
 
       expect { MiqProductFeature.features }.to match_query_limit_of(1)
       expect { MiqProductFeature.features }.to match_query_limit_of(0)
@@ -334,12 +334,12 @@ describe MiqProductFeature do
   end
 
   describe "feature object cache" do
-    let!(:f0) { FactoryGirl.create(:miq_product_feature, :identifier => "everything", :name => "F0n") }
-    let!(:f1) { FactoryGirl.create(:miq_product_feature, :identifier => "f1", :name => "F1n", :parent_id => f0.id) }
-    let!(:f2) { FactoryGirl.create(:miq_product_feature, :identifier => "f2", :name => "F2n", :parent_id => f1.id) }
-    let!(:f3) { FactoryGirl.create(:miq_product_feature, :identifier => "f3", :name => "F3n", :parent_id => f1.id) }
-    let!(:f4) { FactoryGirl.create(:miq_product_feature, :identifier => "f4", :name => "F4n", :parent_id => f3.id) }
-    let!(:f5) { FactoryGirl.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id) }
+    let!(:f0) { FactoryBot.create(:miq_product_feature, :identifier => "everything", :name => "F0n") }
+    let!(:f1) { FactoryBot.create(:miq_product_feature, :identifier => "f1", :name => "F1n", :parent_id => f0.id) }
+    let!(:f2) { FactoryBot.create(:miq_product_feature, :identifier => "f2", :name => "F2n", :parent_id => f1.id) }
+    let!(:f3) { FactoryBot.create(:miq_product_feature, :identifier => "f3", :name => "F3n", :parent_id => f1.id) }
+    let!(:f4) { FactoryBot.create(:miq_product_feature, :identifier => "f4", :name => "F4n", :parent_id => f3.id) }
+    let!(:f5) { FactoryBot.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id) }
 
     it "memoizes hash to prevent extra db queries" do
       expect { MiqProductFeature.obj_features }.to match_query_limit_of(1)

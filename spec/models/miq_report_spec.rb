@@ -3,14 +3,14 @@ shared_examples "custom_report_with_custom_attributes" do |base_report, custom_a
   let(:custom_attributes_field) { custom_attribute_field.to_s.pluralize }
 
   before do
-    @user = FactoryGirl.create(:user_with_group)
+    @user = FactoryBot.create(:user_with_group)
 
     # create custom attributes
     @key    = 'key1'
     @value  = 'value1'
 
-    @resource = base_report == "Host" ? FactoryGirl.create(:host) : FactoryGirl.create(:vm_vmware)
-    FactoryGirl.create(custom_attribute_field, :resource => @resource, :name => @key, :value => @value)
+    @resource = base_report == "Host" ? FactoryBot.create(:host) : FactoryBot.create(:vm_vmware)
+    FactoryBot.create(custom_attribute_field, :resource => @resource, :name => @key, :value => @value)
   end
 
   let(:report) do
@@ -40,15 +40,15 @@ end
 
 describe MiqReport do
   context ".for_user" do
-    let(:my_user) { FactoryGirl.create(:user_with_group) }
-    let(:group_in_my_tenant) { FactoryGirl.create(:miq_group, :tenant => my_user.current_tenant) }
+    let(:my_user) { FactoryBot.create(:user_with_group) }
+    let(:group_in_my_tenant) { FactoryBot.create(:miq_group, :tenant => my_user.current_tenant) }
 
-    let(:other_tenant) { FactoryGirl.create(:tenant) }
-    let(:group_in_other_tenant) { FactoryGirl.create(:miq_group, :tenant => other_tenant) }
+    let(:other_tenant) { FactoryBot.create(:tenant) }
+    let(:group_in_other_tenant) { FactoryBot.create(:miq_group, :tenant => other_tenant) }
 
-    let!(:my_report) { FactoryGirl.create(:miq_report, :miq_group => my_user.current_group, :rpt_type => "Custom") }
-    let!(:report_in_my_tenant) { FactoryGirl.create(:miq_report, :miq_group => group_in_my_tenant, :rpt_type => "Custom") }
-    let!(:report_in_another_tenant) { FactoryGirl.create(:miq_report, :miq_group => group_in_other_tenant, :rpt_type => "Custom") }
+    let!(:my_report) { FactoryBot.create(:miq_report, :miq_group => my_user.current_group, :rpt_type => "Custom") }
+    let!(:report_in_my_tenant) { FactoryBot.create(:miq_report, :miq_group => group_in_my_tenant, :rpt_type => "Custom") }
+    let!(:report_in_another_tenant) { FactoryBot.create(:miq_report, :miq_group => group_in_other_tenant, :rpt_type => "Custom") }
 
     it "returns reports created by me or anyone in a group in my tenant" do
       User.current_user = my_user
@@ -59,14 +59,14 @@ describe MiqReport do
 
   context "report with filtering in Registry" do
     let(:options)  { {:targets_hash => true, :userid => "admin"} }
-    let(:miq_task) { FactoryGirl.create(:miq_task) }
+    let(:miq_task) { FactoryBot.create(:miq_task) }
 
     before do
-      @user     = FactoryGirl.create(:user_with_group)
+      @user     = FactoryBot.create(:user_with_group)
 
-      @registry = FactoryGirl.create(:registry_item, :name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall",
+      @registry = FactoryBot.create(:registry_item, :name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall",
                                                      :data => 0)
-      @vm       = FactoryGirl.create(:vm_vmware, :registry_items => [@registry])
+      @vm       = FactoryBot.create(:vm_vmware, :registry_items => [@registry])
       EvmSpecHelper.local_miq_server
     end
 
@@ -101,21 +101,21 @@ describe MiqReport do
     let(:custom_column_key_2)  { 'manageiq.org' }
     let(:custom_column_key_3)  { 'ATTR_Name_3' }
     let(:custom_column_value)  { 'value1' }
-    let(:user)                 { FactoryGirl.create(:user_with_group) }
-    let(:ems)                  { FactoryGirl.create(:ems_vmware) }
-    let!(:vm_1)                { FactoryGirl.create(:vm_vmware) }
-    let!(:vm_2)                { FactoryGirl.create(:vm_vmware, :retired => false, :ext_management_system => ems) }
+    let(:user)                 { FactoryBot.create(:user_with_group) }
+    let(:ems)                  { FactoryBot.create(:ems_vmware) }
+    let!(:vm_1)                { FactoryBot.create(:vm_vmware) }
+    let!(:vm_2)                { FactoryBot.create(:vm_vmware, :retired => false, :ext_management_system => ems) }
     let(:virtual_column_key_1) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}kubernetes.io/hostname" }
     let(:virtual_column_key_2) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}manageiq.org" }
     let(:virtual_column_key_3) { "#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}ATTR_Name_3" }
-    let(:miq_task)             { FactoryGirl.create(:miq_task) }
+    let(:miq_task)             { FactoryBot.create(:miq_task) }
 
     subject! do
-      FactoryGirl.create(:miq_custom_attribute, :resource => vm_1, :name => custom_column_key_1,
+      FactoryBot.create(:miq_custom_attribute, :resource => vm_1, :name => custom_column_key_1,
                          :value => custom_column_value)
-      FactoryGirl.create(:miq_custom_attribute, :resource => vm_2, :name => custom_column_key_2,
+      FactoryBot.create(:miq_custom_attribute, :resource => vm_2, :name => custom_column_key_2,
                          :value => custom_column_value)
-      FactoryGirl.create(:miq_custom_attribute, :resource => vm_2, :name => custom_column_key_3,
+      FactoryBot.create(:miq_custom_attribute, :resource => vm_2, :name => custom_column_key_3,
                          :value => custom_column_value)
     end
 
@@ -151,16 +151,16 @@ describe MiqReport do
       end
 
       let!(:container_image) do
-        FactoryGirl.create(:container_image, :name => "test_container_images")
+        FactoryBot.create(:container_image, :name => "test_container_images")
       end
 
       let!(:custom_attribute_1) do
-        FactoryGirl.create(:custom_attribute, :resource => container_image, :name => 'CATTR', :value => 'any_value',
+        FactoryBot.create(:custom_attribute, :resource => container_image, :name => 'CATTR', :value => 'any_value',
                            :section => 'docker_labels')
       end
 
       let!(:custom_attribute_2) do
-        FactoryGirl.create(:custom_attribute, :resource => container_image, :name => 'CATTR', :value => 'other_value',
+        FactoryBot.create(:custom_attribute, :resource => container_image, :name => 'CATTR', :value => 'other_value',
                            :section => 'labels')
       end
 
@@ -271,23 +271,23 @@ describe MiqReport do
   end
 
   it '.get_expressions_by_model' do
-    FactoryGirl.create(:miq_report, :conditions => nil)
-    rep_nil = FactoryGirl.create(:miq_report)
+    FactoryBot.create(:miq_report, :conditions => nil)
+    rep_nil = FactoryBot.create(:miq_report)
 
     # FIXME: find a way to do this in a factory
     serialized_nil = "--- !!null \n...\n"
     ActiveRecord::Base.connection.execute("update miq_reports set conditions='#{serialized_nil}' where id=#{rep_nil.id}")
 
-    rep_ok  = FactoryGirl.create(:miq_report, :conditions => "SOMETHING")
+    rep_ok  = FactoryBot.create(:miq_report, :conditions => "SOMETHING")
     reports = MiqReport.get_expressions_by_model('Vm')
     expect(reports).to eq(rep_ok.name => rep_ok.id)
   end
 
   it "paged_view_search on vmdb_* tables" do
     # Create EVM tables/indexes and hourly metric data...
-    table = FactoryGirl.create(:vmdb_table_evm, :name => "accounts")
-    index = FactoryGirl.create(:vmdb_index, :name => "accounts_pkey", :vmdb_table => table)
-    FactoryGirl.create(:vmdb_metric, :resource => index, :timestamp => Time.now.utc, :capture_interval_name => 'hourly', :size => 102, :rows => 102, :pages => 102, :wasted_bytes => 102, :percent_bloat => 102)
+    table = FactoryBot.create(:vmdb_table_evm, :name => "accounts")
+    index = FactoryBot.create(:vmdb_index, :name => "accounts_pkey", :vmdb_table => table)
+    FactoryBot.create(:vmdb_metric, :resource => index, :timestamp => Time.now.utc, :capture_interval_name => 'hourly', :size => 102, :rows => 102, :pages => 102, :wasted_bytes => 102, :percent_bloat => 102)
 
     report_args = {
       "db"          => "VmdbIndex",
@@ -317,20 +317,20 @@ describe MiqReport do
 
   context "#paged_view_search" do
     it "filters vms in folders" do
-      host = FactoryGirl.create(:host)
-      vm1  = FactoryGirl.create(:vm_vmware, :host => host)
+      host = FactoryBot.create(:host)
+      vm1  = FactoryBot.create(:vm_vmware, :host => host)
       allow(vm1).to receive(:archived?).and_return(false)
-      vm2  = FactoryGirl.create(:vm_vmware, :host => host)
+      vm2  = FactoryBot.create(:vm_vmware, :host => host)
       allow(vm2).to receive(:archived?).and_return(false)
       allow(Vm).to receive(:find_by).and_return(vm1)
 
-      root        = FactoryGirl.create(:ems_folder, :name => "datacenters")
+      root        = FactoryBot.create(:ems_folder, :name => "datacenters")
       root.parent = host
 
-      usa         = FactoryGirl.create(:ems_folder, :name => "usa")
+      usa         = FactoryBot.create(:ems_folder, :name => "usa")
       usa.parent  = root
 
-      nyc         = FactoryGirl.create(:ems_folder, :name => "nyc")
+      nyc         = FactoryBot.create(:ems_folder, :name => "nyc")
       nyc.parent  = usa
 
       vm1.with_relationship_type("ems_metadata") { vm1.parent = usa }
@@ -349,8 +349,8 @@ describe MiqReport do
     end
 
     it "paging with order" do
-      vm1 = FactoryGirl.create(:vm_vmware)
-      vm2 = FactoryGirl.create(:vm_vmware)
+      vm1 = FactoryBot.create(:vm_vmware)
+      vm2 = FactoryBot.create(:vm_vmware)
       ids = [vm1.id, vm2.id].sort
 
       report    = MiqReport.new(:db => "Vm", :sortby => "id", :order => "Descending")
@@ -361,8 +361,8 @@ describe MiqReport do
     end
 
     it "target_ids_for_paging caches results" do
-      vm = FactoryGirl.create(:vm_vmware)
-      FactoryGirl.create(:vm_vmware)
+      vm = FactoryBot.create(:vm_vmware)
+      FactoryBot.create(:vm_vmware)
 
       report        = MiqReport.new(:db => "Vm")
       report.extras = {:target_ids_for_paging => [vm.id], :attrs_for_paging => {}}
@@ -372,13 +372,13 @@ describe MiqReport do
     end
 
     it "VMs under Host with order" do
-      host1 = FactoryGirl.create(:host)
-      FactoryGirl.create(:vm_vmware, :host => host1, :name => "a")
+      host1 = FactoryBot.create(:host)
+      FactoryBot.create(:vm_vmware, :host => host1, :name => "a")
 
-      ems   = FactoryGirl.create(:ems_vmware)
-      host2 = FactoryGirl.create(:host)
-      vmb   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "b", :ext_management_system => ems)
-      vmc   = FactoryGirl.create(:vm_vmware, :host => host2, :name => "c", :ext_management_system => ems)
+      ems   = FactoryBot.create(:ems_vmware)
+      host2 = FactoryBot.create(:host)
+      vmb   = FactoryBot.create(:vm_vmware, :host => host2, :name => "b", :ext_management_system => ems)
+      vmc   = FactoryBot.create(:vm_vmware, :host => host2, :name => "c", :ext_management_system => ems)
 
       report = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending")
       results, = report.paged_view_search(
@@ -393,12 +393,12 @@ describe MiqReport do
     end
 
     it "user managed filters" do
-      vm1 = FactoryGirl.create(:vm_vmware)
+      vm1 = FactoryBot.create(:vm_vmware)
       vm1.tag_with("/managed/environment/prod", :ns => "*")
-      vm2 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryBot.create(:vm_vmware)
       vm2.tag_with("/managed/environment/dev", :ns => "*")
 
-      user  = FactoryGirl.create(:user_with_group)
+      user  = FactoryBot.create(:user_with_group)
       group = user.current_group
       allow(User).to receive_messages(:server_timezone => "UTC")
       group.entitlement = Entitlement.new
@@ -420,10 +420,10 @@ describe MiqReport do
     end
 
     it "sortby, order, user filters, where sort column is in a sub-table" do
-      user  = FactoryGirl.create(:user_with_group)
+      user  = FactoryBot.create(:user_with_group)
       group = user.current_group
-      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA", :storage => FactoryGirl.create(:storage, :name => "SA"))
-      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB", :storage => FactoryGirl.create(:storage, :name => "SB"))
+      vm1 = FactoryBot.create(:vm_vmware, :name => "VA", :storage => FactoryBot.create(:storage, :name => "SA"))
+      vm2 = FactoryBot.create(:vm_vmware, :name => "VB", :storage => FactoryBot.create(:storage, :name => "SB"))
       tag = "/managed/environment/prod"
       group.entitlement = Entitlement.new
       group.entitlement.set_managed_filters([[tag]])
@@ -452,8 +452,8 @@ describe MiqReport do
     end
 
     it "sorting on a virtual column" do
-      FactoryGirl.create(:vm_vmware, :name => "B", :host => FactoryGirl.create(:host, :name => "A"))
-      FactoryGirl.create(:vm_vmware, :name => "A", :host => FactoryGirl.create(:host, :name => "B"))
+      FactoryBot.create(:vm_vmware, :name => "B", :host => FactoryBot.create(:host, :name => "A"))
+      FactoryBot.create(:vm_vmware, :name => "A", :host => FactoryBot.create(:host, :name => "B"))
 
       report = MiqReport.new(:db => "Vm", :sortby => %w(host_name name), :order => "Descending")
       options = {
@@ -467,8 +467,8 @@ describe MiqReport do
     end
 
     it "expression filtering on a virtual column" do
-      FactoryGirl.create(:vm_vmware, :name => "VA", :host => FactoryGirl.create(:host, :name => "HA"))
-      FactoryGirl.create(:vm_vmware, :name => "VB", :host => FactoryGirl.create(:host, :name => "HB"))
+      FactoryBot.create(:vm_vmware, :name => "VA", :host => FactoryBot.create(:host, :name => "HA"))
+      FactoryBot.create(:vm_vmware, :name => "VB", :host => FactoryBot.create(:host, :name => "HB"))
 
       report = MiqReport.new(:db => "Vm")
 
@@ -486,12 +486,12 @@ describe MiqReport do
     end
 
     it "expression filtering on a virtual column and user filters" do
-      user  = FactoryGirl.create(:user_with_group)
+      user  = FactoryBot.create(:user_with_group)
       group = user.current_group
 
-      _vm1 = FactoryGirl.create(:vm_vmware, :name => "VA",  :host => FactoryGirl.create(:host, :name => "HA"))
-      vm2 =  FactoryGirl.create(:vm_vmware, :name => "VB",  :host => FactoryGirl.create(:host, :name => "HB"))
-      vm3 =  FactoryGirl.create(:vm_vmware, :name => "VAA", :host => FactoryGirl.create(:host, :name => "HAA"))
+      _vm1 = FactoryBot.create(:vm_vmware, :name => "VA",  :host => FactoryBot.create(:host, :name => "HA"))
+      vm2 =  FactoryBot.create(:vm_vmware, :name => "VB",  :host => FactoryBot.create(:host, :name => "HB"))
+      vm3 =  FactoryBot.create(:vm_vmware, :name => "VAA", :host => FactoryBot.create(:host, :name => "HAA"))
       tag =  "/managed/environment/prod"
       group.entitlement = Entitlement.new
       group.entitlement.set_managed_filters([[tag]])
@@ -520,10 +520,10 @@ describe MiqReport do
     end
 
     it "filtering on a virtual reflection" do
-      vm1 = FactoryGirl.create(:vm_vmware, :name => "VA")
-      vm2 = FactoryGirl.create(:vm_vmware, :name => "VB")
-      rp1 = FactoryGirl.create(:resource_pool, :name => "RPA")
-      rp2 = FactoryGirl.create(:resource_pool, :name => "RPB")
+      vm1 = FactoryBot.create(:vm_vmware, :name => "VA")
+      vm2 = FactoryBot.create(:vm_vmware, :name => "VB")
+      rp1 = FactoryBot.create(:resource_pool, :name => "RPA")
+      rp2 = FactoryBot.create(:resource_pool, :name => "RPB")
       rp1.add_child(vm1)
       rp2.add_child(vm2)
 
@@ -541,8 +541,8 @@ describe MiqReport do
     end
 
     it "virtual columns included in cols" do
-      FactoryGirl.create(:vm_vmware, :host => FactoryGirl.create(:host, :name => "HA", :vmm_product => "ESX"))
-      FactoryGirl.create(:vm_vmware, :host => FactoryGirl.create(:host, :name => "HB", :vmm_product => "ESX"))
+      FactoryBot.create(:vm_vmware, :host => FactoryBot.create(:host, :name => "HA", :vmm_product => "ESX"))
+      FactoryBot.create(:vm_vmware, :host => FactoryBot.create(:host, :name => "HB", :vmm_product => "ESX"))
 
       report = MiqReport.new(
         :name      => "VMs",
@@ -569,13 +569,13 @@ describe MiqReport do
 
   describe "#generate_table" do
     it "with has_many through" do
-      ems      = FactoryGirl.create(:ems_vmware_with_authentication)
-      user     = FactoryGirl.create(:user_with_group)
+      ems      = FactoryBot.create(:ems_vmware_with_authentication)
+      user     = FactoryBot.create(:user_with_group)
       group    = user.current_group
-      template = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
-      vm       = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
-      hardware = FactoryGirl.create(:hardware, :vm => vm)
-      FactoryGirl.create(:disk, :hardware => hardware, :disk_type => "thin")
+      template = FactoryBot.create(:template_vmware, :ext_management_system => ems)
+      vm       = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
+      hardware = FactoryBot.create(:hardware, :vm => vm)
+      FactoryBot.create(:disk, :hardware => hardware, :disk_type => "thin")
 
       options = {
         :vm_name        => vm.name,
@@ -584,7 +584,7 @@ describe MiqReport do
         :src_vm_id      => [template.id, template.name]
       }
 
-      provision = FactoryGirl.create(
+      provision = FactoryBot.create(
         :miq_provision_vmware,
         :destination  => vm,
         :source       => template,
@@ -666,7 +666,7 @@ describe MiqReport do
                             derived_memory_used_high_over_time_period
                             derived_memory_used_low_over_time_period)}})
       end
-      let(:ems) { FactoryGirl.create(:ems_vmware, :zone => @server.zone) }
+      let(:ems) { FactoryBot.create(:ems_vmware, :zone => @server.zone) }
 
       it "runs report" do
         report.generate_table(:userid => "admin")
@@ -676,7 +676,7 @@ describe MiqReport do
     context "Tenant Quota Report" do
       include Spec::Support::QuotaHelper
 
-      let!(:tenant_without_quotas) { FactoryGirl.create(:tenant, :name=>"tenant_without_quotas") }
+      let!(:tenant_without_quotas) { FactoryBot.create(:tenant, :name=>"tenant_without_quotas") }
 
       let(:skip_condition) do
         YAML.load '--- !ruby/object:MiqExpression
@@ -691,13 +691,13 @@ describe MiqReport do
                 "tenant_quotas.available"]
         headers = ["Tenant Name", "Quota Name", "Total Quota", "Total Quota", "In Use", "Allocated", "Available"]
 
-        FactoryGirl.create(:miq_report, :title => "Tenant Quotas", :order => 'Ascending', :rpt_group => "Custom",
+        FactoryBot.create(:miq_report, :title => "Tenant Quotas", :order => 'Ascending', :rpt_group => "Custom",
                            :priority => 231, :rpt_type => 'Custom', :db => 'Tenant',
                            :col_order => cols, :template_type => "report", :headers => headers,
                            :conditions => skip_condition, :sortby => ["tenant_quotas.name"])
       end
 
-      let(:user_admin) { FactoryGirl.create(:user, :role => "super_administrator") }
+      let(:user_admin) { FactoryBot.create(:user, :role => "super_administrator") }
 
       def generate_table_cell(formatted_value)
         "<td style=\"text-align:right\">#{formatted_value}</td>"
@@ -719,7 +719,7 @@ describe MiqReport do
         setup_model
 
         # dummy child tenant
-        FactoryGirl.create(:tenant, :parent => @tenant)
+        FactoryBot.create(:tenant, :parent => @tenant)
 
         # remove quotas that QuotaHelper already initialized
         @tenant.tenant_quotas = []
@@ -872,7 +872,7 @@ describe MiqReport do
     let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
     let(:detail_params) { {:chargeback_rate_detail_fixed_compute_cost => { :tiers => [hourly_variable_tier_rate] } } }
     let!(:chargeback_rate) do
-      FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+      FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
     end
     let(:report_params) do
       {
@@ -895,7 +895,7 @@ describe MiqReport do
     context "chargeback based on container images" do
       let(:label_name) { "version" }
       let(:label_value) { "1.0.0" }
-      let(:label) { FactoryGirl.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'docker_labels') }
+      let(:label) { FactoryBot.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'docker_labels') }
       let(:label_report_column) { "virtual_custom_attribute_#{label_name}" }
       let(:report) do
         MiqReport.new(
@@ -920,14 +920,14 @@ describe MiqReport do
       end
 
       it "runs a report with a custom attribute" do
-        ems = FactoryGirl.create(:ems_openshift)
-        image = FactoryGirl.create(:container_image, :ext_management_system => ems)
+        ems = FactoryBot.create(:ems_openshift)
+        image = FactoryBot.create(:container_image, :ext_management_system => ems)
         image.docker_labels << label
         project_name = "my project"
-        project = FactoryGirl.create(:container_project, :name => project_name, :ext_management_system => ems)
-        group = FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => project)
-        container = FactoryGirl.create(:kubernetes_container, :container_group => group, :container_image => image)
-        container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        project = FactoryBot.create(:container_project, :name => project_name, :ext_management_system => ems)
+        group = FactoryBot.create(:container_group, :ext_management_system => ems, :container_project => project)
+        container = FactoryBot.create(:kubernetes_container, :container_group => group, :container_image => image)
+        container.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
                                                        :with_data,
                                                        :timestamp     => 1.day.ago.beginning_of_day,
                                                        :resource_id   => container.id,
@@ -945,7 +945,7 @@ describe MiqReport do
     context "chargeback based on container projects" do
       let(:label_name) { "version" }
       let(:label_value) { "1.0.0" }
-      let(:label) { FactoryGirl.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'labels') }
+      let(:label) { FactoryBot.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'labels') }
       let(:label_report_column) { "virtual_custom_attribute_#{label_name}" }
       let(:report) do
         MiqReport.new(
@@ -970,11 +970,11 @@ describe MiqReport do
       end
 
       it "runs a report with a custom attribute" do
-        ems = FactoryGirl.create(:ems_openshift)
+        ems = FactoryBot.create(:ems_openshift)
         project_name = "my project"
-        project = FactoryGirl.create(:container_project, :name => project_name, :ext_management_system => ems, :created_on => 2.days.ago)
+        project = FactoryBot.create(:container_project, :name => project_name, :ext_management_system => ems, :created_on => 2.days.ago)
         project.labels << label
-        project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        project.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
                                                      :with_data,
                                                      :timestamp     => 1.day.ago,
                                                      :resource_id   => project.id,
@@ -991,7 +991,7 @@ describe MiqReport do
     context "chargeback based on vms" do
       let(:label_name) { "version" }
       let(:label_value) { "1.0.0" }
-      let(:label) { FactoryGirl.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'labels') }
+      let(:label) { FactoryBot.build(:custom_attribute, :name => label_name, :value => label_value, :section => 'labels') }
       let(:label_report_column) { "virtual_custom_attribute_#{label_name}" }
       let(:report) do
         MiqReport.new(
@@ -1017,27 +1017,27 @@ describe MiqReport do
       end
 
       it "runs a report with a custom attribute" do
-        ems = FactoryGirl.create(:ems_vmware)
+        ems = FactoryBot.create(:ems_vmware)
 
-        cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
-        c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+        cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
+        c = FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
         tag = Tag.find_by(:name => "/managed/environment/prod")
 
         temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
         ChargebackRate.set_assignments(:compute, [temp])
         vm_name = "test_vm"
-        vm1 = FactoryGirl.create(:vm_vmware, :name => vm_name, :evm_owner => FactoryGirl.create(:user_admin), :ems_ref => "ems_ref",
+        vm1 = FactoryBot.create(:vm_vmware, :name => vm_name, :evm_owner => FactoryBot.create(:user_admin), :ems_ref => "ems_ref",
                                   :created_on => 2.days.ago)
         vm1.tag_with(tag.name, :ns => '*')
         vm1.labels << label
 
-        host1   = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [vm1])
-        storage = FactoryGirl.create(:storage_target_vmware)
+        host1   = FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [vm1])
+        storage = FactoryBot.create(:storage_target_vmware)
         host1.storages << storage
 
-        ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+        ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => ems)
         ems_cluster.hosts << host1
-        vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        vm1.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
                                                  :with_data,
                                                  :timestamp             => 1.day.ago,
                                                  :resource_id           => vm1.id,

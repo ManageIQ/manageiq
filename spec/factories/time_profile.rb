@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :time_profile do
     sequence(:description) { |n| "Time Profile #{seq_padded_for_sorting(n)}" }
   end

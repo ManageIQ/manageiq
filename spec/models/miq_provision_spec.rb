@@ -2,7 +2,7 @@ describe MiqProvision do
   context "A new provision request," do
     before do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
-      @admin = FactoryGirl.create(:user_with_group, :role => "admin")
+      @admin = FactoryBot.create(:user_with_group, :role => "admin")
       @target_vm_name = 'clone test'
       @options = {
         :pass          => 1,
@@ -17,16 +17,16 @@ describe MiqProvision do
 
     context "with VMware infrastructure" do
       before do
-        @ems         = FactoryGirl.create(:ems_vmware_with_authentication)
-        @vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => @ems, :operating_system => @os, :cpu_limit => -1, :cpu_reserve => 0)
-        @vm          = FactoryGirl.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx")
+        @ems         = FactoryBot.create(:ems_vmware_with_authentication)
+        @vm_template = FactoryBot.create(:template_vmware, :name => "template1", :ext_management_system => @ems, :operating_system => @os, :cpu_limit => -1, :cpu_reserve => 0)
+        @vm          = FactoryBot.create(:vm_vmware, :name => "vm1", :location => "abc/def.vmx")
       end
 
       context "with a valid userid and source vm," do
         before do
-          @pr = FactoryGirl.create(:miq_provision_request, :requester => @admin, :src_vm_id => @vm_template.id)
+          @pr = FactoryBot.create(:miq_provision_request, :requester => @admin, :src_vm_id => @vm_template.id)
           @options[:src_vm_id] = [@vm_template.id, @vm_template.name]
-          @vm_prov = FactoryGirl.create(:miq_provision, :userid => @admin.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
+          @vm_prov = FactoryBot.create(:miq_provision, :userid => @admin.userid, :miq_request => @pr, :source => @vm_template, :request_type => 'template', :state => 'pending', :status => 'Ok', :options => @options)
         end
 
         it "should get values out of an arrays in the options hash" do
@@ -110,7 +110,7 @@ describe MiqProvision do
 
           it "When task is part of a ServiceTemplateProvisionRequest the description should not update" do
             request_descripton = "Service Name Test"
-            service_provision_request = FactoryGirl.create(:service_template_provision_request, :description => request_descripton)
+            service_provision_request = FactoryBot.create(:service_template_provision_request, :description => request_descripton)
             @vm_prov.update_attributes(:miq_request_id => service_provision_request.id)
 
             expect(service_provision_request).not_to receive(:update_description_from_tasks)
@@ -194,7 +194,7 @@ describe MiqProvision do
 
   context "#eligible_resources" do
     it "workflow should be called with placement_auto = false and skip_dialog_load = true" do
-      prov     = FactoryGirl.build(:miq_provision)
+      prov     = FactoryBot.build(:miq_provision)
       host     = double('Host', :id => 1, :name => 'my_host')
       workflow = double("MiqProvisionWorkflow", :allowed_hosts => [host])
 
@@ -210,7 +210,7 @@ describe MiqProvision do
   end
 
   describe "#placement_auto" do
-    let(:miq_provision) { FactoryGirl.build(:miq_provision, :options => {:placement_auto => placement_option}) }
+    let(:miq_provision) { FactoryBot.build(:miq_provision, :options => {:placement_auto => placement_option}) }
 
     context "when option[:placement_auto] is true" do
       let(:placement_option) { [true, 1] }

@@ -1,9 +1,9 @@
 describe OrchestrationStackRetireTask do
-  let(:user) { FactoryGirl.create(:user_with_group) }
-  let(:orchestration_stack) { FactoryGirl.create(:orchestration_stack) }
-  let(:miq_request) { FactoryGirl.create(:orchestration_stack_retire_request, :requester => user) }
-  let(:orchestration_stack_retire_task) { FactoryGirl.create(:orchestration_stack_retire_task, :source => orchestration_stack, :miq_request => miq_request, :options => {:src_ids => [orchestration_stack.id] }) }
-  let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
+  let(:user) { FactoryBot.create(:user_with_group) }
+  let(:orchestration_stack) { FactoryBot.create(:orchestration_stack) }
+  let(:miq_request) { FactoryBot.create(:orchestration_stack_retire_request, :requester => user) }
+  let(:orchestration_stack_retire_task) { FactoryBot.create(:orchestration_stack_retire_task, :source => orchestration_stack, :miq_request => miq_request, :options => {:src_ids => [orchestration_stack.id] }) }
+  let(:approver) { FactoryBot.create(:user_miq_request_approver) }
 
   it "should initialize properly" do
     expect(orchestration_stack_retire_task).to have_attributes(:state => "pending", :status => "Ok")

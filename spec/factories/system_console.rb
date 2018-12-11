@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory(:system_console) do
     host_name 'manageiq.org'
     port '80'

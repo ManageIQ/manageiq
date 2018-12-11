@@ -15,16 +15,16 @@ describe MiqReportResult do
       stub_settings(settings)
 
       @rr1 = [
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months + 1.days).to_i.seconds.ago.utc),
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months - 1.days).to_i.seconds.ago.utc)
+        FactoryBot.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months + 1.days).to_i.seconds.ago.utc),
+        FactoryBot.create(:miq_report_result, :miq_report_id => 1, :created_on => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
       @rr2 = [
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months + 2.days).to_i.seconds.ago.utc),
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months + 1.days).to_i.seconds.ago.utc),
-        FactoryGirl.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months - 1.days).to_i.seconds.ago.utc)
+        FactoryBot.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months + 2.days).to_i.seconds.ago.utc),
+        FactoryBot.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months + 1.days).to_i.seconds.ago.utc),
+        FactoryBot.create(:miq_report_result, :miq_report_id => 2, :created_on => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
       @rr_orphaned = [
-        FactoryGirl.create(:miq_report_result, :miq_report_id => nil, :created_on => (6.months - 1.days).to_i.seconds.ago.utc)
+        FactoryBot.create(:miq_report_result, :miq_report_id => nil, :created_on => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
     end
 

@@ -333,8 +333,8 @@ describe VirtualTotal do
     end
 
     def model_with_children(count)
-      FactoryGirl.create(:ext_management_system).tap do |ems|
-        FactoryGirl.create_list(:vm, count, :ext_management_system => ems) if count > 0
+      FactoryBot.create(:ext_management_system).tap do |ems|
+        FactoryBot.create_list(:vm, count, :ext_management_system => ems) if count > 0
       end
     end
   end
@@ -353,9 +353,9 @@ describe VirtualTotal do
     end
 
     def model_with_children(count)
-      FactoryGirl.create(:resource_pool).tap do |pool|
+      FactoryBot.create(:resource_pool).tap do |pool|
         count.times do |_i|
-          vm = FactoryGirl.create(:vm)
+          vm = FactoryBot.create(:vm)
           vm.with_relationship_type("ems_metadata") { vm.set_parent pool }
         end
       end
@@ -375,9 +375,9 @@ describe VirtualTotal do
     end
 
     def model_with_children(count)
-      FactoryGirl.create(:ext_management_system).tap do |ems|
-        ems.hosts.create(FactoryGirl.attributes_for(:host)).tap do |host|
-          count.times { host.storages.create(FactoryGirl.attributes_for(:storage)) }
+      FactoryBot.create(:ext_management_system).tap do |ems|
+        ems.hosts.create(FactoryBot.attributes_for(:host)).tap do |host|
+          count.times { host.storages.create(FactoryBot.attributes_for(:storage)) }
         end
       end.reload
     end
@@ -410,7 +410,7 @@ describe VirtualTotal do
       end
 
       def model_with_children(count)
-        FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware)).tap do |vm|
+        FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware)).tap do |vm|
           count.times { vm.hardware.disks.create(:size => 10.0) }
         end.reload
       end

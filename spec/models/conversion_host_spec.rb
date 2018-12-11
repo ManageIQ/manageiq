@@ -1,16 +1,16 @@
 require "MiqSshUtil"
 
 describe ConversionHost do
-  let(:apst) { FactoryGirl.create(:service_template_ansible_playbook) }
+  let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
 
   context "provider independent methods" do
-    let(:host) { FactoryGirl.create(:host) }
-    let(:vm) { FactoryGirl.create(:vm_or_template) }
-    let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host) }
-    let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm) }
-    let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
-    let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task, :conversion_host => conversion_host_1) }
-    let(:task_3) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_2) }
+    let(:host) { FactoryBot.create(:host) }
+    let(:vm) { FactoryBot.create(:vm_or_template) }
+    let(:conversion_host_1) { FactoryBot.create(:conversion_host, :resource => host) }
+    let(:conversion_host_2) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:task_1) { FactoryBot.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
+    let(:task_2) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host_1) }
+    let(:task_3) { FactoryBot.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_2) }
 
     before do
       allow(conversion_host_1).to receive(:active_tasks).and_return([task_1])
@@ -140,9 +140,9 @@ describe ConversionHost do
   end
 
   context "resource provider is rhevm" do
-    let(:ems) { FactoryGirl.create(:ems_redhat, :zone => FactoryGirl.create(:zone)) }
-    let(:host) { FactoryGirl.create(:host_redhat, :ext_management_system => ems) }
-    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host, :vddk_transport_supported => true) }
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone)) }
+    let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => host, :vddk_transport_supported => true) }
 
     context "host userid is nil" do
       before { allow(host).to receive(:authentication_userid).and_return(nil) }
@@ -165,16 +165,16 @@ describe ConversionHost do
   end
 
   context "resource provider is openstack" do
-    let(:ems) { FactoryGirl.create(:ems_openstack, :zone => FactoryGirl.create(:zone)) }
-    let(:vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
-    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => vm, :vddk_transport_supported => true) }
+    let(:ems) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
+    let(:vm) { FactoryBot.create(:vm_openstack, :ext_management_system => ems) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm, :vddk_transport_supported => true) }
 
     context "ems authentications is empty" do
       it { expect(conversion_host.check_ssh_connection).to be(false) }
     end
 
     context "ems authentications contains ssh_auth" do
-      let(:ssh_auth) { FactoryGirl.create(:authentication_ssh_keypair, :resource => ems) }
+      let(:ssh_auth) { FactoryBot.create(:authentication_ssh_keypair, :resource => ems) }
 
       before do
         allow(ems).to receive(:authentications).and_return(ssh_auth)

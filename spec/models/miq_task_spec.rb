@@ -1,6 +1,6 @@
 describe MiqTask do
   context "when I add an MiqTask" do
-    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
+    let(:miq_task) { FactoryBot.create(:miq_task_plain) }
 
     it "should initialize properly" do
       expect(miq_task.state).to eq(MiqTask::STATE_INITIALIZED)
@@ -177,7 +177,7 @@ describe MiqTask do
     end
 
     it "should properly process MiqTask#generic_action_with_callback" do
-      zone = FactoryGirl.create(:zone)
+      zone = FactoryBot.create(:zone)
       allow(MiqServer).to receive(:my_zone).and_return(zone.name)
       opts = {
         :action => 'Feed',
@@ -207,10 +207,10 @@ describe MiqTask do
   end
 
   context "when there are multiple MiqTasks" do
-    let(:miq_task1) { FactoryGirl.create(:miq_task_plain) }
-    let(:miq_task2) { FactoryGirl.create(:miq_task_plain) }
-    let(:miq_task3) { FactoryGirl.create(:miq_task_plain) }
-    let(:zone)      { FactoryGirl.create(:zone) }
+    let(:miq_task1) { FactoryBot.create(:miq_task_plain) }
+    let(:miq_task2) { FactoryBot.create(:miq_task_plain) }
+    let(:miq_task3) { FactoryBot.create(:miq_task_plain) }
+    let(:zone)      { FactoryBot.create(:zone) }
     before do
       allow(MiqServer).to receive(:my_zone).and_return(zone.name)
     end
@@ -265,7 +265,7 @@ describe MiqTask do
   end
 
   describe '#results_ready?' do
-    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
+    let(:miq_task) { FactoryBot.create(:miq_task_plain) }
     it 'returns false when task_results are missing' do
       expect(miq_task.task_results).to be_blank
       expect(miq_task.status).to eq(MiqTask::STATUS_OK)
@@ -283,7 +283,7 @@ describe MiqTask do
 
   context "before_destroy callback" do
     it "destroys miq_task record if there is no job associated with it and Task is not active" do
-      miq_task = FactoryGirl.create(:miq_task_plain)
+      miq_task = FactoryBot.create(:miq_task_plain)
       miq_task.update_attributes!(:state => MiqTask::STATE_QUEUED)
       miq_task.destroy
       expect(MiqTask.count).to eq 0
@@ -301,7 +301,7 @@ describe MiqTask do
 
     it "doesn't destroy miq_task if task is active" do
       expect(MiqTask.count).to eq 0
-      miq_task = FactoryGirl.create(:miq_task_plain)
+      miq_task = FactoryBot.create(:miq_task_plain)
       expect(MiqTask.count).to eq 1
       miq_task.update_attributes!(:state => MiqTask::STATE_ACTIVE)
       MiqTask.first.destroy
@@ -331,7 +331,7 @@ describe MiqTask do
 
   context "before save callback" do
     describe "#started" do
-      let(:task) { FactoryGirl.create(:miq_task_plain) }
+      let(:task) { FactoryBot.create(:miq_task_plain) }
 
       it "initilizes 'started_on' attribute if task become Active " do
         expect(task.started_on).to be nil
@@ -344,7 +344,7 @@ describe MiqTask do
   end
 
   describe "#update_status" do
-    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
+    let(:miq_task) { FactoryBot.create(:miq_task_plain) }
 
     context "to 'Active' state" do
       it "sets 'started_on => Time.now.utc' if 'started_on' is nil" do
@@ -376,7 +376,7 @@ describe MiqTask do
   end
 
   describe "#state_active" do
-    let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
+    let(:miq_task) { FactoryBot.create(:miq_task_plain) }
 
     it "sets 'started_on => Time.now.utc' if 'started_on' is nil" do
       Timecop.freeze do
@@ -407,7 +407,7 @@ describe MiqTask do
     end
 
     context "task does not linked to job" do
-      let(:miq_task) { FactoryGirl.create(:miq_task_plain) }
+      let(:miq_task) { FactoryBot.create(:miq_task_plain) }
 
       context "task is active" do
         before do
@@ -486,7 +486,7 @@ describe MiqTask do
 
   describe "#task_results" do
     it "forces UTF-8 encoding" do
-      task = FactoryGirl.create(
+      task = FactoryBot.create(
         :miq_task,
         :binary_blob => BinaryBlob.new(
           :name      => "task_results",
@@ -501,7 +501,7 @@ describe MiqTask do
 
   describe "#task_results=" do
     it "forces UTF-8 encoding" do
-      task = FactoryGirl.create(:miq_task, :task_results => "\xC3\xA4".force_encoding("ASCII-8BIT"))
+      task = FactoryBot.create(:miq_task, :task_results => "\xC3\xA4".force_encoding("ASCII-8BIT"))
 
       expect(task.task_results).to eq("ä")
     end
@@ -511,7 +511,7 @@ describe MiqTask do
 
   def create_test_task(name, status, updated)
     Timecop.travel(updated) do
-      FactoryGirl.create(:miq_task_plain).update_attributes(:state  => MiqTask::STATE_FINISHED,
+      FactoryBot.create(:miq_task_plain).update_attributes(:state  => MiqTask::STATE_FINISHED,
                                                             :status => status,
                                                             :name   => name)
     end

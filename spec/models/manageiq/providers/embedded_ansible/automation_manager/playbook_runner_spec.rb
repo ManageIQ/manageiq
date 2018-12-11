@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner do
-  let(:manager)  { FactoryGirl.create(:embedded_automation_manager_ansible) }
-  let(:playbook) { FactoryGirl.create(:embedded_playbook, :manager => manager) }
+  let(:manager)  { FactoryBot.create(:embedded_automation_manager_ansible) }
+  let(:playbook) { FactoryBot.create(:embedded_playbook, :manager => manager) }
   subject { ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner.create_job(options.merge(:playbook_id => playbook.id)) }
 
   describe '#start' do

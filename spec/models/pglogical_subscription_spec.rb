@@ -53,7 +53,7 @@ describe PglogicalSubscription do
 
   let(:pglogical)      { double }
   let!(:remote_region) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :miq_region,
       :id          => ApplicationRecord.id_in_region(remote_region1, 1),
       :region      => remote_region1,

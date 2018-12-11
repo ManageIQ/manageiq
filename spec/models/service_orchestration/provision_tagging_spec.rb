@@ -15,9 +15,9 @@ describe ServiceOrchestration::ProvisionTagging do
   describe '#apply_provisioning_tags' do
     before { expect(service).to receive(:assign_vms_owner) }
 
-    let(:miq_request_task) { FactoryGirl.create(:service_template_provision_task) }
-    let(:vm) { FactoryGirl.create(:vm) }
-    let(:service) { FactoryGirl.build(:service_orchestration, :miq_request_task => miq_request_task) }
+    let(:miq_request_task) { FactoryBot.create(:service_template_provision_task) }
+    let(:vm) { FactoryBot.create(:vm) }
+    let(:service) { FactoryBot.build(:service_orchestration, :miq_request_task => miq_request_task) }
     let(:dialog_tag_options) do
       { :dialog => {
         'Array::dialog_tag_0_env'     => 'Classification::1',
@@ -54,8 +54,8 @@ describe ServiceOrchestration::ProvisionTagging do
           service.add_to_service(parent_service)
         end
 
-        let(:parent_service) { FactoryGirl.create(:service, :name => 'parent_service') }
-        let(:service) { FactoryGirl.build(:service_orchestration, :miq_request_task => miq_request_task) }
+        let(:parent_service) { FactoryBot.create(:service, :name => 'parent_service') }
+        let(:service) { FactoryBot.build(:service_orchestration, :miq_request_task => miq_request_task) }
 
         context 'Calls Classification.bulk_reassignment with VM and tag IDs for provision_priority 0' do
           let(:provision_priority) { 0 }

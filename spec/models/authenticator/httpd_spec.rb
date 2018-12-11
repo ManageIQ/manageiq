@@ -1,7 +1,7 @@
 describe Authenticator::Httpd do
   subject { Authenticator::Httpd.new(config) }
-  let!(:alice) { FactoryGirl.create(:user, :userid => 'alice') }
-  let!(:cheshire) { FactoryGirl.create(:user, :userid => 'cheshire@example.com') }
+  let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
+  let!(:cheshire) { FactoryBot.create(:user, :userid => 'cheshire@example.com') }
   let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
   let(:config) { {:httpd_role => false} }
   let(:request) do
@@ -28,8 +28,8 @@ describe Authenticator::Httpd do
   end
 
   before do
-    FactoryGirl.create(:miq_group, :description => 'wibble')
-    FactoryGirl.create(:miq_group, :description => 'wobble')
+    FactoryBot.create(:miq_group, :description => 'wibble')
+    FactoryBot.create(:miq_group, :description => 'wobble')
 
     allow(MiqLdap).to receive(:using_ldap?) { false }
   end
@@ -48,7 +48,7 @@ describe Authenticator::Httpd do
 
   describe '#lookup_by_identity' do
     let(:dn) { 'cn=towmater,ou=people,ou=prod,dc=example,dc=com' }
-    let!(:towmater_dn) { FactoryGirl.create(:user, :userid => dn) }
+    let!(:towmater_dn) { FactoryBot.create(:user, :userid => dn) }
 
     let(:headers) do
       {
@@ -108,7 +108,7 @@ describe Authenticator::Httpd do
 
     let(:identity_upn) { [user_attrs_upn, %w(mumble bumble bee)] }
 
-    let(:upn_sal) { FactoryGirl.create(:user, :userid => 'sal@example.com') }
+    let(:upn_sal) { FactoryBot.create(:user, :userid => 'sal@example.com') }
 
     before do
       upn_sal
@@ -273,9 +273,9 @@ describe Authenticator::Httpd do
       end
 
       context "when user record with userid in upn format already exists" do
-        let!(:sally_username) { FactoryGirl.create(:user, :userid => 'sAlly') }
-        let!(:sally_dn) { FactoryGirl.create(:user, :userid => dn) }
-        let!(:sally_upn) { FactoryGirl.create(:user, :userid => 'sAlly@example.com') }
+        let!(:sally_username) { FactoryBot.create(:user, :userid => 'sAlly') }
+        let!(:sally_dn) { FactoryBot.create(:user, :userid => dn) }
+        let!(:sally_upn) { FactoryBot.create(:user, :userid => 'sAlly@example.com') }
 
         it "leaves user record with userid in username format unchanged" do
           expect(-> { authenticate }).to_not change { sally_username.reload.userid }
@@ -293,17 +293,17 @@ describe Authenticator::Httpd do
 
       context "when user record with userid in upn format does not already exists" do
         it "updates userid from username format to upn format" do
-          sally_username = FactoryGirl.create(:user, :userid => 'sally')
+          sally_username = FactoryBot.create(:user, :userid => 'sally')
           expect(-> { authenticate }).to change { sally_username.reload.userid }.from("sally").to("sally@example.com")
         end
 
         it "updates userid from distinguished name format to upn format" do
-          sally_dn = FactoryGirl.create(:user, :userid => dn)
+          sally_dn = FactoryBot.create(:user, :userid => dn)
           expect(-> { authenticate }).to change { sally_dn.reload.userid }.from(dn).to("sally@example.com")
         end
 
         it "does not modify userid if already in upn format" do
-          sally_upn = FactoryGirl.create(:user, :userid => 'sally@example.com')
+          sally_upn = FactoryBot.create(:user, :userid => 'sally@example.com')
           expect(-> { authenticate }).to_not change { sally_upn.reload.userid }
         end
       end
@@ -314,17 +314,17 @@ describe Authenticator::Httpd do
         let(:other_region_id) { other_region * ApplicationRecord.rails_sequence_factor + 1 }
 
         it "does not modify the user record when userid is in username format" do
-          sally_username = FactoryGirl.create(:user, :userid => 'sally', :id => other_region_id)
+          sally_username = FactoryBot.create(:user, :userid => 'sally', :id => other_region_id)
           expect(-> { authenticate }).to_not change { sally_username.reload.userid }
         end
 
         it "does not modify the user record when userid is in distinguished name format" do
-          sally_dn = FactoryGirl.create(:user, :userid => dn, :id => other_region_id)
+          sally_dn = FactoryBot.create(:user, :userid => dn, :id => other_region_id)
           expect(-> { authenticate }).to_not change { sally_dn.reload.userid }
         end
 
         it "does not modify the user record when userid is in already upn format" do
-          sally_upn = FactoryGirl.create(:user, :userid => 'sally@example.com', :id => other_region_id)
+          sally_upn = FactoryBot.create(:user, :userid => 'sally@example.com', :id => other_region_id)
           expect(-> { authenticate }).to_not change { sally_upn.reload.userid }
         end
       end
@@ -518,7 +518,7 @@ describe Authenticator::Httpd do
     end
 
     context "with a userid record in mixed case" do
-      let!(:testuser_mixedcase) { FactoryGirl.create(:user, :userid => 'TestUser') }
+      let!(:testuser_mixedcase) { FactoryBot.create(:user, :userid => 'TestUser') }
       let(:username) { 'testuser' }
       let(:headers) do
         super().merge('X-Remote-User-FullName' => 'Test User',

@@ -256,7 +256,7 @@ describe MiqServer do
 
     context "with a worker" do
       before do
-        @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
+        @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
         allow(@miq_server).to receive(:validate_worker).and_return(true)
         @miq_server.setup_drb_variables
         @miq_server.worker_add(@worker.pid)
@@ -304,8 +304,8 @@ describe MiqServer do
 
       context "with an active messsage and a second server" do
         before do
-          @msg = FactoryGirl.create(:miq_queue, :state => 'dequeue')
-          @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @zone)
+          @msg = FactoryBot.create(:miq_queue, :state => 'dequeue')
+          @miq_server2 = FactoryBot.create(:miq_server, :is_master => true, :zone => @zone)
         end
 
         it "will validate the 'started' first server's active message when called on it" do
@@ -374,7 +374,7 @@ describe MiqServer do
           ['event',                  1],
           ['ems_metrics_coordinator', 1],
           ['ems_operations',         0]
-        ].each { |r, max| @server_roles << FactoryGirl.create(:server_role, :name => r, :max_concurrent => max) }
+        ].each { |r, max| @server_roles << FactoryBot.create(:server_role, :name => r, :max_concurrent => max) }
 
         @miq_server.role = @server_roles.collect(&:name).join(',')
       end
@@ -416,9 +416,9 @@ describe MiqServer do
 
       describe ".destroy_linked_events" do
         it "destroys all events associated with destroyed server" do
-          FactoryGirl.create(:miq_event, :event_type => "Local TestEvent", :target => @miq_server)
-          FactoryGirl.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
-          FactoryGirl.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+          FactoryBot.create(:miq_event, :event_type => "Local TestEvent", :target => @miq_server)
+          FactoryBot.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+          FactoryBot.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
 
           expect(MiqEvent.count).to eq 3
 

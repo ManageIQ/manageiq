@@ -29,13 +29,13 @@ describe CustomAttributeMixin do
   end
 
   describe '#custom_keys' do
-    let!(:custom_attribute) { FactoryGirl.create(:custom_attribute, :name => "attr_1", :value => 'value') }
+    let!(:custom_attribute) { FactoryBot.create(:custom_attribute, :name => "attr_1", :value => 'value') }
     let!(:custom_attribute_with_section) do
-      FactoryGirl.create(:custom_attribute, :name => "attr_2", :value => 'value', :section => 'labels')
+      FactoryBot.create(:custom_attribute, :name => "attr_2", :value => 'value', :section => 'labels')
     end
 
     let!(:vm) do
-      FactoryGirl.create(:vm_redhat, :custom_attributes => [custom_attribute, custom_attribute_with_section])
+      FactoryBot.create(:vm_redhat, :custom_attributes => [custom_attribute, custom_attribute_with_section])
     end
 
     it 'returns human form of virtual custom attribute with sections' do
@@ -70,12 +70,12 @@ describe CustomAttributeMixin do
   it "#miq_custom_keys" do
     expect(test_class.new.miq_custom_keys).to eq([])
     supported_factories.each do |factory_name|
-      object = FactoryGirl.create(factory_name)
+      object = FactoryBot.create(factory_name)
 
       expect(object.miq_custom_keys).to eq([])
 
       key  = "foo"
-      FactoryGirl.create(:miq_custom_attribute,
+      FactoryBot.create(:miq_custom_attribute,
                          :resource_type => object.class.base_class.name,
                          :resource_id   => object.id,
                          :name          => key,
@@ -84,7 +84,7 @@ describe CustomAttributeMixin do
       expect(object.reload.miq_custom_keys).to eq([key])
 
       key2 = "foobar"
-      FactoryGirl.create(:miq_custom_attribute,
+      FactoryBot.create(:miq_custom_attribute,
                          :resource_type => object.class.base_class.name,
                          :resource_id   => object.id,
                          :name          => key2,
@@ -95,7 +95,7 @@ describe CustomAttributeMixin do
 
   it "#miq_custom_set" do
     supported_factories.each do |factory_name|
-      object = FactoryGirl.create(factory_name)
+      object = FactoryBot.create(factory_name)
 
       key    = "foo"
       value  = "bar"
@@ -133,14 +133,14 @@ describe CustomAttributeMixin do
 
   it "#miq_custom_get" do
     supported_factories.each do |factory_name|
-      object = FactoryGirl.create(factory_name)
+      object = FactoryBot.create(factory_name)
 
       key   = "foo"
       value = "bar"
 
       expect(object.miq_custom_get(key)).to be_nil
 
-      FactoryGirl.create(:miq_custom_attribute,
+      FactoryBot.create(:miq_custom_attribute,
                          :resource_type => object.class.base_class.name,
                          :resource_id   => object.id,
                          :name          => key,

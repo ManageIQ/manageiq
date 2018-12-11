@@ -3,7 +3,7 @@ describe VmMigrateTask do
     let(:vm) { Vm.new }
     before do
       subject.vm = vm
-      host = FactoryGirl.create(:host, :name => "test")
+      host = FactoryBot.create(:host, :name => "test")
       subject.update_attributes(:options => {:placement_host_name => [host.id, host.name]})
     end
 

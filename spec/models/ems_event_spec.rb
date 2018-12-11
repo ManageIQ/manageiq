@@ -1,10 +1,10 @@
 describe EmsEvent do
   context "model" do
-    let(:ems1) { FactoryGirl.create(:ems_kubernetes) }
-    let(:ems2) { FactoryGirl.create(:ems_kubernetes) }
+    let(:ems1) { FactoryBot.create(:ems_kubernetes) }
+    let(:ems2) { FactoryBot.create(:ems_kubernetes) }
 
     it "Find ems events and generated events for ext management systems" do
-      generated_event = FactoryGirl.create(:ems_event, :ext_management_system => ems1, :generating_ems => ems2)
+      generated_event = FactoryBot.create(:ems_event, :ext_management_system => ems1, :generating_ems => ems2)
       expect(ems1.ems_events).to match_array([generated_event])
       expect(ems2.generated_events).to match_array([generated_event])
     end
@@ -12,13 +12,13 @@ describe EmsEvent do
 
   context "container events" do
     let(:ems_ref) { "test_ems_ref" }
-    let(:ems) { FactoryGirl.create(:ems_kubernetes) }
+    let(:ems) { FactoryBot.create(:ems_kubernetes) }
     let(:event_hash) { { :ems_ref => "event-ref", :ems_id => ems.id, :event_type => "STUFF_HAPPENED" } }
-    let(:container_project) { FactoryGirl.create(:container_project, :ext_management_system => ems) }
+    let(:container_project) { FactoryBot.create(:container_project, :ext_management_system => ems) }
 
     context "on node" do
       let(:node_event_hash) { event_hash.merge(:container_node_ems_ref => ems_ref) }
-      let!(:container_node) { FactoryGirl.create(:container_node, :ext_management_system => ems, :name => "Test Node", :ems_ref => ems_ref) }
+      let!(:container_node) { FactoryBot.create(:container_node, :ext_management_system => ems, :name => "Test Node", :ems_ref => ems_ref) }
 
       it "process_container_entities_in_event! links node id to event" do
         EmsEvent.process_container_entities_in_event!(node_event_hash)
@@ -38,7 +38,7 @@ describe EmsEvent do
 
     context "on pod" do
       let(:pod_event_hash) { event_hash.merge(:container_group_ems_ref => ems_ref) }
-      let!(:container_group) { FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => container_project, :name => "Test Group", :ems_ref => ems_ref) }
+      let!(:container_group) { FactoryBot.create(:container_group, :ext_management_system => ems, :container_project => container_project, :name => "Test Group", :ems_ref => ems_ref) }
 
       it "process_container_entities_in_event! links pod id to event" do
         EmsEvent.process_container_entities_in_event!(pod_event_hash)
@@ -53,7 +53,7 @@ describe EmsEvent do
 
     context "on replicator" do
       let(:repl_event_hash) { event_hash.merge(:container_replicator_ems_ref => ems_ref) }
-      let!(:container_replicator) { FactoryGirl.create(:container_replicator, :ext_management_system => ems, :container_project => container_project, :name => "Test Replicator", :ems_ref => ems_ref) }
+      let!(:container_replicator) { FactoryBot.create(:container_replicator, :ext_management_system => ems, :container_project => container_project, :name => "Test Replicator", :ems_ref => ems_ref) }
 
       it "process_container_entities_in_event! links replicator id to event" do
         EmsEvent.process_container_entities_in_event!(repl_event_hash)
@@ -68,11 +68,11 @@ describe EmsEvent do
   end
 
   context "with availability zones" do
-    let(:vm) { FactoryGirl.create(:vm_openstack, :ems_ref => "vm1") }
+    let(:vm) { FactoryBot.create(:vm_openstack, :ems_ref => "vm1") }
     before do
-      @zone = FactoryGirl.create(:small_environment)
+      @zone = FactoryBot.create(:small_environment)
       @ems  = @zone.ext_management_systems.first
-      @availability_zone = FactoryGirl.create(:availability_zone_openstack, :ems_ref => "az1")
+      @availability_zone = FactoryBot.create(:availability_zone_openstack, :ems_ref => "az1")
     end
 
     context ".process_availability_zone_in_event!" do
@@ -111,7 +111,7 @@ describe EmsEvent do
     end
 
     context ".add_queue" do
-      let(:ems) { FactoryGirl.create(:ems_kubernetes) }
+      let(:ems) { FactoryBot.create(:ems_kubernetes) }
       let(:event_hash) do
         {
           :ems_ref    => "event-ref",
@@ -221,9 +221,9 @@ describe EmsEvent do
   end
 
   context ".add" do
-    let(:ems) { FactoryGirl.create(:ext_management_system) }
+    let(:ems) { FactoryBot.create(:ext_management_system) }
     context "with a VM" do
-      let(:vm) { FactoryGirl.create(:vm, :uid_ems => '3ace5197-3d6a-4cb3-aeb2-e8348e428775', :ems_ref => 'vm-123') }
+      let(:vm) { FactoryBot.create(:vm, :uid_ems => '3ace5197-3d6a-4cb3-aeb2-e8348e428775', :ems_ref => 'vm-123') }
       let(:event) do
         {
           :ems_id     => ems.id,

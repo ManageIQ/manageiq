@@ -2,15 +2,15 @@ describe MiqAlert do
   context "With single server with a single generic worker with the notifier role," do
     before do
       @miq_server = EvmSpecHelper.local_miq_server(:role => 'notifier')
-      @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
-      @vm     = FactoryGirl.create(:vm_vmware)
+      @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id)
+      @vm     = FactoryBot.create(:vm_vmware)
 
       MiqAlert.seed
       @events_to_alerts = MiqAlert.all.inject([]) do |arr, a|
         next(arr) if a.responds_to_events.nil?
         next(arr) unless a.db == "Vm"
 
-        ap = FactoryGirl.create(:miq_alert_set_vm, :alerts => [a])
+        ap = FactoryBot.create(:miq_alert_set_vm, :alerts => [a])
         ap.assign_to_objects(@vm)
 
         events = a.responds_to_events.split(",")
@@ -110,12 +110,12 @@ describe MiqAlert do
       it "should update the existing status on susesquent evaluations" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event)
+          :ems_event => FactoryBot.create(:ems_event)
         )
         Timecop.travel 10.minutes do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryGirl.create(:ems_event)
+            :ems_event => FactoryBot.create(:ems_event)
           )
           statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
           expect(statuses.length).to eq(1)
@@ -125,12 +125,12 @@ describe MiqAlert do
       it "should update the existing status if event has the same ems_ref" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :ems_ref => 'same')
+          :ems_event => FactoryBot.create(:ems_event, :ems_ref => 'same')
         )
         Timecop.travel 10.minutes do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryGirl.create(:ems_event, :ems_ref => 'same')
+            :ems_event => FactoryBot.create(:ems_event, :ems_ref => 'same')
           )
           statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
           expect(statuses.length).to eq(1)
@@ -140,12 +140,12 @@ describe MiqAlert do
       it "should create a new status if event has a different ems_ref" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :ems_ref => 'same')
+          :ems_event => FactoryBot.create(:ems_event, :ems_ref => 'same')
         )
         Timecop.travel 10.minutes do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryGirl.create(:ems_event, :ems_ref => 'different')
+            :ems_event => FactoryBot.create(:ems_event, :ems_ref => 'different')
           )
           statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
           expect(statuses.length).to eq(2)
@@ -159,7 +159,7 @@ describe MiqAlert do
       it "miq_alert_status.description = miq_alert.description event if overriden by ems_event.description" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!")
+          :ems_event => FactoryBot.create(:ems_event, :message => "oh no!")
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.description).to eq("VM Unregistered")
@@ -168,7 +168,7 @@ describe MiqAlert do
       it "miq_alert_status.description = ems_event.message if present and datawarehouse_alert" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!", :event_type => "datawarehouse_alert")
+          :ems_event => FactoryBot.create(:ems_event, :message => "oh no!", :event_type => "datawarehouse_alert")
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.description).to eq("oh no!")
@@ -177,7 +177,7 @@ describe MiqAlert do
       it "miq_alert_status.severity = ems_event.full_data.severity if present" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:severity => 'warning'})
+          :ems_event => FactoryBot.create(:ems_event, :full_data => {:severity => 'warning'})
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.severity).to eq('warning')
@@ -187,7 +187,7 @@ describe MiqAlert do
         @alert.severity = "error"
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :full_data => {})
+          :ems_event => FactoryBot.create(:ems_event, :full_data => {})
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.severity).to eq('error')
@@ -197,7 +197,7 @@ describe MiqAlert do
         @alert.severity = "error"
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:severity => 'info'})
+          :ems_event => FactoryBot.create(:ems_event, :full_data => {:severity => 'info'})
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.severity).to eq('info')
@@ -213,7 +213,7 @@ describe MiqAlert do
         expect do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryGirl.create(:ems_event, :full_data => {:severity => 'undefined'})
+            :ems_event => FactoryBot.create(:ems_event, :full_data => {:severity => 'undefined'})
           )
         end.to raise_error(ActiveRecord::RecordInvalid)
       end
@@ -221,7 +221,7 @@ describe MiqAlert do
       it "miq_alert_status.url = ems_event.full_data.url if present" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryGirl.create(
+          :ems_event => FactoryBot.create(
             :ems_event,
             :full_data => {:url => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
           )
@@ -322,16 +322,16 @@ describe MiqAlert do
 
   describe ".assigned_to_target" do
     it "gets assignment by tagged VM" do
-      cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
-      FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
+      FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
 
-      @vm   = FactoryGirl.create(:vm_vmware)
+      @vm   = FactoryBot.create(:vm_vmware)
       @mode = @vm.class.base_model.name
       @c    = Classification.where(:description => "Production").first
       @c.assign_entry_to(@vm)
 
-      @alert = FactoryGirl.create(:miq_alert_vm)
-      @ap    = FactoryGirl.create(:miq_alert_set_vm, :alerts =>[@alert])
+      @alert = FactoryBot.create(:miq_alert_vm)
+      @ap    = FactoryBot.create(:miq_alert_set_vm, :alerts =>[@alert])
       @ap.assign_to_tags([@c.id], @mode)
 
       expect(MiqAlert.assigned_to_target(@vm)).to eq([@alert])
@@ -344,24 +344,24 @@ describe MiqAlert do
     end
 
     let(:vm_alert_set) do
-      alert = FactoryGirl.create(:miq_alert_vm, :responds_to_events => "xxx|vm_perf_complete|zzz")
-      FactoryGirl.create(:miq_alert_set_vm, :alerts => [alert])
+      alert = FactoryBot.create(:miq_alert_vm, :responds_to_events => "xxx|vm_perf_complete|zzz")
+      FactoryBot.create(:miq_alert_set_vm, :alerts => [alert])
     end
 
     let(:host_alert_set) do
-      alert = FactoryGirl.create(:miq_alert_host, :responds_to_events => "xxx|host_perf_complete|zzz")
-      FactoryGirl.create(:miq_alert_set_host, :alerts => [alert])
+      alert = FactoryBot.create(:miq_alert_host, :responds_to_events => "xxx|host_perf_complete|zzz")
+      FactoryBot.create(:miq_alert_set_host, :alerts => [alert])
     end
 
     it "detects true with a VM assigned to a realtime C&U alert" do
-      vm = FactoryGirl.create(:vm_vmware)
+      vm = FactoryBot.create(:vm_vmware)
       vm_alert_set.assign_to_objects(vm)
 
       expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_truthy
     end
 
     it "detects false with a VM NOT assigned to a realtime C&U alert" do
-      vm = FactoryGirl.create(:vm_vmware)
+      vm = FactoryBot.create(:vm_vmware)
 
       expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_falsey
     end
@@ -369,36 +369,36 @@ describe MiqAlert do
     it "detects true with a VM's ems assigned to a realtime C&U alert" do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
 
-      ems = FactoryGirl.create(:ems_vmware)
-      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      ems = FactoryBot.create(:ems_vmware)
+      vm = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
       vm_alert_set.assign_to_objects(ems)
 
       expect(MiqAlert.target_needs_realtime_capture?(vm)).to be_truthy
     end
 
     it "detects true with a Host assigned to a realtime C&U alert" do
-      host = FactoryGirl.create(:host)
+      host = FactoryBot.create(:host)
       host_alert_set.assign_to_objects(host)
 
       expect(MiqAlert.target_needs_realtime_capture?(host)).to be_truthy
     end
 
     it "detects true with a Host's cluster assigned to a realtime C&U alert" do
-      cluster = FactoryGirl.create(:ems_cluster)
-      host = FactoryGirl.create(:host, :ems_cluster => cluster)
+      cluster = FactoryBot.create(:ems_cluster)
+      host = FactoryBot.create(:host, :ems_cluster => cluster)
       host_alert_set.assign_to_objects(cluster)
 
       expect(MiqAlert.target_needs_realtime_capture?(host)).to be_truthy
     end
 
     it "detects false with a Host NOT assigned to a realtime C&U alert" do
-      host = FactoryGirl.create(:host)
+      host = FactoryBot.create(:host)
 
       expect(MiqAlert.target_needs_realtime_capture?(host)).to be_falsey
     end
 
     it "detects true with a VM assigned to a v4-style realtime C&U alert" do
-      vm = FactoryGirl.create(:vm_vmware)
+      vm = FactoryBot.create(:vm_vmware)
       # V4 code is actually the same here -- assign_to_objects -- but
       # this forces the namespace to use actual model class name
       # rather than base_class
@@ -408,7 +408,7 @@ describe MiqAlert do
     end
 
     it "detects true with a Host assigned to a v4-style realtime C&U alert" do
-      host = FactoryGirl.create(:host)
+      host = FactoryBot.create(:host)
       # V4 code is actually the same here -- assign_to_objects -- but
       # this forces the namespace to use actual model class name
       # rather than base_class
@@ -418,14 +418,14 @@ describe MiqAlert do
     end
 
     let(:classification) do
-      env = FactoryGirl.create(:classification, :name => "env", :single_value => 1)
-      FactoryGirl.create(:classification_tag, :name => "good", :parent => env)
+      env = FactoryBot.create(:classification, :name => "env", :single_value => 1)
+      FactoryBot.create(:classification_tag, :name => "good", :parent => env)
     end
 
     let(:tag) { classification.tag }
 
     it "detects with a shared tag on a Vm" do
-      vm = FactoryGirl.create(:vm_vmware)
+      vm = FactoryBot.create(:vm_vmware)
       vm.tag_add(tag.name, :ns => "")
       vm.reload # reload ensures the tag is set
 
@@ -436,8 +436,8 @@ describe MiqAlert do
     end
 
     it "doesnt detects with a shared tag assigned to a Vm's ems" do
-      ems = FactoryGirl.create(:ems_vmware)
-      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      ems = FactoryBot.create(:ems_vmware)
+      vm = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
       ems.tag_add(tag.name, :ns => "")
       ems.reload # reload ensures the tag is set
 
@@ -452,11 +452,11 @@ describe MiqAlert do
     before do
       allow_any_instance_of(MiqAlert).to receive_messages(:validate => true)
       @miq_server = EvmSpecHelper.local_miq_server
-      @ems        = FactoryGirl.create(:ems_vmware, :zone => @miq_server.zone)
-      @ems_other  = FactoryGirl.create(:ems_vmware, :zone => FactoryGirl.create(:zone, :name => 'other'))
-      @ems_kub    = FactoryGirl.create(:ems_kubernetes, :zone => @miq_server.zone)
-      @alert      = FactoryGirl.create(:miq_alert, :responds_to_events => "_hourly_timer_")
-      @alert_prof = FactoryGirl.create(:miq_alert_set, :alerts => [@alert])
+      @ems        = FactoryBot.create(:ems_vmware, :zone => @miq_server.zone)
+      @ems_other  = FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone, :name => 'other'))
+      @ems_kub    = FactoryBot.create(:ems_kubernetes, :zone => @miq_server.zone)
+      @alert      = FactoryBot.create(:miq_alert, :responds_to_events => "_hourly_timer_")
+      @alert_prof = FactoryBot.create(:miq_alert_set, :alerts => [@alert])
     end
 
     it "evaluates for ext_management_system" do
@@ -470,9 +470,9 @@ describe MiqAlert do
     end
 
     it "evaluates for vm" do
-      vm_in_zone = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
-      vm_in_other = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems_other)
-      vm_no_ems = FactoryGirl.create(:vm_vmware)
+      vm_in_zone = FactoryBot.create(:vm_vmware, :ext_management_system => @ems)
+      vm_in_other = FactoryBot.create(:vm_vmware, :ext_management_system => @ems_other)
+      vm_no_ems = FactoryBot.create(:vm_vmware)
       @alert.update_attributes(:db => "Vm")
       @alert_prof.mode = vm_in_zone.class.base_model.name
       @alert_prof.assign_to_objects(vm_in_zone.id, "Vm")
@@ -484,16 +484,16 @@ describe MiqAlert do
     end
 
     it "evaluates for storage" do
-      storage_in_zone = FactoryGirl.create(:storage_vmware)
-      FactoryGirl.create(:host, :ext_management_system => @ems, :storages => [storage_in_zone])
+      storage_in_zone = FactoryBot.create(:storage_vmware)
+      FactoryBot.create(:host, :ext_management_system => @ems, :storages => [storage_in_zone])
 
-      storage_in_another = FactoryGirl.create(:storage_vmware)
-      FactoryGirl.create(:host, :ext_management_system => @ems_other, :storages => [storage_in_another])
+      storage_in_another = FactoryBot.create(:storage_vmware)
+      FactoryBot.create(:host, :ext_management_system => @ems_other, :storages => [storage_in_another])
 
-      storage_in_host_no_ems = FactoryGirl.create(:storage_vmware)
-      FactoryGirl.create(:host, :storages => [storage_in_host_no_ems])
+      storage_in_host_no_ems = FactoryBot.create(:storage_vmware)
+      FactoryBot.create(:host, :storages => [storage_in_host_no_ems])
 
-      storage_no_ems = FactoryGirl.create(:storage_vmware)
+      storage_no_ems = FactoryBot.create(:storage_vmware)
 
       @alert.update_attributes(:db => "Storage")
       @alert_prof.mode = storage_in_zone.class.base_model.name
@@ -508,7 +508,7 @@ describe MiqAlert do
 
     it "evaluates for container entities" do
       [:container_node, :container_group, :container_replicator, :container].each do |entity|
-        container_entity_in_zone = FactoryGirl.create(entity, :ext_management_system => @ems_kub)
+        container_entity_in_zone = FactoryBot.create(entity, :ext_management_system => @ems_kub)
         @alert.update_attributes(:db => entity.to_s.camelize)
         @alert_prof.mode = container_entity_in_zone.class.base_model.name
         @alert_prof.assign_to_objects(container_entity_in_zone.id, entity.to_s.camelize)
@@ -521,14 +521,14 @@ describe MiqAlert do
   describe 'Mangement Event' do
     before do
       @miq_server = EvmSpecHelper.local_miq_server
-      @vm         = FactoryGirl.create(:vm_vmware)
-      @alert      = FactoryGirl.create(
+      @vm         = FactoryBot.create(:vm_vmware)
+      @alert      = FactoryBot.create(
         :miq_alert_vm,
         :options            => {:notifications => {:automate => {:event_name => 'test_event_alert'}}},
         :expression         => {:eval_method => "nothing", :mode => "internal", :options => {}},
         :responds_to_events => "request_vm_poweroff"
       )
-      @alert_prof = FactoryGirl.create(:miq_alert_set_vm, :alerts => [@alert])
+      @alert_prof = FactoryBot.create(:miq_alert_set_vm, :alerts => [@alert])
       @alert_prof.assign_to_objects(@vm)
     end
 
@@ -562,7 +562,7 @@ describe MiqAlert do
   describe '.validate_automate_expressions' do
     it 'Does not allow creation of dwh_generic miq_alerts with delay_next_evaluation > 0 ' do
       expect do
-        FactoryGirl.create(
+        FactoryBot.create(
           :miq_alert,
           :options    => {:notifications => {:delay_next_evaluation => 600, :evm_event => {}}},
           :expression => {:eval_method => "dwh_generic"}

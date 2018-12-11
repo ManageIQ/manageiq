@@ -1,5 +1,5 @@
 describe DialogGroup do
-  let(:dialog_group) { FactoryGirl.build(:dialog_group, :label => 'group') }
+  let(:dialog_group) { FactoryBot.build(:dialog_group, :label => 'group') }
   context "#validate_children" do
     it "fails without element" do
       expect { dialog_group.save! }
@@ -7,7 +7,7 @@ describe DialogGroup do
     end
 
     it "validates with at least one element" do
-      dialog_group.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field1')
+      dialog_group.dialog_fields << FactoryBot.create(:dialog_field, :label => 'field 1', :name => 'field1')
       expect_any_instance_of(DialogField).to receive(:valid?)
       expect(dialog_group.errors.full_messages).to be_empty
       dialog_group.validate_children
@@ -22,9 +22,9 @@ describe DialogGroup do
   end
 
   describe '#update_dialog_fields' do
-    let(:dialog_fields) { FactoryGirl.create_list(:dialog_field, 2) }
-    let(:dialog_group) { FactoryGirl.create(:dialog_group, :dialog_fields => dialog_fields) }
-    let(:resource_action) { FactoryGirl.create(:resource_action) }
+    let(:dialog_fields) { FactoryBot.create_list(:dialog_field, 2) }
+    let(:dialog_group) { FactoryBot.create(:dialog_group, :dialog_fields => dialog_fields) }
+    let(:resource_action) { FactoryBot.create(:resource_action) }
 
     context 'a collection of dialog fields containing two objects with ids and one without an id' do
       let(:updated_fields) do

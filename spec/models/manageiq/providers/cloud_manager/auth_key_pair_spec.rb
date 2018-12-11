@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::CloudManager::AuthKeyPair do
-  let(:ems) { FactoryGirl.create(:ems_cloud) }
+  let(:ems) { FactoryBot.create(:ems_cloud) }
 
   context 'create and delete actions' do
     it "has methods" do

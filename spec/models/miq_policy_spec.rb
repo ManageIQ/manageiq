@@ -6,12 +6,12 @@ describe MiqPolicy do
     # calling conditions.
 
     before do
-      @ps = FactoryGirl.create(:miq_policy_set, :name => "ps")
-      @p  = FactoryGirl.create(:miq_policy)
+      @ps = FactoryBot.create(:miq_policy_set, :name => "ps")
+      @p  = FactoryBot.create(:miq_policy)
       @ps.add_member(@p)
 
-      @ps2 = FactoryGirl.create(:miq_policy_set, :name => "ps2")
-      @p2  = FactoryGirl.create(:miq_policy)
+      @ps2 = FactoryBot.create(:miq_policy_set, :name => "ps2")
+      @p2  = FactoryBot.create(:miq_policy)
     end
 
     it "should return the correct conditions" do
@@ -21,7 +21,7 @@ describe MiqPolicy do
   end
 
   context "#description=" do
-    subject { FactoryGirl.create(:miq_policy, :description => @description) }
+    subject { FactoryBot.create(:miq_policy, :description => @description) }
 
     it "should keep the description < 255" do
       @description = "a" * 30
@@ -41,12 +41,12 @@ describe MiqPolicy do
   end
 
   context "instance methods" do
-    let(:event)  { FactoryGirl.create(:miq_event_definition) }
-    let(:action) { FactoryGirl.create(:miq_action) }
+    let(:event)  { FactoryBot.create(:miq_event_definition) }
+    let(:action) { FactoryBot.create(:miq_action) }
 
     let(:policy) do
-      cond = FactoryGirl.create(:condition)
-      FactoryGirl.create(:miq_policy, :conditions => [cond]).tap do |p|
+      cond = FactoryBot.create(:condition)
+      FactoryBot.create(:miq_policy, :conditions => [cond]).tap do |p|
         p.replace_actions_for_event(event, [[action, {:qualifier => :success}]])
       end
     end
@@ -59,7 +59,7 @@ describe MiqPolicy do
 
     describe '#miq_event_definitions' do
       before do
-        policy.miq_policy_contents.push(FactoryGirl.create(:miq_policy_content))
+        policy.miq_policy_contents.push(FactoryBot.create(:miq_policy_content))
       end
 
       it 'lists event definition' do
@@ -68,7 +68,7 @@ describe MiqPolicy do
     end
 
     describe "#sync_events, #add_event, #delete_event" do
-      let(:new_events) { [FactoryGirl.create(:miq_event_definition), FactoryGirl.create(:miq_event_definition)] }
+      let(:new_events) { [FactoryBot.create(:miq_event_definition), FactoryBot.create(:miq_event_definition)] }
 
       it 'synchronizes with new list of events' do
         policy.sync_events(new_events)
@@ -78,8 +78,8 @@ describe MiqPolicy do
     end
 
     describe "#actions #actions_for_event, #replace_actions_for_event" do
-      let(:new_action)    { FactoryGirl.create(:miq_action) }
-      let(:another_event) { FactoryGirl.create(:miq_event_definition) }
+      let(:new_action)    { FactoryBot.create(:miq_action) }
+      let(:another_event) { FactoryBot.create(:miq_event_definition) }
 
       it "lists all actions for the policy" do
         policy.replace_actions_for_event(another_event, [[new_action, {:qualifier => :success}]])
@@ -112,9 +112,9 @@ describe MiqPolicy do
     end
 
     describe "#applies_to?" do
-      let(:target_vm)       { FactoryGirl.create(:vm_amazon) }
-      let(:target_template) { FactoryGirl.create(:template_infra) }
-      let(:target_host)     { FactoryGirl.create(:host) }
+      let(:target_vm)       { FactoryBot.create(:vm_amazon) }
+      let(:target_template) { FactoryBot.create(:template_infra) }
+      let(:target_host)     { FactoryBot.create(:host) }
 
       it "applies to target with matched type" do
         expect(policy.applies_to?(target_vm)).to       be_truthy
@@ -141,17 +141,17 @@ describe MiqPolicy do
   end
 
   context "class methods" do
-    let(:events)  { [FactoryGirl.create(:miq_event_definition), FactoryGirl.create(:miq_event_definition)] }
-    let(:actions) { [FactoryGirl.create(:miq_action), FactoryGirl.create(:miq_action)] }
-    let(:conds)   { [FactoryGirl.create(:condition), FactoryGirl.create(:condition)] }
-    let(:target)  { FactoryGirl.create(:vm) }
+    let(:events)  { [FactoryBot.create(:miq_event_definition), FactoryBot.create(:miq_event_definition)] }
+    let(:actions) { [FactoryBot.create(:miq_action), FactoryBot.create(:miq_action)] }
+    let(:conds)   { [FactoryBot.create(:condition), FactoryBot.create(:condition)] }
+    let(:target)  { FactoryBot.create(:vm) }
 
     let(:policies) do
       [
-        FactoryGirl.create(:miq_policy, :conditions => [conds[0]], :active => true, :mode => 'control').tap do |p|
+        FactoryBot.create(:miq_policy, :conditions => [conds[0]], :active => true, :mode => 'control').tap do |p|
           p.replace_actions_for_event(events[0], [[actions[0], {:qualifier => :success}], [actions[1], {:qualifier => :failure}]])
         end,
-        FactoryGirl.create(:miq_policy, :conditions => [conds[1]], :active => false).tap do |p|
+        FactoryBot.create(:miq_policy, :conditions => [conds[1]], :active => false).tap do |p|
           p.replace_actions_for_event(events[1], [[actions[1], {:qualifier => :success}]])
         end
       ]
@@ -159,8 +159,8 @@ describe MiqPolicy do
 
     let(:profiles) do
       [
-        FactoryGirl.create(:miq_policy_set, :name => "ps3").tap { |pf| pf.add_member(policies[0]) },
-        FactoryGirl.create(:miq_policy_set, :name => "ps4").tap { |pf| pf.add_member(policies[1]) },
+        FactoryBot.create(:miq_policy_set, :name => "ps3").tap { |pf| pf.add_member(policies[0]) },
+        FactoryBot.create(:miq_policy_set, :name => "ps4").tap { |pf| pf.add_member(policies[1]) },
       ]
     end
 
@@ -168,12 +168,12 @@ describe MiqPolicy do
 
     describe ".resolve" do
       it "resolves all policies" do
-        results = described_class.resolve(FactoryGirl.create(:vm))
+        results = described_class.resolve(FactoryBot.create(:vm))
         expect(results.size).to eq(2)
       end
 
       it "resolves policies by event" do
-        results = described_class.resolve(FactoryGirl.create(:vm), policies.collect(&:name), events[1])
+        results = described_class.resolve(FactoryBot.create(:vm), policies.collect(&:name), events[1])
         expect(results.size).to eq(1)
         result = results[0]
         expect(result).to include(
@@ -233,7 +233,7 @@ describe MiqPolicy do
 
     describe ".eval_condition" do
       it "returns 'allow' when condition is met" do
-        vm = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :cpu_sockets => 2))
+        vm = FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu_sockets => 2))
         result = described_class.send(:eval_condition, conds[0], vm)
 
         expect(result).to eq('allow')
@@ -260,12 +260,12 @@ describe MiqPolicy do
 
   describe "(Built-in) Prevent Retired Instance from Starting policy" do
     before do
-      FactoryGirl.create(:miq_event_definition, :name => "vm_resume")
-      FactoryGirl.create(:miq_action, :name => "vm_suspend", :action_type => 'default')
+      FactoryBot.create(:miq_event_definition, :name => "vm_resume")
+      FactoryBot.create(:miq_action, :name => "vm_suspend", :action_type => 'default')
       MiqPolicy.class_variable_set(:@@built_in_policies, nil)
-      @vm = FactoryGirl.create(:vm_openstack,
-                               :ext_management_system => FactoryGirl.create(:ems_openstack,
-                                                                            :zone => FactoryGirl.create(:zone)))
+      @vm = FactoryBot.create(:vm_openstack,
+                               :ext_management_system => FactoryBot.create(:ems_openstack,
+                                                                            :zone => FactoryBot.create(:zone)))
     end
     subject { MiqPolicy.enforce_policy(@vm, "vm_resume", {}) }
 
@@ -310,11 +310,11 @@ describe MiqPolicy do
 
   context '.validates' do
     it 'validates towhat' do
-      expect(FactoryGirl.build(:miq_policy, :towhat => "Host")).to be_valid
+      expect(FactoryBot.build(:miq_policy, :towhat => "Host")).to be_valid
     end
 
     it 'reports invalid towhat' do
-      expect(FactoryGirl.build(:miq_policy, :towhat => "BobsYourUncle")).not_to be_valid
+      expect(FactoryBot.build(:miq_policy, :towhat => "BobsYourUncle")).not_to be_valid
     end
   end
 end

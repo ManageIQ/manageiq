@@ -2,21 +2,21 @@ describe Notification do
   context "::Purging" do
     describe ".purge_by_date" do
       it "purges old notifications" do
-        FactoryGirl.create(:user)
-        FactoryGirl.create(:user)
-        type = FactoryGirl.create(:notification_type, :audience => NotificationType::AUDIENCE_GLOBAL)
+        FactoryBot.create(:user)
+        FactoryBot.create(:user)
+        type = FactoryBot.create(:notification_type, :audience => NotificationType::AUDIENCE_GLOBAL)
 
         # Notification and recipients that will not be purged
-        new_notification = FactoryGirl.create(:notification, :notification_type => type)
+        new_notification = FactoryBot.create(:notification, :notification_type => type)
 
         old_notification, semi_old_notification = nil
         Timecop.freeze(6.days.ago) do
-          semi_old_notification = FactoryGirl.create(:notification, :notification_type => type)
+          semi_old_notification = FactoryBot.create(:notification, :notification_type => type)
         end
 
         Timecop.freeze(8.days.ago) do
           # Notification and recipients that will be purged
-          old_notification = FactoryGirl.create(:notification, :notification_type => type)
+          old_notification = FactoryBot.create(:notification, :notification_type => type)
         end
 
         expect(described_class.all).to match_array([new_notification, semi_old_notification, old_notification])

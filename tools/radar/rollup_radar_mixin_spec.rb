@@ -3,25 +3,25 @@ require './tools/radar/rollup_radar_mixin.rb'
 describe RollupRadarMixin do
   include RollupRadarMixin
 
-  let(:ems) { FactoryGirl.create(:ems_openshift, :name => 'OpenShiftProvider') }
+  let(:ems) { FactoryBot.create(:ems_openshift, :name => 'OpenShiftProvider') }
 
   let(:container_project) do
-    FactoryGirl.create(:container_project, :ext_management_system => ems)
+    FactoryBot.create(:container_project, :ext_management_system => ems)
   end
 
   let(:container_group) do
-    FactoryGirl.create(:container_group, :container_project     => container_project,
+    FactoryBot.create(:container_group, :container_project     => container_project,
                                          :ext_management_system => ems)
   end
 
   let(:container_image_a) do
-    FactoryGirl.create(:container_image,
+    FactoryBot.create(:container_image,
                        :ext_management_system => ems,
                        :custom_attributes     => [custom_attribute_a])
   end
 
   let(:container_a) do
-    FactoryGirl.create(:container,
+    FactoryBot.create(:container,
                        :name                  => "A",
                        :container_group       => container_group,
                        :container_image       => container_image_a,
@@ -29,14 +29,14 @@ describe RollupRadarMixin do
   end
 
   let(:custom_attribute_a) do
-    FactoryGirl.create(:custom_attribute,
+    FactoryBot.create(:custom_attribute,
                        :name    => 'com.redhat.component',
                        :value   => 'EAP7',
                        :section => 'docker_labels')
   end
 
   let(:container_b) do
-    FactoryGirl.create(:container,
+    FactoryBot.create(:container,
                        :name                  => "B",
                        :container_group       => container_group,
                        :container_image       => container_image_b,
@@ -44,13 +44,13 @@ describe RollupRadarMixin do
   end
 
   let(:container_image_b) do
-    FactoryGirl.create(:container_image,
+    FactoryBot.create(:container_image,
                        :ext_management_system => ems,
                        :custom_attributes     => [custom_attribute_b])
   end
 
   let(:custom_attribute_b) do
-    FactoryGirl.create(:custom_attribute,
+    FactoryBot.create(:custom_attribute,
                        :name    => 'com.redhat.component',
                        :value   => 'EAP7',
                        :section => 'docker_labels')
@@ -68,7 +68,7 @@ describe RollupRadarMixin do
       metric_rollup_params[:resource_id]   = resource.id
       metric_rollup_params[:resource_name] = resource.name
       params = [:metric, metric_rollup_params].compact
-      resource.metrics << FactoryGirl.create(*params)
+      resource.metrics << FactoryBot.create(*params)
     end
   end
 
@@ -270,7 +270,7 @@ describe RollupRadarMixin do
     end
 
     let(:custom_attribute_a) do
-      FactoryGirl.create(:custom_attribute,
+      FactoryBot.create(:custom_attribute,
                          :name    => 'com.redhat.component_different',
                          :value   => 'EAP7',
                          :section => 'docker_labels')

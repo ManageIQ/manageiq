@@ -100,7 +100,7 @@ describe EmbeddedAnsible do
     let(:miq_database) { MiqDatabase.first }
 
     before do
-      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
       MiqDatabase.seed
       EvmSpecHelper.create_guid_miq_server_zone
     end

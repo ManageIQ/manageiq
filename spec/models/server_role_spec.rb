@@ -6,11 +6,11 @@ describe ServerRole do
         ['event',                   1],
         ['ems_metrics_coordinator', 1],
         ['ems_operations',          0]
-      ].each { |r, max| @server_roles << FactoryGirl.create(:server_role, :name => r, :max_concurrent => max) }
+      ].each { |r, max| @server_roles << FactoryBot.create(:server_role, :name => r, :max_concurrent => max) }
     end
 
     it "validates uniqueness of name" do
-      expect { FactoryGirl.create(:server_role, :name => @server_roles.first.name, :max_concurrent => @server_roles.first.max_concurrent) }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { FactoryBot.create(:server_role, :name => @server_roles.first.name, :max_concurrent => @server_roles.first.max_concurrent) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should return all names" do

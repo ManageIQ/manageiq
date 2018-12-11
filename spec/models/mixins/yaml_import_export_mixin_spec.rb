@@ -2,7 +2,7 @@ describe YAMLImportExportMixin do
   let(:test_class) { Class.new { include YAMLImportExportMixin } }
 
   before do
-    @report1 = FactoryGirl.create(:miq_report, :name => "test_report_1")
+    @report1 = FactoryBot.create(:miq_report, :name => "test_report_1")
   end
 
   context ".export_to_array" do
@@ -20,7 +20,7 @@ describe YAMLImportExportMixin do
     end
 
     it "single valid instance" do
-      policy = FactoryGirl.create(:miq_policy, :name => "test_policy")
+      policy = FactoryBot.create(:miq_policy, :name => "test_policy")
       @list = [@report1.id, policy.id]
 
       expect_any_instance_of(MiqPolicy).to receive(:export_to_array).never
@@ -29,7 +29,7 @@ describe YAMLImportExportMixin do
     end
 
     it "multiple valid instances" do
-      @report2 = FactoryGirl.create(:miq_report, :name => "test_report_2")
+      @report2 = FactoryBot.create(:miq_report, :name => "test_report_2")
       @list = [@report1.id, @report2.id]
 
       expect(subject.size).to eq(2)

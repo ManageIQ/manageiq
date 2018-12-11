@@ -1,9 +1,9 @@
 describe MiqAeMethod do
-  let(:user) { FactoryGirl.create(:user_with_group) }
+  let(:user) { FactoryBot.create(:user_with_group) }
   it "should return editable as false if the parent namespace/class is not editable" do
-    n1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => user.current_tenant)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    f1 = FactoryGirl.create(:miq_ae_method,
+    n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => user.current_tenant)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    f1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
                             :name     => "foo_method",
                             :scope    => "instance",
@@ -13,9 +13,9 @@ describe MiqAeMethod do
   end
 
   it "should return editable as true if the parent namespace/class is editable" do
-    n1 = FactoryGirl.create(:miq_ae_domain, :tenant => user.current_tenant)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    f1 = FactoryGirl.create(:miq_ae_method,
+    n1 = FactoryBot.create(:miq_ae_domain, :tenant => user.current_tenant)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    f1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
                             :name     => "foo_method",
                             :scope    => "instance",
@@ -25,14 +25,14 @@ describe MiqAeMethod do
   end
 
   context "#copy" do
-    let(:d2) { FactoryGirl.create(:miq_ae_domain, :name => "domain2", :priority => 2) }
-    let(:ns1) { FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id) }
-    let(:m1) { FactoryGirl.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method1", :scope => "instance", :language => "ruby", :location => "inline") }
-    let(:m2) { FactoryGirl.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method2", :scope => "instance", :language => "ruby", :location => "inline") }
+    let(:d2) { FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2) }
+    let(:ns1) { FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id) }
+    let(:m1) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method1", :scope => "instance", :language => "ruby", :location => "inline") }
+    let(:m2) { FactoryBot.create(:miq_ae_method, :class_id => @cls1.id, :name => "foo_method2", :scope => "instance", :language => "ruby", :location => "inline") }
     before do
-      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
-      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
+      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
     end
 
     it "copies instances under specified namespace" do
@@ -102,10 +102,10 @@ describe MiqAeMethod do
   end
 
   it "#domain" do
-    d1 = FactoryGirl.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
-    n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    m1 = FactoryGirl.create(:miq_ae_method,
+    d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
+    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    m1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
                             :name     => "foo_method",
                             :scope    => "instance",
@@ -115,10 +115,10 @@ describe MiqAeMethod do
   end
 
   it "#to_export_yaml" do
-    d1 = FactoryGirl.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
-    n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    m1 = FactoryGirl.create(:miq_ae_method,
+    d1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1', :priority => 10)
+    n1 = FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    m1 = FactoryBot.create(:miq_ae_method,
                             :class_id => c1.id,
                             :name     => "foo_method",
                             :scope    => "instance",

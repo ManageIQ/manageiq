@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :middleware_domain do
     sequence(:name) { |n| "middleware_domain_#{seq_padded_for_sorting(n)}" }
   end

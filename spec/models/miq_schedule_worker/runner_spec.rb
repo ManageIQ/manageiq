@@ -5,7 +5,7 @@ describe MiqScheduleWorker::Runner do
       @zone = @miq_server.zone
 
       worker_guid = SecureRandom.uuid
-      @worker = FactoryGirl.create(:miq_schedule_worker, :guid => worker_guid, :miq_server_id => @miq_server.id)
+      @worker = FactoryBot.create(:miq_schedule_worker, :guid => worker_guid, :miq_server_id => @miq_server.id)
 
       allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:initialize_rufus)
       allow_any_instance_of(MiqScheduleWorker::Runner).to receive(:sync_config)
@@ -22,11 +22,11 @@ describe MiqScheduleWorker::Runner do
         allow(@schedule_worker).to receive(:worker_settings).and_return(:job_proxy_dispatcher_stale_message_timeout => @stale_timeout)
 
         @zone1 = @zone
-        @worker1 = FactoryGirl.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
-        @dispatch1 = FactoryGirl.create(:miq_queue, {:zone => @zone1.name, :handler_type => @worker1.class.name, :handler_id => @worker1.id}.merge(@opts))
+        @worker1 = FactoryBot.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
+        @dispatch1 = FactoryBot.create(:miq_queue, {:zone => @zone1.name, :handler_type => @worker1.class.name, :handler_id => @worker1.id}.merge(@opts))
 
-        @zone2 = FactoryGirl.create(:zone)
-        @worker2 = FactoryGirl.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
+        @zone2 = FactoryBot.create(:zone)
+        @worker2 = FactoryBot.create(:miq_worker, :status => MiqWorker::STATUS_STOPPED)
 
         allow(MiqServer).to receive(:my_zone).and_return(@zone1.name)
         Timecop.travel 5.minutes
@@ -39,7 +39,7 @@ describe MiqScheduleWorker::Runner do
       it "check_for_dispatch calls check_for_timeout which deletes both dispatches with fixnum" do
         attrs = {:zone       => @zone2.name, :handler_type => @worker2.class.name,
                  :handler_id => @worker2.id}
-        @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
+        @dispatch2 = FactoryBot.create(:miq_queue, attrs.merge(@opts))
 
         expect(MiqQueue.where(@cond).count).to eq(2)
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout.to_i)
@@ -49,7 +49,7 @@ describe MiqScheduleWorker::Runner do
       it "check_for_dispatch calls check_for_timeout which deletes both dispatches" do
         attrs = {:zone       => @zone2.name, :handler_type => @worker2.class.name,
                  :handler_id => @worker2.id}
-        @dispatch2 = FactoryGirl.create(:miq_queue, attrs.merge(@opts))
+        @dispatch2 = FactoryBot.create(:miq_queue, attrs.merge(@opts))
 
         expect(MiqQueue.where(@cond).count).to eq(2)
         MiqScheduleWorker::Jobs.new.check_for_stuck_dispatch(@stale_timeout)
@@ -72,7 +72,7 @@ describe MiqScheduleWorker::Runner do
       end
 
       it "check_for_dispatch calls check_for_timeout which deletes for in-active worker" do
-        @dispatch2 = FactoryGirl.create(:miq_queue, {:zone => @zone2.name, :handler_type => @worker2.class.name, :handler_id => @worker2.id}.merge(@opts))
+        @dispatch2 = FactoryBot.create(:miq_queue, {:zone => @zone2.name, :handler_type => @worker2.class.name, :handler_id => @worker2.id}.merge(@opts))
 
         @worker1.update_attribute(:status, MiqWorker::STATUS_STARTED)
         cond_active = @cond.dup
@@ -118,7 +118,7 @@ describe MiqScheduleWorker::Runner do
         it "monthly schedule scheduled for 5 years will be unscheduled by tag" do
           first_at = Time.utc(2011, 1, 1, 8, 30)
           tag = "miq_schedules_1"
-          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
+          @sch = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
           @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => tag)
           expect(@schedule_worker.queue_length).to eq(0)
 
@@ -129,7 +129,7 @@ describe MiqScheduleWorker::Runner do
 
         it "monthly creates a schedule each month for 5 years" do
           first_at = Time.utc(2011, 1, 1, 8, 30)
-          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
+          @sch = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
 
           Timecop.freeze(first_at - 1.minute) do
             @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => "miq_schedules_1")
@@ -143,7 +143,7 @@ describe MiqScheduleWorker::Runner do
 
         it "monthly schedule starting Jan 31 will next run Feb 28" do
           first_at = Time.utc(2011, 1, 31, 8, 30)
-          @sch = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
+          @sch = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2011-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
 
           Timecop.freeze(first_at + 1.minute) do
             @schedule_worker.rufus_add_schedule(:method => :schedule_at, :interval => first_at, :months => 1, :schedule_id => @sch.id, :discard_past => true, :tags => "miq_schedules_1")
@@ -177,8 +177,8 @@ describe MiqScheduleWorker::Runner do
             allow(@schedule_worker).to receive(:worker_settings).and_return(Hash.new(5.minutes))
             @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
 
-            @sch1 = FactoryGirl.create(:miq_schedule)
-            @sch2 = FactoryGirl.create(:miq_schedule)
+            @sch1 = FactoryBot.create(:miq_schedule)
+            @sch2 = FactoryBot.create(:miq_schedule)
           end
 
           it "should load all user schedules when scheduler role is added" do

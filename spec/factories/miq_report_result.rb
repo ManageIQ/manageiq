@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_report_result
 
   factory :miq_chargeback_report_result, :parent => :miq_report_result do

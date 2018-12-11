@@ -51,14 +51,14 @@ describe TaskHelpers::Exports::ProvisionDialogs do
   end
 
   before do
-    FactoryGirl.create(:miq_dialog,
+    FactoryBot.create(:miq_dialog,
                        :dialog_type => dialog_type1,
                        :name        => dialog_name1,
                        :description => dialog_desc1,
                        :content     => content,
                        :default     => true)
 
-    FactoryGirl.create(:miq_dialog,
+    FactoryBot.create(:miq_dialog,
                        :dialog_type => dialog_type2,
                        :name        => dialog_name2,
                        :description => dialog_desc2,
@@ -104,7 +104,7 @@ describe TaskHelpers::Exports::ProvisionDialogs do
     let(:dialog_filename2) { "#{export_dir}/#{dialog_type3}-custom_dialog.yaml" }
 
     before do
-      FactoryGirl.create(:miq_dialog,
+      FactoryBot.create(:miq_dialog,
                          :dialog_type => dialog_type3,
                          :name        => dialog_name2,
                          :description => dialog_desc2,

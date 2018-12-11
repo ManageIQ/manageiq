@@ -1,5 +1,5 @@
 describe MiqQueue do
-  specify { expect(FactoryGirl.build(:miq_queue)).to be_valid }
+  specify { expect(FactoryBot.build(:miq_queue)).to be_valid }
 
   context "#deliver" do
     before do
@@ -112,7 +112,7 @@ describe MiqQueue do
     it "works with MiqQueueRetryLater(deliver_on)" do
       deliver_on = Time.now.utc + 1.minute
       allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
-      msg = FactoryGirl.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
       status, message, result = msg.deliver
 
       expect(status).to eq(MiqQueue::STATUS_RETRY)
@@ -136,7 +136,7 @@ describe MiqQueue do
     it "sets last_exception on raised Exception" do
       ex = StandardError.new("something blewup")
       allow(MiqServer).to receive(:foobar).and_raise(ex)
-      msg = FactoryGirl.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
+      msg = FactoryBot.build(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
       expect(msg._log).to receive(:error).with(/Error:/)
       expect(msg._log).to receive(:log_backtrace)
       status, message, _result = msg.deliver
@@ -148,8 +148,8 @@ describe MiqQueue do
 
   describe "user_context" do
     it "sets the User.current_user" do
-      user = FactoryGirl.create(:user_with_group, :name => 'Freddy Kreuger')
-      msg = FactoryGirl.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
+      user = FactoryBot.create(:user_with_group, :name => 'Freddy Kreuger')
+      msg = FactoryBot.create(:miq_queue, :state       => MiqQueue::STATE_DEQUEUE,
                                            :handler     => @miq_server,
                                            :class_name  => 'Storage',
                                            :method_name => 'foobar',
@@ -170,8 +170,8 @@ describe MiqQueue do
 
   describe "#check_for_timeout" do
     it "will destroy a dequeued message when it times out" do
-      handler = FactoryGirl.create(:miq_ems_refresh_worker)
-      msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => handler, :msg_timeout => 1.minute)
+      handler = FactoryBot.create(:miq_ems_refresh_worker)
+      msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => handler, :msg_timeout => 1.minute)
 
       Timecop.travel(10.minutes) do
         expect($log).to receive(:warn)
@@ -202,7 +202,7 @@ describe MiqQueue do
     ]
 
     message_parms.each do |mparms|
-      msg = FactoryGirl.create(:miq_queue)
+      msg = FactoryBot.create(:miq_queue)
       mparms.each { |k, v| msg.send("#{k}=", v) }
       expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
       expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], MiqTask id: [#{msg.miq_task_id}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{msg.args.inspect}")
@@ -240,7 +240,7 @@ describe MiqQueue do
     ]
 
     message_parms.each do |mparms|
-      msg = FactoryGirl.build(:miq_queue, mparms)
+      msg = FactoryBot.build(:miq_queue, mparms)
       expect(MiqQueue.format_short_log_msg(msg)).to eq("Message id: [#{msg.id}]")
       expect(MiqQueue.format_full_log_msg(msg)).to eq("Message id: [#{msg.id}], #{msg.handler_type} id: [#{msg.handler_id}], Zone: [#{msg.zone}], Role: [#{msg.role}], Server: [#{msg.server_guid}], MiqTask id: [#{msg.miq_task_id}], Ident: [#{msg.queue_name}], Target id: [#{msg.target_id}], Instance id: [#{msg.instance_id}], Task id: [#{msg.task_id}], Command: [#{msg.class_name}.#{msg.method_name}], Timeout: [#{msg.msg_timeout}], Priority: [#{msg.priority}], State: [#{msg.state}], Deliver On: [#{msg.deliver_on}], Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], Args: #{args_cleaned_password.inspect}")
     end
@@ -286,7 +286,7 @@ describe MiqQueue do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @t1 = Time.parse("Wed Apr 20 00:15:00 UTC 2011")
-      @msg = FactoryGirl.create(:miq_queue, :zone => @zone.name, :role => "role1", :priority => 20, :created_on => @t1)
+      @msg = FactoryBot.create(:miq_queue, :zone => @zone.name, :role => "role1", :priority => 20, :created_on => @t1)
     end
 
     it "should requeue a message with new message id" do
@@ -339,8 +339,8 @@ describe MiqQueue do
     before do
       _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
 
-      @worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
-      @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :task_id => "task123", :handler => @worker)
+      @worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
+      @msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :task_id => "task123", :handler => @worker)
     end
 
     it "should find a message by task id" do
@@ -771,7 +771,7 @@ describe MiqQueue do
     end
 
     it "should not unqueue a message from a different zone" do
-      zone = FactoryGirl.create(:zone)
+      zone = FactoryBot.create(:zone)
       MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -844,7 +844,7 @@ describe MiqQueue do
 
   context "validates that the zone exists in the current region" do
     it "with a matching region" do
-      zone = FactoryGirl.create(:zone)
+      zone = FactoryBot.create(:zone)
       expect(MiqQueue.create!(:state => "ready", :zone => zone.name)).to be_kind_of(MiqQueue)
     end
 

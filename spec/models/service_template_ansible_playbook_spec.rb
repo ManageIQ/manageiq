@@ -1,23 +1,23 @@
 describe ServiceTemplateAnsiblePlaybook do
-  let(:user)     { FactoryGirl.create(:user_with_group) }
-  let(:auth_one) { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '6') }
-  let(:auth_two) { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '10') }
-  let(:auth_three) { FactoryGirl.create(:embedded_ansible_credential, :manager_ref => '14') }
+  let(:user)     { FactoryBot.create(:user_with_group) }
+  let(:auth_one) { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '6') }
+  let(:auth_two) { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '10') }
+  let(:auth_three) { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '14') }
 
-  let(:script_source) { FactoryGirl.create(:configuration_script_source, :manager => ems) }
+  let(:script_source) { FactoryBot.create(:configuration_script_source, :manager => ems) }
 
-  let(:service_template_catalog) { FactoryGirl.create(:service_template_catalog) }
-  let(:provider) { FactoryGirl.create(:provider_embedded_ansible, :default_inventory => 1) }
-  let(:ems)      { FactoryGirl.create(:automation_manager_ansible_tower, :provider => provider) }
+  let(:service_template_catalog) { FactoryBot.create(:service_template_catalog) }
+  let(:provider) { FactoryBot.create(:provider_embedded_ansible, :default_inventory => 1) }
+  let(:ems)      { FactoryBot.create(:automation_manager_ansible_tower, :provider => provider) }
 
   let(:playbook) do
-    FactoryGirl.create(:embedded_playbook,
+    FactoryBot.create(:embedded_playbook,
                        :configuration_script_source => script_source,
                        :manager                     => ems)
   end
 
   let(:job_template) do
-    FactoryGirl.create(:embedded_ansible_configuration_script,
+    FactoryBot.create(:embedded_ansible_configuration_script,
                        :variables => catalog_item_options.fetch_path(:config_info, :provision, :extra_vars),
                        :manager   => ems)
   end
@@ -277,7 +277,7 @@ describe ServiceTemplateAnsiblePlaybook do
   end
 
   describe '#delete_job_templates' do
-    let(:service) { FactoryGirl.create(:service_ansible_tower) }
+    let(:service) { FactoryBot.create(:service_ansible_tower) }
 
     it 'destroys a job template if there is an associated configuration_template' do
       service_template = prebuild_service_template(:job_template => false)

@@ -76,8 +76,8 @@ describe Ansible::Runner do
 
   describe ".run_queue" do
     let(:playbook) { "/path/to/my/playbook" }
-    let(:zone)     { FactoryGirl.create(:zone) }
-    let(:user)     { FactoryGirl.create(:user) }
+    let(:zone)     { FactoryBot.create(:zone) }
+    let(:user)     { FactoryBot.create(:user) }
 
     it "queues Ansible::Runner.run in the right zone" do
       described_class.run_queue(env_vars, extra_vars, playbook, user.name, :zone => zone.name)
@@ -135,8 +135,8 @@ describe Ansible::Runner do
   describe ".run_role_queue" do
     let(:role_name) { "my-custom-role" }
     let(:role_path) { "/path/to/my/roles" }
-    let(:zone)      { FactoryGirl.create(:zone) }
-    let(:user)      { FactoryGirl.create(:user) }
+    let(:zone)      { FactoryBot.create(:zone) }
+    let(:user)      { FactoryBot.create(:user) }
 
     it "queues Ansible::Runner.run in the right zone" do
       described_class.run_role_queue(env_vars, extra_vars, role_name, user.name, {:zone => zone.name}, :roles_path => role_path)

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :chargeable_field do
     metric 'unknown'
     group  'unknown'
@@ -18,7 +18,7 @@ FactoryGirl.define do
     metric      'cpu_usagemhz_rate_average'
     group       'cpu'
     source      'used'
-    detail_measure { FactoryGirl.build(:chargeback_measure_hz) }
+    detail_measure { FactoryBot.build(:chargeback_measure_hz) }
   end
 
   factory :chargeable_field_cpu_allocated, :parent => :chargeable_field do
@@ -33,7 +33,7 @@ FactoryGirl.define do
     metric      'derived_memory_available'
     group       'memory'
     source      'allocated'
-    detail_measure { FactoryGirl.build(:chargeback_measure_bytes) }
+    detail_measure { FactoryBot.build(:chargeback_measure_bytes) }
   end
 
   factory :chargeable_field_storage_allocated, :parent => :chargeable_field do
@@ -41,7 +41,7 @@ FactoryGirl.define do
     metric      'derived_vm_allocated_disk_storage'
     group       'storage'
     source      'allocated'
-    detail_measure { FactoryGirl.build(:chargeback_measure_bytes) }
+    detail_measure { FactoryBot.build(:chargeback_measure_bytes) }
   end
 
   factory :chargeable_field_cpu_cores_used, :parent => :chargeable_field do
@@ -63,7 +63,7 @@ FactoryGirl.define do
     metric      'derived_memory_used'
     group       'memory'
     source      'used'
-    detail_measure { FactoryGirl.build(:chargeback_measure_bytes) }
+    detail_measure { FactoryBot.build(:chargeback_measure_bytes) }
   end
 
   factory :chargeable_field_net_io_used, :parent => :chargeable_field do
@@ -71,7 +71,7 @@ FactoryGirl.define do
     metric      'net_usage_rate_average'
     group       'net_io'
     source      'used'
-    detail_measure { FactoryGirl.build(:chargeback_measure_bps) }
+    detail_measure { FactoryBot.build(:chargeback_measure_bps) }
   end
 
   factory :chargeable_field_disk_io_used, :parent => :chargeable_field do
@@ -79,7 +79,7 @@ FactoryGirl.define do
     metric      'disk_usage_rate_average'
     group       'disk_io'
     source      'used'
-    detail_measure { FactoryGirl.build(:chargeback_measure_bps) }
+    detail_measure { FactoryBot.build(:chargeback_measure_bps) }
   end
 
   factory :chargeable_field_storage_used, :parent => :chargeable_field do
@@ -87,7 +87,7 @@ FactoryGirl.define do
     metric      'derived_vm_used_disk_storage'
     group       'storage'
     source      'used'
-    detail_measure { FactoryGirl.build(:chargeback_measure_bytes) }
+    detail_measure { FactoryBot.build(:chargeback_measure_bytes) }
   end
 
   factory :chargeable_field_metering_used, :parent => :chargeable_field do

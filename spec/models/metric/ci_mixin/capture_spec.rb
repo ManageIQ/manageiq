@@ -8,8 +8,8 @@ describe Metric::CiMixin::Capture do
            :list_meters => OpenstackApiResult.new((mock_meter_list.list_meters("resource_counters") +
                               mock_meter_list.list_meters("metadata_counters"))))
   end
-  let(:ems_openstack) { FactoryGirl.create(:ems_openstack, :zone => zone) }
-  let(:vm) { FactoryGirl.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
+  let(:ems_openstack) { FactoryBot.create(:ems_openstack, :zone => zone) }
+  let(:vm) { FactoryBot.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
 
   # TODO: Don't hack this log stuff. This is difficult right now as some assertions
   # below are actually emitted by the provider. Not worth fixing right now.
@@ -358,7 +358,7 @@ describe Metric::CiMixin::Capture do
 
     it "links supplied miq_task with queued item which allow to initialize MiqTask#started_on attribute" do
       MiqQueue.delete_all
-      task = FactoryGirl.create(:miq_task)
+      task = FactoryBot.create(:miq_task)
       vm.perf_capture_queue("realtime", :task_id => task.id)
       expect(MiqQueue.first.miq_task_id).to eq task.id
     end
@@ -418,13 +418,13 @@ describe Metric::CiMixin::Capture do
 
   context "handles archived container entities" do
     it "get the correct queue name and zone from archived container entities" do
-      ems = FactoryGirl.create(:ems_openshift, :name => 'OpenShiftProvider')
-      group = FactoryGirl.create(:container_group, :name => "group", :ext_management_system => ems)
-      container = FactoryGirl.create(:container,
+      ems = FactoryBot.create(:ems_openshift, :name => 'OpenShiftProvider')
+      group = FactoryBot.create(:container_group, :name => "group", :ext_management_system => ems)
+      container = FactoryBot.create(:container,
                                      :name                  => "container",
                                      :container_group       => group,
                                      :ext_management_system => ems)
-      project = FactoryGirl.create(:container_project,
+      project = FactoryBot.create(:container_project,
                                    :name                  => "project",
                                    :ext_management_system => ems)
       container.disconnect_inv

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :tenant_quota do
     factory :tenant_quota_cpu do
       name :cpu_allocated

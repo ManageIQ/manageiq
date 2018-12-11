@@ -1,9 +1,9 @@
 describe MiqRequestWorkflow do
-  let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
-  let(:ems) { FactoryGirl.create(:ext_management_system) }
-  let(:resource_pool) { FactoryGirl.create(:resource_pool) }
-  let(:ems_folder) { FactoryGirl.create(:ems_folder) }
-  let(:datacenter) { FactoryGirl.create(:ems_folder, :type => "Datacenter") }
+  let(:workflow) { FactoryBot.build(:miq_provision_workflow) }
+  let(:ems) { FactoryBot.create(:ext_management_system) }
+  let(:resource_pool) { FactoryBot.create(:resource_pool) }
+  let(:ems_folder) { FactoryBot.create(:ems_folder) }
+  let(:datacenter) { FactoryBot.create(:ems_folder, :type => "Datacenter") }
 
   context "#validate" do
     let(:dialog) { workflow.instance_variable_get(:@dialogs) }
@@ -218,13 +218,13 @@ describe MiqRequestWorkflow do
   end
 
   context "#allowed_tags" do
-    let!(:managed_classification)   { FactoryGirl.create(:classification) }
-    let!(:no_child_classification)  { FactoryGirl.create(:classification) }
-    let!(:read_only_classification) { FactoryGirl.create(:classification, :read_only => true) }
-    let!(:hidden_classification)    { FactoryGirl.create(:classification, :show => false) }
-    let!(:unmanaged_classification) { FactoryGirl.create(:classification, :ns => "/unmanaged") }
-    let!(:child_classification_1)   { FactoryGirl.create(:classification, :parent => managed_classification) }
-    let!(:child_classification_2)   { FactoryGirl.create(:classification, :parent => unmanaged_classification) }
+    let!(:managed_classification)   { FactoryBot.create(:classification) }
+    let!(:no_child_classification)  { FactoryBot.create(:classification) }
+    let!(:read_only_classification) { FactoryBot.create(:classification, :read_only => true) }
+    let!(:hidden_classification)    { FactoryBot.create(:classification, :show => false) }
+    let!(:unmanaged_classification) { FactoryBot.create(:classification, :ns => "/unmanaged") }
+    let!(:child_classification_1)   { FactoryBot.create(:classification, :parent => managed_classification) }
+    let!(:child_classification_2)   { FactoryBot.create(:classification, :parent => unmanaged_classification) }
 
     it "includes all managed tags" do
       allowed_tag_ids = workflow.allowed_tags.map { |c| c[:id] }
@@ -241,10 +241,10 @@ describe MiqRequestWorkflow do
   end
 
   context "'allowed_*' methods" do
-    let(:cluster)       { FactoryGirl.create(:ems_cluster, :ems_id => ems.id) }
-    let(:ems)           { FactoryGirl.create(:ext_management_system) }
-    let(:resource_pool) { FactoryGirl.create(:resource_pool, :ems_id => ems.id) }
-    let(:host)          { FactoryGirl.create(:host, :ems_id => ems.id) }
+    let(:cluster)       { FactoryBot.create(:ems_cluster, :ems_id => ems.id) }
+    let(:ems)           { FactoryBot.create(:ext_management_system) }
+    let(:resource_pool) { FactoryBot.create(:resource_pool, :ems_id => ems.id) }
+    let(:host)          { FactoryBot.create(:host, :ems_id => ems.id) }
 
     before { allow_any_instance_of(User).to receive(:get_timezone).and_return("UTC") }
 
@@ -259,7 +259,7 @@ describe MiqRequestWorkflow do
       end
 
       it "with valid sources" do
-        FactoryGirl.create(:ems_cluster)
+        FactoryBot.create(:ems_cluster)
         allow(workflow).to receive(:get_source_and_targets).and_return(:ems => ems)
 
         expect(workflow).to receive(:allowed_ci).with(:cluster, [:respool, :host, :folder], [cluster.id])
@@ -279,7 +279,7 @@ describe MiqRequestWorkflow do
       end
 
       it "with valid sources" do
-        FactoryGirl.create(:resource_pool)
+        FactoryBot.create(:resource_pool)
         allow(workflow).to receive(:get_source_and_targets).and_return(:ems => workflow.ci_to_hash_struct(ems))
 
         expect(workflow).to receive(:allowed_ci).with(:respool, [:cluster, :host, :folder], [resource_pool.id])
@@ -311,17 +311,17 @@ describe MiqRequestWorkflow do
     it("with a nil") { expect(workflow.ci_to_hash_struct(nil)).to be_nil }
 
     context "with collections" do
-      let(:ems) { FactoryGirl.create(:ext_management_system) }
+      let(:ems) { FactoryBot.create(:ext_management_system) }
 
       it "an array" do
-        arr = [FactoryGirl.create(:ems_cluster, :ems_id => ems.id), FactoryGirl.create(:ems_cluster, :ems_id => ems.id)]
+        arr = [FactoryBot.create(:ems_cluster, :ems_id => ems.id), FactoryBot.create(:ems_cluster, :ems_id => ems.id)]
 
         expect(workflow.ci_to_hash_struct(arr).length).to eq(2)
       end
 
       it "an ActiveRecord CollectionProxy" do
-        FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
-        FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
+        FactoryBot.create(:ems_cluster, :ems_id => ems.id)
+        FactoryBot.create(:ems_cluster, :ems_id => ems.id)
 
         expect(ems.clusters).to be_kind_of(ActiveRecord::Associations::CollectionProxy)
         expect(workflow.ci_to_hash_struct(ems.clusters).length).to eq(2)
@@ -329,7 +329,7 @@ describe MiqRequestWorkflow do
     end
 
     it "with an instance of a class that has a special format" do
-      hs = workflow.ci_to_hash_struct(FactoryGirl.create(:vm_or_template))
+      hs = workflow.ci_to_hash_struct(FactoryBot.create(:vm_or_template))
 
       expect(hs.id).to               be_kind_of(Integer)
       expect(hs.evm_object_class).to eq(:VmOrTemplate)
@@ -339,7 +339,7 @@ describe MiqRequestWorkflow do
     end
 
     it "with a regular class" do
-      hs = workflow.ci_to_hash_struct(FactoryGirl.create(:configured_system))
+      hs = workflow.ci_to_hash_struct(FactoryBot.create(:configured_system))
 
       expect(hs.id).to               be_kind_of(Integer)
       expect(hs.evm_object_class).to eq(:ConfiguredSystem)
@@ -349,7 +349,7 @@ describe MiqRequestWorkflow do
 
   context "#ems_folder_to_hash_struct" do
     it 'contains hidden column' do
-      hs = workflow.ems_folder_to_hash_struct(FactoryGirl.create(:ems_folder, :name => 'vm', :hidden => true))
+      hs = workflow.ems_folder_to_hash_struct(FactoryBot.create(:ems_folder, :name => 'vm', :hidden => true))
 
       expect(hs.id).to               be_kind_of(Integer)
       expect(hs.evm_object_class).to eq(:EmsFolder)
@@ -426,7 +426,7 @@ describe MiqRequestWorkflow do
     end
 
     it "sets owner group" do
-      owner = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
+      owner = FactoryBot.create(:user_with_email, :miq_groups => [FactoryBot.create(:miq_group)])
       values = {:owner_email => owner.email}
       request = workflow.make_request(nil, values)
       expect(request.options[:owner_email]).to eq(owner.email)
@@ -439,7 +439,7 @@ describe MiqRequestWorkflow do
       workflow.set_request_values(values)
     end
     let(:values) { {:owner_email => owner.email} }
-    let(:owner)  { FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)]) }
+    let(:owner)  { FactoryBot.create(:user_with_email, :miq_groups => [FactoryBot.create(:miq_group)]) }
 
     it 'sets owner_group and requester_group' do
       expect(values[:owner_group]).to eq(owner.current_group.description)
@@ -448,9 +448,9 @@ describe MiqRequestWorkflow do
 
     it 'does not reset owner_group and requester_group on a second run' do
       old_requester = workflow.requester
-      new_requester = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
+      new_requester = FactoryBot.create(:user_with_email, :miq_groups => [FactoryBot.create(:miq_group)])
       workflow.requester = new_requester
-      new_owner = FactoryGirl.create(:user_with_email, :miq_groups => [FactoryGirl.create(:miq_group)])
+      new_owner = FactoryBot.create(:user_with_email, :miq_groups => [FactoryBot.create(:miq_group)])
 
       values[:owner_email] = new_owner.email
       workflow.set_request_values(values)
@@ -622,12 +622,12 @@ describe MiqRequestWorkflow do
   end
 
   context "#storage_to_hash_struct" do
-    let(:storage) { FactoryGirl.create(:storage) }
+    let(:storage) { FactoryBot.create(:storage) }
 
     it 'filters out storage_clusters not in same ems' do
       allow(workflow).to receive(:get_source_and_targets).and_return(:ems => MiqHashStruct.new(:id => ems.id))
-      storage_cluster1 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1', :ems_id => ems.id)
-      storage_cluster2 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster2', :ems_id => ems.id + 1)
+      storage_cluster1 = FactoryBot.create(:storage_cluster, :name => 'test_storage_cluster1', :ems_id => ems.id)
+      storage_cluster2 = FactoryBot.create(:storage_cluster, :name => 'test_storage_cluster2', :ems_id => ems.id + 1)
       storage_cluster1.add_child(storage)
       storage_cluster2.add_child(storage)
       clusters = workflow.storage_to_hash_struct(storage).storage_clusters.split(', ')

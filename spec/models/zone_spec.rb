@@ -3,10 +3,10 @@ describe Zone do
 
   context "with two small envs" do
     before do
-      @zone1 = FactoryGirl.create(:small_environment)
+      @zone1 = FactoryBot.create(:small_environment)
       @host1 = @zone1.ext_management_systems.first.hosts.first
       @zone1.reload
-      @zone2 = FactoryGirl.create(:small_environment)
+      @zone2 = FactoryBot.create(:small_environment)
       @host2 = @zone2.ext_management_systems.first.hosts.first
       @zone2.reload
     end
@@ -43,9 +43,9 @@ describe Zone do
 
     it "returns the set of ems_clouds" do
       ems_clouds = []
-      2.times { ems_clouds << FactoryGirl.create(:ems_openstack, :zone => @zone) }
-      2.times { ems_clouds << FactoryGirl.create(:ems_amazon, :zone => @zone) }
-      ems_infra = FactoryGirl.create(:ems_vmware, :zone => @zone)
+      2.times { ems_clouds << FactoryBot.create(:ems_openstack, :zone => @zone) }
+      2.times { ems_clouds << FactoryBot.create(:ems_amazon, :zone => @zone) }
+      ems_infra = FactoryBot.create(:ems_vmware, :zone => @zone)
 
       zone_clouds = @zone.ems_clouds
       expect(zone_clouds).to match_array(ems_clouds)
@@ -54,20 +54,20 @@ describe Zone do
     end
 
     it "returns the set of availability_zones" do
-      openstack = FactoryGirl.create(:ems_openstack, :zone => @zone)
+      openstack = FactoryBot.create(:ems_openstack, :zone => @zone)
       azs = []
-      3.times { azs << FactoryGirl.create(:availability_zone, :ems_id => openstack.id) }
+      3.times { azs << FactoryBot.create(:availability_zone, :ems_id => openstack.id) }
 
       expect(@zone.availability_zones).to match_array(azs)
     end
   end
 
   describe "#clustered_hosts" do
-    let(:zone) { FactoryGirl.create(:zone) }
-    let(:ems) { FactoryGirl.create(:ems_vmware, :zone => zone) }
-    let(:cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems)}
-    let(:host_with_cluster) { FactoryGirl.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
-    let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
+    let(:zone) { FactoryBot.create(:zone) }
+    let(:ems) { FactoryBot.create(:ems_vmware, :zone => zone) }
+    let(:cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems)}
+    let(:host_with_cluster) { FactoryBot.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
+    let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
 
     it "returns clustered hosts" do
       host
@@ -78,11 +78,11 @@ describe Zone do
   end
 
   describe "#non_clustered_hosts" do
-    let(:zone) { FactoryGirl.create(:zone) }
-    let(:ems) { FactoryGirl.create(:ems_vmware, :zone => zone) }
-    let(:cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems)}
-    let(:host_with_cluster) { FactoryGirl.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
-    let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
+    let(:zone) { FactoryBot.create(:zone) }
+    let(:ems) { FactoryBot.create(:ems_vmware, :zone => zone) }
+    let(:cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems)}
+    let(:host_with_cluster) { FactoryBot.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
+    let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
 
     it "returns clustered hosts" do
       host
@@ -162,7 +162,7 @@ describe Zone do
       end
 
       it "server when enabled" do
-        server = FactoryGirl.create(:miq_server, :has_active_cockpit_ws => true, :zone => @zone)
+        server = FactoryBot.create(:miq_server, :has_active_cockpit_ws => true, :zone => @zone)
         server.assign_role('cockpit_ws', 1)
         server.activate_roles('cockpit_ws')
         expect(@zone.remote_cockpit_ws_miq_server).to eq(server)
@@ -174,9 +174,9 @@ describe Zone do
     it "queues a ntp reload for all active servers in the zone" do
       expect(MiqEnvironment::Command).to receive(:is_appliance?).and_return(true)
       expect(MiqEnvironment::Command).to receive(:is_container?).and_return(false)
-      zone     = FactoryGirl.create(:zone)
-      server_1 = FactoryGirl.create(:miq_server, :zone => zone)
-      FactoryGirl.create(:miq_server, :zone => zone, :status => "stopped")
+      zone     = FactoryBot.create(:zone)
+      server_1 = FactoryBot.create(:miq_server, :zone => zone)
+      FactoryBot.create(:miq_server, :zone => zone, :status => "stopped")
 
       zone.ntp_reload_queue
 
@@ -203,8 +203,8 @@ describe Zone do
   end
 
   it "removes queued items on destroy" do
-    zone = FactoryGirl.create(:zone)
-    FactoryGirl.create(:miq_queue, :zone => zone.name)
+    zone = FactoryBot.create(:zone)
+    FactoryBot.create(:miq_queue, :zone => zone.name)
     expect(MiqQueue.where(:zone => zone.name).count).to eq(1)
     zone.destroy!
     expect(MiqQueue.where(:zone => zone.name).count).to eq(0)

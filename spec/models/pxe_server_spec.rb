@@ -1,7 +1,7 @@
 describe PxeServer do
   before do
     EvmSpecHelper.local_miq_server
-    @pxe_server = FactoryGirl.create(:pxe_server, :uri_prefix => "nfs", :uri => "nfs:///#{@mnt_point}")
+    @pxe_server = FactoryBot.create(:pxe_server, :uri_prefix => "nfs", :uri => "nfs:///#{@mnt_point}")
   end
 
   context "#sync_images_queue" do
@@ -86,9 +86,9 @@ describe PxeServer do
 
       it "with existing data" do
         @pxe_server.pxe_images = [
-          FactoryGirl.create(:pxe_image_pxelinux, :path => "XXX",     :name => "XXX"),
-          FactoryGirl.create(:pxe_image_pxelinux, :path => "default", :name => "XXX"),
-          FactoryGirl.create(:pxe_image_pxelinux, :path => "default", :name => "iPXE", :kernel => "XXX"),
+          FactoryBot.create(:pxe_image_pxelinux, :path => "XXX",     :name => "XXX"),
+          FactoryBot.create(:pxe_image_pxelinux, :path => "default", :name => "XXX"),
+          FactoryBot.create(:pxe_image_pxelinux, :path => "default", :name => "iPXE", :kernel => "XXX"),
         ]
 
         @pxe_server.sync_images
@@ -132,7 +132,7 @@ PXE
         image = @pxe_server.pxe_images.find_by(:name => "Ubuntu-10.10-Desktop-i386-LIVE_BOOT")
 
         ks_contents = "FOO"
-        kickstart = FactoryGirl.create(:customization_template_kickstart, :script => ks_contents)
+        kickstart = FactoryBot.create(:customization_template_kickstart, :script => ks_contents)
 
         expected_contents = <<-PXE
 timeout 0
@@ -218,9 +218,9 @@ PXE
 
       it "with existing images" do
         @pxe_server.pxe_images = [
-          FactoryGirl.create(:pxe_image_ipxe, :path => "XXX",               :name => "XXX"),
-          FactoryGirl.create(:pxe_image_ipxe, :path => "00-50-56-91-79-d5", :name => "XXX"),
-          FactoryGirl.create(:pxe_image_ipxe, :path => "00-50-56-91-79-d5", :name => "00-50-56-91-79-d5", :kernel => "XXX")
+          FactoryBot.create(:pxe_image_ipxe, :path => "XXX",               :name => "XXX"),
+          FactoryBot.create(:pxe_image_ipxe, :path => "00-50-56-91-79-d5", :name => "XXX"),
+          FactoryBot.create(:pxe_image_ipxe, :path => "00-50-56-91-79-d5", :name => "00-50-56-91-79-d5", :kernel => "XXX")
         ]
 
         @pxe_server.sync_images
@@ -230,7 +230,7 @@ PXE
 
     context "#create_provisioning_files" do
       it "without kickstart" do
-        image = FactoryGirl.create(:pxe_image_ipxe,
+        image = FactoryBot.create(:pxe_image_ipxe,
                                    :pxe_server     => @pxe_server,
                                    :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
                                    :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
@@ -260,7 +260,7 @@ PXE
         expected_name = @pxe_server.test_full_path_to("#{@pxe_server.pxe_directory}/#{dashed_mac_address}")
         expected_ks_name = "#{expected_name}.ks.cfg"
 
-        image = FactoryGirl.create(:pxe_image_ipxe,
+        image = FactoryBot.create(:pxe_image_ipxe,
                                    :pxe_server     => @pxe_server,
                                    :kernel         => "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz",
                                    :kernel_options => "ramdisk_size=10000 ksdevice=00:50:56:91:79:d5",
@@ -268,7 +268,7 @@ PXE
                                   )
 
         ks_contents = "FOO"
-        kickstart = FactoryGirl.create(:customization_template_kickstart, :script => ks_contents)
+        kickstart = FactoryBot.create(:customization_template_kickstart, :script => ks_contents)
 
         expected_contents = <<-PXE
 #!ipxe
@@ -293,9 +293,9 @@ PXE
 
   context "with pxe images" do
     before do
-      pxe_menu          = FactoryGirl.create(:pxe_menu,  :pxe_server => @pxe_server)
-      @advertised_image = FactoryGirl.create(:pxe_image, :pxe_server => @pxe_server, :pxe_menu => pxe_menu)
-      @discovered_image = FactoryGirl.create(:pxe_image, :pxe_server => @pxe_server)
+      pxe_menu          = FactoryBot.create(:pxe_menu,  :pxe_server => @pxe_server)
+      @advertised_image = FactoryBot.create(:pxe_image, :pxe_server => @pxe_server, :pxe_menu => pxe_menu)
+      @discovered_image = FactoryBot.create(:pxe_image, :pxe_server => @pxe_server)
     end
 
     it "#pxe_images" do

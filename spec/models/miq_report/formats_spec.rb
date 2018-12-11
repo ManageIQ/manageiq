@@ -19,7 +19,7 @@ describe MiqReport::Formats do
 
   describe '.default_format_for_path' do
     context 'for chargebacks' do
-      let!(:cloud_volume) { FactoryGirl.create(:cloud_volume_openstack) }
+      let!(:cloud_volume) { FactoryBot.create(:cloud_volume_openstack) }
 
       before do
         ChargebackVm.refresh_dynamic_metric_columns

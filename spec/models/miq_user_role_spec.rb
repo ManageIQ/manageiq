@@ -18,8 +18,8 @@ describe MiqUserRole do
     it "with existing records" do
       # administrator is a role that we know is provide with the product
       # this is not testing administrator privileges
-      changed   = FactoryGirl.create(:miq_user_role, :name => "EvmRole-administrator", :read_only => false)
-      unchanged = FactoryGirl.create(:miq_user_role, :name => "xxx", :read_only => false)
+      changed   = FactoryBot.create(:miq_user_role, :name => "EvmRole-administrator", :read_only => false)
+      unchanged = FactoryBot.create(:miq_user_role, :name => "xxx", :read_only => false)
       unchanged_orig_updated_at = unchanged.updated_at
 
       MiqUserRole.seed
@@ -57,19 +57,19 @@ describe MiqUserRole do
       ))
 
       feature1 = MiqProductFeature.find_all_by_identifier("dashboard_admin")
-      @role1   = FactoryGirl.create(:miq_user_role, :name => "Role1", :miq_product_features => feature1)
-      @group1  = FactoryGirl.create(:miq_group, :description => "Group1", :miq_user_role => @role1)
-      @user1   = FactoryGirl.create(:user, :userid => "user1", :miq_groups => [@group1])
+      @role1   = FactoryBot.create(:miq_user_role, :name => "Role1", :miq_product_features => feature1)
+      @group1  = FactoryBot.create(:miq_group, :description => "Group1", :miq_user_role => @role1)
+      @user1   = FactoryBot.create(:user, :userid => "user1", :miq_groups => [@group1])
 
       feature2 = MiqProductFeature.find_all_by_identifier("everything")
-      @role2   = FactoryGirl.create(:miq_user_role, :name => "Role2", :miq_product_features => feature2)
-      @group2  = FactoryGirl.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
-      @user2   = FactoryGirl.create(:user, :userid => "user2", :miq_groups => [@group2])
+      @role2   = FactoryBot.create(:miq_user_role, :name => "Role2", :miq_product_features => feature2)
+      @group2  = FactoryBot.create(:miq_group, :description => "Group2", :miq_user_role => @role2)
+      @user2   = FactoryBot.create(:user, :userid => "user2", :miq_groups => [@group2])
 
       feature3 = MiqProductFeature.find_all_by_identifier(%w(host_show_list host_scan host_edit))
-      @role3   = FactoryGirl.create(:miq_user_role, :name => "Role3", :miq_product_features => feature3)
-      @group3  = FactoryGirl.create(:miq_group, :description => "Group3", :miq_user_role => @role3)
-      @user3   = FactoryGirl.create(:user, :userid => "user3", :miq_groups => [@group3])
+      @role3   = FactoryBot.create(:miq_user_role, :name => "Role3", :miq_product_features => feature3)
+      @group3  = FactoryBot.create(:miq_group, :description => "Group3", :miq_user_role => @role3)
+      @user3   = FactoryBot.create(:user, :userid => "user3", :miq_groups => [@group3])
     end
 
     context "dynamic tenant product features" do
@@ -78,19 +78,19 @@ describe MiqUserRole do
         Tenant.default_tenant
       end
 
-      let!(:tenant_1) { FactoryGirl.create(:tenant, :parent => root_tenant) }
-      let!(:tenant_2) { FactoryGirl.create(:tenant, :parent => root_tenant) }
+      let!(:tenant_1) { FactoryBot.create(:tenant, :parent => root_tenant) }
+      let!(:tenant_2) { FactoryBot.create(:tenant, :parent => root_tenant) }
 
       let(:feature)             { MiqProductFeature.find_all_by_identifier(["dialog_edit_editor_tenant_#{tenant_2.id}", "rbac_tenant_manage_quotas_tenant_#{tenant_2.id}"]) }
       let(:non_dynamic_feature) { MiqProductFeature.find_all_by_identifier(["dialog_edit_editor", "rbac_tenant_manage_quotas"]) }
-      let(:role)            { FactoryGirl.create(:miq_user_role, :miq_product_features => feature) }
-      let(:role_no_dynamic) { FactoryGirl.create(:miq_user_role, :miq_product_features => non_dynamic_feature) }
-      let(:group_tenant_1) { FactoryGirl.create(:miq_group, :miq_user_role => role, :tenant => tenant_1) }
-      let(:group_tenant_2) { FactoryGirl.create(:miq_group, :miq_user_role => role, :tenant => tenant_2) }
-      let(:group_3)        { FactoryGirl.create(:miq_group, :miq_user_role => role_no_dynamic, :tenant => tenant_2) }
-      let!(:user_1) { FactoryGirl.create(:user, :userid => "user_1", :miq_groups => [group_tenant_1]) }
-      let!(:user_2) { FactoryGirl.create(:user, :userid => "user_2", :miq_groups => [group_tenant_2]) }
-      let!(:user_3) { FactoryGirl.create(:user, :userid => "user_3", :miq_groups => [group_3]) }
+      let(:role)            { FactoryBot.create(:miq_user_role, :miq_product_features => feature) }
+      let(:role_no_dynamic) { FactoryBot.create(:miq_user_role, :miq_product_features => non_dynamic_feature) }
+      let(:group_tenant_1) { FactoryBot.create(:miq_group, :miq_user_role => role, :tenant => tenant_1) }
+      let(:group_tenant_2) { FactoryBot.create(:miq_group, :miq_user_role => role, :tenant => tenant_2) }
+      let(:group_3)        { FactoryBot.create(:miq_group, :miq_user_role => role_no_dynamic, :tenant => tenant_2) }
+      let!(:user_1) { FactoryBot.create(:user, :userid => "user_1", :miq_groups => [group_tenant_1]) }
+      let!(:user_2) { FactoryBot.create(:user, :userid => "user_2", :miq_groups => [group_tenant_2]) }
+      let!(:user_3) { FactoryBot.create(:user, :userid => "user_3", :miq_groups => [group_3]) }
 
       it "doesn't authorize user without dynamic product feature" do
         User.with_user(user_1) do
@@ -138,19 +138,19 @@ describe MiqUserRole do
   describe "#allow?" do
     it "allows everything" do
       EvmSpecHelper.seed_specific_product_features(%w(everything miq_report))
-      user = FactoryGirl.create(:user, :features => "everything")
+      user = FactoryBot.create(:user, :features => "everything")
       expect(user.role_allows?(:identifier => "miq_report")).to be_truthy
     end
 
     it "dissallows unentitled" do
       EvmSpecHelper.seed_specific_product_features(%w(miq_report container_dashboard))
-      user = FactoryGirl.create(:user, :features => "container_dashboard")
+      user = FactoryBot.create(:user, :features => "container_dashboard")
       expect(user.role_allows?(:identifier => "miq_report")).to be_falsey
     end
 
     it "allows entitled" do
       EvmSpecHelper.seed_specific_product_features(%w(miq_report))
-      user = FactoryGirl.create(:user, :features => "miq_report")
+      user = FactoryBot.create(:user, :features => "miq_report")
       expect(user.role_allows?(:identifier => "miq_report")).to be_truthy
     end
 
@@ -160,13 +160,13 @@ describe MiqUserRole do
 
     it "disallows hidden child with not-entitled parent" do
       EvmSpecHelper.seed_specific_product_features(%w(miq_report_view render_report_csv container_dashboard))
-      user = FactoryGirl.create(:user, :features => "container_dashboard")
+      user = FactoryBot.create(:user, :features => "container_dashboard")
       expect(user.role_allows?(:identifier => "render_report_csv")).to be_falsey
     end
 
     it "allows hidden child with entitled parent" do
       EvmSpecHelper.seed_specific_product_features(%w(miq_report_view render_report_csv))
-      user = FactoryGirl.create(:user, :features => "miq_report_view")
+      user = FactoryBot.create(:user, :features => "miq_report_view")
       expect(user.role_allows?(:identifier => "render_report_csv")).to be_truthy
     end
 
@@ -180,7 +180,7 @@ describe MiqUserRole do
       EvmSpecHelper.seed_specific_product_features(
         %w(miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
       )
-      user = FactoryGirl.create(:user, :features => "widget_edit")
+      user = FactoryBot.create(:user, :features => "widget_edit")
       expect(user.role_allows?(:identifier => "widget_refresh")).to be_truthy
     end
 
@@ -188,7 +188,7 @@ describe MiqUserRole do
       EvmSpecHelper.seed_specific_product_features(
         %w(miq_report_widget_admin widget_refresh widget_edit widget_copy container_dashboard)
       )
-      user = FactoryGirl.create(:user, :features => "container_dashboard")
+      user = FactoryBot.create(:user, :features => "container_dashboard")
       expect(user.role_allows?(:identifier => "widget_refresh")).to be_falsey
     end
 
@@ -199,30 +199,30 @@ describe MiqUserRole do
       EvmSpecHelper.seed_specific_product_features(
         %w(policy_profile_admin profile_new container_dashboard)
       )
-      user = FactoryGirl.create(:user, :features => "container_dashboard")
+      user = FactoryBot.create(:user, :features => "container_dashboard")
       expect(user.role_allows?(:identifier => "profile_new")).to be_truthy
     end
   end
 
   it "deletes with no group assigned" do
-    role = FactoryGirl.create(:miq_user_role, :name => "test role")
+    role = FactoryBot.create(:miq_user_role, :name => "test role")
     role.destroy
     expect(MiqUserRole.count).to eq(0)
   end
 
   it "does not delete with group assigned" do
-    role = FactoryGirl.create(:miq_user_role, :name => "test role")
-    FactoryGirl.create(:miq_group, :description => "test group", :miq_user_role => role)
+    role = FactoryBot.create(:miq_user_role, :name => "test role")
+    FactoryBot.create(:miq_group, :description => "test group", :miq_user_role => role)
 
     expect { role.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError)
     expect(MiqUserRole.count).to eq(1)
   end
 
-  let(:super_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::SUPER_ADMIN_FEATURE) }
-  let(:tenant_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::TENANT_ADMIN_FEATURE) }
-  let(:report_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REPORT_ADMIN_FEATURE) }
-  let(:request_admin_role) { FactoryGirl.create(:miq_user_role, :features => MiqProductFeature::REQUEST_ADMIN_FEATURE) }
-  let(:regular_role) { FactoryGirl.create(:miq_user_role) }
+  let(:super_admin_role) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::SUPER_ADMIN_FEATURE) }
+  let(:tenant_admin_role) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::TENANT_ADMIN_FEATURE) }
+  let(:report_admin_role) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::REPORT_ADMIN_FEATURE) }
+  let(:request_admin_role) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::REQUEST_ADMIN_FEATURE) }
+  let(:regular_role) { FactoryBot.create(:miq_user_role) }
 
   describe "#super_admin_user?" do
     it "detects super admin" do
@@ -268,7 +268,7 @@ describe MiqUserRole do
 
   describe "#destroy" do
     subject { miq_group.entitlement.miq_user_role }
-    let!(:miq_group) { FactoryGirl.create(:miq_group, :role => "EvmRole-administrator") }
+    let!(:miq_group) { FactoryBot.create(:miq_group, :role => "EvmRole-administrator") }
 
     context "when the role has any entitlements" do
       it "does not allow the role to be deleted" do
@@ -295,22 +295,22 @@ describe MiqUserRole do
 
   describe "#group_count" do
     it "counts none in ruby" do
-      role = FactoryGirl.create(:miq_user_role)
+      role = FactoryBot.create(:miq_user_role)
       expect(role.group_count).to eq(0)
     end
 
     it "counts some in ruby" do
-      role = FactoryGirl.create(:miq_user_role)
-      FactoryGirl.create_list(:miq_group, 2, :miq_user_role => role)
+      role = FactoryBot.create(:miq_user_role)
+      FactoryBot.create_list(:miq_group, 2, :miq_user_role => role)
       expect(role.group_count).to eq(2)
     end
   end
 
   describe ".with_roles_excluding" do
     it "handles multiple columns" do
-      a = FactoryGirl.create(:miq_user_role, :features => "good")
-      FactoryGirl.create(:miq_user_role, :features => %w(good everything))
-      FactoryGirl.create(:miq_user_role, :features => "everything")
+      a = FactoryBot.create(:miq_user_role, :features => "good")
+      FactoryBot.create(:miq_user_role, :features => %w(good everything))
+      FactoryBot.create(:miq_user_role, :features => "everything")
 
       expect(MiqUserRole.select(:id, :name).with_roles_excluding("everything")).to match_array([a])
     end

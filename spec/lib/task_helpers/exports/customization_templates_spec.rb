@@ -42,21 +42,21 @@ describe TaskHelpers::Exports::CustomizationTemplates do
   end
 
   before do
-    pit1 = FactoryGirl.create(:pxe_image_type,
+    pit1 = FactoryBot.create(:pxe_image_type,
                               :name => image_type_name1)
 
-    pit2 = FactoryGirl.create(:pxe_image_type,
+    pit2 = FactoryBot.create(:pxe_image_type,
                               :name           => image_type_name2,
                               :provision_type => provision_type2)
 
-    FactoryGirl.create(:customization_template,
+    FactoryBot.create(:customization_template,
                        :name           => template_name,
                        :type           => template_type,
                        :description    => template_desc,
                        :script         => template_script,
                        :pxe_image_type => pit1)
 
-    FactoryGirl.create(:customization_template,
+    FactoryBot.create(:customization_template,
                        :name           => template_name,
                        :type           => template_type,
                        :description    => template_desc,

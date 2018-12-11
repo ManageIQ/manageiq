@@ -10,11 +10,11 @@ describe RssFeed do
       RssFeed.sync_from_yml_file("newest_vms")
     end
 
-    let(:owner_tenant)    { FactoryGirl.create(:tenant) }
-    let(:owner_group)     { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
-    let(:owner_user)      { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
-    let!(:owned_vm)       { FactoryGirl.create(:vm_vmware, :tenant => owner_tenant) }
-    let!(:tenant_root_vm) { FactoryGirl.create(:vm_vmware, :tenant => Tenant.root_tenant) }
+    let(:owner_tenant)    { FactoryBot.create(:tenant) }
+    let(:owner_group)     { FactoryBot.create(:miq_group, :tenant => owner_tenant) }
+    let(:owner_user)      { FactoryBot.create(:user, :miq_groups => [owner_group]) }
+    let!(:owned_vm)       { FactoryBot.create(:vm_vmware, :tenant => owner_tenant) }
+    let!(:tenant_root_vm) { FactoryBot.create(:vm_vmware, :tenant => Tenant.root_tenant) }
     let(:rss_feed)        { RssFeed.find_by(:name => "newest_vms") }
 
     it "#generate 1 vms with owner_tenant tenant in newest_vms rss" do
@@ -48,8 +48,8 @@ describe RssFeed do
 
   context "with 2 hosts" do
     before do
-      @host1 = FactoryGirl.create(:host,           :created_on => Time.utc(2013, 1, 1, 0, 0, 0))
-      @host2 = FactoryGirl.create(:host_microsoft, :created_on => @host1.created_on + 1.second)
+      @host1 = FactoryBot.create(:host,           :created_on => Time.utc(2013, 1, 1, 0, 0, 0))
+      @host2 = FactoryBot.create(:host_microsoft, :created_on => @host1.created_on + 1.second)
     end
 
     it "#generate 2 hosts in newest_hosts rss" do

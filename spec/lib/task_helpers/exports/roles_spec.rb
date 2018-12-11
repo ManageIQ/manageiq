@@ -18,8 +18,8 @@ describe TaskHelpers::Exports::Roles do
   end
 
   before do
-    FactoryGirl.create(:miq_user_role, :name => "Test Role", :features => "about")
-    FactoryGirl.create(:miq_user_role, :role => "super_administrator")
+    FactoryBot.create(:miq_user_role, :name => "Test Role", :features => "about")
+    FactoryBot.create(:miq_user_role, :role => "super_administrator")
   end
 
   after do

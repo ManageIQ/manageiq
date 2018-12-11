@@ -1,15 +1,15 @@
 describe MiqReport::Generator do
   before do
     EvmSpecHelper.local_miq_server
-    @user = FactoryGirl.create(:user_with_group)
-    @time_profile_all = FactoryGirl.create(:time_profile_with_rollup, :tz => "UTC")
-    @host1 = FactoryGirl.create(:host)
+    @user = FactoryBot.create(:user_with_group)
+    @time_profile_all = FactoryBot.create(:time_profile_with_rollup, :tz => "UTC")
+    @host1 = FactoryBot.create(:host)
   end
 
   describe "#generate" do
     context "Memory Utilization Trends report (daily)" do
       before do
-        @miq_report_profile_all = FactoryGirl.create(
+        @miq_report_profile_all = FactoryBot.create(
           :miq_report,
           :db              => "VimPerformanceTrend",
           :order           => "Ascending",
@@ -27,7 +27,7 @@ describe MiqReport::Generator do
 
       it "returns one row for each host" do
         used_mem_up = [400, 500, 600, 700]
-        @host2 = FactoryGirl.create(:host)
+        @host2 = FactoryBot.create(:host)
         create_rollup(@host1, @time_profile_all, used_mem_up)
         create_rollup(@host2, @time_profile_all, used_mem_up)
         @miq_report_profile_all.generate_table(:userid => @user.userid)
@@ -67,7 +67,7 @@ describe MiqReport::Generator do
     def create_rollup(host, profile, used_mem)
       day_midnight = Time.zone.yesterday.beginning_of_day - used_mem.size.days
       used_mem.size.times do |i|
-        host.metric_rollups << FactoryGirl.create(:metric_rollup_host_daily,
+        host.metric_rollups << FactoryBot.create(:metric_rollup_host_daily,
                                                   :timestamp                => day_midnight + i.day,
                                                   :time_profile_id          => profile.id,
                                                   :derived_memory_used      => used_mem[i],

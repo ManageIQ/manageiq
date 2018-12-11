@@ -116,16 +116,16 @@ describe AggregationMixin do
 
   def cluster_2_1_host(hardware_args)
     hosts = Array.new(2) do
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, hardware_args))
-    end + [FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware))]
-    FactoryGirl.create(:ems_cluster, :hosts => hosts)
+      FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, hardware_args))
+    end + [FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware))]
+    FactoryBot.create(:ems_cluster, :hosts => hosts)
   end
 
   def cluster_3_1_vm(hardware_args)
     vms = Array.new(3) do
-      FactoryGirl.create(:vm, :hardware => FactoryGirl.create(:hardware, hardware_args))
-    end + [FactoryGirl.create(:vm, :hardware => FactoryGirl.create(:hardware))]
+      FactoryBot.create(:vm, :hardware => FactoryBot.create(:hardware, hardware_args))
+    end + [FactoryBot.create(:vm, :hardware => FactoryBot.create(:hardware))]
 
-    FactoryGirl.create(:ems_cluster, :vms => vms)
+    FactoryBot.create(:ems_cluster, :vms => vms)
   end
 end

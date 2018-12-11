@@ -1,13 +1,13 @@
 describe ServiceTemplateTransformationPlanRequest do
-  let(:vms) { Array.new(3) { FactoryGirl.create(:vm_or_template) } }
+  let(:vms) { Array.new(3) { FactoryBot.create(:vm_or_template) } }
   let(:vm_requests) do
     [ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_FAILED, ServiceResource::STATUS_APPROVED].zip(vms).collect do |status, vm|
       ServiceResource.new(:resource => vm, :status => status)
     end
   end
 
-  let(:plan) { FactoryGirl.create(:service_template_transformation_plan, :service_resources => vm_requests) }
-  let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
+  let(:plan) { FactoryBot.create(:service_template_transformation_plan, :service_resources => vm_requests) }
+  let(:request) { FactoryBot.create(:service_template_transformation_plan_request, :source => plan) }
 
   describe '#requested_task_idx' do
     it 'selects approved vm requests' do
@@ -31,12 +31,12 @@ describe ServiceTemplateTransformationPlanRequest do
 
   describe '#validate_conversion_hosts' do
     context 'no conversion host exists in EMS' do
-      let(:dst_ems) { FactoryGirl.create(:ext_management_system) }
-      let(:src_cluster) { FactoryGirl.create(:ems_cluster) }
-      let(:dst_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => dst_ems) }
+      let(:dst_ems) { FactoryBot.create(:ext_management_system) }
+      let(:src_cluster) { FactoryBot.create(:ems_cluster) }
+      let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
 
       let(:mapping) do
-        FactoryGirl.create(
+        FactoryBot.create(
           :transformation_mapping,
           :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
         )
@@ -57,22 +57,22 @@ describe ServiceTemplateTransformationPlanRequest do
       end
 
       let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
-      let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
+      let(:request) { FactoryBot.create(:service_template_transformation_plan_request, :source => plan) }
 
       it 'returns false' do
-        host = FactoryGirl.create(:host, :ext_management_system => FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone)))
-        conversion_host = FactoryGirl.create(:conversion_host, :resource => host)
+        host = FactoryBot.create(:host, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone)))
+        conversion_host = FactoryBot.create(:conversion_host, :resource => host)
         expect(request.validate_conversion_hosts).to be false
       end
     end
 
     context 'conversion host exists in EMS and resource is a Host' do
-      let(:dst_ems) { FactoryGirl.create(:ems_redhat) }
-      let(:src_cluster) { FactoryGirl.create(:ems_cluster) }
-      let(:dst_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => dst_ems) }
+      let(:dst_ems) { FactoryBot.create(:ems_redhat) }
+      let(:src_cluster) { FactoryBot.create(:ems_cluster) }
+      let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
 
       let(:mapping) do
-        FactoryGirl.create(
+        FactoryBot.create(
           :transformation_mapping,
           :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
         )
@@ -93,22 +93,22 @@ describe ServiceTemplateTransformationPlanRequest do
       end
 
       let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
-      let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
+      let(:request) { FactoryBot.create(:service_template_transformation_plan_request, :source => plan) }
 
       it 'returns true' do
-        host = FactoryGirl.create(:host, :ext_management_system => dst_ems, :ems_cluster => dst_cluster)
-        conversion_host = FactoryGirl.create(:conversion_host, :resource => host)
+        host = FactoryBot.create(:host, :ext_management_system => dst_ems, :ems_cluster => dst_cluster)
+        conversion_host = FactoryBot.create(:conversion_host, :resource => host)
         expect(request.validate_conversion_hosts).to be true
       end
     end
 
     context 'conversion host exists in EMS and resource is a Vm' do
-      let(:dst_ems) { FactoryGirl.create(:ems_openstack) }
-      let(:src_cluster) { FactoryGirl.create(:ems_cluster) }
-      let(:dst_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :ext_management_system => dst_ems) }
+      let(:dst_ems) { FactoryBot.create(:ems_openstack) }
+      let(:src_cluster) { FactoryBot.create(:ems_cluster) }
+      let(:dst_cloud_tenant) { FactoryBot.create(:cloud_tenant, :ext_management_system => dst_ems) }
 
       let(:mapping) do
-        FactoryGirl.create(
+        FactoryBot.create(
           :transformation_mapping,
           :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cloud_tenant)]
         )
@@ -129,11 +129,11 @@ describe ServiceTemplateTransformationPlanRequest do
       end
 
       let(:plan) { ServiceTemplateTransformationPlan.create_catalog_item(catalog_item_options) }
-      let(:request) { FactoryGirl.create(:service_template_transformation_plan_request, :source => plan) }
+      let(:request) { FactoryBot.create(:service_template_transformation_plan_request, :source => plan) }
 
       it 'returns true' do
-        vm = FactoryGirl.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant)
-        conversion_host = FactoryGirl.create(:conversion_host, :resource => vm)
+        vm = FactoryBot.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant)
+        conversion_host = FactoryBot.create(:conversion_host, :resource => vm)
         expect(request.validate_conversion_hosts).to be true
       end
     end

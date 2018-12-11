@@ -4,36 +4,36 @@ describe "MiqSchedule Filter" do
       @server1 = EvmSpecHelper.local_miq_server
 
       # Vm Scan Schedules
-      @vm1 = FactoryGirl.create(:vm_vmware, :name => "Test VM 1")
-      @vm2 = FactoryGirl.create(:vm_vmware, :name => "Test VM 2")
-      @vm3 = FactoryGirl.create(:vm_vmware, :name => "Test VM 3")
-      @vm4 = FactoryGirl.create(:vm_vmware, :name => "Special Test VM")
+      @vm1 = FactoryBot.create(:vm_vmware, :name => "Test VM 1")
+      @vm2 = FactoryBot.create(:vm_vmware, :name => "Test VM 2")
+      @vm3 = FactoryBot.create(:vm_vmware, :name => "Test VM 3")
+      @vm4 = FactoryBot.create(:vm_vmware, :name => "Special Test VM")
 
-      @vm_single_schedule = FactoryGirl.create(:miq_schedule,
+      @vm_single_schedule = FactoryBot.create(:miq_schedule,
                                                :resource_type => "Vm",
                                                :sched_action  => {:method => "vm_scan"},
                                                :filter        => MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Special Test VM"})
                                               )
 
-      @vm_all_schedule = FactoryGirl.create(:miq_schedule,
+      @vm_all_schedule = FactoryBot.create(:miq_schedule,
                                             :resource_type => "Vm",
                                             :sched_action  => {:method => "vm_scan"},
                                             :filter        => MiqExpression.new("IS NOT NULL" => {"field" => "Vm-name"})
                                            )
 
       # Schedule froma saved search
-      @search = FactoryGirl.create(:miq_search,
+      @search = FactoryBot.create(:miq_search,
                                    :db     => "Vm",
                                    :filter => MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Test VM 2"})
                                   )
-      @vm_search_schedule = FactoryGirl.create(:miq_schedule,
+      @vm_search_schedule = FactoryBot.create(:miq_schedule,
                                                :resource_type => "Vm",
                                                :sched_action  => {:method => "vm_scan"},
                                                :miq_search_id => @search.id
                                               )
 
       # DB Baskup Schedule
-      @db_backup = FactoryGirl.create(:miq_schedule,
+      @db_backup = FactoryBot.create(:miq_schedule,
                                       :resource_type => "DatabaseBackup",
                                       :sched_action  => {:method => "db_backup"}
                                      )
@@ -43,7 +43,7 @@ describe "MiqSchedule Filter" do
       before do
         MiqReport.seed_report("Vendor and Guest OS")
         @report = MiqReport.first
-        @report_schedule = FactoryGirl.create(:miq_schedule,
+        @report_schedule = FactoryBot.create(:miq_schedule,
                                               :resource_type => "MiqReport",
                                               :sched_action  => {:method => "run_report"},
                                               :filter        => MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => @report.id})

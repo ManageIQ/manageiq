@@ -1,11 +1,11 @@
 describe Dialog::ContainerTemplateServiceDialog do
   describe "#create_dialog" do
-    let(:container_template) { FactoryGirl.create(:container_template) }
+    let(:container_template) { FactoryBot.create(:container_template) }
     let(:params) { [] }
     before do
-      params << FactoryGirl.create(:container_template_parameter, :name => "name_1", :value => "value_1", :required => true)
-      params << FactoryGirl.create(:container_template_parameter, :name => "name_2", :value => "value_2")
-      params << FactoryGirl.create(:container_template_parameter, :name => "name_3", :value => "value_3", :required => true, :generate => "expression")
+      params << FactoryBot.create(:container_template_parameter, :name => "name_1", :value => "value_1", :required => true)
+      params << FactoryBot.create(:container_template_parameter, :name => "name_2", :value => "value_2")
+      params << FactoryBot.create(:container_template_parameter, :name => "name_3", :value => "value_3", :required => true, :generate => "expression")
     end
 
     it "creates a dialog for a container template with parameters" do

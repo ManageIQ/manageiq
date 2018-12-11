@@ -2,7 +2,7 @@ describe ChargebackVm do
   shared_examples_for "ChargebackVm" do
     include Spec::Support::ChargebackHelper
 
-    let(:admin) { FactoryGirl.create(:user_admin) }
+    let(:admin) { FactoryBot.create(:user_admin) }
     let(:base_options) do
       {:interval_size       => 2,
        :end_interval_offset => 0,
@@ -21,7 +21,7 @@ describe ChargebackVm do
     let(:month_beginning) { ts.beginning_of_month.utc }
     let(:month_end) { ts.end_of_month.utc }
     let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
-    let(:ems) { FactoryGirl.create(:ems_vmware) }
+    let(:ems) { FactoryBot.create(:ems_vmware) }
 
     let(:hourly_variable_tier_rate)       { {:variable_rate => hourly_rate.to_s} }
     let(:count_hourly_variable_tier_rate) { {:variable_rate => count_hourly_rate.to_s} }
@@ -41,7 +41,7 @@ describe ChargebackVm do
     end
 
     let!(:chargeback_rate) do
-      FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+      FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
     end
 
     let(:metric_rollup_params) do
@@ -66,8 +66,8 @@ describe ChargebackVm do
       MiqEnterprise.seed
 
       EvmSpecHelper.create_guid_miq_server_zone
-      cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
-      c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
+      c = FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
       @tag = Tag.find_by(:name => "/managed/environment/prod")
 
       temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
@@ -82,15 +82,15 @@ describe ChargebackVm do
 
     context 'with metric rollups' do
       before do
-        @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm", :evm_owner => admin, :ems_ref => "ems_ref",
+        @vm1 = FactoryBot.create(:vm_vmware, :name => "test_vm", :evm_owner => admin, :ems_ref => "ems_ref",
                                   :created_on => month_beginning)
         @vm1.tag_with(@tag.name, :ns => '*')
 
-        @host1   = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
-        @storage = FactoryGirl.create(:storage_target_vmware)
+        @host1   = FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
+        @storage = FactoryBot.create(:storage_target_vmware)
         @host1.storages << @storage
 
-        @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+        @ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => ems)
         @ems_cluster.hosts << @host1
       end
 
@@ -108,11 +108,11 @@ describe ChargebackVm do
       context "by service" do
         let(:options) { base_options.merge(:interval => 'monthly', :interval_size => 4, :service_id => @service.id) }
         before do
-          @service = FactoryGirl.create(:service)
+          @service = FactoryBot.create(:service)
           @service << @vm1
           @service.save
 
-          @vm2 = FactoryGirl.create(:vm_vmware, :name => "test_vm 2", :evm_owner => admin, :created_on => month_beginning)
+          @vm2 = FactoryBot.create(:vm_vmware, :name => "test_vm 2", :evm_owner => admin, :created_on => month_beginning)
 
           add_metric_rollups_for([@vm1, @vm2], month_beginning...month_end, 12.hours, metric_rollup_params)
         end
@@ -131,7 +131,7 @@ describe ChargebackVm do
         let(:start_time)  { report_run_time - 17.hours }
         let(:finish_time) { report_run_time - 14.hours }
 
-        let(:cloud_volume) { FactoryGirl.create(:cloud_volume_openstack) }
+        let(:cloud_volume) { FactoryBot.create(:cloud_volume_openstack) }
 
         it 'contains also columns with sub_metric(from cloud_volume)' do
           skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
@@ -151,8 +151,8 @@ describe ChargebackVm do
         end
 
         context 'with cloud volume types' do
-          let!(:cloud_volume_sdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'sdd') }
-          let!(:cloud_volume_hdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'hdd') }
+          let!(:cloud_volume_sdd) { FactoryBot.create(:cloud_volume_openstack, :volume_type => 'sdd') }
+          let!(:cloud_volume_hdd) { FactoryBot.create(:cloud_volume_openstack, :volume_type => 'hdd') }
           let(:state_data) do
             {
               :allocated_disk_types => {
@@ -211,23 +211,23 @@ describe ChargebackVm do
           context 'without including metrics' do
             let(:ssd_volume_type) { 'ssd' }
             let(:ssd_size_1) { 1_234 }
-            let!(:cloud_volume_1) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => ssd_volume_type, :size => ssd_size_1) }
+            let!(:cloud_volume_1) { FactoryBot.create(:cloud_volume_openstack, :volume_type => ssd_volume_type, :size => ssd_size_1) }
 
-            let(:ssd_disk_1) { FactoryGirl.create(:disk, :size => ssd_size_1, :backing => cloud_volume_1) }
+            let(:ssd_disk_1) { FactoryBot.create(:disk, :size => ssd_size_1, :backing => cloud_volume_1) }
 
             let(:ssd_size_2) { 4_234 }
-            let!(:cloud_volume_2) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => ssd_volume_type, :size => ssd_size_2) }
+            let!(:cloud_volume_2) { FactoryBot.create(:cloud_volume_openstack, :volume_type => ssd_volume_type, :size => ssd_size_2) }
 
-            let(:ssd_disk_2) { FactoryGirl.create(:disk, :size => ssd_size_2, :backing => cloud_volume_2) }
+            let(:ssd_disk_2) { FactoryBot.create(:disk, :size => ssd_size_2, :backing => cloud_volume_2) }
 
-            let(:hardware) { FactoryGirl.create(:hardware, :disks => [ssd_disk_1, ssd_disk_2]) }
+            let(:hardware) { FactoryBot.create(:hardware, :disks => [ssd_disk_1, ssd_disk_2]) }
 
-            let(:resource) { FactoryGirl.create(:vm_vmware_cloud, :hardware => hardware, :created_on => month_beginning) }
+            let(:resource) { FactoryBot.create(:vm_vmware_cloud, :hardware => hardware, :created_on => month_beginning) }
 
-            let(:storage_chargeback_rate) { FactoryGirl.create(:chargeback_rate, :detail_params => detail_params, :rate_type => "Storage") }
+            let(:storage_chargeback_rate) { FactoryBot.create(:chargeback_rate, :detail_params => detail_params, :rate_type => "Storage") }
 
-            let(:parent_classification) { FactoryGirl.create(:classification) }
-            let(:classification)        { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
+            let(:parent_classification) { FactoryBot.create(:classification) }
+            let(:classification)        { FactoryBot.create(:classification, :parent_id => parent_classification.id) }
 
             let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :object => MiqEnterprise.first } }
             let(:options) { base_options.merge(:interval => 'daily', :tag => nil, :entity_id => resource.id, :include_metrics => false) }
@@ -389,9 +389,9 @@ describe ChargebackVm do
         let(:finish_time) { report_run_time - 14.hours }
 
         before do
-          @tenant = FactoryGirl.create(:tenant)
-          @tenant_child = FactoryGirl.create(:tenant, :parent => @tenant)
-          @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id,
+          @tenant = FactoryBot.create(:tenant)
+          @tenant_child = FactoryBot.create(:tenant, :parent => @tenant)
+          @vm_tenant = FactoryBot.create(:vm_vmware, :tenant_id => @tenant_child.id,
                                           :name => "test_vm_tenant", :created_on => month_beginning)
 
           add_metric_rollups_for(@vm_tenant, start_time...finish_time, 1.hour, metric_rollup_params)
@@ -448,24 +448,24 @@ describe ChargebackVm do
         #     \__Tenant 5
         #
         let(:tenant_1) { Tenant.root_tenant }
-        let(:vm_1_1)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_1, :miq_group => nil) }
-        let(:vm_2_1)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_1, :miq_group => nil) }
+        let(:vm_1_1)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_1, :miq_group => nil) }
+        let(:vm_2_1)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_1, :miq_group => nil) }
 
-        let(:tenant_2) { FactoryGirl.create(:tenant, :name => 'Tenant 2', :parent => tenant_1) }
-        let(:vm_1_2)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_2, :miq_group => nil) }
-        let(:vm_2_2)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_2, :miq_group => nil) }
+        let(:tenant_2) { FactoryBot.create(:tenant, :name => 'Tenant 2', :parent => tenant_1) }
+        let(:vm_1_2)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_2, :miq_group => nil) }
+        let(:vm_2_2)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_2, :miq_group => nil) }
 
-        let(:tenant_3) { FactoryGirl.create(:tenant, :name => 'Tenant 3', :parent => tenant_1) }
-        let(:vm_1_3)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_3, :miq_group => nil) }
-        let(:vm_2_3)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_3, :miq_group => nil) }
+        let(:tenant_3) { FactoryBot.create(:tenant, :name => 'Tenant 3', :parent => tenant_1) }
+        let(:vm_1_3)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_3, :miq_group => nil) }
+        let(:vm_2_3)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_3, :miq_group => nil) }
 
-        let(:tenant_4) { FactoryGirl.create(:tenant, :name => 'Tenant 4', :divisible => false, :parent => tenant_3) }
-        let(:vm_1_4)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_4, :miq_group => nil) }
-        let(:vm_2_4)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_4, :miq_group => nil) }
+        let(:tenant_4) { FactoryBot.create(:tenant, :name => 'Tenant 4', :divisible => false, :parent => tenant_3) }
+        let(:vm_1_4)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_4, :miq_group => nil) }
+        let(:vm_2_4)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_4, :miq_group => nil) }
 
-        let(:tenant_5) { FactoryGirl.create(:tenant, :name => 'Tenant 5', :divisible => false, :parent => tenant_3) }
-        let(:vm_1_5)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_5, :miq_group => nil) }
-        let(:vm_2_5)   { FactoryGirl.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_5, :miq_group => nil) }
+        let(:tenant_5) { FactoryBot.create(:tenant, :name => 'Tenant 5', :divisible => false, :parent => tenant_3) }
+        let(:vm_1_5)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_5, :miq_group => nil) }
+        let(:vm_2_5)   { FactoryBot.create(:vm_vmware, :created_on => month_beginning, :tenant => tenant_5, :miq_group => nil) }
 
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first }
 
@@ -700,7 +700,7 @@ describe ChargebackVm do
 
         context "chargeback rate contains rate unrelated to chargeback vm" do
           let!(:chargeback_rate) do
-            FactoryGirl.create(:chargeback_rate, :detail_params => detail_params.merge(:chargeback_rate_detail_cpu_cores_allocated => {:tiers => [count_hourly_variable_tier_rate]}))
+            FactoryBot.create(:chargeback_rate, :detail_params => detail_params.merge(:chargeback_rate_detail_cpu_cores_allocated => {:tiers => [count_hourly_variable_tier_rate]}))
           end
 
           it "skips unrelated columns and calculate related columns" do
@@ -818,7 +818,7 @@ describe ChargebackVm do
         end
 
         context "by owner" do
-          let(:user) { FactoryGirl.create(:user, :name => 'Test VM Owner', :userid => 'test_user') }
+          let(:user) { FactoryBot.create(:user, :name => 'Test VM Owner', :userid => 'test_user') }
           let(:options) { {:interval_size => 4, :owner => user.userid, :ext_options => {:tz => 'Eastern Time (US & Canada)'} } }
           before do
             @vm1.update_attribute(:evm_owner, user)
@@ -836,11 +836,11 @@ describe ChargebackVm do
       end
 
       describe "#get_rates" do
-        let(:chargeback_rate)         { FactoryGirl.create(:chargeback_rate, :rate_type => "Compute") }
+        let(:chargeback_rate)         { FactoryBot.create(:chargeback_rate, :rate_type => "Compute") }
         let(:chargeback_vm)           { ChargebackVm.new }
         let(:rate_assignment_options) { {:cb_rate => chargeback_rate, :object => Tenant.root_tenant} }
         let(:metric_rollup) do
-          FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
+          FactoryBot.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
                              :tag_names => "environment/prod",
                              :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                              :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
@@ -860,20 +860,20 @@ describe ChargebackVm do
         end
 
         context "selecting based on tagged cloud volumes" do
-          let!(:cloud_volume_sdd) { FactoryGirl.create(:cloud_volume_openstack, :volume_type => 'sdd') }
+          let!(:cloud_volume_sdd) { FactoryBot.create(:cloud_volume_openstack, :volume_type => 'sdd') }
 
           let(:ssd_size) { 1_234 }
-          let(:ssd_disk) { FactoryGirl.create(:disk, :size => ssd_size, :backing => cloud_volume_sdd) }
-          let(:hardware) { FactoryGirl.create(:hardware, :disks => [ssd_disk]) }
+          let(:ssd_disk) { FactoryBot.create(:disk, :size => ssd_size, :backing => cloud_volume_sdd) }
+          let(:hardware) { FactoryBot.create(:hardware, :disks => [ssd_disk]) }
 
-          let(:resource) { FactoryGirl.create(:vm_vmware_cloud, :hardware => hardware, :created_on => month_beginning) }
+          let(:resource) { FactoryBot.create(:vm_vmware_cloud, :hardware => hardware, :created_on => month_beginning) }
 
           let(:consumption) { Chargeback::ConsumptionWithoutRollups.new(resource, nil, nil) }
 
-          let(:storage_chargeback_rate) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
+          let(:storage_chargeback_rate) { FactoryBot.create(:chargeback_rate, :rate_type => "Storage") }
 
-          let(:parent_classification) { FactoryGirl.create(:classification) }
-          let(:classification)        { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
+          let(:parent_classification) { FactoryBot.create(:classification) }
+          let(:classification)        { FactoryBot.create(:classification, :parent_id => parent_classification.id) }
 
           let(:rate_assignment_options) { {:cb_rate => storage_chargeback_rate, :tag => [classification, "storage"]} }
 
@@ -903,7 +903,7 @@ describe ChargebackVm do
         let(:report_options) { Chargeback::ReportOptions.new }
         let(:timestamp_key) { 'Fri, 13 May 2016 10:40:00 UTC +00:00' }
         let(:beginning_of_day) { timestamp_key.in_time_zone.beginning_of_day }
-        let(:metric_rollup) { FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
+        let(:metric_rollup) { FactoryBot.create(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
         let(:consumption) { Chargeback::ConsumptionWithRollups.new(pluck_rollup([metric_rollup]), nil, nil) }
         subject { described_class.report_row_key(consumption) }
         before do
@@ -929,7 +929,7 @@ describe ChargebackVm do
 
         context 'with parent ems' do
           let(:metric_rollup) do
-            FactoryGirl.create(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+            FactoryBot.create(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
                               :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                               :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                               :resource => @vm1, :resource_name => @vm1.name)
@@ -942,7 +942,7 @@ describe ChargebackVm do
 
         context 'when parent ems is missing' do
           let(:metric_rollup) do
-            FactoryGirl.create(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+            FactoryBot.create(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
                               :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                               :parent_storage_id => @storage.id,
                               :resource => @vm1, :resource_name => @vm1.name)
@@ -963,13 +963,13 @@ describe ChargebackVm do
           base_options
         end
 
-        let(:vm) { FactoryGirl.create(:vm_vmware, :evm_owner => admin, :name => "vm_1", :created_on => month_beginning) }
+        let(:vm) { FactoryBot.create(:vm_vmware, :evm_owner => admin, :name => "vm_1", :created_on => month_beginning) }
 
-        let(:parent_classification_1)   { FactoryGirl.create(:classification, :name => 'department') }
-        let(:classification_1_1)        { FactoryGirl.create(:classification, :name => 'financial', :parent_id => parent_classification_1.id) }
+        let(:parent_classification_1)   { FactoryBot.create(:classification, :name => 'department') }
+        let(:classification_1_1)        { FactoryBot.create(:classification, :name => 'financial', :parent_id => parent_classification_1.id) }
 
-        let(:parent_classification_2)   { FactoryGirl.create(:classification, :name => 'enviroment') }
-        let(:classification_2_1)        { FactoryGirl.create(:classification, :name => 'test', :parent_id => parent_classification_2.id) }
+        let(:parent_classification_2)   { FactoryBot.create(:classification, :name => 'enviroment') }
+        let(:classification_2_1)        { FactoryBot.create(:classification, :name => 'test', :parent_id => parent_classification_2.id) }
 
         let(:hourly_rate_2)       { 0.05 }
         let(:count_hourly_rate_2) { 10.00 }
@@ -993,8 +993,8 @@ describe ChargebackVm do
           }
         end
 
-        let(:chargeback_rate_1) { FactoryGirl.create(:chargeback_rate, :rate_type => "Compute", :detail_params => detail_params) }
-        let(:chargeback_rate_2) { FactoryGirl.create(:chargeback_rate, :rate_type => "Compute", :detail_params => detail_params_2) }
+        let(:chargeback_rate_1) { FactoryBot.create(:chargeback_rate, :rate_type => "Compute", :detail_params => detail_params) }
+        let(:chargeback_rate_2) { FactoryBot.create(:chargeback_rate, :rate_type => "Compute", :detail_params => detail_params_2) }
 
         let(:rates) do
           [
@@ -1126,19 +1126,19 @@ describe ChargebackVm do
       end
 
       context 'more rates have been selected' do
-        let(:storage_chargeback_rate_1) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
-        let(:storage_chargeback_rate_2) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
+        let(:storage_chargeback_rate_1) { FactoryBot.create(:chargeback_rate, :rate_type => "Storage") }
+        let(:storage_chargeback_rate_2) { FactoryBot.create(:chargeback_rate, :rate_type => "Storage") }
         let(:chargeback_vm)             { Chargeback::RatesCache.new(Chargeback::ReportOptions.new_from_h(base_options)) }
 
-        let(:parent_classification) { FactoryGirl.create(:classification) }
-        let(:classification_1)      { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
-        let(:classification_2)      { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
+        let(:parent_classification) { FactoryBot.create(:classification) }
+        let(:classification_1)      { FactoryBot.create(:classification, :parent_id => parent_classification.id) }
+        let(:classification_2)      { FactoryBot.create(:classification, :parent_id => parent_classification.id) }
 
         let(:rate_assignment_options_1) { {:cb_rate => storage_chargeback_rate_1, :tag => [classification_1, "Storage"]} }
         let(:rate_assignment_options_2) { {:cb_rate => storage_chargeback_rate_2, :tag => [classification_2, "Storage"]} }
 
         let(:metric_rollup) do
-          FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
+          FactoryBot.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
                              :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                              :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                              :resource => @vm)
@@ -1147,7 +1147,7 @@ describe ChargebackVm do
         before do
           @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
           ChargebackRate.set_assignments(:storage, [rate_assignment_options_1, rate_assignment_options_2])
-          @vm = FactoryGirl.create(:vm_vmware, :name => "test_vm_1", :evm_owner => admin, :ems_ref => "ems_ref", :created_on => month_beginning)
+          @vm = FactoryBot.create(:vm_vmware, :name => "test_vm_1", :evm_owner => admin, :ems_ref => "ems_ref", :created_on => month_beginning)
         end
 
         it "return only one chargeback rate according to tag name of Vm" do
@@ -1176,8 +1176,8 @@ describe ChargebackVm do
 
         context "with global and remote regions" do
           let(:options_tenant)  { base_options.merge(:interval => 'monthly', :tenant_id => tenant_1.id).tap { |t| t.delete(:tag) } }
-          let(:vm_global)       { FactoryGirl.create(:vm_vmware) }
-          let!(:region_1) { FactoryGirl.create(:miq_region) }
+          let(:vm_global)       { FactoryBot.create(:vm_vmware) }
+          let!(:region_1) { FactoryBot.create(:miq_region) }
 
           def region_id_for(klass, region)
             klass.id_in_region(klass.count + 1_000_000, region)
@@ -1202,17 +1202,17 @@ describe ChargebackVm do
           # T1(vm_1, vm_2) ->
           #   T2(vm_1, vm_2)
           #   T3(vm_1, vm_2)
-          let!(:tenant_1) { FactoryGirl.create(:tenant, :parent => Tenant.root_tenant, :name => tenant_name_1, :description => tenant_name_1) }
-          let(:vm_1_t_1) { FactoryGirl.create(:vm_vmware, :tenant => tenant_1, :name => vm_name_1) }
-          let(:vm_2_t_1) { FactoryGirl.create(:vm_vmware, :tenant => tenant_1) }
+          let!(:tenant_1) { FactoryBot.create(:tenant, :parent => Tenant.root_tenant, :name => tenant_name_1, :description => tenant_name_1) }
+          let(:vm_1_t_1) { FactoryBot.create(:vm_vmware, :tenant => tenant_1, :name => vm_name_1) }
+          let(:vm_2_t_1) { FactoryBot.create(:vm_vmware, :tenant => tenant_1) }
 
-          let(:tenant_2) { FactoryGirl.create(:tenant, :name => tenant_name_2, :parent => tenant_1, :description => tenant_name_2) }
-          let(:vm_1_t_2) { FactoryGirl.create(:vm_vmware, :tenant => tenant_2) }
-          let(:vm_2_t_2) { FactoryGirl.create(:vm_vmware, :tenant => tenant_2) }
+          let(:tenant_2) { FactoryBot.create(:tenant, :name => tenant_name_2, :parent => tenant_1, :description => tenant_name_2) }
+          let(:vm_1_t_2) { FactoryBot.create(:vm_vmware, :tenant => tenant_2) }
+          let(:vm_2_t_2) { FactoryBot.create(:vm_vmware, :tenant => tenant_2) }
 
-          let(:tenant_3) { FactoryGirl.create(:tenant, :name => tenant_name_3, :parent => tenant_1, :description => tenant_name_3) }
-          let(:vm_1_t_3) { FactoryGirl.create(:vm_vmware, :tenant => tenant_3) }
-          let(:vm_2_t_3) { FactoryGirl.create(:vm_vmware, :tenant => tenant_3) }
+          let(:tenant_3) { FactoryBot.create(:tenant, :name => tenant_name_3, :parent => tenant_1, :description => tenant_name_3) }
+          let(:vm_1_t_3) { FactoryBot.create(:vm_vmware, :tenant => tenant_3) }
+          let(:vm_2_t_3) { FactoryBot.create(:vm_vmware, :tenant => tenant_3) }
 
           # BUILD tenants and VMs structure for region_1
           #
@@ -1221,23 +1221,23 @@ describe ChargebackVm do
           #   T3(vm_1, vm_2)
           #
           let!(:root_tenant_region_1) do
-            tenant = FactoryGirl.create(:tenant, :id => region_id_for(Tenant, region_1.region))
+            tenant = FactoryBot.create(:tenant, :id => region_id_for(Tenant, region_1.region))
             tenant.parent = nil
             tenant.save(:validate => false) # skip validate to set parent = nil
             tenant
           end
 
-          let!(:tenant_1_region_1) { FactoryGirl.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_1, :parent => root_tenant_region_1, :description => tenant_name_1) }
-          let(:vm_1_region_1_t_1) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1, :name => vm_name_1) }
-          let(:vm_2_region_1_t_1) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
+          let!(:tenant_1_region_1) { FactoryBot.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_1, :parent => root_tenant_region_1, :description => tenant_name_1) }
+          let(:vm_1_region_1_t_1) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1, :name => vm_name_1) }
+          let(:vm_2_region_1_t_1) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
 
-          let!(:tenant_2_region_1) { FactoryGirl.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_2, :parent => tenant_1_region_1, :description => tenant_name_2) }
-          let(:vm_1_region_1_t_2) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
-          let(:vm_2_region_1_t_2) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
+          let!(:tenant_2_region_1) { FactoryBot.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_2, :parent => tenant_1_region_1, :description => tenant_name_2) }
+          let(:vm_1_region_1_t_2) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
+          let(:vm_2_region_1_t_2) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_2_region_1) }
 
-          let!(:tenant_3_region_1) { FactoryGirl.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_3, :parent => tenant_1_region_1, :description => tenant_name_3) }
-          let(:vm_1_region_1_t_3) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_3_region_1) }
-          let(:vm_2_region_1_t_3) { FactoryGirl.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_3_region_1) }
+          let!(:tenant_3_region_1) { FactoryBot.create(:tenant, :id => region_id_for(Tenant, region_1.region), :name => tenant_name_3, :parent => tenant_1_region_1, :description => tenant_name_3) }
+          let(:vm_1_region_1_t_3) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_3_region_1) }
+          let(:vm_2_region_1_t_3) { FactoryBot.create(:vm_vmware, :id => region_id_for(Vm, region_1.region), :tenant => tenant_3_region_1) }
 
           before do
             # default region
@@ -1302,10 +1302,10 @@ describe ChargebackVm do
       let(:disk_b)              { disk_gb * 1024**3 }
 
       let(:hardware) do
-        FactoryGirl.create(:hardware,
+        FactoryBot.create(:hardware,
                           :cpu_total_cores => cores,
                           :memory_mb       => mem_mb,
-                          :disks           => [FactoryGirl.create(:disk, :size => disk_b)])
+                          :disks           => [FactoryBot.create(:disk, :size => disk_b)])
       end
 
       let(:fixed_cost) { hourly_rate * 24 }
@@ -1315,7 +1315,7 @@ describe ChargebackVm do
 
       context 'for SCVMM (hyper-v)' do
         let!(:vm1) do
-          vm = FactoryGirl.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day)
+          vm = FactoryBot.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day)
           vm.tag_with(@tag.name, :ns => '*')
           vm
         end
@@ -1343,7 +1343,7 @@ describe ChargebackVm do
 
       context 'for any virtual machine' do
         let!(:vm1) do
-          vm = FactoryGirl.create(:vm_vmware, :hardware => hardware, :created_on => report_run_time - 1.day)
+          vm = FactoryBot.create(:vm_vmware, :hardware => hardware, :created_on => report_run_time - 1.day)
           vm.tag_with(@tag.name, :ns => '*')
           vm
         end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   region_remote = MiqRegion.my_region_number
 
   factory :miq_region do

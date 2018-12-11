@@ -2,11 +2,11 @@ describe MiqReport do
   before do
     EvmSpecHelper.local_miq_server
 
-    @group = FactoryGirl.create(:miq_group)
-    @user  = FactoryGirl.create(:user, :miq_groups => [@group])
+    @group = FactoryBot.create(:miq_group)
+    @user  = FactoryBot.create(:user, :miq_groups => [@group])
 
     5.times do |i|
-      vm = FactoryGirl.build(:vm_vmware)
+      vm = FactoryBot.build(:vm_vmware)
       vm.evm_owner_id = @user.id           if i > 2
       vm.miq_group_id = @user.current_group.id if vm.evm_owner_id || (i > 1)
       vm.save
@@ -31,7 +31,7 @@ describe MiqReport do
 
   context 'to_chart' do
     it "raises an exception for missing sortby or type" do
-      rpt = FactoryGirl.create(:miq_report)
+      rpt = FactoryBot.create(:miq_report)
 
       # Can't create a graph without a sortby column
       expect { rpt.to_chart(@report_theme, @show_title, @options) }

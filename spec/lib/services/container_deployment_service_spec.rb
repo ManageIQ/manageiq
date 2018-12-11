@@ -1,19 +1,19 @@
 RSpec.describe ContainerDeploymentService do
   before do
     %w(amazon openstack google azure redhat vmware).each do |p|
-      network = FactoryGirl.create(:network, :ipaddress => "127.0.0.1")
-      hardware = FactoryGirl.create(:hardware)
+      network = FactoryBot.create(:network, :ipaddress => "127.0.0.1")
+      hardware = FactoryBot.create(:hardware)
       hardware.networks << network
-      vm = FactoryGirl.create("vm_#{p}".to_sym, :hardware => hardware)
+      vm = FactoryBot.create("vm_#{p}".to_sym, :hardware => hardware)
       if %w(amazon redhat).include?(p)
-        template = FactoryGirl.create("template_#{p}".to_sym)
-        provider = FactoryGirl.create("ems_#{p}".to_sym, :miq_templates => [template])
+        template = FactoryBot.create("template_#{p}".to_sym)
+        provider = FactoryBot.create("ems_#{p}".to_sym, :miq_templates => [template])
       else
-        provider = FactoryGirl.create("ems_#{p}".to_sym)
+        provider = FactoryBot.create("ems_#{p}".to_sym)
       end
       provider.vms << vm
     end
-    @foreman_provider = FactoryGirl.create(:configuration_manager_foreman)
+    @foreman_provider = FactoryBot.create(:configuration_manager_foreman)
   end
 
   context "possible_providers_and_vms" do

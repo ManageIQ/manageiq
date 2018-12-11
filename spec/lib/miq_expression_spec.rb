@@ -1,7 +1,7 @@
 describe MiqExpression do
   describe '#reporting_available_fields' do
-    let(:vm) { FactoryGirl.create(:vm) }
-    let!(:custom_attribute) { FactoryGirl.create(:custom_attribute, :name => 'my_attribute_1', :resource => vm) }
+    let(:vm) { FactoryBot.create(:vm) }
+    let!(:custom_attribute) { FactoryBot.create(:custom_attribute, :name => 'my_attribute_1', :resource => vm) }
     let(:extra_fields) do
       %w(start_date
          end_date
@@ -29,9 +29,9 @@ describe MiqExpression do
 
     context 'with ChargebackVm' do
       context 'with dynamic fields' do
-        let(:volume_1) { FactoryGirl.create(:cloud_volume, :volume_type => 'TYPE1') }
-        let(:volume_2) { FactoryGirl.create(:cloud_volume, :volume_type => 'TYPE2') }
-        let(:volume_3) { FactoryGirl.create(:cloud_volume, :volume_type => 'TYPE3') }
+        let(:volume_1) { FactoryBot.create(:cloud_volume, :volume_type => 'TYPE1') }
+        let(:volume_2) { FactoryBot.create(:cloud_volume, :volume_type => 'TYPE2') }
+        let(:volume_3) { FactoryBot.create(:cloud_volume, :volume_type => 'TYPE3') }
         let(:model)    { "ChargebackVm" }
         let(:volume_1_type_field_cost) { "#{model}-storage_allocated_#{volume_1.volume_type}_cost" }
         let(:volume_2_type_field_cost) { "#{model}-storage_allocated_#{volume_2.volume_type}_cost" }
@@ -464,8 +464,8 @@ describe MiqExpression do
     end
 
     it "generates the SQL for a CONTAINS expression with tag" do
-      tag = FactoryGirl.create(:tag, :name => "/managed/operations/analysis_failed")
-      vm = FactoryGirl.create(:vm_vmware, :tags => [tag])
+      tag = FactoryBot.create(:tag, :name => "/managed/operations/analysis_failed")
+      vm = FactoryBot.create(:vm_vmware, :tags => [tag])
       exp = {"CONTAINS" => {"tag" => "VmInfra.managed-operations", "value" => "analysis_failed"}}
       sql, * = MiqExpression.new(exp).to_sql
       expect(sql).to eq("\"vms\".\"id\" IN (#{vm.id})")
@@ -659,18 +659,18 @@ describe MiqExpression do
     describe "integration" do
       context "date/time support" do
         it "finds the correct instances for an gt expression with a dynamic integer field" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :memory_reserve => 1, :cpu_reserve => 2)
-          vm2 = FactoryGirl.create(:vm_vmware, :memory_reserve => 2, :cpu_reserve => 1)
+          _vm1 = FactoryBot.create(:vm_vmware, :memory_reserve => 1, :cpu_reserve => 2)
+          vm2 = FactoryBot.create(:vm_vmware, :memory_reserve => 2, :cpu_reserve => 1)
           filter = MiqExpression.new(">" => {"field" => "Vm-memory_reserve", "value" => "Vm-cpu_reserve"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm2])
         end
 
         it "finds the correct instances for an gt expression with a custom attribute dynamic integer field" do
-          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 10)
-          vm1 = FactoryGirl.create(:vm, :memory_reserve => 2)
+          custom_attribute =  FactoryBot.create(:custom_attribute, :name => "example", :value => 10)
+          vm1 = FactoryBot.create(:vm, :memory_reserve => 2)
           vm1.custom_attributes << custom_attribute
-          _vm2 = FactoryGirl.create(:vm, :memory_reserve => 0)
+          _vm2 = FactoryBot.create(:vm, :memory_reserve => 0)
           name_of_attribute = "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"
           filter = MiqExpression.new("<" => {"field" => "VmOrTemplate-memory_reserve", "value" => name_of_attribute})
           result = Rbac.search(:targets => Vm, :filter => filter).first.first
@@ -679,89 +679,89 @@ describe MiqExpression do
         end
 
         it "finds the correct instances for an AFTER expression with a datetime field" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00:00.000001")
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00:00.000001")
           filter = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm2])
         end
 
         it "finds the correct instances for an IS EMPTY expression with a datetime field" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:01")
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => nil)
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 9:01")
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => nil)
           filter = MiqExpression.new("IS EMPTY" => {"field" => "Vm-last_scan_on"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm2])
         end
 
         it "finds the correct instances for an IS EMPTY expression with a date field" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-11")
-          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => nil)
+          _vm1 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-11")
+          vm2 = FactoryBot.create(:vm_vmware, :retires_on => nil)
           filter = MiqExpression.new("IS EMPTY" => {"field" => "Vm-retires_on"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm2])
         end
 
         it "finds the correct instances for an IS NOT EMPTY expression with a datetime field" do
-          vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:01")
-          _vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => nil)
+          vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 9:01")
+          _vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => nil)
           filter = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-last_scan_on"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm1])
         end
 
         it "finds the correct instances for an IS NOT EMPTY expression with a date field" do
-          vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-11")
-          _vm2 = FactoryGirl.create(:vm_vmware, :retires_on => nil)
+          vm1 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-11")
+          _vm2 = FactoryBot.create(:vm_vmware, :retires_on => nil)
           filter = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-retires_on"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm1])
         end
 
         it "finds the correct instances for an IS expression with a date field" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-09")
-          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-10")
-          _vm3 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-11")
+          _vm1 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-09")
+          vm2 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-10")
+          _vm3 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-11")
           filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm2])
         end
 
         it "finds the correct instances for an IS expression with a datetime field" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-10 23:59:59.999999")
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 0:00")
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 23:59:59.999999")
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-12 0:00")
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-10 23:59:59.999999")
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 0:00")
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 23:59:59.999999")
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-12 0:00")
           filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for a FROM expression with a datetime field, given date values" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2010-07-10 23:59:59.999999")
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2010-07-11 00:00:00")
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2010-12-31 23:59:59.999999")
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-01 00:00:00")
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => "2010-07-10 23:59:59.999999")
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => "2010-07-11 00:00:00")
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => "2010-12-31 23:59:59.999999")
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-01 00:00:00")
           filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2010-07-11", "2010-12-31"]})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for a FROM expression with a date field" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2010-07-10")
-          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => "2010-07-11")
-          vm3 = FactoryGirl.create(:vm_vmware, :retires_on => "2010-12-31")
-          _vm4 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-01")
+          _vm1 = FactoryBot.create(:vm_vmware, :retires_on => "2010-07-10")
+          vm2 = FactoryBot.create(:vm_vmware, :retires_on => "2010-07-11")
+          vm3 = FactoryBot.create(:vm_vmware, :retires_on => "2010-12-31")
+          _vm4 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-01")
           filter = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2010-07-11", "2010-12-31"]})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for a FROM expression with a datetime field, given datetimes" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-09 16:59:59.999999")
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-09 17:30:00")
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-10 23:30:59")
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-10 23:31:00")
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-09 16:59:59.999999")
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-09 17:30:00")
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-10 23:30:59")
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-10 23:31:00")
           filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
                                                 "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
           result = Vm.where(filter.to_sql.first)
@@ -773,79 +773,79 @@ describe MiqExpression do
         around { |example| Timecop.freeze("2011-01-11 17:30 UTC") { example.run } }
 
         it "finds the correct instances for an IS expression with 'Today'" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.yesterday.end_of_day)
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.today)
-          _vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.tomorrow.beginning_of_day)
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => Time.zone.yesterday.end_of_day)
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => Time.zone.today)
+          _vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => Time.zone.tomorrow.beginning_of_day)
           filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Today"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to eq([vm2])
         end
 
         it "finds the correct instances for an IS expression with a datetime field and 'n Hours Ago'" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("13:59:59.999999"))
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:00:00"))
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:59:59.999999"))
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("15:00:00"))
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => Time.zone.parse("13:59:59.999999"))
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:00:00"))
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:59:59.999999"))
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => Time.zone.parse("15:00:00"))
           filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for an IS expression with 'Last Month'" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => (1.month.ago.beginning_of_month - 1.day).end_of_day)
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month)
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month)
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => (1.month.ago.end_of_month + 1.day).beginning_of_day)
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => (1.month.ago.beginning_of_month - 1.day).end_of_day)
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month)
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month)
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => (1.month.ago.end_of_month + 1.day).beginning_of_day)
           filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Last Month"})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for a FROM expression with a date field and 'Last Week'" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => 1.week.ago.beginning_of_week - 1.day)
-          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => 1.week.ago.beginning_of_week)
-          vm3 = FactoryGirl.create(:vm_vmware, :retires_on => 1.week.ago.end_of_week)
-          _vm4 = FactoryGirl.create(:vm_vmware, :retires_on => 1.week.ago.end_of_week + 1.day)
+          _vm1 = FactoryBot.create(:vm_vmware, :retires_on => 1.week.ago.beginning_of_week - 1.day)
+          vm2 = FactoryBot.create(:vm_vmware, :retires_on => 1.week.ago.beginning_of_week)
+          vm3 = FactoryBot.create(:vm_vmware, :retires_on => 1.week.ago.end_of_week)
+          _vm4 = FactoryBot.create(:vm_vmware, :retires_on => 1.week.ago.end_of_week + 1.day)
           filter = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for a FROM expression with a datetime field and 'Last Week'" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week - 1.second)
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week.beginning_of_day)
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.end_of_week.end_of_day)
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.end_of_week + 1.second)
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week - 1.second)
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week.beginning_of_day)
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.week.ago.end_of_week.end_of_day)
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.week.ago.end_of_week + 1.second)
           filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for a FROM expression with 'Last Week' and 'This Week'" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week - 1.second)
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week.beginning_of_day)
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.from_now.beginning_of_week - 1.second)
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.from_now.beginning_of_week.beginning_of_day)
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week - 1.second)
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week.beginning_of_day)
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.week.from_now.beginning_of_week - 1.second)
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.week.from_now.beginning_of_week.beginning_of_day)
           filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "This Week"]})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for a FROM expression with 'n Months Ago'" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => 2.months.ago.beginning_of_month - 1.second)
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 2.months.ago.beginning_of_month.beginning_of_day)
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month.end_of_day)
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month + 1.second)
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => 2.months.ago.beginning_of_month - 1.second)
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => 2.months.ago.beginning_of_month.beginning_of_day)
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month.end_of_day)
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month + 1.second)
           filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "1 Month Ago"]})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
         end
 
         it "finds the correct instances for a FROM expression with 'Last Month'" do
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month - 1.second)
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month.beginning_of_day)
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month.end_of_day)
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month + 1.second)
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month - 1.second)
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month.beginning_of_day)
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month.end_of_day)
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month + 1.second)
           filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]})
           result = Vm.where(filter.to_sql.first)
           expect(result).to contain_exactly(vm2, vm3)
@@ -855,10 +855,10 @@ describe MiqExpression do
       context "timezone support" do
         it "finds the correct instances for a FROM expression with a datetime field and timezone" do
           timezone = "Eastern Time (US & Canada)"
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-09 21:59:59.999999")
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-09 22:00:00")
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 04:30:59")
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 04:31:00")
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-09 21:59:59.999999")
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-09 22:00:00")
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 04:30:59")
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 04:31:00")
           filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
                                                 "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
           result = Vm.where(filter.to_sql(timezone).first)
@@ -867,9 +867,9 @@ describe MiqExpression do
 
         it "finds the correct instances for a FROM expression with a date field and timezone" do
           timezone = "Eastern Time (US & Canada)"
-          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-09T23:59:59Z")
-          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-10T06:30:00Z")
-          _vm3 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-11T08:00:00Z")
+          _vm1 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-09T23:59:59Z")
+          vm2 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-10T06:30:00Z")
+          _vm3 = FactoryBot.create(:vm_vmware, :retires_on => "2011-01-11T08:00:00Z")
           filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
           result = Vm.where(filter.to_sql(timezone).first)
           expect(result).to eq([vm2])
@@ -877,10 +877,10 @@ describe MiqExpression do
 
         it "finds the correct instances for an IS expression with timezone" do
           timezone = "Eastern Time (US & Canada)"
-          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 04:59:59.999999")
-          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 05:00:00")
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-12 04:59:59.999999")
-          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-12 05:00:00")
+          _vm1 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 04:59:59.999999")
+          vm2 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-11 05:00:00")
+          vm3 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-12 04:59:59.999999")
+          _vm4 = FactoryBot.create(:vm_vmware, :last_scan_on => "2011-01-12 05:00:00")
           filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
           result = Vm.where(filter.to_sql(timezone).first)
           expect(result).to contain_exactly(vm2, vm3)
@@ -892,15 +892,15 @@ describe MiqExpression do
   describe "#lenient_evaluate" do
     describe "integration" do
       it "with a find/checkany expression" do
-        host1, host2, host3, host4, host5, host6, host7, host8 = FactoryGirl.create_list(:host, 8)
-        FactoryGirl.create(:vm_vmware, :host => host1, :description => "foo", :last_scan_on => "2011-01-08 16:59:59.999999")
-        FactoryGirl.create(:vm_vmware, :host => host2, :description => nil, :last_scan_on => "2011-01-08 16:59:59.999999")
-        FactoryGirl.create(:vm_vmware, :host => host3, :description => "bar", :last_scan_on => "2011-01-08 17:00:00")
-        FactoryGirl.create(:vm_vmware, :host => host4, :description => nil, :last_scan_on => "2011-01-08 17:00:00")
-        FactoryGirl.create(:vm_vmware, :host => host5, :description => "baz", :last_scan_on => "2011-01-09 23:30:59.999999")
-        FactoryGirl.create(:vm_vmware, :host => host6, :description => nil, :last_scan_on => "2011-01-09 23:30:59.999999")
-        FactoryGirl.create(:vm_vmware, :host => host7, :description => "qux", :last_scan_on => "2011-01-09 23:31:00")
-        FactoryGirl.create(:vm_vmware, :host => host8, :description => nil, :last_scan_on => "2011-01-09 23:31:00")
+        host1, host2, host3, host4, host5, host6, host7, host8 = FactoryBot.create_list(:host, 8)
+        FactoryBot.create(:vm_vmware, :host => host1, :description => "foo", :last_scan_on => "2011-01-08 16:59:59.999999")
+        FactoryBot.create(:vm_vmware, :host => host2, :description => nil, :last_scan_on => "2011-01-08 16:59:59.999999")
+        FactoryBot.create(:vm_vmware, :host => host3, :description => "bar", :last_scan_on => "2011-01-08 17:00:00")
+        FactoryBot.create(:vm_vmware, :host => host4, :description => nil, :last_scan_on => "2011-01-08 17:00:00")
+        FactoryBot.create(:vm_vmware, :host => host5, :description => "baz", :last_scan_on => "2011-01-09 23:30:59.999999")
+        FactoryBot.create(:vm_vmware, :host => host6, :description => nil, :last_scan_on => "2011-01-09 23:30:59.999999")
+        FactoryBot.create(:vm_vmware, :host => host7, :description => "qux", :last_scan_on => "2011-01-09 23:31:00")
+        FactoryBot.create(:vm_vmware, :host => host8, :description => nil, :last_scan_on => "2011-01-09 23:31:00")
         filter = MiqExpression.new(
           "FIND" => {
             "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on",
@@ -911,20 +911,20 @@ describe MiqExpression do
       end
 
       it "with a find/checkall expression" do
-        host1, host2, host3, host4, host5 = FactoryGirl.create_list(:host, 5)
+        host1, host2, host3, host4, host5 = FactoryBot.create_list(:host, 5)
 
-        FactoryGirl.create(:vm_vmware, :host => host1, :description => "foo", :last_scan_on => "2011-01-08 16:59:59.999999")
+        FactoryBot.create(:vm_vmware, :host => host1, :description => "foo", :last_scan_on => "2011-01-08 16:59:59.999999")
 
-        FactoryGirl.create(:vm_vmware, :host => host2, :description => "bar", :last_scan_on => "2011-01-08 17:00:00")
-        FactoryGirl.create(:vm_vmware, :host => host2, :description => "baz", :last_scan_on => "2011-01-09 23:30:59.999999")
+        FactoryBot.create(:vm_vmware, :host => host2, :description => "bar", :last_scan_on => "2011-01-08 17:00:00")
+        FactoryBot.create(:vm_vmware, :host => host2, :description => "baz", :last_scan_on => "2011-01-09 23:30:59.999999")
 
-        FactoryGirl.create(:vm_vmware, :host => host3, :description => "qux", :last_scan_on => "2011-01-08 17:00:00")
-        FactoryGirl.create(:vm_vmware, :host => host3, :description => nil, :last_scan_on => "2011-01-09 23:30:59.999999")
+        FactoryBot.create(:vm_vmware, :host => host3, :description => "qux", :last_scan_on => "2011-01-08 17:00:00")
+        FactoryBot.create(:vm_vmware, :host => host3, :description => nil, :last_scan_on => "2011-01-09 23:30:59.999999")
 
-        FactoryGirl.create(:vm_vmware, :host => host4, :description => nil, :last_scan_on => "2011-01-08 17:00:00")
-        FactoryGirl.create(:vm_vmware, :host => host4, :description => "quux", :last_scan_on => "2011-01-09 23:30:59.999999")
+        FactoryBot.create(:vm_vmware, :host => host4, :description => nil, :last_scan_on => "2011-01-08 17:00:00")
+        FactoryBot.create(:vm_vmware, :host => host4, :description => "quux", :last_scan_on => "2011-01-09 23:30:59.999999")
 
-        FactoryGirl.create(:vm_vmware, :host => host5, :description => "corge", :last_scan_on => "2011-01-09 23:31:00")
+        FactoryBot.create(:vm_vmware, :host => host5, :description => "corge", :last_scan_on => "2011-01-09 23:31:00")
 
         filter = MiqExpression.new(
           "FIND" => {
@@ -937,7 +937,7 @@ describe MiqExpression do
       end
 
       it "cannot execute non-attribute methods on target objects" do
-        vm = FactoryGirl.create(:vm_vmware)
+        vm = FactoryBot.create(:vm_vmware)
 
         expect do
           described_class.new("=" => {"field" => "Vm-destroy", "value" => true}).lenient_evaluate(vm)
@@ -2181,8 +2181,8 @@ describe MiqExpression do
       # tags contain the root tenant's name
       Tenant.seed
 
-      category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
-      FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
+      category = FactoryBot.create(:classification, :name => 'environment', :description => 'Environment')
+      FactoryBot.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
       tags = MiqExpression.model_details('Host',
                                          :typ             => 'tag',
                                          :include_model   => true,
@@ -2194,23 +2194,23 @@ describe MiqExpression do
 
   context "._custom_details_for" do
     let(:klass)         { Vm }
-    let(:vm)            { FactoryGirl.create(:vm) }
-    let!(:custom_attr1) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => "CATTR_1", :value => "Value 1") }
-    let!(:custom_attr2) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => nil,       :value => "Value 2") }
+    let(:vm)            { FactoryBot.create(:vm) }
+    let!(:custom_attr1) { FactoryBot.create(:custom_attribute, :resource => vm, :name => "CATTR_1", :value => "Value 1") }
+    let!(:custom_attr2) { FactoryBot.create(:custom_attribute, :resource => vm, :name => nil,       :value => "Value 2") }
 
     it "ignores custom_attibutes with a nil name" do
       expect(MiqExpression._custom_details_for("Vm", {})).to eq([["Custom Attribute: CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
     end
 
-    let(:conatiner_image) { FactoryGirl.create(:container_image) }
+    let(:conatiner_image) { FactoryBot.create(:container_image) }
 
     let!(:custom_attribute_with_section_1) do
-      FactoryGirl.create(:custom_attribute, :resource => conatiner_image, :name => 'CATTR_3', :value => "Value 3",
+      FactoryBot.create(:custom_attribute, :resource => conatiner_image, :name => 'CATTR_3', :value => "Value 3",
                          :section => 'section_3')
     end
 
     let!(:custom_attribute_with_section_2) do
-      FactoryGirl.create(:custom_attribute, :resource => conatiner_image, :name => 'CATTR_3', :value => "Value 3",
+      FactoryBot.create(:custom_attribute, :resource => conatiner_image, :name => 'CATTR_3', :value => "Value 3",
                          :section => 'docker_labels')
     end
 
@@ -2269,8 +2269,8 @@ describe MiqExpression do
         # tags contain the root tenant's name
         Tenant.seed
 
-        category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
-        FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
+        category = FactoryBot.create(:classification, :name => 'environment', :description => 'Environment')
+        FactoryBot.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
       end
 
       it "generates a human readable string for a TAG expression" do
@@ -2473,13 +2473,13 @@ describe MiqExpression do
   describe ".get_col_type" do
     subject { described_class.get_col_type(@field) }
     let(:string_custom_attribute) do
-      FactoryGirl.create(:custom_attribute,
+      FactoryBot.create(:custom_attribute,
                          :name          => "foo",
                          :value         => "string",
                          :resource_type => 'ExtManagementSystem')
     end
     let(:date_custom_attribute) do
-      FactoryGirl.create(:custom_attribute,
+      FactoryBot.create(:custom_attribute,
                          :name          => "foo",
                          :value         => DateTime.current,
                          :resource_type => 'ExtManagementSystem')
@@ -2548,7 +2548,7 @@ describe MiqExpression do
       # tags contain the root tenant's name
       Tenant.seed
 
-      cat = FactoryGirl.create(:classification,
+      cat = FactoryBot.create(:classification,
                                :description  => "Auto Approve - Max CPU",
                                :name         => "prov_max_cpu",
                                :single_value => true,
@@ -3205,7 +3205,7 @@ describe MiqExpression do
     it "adds mapping 'result'=>false to expression if expression evaluates to false on supplied object" do
       expression = {">=" => {"field" => "Vm-num_cpu",
                              "value" => "2"}}
-      result = described_class.evaluate_atoms(expression, FactoryGirl.build(:vm))
+      result = described_class.evaluate_atoms(expression, FactoryBot.build(:vm))
       expect(result).to include(
         ">="     => {"field" => "Vm-num_cpu",
                      "value" => "2"},
@@ -3370,11 +3370,11 @@ describe MiqExpression do
 
     it "returns the tags when no path is given" do
       Tenant.seed
-      FactoryGirl.create(
+      FactoryBot.create(
         :classification,
         :name        => "env",
         :description => "Environment",
-        :children    => [FactoryGirl.create(:classification)]
+        :children    => [FactoryBot.create(:classification)]
       )
       actual = described_class.tag_details(nil, {})
       expect(actual).to eq([["My Company Tags : Environment", "managed-env"]])
@@ -3382,17 +3382,17 @@ describe MiqExpression do
 
     it "returns the added classification when no_cache option is used" do
       Tenant.seed
-      FactoryGirl.create(:classification,
+      FactoryBot.create(:classification,
                          :name        => "first_classification",
                          :description => "First Classification",
-                         :children    => [FactoryGirl.create(:classification)])
+                         :children    => [FactoryBot.create(:classification)])
       actual = described_class.tag_details(nil, {})
       expect(actual).to eq([["My Company Tags : First Classification", "managed-first_classification"]])
 
-      FactoryGirl.create(:classification,
+      FactoryBot.create(:classification,
                          :name        => "second_classification",
                          :description => "Second Classification",
-                         :children    => [FactoryGirl.create(:classification)])
+                         :children    => [FactoryBot.create(:classification)])
       actual = described_class.tag_details(nil, :no_cache => true)
       expect(actual).to eq([["My Company Tags : First Classification", "managed-first_classification"], ["My Company Tags : Second Classification", "managed-second_classification"]])
     end

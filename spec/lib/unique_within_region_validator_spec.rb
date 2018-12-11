@@ -20,7 +20,7 @@ describe UniqueWithinRegionValidator do
       let(:test_name) { "thename" }
 
       let(:in_first_region_id) do
-        FactoryGirl.create(
+        FactoryBot.create(
           :user,
           :id   => case_sensitive_class.id_in_region(1, 0),
           :name => test_name
@@ -28,7 +28,7 @@ describe UniqueWithinRegionValidator do
       end
 
       let(:also_in_first_region_id) do
-        FactoryGirl.create(
+        FactoryBot.create(
           :user,
           :id   => case_sensitive_class.id_in_region(2, 0),
           :name => test_name.upcase
@@ -36,7 +36,7 @@ describe UniqueWithinRegionValidator do
       end
 
       let(:in_second_region_id) do
-        FactoryGirl.create(
+        FactoryBot.create(
           :user,
           :id   => case_sensitive_class.id_in_region(2, 1),
           :name => test_name

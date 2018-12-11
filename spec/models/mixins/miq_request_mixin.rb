@@ -13,8 +13,8 @@ describe MiqRequestMixin do
   let(:test_instance) { test_class.new }
 
   it "#get_user only searches users in the current region" do
-    user = FactoryGirl.create(:user, :userid => "TestUser")
-    FactoryGirl.create(:user, :userid => "TestUser", :id => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
+    user = FactoryBot.create(:user, :userid => "TestUser")
+    FactoryBot.create(:user, :userid => "TestUser", :id => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
 
     test_instance.userid = "TestUser"
     expect(test_instance.get_user).to eq(user)

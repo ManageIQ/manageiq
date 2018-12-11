@@ -9,10 +9,10 @@ describe CloudTenancyMixin do
   end
 
   describe "miq_group" do
-    let(:user)         { FactoryGirl.create(:user, :userid => 'user', :miq_groups => [tenant_group]) }
-    let(:tenant)       { FactoryGirl.build(:tenant, :parent => default_tenant) }
-    let(:tenant_users) { FactoryGirl.create(:miq_user_role, :name => "tenant-users") }
-    let(:tenant_group) { FactoryGirl.create(:miq_group, :miq_user_role => tenant_users, :tenant => tenant) }
+    let(:user)         { FactoryBot.create(:user, :userid => 'user', :miq_groups => [tenant_group]) }
+    let(:tenant)       { FactoryBot.build(:tenant, :parent => default_tenant) }
+    let(:tenant_users) { FactoryBot.create(:miq_user_role, :name => "tenant-users") }
+    let(:tenant_group) { FactoryBot.create(:miq_group, :miq_user_role => tenant_users, :tenant => tenant) }
 
     it "finds correct tenant id clause for regular tenants" do
       expect(VmOrTemplate.tenant_id_clause(user)).to eql ["(vms.template = true AND vms.tenant_id IN (?)) OR (vms.template = false AND vms.tenant_id IN (?))", [default_tenant.id, tenant.id], [tenant.id]]

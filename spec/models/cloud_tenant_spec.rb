@@ -1,22 +1,22 @@
 describe CloudTenant do
   it "#all_cloud_networks" do
-    ems     = FactoryGirl.create(:ems_openstack)
-    tenant1 = FactoryGirl.create(:cloud_tenant,  :ext_management_system => ems)
-    tenant2 = FactoryGirl.create(:cloud_tenant,  :ext_management_system => ems)
-    net1    = FactoryGirl.create(:cloud_network, :ext_management_system => ems.network_manager, :shared => true)
-    net2    = FactoryGirl.create(:cloud_network, :ext_management_system => ems.network_manager, :cloud_tenant => tenant1)
-    _net3   = FactoryGirl.create(:cloud_network, :ext_management_system => ems.network_manager, :cloud_tenant => tenant2)
+    ems     = FactoryBot.create(:ems_openstack)
+    tenant1 = FactoryBot.create(:cloud_tenant,  :ext_management_system => ems)
+    tenant2 = FactoryBot.create(:cloud_tenant,  :ext_management_system => ems)
+    net1    = FactoryBot.create(:cloud_network, :ext_management_system => ems.network_manager, :shared => true)
+    net2    = FactoryBot.create(:cloud_network, :ext_management_system => ems.network_manager, :cloud_tenant => tenant1)
+    _net3   = FactoryBot.create(:cloud_network, :ext_management_system => ems.network_manager, :cloud_tenant => tenant2)
 
     expect(tenant1.all_cloud_networks).to match_array([net1, net2])
   end
 
   describe '#total_vms' do
-    let(:ems)          { FactoryGirl.create(:ems_openstack) }
-    let(:vm1)          { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
-    let(:vm2)          { FactoryGirl.create(:vm_openstack, :ext_management_system => nil) }
+    let(:ems)          { FactoryBot.create(:ems_openstack) }
+    let(:vm1)          { FactoryBot.create(:vm_openstack, :ext_management_system => ems) }
+    let(:vm2)          { FactoryBot.create(:vm_openstack, :ext_management_system => nil) }
     let(:vms)          { [vm1, vm2] }
-    let(:template)     { FactoryGirl.create(:miq_template) }
-    let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant, :ext_management_system => ems, :vms => vms, :miq_templates => [template]) }
+    let(:template)     { FactoryBot.create(:miq_template) }
+    let(:cloud_tenant) { FactoryBot.create(:cloud_tenant, :ext_management_system => ems, :vms => vms, :miq_templates => [template]) }
 
     it 'counts only vms' do
       cloud_tenant.reload

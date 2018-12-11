@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :service_template
   factory :service_template_orchestration, :class => 'ServiceTemplateOrchestration', :parent => :service_template
   factory :service_template_ansible_playbook, :class => 'ServiceTemplateAnsiblePlaybook', :parent => :service_template
@@ -9,7 +9,7 @@ FactoryGirl.define do
 
   trait :with_provision_resource_action_and_dialog do
     after(:create) do |x|
-      x.resource_actions << FactoryGirl.create(:resource_action, :with_dialog, :action => 'Provision')
+      x.resource_actions << FactoryBot.create(:resource_action, :with_dialog, :action => 'Provision')
     end
   end
 

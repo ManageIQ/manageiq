@@ -30,7 +30,7 @@ describe Authenticator::Ldap do
     end
 
     it "user exists" do
-      user = FactoryGirl.create(:user_admin, :userid => @fqusername)
+      user = FactoryBot.create(:user_admin, :userid => @fqusername)
       allow(@auth).to receive(:lookup_by_identity).and_return(user)
       expect(current_user).to eq(user)
     end
@@ -102,10 +102,10 @@ describe Authenticator::Ldap do
   end
 
   def create_super_admin_group
-    FactoryGirl.create(
+    FactoryBot.create(
       :miq_group,
       :description   => "EvmGroup-super_administrator",
-      :miq_user_role => FactoryGirl.create(:miq_user_role, :role => "super_administrator")
+      :miq_user_role => FactoryBot.create(:miq_user_role, :role => "super_administrator")
     )
   end
 

@@ -13,16 +13,16 @@ describe DriftState do
       stub_settings(@vmdb_config)
 
       @rr1 = [
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months + 1.days).to_i.seconds.ago.utc),
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
+        FactoryBot.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months + 1.days).to_i.seconds.ago.utc),
+        FactoryBot.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 1, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
       @rr2 = [
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months + 2.days).to_i.seconds.ago.utc),
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months + 1.days).to_i.seconds.ago.utc),
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
+        FactoryBot.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months + 2.days).to_i.seconds.ago.utc),
+        FactoryBot.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months + 1.days).to_i.seconds.ago.utc),
+        FactoryBot.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => 2, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
       @rr_orphaned = [
-        FactoryGirl.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => nil, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
+        FactoryBot.create(:drift_state, :resource_type => 'VmOrTemplate', :resource_id => nil, :timestamp => (6.months - 1.days).to_i.seconds.ago.utc)
       ]
     end
 

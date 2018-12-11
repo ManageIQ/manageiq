@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_server do
     guid            { SecureRandom.uuid }
-    zone            { FactoryGirl.build(:zone) }
+    zone            { FactoryBot.build(:zone) }
     sequence(:name) { |n| "miq_server_#{seq_padded_for_sorting(n)}" }
     last_heartbeat  { Time.now.utc }
     status          "started"

@@ -1,7 +1,7 @@
 describe DialogFieldDateTimeControl do
   context "legacy tests" do
     let!(:user) do
-      User.current_user = FactoryGirl.create(:user)
+      User.current_user = FactoryBot.create(:user)
     end
 
     context "with UTC timezone" do

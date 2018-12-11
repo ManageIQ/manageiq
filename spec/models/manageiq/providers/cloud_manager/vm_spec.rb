@@ -1,8 +1,8 @@
 describe VmCloud do
-  subject { FactoryGirl.create(:vm_cloud) }
+  subject { FactoryBot.create(:vm_cloud) }
 
   context "relationships" do
-    let(:resource_group) { FactoryGirl.create(:resource_group) }
+    let(:resource_group) { FactoryBot.create(:resource_group) }
     before { subject.resource_group = resource_group }
 
     it "has one resource group" do
@@ -20,8 +20,8 @@ describe VmCloud do
   end
 
   describe "#service and #direct_service" do
-    let(:service_root) { FactoryGirl.create(:service) }
-    let(:service)      { FactoryGirl.create(:service, :parent => service_root) }
+    let(:service_root) { FactoryBot.create(:service) }
+    let(:service)      { FactoryBot.create(:service, :parent => service_root) }
 
     context "provisioned through a vm provisioning service" do
       before { service.add_resource!(subject) }
@@ -34,7 +34,7 @@ describe VmCloud do
 
     context "provisioned through an orchestration provisioning service" do
       before do
-        stack = FactoryGirl.create(:orchestration_stack, :direct_vms => [subject])
+        stack = FactoryBot.create(:orchestration_stack, :direct_vms => [subject])
         service.add_resource!(stack)
       end
 

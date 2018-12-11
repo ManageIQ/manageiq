@@ -1,6 +1,6 @@
 describe Service::LinkingWorkflow do
-  let(:service)  { FactoryGirl.create(:service) }
-  let(:provider) { FactoryGirl.create(:ems_vmware) }
+  let(:service)  { FactoryBot.create(:service) }
+  let(:provider) { FactoryBot.create(:ems_vmware) }
   let(:uid_ems_array) { ["423c9963-378c-813f-1dbd-630e464d59d4", "423cf3e2-e319-3953-993f-fd8513db951d"] }
   let(:options) do
     {
@@ -34,7 +34,7 @@ describe Service::LinkingWorkflow do
     end
 
     it 'calls post_refresh if all VMs found in DB' do
-      uid_ems_array.each { |uid| FactoryGirl.create(:vm_vmware, :uid_ems => uid, :ems_id => provider.id) }
+      uid_ems_array.each { |uid| FactoryBot.create(:vm_vmware, :uid_ems => uid, :ems_id => provider.id) }
       expect(job).to receive(:signal).with(:post_refresh)
       subject
     end
@@ -44,7 +44,7 @@ describe Service::LinkingWorkflow do
     subject { job.post_refresh }
 
     it 'links found VMs to service' do
-      uid_ems_array.each { |uid| FactoryGirl.create(:vm_vmware, :uid_ems => uid, :ems_id => provider.id) }
+      uid_ems_array.each { |uid| FactoryBot.create(:vm_vmware, :uid_ems => uid, :ems_id => provider.id) }
       subject
       expect(service.vms.count).to eq(2)
     end

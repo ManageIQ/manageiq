@@ -1,12 +1,12 @@
 describe Condition do
   describe ".subst" do
     context "evaluation of virtual custom attributes from left and right side" do
-      let(:custom_attribute_1)         { FactoryGirl.create(:custom_attribute, :name => "attr_1", :value => 20) }
-      let(:custom_attribute_2)         { FactoryGirl.create(:custom_attribute, :name => "attr_2", :value => 30) }
+      let(:custom_attribute_1)         { FactoryBot.create(:custom_attribute, :name => "attr_1", :value => 20) }
+      let(:custom_attribute_2)         { FactoryBot.create(:custom_attribute, :name => "attr_2", :value => 30) }
       let(:name_of_custom_attribute_1) { "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}attr_1" }
       let(:name_of_custom_attribute_2) { "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}attr_2" }
       let!(:vm) do
-        FactoryGirl.create(:vm, :memory_reserve => 10, :custom_attributes => [custom_attribute_1, custom_attribute_2])
+        FactoryBot.create(:vm, :memory_reserve => 10, :custom_attributes => [custom_attribute_1, custom_attribute_2])
       end
 
       before do
@@ -37,20 +37,20 @@ describe Condition do
     end
 
     context "expression with <find>" do
-      let(:cluster) { FactoryGirl.create(:ems_cluster) }
-      let(:host1) { FactoryGirl.create(:host, :ems_cluster => cluster) }
-      let(:host2) { FactoryGirl.create(:host, :ems_cluster => cluster) }
+      let(:cluster) { FactoryBot.create(:ems_cluster) }
+      let(:host1) { FactoryBot.create(:host, :ems_cluster => cluster) }
+      let(:host2) { FactoryBot.create(:host, :ems_cluster => cluster) }
       before do
-        @rp1 = FactoryGirl.create(:resource_pool)
-        @rp2 = FactoryGirl.create(:resource_pool)
+        @rp1 = FactoryBot.create(:resource_pool)
+        @rp2 = FactoryBot.create(:resource_pool)
 
         cluster.with_relationship_type("ems_metadata") { cluster.add_child @rp1 }
         @rp1.with_relationship_type("ems_metadata") { @rp1.add_child @rp2 }
 
-        @vm1 = FactoryGirl.create(:vm_vmware, :host => host1, :ems_cluster => cluster)
+        @vm1 = FactoryBot.create(:vm_vmware, :host => host1, :ems_cluster => cluster)
         @vm1.with_relationship_type("ems_metadata") { @vm1.parent = @rp1 }
 
-        @vm2 = FactoryGirl.create(:vm_vmware, :host => host2, :ems_cluster => cluster)
+        @vm2 = FactoryBot.create(:vm_vmware, :host => host2, :ems_cluster => cluster)
         @vm2.with_relationship_type("ems_metadata") { @vm2.parent = @rp2 }
       end
 
@@ -96,10 +96,10 @@ describe Condition do
     end
 
     context "expression with <registry>" do
-      let(:vm) { FactoryGirl.create(:vm_vmware, :registry_items => [reg_num, @reg_string]) }
-      let(:reg_num) { FactoryGirl.create(:registry_item, :name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall", :data => 0) }
+      let(:vm) { FactoryBot.create(:vm_vmware, :registry_items => [reg_num, @reg_string]) }
+      let(:reg_num) { FactoryBot.create(:registry_item, :name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall", :data => 0) }
       before do
-        @reg_string = FactoryGirl.create(:registry_item, :name => "HKLM\\SOFTWARE\\Microsoft\\Ole : EnableDCOM", :data => 'y')
+        @reg_string = FactoryBot.create(:registry_item, :name => "HKLM\\SOFTWARE\\Microsoft\\Ole : EnableDCOM", :data => 'y')
       end
 
       it "string type registry key data is single quoted" do
@@ -114,8 +114,8 @@ describe Condition do
     end
 
     it "does not change the scope for taggings when passed a Tag" do
-      tag = FactoryGirl.create(:tag, :name => "/managed/foo")
-      vm = FactoryGirl.create(:vm_vmware)
+      tag = FactoryBot.create(:tag, :name => "/managed/foo")
+      vm = FactoryBot.create(:vm_vmware)
       expr = "<value ref=tag, type=text>/virtual/name</value> == \"/managed/foo\""
 
       described_class.subst(expr, tag)
@@ -137,7 +137,7 @@ describe Condition do
   end
 
   describe ".subst_matches?" do
-    let(:vm1) { FactoryGirl.build(:vm_vmware, :host => FactoryGirl.build(:host, :name => "XXX")) }
+    let(:vm1) { FactoryBot.build(:vm_vmware, :host => FactoryBot.build(:host, :name => "XXX")) }
 
     it "detects match" do
       expr = "<find><search><value ref=vm, type=string>/virtual/host/name</value> == 'XXX'</search><check mode=count> \

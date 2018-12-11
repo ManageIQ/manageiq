@@ -38,9 +38,9 @@ describe EventStream do
       let(:purge_date) { 2.weeks.ago }
 
       before do
-        @old_event        = FactoryGirl.create(:ems_event, :timestamp => purge_date - 1.day)
-        @purge_date_event = FactoryGirl.create(:ems_event, :timestamp => purge_date)
-        @new_event        = FactoryGirl.create(:ems_event, :timestamp => purge_date + 1.day)
+        @old_event        = FactoryBot.create(:ems_event, :timestamp => purge_date - 1.day)
+        @purge_date_event = FactoryBot.create(:ems_event, :timestamp => purge_date)
+        @new_event        = FactoryBot.create(:ems_event, :timestamp => purge_date + 1.day)
       end
 
       def assert_unpurged_ids(unpurged_ids)

@@ -2,7 +2,7 @@ describe CockpitSupportMixin do
   context '#supports_launch_cockpit?' do
     context 'Container Groups' do
       before do
-        @container_group = FactoryGirl.create(:container_group)
+        @container_group = FactoryBot.create(:container_group)
       end
 
       it 'does not support it if the ready condition is not true' do
@@ -30,7 +30,7 @@ describe CockpitSupportMixin do
 
     context 'VMs' do
       before do
-        @vm = FactoryGirl.create(:vm)
+        @vm = FactoryBot.create(:vm)
       end
 
       it 'does not support it if there are no ipaddresses present' do
@@ -60,7 +60,7 @@ describe CockpitSupportMixin do
 
   context '#supports_cockpit_console?' do
     context 'Container Groups' do
-      let(:container_group) { FactoryGirl.create(:container_group) }
+      let(:container_group) { FactoryBot.create(:container_group) }
 
       before do
         @my_region = double
@@ -83,7 +83,7 @@ describe CockpitSupportMixin do
     context 'VMs' do
       before do
         @my_region = double
-        @vm = FactoryGirl.create(:vm)
+        @vm = FactoryBot.create(:vm)
         allow(MiqRegion).to receive(:my_region).and_return(@my_region)
       end
 

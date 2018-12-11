@@ -24,18 +24,18 @@ describe ContainerQuota do
       let(:deleted_date) { 6.months.ago }
 
       before do
-        @old_quota = FactoryGirl.create(:container_quota, :deleted_on => deleted_date - 1.day)
-        @old_quota_scope = FactoryGirl.create(:container_quota_scope, :container_quota => @old_quota)
-        @old_quota_old_item    = FactoryGirl.create(:container_quota_item, :container_quota => @old_quota,
+        @old_quota = FactoryBot.create(:container_quota, :deleted_on => deleted_date - 1.day)
+        @old_quota_scope = FactoryBot.create(:container_quota_scope, :container_quota => @old_quota)
+        @old_quota_old_item    = FactoryBot.create(:container_quota_item, :container_quota => @old_quota,
                                                                            :deleted_on      => deleted_date - 1.day)
-        @old_quota_active_item = FactoryGirl.create(:container_quota_item, :container_quota => @old_quota,
+        @old_quota_active_item = FactoryBot.create(:container_quota_item, :container_quota => @old_quota,
                                                                            :deleted_on      => nil)
 
-        @purge_date_quota = FactoryGirl.create(:container_quota, :deleted_on => deleted_date)
+        @purge_date_quota = FactoryBot.create(:container_quota, :deleted_on => deleted_date)
 
-        @new_quota = FactoryGirl.create(:container_quota, :deleted_on => deleted_date + 1.day)
-        @new_quota_scope = FactoryGirl.create(:container_quota_scope, :container_quota => @new_quota)
-        @new_quota_old_item = FactoryGirl.create(:container_quota_item, :container_quota => @new_quota,
+        @new_quota = FactoryBot.create(:container_quota, :deleted_on => deleted_date + 1.day)
+        @new_quota_scope = FactoryBot.create(:container_quota_scope, :container_quota => @new_quota)
+        @new_quota_old_item = FactoryBot.create(:container_quota_item, :container_quota => @new_quota,
                                                                         :deleted_on      => deleted_date - 1.day)
       end
 

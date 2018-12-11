@@ -3,12 +3,12 @@ describe Chargeback::ConsumptionWithoutRollups do
   let(:mem_mb) { 1777 }
   let(:disk_size) { 12_345 }
   let(:hardware) do
-    FactoryGirl.build(:hardware,
+    FactoryBot.build(:hardware,
                       :cpu_total_cores => cores,
                       :memory_mb       => mem_mb,
-                      :disks           => [FactoryGirl.build(:disk, :size => disk_size)])
+                      :disks           => [FactoryBot.build(:disk, :size => disk_size)])
   end
-  let(:vm) { FactoryGirl.build(:vm_microsoft, :hardware => hardware) }
+  let(:vm) { FactoryBot.build(:vm_microsoft, :hardware => hardware) }
   let(:consumption) { described_class.new(vm, nil, nil) }
 
   describe '#avg' do

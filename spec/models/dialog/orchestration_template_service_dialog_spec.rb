@@ -1,6 +1,6 @@
 describe Dialog::OrchestrationTemplateServiceDialog do
   let(:orchestration_template) do
-    FactoryGirl.create(:orchestration_template).tap do |template|
+    FactoryBot.create(:orchestration_template).tap do |template|
       allow(template).to receive(:parameter_groups).and_return(param_groups)
       allow(template).to receive(:tabs).and_return(tabs) if tabs.count > 0
     end

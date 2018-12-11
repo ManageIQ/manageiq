@@ -2,7 +2,7 @@ describe MiqServer::WorkerManagement::Heartbeat do
   context "#validate_heartbeat" do
     let(:miq_server) { EvmSpecHelper.local_miq_server.tap(&:setup_drb_variables) }
     let(:pid)        { 1234 }
-    let(:worker)     { FactoryGirl.create(:miq_worker, :miq_server_id => miq_server.id, :pid => pid) }
+    let(:worker)     { FactoryBot.create(:miq_worker, :miq_server_id => miq_server.id, :pid => pid) }
 
     it "sets initial and subsequent heartbeats" do
       2.times do

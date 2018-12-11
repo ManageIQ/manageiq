@@ -85,7 +85,7 @@ describe Service::DialogProperties::Retirement do
 
   context 'when setting retirement warn date' do
     it 'with retirement_warn_on' do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       expect(user).to receive(:with_my_timezone).exactly(3).times.and_yield
 
       Timecop.freeze(time) do

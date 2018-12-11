@@ -1,6 +1,6 @@
 describe Partition do
   it "#partition_type_name" do
-    partition = FactoryGirl.create(:partition)
+    partition = FactoryBot.create(:partition)
 
     partition.partition_type = 999
     expect(partition.partition_type_name).to eq(Partition::UNKNOWN_PARTITION_TYPE)

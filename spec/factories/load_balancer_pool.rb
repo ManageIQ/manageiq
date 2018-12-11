@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :load_balancer_pool do
     sequence(:name)    { |n| "load_balancer_pool_#{seq_padded_for_sorting(n)}" }
     sequence(:ems_ref) { |n| "ems_ref_#{seq_padded_for_sorting(n)}" }

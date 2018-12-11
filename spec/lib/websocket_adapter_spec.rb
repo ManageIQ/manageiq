@@ -1,6 +1,6 @@
 describe WebsocketAdapter do
   describe '.new' do
-    let(:record) { FactoryGirl.create(:system_console, :protocol => protocol) }
+    let(:record) { FactoryBot.create(:system_console, :protocol => protocol) }
 
     context 'legacy vcloud console' do
       let(:protocol) { 'webmks-uint8utf8' }

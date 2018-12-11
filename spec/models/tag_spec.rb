@@ -1,15 +1,15 @@
 describe Tag do
   describe ".list" do
     it "returns an empty string for something that is untaggable" do
-      account = FactoryGirl.create(:account)
+      account = FactoryBot.create(:account)
       actual = described_class.list(account)
       expect(actual).to eq("")
     end
   end
 
   describe ".tags" do
-    let!(:account) { FactoryGirl.create(:account) }
-    let!(:tag) { FactoryGirl.create(:tag) }
+    let!(:account) { FactoryBot.create(:account) }
+    let!(:tag) { FactoryBot.create(:tag) }
 
     it "returns tags with tagged items" do
       Tagging.create(:taggable => account, :tag => tag)
@@ -78,7 +78,7 @@ describe Tag do
 
   context "categorization" do
     before do
-      FactoryGirl.create(:classification_department_with_tags)
+      FactoryBot.create(:classification_department_with_tags)
 
       @tag            = Tag.find_by(:name => "/managed/department/finance")
       @category       = Classification.find_by_name("department")
@@ -120,11 +120,11 @@ describe Tag do
     let(:parent_ns) { "/managed/test_category" }
     let(:entry_ns)  { "/managed/test_category/test_entry" }
     let(:my_region_number) { Tag.my_region_number }
-    let(:parent) { FactoryGirl.create(:classification, :name => "test_category") }
+    let(:parent) { FactoryBot.create(:classification, :name => "test_category") }
 
     before do
-      FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
-      FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
+      FactoryBot.create(:classification_tag,      :name => "test_entry",         :parent => parent)
+      FactoryBot.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
     end
 
     it "finds tag by name" do
@@ -166,23 +166,23 @@ describe Tag do
 
   describe "#==" do
     it "equals only itself" do
-      tag1 = FactoryGirl.build(:tag)
-      tag2 = FactoryGirl.build(:tag)
+      tag1 = FactoryBot.build(:tag)
+      tag2 = FactoryBot.build(:tag)
       expect(tag1).to eq tag1
       expect(tag1).not_to eq tag2
     end
 
     it "equals its name" do
-      tag1 = FactoryGirl.build(:tag, :name => '/a/b/c')
+      tag1 = FactoryBot.build(:tag, :name => '/a/b/c')
       expect(tag1).to eq '/a/b/c'
     end
   end
 
   describe "#destroy" do
-    let(:miq_group)       { FactoryGirl.create(:miq_group, :entitlement => Entitlement.create!) }
-    let(:other_miq_group) { FactoryGirl.create(:miq_group, :entitlement => Entitlement.create!) }
+    let(:miq_group)       { FactoryBot.create(:miq_group, :entitlement => Entitlement.create!) }
+    let(:other_miq_group) { FactoryBot.create(:miq_group, :entitlement => Entitlement.create!) }
     let(:filters)         { [["/managed/prov_max_memory/test"], ["/managed/my_name/test"]] }
-    let(:tag)             { FactoryGirl.create(:tag, :name => "/managed/my_name/test") }
+    let(:tag)             { FactoryBot.create(:tag, :name => "/managed/my_name/test") }
 
     before do
       miq_group.entitlement.set_managed_filters(filters)

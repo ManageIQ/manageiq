@@ -1,14 +1,14 @@
 describe CustomizationTemplate do
   context "unique name validation" do
     it "doesn't allow same name, same pxe_image_type in same region" do
-      pit = FactoryGirl.create(:pxe_image_type)
-      FactoryGirl.create(:customization_template, :name => "fred", :pxe_image_type => pit)
-      expect { FactoryGirl.create(:customization_template, :name => "fred", :pxe_image_type => pit) }.to raise_error(ActiveRecord::RecordInvalid)
+      pit = FactoryBot.create(:pxe_image_type)
+      FactoryBot.create(:customization_template, :name => "fred", :pxe_image_type => pit)
+      expect { FactoryBot.create(:customization_template, :name => "fred", :pxe_image_type => pit) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "allows same name, different pxe_image_type in same region" do
-      FactoryGirl.create(:customization_template, :name => "fred", :pxe_image_type => FactoryGirl.create(:pxe_image_type))
-      FactoryGirl.create(:customization_template, :name => "fred", :pxe_image_type => FactoryGirl.create(:pxe_image_type))
+      FactoryBot.create(:customization_template, :name => "fred", :pxe_image_type => FactoryBot.create(:pxe_image_type))
+      FactoryBot.create(:customization_template, :name => "fred", :pxe_image_type => FactoryBot.create(:pxe_image_type))
 
       first, second = described_class.all
       expect(first.name).to eq(second.name)
@@ -17,9 +17,9 @@ describe CustomizationTemplate do
     end
 
     it "allows different name, same pxe_image_type in same region" do
-      pit = FactoryGirl.create(:pxe_image_type)
-      FactoryGirl.create(:customization_template, :name => "fred", :pxe_image_type => pit)
-      FactoryGirl.create(:customization_template, :name => "nick", :pxe_image_type => pit)
+      pit = FactoryBot.create(:pxe_image_type)
+      FactoryBot.create(:customization_template, :name => "fred", :pxe_image_type => pit)
+      FactoryBot.create(:customization_template, :name => "nick", :pxe_image_type => pit)
       expect(described_class.count).to eq(2)
 
       first, second = described_class.all
@@ -41,12 +41,12 @@ describe CustomizationTemplate do
     end
 
     it "allows same name, different pxe_image_types in different regions" do
-      pit               = FactoryGirl.create(:pxe_image_type)
-      template          = FactoryGirl.create(:customization_template, :name => "nick", :pxe_image_type => pit)
+      pit               = FactoryBot.create(:pxe_image_type)
+      template          = FactoryBot.create(:customization_template, :name => "nick", :pxe_image_type => pit)
       other_template_id = ApplicationRecord.id_in_region(template.id, MiqRegion.my_region_number + 1)
       other_pit_id      = ApplicationRecord.id_in_region(pit.id, MiqRegion.my_region_number + 1)
-      other_pit         = FactoryGirl.create(:pxe_image_type, :id => other_pit_id)
-      FactoryGirl.create(:customization_template, :name => "nick", :pxe_image_type => other_pit, :id => other_template_id)
+      other_pit         = FactoryBot.create(:pxe_image_type, :id => other_pit_id)
+      FactoryBot.create(:customization_template, :name => "nick", :pxe_image_type => other_pit, :id => other_template_id)
 
       first, second = described_class.all
       expect(first.name).to eq(second.name)

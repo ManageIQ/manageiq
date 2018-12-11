@@ -3,11 +3,11 @@ describe "Message Timeout Handling" do
     @guid = SecureRandom.uuid
     allow(MiqServer).to receive(:my_guid).and_return(@guid)
 
-    @zone       = FactoryGirl.create(:zone)
-    @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
+    @zone       = FactoryBot.create(:zone)
+    @miq_server = FactoryBot.create(:miq_server, :guid => @guid, :zone => @zone)
     allow(MiqServer).to receive(:my_server).and_return(@miq_server)
 
-    @worker = FactoryGirl.create(:vmware_refresh_worker, :miq_server_id => @miq_server.id)
+    @worker = FactoryBot.create(:vmware_refresh_worker, :miq_server_id => @miq_server.id)
   end
 
   context "A Worker Handling a Message with a timeout of 3600 seconds" do

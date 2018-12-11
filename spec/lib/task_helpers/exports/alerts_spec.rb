@@ -29,7 +29,7 @@ describe TaskHelpers::Exports::Alerts do
   end
 
   before do
-    FactoryGirl.create(:miq_alert, alert_create_attrs)
+    FactoryBot.create(:miq_alert, alert_create_attrs)
     @export_dir = Dir.mktmpdir('miq_exp_dir')
   end
 

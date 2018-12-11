@@ -101,7 +101,7 @@ describe ManageIQ::Providers::EmsRefreshWorkflow do
 
   context "refresh" do
     before do
-      vm = FactoryGirl.create(:vm)
+      vm = FactoryBot.create(:vm)
 
       options = {
         :target_id    => vm.id,
@@ -113,7 +113,7 @@ describe ManageIQ::Providers::EmsRefreshWorkflow do
     end
 
     it 'sets the refresh_task_ids in the context' do
-      refresh_task = FactoryGirl.create(:miq_task)
+      refresh_task = FactoryBot.create(:miq_task)
       expect(EmsRefresh).to receive(:queue_refresh_task).and_return([refresh_task.id])
       expect(@job).to receive(:queue_signal).with(:poll_refresh)
 
@@ -140,7 +140,7 @@ describe ManageIQ::Providers::EmsRefreshWorkflow do
     end
 
     it 'with a refresh task that is still running' do
-      refresh_task = FactoryGirl.create(:miq_task)
+      refresh_task = FactoryBot.create(:miq_task)
       @job.context[:refresh_task_ids] = [refresh_task.id]
 
       expect(@job).to receive(:queue_signal).with(:poll_refresh, anything)
@@ -149,7 +149,7 @@ describe ManageIQ::Providers::EmsRefreshWorkflow do
     end
 
     it 'with a refresh task that failed' do
-      refresh_task = FactoryGirl.create(:miq_task, :status => MiqTask::STATUS_ERROR)
+      refresh_task = FactoryBot.create(:miq_task, :status => MiqTask::STATUS_ERROR)
       @job.context[:refresh_task_ids] = [refresh_task.id]
 
       expect(@job).to receive(:queue_signal).with(:post_refresh)
@@ -161,7 +161,7 @@ describe ManageIQ::Providers::EmsRefreshWorkflow do
     end
 
     it 'with a refresh task that finished' do
-      refresh_task = FactoryGirl.create(:miq_task, :state => MiqTask::STATE_FINISHED)
+      refresh_task = FactoryBot.create(:miq_task, :state => MiqTask::STATE_FINISHED)
       @job.context[:refresh_task_ids] = [refresh_task.id]
 
       expect(@job).to receive(:queue_signal).with(:post_refresh)

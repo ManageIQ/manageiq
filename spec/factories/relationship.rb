@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :relationship do
     trait :membership do
       relationship 'membership'

@@ -1,7 +1,7 @@
 describe MiqReport::ImportExport do
   before do
-    @user       = FactoryGirl.create(:user_admin)
-    @old_report = FactoryGirl.create(:miq_report,
+    @user       = FactoryBot.create(:user_admin)
+    @old_report = FactoryBot.create(:miq_report,
                                      :name       => "Test Report",
                                      :rpt_type   => "Custom",
                                      :tz         => "Eastern Time (US & Canada)",
@@ -107,7 +107,7 @@ describe MiqReport::ImportExport do
 
   context ".view_yaml_filename" do
     let(:feature) { MiqProductFeature.find_all_by_identifier("vm_infra_explorer") }
-    let(:user)    { FactoryGirl.create(:user, :features => feature) }
+    let(:user)    { FactoryBot.create(:user, :features => feature) }
 
     before do
       EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")

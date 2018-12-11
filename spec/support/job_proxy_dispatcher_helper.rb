@@ -2,19 +2,19 @@ module Spec
   module Support
     module JobProxyDispatcherHelper
       def build_entities(options = {})
-        options = {:hosts => 2, :storages => 2, :vms => 3, :repo_vms => 3, :container_providers => [1, 2], :zone => FactoryGirl.create(:zone)}.merge(options)
+        options = {:hosts => 2, :storages => 2, :vms => 3, :repo_vms => 3, :container_providers => [1, 2], :zone => FactoryBot.create(:zone)}.merge(options)
 
         proxies = []
         storages = []
         options[:storages].times do |i|
-          storage = FactoryGirl.create(:storage, :name => "test_storage_#{i}", :store_type => "VMFS")
+          storage = FactoryBot.create(:storage, :name => "test_storage_#{i}", :store_type => "VMFS")
           storages << storage
         end
 
-        ems = FactoryGirl.create(:ems_vmware, :name => "ems1", :zone => options[:zone])
+        ems = FactoryBot.create(:ems_vmware, :name => "ems1", :zone => options[:zone])
         hosts = []
         options[:hosts].times do |i|
-          host = FactoryGirl.create(:host, :name => "test_host_#{i}", :hostname => "test_host_#{i}")
+          host = FactoryBot.create(:host, :name => "test_host_#{i}", :hostname => "test_host_#{i}")
           max = i > storages.length ? storages.length : i
           host.storages = storages[0..max]
           host.ext_management_system = ems
@@ -24,7 +24,7 @@ module Spec
 
         vms = []
         options[:vms].times do |i|
-          vm = FactoryGirl.create(:vm_vmware, :name => "test_vm_#{i}", :location => "abc/abc.vmx")
+          vm = FactoryBot.create(:vm_vmware, :name => "test_vm_#{i}", :location => "abc/abc.vmx")
           vm.storage = storages[(i % options[:storages])]
           vm.host = hosts[(i % options[:hosts])]
           vm.ext_management_system = ems
@@ -34,12 +34,12 @@ module Spec
 
         repo_vms = []
 
-        repo_storage = FactoryGirl.create(:storage, :name => "test_repo_storage", :store_type => "VMFS")
+        repo_storage = FactoryBot.create(:storage, :name => "test_repo_storage", :store_type => "VMFS")
         repo_storage.hosts = []
         repo_storage.save
 
         options[:repo_vms].times do |i|
-          vm = FactoryGirl.create(:vm_vmware, :name => "test_repo_vm_#{i}", :location => "abc/abc.vmx")
+          vm = FactoryBot.create(:vm_vmware, :name => "test_repo_vm_#{i}", :location => "abc/abc.vmx")
           vm.storage = repo_storage
           vm.host = nil
           vm.save
@@ -48,12 +48,12 @@ module Spec
 
         container_providers = []
         options[:container_providers].each_with_index do |images_count, i|
-          ems_openshift = FactoryGirl.create(:ems_openshift, :name => "test_container_provider_#{i}", :zone => options[:zone])
+          ems_openshift = FactoryBot.create(:ems_openshift, :name => "test_container_provider_#{i}", :zone => options[:zone])
           container_providers << ems_openshift
           container_image_classes = ContainerImage.descendants.append(ContainerImage)
           images_count.times do |idx|
             container_image_classes.each do |cic|
-              FactoryGirl.create(:container_image,
+              FactoryBot.create(:container_image,
                                  :name   => "test_container_images_#{idx}",
                                  :ems_id => ems_openshift.id,
                                  :type   => cic.name)

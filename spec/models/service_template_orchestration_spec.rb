@@ -1,5 +1,5 @@
 describe ServiceTemplateOrchestration do
-  subject { FactoryGirl.create(:service_template_orchestration) }
+  subject { FactoryBot.create(:service_template_orchestration) }
 
   describe '#create_subtasks' do
     it 'does not need subtasks' do
@@ -8,8 +8,8 @@ describe ServiceTemplateOrchestration do
   end
 
   describe "#orchestration_template" do
-    let(:first_orch_template) { FactoryGirl.create(:orchestration_template) }
-    let(:second_orch_template) { FactoryGirl.create(:orchestration_template) }
+    let(:first_orch_template) { FactoryBot.create(:orchestration_template) }
+    let(:second_orch_template) { FactoryBot.create(:orchestration_template) }
 
     it "initially reads a nil orchestration template" do
       expect(subject.orchestration_template).to be_nil
@@ -46,8 +46,8 @@ describe ServiceTemplateOrchestration do
   end
 
   describe "#orchestration_manager" do
-    let(:ems_amazon) { FactoryGirl.create(:ems_amazon) }
-    let(:ems_openstack) { FactoryGirl.create(:ems_openstack) }
+    let(:ems_amazon) { FactoryBot.create(:ems_amazon) }
+    let(:ems_openstack) { FactoryBot.create(:ems_openstack) }
 
     it "initially reads a nil orchestration manager" do
       expect(subject.orchestration_manager).to be_nil
@@ -85,7 +85,7 @@ describe ServiceTemplateOrchestration do
 
   describe "#my_zone" do
     context "with orchestration manager" do
-      let(:ems_amazon) { FactoryGirl.create(:ems_amazon) }
+      let(:ems_amazon) { FactoryBot.create(:ems_amazon) }
       before { subject.orchestration_manager = ems_amazon }
 
       it "takes the zone from orchestration manager" do
@@ -101,11 +101,11 @@ describe ServiceTemplateOrchestration do
     end
   end
 
-  let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
-  let(:ra2) { FactoryGirl.create(:resource_action, :action => 'Retirement') }
-  let(:service_dialog) { FactoryGirl.create(:dialog) }
-  let(:template) { FactoryGirl.create(:orchestration_template) }
-  let(:manager) { FactoryGirl.create(:ext_management_system) }
+  let(:ra1) { FactoryBot.create(:resource_action, :action => 'Provision') }
+  let(:ra2) { FactoryBot.create(:resource_action, :action => 'Retirement') }
+  let(:service_dialog) { FactoryBot.create(:dialog) }
+  let(:template) { FactoryBot.create(:orchestration_template) }
+  let(:manager) { FactoryBot.create(:ext_management_system) }
   let(:catalog_item_options) do
     {
       :name         => 'Orchestration Template',
@@ -167,8 +167,8 @@ describe ServiceTemplateOrchestration do
   end
 
   describe '#update_catalog_item' do
-    let(:new_template) { FactoryGirl.create(:orchestration_template) }
-    let(:new_manager) { FactoryGirl.create(:ext_management_system) }
+    let(:new_template) { FactoryBot.create(:orchestration_template) }
+    let(:new_manager) { FactoryBot.create(:ext_management_system) }
     let(:updated_catalog_item_options) do
       {
         :name        => 'Updated Orchestration Template',
@@ -230,12 +230,12 @@ describe ServiceTemplateOrchestration do
 
   describe '#config_info' do
     it 'returns the correct format' do
-      template = FactoryGirl.create(:orchestration_template)
-      manager = FactoryGirl.create(:ext_management_system)
-      service_template = FactoryGirl.create(:service_template_orchestration,
+      template = FactoryBot.create(:orchestration_template)
+      manager = FactoryBot.create(:ext_management_system)
+      service_template = FactoryBot.create(:service_template_orchestration,
                                             :orchestration_template => template,
                                             :orchestration_manager  => manager)
-      ra = FactoryGirl.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
+      ra = FactoryBot.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
       service_template.create_resource_actions(:provision => { :fqname => ra.fqname })
 
       expected_config_info = {

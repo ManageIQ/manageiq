@@ -1,7 +1,7 @@
 describe TaskHelpers::Exports::CustomButtons do
-  let!(:custom_button)     { FactoryGirl.create(:custom_button, :name => "export_test_button", :description => "Export Test", :applies_to_class => "Vm") }
-  let!(:custom_button2)    { FactoryGirl.create(:custom_button, :name => "export_test_button2", :description => "Export Test", :applies_to_class => "Service") }
-  let!(:custom_button_set) { FactoryGirl.create(:custom_button_set, :name => "custom_button_set", :description => "Default Export Test") }
+  let!(:custom_button)     { FactoryBot.create(:custom_button, :name => "export_test_button", :description => "Export Test", :applies_to_class => "Vm") }
+  let!(:custom_button2)    { FactoryBot.create(:custom_button, :name => "export_test_button2", :description => "Export Test", :applies_to_class => "Service") }
+  let!(:custom_button_set) { FactoryBot.create(:custom_button_set, :name => "custom_button_set", :description => "Default Export Test") }
   let(:export_dir)         { Dir.mktmpdir('miq_exp_dir') }
 
   let(:custom_button_export_test) do

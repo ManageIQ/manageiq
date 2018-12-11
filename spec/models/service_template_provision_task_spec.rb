@@ -1,9 +1,9 @@
 describe ServiceTemplateProvisionTask do
   context "with multiple tasks" do
     before do
-      @admin = FactoryGirl.create(:user_with_group)
+      @admin = FactoryBot.create(:user_with_group)
 
-      @request = FactoryGirl.create(:service_template_provision_request,
+      @request = FactoryBot.create(:service_template_provision_request,
                                     :description => 'Service Request',
                                     :requester   => @admin)
       @task_0 = create_stp('Task 0 (Top)')
@@ -33,7 +33,7 @@ describe ServiceTemplateProvisionTask do
       else
         options = {}
       end
-      FactoryGirl.create(:service_template_provision_task,
+      FactoryBot.create(:service_template_provision_task,
                          :description    => description,
                          :userid         => @admin.userid,
                          :state          => state,
@@ -42,7 +42,7 @@ describe ServiceTemplateProvisionTask do
     end
 
     def service_resource_id(index, scaling_max)
-      FactoryGirl.create(:service_resource,
+      FactoryBot.create(:service_resource,
                          :provision_index => index,
                          :scaling_min     => 1,
                          :scaling_max     => scaling_max,
@@ -77,12 +77,12 @@ describe ServiceTemplateProvisionTask do
 
     describe "#deliver_to_automate" do
       it "delivers to the queue when the state is not active" do
-        @service              = FactoryGirl.create(:service, :name => 'Test Service')
+        @service              = FactoryBot.create(:service, :name => 'Test Service')
         @task_0.destination   = @service
         @task_0.state         = 'pending'
-        zone                  = FactoryGirl.create(:zone, :name => "special")
-        orchestration_manager = FactoryGirl.create(:ext_management_system, :zone => zone)
-        @task_0.source        = FactoryGirl.create(:service_template_orchestration, :orchestration_manager => orchestration_manager)
+        zone                  = FactoryBot.create(:zone, :name => "special")
+        orchestration_manager = FactoryBot.create(:ext_management_system, :zone => zone)
+        @task_0.source        = FactoryBot.create(:service_template_orchestration, :orchestration_manager => orchestration_manager)
         automate_args         = {
           :object_type      => 'ServiceTemplateProvisionTask',
           :object_id        => @task_0.id,
@@ -223,7 +223,7 @@ describe ServiceTemplateProvisionTask do
 
     context "with a service" do
       before do
-        @service = FactoryGirl.create(:service, :name => 'Test Service')
+        @service = FactoryBot.create(:service, :name => 'Test Service')
       end
 
       it "raise provisioned event" do
@@ -235,7 +235,7 @@ describe ServiceTemplateProvisionTask do
     end
 
     describe "#mark_execution_servers" do
-      let(:server) { FactoryGirl.create(:miq_server) }
+      let(:server) { FactoryBot.create(:miq_server) }
       before { allow(MiqServer).to receive(:my_server).and_return(server) }
 
       it "with new server id" do

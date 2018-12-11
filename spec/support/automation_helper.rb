@@ -17,7 +17,7 @@ module Spec
         ae_fields ||= {'field1' => {:aetype => 'relationship', :datatype => 'string'}}
         ae_instances ||= {instance_name => {'field1' => {:value => 'hello world'}}}
 
-        FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances,
+        FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances,
                            attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
       end
 
@@ -27,7 +27,7 @@ module Spec
         ae_fields = {'field1' => {:aetype => 'state', :datatype => 'string'}}
         ae_instances = {instance_name => {'field1' => {:value => 'phases of matter'}}}
 
-        FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances,
+        FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances,
                            attrs.merge('ae_fields' => ae_fields, 'ae_instances' => ae_instances))
       end
 
@@ -44,7 +44,7 @@ module Spec
                                       :data => method_script,
                                       :language => 'ruby', 'params' => method_params}}
 
-        FactoryGirl.create(:miq_ae_domain, :with_small_model, :with_instances, :with_methods,
+        FactoryBot.create(:miq_ae_domain, :with_small_model, :with_instances, :with_methods,
                            attrs.merge('ae_fields'    => ae_fields,
                                        'ae_instances' => ae_instances,
                                        'ae_methods'   => ae_methods))

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     transient do
       # e.g. "super_administrtor"
@@ -18,7 +18,7 @@ FactoryGirl.define do
       if e.miq_groups.blank? && (e.role || e.features)
         u.miq_groups = [
           (e.role && MiqGroup.find_by(:description => "EvmGroup-#{e.role}")) ||
-            FactoryGirl.create(:miq_group, :features => e.features, :role => e.role, :tenant => e.tenant)
+            FactoryBot.create(:miq_group, :features => e.features, :role => e.role, :tenant => e.tenant)
         ]
       end
     end
@@ -44,7 +44,7 @@ FactoryGirl.define do
   end
 
   factory :user_with_group, :parent => :user do
-    miq_groups { FactoryGirl.build_list(:miq_group, 1, :tenant => tenant) }
+    miq_groups { FactoryBot.build_list(:miq_group, 1, :tenant => tenant) }
   end
 
   factory :user_admin, :parent => :user do

@@ -1,4 +1,4 @@
-# HACK: Allow calling FactoryGirl.create or FactoryGirl.build on anything.
+# HACK: Allow calling FactoryBot.create or FactoryBot.build on anything.
 module Spec
   module Support
     module MissingFactoryHelper

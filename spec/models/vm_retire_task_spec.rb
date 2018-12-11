@@ -1,9 +1,9 @@
 describe VmRetireTask do
-  let(:user) { FactoryGirl.create(:user_with_group) }
-  let(:vm) { FactoryGirl.create(:vm) }
-  let(:miq_request) { FactoryGirl.create(:vm_retire_request, :requester => user) }
-  let(:vm_retire_task) { FactoryGirl.create(:vm_retire_task, :source => vm, :miq_request => miq_request, :options => {:src_ids => [vm.id] }) }
-  let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
+  let(:user) { FactoryBot.create(:user_with_group) }
+  let(:vm) { FactoryBot.create(:vm) }
+  let(:miq_request) { FactoryBot.create(:vm_retire_request, :requester => user) }
+  let(:vm_retire_task) { FactoryBot.create(:vm_retire_task, :source => vm, :miq_request => miq_request, :options => {:src_ids => [vm.id] }) }
+  let(:approver) { FactoryBot.create(:user_miq_request_approver) }
 
   it "should initialize properly" do
     expect(vm_retire_task).to have_attributes(:state => 'pending', :status => 'Ok')

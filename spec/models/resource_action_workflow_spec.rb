@@ -1,20 +1,20 @@
 describe ResourceActionWorkflow do
-  let(:admin) { FactoryGirl.create(:user_with_group) }
+  let(:admin) { FactoryBot.create(:user_with_group) }
 
   context "#create" do
     before do
-      @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
-      @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field = FactoryGirl.create(:dialog_field_text_box, :label => 'field 1', :name => 'field_1')
-      @dialog_field2 = FactoryGirl.create(:dialog_field_text_box, :label => 'field 2', :name => 'field_2')
+      @dialog       = FactoryBot.create(:dialog, :label => 'dialog')
+      @dialog_tab   = FactoryBot.create(:dialog_tab, :label => 'tab')
+      @dialog_group = FactoryBot.create(:dialog_group, :label => 'group')
+      @dialog_field = FactoryBot.create(:dialog_field_text_box, :label => 'field 1', :name => 'field_1')
+      @dialog_field2 = FactoryBot.create(:dialog_field_text_box, :label => 'field 2', :name => 'field_2')
 
       @dialog_tab.dialog_groups << @dialog_group
       @dialog_group.dialog_fields << @dialog_field
       @dialog_group.dialog_fields << @dialog_field2
       @dialog.dialog_tabs << @dialog_tab
 
-      @resource_action = FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
+      @resource_action = FactoryBot.create(:resource_action, :action => "Provision", :dialog => @dialog)
     end
 
     it "new from resource_action" do
@@ -68,7 +68,7 @@ describe ResourceActionWorkflow do
         let(:data) { {} }
 
         context "with request class" do
-          let(:target) { FactoryGirl.create(:service) }
+          let(:target) { FactoryBot.create(:service) }
 
           it "creates requests" do
             EvmSpecHelper.local_miq_server
@@ -89,7 +89,7 @@ describe ResourceActionWorkflow do
           subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
           let(:resource_action) { @resource_action }
 
-          let(:target) { FactoryGirl.create(:vm_vmware) }
+          let(:target) { FactoryBot.create(:vm_vmware) }
 
           it "calls automate" do
             EvmSpecHelper.local_miq_server
@@ -104,11 +104,11 @@ describe ResourceActionWorkflow do
         end
 
         context "with custom button request" do
-          let(:target)  { FactoryGirl.build(:service) }
+          let(:target)  { FactoryBot.build(:service) }
           let(:options) { {} }
           let(:resource_action) do
             @resource_action.tap do |ra|
-              ra.update_attributes(:resource => FactoryGirl.create(:custom_button, :applies_to_class => target.class.name, :options => options))
+              ra.update_attributes(:resource => FactoryBot.create(:custom_button, :applies_to_class => target.class.name, :options => options))
             end
           end
 
@@ -138,7 +138,7 @@ describe ResourceActionWorkflow do
         let(:data) { {"parameters" => {"field_1" => "new_value"}} }
 
         context "with request class" do
-          let(:target) { FactoryGirl.create(:service) }
+          let(:target) { FactoryBot.create(:service) }
 
           it "creates requests" do
             EvmSpecHelper.local_miq_server
@@ -159,7 +159,7 @@ describe ResourceActionWorkflow do
           subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
           let(:resource_action) { @resource_action }
 
-          let(:target) { FactoryGirl.create(:vm_vmware) }
+          let(:target) { FactoryBot.create(:vm_vmware) }
 
           it "calls automate" do
             EvmSpecHelper.local_miq_server
@@ -174,11 +174,11 @@ describe ResourceActionWorkflow do
         end
 
         context "with custom button request" do
-          let(:target)  { FactoryGirl.build(:service) }
+          let(:target)  { FactoryBot.build(:service) }
           let(:options) { {} }
           let(:resource_action) do
             @resource_action.tap do |ra|
-              ra.update_attributes(:resource => FactoryGirl.create(:custom_button, :applies_to_class => target.class.name, :options => options))
+              ra.update_attributes(:resource => FactoryBot.create(:custom_button, :applies_to_class => target.class.name, :options => options))
             end
           end
 

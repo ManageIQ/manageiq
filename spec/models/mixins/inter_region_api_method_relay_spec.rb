@@ -164,7 +164,7 @@ describe InterRegionApiMethodRelay do
 
     describe ".api_client_connection_for_region" do
       let!(:server)           { EvmSpecHelper.local_miq_server(:has_active_webservices => true) }
-      let!(:region)           { FactoryGirl.create(:miq_region, :region => region_number) }
+      let!(:region)           { FactoryBot.create(:miq_region, :region => region_number) }
       let(:region_number)     { ApplicationRecord.my_region_number }
       let(:request_user)      { "test_user" }
       let(:api_connection)    { double("ManageIQ::API::Client connection") }

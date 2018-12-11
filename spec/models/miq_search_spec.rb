@@ -2,9 +2,9 @@ describe MiqSearch do
   describe '#descriptions' do
     it "hashes" do
       srchs = [
-        FactoryGirl.create(:miq_search, :description => 'a'),
-        FactoryGirl.create(:miq_search, :description => 'b'),
-        FactoryGirl.create(:miq_search, :description => 'c')
+        FactoryBot.create(:miq_search, :description => 'a'),
+        FactoryBot.create(:miq_search, :description => 'b'),
+        FactoryBot.create(:miq_search, :description => 'c')
       ]
 
       expect(MiqSearch.descriptions).to eq(
@@ -15,9 +15,9 @@ describe MiqSearch do
 
     it "supports scopes" do
       srchs = [
-        FactoryGirl.create(:miq_search, :description => 'a', :db => 'Vm'),
-        FactoryGirl.create(:miq_search, :description => 'b', :db => 'Vm'),
-        FactoryGirl.create(:miq_search, :description => 'c', :db => 'Host')
+        FactoryBot.create(:miq_search, :description => 'a', :db => 'Vm'),
+        FactoryBot.create(:miq_search, :description => 'b', :db => 'Vm'),
+        FactoryBot.create(:miq_search, :description => 'c', :db => 'Host')
       ]
 
       expect(MiqSearch.where(:db => 'Vm').descriptions).to eq(
@@ -27,14 +27,14 @@ describe MiqSearch do
   end
 
   let(:vm_location_search) do
-    FactoryGirl.create(:miq_search,
+    FactoryBot.create(:miq_search,
                        :db     => "Vm",
                        :filter => MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"})
                       )
   end
 
-  let(:matched_vms) { FactoryGirl.create_list(:vm_vmware, 2, :location => "good") }
-  let(:other_vms)   { FactoryGirl.create_list(:vm_vmware, 1, :location => "other") }
+  let(:matched_vms) { FactoryBot.create_list(:vm_vmware, 2, :location => "good") }
+  let(:other_vms)   { FactoryBot.create_list(:vm_vmware, 1, :location => "other") }
   let(:all_vms)     { matched_vms + other_vms }
   let(:partial_matched_vms) { [matched_vms.first] }
   let(:partial_vms) { partial_matched_vms + other_vms }
@@ -42,7 +42,7 @@ describe MiqSearch do
   describe "#quick_search?" do
     let(:qs) { MiqExpression.new("=" => {"field" => "Vm-name", "value" => :user_input}) }
     it "supports no filter" do
-      expect(FactoryGirl.build(:miq_search, :filter => nil)).not_to be_quick_search
+      expect(FactoryBot.build(:miq_search, :filter => nil)).not_to be_quick_search
     end
 
     it "supports a filter" do
@@ -50,7 +50,7 @@ describe MiqSearch do
     end
 
     it "supports a quick search" do
-      expect(FactoryGirl.build(:miq_search, :filter => qs)).to be_quick_search
+      expect(FactoryBot.build(:miq_search, :filter => qs)).to be_quick_search
     end
   end
 

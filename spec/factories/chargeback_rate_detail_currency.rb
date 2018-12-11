@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :chargeback_rate_detail_currency do
     code  "EUR"
     name "Euro"

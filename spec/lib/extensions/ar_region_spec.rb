@@ -10,7 +10,7 @@ describe ArRegion do
   context "#miq_region" do
     before { MiqRegion.seed }
 
-    let!(:vm) { FactoryGirl.create(:vm) }
+    let!(:vm) { FactoryBot.create(:vm) }
 
     it "returns the MiqRegion record" do
       expect(vm.miq_region).to eq(MiqRegion.first)
@@ -27,12 +27,12 @@ describe ArRegion do
   context "#region_description" do
     it "when the region exists" do
       MiqRegion.seed
-      vm = FactoryGirl.create(:vm)
+      vm = FactoryBot.create(:vm)
       expect(vm.region_description).to eq(MiqRegion.first.description)
     end
 
     it "when the region does not exist" do
-      vm = FactoryGirl.create(:vm)
+      vm = FactoryBot.create(:vm)
       expect(vm.region_description).to be_nil
     end
   end

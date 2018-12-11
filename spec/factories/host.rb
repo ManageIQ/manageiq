@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :host do
     sequence(:name)     { |n| "host_#{seq_padded_for_sorting(n)}" }
     sequence(:hostname) { |n| "host-#{seq_padded_for_sorting(n)}" }
@@ -15,13 +15,13 @@ FactoryGirl.define do
 
   factory :host_with_authentication, :parent => :host do
     after(:create) do |x|
-      x.authentications = [FactoryGirl.build(:authentication, :resource => x)]
+      x.authentications = [FactoryBot.build(:authentication, :resource => x)]
     end
   end
 
   factory :host_vmware_esx_with_authentication, :parent => :host_vmware_esx do
     after(:create) do |x|
-      x.authentications = [FactoryGirl.build(:authentication, :resource => x)]
+      x.authentications = [FactoryBot.build(:authentication, :resource => x)]
     end
   end
 
@@ -29,7 +29,7 @@ FactoryGirl.define do
   factory :host_target_vmware, :parent => :host, :class => 'ManageIQ::Providers::Vmware::InfraManager::Host' do
     after(:create) do |x|
       x.perf_capture_enabled = toggle_on_name_seq(x)
-      2.times { x.vms << FactoryGirl.create(:vm_target_vmware, :ext_management_system => x.ext_management_system) }
+      2.times { x.vms << FactoryBot.create(:vm_target_vmware, :ext_management_system => x.ext_management_system) }
     end
   end
 
@@ -37,7 +37,7 @@ FactoryGirl.define do
     ipmi_address "127.0.0.1"
     mac_address  "aa:bb:cc:dd:ee:ff"
     after(:create) do |x|
-      x.authentications = [FactoryGirl.build(:authentication_ipmi, :resource => x)]
+      x.authentications = [FactoryBot.build(:authentication_ipmi, :resource => x)]
     end
   end
 

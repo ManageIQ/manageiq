@@ -1,13 +1,13 @@
 describe ContainerImage do
   it "counts containers" do
-    group = FactoryGirl.create(
+    group = FactoryBot.create(
       :container_group,
       :name           => "group",
-      :container_node => FactoryGirl.create(:container_node, :name => "node")
+      :container_node => FactoryBot.create(:container_node, :name => "node")
     )
-    expect(FactoryGirl.create(
+    expect(FactoryBot.create(
       :container_image,
-      :containers => FactoryGirl.create_list(:container, 2, :container_group => group)
+      :containers => FactoryBot.create_list(:container, 2, :container_group => group)
     ).total_containers).to eq(2)
   end
 end

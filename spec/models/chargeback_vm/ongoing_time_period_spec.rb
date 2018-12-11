@@ -1,5 +1,5 @@
 describe ChargebackVm do
-  let(:admin) { FactoryGirl.create(:user_admin) }
+  let(:admin) { FactoryBot.create(:user_admin) }
   let(:start_of_all_intervals) { Time.parse('2007-01-01 00:00:00Z').utc } # 0hours, Monday, 1st of month
   let(:consumed_hours) { 17 }
   let(:midle_of_the_first_day) { start_of_all_intervals + consumed_hours.hours } # it is a Monday
@@ -14,19 +14,19 @@ describe ChargebackVm do
   end
   let(:tag) { Tag.find_by(:name => '/managed/environment/prod') }
   let(:vm) do
-    ems = FactoryGirl.create(:ems_vmware)
-    vm = FactoryGirl.create(:vm_vmware, :name => 'test_vm', :evm_owner => admin, :ems_ref => 'ems_ref',
+    ems = FactoryBot.create(:ems_vmware)
+    vm = FactoryBot.create(:vm_vmware, :name => 'test_vm', :evm_owner => admin, :ems_ref => 'ems_ref',
                             :created_on => start_of_all_intervals)
     vm.tag_with(tag.name, :ns => '*')
-    host = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware,
+    host = FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware,
                                                                      :memory_mb => 8124, :cpu_total_cores => 1,
                                                                      :cpu_speed => 9576), :vms => [vm])
-    ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+    ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => ems)
     ems_cluster.hosts << host
-    storage = FactoryGirl.create(:storage_target_vmware)
+    storage = FactoryBot.create(:storage_target_vmware)
 
     Range.new(start_of_all_intervals, midle_of_the_first_day, true).step_value(1.hour).each do |time|
-      vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+      vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
                                               :derived_vm_numvcpus       => number_of_cpus,
                                               :cpu_usagemhz_rate_average => cpu_usagemhz,
                                               :timestamp                 => time,
@@ -52,10 +52,10 @@ describe ChargebackVm do
   end
 
   let!(:chargeback_rate) do
-    cat = FactoryGirl.create(:classification, :description => 'Environment', :name => 'environment',
+    cat = FactoryBot.create(:classification, :description => 'Environment', :name => 'environment',
                              :single_value => true, :show => true)
-    c = FactoryGirl.create(:classification, :name => 'prod', :description => 'Production', :parent_id => cat.id)
-    chargeback_rate = FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+    c = FactoryBot.create(:classification, :name => 'prod', :description => 'Production', :parent_id => cat.id)
+    chargeback_rate = FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
     temp = { :cb_rate => chargeback_rate, :tag => [c, 'vm'] }
     ChargebackRate.set_assignments(:compute, [temp])
   end

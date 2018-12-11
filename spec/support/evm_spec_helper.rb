@@ -14,17 +14,17 @@ module EvmSpecHelper
 
   module EmsMetadataHelper
     def self.vmware_nested_folders(ems)
-      datacenters = FactoryGirl.create(:ems_folder, :name => 'Datacenters').tap { |x| x.parent = ems }
-      nested = FactoryGirl.create(:ems_folder, :name => 'nested').tap { |x| x.parent = datacenters }
-      testing = FactoryGirl.create(:ems_folder, :name => 'testing').tap { |x| x.parent = nested }
-      FactoryGirl.create(:datacenter).tap { |x| x.parent = testing }
+      datacenters = FactoryBot.create(:ems_folder, :name => 'Datacenters').tap { |x| x.parent = ems }
+      nested = FactoryBot.create(:ems_folder, :name => 'nested').tap { |x| x.parent = datacenters }
+      testing = FactoryBot.create(:ems_folder, :name => 'testing').tap { |x| x.parent = nested }
+      FactoryBot.create(:datacenter).tap { |x| x.parent = testing }
     end
   end
 
   def self.assign_embedded_ansible_role(miq_server = nil)
     MiqRegion.seed
     miq_server ||= local_miq_server
-    ServerRole.find_by(:name => "embedded_ansible") || FactoryGirl.create(:server_role, :name => 'embedded_ansible', :max_concurrent => 0)
+    ServerRole.find_by(:name => "embedded_ansible") || FactoryBot.create(:server_role, :name => 'embedded_ansible', :max_concurrent => 0)
     miq_server.assign_role('embedded_ansible').update_attributes(:active => true)
   end
 
@@ -80,7 +80,7 @@ module EvmSpecHelper
   def self.remote_miq_server(attrs = {})
     Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => false)
 
-    FactoryGirl.create(:miq_server, attrs)
+    FactoryBot.create(:miq_server, attrs)
   end
 
   def self.remote_guid_miq_server_zone

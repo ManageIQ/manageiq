@@ -4,7 +4,7 @@ describe "JobProxyDispatcherVmProxies4Job" do
   context "with two servers on same zone, vix disk enabled for all, " do
     before do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
-      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
+      @server2 = FactoryBot.create(:miq_server, :zone => @server1.zone)
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 

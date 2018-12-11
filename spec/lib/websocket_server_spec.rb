@@ -52,7 +52,7 @@ describe WebsocketServer do
     let(:proxy) { subject.instance_variable_get(:@proxy) }
     let(:protocol) { 'vnc' }
     let(:url) { 'console/12345' }
-    let!(:console) { FactoryGirl.create(:system_console, :url_secret => '12345', :protocol => protocol) }
+    let!(:console) { FactoryBot.create(:system_console, :url_secret => '12345', :protocol => protocol) }
     let(:init) { subject.send(:init_proxy, env, '12345') }
 
     before do

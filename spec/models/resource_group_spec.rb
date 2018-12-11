@@ -1,6 +1,6 @@
 describe ResourceGroup do
   let(:resource_group) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :resource_group,
       :type    => "ResourceGroup",
       :name    => "foo",
@@ -24,8 +24,8 @@ describe ResourceGroup do
 
   context "relationships" do
     before do
-      @vm       = FactoryGirl.create(:vm_google, :template => false, :resource_group => resource_group)
-      @template = FactoryGirl.create(:template_google, :template => true, :resource_group => resource_group)
+      @vm       = FactoryBot.create(:vm_google, :template => false, :resource_group => resource_group)
+      @template = FactoryBot.create(:template_google, :template => true, :resource_group => resource_group)
     end
 
     it "returns the expected results for vms" do

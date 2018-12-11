@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :storage do
     sequence(:name) { |n| "storage_#{seq_padded_for_sorting(n)}" }
   end

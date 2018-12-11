@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :vm_or_template do
     sequence(:name) { |n| "vm_#{seq_padded_for_sorting(n)}" }
     location        "unknown"
@@ -70,7 +70,7 @@ FactoryGirl.define do
 
     trait :with_provider do
       after(:create) do |x|
-        FactoryGirl.create(:ems_amazon, :vms => [x])
+        FactoryBot.create(:ems_amazon, :vms => [x])
       end
     end
 
@@ -89,7 +89,7 @@ FactoryGirl.define do
 
     trait :with_provider do
       after(:create) do |x|
-        FactoryGirl.create(:ems_azure, :vms => [x])
+        FactoryBot.create(:ems_azure, :vms => [x])
       end
     end
   end
@@ -99,7 +99,7 @@ FactoryGirl.define do
 
     trait :with_provider do
       after(:create) do |x|
-        FactoryGirl.create(:ems_google, :vms => [x])
+        FactoryBot.create(:ems_google, :vms => [x])
       end
     end
   end
@@ -114,7 +114,7 @@ FactoryGirl.define do
     vendor          "openstack"
     raw_power_state "ACTIVE"
     sequence(:ems_ref) { |n| "some-uuid-#{seq_padded_for_sorting(n)}" }
-    cloud_tenant { FactoryGirl.create(:cloud_tenant_openstack) }
+    cloud_tenant { FactoryBot.create(:cloud_tenant_openstack) }
 
     factory :vm_perf_openstack, :parent => :vm_openstack do
       ems_ref "openstack-perf-vm"
@@ -122,7 +122,7 @@ FactoryGirl.define do
 
     trait :with_provider do
       after(:create) do |x|
-        FactoryGirl.create(:ems_openstack, :vms => [x])
+        FactoryBot.create(:ems_openstack, :vms => [x])
       end
     end
   end

@@ -6,8 +6,8 @@ describe MiqServer, "::AtStartup" do
 
     context "where worker has a message in dequeue" do
       it "should cleanup message on startup" do
-        worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
-        msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => worker)
+        worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
+        msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => worker)
 
         described_class.clean_dequeued_messages
 
@@ -16,8 +16,8 @@ describe MiqServer, "::AtStartup" do
       end
 
       it "deletes shutdown_and_exit messages" do
-        worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
-        FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => worker,
+        worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
+        FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => worker,
                            :method_name => "shutdown_and_exit")
         described_class.clean_dequeued_messages
         expect(MiqQueue.count).to eq 0
@@ -26,9 +26,9 @@ describe MiqServer, "::AtStartup" do
 
     context "where worker on other server has a message in dequeue" do
       it "should not cleanup message on startup" do
-        other_miq_server = FactoryGirl.create(:miq_server, :zone => @zone)
-        other_worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => other_miq_server.id)
-        msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => other_worker)
+        other_miq_server = FactoryBot.create(:miq_server, :zone => @zone)
+        other_worker = FactoryBot.create(:miq_ems_refresh_worker, :miq_server_id => other_miq_server.id)
+        msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => other_worker)
 
         described_class.clean_dequeued_messages
 
@@ -39,7 +39,7 @@ describe MiqServer, "::AtStartup" do
 
     context "message in dequeue without a worker" do
       it "should cleanup message on startup" do
-        msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE)
+        msg = FactoryBot.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE)
 
         described_class.clean_dequeued_messages
 
@@ -51,8 +51,8 @@ describe MiqServer, "::AtStartup" do
 
   it ".log_not_under_management (private)" do
     MiqRegion.seed
-    FactoryGirl.create(:host_vmware)
-    FactoryGirl.create(:vm_vmware)
+    FactoryBot.create(:host_vmware)
+    FactoryBot.create(:vm_vmware)
     expect($log).to receive(:info).with(/VMs: \[1\], Hosts: \[1\]/)
     described_class.send(:log_not_under_management, "")
   end

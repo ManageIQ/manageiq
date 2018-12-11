@@ -87,28 +87,28 @@ describe ExtManagementSystem do
 
   context "#ipaddress / #ipaddress=" do
     it "will delegate to the default endpoint" do
-      ems = FactoryGirl.build(:ems_vmware, :ipaddress => "1.2.3.4")
+      ems = FactoryBot.build(:ems_vmware, :ipaddress => "1.2.3.4")
       expect(ems.default_endpoint.ipaddress).to eq "1.2.3.4"
     end
 
     it "with nil" do
-      ems = FactoryGirl.build(:ems_vmware, :ipaddress => nil)
+      ems = FactoryBot.build(:ems_vmware, :ipaddress => nil)
       expect(ems.default_endpoint.ipaddress).to be_nil
     end
   end
 
   it "#total_storages" do
-    storage1 = FactoryGirl.create(:storage)
-    storage2 = FactoryGirl.create(:storage)
+    storage1 = FactoryBot.create(:storage)
+    storage2 = FactoryBot.create(:storage)
 
-    ems = FactoryGirl.create(:ems_vmware)
-    FactoryGirl.create(
+    ems = FactoryBot.create(:ems_vmware)
+    FactoryBot.create(
       :host_vmware,
       :storages              => [storage1, storage2],
       :ext_management_system => ems
     )
 
-    FactoryGirl.create(
+    FactoryBot.create(
       :host_vmware,
       :storages              => [storage2],
       :ext_management_system => ems
@@ -119,35 +119,35 @@ describe ExtManagementSystem do
 
   context "#hostname / #hostname=" do
     it "will delegate to the default endpoint" do
-      ems = FactoryGirl.build(:ems_vmware, :hostname => "example.org")
+      ems = FactoryBot.build(:ems_vmware, :hostname => "example.org")
       expect(ems.default_endpoint.hostname).to eq "example.org"
     end
 
     it "with nil" do
-      ems = FactoryGirl.build(:ems_vmware, :hostname => nil)
+      ems = FactoryBot.build(:ems_vmware, :hostname => nil)
       expect(ems.default_endpoint.hostname).to be_nil
     end
   end
 
   context "#port, #port=" do
     it "will delegate to the default endpoint" do
-      ems = FactoryGirl.build(:ems_vmware, :port => 1234)
+      ems = FactoryBot.build(:ems_vmware, :port => 1234)
       expect(ems.default_endpoint.port).to eq 1234
     end
 
     it "will delegate a string to the default endpoint" do
-      ems = FactoryGirl.build(:ems_vmware, :port => "1234")
+      ems = FactoryBot.build(:ems_vmware, :port => "1234")
       expect(ems.default_endpoint.port).to eq 1234
     end
 
     it "with nil" do
-      ems = FactoryGirl.build(:ems_vmware, :port => nil)
+      ems = FactoryBot.build(:ems_vmware, :port => nil)
       expect(ems.default_endpoint.port).to be_nil
     end
   end
 
   context "with multiple endpoints" do
-    let(:ems) { FactoryGirl.build(:ems_openstack, :hostname => "example.org") }
+    let(:ems) { FactoryBot.build(:ems_openstack, :hostname => "example.org") }
     before { ems.add_connection_configuration_by_role(:endpoint => {:role => "amqp", :hostname => "amqp.example.org"}) }
 
     it "will contain seperate ampq endpoint" do
@@ -163,7 +163,7 @@ describe ExtManagementSystem do
 
   context "with multiple endpoints using connection_configurations" do
     let(:ems) do
-      FactoryGirl.build(:ems_openstack,
+      FactoryBot.build(:ems_openstack,
                         :hostname                  => "example.org",
                         :connection_configurations => [{:endpoint => {:role     => "amqp",
                                                                       :hostname => "amqp.example.org"}}])
@@ -182,7 +182,7 @@ describe ExtManagementSystem do
 
   context "with multiple endpoints using connection_configurations (string keys)" do
     let(:ems) do
-      FactoryGirl.build(:ems_openstack,
+      FactoryBot.build(:ems_openstack,
                         "hostname"                  => "example.org",
                         "connection_configurations" => [{"endpoint" => {"role"     => "amqp",
                                                                         "hostname" => "amqp.example.org"}}])
@@ -201,7 +201,7 @@ describe ExtManagementSystem do
 
   context "with multiple endpoints using explicit authtype" do
     let(:ems) do
-      FactoryGirl.build(:ems_openshift,
+      FactoryBot.build(:ems_openshift,
                         :connection_configurations => [{:endpoint       => {:role     => "default",
                                                                             :hostname => "openshift.example.org"},
                                                         :authentication => {:role     => "bearer",
@@ -222,7 +222,7 @@ describe ExtManagementSystem do
 
   context "with multiple endpoints using implicit default authtype" do
     let(:ems) do
-      FactoryGirl.build(:ems_openshift,
+      FactoryBot.build(:ems_openshift,
                         :connection_configurations => [{:endpoint       => {:role     => "default",
                                                                             :hostname => "openshift.example.org"},
                                                         :authentication => {:auth_key => "SomeSecret"}},
@@ -241,8 +241,8 @@ describe ExtManagementSystem do
 
   context "with two small envs" do
     before do
-      @zone1 = FactoryGirl.create(:small_environment)
-      @zone2 = FactoryGirl.create(:small_environment)
+      @zone1 = FactoryBot.create(:small_environment)
+      @zone2 = FactoryBot.create(:small_environment)
     end
 
     it "refresh_all_ems_timer will refresh for all emses in zone1" do
@@ -262,18 +262,18 @@ describe ExtManagementSystem do
 
   context "with virtual totals" do
     before do
-      @ems = FactoryGirl.create(:ems_vmware)
+      @ems = FactoryBot.create(:ems_vmware)
       2.times do
-        FactoryGirl.create(:vm_vmware,
+        FactoryBot.create(:vm_vmware,
                            :ext_management_system => @ems,
-                           :hardware              => FactoryGirl.create(:hardware,
+                           :hardware              => FactoryBot.create(:hardware,
                                                                         :cpu1x2,
                                                                         :ram1GB))
       end
       2.times do
-        FactoryGirl.create(:host,
+        FactoryBot.create(:host,
                            :ext_management_system => @ems,
-                           :hardware              => FactoryGirl.create(:hardware,
+                           :hardware              => FactoryBot.create(:hardware,
                                                                         :cpu2x2,
                                                                         :ram1GB))
       end
@@ -338,25 +338,25 @@ describe ExtManagementSystem do
     end
 
     it "#total_vms_and_templates" do
-      FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
+      FactoryBot.create(:template_vmware, :ext_management_system => @ems)
       expect(@ems.total_vms_and_templates).to eq(3)
     end
 
     it "#total_miq_templates" do
-      FactoryGirl.create(:template_vmware, :ext_management_system => @ems)
+      FactoryBot.create(:template_vmware, :ext_management_system => @ems)
       expect(@ems.total_miq_templates).to eq(1)
     end
   end
 
   describe "#total_clusters" do
     it "knows it has none" do
-      ems = FactoryGirl.create(:ems_vmware)
+      ems = FactoryBot.create(:ems_vmware)
       expect(ems.total_clusters).to eq(0)
     end
 
     it "knows it has one" do
-      ems = FactoryGirl.create(:ems_vmware)
-      FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
+      ems = FactoryBot.create(:ems_vmware)
+      FactoryBot.create(:ems_cluster, :ext_management_system => ems)
       expect(ems.total_clusters).to eq(1)
     end
   end
@@ -365,47 +365,47 @@ describe ExtManagementSystem do
     context "across tenants" do
       before do
         tenant1  = Tenant.seed
-        @tenant2 = FactoryGirl.create(:tenant, :parent => tenant1)
-        @ems     = FactoryGirl.create(:ems_vmware, :tenant => tenant1)
+        @tenant2 = FactoryBot.create(:tenant, :parent => tenant1)
+        @ems     = FactoryBot.create(:ems_vmware, :tenant => tenant1)
       end
 
       it "allowing duplicate name" do
         expect do
-          FactoryGirl.create(:ems_vmware, :name => @ems.name, :tenant => @tenant2)
+          FactoryBot.create(:ems_vmware, :name => @ems.name, :tenant => @tenant2)
         end.to_not raise_error
       end
 
       it "not allowing duplicate hostname for same type provider" do
         expect do
-          FactoryGirl.create(:ems_vmware, :hostname => @ems.hostname, :tenant => @tenant2)
+          FactoryBot.create(:ems_vmware, :hostname => @ems.hostname, :tenant => @tenant2)
         end.to raise_error(ActiveRecord::RecordInvalid)
       end
 
       it "allowing duplicate hostname for different type providers" do
-        FactoryGirl.create(:ems_microsoft, :hostname => @ems.hostname, :tenant => @tenant2)
+        FactoryBot.create(:ems_microsoft, :hostname => @ems.hostname, :tenant => @tenant2)
         expect(ExtManagementSystem.count).to eq(2)
       end
     end
   end
 
   context "#tenant" do
-    let(:tenant) { FactoryGirl.create(:tenant) }
+    let(:tenant) { FactoryBot.create(:tenant) }
     it "has a tenant" do
-      ems = FactoryGirl.create(:ext_management_system, :tenant => tenant)
+      ems = FactoryBot.create(:ext_management_system, :tenant => tenant)
       expect(tenant.ext_management_systems).to include(ems)
     end
   end
 
   context "destroy" do
     it "destroys an ems with no active workers" do
-      ems = FactoryGirl.create(:ext_management_system)
+      ems = FactoryBot.create(:ext_management_system)
       ems.destroy
       expect(ExtManagementSystem.count).to eq(0)
     end
 
     it "destroys an ems with active workers" do
-      ems = FactoryGirl.create(:ext_management_system)
-      worker = FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
+      ems = FactoryBot.create(:ext_management_system)
+      worker = FactoryBot.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
       ems.destroy
       expect(ExtManagementSystem.count).to eq(0)
       expect(worker.class.exists?(worker.id)).to be_falsy
@@ -413,8 +413,8 @@ describe ExtManagementSystem do
   end
 
   context ".destroy_queue" do
-    let(:ems)    { FactoryGirl.create(:ext_management_system, :zone => zone) }
-    let(:ems2)   { FactoryGirl.create(:ext_management_system, :zone => zone) }
+    let(:ems)    { FactoryBot.create(:ext_management_system, :zone => zone) }
+    let(:ems2)   { FactoryBot.create(:ext_management_system, :zone => zone) }
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:zone)   { server.zone }
 
@@ -427,7 +427,7 @@ describe ExtManagementSystem do
   end
 
   context "#destroy_queue" do
-    let(:ems)    { FactoryGirl.create(:ext_management_system, :zone => zone) }
+    let(:ems)    { FactoryBot.create(:ext_management_system, :zone => zone) }
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:zone)   { server.zone }
 
@@ -454,7 +454,7 @@ describe ExtManagementSystem do
     end
 
     it "destroys the ems when active worker exists" do
-      FactoryGirl.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
+      FactoryBot.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started", :miq_server => server)
       ems.destroy_queue
 
       expect(MiqQueue.count).to eq(1)
@@ -474,7 +474,7 @@ describe ExtManagementSystem do
 
   context "virtual column :supports_block_storage" do
     it "returns true if block storage is supported" do
-      ems = FactoryGirl.create(:ext_management_system)
+      ems = FactoryBot.create(:ext_management_system)
       allow(ems).to receive(:supports_block_storage).and_return(true)
       expect(ems.supports_block_storage).to eq(true)
     end
@@ -482,7 +482,7 @@ describe ExtManagementSystem do
 
   context "virtual column :supports_cloud_object_store_container_create" do
     it "returns true if cloud_object_store_container_create is supported" do
-      ems = FactoryGirl.create(:ext_management_system)
+      ems = FactoryBot.create(:ext_management_system)
       allow(ems).to receive(:supports_cloud_object_store_container_create).and_return(true)
       expect(ems.supports_cloud_object_store_container_create).to eq(true)
     end
@@ -499,10 +499,10 @@ describe ExtManagementSystem do
 
   describe ".inventory_status" do
     it "works with infra providers" do
-      ems = FactoryGirl.create(:ems_infra)
-      host = FactoryGirl.create(:host, :ext_management_system => ems)
-      FactoryGirl.create(:vm_infra, :ext_management_system => ems, :host => host)
-      FactoryGirl.create(:vm_infra, :ext_management_system => ems, :host => host)
+      ems = FactoryBot.create(:ems_infra)
+      host = FactoryBot.create(:host, :ext_management_system => ems)
+      FactoryBot.create(:vm_infra, :ext_management_system => ems, :host => host)
+      FactoryBot.create(:vm_infra, :ext_management_system => ems, :host => host)
 
       result = ExtManagementSystem.inventory_status
       expect(result.size).to eq(2)
@@ -511,9 +511,9 @@ describe ExtManagementSystem do
     end
 
     it "works with container providers" do
-      ems = FactoryGirl.create(:ems_container)
-      FactoryGirl.create(:container, :ems_id => ems.id)
-      FactoryGirl.create(:container, :ems_id => ems.id)
+      ems = FactoryBot.create(:ems_container)
+      FactoryBot.create(:container, :ems_id => ems.id)
+      FactoryBot.create(:container, :ems_id => ems.id)
       result = ExtManagementSystem.inventory_status
       expect(result.size).to eq(2)
       expect(result[0]).to eq(%w(region zone kind ems containers))

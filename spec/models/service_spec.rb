@@ -3,7 +3,7 @@ describe Service do
 
   context "service events" do
     before do
-      @service = FactoryGirl.create(:service)
+      @service = FactoryBot.create(:service)
     end
 
     it "raise_request_start_event" do
@@ -70,15 +70,15 @@ describe Service do
 
   context "VM associations" do
     before do
-      @zone1 = FactoryGirl.create(:small_environment)
+      @zone1 = FactoryBot.create(:small_environment)
       allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
-      @vm  = FactoryGirl.create(:vm_vmware)
-      @vm1 = FactoryGirl.create(:vm_vmware)
-      @vm2 = FactoryGirl.create(:vm_vmware)
+      @vm  = FactoryBot.create(:vm_vmware)
+      @vm1 = FactoryBot.create(:vm_vmware)
+      @vm2 = FactoryBot.create(:vm_vmware)
 
-      @service    = FactoryGirl.create(:service)
-      @service_c1 = FactoryGirl.create(:service, :service => @service)
-      @service_c2 = FactoryGirl.create(:service, :service => @service_c1)
+      @service    = FactoryBot.create(:service)
+      @service_c1 = FactoryBot.create(:service, :service => @service)
+      @service_c2 = FactoryBot.create(:service, :service => @service_c1)
       @service << @vm
       @service_c1 << @vm1
       @service_c2 << @vm1
@@ -233,9 +233,9 @@ describe Service do
 
   context "with a small env" do
     before do
-      @zone1 = FactoryGirl.create(:small_environment)
+      @zone1 = FactoryBot.create(:small_environment)
       allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
-      @service = FactoryGirl.create(:service, :name => 'Service 1')
+      @service = FactoryBot.create(:service, :name => 'Service 1')
     end
 
     it "should create a valid service" do
@@ -262,13 +262,13 @@ describe Service do
     end
 
     it "should allow a service to connect to another service" do
-      s2 = FactoryGirl.create(:service, :name => 'inner_service')
+      s2 = FactoryBot.create(:service, :name => 'inner_service')
       @service << s2
       expect(@service.service_resources.size).to eq(1)
     end
 
     it "should allow a service to connect to ansible tower service" do
-      s2 = FactoryGirl.create(:service_ansible_tower, :name => 'ansible')
+      s2 = FactoryBot.create(:service_ansible_tower, :name => 'ansible')
       @service.add_resource(s2)
       expect(s2.parent).to eq(@service)
     end
@@ -400,7 +400,7 @@ describe Service do
         vm = Vm.first
         @service.save
         expect(vm.service).not_to be_nil
-        service2 = FactoryGirl.create(:service)
+        service2 = FactoryBot.create(:service)
         expect { service2.add_resource(vm) }.to raise_error(MiqException::Error)
         expect { service2 << vm            }.to raise_error(MiqException::Error)
       end
@@ -420,9 +420,9 @@ describe Service do
 
   context "Chargeback report generation" do
     before do
-      @vm = FactoryGirl.create(:vm_vmware)
-      @vm1 = FactoryGirl.create(:vm_vmware)
-      @service = FactoryGirl.create(:service)
+      @vm = FactoryBot.create(:vm_vmware)
+      @vm1 = FactoryBot.create(:vm_vmware)
+      @service = FactoryBot.create(:service)
       @service.name = "Test_Service_1"
       @service << @vm
       @service.save
@@ -430,7 +430,7 @@ describe Service do
 
     describe ".queue_chargeback_reports" do
       it "queue request to generate chargeback report for each service" do
-        @service_c1 = FactoryGirl.create(:service, :service => @service)
+        @service_c1 = FactoryBot.create(:service, :service => @service)
         @service_c1.name = "Test_Service_2"
         @service_c1 << @vm1
         @service_c1.save
@@ -459,7 +459,7 @@ describe Service do
 
     describe "#generate_chargeback_report" do
       it "delete existing chargeback report result for service before generating new one" do
-        FactoryGirl.create(:miq_chargeback_report_result, :name => @service.chargeback_report_name)
+        FactoryBot.create(:miq_chargeback_report_result, :name => @service.chargeback_report_name)
         expect(MiqReportResult.count).to eq 1
 
         report = double("MiqReport")
@@ -481,7 +481,7 @@ describe Service do
 
     describe "#chargeback_yaml" do
       it "loads chargeback report template" do
-        @user = FactoryGirl.create(:user_with_group)
+        @user = FactoryBot.create(:user_with_group)
         report_yaml = @service.chargeback_yaml
 
         report = MiqReport.new(report_yaml)
@@ -515,7 +515,7 @@ describe Service do
     end
 
     it "returns no children" do
-      @service = FactoryGirl.create(:service)
+      @service = FactoryBot.create(:service)
       expect(@service.children).to be_empty
       expect(@service.composite?).to be_falsey
       expect(@service.atomic?).to be_truthy
@@ -575,13 +575,13 @@ describe Service do
 
   describe "#parent_service" do
     it "returns no parent" do
-      service = FactoryGirl.create(:service)
+      service = FactoryBot.create(:service)
       expect(service.parent).to be_nil
     end
 
     it "returns parent" do
-      service = FactoryGirl.create(:service)
-      service_c1 = FactoryGirl.create(:service, :service => service)
+      service = FactoryBot.create(:service)
+      service_c1 = FactoryBot.create(:service, :service => service)
 
       expect(service_c1.parent).to eq(service)
       expect(service_c1.parent_service).to eq(service) # alias
@@ -590,14 +590,14 @@ describe Service do
 
   describe "#has_parent" do
     it "has no parent" do
-      service = FactoryGirl.create(:service)
+      service = FactoryBot.create(:service)
       expect(service.has_parent).to be_falsey
       expect(service.has_parent?).to be_falsey # alias
     end
 
     it "has parent" do
-      service = FactoryGirl.create(:service)
-      service_c1 = FactoryGirl.create(:service, :service => service)
+      service = FactoryBot.create(:service)
+      service_c1 = FactoryBot.create(:service, :service => service)
 
       expect(service_c1.has_parent).to be_truthy
       expect(service_c1.has_parent?).to be_truthy # alias
@@ -606,21 +606,21 @@ describe Service do
 
   describe "#root" do
     it "has root as self" do
-      service = FactoryGirl.create(:service)
+      service = FactoryBot.create(:service)
       expect(service.root).to eq(service)
       expect(service.root_service).to eq(service) # alias
     end
 
     it "has root as parent" do
-      service = FactoryGirl.create(:service)
-      service_c1 = FactoryGirl.create(:service, :service => service)
+      service = FactoryBot.create(:service)
+      service_c1 = FactoryBot.create(:service, :service => service)
       expect(service_c1.root).to eq(service)
       expect(service_c1.root_service).to eq(service) # alias
     end
   end
 
   describe "#service_action" do
-    let(:service) { FactoryGirl.create(:service) }
+    let(:service) { FactoryBot.create(:service) }
     let(:service_resource_nil) { double(:service_resource) }
     let(:service_resource_power) do
       instance_double("ServiceResource", :start_action => "Power On",
@@ -670,7 +670,7 @@ describe Service do
     end
 
     it "cannot be nil" do
-      service = FactoryGirl.build(:service, :display => nil)
+      service = FactoryBot.build(:service, :display => nil)
       expect(service).not_to be_valid
     end
   end
@@ -682,14 +682,14 @@ describe Service do
     end
 
     it "cannot be nil" do
-      service = FactoryGirl.build(:service, :retired => nil)
+      service = FactoryBot.build(:service, :retired => nil)
       expect(service).not_to be_valid
     end
   end
 
   describe '#orchestration_stacks' do
-    let(:service) { FactoryGirl.create(:service) }
-    let(:tower_job) { FactoryGirl.create(:embedded_ansible_job) }
+    let(:service) { FactoryBot.create(:service) }
+    let(:tower_job) { FactoryBot.create(:embedded_ansible_job) }
 
     before { service.add_resource!(tower_job, :name => ResourceAction::PROVISION) }
 
@@ -699,9 +699,9 @@ describe Service do
   end
 
   describe '#generic_objects' do
-    let(:service) { FactoryGirl.create(:service) }
-    let(:go_def)  { FactoryGirl.create(:generic_object_definition, :properties => {:attributes => {:limit => :integer}}) }
-    let(:generic_object) { FactoryGirl.create(:generic_object, :generic_object_definition => go_def).tap { |g| g.property_attributes = {"limit" => 1} } }
+    let(:service) { FactoryBot.create(:service) }
+    let(:go_def)  { FactoryBot.create(:generic_object_definition, :properties => {:attributes => {:limit => :integer}}) }
+    let(:generic_object) { FactoryBot.create(:generic_object, :generic_object_definition => go_def).tap { |g| g.property_attributes = {"limit" => 1} } }
 
     before { service.add_resource!(generic_object) }
 
@@ -711,22 +711,22 @@ describe Service do
   end
 
   describe '#my_zone' do
-    let(:service) { FactoryGirl.create(:service) }
+    let(:service) { FactoryBot.create(:service) }
 
     it 'returns nil without any resources' do
       expect(service.my_zone).to be_nil
     end
 
     it 'returns nil zone when VM is archived' do
-      vm = FactoryGirl.build(:vm_vmware)
+      vm = FactoryBot.build(:vm_vmware)
 
       service.add_resource!(vm)
       expect(service.my_zone).to be_nil
     end
 
     it 'returns the EMS zone when the VM is connected to a EMS' do
-      ems = FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone))
-      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      ems = FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone))
+      vm = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
 
       service.add_resource!(vm)
 
@@ -734,10 +734,10 @@ describe Service do
     end
 
     it 'returns the EMS zone with one VM connected to a EMS and one archived' do
-      service.add_resource!(FactoryGirl.build(:vm_vmware))
+      service.add_resource!(FactoryBot.build(:vm_vmware))
 
-      ems = FactoryGirl.create(:ext_management_system, :zone => FactoryGirl.create(:zone))
-      vm = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
+      ems = FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone))
+      vm = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
 
       service.add_resource!(vm)
 
@@ -746,8 +746,8 @@ describe Service do
   end
 
   describe '#add_to_service' do
-    let(:service) { FactoryGirl.create(:service) }
-    let(:child_service) { FactoryGirl.create(:service) }
+    let(:service) { FactoryBot.create(:service) }
+    let(:child_service) { FactoryBot.create(:service) }
 
     it 'associates a child_service to the service' do
       expect(child_service.add_to_service(service)).to be_kind_of(ServiceResource)
@@ -763,8 +763,8 @@ describe Service do
   end
 
   describe '#remove_from_service' do
-    let(:service) { FactoryGirl.create(:service) }
-    let(:child_service) { FactoryGirl.create(:service) }
+    let(:service) { FactoryBot.create(:service) }
+    let(:child_service) { FactoryBot.create(:service) }
 
     it 'removes child_service from the service' do
       child_service.add_to_service(service)
@@ -814,17 +814,17 @@ describe Service do
   end
 
   def create_deep_tree
-    @service      = FactoryGirl.create(:service)
-    @service_c1   = FactoryGirl.create(:service, :service => @service)
-    @service_c11  = FactoryGirl.create(:service, :service => @service_c1)
-    @service_c12  = FactoryGirl.create(:service, :service => @service_c1)
-    @service_c121 = FactoryGirl.create(:service, :service => @service_c12)
-    @service_c2   = FactoryGirl.create(:service, :service => @service)
+    @service      = FactoryBot.create(:service)
+    @service_c1   = FactoryBot.create(:service, :service => @service)
+    @service_c11  = FactoryBot.create(:service, :service => @service_c1)
+    @service_c12  = FactoryBot.create(:service, :service => @service_c1)
+    @service_c121 = FactoryBot.create(:service, :service => @service_c12)
+    @service_c2   = FactoryBot.create(:service, :service => @service)
   end
 
   context "custom actions" do
-    let(:service_template) { FactoryGirl.create(:service_template) }
-    let(:service) { FactoryGirl.create(:service, :service_template => service_template) }
+    let(:service_template) { FactoryBot.create(:service_template) }
+    let(:service) { FactoryBot.create(:service, :service_template => service_template) }
 
     context "with template" do
       describe "#custom_actions" do
@@ -843,8 +843,8 @@ describe Service do
     end
 
     context "without template" do
-      let!(:custom_button) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
-      let(:service) { FactoryGirl.create(:service, :service_template_id => -1) }
+      let!(:custom_button) { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
+      let(:service) { FactoryBot.create(:service, :service_template_id => -1) }
 
       describe "#custom_action_buttons" do
         it "get list of custom action buttons on services" do

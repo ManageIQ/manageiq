@@ -11,7 +11,7 @@ describe EmbeddedAnsibleWorker::Runner do
       s
     }
     let(:worker_guid) { SecureRandom.uuid }
-    let(:worker)      { FactoryGirl.create(:embedded_ansible_worker, :guid => worker_guid, :miq_server_id => miq_server.id) }
+    let(:worker)      { FactoryBot.create(:embedded_ansible_worker, :guid => worker_guid, :miq_server_id => miq_server.id) }
     let(:runner) {
       worker
       allow_any_instance_of(described_class).to receive(:worker_initialization)
@@ -61,7 +61,7 @@ describe EmbeddedAnsibleWorker::Runner do
           .with(instance_of(ManageIQ::Providers::EmbeddedAnsible::Provider), api_connection)
 
         runner.update_embedded_ansible_provider
-        new_zone = FactoryGirl.create(:zone)
+        new_zone = FactoryBot.create(:zone)
         miq_server.update(:hostname => "boringserver", :zone => new_zone)
 
         runner.update_embedded_ansible_provider
@@ -110,7 +110,7 @@ describe EmbeddedAnsibleWorker::Runner do
       end
 
       context "with a provider" do
-        let!(:provider) { FactoryGirl.create(:provider_embedded_ansible, :with_authentication) }
+        let!(:provider) { FactoryBot.create(:provider_embedded_ansible, :with_authentication) }
 
         it "runs an authentication check if embedded ansible is alive and the credentials are not valid" do
           auth = provider.authentications.first
@@ -143,7 +143,7 @@ describe EmbeddedAnsibleWorker::Runner do
 
         it "updates provider zone if appliance zone changed" do
           allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
-          miq_server.update(:zone => FactoryGirl.create(:zone))
+          miq_server.update(:zone => FactoryBot.create(:zone))
 
           runner.do_work
           expect(provider.reload.zone).to eq(miq_server.zone)
@@ -165,7 +165,7 @@ describe EmbeddedAnsibleWorker::Runner do
           runner.do_work
 
           original_zone = miq_server.zone
-          miq_server.update(:zone => FactoryGirl.create(:zone))
+          miq_server.update(:zone => FactoryBot.create(:zone))
 
           # zone was just checked, doesn't do anything yet
           runner.do_work
@@ -187,7 +187,7 @@ describe EmbeddedAnsibleWorker::Runner do
       before do
         ServerRole.seed
         NotificationType.seed
-        FactoryGirl.create(:user_admin)
+        FactoryBot.create(:user_admin)
       end
 
       it "creates a notification to inform the user that the service has started" do

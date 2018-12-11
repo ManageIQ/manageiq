@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_product_feature
 
   factory :miq_product_feature_everything, :parent => :miq_product_feature do

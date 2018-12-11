@@ -16,9 +16,9 @@ describe Authenticator do
 
   describe '#authorize' do
     let(:authenticator) { Authenticator::Httpd.new({}) }
-    let(:user) { FactoryGirl.create(:user_with_group) }
-    let(:task) { FactoryGirl.create(:miq_task) }
-    let(:groups) { FactoryGirl.create_list(:miq_group, 2) }
+    let(:user) { FactoryBot.create(:user_with_group) }
+    let(:task) { FactoryBot.create(:miq_task) }
+    let(:groups) { FactoryBot.create_list(:miq_group, 2) }
 
     before do
       EvmSpecHelper.create_guid_miq_server_zone
@@ -45,7 +45,7 @@ describe Authenticator do
     let(:authenticator) { Authenticator::Httpd.new({}) }
 
     def create_groups(group_descriptions)
-      group_descriptions.each { |d| FactoryGirl.create(:miq_group, :description => d) }
+      group_descriptions.each { |d| FactoryBot.create(:miq_group, :description => d) }
     end
 
     it "returns external groups matching internal ones" do
@@ -67,11 +67,11 @@ describe Authenticator do
     end
 
     it "only returns matched group for the current region" do
-      FactoryGirl.create(:miq_group,
+      FactoryBot.create(:miq_group,
                          :description => "group2",
                          :id          => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
-      FactoryGirl.create(:miq_group, :description => "group1")
-      group2 = FactoryGirl.create(:miq_group, :description => "group2")
+      FactoryBot.create(:miq_group, :description => "group1")
+      group2 = FactoryBot.create(:miq_group, :description => "group2")
 
       matched_groups = authenticator.send(:match_groups, %w(group2))
       expect(MiqGroup.where(:description => "group2").count).to eq(2)

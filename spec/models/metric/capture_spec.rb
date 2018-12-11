@@ -1,6 +1,6 @@
 describe Metric::Capture do
   describe ".alert_capture_threshold" do
-    let(:target) { FactoryGirl.build(:host_vmware) }
+    let(:target) { FactoryBot.build(:host_vmware) }
 
     it "parses fixed num" do
       stub_performance_settings(:capture_threshold_with_alerts => {:host => 4})
@@ -26,7 +26,7 @@ describe Metric::Capture do
   end
 
   describe ".standard_capture_threshold" do
-    let(:host) { FactoryGirl.build(:host_vmware) }
+    let(:host) { FactoryBot.build(:host_vmware) }
 
     it "parses fixed num" do
       stub_performance_settings(:capture_threshold => {:host => 4})
@@ -53,9 +53,9 @@ describe Metric::Capture do
 
   context ".perf_capture_health_check" do
     let(:miq_server) { EvmSpecHelper.local_miq_server }
-    let(:ems) { FactoryGirl.create(:ems_vmware, :zone => miq_server.zone) }
-    let(:vm) { FactoryGirl.create(:vm_perf, :ext_management_system => ems) }
-    let(:vm2) { FactoryGirl.create(:vm_perf, :ext_management_system => ems) }
+    let(:ems) { FactoryBot.create(:ems_vmware, :zone => miq_server.zone) }
+    let(:vm) { FactoryBot.create(:vm_perf, :ext_management_system => ems) }
+    let(:vm2) { FactoryBot.create(:vm_perf, :ext_management_system => ems) }
 
     it "should queue up realtime capture for vm" do
       vm.perf_capture_realtime_now
@@ -77,7 +77,7 @@ describe Metric::Capture do
       )
     end
 
-    let(:target) { FactoryGirl.build(:host_vmware) }
+    let(:target) { FactoryBot.build(:host_vmware) }
 
     context "with a host with alerts" do
       before do
