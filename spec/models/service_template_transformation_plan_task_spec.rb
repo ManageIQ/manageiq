@@ -248,7 +248,7 @@ describe ServiceTemplateTransformationPlanTask do
     let(:task_1) { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm_1) }
     let(:task_2) { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm_2) }
 
-    let(:conversion_host) { FactoryBot.create(:conversion_host) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => src_vm_1) }
 
     describe '#transformation_destination' do
       it { expect(task_1.transformation_destination(src_cluster)).to eq(dst_cluster) }

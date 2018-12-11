@@ -118,12 +118,12 @@ describe ConversionHost do
       it "returns false if if kill command failed" do
         allow(conversion_host_1).to receive(:connect_ssh).and_raise('Unexpected failure')
         expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(false)
-      end 
+      end
 
       it "returns true if if kill command succeeded" do
         allow(conversion_host_1).to receive(:connect_ssh)
         expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(true)
-      end 
+      end
     end
   end
 
