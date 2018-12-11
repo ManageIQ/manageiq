@@ -152,6 +152,10 @@ class Service < ApplicationRecord
     'service_reconfigure'
   end
 
+  def retireable?
+    parent.present? ? true : type.present?
+  end
+
   alias root_service root
   alias services children
   alias direct_service_children children
@@ -216,10 +220,6 @@ class Service < ApplicationRecord
 
   def composite?
     children.present?
-  end
-
-  def retireable?
-    type.present?
   end
 
   def atomic?

@@ -77,7 +77,7 @@ class MiqRequestTask < ApplicationRecord
     req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
     if req_state == "finished" && state != "finished"
-      req_state = (req_status == 'Ok') ? 'provisioned' : "finished"
+      req_state = req_status == 'Ok' ? completed_state : "finished"
       $log.info("Child tasks finished but current task still processing. Setting state to: [#{req_state}]...")
     end
 
@@ -92,6 +92,10 @@ class MiqRequestTask < ApplicationRecord
     end
 
     update_and_notify_parent(:state => req_state, :status => req_status, :message => display_message(msg))
+  end
+
+  def completed_state
+    "provisioned"
   end
 
   def execute_callback(state, message, _result)

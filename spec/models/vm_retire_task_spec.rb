@@ -9,6 +9,13 @@ describe VmRetireTask do
     expect(vm_retire_task).to have_attributes(:state => 'pending', :status => 'Ok')
   end
 
+  describe "#after_request_task_create" do
+    it "should set the task description" do
+      vm_retire_task.after_request_task_create
+      expect(vm_retire_task.description).to eq("VM Retire for: #{vm.name} - ")
+    end
+  end
+
   describe "deliver_to_automate" do
     before do
       MiqRegion.seed

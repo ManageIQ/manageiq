@@ -8,17 +8,6 @@ describe ServiceRetireTask do
   let(:approver) { FactoryBot.create(:user_miq_request_approver) }
   let(:zone) { FactoryBot.create(:zone, :name => "fred") }
 
-  shared_context "service_bundle" do
-    let(:zone) { FactoryBot.create(:small_environment) }
-    let(:service_c1) { FactoryBot.create(:service, :service => service) }
-
-    before do
-      allow(MiqServer).to receive(:my_server).and_return(zone.miq_servers.first)
-      @miq_request = FactoryBot.create(:service_retire_request, :requester => user)
-      @miq_request.approve(approver, reason)
-    end
-  end
-
   it "should initialize properly" do
     expect(service_retire_task).to have_attributes(:state => 'pending', :status => 'Ok')
   end
@@ -36,7 +25,7 @@ describe ServiceRetireTask do
       it "should call task_finished" do
         service_retire_task.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "yabadabadoo")
 
-        expect(service_retire_task.status).to eq("Completed")
+        expect(service_retire_task.status).to eq("Ok")
       end
     end
   end
@@ -58,59 +47,51 @@ describe ServiceRetireTask do
         miq_request.approve(approver, reason)
       end
 
-      it "creates subtask" do
-        resource = FactoryBot.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service.id, :resource_id => vm.id)
-        service.service_resources << resource
-        service_retire_task.after_request_task_create
+      context "resource lacks type" do
+        it "creates service retire subtask" do
+          resource = FactoryBot.create(:service_resource, :resource_type => nil, :service_id => service.id, :resource_id => vm.id)
+          service.service_resources << resource
+          service_retire_task.after_request_task_create
 
-        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
-        expect(VmRetireTask.count).to eq(1)
+          expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+          expect(ServiceRetireTask.count).to eq(1)
+        end
+      end
+
+      context "resource has type" do
+        it "creates vm retire subtask" do
+          resource = FactoryBot.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service.id, :resource_id => vm.id)
+          service.service_resources << resource
+          service_retire_task.after_request_task_create
+
+          expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+          expect(VmRetireTask.count).to eq(1)
+        end
       end
     end
 
     context "bundled service retires all children" do
-      include_context "service_bundle"
-      let(:vm1) { FactoryBot.create(:vm_vmware) }
-      let(:service_c2) { FactoryBot.create(:service, :service => service_c1) }
+      let(:service_c1) { FactoryBot.create(:service) }
 
       before do
-        service_c1 << vm
-        service_c2 << vm1
-        service.save
-        service_c1.save
-        service_c2.save
+        service.add_resource!(service_c1)
+        service.add_resource!(FactoryBot.create(:service_template))
+        @miq_request = FactoryBot.create(:service_retire_request, :requester => user)
+        @miq_request.approve(approver, reason)
+        @service_retire_task = FactoryBot.create(:service_retire_task, :source => service, :miq_request => @miq_request, :options => {:src_ids => [service.id] })
       end
 
-      it "creates subtask" do
-        @service_retire_task = FactoryBot.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
-        service.service_resources << FactoryBot.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => vm.id)
-        service.service_resources << FactoryBot.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service_c1.id, :resource_id => vm1.id)
-        service.service_resources << FactoryBot.create(:service_resource, :resource_type => "Service", :service_id => service_c1.id, :resource_id => service_c1.id)
-        service.service_resources << FactoryBot.create(:service_resource, :resource_type => "ServiceTemplate", :service_id => service_c1.id, :resource_id => service_c1.id)
-
+      it "creates subtask for services but not templates" do
         @service_retire_task.after_request_task_create
-        expect(VmRetireTask.count).to eq(2)
-        expect(VmRetireTask.all.pluck(:message)).to eq(["Automation Starting", "Automation Starting"])
-        expect(ServiceRetireTask.count).to eq(1)
+
+        expect(ServiceRetireTask.count).to eq(2)
         expect(ServiceRetireRequest.count).to eq(1)
       end
 
       it "doesn't creates subtask for ServiceTemplates" do
-        @service_retire_task = FactoryBot.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
-        service.service_resources << FactoryBot.create(:service_resource, :resource_type => "ServiceTemplate", :service_id => service_c1.id, :resource_id => service_c1.id)
-
         @service_retire_task.after_request_task_create
-        expect(ServiceRetireTask.count).to eq(1)
-        expect(ServiceRetireRequest.count).to eq(1)
-      end
 
-      it "doesn't creates subtask for service resources whose resources are nil" do
-        @service_retire_task = FactoryBot.create(:service_retire_task, :source => service, :miq_request_task_id => nil, :miq_request_id => @miq_request.id, :options => {:src_ids => [service.id] })
-        service.service_resources << FactoryBot.create(:service_resource, :resource_type => "ServiceTemplate", :service_id => service_c1.id, :resource => nil)
-
-        @service_retire_task.after_request_task_create
-        expect(ServiceRetireTask.count).to eq(1)
-        expect(ServiceRetireRequest.count).to eq(1)
+        expect(ServiceRetireTask.count).to eq(2)
       end
     end
   end
