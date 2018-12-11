@@ -280,7 +280,7 @@ describe ServiceTemplateTransformationPlanTask do
     let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm_1) }
     let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => src_vm_2) }
 
-    let(:conversion_host) { FactoryGirl.create(:conversion_host) }
+    let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => src_vm_1) }
 
     describe "#valid_states" do
       it "contains 'migrate'" do

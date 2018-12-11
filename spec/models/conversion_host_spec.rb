@@ -5,9 +5,9 @@ describe ConversionHost do
 
   context "provider independent methods" do
     let(:host) { FactoryGirl.create(:host) }
-    let(:vm) { FactoryGirl.create(:vm_or_template) }
-    let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host) }
-    let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm) }
+    let(:vm) { FactoryGirl.create(:vm) }
+    let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host, :address => '10.0.0.1') }
+    let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm, :address => '10.0.1.1') }
     let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
     let(:task_2) { FactoryGirl.create(:service_template_transformation_plan_task, :conversion_host => conversion_host_1) }
     let(:task_3) { FactoryBot.create(:service_template_transformation_plan_task, :state => 'migrate', :conversion_host => conversion_host_2) }
@@ -118,12 +118,12 @@ describe ConversionHost do
       it "returns false if if kill command failed" do
         allow(conversion_host_1).to receive(:connect_ssh).and_raise('Unexpected failure')
         expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(false)
-      end 
+      end
 
       it "returns true if if kill command succeeded" do
         allow(conversion_host_1).to receive(:connect_ssh)
         expect(conversion_host_1.kill_process('1234', 'KILL')).to eq(true)
-      end 
+      end
     end
   end
 
