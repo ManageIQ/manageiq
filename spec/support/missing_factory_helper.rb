@@ -23,11 +23,11 @@ module Spec
       def registered_factory_symbols
         @registered_factory_symbols ||= begin
           require 'set'
-          FactoryGirl.factories.collect { |i| i.name.to_sym }.to_set
+          FactoryBot.factories.collect { |i| i.name.to_sym }.to_set
         end
       end
     end
   end
 end
 
-FactoryGirl.singleton_class.prepend(Spec::Support::MissingFactoryHelper)
+FactoryBot.singleton_class.prepend(Spec::Support::MissingFactoryHelper)
