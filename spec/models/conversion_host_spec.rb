@@ -15,7 +15,6 @@ describe ConversionHost do
     before do
       allow(conversion_host_1).to receive(:active_tasks).and_return([task_1])
       allow(conversion_host_2).to receive(:active_tasks).and_return([task_3])
-      allow(conversion_host_2).to receive(:resource).and_return(vm)
 
       allow(host).to receive(:ipaddresses).and_return(['10.0.0.1', 'FE80:0000:0000:0000:0202:B3FF:FE1E:8329', '192.168.0.1'])
       allow(host).to receive(:ipaddress).and_return(nil)
