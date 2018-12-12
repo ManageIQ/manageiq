@@ -200,11 +200,26 @@ describe MiqServer do
     end
   end
 
-  it "#enable_repos" do
-    expect(reg_system).to receive(:enable_repo).twice
+  describe "#enable_repos" do
+    it "enables all repos in the list" do
+      expect(reg_system).to receive(:enable_repo).twice
 
-    @server.enable_repos
-    expect(@server.upgrade_message).to eq("enabling repo-2")
+      @server.enable_repos
+      expect(@server.upgrade_message).to eq("enabling repo-2")
+    end
+
+    it "raises a notification for repos which fail to enable" do
+      NotificationType.seed
+      result = AwesomeSpawn::CommandResult.new("stuff", "things", "more things", 1)
+      err = LinuxAdmin::SubscriptionManagerError.new("things", result)
+
+      expect(reg_system).to receive(:enable_repo).with("repo-1", anything).and_raise(err)
+      expect(reg_system).to receive(:enable_repo).with("repo-2", anything)
+
+      @server.enable_repos
+      note = Notification.find_by(:notification_type_id => NotificationType.find_by(:name => "enable_update_repo_failed").id)
+      expect(note.options).to eq(:repo_name => "repo-1")
+    end
   end
 
   it "#check_updates" do
