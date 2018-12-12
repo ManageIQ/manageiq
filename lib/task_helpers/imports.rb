@@ -4,6 +4,7 @@ module TaskHelpers
       require 'trollop'
       options = Trollop.options(EvmRakeHelper.extract_command_options) do
         opt :source, 'Directory or file to import from', :type => :string, :required => true
+        opt :overwrite, 'Overwrite existing object', :type => :boolean, :default => true
       end
 
       error = validate_source(options[:source])

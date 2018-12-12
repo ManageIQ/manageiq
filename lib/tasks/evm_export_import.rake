@@ -8,6 +8,7 @@
 #   * Custom Buttons
 #   * SmartState Analysis Scan Profiles
 #   * Customization Templates
+#   * Reports
 
 namespace :evm do
   namespace :export do
@@ -96,6 +97,14 @@ namespace :evm do
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
+
+    desc 'Exports all reports to individual YAML files'
+    task :reports => :environment do
+      options = TaskHelpers::Exports.parse_options
+      TaskHelpers::Exports::Reports.new.export(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
   end
 
   namespace :import do
@@ -181,6 +190,14 @@ namespace :evm do
     task :customization_templates => :environment do
       options = TaskHelpers::Imports.parse_options
       TaskHelpers::Imports::CustomizationTemplates.new.import(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
+
+    desc 'Imports all reports from individual YAML files'
+    task :reports => :environment do
+      options = TaskHelpers::Imports.parse_options
+      TaskHelpers::Imports::Reports.new.import(options)
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
