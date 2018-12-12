@@ -9,7 +9,7 @@ describe MiqServer, "::ConfigurationManagement" do
 
       it "with changes in the database" do
         miq_server.settings_changes = [
-          FactoryGirl.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
+          FactoryBot.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
         ]
         Settings.reload!
 
@@ -50,12 +50,12 @@ describe MiqServer, "::ConfigurationManagement" do
   end
 
   context "ConfigurationManagementMixin" do
-    let(:miq_server) { FactoryGirl.create(:miq_server) }
+    let(:miq_server) { FactoryBot.create(:miq_server) }
     describe "#config_activated" do
-      let(:zone) { FactoryGirl.create(:zone, :name => "My Zone") }
+      let(:zone) { FactoryBot.create(:zone, :name => "My Zone") }
       let(:zone_other_region) do
         other_region_id = ApplicationRecord.id_in_region(1, MiqRegion.my_region_number + 1)
-        FactoryGirl.create(:zone, :id => other_region_id).tap do |z|
+        FactoryBot.create(:zone, :id => other_region_id).tap do |z|
           z.update_column(:name, "My Zone") # Bypass validation for test purposes
         end
       end

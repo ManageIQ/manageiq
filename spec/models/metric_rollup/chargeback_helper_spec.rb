@@ -1,6 +1,6 @@
 describe MetricRollup do
   describe '#parents_determining_rate' do
-    let(:ems) { FactoryGirl.build(:ems_vmware) }
+    let(:ems) { FactoryBot.build(:ems_vmware) }
 
     before do
       MiqRegion.seed
@@ -8,11 +8,11 @@ describe MetricRollup do
     end
 
     context 'VmOrTemplate' do
-      let(:ems_cluster) { FactoryGirl.build(:ems_cluster, :ext_management_system => ems) }
-      let(:storage) { FactoryGirl.build(:storage_target_vmware) }
-      let(:host) { FactoryGirl.build(:host) }
+      let(:ems_cluster) { FactoryBot.build(:ems_cluster, :ext_management_system => ems) }
+      let(:storage) { FactoryBot.build(:storage_target_vmware) }
+      let(:host) { FactoryBot.build(:host) }
       let(:vm) do
-        FactoryGirl.create(:vm_vmware, :name => 'test_vm', :ems_ref => 'ems_ref',
+        FactoryBot.create(:vm_vmware, :name => 'test_vm', :ems_ref => 'ems_ref',
                            :ems_cluster => ems_cluster, :storage => storage, :host => host,
                            :ext_management_system => ems
                           )
@@ -22,7 +22,7 @@ describe MetricRollup do
 
       context 'metric_rollup record with parents not nil' do
         let(:metric_rollup) do
-          FactoryGirl.build(:metric_rollup_vm_hr,
+          FactoryBot.build(:metric_rollup_vm_hr,
                             :resource           => vm,
                             :parent_host        => host,
                             :parent_ems_cluster => ems_cluster,
@@ -45,7 +45,7 @@ describe MetricRollup do
       end
 
       context 'metric_rollup record with parents nil' do
-        let(:metric_rollup) { FactoryGirl.build(:metric_rollup_vm_hr, :resource => vm) }
+        let(:metric_rollup) { FactoryBot.build(:metric_rollup_vm_hr, :resource => vm) }
         let(:parents_from_vm) do
           [
             vm.host,

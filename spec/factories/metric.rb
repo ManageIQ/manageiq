@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :metric do
     timestamp { Time.now.utc }
   end

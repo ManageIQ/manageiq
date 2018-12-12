@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_alert_set do
     transient { alerts nil }
     sequence(:name)         { |n| "alert_profile_#{seq_padded_for_sorting(n)}" }

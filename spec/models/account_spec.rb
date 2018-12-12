@@ -1,9 +1,9 @@
 describe Account do
-  let(:user_account1) { FactoryGirl.create(:account_user) }
-  let(:group_account1) { FactoryGirl.create(:account_group) }
+  let(:user_account1) { FactoryBot.create(:account_user) }
+  let(:group_account1) { FactoryBot.create(:account_group) }
 
   context 'when host has users and groups' do
-    let(:host) { FactoryGirl.create(:host) }
+    let(:host) { FactoryBot.create(:host) }
     let(:test_xml) do
       REXML::Document.new("<miq>
                           <accounts>
@@ -56,7 +56,7 @@ describe Account do
   end
 
   describe 'group methods' do
-    let(:user_account2) { FactoryGirl.create(:account_user) }
+    let(:user_account2) { FactoryBot.create(:account_user) }
 
     it '#add_user' do
       expect(group_account1.add_member(user_account1)).not_to be_empty
@@ -81,7 +81,7 @@ describe Account do
   end
 
   describe 'user methods' do
-    let(:group_account2) { FactoryGirl.create(:account_group) }
+    let(:group_account2) { FactoryBot.create(:account_group) }
 
     it '#add_group' do
       expect(user_account1.add_member(group_account1)).not_to be_empty

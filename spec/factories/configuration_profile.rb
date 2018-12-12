@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :configuration_profile
 
   factory :configuration_profile_foreman,

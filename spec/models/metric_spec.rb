@@ -7,23 +7,23 @@ describe Metric do
 
   context "as vmware" do
     before do
-      @ems_vmware = FactoryGirl.create(:ems_vmware, :zone => @zone)
+      @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)
     end
 
     context "with enabled and disabled targets" do
       before do
         storages = []
-        2.times { storages << FactoryGirl.create(:storage_target_vmware) }
+        2.times { storages << FactoryBot.create(:storage_target_vmware) }
 
         @vmware_clusters = []
         2.times do
-          cluster = FactoryGirl.create(:cluster_target)
+          cluster = FactoryBot.create(:cluster_target)
           @vmware_clusters << cluster
           @ems_vmware.ems_clusters << cluster
         end
 
         6.times do |n|
-          host = FactoryGirl.create(:host_target_vmware, :ext_management_system => @ems_vmware)
+          host = FactoryBot.create(:host_target_vmware, :ext_management_system => @ems_vmware)
           @ems_vmware.hosts << host
 
           @vmware_clusters[n / 2].hosts << host if n < 4
@@ -239,7 +239,7 @@ describe Metric do
 
     context "with a vm" do
       before do
-        @vm = FactoryGirl.create(:vm_perf, :ext_management_system => @ems_vmware)
+        @vm = FactoryBot.create(:vm_perf, :ext_management_system => @ems_vmware)
       end
 
       context "queueing up realtime rollups to parent" do
@@ -284,7 +284,7 @@ describe Metric do
       end
 
       context "services" do
-        let(:service) { FactoryGirl.create(:service) }
+        let(:service) { FactoryBot.create(:service) }
 
         before do
           service.add_resource(@vm)
@@ -302,16 +302,16 @@ describe Metric do
 
     context "with a small environment and time_profile" do
       before do
-        @vm1 = FactoryGirl.create(:vm_vmware)
-        @vm2 = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 4096))
-        @host1 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
-        @host2 = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576))
+        @vm1 = FactoryBot.create(:vm_vmware)
+        @vm2 = FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 4096))
+        @host1 = FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
+        @host2 = FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576))
 
-        @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems_vmware)
+        @ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => @ems_vmware)
         @ems_cluster.hosts << @host1
         @ems_cluster.hosts << @host2
 
-        @time_profile = FactoryGirl.create(:time_profile_utc)
+        @time_profile = FactoryBot.create(:time_profile_utc)
 
         MiqQueue.delete_all
       end
@@ -328,7 +328,7 @@ describe Metric do
             "2010-04-14T22:52:30Z", 100.0,
           ]
           cases.each_slice(2) do |t, v|
-            @vm1.metrics << FactoryGirl.create(:metric_vm_rt,
+            @vm1.metrics << FactoryBot.create(:metric_vm_rt,
                                                :timestamp                  => t,
                                                :cpu_usage_rate_average     => v,
                                                :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to maake it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
@@ -382,7 +382,7 @@ describe Metric do
             "2010-04-15T21:00:00Z", 100.0,
           ]
           cases.each_slice(2) do |t, v|
-            @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+            @vm1.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
                                                       :timestamp                  => t,
                                                       :cpu_usage_rate_average     => v,
                                                       :cpu_ready_delta_summation  => v * 10000,
@@ -403,7 +403,7 @@ describe Metric do
         end
 
         it "should find multiple resource types" do
-          @host1.metric_rollups << FactoryGirl.create(:metric_rollup_host_hr,
+          @host1.metric_rollups << FactoryBot.create(:metric_rollup_host_hr,
                                                       :resource  => @host1,
                                                       :timestamp => "2010-04-14T22:00:00Z")
           metrics = Metric::Finders.find_all_by_day([@vm1, @host1], "2010-04-14T00:00:00Z", 'hourly', @time_profile)
@@ -461,7 +461,7 @@ describe Metric do
 
         context "with Vm daily performances" do
           before do
-            @perf = FactoryGirl.create(:metric_rollup_vm_daily,
+            @perf = FactoryBot.create(:metric_rollup_vm_daily,
                                        :timestamp    => "2010-04-14T00:00:00Z",
                                        :time_profile => @time_profile
                                       )
@@ -500,7 +500,7 @@ describe Metric do
               "2010-04-14T22:52:40Z", 100.0,
             ]
             cases.each_slice(2) do |t, v|
-              @host1.metrics << FactoryGirl.create(:metric_host_rt,
+              @host1.metrics << FactoryBot.create(:metric_host_rt,
                                                    :timestamp                  => t,
                                                    :cpu_usage_rate_average     => v,
                                                    :cpu_usagemhz_rate_average  => v,
@@ -518,7 +518,7 @@ describe Metric do
               "2010-04-14T22:52:40Z", 200.0,
             ]
             cases.each_slice(2) do |t, v|
-              @host2.metrics << FactoryGirl.create(:metric_host_rt,
+              @host2.metrics << FactoryBot.create(:metric_host_rt,
                                                    :timestamp                  => t,
                                                    :cpu_usage_rate_average     => v,
                                                    :cpu_usagemhz_rate_average  => v,
@@ -649,7 +649,7 @@ describe Metric do
           ]
           cases.each_slice(3) do |t, cpu, mem|
             [@vm1, @vm2].each do |vm|
-              vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_daily,
+              vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_daily,
                                                       :timestamp                  => t,
                                                       :cpu_usage_rate_average     => cpu,
                                                       :mem_usage_absolute_average => mem,
@@ -702,12 +702,12 @@ describe Metric do
 
     context "with a full rollup chain and time profile" do
       before do
-        @host = FactoryGirl.create(:host, :ext_management_system => @ems_vmware)
-        @vm = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems_vmware, :host => @host)
-        @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems_vmware)
+        @host = FactoryBot.create(:host, :ext_management_system => @ems_vmware)
+        @vm = FactoryBot.create(:vm_vmware, :ext_management_system => @ems_vmware, :host => @host)
+        @ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => @ems_vmware)
         @ems_cluster.hosts << @host
 
-        @time_profile = FactoryGirl.create(:time_profile_utc)
+        @time_profile = FactoryBot.create(:time_profile_utc)
 
         MiqQueue.delete_all
       end
@@ -978,8 +978,8 @@ describe Metric do
     context "with a cluster" do
       context "maintains_value_for_duration?" do
         it "should handle the only event right before the starting on time (FB15770)" do
-          @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems_vmware)
-          @ems_cluster.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+          @ems_cluster = FactoryBot.create(:ems_cluster, :ext_management_system => @ems_vmware)
+          @ems_cluster.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr,
                                                             :timestamp => Time.parse("2011-08-12T20:33:12Z")
                                                            )
 
@@ -1000,20 +1000,20 @@ describe Metric do
 
   context "as openstack" do
     before do
-      @ems_openstack = FactoryGirl.create(:ems_openstack, :zone => @zone)
+      @ems_openstack = FactoryBot.create(:ems_openstack, :zone => @zone)
     end
 
     context "with enabled and disabled targets" do
       before do
-        @availability_zone = FactoryGirl.create(:availability_zone_target)
+        @availability_zone = FactoryBot.create(:availability_zone_target)
         @ems_openstack.availability_zones << @availability_zone
         @vms_in_az = []
-        2.times { @vms_in_az << FactoryGirl.create(:vm_openstack, :ems_id => @ems_openstack.id) }
+        2.times { @vms_in_az << FactoryBot.create(:vm_openstack, :ems_id => @ems_openstack.id) }
         @availability_zone.vms = @vms_in_az
-        @availability_zone.vms.push(FactoryGirl.create(:vm_openstack, :ems_id => nil))
+        @availability_zone.vms.push(FactoryBot.create(:vm_openstack, :ems_id => nil))
 
         @vms_not_in_az = []
-        3.times { @vms_not_in_az << FactoryGirl.create(:vm_openstack, :ems_id => @ems_openstack.id) }
+        3.times { @vms_not_in_az << FactoryBot.create(:vm_openstack, :ems_id => @ems_openstack.id) }
 
         MiqQueue.delete_all
       end
@@ -1043,7 +1043,7 @@ describe Metric do
 
     context "with a vm" do
       before do
-        @vm = FactoryGirl.create(:vm_perf_openstack, :ext_management_system => @ems_openstack)
+        @vm = FactoryBot.create(:vm_perf_openstack, :ext_management_system => @ems_openstack)
       end
 
       context "queueing up realtime rollups to parent" do
@@ -1074,10 +1074,10 @@ describe Metric do
 
     context "with a full rollup chain and time profile" do
       before do
-        @availability_zone = FactoryGirl.create(:availability_zone, :ext_management_system => @ems_openstack)
-        @vm = FactoryGirl.create(:vm_openstack, :ext_management_system => @ems_openstack, :availability_zone => @availability_zone)
+        @availability_zone = FactoryBot.create(:availability_zone, :ext_management_system => @ems_openstack)
+        @vm = FactoryBot.create(:vm_openstack, :ext_management_system => @ems_openstack, :availability_zone => @availability_zone)
 
-        @time_profile = FactoryGirl.create(:time_profile_utc)
+        @time_profile = FactoryBot.create(:time_profile_utc)
 
         MiqQueue.delete_all
       end
@@ -1133,15 +1133,15 @@ describe Metric do
 
   context "as kubernetes" do
     before do
-      @ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
+      @ems_kubernetes = FactoryBot.create(:ems_kubernetes, :zone => @zone)
 
-      @node_a = FactoryGirl.create(:container_node, :ext_management_system => @ems_kubernetes)
-      @node_a.computer_system.hardware = FactoryGirl.create(:hardware, :cpu_total_cores => 2)
+      @node_a = FactoryBot.create(:container_node, :ext_management_system => @ems_kubernetes)
+      @node_a.computer_system.hardware = FactoryBot.create(:hardware, :cpu_total_cores => 2)
 
-      @node_b = FactoryGirl.create(:container_node, :ext_management_system => @ems_kubernetes)
-      @node_b.computer_system.hardware = FactoryGirl.create(:hardware, :cpu_total_cores => 8)
+      @node_b = FactoryBot.create(:container_node, :ext_management_system => @ems_kubernetes)
+      @node_b.computer_system.hardware = FactoryBot.create(:hardware, :cpu_total_cores => 8)
 
-      @node_a.metric_rollups << FactoryGirl.create(
+      @node_a.metric_rollups << FactoryBot.create(
         :metric_rollup,
         :timestamp                  => ROLLUP_CHAIN_TIMESTAMP,
         :cpu_usage_rate_average     => 50.0,
@@ -1150,7 +1150,7 @@ describe Metric do
         :parent_ems_id              => @ems_kubernetes.id
       )
 
-      @node_b.metric_rollups << FactoryGirl.create(
+      @node_b.metric_rollups << FactoryBot.create(
         :metric_rollup,
         :timestamp                  => ROLLUP_CHAIN_TIMESTAMP,
         :cpu_usage_rate_average     => 75.0,

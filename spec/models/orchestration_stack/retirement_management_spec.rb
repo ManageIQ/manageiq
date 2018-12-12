@@ -1,11 +1,11 @@
 describe "Service Retirement Management" do
-  let!(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => "admin") }
+  let!(:user) { FactoryBot.create(:user_miq_request_approver, :userid => "admin") }
   context "with zone/ems" do
     before do
       @miq_server = EvmSpecHelper.local_miq_server
       @zone = @miq_server.zone
-      ems = FactoryGirl.create(:ext_management_system, :zone => @zone)
-      @stack = FactoryGirl.create(:orchestration_stack, :ext_management_system => ems)
+      ems = FactoryBot.create(:ext_management_system, :zone => @zone)
+      @stack = FactoryBot.create(:orchestration_stack, :ext_management_system => ems)
     end
 
     it "#retirement_check" do
@@ -148,7 +148,7 @@ describe "Service Retirement Management" do
 
   context "without zone/ems" do
     it "#raise_retirement_event" do
-      stack_without_zone = FactoryGirl.create(:orchestration_stack, :ext_management_system => nil)
+      stack_without_zone = FactoryBot.create(:orchestration_stack, :ext_management_system => nil)
       event_name = 'foo'
       event_hash = {
         :userid              => nil,

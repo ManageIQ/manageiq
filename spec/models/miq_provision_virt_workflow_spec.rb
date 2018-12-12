@@ -1,10 +1,10 @@
 describe MiqProvisionVirtWorkflow do
-  let(:workflow) { FactoryGirl.create(:miq_provision_virt_workflow) }
+  let(:workflow) { FactoryBot.create(:miq_provision_virt_workflow) }
 
   context "#new" do
     let(:sdn)  { 'SysprepDomainName' }
     let(:host) { double('Host', :id => 1, :name => 'my_host') }
-    let(:user) { FactoryGirl.create(:user_with_email) }
+    let(:user) { FactoryBot.create(:user_with_email) }
 
     before do
       allow(workflow).to receive_messages(:validate => true)
@@ -67,11 +67,11 @@ describe MiqProvisionVirtWorkflow do
 
   context 'network selection' do
     before do
-      @ems      = FactoryGirl.create(:ems_vmware)
-      @host1    = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-      @host2    = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-      @src_vm   = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
-      @other_vm = FactoryGirl.create(:vm_vmware, :host => @host2, :ems_id => @ems.id)
+      @ems      = FactoryBot.create(:ems_vmware)
+      @host1    = FactoryBot.create(:host_vmware, :ems_id => @ems.id)
+      @host2    = FactoryBot.create(:host_vmware, :ems_id => @ems.id)
+      @src_vm   = FactoryBot.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
+      @other_vm = FactoryBot.create(:vm_vmware, :host => @host2, :ems_id => @ems.id)
       allow(Rbac).to receive(:search) do |hash|
         [Array.wrap(hash[:targets])]
       end
@@ -83,16 +83,16 @@ describe MiqProvisionVirtWorkflow do
 
     context 'vlans' do
       before do
-        s11 = FactoryGirl.create(:switch, :name => "A")
-        s12 = FactoryGirl.create(:switch, :name => "B")
-        s13 = FactoryGirl.create(:switch, :name => "C")
-        s14 = FactoryGirl.create(:switch, :name => "D")
+        s11 = FactoryBot.create(:switch, :name => "A")
+        s12 = FactoryBot.create(:switch, :name => "B")
+        s13 = FactoryBot.create(:switch, :name => "C")
+        s14 = FactoryBot.create(:switch, :name => "D")
         @src_vm.host.switches   = [s11, s12, s13]
         @other_vm.host.switches = [s14]
-        @lan11 = FactoryGirl.create(:lan, :name => "lan_A", :switch_id => s11.id)
-        @lan12 = FactoryGirl.create(:lan, :name => "lan_B", :switch_id => s12.id)
-        @lan13 = FactoryGirl.create(:lan, :name => "lan_C", :switch_id => s13.id)
-        @lan14 = FactoryGirl.create(:lan, :name => "lan_D", :switch_id => s14.id)
+        @lan11 = FactoryBot.create(:lan, :name => "lan_A", :switch_id => s11.id)
+        @lan12 = FactoryBot.create(:lan, :name => "lan_B", :switch_id => s12.id)
+        @lan13 = FactoryBot.create(:lan, :name => "lan_C", :switch_id => s13.id)
+        @lan14 = FactoryBot.create(:lan, :name => "lan_D", :switch_id => s14.id)
       end
 
       it '#allowed_vlans' do
@@ -116,22 +116,22 @@ describe MiqProvisionVirtWorkflow do
 
   context '#allowed_hosts_obj' do
     before do
-      @ems    = FactoryGirl.create(:ems_vmware)
-      @host1  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-      @host2  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-      @src_vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
+      @ems    = FactoryBot.create(:ems_vmware)
+      @host1  = FactoryBot.create(:host_vmware, :ems_id => @ems.id)
+      @host2  = FactoryBot.create(:host_vmware, :ems_id => @ems.id)
+      @src_vm = FactoryBot.create(:vm_vmware, :ems_id => @ems.id)
       allow(workflow).to receive(:find_all_ems_of_type).and_return([@host1, @host2])
       allow(Rbac).to receive(:search) do |hash|
         [Array.wrap(hash[:targets])]
       end
       workflow.instance_variable_set(:@target_resource, nil)
 
-      s1 = FactoryGirl.create(:switch, :name => "A")
-      s2 = FactoryGirl.create(:switch, :name => "B")
+      s1 = FactoryBot.create(:switch, :name => "A")
+      s2 = FactoryBot.create(:switch, :name => "B")
       @host1.switches = [s1]
       @host2.switches = [s2]
-      @lan1 = FactoryGirl.create(:lan, :name => "lan_A", :switch_id => s1.id)
-      @lan2 = FactoryGirl.create(:lan, :name => "lan_B", :switch_id => s2.id)
+      @lan1 = FactoryBot.create(:lan, :name => "lan_A", :switch_id => s1.id)
+      @lan2 = FactoryBot.create(:lan, :name => "lan_B", :switch_id => s2.id)
     end
 
     it 'finds all hosts with no selected network' do
@@ -146,9 +146,9 @@ describe MiqProvisionVirtWorkflow do
   end
 
   context "#update_requester_from_parameters" do
-    let(:user_new) { FactoryGirl.create(:user_with_email) }
+    let(:user_new) { FactoryBot.create(:user_with_email) }
     let(:data_new_user) { {:user_name => user_new.name} }
-    let(:current_user) { FactoryGirl.create(:user_with_email) }
+    let(:current_user) { FactoryBot.create(:user_with_email) }
 
     it "finds and sets a new user if one is passed in" do
       expect(User).to receive(:lookup_by_identity).and_return(user_new).once
@@ -230,7 +230,7 @@ describe MiqProvisionVirtWorkflow do
     end
 
     it "with a provider model defined" do
-      ems = FactoryGirl.create(:ems_vmware)
+      ems = FactoryBot.create(:ems_vmware)
       expect(workflow.class).to receive(:provider_model).once.and_return(ems.class)
 
       expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id in (?)", true, [ems.id]])
@@ -258,9 +258,9 @@ describe MiqProvisionVirtWorkflow do
     end
 
     it "returns a hash struct if a vm or template is found" do
-      ems    = FactoryGirl.create(:ems_vmware)
-      host1  = FactoryGirl.create(:host_vmware, :ems_id => ems.id)
-      src_vm = FactoryGirl.create(:vm_vmware, :host => host1, :ems_id => ems.id)
+      ems    = FactoryBot.create(:ems_vmware)
+      host1  = FactoryBot.create(:host_vmware, :ems_id => ems.id)
+      src_vm = FactoryBot.create(:vm_vmware, :host => host1, :ems_id => ems.id)
       allow(workflow).to receive(:source_vm_rbac_filter).and_return([src_vm])
       expect(workflow.ws_find_template_or_vm("", "VMWARE", "asdf-adsf", "asdfadfasdf")).to be_a(MiqHashStruct)
     end
@@ -348,9 +348,9 @@ describe MiqProvisionVirtWorkflow do
 
   context '#make_request (update)' do
     let(:template) do
-      FactoryGirl.create(
+      FactoryBot.create(
         :template_vmware,
-        :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication)
+        :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication)
       )
     end
     let(:values)  { {:src_vm_id => [template.id, template.name]} }
@@ -372,13 +372,13 @@ describe MiqProvisionVirtWorkflow do
       ApplicationRecord.region_to_range(remote_region_number).first
     end
 
-    let(:remote_vmware) { FactoryGirl.create(:ems_vmware_with_authentication, :id => external_region_id) }
-    let(:local_vmware)  { FactoryGirl.create(:ems_vmware_with_authentication) }
+    let(:remote_vmware) { FactoryBot.create(:ems_vmware_with_authentication, :id => external_region_id) }
+    let(:local_vmware)  { FactoryBot.create(:ems_vmware_with_authentication) }
 
     it "only returns records from its region" do
       EvmSpecHelper.local_miq_server # Because there is no default timezone in settings
-      FactoryGirl.create(:template_vmware, :ext_management_system => remote_vmware, :id => external_region_id)
-      FactoryGirl.create(:template_vmware, :ext_management_system => local_vmware)
+      FactoryBot.create(:template_vmware, :ext_management_system => remote_vmware, :id => external_region_id)
+      FactoryBot.create(:template_vmware, :ext_management_system => local_vmware)
 
       expect(MiqTemplate.count).to eq(2)
       expect(workflow.allowed_templates.count).to eq(1)

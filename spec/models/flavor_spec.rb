@@ -1,5 +1,5 @@
 describe Flavor do
-  let(:ems) { FactoryGirl.create(:ems_openstack) }
+  let(:ems) { FactoryBot.create(:ems_openstack) }
 
   context 'when calling raw_create_flavor methods' do
     it 'raises NotImplementedError' do

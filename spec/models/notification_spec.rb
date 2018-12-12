@@ -1,8 +1,8 @@
 describe Notification, :type => :model do
   before { allow(User).to receive_messages(:server_timezone => 'UTC') }
   before { NotificationType.seed }
-  let(:tenant) { FactoryGirl.create(:tenant) }
-  let!(:user) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
+  let(:tenant) { FactoryBot.create(:tenant) }
+  let!(:user) { FactoryBot.create(:user_with_group, :tenant => tenant) }
 
   describe '.of_type' do
     it "only returns notification of the given type" do
@@ -23,7 +23,7 @@ describe Notification, :type => :model do
 
   describe '.emit' do
     context 'successful' do
-      let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
+      let(:vm) { FactoryBot.create(:vm, :tenant => tenant) }
       let(:notification_type) { :vm_retired }
 
       subject { Notification.create(:type => notification_type, :subject => vm) }
@@ -37,7 +37,7 @@ describe Notification, :type => :model do
       end
 
       it 'creates single record in notification_recipients table if recipent user belongs to several groups' do
-        user.miq_groups << FactoryGirl.create(:miq_group, :tenant => tenant)
+        user.miq_groups << FactoryBot.create(:miq_group, :tenant => tenant)
         expect(subject.recipients).to match_array([user])
       end
 
@@ -63,11 +63,11 @@ describe Notification, :type => :model do
       end
 
       context 'tenant includes user without access to the subject (vm)' do
-        let(:limiting_role) { FactoryGirl.create(:miq_user_role, :settings => {:restrictions=>{:vms=>:user}}) }
+        let(:limiting_role) { FactoryBot.create(:miq_user_role, :settings => {:restrictions=>{:vms=>:user}}) }
         let(:limited_group) do
-          FactoryGirl.create(:miq_group, :tenant_type, :tenant => tenant, :miq_user_role => limiting_role)
+          FactoryBot.create(:miq_group, :tenant_type, :tenant => tenant, :miq_user_role => limiting_role)
         end
-        let!(:limited_user) { FactoryGirl.create(:user, :miq_groups => [limited_group]) }
+        let!(:limited_user) { FactoryBot.create(:user, :miq_groups => [limited_group]) }
 
         it 'emits notifications only to those users, who are authorized to see the subject' do
           expect(subject.recipients).to match_array([user])
@@ -75,13 +75,13 @@ describe Notification, :type => :model do
       end
 
       context 'emiting for MiqRequest' do
-        let(:friends) { FactoryGirl.create(:miq_group) }
-        let(:requester) { FactoryGirl.create(:user, :miq_groups => [friends]) }
-        let!(:peer) { FactoryGirl.create(:user, :miq_groups => [friends]) }
-        let!(:non_peer) { FactoryGirl.create(:user) }
-        let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'vm', :location => 'abc/def.vmx') }
+        let(:friends) { FactoryBot.create(:miq_group) }
+        let(:requester) { FactoryBot.create(:user, :miq_groups => [friends]) }
+        let!(:peer) { FactoryBot.create(:user, :miq_groups => [friends]) }
+        let!(:non_peer) { FactoryBot.create(:user) }
+        let(:vm) { FactoryBot.create(:vm_vmware, :name => 'vm', :location => 'abc/def.vmx') }
         let(:request) do
-          FactoryGirl.create(:miq_provision_request, :requester => requester, :src_vm_id => vm.id,
+          FactoryBot.create(:miq_provision_request, :requester => requester, :src_vm_id => vm.id,
                              :options => {:owner_email => 'tester@miq.com'})
         end
         subject { Notification.create(:subject => request, :type => 'request_approved') }
@@ -92,8 +92,8 @@ describe Notification, :type => :model do
       end
 
       context 'subject does not have tenant' do
-        let!(:peer) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
-        let!(:non_peer) { FactoryGirl.create(:user) }
+        let!(:peer) { FactoryBot.create(:user_with_group, :tenant => tenant) }
+        let!(:non_peer) { FactoryBot.create(:user) }
 
         subject { Notification.create(:initiator => user, :type => 'automate_tenant_info') }
 
@@ -105,7 +105,7 @@ describe Notification, :type => :model do
   end
 
   describe '#to_h' do
-    let(:notification) { FactoryGirl.create(:notification, :initiator => user, :options => {:extra => 'information'}) }
+    let(:notification) { FactoryBot.create(:notification, :initiator => user, :options => {:extra => 'information'}) }
     it 'contains information consumable by UI' do
       expect(notification.to_h).to include(
         :level      => notification.notification_type.level,
@@ -119,8 +119,8 @@ describe Notification, :type => :model do
 
     context 'link_to is set' do
       let(:notification) do
-        FactoryGirl.create(:notification, :initiator         => user,
-                                          :notification_type => FactoryGirl.create(:notification_type, :link_to => 'initiator'))
+        FactoryBot.create(:notification, :initiator         => user,
+                                          :notification_type => FactoryBot.create(:notification_type, :link_to => 'initiator'))
       end
 
       it 'contains the link to the initiator' do
@@ -129,7 +129,7 @@ describe Notification, :type => :model do
     end
 
     context "subject text" do
-      let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
+      let(:vm) { FactoryBot.create(:vm, :tenant => tenant) }
       subject { Notification.create(:type => :vm_snapshot_failure, :subject => vm, :options => {:error => "oops", :snapshot_op => "create"}) }
 
       it "stuffs subject into options hash in case the subject is destroyed" do
@@ -168,7 +168,7 @@ describe Notification, :type => :model do
   end
 
   describe "#seen_by_all_recipients?" do
-    let(:notification) { FactoryGirl.create(:notification, :initiator => user) }
+    let(:notification) { FactoryBot.create(:notification, :initiator => user) }
 
     it "is false if a user has not seen the notification" do
       expect(notification.seen_by_all_recipients?).to be_falsey

@@ -1,5 +1,5 @@
 describe ServiceTemplateTransformationPlan do
-  subject { FactoryGirl.create(:service_template_transformation_plan) }
+  subject { FactoryBot.create(:service_template_transformation_plan) }
 
   describe '#request_class' do
     it { expect(subject.request_class).to eq(ServiceTemplateTransformationPlanRequest) }
@@ -16,16 +16,16 @@ describe ServiceTemplateTransformationPlan do
     end
   end
 
-  let(:transformation_mapping) { FactoryGirl.create(:transformation_mapping) }
-  let(:transformation_mapping2) { FactoryGirl.create(:transformation_mapping) }
-  let(:apst) { FactoryGirl.create(:service_template_ansible_playbook) }
-  let(:vm1) { FactoryGirl.create(:vm_or_template) }
-  let(:vm2) { FactoryGirl.create(:vm_or_template) }
-  let(:vm3) { FactoryGirl.create(:vm_or_template) }
-  let(:security_group1) { FactoryGirl.create(:security_group, :name => "default") }
-  let(:flavor1) { FactoryGirl.create(:flavor, :name => "large") }
-  let(:security_group2) { FactoryGirl.create(:security_group, :name => "default") }
-  let(:flavor2) { FactoryGirl.create(:flavor, :name => "medium") }
+  let(:transformation_mapping) { FactoryBot.create(:transformation_mapping) }
+  let(:transformation_mapping2) { FactoryBot.create(:transformation_mapping) }
+  let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
+  let(:vm1) { FactoryBot.create(:vm_or_template) }
+  let(:vm2) { FactoryBot.create(:vm_or_template) }
+  let(:vm3) { FactoryBot.create(:vm_or_template) }
+  let(:security_group1) { FactoryBot.create(:security_group, :name => "default") }
+  let(:flavor1) { FactoryBot.create(:flavor, :name => "large") }
+  let(:security_group2) { FactoryBot.create(:security_group, :name => "default") }
+  let(:flavor2) { FactoryBot.create(:flavor, :name => "medium") }
 
   let(:catalog_item_options) do
     {
@@ -107,13 +107,13 @@ describe ServiceTemplateTransformationPlan do
     }
   end
 
-  let(:miq_requests) { [FactoryGirl.create(:service_template_transformation_plan_request, :request_state => "finished")] }
-  let(:miq_requests_with_in_progress_request) { [FactoryGirl.create(:service_template_transformation_plan_request, :request_state => "active")] }
+  let(:miq_requests) { [FactoryBot.create(:service_template_transformation_plan_request, :request_state => "finished")] }
+  let(:miq_requests_with_in_progress_request) { [FactoryBot.create(:service_template_transformation_plan_request, :request_state => "active")] }
 
   describe '.public_service_templates' do
     it 'display public service templates' do
-      st1 = FactoryGirl.create(:service_template_transformation_plan)
-      st2 = FactoryGirl.create(:service_template)
+      st1 = FactoryBot.create(:service_template_transformation_plan)
+      st2 = FactoryBot.create(:service_template)
 
       expect(st1.internal?).to be_truthy
       expect(st2.internal?).to be_falsey

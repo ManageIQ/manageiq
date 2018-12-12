@@ -1,8 +1,8 @@
 describe ServiceTemplateAnsibleTower do
-  let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
-  let(:ra2) { FactoryGirl.create(:resource_action, :action => 'Retirement') }
-  let(:service_dialog) { FactoryGirl.create(:dialog) }
-  let(:configuration_script) { FactoryGirl.create(:configuration_script) }
+  let(:ra1) { FactoryBot.create(:resource_action, :action => 'Provision') }
+  let(:ra2) { FactoryBot.create(:resource_action, :action => 'Retirement') }
+  let(:service_dialog) { FactoryBot.create(:dialog) }
+  let(:configuration_script) { FactoryBot.create(:configuration_script) }
   let(:catalog_item_options) do
     {
       :name         => 'Ansible Tower',
@@ -54,7 +54,7 @@ describe ServiceTemplateAnsibleTower do
   end
 
   describe '#update_catalog_item' do
-    let(:new_configuration_script) { FactoryGirl.create(:configuration_script) }
+    let(:new_configuration_script) { FactoryBot.create(:configuration_script) }
     let(:updated_catalog_item_options) do
       {
         :name        => 'Updated Ansible Tower',
@@ -112,9 +112,9 @@ describe ServiceTemplateAnsibleTower do
 
   describe '#config_info' do
     it 'returns the correct format' do
-      job_template = FactoryGirl.create(:configuration_script)
-      service_template = FactoryGirl.create(:service_template_ansible_tower, :job_template => job_template)
-      ra = FactoryGirl.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
+      job_template = FactoryBot.create(:configuration_script)
+      service_template = FactoryBot.create(:service_template_ansible_tower, :job_template => job_template)
+      ra = FactoryBot.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
       service_template.create_resource_actions(:provision => { :fqname => ra.fqname })
 
       expected_config_info = {
@@ -128,9 +128,9 @@ describe ServiceTemplateAnsibleTower do
   end
 
   describe '#my_zone' do
-    let(:manager) { FactoryGirl.create(:automation_manager_ansible_tower, :provider) }
-    let(:job_template) { FactoryGirl.create(:configuration_script, :manager => manager) }
-    let(:service_template) { FactoryGirl.create(:service_template_ansible_tower, :job_template => job_template) }
+    let(:manager) { FactoryBot.create(:automation_manager_ansible_tower, :provider) }
+    let(:job_template) { FactoryBot.create(:configuration_script, :manager => manager) }
+    let(:service_template) { FactoryBot.create(:service_template_ansible_tower, :job_template => job_template) }
 
     context "with job template manager" do
       it "takes the zone from job_template manager" do

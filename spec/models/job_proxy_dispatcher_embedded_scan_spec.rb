@@ -39,11 +39,11 @@ describe "JobProxyDispatcherEmbeddedScanSpec" do
     end
 
     context "With a zone, server, ems, hosts, vmware vms" do
-      let(:zone) { FactoryGirl.create(:zone) }
+      let(:zone) { FactoryBot.create(:zone) }
       before do
         server = EvmSpecHelper.local_miq_server(:is_master => true, :name => "test_server_main_server", :zone => zone)
         (NUM_OF_SERVERS - 1).times do |i|
-          FactoryGirl.create(:miq_server, :zone => server.zone, :name => "test_server_#{i}")
+          FactoryBot.create(:miq_server, :zone => server.zone, :name => "test_server_#{i}")
         end
 
         # TODO: We should be able to set values so we don't need to stub behavior

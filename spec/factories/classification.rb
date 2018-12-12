@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :classification do
     sequence(:name)        { |n| "category_#{seq_padded_for_sorting(n)}" }
     sequence(:description) { |n| "category #{seq_padded_for_sorting(n)}" }
@@ -31,7 +31,7 @@ FactoryGirl.define do
   factory :classification_cost_center_with_tags, :parent => :classification_cost_center do
     children do
       [
-        FactoryGirl.create(:classification_tag, :name => "001", :description => "Cost Center 001"),
+        FactoryBot.create(:classification_tag, :name => "001", :description => "Cost Center 001"),
       ]
     end
   end
@@ -39,9 +39,9 @@ FactoryGirl.define do
   factory :classification_department_with_tags, :parent => :classification_department do
     children do
       [
-        FactoryGirl.create(:classification_tag, :name => "accounting", :description => "Accounting"),
-        FactoryGirl.create(:classification_tag, :name => "finance",    :description => "Financial Services"),
-        FactoryGirl.create(:classification_tag, :name => "hr",         :description => "Human Resources"),
+        FactoryBot.create(:classification_tag, :name => "accounting", :description => "Accounting"),
+        FactoryBot.create(:classification_tag, :name => "finance",    :description => "Financial Services"),
+        FactoryBot.create(:classification_tag, :name => "hr",         :description => "Human Resources"),
       ]
     end
   end

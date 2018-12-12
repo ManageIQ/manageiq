@@ -24,9 +24,9 @@ describe Container do
       let(:deleted_date) { 6.months.ago }
 
       before do
-        @old_container        = FactoryGirl.create(:container, :deleted_on => deleted_date - 1.day)
-        @purge_date_container = FactoryGirl.create(:container, :deleted_on => deleted_date)
-        @new_container        = FactoryGirl.create(:container, :deleted_on => deleted_date + 1.day)
+        @old_container        = FactoryBot.create(:container, :deleted_on => deleted_date - 1.day)
+        @purge_date_container = FactoryBot.create(:container, :deleted_on => deleted_date)
+        @new_container        = FactoryBot.create(:container, :deleted_on => deleted_date + 1.day)
       end
 
       def assert_unpurged_ids(unpurged_ids)

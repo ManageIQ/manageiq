@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :hardware do
     trait(:cpu1x1) do
       cpu_sockets          1

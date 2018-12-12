@@ -23,7 +23,7 @@ module Spec
         allow_any_instance_of(described_class).to receive(:set_user_time_zone)
 
         features = "everything" if features == :all
-        login_as FactoryGirl.create(:user, :features => Array.wrap(features).map(&:to_s)), :stub_controller => true
+        login_as FactoryBot.create(:user, :features => Array.wrap(features).map(&:to_s)), :stub_controller => true
       end
 
       def stub_admin

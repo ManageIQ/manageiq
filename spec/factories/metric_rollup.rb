@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :metric_rollup do
     timestamp { Time.now.utc }
     trait :with_data do

@@ -1,7 +1,7 @@
 describe TaskHelpers::Exports::Tags do
-  let(:parent)      { FactoryGirl.create(:classification, :name => "export_test_category",   :description => "Export Test") }
-  let(:def_parent)  { FactoryGirl.create(:classification, :name => "default_test_category",  :description => "Default Export Test",   :default => true) }
-  let(:def_parent2) { FactoryGirl.create(:classification, :name => "default_test2_category", :description => "Default Export Test 2", :default => true) }
+  let(:parent)      { FactoryBot.create(:classification, :name => "export_test_category",   :description => "Export Test") }
+  let(:def_parent)  { FactoryBot.create(:classification, :name => "default_test_category",  :description => "Default Export Test",   :default => true) }
+  let(:def_parent2) { FactoryBot.create(:classification, :name => "default_test2_category", :description => "Default Export Test 2", :default => true) }
   let(:export_dir)  { Dir.mktmpdir('miq_exp_dir') }
 
   let(:tag_export_test) do
@@ -97,11 +97,11 @@ describe TaskHelpers::Exports::Tags do
   end
 
   before do
-    FactoryGirl.create(:classification_tag, :name => "test_entry",         :description => "Test Entry",           :parent => parent)
-    FactoryGirl.create(:classification_tag, :name => "another_test_entry", :description => "Another Test Entry",   :parent => parent)
-    FactoryGirl.create(:classification_tag, :name => "def_test_entry",     :description => "Default Test Entry",   :parent => def_parent,  :default => true)
-    FactoryGirl.create(:classification_tag, :name => "def_test_entry_2",   :description => "Default Test Entry 2", :parent => def_parent2, :default => true)
-    FactoryGirl.create(:classification_tag, :name => "def_test_entry_3",   :description => "Default Test Entry 3", :parent => def_parent2)
+    FactoryBot.create(:classification_tag, :name => "test_entry",         :description => "Test Entry",           :parent => parent)
+    FactoryBot.create(:classification_tag, :name => "another_test_entry", :description => "Another Test Entry",   :parent => parent)
+    FactoryBot.create(:classification_tag, :name => "def_test_entry",     :description => "Default Test Entry",   :parent => def_parent,  :default => true)
+    FactoryBot.create(:classification_tag, :name => "def_test_entry_2",   :description => "Default Test Entry 2", :parent => def_parent2, :default => true)
+    FactoryBot.create(:classification_tag, :name => "def_test_entry_3",   :description => "Default Test Entry 3", :parent => def_parent2)
   end
 
   after do

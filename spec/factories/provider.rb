@@ -1,15 +1,15 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :provider do
     sequence(:name) { |n| "provider_#{seq_padded_for_sorting(n)}" }
     guid            { SecureRandom.uuid }
-    zone            { FactoryGirl.create(:zone) }
+    zone            { FactoryBot.create(:zone) }
   end
 
   factory :provider_foreman, :class => "ManageIQ::Providers::Foreman::Provider", :parent => :provider do
     url "example.com"
 
     after(:build) do |provider|
-      provider.authentications << FactoryGirl.build(:authentication,
+      provider.authentications << FactoryBot.build(:authentication,
                                                     :userid   => "admin",
                                                     :password => "smartvm")
     end
@@ -20,7 +20,7 @@ FactoryGirl.define do
     url "example.com"
     trait(:with_authentication) do
       after(:create) do |x|
-        x.authentications << FactoryGirl.create(:authentication, :status => "Valid")
+        x.authentications << FactoryBot.create(:authentication, :status => "Valid")
       end
     end
   end

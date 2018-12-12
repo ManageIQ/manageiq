@@ -30,7 +30,7 @@ describe TimezoneMixin do
 
     context "with a user" do
       let!(:user) do
-        User.current_user = FactoryGirl.create(:user)
+        User.current_user = FactoryBot.create(:user)
       end
 
       it "#with_current_user_timezone in GMT" do

@@ -4,11 +4,11 @@ describe GenericObject do
   let(:server_name)    { "test_server" }
   let(:data_read)      { 345.67 }
   let(:s_time)         { Time.now.utc }
-  let(:vm1)            { FactoryGirl.create(:vm_vmware) }
-  let(:user)           { FactoryGirl.create(:user_with_group) }
+  let(:vm1)            { FactoryBot.create(:vm_vmware) }
+  let(:user)           { FactoryBot.create(:user_with_group) }
 
   let(:definition) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :generic_object_definition,
       :name       => "test_definition",
       :properties => {
@@ -26,7 +26,7 @@ describe GenericObject do
   end
 
   let(:go) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :generic_object,
       :generic_object_definition => definition,
       :name                      => go_object_name,
@@ -104,7 +104,7 @@ describe GenericObject do
     end
 
     context "without generic_object_definition" do
-      let(:empty_go) { FactoryGirl.build(:generic_object) }
+      let(:empty_go) { FactoryBot.build(:generic_object) }
 
       it "raises an error when set a property attribute" do
         expect { empty_go.max_number = max_number }.to raise_error(NoMethodError)
@@ -121,9 +121,9 @@ describe GenericObject do
   end
 
   describe 'property associations' do
-    let(:vm2) { FactoryGirl.create(:vm_vmware) }
+    let(:vm2) { FactoryBot.create(:vm_vmware) }
     let(:go_assoc) do
-      FactoryGirl.create(
+      FactoryBot.create(
         :generic_object,
         :generic_object_definition => definition,
         :name                      => 'go_assoc',
@@ -144,7 +144,7 @@ describe GenericObject do
     end
 
     it 'skips invalid object when saving to DB' do
-      go_assoc.vms = [vm1, vm2, FactoryGirl.create(:host)]
+      go_assoc.vms = [vm1, vm2, FactoryBot.create(:host)]
       go_assoc.save!
 
       expect(go_assoc.reload.vms.count).to eq(2)
@@ -162,7 +162,7 @@ describe GenericObject do
     end
 
     it 'method returns all associations' do
-      host = FactoryGirl.create(:host)
+      host = FactoryBot.create(:host)
       go_assoc.hosts = [host]
 
       result = go_assoc.property_associations
@@ -253,7 +253,7 @@ describe GenericObject do
     end
 
     it 'an association' do
-      vm2 = FactoryGirl.create(:vm_vmware)
+      vm2 = FactoryBot.create(:vm_vmware)
       go.vms = [vm1, vm2]
       expect(go.delete_property("vms")).to match_array([vm1, vm2])
       expect(go.vms).to be_empty
@@ -269,7 +269,7 @@ describe GenericObject do
   end
 
   describe '#add_to_property_association' do
-    let(:new_vm) { FactoryGirl.create(:vm_vmware) }
+    let(:new_vm) { FactoryBot.create(:vm_vmware) }
     subject { go.add_to_property_association("vms", vm1) }
 
     it 'adds objects into association' do
@@ -289,7 +289,7 @@ describe GenericObject do
     end
 
     it 'does not add object from differnt class' do
-      go.add_to_property_association("vms", FactoryGirl.create(:host))
+      go.add_to_property_association("vms", FactoryBot.create(:host))
       expect(go.vms.count).to eq(0)
     end
 
@@ -301,7 +301,7 @@ describe GenericObject do
 
   describe '#delete_from_property_association' do
     before { go.add_to_property_association("vms", [vm1]) }
-    let(:new_vm) { FactoryGirl.create(:vm_vmware) }
+    let(:new_vm) { FactoryBot.create(:vm_vmware) }
 
     it 'deletes objects from association' do
       result = go.delete_from_property_association(:vms, [vm1])
@@ -317,7 +317,7 @@ describe GenericObject do
     end
 
     it 'does not delete object from differnt class' do
-      result = go.delete_from_property_association(:vms, [FactoryGirl.create(:host)])
+      result = go.delete_from_property_association(:vms, [FactoryBot.create(:host)])
       expect(go.vms).to match_array([vm1])
       expect(result).to be_nil
     end
@@ -328,7 +328,7 @@ describe GenericObject do
   end
 
   describe '#add_to_service' do
-    let(:service) { FactoryGirl.create(:service) }
+    let(:service) { FactoryBot.create(:service) }
 
     it 'associates the generic object to the service' do
       go.add_to_service(service)
@@ -336,14 +336,14 @@ describe GenericObject do
     end
 
     it 'can associate to multiple services' do
-      go.add_to_service(FactoryGirl.create(:service))
+      go.add_to_service(FactoryBot.create(:service))
       go.add_to_service(service)
       expect(service.reload.generic_objects).to include(go)
     end
   end
 
   describe '#remove_from_service' do
-    let(:service) { FactoryGirl.create(:service) }
+    let(:service) { FactoryBot.create(:service) }
 
     it 'removes the generic object from the service' do
       go.add_to_service(service)
@@ -378,7 +378,7 @@ describe GenericObject do
     end
 
     describe '#custom_button_events' do
-      let(:cb_event) { FactoryGirl.create(:custom_button_event, :target => go) }
+      let(:cb_event) { FactoryBot.create(:custom_button_event, :target => go) }
 
       it 'returns list of custom button events' do
         expect(go.custom_button_events).to match_array([cb_event])

@@ -3,7 +3,7 @@ describe PersistentVolumeClaim do
     let(:storage_size) { 123_456_789 }
 
     it "returns value for :storage key in Hash column :capacity" do
-      persistent_volume = FactoryGirl.create(
+      persistent_volume = FactoryBot.create(
         :persistent_volume_claim,
         :capacity => {:storage => storage_size, :foo => "something"}
       )
@@ -11,7 +11,7 @@ describe PersistentVolumeClaim do
     end
 
     it "returns nil if there is no :storage key in Hash column :capacity" do
-      persistent_volume = FactoryGirl.create(
+      persistent_volume = FactoryBot.create(
         :persistent_volume_claim,
         :capacity => {:foo => "something"}
       )

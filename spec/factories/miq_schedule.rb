@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_schedule_validation, :class => :MiqSchedule do
     sequence(:name)     { |n| "schedule_#{seq_padded_for_sorting(n)}" }
     description         "test"

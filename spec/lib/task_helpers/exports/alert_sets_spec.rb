@@ -31,7 +31,7 @@ describe TaskHelpers::Exports::AlertSets do
   end
 
   before do
-    FactoryGirl.create(:miq_alert_set_vm, alert_set_create_attrs)
+    FactoryBot.create(:miq_alert_set_vm, alert_set_create_attrs)
     @export_dir = Dir.mktmpdir('miq_exp_dir')
   end
 

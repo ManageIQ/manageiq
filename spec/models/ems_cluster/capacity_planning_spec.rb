@@ -1,6 +1,6 @@
 describe EmsCluster::CapacityPlanning do
   before do
-    @cluster = FactoryGirl.create(:ems_cluster)
+    @cluster = FactoryBot.create(:ems_cluster)
   end
 
   it "virtual columns" do
@@ -209,9 +209,9 @@ describe EmsCluster::CapacityPlanning do
 
   it "#capacity_failover_host_resources_with_failover_hosts" do
     hosts = [
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 4), :failover => true),
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 2), :failover => true),
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 1), :failover => false)
+      FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :cpu_total_cores => 4), :failover => true),
+      FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :cpu_total_cores => 2), :failover => true),
+      FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :cpu_total_cores => 1), :failover => false)
     ]
     @cluster.hosts << hosts
     expect(@cluster.capacity_failover_host_resources_with_failover_hosts(1, :vcpu)).to eq(6.0)
@@ -219,8 +219,8 @@ describe EmsCluster::CapacityPlanning do
 
   it "#capacity_failover_host_resources_without_failover_hosts" do
     hosts = [
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 4), :failover => false),
-      FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 2), :failover => false)
+      FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :cpu_total_cores => 4), :failover => false),
+      FactoryBot.create(:host, :hardware => FactoryBot.create(:hardware, :cpu_total_cores => 2), :failover => false)
     ]
     @cluster.hosts << hosts
     expect(@cluster.capacity_failover_host_resources_without_failover_hosts(1, :vcpu)).to eq(3.0)

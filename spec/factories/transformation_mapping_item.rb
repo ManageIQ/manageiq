@@ -1,3 +1,3 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :transformation_mapping_item
 end

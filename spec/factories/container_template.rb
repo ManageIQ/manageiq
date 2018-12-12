@@ -1,1 +1,1 @@
-FactoryGirl.define { factory(:container_template) }
+FactoryBot.define { factory(:container_template) }

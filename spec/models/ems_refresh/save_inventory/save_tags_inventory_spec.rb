@@ -3,7 +3,7 @@ require 'inventory_refresh/inventory_object'
 context "save_tags_inventory" do
   # @return [Tag] a tag in a category linked to a mapping.
   def mapped_tag(category_name, tag_name)
-    mapping = FactoryGirl.create(:tag_mapping_with_category,
+    mapping = FactoryBot.create(:tag_mapping_with_category,
                                  :category_name        => category_name,
                                  :category_description => category_name)
     category = mapping.tag.classification
@@ -12,11 +12,11 @@ context "save_tags_inventory" do
   end
 
   before do
-    @zone = FactoryGirl.create(:zone)
-    @ems  = FactoryGirl.create(:ems_amazon, :zone => @zone)
+    @zone = FactoryBot.create(:zone)
+    @ems  = FactoryBot.create(:ems_amazon, :zone => @zone)
 
-    @vm   = FactoryGirl.create(:vm, :ext_management_system => @ems)
-    @node = FactoryGirl.create(:container_node, :ext_management_system => @ems)
+    @vm   = FactoryBot.create(:vm, :ext_management_system => @ems)
+    @node = FactoryBot.create(:container_node, :ext_management_system => @ems)
 
     @tag1 = mapped_tag('amazon:vm:owner', 'alice')
     @tag2 = mapped_tag('kubernetes:container_node:stuff', 'jabberwocky')

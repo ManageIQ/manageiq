@@ -2,7 +2,7 @@ describe MiqEvent do
   context "seeded" do
     context ".raise_evm_job_event" do
       it "vm" do
-        obj = FactoryGirl.create(:vm_redhat)
+        obj = FactoryBot.create(:vm_redhat)
         expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
           target == obj && raw_event == "vm_scan_complete"
         end
@@ -10,7 +10,7 @@ describe MiqEvent do
       end
 
       it "container_image" do
-        obj = FactoryGirl.create(:container_image)
+        obj = FactoryBot.create(:container_image)
         expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
           target == obj && raw_event == "container_image_scan_complete"
         end
@@ -22,7 +22,7 @@ describe MiqEvent do
       end
 
       it "host" do
-        obj = FactoryGirl.create(:host_vmware)
+        obj = FactoryBot.create(:host_vmware)
         expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
           target == obj && raw_event == "host_scan_complete"
         end
@@ -30,7 +30,7 @@ describe MiqEvent do
       end
 
       it "physical_server" do
-        obj = FactoryGirl.create(:physical_server)
+        obj = FactoryBot.create(:physical_server)
         expect(MiqEvent).to receive(:raise_evm_event) do |target, raw_event, _inputs|
           target == obj && raw_event == "physical_server_shutdown"
         end
@@ -39,10 +39,10 @@ describe MiqEvent do
     end
 
     it "will recognize known events" do
-      FactoryGirl.create(:miq_event_definition, :name => "host_connect")
+      FactoryBot.create(:miq_event_definition, :name => "host_connect")
       expect(MiqEvent.normalize_event("host_connect")).not_to eq("unknown")
 
-      FactoryGirl.create(:miq_event_definition, :name => "evm_server_start")
+      FactoryBot.create(:miq_event_definition, :name => "evm_server_start")
       expect(MiqEvent.normalize_event("evm_server_start")).not_to eq("unknown")
     end
 
@@ -53,17 +53,17 @@ describe MiqEvent do
 
     context ".event_name_for_target" do
       it "vm" do
-        expect(MiqEvent.event_name_for_target(FactoryGirl.build(:vm_redhat),   "perf_complete")).to eq("vm_perf_complete")
+        expect(MiqEvent.event_name_for_target(FactoryBot.build(:vm_redhat),   "perf_complete")).to eq("vm_perf_complete")
       end
 
       it "host" do
-        expect(MiqEvent.event_name_for_target(FactoryGirl.build(:host_redhat), "perf_complete")).to eq("host_perf_complete")
+        expect(MiqEvent.event_name_for_target(FactoryBot.build(:host_redhat), "perf_complete")).to eq("host_perf_complete")
       end
     end
 
     context ".raise_evm_event" do
       before do
-        @cluster    = FactoryGirl.create(:ems_cluster)
+        @cluster    = FactoryBot.create(:ems_cluster)
         @miq_server = EvmSpecHelper.local_miq_server
         @zone       = @miq_server.zone
       end
@@ -80,20 +80,20 @@ describe MiqEvent do
 
       it "will raise the event to automate given target directly" do
         event = 'evm_server_start'
-        FactoryGirl.create(:miq_event_definition, :name => event)
+        FactoryBot.create(:miq_event_definition, :name => event)
         expect(MiqAeEvent).to receive(:raise_evm_event)
         MiqEvent.raise_evm_event(@miq_server, event)
       end
 
       it "will raise the event to automate given target type and id" do
         event = 'evm_server_start'
-        FactoryGirl.create(:miq_event_definition, :name => event)
+        FactoryBot.create(:miq_event_definition, :name => event)
         expect(MiqAeEvent).to receive(:raise_evm_event)
         MiqEvent.raise_evm_event([:MiqServer, @miq_server.id], event)
       end
 
       it "will raise undefined event for classes that do not support policy" do
-        service = FactoryGirl.create(:service)
+        service = FactoryBot.create(:service)
         expect(MiqAeEvent).to receive(:raise_evm_event)
         MiqEvent.raise_evm_event(service, "request_service_retire")
       end
@@ -104,10 +104,10 @@ describe MiqEvent do
       end
 
       it "will create miq_event object with username" do
-        user = FactoryGirl.create(:user_with_group, :userid => "test")
-        vm = FactoryGirl.create(:vm_vmware)
+        user = FactoryBot.create(:user_with_group, :userid => "test")
+        vm = FactoryBot.create(:vm_vmware)
         event = 'request_vm_start'
-        FactoryGirl.create(:miq_event_definition, :name => event)
+        FactoryBot.create(:miq_event_definition, :name => event)
 
         User.with_user(user) do
           event_obj = MiqEvent.raise_evm_event(vm, event)
@@ -120,15 +120,15 @@ describe MiqEvent do
 
     context "#process_evm_event" do
       before do
-        @cluster    = FactoryGirl.create(:ems_cluster)
-        @zone       = FactoryGirl.create(:zone, :name => "test")
-        @miq_server = FactoryGirl.create(:miq_server, :guid => @guid, :zone => @zone)
+        @cluster    = FactoryBot.create(:ems_cluster)
+        @zone       = FactoryBot.create(:zone, :name => "test")
+        @miq_server = FactoryBot.create(:miq_server, :guid => @guid, :zone => @zone)
       end
 
       it "will do policy, alerts, and children events for supported policy target" do
         event = 'vm_start'
-        FactoryGirl.create(:miq_event_definition, :name => event)
-        FactoryGirl.create(:miq_event, :event_type => event, :target => @cluster)
+        FactoryBot.create(:miq_event_definition, :name => event)
+        FactoryBot.create(:miq_event, :event_type => event, :target => @cluster)
         inputs = {:type => @cluster.class.name, :triggering_type => event, :triggering_data => nil}
         expect(MiqPolicy).to receive(:enforce_policy).with(@cluster, event, inputs)
         expect(MiqAlert).to receive(:evaluate_alerts).with(@cluster, event, inputs)
@@ -140,16 +140,16 @@ describe MiqEvent do
 
       it "will not raise to automate for supported policy target" do
         raw_event = "evm_server_start"
-        FactoryGirl.create(:miq_event_definition, :name => raw_event)
-        FactoryGirl.create(:miq_event, :event_type => raw_event, :target => @miq_server)
+        FactoryBot.create(:miq_event_definition, :name => raw_event)
+        FactoryBot.create(:miq_event, :event_type => raw_event, :target => @miq_server)
 
         expect(MiqAeEvent).to receive(:raise_evm_event).never
         MiqEvent.first.process_evm_event
       end
 
       it "will do nothing for unsupported policy target" do
-        FactoryGirl.create(:miq_event_definition, :name => "some_event")
-        FactoryGirl.create(:miq_event, :event_type => "some_event", :target => @zone)
+        FactoryBot.create(:miq_event_definition, :name => "some_event")
+        FactoryBot.create(:miq_event, :event_type => "some_event", :target => @zone)
 
         expect(MiqPolicy).to receive(:enforce_policy).never
         expect(MiqAlert).to receive(:evaluate_alerts).never
@@ -159,9 +159,9 @@ describe MiqEvent do
 
       it "will do policy for provider events" do
         event = 'ems_auth_changed'
-        ems = FactoryGirl.create(:ext_management_system)
-        FactoryGirl.create(:miq_event_definition, :name => event)
-        FactoryGirl.create(:miq_event, :event_type => event, :target => ems)
+        ems = FactoryBot.create(:ext_management_system)
+        FactoryBot.create(:miq_event_definition, :name => event)
+        FactoryBot.create(:miq_event, :event_type => event, :target => ems)
         inputs = {:type => ems.class.name, :triggering_type => event, :triggering_data => nil}
 
         expect(MiqPolicy).to receive(:enforce_policy).with(ems, event, inputs)
@@ -170,13 +170,13 @@ describe MiqEvent do
 
       it"will pass EmsEvent to policy if set" do
         event = 'vm_clone_start'
-        vm = FactoryGirl.create(:vm_vmware)
-        ems_event = FactoryGirl.create(
+        vm = FactoryBot.create(:vm_vmware)
+        ems_event = FactoryBot.create(
           :ems_event,
           :event_type => "CloneVM_Task",
           :full_data  => { "info" => {"task" => "task-5324"}})
-        FactoryGirl.create(:miq_event_definition, :name => event)
-        FactoryGirl.create(
+        FactoryBot.create(:miq_event_definition, :name => event)
+        FactoryBot.create(
           :miq_event,
           :event_type => event,
           :target     => vm,
@@ -199,8 +199,8 @@ describe MiqEvent do
 
     context ".raise_event_for_children" do
       it "uses base_model to build event name" do
-        host = FactoryGirl.create(:host_vmware_esx)
-        vm = FactoryGirl.create(:vm_vmware, :host => host)
+        host = FactoryBot.create(:host_vmware_esx)
+        vm = FactoryBot.create(:vm_vmware, :host => host)
         expect(MiqEvent).to receive(:raise_evm_event_queue) do |target, child_event, _inputs|
           target == vm && child_event == "assigned_company_tag_parent_host"
         end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_worker do
     pid    { rand(99999) }
     status "ready"

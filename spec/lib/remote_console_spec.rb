@@ -1,6 +1,6 @@
 describe RemoteConsole do
   describe '.new' do
-    let(:record) { FactoryGirl.create(:system_console, :protocol => protocol, :ssl => ssl) }
+    let(:record) { FactoryBot.create(:system_console, :protocol => protocol, :ssl => ssl) }
     let(:ssl) { false }
 
     context 'VNC' do

@@ -1,7 +1,7 @@
 describe ServiceAnsibleTower do
-  let(:tower) { FactoryGirl.create(:automation_manager_ansible_tower) }
-  let(:template_by_dialog) { FactoryGirl.create(:ansible_configuration_script, :manager => tower) }
-  let(:template_by_setter) { FactoryGirl.create(:ansible_configuration_script, :manager => tower) }
+  let(:tower) { FactoryBot.create(:automation_manager_ansible_tower) }
+  let(:template_by_dialog) { FactoryBot.create(:ansible_configuration_script, :manager => tower) }
+  let(:template_by_setter) { FactoryBot.create(:ansible_configuration_script, :manager => tower) }
 
   let(:dialog_options) do
     {
@@ -20,9 +20,9 @@ describe ServiceAnsibleTower do
   end
 
   let(:service) do
-    FactoryGirl.create(:service_ansible_tower,
-                       :evm_owner => FactoryGirl.create(:user),
-                       :miq_group => FactoryGirl.create(:miq_group))
+    FactoryBot.create(:service_ansible_tower,
+                       :evm_owner => FactoryBot.create(:user),
+                       :miq_group => FactoryBot.create(:miq_group))
   end
 
   let(:service_with_dialog_options) do
@@ -63,11 +63,11 @@ describe ServiceAnsibleTower do
   describe '#launch_job' do
     let(:control_extras) { {'a' => 'A', 'b' => 'B', 'c' => 'C'} }
     before do
-      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
-      miq_request_task = FactoryGirl.create(:miq_request_task, :miq_request => FactoryGirl.create(:service_template_provision_request))
+      FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      miq_request_task = FactoryBot.create(:miq_request_task, :miq_request => FactoryBot.create(:service_template_provision_request))
       miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
-      service.update_attributes(:evm_owner        => FactoryGirl.create(:user_with_group),
-                                :miq_group        => FactoryGirl.create(:miq_group),
+      service.update_attributes(:evm_owner        => FactoryBot.create(:user_with_group),
+                                :miq_group        => FactoryBot.create(:miq_group),
                                 :miq_request_task => miq_request_task)
     end
 

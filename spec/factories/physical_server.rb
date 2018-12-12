@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :physical_server do
     vendor "lenovo"
   end

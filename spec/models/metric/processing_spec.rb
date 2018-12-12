@@ -1,8 +1,8 @@
 describe Metric::Processing do
   context "#add_missing_intervals" do
     let(:time_now) { Time.current }
-    let(:last_perf) { FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => time_now) }
-    let(:perf) { FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => time_now + 10_800) }
+    let(:last_perf) { FactoryBot.create(:metric_rollup_vm_hr, :timestamp => time_now) }
+    let(:perf) { FactoryBot.create(:metric_rollup_vm_hr, :timestamp => time_now + 10_800) }
     context "#extrapolate" do
       it "fills all hourly intervals" do
         perf.save && last_perf.save
@@ -29,11 +29,11 @@ describe Metric::Processing do
 
   context ".process_derived_columns" do
     context "services" do
-      let(:vm_amazon_a) { FactoryGirl.create(:vm_amazon) }
-      let(:vm_amazon_b) { FactoryGirl.create(:vm_amazon, :powered_off) }
-      let(:service) { FactoryGirl.create(:service) }
-      let(:metric_a) { FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm_amazon_a) }
-      let(:metric_b) { FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm_amazon_b) }
+      let(:vm_amazon_a) { FactoryBot.create(:vm_amazon) }
+      let(:vm_amazon_b) { FactoryBot.create(:vm_amazon, :powered_off) }
+      let(:service) { FactoryBot.create(:service) }
+      let(:metric_a) { FactoryBot.create(:metric_rollup_vm_hr, :resource => vm_amazon_a) }
+      let(:metric_b) { FactoryBot.create(:metric_rollup_vm_hr, :resource => vm_amazon_b) }
 
       before do
         service.add_resource(vm_amazon_a)
@@ -51,11 +51,11 @@ describe Metric::Processing do
     end
 
     context "on :derived_host_sockets" do
-      let(:hardware) { FactoryGirl.create(:hardware, :cpu_sockets => 2) }
-      let(:host) { FactoryGirl.create(:host, :hardware => hardware) }
+      let(:hardware) { FactoryBot.create(:hardware, :cpu_sockets => 2) }
+      let(:host) { FactoryBot.create(:host, :hardware => hardware) }
 
       it "adds the derived host sockets" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => host)
+        m = FactoryBot.create(:metric_rollup_vm_hr, :resource => host)
 
         derived_columns = described_class.process_derived_columns(host, m.attributes.symbolize_keys)
 
@@ -64,10 +64,10 @@ describe Metric::Processing do
     end
 
     context "on :derived_vm_numvcpus" do
-      let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 8)) }
+      let(:vm) { FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :cpu_total_cores => 8)) }
 
       it "with all usage values" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usage_rate_average    => 50.0,
                                :cpu_usagemhz_rate_average => 1_500.0,
@@ -79,7 +79,7 @@ describe Metric::Processing do
       end
 
       it "with only cpu_usage_rate_average usage value" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource               => vm,
                                :cpu_usage_rate_average => 50.0,
                               )
@@ -90,7 +90,7 @@ describe Metric::Processing do
       end
 
       it "with only cpu_usagemhz_rate_average usage value" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usagemhz_rate_average => 1_500.0,
                               )
@@ -101,7 +101,7 @@ describe Metric::Processing do
       end
 
       it "without usage values" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm)
+        m = FactoryBot.create(:metric_rollup_vm_hr, :resource => vm)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -109,8 +109,8 @@ describe Metric::Processing do
       end
 
       it "without hardware" do
-        vm = FactoryGirl.create(:vm_vmware)
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        vm = FactoryBot.create(:vm_vmware)
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usage_rate_average    => 50.0,
                                :cpu_usagemhz_rate_average => 1_500.0
@@ -124,8 +124,8 @@ describe Metric::Processing do
 
     context "on :derived_cpu_available" do
       let(:vm) do
-        FactoryGirl.create(:vm_vmware, :hardware =>
-          FactoryGirl.create(:hardware,
+        FactoryBot.create(:vm_vmware, :hardware =>
+          FactoryBot.create(:hardware,
                              :cpu_total_cores      => 8,
                              :cpu_sockets          => 4,
                              :cpu_cores_per_socket => 2,
@@ -135,7 +135,7 @@ describe Metric::Processing do
       end
 
       it "with all usage values" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usage_rate_average    => 50.0,
                                :cpu_usagemhz_rate_average => 1_500.0,
@@ -147,7 +147,7 @@ describe Metric::Processing do
       end
 
       it "with only cpu_usage_rate_average usage value" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource               => vm,
                                :cpu_usage_rate_average => 50.0,
                               )
@@ -158,7 +158,7 @@ describe Metric::Processing do
       end
 
       it "with only cpu_usagemhz_rate_average usage value" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usagemhz_rate_average => 1_500.0,
                               )
@@ -169,7 +169,7 @@ describe Metric::Processing do
       end
 
       it "without usage values" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm)
+        m = FactoryBot.create(:metric_rollup_vm_hr, :resource => vm)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -177,8 +177,8 @@ describe Metric::Processing do
       end
 
       it "without hardware" do
-        vm = FactoryGirl.create(:vm_vmware)
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        vm = FactoryBot.create(:vm_vmware)
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usage_rate_average    => 50.0,
                                :cpu_usagemhz_rate_average => 1_500.0
@@ -192,15 +192,15 @@ describe Metric::Processing do
 
     context "on :derived_memory_available" do
       let(:vm) do
-        FactoryGirl.create(:vm_vmware, :hardware =>
-          FactoryGirl.create(:hardware,
+        FactoryBot.create(:vm_vmware, :hardware =>
+          FactoryBot.create(:hardware,
                              :memory_mb => 4_096
                             )
                           )
       end
 
       it "with usage values" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource                   => vm,
                                :mem_usage_absolute_average => 50.0,
                               )
@@ -211,7 +211,7 @@ describe Metric::Processing do
       end
 
       it "without usage values" do
-        m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm)
+        m = FactoryBot.create(:metric_rollup_vm_hr, :resource => vm)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
 
@@ -219,8 +219,8 @@ describe Metric::Processing do
       end
 
       it "without hardware" do
-        vm = FactoryGirl.create(:vm_vmware)
-        m = FactoryGirl.create(:metric_rollup_vm_hr,
+        vm = FactoryBot.create(:vm_vmware)
+        m = FactoryBot.create(:metric_rollup_vm_hr,
                                :resource                   => vm,
                                :mem_usage_absolute_average => 50.0,
                               )

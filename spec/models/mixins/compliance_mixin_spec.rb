@@ -1,11 +1,11 @@
 describe ComplianceMixin do
   include Spec::Support::ArelHelper
 
-  let(:host)           { FactoryGirl.create(:host) }
+  let(:host)           { FactoryBot.create(:host) }
   let(:new_timestamp)  { 2.months.ago.change(:usec => 0) }
   let(:old_timestamp)  { 4.months.ago.change(:usec => 0) }
-  let(:new_compliance) { FactoryGirl.create(:compliance, :resource => host, :timestamp => new_timestamp, :compliant => false) }
-  let(:old_compliance) { FactoryGirl.create(:compliance, :resource => host, :timestamp => old_timestamp) }
+  let(:new_compliance) { FactoryBot.create(:compliance, :resource => host, :timestamp => new_timestamp, :compliant => false) }
+  let(:old_compliance) { FactoryBot.create(:compliance, :resource => host, :timestamp => old_timestamp) }
   let(:compliances)    { [old_compliance, new_compliance] }
 
   describe "#last_compliance" do

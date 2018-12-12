@@ -1,6 +1,6 @@
 describe GenericObjectDefinition do
   let(:definition) do
-    FactoryGirl.create(
+    FactoryBot.create(
       :generic_object_definition,
       :name       => "test_definition",
       :properties => {
@@ -81,7 +81,7 @@ describe GenericObjectDefinition do
 
   describe '#destroy' do
     let(:generic_object) do
-      FactoryGirl.build(:generic_object, :generic_object_definition => definition, :name => 'test')
+      FactoryBot.build(:generic_object, :generic_object_definition => definition, :name => 'test')
     end
 
     it 'raises an error if the definition is in use' do
@@ -101,7 +101,7 @@ describe GenericObjectDefinition do
 
   describe '#add_property_attribute' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :attributes => {:status => "string"}})
     end
@@ -128,7 +128,7 @@ describe GenericObjectDefinition do
 
   describe '#delete_property_attribute' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :attributes => {:status => "string"}})
     end
@@ -152,7 +152,7 @@ describe GenericObjectDefinition do
 
   describe '#add_property_method' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :methods => %w(method1) })
     end
@@ -170,7 +170,7 @@ describe GenericObjectDefinition do
 
   describe '#delete_property_method' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :methods => %w(method1) })
     end
@@ -188,7 +188,7 @@ describe GenericObjectDefinition do
 
   describe '#add_property_association' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => { :associations => { :vms => 'Vm' } })
     end
@@ -220,7 +220,7 @@ describe GenericObjectDefinition do
 
   describe '#delete_property_association' do
     let(:definition) do
-      FactoryGirl.create(:generic_object_definition,
+      FactoryBot.create(:generic_object_definition,
                          :name       => 'test',
                          :properties => {:associations => {:vms => 'Vm'}})
     end
@@ -236,8 +236,8 @@ describe GenericObjectDefinition do
     end
 
     it 'deletes the association from associated generic objects' do
-      vm = FactoryGirl.create(:vm)
-      go = FactoryGirl.create(:generic_object, :name => 'test', :generic_object_definition => definition)
+      vm = FactoryBot.create(:vm)
+      go = FactoryBot.create(:generic_object, :name => 'test', :generic_object_definition => definition)
       go.add_to_property_association('vms', vm)
       expect(go.vms.size).to eq(1)
 
@@ -281,7 +281,7 @@ describe GenericObjectDefinition do
 
     it 'finds by associations' do
       vm = []
-      3.times { vm << FactoryGirl.create(:vm_vmware) }
+      3.times { vm << FactoryBot.create(:vm_vmware) }
 
       definition.add_property_association(:vms, 'vm')
       @g1.vms = [vm[0], vm[1], vm[2]]
@@ -295,24 +295,24 @@ describe GenericObjectDefinition do
 
   describe "#custom_actions" do
     it "returns the custom actions in a hash grouped by buttons and button groups" do
-      FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "GenericObject")
-      generic_group = FactoryGirl.create(:custom_button, :name => "generic_group", :applies_to_class => "GenericObject")
-      generic_group_set = FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
+      FactoryBot.create(:custom_button, :name => "generic_no_group", :applies_to_class => "GenericObject")
+      generic_group = FactoryBot.create(:custom_button, :name => "generic_group", :applies_to_class => "GenericObject")
+      generic_group_set = FactoryBot.create(:custom_button_set, :name => "generic_group_set")
       generic_group_set.add_member(generic_group)
 
-      FactoryGirl.create(
+      FactoryBot.create(
         :custom_button,
         :name             => "assigned_no_group",
         :applies_to_class => "GenericObjectDefinition",
         :applies_to_id    => definition.id
       )
-      assigned_group = FactoryGirl.create(
+      assigned_group = FactoryBot.create(
         :custom_button,
         :name             => "assigned_group",
         :applies_to_class => "GenericObjectDefinition",
         :applies_to_id    => definition.id
       )
-      assigned_group_set = FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
+      assigned_group_set = FactoryBot.create(:custom_button_set, :name => "assigned_group_set")
       assigned_group_set.add_member(assigned_group)
       definition.update(:custom_button_sets => [assigned_group_set])
 
@@ -336,7 +336,7 @@ describe GenericObjectDefinition do
     end
 
     context "expression evaluation" do
-      let(:generic) { FactoryGirl.build(:generic_object, :generic_object_definition => definition, :name => 'hello') }
+      let(:generic) { FactoryBot.build(:generic_object, :generic_object_definition => definition, :name => 'hello') }
       let(:true_expression_on_definition) do
         MiqExpression.new("=" => {"field" => "GenericObjectDefinition-name", "value" => "test_definition"})
       end
@@ -351,20 +351,20 @@ describe GenericObjectDefinition do
       end
 
       before do
-        FactoryGirl.create(:custom_button,
+        FactoryBot.create(:custom_button,
                            :name                  => "visible button on Generic Object",
                            :applies_to_class      => "GenericObject",
                            :visibility_expression => true_expression_on_generic)
-        FactoryGirl.create(:custom_button,
+        FactoryBot.create(:custom_button,
                            :name                  => "hidden button on Generic Object",
                            :applies_to_class      => "GenericObject",
                            :visibility_expression => false_expression_on_generic)
-        FactoryGirl.create(:custom_button,
+        FactoryBot.create(:custom_button,
                            :name                  => "visible button on Generic Object Definition",
                            :applies_to_class      => "GenericObjectDefinition",
                            :applies_to_id         => definition.id,
                            :visibility_expression => true_expression_on_definition)
-        FactoryGirl.create(:custom_button,
+        FactoryBot.create(:custom_button,
                            :name                  => "hidden button on Generic Object Definition",
                            :applies_to_class      => "GenericObjectDefinition",
                            :applies_to_id         => definition.id,

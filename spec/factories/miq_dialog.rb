@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_dialog do
     sequence(:name)        { |n| "miq_dialog_#{n}" }
     sequence(:description) { |n| "MiqDialog #{n}" }

@@ -8,7 +8,7 @@ describe MiqScheduleWorker::Jobs do
 
     it "with an EMS" do
       _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-      FactoryGirl.create(:ems_vmware, :zone => zone)
+      FactoryBot.create(:ems_vmware, :zone => zone)
       described_class.new.ems_refresh_timer(ManageIQ::Providers::Vmware::InfraManager)
 
       expect(MiqQueue.count).to eq(1)

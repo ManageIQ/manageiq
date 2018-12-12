@@ -4,7 +4,7 @@ describe EmsRefresh do
   context ".queue_refresh" do
     before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @ems = FactoryBot.create(:ems_vmware, :zone => zone)
     end
 
     it "with Ems" do
@@ -24,25 +24,25 @@ describe EmsRefresh do
     end
 
     it "with Host" do
-      target = FactoryGirl.create(:host_vmware, :ext_management_system => @ems)
+      target = FactoryBot.create(:host_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target, [target])
     end
 
     it "with Vm" do
-      target = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
+      target = FactoryBot.create(:vm_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target, [target])
     end
 
     it "with Storage" do
       allow_any_instance_of(Storage).to receive_messages(:ext_management_systems => [@ems])
-      target = FactoryGirl.create(:storage_vmware)
+      target = FactoryBot.create(:storage_vmware)
       queue_refresh_and_assert_queue_item(target, [target])
     end
 
     it "with Vm and an item already on the queue" do
       target = @ems
       queue_refresh_and_assert_queue_item(target, [target])
-      target2 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
+      target2 = FactoryBot.create(:vm_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target2, [target, target2])
     end
 
@@ -58,7 +58,7 @@ describe EmsRefresh do
   context "stopping targets unbounded growth" do
     before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @ems = FactoryBot.create(:ems_vmware, :zone => zone)
     end
 
     let(:targets) do
@@ -79,8 +79,8 @@ describe EmsRefresh do
       targets
     end
 
-    let(:vm_target) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
-    let(:host_target) { FactoryGirl.create(:host_vmware, :ext_management_system => @ems) }
+    let(:vm_target) { FactoryBot.create(:vm_vmware, :ext_management_system => @ems) }
+    let(:host_target) { FactoryBot.create(:host_vmware, :ext_management_system => @ems) }
 
     it "doesn't call uniq on targets if size is <= 1000" do
       described_class.queue_refresh(targets)
@@ -99,7 +99,7 @@ describe EmsRefresh do
 
     it "uniques targets if queuing breaches size 1000" do
       # We need different Vm, since targets are uniqued before queueing
-      described_class.queue_refresh(targets << FactoryGirl.create(:vm_vmware, :ext_management_system => @ems))
+      described_class.queue_refresh(targets << FactoryBot.create(:vm_vmware, :ext_management_system => @ems))
 
       expect(MiqQueue.last.data.size).to eq(5)
     end
@@ -108,13 +108,13 @@ describe EmsRefresh do
   context ".queue_refresh_task" do
     before do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems  = FactoryGirl.create(:ems_vmware, :zone => zone)
-      @ems2 = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @ems  = FactoryBot.create(:ems_vmware, :zone => zone)
+      @ems2 = FactoryBot.create(:ems_vmware, :zone => zone)
     end
 
     context "with a refresh already on the queue" do
       let(:target1) { @ems }
-      let(:target2) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
+      let(:target2) { FactoryBot.create(:vm_vmware, :ext_management_system => @ems) }
 
       it "only creates one task" do
         described_class.queue_refresh_task(target1)
@@ -142,8 +142,8 @@ describe EmsRefresh do
     end
 
     context "with Vms on different EMSs" do
-      let(:vm1) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
-      let(:vm2) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems2) }
+      let(:vm1) { FactoryBot.create(:vm_vmware, :ext_management_system => @ems) }
+      let(:vm2) { FactoryBot.create(:vm_vmware, :ext_management_system => @ems2) }
       it "returns a task for each EMS" do
         task_ids = described_class.queue_refresh_task([vm1, vm2])
         expect(task_ids.length).to eq(2)
@@ -151,8 +151,8 @@ describe EmsRefresh do
     end
 
     context "task name" do
-      let(:vm1) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
-      let(:vm2) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
+      let(:vm1) { FactoryBot.create(:vm_vmware, :ext_management_system => @ems) }
+      let(:vm2) { FactoryBot.create(:vm_vmware, :ext_management_system => @ems) }
       it "uses targets' short classnames to compose task name" do
         task_ids = described_class.queue_refresh_task([vm1, vm2])
         task_name = MiqTask.find(task_ids.first).name
@@ -163,7 +163,7 @@ describe EmsRefresh do
 
     describe ".create_refresh_task" do
       it "create refresh task and trancates task name to 255 symbols" do
-        vm = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => @ems)
+        vm = FactoryBot.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => @ems)
         targets = Array.new(500) { [vm.class.name, vm.id] }
         task_name = described_class.send(:create_refresh_task, @ems, targets).name
         expect(task_name.include?(@ems.name)).to eq true
@@ -188,8 +188,8 @@ describe EmsRefresh do
 
   context ".get_target_objects" do
     it "array of class/ids pairs" do
-      ems1 = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
-      ems2 = FactoryGirl.create(:ems_redhat, :name => "ems_redhat1")
+      ems1 = FactoryBot.create(:ems_vmware, :name => "ems_vmware1")
+      ems2 = FactoryBot.create(:ems_redhat, :name => "ems_redhat1")
       pairs = [
         [ems1.class, ems1.id],
         [ems2.class, ems2.id]
@@ -199,8 +199,8 @@ describe EmsRefresh do
     end
 
     it "array of class/hash pairs for InventoryRefresh::Target objects" do
-      ems1 = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
-      ems2 = FactoryGirl.create(:ems_redhat, :name => "ems_redhat1")
+      ems1 = FactoryBot.create(:ems_vmware, :name => "ems_vmware1")
+      ems2 = FactoryBot.create(:ems_redhat, :name => "ems_redhat1")
 
       target1     = InventoryRefresh::Target.load(:manager_id  => ems1.id,
                                                   :association => :vms,
@@ -227,9 +227,9 @@ describe EmsRefresh do
 
   context ".refresh" do
     it "accepts VMs" do
-      ems = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
-      vm1 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
-      vm2 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => ems)
+      ems = FactoryBot.create(:ems_vmware, :name => "ems_vmware1")
+      vm1 = FactoryBot.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
+      vm2 = FactoryBot.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => ems)
       expect(ManageIQ::Providers::Vmware::InfraManager::Refresher).to receive(:refresh) do |args|
         # Refresh code doesn't care about args order so neither does the test
         # TODO: use array_including in rspec 3
@@ -243,9 +243,9 @@ describe EmsRefresh do
     end
 
     it "ignores an EMS-less (archived) VM" do
-      ems = FactoryGirl.create(:ems_vmware, :name => "ems_vmware1")
-      vm1 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
-      vm2 = FactoryGirl.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => nil)
+      ems = FactoryBot.create(:ems_vmware, :name => "ems_vmware1")
+      vm1 = FactoryBot.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems)
+      vm2 = FactoryBot.create(:vm_vmware, :name => "vm_vmware2", :ext_management_system => nil)
       expect(ManageIQ::Providers::Vmware::InfraManager::Refresher).to receive(:refresh).with([vm1])
       EmsRefresh.refresh([
         [vm1.class, vm1.id],
@@ -257,7 +257,7 @@ describe EmsRefresh do
   context '.refresh_new_target' do
     let(:ems) do
       _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-      FactoryGirl.create(:ems_vmware, :zone => zone)
+      FactoryBot.create(:ems_vmware, :zone => zone)
     end
 
     context 'targeting a new vm' do
@@ -285,7 +285,7 @@ describe EmsRefresh do
       end
 
       context 'on an existing host' do
-        let(:host) { FactoryGirl.create(:host_with_ref, :ext_management_system => ems) }
+        let(:host) { FactoryBot.create(:host_with_ref, :ext_management_system => ems) }
 
         it 'links the new vm to the existing host' do
           target_hash = {
@@ -308,7 +308,7 @@ describe EmsRefresh do
     end
 
     context 'targeting an existing vm' do
-      let(:vm) { FactoryGirl.create(:vm_with_ref, :ext_management_system => ems) }
+      let(:vm) { FactoryBot.create(:vm_with_ref, :ext_management_system => ems) }
 
       it "doesn't try to create a new record" do
         vm_hash = {
@@ -328,7 +328,7 @@ describe EmsRefresh do
     end
 
     context 'targeting an archived vm' do
-      let(:vm) { FactoryGirl.create(:vm_with_ref, :ems_id => nil) }
+      let(:vm) { FactoryBot.create(:vm_with_ref, :ems_id => nil) }
 
       it 'adopts the existing vm' do
         vm_hash = {
@@ -351,8 +351,8 @@ describe EmsRefresh do
   end
 
   describe '.queue_merge' do
-    let(:ems) { FactoryGirl.create(:ems_vmware, :name => "ems_vmware1") }
-    let(:vm)  { FactoryGirl.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems) }
+    let(:ems) { FactoryBot.create(:ems_vmware, :name => "ems_vmware1") }
+    let(:vm)  { FactoryBot.create(:vm_vmware, :name => "vm_vmware1", :ext_management_system => ems) }
 
     it 'sends the command to queue' do
       EmsRefresh.queue_merge([vm], ems)
@@ -361,7 +361,7 @@ describe EmsRefresh do
 
     context "task creation" do
       before do
-        @miq_task = FactoryGirl.create(:miq_task)
+        @miq_task = FactoryBot.create(:miq_task)
         allow(EmsRefresh).to receive(:create_refresh_task).and_return(@miq_task)
       end
 

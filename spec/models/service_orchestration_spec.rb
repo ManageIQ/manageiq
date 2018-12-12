@@ -1,14 +1,14 @@
 describe ServiceOrchestration do
-  let(:manager_by_setter)  { FactoryGirl.create(:ems_amazon) }
-  let(:template_by_setter) { FactoryGirl.create(:orchestration_template) }
-  let(:manager_by_dialog)  { FactoryGirl.create(:ems_amazon) }
-  let(:template_by_dialog) { FactoryGirl.create(:orchestration_template) }
-  let(:manager_in_st)      { FactoryGirl.create(:ems_amazon) }
-  let(:template_in_st)     { FactoryGirl.create(:orchestration_template) }
-  let(:deployed_stack)     { FactoryGirl.create(:orchestration_stack_amazon) }
+  let(:manager_by_setter)  { FactoryBot.create(:ems_amazon) }
+  let(:template_by_setter) { FactoryBot.create(:orchestration_template) }
+  let(:manager_by_dialog)  { FactoryBot.create(:ems_amazon) }
+  let(:template_by_dialog) { FactoryBot.create(:orchestration_template) }
+  let(:manager_in_st)      { FactoryBot.create(:ems_amazon) }
+  let(:template_in_st)     { FactoryBot.create(:orchestration_template) }
+  let(:deployed_stack)     { FactoryBot.create(:orchestration_stack_amazon) }
 
   let(:service_template) do
-    FactoryGirl.create(:service_template_orchestration,
+    FactoryBot.create(:service_template_orchestration,
                        :orchestration_manager  => manager_in_st,
                        :orchestration_template => template_in_st)
   end
@@ -26,12 +26,12 @@ describe ServiceOrchestration do
   end
 
   let(:service) do
-    FactoryGirl.create(:service_orchestration,
+    FactoryBot.create(:service_orchestration,
                        :service_template       => service_template,
                        :orchestration_manager  => manager_in_st,
                        :orchestration_template => template_in_st,
-                       :evm_owner              => FactoryGirl.create(:user),
-                       :miq_group              => FactoryGirl.create(:miq_group))
+                       :evm_owner              => FactoryBot.create(:user),
+                       :miq_group              => FactoryBot.create(:miq_group))
   end
 
   let(:service_with_dialog_options) do
@@ -66,14 +66,14 @@ describe ServiceOrchestration do
     end
 
     it "service, takes the zone from orchestration_manager" do
-      ems = FactoryGirl.create(:ems_amazon, :zone => FactoryGirl.create(:zone))
-      deployed_stack.direct_vms << FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
+      ems = FactoryBot.create(:ems_amazon, :zone => FactoryBot.create(:zone))
+      deployed_stack.direct_vms << FactoryBot.create(:vm_amazon, :ext_management_system => ems)
       expect(service_with_deployed_stack.my_zone).to eq(service.orchestration_manager.my_zone)
     end
 
     it "service, takes the zone from VM ext_management_system if no orchestration_manager" do
-      ems = FactoryGirl.create(:ems_amazon, :zone => FactoryGirl.create(:zone))
-      deployed_stack.direct_vms << FactoryGirl.create(:vm_amazon, :ext_management_system => ems)
+      ems = FactoryBot.create(:ems_amazon, :zone => FactoryBot.create(:zone))
+      deployed_stack.direct_vms << FactoryBot.create(:vm_amazon, :ext_management_system => ems)
       service.orchestration_manager = nil
       expect(service_with_deployed_stack.my_zone).to eq(service_with_deployed_stack.vms.first.ext_management_system.my_zone)
     end
@@ -179,8 +179,8 @@ describe ServiceOrchestration do
 
   describe '#update_orchestration_stack' do
     let(:reconfigurable_service) do
-      stack = FactoryGirl.create(:orchestration_stack)
-      service_template = FactoryGirl.create(:service_template_orchestration)
+      stack = FactoryBot.create(:orchestration_stack)
+      service_template = FactoryBot.create(:service_template_orchestration)
       service_template.orchestration_template = template_by_setter
 
       service.service_template = service_template
@@ -232,10 +232,10 @@ describe ServiceOrchestration do
 
   describe '#all_vms' do
     it 'returns all vms from a deployed stack' do
-      vm1 = FactoryGirl.create(:vm_amazon)
-      vm2 = FactoryGirl.create(:vm_amazon)
+      vm1 = FactoryBot.create(:vm_amazon)
+      vm2 = FactoryBot.create(:vm_amazon)
 
-      child_stack = FactoryGirl.create(:orchestration_stack_amazon, :parent => deployed_stack)
+      child_stack = FactoryBot.create(:orchestration_stack_amazon, :parent => deployed_stack)
       deployed_stack.direct_vms << vm1
       child_stack.direct_vms << vm2
 
@@ -259,11 +259,11 @@ describe ServiceOrchestration do
         :raw_create_stack).and_return("ems_ref")
       @resulting_stack = service.deploy_orchestration_stack
 
-      service.miq_request_task = FactoryGirl.create(:service_template_provision_task)
+      service.miq_request_task = FactoryBot.create(:service_template_provision_task)
     end
 
     it 'sets owners for all vms included in the stack' do
-      vms = [FactoryGirl.create(:vm_amazon), FactoryGirl.create(:vm_amazon)]
+      vms = [FactoryBot.create(:vm_amazon), FactoryBot.create(:vm_amazon)]
       @resulting_stack.direct_vms.push(*vms)
 
       service.post_provision_configure

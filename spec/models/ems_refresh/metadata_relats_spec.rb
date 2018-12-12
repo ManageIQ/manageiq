@@ -1,17 +1,17 @@
 describe EmsRefresh::MetadataRelats do
   context ".vmdb_relats" do
     before do
-      @zone        = FactoryGirl.create(:zone)
-      @ems         = FactoryGirl.create(:ems_vmware, :zone => @zone)
+      @zone        = FactoryBot.create(:zone)
+      @ems         = FactoryBot.create(:ems_vmware, :zone => @zone)
 
-      @cluster     = FactoryGirl.create(:ems_cluster,        :ext_management_system => @ems)
-      @host        = FactoryGirl.create(:host,               :ext_management_system => @ems, :ems_cluster => @cluster)
-      @vm          = FactoryGirl.create(:vm_vmware,          :ext_management_system => @ems, :ems_cluster => @cluster, :host => @host)
-      @template    = FactoryGirl.create(:template_vmware,    :ext_management_system => @ems)
-      @rp          = FactoryGirl.create(:resource_pool,      :ext_management_system => @ems)
-      @host_folder = FactoryGirl.create(:vmware_folder_host, :ext_management_system => @ems)
-      @vm_folder_1 = FactoryGirl.create(:vmware_folder_vm,   :ext_management_system => @ems, :name => "folder1")
-      @vm_folder_2 = FactoryGirl.create(:vmware_folder_vm,   :ext_management_system => @ems, :name => "folder2")
+      @cluster     = FactoryBot.create(:ems_cluster,        :ext_management_system => @ems)
+      @host        = FactoryBot.create(:host,               :ext_management_system => @ems, :ems_cluster => @cluster)
+      @vm          = FactoryBot.create(:vm_vmware,          :ext_management_system => @ems, :ems_cluster => @cluster, :host => @host)
+      @template    = FactoryBot.create(:template_vmware,    :ext_management_system => @ems)
+      @rp          = FactoryBot.create(:resource_pool,      :ext_management_system => @ems)
+      @host_folder = FactoryBot.create(:vmware_folder_host, :ext_management_system => @ems)
+      @vm_folder_1 = FactoryBot.create(:vmware_folder_vm,   :ext_management_system => @ems, :name => "folder1")
+      @vm_folder_2 = FactoryBot.create(:vmware_folder_vm,   :ext_management_system => @ems, :name => "folder2")
 
       @host_folder.add_cluster(@cluster)
       @cluster.add_resource_pool(@rp)
@@ -45,7 +45,7 @@ describe EmsRefresh::MetadataRelats do
 
     context "with an invalid relats tree" do
       before do
-        @rp2 = FactoryGirl.create(:resource_pool, :ext_management_system => @ems)
+        @rp2 = FactoryBot.create(:resource_pool, :ext_management_system => @ems)
         @host.set_child(@rp2)
         @host_folder.add_host(@host)
 

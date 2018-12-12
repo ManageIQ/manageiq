@@ -1,14 +1,14 @@
 describe MiqProvision do
   context "::StateMachine" do
-    let(:req_user) { FactoryGirl.create(:user_with_group) }
-    let(:ems)      { FactoryGirl.create(:ems_openstack_with_authentication) }
-    let(:flavor)   { FactoryGirl.create(:flavor_openstack, :ems_ref => 24) }
+    let(:req_user) { FactoryBot.create(:user_with_group) }
+    let(:ems)      { FactoryBot.create(:ems_openstack_with_authentication) }
+    let(:flavor)   { FactoryBot.create(:flavor_openstack, :ems_ref => 24) }
     let(:options)  { {:src_vm_id => template.id, :vm_target_name => "test_vm_1"} }
-    let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => ems, :ems_ref => SecureRandom.uuid) }
-    let(:vm)       { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
+    let(:template) { FactoryBot.create(:template_openstack, :ext_management_system => ems, :ems_ref => SecureRandom.uuid) }
+    let(:vm)       { FactoryBot.create(:vm_openstack, :ext_management_system => ems) }
 
     let(:task) do
-      FactoryGirl.create(:miq_provision_openstack,
+      FactoryBot.create(:miq_provision_openstack,
                          :source      => template,
                          :destination => vm,
                          :state       => 'pending',
@@ -74,7 +74,7 @@ describe MiqProvision do
     end
 
     context "#post_create_destination" do
-      let(:user) { FactoryGirl.create(:user_with_email_and_group) }
+      let(:user) { FactoryBot.create(:user_with_email_and_group) }
 
       it "sets description" do
         options[:vm_description] = description = "foo bar"
@@ -89,8 +89,8 @@ describe MiqProvision do
       end
 
       it "sets ownership" do
-        group_owner = FactoryGirl.create(:miq_group, :description => "desired")
-        group_current = FactoryGirl.create(:miq_group, :description => "current")
+        group_owner = FactoryBot.create(:miq_group, :description => "desired")
+        group_current = FactoryBot.create(:miq_group, :description => "current")
         user.update_attributes!(:miq_groups => [group_owner, group_current], :current_group => group_current)
         options[:owner_email] = user.email
         options[:owner_group] = group_owner.description

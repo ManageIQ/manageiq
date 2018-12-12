@@ -1,9 +1,9 @@
 describe AutomationRequest do
-  let(:admin) { FactoryGirl.create(:user, :role => "admin") }
+  let(:admin) { FactoryBot.create(:user, :role => "admin") }
   before do
     allow(MiqServer).to receive(:my_zone).and_return(Zone.seed.name)
-    @zone        = FactoryGirl.create(:zone, :name => "fred")
-    @approver    = FactoryGirl.create(:user_miq_request_approver)
+    @zone        = FactoryBot.create(:zone, :name => "fred")
+    @approver    = FactoryBot.create(:user_miq_request_approver)
 
     @version     = 1
     @ae_instance = "IIII"
@@ -107,7 +107,7 @@ describe AutomationRequest do
   end
 
   context ".create_from_scheduled_task" do
-    let(:admin) { FactoryGirl.create(:user_miq_request_approver) }
+    let(:admin) { FactoryBot.create(:user_miq_request_approver) }
 
     it "with prescheduled task" do
       ar = described_class.create_from_scheduled_task(admin, @uri_parts, @parameters)

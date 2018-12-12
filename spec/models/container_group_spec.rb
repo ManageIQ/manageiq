@@ -1,22 +1,22 @@
 describe ContainerGroup do
   it "has container volumes and pods" do
-    pvc = FactoryGirl.create(
+    pvc = FactoryBot.create(
       :persistent_volume_claim,
       :name => "test_claim"
     )
 
-    group = FactoryGirl.create(
+    group = FactoryBot.create(
       :container_group,
       :name => "group",
     )
 
-    ems = FactoryGirl.create(
+    ems = FactoryBot.create(
       :ems_kubernetes,
       :id   => group.id,
       :name => "ems"
     )
 
-    FactoryGirl.create(
+    FactoryBot.create(
       :container_volume,
       :name                    => "container_volume",
       :type                    => 'ContainerVolume',
@@ -24,14 +24,14 @@ describe ContainerGroup do
       :persistent_volume_claim => pvc
     )
 
-    FactoryGirl.create(
+    FactoryBot.create(
       :persistent_volume,
       :name                    => "persistent_volume0",
       :parent                  => ems,
       :persistent_volume_claim => pvc
     )
 
-    FactoryGirl.create(
+    FactoryBot.create(
       :persistent_volume,
       :name                    => "persistent_volume1",
       :parent                  => ems,

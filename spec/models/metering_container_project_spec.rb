@@ -1,7 +1,7 @@
 describe MeteringContainerProject do
   include Spec::Support::ChargebackHelper
 
-  let(:admin) { FactoryGirl.create(:user_admin) }
+  let(:admin) { FactoryBot.create(:user_admin) }
   let(:base_options) do
     {:interval_size       => 2,
      :end_interval_offset => 0,
@@ -19,12 +19,12 @@ describe MeteringContainerProject do
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:count_of_metric_rollup) { MetricRollup.where(:timestamp => month_beginning...month_end).count }
-  let(:ems) { FactoryGirl.create(:ems_vmware) }
-  let(:project) { FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems, :created_on => month_beginning) }
-  let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576) }
-  let(:host) { FactoryGirl.create(:host, :storages => [storage], :hardware => hardware, :vms => [vm]) }
-  let(:storage) { FactoryGirl.create(:storage_target_vmware) }
-  let(:ems_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems, :hosts => [host]) }
+  let(:ems) { FactoryBot.create(:ems_vmware) }
+  let(:project) { FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems, :created_on => month_beginning) }
+  let(:hardware) { FactoryBot.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576) }
+  let(:host) { FactoryBot.create(:host, :storages => [storage], :hardware => hardware, :vms => [vm]) }
+  let(:storage) { FactoryBot.create(:storage_target_vmware) }
+  let(:ems_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems, :hosts => [host]) }
 
   before do
     MiqRegion.seed

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :middleware_server_group do
     sequence(:name) { |n| "middleware_server_group_#{seq_padded_for_sorting(n)}" }
   end

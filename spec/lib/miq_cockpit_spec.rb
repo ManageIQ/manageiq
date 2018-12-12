@@ -1,6 +1,6 @@
 describe MiqCockpit::WS do
   before do
-    @server = FactoryGirl.create(:miq_server, :hostname => "hostname")
+    @server = FactoryBot.create(:miq_server, :hostname => "hostname")
     @miq_server = EvmSpecHelper.local_miq_server
     @miq_server.ipaddress = "10.0.0.1"
     @miq_server.has_active_userinterface = true
@@ -125,7 +125,7 @@ describe MiqCockpit::WS do
     context "when using a active region" do
       it "it uses the full domain for the url" do
         MiqRegion.seed
-        server = FactoryGirl.create(:miq_server, :hostname => "hostname")
+        server = FactoryBot.create(:miq_server, :hostname => "hostname")
         expect(MiqRegion.my_region).to receive(:remote_ui_miq_server).once.and_return(server)
 
         ins = MiqCockpit::WS.new(nil)

@@ -1,8 +1,8 @@
 describe EmbeddedAnsibleWorker do
-  subject { FactoryGirl.create(:embedded_ansible_worker) }
+  subject { FactoryBot.create(:embedded_ansible_worker) }
 
   context "ObjectManagement concern" do
-    let(:provider)       { FactoryGirl.create(:provider_embedded_ansible) }
+    let(:provider)       { FactoryBot.create(:provider_embedded_ansible) }
     let(:api_connection) { double("AnsibleAPIConnection", :api => tower_api) }
     let(:tower_api) do
       methods = {

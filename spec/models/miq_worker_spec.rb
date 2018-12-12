@@ -16,7 +16,7 @@ describe MiqWorker do
   context ".sync_workers" do
     it "stops extra workers, returning deleted pids" do
       expect_any_instance_of(described_class).to receive(:stop)
-      worker = FactoryGirl.create(:miq_worker, :status => "started")
+      worker = FactoryBot.create(:miq_worker, :status => "started")
       worker.class.workers = 0
       expect(worker.class.sync_workers).to eq(:adds => [], :deletes => [worker.pid])
     end
@@ -36,14 +36,14 @@ describe MiqWorker do
     end
 
     before do
-      active_roles = %w(foo bar).map { |rn| FactoryGirl.create(:server_role, :name => rn) }
+      active_roles = %w(foo bar).map { |rn| FactoryBot.create(:server_role, :name => rn) }
       @server = EvmSpecHelper.local_miq_server(:active_roles => active_roles)
     end
 
     context "clean_active_messages" do
       before do
-        @worker = FactoryGirl.create(:miq_worker, :miq_server => @server)
-        @message = FactoryGirl.create(:miq_queue, :handler => @worker, :state => 'dequeue')
+        @worker = FactoryBot.create(:miq_worker, :miq_server => @server)
+        @message = FactoryBot.create(:miq_queue, :handler => @worker, :state => 'dequeue')
       end
 
       it "normal" do
@@ -229,13 +229,13 @@ describe MiqWorker do
     before do
       allow(described_class).to receive(:nice_increment).and_return("+10")
 
-      @zone = FactoryGirl.create(:zone)
-      @server = FactoryGirl.create(:miq_server, :zone => @zone)
+      @zone = FactoryBot.create(:zone)
+      @server = FactoryBot.create(:miq_server, :zone => @zone)
       allow(MiqServer).to receive(:my_server).and_return(@server)
-      @worker = FactoryGirl.create(:ems_refresh_worker_amazon, :miq_server => @server)
+      @worker = FactoryBot.create(:ems_refresh_worker_amazon, :miq_server => @server)
 
-      @server2 = FactoryGirl.create(:miq_server, :zone => @zone)
-      @worker2 = FactoryGirl.create(:ems_refresh_worker_amazon, :miq_server => @server2)
+      @server2 = FactoryBot.create(:miq_server, :zone => @zone)
+      @worker2 = FactoryBot.create(:ems_refresh_worker_amazon, :miq_server => @server2)
     end
 
     it ".server_scope" do
@@ -338,7 +338,7 @@ describe MiqWorker do
   context "instance" do
     before do
       allow(described_class).to receive(:nice_increment).and_return("+10")
-      @worker = FactoryGirl.create(:miq_worker)
+      @worker = FactoryBot.create(:miq_worker)
     end
 
     it "#worker_options" do
@@ -390,14 +390,14 @@ describe MiqWorker do
       end
 
       it "true if stopping and last heartbeat is within the queue message timeout of an active message" do
-        @worker.messages << FactoryGirl.create(:miq_queue, :msg_timeout => 60.minutes)
+        @worker.messages << FactoryBot.create(:miq_queue, :msg_timeout => 60.minutes)
         @worker.update(:status         => described_class::STATUS_STOPPING,
                        :last_heartbeat => 90.minutes.ago)
         expect(subject).to be_truthy
       end
 
       it "false if stopping and last heartbeat is older than the queue message timeout of the work item" do
-        @worker.messages << FactoryGirl.create(:miq_queue, :msg_timeout => 60.minutes, :state => "dequeue")
+        @worker.messages << FactoryBot.create(:miq_queue, :msg_timeout => 60.minutes, :state => "dequeue")
         @worker.update(:status         => described_class::STATUS_STOPPING,
                        :last_heartbeat => 30.minutes.ago)
         expect(subject).to be_falsey

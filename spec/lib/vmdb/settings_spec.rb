@@ -68,7 +68,7 @@ describe Vmdb::Settings do
   end
 
   describe ".save!" do
-    let(:miq_server) { FactoryGirl.create(:miq_server) }
+    let(:miq_server) { FactoryBot.create(:miq_server) }
 
     it "does not allow invalid configuration values" do
       expect do
@@ -362,7 +362,7 @@ describe Vmdb::Settings do
   end
 
   describe "save_yaml!" do
-    let(:miq_server) { FactoryGirl.create(:miq_server) }
+    let(:miq_server) { FactoryBot.create(:miq_server) }
 
     it "saves the settings" do
       data = {:api => {:token_ttl => "1.day"}}.to_yaml
@@ -492,7 +492,7 @@ describe Vmdb::Settings do
   end
 
   describe ".for_resource" do
-    let(:server) { FactoryGirl.create(:miq_server) }
+    let(:server) { FactoryBot.create(:miq_server) }
 
     it "without database changes" do
       settings = Vmdb::Settings.for_resource(server)
@@ -549,7 +549,7 @@ describe Vmdb::Settings do
 
   describe ".for_resource_yaml" do
     it "fetches the yaml with changes" do
-      miq_server = FactoryGirl.create(:miq_server)
+      miq_server = FactoryBot.create(:miq_server)
       described_class.save!(miq_server, :api => {:token_ttl => "1.day"})
 
       yaml = described_class.for_resource_yaml(miq_server)
@@ -564,7 +564,7 @@ describe Vmdb::Settings do
       password  = "pa$$word"
       encrypted = MiqPassword.encrypt(password)
 
-      miq_server = FactoryGirl.create(:miq_server)
+      miq_server = FactoryBot.create(:miq_server)
       described_class.save!(miq_server, :authentication => {:bind_pwd => password})
 
       yaml = described_class.for_resource_yaml(miq_server)

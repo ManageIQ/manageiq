@@ -1,7 +1,7 @@
 describe ServiceReconfigureTask do
-  let(:user)     { FactoryGirl.create(:user_with_group) }
-  let(:template) { FactoryGirl.create(:service_template, :name => 'Test Template') }
-  let(:service)  { FactoryGirl.create(:service, :name => 'Test Service', :service_template => template) }
+  let(:user)     { FactoryBot.create(:user_with_group) }
+  let(:template) { FactoryBot.create(:service_template, :name => 'Test Template') }
+  let(:service)  { FactoryBot.create(:service, :name => 'Test Service', :service_template => template) }
 
   let(:request) do
     ServiceReconfigureRequest.create(:requester    => user,
@@ -60,7 +60,7 @@ describe ServiceReconfigureTask do
 
     context "automation entry point available" do
       before do
-        FactoryGirl.create(:resource_action, :action       => 'Reconfigure',
+        FactoryBot.create(:resource_action, :action       => 'Reconfigure',
                                              :resource     => template,
                                              :ae_namespace => 'namespace',
                                              :ae_class     => 'class',

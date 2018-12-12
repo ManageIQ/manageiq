@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :dialog_field do
     name "Dialog Field"
   end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :chargeback_rate do
     guid                   { SecureRandom.uuid }
     sequence(:description) { |n| "Chargeback Rate ##{n}" }
@@ -19,14 +19,14 @@ FactoryGirl.define do
         params_hash.merge!(chargeback_rate_params[:detail]) if chargeback_rate_params[:detail]
         params = [factory_name, :tiers, params_hash]
 
-        chargeback_rate.chargeback_rate_details << FactoryGirl.create(*params)
+        chargeback_rate.chargeback_rate_details << FactoryBot.create(*params)
       end
     end
 
     trait :with_details do
       chargeback_rate_details do
-        [FactoryGirl.create(:chargeback_rate_detail_memory_allocated, :tiers_with_three_intervals),
-         FactoryGirl.create(:chargeback_rate_detail_memory_used, :tiers)]
+        [FactoryBot.create(:chargeback_rate_detail_memory_allocated, :tiers_with_three_intervals),
+         FactoryBot.create(:chargeback_rate_detail_memory_used, :tiers)]
       end
     end
 
@@ -43,7 +43,7 @@ FactoryGirl.define do
           chargeback_rate_detail_memory_used
           chargeback_rate_detail_net_io_used
         ).each do |factory_name|
-          chargeback_rate.chargeback_rate_details << FactoryGirl.create(factory_name,
+          chargeback_rate.chargeback_rate_details << FactoryBot.create(factory_name,
                                                                         :tiers_with_three_intervals,
                                                                         :per_time => evaluator.per_time)
         end
@@ -60,7 +60,7 @@ FactoryGirl.define do
           chargeback_rate_detail_fixed_storage_cost
           chargeback_rate_detail_fixed_storage_cost
         ).each do |factory_name|
-          chargeback_rate.chargeback_rate_details << FactoryGirl.create(factory_name,
+          chargeback_rate.chargeback_rate_details << FactoryBot.create(factory_name,
                                                                         :tiers_with_three_intervals,
                                                                         :per_time => evaluator.per_time)
         end

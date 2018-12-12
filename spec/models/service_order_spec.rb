@@ -1,17 +1,17 @@
 describe ServiceOrder do
   def create_request
-    FactoryGirl.create(:service_template_provision_request,
+    FactoryBot.create(:service_template_provision_request,
                        :process   => false,
                        :requester => admin)
   end
 
-  let(:admin)         { FactoryGirl.create(:user_with_group, :userid => "admin") }
-  let(:user)          { FactoryGirl.create(:user_with_group, :tenant => tenant) }
+  let(:admin)         { FactoryBot.create(:user_with_group, :userid => "admin") }
+  let(:user)          { FactoryBot.create(:user_with_group, :tenant => tenant) }
   let(:request)       { create_request }
   let(:request2)      { create_request }
   let(:request3)      { create_request }
   let(:service_order) do
-    FactoryGirl.create(:service_order, :state  => ServiceOrder::STATE_CART,
+    FactoryBot.create(:service_order, :state  => ServiceOrder::STATE_CART,
                                        :user   => user,
                                        :tenant => tenant)
   end

@@ -7,13 +7,13 @@ describe VmScan do
       # TODO: stub only settings needed for test instead of all from settings.yml
       stub_settings(::Settings.to_hash.merge(:coresident_miqproxy => {:scan_via_host => false}))
 
-      @user      = FactoryGirl.create(:user_with_group, :userid => "tester")
-      @ems       = FactoryGirl.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server.zone,
-                                      :tenant                                  => FactoryGirl.create(:tenant))
-      @storage   = FactoryGirl.create(:storage, :name => "test_storage", :store_type => "VMFS")
-      @host      = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host",
+      @user      = FactoryBot.create(:user_with_group, :userid => "tester")
+      @ems       = FactoryBot.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server.zone,
+                                      :tenant                                  => FactoryBot.create(:tenant))
+      @storage   = FactoryBot.create(:storage, :name => "test_storage", :store_type => "VMFS")
+      @host      = FactoryBot.create(:host, :name => "test_host", :hostname => "test_host",
                                       :state       => 'on', :ext_management_system => @ems)
-      @vm        = FactoryGirl.create(:vm_vmware, :name => "test_vm", :location => "abc/abc.vmx",
+      @vm        = FactoryBot.create(:vm_vmware, :name => "test_vm", :location => "abc/abc.vmx",
                                       :raw_power_state       => 'poweredOn',
                                       :host                  => @host,
                                       :ext_management_system => @ems,
@@ -58,7 +58,7 @@ describe VmScan do
 
     context "without Broker Running and with valid MiqVimBrokerWorker record," do
       before do
-        @vim_broker_worker = FactoryGirl.create(:miq_vim_broker_worker, :miq_server_id => @server.id)
+        @vim_broker_worker = FactoryBot.create(:miq_vim_broker_worker, :miq_server_id => @server.id)
       end
 
       context "in status of 'starting'," do
@@ -202,7 +202,7 @@ describe VmScan do
       end
 
       it "should raise vm_scan_start for template" do
-        template = FactoryGirl.create(
+        template = FactoryBot.create(
           :template_vmware,
           :name                  => "test_vm",
           :location              => "abc/abc.vmx",
@@ -414,13 +414,13 @@ describe VmScan do
     before do
       # local zone
       @server1 = EvmSpecHelper.local_miq_server(:capabilities => {:vixDisk => true})
-      @user      = FactoryGirl.create(:user_with_group, :userid => "tester")
-      @ems       = FactoryGirl.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server1.zone,
-                                      :tenant                                  => FactoryGirl.create(:tenant))
-      @storage   = FactoryGirl.create(:storage, :name => "test_storage", :store_type => "VMFS")
-      @host      = FactoryGirl.create(:host, :name => "test_host", :hostname => "test_host",
+      @user      = FactoryBot.create(:user_with_group, :userid => "tester")
+      @ems       = FactoryBot.create(:ems_vmware_with_authentication, :name   => "Test EMS", :zone => @server1.zone,
+                                      :tenant                                  => FactoryBot.create(:tenant))
+      @storage   = FactoryBot.create(:storage, :name => "test_storage", :store_type => "VMFS")
+      @host      = FactoryBot.create(:host, :name => "test_host", :hostname => "test_host",
                                       :state       => 'on', :ext_management_system => @ems)
-      @vm        = FactoryGirl.create(:vm_vmware, :name => "test_vm", :location => "abc/abc.vmx",
+      @vm        = FactoryBot.create(:vm_vmware, :name => "test_vm", :location => "abc/abc.vmx",
                                       :raw_power_state       => 'poweredOn',
                                       :host                  => @host,
                                       :ext_management_system => @ems,
@@ -430,11 +430,11 @@ describe VmScan do
 
       # remote zone
       @server2 = EvmSpecHelper.remote_miq_server(:capabilities => {:vixDisk => true})
-      @user2     = FactoryGirl.create(:user_with_group, :userid => "tester2")
-      @storage2  = FactoryGirl.create(:storage, :name => "test_storage2", :store_type => "VMFS")
-      @host2     = FactoryGirl.create(:host, :name => "test_host2", :hostname => "test_host2",
+      @user2     = FactoryBot.create(:user_with_group, :userid => "tester2")
+      @storage2  = FactoryBot.create(:storage, :name => "test_storage2", :store_type => "VMFS")
+      @host2     = FactoryBot.create(:host, :name => "test_host2", :hostname => "test_host2",
                                       :state       => 'on', :ext_management_system => @ems)
-      @vm2       = FactoryGirl.create(:vm_vmware, :name => "test_vm2", :location => "abc2/abc2.vmx",
+      @vm2       = FactoryBot.create(:vm_vmware, :name => "test_vm2", :location => "abc2/abc2.vmx",
                                       :raw_power_state       => 'poweredOn',
                                       :host                  => @host2,
                                       :ext_management_system => @ems,
@@ -517,7 +517,7 @@ describe VmScan do
   private
 
   def assign_smartproxy_role_to_server(server)
-    server_role = FactoryGirl.create(
+    server_role = FactoryBot.create(
       :server_role,
       :name              => "smartproxy",
       :description       => "SmartProxy",
@@ -525,7 +525,7 @@ describe VmScan do
       :external_failover => false,
       :role_scope        => "zone"
     )
-    FactoryGirl.create(
+    FactoryBot.create(
       :assigned_server_role,
       :miq_server_id  => server.id,
       :server_role_id => server_role.id,

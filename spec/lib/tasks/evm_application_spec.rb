@@ -18,12 +18,12 @@ describe EvmApplication do
   end
 
   describe ".servers_status" do
-    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local_zone)  { FactoryBot.create(:zone, :name => 'A Zone') }
     let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
-    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+    let!(:ui)      { FactoryBot.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryBot.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:refresh) { FactoryBot.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     it "displays server status for local and remote servers" do
       expect(described_class.servers_status([local, remote])).to eq(
@@ -62,12 +62,12 @@ describe EvmApplication do
   end
 
   describe ".worker_status" do
-    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local_zone)  { FactoryBot.create(:zone, :name => 'A Zone') }
     let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
-    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+    let!(:ui)      { FactoryBot.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryBot.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:refresh) { FactoryBot.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     it "displays worker status for local and remote server" do
       expect(described_class.workers_status([local, remote])).to eq(
@@ -130,13 +130,13 @@ describe EvmApplication do
       val.to_s.send(adjust, send("#{col.downcase}_padding"))
     end
 
-    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local_zone)  { FactoryBot.create(:zone, :name => 'A Zone') }
     let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
     let(:rgn)      { local.region_number }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
-    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+    let!(:ui)      { FactoryBot.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryBot.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:refresh) { FactoryBot.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     let(:local_started_on)  { local.started_on.strftime("%H:%M:%S%Z") }
     let(:local_heartbeat)   { local.last_heartbeat.strftime("%Y-%m-%d") }
@@ -202,7 +202,7 @@ describe EvmApplication do
   context ".queue_status" do
     it "calculates oldest and counts" do
       tgt_time = 2.hours.ago
-      zone = FactoryGirl.create(:zone)
+      zone = FactoryBot.create(:zone)
       MiqQueue.put(:zone => zone.name, :class_name => "X", :method_name => "x", :created_on => 1.hour.ago)
       MiqQueue.put(:zone => zone.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
       MiqQueue.put(:zone        => zone.name,
@@ -226,8 +226,8 @@ describe EvmApplication do
 
     it "groups zone together" do
       tgt_time = 2.hours.ago
-      zone1 = FactoryGirl.create(:zone, :name => "zone1")
-      zone2 = FactoryGirl.create(:zone, :name => "zone2")
+      zone1 = FactoryBot.create(:zone, :name => "zone1")
+      zone2 = FactoryBot.create(:zone, :name => "zone2")
       MiqQueue.put(:zone => zone1.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
       MiqQueue.put(:zone => zone2.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
       expect(described_class.queue_status).to eq(

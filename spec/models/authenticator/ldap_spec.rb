@@ -1,6 +1,6 @@
 describe Authenticator::Ldap do
   subject { Authenticator::Ldap.new(config) }
-  let!(:alice) { FactoryGirl.create(:user, :userid => 'alice') }
+  let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
   let(:config) do
     {
       :ldap_role => false,
@@ -57,8 +57,8 @@ describe Authenticator::Ldap do
   end
 
   before do
-    FactoryGirl.create(:miq_group, :description => 'wibble')
-    FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
+    FactoryBot.create(:miq_group, :description => 'wibble')
+    FactoryBot.build_stubbed(:miq_group, :description => 'wobble')
   end
 
   let(:user_data) do

@@ -20,7 +20,7 @@ module Spec
             metric_rollup_params[:resource_id]   = resource.id
             metric_rollup_params[:resource_name] = resource.name
             params = [:metric_rollup_vm_hr, trait, metric_rollup_params].compact
-            resource.metric_rollups << FactoryGirl.create(*params)
+            resource.metric_rollups << FactoryBot.create(*params)
           end
         end
       end
@@ -28,7 +28,7 @@ module Spec
       def add_vim_performance_state_for(resources, range, step, state_data)
         range.step_value(step).each do |time|
           Array(resources).each do |resource|
-            FactoryGirl.create(:vim_performance_state,
+            FactoryBot.create(:vim_performance_state,
                                :timestamp        => time,
                                :resource         => resource,
                                :state_data       => state_data,

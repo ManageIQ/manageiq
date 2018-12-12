@@ -1,7 +1,7 @@
 describe TransformationMapping::CloudBestFit do
-  let(:ems)         { FactoryGirl.create(:ems_openstack) }
-  let(:vm)          { FactoryGirl.create(:vm_vmware, :hardware => vm_hardware) }
-  let(:vm_hardware) { FactoryGirl.create(:hardware, :cpu1x2, :ram1GB) }
+  let(:ems)         { FactoryBot.create(:ems_openstack) }
+  let(:vm)          { FactoryBot.create(:vm_vmware, :hardware => vm_hardware) }
+  let(:vm_hardware) { FactoryBot.create(:hardware, :cpu1x2, :ram1GB) }
 
   subject { described_class.new(vm, ems) }
 

@@ -1,10 +1,10 @@
 describe "Service Retirement Management" do
-  let!(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => 'admin') }
-  let(:service_without_owner) { FactoryGirl.create(:service) }
-  let(:service3) { FactoryGirl.create(:service) }
+  let!(:user) { FactoryBot.create(:user_miq_request_approver, :userid => 'admin') }
+  let(:service_without_owner) { FactoryBot.create(:service) }
+  let(:service3) { FactoryBot.create(:service) }
   before do
     @server = EvmSpecHelper.local_miq_server
-    @service = FactoryGirl.create(:service, :evm_owner_id => user.id)
+    @service = FactoryBot.create(:service, :evm_owner_id => user.id)
   end
 
   # shouldn't be running make_retire_request because it's the bimodal not from ui part
@@ -118,8 +118,8 @@ describe "Service Retirement Management" do
   end
 
   it "#retire_service_resources" do
-    ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+    ems = FactoryBot.create(:ems_vmware, :zone => @server.zone)
+    vm  = FactoryBot.create(:vm_vmware, :ems_id => ems.id)
     @service << vm
     expect(@service.service_resources.size).to eq(1)
     expect(@service.service_resources.first.resource).to_not receive(:retire_now)
@@ -127,8 +127,8 @@ describe "Service Retirement Management" do
   end
 
   it "#retire_service_resources should get service's retirement_requester" do
-    ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+    ems = FactoryBot.create(:ems_vmware, :zone => @server.zone)
+    vm  = FactoryBot.create(:vm_vmware, :ems_id => ems.id)
     userid = 'freddy'
     @service.update_attributes(:retirement_requester => userid)
     @service << vm
@@ -138,8 +138,8 @@ describe "Service Retirement Management" do
   end
 
   it "#retire_service_resources should get service's nil retirement_requester" do
-    ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
-    vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+    ems = FactoryBot.create(:ems_vmware, :zone => @server.zone)
+    vm  = FactoryBot.create(:vm_vmware, :ems_id => ems.id)
     @service << vm
     expect(@service.service_resources.size).to eq(1)
     expect(@service.service_resources.first.resource).to_not receive(:retire_now).with(nil)

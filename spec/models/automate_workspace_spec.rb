@@ -1,6 +1,6 @@
 describe AutomateWorkspace do
   describe "#merge_output!" do
-    let(:aw) { FactoryGirl.create(:automate_workspace, :input => input) }
+    let(:aw) { FactoryBot.create(:automate_workspace, :input => input) }
     let(:password) { "ca$hc0w" }
     let(:encrypted) { MiqPassword.encrypt(password) }
     let(:input) do

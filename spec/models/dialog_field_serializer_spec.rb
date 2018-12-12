@@ -123,7 +123,7 @@ describe DialogFieldSerializer do
         end
 
         context 'with associations' do
-          let(:dialog_field_responders) { [FactoryGirl.build(:dialog_field_text_box)] }
+          let(:dialog_field_responders) { [FactoryBot.build(:dialog_field_text_box)] }
 
           it 'serializes the dialog_field with all attributes and non_empty associations' do
             expect(dialog_field_serializer.serialize(dialog_field, dialog_field_responders))

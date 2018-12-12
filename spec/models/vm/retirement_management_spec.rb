@@ -1,12 +1,12 @@
 describe "VM Retirement Management" do
-  let!(:user) { FactoryGirl.create(:user_miq_request_approver) }
-  let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
-  let(:vm2) { FactoryGirl.create(:vm) }
+  let!(:user) { FactoryBot.create(:user_miq_request_approver) }
+  let(:region) { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number) }
+  let(:vm2) { FactoryBot.create(:vm) }
 
   before do
     @zone = EvmSpecHelper.local_miq_server.zone
-    @ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
-    @vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id, :evm_owner => user)
+    @ems = FactoryBot.create(:ems_vmware, :zone => @zone)
+    @vm = FactoryBot.create(:vm_vmware, :ems_id => @ems.id, :evm_owner => user)
   end
 
   it "#retirement_check" do
@@ -148,7 +148,7 @@ describe "VM Retirement Management" do
   end
 
   it "#retirement_due?" do
-    vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id)
+    vm = FactoryBot.create(:vm_vmware, :ems_id => @ems.id)
     expect(vm.retirement_due?).to be_falsey
     vm.update_attributes(:retires_on => Time.zone.today + 1.day)
     expect(vm.retirement_due?).to be_falsey
@@ -183,7 +183,7 @@ describe "VM Retirement Management" do
   it "#raise_audit_event" do
     event_name = 'foo'
     message = 'bar'
-    vm = FactoryGirl.create(:vm_vmware)
+    vm = FactoryBot.create(:vm_vmware)
     event_hash = {:target_class => "Vm", :target_id => vm.id.to_s, :event => event_name, :message => message}
     expect(AuditEvent).to receive(:success).with(event_hash)
 

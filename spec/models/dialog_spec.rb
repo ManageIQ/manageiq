@@ -61,35 +61,35 @@ describe Dialog do
 
   describe "#content" do
     it "returns the serialized content" do
-      dialog = FactoryGirl.create(:dialog, :description => "foo", :label => "bar")
+      dialog = FactoryBot.create(:dialog, :description => "foo", :label => "bar")
       expect(dialog.content).to match([hash_including("description" => "foo", "label" => "bar")])
     end
   end
 
   context "validate label uniqueness" do
     it "with same label" do
-      dialog = FactoryGirl.create(:dialog)
+      dialog = FactoryBot.create(:dialog)
 
-      expect { FactoryGirl.create(:dialog, :name => dialog.name) }
+      expect { FactoryBot.create(:dialog, :name => dialog.name) }
         .to raise_error(ActiveRecord::RecordInvalid, /Name is not unique within region/)
     end
 
     it "with different labels" do
-      FactoryGirl.create(:dialog)
+      FactoryBot.create(:dialog)
 
-      expect { FactoryGirl.create(:dialog) }.to_not raise_error
+      expect { FactoryBot.create(:dialog) }.to_not raise_error
     end
   end
 
   context "#destroy" do
     it "destroy without resource_action association" do
-      expect(FactoryGirl.create(:dialog).destroy).to be_truthy
+      expect(FactoryBot.create(:dialog).destroy).to be_truthy
       expect(Dialog.count).to eq(0)
     end
 
     it "destroy with resource_action association" do
-      dialog = FactoryGirl.create(:dialog)
-      FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog, :resource_type => Dialog, :resource_id => dialog.id)
+      dialog = FactoryBot.create(:dialog)
+      FactoryBot.create(:resource_action, :action => "Provision", :dialog => dialog, :resource_type => Dialog, :resource_id => dialog.id)
       expect { dialog.destroy }
       .to raise_error(RuntimeError, "Dialog cannot be deleted because it is connected to other components: [\"Dialog:#{dialog.id} - #{dialog.name}\"]")
       expect(Dialog.count).to eq(1)
@@ -98,10 +98,10 @@ describe Dialog do
 
   describe "dialog structures" do
     before do
-      @dialog       = FactoryGirl.build(:dialog, :label => 'dialog')
-      @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field_1')
+      @dialog       = FactoryBot.build(:dialog, :label => 'dialog')
+      @dialog_tab   = FactoryBot.create(:dialog_tab, :label => 'tab')
+      @dialog_group = FactoryBot.create(:dialog_group, :label => 'group')
+      @dialog_field = FactoryBot.create(:dialog_field, :label => 'field 1', :name => 'field_1')
     end
 
     it "dialogs contain tabs" do
@@ -122,26 +122,26 @@ describe Dialog do
     end
 
     it "add controls" do
-      text_box = FactoryGirl.create(:dialog_field_text_box, :label => 'text box', :name => 'text_box')
+      text_box = FactoryBot.create(:dialog_field_text_box, :label => 'text box', :name => 'text_box')
       @dialog_group.dialog_fields << text_box
       expect(@dialog_group.dialog_fields.size).to eq(1)
 
-      tags = FactoryGirl.create(:dialog_field_tag_control, :label => 'tags', :name => 'tags')
+      tags = FactoryBot.create(:dialog_field_tag_control, :label => 'tags', :name => 'tags')
       @dialog_group.dialog_fields << tags
       @dialog_group.reload
       expect(@dialog_group.dialog_fields.size).to eq(2)
 
-      button = FactoryGirl.create(:dialog_field_button, :label => 'button', :name => 'button')
+      button = FactoryBot.create(:dialog_field_button, :label => 'button', :name => 'button')
       @dialog_group.dialog_fields << button
       @dialog_group.reload
       expect(@dialog_group.dialog_fields.size).to eq(3)
 
-      check_box = FactoryGirl.create(:dialog_field_text_box, :label => 'check box', :name => "check_box")
+      check_box = FactoryBot.create(:dialog_field_text_box, :label => 'check box', :name => "check_box")
       @dialog_group.dialog_fields << check_box
       @dialog_group.reload
       expect(@dialog_group.dialog_fields.size).to eq(4)
 
-      drop_down_list = FactoryGirl.create(:dialog_field_drop_down_list, :label => 'drop down list', :name => "drop_down_1")
+      drop_down_list = FactoryBot.create(:dialog_field_drop_down_list, :label => 'drop down list', :name => "drop_down_1")
       @dialog_group.dialog_fields << drop_down_list
       @dialog_group.reload
       expect(@dialog_group.dialog_fields.size).to eq(5)
@@ -150,10 +150,10 @@ describe Dialog do
 
   context "#remove_all_resources" do
     before do
-      @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
-      @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1")
+      @dialog       = FactoryBot.create(:dialog, :label => 'dialog')
+      @dialog_tab   = FactoryBot.create(:dialog_tab, :label => 'tab')
+      @dialog_group = FactoryBot.create(:dialog_group, :label => 'group')
+      @dialog_field = FactoryBot.create(:dialog_field, :label => 'field 1', :name => "field_1")
     end
 
     it "dialogs contain tabs" do
@@ -180,10 +180,10 @@ describe Dialog do
 
   context "remove resources" do
     before do
-      @dialog             = FactoryGirl.create(:dialog,       :label => 'dialog')
-      @dialog_tab         = FactoryGirl.create(:dialog_tab,   :label => 'tab')
-      @dialog_group       = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_group_field = FactoryGirl.create(:dialog_field, :label => 'group field', :name => "group field")
+      @dialog             = FactoryBot.create(:dialog,       :label => 'dialog')
+      @dialog_tab         = FactoryBot.create(:dialog_tab,   :label => 'tab')
+      @dialog_group       = FactoryBot.create(:dialog_group, :label => 'group')
+      @dialog_group_field = FactoryBot.create(:dialog_field, :label => 'group field', :name => "group field")
 
       @dialog.dialog_tabs << @dialog_tab
       @dialog_tab.dialog_groups << @dialog_group
@@ -225,11 +225,11 @@ describe Dialog do
 
   context "#each_field" do
     before do
-      @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')
-      @dialog_tab    = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group  = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field  = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1")
-      @dialog_field2 = FactoryGirl.create(:dialog_field, :label => 'field 2', :name => "field_2")
+      @dialog        = FactoryBot.create(:dialog, :label => 'dialog')
+      @dialog_tab    = FactoryBot.create(:dialog_tab, :label => 'tab')
+      @dialog_group  = FactoryBot.create(:dialog_group, :label => 'group')
+      @dialog_field  = FactoryBot.create(:dialog_field, :label => 'field 1', :name => "field_1")
+      @dialog_field2 = FactoryBot.create(:dialog_field, :label => 'field 2', :name => "field_2")
 
       @dialog.dialog_tabs << @dialog_tab
       @dialog_tab.dialog_groups << @dialog_group
@@ -261,10 +261,10 @@ describe Dialog do
   end
 
   describe '#update_tabs' do
-    let(:dialog_field) { FactoryGirl.create_list(:dialog_field, 1, :label => 'field') }
-    let(:dialog_group) { FactoryGirl.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => dialog_field) }
-    let(:dialog_tab) { FactoryGirl.create_list(:dialog_tab, 1, :label => 'tab', :dialog_groups => dialog_group) }
-    let(:dialog) { FactoryGirl.create(:dialog, :label => 'dialog', :dialog_tabs => dialog_tab) }
+    let(:dialog_field) { FactoryBot.create_list(:dialog_field, 1, :label => 'field') }
+    let(:dialog_group) { FactoryBot.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => dialog_field) }
+    let(:dialog_tab) { FactoryBot.create_list(:dialog_tab, 1, :label => 'tab', :dialog_groups => dialog_group) }
+    let(:dialog) { FactoryBot.create(:dialog, :label => 'dialog', :dialog_tabs => dialog_tab) }
 
     let(:updated_content) do
       [
@@ -335,7 +335,7 @@ describe Dialog do
       end
 
       before do
-        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
+        dialog.dialog_tabs << FactoryBot.create(:dialog_tab)
       end
 
       it 'deletes the removed dialog_tab' do
@@ -348,16 +348,16 @@ describe Dialog do
 
   context "#dialog_fields" do
     before do
-      @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')
-      @dialog_tab    = FactoryGirl.create(:dialog_tab, :label => 'tab')
-      @dialog_group  = FactoryGirl.create(:dialog_group, :label => 'group')
-      @dialog_field  = FactoryGirl.create(:dialog_field, :label => 'field 1', :name => "field_1")
-      @dialog_field2 = FactoryGirl.create(:dialog_field, :label => 'field 2', :name => "field_2")
+      @dialog        = FactoryBot.create(:dialog, :label => 'dialog')
+      @dialog_tab    = FactoryBot.create(:dialog_tab, :label => 'tab')
+      @dialog_group  = FactoryBot.create(:dialog_group, :label => 'group')
+      @dialog_field  = FactoryBot.create(:dialog_field, :label => 'field 1', :name => "field_1")
+      @dialog_field2 = FactoryBot.create(:dialog_field, :label => 'field 2', :name => "field_2")
 
       @dialog.dialog_tabs << @dialog_tab
-      @dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab2')
+      @dialog.dialog_tabs << FactoryBot.create(:dialog_tab, :label => 'tab2')
       @dialog_tab.dialog_groups << @dialog_group
-      @dialog_tab.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group2')
+      @dialog_tab.dialog_groups << FactoryBot.create(:dialog_group, :label => 'group2')
       @dialog_group.dialog_fields << @dialog_field
       @dialog_group.dialog_fields << @dialog_field2
 
@@ -380,7 +380,7 @@ describe Dialog do
   end
 
   context "validate children before save" do
-    let(:dialog) { FactoryGirl.build(:dialog, :label => 'dialog') }
+    let(:dialog) { FactoryBot.build(:dialog, :label => 'dialog') }
 
     it "fails without tab" do
       expect { dialog.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Dialog #{dialog.label} must have at least one Tab")
@@ -388,27 +388,27 @@ describe Dialog do
 
     context "unique field names" do
       before do
-        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
-        dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group')
-        dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 1', :name => 'field1')
+        dialog.dialog_tabs << FactoryBot.create(:dialog_tab, :label => 'tab')
+        dialog.dialog_tabs.first.dialog_groups << FactoryBot.create(:dialog_group, :label => 'group')
+        dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryBot.create(:dialog_field, :label => 'field 1', :name => 'field1')
       end
 
       it "fails with two identical field names on different groups" do
-        dialog.dialog_tabs.first.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group2')
-        dialog.dialog_tabs.first.dialog_groups.last.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 3', :name => 'field1')
+        dialog.dialog_tabs.first.dialog_groups << FactoryBot.create(:dialog_group, :label => 'group2')
+        dialog.dialog_tabs.first.dialog_groups.last.dialog_fields << FactoryBot.create(:dialog_field, :label => 'field 3', :name => 'field1')
         expect { dialog.save! }
           .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
       end
 
       it "fails with two identical field names on same group" do
-        dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryGirl.create(:dialog_field, :label => 'field 3', :name => 'field1')
+        dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << FactoryBot.create(:dialog_field, :label => 'field 3', :name => 'field1')
         expect { dialog.save! }
           .to raise_error(ActiveRecord::RecordInvalid, /Dialog field name cannot be duplicated on a dialog: field1/)
       end
     end
 
     it "validates with tab" do
-      dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab')
+      dialog.dialog_tabs << FactoryBot.create(:dialog_tab, :label => 'tab')
       expect_any_instance_of(DialogTab).to receive(:valid?)
       expect(dialog.errors.full_messages).to be_empty
       dialog.validate_children
@@ -417,7 +417,7 @@ describe Dialog do
 
   describe "#deep_copy" do
     let(:dialog_service) { Dialog::OrchestrationTemplateServiceDialog.new }
-    let(:template)       { FactoryGirl.create(:orchestration_template).tap { |t| allow(t).to receive(:parameter_groups).and_return([]) } }
+    let(:template)       { FactoryBot.create(:orchestration_template).tap { |t| allow(t).to receive(:parameter_groups).and_return([]) } }
     let(:dialog)         { dialog_service.create_dialog('test', template) }
 
     it "clones the dialog and all containing components" do

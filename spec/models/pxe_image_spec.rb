@@ -1,5 +1,5 @@
 describe PxeImage do
-  let(:image) { FactoryGirl.create(:pxe_image) }
+  let(:image) { FactoryBot.create(:pxe_image) }
 
   context "#build_pxe_contents" do
     it "updates ks and ks_device options" do

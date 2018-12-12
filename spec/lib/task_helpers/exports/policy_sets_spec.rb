@@ -65,8 +65,8 @@ describe TaskHelpers::Exports::PolicySets do
   end
 
   before do
-    FactoryGirl.create(:miq_policy_set, policy_set_create_attrs)
-    FactoryGirl.create(:miq_policy_set_read_only, policy2_set_create_attrs)
+    FactoryBot.create(:miq_policy_set, policy_set_create_attrs)
+    FactoryBot.create(:miq_policy_set_read_only, policy2_set_create_attrs)
   end
 
   after do

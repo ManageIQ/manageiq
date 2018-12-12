@@ -1,7 +1,7 @@
 describe ManageIQ::Providers::EmbeddedAnsible::Provider do
-  subject { FactoryGirl.create(:provider_embedded_ansible) }
+  subject { FactoryBot.create(:provider_embedded_ansible) }
 
-  let(:miq_server) { FactoryGirl.create(:miq_server) }
+  let(:miq_server) { FactoryBot.create(:miq_server) }
 
   before do
     EvmSpecHelper.assign_embedded_ansible_role(miq_server)

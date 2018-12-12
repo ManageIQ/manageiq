@@ -4,7 +4,7 @@ describe MiqServer do
   end
 
   let!(:database) do
-    FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+    FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
     db = MiqDatabase.seed
     db.update_repo_name = "repo-1 repo-2"
     db
@@ -15,7 +15,7 @@ describe MiqServer do
 
   context "Queue multiple servers" do
     before do
-      FactoryGirl.create(:miq_server, :zone => @server.zone)
+      FactoryBot.create(:miq_server, :zone => @server.zone)
     end
 
     it ".queue_update_registration_status" do

@@ -1,12 +1,12 @@
 describe SecurityGroup do
   before do
-    provider = FactoryGirl.create(:ems_amazon)
-    cn       = FactoryGirl.create(:cloud_network)
-    @sg1     = FactoryGirl.create(:security_group,
+    provider = FactoryBot.create(:ems_amazon)
+    cn       = FactoryBot.create(:cloud_network)
+    @sg1     = FactoryBot.create(:security_group,
                                   :name                  => "sq_1",
                                   :ext_management_system => provider.network_manager,
                                   :cloud_network         => cn)
-    @sg2     = FactoryGirl.create(:security_group,
+    @sg2     = FactoryBot.create(:security_group,
                                   :name                  => "sq_1",
                                   :ext_management_system => provider.network_manager)
   end
@@ -17,11 +17,11 @@ describe SecurityGroup do
 
   describe "#total_vms" do
     it "counts vms" do
-      sg = FactoryGirl.create(:security_group)
+      sg = FactoryBot.create(:security_group)
 
       2.times do
-        vm = FactoryGirl.create(:vm_amazon)
-        FactoryGirl.create(:network_port_openstack,
+        vm = FactoryBot.create(:vm_amazon)
+        FactoryBot.create(:network_port_openstack,
                            :device          => vm,
                            :security_groups => [sg])
       end

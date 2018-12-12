@@ -61,11 +61,11 @@ describe "Widget RSS Content" do
 
     EvmSpecHelper.local_miq_server
 
-    @admin       = FactoryGirl.create(:user_admin)
+    @admin       = FactoryBot.create(:user_admin)
     @admin_group = @admin.current_group
 
     10.times do |i|
-      FactoryGirl.create(:vm_vmware, :name => "VmVmware #{i}")
+      FactoryBot.create(:vm_vmware, :name => "VmVmware #{i}")
     end
 
     MiqWidget.sync_from_hash(YAML.load('

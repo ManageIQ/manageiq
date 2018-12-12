@@ -27,8 +27,8 @@ describe EmsCloud do
   end
 
   context "OpenStack CloudTenant Mapping" do
-    let(:ems_cloud) { FactoryGirl.create(:ems_openstack_with_authentication, :tenant_mapping_enabled => true) }
-    let(:ems_infra) { FactoryGirl.create(:ext_management_system) }
+    let(:ems_cloud) { FactoryBot.create(:ems_openstack_with_authentication, :tenant_mapping_enabled => true) }
+    let(:ems_infra) { FactoryBot.create(:ext_management_system) }
 
     describe "#supports_cloud_tenant_mapping" do
       it "supports tenant mapping if the provider has CloudTenant relation and mapping is enabled" do
@@ -52,9 +52,9 @@ describe EmsCloud do
       end
 
       context "provider is not created under root tenant" do
-        let(:tenant) { FactoryGirl.build(:tenant, :parent => default_tenant) }
+        let(:tenant) { FactoryBot.build(:tenant, :parent => default_tenant) }
         let(:ems_cloud_without_root_tenant) do
-          FactoryGirl.create(:ems_openstack, :tenant => tenant, :tenant_mapping_enabled => true)
+          FactoryBot.create(:ems_openstack, :tenant => tenant, :tenant_mapping_enabled => true)
         end
 
         it "creates provider's tenant under tenant of provider" do
@@ -116,26 +116,26 @@ describe EmsCloud do
           ems_cloud.reload
         end
 
-        let(:vm_1) { FactoryGirl.create(:vm_openstack) }
-        let(:vm_2) { FactoryGirl.create(:vm_openstack) }
-        let(:vm_3) { FactoryGirl.create(:vm_openstack) }
-        let(:vm_4) { FactoryGirl.create(:vm_openstack) }
+        let(:vm_1) { FactoryBot.create(:vm_openstack) }
+        let(:vm_2) { FactoryBot.create(:vm_openstack) }
+        let(:vm_3) { FactoryBot.create(:vm_openstack) }
+        let(:vm_4) { FactoryBot.create(:vm_openstack) }
 
         let!(:ct_1) do
-          FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud)
+          FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud)
         end
 
         let!(:ct_2) do
-          FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_1,
+          FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_1,
                                                       :vms_and_templates => [vm_1, vm_2])
         end
 
         let!(:ct_3) do
-          FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_2)
+          FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_2)
         end
 
         let!(:ct_4) do
-          FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_2,
+          FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_2,
                                                       :vms_and_templates => [vm_3, vm_4])
         end
 
@@ -203,10 +203,10 @@ describe EmsCloud do
           expect(Tenant.first.name).to eq("My Company")
         end
 
-        let(:vm_5) { FactoryGirl.create(:vm_openstack) }
+        let(:vm_5) { FactoryBot.create(:vm_openstack) }
 
         let(:ct_5) do
-          FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_4,
+          FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_4,
                                                       :vms_and_templates => [vm_5])
         end
 
@@ -291,8 +291,8 @@ describe EmsCloud do
       end
 
       context "provider's user is changed between two synchronizations" do
-        let!(:vm_1) { FactoryGirl.create(:vm_openstack) }
-        let!(:vm_2) { FactoryGirl.create(:vm_openstack) }
+        let!(:vm_1) { FactoryBot.create(:vm_openstack) }
+        let!(:vm_2) { FactoryBot.create(:vm_openstack) }
         let(:ct_name_1) { "c_t_1" }
         let(:ct_name_2) { "c_t_2" }
         let(:ct_name_3) { "c_t_3" }
@@ -303,7 +303,7 @@ describe EmsCloud do
         end
 
         let(:ct_3) do
-          FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3)
+          FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3)
         end
 
         before do
@@ -385,9 +385,9 @@ describe EmsCloud do
           #    -> t_3 (new_ct_3's) -> t_1(new_ct_1's)
           #    -> t_2 (new_ct_2's)
           ######
-          let(:ct_1_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_3_new, :name => ct_name_1) }
-          let(:ct_2_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_2) }
-          let(:ct_3_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3) }
+          let(:ct_1_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_3_new, :name => ct_name_1) }
+          let(:ct_2_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_2) }
+          let(:ct_3_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3) }
 
           it "creates tenant tree from cloud tenants with correct source_tenant relations" do
             expect(CloudTenant.count).to eq(3)
@@ -473,9 +473,9 @@ describe EmsCloud do
           #    -> t_2(old - moved out)
           #    -> t_3(old - moved out)
           ######
-          let(:ct_1_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_3_new, :name => ct_name_1 + "X") }
-          let(:ct_2_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_2 + "X") }
-          let(:ct_3_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3 + "X") }
+          let(:ct_1_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_3_new, :name => ct_name_1 + "X") }
+          let(:ct_2_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_2 + "X") }
+          let(:ct_3_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3 + "X") }
 
           it "creates tenant tree from cloud tenants with correct source_tenant relations" do
             expect(CloudTenant.count).to eq(3)
@@ -577,7 +577,7 @@ describe EmsCloud do
           #    -> t_2(old - moved out)
           #    -> t_3(old - moved out)
           ######
-          let(:ct_1_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_1) }
+          let(:ct_1_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_1) }
 
           it "creates tenant tree from cloud tenants with correct source_tenant relations" do
             expect(CloudTenant.count).to eq(3)
@@ -655,12 +655,12 @@ describe EmsCloud do
           #    -> t_1(old - moved out)
           #    -> t_2(old - moved out)
           ######
-          let(:ct_1_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_3_new, :name => ct_name_1 + "X") }
-          let(:ct_2_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_2 + "X") }
-          let(:ct_3_new) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3) }
+          let(:ct_1_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :parent => ct_3_new, :name => ct_name_1 + "X") }
+          let(:ct_2_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_2 + "X") }
+          let(:ct_3_new) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_cloud, :name => ct_name_3) }
           let(:ct_name_4) { "ct_name_4" }
           let(:vm_4) do
-            vm = FactoryGirl.create(:vm_openstack)
+            vm = FactoryBot.create(:vm_openstack)
             vm.cloud_tenant.update_attributes!(:parent => ct_1_new, :ext_management_system => ems_cloud, :name => ct_name_4)
             vm
           end

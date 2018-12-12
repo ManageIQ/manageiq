@@ -33,18 +33,18 @@ describe MiqAeNamespace do
     end
 
     context "with a duplicite names" do
-      let(:domain) { FactoryGirl.create(:miq_ae_domain) }
-      let(:ns1)    { FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => domain.id) }
+      let(:domain) { FactoryBot.create(:miq_ae_domain) }
+      let(:ns1)    { FactoryBot.create(:miq_ae_namespace, :name => 'ns1', :parent_id => domain.id) }
 
       before do
-        FactoryGirl.create(:miq_ae_namespace, :name => 'namespace', :parent_id => ns1.id)
+        FactoryBot.create(:miq_ae_namespace, :name => 'namespace', :parent_id => ns1.id)
       end
 
       it "with a distinct path is allowed" do
         # domain/ns1/namespace
         # domain/ns2/namespace
-        ns2 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns2', :parent_id => domain.id)
-        dup_namespace = FactoryGirl.create(:miq_ae_namespace, :name => 'namespace', :parent_id => ns2.id)
+        ns2 = FactoryBot.create(:miq_ae_namespace, :name => 'ns2', :parent_id => domain.id)
+        dup_namespace = FactoryBot.create(:miq_ae_namespace, :name => 'namespace', :parent_id => ns2.id)
 
         expect(ns2.valid?).to be_truthy
         expect(dup_namespace.valid?).to be_truthy
@@ -54,14 +54,14 @@ describe MiqAeNamespace do
         # domain/ns1/namespace
         # domain/ns1/NAMESPACE
         expect do
-          FactoryGirl.create(:miq_ae_namespace, :name => 'NAMESPACE', :parent_id => ns1.id)
+          FactoryBot.create(:miq_ae_namespace, :name => 'NAMESPACE', :parent_id => ns1.id)
         end.to raise_error("Validation failed: MiqAeNamespace: Name has already been taken")
       end
     end
   end
 
   before do
-    @user = FactoryGirl.create(:user_with_group)
+    @user = FactoryBot.create(:user_with_group)
   end
 
   it "should find or create namespaces by fqname" do
@@ -89,7 +89,7 @@ describe MiqAeNamespace do
   end
 
   it "should return editable as false if the parent has the system property set to true" do
-    n1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+    n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
     expect(n1.editable?(@user)).to be_falsey
 
     n2 = MiqAeNamespace.create!(:name => 'ns2', :parent_id => n1.id)
@@ -99,12 +99,12 @@ describe MiqAeNamespace do
   end
 
   it "should return editable as true if the namespace doesn't have the system property defined" do
-    n1 = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+    n1 = FactoryBot.create(:miq_ae_domain, :tenant => @user.current_tenant)
     expect(n1.editable?(@user)).to be_truthy
   end
 
   it "should raise exception if user is nil" do
-    n1 = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
+    n1 = FactoryBot.create(:miq_ae_domain, :tenant => @user.current_tenant)
     expect { n1.editable?(nil) }.to raise_error(ArgumentError)
   end
 

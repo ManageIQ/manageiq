@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:miq_group_description) { |n| "Test Group #{seq_padded_for_sorting(n)}" }
 
   factory :miq_group do
@@ -17,7 +17,7 @@ FactoryGirl.define do
 
     after :build do |g, e|
       if e.role || e.features || e.miq_user_role_id || e.miq_user_role
-        g.entitlement = FactoryGirl.create(:entitlement,
+        g.entitlement = FactoryBot.create(:entitlement,
                                            :features => e.features,
                                            :role => e.role,
                                            :miq_user_role_id => e.miq_user_role_id,

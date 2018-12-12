@@ -11,11 +11,11 @@ describe "MiqWorker Monitor" do
 
     context "A worker" do
       before do
-        @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
+        @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id)
       end
 
       it "MiqServer#clean_worker_records" do
-        FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
+        FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id)
         allow(@miq_server).to receive(:worker_delete)
         @worker.update_attributes(:status => MiqWorker::STATUS_STOPPED)
 
@@ -26,7 +26,7 @@ describe "MiqWorker Monitor" do
       end
 
       it "MiqServer#check_not_responding" do
-        w2 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => (@worker.pid + 1))
+        w2 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => (@worker.pid + 1))
         allow(@miq_server).to receive(:worker_delete)
         allow(@miq_server).to receive(:worker_get_monitor_status).with(@worker.pid).and_return(:waiting_for_stop)
         allow(@miq_server).to receive(:worker_get_monitor_reason).with(@worker.pid).and_return(:not_responding)
@@ -43,11 +43,11 @@ describe "MiqWorker Monitor" do
 
       describe "#do_system_limit_exceeded" do
         before do
-          @worker_to_keep = FactoryGirl.create(:miq_ems_metrics_processor_worker,
+          @worker_to_keep = FactoryBot.create(:miq_ems_metrics_processor_worker,
             :miq_server   => @miq_server,
             :memory_usage => 1.gigabytes
           )
-          @worker_to_kill = FactoryGirl.create(:miq_ems_metrics_processor_worker,
+          @worker_to_kill = FactoryBot.create(:miq_ems_metrics_processor_worker,
             :miq_server   => @miq_server,
             :memory_usage => 2.gigabytes
           )
@@ -74,7 +74,7 @@ describe "MiqWorker Monitor" do
 
       context "with 1 message" do
         before do
-          @message = FactoryGirl.create(:miq_queue, :state => 'dequeue', :handler => @worker)
+          @message = FactoryBot.create(:miq_queue, :state => 'dequeue', :handler => @worker)
         end
 
         it "should have one in its relationship" do
@@ -88,15 +88,15 @@ describe "MiqWorker Monitor" do
           @messages = []
           @actives  = []
 
-          m = FactoryGirl.create(:miq_queue, :state => 'ready',   :handler => @worker, :msg_timeout => 4.minutes)
+          m = FactoryBot.create(:miq_queue, :state => 'ready',   :handler => @worker, :msg_timeout => 4.minutes)
           @messages << m
           @actives << m if m.state == 'dequeue'
 
-          m = FactoryGirl.create(:miq_queue, :state => 'dequeue', :handler => @worker, :msg_timeout => 4.minutes)
+          m = FactoryBot.create(:miq_queue, :state => 'dequeue', :handler => @worker, :msg_timeout => 4.minutes)
           @messages << m
           @actives << m if m.state == 'dequeue'
 
-          m = FactoryGirl.create(:miq_queue, :state => 'dequeue', :handler => @worker, :msg_timeout => 5.minutes)
+          m = FactoryBot.create(:miq_queue, :state => 'dequeue', :handler => @worker, :msg_timeout => 5.minutes)
           @messages << m
           @actives << m if m.state == 'dequeue'
           @worker.reload
@@ -150,8 +150,8 @@ describe "MiqWorker Monitor" do
       context "with active messages without worker" do
         before do
           @actives = []
-          @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes)
-          @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 5.minutes)
+          @actives << FactoryBot.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes)
+          @actives << FactoryBot.create(:miq_queue, :state => 'dequeue', :msg_timeout => 5.minutes)
         end
 
         it "should timeout the right active messages" do
@@ -169,16 +169,16 @@ describe "MiqWorker Monitor" do
 
       context "with expired active messages assigned to workers from multiple" do
         before do
-          @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server.zone)
-          @worker1 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
-          @worker2 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server2.id)
+          @miq_server2 = FactoryBot.create(:miq_server, :zone => @miq_server.zone)
+          @worker1 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id)
+          @worker2 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server2.id)
 
           @actives = []
         end
 
         it "should timeout messages on my server or servers that are down" do
-          @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker1)
-          @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker2)
+          @actives << FactoryBot.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker1)
+          @actives << FactoryBot.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker2)
 
           actives = MiqQueue.where(:state => 'dequeue')
           expect(actives.length).to eq(@actives.length)
@@ -204,7 +204,7 @@ describe "MiqWorker Monitor" do
 
       context "with vanilla generic worker" do
         before do
-          @worker1 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => 42, :type => 'MiqGenericWorker')
+          @worker1 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => 42, :type => 'MiqGenericWorker')
           allow_any_instance_of(MiqServer).to receive(:get_time_threshold).and_return(2.minutes)
           allow_any_instance_of(MiqServer).to receive(:get_memory_threshold).and_return(500.megabytes)
           allow_any_instance_of(MiqServer).to receive(:get_restart_interval).and_return(0.hours)
@@ -323,7 +323,7 @@ describe "MiqWorker Monitor" do
       end
 
       context "threshold validation" do
-        let(:worker) { FactoryGirl.create(:miq_worker, :miq_server_id => server.id, :pid => 42) }
+        let(:worker) { FactoryBot.create(:miq_worker, :miq_server_id => server.id, :pid => 42) }
         let(:server) { @miq_server }
 
         before do

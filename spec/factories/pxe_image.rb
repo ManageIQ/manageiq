@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :pxe_image, :class => 'PxeImage' do
     sequence(:name)         { |n| "pxe_image_#{seq_padded_for_sorting(n)}" }
     sequence(:description)  { |n| "pxe_desc_#{seq_padded_for_sorting(n)}"  }

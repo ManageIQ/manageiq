@@ -1,8 +1,8 @@
 describe CustomButtonEvent do
-  let(:custom_button) { FactoryGirl.create(:custom_button, :applies_to_class => "Vm", :name => "Test Button") }
+  let(:custom_button) { FactoryBot.create(:custom_button, :applies_to_class => "Vm", :name => "Test Button") }
   let(:ae_entry_point) { "/SYSTEM/PROCESS/Request" }
   let(:cb_event) do
-    FactoryGirl.create(:custom_button_event,
+    FactoryBot.create(:custom_button_event,
                        :full_data => {
                          :automate_entry_point => ae_entry_point,
                          :button_id            => custom_button.id,

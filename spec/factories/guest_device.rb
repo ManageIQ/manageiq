@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :guest_device
 
   factory :guest_device_nic, :parent => :guest_device do
@@ -10,7 +10,7 @@ FactoryGirl.define do
 
   factory :guest_device_nic_with_network, :parent => :guest_device_nic do
     after(:build) do |x|
-      x.network = FactoryGirl.build(:network, :hardware_id => x.hardware_id)
+      x.network = FactoryBot.build(:network, :hardware_id => x.hardware_id)
     end
   end
 end

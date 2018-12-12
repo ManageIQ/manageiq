@@ -1,27 +1,27 @@
 describe MiqAlertStatus do
-  let(:ems)                    { FactoryGirl.create(:ems_vmware, :name => 'ems') }
-  let(:alert)                  { FactoryGirl.create(:miq_alert_status) }
-  let(:user1)                  { FactoryGirl.create(:user, :name => 'user1') }
-  let(:user2)                  { FactoryGirl.create(:user, :name => 'user2') }
+  let(:ems)                    { FactoryBot.create(:ems_vmware, :name => 'ems') }
+  let(:alert)                  { FactoryBot.create(:miq_alert_status) }
+  let(:user1)                  { FactoryBot.create(:user, :name => 'user1') }
+  let(:user2)                  { FactoryBot.create(:user, :name => 'user2') }
   let(:acknowledgement_action) do
-    FactoryGirl.create(:miq_alert_status_action, :action_type => 'acknowledge', :user => user1,
+    FactoryBot.create(:miq_alert_status_action, :action_type => 'acknowledge', :user => user1,
                        :miq_alert_status => alert)
   end
   let(:assignment_action) do
-    FactoryGirl.create(:miq_alert_status_action, :action_type => 'assign', :user => user1, :assignee => user1,
+    FactoryBot.create(:miq_alert_status_action, :action_type => 'assign', :user => user1, :assignee => user1,
                        :miq_alert_status => alert)
   end
   let(:hide_action) do
-    FactoryGirl.create(:miq_alert_status_action, :action_type => 'hide', :user => user1, :miq_alert_status => alert)
+    FactoryBot.create(:miq_alert_status_action, :action_type => 'hide', :user => user1, :miq_alert_status => alert)
   end
   let(:show_action) do
-    FactoryGirl.create(:miq_alert_status_action, :action_type => 'show', :user => user1, :miq_alert_status => alert)
+    FactoryBot.create(:miq_alert_status_action, :action_type => 'show', :user => user1, :miq_alert_status => alert)
   end
 
   describe "Validation" do
     it "should reject unexpected severities" do
       expect do
-        FactoryGirl.create(:miq_alert_status, :severity => 'awesome')
+        FactoryBot.create(:miq_alert_status, :severity => 'awesome')
       end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatus: Severity must be accepted")
     end
   end
@@ -49,7 +49,7 @@ describe MiqAlertStatus do
         alert.miq_alert_status_actions << acknowledgement_action
       end
       Timecop.travel 2.minutes do
-        FactoryGirl.create(
+        FactoryBot.create(
           :miq_alert_status_action,
           :action_type      => 'unacknowledge',
           :user             => user1,
@@ -66,7 +66,7 @@ describe MiqAlertStatus do
         alert.miq_alert_status_actions << acknowledgement_action
       end
       Timecop.travel 2.minutes do
-        alert.miq_alert_status_actions << FactoryGirl.create(
+        alert.miq_alert_status_actions << FactoryBot.create(
           :miq_alert_status_action,
           :action_type      => 'assign',
           :user             => user1,
@@ -89,7 +89,7 @@ describe MiqAlertStatus do
       alert.miq_alert_status_actions = [assignment_action]
       expect(alert.assignee).to eq(user1)
       Timecop.travel 1.minute do
-        FactoryGirl.create(
+        FactoryBot.create(
           :miq_alert_status_action,
           :action_type      => 'assign',
           :user             => user1,
@@ -100,7 +100,7 @@ describe MiqAlertStatus do
       alert.reload
       expect(alert.assignee).to eq(user2)
       Timecop.travel 2.minutes do
-        FactoryGirl.create(
+        FactoryBot.create(
           :miq_alert_status_action,
           :action_type      => 'unassign',
           :user             => user1,

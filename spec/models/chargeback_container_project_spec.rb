@@ -10,7 +10,7 @@ describe ChargebackContainerProject do
     let(:month_beginning) { ts.beginning_of_month.utc }
     let(:month_end) { ts.end_of_month.utc }
     let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
-    let(:ems) {FactoryGirl.create(:ems_openshift) }
+    let(:ems) {FactoryBot.create(:ems_openshift) }
 
     let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
 
@@ -24,7 +24,7 @@ describe ChargebackContainerProject do
     end
 
     let!(:chargeback_rate) do
-      FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+      FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
     end
 
     let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
@@ -37,14 +37,14 @@ describe ChargebackContainerProject do
       ManageIQ::Showback::InputMeasure.seed
 
       EvmSpecHelper.create_guid_miq_server_zone
-      @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems,
+      @project = FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems,
                                     :created_on => month_beginning)
 
       temp = {:cb_rate => chargeback_rate, :object => ems}
       ChargebackRate.set_assignments(:compute, [temp])
 
-      cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
-      c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
+      c = FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
       @tag = c.tag
       @project.tag_with(@tag.name, :ns => '*')
 

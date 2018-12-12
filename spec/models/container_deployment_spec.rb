@@ -1,23 +1,23 @@
 describe ContainerDeployment do
   before do
-    @container_deployment = FactoryGirl.create(:container_deployment,
+    @container_deployment = FactoryBot.create(:container_deployment,
                                                :method_type => "non_managed",
                                                :version     => "v2",
                                                :kind        => "openshift-enterprise")
     @container_deployment.create_needed_tags
 
-    hardware = FactoryGirl.create(:hardware)
+    hardware = FactoryBot.create(:hardware)
     hardware.ipaddresses << "10.0.0.1"
     hardware.ipaddresses << "37.142.68.50"
-    @container_deployment_node_with_vm_ip = FactoryGirl.create(:container_deployment_node,
-                                                               :vm => FactoryGirl.create(:vm_vmware,
+    @container_deployment_node_with_vm_ip = FactoryBot.create(:container_deployment_node,
+                                                               :vm => FactoryBot.create(:vm_vmware,
                                                                                          :hardware => hardware))
-    hardware = FactoryGirl.create(:hardware)
+    hardware = FactoryBot.create(:hardware)
     hardware.ipaddresses << "37.142.68.51"
-    @container_deployment_node_with_vm_hostname = FactoryGirl.create(:container_deployment_node,
-                                                                     :vm => FactoryGirl.create(:vm_vmware,
+    @container_deployment_node_with_vm_hostname = FactoryBot.create(:container_deployment_node,
+                                                                     :vm => FactoryBot.create(:vm_vmware,
                                                                                                :hardware => hardware))
-    @container_deployment_node_without_vm = FactoryGirl.create(:container_deployment_node,
+    @container_deployment_node_without_vm = FactoryBot.create(:container_deployment_node,
                                                                :address => "10.0.0.2")
 
     @container_deployment_node_with_vm_ip.tag_add("node")
@@ -82,8 +82,8 @@ variant: openshift-enterprise
       allow(ServerRole).to receive(:seed_data).and_return(@csv)
       ServerRole.seed
       _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
-      ems = FactoryGirl.create(:ext_management_system, :zone => @zone)
-      @node = FactoryGirl.create(:container_node, :name => "n", :ext_management_system => ems)
+      ems = FactoryBot.create(:ext_management_system, :zone => @zone)
+      @node = FactoryBot.create(:container_node, :name => "n", :ext_management_system => ems)
     end
 
     it "is direct when no role" do
@@ -91,7 +91,7 @@ variant: openshift-enterprise
     end
 
     it "uses hostname label when present" do
-      label = FactoryGirl.build(:custom_attribute,
+      label = FactoryBot.build(:custom_attribute,
                                 :name    => "kubernetes.io/hostname",
                                 :value   => "a1.custom.domain",
                                 :section => "labels")
@@ -100,7 +100,7 @@ variant: openshift-enterprise
     end
 
     it "uses proxied url when cockpit role is active" do
-      server = FactoryGirl.create(:miq_server, :ipaddress => "10.0.0.1", :has_active_cockpit_ws => true, :zone => @zone)
+      server = FactoryBot.create(:miq_server, :ipaddress => "10.0.0.1", :has_active_cockpit_ws => true, :zone => @zone)
       server.assign_role('cockpit_ws', 1)
       server.activate_roles('cockpit_ws')
       expect(@node.cockpit_url).to eq(URI.parse("https://10.0.0.1/cws/=n"))
@@ -134,7 +134,7 @@ variant: openshift-enterprise
       @container_deployment.authentications.destroy_all
     end
     it "parse allow all correctly" do
-      authentication = FactoryGirl.create(:authentication_allow_all)
+      authentication = FactoryBot.create(:authentication_allow_all)
       @container_deployment.authentications << authentication
       expect(@container_deployment.identity_ansible_config_format).to eq('name'      => "example_name",
                                                                          'login'     => "true",
@@ -143,7 +143,7 @@ variant: openshift-enterprise
     end
 
     it "parse github correctly" do
-      authentication = FactoryGirl.create(:authentication_github)
+      authentication = FactoryBot.create(:authentication_github)
       @container_deployment.authentications << authentication
       expect(@container_deployment.identity_ansible_config_format).to eq("name"                => "example_name",
                                                                          "login"               => "true",
@@ -155,7 +155,7 @@ variant: openshift-enterprise
     end
 
     it "parse google correctly" do
-      authentication = FactoryGirl.create(:authentication_google)
+      authentication = FactoryBot.create(:authentication_google)
       @container_deployment.authentications << authentication
       expect(@container_deployment.identity_ansible_config_format).to eq("name"         => "example_name",
                                                                          "login"        => "true",
@@ -167,7 +167,7 @@ variant: openshift-enterprise
     end
 
     it "parse htpasswd correctly" do
-      authentication = FactoryGirl.create(:authentication_htpasswd)
+      authentication = FactoryBot.create(:authentication_htpasswd)
       @container_deployment.authentications << authentication
       expect(@container_deployment.identity_ansible_config_format).to eq("name"      => "example_name",
                                                                          "login"     => "true",
@@ -177,7 +177,7 @@ variant: openshift-enterprise
     end
 
     it "parse ldap correctly" do
-      authentication = FactoryGirl.create(:authentication_ldap)
+      authentication = FactoryBot.create(:authentication_ldap)
       @container_deployment.authentications << authentication
       expect(@container_deployment.identity_ansible_config_format).to eq("name" => "example_name", "login" => "true",
                                                             "challenge" => "true",
@@ -194,7 +194,7 @@ variant: openshift-enterprise
     end
 
     it "parse openID correctly" do
-      authentication = FactoryGirl.create(:authentication_open_id)
+      authentication = FactoryBot.create(:authentication_open_id)
       @container_deployment.authentications << authentication
       expect(@container_deployment.identity_ansible_config_format).to eq("name"                           => "example_name",
                                                                          "login"                          => "true",
@@ -210,7 +210,7 @@ variant: openshift-enterprise
     end
 
     it "parse request header correctly" do
-      authentication = FactoryGirl.create(:authentication_request_header)
+      authentication = FactoryBot.create(:authentication_request_header)
       @container_deployment.authentications << authentication
       expect(@container_deployment.identity_ansible_config_format).to eq("name"                                  => "example_name",
                                                                          "login"                                 => "true",

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :customization_spec do
     sequence(:name) { |n| "customization_spec_#{seq_padded_for_sorting(n)}" }
     typ { "Windows" }

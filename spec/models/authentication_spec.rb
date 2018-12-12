@@ -22,7 +22,7 @@ describe Authentication do
 
   context "with an authentication" do
     let(:pwd_plain) { "smartvm" }
-    let(:auth) { FactoryGirl.create(:authentication, :password => pwd_plain) }
+    let(:auth) { FactoryBot.create(:authentication, :password => pwd_plain) }
 
     it "should return decrypted password" do
       expect(auth.password).to eq(pwd_plain)

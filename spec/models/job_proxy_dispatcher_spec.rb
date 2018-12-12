@@ -7,7 +7,7 @@ describe JobProxyDispatcher do
   NUM_SERVERS = 3
   NUM_STORAGES = 3
 
-  let(:zone) { FactoryGirl.create(:zone) }
+  let(:zone) { FactoryBot.create(:zone) }
   let(:dispatcher) do
     JobProxyDispatcher.new.tap do |dispatcher|
       dispatcher.instance_variable_set(:@zone, zone.name)
@@ -21,7 +21,7 @@ describe JobProxyDispatcher do
   context "With a default zone, server, with hosts with a miq_proxy, vmware vms on storages" do
     before do
       (NUM_SERVERS - 1).times do |i|
-        FactoryGirl.create(:miq_server, :zone => @server.zone, :name => "test_server_#{i}")
+        FactoryBot.create(:miq_server, :zone => @server.zone, :name => "test_server_#{i}")
       end
 
       # TODO: We should be able to set values so we don't need to stub behavior
@@ -166,7 +166,7 @@ describe JobProxyDispatcher do
       let (:container_image_classes) { ContainerImage.descendants.collect(&:name).append('ContainerImage') }
       before do
         @jobs = (@vms + @repo_vms).collect(&:raw_scan)
-        User.current_user = FactoryGirl.create(:user)
+        User.current_user = FactoryBot.create(:user)
         @jobs += @container_images.map { |img| img.ext_management_system.raw_scan_job_create(img.class, img.id) }
       end
 

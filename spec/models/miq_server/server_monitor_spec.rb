@@ -234,7 +234,7 @@ describe "Server Monitor" do
         @miq_server1.deactivate_all_roles
         @miq_server1.role = 'event, ems_operations, scheduler, reporting'
 
-        @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone)
+        @miq_server2 = FactoryBot.create(:miq_server, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
         @miq_server2.role = 'event, ems_operations, scheduler, reporting'
       end
@@ -355,7 +355,7 @@ describe "Server Monitor" do
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
         @miq_server1.activate_roles("ems_operations", 'reporting')
 
-        @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone)
+        @miq_server2 = FactoryBot.create(:miq_server, :is_master => true, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
         @miq_server2.role = 'event, ems_operations, scheduler, reporting'
         @roles2 = [['ems_operations', 1], ['event', 1], ['scheduler', 1], ['reporting', 1]]
@@ -443,12 +443,12 @@ describe "Server Monitor" do
         @roles1 = [['ems_operations', 2], ['event', 2], ['ems_inventory', 3], ['ems_metrics_coordinator', 2],]
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
 
-        @miq_server2 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq2")
+        @miq_server2 = FactoryBot.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq2")
         @miq_server2.deactivate_all_roles
         @roles2 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 3], ['ems_inventory', 2],]
         @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
 
-        @miq_server3 = FactoryGirl.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq3")
+        @miq_server3 = FactoryBot.create(:miq_server, :zone => @miq_server1.zone, :name => "Miq3")
         @miq_server3.deactivate_all_roles
         @roles3 = [['ems_operations', 2], ['event', 3], ['ems_inventory', 1], ['ems_metrics_coordinator', 1]]
         @roles3.each { |role, priority| @miq_server3.assign_role(role, priority) }
@@ -674,12 +674,12 @@ describe "Server Monitor" do
         @miq_server1.role = 'event, ems_operations, ems_inventory'
         @miq_server1.activate_roles("ems_operations", "ems_inventory")
 
-        @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone, :name => "Server 2")
+        @miq_server2 = FactoryBot.create(:miq_server, :is_master => true, :zone => @miq_server1.zone, :name => "Server 2")
         @miq_server2.deactivate_all_roles
         @miq_server2.role = 'event, ems_metrics_coordinator, ems_operations'
         @miq_server2.activate_roles("event", "ems_metrics_coordinator", 'ems_operations')
 
-        @miq_server3 = FactoryGirl.create(:miq_server, :zone => @miq_server2.zone, :name => "Server 3")
+        @miq_server3 = FactoryBot.create(:miq_server, :zone => @miq_server2.zone, :name => "Server 3")
         @miq_server3.deactivate_all_roles
         @miq_server3.role = 'ems_metrics_coordinator, ems_inventory, ems_operations'
         @miq_server3.activate_roles("ems_operations")
@@ -787,8 +787,8 @@ describe "Server Monitor" do
 
     context "In 2 Zones," do
       before do
-        @zone1 = FactoryGirl.create(:zone)
-        @zone2 = FactoryGirl.create(:zone, :name => "zone2", :description => "Zone 2")
+        @zone1 = FactoryBot.create(:zone)
+        @zone2 = FactoryBot.create(:zone, :name => "zone2", :description => "Zone 2")
       end
 
       context "with 2 Servers across Zones where there is no master" do
@@ -796,7 +796,7 @@ describe "Server Monitor" do
           @miq_server1 = EvmSpecHelper.local_miq_server(:zone => @zone1, :name => "Server 1")
           @miq_server1.deactivate_all_roles
 
-          @miq_server2 = FactoryGirl.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
+          @miq_server2 = FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
         end
 
@@ -831,7 +831,7 @@ describe "Server Monitor" do
           @roles1 = [['ems_operations', 1], ['event', 1], ['ems_metrics_coordinator', 2], ['scheduler', 1], ['reporting', 1]]
           @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
 
-          @miq_server2 = FactoryGirl.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
+          @miq_server2 = FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => @zone2, :name => "Server 2")
           @miq_server2.deactivate_all_roles
           @roles2 = [['ems_operations', 1], ['event', 2], ['ems_metrics_coordinator', 1], ['scheduler', 2], ['reporting', 1]]
           @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }

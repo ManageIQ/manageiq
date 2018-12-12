@@ -18,7 +18,7 @@ describe ServiceResource do
 
   context "with a service as a resource" do
     before do
-      @service = FactoryGirl.create(:service, :name => "Svc_A", :description => "Test Service")
+      @service = FactoryBot.create(:service, :name => "Svc_A", :description => "Test Service")
       subject.resource = @service
     end
 

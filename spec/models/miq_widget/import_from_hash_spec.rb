@@ -1,15 +1,15 @@
 describe MiqWidget do
   context ".import_from_hash" do
     before do
-      @user       = FactoryGirl.create(:user_admin)
-      @old_report = FactoryGirl.create(:miq_report,
+      @user       = FactoryBot.create(:user_admin)
+      @old_report = FactoryBot.create(:miq_report,
                                        :name      => "Test Report",
                                        :rpt_type  => "Custom",
                                        :tz        => "Eastern Time (US & Canada)",
                                        :col_order => ["name", "boot_time", "disks_aligned"],
                                        :cols      => ["name", "boot_time", "disks_aligned"]
                                       )
-      @old_widget = FactoryGirl.create(:miq_widget,
+      @old_widget = FactoryBot.create(:miq_widget,
                                        :title      => "Test Widget",
                                        :visibility => {:roles => ["_ALL_"]},
                                        :resource   => @old_report

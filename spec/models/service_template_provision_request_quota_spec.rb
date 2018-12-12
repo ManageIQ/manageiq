@@ -2,11 +2,11 @@ describe ServiceTemplateProvisionRequest do
   include Spec::Support::QuotaHelper
   include Spec::Support::ServiceTemplateHelper
 
-  let(:admin) { FactoryGirl.create(:user_admin) }
+  let(:admin) { FactoryBot.create(:user_admin) }
   context "quota methods" do
     context "for cloud and infra providers," do
       def create_request(user, template, prov_options = {})
-        FactoryGirl.create(:service_template_provision_request, :requester   => user,
+        FactoryBot.create(:service_template_provision_request, :requester   => user,
                                                                 :description => "request",
                                                                 :tenant_id   => user.current_tenant.id,
                                                                 :source_type => "ServiceTemplate",
@@ -38,13 +38,13 @@ describe ServiceTemplateProvisionRequest do
 
       context "infra," do
         let(:vmware_requests) do
-          ems = FactoryGirl.create(:ems_vmware)
-          group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
-          @vmware_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
-          @vmware_user2 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
-          @vmware_template = FactoryGirl.create(:template_vmware,
+          ems = FactoryBot.create(:ems_vmware)
+          group = FactoryBot.create(:miq_group, :tenant => FactoryBot.create(:tenant))
+          @vmware_user1 = FactoryBot.create(:user_with_email, :miq_groups => [group])
+          @vmware_user2 = FactoryBot.create(:user_with_email, :miq_groups => [group])
+          @vmware_template = FactoryBot.create(:template_vmware,
                                                 :ext_management_system => ems,
-                                                :hardware              => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
+                                                :hardware              => FactoryBot.create(:hardware, :cpu1x2, :memory_mb => 512))
           @vmware_prov_options = {:number_of_vms => [2, '2'], :vm_memory => [1024, '1024'], :number_of_cpus => [2, '2']}
           requests = []
 
@@ -112,14 +112,14 @@ describe ServiceTemplateProvisionRequest do
         end
 
         let(:google_requests) do
-          ems = FactoryGirl.create(:ems_google_with_authentication,
-                                   :availability_zones => [FactoryGirl.create(:availability_zone_google)])
-          group = FactoryGirl.create(:miq_group, :tenant => FactoryGirl.create(:tenant))
-          @google_user1 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
-          @google_user2 = FactoryGirl.create(:user_with_email, :miq_groups => [group])
+          ems = FactoryBot.create(:ems_google_with_authentication,
+                                   :availability_zones => [FactoryBot.create(:availability_zone_google)])
+          group = FactoryBot.create(:miq_group, :tenant => FactoryBot.create(:tenant))
+          @google_user1 = FactoryBot.create(:user_with_email, :miq_groups => [group])
+          @google_user2 = FactoryBot.create(:user_with_email, :miq_groups => [group])
 
-          @google_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
-          flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id,
+          @google_template = FactoryBot.create(:template_google, :ext_management_system => ems)
+          flavor = FactoryBot.create(:flavor_google, :ems_id => ems.id,
                                       :cpus => 4, :cpu_cores => 1, :memory => 1024)
           @google_prov_options = {:number_of_vms => [1, '1'], :src_vm_id => @google_template.id, :boot_disk_size => ["10.GB", "10 GB"],
                           :placement_auto => [true, 1], :instance_type => [flavor.id, flavor.name]}

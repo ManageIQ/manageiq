@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_report do
     sequence(:name) { |n| "Test Report #{seq_padded_for_sorting(n)}" }
     db              'Vm'
@@ -21,7 +21,7 @@ FactoryGirl.define do
   end
 
   factory :miq_report_with_results, :parent => :miq_report do
-    miq_report_results { [FactoryGirl.create(:miq_report_result, :miq_group => miq_group)] }
+    miq_report_results { [FactoryBot.create(:miq_report_result, :miq_group => miq_group)] }
   end
 
   factory :miq_report_chargeback, :parent => :miq_report do
@@ -35,7 +35,7 @@ FactoryGirl.define do
   end
 
   factory :miq_report_chargeback_with_results, :parent => :miq_report do
-    miq_report_results { [FactoryGirl.create(:miq_chargeback_report_result)] }
+    miq_report_results { [FactoryBot.create(:miq_chargeback_report_result)] }
     sequence(:name) { |n| "Test Report #{seq_padded_for_sorting(n)}" }
     db              'ChargebackVm'
     title           'some title'

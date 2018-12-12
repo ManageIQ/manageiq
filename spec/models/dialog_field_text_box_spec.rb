@@ -70,7 +70,7 @@ describe DialogFieldTextBox do
   end
 
   context "dialog field text box without options hash" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
     it "#protected?" do
       expect(df).not_to be_protected
@@ -83,7 +83,7 @@ describe DialogFieldTextBox do
   end
 
   context "dialog field text box without protected field" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => false}) }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => false}) }
 
     it "#protected?" do
       expect(df).not_to be_protected
@@ -95,7 +95,7 @@ describe DialogFieldTextBox do
   end
 
   context "dialog field text box with protected field" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label   => 'test field', :name    => 'test field', :options => {:protected => true}) }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label   => 'test field', :name    => 'test field', :options => {:protected => true}) }
 
     it "#protected?" do
       expect(df).to be_protected
@@ -121,7 +121,7 @@ describe DialogFieldTextBox do
   end
 
   context "validation" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
     describe "#validate_field_data" do
       let(:dt) { double('DialogTab', :label => 'tab') }

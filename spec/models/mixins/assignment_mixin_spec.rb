@@ -5,10 +5,10 @@ describe AssignmentMixin do
   describe '#get_assigned_for_target' do
     context 'searching for ChargebackRate' do
       let(:test_class) { ChargebackRate }
-      let(:vm)              { FactoryGirl.create(:vm_openstack) }
-      let(:hardware)        { FactoryGirl.create(:hardware, :vm_or_template_id => vm.id) }
-      let(:cloud_volume)    { FactoryGirl.create(:cloud_volume, :hardwares => [hardware]) }
-      let(:chargeback_rate) { FactoryGirl.create(:chargeback_rate, :rate_type => 'Storage') }
+      let(:vm)              { FactoryBot.create(:vm_openstack) }
+      let(:hardware)        { FactoryBot.create(:hardware, :vm_or_template_id => vm.id) }
+      let(:cloud_volume)    { FactoryBot.create(:cloud_volume, :hardwares => [hardware]) }
+      let(:chargeback_rate) { FactoryBot.create(:chargeback_rate, :rate_type => 'Storage') }
 
       before do
         ct1 = ctag("environment", "test1")
@@ -30,12 +30,12 @@ describe AssignmentMixin do
 
     it "detects tags on alert_set" do
       ct1 = ctag("environment", "test")
-      alert_set = FactoryGirl.create(:miq_alert_set_vm)
+      alert_set = FactoryBot.create(:miq_alert_set_vm)
       alert_set.assign_to_tags([ct1], "vm")
       alert_set.reload # reload ensures the tag is set
 
       ct2 = ctag("environment", "staging")
-      alert_set2 = FactoryGirl.create(:miq_alert_set_vm)
+      alert_set2 = FactoryBot.create(:miq_alert_set_vm)
       alert_set2.assign_to_tags([ct2], "vm")
       alert_set2.reload # reload ensures the tag is set
 
@@ -48,7 +48,7 @@ describe AssignmentMixin do
     it "unassigns one tag from alert_set" do
       ct1 = ctag("environment", "test1")
       ct2 = ctag("environment", "staging1")
-      alert_set = FactoryGirl.create(:miq_alert_set_vm)
+      alert_set = FactoryBot.create(:miq_alert_set_vm)
       alert_set.assign_to_tags([ct1, ct2], "vm")
       alert_set.reload # reload ensures the tag is set
 
@@ -61,9 +61,9 @@ describe AssignmentMixin do
     end
 
     it "unassigns object from alert_set" do
-      enterprise = FactoryGirl.create(:miq_enterprise)
-      enterprise2 = FactoryGirl.create(:miq_enterprise)
-      alert_set = FactoryGirl.create(:miq_alert_set_vm)
+      enterprise = FactoryBot.create(:miq_enterprise)
+      enterprise2 = FactoryBot.create(:miq_enterprise)
+      alert_set = FactoryBot.create(:miq_alert_set_vm)
 
       alert_set.assign_to_objects([enterprise, enterprise2])
       alert_set.reload
@@ -79,10 +79,10 @@ describe AssignmentMixin do
   end
 
   describe "#get_assigned_tos" do
-    let(:cc_classification)  { FactoryGirl.create(:classification_cost_center) }
-    let(:classification_tag) { FactoryGirl.create(:classification_tag, :parent => cc_classification) }
-    let(:vm)                 { FactoryGirl.create(:vm) }
-    let(:alert_set)          { FactoryGirl.create(:miq_alert_set) }
+    let(:cc_classification)  { FactoryBot.create(:classification_cost_center) }
+    let(:classification_tag) { FactoryBot.create(:classification_tag, :parent => cc_classification) }
+    let(:vm)                 { FactoryBot.create(:vm) }
+    let(:alert_set)          { FactoryBot.create(:miq_alert_set) }
 
     before do
       alert_set.assign_to_objects([vm])
@@ -131,7 +131,7 @@ describe AssignmentMixin do
   # @return [ClassificationTag] classification tag. `.tag()` is an available method
   def ctag(category = "environment", value = "test")
     env = Classification.find_by_name(category) ||
-          FactoryGirl.create(:classification, :name => category, :single_value => 1)
-    FactoryGirl.create(:classification_tag, :name => value, :parent => env)
+          FactoryBot.create(:classification, :name => category, :single_value => 1)
+    FactoryBot.create(:classification_tag, :name => value, :parent => env)
   end
 end

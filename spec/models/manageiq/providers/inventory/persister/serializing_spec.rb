@@ -11,10 +11,10 @@ describe ManageIQ::Providers::Inventory::Persister do
   ######################################################################################################################
   #
   before do
-    @zone = FactoryGirl.create(:zone)
-    @ems  = FactoryGirl.create(:ems_cloud,
+    @zone = FactoryBot.create(:zone)
+    @ems  = FactoryBot.create(:ems_cloud,
                                :zone            => @zone,
-                               :network_manager => FactoryGirl.create(:ems_network, :zone => @zone))
+                               :network_manager => FactoryBot.create(:ems_network, :zone => @zone))
 
     allow(@ems.class).to receive(:ems_type).and_return(:mock)
     allow(Settings.ems_refresh).to receive(:mock).and_return({})
@@ -60,8 +60,8 @@ describe ManageIQ::Providers::Inventory::Persister do
 
   def populate_test_data(persister)
     # Add some data into the DB
-    FactoryGirl.create(:vm, vm_data(20))
-    FactoryGirl.create(:vm, vm_data(21))
+    FactoryBot.create(:vm, vm_data(20))
+    FactoryBot.create(:vm, vm_data(21))
 
     @image_data_1          = image_data(1)
     @image_hardware_data_1 = image_hardware_data(1).merge(

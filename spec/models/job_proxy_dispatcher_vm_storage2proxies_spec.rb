@@ -4,7 +4,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
   context "two vix disk enabled servers," do
     before do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
-      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
+      @server2 = FactoryBot.create(:miq_server, :zone => @server1.zone)
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
@@ -51,7 +51,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
 
           context "'smartproxy' server and roles deactivated" do
             before do
-              FactoryGirl.create(:server_role, :name => "smartproxy", :max_concurrent => 0)
+              FactoryBot.create(:server_role, :name => "smartproxy", :max_concurrent => 0)
 
               @server1.deactivate_all_roles
               @server1.role = 'smartproxy'
@@ -85,7 +85,7 @@ describe "JobProxyDispatcherVmStorage2Proxies" do
               before do
                 allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:missing_credentials? => true)
                 allow(@vm).to receive_messages(:template? => true)
-                @ems1 = FactoryGirl.create(:ems_vmware, :name => "Ems1")
+                @ems1 = FactoryBot.create(:ems_vmware, :name => "Ems1")
                 @vm.ext_management_system = @ems1
                 @vm.save
               end

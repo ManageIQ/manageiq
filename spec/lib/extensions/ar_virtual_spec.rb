@@ -779,7 +779,7 @@ describe VirtualFields do
       end
 
       it "supports #includes with #references" do
-        vm           = FactoryGirl.create :vm_vmware
+        vm           = FactoryBot.create :vm_vmware
         table        = Vm.arel_table
         dash         = Arel::Nodes::SqlLiteral.new("'-'")
         name_dash_id = Arel::Nodes::NamedFunction.new("CONCAT", [table[:name], dash, table[:id]])
@@ -940,12 +940,12 @@ describe VirtualFields do
 
   context "preloading" do
     before do
-      FactoryGirl.create(:vm_vmware,
-                         :hardware         => FactoryGirl.create(:hardware),
-                         :operating_system => FactoryGirl.create(:operating_system),
-                         :host             => FactoryGirl.create(:host,
-                                                                 :hardware         => FactoryGirl.create(:hardware),
-                                                                 :operating_system => FactoryGirl.create(:operating_system)
+      FactoryBot.create(:vm_vmware,
+                         :hardware         => FactoryBot.create(:hardware),
+                         :operating_system => FactoryBot.create(:operating_system),
+                         :host             => FactoryBot.create(:host,
+                                                                 :hardware         => FactoryBot.create(:hardware),
+                                                                 :operating_system => FactoryBot.create(:operating_system)
                                                                 )
                         )
     end
@@ -999,7 +999,7 @@ end
 
 describe "ActiveRecord attributes" do
   it "doesn't botch up the attributes" do
-    hardware = Hardware.select(:id, :model).find(FactoryGirl.create(:hardware).id)
+    hardware = Hardware.select(:id, :model).find(FactoryBot.create(:hardware).id)
     expect(hardware.attributes.size).to eq(2)
     hardware.save
     expect(hardware.attributes.size).to eq(2)

@@ -1,7 +1,7 @@
 describe Relationship do
   describe "#filtered?" do
     before do
-      @rel = FactoryGirl.build(:relationship_vm_vmware)
+      @rel = FactoryBot.build(:relationship_vm_vmware)
     end
 
     it "with neither" do
@@ -29,9 +29,9 @@ describe Relationship do
   end
 
   describe ".filter_by_resource_type" do
-    let(:storages) { FactoryGirl.build_list(:relationship_storage_vmware, 1) }
-    let(:vms) { FactoryGirl.build_list(:relationship_vm_vmware, 1) }
-    let(:hosts) { FactoryGirl.build_list(:relationship_host_vmware, 1) }
+    let(:storages) { FactoryBot.build_list(:relationship_storage_vmware, 1) }
+    let(:vms) { FactoryBot.build_list(:relationship_vm_vmware, 1) }
+    let(:hosts) { FactoryBot.build_list(:relationship_host_vmware, 1) }
 
     it "includes" do
       expect(Relationship.filter_by_resource_type(vms + hosts, :of_type => "Host")).to eq(hosts)
@@ -104,9 +104,9 @@ describe Relationship do
   end
 
   describe ".filtered" do
-    let(:storages) { FactoryGirl.build_list(:relationship_storage_vmware, 1) }
-    let(:vms) { FactoryGirl.build_list(:relationship_vm_vmware, 1) }
-    let(:hosts) { FactoryGirl.build_list(:relationship_host_vmware, 1) }
+    let(:storages) { FactoryBot.build_list(:relationship_storage_vmware, 1) }
+    let(:vms) { FactoryBot.build_list(:relationship_vm_vmware, 1) }
+    let(:hosts) { FactoryBot.build_list(:relationship_host_vmware, 1) }
 
     it "scopes" do
       vms.map(&:save!)

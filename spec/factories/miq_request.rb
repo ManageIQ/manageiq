@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_request do
     requester { create(:user) }
 
@@ -26,7 +26,7 @@ FactoryGirl.define do
       end
 
       after(:create) do |request, evaluator|
-        request.miq_approvals << FactoryGirl.create(:miq_approval, :reason => evaluator.reason)
+        request.miq_approvals << FactoryBot.create(:miq_approval, :reason => evaluator.reason)
       end
     end
   end

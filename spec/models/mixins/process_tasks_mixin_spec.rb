@@ -77,7 +77,7 @@ describe ProcessTasksMixin do
     end
 
     before do
-      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
     end
 
     context "when the server has an ip address" do

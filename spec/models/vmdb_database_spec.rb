@@ -1,8 +1,8 @@
 describe VmdbDatabase do
   before do
-    @db    = FactoryGirl.create(:vmdb_database)
-    @table = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts')
-    @text  = FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :name => 'accounts', :parent_id => @table.id)
+    @db    = FactoryBot.create(:vmdb_database)
+    @table = FactoryBot.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts')
+    @text  = FactoryBot.create(:vmdb_table_text, :vmdb_database => @db, :name => 'accounts', :parent_id => @table.id)
   end
 
   it "#size" do
@@ -85,22 +85,22 @@ describe VmdbDatabase do
 
   context "#top_tables_by" do
     before do
-      @table_1 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts1')
-      @table_2 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts2')
-      @table_3 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts3')
-      @table_4 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts4')
-      @table_5 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts5')
-      @table_6 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts6')
-      @table_7 = FactoryGirl.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts7')
+      @table_1 = FactoryBot.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts1')
+      @table_2 = FactoryBot.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts2')
+      @table_3 = FactoryBot.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts3')
+      @table_4 = FactoryBot.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts4')
+      @table_5 = FactoryBot.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts5')
+      @table_6 = FactoryBot.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts6')
+      @table_7 = FactoryBot.create(:vmdb_table_evm,  :vmdb_database => @db, :name => 'accounts7')
 
-      @metric_1  = FactoryGirl.create(:vmdb_metric,  :resource => @table_1,  :capture_interval_name => 'hourly', :rows => 125,   :size => 15000, :wasted_bytes => 4)
-      @metric_2  = FactoryGirl.create(:vmdb_metric,  :resource => @table_2,  :capture_interval_name => 'hourly', :rows => 255,   :size => 10000, :wasted_bytes => 8)
-      @metric_3  = FactoryGirl.create(:vmdb_metric,  :resource => @table_3,  :capture_interval_name => 'hourly', :rows => 505,   :size => 5000,  :wasted_bytes => 16)
-      @metric_4  = FactoryGirl.create(:vmdb_metric,  :resource => @table_4,  :capture_interval_name => 'hourly', :rows => 1005,  :size => 2000,  :wasted_bytes => 32)
-      @metric_5  = FactoryGirl.create(:vmdb_metric,  :resource => @table_5,  :capture_interval_name => 'hourly', :rows => 2005,  :size => 1000,  :wasted_bytes => 64)
-      @metric_6  = FactoryGirl.create(:vmdb_metric,  :resource => @table_6,  :capture_interval_name => 'hourly', :rows => 4005,  :size => 500,   :wasted_bytes => 128)
-      @metric_7a = FactoryGirl.create(:vmdb_metric,  :resource => @table_7,  :capture_interval_name => 'hourly', :rows => 10005, :size => 150,   :wasted_bytes => 256, :timestamp => 1.hour.ago)
-      @metric_7b = FactoryGirl.create(:vmdb_metric,  :resource => @table_7,  :capture_interval_name => 'hourly', :rows => 1,     :size => 150,   :wasted_bytes => 256, :timestamp => 1.minute.ago)
+      @metric_1  = FactoryBot.create(:vmdb_metric,  :resource => @table_1,  :capture_interval_name => 'hourly', :rows => 125,   :size => 15000, :wasted_bytes => 4)
+      @metric_2  = FactoryBot.create(:vmdb_metric,  :resource => @table_2,  :capture_interval_name => 'hourly', :rows => 255,   :size => 10000, :wasted_bytes => 8)
+      @metric_3  = FactoryBot.create(:vmdb_metric,  :resource => @table_3,  :capture_interval_name => 'hourly', :rows => 505,   :size => 5000,  :wasted_bytes => 16)
+      @metric_4  = FactoryBot.create(:vmdb_metric,  :resource => @table_4,  :capture_interval_name => 'hourly', :rows => 1005,  :size => 2000,  :wasted_bytes => 32)
+      @metric_5  = FactoryBot.create(:vmdb_metric,  :resource => @table_5,  :capture_interval_name => 'hourly', :rows => 2005,  :size => 1000,  :wasted_bytes => 64)
+      @metric_6  = FactoryBot.create(:vmdb_metric,  :resource => @table_6,  :capture_interval_name => 'hourly', :rows => 4005,  :size => 500,   :wasted_bytes => 128)
+      @metric_7a = FactoryBot.create(:vmdb_metric,  :resource => @table_7,  :capture_interval_name => 'hourly', :rows => 10005, :size => 150,   :wasted_bytes => 256, :timestamp => 1.hour.ago)
+      @metric_7b = FactoryBot.create(:vmdb_metric,  :resource => @table_7,  :capture_interval_name => 'hourly', :rows => 1,     :size => 150,   :wasted_bytes => 256, :timestamp => 1.minute.ago)
     end
 
     it "will return a list of ALL tables sorted by number of rows" do
@@ -133,7 +133,7 @@ describe VmdbDatabase do
 
     context 'with metrics' do
       before do
-        @db.vmdb_database_metrics = [FactoryGirl.create(:vmdb_database_metric, :capture_interval_name => 'hourly')]
+        @db.vmdb_database_metrics = [FactoryBot.create(:vmdb_database_metric, :capture_interval_name => 'hourly')]
       end
 
       it { is_expected.to be_truthy }

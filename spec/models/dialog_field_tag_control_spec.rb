@@ -4,12 +4,12 @@ describe DialogFieldTagControl do
     # Inherit from parent classification
     options.merge!(:read_only => cat.read_only, :syntax => cat.syntax, :single_value => cat.single_value, :ns => cat.ns)
     options.merge!(:parent_id => cat.id) # Ugly way to set up a child
-    FactoryGirl.create(:classification, options)
+    FactoryBot.create(:classification, options)
   end
 
   context "dialog field tag control without options hash" do
     before do
-      @df = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category')
+      @df = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category')
     end
 
     it "#category=" do
@@ -63,7 +63,7 @@ describe DialogFieldTagControl do
 
   context "dialog field tag control with with options hash and category" do
     before do
-      @df = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
+      @df = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
             :options => {:force_single_value => true, :category_id => 1, :category_name => 'category', :category_description => 'description'}
                               )
     end
@@ -87,8 +87,8 @@ describe DialogFieldTagControl do
 
   context "dialog field with tag control hash and tag categories" do
     before do
-      @cat = FactoryGirl.create(:classification, :description => "Auto Approve - Max CPU", :name => "prov_max_cpu", :single_value => 1)
-      @df  = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
+      @cat = FactoryBot.create(:classification, :description => "Auto Approve - Max CPU", :name => "prov_max_cpu", :single_value => 1)
+      @df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
             :options => {:category_id => @cat.id, :category_name => 'category', :category_description => 'description'}
                                )
     end
@@ -96,8 +96,8 @@ describe DialogFieldTagControl do
     it "#single_value?" do
       expect(@df.single_value?).to be_truthy
 
-      cat = FactoryGirl.create(:classification, :description => "Auto Approve - Max Memory", :name => "prov_max_memory", :single_value => 0)
-      df  = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
+      cat = FactoryBot.create(:classification, :description => "Auto Approve - Max Memory", :name => "prov_max_memory", :single_value => 0)
+      df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag category', :name => 'test tag category',
             :options => {:category_id => cat.id, :category_name => 'category', :category_description => 'description'}
                               )
 
@@ -107,12 +107,12 @@ describe DialogFieldTagControl do
 
   context "dialog field tag control and Classification seeded" do
     before do
-      cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
+      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
       add_entry(cat, :name => "dev",  :description => "Development")
       add_entry(cat, :name => "test", :description => "Test")
       add_entry(cat, :name => "prod", :description => "Production")
 
-      cat = FactoryGirl.create(:classification, :description => "Department",  :name => "department",   :single_value => false, :parent_id => 0)
+      cat = FactoryBot.create(:classification, :description => "Department",  :name => "department",   :single_value => false, :parent_id => 0)
       add_entry(cat, :name => "accounting",  :description => "Accounting")
       add_entry(cat, :name => "engineering", :description => "Engineering")
       add_entry(cat, :name => "marketing",   :description => "Marketing")
@@ -128,7 +128,7 @@ describe DialogFieldTagControl do
 
     context "with dialog field tag control without options hash" do
       before do
-        @df  = FactoryGirl.create(:dialog_field_tag_control, :label => 'test tag', :name => 'test tag', :options => {:force_single_select => true})
+        @df  = FactoryBot.create(:dialog_field_tag_control, :label => 'test tag', :name => 'test tag', :options => {:force_single_select => true})
       end
 
       it "automate_output_value with an empty value" do

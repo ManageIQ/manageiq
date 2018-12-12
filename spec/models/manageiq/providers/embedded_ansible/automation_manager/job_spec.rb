@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
-  let(:job) { FactoryGirl.create(:embedded_ansible_job) }
+  let(:job) { FactoryBot.create(:embedded_ansible_job) }
 
   before do
     region = MiqRegion.seed

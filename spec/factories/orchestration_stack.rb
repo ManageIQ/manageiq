@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :orchestration_stack do
     ems_ref "1"
   end
@@ -6,7 +6,7 @@ FactoryGirl.define do
   factory :orchestration_stack_cloud, :parent => :orchestration_stack, :class => "ManageIQ::Providers::CloudManager::OrchestrationStack"
 
   factory :orchestration_stack_cloud_with_template, :parent => :orchestration_stack, :class => "ManageIQ::Providers::CloudManager::OrchestrationStack" do
-    orchestration_template { FactoryGirl.create(:orchestration_template) }
+    orchestration_template { FactoryBot.create(:orchestration_template) }
   end
 
   factory :orchestration_stack_amazon, :parent => :orchestration_stack, :class => "ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack"
@@ -19,10 +19,10 @@ FactoryGirl.define do
           :parent => :orchestration_stack,
           :class  => "ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack" do
     after :create do |x|
-      x.parameters << FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_compute)
-      x.parameters << FactoryGirl.create(:orchestration_stack_parameter_openstack_infra_controller)
-      x.resources << FactoryGirl.create(:orchestration_stack_resource_openstack_infra_compute)
-      x.resources << FactoryGirl.create(:orchestration_stack_resource_openstack_infra_compute_parent)
+      x.parameters << FactoryBot.create(:orchestration_stack_parameter_openstack_infra_compute)
+      x.parameters << FactoryBot.create(:orchestration_stack_parameter_openstack_infra_controller)
+      x.resources << FactoryBot.create(:orchestration_stack_resource_openstack_infra_compute)
+      x.resources << FactoryBot.create(:orchestration_stack_resource_openstack_infra_compute_parent)
     end
   end
 
@@ -57,7 +57,7 @@ FactoryGirl.define do
           :parent => :orchestration_stack_resource_openstack_infra do
     after :create do |x|
       x.physical_resource = "openstack-perf-host-nova-instance"
-      x.stack = FactoryGirl.create(:orchestration_stack_openstack_infra_nested)
+      x.stack = FactoryBot.create(:orchestration_stack_openstack_infra_nested)
     end
   end
 
