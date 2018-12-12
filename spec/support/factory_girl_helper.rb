@@ -18,6 +18,10 @@ def seq_padded_for_sorting(n)
 end
 
 require 'factory_girl'
+
+# Alias as we switch from FactoryGirl to FactoryBot. This will aid backporting.
+FactoryBot = FactoryGirl
+
 # in case we are running as an engine, the factories are located in the dummy app
 FactoryGirl.definition_file_paths << 'spec/manageiq/spec/factories'
 # also add factories from provider gems until miq codebase does not use any provider specific factories anymore
