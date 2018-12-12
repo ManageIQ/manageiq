@@ -6,7 +6,7 @@ describe 'YAML reports' do
 
   before do
     EvmSpecHelper.local_miq_server
-    @user = FactoryGirl.create(:user_with_group)
+    @user = FactoryBot.create(:user_with_group)
   end
 
   context "product directory" do
