@@ -143,7 +143,7 @@ class MiqProductFeature < ApplicationRecord
 
   def self.seed_tenant_miq_product_features
     result = with_tenant_feature_root_features.map.each do |tenant_miq_product_feature|
-      Tenant.all.map { |tenant| tenant.build_miq_product_feature(tenant_miq_product_feature) }
+      Tenant.in_my_region.all.map { |tenant| tenant.build_miq_product_feature(tenant_miq_product_feature) }
     end.flatten
 
     MiqProductFeature.create(result).map(&:identifier)
