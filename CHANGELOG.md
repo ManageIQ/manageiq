@@ -5,7 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Gaprindashvili-6
+## Gaprindashvili-7
+
+### Added
+- Add `virtual_has_one` for `transformation_mapping` for API accessibility [(#18070)](https://github.com/ManageIQ/manageiq/pull/18070)
+
+### Fixed
+- Fixed MiqExpression evaluation on tagged Services [(#18020)](https://github.com/ManageIQ/manageiq/pull/18020)
+- Fix ordering in list of custom buttons [(#18049)](https://github.com/ManageIQ/manageiq/pull/18049)
+- Handle a blank value for the http_proxy host [(#18073)](https://github.com/ManageIQ/manageiq/pull/18073)
+- Order custom buttons by array of ids [(#18060)](https://github.com/ManageIQ/manageiq/pull/18060)
+- Add product setting default for allowing API service ordering [(#18029)](https://github.com/ManageIQ/manageiq/pull/18029)
+- Add retirement initiator context [(#17951)](https://github.com/ManageIQ/manageiq/pull/17951)
+- Queue reporting work for any zone [(#18041)](https://github.com/ManageIQ/manageiq/pull/18041)
+- Add aggregate_memory to container project [(18159)](https://github.com/ManageIQ/manageiq/pull/18159)
+- Allow to set retirement date for service via Centralized Administration [(#18137)](https://github.com/ManageIQ/manageiq/pull/18137)
+- Tags without a classification cause errors [(#18177)](https://github.com/ManageIQ/manageiq/pull/18177)
+- Added metrics and tag permissions to SUI permission tree [(#18175)](https://github.com/ManageIQ/manageiq/pull/18175)
+- Don't JSON.parse(nil) [(#18172)](https://github.com/ManageIQ/manageiq/pull/18172)
+- Accept Hash object as result of inter region api invocation [(#18210)](https://github.com/ManageIQ/manageiq/pull/18210)
+- Remove tenant selection from base deployment options [(#18202)](https://github.com/ManageIQ/manageiq/pull/18202)
+- Disconnect storage when disconnecting the VM [(#18200)](https://github.com/ManageIQ/manageiq/pull/18200)
+- Link service resources of bundled service correctly [(#18251)](https://github.com/ManageIQ/manageiq/pull/18251)
+
+## Gaprindashvili-6 - Released 2018-11-06
 
 ### Added
 - Add possibility to group by date only in chargeback [(#17893)](https://github.com/ManageIQ/manageiq/pull/17893)
@@ -38,7 +61,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Add flag for init of defaults in fields [(#18061)](https://github.com/ManageIQ/manageiq/pull/18061)
 - Check if class is taggable before attempting to process tag expression [(#18114)](https://github.com/ManageIQ/manageiq/pull/18114)
 
-## Gaprindashvili-5
+## Gaprindashvili-5 - Released 2018-09-07
 
 ### Added
 - Scheduling catalog items [(#17765)](https://github.com/ManageIQ/manageiq/pull/17765)
