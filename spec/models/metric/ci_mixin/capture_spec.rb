@@ -11,16 +11,8 @@ describe Metric::CiMixin::Capture do
   let(:ems_openstack) { FactoryBot.create(:ems_openstack, :zone => zone) }
   let(:vm) { FactoryBot.create(:vm_perf_openstack, :ext_management_system => ems_openstack) }
 
-  # TODO: Don't hack this log stuff. This is difficult right now as some assertions
-  # below are actually emitted by the provider. Not worth fixing right now.
   before do
     allow(ems_openstack).to receive(:connect).with(:service => "Metering").and_return(metering)
-    @orig_log = $log
-    $log = double.as_null_object
-  end
-
-  after do
-    $log = @orig_log
   end
 
   describe "#perf_capture_realtime integration tests" do
