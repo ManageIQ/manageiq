@@ -75,7 +75,7 @@ class EvmApplication
     # dont give headsup for empty values
     heads_up = duplicate_columns.select { |n, v| n == "Region" || (v != 0 && v.present?) }
     if heads_up.present?
-      puts "", "For all rows: #{heads_up.map { |n, v| "#{n}=#{v}" }.join(", ")}"
+      puts "", "All rows have the values: #{heads_up.map { |n, v| "#{n}=#{v}" }.join(", ")}"
       puts footnote if footnote
     elsif footnote
       puts "", footnote
