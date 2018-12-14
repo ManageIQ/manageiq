@@ -29,3 +29,28 @@ Rails::Engine.subclasses.select { |e| e.name.starts_with?("ManageIQ::Providers")
 end
 
 FactoryBot.find_definitions
+
+FactoryBot.define do
+  trait :other_region do
+    transient do
+      other_region { nil }
+    end
+
+    after(:build) do |instance, evaluator|
+      unless MiqRegion.my_region
+        raise "You need to seed default MiqRegion with MiqRegion.seed"
+      end
+
+      unless evaluator.other_region
+        raise "You need to pass specific region  with :other_region: \n"\
+              "FactoryGirl.create(:#{instance.class.to_s.tableize.singularize.to_sym}, :in_other_region, :other_region => <region>) "
+      end
+
+      sequence_id = "id_for_other_region_#{instance.class}_#{evaluator.other_region}".to_sym
+      @sequence ||= {}
+      @sequence[sequence_id] ||= FactoryGirl::Syntax::Default::DSL.new.sequence(sequence_id) { |n| instance.class.id_in_region(n, evaluator.other_region.region) }
+      instance.id = generate(sequence_id)
+    end
+  end
+end
+

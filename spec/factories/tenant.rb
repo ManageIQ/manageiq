@@ -5,6 +5,14 @@ FactoryBot.define do
     parent { Tenant.seed }
   end
 
+  trait :in_other_region do
+    other_region
+
+    after(:create) do |instance, evaluator|
+      instance.default_miq_group = FactoryGirl.create(:miq_group, :in_other_region, :other_region => evaluator.other_region, :default_tenant => instance)
+    end
+  end
+
   factory :tenant_with_cloud_tenant, :parent => :tenant do
     source { FactoryBot.create(:cloud_tenant) }
   end

@@ -32,5 +32,17 @@ FactoryBot.define do
     trait :tenant_type do
       group_type { MiqGroup::TENANT_GROUP }
     end
+
+    transient do
+      default_tenant nil
+    end
+
+    trait :in_other_region do
+      other_region
+
+      after(:create) do |instance, evaluator|
+        instance.tenant = evaluator.default_tenant
+      end
+    end
   end
 end
