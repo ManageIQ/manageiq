@@ -182,7 +182,7 @@ describe EvmApplication do
            #{pad(local.zone.name, :Zone, :ljust) } | #{      local.name     }  | started |       1 | #{local_started_on          } | #{local_heartbeat}
            #{pad(remote.zone.name, :Zone, :ljust)} | #{     remote.name     }* | started |       2 | #{remote_started_on         } |
 
-          For all rows: Region=#{rgn}, Version=9.9.9.9
+          All rows have the values: Region=#{rgn}, Version=9.9.9.9
           * marks a master appliance
 
            #{header(:Zone, :ljust)               } | Type          | Status | #{header(:PID)          } | Server
@@ -191,7 +191,7 @@ describe EvmApplication do
            #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | ready  | #{pad(refresh.pid, :PID)} | #{     remote.name     }
            #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | ready  | #{pad(generic.pid, :PID)} | #{     remote.name     }
 
-          For all rows: Region=#{rgn}
+          All rows have the values: Region=#{rgn}
         SERVER_INFO
 
         expect { EvmApplication.status(true) }.to output(expected_output).to_stdout
