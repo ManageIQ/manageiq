@@ -192,28 +192,34 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     options[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
     options[:virtv2v_started_on] = start_timestamp
     options[:virtv2v_status] = 'active'
+    save!
   end
 
   def get_conversion_state
-    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
-    updated_disks = virtv2v_disks
-    if virtv2v_state['finished'].nil?
-      updated_disks.each do |disk|
-        matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
-        raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
-        raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1 
-        disk[:percent] = matching_disks.first['progress']
-      end
-    else
-      options[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
-      if virtv2v_state['failed']
-        options[:virtv2v_status] = 'failed'
+    begin
+      virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
+      updated_disks = virtv2v_disks
+      if virtv2v_state['finished'].nil?
+        updated_disks.each do |disk|
+          matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
+          raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
+          raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1 
+          disk[:percent] = matching_disks.first['progress']
+        end
       else
-        options[:virtv2v_status] = 'succeeded'
-        updated_disks.each { |d| d[:percent] = 100 }
+        options[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+        if virtv2v_state['failed']
+          options[:virtv2v_status] = 'failed'
+          raise "Disks transformation failed."
+        else
+          options[:virtv2v_status] = 'succeeded'
+          updated_disks.each { |d| d[:percent] = 100 }
+        end
       end
+      options[:virtv2v_disks] = updated_disks
+    ensure
+      save!
     end
-    options[:virtv2v_disks] = updated_disks
   end 
 
   def kill_virtv2v(signal = 'TERM')

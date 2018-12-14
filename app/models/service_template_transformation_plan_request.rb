@@ -5,6 +5,7 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
 
   def requested_task_idx
     vm_resources.where(:status => ServiceResource::STATUS_APPROVED)
+    #  ?? vm_resources.all # ignore approval?
   end
 
   def customize_request_task_attributes(req_task_attrs, vm_resource)
@@ -29,6 +30,11 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def approve_vm(vm_id)
+  # STATUS_ACTIVE    = 'Active'.freeze
+  # STATUS_APPROVED  = 'Approved'.freeze
+  # STATUS_COMPLETED = 'Completed'.freeze
+  # STATUS_FAILED    = 'Failed'.freeze
+  # STATUS_QUEUED    = 'Queued'.freeze
     vm_resources.find_by(:resource_id => vm_id).update_attributes!(:status => ServiceResource::STATUS_APPROVED)
   end
 
@@ -43,6 +49,18 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
       Notification.create(:type => "transformation_plan_request_succeeded", :options => {:plan_name => description})
     elsif request_state == 'finished' && status != 'Ok'
       Notification.create(:type => "transformation_plan_request_failed", :options => {:plan_name => description}, :subject => self)
+    end
+  end
+
+  def post_create_request_tasks
+    miq_request_tasks.each do |req_task|
+      job_options = {
+        :target_class => req_task.class.name,
+        :target_id    => req_task.id
+      }
+      job = ManageIQ::Providers::InfraMigrationJob.create_job(job_options)
+      req_task.options[:infra_migration_job_id] = job.id
+      req_task.save!
     end
   end
 end
