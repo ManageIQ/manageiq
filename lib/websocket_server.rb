@@ -52,9 +52,6 @@ class WebsocketServer
   end
 
   def call(env)
-    # Pass the request to ActionCable if it is for notifications
-    return ActionCable.server.call(env) if env['REQUEST_URI'].start_with?('/ws/notifications') && ::Settings.server.asynchronous_notifications
-
     exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
     if WebSocket::Driver.websocket?(env) && same_origin_as_host?(env) && exp.present?
       @logger.info("Remote console connection initiated with secret #{exp[1]}")
