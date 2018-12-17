@@ -6,7 +6,7 @@ module Vmdb
       attr_reader :path
 
       def initialize(path)
-        raise "#{path} does not exist" unless File.directory?(path)
+        raise "#{path} is not a directory" unless File.directory?(path)
         @path            = Pathname.new(path)
         @datastores_path = @path.split.first
         @name            = config.fetch_path("object", "attributes", "name")
