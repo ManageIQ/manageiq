@@ -434,7 +434,7 @@ describe Classification do
       end
 
       it "does not re-seed deleted tags" do
-        Classification.where("parent_id != 0").destroy_all
+        Classification.is_entry.destroy_all
         expect(Classification.count).to eq(1)
 
         Classification.seed
@@ -445,7 +445,7 @@ describe Classification do
         # If categories' names are edited they auto-save a different associated tag
         # This tests that if seeding category and it's invalid (due to uniqueness constraints)
         # then seeding still doesn't fail.
-        cat = Classification.find_by!(:description => "Cost Center", :parent_id => 0)
+        cat = Classification.is_category.find_by!(:description => "Cost Center")
         allow(YAML).to receive(:load_file).and_call_original
         cat.update_attributes!(:name => "new_name")
         expect {

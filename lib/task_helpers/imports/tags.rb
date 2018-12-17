@@ -58,7 +58,7 @@ module TaskHelpers
         ns = tag_category["ns"] ? tag_category["ns"] : "/managed"
         tag_category["name"] = tag_category["name"].to_s
 
-        classification = Classification.find_by_name(tag_category['name'], REGION_NUMBER, ns, 0)
+        classification = Classification.find_by_name(tag_category['name'], REGION_NUMBER, ns)
 
         entries = tag_category.delete('entries')
 

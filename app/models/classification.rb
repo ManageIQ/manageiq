@@ -49,11 +49,11 @@ class Classification < ApplicationRecord
   def self.hash_all_by_type_and_name(conditions = {})
     ret = {}
 
-    where(conditions).where(:parent_id => 0).includes(:tag).each do |c|
+    where(conditions).is_category.includes(:tag).each do |c|
       ret.store_path(c.name, :category, c)
     end
 
-    where(conditions).where.not(:parent_id => 0).includes(:tag, :parent => :tag).each do |e|
+    where(conditions).is_entry.includes(:tag, :parent => :tag).each do |e|
       ret.store_path(e.parent.name, :entry, e.name, e) unless e.parent.nil?
     end
 
@@ -203,14 +203,12 @@ class Classification < ApplicationRecord
   end
 
   def self.categories(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    cats = where(:classifications => {:parent_id => 0}).includes(:tag, :children)
-    cats = cats.in_region(region_id) if region_id
+    cats = is_category.in_region(region_id).includes(:tag, :children)
     cats.select { |c| c.ns == ns }
   end
 
   def self.category_names_for_perf_by_tag(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    in_region(region_id)
-      .where(:parent_id => 0, :perf_by_tag => true)
+    in_region(region_id).is_category.where(:perf_by_tag => true)
       .includes(:tag)
       .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
       .compact
