@@ -333,12 +333,11 @@ class Classification < ApplicationRecord
   end
 
   def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = 0)
-    tag = Tag.find_by_classification_name(name, region_id, ns, parent_id)
-    find_by(:tag_id => tag.id) if tag
+    find_by_names([name], region_id, ns, parent_id).first
   end
 
-  def self.find_by_names(names, region_id = my_region_number, ns = DEFAULT_NAMESPACE)
-    tag_names = names.map { |name| Classification.name2tag(name, 0, ns) }
+  def self.find_by_names(names, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = 0)
+    tag_names = names.map { |name| name2tag(name, parent_id, ns) }
     # NOTE: tags is a subselect - not an array of ids
     tags = Tag.in_region(region_id).where(:name => tag_names).select(:id)
     where(:tag_id => tags)
@@ -529,11 +528,13 @@ class Classification < ApplicationRecord
   private_class_method :tag2human
 
   def find_tag
-    Tag.find_by_classification_name(name, region_id, ns, parent_id)
+    tag_name = Classification.name2tag(name, parent_id, ns)
+    Tag.in_region(region_id).find_by(:name => tag_name)
   end
 
   def save_tag
-    self.tag = Tag.find_or_create_by_classification_name(name, region_id, ns, parent_id)
+    tag_name = Classification.name2tag(name, parent_id, ns)
+    self.tag = Tag.in_region(region_id).find_or_create_by(:name => tag_name)
   end
 
   def delete_all_entries
