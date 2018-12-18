@@ -31,5 +31,9 @@ FactoryGirl.define do
     vendor   "amazon"
   end
 
+  factory :volume_template_openstack, :class => "ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate", :parent => :template_cloud do
+    vendor "openstack"
+  end
+
   factory(:template_xen, :class => "TemplateXen", :parent => :template_infra)
 end
