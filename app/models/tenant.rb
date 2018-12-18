@@ -90,8 +90,16 @@ class Tenant < ApplicationRecord
     self.class.descendants_of(self).where(:divisible => false)
   end
 
+  def regional_tenants
+    self.class.regional_tenants(self)
+  end
+
+  def self.regional_tenants(tenant)
+    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:name)]).eq(tenant.name.downcase)))
+  end
+
   def accessible_tenant_ids(strategy = nil)
-    (strategy ? send(strategy) : []).append(id)
+    (strategy ? regional_tenants.map(&strategy.to_sym).flatten : []) + regional_tenants.ids
   end
 
   def name
