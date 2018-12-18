@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 101 ending 2018-12-17
+
+### Added
+- Add ConversionHost validations [(#18277)](https://github.com/ManageIQ/manageiq/pull/18277)
+
+### Fixed
+- Raise a notification for each repo that fails to enable [(#18290)](https://github.com/ManageIQ/manageiq/pull/18290)
+- Synchronize provider with server when zone changes [(#18272)](https://github.com/ManageIQ/manageiq/pull/18272)
+- Include  /etc/manageiq/postgresql.conf.d/ directory to log collection [(#18262)](https://github.com/ManageIQ/manageiq/pull/18262)
+- Do not rely on the asset pipeline when calling backend PDF generation [(#18236)](https://github.com/ManageIQ/manageiq/pull/18236)
+
 ## Unreleased as of Sprint 100 ending 2018-12-03
 
 ### Added
