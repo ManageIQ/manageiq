@@ -1,5 +1,6 @@
 describe MiqServer do
   before do
+    MiqRegion.seed
     @server = EvmSpecHelper.local_miq_server(:zone => Zone.seed)
   end
 

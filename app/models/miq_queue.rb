@@ -128,6 +128,11 @@ class MiqQueue < ApplicationRecord
       :handler_id   => nil,
     )
 
+    if options[:zone].present? && options[:zone] == Zone.maintenance_zone&.name
+      _log.debug("MiqQueue#put skipped: #{options.inspect}")
+      return
+    end
+
     create_with_options = all.values[:create_with] || {}
     options[:priority]    ||= create_with_options[:priority] || NORMAL_PRIORITY
     options[:queue_name]  ||= create_with_options[:queue_name] || "generic"

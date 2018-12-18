@@ -396,6 +396,174 @@ describe ExtManagementSystem do
     end
   end
 
+  context "#pause!" do
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
+
+    it 'disables an ems with child managers and moves them to maintenance zone' do
+      zone  = FactoryGirl.create(:zone)
+      ems   = FactoryGirl.create(:ext_management_system, :zone => zone)
+      child = FactoryGirl.create(:ext_management_system, :zone => zone)
+      ems.child_managers << child
+
+      ems.pause!
+
+      expect(ems.enabled).to eq(false)
+      expect(ems.zone).to eq(Zone.maintenance_zone)
+      expect(ems.zone_before_pause).to eq(zone)
+
+      child.reload
+      expect(child.enabled).to eq(false)
+      expect(child.zone).to eq(Zone.maintenance_zone)
+      expect(child.zone_before_pause).to eq(zone)
+    end
+
+    it 'disables an ems and moves child managers created by ensure_managers() to maintenance zone' do
+      zone  = FactoryGirl.create(:zone)
+      emses = {
+        :amazon_cloud    => FactoryGirl.create(:ems_amazon,          :zone => zone),
+        :azure_cloud     => FactoryGirl.create(:ems_azure,           :zone => zone),
+        :google_cloud    => FactoryGirl.create(:ems_google,          :zone => zone),
+        :openstack_cloud => FactoryGirl.create(:ems_openstack,       :zone => zone),
+        :openstack_infra => FactoryGirl.create(:ems_openstack_infra, :zone => zone),
+        :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
+      }
+
+      # managers with child managers created with ensure_managers() callback has own callback to change zone
+      # so it should be tested separately
+      emses.each_value do |manager|
+        manager.pause!
+
+        manager.reload
+        expect(manager.network_manager.zone_before_pause).to eq(zone)
+        expect(manager.network_manager.zone).to eq(Zone.maintenance_zone)
+      end
+
+      # The same for storage managers, i.e. amazon
+      %i(amazon_cloud openstack_cloud).each do |manager_type|
+        emses[manager_type].storage_managers.each do |storage_manager|
+          expect(storage_manager.zone_before_pause).to eq(zone)
+          expect(storage_manager.zone).to eq(Zone.maintenance_zone)
+        end
+      end
+    end
+  end
+
+  context "#resume" do
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
+
+    it "enables an ems with child managers and move them from maintenance zone" do
+      zone = FactoryGirl.create(:zone)
+      ems = FactoryGirl.create(:ext_management_system,
+                               :zone_before_pause => zone,
+                               :zone              => Zone.maintenance_zone,
+                               :enabled           => false)
+
+      child = FactoryGirl.create(:ext_management_system,
+                                 :zone_before_pause => zone,
+                                 :zone              => Zone.maintenance_zone,
+                                 :enabled           => false)
+      ems.child_managers << child
+
+      ems.resume!
+
+      expect(ems.enabled).to eq(true)
+      expect(ems.zone).to eq(zone)
+      expect(ems.zone_before_pause).to be_nil
+
+      child.reload
+      expect(child.enabled).to eq(true)
+      expect(child.zone).to eq(zone)
+      expect(child.zone_before_pause).to be_nil
+    end
+
+    it "doesn't change zone when ems was disabled before" do
+      zone = FactoryGirl.create(:zone)
+      ems = FactoryGirl.create(:ext_management_system,
+                               :zone_before_pause => nil,
+                               :zone              => zone,
+                               :enabled           => false)
+
+      ems.resume!
+
+      expect(ems.enabled).to eq(true)
+      expect(ems.zone).to eq(zone)
+    end
+
+    it 'enables an ems and moves child managers created by ensure_managers() to original zone' do
+      zone  = FactoryGirl.create(:zone)
+      # Cannot create paused child managers this way, so we first pause! (tested yet) and then resume!
+      emses = {
+        :amazon_cloud    => FactoryGirl.create(:ems_amazon,          :zone => zone),
+        :azure_cloud     => FactoryGirl.create(:ems_azure,           :zone => zone),
+        :google_cloud    => FactoryGirl.create(:ems_google,          :zone => zone),
+        :openstack_cloud => FactoryGirl.create(:ems_openstack,       :zone => zone),
+        :openstack_infra => FactoryGirl.create(:ems_openstack_infra, :zone => zone),
+        :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
+      }
+
+      # managers with child managers created with ensure_managers() callback has own callback to change zone
+      # so it should be tested separately
+      emses.each_value do |manager|
+        manager.pause!
+        manager.reload
+
+        manager.resume!
+        manager.reload
+
+        expect(manager.network_manager.zone_before_pause).to be_nil
+        expect(manager.network_manager.zone).to eq(zone)
+      end
+
+      # The same for storage managers, i.e. amazon
+      %i(amazon_cloud openstack_cloud).each do |manager_type|
+        emses[manager_type].storage_managers.each do |storage_manager|
+          expect(storage_manager.zone_before_pause).to be_nil
+          expect(storage_manager.zone).to eq(zone)
+        end
+      end
+    end
+  end
+
+  context "changing zone" do
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
+
+    it 'is allowed when enabled' do
+      zone = FactoryGirl.create(:zone)
+      ems  = FactoryGirl.create(:ext_management_system, :zone => Zone.default_zone)
+
+      ems.zone = zone
+      expect(ems.save).to eq(true)
+    end
+
+    it 'is denied when disabled' do
+      zone = FactoryGirl.create(:zone)
+      ems  = FactoryGirl.create(:ext_management_system, :zone => Zone.default_zone, :enabled => false)
+
+      ems.zone = zone
+      expect(ems.save).to eq(false)
+      expect(ems.errors.messages[:zone]).to be_present
+    end
+
+    it 'to maintenance is not possible when provider enabled' do
+      zone_visible = FactoryGirl.create(:zone)
+
+      ems = FactoryGirl.create(:ext_management_system, :zone => zone_visible, :enabled => true)
+
+      ems.zone = Zone.maintenance_zone
+      expect(ems.save).to eq(false)
+      expect(ems.errors.messages[:zone]).to be_present
+    end
+  end
+
   context "destroy" do
     it "destroys an ems with no active workers" do
       ems = FactoryBot.create(:ext_management_system)
@@ -408,7 +576,7 @@ describe ExtManagementSystem do
       worker = FactoryBot.create(:miq_ems_refresh_worker, :queue_name => ems.queue_name, :status => "started")
       ems.destroy
       expect(ExtManagementSystem.count).to eq(0)
-      expect(worker.class.exists?(worker.id)).to be_falsy
+      expect(worker.class.exists?(worker.id)).to eq(false)
     end
   end
 

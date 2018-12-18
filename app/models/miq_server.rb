@@ -39,6 +39,8 @@ class MiqServer < ApplicationRecord
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
   virtual_delegate :description, :to => :zone, :prefix => true
 
+  validate :validate_zone_not_maintenance?
+
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze
   STATUS_RESTARTING     = 'restarting'.freeze
@@ -52,6 +54,10 @@ class MiqServer < ApplicationRecord
   STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
 
   RESTART_EXIT_STATUS = 123
+
+  def validate_zone_not_maintenance?
+    errors.add(:zone, N_('cannot be maintenance zone')) if zone == Zone.maintenance_zone
+  end
 
   def hostname
     h = super

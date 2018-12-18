@@ -4,10 +4,11 @@ class Zone < ApplicationRecord
 
   serialize :settings, Hash
 
-  belongs_to      :log_file_depot, :class_name => "FileDepot"
+  belongs_to :log_file_depot, :class_name => "FileDepot"
 
   has_many :miq_servers
   has_many :ext_management_systems
+  has_many :paused_ext_management_systems, :class_name => 'ExtManagementSystem', :foreign_key => :zone_before_pause_id
   has_many :container_managers, :class_name => "ManageIQ::Providers::ContainerManager"
   has_many :miq_schedules, :dependent => :destroy
   has_many :providers
@@ -36,6 +37,9 @@ class Zone < ApplicationRecord
   include AggregationMixin
   include ConfigurationManagementMixin
 
+  scope :visible, -> { where(:visible => true) }
+  default_value_for :visible, true
+
   def active_miq_servers
     MiqServer.active_miq_servers.where(:zone_id => id)
   end
@@ -48,7 +52,31 @@ class Zone < ApplicationRecord
     active_miq_servers.detect(&:is_master?)
   end
 
+  def self.create_maintenance_zone
+    return MiqRegion.my_region.maintenance_zone if MiqRegion.my_region.maintenance_zone.present?
+
+    begin
+      # 1) Create Maintenance zone
+      zone = create!(:name        => "__maintenance__#{SecureRandom.uuid}",
+                     :description => "Maintenance Zone",
+                     :visible     => false)
+
+      # 2) Assign to MiqRegion
+      MiqRegion.my_region.update_attributes(:maintenance_zone => zone)
+    rescue ActiveRecord::RecordInvalid
+      raise if zone.errors[:name].blank?
+      retry
+    end
+    _log.info("Creating maintenance zone...")
+    zone
+  end
+
+  private_class_method :create_maintenance_zone
+
   def self.seed
+    MiqRegion.seed
+    create_maintenance_zone
+
     create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
       _log.info("Creating default zone...")
     end
@@ -76,6 +104,11 @@ class Zone < ApplicationRecord
 
   def self.default_zone
     in_my_region.find_by(:name => "default")
+  end
+
+  # Zone for paused providers (no servers in it), not visible by default
+  cache_with_timeout(:maintenance_zone) do
+    MiqRegion.my_region&.maintenance_zone
   end
 
   def remote_cockpit_ws_miq_server
@@ -209,6 +242,7 @@ class Zone < ApplicationRecord
 
   def check_zone_in_use_on_destroy
     raise _("cannot delete default zone") if name == "default"
+    raise _("cannot delete maintenance zone") if self == miq_region.maintenance_zone
     raise _("zone name '%{name}' is used by a server") % {:name => name} unless miq_servers.blank?
   end
 end

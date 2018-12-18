@@ -354,6 +354,8 @@ describe MiqQueue do
 
   context "#put" do
     before do
+      MiqRegion.seed
+      Zone.seed
       _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
     end
 
@@ -366,6 +368,16 @@ describe MiqQueue do
 
       expect(MiqQueue.get).to eq(msg)
       expect(MiqQueue.get).to eq(nil)
+    end
+
+    it "should skip putting message on queue in maintenance zone" do
+      msg = MiqQueue.put(
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2],
+        :zone        => Zone.maintenance_zone.name
+      )
+      expect(MiqQueue.count).to eq(0)
     end
 
     it "should accept non-Array args (for now)" do

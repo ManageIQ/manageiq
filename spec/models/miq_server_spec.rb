@@ -1,6 +1,10 @@
 describe MiqServer do
   context ".seed" do
-    before { Zone.seed }
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
+
     include_examples ".seed called multiple times"
   end
 
@@ -92,6 +96,15 @@ describe MiqServer do
 
     it "should have default zone" do
       expect(@miq_server.zone.name).to eq(@zone.name)
+    end
+
+    it "cannot assign to maintenance zone" do
+      MiqRegion.seed
+      Zone.seed
+
+      @miq_server.zone = Zone.maintenance_zone
+      expect(@miq_server.save).to eq(false)
+      expect(@miq_server.errors.messages[:zone]).to be_present
     end
 
     it "shutdown will raise an event and quiesce" do

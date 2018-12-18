@@ -1,5 +1,8 @@
 describe Zone do
-  include_examples ".seed called multiple times"
+  context ".seed" do
+    before { MiqRegion.seed }
+    include_examples ".seed called multiple times", 2
+  end
 
   context "with two small envs" do
     before do
@@ -137,7 +140,7 @@ describe Zone do
     it "false" do
       allow(miq_server).to receive(:active?).and_return(false)
 
-      expect(zone.active?).to be_falsey
+      expect(zone.active?).to eq(false)
     end
   end
 
@@ -192,6 +195,24 @@ describe Zone do
     end
   end
 
+  context "maintenance zone" do
+    before { MiqRegion.seed }
+
+    it "is seeded with relation to region" do
+      described_class.seed
+      expect(Zone.maintenance_zone).to have_attributes(
+        :name => a_string_starting_with("__maintenance__")
+      )
+
+      expect(MiqRegion.my_region.maintenance_zone).to eq(Zone.maintenance_zone)
+    end
+
+    it "is not visible" do
+      described_class.seed
+      expect(described_class.maintenance_zone.visible).to eq(false)
+    end
+  end
+
   context "validate multi region" do
     let!(:other_region_id)         { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
     let!(:default_in_other_region) { described_class.create(:name => "default", :description => "Default Zone", :id => other_region_id) }
@@ -203,6 +224,8 @@ describe Zone do
   end
 
   it "removes queued items on destroy" do
+    MiqRegion.seed
+    Zone.seed
     zone = FactoryBot.create(:zone)
     FactoryBot.create(:miq_queue, :zone => zone.name)
     expect(MiqQueue.where(:zone => zone.name).count).to eq(1)
