@@ -15,7 +15,7 @@ describe CloudTenancyMixin do
     let(:tenant_group) { FactoryBot.create(:miq_group, :miq_user_role => tenant_users, :tenant => tenant) }
 
     it "finds correct tenant id clause for regular tenants" do
-      expect(VmOrTemplate.tenant_id_clause(user)).to eql ["(vms.template = true AND vms.tenant_id IN (?)) OR (vms.template = false AND vms.tenant_id IN (?))", [default_tenant.id, tenant.id], [tenant.id]]
+      expect(VmOrTemplate.tenant_id_clause(user)).to eql ["vms.template = true AND vms.tenant_id IN (?) OR vms.template = true AND vms.publicly_available = true AND vms.type IN (?) OR vms.template = false AND vms.tenant_id IN (?)", [default_tenant.id, tenant.id], ["ManageIQ::Providers::Openstack::CloudManager::Template"], [tenant.id]]
 
       query = VmOrTemplate.where(VmOrTemplate.tenant_id_clause(user))
       expect { query.load }.not_to raise_error
