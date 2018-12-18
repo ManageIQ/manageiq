@@ -31,6 +31,10 @@ FactoryGirl.define do
     vendor "openstack"
   end
 
+  factory :volume_template_openstack, :class => "ManageIQ::Providers::Openstack::CloudManager::VolumeTemplate", :parent => :template_cloud do
+    vendor "openstack"
+  end
+
   factory :miq_template do
     name "ubuntu-16.04-stable"
     location "Minneapolis, MN"
