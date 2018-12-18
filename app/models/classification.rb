@@ -375,14 +375,9 @@ class Classification < ApplicationRecord
   end
 
   def export_to_array
-    h = attributes
+    h = attributes.except(*%w(id tag_id reserved parent_id))
     h["name"] = name
-    if category?
-      ["id", "tag_id", "reserved"].each { |k| h.delete(k) }
-      h["entries"] = entries.collect(&:export_to_array).flatten
-    else
-      ["id", "tag_id", "reserved", "parent_id"].each { |k| h.delete(k) }
-    end
+    h["entries"] = entries.collect(&:export_to_array).flatten if category?
     [h]
   end
 
@@ -395,7 +390,7 @@ class Classification < ApplicationRecord
 
     stats = {"categories" => 0, "entries" => 0}
 
-    if classification["parent_id"] == 0 # category
+    if parent.nil? # category
       cat = find_by_name(classification["name"])
       if cat
         _log.info("Skipping Classification (already in DB): Category: name=[#{classification["name"]}]")
@@ -404,6 +399,7 @@ class Classification < ApplicationRecord
 
       _log.info("Importing Classification: Category: name=[#{classification["name"]}]")
 
+      classification.delete("parent_id")
       entries = classification.delete("entries")
       cat = create(classification)
       stats["categories"] += 1
@@ -445,15 +441,12 @@ class Classification < ApplicationRecord
       category = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
       next if category
 
-      category = new(c.except(:entries))
+      category = is_category.new(c.except(:entries))
       next unless category.valid? # HACK: Skip seeding if categories aren't valid/unique
       _log.info("Creating category #{c[:name]}")
       category.save!
       add_entries_from_hash(category, c[:entries])
     end
-
-    # Fix categories that have a nill parent_id
-    where(:parent_id => nil).update_all(:parent_id => 0)
   end
 
   def self.sanitize_name(name)

@@ -408,7 +408,6 @@ describe Classification do
          :read_only    => "0",
          :syntax       => "string",
          :show         => true,
-         :parent_id    => 0,
          :default      => true,
          :single_value => "1",
          :entries      => [{:description => "Cost Center 001", :name => "001"},

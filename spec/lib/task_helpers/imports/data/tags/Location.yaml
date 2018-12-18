@@ -6,7 +6,6 @@
   single_value: true
   example_text: The geographic location of the resource, such as New York, Chicago,
     or London.
-  parent_id: 0
   show: true
   default: true
   perf_by_tag:
