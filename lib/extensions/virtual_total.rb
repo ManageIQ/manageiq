@@ -109,9 +109,8 @@ module VirtualTotal
 
         foreign_table = reflection.klass.arel_table
         # need db access for the keys, so delaying all this lookup until call time
-        local_key   = reflection.active_record_primary_key
-        foreign_key = reflection.foreign_key
-        query       = query.where(t[local_key].eq(foreign_table[foreign_key]))
+        join_keys = reflection.join_keys(reflection.klass)
+        query       = query.where(t[join_keys.foreign_key].eq(foreign_table[join_keys.key]))
 
         arel_column = if method_name == :size
                         Arel.star.count

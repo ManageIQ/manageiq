@@ -344,11 +344,15 @@ describe VirtualTotal do
     # it can not sort by virtual
 
     it "calculates totals locally" do
-      expect(model_with_children(0).total_vms).to eq(0)
-      expect(model_with_children(2).total_vms).to eq(2)
+      expect(model_with_children(0).v_total_vms).to eq(0)
+      expect(model_with_children(2).v_total_vms).to eq(2)
     end
 
     it "is not defined in sql" do
+      expect(base_model.attribute_supported_by_sql?(:v_total_vms)).to be(false)
+    end
+
+    it "alias is not defined in sql" do
       expect(base_model.attribute_supported_by_sql?(:total_vms)).to be(false)
     end
 
