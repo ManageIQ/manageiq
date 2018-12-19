@@ -6,7 +6,7 @@ class Endpoint < ApplicationRecord
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
   validates :port, :numericality => {:only_integer => true, :allow_nil => true, :greater_than => 0}
-  validates :url, :uniqueness => true, :allow_blank => true, :if => :should_validate_url?
+  validates :url, :uniqueness => true, :allow_blank => true, :if => :should_have_unique_url?
   validate :validate_certificate_authority
 
   after_create  :endpoint_created
@@ -78,7 +78,7 @@ class Endpoint < ApplicationRecord
     errors.add(:certificate_authority, err.to_s)
   end
 
-  def should_validate_url?
-    !resource.kind_of?(ManageIQ::Providers::CloudManager)
+  def should_have_unique_url?
+    !resource.try(:allow_nonunique_endpoint_url?)
   end
 end
