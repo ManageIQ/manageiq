@@ -1,7 +1,6 @@
 language: ruby
 rvm:
-- 2.4.4
-- 2.3.8
+- 2.4.5
 sudo: false
 cache:
   bundler: true
@@ -15,10 +14,8 @@ env:
   - TEST_SUITE=vmdb PARALLEL=true
   - TEST_SUITE=brakeman
 matrix:
-  allow_failures:
-  - rvm: 2.4.2
   exclude:
-  - rvm: 2.4.2
+  - rvm: 2.4.5
     env: TEST_SUITE=brakeman
   fast_finish: true
 addons:
