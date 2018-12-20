@@ -779,4 +779,6 @@ class ExtManagementSystem < ApplicationRecord
     @storages = nil
     super
   end
+
+  define_method(:allow_duplicate_endpoint_url?) { false }
 end
