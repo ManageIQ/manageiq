@@ -1,8 +1,10 @@
 class MiqProductFeature < ApplicationRecord
-  SUPER_ADMIN_FEATURE = "everything".freeze
+  SUPER_ADMIN_FEATURE   = "everything".freeze
   REPORT_ADMIN_FEATURE  = "miq_report_superadmin".freeze
   REQUEST_ADMIN_FEATURE = "miq_request_approval".freeze
-  TENANT_ADMIN_FEATURE = "rbac_tenant".freeze
+  REPORT_MY_TASKS       = "miq_task_my_ui".freeze
+  REPORT_ALL_TASKS      = "miq_task_all_ui".freeze
+  TENANT_ADMIN_FEATURE  = "rbac_tenant".freeze
 
   acts_as_tree
 
