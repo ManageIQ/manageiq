@@ -1,5 +1,6 @@
 class ConversionHost < ApplicationRecord
   include NewWithTypeStiMixin
+  include AuthenticationMixin
 
   acts_as_miq_taggable
 
@@ -25,6 +26,34 @@ class ConversionHost < ApplicationRecord
 
   after_create :tag_resource_as_enabled
   after_destroy :tag_resource_as_disabled
+
+  # Comply with AuthenticationMixin interface. Check using all associated
+  # authentications.
+  #
+  def verify_credentials(_auth_type = nil, _options = {})
+    require 'net/ssh'
+    host = hostname || ipaddress
+
+    authentications.each do |auth|
+      user = auth.userid || ENV['USER']
+
+      options = {}
+
+      if auth.password
+        options[:password] = auth.password
+        options[:auth_methods] = ['password']
+      end
+
+      if auth.auth_key
+        options[:keys] = [auth.auth_key]
+        options[:auth_methods] = ['public_key', 'host_based']
+      end
+
+      Net::SSH.start(host, user, options) do |ssh|
+        ssh.exec!('uname -a')
+      end
+    end
+  end
 
   # To be eligible, a conversion host must have the following properties
   #  - A transport mechanism is configured for source (set by 3rd party)
