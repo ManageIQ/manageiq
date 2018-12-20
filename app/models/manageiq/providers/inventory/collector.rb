@@ -10,6 +10,10 @@ class ManageIQ::Providers::Inventory::Collector
     @target  = refresh_target
   end
 
+  def collect
+    # placeholder for sub-classes to be able to collect inventory before parsing
+  end
+
   # @return [Config::Options] Options for the manager type
   def options
     @options ||= Settings.ems_refresh[manager.class.ems_type]
