@@ -49,9 +49,7 @@ class ConversionHost < ApplicationRecord
         options[:auth_methods] = ['public_key', 'host_based']
       end
 
-      Net::SSH.start(host, user, options) do |ssh|
-        ssh.exec!('uname -a')
-      end
+      Net::SSH.start(host, user, options) { |ssh| ssh.exec!('uname -a') }
     end
   end
 
