@@ -37,7 +37,7 @@ class ConversionHost < ApplicationRecord
     authentications.each do |auth|
       user = auth.userid || ENV['USER']
 
-      options = {}
+      options = { :timeout => 3 }
 
       if auth.password
         options[:password] = auth.password
@@ -60,7 +60,7 @@ class ConversionHost < ApplicationRecord
   #  - Credentials are set on the resource and SSH connection works
   #  - The number of concurrent tasks has not reached the limit
   def eligible?
-    source_transport_method.present? && check_ssh_connection && check_concurrent_tasks
+    source_transport_method.present? && verify_credentials && check_concurrent_tasks
   end
 
   def check_concurrent_tasks
