@@ -37,19 +37,19 @@ class ConversionHost < ApplicationRecord
     authentications.each do |auth|
       user = auth.userid || ENV['USER']
 
-      options = { :timeout => 3 }
+      ssh_options = { :timeout => 3 }
 
       if auth.password
-        options[:password] = auth.password
-        options[:auth_methods] = ['password']
+        ssh_options[:password] = auth.password
+        ssh_options[:auth_methods] = ['password']
       end
 
       if auth.auth_key
-        options[:keys] = [auth.auth_key]
-        options[:auth_methods] = ['public_key', 'host_based']
+        ssh_options[:keys] = [auth.auth_key]
+        ssh_options[:auth_methods] = ['public_key', 'host_based']
       end
 
-      Net::SSH.start(host, user, options) { |ssh| ssh.exec!('uname -a') }
+      Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
     end
   end
 
