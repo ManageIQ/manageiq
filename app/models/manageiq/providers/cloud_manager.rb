@@ -150,5 +150,7 @@ module ManageIQ::Providers
         source_tenant.destroy
       end
     end
+
+    define_method(:allow_duplicate_endpoint_url?) { true }
   end
 end
