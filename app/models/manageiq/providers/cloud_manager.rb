@@ -151,6 +151,6 @@ module ManageIQ::Providers
       end
     end
 
-    define_method(:allow_nonunique_endpoint_url?) { true }
+    define_method(:allow_duplicate_endpoint_url?) { true }
   end
 end
