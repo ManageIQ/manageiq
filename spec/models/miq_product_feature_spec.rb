@@ -164,6 +164,32 @@ describe MiqProductFeature do
           expect(MiqProductFeature.where(:identifier => "dialog_copy_editor", :name => "Edit").count).to eq(1)
         end
 
+        context "with tenants from remote region" do
+          before do
+            MiqRegion.seed
+          end
+
+          def id_for_model_in_region(model, region)
+            model.id_in_region(model.count + 1_000_000, region.region)
+          end
+
+          let!(:other_miq_region) { FactoryBot.create(:miq_region) }
+          let!(:tenant_product_feature_other_region) do
+            Tenant.skip_callback(:create, :after, :create_miq_product_features_for_tenant_nodes)
+            tenant = FactoryGirl.create(:tenant, :id => id_for_model_in_region(Tenant, other_miq_region))
+            Tenant.set_callback(:create, :after, :create_miq_product_features_for_tenant_nodes)
+
+            tenant
+          end
+
+          it "doesn't seed tenant features for tenants from remote regions" do
+            MiqProductFeature.seed_tenant_miq_product_features
+            expect(tenant_product_feature_other_region.miq_product_features.to_a).to be_empty
+
+            expect(tenant.miq_product_features.map(&:identifier)).to match_array(["dialog_copy_editor_tenant_#{tenant.id}"])
+          end
+        end
+
         context "add tenant node product features" do
           let(:base) do
             {
