@@ -1,5 +1,6 @@
 language: ruby
 rvm:
+- 2.5.3
 - 2.4.5
 - 2.3.8
 sudo: false
@@ -15,6 +16,8 @@ env:
   - TEST_SUITE=vmdb PARALLEL=true
   - TEST_SUITE=brakeman
 matrix:
+  allow_failures:
+  - rvm: 2.5.3
   allow_failures:
   - rvm: 2.4.2
   exclude:
