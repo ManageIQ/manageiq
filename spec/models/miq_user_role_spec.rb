@@ -222,8 +222,8 @@ describe MiqUserRole do
   let(:tenant_admin_role) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::TENANT_ADMIN_FEATURE) }
   let(:report_admin_role) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::REPORT_ADMIN_FEATURE) }
   let(:request_admin_role) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::REQUEST_ADMIN_FEATURE) }
-  let(:report_only_my_tasks) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::REPORT_MY_TASKS) }
-  let(:report_only_all_tasks) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::REPORT_ALL_TASKS) }
+  let(:report_only_my_tasks) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::MY_TASKS_FEATURE) }
+  let(:report_only_all_tasks) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::ALL_TASKS_FEATURE) }
   let(:regular_role) { FactoryBot.create(:miq_user_role) }
 
   describe "#super_admin_user?" do
@@ -240,17 +240,17 @@ describe MiqUserRole do
     end
   end
 
-  describe "#report_only_my_user_tasks?" do
+  describe "#only_my_user_tasks?" do
     it "detects access limited to only the current users tasks" do
-      expect(report_only_my_tasks).to be_report_only_my_user_tasks
+      expect(report_only_my_tasks).to be_only_my_user_tasks
     end
 
     it "detects access not limited to only the current users tasks" do
-      expect(report_only_all_tasks).not_to be_report_only_my_user_tasks
+      expect(report_only_all_tasks).not_to be_only_my_user_tasks
     end
 
     it "detects no access to tasks" do
-      expect(regular_role).not_to be_report_only_my_user_tasks
+      expect(regular_role).not_to be_only_my_user_tasks
     end
   end
 
