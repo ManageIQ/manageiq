@@ -1,13 +1,13 @@
 describe ServiceTemplateProvisionRequest do
-  let(:admin) { FactoryGirl.create(:user_admin) }
+  let(:admin) { FactoryBot.create(:user_admin) }
   context "with multiple tasks" do
     before do
-      @request  = FactoryGirl.create(:service_template_provision_request, :description => 'Service Request', :requester => admin)
+      @request  = FactoryBot.create(:service_template_provision_request, :description => 'Service Request', :requester => admin)
 
-      @task_1   = FactoryGirl.create(:service_template_provision_task, :description => 'Task 1',     :userid => admin.userid, :miq_request_id => @request.id)
-      @task_1_1 = FactoryGirl.create(:service_template_provision_task, :description => 'Task 1 - 1', :userid => admin.userid, :miq_request_id => @request.id)
-      @task_2   = FactoryGirl.create(:service_template_provision_task, :description => 'Task 2',     :userid => admin.userid, :miq_request_id => @request.id)
-      @task_2_1 = FactoryGirl.create(:service_template_provision_task, :description => 'Task 2 - 1', :userid => admin.userid, :miq_request_id => @request.id)
+      @task_1   = FactoryBot.create(:service_template_provision_task, :description => 'Task 1',     :userid => admin.userid, :miq_request_id => @request.id)
+      @task_1_1 = FactoryBot.create(:service_template_provision_task, :description => 'Task 1 - 1', :userid => admin.userid, :miq_request_id => @request.id)
+      @task_2   = FactoryBot.create(:service_template_provision_task, :description => 'Task 2',     :userid => admin.userid, :miq_request_id => @request.id)
+      @task_2_1 = FactoryBot.create(:service_template_provision_task, :description => 'Task 2 - 1', :userid => admin.userid, :miq_request_id => @request.id)
 
       @task_1.miq_request_tasks << @task_1_1
       @task_2.miq_request_tasks << @task_2_1
@@ -109,8 +109,8 @@ describe ServiceTemplateProvisionRequest do
   end
 
   describe "#make_request" do
-    let(:service_template) { FactoryGirl.create(:service_template, :name => "My Service Template") }
-    let(:alt_user) { FactoryGirl.create(:user_with_group) }
+    let(:service_template) { FactoryBot.create(:service_template, :name => "My Service Template") }
+    let(:alt_user) { FactoryBot.create(:user_with_group) }
     it "creates and update a request" do
       EvmSpecHelper.local_miq_server
       expect(AuditEvent).to receive(:success).with(

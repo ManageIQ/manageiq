@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_search do
     sequence(:name)        { |n| "miq_search_#{seq_padded_for_sorting(n)}" }
     sequence(:description) { |n| "MiqSearch #{seq_padded_for_sorting(n)}" }
@@ -14,6 +14,6 @@ FactoryGirl.define do
 
   factory :miq_search_user, :parent => :miq_search do
     search_type "user"
-    search_key  { FactoryGirl.create(:user).id }
+    search_key  { FactoryBot.create(:user).id }
   end
 end

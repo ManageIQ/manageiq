@@ -1,28 +1,28 @@
 describe(ServiceAnsiblePlaybook) do
-  let(:tower_job)      { FactoryGirl.create(:embedded_ansible_job) }
-  let(:tower_job_temp) { FactoryGirl.create(:ansible_configuration_script) }
-  let(:basic_service)  { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options) }
-  let(:service)        { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
+  let(:tower_job)      { FactoryBot.create(:embedded_ansible_job) }
+  let(:tower_job_temp) { FactoryBot.create(:ansible_configuration_script) }
+  let(:basic_service)  { FactoryBot.create(:service_ansible_playbook, :options => config_info_options) }
+  let(:service)        { FactoryBot.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
   let(:action)         { ResourceAction::PROVISION }
-  let(:credential_0)   { FactoryGirl.create(:authentication, :manager_ref => '1') }
-  let(:credential_1)   { FactoryGirl.create(:authentication, :manager_ref => 'a') }
-  let(:credential_2)   { FactoryGirl.create(:authentication, :manager_ref => 'b') }
-  let(:credential_3)   { FactoryGirl.create(:authentication, :manager_ref => '2') }
+  let(:credential_0)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '1') }
+  let(:credential_1)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '2') }
+  let(:credential_2)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '3') }
+  let(:credential_3)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '4') }
   let(:decrpyted_val)  { 'my secret' }
   let(:encrypted_val)  { MiqPassword.encrypt(decrpyted_val) }
   let(:encrypted_val2) { MiqPassword.encrypt(decrpyted_val + "new") }
 
   let(:loaded_service) do
-    service_template = FactoryGirl.create(:service_template_ansible_playbook)
+    service_template = FactoryBot.create(:service_template_ansible_playbook)
     service_template.resource_actions.build(:action => action, :configuration_template => tower_job_temp)
     service_template.save!
-    FactoryGirl.create(:service_ansible_playbook,
+    FactoryBot.create(:service_ansible_playbook,
                        :options          => provision_options.merge(config_info_options),
                        :service_template => service_template)
   end
 
   let(:executed_service) do
-    FactoryGirl.create(:service_ansible_playbook, :options => provision_options).tap do |service|
+    FactoryBot.create(:service_ansible_playbook, :options => provision_options).tap do |service|
       regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/
       allow(service).to receive(:job).with(regex).and_return(tower_job)
     end
@@ -97,7 +97,7 @@ describe(ServiceAnsiblePlaybook) do
         service.reload
         expect(service.options[:provision_job_options]).to include(
           :inventory  => 20,
-          :credential => credential_1.manager_ref,
+          :credential => credential_1.native_ref,
           :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val}
         )
       end
@@ -133,7 +133,7 @@ describe(ServiceAnsiblePlaybook) do
         service.reload
         expect(service.options[:provision_job_options]).to include(
           :inventory  => 30,
-          :credential => credential_2.manager_ref,
+          :credential => credential_2.native_ref,
           :extra_vars => {'var1' => 'new_val1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val2}
         )
       end
@@ -143,18 +143,18 @@ describe(ServiceAnsiblePlaybook) do
   describe '#execute' do
     let(:control_extras) { {'a' => 'A', 'b' => 'B', 'c' => 'C'} }
     before do
-      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
-      miq_request_task = FactoryGirl.create(:miq_request_task)
+      FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      miq_request_task = FactoryBot.create(:miq_request_task, :miq_request => FactoryBot.create(:service_template_provision_request))
       miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
-      loaded_service.update_attributes(:evm_owner        => FactoryGirl.create(:user_with_group),
-                                       :miq_group        => FactoryGirl.create(:miq_group),
+      loaded_service.update_attributes(:evm_owner        => FactoryBot.create(:user_with_group),
+                                       :miq_group        => FactoryBot.create(:miq_group),
                                        :miq_request_task => miq_request_task)
     end
 
     it 'creates an Ansible Tower job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
         expect(jobtemp).to eq(tower_job_temp)
-        exposed_miq = %w(api_url api_token service user group X_MIQ_Group) + control_extras.keys
+        exposed_miq = %w(api_url api_token service user group X_MIQ_Group request_task request) + control_extras.keys
         exposed_connection = %w(url token X_MIQ_Group)
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
         expect(opts[:extra_vars].delete('manageiq_connection').keys).to include(*exposed_connection)

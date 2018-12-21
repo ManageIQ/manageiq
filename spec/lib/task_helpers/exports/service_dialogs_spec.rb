@@ -28,8 +28,8 @@ describe TaskHelpers::Exports::ServiceDialogs do
   end
 
   before do
-    FactoryGirl.create(:dialog, :name => label1, :description => description1, :buttons => buttons)
-    FactoryGirl.create(:dialog, :name => label2, :description => description2, :buttons => buttons)
+    FactoryBot.create(:dialog, :name => label1, :description => description1, :buttons => buttons)
+    FactoryBot.create(:dialog, :name => label2, :description => description2, :buttons => buttons)
   end
 
   after do

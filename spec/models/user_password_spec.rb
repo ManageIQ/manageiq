@@ -6,7 +6,7 @@ describe "User Password" do
       EvmSpecHelper.create_guid_miq_server_zone
 
       @old = 'smartvm'
-      @admin = FactoryGirl.create(:user, :userid          => 'admin',
+      @admin = FactoryBot.create(:user, :userid          => 'admin',
                                          :password_digest => BCrypt::Password.create(@old))
     end
 

@@ -15,23 +15,23 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     @initiator       = options[:initiator]
     @dialog          = load_dialog(resource_action, values, options)
 
-    @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
-    @settings[:dialog_id]          = @dialog.id         unless @dialog.nil?
+    @settings[:resource_action_id] = resource_action.id if resource_action
+    @settings[:dialog_id]          = @dialog.id         if @dialog
   end
 
-  def dialogs
-    msg = "[DEPRECATION] ResourceActionWorkflow#dialogs should not be used.  Please use ResourceActionWorkflow#dialog instead.  At #{caller[0]}"
-    $log.warn(msg)
-    Kernel.warn(msg)
-    dialog
-  end
+  Vmdb::Deprecation.deprecate_methods(self, :dialogs => :dialog)
 
-  def submit_request
+  def submit_request(data = {})
+    update_dialog_field_values(data) if data.present?
     process_request(ServiceOrder::STATE_ORDERED)
   end
 
   def add_request_to_cart
     process_request(ServiceOrder::STATE_CART)
+  end
+
+  def update_dialog_field_values(data)
+    @dialog.load_values_into_fields(data)
   end
 
   def process_request(state)
@@ -43,7 +43,11 @@ class ResourceActionWorkflow < MiqRequestWorkflow
       result[:request] = generate_request(state, values)
     else
       ra = load_resource_action(values)
-      ra.deliver_to_automate_from_dialog(values, @target, @requester)
+      if ra.resource.try(:open_url?)
+        result[:task_id] = ra.deliver_to_automate_from_dialog_with_miq_task(values, @target, @requester)
+      else
+        ra.deliver_to_automate_from_dialog(values, @target, @requester)
+      end
     end
 
     result
@@ -77,11 +81,8 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def load_resource_action(values = nil)
-    if values.nil?
-      ResourceAction.find_by(:id => @settings[:resource_action_id])
-    else
-      ResourceAction.find_by(:id => values.fetch_path(:workflow_settings, :resource_action_id))
-    end
+    id = values ? values.fetch_path(:workflow_settings, :resource_action_id) : @settings[:resource_action_id]
+    ResourceAction.find_by(:id => id)
   end
 
   def create_values_hash
@@ -95,16 +96,21 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   def load_dialog(resource_action, values, options)
     if resource_action.nil?
       resource_action = load_resource_action(values)
-      @settings[:resource_action_id] = resource_action.id unless resource_action.nil?
+      @settings[:resource_action_id] = resource_action.id if resource_action
     end
 
-    dialog = resource_action.dialog unless resource_action.nil?
-    unless dialog.nil?
+    dialog = resource_action.dialog if resource_action
+    if dialog
       dialog.target_resource = @target
       if options[:display_view_only]
         dialog.init_fields_with_values_for_request(values)
-      elsif options[:refresh]
+      elsif options[:provision_workflow] || options[:init_defaults]
+        dialog.initialize_value_context(values)
+        dialog.load_values_into_fields(values, false)
+      elsif options[:refresh] || options[:submit_workflow]
         dialog.load_values_into_fields(values)
+      elsif options[:reconfigure]
+        dialog.initialize_with_given_values(values)
       else
         dialog.initialize_value_context(values)
       end
@@ -129,8 +135,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def value(name)
-    dlg_field = @dialog.field(name)
-    dlg_field.value if dlg_field
+    @dialog.field(name)&.value
   end
 
   def dialog_field(name)

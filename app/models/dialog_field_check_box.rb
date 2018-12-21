@@ -10,7 +10,7 @@ class DialogFieldCheckBox < DialogField
   end
 
   def script_error_values
-    "<Script error>"
+    N_("<Script error>")
   end
 
   def normalize_automate_values(automate_hash)

@@ -1,8 +1,11 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_request do
     requester { create(:user) }
 
-    factory :miq_host_provision_request,         :class => "MiqHostProvisionRequest"
+    factory :automation_request, :class => "AutomationRequest" do
+      request_type "automation"
+    end
+
     factory :service_reconfigure_request,        :class => "ServiceReconfigureRequest"
     factory :service_template_provision_request, :class => "ServiceTemplateProvisionRequest" do
       source { create(:service_template) }
@@ -23,7 +26,7 @@ FactoryGirl.define do
       end
 
       after(:create) do |request, evaluator|
-        request.miq_approvals << FactoryGirl.create(:miq_approval, :reason => evaluator.reason)
+        request.miq_approvals << FactoryBot.create(:miq_approval, :reason => evaluator.reason)
       end
     end
   end

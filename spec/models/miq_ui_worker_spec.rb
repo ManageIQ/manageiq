@@ -6,8 +6,8 @@ describe MiqUiWorker do
 
       _guid, server1, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-      @worker1 = FactoryGirl.create(:miq_ui_worker, :miq_server => server1, :uri => "http://0.0.0.0:3000", :status => 'started')
-      @worker2 = FactoryGirl.create(:miq_ui_worker, :miq_server => server1, :uri => "http://0.0.0.0:3001", :status => 'started')
+      @worker1 = FactoryBot.create(:miq_ui_worker, :miq_server => server1, :uri => "http://0.0.0.0:3000", :status => 'started')
+      @worker2 = FactoryBot.create(:miq_ui_worker, :miq_server => server1, :uri => "http://0.0.0.0:3001", :status => 'started')
     end
 
     it "normal case" do
@@ -20,7 +20,7 @@ describe MiqUiWorker do
     end
 
     it "current vs. remote servers" do
-      server2 = FactoryGirl.create(:miq_server, :zone => @zone)
+      server2 = FactoryBot.create(:miq_server, :zone => @zone)
       @worker2.miq_server = server2
       @worker2.save
       expect(MiqUiWorker.all_ports_in_use).to eq([3000])

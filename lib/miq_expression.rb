@@ -344,6 +344,15 @@ class MiqExpression
         # TODO: Support includes operator for sub-sub-tables
         return false
       end
+    when "includes any", "includes all", "includes only"
+      # Support this only from the main model (for now)
+      if exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 1
+        model, field = exp[operator]["field"].split("-")
+        method = "miq_expression_#{operator.downcase.tr(' ', '_')}_#{field}_arel"
+        return model.constantize.respond_to?(method)
+      else
+        return false
+      end
     when "find", "regular expression matches", "regular expression does not match", "key exists", "value exists"
       return false
     else
@@ -876,6 +885,9 @@ class MiqExpression
 
   def self.tag_details(path, opts)
     result = []
+    if opts[:no_cache]
+      @classifications = nil
+    end
     @classifications ||= categories
     @classifications.each do |name, cat|
       prefix = path.nil? ? "managed" : [path, "managed"].join(".")
@@ -1340,6 +1352,11 @@ class MiqExpression
       escape = nil
       case_sensitive = true
       arel_attribute.matches("%#{parsed_value}%", escape, case_sensitive)
+    when "includes all", "includes any", "includes only"
+      method = "miq_expression_"
+      method << "#{operator.downcase.tr(' ', '_')}_"
+      method << "#{field.column}_arel"
+      field.model.send(method, parsed_value)
     when "starts with"
       escape = nil
       case_sensitive = true
@@ -1431,7 +1448,7 @@ class MiqExpression
 
       arel  = relation.arel
       binds = relation.bound_attributes
-      binds = connection.prepare_binds_for_database(binds)
+      binds = binds.collect(&:value_for_database)
       binds.map! { |value| connection.quote(value) }
       collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
       collect.substitute_binds(binds).join

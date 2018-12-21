@@ -4,22 +4,22 @@ describe Metric::Helper do
   end
 
   describe ".remove_duplicate_timestamps" do
-    let(:host) { FactoryGirl.create(:host) }
+    let(:host) { FactoryBot.create(:host) }
     let(:metric_rollup_1) do
-      FactoryGirl.create(:metric_rollup,
+      FactoryBot.create(:metric_rollup,
                          :resource  => host,
                          :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000"))
     end
 
     # duplicate of metric_rollup_1
     let(:metric_rollup_2) do
-      FactoryGirl.create(:metric_rollup,
+      FactoryBot.create(:metric_rollup,
                          :resource  => host,
                          :timestamp => Time.zone.parse("2016-01-12T00:00:00.00000000"))
     end
 
     let(:metric_rollup_3) do
-      FactoryGirl.create(:metric_rollup,
+      FactoryBot.create(:metric_rollup,
                          :resource  => host,
                          :timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000"))
     end
@@ -51,7 +51,7 @@ describe Metric::Helper do
     end
 
     let(:ems_event) do
-      FactoryGirl.create(:ems_event, :timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000"))
+      FactoryBot.create(:ems_event, :timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000"))
     end
 
     it "returns origin set of records, some input records are not MetricRollup and Metric" do

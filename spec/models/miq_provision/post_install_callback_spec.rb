@@ -18,7 +18,7 @@ describe MiqProvision::PostInstallCallback do
     end
   end
 
-  let(:destination) { FactoryGirl.build(:vm) }
+  let(:destination) { FactoryBot.build(:vm) }
 
   ALLOWED_PHASES = [:poll_destination_powered_off_in_provider, :poll_destination_powered_off_in_vmdb].freeze
   BLOCKED_PHASES = [

@@ -3,12 +3,15 @@ module TaskHelpers
     class Alerts
       def import(options)
         glob = File.file?(options[:source]) ? options[:source] : "#{options[:source]}/*.yaml"
-        Dir.glob(glob) do |fname|
+        Dir.glob(glob) do |filename|
+          $log.info("Importing Alerts from: #{filename}")
+
           begin
-            alerts = YAML.load_file(fname)
+            alerts = YAML.load_file(filename)
             import_alerts(alerts)
-          rescue => e
-            $stderr.puts "Error importing #{fname} : #{e.message}"
+          rescue StandardError => err
+            $log.error("Error importing #{filename} : #{err.message}")
+            warn("Error importing #{filename} : #{err.message}")
           end
         end
       end

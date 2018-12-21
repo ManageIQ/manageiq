@@ -27,7 +27,7 @@ module Openstack
                     :ipaddress             => hostname,
                     :port                  => port,
                     :api_version           => version,
-                    :zone                  => Zone.first,
+                    :zone                  => Zone.default_zone,
                     :security_protocol     => 'no_ssl',
                     :keystone_v3_domain_id => 'default'}
 

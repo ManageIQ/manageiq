@@ -55,7 +55,9 @@ module MiqServer::EnvironmentManagement
     end
 
     def validate_database
-      ActiveRecord::Base.connection.reconnect!
+      # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
+      spec_name = ActiveRecord::Base.connection_specification_name
+      ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
 
       # Log the Versions
       _log.info("Database Adapter: [#{ActiveRecord::Base.connection.adapter_name}], version: [#{ActiveRecord::Base.connection.database_version}]")                   if ActiveRecord::Base.connection.respond_to?(:database_version)

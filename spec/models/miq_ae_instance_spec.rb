@@ -1,7 +1,7 @@
 describe MiqAeInstance do
   context "legacy tests" do
     before do
-      @user = FactoryGirl.create(:user_with_group)
+      @user = FactoryBot.create(:user_with_group)
       @c1 = MiqAeClass.create(:namespace => "TEST", :name => "instance_test")
       @fname1 = "field1"
       @f1 = @c1.ae_fields.create(:name => @fname1)
@@ -141,19 +141,19 @@ describe MiqAeInstance do
     end
 
     it "should return editable as false if the parent namespace/class is not editable" do
-      d1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => User.current_tenant)
-      n1 = FactoryGirl.create(:miq_ae_namespace, :parent_id => d1.id)
-      c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-      i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
+      d1 = FactoryBot.create(:miq_ae_system_domain, :tenant => User.current_tenant)
+      n1 = FactoryBot.create(:miq_ae_namespace, :parent_id => d1.id)
+      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+      i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
       expect(i1.editable?(@user)).to be_falsey
     end
 
     it "should return editable as true if the parent namespace/class is editable" do
       User.current_user = @user
-      d1 = FactoryGirl.create(:miq_ae_domain, :tenant => User.current_tenant)
-      n1 = FactoryGirl.create(:miq_ae_namespace, :parent_id => d1.id)
-      c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-      i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
+      d1 = FactoryBot.create(:miq_ae_domain, :tenant => User.current_tenant)
+      n1 = FactoryBot.create(:miq_ae_namespace, :parent_id => d1.id)
+      c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+      i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
       expect(i1.editable?(@user)).to be_truthy
     end
   end
@@ -197,14 +197,14 @@ describe MiqAeInstance do
 
   context "#copy" do
     before do
-      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
-      @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
-      @i1 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance1")
-      @i2 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance2")
+      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
+      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
+      @i1 = FactoryBot.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance1")
+      @i2 = FactoryBot.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance2")
 
-      @d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :priority => 2)
-      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+      @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority => 2)
+      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
     end
 
     it "copies instances under specified namespace" do
@@ -244,9 +244,9 @@ describe MiqAeInstance do
   end
 
   it "#domain" do
-    n1 = FactoryGirl.create(:miq_ae_system_domain, :name => 'dom1')
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
+    n1 = FactoryBot.create(:miq_ae_system_domain, :name => 'dom1')
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
     expect(i1.domain.name).to eql('dom1')
   end
 end

@@ -1,5 +1,13 @@
 name,description,event_type,set_type
 #
+# Authentication
+#
+login_failed,Login failed,Default,authentication
+
+# Authorization
+user_created,User created,Default,authorization
+
+#
 # EVM Server operations
 #
 evm_server_start,Server Start,Default,evm_operations
@@ -45,10 +53,10 @@ extmanagementsystem_compliance_failed,Provider Compliance Failed,Default,complia
 #
 host_connect,Host Connect,Default,host_operations
 host_disconnect,Host Disconnect,Default,host_operations
+host_failure,Host Failure,Default,host_operations
 request_host_scan,Host Analysis Request,Default,host_operations
 host_scan_complete,Host Analysis Complete,Default,host_operations
 host_perf_complete,Host C & U Processing Complete,Default,host_operations
-host_provisioned,Host Provision Complete,Default,host_operations
 host_add_to_cluster,Host Added to Cluster,Default,host_operations
 host_remove_from_cluster,Host Removed from Cluster,Default,host_operations
 host_compliance_check,Host Compliance Check,Default,compliance
@@ -175,6 +183,7 @@ request_orchestration_stack_retire,Orchestration Stack Retire Request,Default,or
 # Container Operations
 #
 request_containerimage_scan,Container Image Analysis Request,Default,container_operations
+containerimage_scan_abort,Container Image Analysis Failure,Default,container_operations
 containerimage_scan_complete,Container Image Analysis Complete,Default,container_operations
 containerimage_created,Container Image Discovered,Default,container_operations
 containerimage_compliance_check,Container Image Compliance Check,Default,compliance
@@ -222,6 +231,7 @@ containerproject_created,Container Project Discovered,Default,container_operatio
 #
 # Physical Server Operations
 #
+physicalserver_compliance_check,Physical Server Compliance Check,Default,compliance
 physical_server_shutdown,Physical Server Shutdown,Default,physical_server_operations
 physical_server_start,Physical Server Start,Default,physical_server_operations
 physical_server_reset,Physical Server Reset,Default,physical_server_operations

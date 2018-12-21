@@ -17,7 +17,7 @@ module ManageIQ::Providers
     has_many :container_quotas, -> { active }, :foreign_key => :ems_id
     has_many :container_limits, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_image_registries, :foreign_key => :ems_id, :dependent => :destroy
-    has_many :container_images, -> { active }, :foreign_key => :ems_id
+    has_many :container_images, -> { active }, :foreign_key => :ems_id, :dependent => :destroy
     has_many :persistent_volumes, :as => :parent, :dependent => :destroy
     has_many :persistent_volume_claims, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_builds, :foreign_key => :ems_id, :dependent => :destroy
@@ -60,6 +60,11 @@ module ManageIQ::Providers
       unless respond_to?(:external_logging_route_name)
         unsupported_reason_add(:external_logging, _('This provider type does not support external_logging'))
       end
+    end
+
+    # TODO: move this to supports_feature_mixin
+    def supports_metrics?
+      true
     end
 
     # required by aggregate_hardware
@@ -109,5 +114,9 @@ module ManageIQ::Providers
       monitoring_endpoint_destroyed(role) if respond_to?(:monitoring_endpoint_destroyed)
       virtualization_endpoint_destroyed(role) if respond_to?(:virtualization_endpoint_destroyed)
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Containers Manager', 'Containers Managers', number)
   end
 end

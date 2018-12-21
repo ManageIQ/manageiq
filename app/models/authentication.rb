@@ -34,6 +34,11 @@ class Authentication < ApplicationRecord
 
   serialize :options
 
+  include OwnershipMixin
+  include TenancyMixin
+
+  belongs_to :tenant
+
   # TODO: DELETE ME!!!!
   ERRORS = {
     :incomplete => "Incomplete credentials",
@@ -49,6 +54,22 @@ class Authentication < ApplicationRecord
     "unreachable" => 2,
     "invalid"     => 3,
   ).freeze
+
+  # Builds a case statement that case be used in a sql ORDER BY.
+  #
+  # Generated SQL looks like:
+  #
+  #   CASE
+  #   WHEN LOWER(status) = ''      THEN -1
+  #   WHEN LOWER(status) = 'valid' THEN 0
+  #   ...
+  #   ELSE -1
+  #
+  STATUS_SEVERITY_AREL = Arel::Nodes::Case.new.tap do |arel_case|
+    STATUS_SEVERITY.each do |value, sort_weight|
+      arel_case.when(arel_table[:status].lower.eq(value)).then(sort_weight)
+    end
+  end.else(-1)
 
   RETRYABLE_STATUS = %w(error unreachable).freeze
 
@@ -118,6 +139,11 @@ class Authentication < ApplicationRecord
         fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
       end
     end
+  end
+
+  def native_ref
+    # to be overridden by individual provider/manager
+    manager_ref
   end
 
   private

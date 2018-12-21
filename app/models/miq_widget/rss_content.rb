@@ -24,7 +24,7 @@ class MiqWidget::RssContent < MiqWidget::ContentGeneration
 
   def internal_feed(user_or_group)
     resource.options[:limit_to_count] = widget_options[:row_count] || 5
-    SimpleRSS.parse(resource.generate(nil, nil, nil, user_or_group))
+    SimpleRSS.parse(resource.generate(nil, nil, user_or_group))
   end
 
   def external_feed

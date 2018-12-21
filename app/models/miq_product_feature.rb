@@ -1,9 +1,17 @@
 class MiqProductFeature < ApplicationRecord
+  SUPER_ADMIN_FEATURE   = "everything".freeze
+  REPORT_ADMIN_FEATURE  = "miq_report_superadmin".freeze
+  REQUEST_ADMIN_FEATURE = "miq_request_approval".freeze
+  MY_TASKS_FEATURE      = "miq_task_my_ui".freeze
+  ALL_TASKS_FEATURE     = "miq_task_all_ui".freeze
+  TENANT_ADMIN_FEATURE  = "rbac_tenant".freeze
+
   acts_as_tree
 
   has_and_belongs_to_many :miq_user_roles, :join_table => :miq_roles_features
   has_many :miq_product_features_shares
   has_many :shares, :through => :miq_product_features_shares
+  belongs_to :tenant
 
   virtual_delegate :identifier, :to => :parent, :prefix => true, :allow_nil => true
 
@@ -17,13 +25,37 @@ class MiqProductFeature < ApplicationRecord
     :description,
     :feature_type,
     :hidden,
-    :protected
+    :protected,
+    :tenant_id
   ]
 
-  FEATURE_TYPE_ORDER = ["view", "control", "admin", "node"]
+  FEATURE_TYPE_ORDER = %w(view control admin node).freeze
   REQUIRED_ATTRIBUTES = [:identifier].freeze
-  OPTIONAL_ATTRIBUTES = [:name, :feature_type, :description, :children, :hidden, :protected].freeze
+  OPTIONAL_ATTRIBUTES = %i(name feature_type description children hidden protected).freeze
   ALLOWED_ATTRIBUTES = (REQUIRED_ATTRIBUTES + OPTIONAL_ATTRIBUTES).freeze
+  TENANT_FEATURE_ROOT_IDENTIFIERS = %w(dialog_new_editor dialog_edit_editor dialog_copy_editor dialog_delete rbac_tenant_manage_quotas).freeze
+
+  def name
+    value = self[:name]
+    self[:tenant_id] ? "#{value} (#{tenant.name})" : value
+  end
+
+  def description
+    value = self[:description]
+    self[:tenant_id] ? "#{value} for tenant #{tenant.name}" : value
+  end
+
+  def self.tenant_identifier(identifier, tenant_id)
+    "#{identifier}_tenant_#{tenant_id}"
+  end
+
+  def self.root_tenant_identifier?(identifier)
+    TENANT_FEATURE_ROOT_IDENTIFIERS.include?(identifier)
+  end
+
+  def self.current_tenant_identifier(identifier)
+    tenant_identifier(identifier, User.current_tenant.id) if identifier && feature_details(identifier) && root_tenant_identifier?(identifier)
+  end
 
   def self.feature_yaml(path = FIXTURE_PATH)
     "#{path}.yml".freeze
@@ -69,6 +101,12 @@ class MiqProductFeature < ApplicationRecord
     features.key?(ident)
   end
 
+  def self.invalidate_caches
+    @feature_cache = nil
+    @obj_cache = nil
+    @detail = nil
+  end
+
   def self.features
     @feature_cache ||= begin
       # create hash with parent identifier and details
@@ -101,18 +139,31 @@ class MiqProductFeature < ApplicationRecord
     seed_features
   end
 
+  def self.with_tenant_feature_root_features
+    where(:identifier => TENANT_FEATURE_ROOT_IDENTIFIERS)
+  end
+
+  def self.seed_tenant_miq_product_features
+    result = with_tenant_feature_root_features.map.each do |tenant_miq_product_feature|
+      Tenant.in_my_region.all.map { |tenant| tenant.build_miq_product_feature(tenant_miq_product_feature) }
+    end.flatten
+
+    MiqProductFeature.create(result).map(&:identifier)
+  end
+
   def self.seed_features(path = FIXTURE_PATH)
     fixture_yaml = feature_yaml(path)
 
     features = all.to_a.index_by(&:identifier)
     seen     = seed_from_hash(YAML.load_file(fixture_yaml), seen, nil, features)
 
-    root_feature = MiqProductFeature.find_by(:identifier => 'everything')
+    root_feature = MiqProductFeature.find_by(:identifier => SUPER_ADMIN_FEATURE)
     Dir.glob(path.join("*.yml")).each do |fixture|
       seed_from_hash(YAML.load_file(fixture), seen, root_feature)
     end
 
-    deletes = where.not(:identifier => seen.values.flatten).destroy_all
+    tenant_identifiers = seed_tenant_miq_product_features
+    deletes = where.not(:identifier => seen.values.flatten + tenant_identifiers).destroy_all
     _log.info("Deleting product features: #{deletes.collect(&:identifier).inspect}") unless deletes.empty?
     seen
   end
@@ -215,5 +266,9 @@ class MiqProductFeature < ApplicationRecord
         :children => children.where(:hidden => [false, nil])
       )
     end
+  end
+
+  def self.display_name(number = 1)
+    n_('Product Feature', 'Product Features', number)
   end
 end

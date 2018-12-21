@@ -100,7 +100,7 @@ describe EmbeddedAnsible do
     let(:miq_database) { MiqDatabase.first }
 
     before do
-      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
       MiqDatabase.seed
       EvmSpecHelper.create_guid_miq_server_zone
     end
@@ -229,6 +229,15 @@ describe EmbeddedAnsible do
         miq_database.set_ansible_database_authentication(:password => "mypassword")
         auth = subject.send(:find_or_create_database_authentication)
         expect(auth).to have_attributes(:userid => "awx", :password => "mypassword")
+      end
+    end
+
+    describe "#generate_password (private)" do
+      it "doesn't include special characters" do
+        100.times do
+          pass = subject.send(:generate_password)
+          expect(pass).to match(/^[a-zA-Z0-9]+$/)
+        end
       end
     end
   end

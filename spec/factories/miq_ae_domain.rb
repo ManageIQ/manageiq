@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_ae_domain_user_locked, :parent => :miq_ae_domain_disabled do
     source { MiqAeDomain::USER_LOCKED_SOURCE }
   end
@@ -23,7 +23,7 @@ FactoryGirl.define do
 
   factory :miq_ae_git_domain, :parent => :miq_ae_domain do
     source { MiqAeDomain::REMOTE_SOURCE }
-    git_repository { FactoryGirl.create(:git_repository, :url => 'https://www.example.com/abc') }
+    git_repository { FactoryBot.create(:git_repository, :url => 'https://www.example.com/abc') }
   end
 
   factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
@@ -82,7 +82,7 @@ FactoryGirl.define do
         items = %w(ae_fields ae_instances ae_methods)
         items.each { |f| args[f] = evaluator.respond_to?(f) ? evaluator.send(f) : {} }
 
-        FactoryGirl.create(:miq_ae_class, :with_instances_and_methods, args) if evaluator.respond_to?('ae_class')
+        FactoryBot.create(:miq_ae_class, :with_instances_and_methods, args) if evaluator.respond_to?('ae_class')
       end
     end
   end

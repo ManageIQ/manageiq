@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :container_quota_scope do
     scope "NotTerminating"
   end

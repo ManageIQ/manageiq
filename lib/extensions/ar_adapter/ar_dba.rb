@@ -502,7 +502,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
        INNER JOIN pg_class i ON d.indexrelid = i.oid
        WHERE i.relkind = 'i'
          AND t.relkind = 't'
-         AND i.oid = #{postgresql_version >= 90400 ? 'd.indexrelid' : 't.reltoastidxid'}
+         AND i.oid = d.indexrelid
          AND t.relname = '#{table_name}'
          AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname = 'pg_toast' )
       ORDER BY i.relname

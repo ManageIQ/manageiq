@@ -1,5 +1,12 @@
 describe MiqServer do
-  include_examples ".seed called multiple times"
+  context ".seed" do
+    before do
+      MiqRegion.seed
+      Zone.seed
+    end
+
+    include_examples ".seed called multiple times"
+  end
 
   context "#hostname" do
     it("with a valid hostname")    { expect(MiqServer.new(:hostname => "test").hostname).to eq("test") }
@@ -91,6 +98,15 @@ describe MiqServer do
       expect(@miq_server.zone.name).to eq(@zone.name)
     end
 
+    it "cannot assign to maintenance zone" do
+      MiqRegion.seed
+      Zone.seed
+
+      @miq_server.zone = Zone.maintenance_zone
+      expect(@miq_server.save).to eq(false)
+      expect(@miq_server.errors.messages[:zone]).to be_present
+    end
+
     it "shutdown will raise an event and quiesce" do
       expect(MiqEvent).to receive(:raise_evm_event)
       expect(@miq_server).to receive(:quiesce)
@@ -153,6 +169,23 @@ describe MiqServer do
       it "should return true when last_heartbeat is less than 10.minutes ago" do
         @miq_server.last_heartbeat = 500.seconds.ago.utc
         expect(@miq_server.is_recently_active?).to be_truthy
+      end
+    end
+
+    context "validate_is_deleteable before destroying" do
+      it "prevents deleting the current server" do
+        allow(@miq_server).to receive(:is_local?).and_return(true)
+        @miq_server.destroy
+
+        expect(@miq_server.errors.full_messages.first).to match(/current/)
+      end
+
+      it "prevents deleting recently active server" do
+        allow(@miq_server).to receive(:is_local?).and_return(false)
+        @miq_server.last_heartbeat = 2.minutes.ago.utc
+        @miq_server.destroy
+
+        expect(@miq_server.errors.full_messages.first).to match(/recently/)
       end
     end
 
@@ -236,7 +269,7 @@ describe MiqServer do
 
     context "with a worker" do
       before do
-        @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
+        @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => Process.pid)
         allow(@miq_server).to receive(:validate_worker).and_return(true)
         @miq_server.setup_drb_variables
         @miq_server.worker_add(@worker.pid)
@@ -284,8 +317,8 @@ describe MiqServer do
 
       context "with an active messsage and a second server" do
         before do
-          @msg = FactoryGirl.create(:miq_queue, :state => 'dequeue')
-          @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @zone)
+          @msg = FactoryBot.create(:miq_queue, :state => 'dequeue')
+          @miq_server2 = FactoryBot.create(:miq_server, :is_master => true, :zone => @zone)
         end
 
         it "will validate the 'started' first server's active message when called on it" do
@@ -354,7 +387,7 @@ describe MiqServer do
           ['event',                  1],
           ['ems_metrics_coordinator', 1],
           ['ems_operations',         0]
-        ].each { |r, max| @server_roles << FactoryGirl.create(:server_role, :name => r, :max_concurrent => max) }
+        ].each { |r, max| @server_roles << FactoryBot.create(:server_role, :name => r, :max_concurrent => max) }
 
         @miq_server.role = @server_roles.collect(&:name).join(',')
       end
@@ -396,9 +429,9 @@ describe MiqServer do
 
       describe ".destroy_linked_events" do
         it "destroys all events associated with destroyed server" do
-          FactoryGirl.create(:miq_event, :event_type => "Local TestEvent", :target => @miq_server)
-          FactoryGirl.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
-          FactoryGirl.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+          FactoryBot.create(:miq_event, :event_type => "Local TestEvent", :target => @miq_server)
+          FactoryBot.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+          FactoryBot.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
 
           expect(MiqEvent.count).to eq 3
 
@@ -430,6 +463,20 @@ describe MiqServer do
 
     it "Inactive status returns false" do
       expect(described_class.new(:status => "stopped").active?).to be_falsey
+    end
+  end
+
+  describe "#zone_description" do
+    it "delegates to zone" do
+      _, miq_server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      expect(miq_server.zone_description).to eq(zone.description)
+    end
+  end
+
+  describe "#description" do
+    it "doesnt blowup" do
+      s = described_class.new(:name => "name")
+      expect(s.description).to eq(s.name)
     end
   end
 end

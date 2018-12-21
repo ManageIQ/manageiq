@@ -1,10 +1,11 @@
 describe MiqServer do
   before do
+    MiqRegion.seed
     @server = EvmSpecHelper.local_miq_server(:zone => Zone.seed)
   end
 
   let!(:database) do
-    FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+    FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
     db = MiqDatabase.seed
     db.update_repo_name = "repo-1 repo-2"
     db
@@ -15,7 +16,7 @@ describe MiqServer do
 
   context "Queue multiple servers" do
     before do
-      FactoryGirl.create(:miq_server, :zone => @server.zone)
+      FactoryBot.create(:miq_server, :zone => @server.zone)
     end
 
     it ".queue_update_registration_status" do
@@ -200,11 +201,26 @@ describe MiqServer do
     end
   end
 
-  it "#enable_repos" do
-    expect(reg_system).to receive(:enable_repo).twice
+  describe "#enable_repos" do
+    it "enables all repos in the list" do
+      expect(reg_system).to receive(:enable_repo).twice
 
-    @server.enable_repos
-    expect(@server.upgrade_message).to eq("enabling repo-2")
+      @server.enable_repos
+      expect(@server.upgrade_message).to eq("enabling repo-2")
+    end
+
+    it "raises a notification for repos which fail to enable" do
+      NotificationType.seed
+      result = AwesomeSpawn::CommandResult.new("stuff", "things", "more things", 1)
+      err = LinuxAdmin::SubscriptionManagerError.new("things", result)
+
+      expect(reg_system).to receive(:enable_repo).with("repo-1", anything).and_raise(err)
+      expect(reg_system).to receive(:enable_repo).with("repo-2", anything)
+
+      @server.enable_repos
+      note = Notification.find_by(:notification_type_id => NotificationType.find_by(:name => "enable_update_repo_failed").id)
+      expect(note.options).to eq(:repo_name => "repo-1")
+    end
   end
 
   it "#check_updates" do

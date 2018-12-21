@@ -10,13 +10,10 @@ describe MeteringContainerImage do
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
-  let(:ems) { FactoryGirl.create(:ems_openshift) }
+  let(:ems) { FactoryBot.create(:ems_openshift) }
   let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
 
   before do
-    # TODO: remove metering columns form specs
-    described_class.set_columns_hash(:metering_used_metric => :integer, :metering_used_cost => :float)
-
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
@@ -25,13 +22,13 @@ describe MeteringContainerImage do
     MiqEnterprise.seed
 
     EvmSpecHelper.create_guid_miq_server_zone
-    @node = FactoryGirl.create(:container_node, :name => "node")
-    @image = FactoryGirl.create(:container_image, :ext_management_system => ems)
-    @label = FactoryGirl.build(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels')
-    @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems)
-    @group = FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => @project,
+    @node = FactoryBot.create(:container_node, :name => "node")
+    @image = FactoryBot.create(:container_image, :ext_management_system => ems)
+    @label = FactoryBot.build(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels')
+    @project = FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems)
+    @group = FactoryBot.create(:container_group, :ext_management_system => ems, :container_project => @project,
                                 :container_node => @node)
-    @container = FactoryGirl.create(:kubernetes_container, :container_group => @group, :container_image => @image,
+    @container = FactoryBot.create(:kubernetes_container, :container_group => @group, :container_image => @image,
                                     :limit_memory_bytes => 1.megabytes, :limit_cpu_cores => 1.0)
 
     Timecop.travel(report_run_time)
@@ -48,7 +45,7 @@ describe MeteringContainerImage do
       add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @container.vim_performance_states << FactoryGirl.create(:vim_performance_state, :timestamp => time, :image_tag_names => "environment/prod")
+        @container.vim_performance_states << FactoryBot.create(:vim_performance_state, :timestamp => time, :image_tag_names => "environment/prod")
       end
     end
 
@@ -61,18 +58,45 @@ describe MeteringContainerImage do
       expect(subject.beginning_of_resource_existence_in_report_interval).to eq(month_beginning)
       expect(subject.end_of_resource_existence_in_report_interval).to eq(month_beginning + 1.month)
     end
+
+    it 'calculates metering values' do
+      expect(subject.metering_used_metric).to eq(60)
+      expect(subject.existence_hours_metric).to eq(month_beginning.end_of_month.day * 24)
+    end
+
+    context 'count of used hours is different than count of metric rollups' do
+      it 'calculates metering used hours only from allocated metrics' do
+        expect(subject.metering_allocated_cpu_cores_metric).to eq(720)
+        expect(subject.metering_allocated_memory_metric).to eq(720)
+      end
+
+      context 'with uncompleted allocation of cpu and mem' do
+        before do
+          @container.limit_cpu_cores = 0
+          @container.limit_memory_bytes = 0
+          @container.save
+        end
+
+        it 'calculates metering used hours only from allocated metrics' do
+          expect(subject.metering_allocated_cpu_cores_metric).to eq(0)
+          expect(subject.metering_allocated_memory_metric).to eq(0)
+        end
+      end
+    end
   end
 
   let(:report_col_options) do
     {
-      "cpu_cores_allocated_metric" => {:grouping => [:total]},
-      "cpu_cores_used_metric"      => {:grouping => [:total]},
-      "existence_hours_metric"     => {:grouping => [:total]},
-      "fixed_compute_metric"       => {:grouping => [:total]},
-      "memory_allocated_metric"    => {:grouping => [:total]},
-      "memory_used_metric"         => {:grouping => [:total]},
-      "metering_used_metric"       => {:grouping => [:total]},
-      "net_io_used_metric"         => {:grouping => [:total]},
+      "cpu_cores_allocated_metric"          => {:grouping => [:total]},
+      "cpu_cores_used_metric"               => {:grouping => [:total]},
+      "existence_hours_metric"              => {:grouping => [:total]},
+      "fixed_compute_metric"                => {:grouping => [:total]},
+      "metering_allocated_cpu_cores_metric" => {:grouping => [:total]},
+      "metering_allocated_memory_metric"    => {:grouping => [:total]},
+      "memory_allocated_metric"             => {:grouping => [:total]},
+      "memory_used_metric"                  => {:grouping => [:total]},
+      "metering_used_metric"                => {:grouping => [:total]},
+      "net_io_used_metric"                  => {:grouping => [:total]},
     }
   end
 

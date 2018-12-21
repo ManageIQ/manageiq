@@ -6,11 +6,15 @@ module Spec
         build_all_composites(hash)
       end
 
+      def get_user(options)
+        options[:requester] || User.find(options[:requester_id])
+      end
+
       def build_all_atomics(hash)
         hash.each do |name, value|
           next unless value[:type] == "atomic"
 
-          item = FactoryGirl.create(:service_template, :name         => name,
+          item = FactoryBot.create(:service_template, :name         => name,
                                                        :options      => {:dialog => {}},
                                                        :service_type => 'atomic')
           item.update_attributes(:prov_type => value[:prov_type]) if value[:prov_type].present?
@@ -18,8 +22,8 @@ module Spec
           options = value[:request]
           options ||= {}
           options[:dialog] = {}
-          mprt = FactoryGirl.create(:miq_provision_request_template,
-                                    :requester => options[:requester],
+          mprt = FactoryBot.create(:miq_provision_request_template,
+                                    :requester => get_user(options),
                                     :src_vm_id => options[:src_vm_id],
                                     :options   => options)
           add_st_resource(item, mprt)
@@ -64,7 +68,7 @@ module Spec
       end
 
       def build_a_composite(name, hash)
-        item = FactoryGirl.create(:service_template, :name         => name,
+        item = FactoryBot.create(:service_template, :name         => name,
                                                      :options      => {:dialog => {}},
                                                      :service_type => 'composite')
         properties = hash[name]
@@ -90,7 +94,7 @@ module Spec
         root = ServiceTemplate.find_by(:name => root_st_name)
         return nil unless root
         options = {:src_id => root.id, :target_name => "barney"}.merge(dialog_options)
-        FactoryGirl.create(:service_template_provision_request,
+        FactoryBot.create(:service_template_provision_request,
                            :description    => 'Service Request',
                            :source_type    => 'ServiceTemplate',
                            :type           => 'ServiceTemplateProvisionRequest',
@@ -113,9 +117,9 @@ module Spec
 
       def build_small_environment
         @miq_server = EvmSpecHelper.local_miq_server
-        @ems = FactoryGirl.create(:ems_vmware_with_authentication)
-        @host1 =  FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-        @src_vm = FactoryGirl.create(:vm_vmware, :host   => @host1,
+        @ems = FactoryBot.create(:ems_vmware_with_authentication)
+        @host1 =  FactoryBot.create(:host_vmware, :ems_id => @ems.id)
+        @src_vm = FactoryBot.create(:vm_vmware, :host   => @host1,
                                                  :ems_id => @ems.id,
                                                  :name   => "barney")
       end
@@ -128,7 +132,7 @@ module Spec
 
       def user_helper
         allow_any_instance_of(User).to receive(:role).and_return("admin")
-        @user = FactoryGirl.create(:user_with_group, :name => 'Wilma', :userid => 'wilma')
+        @user = FactoryBot.create(:user_with_group, :name => 'Wilma', :userid => 'wilma')
       end
     end
   end

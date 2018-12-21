@@ -1,12 +1,12 @@
 describe IsoDatastore do
-  let(:ems) { FactoryGirl.create(:ems_redhat) }
-  let(:iso_datastore) { FactoryGirl.create(:iso_datastore, :ext_management_system => ems) }
+  let(:ems) { FactoryBot.create(:ems_redhat) }
+  let(:iso_datastore) { FactoryBot.create(:iso_datastore, :ext_management_system => ems) }
 
   describe "#advertised_images" do
     subject(:advertised_images) { iso_datastore.advertised_images }
 
     context "ems is not rhv" do
-      let(:ems) { FactoryGirl.create(:ems_vmware) }
+      let(:ems) { FactoryBot.create(:ems_vmware) }
       it "returns empty array" do
         expect(advertised_images).to eq([])
       end

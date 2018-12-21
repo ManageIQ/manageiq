@@ -164,11 +164,6 @@
   :url: /infra_networking/explorer
   :rbac_feature_name: infra_networking
   :startup: true
-- :name: miq_request_hosts
-  :description: Compute / Infrastructure / Requests
-  :url: /miq_request/show_list
-  :rbac_feature_name: miq_request_show_list
-  :startup: true
 - :name: infra_topology
   :description: Compute / Infrastructure / Topology
   :url: /infra_topology
@@ -393,6 +388,11 @@
   :description: Automation / Automate / Customization
   :url: /miq_ae_customization/explorer
   :rbac_feature_name: miq_ae_customization_explorer
+  :startup: true
+- :name: generic_object_definition
+  :description: Automation / Automate / Generic Objects
+  :url: /generic_object_definition
+  :rbac_feature_name: generic_object_definition_show_list
   :startup: true
 - :name: miq_ae_class_import_export
   :description: Automation / Automate / Import / Export

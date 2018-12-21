@@ -33,4 +33,8 @@ class MiqAeValue < ApplicationRecord
   def value=(value)
     write_attribute(:value, (ae_field.datatype == "password") ? MiqAePassword.encrypt(value) : value)
   end
+
+  def self.display_name(number = 1)
+    n_('Automation Value', 'Automation Values', number)
+  end
 end

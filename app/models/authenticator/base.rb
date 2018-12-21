@@ -49,13 +49,12 @@ module Authenticator
       user_or_taskid = nil
 
       begin
-        audit = {:event => audit_event, :userid => username}
-
         username = normalize_username(username)
+        audit = {:event => audit_event, :userid => username}
 
         authenticated = options[:authorize_only] || _authenticate(username, password, request)
         if authenticated
-          AuditEvent.success(audit.merge(:message => "User #{username} successfully validated by #{self.class.proper_name}"))
+          audit_success(audit.merge(:message => "User #{username} successfully validated by #{self.class.proper_name}"))
 
           if authorize?
             user_or_taskid = authorize_queue(username, request, options)
@@ -66,17 +65,17 @@ module Authenticator
             user_or_taskid ||= autocreate_user(username)
 
             unless user_or_taskid
-              AuditEvent.failure(audit.merge(:message => "User #{username} authenticated but not defined in EVM"))
+              audit_failure(audit.merge(:message => "User #{username} authenticated but not defined in EVM"))
               raise MiqException::MiqEVMLoginError,
                     _("User authenticated but not defined in EVM, please contact your EVM administrator")
             end
           end
 
-          AuditEvent.success(audit.merge(:message => "Authentication successful for user #{username}"))
+          audit_success(audit.merge(:message => "Authentication successful for user #{username}"))
         else
           reason = failure_reason(username, request)
           reason = ": #{reason}" unless reason.blank?
-          AuditEvent.failure(audit.merge(:message => "Authentication failed for userid #{username}#{reason}"))
+          audit_failure(audit.merge(:message => "Authentication failed for userid #{username}#{reason}"))
           raise MiqException::MiqEVMLoginError, fail_message
         end
 
@@ -115,7 +114,7 @@ module Authenticator
           unless identity
             msg = "Authentication failed for userid #{username}, unable to find user object in #{self.class.proper_name}"
             _log.warn(msg)
-            AuditEvent.failure(audit.merge(:message => msg))
+            audit_failure(audit.merge(:message => msg))
             task.error(msg)
             task.state_finished
             return nil
@@ -124,12 +123,13 @@ module Authenticator
           matching_groups = match_groups(groups_for(identity))
           userid, user = find_or_initialize_user(identity, username)
           update_user_attributes(user, userid, identity)
+          audit_new_user(audit, user) if user.new_record?
           user.miq_groups = matching_groups
 
           if matching_groups.empty?
             msg = "Authentication failed for userid #{user.userid}, unable to match user's group membership to an EVM role"
-            AuditEvent.failure(audit.merge(:message => msg))
             _log.warn(msg)
+            audit_failure(audit.merge(:message => msg))
             task.error(msg)
             task.state_finished
             user.save! unless user.new_record?
@@ -145,7 +145,7 @@ module Authenticator
 
           user
         rescue Exception => err
-          AuditEvent.failure(audit.merge(:message => err.message))
+          audit_failure(audit.merge(:message => err.message))
           raise
         end
       end
@@ -166,7 +166,7 @@ module Authenticator
         result = user && authenticate(username, password, request, options)
       rescue MiqException::MiqEVMLoginError
       end
-      AuditEvent.failure(:userid => username, :message => "Authentication failed for user #{username}") if result.nil?
+      audit_failure(:userid => username, :message => "Authentication failed for user #{username}") if result.nil?
       [!!result, username]
     end
 
@@ -193,6 +193,12 @@ module Authenticator
 
     def audit_event
       "authenticate_#{self.class.short_name}"
+    end
+
+    def audit_new_user(audit, user)
+      msg = "User creation successful for User: #{user.name} with ID: #{user.userid}"
+      audit_success(audit.merge(:message => msg))
+      MiqEvent.raise_evm_event_queue(MiqServer.my_server, "user_created", :event_details => msg)
     end
 
     def authorize?
@@ -286,6 +292,15 @@ module Authenticator
 
     def normalize_username(username)
       username.downcase
+    end
+
+    private def audit_success(options)
+      AuditEvent.success(options)
+    end
+
+    private def audit_failure(options)
+      AuditEvent.failure(options)
+      MiqEvent.raise_evm_event_queue(MiqServer.my_server, "login_failed", options)
     end
   end
 end

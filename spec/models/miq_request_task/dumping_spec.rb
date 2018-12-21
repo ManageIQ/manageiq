@@ -1,6 +1,6 @@
 describe MiqRequestTask do
   context "::Dumping" do
-    let(:task) { FactoryGirl.create(:miq_request_task) }
+    let(:task) { FactoryBot.create(:miq_request_task) }
 
     describe '.dump_obj' do
       it 'accepts a hash' do

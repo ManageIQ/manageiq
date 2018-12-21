@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner do
-  let(:manager)  { FactoryGirl.create(:embedded_automation_manager_ansible) }
-  let(:playbook) { FactoryGirl.create(:embedded_playbook, :manager => manager) }
+  let(:manager)  { FactoryBot.create(:embedded_automation_manager_ansible) }
+  let(:playbook) { FactoryBot.create(:embedded_playbook, :manager => manager) }
   subject { ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner.create_job(options.merge(:playbook_id => playbook.id)) }
 
   describe '#start' do
@@ -28,6 +28,32 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
       it 'moves on to create inventory' do
         expect(subject).to receive(:queue_signal).with(:create_inventory, :deliver_on => nil)
         subject.start
+      end
+    end
+  end
+
+  describe '#current_job_timeout' do
+    context 'timeout set in options' do
+      let(:options) { {:execution_ttl => 50} }
+
+      it 'uses customized timeout value' do
+        expect(subject.current_job_timeout).to eq(3000)
+      end
+    end
+
+    context 'timeout not set in options' do
+      let(:options) { {} }
+
+      it 'uses default timeout value' do
+        expect(subject.current_job_timeout).to eq(described_class::DEFAULT_EXECUTION_TTL * 60)
+      end
+    end
+
+    context 'timeout is blank in options' do
+      let(:options) { {:execution_ttl => ""} }
+
+      it 'uses default timeout value' do
+        expect(subject.current_job_timeout).to eq(described_class::DEFAULT_EXECUTION_TTL * 60)
       end
     end
   end

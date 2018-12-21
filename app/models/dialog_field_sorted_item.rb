@@ -9,17 +9,13 @@ class DialogFieldSortedItem < DialogField
     end
   end
 
-  def initialize_with_values(dialog_values)
-    if load_values_on_init?
-      raw_values
-      @value = value_from_dialog_fields(dialog_values) || default_value_if_included
-    else
-      @raw_values = initial_values
-    end
+  def initialize_with_given_value(given_value)
+    raw_values
+    self.default_value = given_value
   end
 
   def sort_by
-    options[:sort_by] || :description
+    options[:sort_by].try(:to_sym) || :description
   end
 
   def sort_by=(value)
@@ -54,7 +50,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def script_error_values
-    [[nil, "<Script error>"]]
+    [[nil, N_("<Script error>")]]
   end
 
   def normalize_automate_values(automate_hash)
@@ -113,9 +109,6 @@ class DialogFieldSortedItem < DialogField
   end
 
   def determine_selected_value
-    if dynamic? && force_multi_value && !default_value.kind_of?(Array)
-      self.default_value = Array.wrap(default_value)
-    end
     use_first_value_as_default unless default_value_included?(@raw_values)
     self.value ||= default_value.nil? && data_type == "integer" ? nil : default_value.send(value_modifier)
   end
@@ -146,11 +139,11 @@ class DialogFieldSortedItem < DialogField
   end
 
   def initial_values
-    [[nil, "<None>"]]
+    [[nil, N_("<None>")]]
   end
 
   def initial_required_values
-    [nil, "<Choose>"]
+    [nil, N_("<Choose>")]
   end
 
   def nil_option

@@ -2,7 +2,7 @@ describe AsyncDeleteMixin do
   def common_setup(klass)
     objects = []
     3.times do |i|
-      obj = FactoryGirl.create(klass, :name => "test_#{klass}_#{i}")
+      obj = FactoryBot.create(klass, :name => "test_#{klass}_#{i}")
       objects << obj
     end
 

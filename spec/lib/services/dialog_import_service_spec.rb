@@ -74,7 +74,7 @@ describe DialogImportService do
 
       context "when there is an existing dialog" do
         before do
-          FactoryGirl.create(:dialog, :label => "Test2")
+          FactoryBot.create(:dialog, :label => "Test2")
         end
 
         it "does not create a third dialog" do
@@ -154,7 +154,7 @@ describe DialogImportService do
 
     context "when there is already an existing dialog" do
       before do
-        FactoryGirl.create(:dialog, :label => "Test2", :description => "not potato")
+        FactoryBot.create(:dialog, :label => "Test2", :description => "not potato")
       end
 
       it "overwrites the existing dialog" do
@@ -261,7 +261,7 @@ describe DialogImportService do
 
       context "when the list of dialogs to import from the yaml includes an existing dialog" do
         before do
-          FactoryGirl.create(:dialog, :label => "Test2", :description => "not potato")
+          FactoryBot.create(:dialog, :label => "Test2", :description => "not potato")
         end
 
         it_behaves_like "DialogImportService#import_service_dialogs that destroys temporary data"
@@ -489,7 +489,7 @@ describe DialogImportService do
 
       expect do
         dialog_import_service.import(dialogs.first)
-      end.to raise_error(ActiveRecord::RecordInvalid, /Validation failed: Name is not unique within region/)
+      end.to raise_error(ActiveRecord::RecordInvalid, /Validation failed: Dialog: Name is not unique within region/)
     end
   end
 

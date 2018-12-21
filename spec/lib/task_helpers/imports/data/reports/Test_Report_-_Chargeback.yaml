@@ -1,0 +1,157 @@
+---
+- MiqReport:
+    title: Test Chargeback Report
+    rpt_group: Custom
+    rpt_type: Custom
+    priority:
+    db: ChargebackVm
+    cols:
+    - start_date
+    - display_range
+    - vm_name
+    - cpu_used_cost
+    - memory_used_cost
+    - storage_allocated_cost
+    - total_cost
+    include: {}
+    col_order:
+    - vm_name
+    - display_range
+    - cpu_used_cost
+    - memory_used_cost
+    - storage_allocated_cost
+    - total_cost
+    headers:
+    - VM Name
+    - Date Range
+    - CPU Used Cost
+    - Memory Used Cost
+    - Storage Allocated Cost
+    - Total Cost
+    conditions:
+    order: Ascending
+    sortby:
+    - vm_name
+    - start_date
+    group: y
+    graph:
+    dims:
+    filename:
+    file_mtime:
+    categories: []
+    timeline:
+    template_type: report
+    where_clause:
+    db_options:
+      :rpt_type: ChargebackVm
+      :options:
+        :interval: daily
+        :interval_size: 1
+        :end_interval_offset: 1
+        :tenant_id: '1'
+        :method_for_allocated_metrics: :max
+        :include_metrics: true
+        :cumulative_rate_calculation: false
+        :groupby: date
+        :groupby_tag:
+        :groupby_label:
+    generate_cols:
+    generate_rows:
+    col_formats:
+    -
+    -
+    -
+    -
+    -
+    -
+    tz: UTC
+    time_profile_id:
+    display_filter:
+    col_options:
+      cpu_allocated_cost:
+        :grouping:
+        - :total
+      cpu_allocated_metric:
+        :grouping:
+        - :total
+      cpu_cost:
+        :grouping:
+        - :total
+      cpu_used_cost:
+        :grouping:
+        - :total
+      cpu_used_metric:
+        :grouping:
+        - :total
+      disk_io_used_cost:
+        :grouping:
+        - :total
+      disk_io_used_metric:
+        :grouping:
+        - :total
+      fixed_compute_metric:
+        :grouping:
+        - :total
+      fixed_compute_1_cost:
+        :grouping:
+        - :total
+      fixed_compute_2_cost:
+        :grouping:
+        - :total
+      fixed_cost:
+        :grouping:
+        - :total
+      fixed_storage_1_cost:
+        :grouping:
+        - :total
+      fixed_storage_2_cost:
+        :grouping:
+        - :total
+      memory_allocated_cost:
+        :grouping:
+        - :total
+      memory_allocated_metric:
+        :grouping:
+        - :total
+      memory_cost:
+        :grouping:
+        - :total
+      memory_used_cost:
+        :grouping:
+        - :total
+      memory_used_metric:
+        :grouping:
+        - :total
+      net_io_used_cost:
+        :grouping:
+        - :total
+      net_io_used_metric:
+        :grouping:
+        - :total
+      storage_allocated_cost:
+        :grouping:
+        - :total
+      storage_allocated_metric:
+        :grouping:
+        - :total
+      storage_cost:
+        :grouping:
+        - :total
+      storage_used_cost:
+        :grouping:
+        - :total
+      storage_used_metric:
+        :grouping:
+        - :total
+      total_cost:
+        :grouping:
+        - :total
+    rpt_options:
+      :pdf:
+        :page_size: US Legal - 8.5in x 14.0in
+      :queue_timeout:
+      :summary:
+        :hide_detail_rows: false
+    miq_group_id: 2
+    user_id: 1
+    menu_name: Test Report - Chargeback

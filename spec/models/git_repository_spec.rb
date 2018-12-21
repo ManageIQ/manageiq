@@ -1,18 +1,18 @@
 describe GitRepository do
   it "no url" do
-    expect { FactoryGirl.create(:git_repository) }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { FactoryBot.create(:git_repository) }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "invalid url" do
-    expect { FactoryGirl.create(:git_repository, :url => "abc") }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { FactoryBot.create(:git_repository, :url => "abc") }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "invalid url, no path" do
-    expect { FactoryGirl.create(:git_repository, :url => "http://example.com") }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { FactoryBot.create(:git_repository, :url => "http://example.com") }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "default dirname" do
-    repo = FactoryGirl.create(:git_repository,
+    repo = FactoryBot.create(:git_repository,
                               :url => "http://www.example.com/repos/manageiq")
     expect(repo.directory_name).to eq(File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, 'repos/manageiq'))
   end
@@ -34,7 +34,7 @@ describe GitRepository do
        't2' => {:time => Time.now.utc + 5, :message => "T2", :commit_sha => "123456"}
       }
     end
-    let(:repo) { FactoryGirl.create(:git_repository, :url => git_url, :verify_ssl => verify_ssl) }
+    let(:repo) { FactoryBot.create(:git_repository, :url => git_url, :verify_ssl => verify_ssl) }
     let(:userid) { 'user' }
     let(:password) { 'password' }
 
@@ -171,7 +171,7 @@ describe GitRepository do
       end
 
       repo.refresh
-      repo.git_branches << FactoryGirl.create(:git_branch, :name => 'DUMMY')
+      repo.git_branches << FactoryBot.create(:git_branch, :name => 'DUMMY')
       expect(repo.git_branches.collect(&:name)).to match_array(branch_list + ['DUMMY'])
       repo.refresh
       expect(repo.git_branches.collect(&:name)).to match_array(branch_list)
@@ -190,7 +190,7 @@ describe GitRepository do
       end
 
       repo.refresh
-      repo.git_tags << FactoryGirl.create(:git_tag, :name => 'DUMMY')
+      repo.git_tags << FactoryBot.create(:git_tag, :name => 'DUMMY')
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list + ['DUMMY'])
       repo.refresh
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list)

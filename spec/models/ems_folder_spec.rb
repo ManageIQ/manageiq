@@ -1,18 +1,18 @@
 describe EmsFolder do
   context "with folder tree" do
     before do
-      @root = FactoryGirl.create(:ems_folder, :name => "root")
+      @root = FactoryBot.create(:ems_folder, :name => "root")
 
-      @dc   = FactoryGirl.create(:ems_folder, :name => "dc")
+      @dc   = FactoryBot.create(:ems_folder, :name => "dc")
       @dc.parent = @root
 
-      @sib1 = FactoryGirl.create(:ems_folder, :name => "sib1")
+      @sib1 = FactoryBot.create(:ems_folder, :name => "sib1")
       @sib1.parent = @dc
 
-      @sib2 = FactoryGirl.create(:ems_folder, :name => "sib2")
+      @sib2 = FactoryBot.create(:ems_folder, :name => "sib2")
       @sib2.parent = @dc
 
-      @leaf = FactoryGirl.create(:ems_folder, :name => "leaf")
+      @leaf = FactoryBot.create(:ems_folder, :name => "leaf")
       @leaf.parent = @sib2
     end
 

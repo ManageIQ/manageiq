@@ -20,6 +20,7 @@ module ManageIQ::Providers
     has_many :cloud_tenants,                 :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_resource_quotas,         :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volumes,                 :foreign_key => :ems_id, :dependent => :destroy
+    has_many :cloud_volume_types,            :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volume_backups,          :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_volume_snapshots,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
@@ -28,8 +29,6 @@ module ManageIQ::Providers
     has_many :cloud_databases,               :foreign_key => :ems_id, :dependent => :destroy
     has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
-    has_many :cloud_networks,                :through     => :network_manager
-    has_many :security_groups,               :through     => :network_manager
     has_one  :source_tenant, :as => :source, :class_name  => 'Tenant'
     has_many :vm_and_template_labels,        :through     => :vms_and_templates, :source => :labels
     # Only taggings mapped from labels, excluding user-assigned tags.
@@ -40,6 +39,8 @@ module ManageIQ::Providers
 
     include HasNetworkManagerMixin
     include HasManyOrchestrationStackMixin
+
+    after_destroy :destroy_mapped_tenants
 
     # Development helper method for Rails console for opening a browser to the EMS.
     #
@@ -137,5 +138,19 @@ module ManageIQ::Providers
     def create_cloud_tenant(options)
       CloudTenant.create_cloud_tenant(self, options)
     end
+
+    def self.display_name(number = 1)
+      n_('Cloud Manager', 'Cloud Managers', number)
+    end
+
+    def destroy_mapped_tenants
+      if source_tenant
+        source_tenant.all_subtenants.destroy_all
+        source_tenant.all_subprojects.destroy_all
+        source_tenant.destroy
+      end
+    end
+
+    define_method(:allow_duplicate_endpoint_url?) { true }
   end
 end

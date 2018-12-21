@@ -71,7 +71,7 @@ describe TaskHelpers::Imports::Roles do
     r = MiqUserRole.find_by(:name => role_two_name)
     expect(r.name).to eq(role_two_name)
     expect(r.read_only).to be false
-    expect(r.feature_identifiers).to eq(%w(dashboard vm))
+    expect(r.feature_identifiers).to match_array(%w(dashboard vm))
     expect(r.settings).to be nil
   end
 end

@@ -1,5 +1,6 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::Providers::EmbeddedAutomationManager::OrchestrationStack
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
+  include CiFeatureMixin
 
   require_nested :Status
 
@@ -17,13 +18,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
       ).id
     end
 
-    options = {:userid => userid || 'system', :action => 'ansible_stdout'}
-    queue_options = {:class_name  => self.class,
-                     :method_name => 'raw_stdout',
-                     :instance_id => id,
-                     :args        => [format],
-                     :priority    => MiqQueue::HIGH_PRIORITY,
-                     :role        => 'embedded_ansible'}
-    MiqTask.generic_action_with_callback(options, queue_options)
+    super(userid, format, 'embedded_ansible')
+  end
+
+  def retireable?
+    false
   end
 end

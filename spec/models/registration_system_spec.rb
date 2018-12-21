@@ -115,7 +115,7 @@ describe RegistrationSystem do
                      :registration_http_proxy_username => "my_dummy_username",
                      :registration_http_proxy_password => "my_dummy_password"}.freeze
 
-      @miq_region = FactoryGirl.create(:miq_region, :region => 1)
+      @miq_region = FactoryBot.create(:miq_region, :region => 1)
       allow(MiqRegion).to receive(:my_region).and_return(@miq_region)
     end
 

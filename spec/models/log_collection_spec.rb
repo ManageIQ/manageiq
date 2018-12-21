@@ -5,9 +5,9 @@ describe "LogCollection" do
 
   context "active log_collection" do
     before do
-      @log_file = FactoryGirl.create(:log_file, :state => "collecting")
+      @log_file = FactoryBot.create(:log_file, :state => "collecting")
       @miq_server.log_files << @log_file
-      @task = FactoryGirl.create(:miq_task,
+      @task = FactoryBot.create(:miq_task,
                                  :miq_server_id => @miq_server.id,
                                  :name          => "Zipped log retrieval for #{@miq_server.name}"
                                 )
@@ -41,8 +41,8 @@ describe "LogCollection" do
 
   context "with a log file instance" do
     before do
-      @log_file          = FactoryGirl.create(:log_file, :resource => @miq_server)
-      @region            = FactoryGirl.create(:miq_region)
+      @log_file          = FactoryBot.create(:log_file, :resource => @miq_server)
+      @region            = FactoryBot.create(:miq_region)
       @timestamp         = "2010"
       @fname             = "/test.zip"
       allow_any_instance_of(LogFile).to receive(:format_log_time).and_return(@timestamp)
@@ -133,7 +133,7 @@ describe "LogCollection" do
 
   context "Log Collection #synchronize_logs" do
     before do
-      depot = FactoryGirl.create(:file_depot)
+      depot = FactoryBot.create(:file_depot)
       @zone.update_attributes(:log_file_depot_id => depot.id)
     end
 

@@ -20,8 +20,8 @@ describe MetricRollup do
 
   context ".rollups_in_range" do
     before do
-      @current = FactoryGirl.create_list(:metric_rollup_vm_hr, 2)
-      @past = FactoryGirl.create_list(:metric_rollup_vm_hr, 2, :timestamp => Time.now.utc - 5.days)
+      @current = FactoryBot.create_list(:metric_rollup_vm_hr, 2)
+      @past = FactoryBot.create_list(:metric_rollup_vm_hr, 2, :timestamp => Time.now.utc - 5.days)
     end
 
     it "returns rollups from the correct range" do

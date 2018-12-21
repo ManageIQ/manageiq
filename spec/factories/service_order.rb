@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory(:service_order) do
     name "service order"
     state "ordered"

@@ -2,15 +2,16 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
   include Spec::Support::JobProxyDispatcherHelper
 
   context "with two servers on same zone, vix disk enabled for all, " do
+    let(:zone) { FactoryBot.create(:zone) }
     before do
-      @server1 = EvmSpecHelper.local_miq_server
-      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
+      @server1 = EvmSpecHelper.local_miq_server(:zone => zone)
+      @server2 = FactoryBot.create(:miq_server, :zone => zone)
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
     context "with hosts with a miq_proxy, vmware vms on storages" do
       before do
-        @hosts, @proxies, @storages, @vms = build_entities
+        @hosts, @proxies, @storages, @vms = build_entities(:zone => zone)
         @vm = @vms.first
       end
 
@@ -47,7 +48,7 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
 
       context "with only a server in a different zone than the vm, " do
         before do
-          @vms_zone = FactoryGirl.create(:zone, :description => "Zone 1", :name => "zone1")
+          @vms_zone = FactoryBot.create(:zone, :description => "Zone 1", :name => "zone1")
           @server2.zone = @vms_zone
           @server2.save
           allow(@vm).to receive_messages(:my_zone => @vms_zone.name)

@@ -15,5 +15,14 @@ module ManageIQ::Providers
                :foreign_key => :parent_ems_id,
                :class_name  => "ManageIQ::Providers::BaseManager",
                :autosave    => true
+
+    def self.display_name(number = 1)
+      n_('Storage Manager', 'Storage Managers', number)
+    end
+
+    class << model_name
+      define_method(:route_key) { "ems_storages" }
+      define_method(:singular_route_key) { "ems_storage" }
+    end
   end
 end

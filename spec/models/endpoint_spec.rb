@@ -1,5 +1,5 @@
 describe Endpoint do
-  let(:endpoint) { FactoryGirl.build(:endpoint) }
+  let(:endpoint) { FactoryBot.build(:endpoint) }
 
   describe "#verify_ssl" do
     context "when non set" do
@@ -48,13 +48,26 @@ describe Endpoint do
 
   context "Uniqueness validation on :url" do
     it "is not required" do
-      expect(Endpoint.create!).to be_truthy
-      expect(Endpoint.create!).to be_truthy
+      expect(Endpoint.create!(:url => nil)).to be_truthy
+      expect(Endpoint.create!(:url => nil)).to be_truthy
+      expect(Endpoint.create!(:url => '')).to be_truthy
+      expect(Endpoint.create!(:url => '')).to be_truthy
     end
 
     it "raises when provided and already exists" do
       Endpoint.create!(:url => "abc")
-      expect { Endpoint.create!(:url => "abc") }.to raise_error("Validation failed: Url has already been taken")
+      expect { Endpoint.create!(:url => "abc") }.to raise_error("Validation failed: Endpoint: Url has already been taken")
+    end
+
+    it 'disabled for cloud providers' do
+      expect(Endpoint.create!(:url => 'defined', :resource => FactoryBot.create(:ems_cloud))).to be_truthy
+      expect(Endpoint.create!(:url => 'defined', :resource => FactoryBot.create(:ems_cloud))).to be_truthy
+    end
+
+    it 'enabled for other emses' do
+      expect(Endpoint.create!(:url => 'defined', :resource => FactoryBot.create(:ext_management_system))).to be_truthy
+      expect { Endpoint.create!(:url => 'defined', :resource => FactoryBot.create(:ext_management_system)) }
+        .to raise_error("Validation failed: Endpoint: Url has already been taken")
     end
   end
 
@@ -125,6 +138,17 @@ describe Endpoint do
       expect(endpoint).to be_valid
       expect(endpoint.send(:parse_certificate_authority).size).to eq(2)
       expect(endpoint.ssl_cert_store).to be_a(OpenSSL::X509::Store)
+    end
+  end
+
+  context "to_s" do
+    it "returns the url if set" do
+      endpoint.url = 'https://www.foo.bar'
+      expect(endpoint.to_s).to eql('https://www.foo.bar')
+    end
+
+    it "returns a blank string if the url is not set" do
+      expect(endpoint.to_s).to eql('')
     end
   end
 end

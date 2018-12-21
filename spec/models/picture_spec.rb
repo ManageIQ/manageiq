@@ -1,5 +1,5 @@
 describe Picture do
-  subject { FactoryGirl.build(:picture) }
+  subject { FactoryBot.build(:picture) }
 
   it "auto-creates needed directory" do
     expect(File.directory?(described_class.directory)).to be_truthy

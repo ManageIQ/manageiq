@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ems_cluster do
     sequence(:name) { |n| "cluster_#{seq_padded_for_sorting(n)}" }
   end

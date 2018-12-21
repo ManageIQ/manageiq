@@ -11,7 +11,7 @@ describe EmbeddedAnsibleWorker::Runner do
       s
     }
     let(:worker_guid) { SecureRandom.uuid }
-    let(:worker)      { FactoryGirl.create(:embedded_ansible_worker, :guid => worker_guid, :miq_server_id => miq_server.id) }
+    let(:worker)      { FactoryBot.create(:embedded_ansible_worker, :guid => worker_guid, :miq_server_id => miq_server.id) }
     let(:runner) {
       worker
       allow_any_instance_of(described_class).to receive(:worker_initialization)
@@ -21,37 +21,8 @@ describe EmbeddedAnsibleWorker::Runner do
     }
 
     context "#do_before_work_loop" do
-      let(:start_notification_id) { NotificationType.find_by(:name => "role_activate_start").id }
-      let(:success_notification_id) { NotificationType.find_by(:name => "role_activate_success").id }
-
-      before do
-        ServerRole.seed
-        NotificationType.seed
-      end
-
-      it "creates a notification to inform the user that the service has started" do
-        expect(runner).to receive(:setup_ansible)
-        expect(runner).to receive(:update_embedded_ansible_provider)
-
-        runner.do_before_work_loop
-
-        note = Notification.find_by(:notification_type_id => success_notification_id)
-        expect(note.options[:role_name]).to eq("Embedded Ansible")
-        expect(note.options.keys).to include(:server_name)
-      end
-
-      it "creates a notification to inform the user that the role has been assigned" do
-        expect(runner).to receive(:setup_ansible)
-        expect(runner).to receive(:update_embedded_ansible_provider)
-
-        runner.do_before_work_loop
-
-        note = Notification.find_by(:notification_type_id => start_notification_id)
-        expect(note.options[:role_name]).to eq("Embedded Ansible")
-        expect(note.options.keys).to include(:server_name)
-      end
-
       it "exits on exceptions" do
+        allow(runner).to receive(:raise_role_notification)
         expect(runner).to receive(:setup_ansible)
         expect(runner).to receive(:update_embedded_ansible_provider).and_raise(StandardError)
         expect(runner).to receive(:do_exit)
@@ -90,7 +61,7 @@ describe EmbeddedAnsibleWorker::Runner do
           .with(instance_of(ManageIQ::Providers::EmbeddedAnsible::Provider), api_connection)
 
         runner.update_embedded_ansible_provider
-        new_zone = FactoryGirl.create(:zone)
+        new_zone = FactoryBot.create(:zone)
         miq_server.update(:hostname => "boringserver", :zone => new_zone)
 
         runner.update_embedded_ansible_provider
@@ -129,6 +100,7 @@ describe EmbeddedAnsibleWorker::Runner do
       end
 
       it "starts embedded ansible if it is not alive and not running" do
+        allow(runner).to receive(:provider_in_sync_with_server?).and_return(true)
         allow(embedded_ansible_instance).to receive(:alive?).and_return(false)
         allow(embedded_ansible_instance).to receive(:running?).and_return(false)
 
@@ -138,7 +110,7 @@ describe EmbeddedAnsibleWorker::Runner do
       end
 
       context "with a provider" do
-        let(:provider) { FactoryGirl.create(:provider_embedded_ansible, :with_authentication) }
+        let!(:provider) { FactoryBot.create(:provider_embedded_ansible, :with_authentication) }
 
         it "runs an authentication check if embedded ansible is alive and the credentials are not valid" do
           auth = provider.authentications.first
@@ -168,6 +140,99 @@ describe EmbeddedAnsibleWorker::Runner do
           expect(embedded_ansible_instance).to receive(:set_job_data_retention)
           runner.do_work
         end
+
+        it "updates provider zone if appliance zone changed" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          miq_server.update(:zone => FactoryBot.create(:zone))
+
+          runner.do_work
+          expect(provider.reload.zone).to eq(miq_server.zone)
+        end
+
+        it "updates provider URL if appliance hostname changes" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          miq_server.update(:hostname => "example42.com")
+
+          runner.do_work
+          expect(provider.reload.url).to include("example42.com")
+        end
+
+        it "provider zone change is delayed 1 minute after appliance's zone changes" do
+          allow(embedded_ansible_instance).to receive(:alive?).and_return(true)
+          runner.sync_worker_settings
+
+          # provider zone is checked
+          runner.do_work
+
+          original_zone = miq_server.zone
+          miq_server.update(:zone => FactoryBot.create(:zone))
+
+          # zone was just checked, doesn't do anything yet
+          runner.do_work
+          expect(provider.reload.zone).to eq(original_zone)
+
+          # wait at least 1 minute and try again, it now matches the server zone
+          Timecop.travel(65.seconds) do
+            runner.do_work
+            expect(provider.reload.zone).to eq(miq_server.zone)
+          end
+        end
+      end
+    end
+
+    context "#raise_role_notification (private)" do
+      let(:start_notification_id) { NotificationType.find_by(:name => "role_activate_start").id }
+      let(:success_notification_id) { NotificationType.find_by(:name => "role_activate_success").id }
+
+      before do
+        ServerRole.seed
+        NotificationType.seed
+        FactoryBot.create(:user_admin)
+      end
+
+      it "creates a notification to inform the user that the service has started" do
+        runner.send(:raise_role_notification, :role_activate_start)
+
+        note = Notification.find_by(:notification_type_id => start_notification_id)
+        expect(note.options[:role_name]).to eq("Embedded Ansible")
+        expect(note.options.keys).to include(:server_name)
+      end
+
+      it "creates a notification to inform the user that the role has been assigned" do
+        runner.send(:raise_role_notification, :role_activate_success)
+
+        note = Notification.find_by(:notification_type_id => success_notification_id)
+        expect(note.options[:role_name]).to eq("Embedded Ansible")
+        expect(note.options.keys).to include(:server_name)
+      end
+
+      it "doesn't create additional notifications if an unread one exists" do
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(1)
+
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(1)
+      end
+
+      it "creates a new notification if the existing one was read" do
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(1)
+
+        Notification.first.notification_recipients.each { |r| r.update_attributes(:seen => true) }
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(2)
+      end
+
+      it "creates a new notification if there is one for a different role" do
+        Notification.create(:type => :role_activate_start, :options => {:role_name => "someotherrole", :server_name => miq_server.name})
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(2)
+      end
+
+      it "creates a new notification if there is one for a different server" do
+        Notification.create(:type => :role_activate_start, :options => {:role_name => "Embedded Ansible", :server_name => "#{miq_server.name}somenonsense"})
+        runner.send(:raise_role_notification, :role_activate_start)
+        expect(Notification.count).to eq(2)
       end
     end
   end

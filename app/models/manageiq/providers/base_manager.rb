@@ -41,4 +41,8 @@ module ManageIQ::Providers
       {}
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Manager', 'Managers', number)
+  end
 end

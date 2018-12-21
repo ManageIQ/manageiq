@@ -19,6 +19,8 @@ class MiqServer < ApplicationRecord
   acts_as_miq_taggable
   include RelationshipMixin
 
+  alias_attribute :description, :name
+
   belongs_to              :vm, :inverse_of => :miq_server
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
@@ -29,14 +31,15 @@ class MiqServer < ApplicationRecord
   before_destroy          :validate_is_deleteable
   after_destroy           :destroy_linked_events_queue
 
-  virtual_column :zone_description, :type => :string
-
   default_value_for(:name, "EVM")
   default_value_for(:zone) { Zone.default_zone }
 
   scope :active_miq_servers, -> { where(:status => STATUSES_ACTIVE) }
+  scope :recently_active,    -> { where(:last_heartbeat => 10.minutes.ago.utc...Time.now.utc) }
   scope :with_zone_id, ->(zone_id) { where(:zone_id => zone_id) }
-  delegate :description, :to => :zone, :prefix => true
+  virtual_delegate :description, :to => :zone, :prefix => true
+
+  validate :validate_zone_not_maintenance?
 
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze
@@ -51,6 +54,10 @@ class MiqServer < ApplicationRecord
   STATUSES_ALIVE   = STATUSES_ACTIVE + [STATUS_RESTARTING, STATUS_QUIESCE]
 
   RESTART_EXIT_STATUS = 123
+
+  def validate_zone_not_maintenance?
+    errors.add(:zone, N_('cannot be maintenance zone')) if zone == Zone.maintenance_zone
+  end
 
   def hostname
     h = super
@@ -153,7 +160,6 @@ class MiqServer < ApplicationRecord
 
   def self.seed
     unless exists?(:guid => my_guid)
-      Zone.seed
       _log.info("Creating Default MiqServer with guid=[#{my_guid}], zone=[#{Zone.default_zone.name}]")
       create!(:guid => my_guid, :zone => Zone.default_zone)
       my_server_clear_cache
@@ -249,8 +255,7 @@ class MiqServer < ApplicationRecord
 
   def validate_is_deleteable
     unless self.is_deleteable?
-      _log.error(@error_message)
-      @error_message = nil
+      _log.error(@errors.full_messages)
       throw :abort
     end
   end
@@ -349,7 +354,9 @@ class MiqServer < ApplicationRecord
 
     begin
       _log.info("Reconnecting to database after error...")
-      ActiveRecord::Base.connection.reconnect!
+      # Remove the connection and establish a new one since reconnect! doesn't always play nice with SSL postgresql connections
+      spec_name = ActiveRecord::Base.connection_specification_name
+      ActiveRecord::Base.establish_connection(ActiveRecord::Base.remove_connection(spec_name))
     rescue Exception => err
       _log.error("#{err.message}, during reconnect!")
     else
@@ -492,13 +499,17 @@ class MiqServer < ApplicationRecord
 
   def is_deleteable?
     if self.is_local?
-      @error_message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
+      message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
+      @errors ||= ActiveModel::Errors.new(self)
+      @errors.add(:base, message)
       return false
     end
     return true if self.stopped?
 
     if is_recently_active?
-      @error_message = N_("Cannot delete recently active %{log_message}") % {:log_message => format_short_log_msg}
+      message = N_("Cannot delete recently active %{log_message}") % {:log_message => format_short_log_msg}
+      @errors ||= ActiveModel::Errors.new(self)
+      @errors.add(:base, message)
       return false
     end
 
@@ -611,5 +622,9 @@ class MiqServer < ApplicationRecord
 
   def miq_region
     ::MiqRegion.my_region
+  end
+
+  def self.display_name(number = 1)
+    n_('Server', 'Servers', number)
   end
 end # class MiqServer

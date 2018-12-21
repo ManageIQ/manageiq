@@ -5,4 +5,8 @@ class VmPerformance < MetricRollup
   belongs_to :ems_cluster, :foreign_key => :parent_ems_cluster_id
   belongs_to :storage,     :foreign_key => :parent_storage_id
   belongs_to :vm,          :foreign_key => :resource_id, :class_name => 'VmOrTemplate'
+
+  def self.display_name(number = 1)
+    n_('Performance - VM', 'Performance - VMs', number)
+  end
 end

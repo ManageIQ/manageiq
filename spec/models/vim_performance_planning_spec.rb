@@ -1,11 +1,11 @@
 describe VimPerformancePlanning do
   context '.vm_how_many_more_can_fit' do
     let!(:local) { EvmSpecHelper.local_miq_server }
-    let(:cluster) { FactoryGirl.create(:ems_cluster) }
-    let(:compute_host) { FactoryGirl.create(:host, :ems_cluster => cluster) }
+    let(:cluster) { FactoryBot.create(:ems_cluster) }
+    let(:compute_host) { FactoryBot.create(:host, :ems_cluster => cluster) }
     let(:time_profile) { TimeProfile.seed }
     let!(:metrics) do
-      FactoryGirl.create(:metric_rollup, :with_data,
+      FactoryBot.create(:metric_rollup, :with_data,
                          :resource => compute_host, :capture_interval_name => 'daily', :time_profile => time_profile)
     end
     let(:options) do

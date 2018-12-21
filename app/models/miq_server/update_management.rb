@@ -136,6 +136,7 @@ module MiqServer::UpdateManagement
         LinuxAdmin::SubscriptionManager.enable_repo(repo, assemble_registration_options)
       rescue AwesomeSpawn::CommandResultError
         update_attributes(:upgrade_message => "failed to enable #{repo}")
+        Notification.create(:type => "enable_update_repo_failed", :options => {:repo_name => repo})
       end
     end
   end
@@ -160,7 +161,7 @@ module MiqServer::UpdateManagement
     _log.info("Checking for postgres updates...")
     check_postgres_updates
 
-    _log.info("Checking for %{product} updates..." % {:product => I18n.t('product.name')})
+    _log.info("Checking for %{product} updates..." % {:product => Vmdb::Appliance.PRODUCT_NAME})
     check_cfme_version_available
 
     _log.info("Checking for updates... Complete")

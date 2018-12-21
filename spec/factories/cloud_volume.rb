@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cloud_volume do
     sequence(:volume_type) { |n| "volume_type_#{seq_padded_for_sorting(n)}" }
   end

@@ -1,7 +1,7 @@
 describe Service do
   describe '#add_provider_vms' do
-    let(:service)  { FactoryGirl.create(:service, :evm_owner => FactoryGirl.create(:user)) }
-    let(:provider) { FactoryGirl.create(:ems_vmware) }
+    let(:service)  { FactoryBot.create(:service, :evm_owner => FactoryBot.create(:user)) }
+    let(:provider) { FactoryBot.create(:ems_vmware) }
     let(:uid_ems_array) { ["423c9963-378c-813f-1dbd-630e464d59d4", "423cf3e2-e319-3953-993f-fd8513db951d"] }
 
     it 'raises an error if uid_ems_array is not passed in' do

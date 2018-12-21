@@ -1,6 +1,4 @@
 class MiqUserRole < ApplicationRecord
-  SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
-  ADMIN_ROLE_NAME       = "EvmRole-administrator"
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
 
   has_many                :entitlements, :dependent => :restrict_with_exception
@@ -32,7 +30,9 @@ class MiqUserRole < ApplicationRecord
   # @param identifier [String] Product feature identifier to check if this role allows access to it
   #   Returns true when requested feature is directly assigned or a descendant of a feature
   def allows?(identifier:)
-    if feature_identifiers.include?(identifier)
+    # all features are children of "everything", so checking it isn't strictly necessary
+    # but it simplifies testing
+    if feature_identifiers.include?(MiqProductFeature::SUPER_ADMIN_FEATURE) || feature_identifiers.include?(identifier)
       true
     elsif (parent_identifier = MiqProductFeature.feature_parent(identifier))
       allows?(:identifier => parent_identifier)
@@ -64,12 +64,10 @@ class MiqUserRole < ApplicationRecord
     (settings || {}).fetch_path(:restrictions, :vms) == :user
   end
 
-  def disallowed_roles
-    !super_admin_user? && Rbac::Filterer::DISALLOWED_ROLES_FOR_USER_ROLE[name]
-  end
-
-  def self.with_allowed_roles_for(user_or_group)
-    where.not(:name => user_or_group.disallowed_roles)
+  def self.with_roles_excluding(identifier)
+    where.not(:id => MiqUserRole.unscope(:select).joins(:miq_product_features)
+                                .where(:miq_product_features => {:identifier => identifier})
+                                .select(:id))
   end
 
   def self.seed
@@ -107,14 +105,30 @@ class MiqUserRole < ApplicationRecord
   end
 
   def super_admin_user?
-    name == SUPER_ADMIN_ROLE_NAME
+    allows?(:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE)
   end
 
-  def admin_user?
-    name == SUPER_ADMIN_ROLE_NAME || name == ADMIN_ROLE_NAME
+  def tenant_admin_user?
+    allows?(:identifier => MiqProductFeature::TENANT_ADMIN_FEATURE)
+  end
+
+  def only_my_user_tasks?
+    !allows?(:identifier => MiqProductFeature::ALL_TASKS_FEATURE) && allows?(:identifier => MiqProductFeature::MY_TASKS_FEATURE)
+  end
+
+  def report_admin_user?
+    allows?(:identifier => MiqProductFeature::REPORT_ADMIN_FEATURE)
+  end
+
+  def request_admin_user?
+    allows?(:identifier => MiqProductFeature::REQUEST_ADMIN_FEATURE)
   end
 
   def self.default_tenant_role
     find_by(:name => DEFAULT_TENANT_ROLE_NAME)
+  end
+
+  def self.display_name(number = 1)
+    n_('Role', 'Roles', number)
   end
 end

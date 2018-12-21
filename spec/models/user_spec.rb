@@ -1,28 +1,28 @@
 describe User do
   context "validations" do
     it "should ensure presence of name" do
-      expect(FactoryGirl.build(:user, :name => nil)).not_to be_valid
+      expect(FactoryBot.build(:user, :name => nil)).not_to be_valid
     end
 
     it "should ensure presence of user id" do
-      expect(FactoryGirl.build(:user, :userid => nil)).not_to be_valid
+      expect(FactoryBot.build(:user, :userid => nil)).not_to be_valid
     end
 
     it "should invalidate incorrect email address" do
-      expect(FactoryGirl.build(:user, :email => "thisguy@@manageiq.com")).not_to be_valid
+      expect(FactoryBot.build(:user, :email => "thisguy@@manageiq.com")).not_to be_valid
     end
 
     it "should validate email address with a value of nil" do
-      expect(FactoryGirl.build(:user, :email => nil)).to be_valid
+      expect(FactoryBot.build(:user, :email => nil)).to be_valid
     end
 
     it "should save proper email address" do
-      expect(FactoryGirl.build(:user, :email => "that.guy@manageiq.com")).to be_valid
+      expect(FactoryBot.build(:user, :email => "that.guy@manageiq.com")).to be_valid
     end
   end
 
   describe "#change_password" do
-    let(:user) { FactoryGirl.create(:user, :password => "smartvm") }
+    let(:user) { FactoryBot.create(:user, :password => "smartvm") }
 
     it "should change user password" do
       password    = user.password
@@ -41,12 +41,12 @@ describe User do
   end
 
   context "filter methods" do
-    let(:user) { FactoryGirl.create(:user, :miq_groups => [miq_group]) }
+    let(:user) { FactoryBot.create(:user, :miq_groups => [miq_group]) }
     let(:mfilters) { {"managed"   => "m"} }
     let(:bfilters) { {"belongsto" => "b"} }
-    let(:miq_group) { FactoryGirl.create(:miq_group, :entitlement => entitlement) }
+    let(:miq_group) { FactoryBot.create(:miq_group, :entitlement => entitlement) }
     let(:entitlement) do
-      entitlement = FactoryGirl.create(:entitlement)
+      entitlement = FactoryBot.create(:entitlement)
       entitlement.set_managed_filters(mfilters)
       entitlement.set_belongsto_filters(bfilters)
       entitlement.save!
@@ -62,7 +62,7 @@ describe User do
 
   context "timezone methods" do
     let!(:miq_server) { EvmSpecHelper.local_miq_server }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
 
     describe "#get_timezone" do
       it "gets Server time zone setting" do
@@ -83,7 +83,7 @@ describe User do
 
   describe ".missing_user_features" do
     it "user with group and role returns nil" do
-      user = FactoryGirl.create(:user_admin)
+      user = FactoryBot.create(:user_admin)
       expect(User.missing_user_features(user)).to be_nil
     end
 
@@ -92,19 +92,19 @@ describe User do
     end
 
     it "missing group returns 'Group'" do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       expect(User.missing_user_features(user)).to eq "Group"
     end
 
     it "missing role returns 'Role'" do
-      user = FactoryGirl.create(:user_with_group)
+      user = FactoryBot.create(:user_with_group)
       expect(User.missing_user_features(user)).to eq "Role"
     end
   end
 
   describe "role methods" do
     let(:user) do
-      FactoryGirl.create(:user,
+      FactoryBot.create(:user,
                          :settings => {"Setting1" => 1, "Setting2" => 2, "Setting3" => 3},
                          :role     => role_name)
     end
@@ -143,18 +143,6 @@ describe User do
         expect(user.super_admin_user?).to be_falsey
       end
     end
-
-    describe "#admin_user?" do
-      let(:role_name) { "administrator" }
-
-      it "should check Admin Roles" do
-        expect(user.admin_user?).to be_truthy
-        expect(user.super_admin_user?).to be_falsey
-
-        user.current_group = nil
-        expect(user.admin_user?).to be_falsey
-      end
-    end
   end
 
   context "#authorize_ldap" do
@@ -175,9 +163,11 @@ describe User do
                              :group_memberships_max_depth => 2,
                              :ldaphost => ["192.168.254.15"]}
         }
-      stub_server_configuration(@auth_config)
+      stub_settings(@auth_config)
       @miq_ldap = double('miq_ldap')
       allow(@miq_ldap).to receive_messages(:bind => false)
+
+      EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "will fail task if user object not found in ldap" do
@@ -216,14 +206,14 @@ describe User do
 
   context "group assignment" do
     before do
-      @group1 = FactoryGirl.create(:miq_group, :description => "EvmGroup 1")
-      @group2 = FactoryGirl.create(:miq_group, :description => "EvmGroup 2")
-      @group3 = FactoryGirl.create(:miq_group, :description => "EvmGroup 3")
+      @group1 = FactoryBot.create(:miq_group, :description => "EvmGroup 1")
+      @group2 = FactoryBot.create(:miq_group, :description => "EvmGroup 2")
+      @group3 = FactoryBot.create(:miq_group, :description => "EvmGroup 3")
     end
 
     describe "#miq_groups=" do
       before do
-        @user = FactoryGirl.create(:user, :miq_groups => [@group3])
+        @user = FactoryBot.create(:user, :miq_groups => [@group3])
       end
 
       it "sets miq_groups" do
@@ -253,7 +243,7 @@ describe User do
 
     describe "#current_group=" do
       before do
-        @user = FactoryGirl.create(:user, :miq_groups => [@group1, @group2])
+        @user = FactoryBot.create(:user, :miq_groups => [@group1, @group2])
       end
 
       it "sets current_group" do
@@ -277,41 +267,41 @@ describe User do
   end
 
   context "Testing active VM aggregation" do
-    before :each do
+    before do
       @ram_size = 1024
       @disk_size = 1_000_000
       @num_cpu = 2
 
-      group = FactoryGirl.create(:miq_group)
-      @user = FactoryGirl.create(:user, :miq_groups => [group])
-      @ems = FactoryGirl.create(:ems_vmware, :name => "test_vcenter")
-      @storage  = FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
+      group = FactoryBot.create(:miq_group)
+      @user = FactoryBot.create(:user, :miq_groups => [group])
+      @ems = FactoryBot.create(:ems_vmware, :name => "test_vcenter")
+      @storage  = FactoryBot.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
 
-      @hw1 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw2 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw3 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @hw4 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
-      @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
-      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
-      @disk4 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
+      @hw1 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
+      @hw2 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
+      @hw3 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
+      @hw4 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
+      @disk1 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
+      @disk2 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
+      @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
+      @disk4 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
 
-      @active_vm = FactoryGirl.create(:vm_vmware,
+      @active_vm = FactoryBot.create(:vm_vmware,
                                       :name         => "Active VM",
                                       :evm_owner_id => @user.id,
                                       :ems_id       => @ems.id,
                                       :storage_id   => @storage.id,
                                       :hardware     => @hw1)
-      @archived_vm = FactoryGirl.create(:vm_vmware,
+      @archived_vm = FactoryBot.create(:vm_vmware,
                                         :name         => "Archived VM",
                                         :evm_owner_id => @user.id,
                                         :hardware     => @hw2)
-      @orphaned_vm = FactoryGirl.create(:vm_vmware,
+      @orphaned_vm = FactoryBot.create(:vm_vmware,
                                         :name         => "Orphaned VM",
                                         :evm_owner_id => @user.id,
                                         :storage_id   => @storage.id,
                                         :hardware     => @hw3)
-      @retired_vm = FactoryGirl.create(:vm_vmware,
+      @retired_vm = FactoryBot.create(:vm_vmware,
                                        :name         => "Retired VM",
                                        :evm_owner_id => @user.id,
                                        :retired      => true,
@@ -346,7 +336,11 @@ describe User do
   end
 
   context ".authenticate_with_http_basic" do
-    let(:user) { FactoryGirl.create(:user, :password => "dummy") }
+    let(:user) { FactoryBot.create(:user, :password => "dummy") }
+
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
 
     it "should login with good username/password" do
       expect(User.authenticate_with_http_basic(user.userid, user.password)).to eq([true, user.userid])
@@ -372,24 +366,24 @@ describe User do
 
   context "#accessible_vms" do
     before do
-      @user = FactoryGirl.create(:user_admin)
+      @user = FactoryBot.create(:user_admin)
 
-      @self_service_role = FactoryGirl.create(
+      @self_service_role = FactoryBot.create(
         :miq_user_role,
         :name     => "ss_role",
         :settings => {:restrictions => {:vms => :user_or_group}}
       )
-      @self_service_group = FactoryGirl.create(:miq_group, :miq_user_role => @self_service_role)
+      @self_service_group = FactoryBot.create(:miq_group, :miq_user_role => @self_service_role)
 
-      @limited_self_service_role = FactoryGirl.create(
+      @limited_self_service_role = FactoryBot.create(
         :miq_user_role,
         :name     => "lss_role",
         :settings => {:restrictions => {:vms => :user}}
       )
-      @limited_self_service_group = FactoryGirl.create(:miq_group, :miq_user_role => @limited_self_service_role)
+      @limited_self_service_group = FactoryBot.create(:miq_group, :miq_user_role => @limited_self_service_role)
 
       @vm = []
-      (1..5).each { |i| @vm[i] = FactoryGirl.create(:vm_redhat, :name => "vm_#{i}") }
+      (1..5).each { |i| @vm[i] = FactoryBot.create(:vm_redhat, :name => "vm_#{i}") }
     end
     subject(:accessible_vms) { @user.accessible_vms }
 
@@ -416,9 +410,9 @@ describe User do
   end
 
   describe "#current_group_by_description=" do
-    subject { FactoryGirl.create(:user, :miq_groups => [g1, g2], :current_group => g1) }
-    let(:g1) { FactoryGirl.create(:miq_group) }
-    let(:g2) { FactoryGirl.create(:miq_group) }
+    subject { FactoryBot.create(:user, :miq_groups => [g1, g2], :current_group => g1) }
+    let(:g1) { FactoryBot.create(:miq_group) }
+    let(:g2) { FactoryBot.create(:miq_group) }
 
     it "ignores blank" do
       subject.current_group_by_description = ""
@@ -433,7 +427,7 @@ describe User do
     end
 
     it "ignores a group that you do not belong" do
-      subject.current_group_by_description = FactoryGirl.create(:miq_group).description
+      subject.current_group_by_description = FactoryBot.create(:miq_group).description
       expect(subject.current_group).to eq(g1)
       expect(subject.miq_group_description).to eq(g1.description)
     end
@@ -445,7 +439,7 @@ describe User do
     end
 
     context "as a super admin" do
-      subject { FactoryGirl.create(:user, :role => "super_administrator") }
+      subject { FactoryBot.create(:user, :role => "super_administrator") }
 
       it "sets any group, regardless of group membership" do
         expect(subject).to be_super_admin_user
@@ -457,7 +451,7 @@ describe User do
       it "ignores groups from other regions" do
         expect(subject).to be_super_admin_user
 
-        group = FactoryGirl.create(:miq_group, :id => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
+        group = FactoryBot.create(:miq_group, :id => ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1))
 
         subject.current_group_by_description = group.description
         expect(subject.current_group.description).not_to eq(group.description)
@@ -467,18 +461,18 @@ describe User do
 
   describe ".find_by_lower_email" do
     it "uses cache" do
-      u = FactoryGirl.build(:user_with_email)
+      u = FactoryBot.build(:user_with_email)
       expect(User.find_by_lower_email(u.email.upcase, u)).to eq(u)
     end
 
     it "finds in the table" do
-      u = FactoryGirl.create(:user_with_email)
+      u = FactoryBot.create(:user_with_email)
       expect(User.find_by_lower_email(u.email.upcase)).to eq(u)
     end
   end
 
   describe "#current_tenant" do
-    let(:user1) { FactoryGirl.create(:user_with_group) }
+    let(:user1) { FactoryBot.create(:user_with_group) }
 
     it "sets the tenant" do
       User.with_user(user1) do
@@ -489,7 +483,7 @@ describe User do
   end
 
   describe "#current_user=" do
-    let(:user1) { FactoryGirl.create(:user) }
+    let(:user1) { FactoryBot.create(:user) }
 
     it "sets the user" do
       User.current_user = user1
@@ -499,8 +493,8 @@ describe User do
   end
 
   describe "#with_user" do
-    let(:user1) { FactoryGirl.create(:user) }
-    let(:user2) { FactoryGirl.create(:user) }
+    let(:user1) { FactoryBot.create(:user) }
+    let(:user2) { FactoryBot.create(:user) }
 
     it "sets the user" do
       User.with_user(user1) do
@@ -529,8 +523,8 @@ describe User do
   end
 
   describe "#with_user_group" do
-    let(:user1) { FactoryGirl.create(:user_with_group) }
-    let(:user2) { FactoryGirl.create(:user_with_group) }
+    let(:user1) { FactoryBot.create(:user_with_group) }
+    let(:user2) { FactoryBot.create(:user_with_group) }
 
     it "sets the user and group" do
       User.with_user_group(user1, user2.current_group_id) do
@@ -548,17 +542,17 @@ describe User do
   end
 
   describe "#change_current_group" do
-    let(:group1) { FactoryGirl.create(:miq_group) }
-    let(:group2) { FactoryGirl.create(:miq_group) }
+    let(:group1) { FactoryBot.create(:miq_group) }
+    let(:group2) { FactoryBot.create(:miq_group) }
 
     it "changes the user to a group other than the current one" do
-      user = FactoryGirl.create(:user, :miq_groups => [group1, group2], :current_group => group1)
+      user = FactoryBot.create(:user, :miq_groups => [group1, group2], :current_group => group1)
       user.change_current_group
       expect(user.current_group).to eq(group2)
     end
 
     it "raises an error if there is no group other than the current one to switch to" do
-      user = FactoryGirl.create(:user, :miq_groups => [group1], :current_group => group1)
+      user = FactoryBot.create(:user, :miq_groups => [group1], :current_group => group1)
       expect { user.change_current_group }
         .to raise_error(RuntimeError, /The user's current group cannot be changed because the user does not belong to any other group/)
     end
@@ -566,7 +560,7 @@ describe User do
 
   context ".super_admin" do
     it "has super_admin" do
-      FactoryGirl.create(:miq_group, :role => "super_administrator")
+      FactoryBot.create(:miq_group, :role => "super_administrator")
       User.seed
       expect(User.super_admin).to be_super_admin_user
     end
@@ -589,6 +583,43 @@ describe User do
 
     it "returns nil with admin userid" do
       expect(User.authorize_user("admin")).to be_nil
+    end
+  end
+
+  describe ".with_same_userid" do
+    # this is testing the select does not break and in general, the scope works
+    it "properly handles select clause" do
+      u = FactoryBot.create(:user)
+      expect(User.select(:id, :email).with_same_userid(u.id)).to eq([u])
+    end
+  end
+
+  describe ".with_roles_excluding" do
+    it "handles multiple columns" do
+      a1 = FactoryBot.create(:miq_group, :features => "good")
+      a2 = FactoryBot.create(:miq_group, :features => "something")
+      b = FactoryBot.create(:miq_group, :features => %w(good everything))
+      c = FactoryBot.create(:miq_group, :features => "everything")
+
+      u1 = FactoryBot.create(:user, :miq_groups => [a1])
+      u2 = FactoryBot.create(:user, :miq_groups => [a1, a2])
+      FactoryBot.create(:user, :miq_groups => [a1, b])
+      FactoryBot.create(:user, :miq_groups => [c])
+
+      expect(User.with_roles_excluding("everything").select(:id, :name)).to match_array([u1, u2])
+    end
+  end
+
+  describe "#regional_users" do
+    let(:other_id) { ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1) }
+    let(:user) { FactoryBot.create(:user) }
+    let!(:regional_user) { FactoryBot.create(:user, :userid => user.userid.upcase, :id => other_id) }
+
+    it "finds regional users" do
+      FactoryBot.create(:user) # ensure these doen't come back
+      FactoryBot.create(:user, :id => other_id + 1)
+
+      expect(user.regional_users).to match_array([user, regional_user])
     end
   end
 end

@@ -181,6 +181,10 @@ class EmsFolder < ApplicationRecord
     child_folder_paths_recursive(subtree, options)
   end
 
+  def self.display_name(number = 1)
+    n_('Folder', 'Folders', number)
+  end
+
   # Helper method for building the child folder paths given an arranged subtree.
   def self.child_folder_paths_recursive(subtree, options = {})
     options[:prefix] ||= ""

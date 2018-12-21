@@ -180,10 +180,17 @@ class LogFile < ApplicationRecord
     File.join("#{resource.zone.name}_#{resource.zone.id}", "#{resource.name}_#{resource.id}")
   end
 
+  def self.logfile_name(resource, category = "Current", date_string = nil)
+    region = MiqRegion.my_region.try(:region) || "unknown"
+    [category, "region", region, resource.zone.name, resource.zone.id, resource.name, resource.id, date_string].compact.join(" ")
+  end
+
   def destination_file_name
-    date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
-    destname    = historical ? "Archive_" : "Current_"
-    destname << "region_#{MiqRegion.my_region.try(:region) || "unknown"}_#{resource.zone.name}_#{resource.zone.id}_#{resource.name}_#{resource.id}_#{date_string}#{File.extname(local_file)}"
+    name.gsub(/\s+/, "_").concat(File.extname(local_file))
+  end
+
+  def name
+    super || self.class.logfile_name(resource)
   end
 
   def post_upload_tasks
@@ -260,4 +267,6 @@ class LogFile < ApplicationRecord
     _log.info("#{log_header} #{msg}")
     task.update_status("Queued", "Ok", msg)
   end
+
+  private_class_method :_request_logs
 end

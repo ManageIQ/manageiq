@@ -1,5 +1,5 @@
 describe DialogTab do
-  let(:dialog_tab) { FactoryGirl.build(:dialog_tab, :label => 'tab') }
+  let(:dialog_tab) { FactoryBot.build(:dialog_tab, :label => 'tab') }
   context "#validate_children" do
     it "fails without box" do
       expect { dialog_tab.save! }
@@ -7,7 +7,7 @@ describe DialogTab do
     end
 
     it "validates with box" do
-      dialog_tab.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'box')
+      dialog_tab.dialog_groups << FactoryBot.create(:dialog_group, :label => 'box')
       expect_any_instance_of(DialogGroup).to receive(:valid?)
       expect(dialog_tab.errors.full_messages).to be_empty
       dialog_tab.validate_children
@@ -21,15 +21,15 @@ describe DialogTab do
     end
 
     it "returns [] when empty dialog_group " do
-      dialog_tab.dialog_groups << FactoryGirl.build(:dialog_group)
+      dialog_tab.dialog_groups << FactoryBot.build(:dialog_group)
       expect(dialog_tab.dialog_fields).to be_empty
     end
   end
 
   describe '#update_dialog_groups' do
-    let(:dialog_fields) { FactoryGirl.create_list(:dialog_field, 2) }
-    let(:dialog_groups) { FactoryGirl.create_list(:dialog_group, 2) }
-    let(:dialog_tab) { FactoryGirl.create(:dialog_tab, :dialog_groups => dialog_groups) }
+    let(:dialog_fields) { FactoryBot.create_list(:dialog_field, 2) }
+    let(:dialog_groups) { FactoryBot.create_list(:dialog_group, 2) }
+    let(:dialog_tab) { FactoryBot.create(:dialog_tab, :dialog_groups => dialog_groups) }
 
     before do
       dialog_groups.each_with_index { |group, index| group.dialog_fields << dialog_fields[index] }

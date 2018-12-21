@@ -16,4 +16,11 @@ describe ManageIQ::Providers::BaseManager do
       expect(described_class.default_blacklisted_event_names).to eq(%w(ev1 ev2))
     end
   end
+
+  context ".url" do
+    it 'delegates to the provider' do
+      mgr = FactoryGirl.create(:configuration_manager_foreman, :provider => FactoryGirl.create(:provider_foreman, :url => 'example.com'))
+      expect(mgr.url).to eq('example.com')
+    end
+  end
 end

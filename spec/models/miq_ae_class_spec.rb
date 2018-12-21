@@ -38,7 +38,7 @@ describe MiqAeClass do
   end
 
   before do
-    @user = FactoryGirl.create(:user_with_group)
+    @user = FactoryBot.create(:user_with_group)
   end
 
   it "should not create class without namespace" do
@@ -65,14 +65,14 @@ describe MiqAeClass do
   end
 
   it "should return editable as false if the parent namespace is not editable" do
-    n1 = FactoryGirl.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    n1 = FactoryBot.create(:miq_ae_system_domain, :tenant => @user.current_tenant)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     expect(c1.editable?(@user)).to be_falsey
   end
 
   it "should return editable as true if the parent namespace is editable" do
-    n1 = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    n1 = FactoryBot.create(:miq_ae_domain, :tenant => @user.current_tenant)
+    c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     expect(c1.editable?(@user)).to be_truthy
   end
 
@@ -83,7 +83,7 @@ describe MiqAeClass do
     end
 
     before do
-      @user = FactoryGirl.create(:user_with_group, 'name' => 'Fred')
+      @user = FactoryBot.create(:user_with_group, 'name' => 'Fred')
       model_data_dir = Rails.root.join("spec/models/miq_ae_class/data")
       EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain1'), "DOMAIN1")
       EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain2'), "DOMAIN2")
@@ -177,13 +177,13 @@ describe MiqAeClass do
 
   context "#copy" do
     before do
-      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
-      @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
-      @cls2 = FactoryGirl.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
+      @d1 = FactoryBot.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
+      @ns1 = FactoryBot.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
+      @cls1 = FactoryBot.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
+      @cls2 = FactoryBot.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
 
-      @d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :priority  => 2)
-      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+      @d2 = FactoryBot.create(:miq_ae_domain, :name => "domain2", :priority  => 2)
+      @ns2 = FactoryBot.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
     end
 
     it "copies classes under specified namespace" do
@@ -293,8 +293,8 @@ describe MiqAeClass do
 
   context "state_machine_class tests" do
     before do
-      n1 = FactoryGirl.create(:miq_ae_system_domain, :name => 'ns1', :priority => 10)
-      @c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+      n1 = FactoryBot.create(:miq_ae_system_domain, :name => 'ns1', :priority => 10)
+      @c1 = FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
     end
 
     it "class with only state field" do

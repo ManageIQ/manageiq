@@ -44,7 +44,7 @@ groups=$($miqhosts_cmd $miqhosts_file list_groups)
 function usage_common {
   echo "DESCRIPTION: $2"
   echo
-  echo "USAGE: $NAME [-g group] [-s] $1"
+  echo "USAGE: $NAME [-g group1[,groupN]] [-s] $1"
   echo
   shift 2
   echo "DETAILS:"
@@ -159,9 +159,9 @@ function clean_pssh_out {
 
 if [ $NAME == 'miqtail' ]
 then
-  GREP='grep -e'
+  GREP='grep'
 else
-  GREP='zgrep -e'
+  GREP='zgrep'
 fi
 
 L='L'
@@ -190,6 +190,21 @@ do
 done
 
 shift $((OPTIND-1))
+
+GREP="$GREP -e"
+
+if [[ "$TRANSPORT" == 'ansible' && $NAME == 'miqcollect' ]]
+then
+  wildcards=( '*' '.' '?' '|' ']' '[' ) 
+  for wildcard in "${wildcards[@]}"
+  do
+    if [[ $1 == *"${wildcard}"* ]]
+    then
+      echo "*** Switching TRANSPORT to ssh due to wild card in source file name ***"
+      TRANSPORT=ssh
+    fi
+  done
+fi
 
 if [[ -z "$TRANSPORT" || -z "$PARALLELISM" ]]
 then
@@ -274,11 +289,14 @@ then
     echo "Not enough arguments!"
     usage
   fi
-elif [[ "$2" == "list" && $# -lt 2 ]]
+elif [ "$1" == "list" ]
 then
-  echo
-  echo "Not enough arguments!"
-  usage
+  if [ $# -ne 1 ]
+  then
+    echo
+    echo "Wrong number of arguments!"
+    usage
+  fi
 elif [[ $NAME == 'miqgrep' || $NAME == "miqtail" ]]
 then
   if [[ $# -ne 1 && $# -ne 2 ]]
@@ -357,29 +375,19 @@ then
   exit 1
 fi
 
-group_good=false
-
-for i in $groups
-do
-  if [ "$i" == "$group" ]
-  then
-    group_good=true
-  fi
-done
-
-if [ "$group_good" != "true" ]
-then
-  echo
-  echo "Group $group not found in $miqhosts_file"
-  usage
-fi
-
 if [[ "$QUIET" != 'true' && "$TRANSPORT" != 'pssh' && "$TRANSPORT" != 'ansible' || ( $NAME == 'miqgrep' && $REQUEST == 'true' ) ]]
 then
   echo
 fi
 
 SERVERS=$($miqhosts_cmd $miqhosts_file list_servers $group)
+
+if [ -z "$SERVERS" ]
+then
+  echo
+  echo "No servers found matching group(s) $group in $miqhosts_file"
+  usage
+fi
 
 if [ "$1" == "list" ]
 then
@@ -390,7 +398,7 @@ then
   for i in $SERVERS
   do
     echo $i
-  done
+  done | sort
   exit
 fi
 
@@ -450,7 +458,7 @@ then
 fi
 
 ARGS=$*
-ARGS=$(echo $ARGS | sed 's/*/\\*/g')
+#ARGS=$(echo $ARGS | sed 's/*/\\*/g')
 
 if [ $NAME != 'miqtail' ]
 then
@@ -482,7 +490,7 @@ then
     case $NAME in
       "miqssh") pssh -t 0 -i $HOSTS $ARGS ;;
       "miqscp") pscp.pssh -t 0 $HOSTS $1 $2 ;;
-      "miqcollect") pslurp -t 0 $HOSTS -L $2 $1 . ;;
+      "miqcollect") pslurp -t 0 $HOSTS -L $2 "$1" . ;;
       "miqgrep") pssh -t 0 $HOSTS -o $PSSH_OUTDIR "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" ;;
     esac
 
@@ -498,9 +506,9 @@ then
       "miqgrep")
         if [ -n "$PATTERN" ]
         then
-          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE
+          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP \"$PATTERN\" $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE | perl -ne "print if /^\S+\s\|\s\S+\s\|\src=\d+\s>>\s*$|^\S+\s\|\s\S+\s=>\s\{\s*$/"
         else
-          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE
+          ansible all -i $HOSTS -f $PARALLELISM -m shell -a "$GREP $LOG | perl -pe 's/^\/.*?://' | sed -e \"s/^/[\$(hostname -s)] /\"" | tee $TMPFILE | perl -ne "print if /\|\src=\d+\s>>/"
         fi ;;
     esac
 

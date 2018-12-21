@@ -195,15 +195,12 @@ module VirtualDelegates
       # ensure the column has sql and the association is reachable via sql
       # There is currently no way to propagate sql over a virtual association
       if to_ref.klass.arel_attribute(col) && reflect_on_association(to_ref.name)
-        if to_ref.macro == :has_one
+        if to_ref.macro == :has_one || to_ref.macro == :belongs_to
+          blk = ->(arel) { arel.limit = 1 } if to_ref.macro == :has_one
           lambda do |t|
-            src_model_id = arel_attribute(to_ref.association_primary_key, t)
-            VirtualDelegates.select_from_alias(to_ref, col, to_ref.foreign_key, src_model_id)
-          end
-        elsif to_ref.macro == :belongs_to
-          lambda do |t|
-            src_model_id = arel_attribute(to_ref.foreign_key, t)
-            VirtualDelegates.select_from_alias(to_ref, col, to_ref.active_record_primary_key, src_model_id)
+            join_keys = to_ref.join_keys(to_ref.klass)
+            src_model_id = arel_attribute(join_keys.foreign_key, t)
+            VirtualDelegates.select_from_alias(to_ref, col, join_keys.key, src_model_id, &blk)
           end
         end
       end
@@ -287,10 +284,22 @@ module VirtualDelegates
   #
 
   def self.select_from_alias(to_ref, col, to_model_col_name, src_model_id)
-    to_table = select_from_alias_table(to_ref.klass, src_model_id.relation)
+    query = if to_ref.scope
+              to_ref.klass.instance_exec(nil, &to_ref.scope)
+            else
+              to_ref.klass.all
+            end
+
+    to_table    = select_from_alias_table(to_ref.klass, src_model_id.relation)
     to_model_id = to_ref.klass.arel_attribute(to_model_col_name, to_table)
-    to_column = to_ref.klass.arel_attribute(col, to_table)
-    Arel.sql("(#{to_table.project(to_column).where(to_model_id.eq(src_model_id)).to_sql})")
+    to_column   = to_ref.klass.arel_attribute(col, to_table)
+    arel        = query.except(:select).select(to_column).arel
+                       .from(to_table)
+                       .where(to_model_id.eq(src_model_id))
+
+    yield arel if block_given?
+
+    Arel.sql("(#{arel.to_sql})")
   end
 
   # determine table reference to use for a sub query
@@ -386,12 +395,15 @@ module VirtualAttributes
       end
     end
 
-    def attributes_builder
-      @attributes_builder ||= ::ActiveRecord::AttributeSet::Builder.new(attribute_types, primary_key) do |name|
-        unless columns_hash.key?(name) || virtual_attribute?(name)
-          _default_attributes[name].dup
-        end
+    def attributes_builder # :nodoc:
+      unless defined?(@attributes_builder) && @attributes_builder
+        defaults = _default_attributes.except(*(column_names - [primary_key]))
+        # change necessary for rails 5.0 and 5.1 - (changed/introduced in https://github.com/rails/rails/pull/31894)
+        defaults = defaults.except(*virtual_attribute_names)
+        # end change
+        @attributes_builder = ActiveRecord::AttributeSet::Builder.new(attribute_types, defaults)
       end
+      @attributes_builder
     end
 
     private
@@ -582,6 +594,18 @@ end
 #
 # Class extensions
 #
+
+# this patch is no longer necessary for 5.2
+require "active_record/attribute"
+module ActiveRecord
+  # This is a bug in rails 5.0 and 5.1, but it is made much worse by virtual attributes
+  class Attribute
+    def with_value_from_database(value)
+      # self.class.from_database(name, value, type)
+      initialized? ? self.class.from_database(name, value, type) : self
+    end
+  end
+end
 
 module ActiveRecord
   class Base

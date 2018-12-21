@@ -2,7 +2,7 @@ describe MiqServer::WorkerManagement::Monitor do
   context "#check_not_responding" do
     let(:server) { EvmSpecHelper.local_miq_server }
     let(:worker) do
-      FactoryGirl.create(:miq_worker,
+      FactoryBot.create(:miq_worker,
                          :type           => "MiqGenericWorker",
                          :miq_server     => server,
                          :pid            => 12345,

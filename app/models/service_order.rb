@@ -97,7 +97,7 @@ class ServiceOrder < ApplicationRecord
   end
 
   def deep_copy(new_attributes = {})
-    raise _("Cannot copy a service order in the #{STATE_CART} state") if state == STATE_CART
+    raise _("Cannot copy a service order in the %{state} state") % {:state => STATE_CART} if state == STATE_CART
     dup.tap do |new_service_order|
       # Set it to nil - the after_create hook will give it the correct name
       new_service_order.name = nil

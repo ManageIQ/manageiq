@@ -9,7 +9,7 @@ describe MiqSchedule do
     it "hourly schedule" do
       run_at = {:interval => {:value => "1", :unit => "hourly"}, :start_time => "2012-03-10 01:35:00 Z", :tz => "Central Time (US & Canada)"}
 
-      hourly_schedule = FactoryGirl.create(:miq_schedule_validation, :run_at => run_at)
+      hourly_schedule = FactoryBot.create(:miq_schedule_validation, :run_at => run_at)
       current = Time.parse("Sat March 10 3:00:00 -0600 2012") # CST
       Timecop.travel(current) do
         time = hourly_schedule.next_interval_time
@@ -25,7 +25,7 @@ describe MiqSchedule do
     it "hourly schedule, going from CST -> CDT" do
       run_at = {:interval => {:value => "1", :unit => "hourly"}, :start_time => "2012-03-11 01:35:00 Z", :tz => "Central Time (US & Canada)"}
 
-      hourly_schedule = FactoryGirl.create(:miq_schedule_validation, :run_at => run_at)
+      hourly_schedule = FactoryBot.create(:miq_schedule_validation, :run_at => run_at)
       current = Time.parse("Sun March 11 3:00:00 -0500 2012") # CDT
       Timecop.travel(current) do
         time = hourly_schedule.next_interval_time
@@ -40,7 +40,7 @@ describe MiqSchedule do
 
     it "next_interval_time for start of every month" do
       start_time = Time.parse("2012-01-01 08:30:00 Z")
-      start_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => start_time, :interval => {:unit => "monthly", :value => "1"}})
+      start_of_every_month = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => start_time, :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(start_of_every_month.run_at[:start_time] - 5.minutes) do
         time = start_of_every_month.next_interval_time
         expect(time.month).to eq(start_time.month)
@@ -55,7 +55,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for start of every month for a very old start time" do
-      start_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
+      start_of_every_month = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(Time.parse("2013-01-01 08:31:00 UTC")) do
         time = start_of_every_month.next_interval_time
         expect(time.month).to eq(2)
@@ -65,7 +65,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for end of every month" do
-      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
+      end_of_every_month = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(end_of_every_month.run_at[:start_time] - 5.minutes) do
         time = end_of_every_month.next_interval_time
         expect(time.month).to eq(1)
@@ -80,7 +80,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for end of every month for a very old start time" do
-      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
+      end_of_every_month = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2005-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(Time.parse("2013-01-31 08:31:00 UTC")) do
         time = end_of_every_month.next_interval_time
         expect(time.month).to eq(2)
@@ -90,7 +90,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for the 30th of every month" do
-      end_of_every_month = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-30 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
+      end_of_every_month = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-30 08:30:00 Z", :interval => {:unit => "monthly", :value => "1"}})
       Timecop.travel(end_of_every_month.run_at[:start_time] - 5.minutes) do
         time = end_of_every_month.next_interval_time
         expect(time.month).to eq(1)
@@ -105,7 +105,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for start of every two months" do
-      start_of_every_two_months = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "2"}})
+      start_of_every_two_months = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-01 08:30:00 Z", :interval => {:unit => "monthly", :value => "2"}})
       Timecop.travel(start_of_every_two_months.run_at[:start_time] + 5.minutes) do
         time = start_of_every_two_months.next_interval_time
         expect(time.month).to eq(3)
@@ -114,7 +114,7 @@ describe MiqSchedule do
     end
 
     it "next_interval_time for end of every two months" do
-      end_of_every_two_months = FactoryGirl.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "2"}})
+      end_of_every_two_months = FactoryBot.create(:miq_schedule_validation, :run_at => {:start_time => "2012-01-31 08:30:00 Z", :interval => {:unit => "monthly", :value => "2"}})
       Timecop.travel(end_of_every_two_months.run_at[:start_time] + 5.minutes) do
         time = end_of_every_two_months.next_interval_time
         expect(time.month).to eq(3)
@@ -127,7 +127,7 @@ describe MiqSchedule do
         @valid_schedules = []
 
         @valid_run_ats.each do |run_at|
-          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at)
+          @valid_schedules << FactoryBot.create(:miq_schedule_validation, :run_at => run_at)
         end
         @first = @valid_schedules.first
       end
@@ -481,7 +481,7 @@ describe MiqSchedule do
         @task_id = MiqSchedule.run_adhoc_db_gc(:userid => "admin", :aggressive => true)
         @gc_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "gc", :role => "database_operations").first
 
-        @region = FactoryGirl.create(:miq_region)
+        @region = FactoryBot.create(:miq_region)
         allow(MiqRegion).to receive(:my_region).and_return(@region)
       end
 
@@ -512,9 +512,9 @@ describe MiqSchedule do
     end
 
     context "valid action_automation_request" do
-      let(:admin) { FactoryGirl.create(:user_miq_request_approver) }
+      let(:admin) { FactoryBot.create(:user_miq_request_approver) }
       let(:automate_sched) do
-        MiqSchedule.create(:name          => "test_method", :towhat => "AutomationRequest",
+        MiqSchedule.create(:name          => "test_method", :resource_type => "AutomationRequest",
                            :userid        => admin.userid, :enabled => true,
                            :run_at        => {:interval   => {:value => "1", :unit => "daily"},
                                               :start_time => 2.hours.from_now.utc.to_i},
@@ -537,11 +537,11 @@ describe MiqSchedule do
     end
 
     context "valid schedules for db_backup" do
-      let(:file_depot) { FactoryGirl.create(:file_depot_ftp_with_authentication) }
+      let(:file_depot) { FactoryBot.create(:file_depot_ftp_with_authentication) }
       before do
         @valid_schedules = []
         @valid_run_ats.each do |run_at|
-          @valid_schedules << FactoryGirl.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :towhat => "DatabaseBackup")
+          @valid_schedules << FactoryBot.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :resource_type => "DatabaseBackup")
         end
         @schedule = @valid_schedules.first
       end
@@ -551,7 +551,7 @@ describe MiqSchedule do
           @task_id = @schedule.run_adhoc_db_backup
           @backup_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").first
 
-          @region = FactoryGirl.create(:miq_region)
+          @region = FactoryBot.create(:miq_region)
           allow(MiqRegion).to receive(:my_region).and_return(@region)
         end
 
@@ -568,6 +568,10 @@ describe MiqSchedule do
 
         it "should create one backup queue message for our db backup instance for the database role" do
           expect(MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").count).to eq(1)
+        end
+
+        it "sets backup tasks's timeout to ::Settings.task.active_task_timeout" do
+          expect(@backup_message.msg_timeout).to eq ::Settings.task.active_task_timeout.to_i_with_method
         end
       end
 
@@ -591,7 +595,7 @@ describe MiqSchedule do
             @invoke_actions_message.delivered(status, message, result)
             @backup_message = MiqQueue.where(:class_name => "DatabaseBackup", :method_name => "backup", :role => "database_operations").first
 
-            @region = FactoryGirl.create(:miq_region)
+            @region = FactoryBot.create(:miq_region)
             allow(MiqRegion).to receive(:my_region).and_return(@region)
           end
 
@@ -690,9 +694,70 @@ describe MiqSchedule do
 
   describe ".updated_since" do
     it "fetches records" do
-      FactoryGirl.create(:miq_schedule, :updated_at => 1.year.ago)
-      s = FactoryGirl.create(:miq_schedule, :updated_at => 1.day.ago)
+      FactoryBot.create(:miq_schedule, :updated_at => 1.year.ago)
+      s = FactoryBot.create(:miq_schedule, :updated_at => 1.day.ago)
       expect(MiqSchedule.updated_since(1.month.ago)).to eq([s])
+    end
+  end
+
+  context ".queue_scheduled_work" do
+    it "When action exists" do
+      schedule = FactoryBot.create(:miq_schedule, :sched_action => {:method => "scan"})
+      MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => "MiqSchedule",
+        :instance_id => schedule.id,
+        :method_name => "invoke_actions",
+        :args        => ["action_scan", "abc"],
+        :msg_timeout => 1200
+      )
+    end
+
+    context "no action method" do
+      it "no resource" do
+        schedule = FactoryBot.create(:miq_schedule, :sched_action => {:method => "test_method"})
+
+        expect($log).to receive(:warn) do |message|
+          expect(message).to include("no such action: [test_method], aborting schedule")
+        end
+
+        MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+      end
+
+      context "resource exists" do
+        let(:resource) { FactoryBot.create(:host) }
+
+        before do
+          allow(Host).to receive(:find_by).with(:id => resource.id).and_return(resource)
+        end
+
+        it "and does not respond to the method" do
+          schedule = FactoryBot.create(:miq_schedule, :resource => resource, :sched_action => {:method => "test_method"})
+
+          expect($log).to receive(:warn) do |message|
+            expect(message).to include("no such action: [test_method], aborting schedule")
+          end
+
+          MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+        end
+
+        it "and responds to the method" do
+          schedule = FactoryBot.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name"})
+
+          expect_any_instance_of(Host).to receive("name").once
+
+          MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+        end
+
+        it "and responds to the method with arguments" do
+          schedule = FactoryBot.create(:miq_schedule, :resource => resource, :sched_action => {:method => "name", :args => ["abc", 123, :a => 1]})
+
+          expect_any_instance_of(Host).to receive("name").once.with("abc", 123, :a => 1)
+
+          MiqSchedule.queue_scheduled_work(schedule.id, nil, "abc", nil)
+        end
+      end
     end
   end
 end

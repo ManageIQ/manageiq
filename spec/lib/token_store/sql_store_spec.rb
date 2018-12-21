@@ -17,7 +17,7 @@ RSpec.describe TokenStore::SqlStore do
     it "updates a session if it exists" do
       store = build_sql_store("TEST")
       token = SecureRandom.hex
-      session = FactoryGirl.create(
+      session = FactoryBot.create(
         :session,
         :session_id => "TEST:#{token}",
         :raw_data   => {:expires_on => 1.second.from_now}
@@ -33,7 +33,7 @@ RSpec.describe TokenStore::SqlStore do
     it "reads a valid token" do
       store = build_sql_store("TEST")
       token = SecureRandom.hex
-      FactoryGirl.create(
+      FactoryBot.create(
         :session,
         :session_id => "TEST:#{token}",
         :raw_data   => {:userid => "alice", :expires_on => 1.second.from_now}
@@ -47,7 +47,7 @@ RSpec.describe TokenStore::SqlStore do
     it "returns nil for an expired token" do
       store = build_sql_store("TEST")
       token = SecureRandom.hex
-      FactoryGirl.create(
+      FactoryBot.create(
         :session,
         :session_id => "TEST:#{token}",
         :raw_data   => {:userid => "alice", :expires_on => 1.second.ago}
@@ -72,7 +72,7 @@ RSpec.describe TokenStore::SqlStore do
     it "deletes a token" do
       store = build_sql_store("TEST")
       token = SecureRandom.hex
-      FactoryGirl.create(
+      FactoryBot.create(
         :session,
         :session_id => "TEST:#{token}",
         :raw_data   => {:userid => "alice", :expires_on => 1.hour.from_now}

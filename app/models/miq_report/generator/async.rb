@@ -55,7 +55,6 @@ module MiqReport::Generator::Async
       if self.new_record?
         MiqQueue.submit_job(
           :service      => "reporting",
-          :role         => "reporting",
           :class_name   => self.class.to_s,
           :method_name  => "_async_generate_table",
           :args         => [task.id, self, options],

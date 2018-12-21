@@ -23,6 +23,8 @@ Vmdb::Application.configure do
     env.cache = ActiveSupport::Cache.lookup_store(:memory_store)
   end
 
+  config.assets.compile = ENV['TEST_SUITE'] == 'spec:javascript'
+
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
 
@@ -60,7 +62,7 @@ Vmdb::Application.configure do
 end
 
 require "minitest"
-require "factory_girl"
+require "factory_bot"
 require "timecop"
 require "vcr"
 require "webmock/rspec"

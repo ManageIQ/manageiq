@@ -3,13 +3,14 @@ require "fileutils"
 require "securerandom"
 
 class ApplianceEmbeddedAnsible < EmbeddedAnsible
-  TOWER_VERSION_FILE     = "/var/lib/awx/.tower_version".freeze
-  SETUP_SCRIPT           = "ansible-tower-setup".freeze
-  SECRET_KEY_FILE        = "/etc/tower/SECRET_KEY".freeze
-  SETTINGS_FILE          = "/etc/tower/settings.py".freeze
-  EXCLUDE_TAGS           = "packages,migrations,firewall".freeze
-  HTTP_PORT              = 54_321
-  HTTPS_PORT             = 54_322
+  TOWER_VERSION_FILE                    = "/var/lib/awx/.tower_version".freeze
+  SETUP_SCRIPT                          = "ansible-tower-setup".freeze
+  SECRET_KEY_FILE                       = "/etc/tower/SECRET_KEY".freeze
+  SETTINGS_FILE                         = "/etc/tower/settings.py".freeze
+  EXCLUDE_TAGS                          = "packages,migrations,firewall".freeze
+  HTTP_PORT                             = 54_321
+  HTTPS_PORT                            = 54_322
+  CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR = Pathname.new("/var/lib/awx_consolidated_source").freeze
 
   def self.available?
     require "linux_admin"
@@ -28,12 +29,12 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
   end
 
   def start
-    if configured? && !upgrade?
-      update_proxy_settings
-      services.each { |service| LinuxAdmin::Service.new(service).start.enable }
-    else
+    if run_setup_script?
       configure_secret_key
       run_setup_script(EXCLUDE_TAGS)
+    else
+      update_proxy_settings
+      services.each { |service| LinuxAdmin::Service.new(service).start.enable }
     end
 
     5.times do
@@ -70,7 +71,37 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
     api_connection_raw("localhost", HTTP_PORT)
   end
 
+  def create_local_playbook_repo
+    self.class.consolidate_plugin_playbooks(playbook_repo_path)
+
+    Dir.chdir(playbook_repo_path) do
+      require 'rugged'
+      repo = Rugged::Repository.init_at(".")
+      index = repo.index
+      index.add_all("*")
+      index.write
+
+      options              = {}
+      options[:tree]       = index.write_tree(repo)
+      options[:author]     = options[:committer] = { :email => "system@localhost", :name => "System", :time => Time.now.utc }
+      options[:message]    = "Initial Commit"
+      options[:parents]    = []
+      options[:update_ref] = 'HEAD'
+      Rugged::Commit.create(repo, options)
+    end
+
+    FileUtils.chown_R('awx', 'awx', playbook_repo_path)
+  end
+
+  def playbook_repo_path
+    CONSOLIDATED_PLUGIN_PLAYBOOKS_TEMPDIR
+  end
+
   private
+
+  def run_setup_script?
+    force_setup_run? || !configured? || upgrade?
+  end
 
   def upgrade?
     local_tower_version != tower_rpm_version
@@ -99,6 +130,7 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
       AwesomeSpawn.run!(SETUP_SCRIPT, :params => params)
     end
     write_setup_complete_file
+    remove_force_setup_marker_file
   rescue AwesomeSpawn::CommandResultError => e
     _log.error("EmbeddedAnsible setup script failed with: #{e.message}")
     miq_database.ansible_secret_key = nil
@@ -185,5 +217,17 @@ class ApplianceEmbeddedAnsible < EmbeddedAnsible
 
   def setup_complete_file
     Rails.root.join("tmp", "embedded_ansible_setup_complete")
+  end
+
+  def remove_force_setup_marker_file
+    FileUtils.rm_f(force_setup_run_marker_file)
+  end
+
+  def force_setup_run?
+    File.exist?(force_setup_run_marker_file)
+  end
+
+  def force_setup_run_marker_file
+    Rails.root.join("tmp", "embedded_ansible_force_setup_run")
   end
 end

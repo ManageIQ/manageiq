@@ -1,4 +1,6 @@
 class MiqRegion < ApplicationRecord
+  belongs_to :maintenance_zone, :class_name => 'Zone', :inverse_of => false
+
   has_many :metrics,        :as => :resource # Destroy will be handled by purger
   has_many :metric_rollups, :as => :resource # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
@@ -62,7 +64,11 @@ class MiqRegion < ApplicationRecord
   end
 
   def servers_for_settings_reload
-    miq_servers.where(:status => "started")
+    # This method is used to queue reload_settings for the resources which
+    # had settings changed.  If those servers are in a different region it is
+    # not possible to queue methods for them so we want to filter the
+    # returned servers to just ones in the current region.
+    miq_servers.in_my_region.where(:status => "started")
   end
 
   def active_miq_servers
@@ -109,8 +115,12 @@ class MiqRegion < ApplicationRecord
             _("Region [%{region_id}] does not match the database's region [%{db_id}]") % {:region_id => my_region_id,
                                                                                           :db_id     => db_region_id}
     end
+    create_params = {
+      :description    => "Region #{my_region_id}",
+      :migrations_ran => ActiveRecord::SchemaMigration.normalized_versions
+    }
 
-    create_with(:description => "Region #{my_region_id}").find_or_create_by!(:region => my_region_id) do
+    create_with(create_params).find_or_create_by!(:region => my_region_id) do
       _log.info("Creating Region [#{my_region_id}]")
     end
   end
@@ -206,7 +216,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ui_miq_server
-    MiqServer.in_region(region).find_by(:has_active_userinterface => true)
+    MiqServer.in_region(region).recently_active.find_by(:has_active_userinterface => true)
   end
 
   def remote_ui_ipaddress
@@ -220,12 +230,16 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ui_url(contact_with = :hostname)
+    svr = remote_ui_miq_server
+    remote_ui_url_override = svr.settings_for_resource.ui.url if svr
+    return remote_ui_url_override if remote_ui_url_override
+
     hostname = send("remote_ui_#{contact_with}")
     hostname && "https://#{hostname}"
   end
 
   def remote_ws_miq_server
-    MiqServer.in_region(region).find_by(:has_active_webservices => true)
+    MiqServer.in_region(region).recently_active.find_by(:has_active_webservices => true)
   end
 
   def remote_ws_address
@@ -299,6 +313,10 @@ class MiqRegion < ApplicationRecord
       options[type] = self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
     end
     @perf_capture_always = options.freeze
+  end
+
+  def self.display_name(number = 1)
+    n_('Region', 'Regions', number)
   end
 
   private

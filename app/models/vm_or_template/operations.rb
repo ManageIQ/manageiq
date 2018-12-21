@@ -64,6 +64,35 @@ module VmOrTemplate::Operations
     check_policy_prevent(:request_vm_destroy, :raw_destroy)
   end
 
+  def raw_rename(new_name)
+    unless ext_management_system
+      raise _("VM has no Provider, unable to rename VM")
+    end
+    run_command_via_parent(:vm_rename, :new_name => new_name)
+  end
+
+  def rename(new_name)
+    raw_rename(new_name)
+  end
+
+  def rename_queue(userid, new_name)
+    task_opts = {
+      :action => "Renaming VM for user #{userid}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'rename',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [new_name]
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   private
 
   #
@@ -96,7 +125,7 @@ module VmOrTemplate::Operations
               _('The VM is terminated')
             elsif !has_required_host?
               _('The VM is not connected to a Host')
-            elsif !connection_state.nil? && !connected_to_ems?
+            elsif disconnected?
               _('The VM does not have a valid connection state')
             elsif !has_active_ems?
               _("The VM is not connected to an active Provider")

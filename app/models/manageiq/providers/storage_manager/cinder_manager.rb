@@ -67,4 +67,8 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
   def supports_provider_id?
     true
   end
+
+  def self.display_name(number = 1)
+    n_('Storage Manager (Cinder)', 'Storage Managers (Cinder)', number)
+  end
 end

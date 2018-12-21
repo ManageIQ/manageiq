@@ -70,6 +70,13 @@ class ChargeableField < ApplicationRecord
     "#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}metric" # metric value (e.g. Storage [Used|Allocated|Fixed])
   end
 
+  # Fixed metric has _1 or _2 in name but column
+  # fixed_compute_metric is used in report and calculations
+  # TODO: remove and unify with metric_key
+  def metric_column_key
+    fixed? ? metric_key.gsub(/\_1|\_2/, '') : metric_key
+  end
+
   def cost_keys(sub_metric = nil)
     keys = ["#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}cost", # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
             'total_cost']
@@ -83,6 +90,16 @@ class ChargeableField < ApplicationRecord
 
   def rate_name
     "#{group}_#{source}"
+  end
+
+  def self.cols_on_metric_rollup
+    (%w(id tag_names resource_id) + chargeable_cols_on_metric_rollup).uniq
+  end
+
+  def self.col_index(column)
+    @rate_cols ||= {}
+    column = VIRTUAL_COL_USES[column] || column
+    @rate_cols[column] ||= cols_on_metric_rollup.index(column.to_s)
   end
 
   private
@@ -118,9 +135,13 @@ class ChargeableField < ApplicationRecord
     File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
   end
 
+  private_class_method :seed_data
+
   def self.chargeable_cols_on_metric_rollup
     existing_cols = MetricRollup.attribute_names
     chargeable_cols = pluck(:metric) & existing_cols
-    chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }
+    chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.sort
   end
+
+  private_class_method :chargeable_cols_on_metric_rollup
 end

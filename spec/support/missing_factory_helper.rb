@@ -1,4 +1,4 @@
-# HACK: Allow calling FactoryGirl.create or FactoryGirl.build on anything.
+# HACK: Allow calling FactoryBot.create or FactoryBot.build on anything.
 module Spec
   module Support
     module MissingFactoryHelper
@@ -23,11 +23,11 @@ module Spec
       def registered_factory_symbols
         @registered_factory_symbols ||= begin
           require 'set'
-          FactoryGirl.factories.collect { |i| i.name.to_sym }.to_set
+          FactoryBot.factories.collect { |i| i.name.to_sym }.to_set
         end
       end
     end
   end
 end
 
-FactoryGirl.singleton_class.prepend(Spec::Support::MissingFactoryHelper)
+FactoryBot.singleton_class.prepend(Spec::Support::MissingFactoryHelper)

@@ -466,6 +466,10 @@ class Classification < ApplicationRecord
     name.downcase.tr('^a-z0-9_:', '_')[0, NAME_MAX_LENGTH]
   end
 
+  def self.display_name(number = 1)
+    n_('Category', 'Categories', number)
+  end
+
   private
 
   def self.add_entries_from_hash(cat, entries)
@@ -474,6 +478,8 @@ class Classification < ApplicationRecord
       ent ? ent.update_attributes!(entry) : cat.add_entry(entry)
     end
   end
+
+  private_class_method :add_entries_from_hash
 
   def validate_uniqueness_on_tag_name
     tag = find_tag
@@ -519,6 +525,8 @@ class Classification < ApplicationRecord
 
     "#{cname}: #{ename}"
   end
+
+  private_class_method :tag2human
 
   def find_tag
     Tag.find_by_classification_name(name, region_id, ns, parent_id)

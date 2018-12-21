@@ -85,6 +85,10 @@ class MiqPolicySet < ApplicationRecord
     end
   end
 
+  def self.display_name(number = 1)
+    n_('Policy Profile', 'Policy Profiles', number)
+  end
+
   private
 
   def default_name_to_description

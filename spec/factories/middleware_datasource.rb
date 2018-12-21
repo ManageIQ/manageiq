@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :middleware_datasource
 
   factory :hawkular_middleware_datasource,
@@ -10,6 +10,6 @@ FactoryGirl.define do
           :parent => :hawkular_middleware_datasource do
     name 'ExampleDS'
     nativeid 'Local~/subsystem=datasources/data-source=ExampleDS'
-    middleware_server { FactoryGirl.create(:middleware_server) }
+    middleware_server { FactoryBot.create(:middleware_server) }
   end
 end

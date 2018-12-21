@@ -14,7 +14,7 @@ describe VmdbDatabase do
     context "#seed" do
       before do
         MiqDatabase.seed
-        @db = FactoryGirl.create(:vmdb_database)
+        @db = FactoryBot.create(:vmdb_database)
       end
 
       it "adds new tables" do
@@ -26,7 +26,7 @@ describe VmdbDatabase do
 
       it "removes deleted tables" do
         table = 'flintstones'
-        FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => table)
+        FactoryBot.create(:vmdb_table_evm, :vmdb_database => @db, :name => table)
         @db.reload
         expect(@db.evm_tables.collect(&:name)).to include(table)
 
@@ -38,7 +38,7 @@ describe VmdbDatabase do
       it "finds existing tables" do
         table = 'flintstones'
         connection.select_value("CREATE TABLE #{table} (id BIGINT PRIMARY KEY)")
-        FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => table)
+        FactoryBot.create(:vmdb_table_evm, :vmdb_database => @db, :name => table)
 
         expect(VmdbTableEvm).to receive(:create).never
         @db.seed
@@ -74,7 +74,7 @@ describe VmdbDatabase do
 
       it "should not update table values" do
         factory_ip_address = "127.0.0.1"
-        FactoryGirl.create(:vmdb_database, :ipaddress => factory_ip_address)
+        FactoryBot.create(:vmdb_database, :ipaddress => factory_ip_address)
 
         stubbed_ip_address = "127.0.0.1"
         allow(described_class).to receive(:db_server_ipaddress).and_return(stubbed_ip_address)
@@ -86,7 +86,7 @@ describe VmdbDatabase do
 
       it "should update table values" do
         factory_ip_address = "127.0.0.1"
-        FactoryGirl.create(:vmdb_database, :ipaddress => factory_ip_address)
+        FactoryBot.create(:vmdb_database, :ipaddress => factory_ip_address)
 
         stubbed_ip_address = "192.255.255.1"
         allow(described_class).to receive(:db_server_ipaddress).and_return(stubbed_ip_address)

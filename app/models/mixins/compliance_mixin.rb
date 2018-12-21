@@ -3,30 +3,19 @@ module ComplianceMixin
 
   included do
     has_many :compliances, :as => :resource, :dependent => :destroy
+    has_one  :last_compliance,
+             -> { order('"compliances"."timestamp" DESC') },
+             :as         => :resource,
+             :inverse_of => :resource,
+             :class_name => "Compliance"
 
-    virtual_has_one :last_compliance, :class_name => "Compliance"
-
-    virtual_column  :last_compliance_status,    :type => :boolean,  :uses => :last_compliance
-    virtual_column  :last_compliance_timestamp, :type => :datetime, :uses => :last_compliance
-  end
-
-  def last_compliance
-    return @last_compliance unless @last_compliance.nil?
-    @last_compliance = if @association_cache.include?(:compliances)
-                         compliances.max_by(&:timestamp)
-                       else
-                         compliances.order("timestamp DESC").first
-                       end
-  end
-
-  def last_compliance_status
-    lc = last_compliance
-    lc.try(:compliant)
-  end
-
-  def last_compliance_timestamp
-    lc = last_compliance
-    lc.try(:timestamp)
+    virtual_delegate :last_compliance_status,
+                     :to        => "last_compliance.compliant",
+                     :allow_nil => true
+    virtual_delegate :timestamp,
+                     :to        => :last_compliance,
+                     :allow_nil => true,
+                     :prefix    => true
   end
 
   def check_compliance

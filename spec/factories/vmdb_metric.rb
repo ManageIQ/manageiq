@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :vmdb_metric
 
   factory :vmdb_metric_hourly, :parent => :vmdb_metric do

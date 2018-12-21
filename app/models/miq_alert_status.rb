@@ -18,4 +18,8 @@ class MiqAlertStatus < ApplicationRecord
   def hidden?
     miq_alert_status_actions.where(:action_type => %w(hide show)).last.try(:action_type) == 'hide'
   end
+
+  def self.display_name(number = 1)
+    n_('Alert Status', 'Alert Statuses', number)
+  end
 end

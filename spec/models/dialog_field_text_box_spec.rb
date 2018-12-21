@@ -1,4 +1,66 @@
 describe DialogFieldTextBox do
+  describe "#initialize_value_context" do
+    let(:field) do
+      described_class.new(
+        :dynamic             => dynamic,
+        :load_values_on_init => load_values_on_init,
+        :show_refresh_button => show_refresh_button,
+        :default_value       => "default value"
+      )
+    end
+    let(:automate_value) { "value from automate" }
+    let(:load_values_on_init) { false }
+    let(:show_refresh_button) { false }
+
+    context "when the field is dynamic" do
+      let(:dynamic) { true }
+
+      before do
+        allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).and_return(automate_value)
+      end
+
+      context "when show_refresh_button is true" do
+        let(:show_refresh_button) { true }
+
+        context "when load_values_on_init is true" do
+          let(:load_values_on_init) { true }
+
+          it "sets the value to the automate value" do
+            field.initialize_value_context
+            expect(field.instance_variable_get(:@value)).to eq("value from automate")
+          end
+        end
+
+        context "when load_values_on_init is false" do
+          let(:load_values_on_init) { false }
+
+          it "uses the default value" do
+            field.initialize_value_context
+            expect(field.instance_variable_get(:@value)).to eq("default value")
+          end
+        end
+      end
+
+      context "when show_refresh_button is false" do
+        let(:show_refresh_button) { false }
+
+        it "sets the value to the automate value" do
+          field.initialize_value_context
+          expect(field.instance_variable_get(:@value)).to eq("value from automate")
+        end
+      end
+    end
+
+    context "when the field is not dynamic" do
+      let(:dynamic) { false }
+
+      it "uses the default value" do
+        field.initialize_value_context
+        expect(field.instance_variable_get(:@value)).to eq("default value")
+      end
+    end
+  end
+
   describe "#initial_values" do
     let(:dialog_field) { described_class.new }
 
@@ -8,7 +70,7 @@ describe DialogFieldTextBox do
   end
 
   context "dialog field text box without options hash" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
     it "#protected?" do
       expect(df).not_to be_protected
@@ -21,7 +83,7 @@ describe DialogFieldTextBox do
   end
 
   context "dialog field text box without protected field" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => false}) }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field', :options => {:protected => false}) }
 
     it "#protected?" do
       expect(df).not_to be_protected
@@ -33,7 +95,7 @@ describe DialogFieldTextBox do
   end
 
   context "dialog field text box with protected field" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label   => 'test field', :name    => 'test field', :options => {:protected => true}) }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label   => 'test field', :name    => 'test field', :options => {:protected => true}) }
 
     it "#protected?" do
       expect(df).to be_protected
@@ -59,7 +121,7 @@ describe DialogFieldTextBox do
   end
 
   context "validation" do
-    let(:df) { FactoryGirl.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
+    let(:df) { FactoryBot.build(:dialog_field_text_box, :label => 'test field', :name => 'test field') }
 
     describe "#validate_field_data" do
       let(:dt) { double('DialogTab', :label => 'tab') }

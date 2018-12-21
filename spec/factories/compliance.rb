@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :compliance do
     sequence(:id)          { |n| 10_000_000 + n }
     sequence(:resource_id) { |n| 10_000_010 + n }

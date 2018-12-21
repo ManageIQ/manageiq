@@ -1,7 +1,7 @@
 # manageiq-providers-<%= provider_name %>
 
 [![Gem Version](https://badge.fury.io/rb/manageiq-providers-<%= provider_name %>.svg)](http://badge.fury.io/rb/manageiq-providers-<%= provider_name %>)
-[![Build Status](https://travis-ci.org/ManageIQ/manageiq-providers-<%= provider_name %>.svg)](https://travis-ci.org/ManageIQ/manageiq-providers-<%= provider_name %>)
+[![Build Status](https://travis-ci.org/ManageIQ/manageiq-providers-<%= provider_name %>.svg?branch=master)](https://travis-ci.org/ManageIQ/manageiq-providers-<%= provider_name %>)
 [![Code Climate](https://codeclimate.com/github/ManageIQ/manageiq-providers-<%= provider_name %>.svg)](https://codeclimate.com/github/ManageIQ/manageiq-providers-<%= provider_name %>)
 [![Test Coverage](https://codeclimate.com/github/ManageIQ/manageiq-providers-<%= provider_name %>/badges/coverage.svg)](https://codeclimate.com/github/ManageIQ/manageiq-providers-<%= provider_name %>/coverage)
 [![Dependency Status](https://gemnasium.com/ManageIQ/manageiq-providers-<%= provider_name %>.svg)](https://gemnasium.com/ManageIQ/manageiq-providers-<%= provider_name %>)

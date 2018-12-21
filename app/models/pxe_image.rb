@@ -59,6 +59,10 @@ class PxeImage < ApplicationRecord
     pxe_server.delete_file(filepath)
   end
 
+  def self.display_name(number = 1)
+    n_('PXE Image', 'PXE Images', number)
+  end
+
   private
 
   def update_pxe_content_option(options, key, value)

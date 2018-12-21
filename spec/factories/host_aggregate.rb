@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :host_aggregate do
     sequence(:name) { |n| " host_aggregate_#{seq_padded_for_sorting(n)}" }
   end

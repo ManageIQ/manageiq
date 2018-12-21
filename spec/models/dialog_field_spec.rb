@@ -1,18 +1,18 @@
 describe DialogField do
   context "legacy tests" do
 
-    let(:df) { FactoryGirl.create(:dialog_field) }
+    let(:df) { FactoryBot.create(:dialog_field) }
     it "sets default value for required attribute" do
       expect(df.required).to eq(false)
       expect(df.visible).to eq(true)
     end
 
     it "fields named 'action' or 'controller' are invalid" do
-      action_field = FactoryGirl.build(:dialog_field, :name => 'action')
+      action_field = FactoryBot.build(:dialog_field, :name => 'action')
       expect(action_field).not_to be_valid
-      controller_field = FactoryGirl.build(:dialog_field, :name => 'controller')
+      controller_field = FactoryBot.build(:dialog_field, :name => 'controller')
       expect(controller_field).not_to be_valid
-      foo_field = FactoryGirl.build(:dialog_field, :name => 'foo')
+      foo_field = FactoryBot.build(:dialog_field, :name => 'foo')
       expect(foo_field).to be_valid
     end
 
@@ -108,6 +108,7 @@ describe DialogField do
 
   describe "#initialize_value_context" do
     let(:field) { described_class.new(:dynamic => dynamic, :value => value) }
+    let(:field_with_default) { described_class.new(:dynamic => dynamic, :value => value, :default_value => "drew_was_here") }
 
     context "when the field is dynamic" do
       let(:dynamic) { true }
@@ -138,12 +139,35 @@ describe DialogField do
 
     context "when the field is not dynamic" do
       let(:dynamic) { false }
-      let(:value) { "not dynamic" }
 
-      it "does not adjust the value" do
-        field.initialize_value_context
-        expect(field.instance_variable_get(:@value)).to eq("not dynamic")
+      context "with a user-adjusted value" do
+        let(:value) { "not dynamic" }
+
+        it "does not adjust the value" do
+          field.initialize_value_context
+          expect(field.instance_variable_get(:@value)).to eq("not dynamic")
+        end
       end
+
+      context "without a user-adjusted value" do
+        context "with a default value" do
+          let(:value) { nil }
+
+          it "does adjust the value" do
+            field_with_default.initialize_value_context
+            expect(field_with_default.instance_variable_get(:@value)).to eq("drew_was_here")
+          end
+        end
+      end
+    end
+  end
+
+  describe "#initialize_with_given_value" do
+    let(:field) { described_class.new(:default_value => "not the given value") }
+
+    it "uses the given value" do
+      field.initialize_with_given_value("given_value")
+      expect(field.default_value).to eq("given_value")
     end
   end
 

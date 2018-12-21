@@ -1,4 +1,5 @@
 require 'ancestry'
+require 'ancestry_patch'
 
 class Service < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
@@ -49,13 +50,15 @@ class Service < ApplicationRecord
   virtual_has_one    :user
   virtual_has_one    :chargeback_report
   virtual_has_one    :configuration_script
+  virtual_has_one    :reconfigure_dialog
 
   before_validation :set_tenant_from_group
-  before_create     :apply_dialog_settings
+  before_create :update_attributes_from_dialog
 
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
 
+  include CustomActionsMixin
   include ServiceMixin
   include OwnershipMixin
   include CustomAttributeMixin
@@ -63,8 +66,12 @@ class Service < ApplicationRecord
   include ProcessTasksMixin
   include TenancyMixin
   include SupportsFeatureMixin
+  include CiFeatureMixin
   include Metric::CiMixin
 
+  extend InterRegionApiMethodRelay
+
+  include_concern 'Operations'
   include_concern 'RetirementManagement'
   include_concern 'Aggregation'
   include_concern 'ResourceLinking'
@@ -92,6 +99,8 @@ class Service < ApplicationRecord
     unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
   end
 
+  supports :retire
+
   alias parent_service parent
   alias_attribute :service, :parent
   virtual_belongs_to :service
@@ -100,12 +109,14 @@ class Service < ApplicationRecord
     vms.map(&:power_state)
   end
 
+  # renaming method from custom_actions_mixin
+  alias_method :custom_service_actions, :custom_actions
   def custom_actions
-    service_template&.custom_actions(self)
+    service_template ? service_template.custom_actions(self) : custom_service_actions(self)
   end
 
   def custom_action_buttons
-    service_template&.custom_action_buttons(self)
+    service_template ? service_template.custom_action_buttons(self) : generic_custom_buttons
   end
 
   def power_state
@@ -205,6 +216,10 @@ class Service < ApplicationRecord
 
   def composite?
     children.present?
+  end
+
+  def retireable?
+    type.present?
   end
 
   def atomic?
@@ -315,6 +330,15 @@ class Service < ApplicationRecord
 
   def reconfigure_resource_action
     service_template.resource_actions.find_by(:action => 'Reconfigure') if service_template
+  end
+
+  def reconfigure_dialog
+    resource_action = reconfigure_resource_action
+    options = {:target => self, :reconfigure => true}
+
+    workflow = ResourceActionWorkflow.new(self.options[:dialog], User.current_user, resource_action, options)
+
+    DialogSerializer.new.serialize(Array[workflow.dialog], true)
   end
 
   def raise_final_process_event(action)
@@ -447,21 +471,7 @@ class Service < ApplicationRecord
   def configuration_script
   end
 
-  private
-
-  def apply_dialog_settings
-    dialog_options = options[:dialog] || {}
-
-    %w(dialog_service_name dialog_service_description).each do |field_name|
-      send(field_name, dialog_options[field_name]) if dialog_options.key?(field_name)
-    end
-  end
-
-  def dialog_service_name(value)
-    self.name = value if value.present?
-  end
-
-  def dialog_service_description(value)
-    self.description = value if value.present?
+  private def update_attributes_from_dialog
+    Service::DialogProperties.parse(options[:dialog], evm_owner).each { |key, value| self[key] = value }
   end
 end

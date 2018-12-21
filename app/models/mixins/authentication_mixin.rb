@@ -4,7 +4,16 @@ module AuthenticationMixin
   included do
     has_many :authentications, :as => :resource, :dependent => :destroy, :autosave => true
 
-    virtual_column :authentication_status,  :type => :string
+    has_one  :authentication_status_severity_level,
+             -> { order(Authentication::STATUS_SEVERITY_AREL.desc) },
+             :as         => :resource,
+             :inverse_of => :resource,
+             :class_name => "Authentication"
+
+    virtual_delegate :authentication_status,
+                     :to        => "authentication_status_severity_level.status",
+                     :default   => "None",
+                     :allow_nil => true
 
     def self.authentication_check_schedule
       zone = MiqServer.my_server.zone
@@ -115,11 +124,6 @@ module AuthenticationMixin
 
   def missing_credentials?(type = nil)
     !has_credentials?(type)
-  end
-
-  def authentication_status
-    ordered_auths = authentication_for_providers.sort_by(&:status_severity)
-    ordered_auths.last.try(:status) || "None"
   end
 
   def authentication_status_ok?(type = nil)
@@ -349,7 +353,9 @@ module AuthenticationMixin
   # @return [Boolean] true if the routine is executed successfully
   #
   def change_password(current_password, new_password, auth_type = :default)
-    raise MiqException::Error, _("Change Password is not supported for #{self.class.description} provider") unless supports?(:change_password)
+    unless supports?(:change_password)
+      raise MiqException::Error, _("Change Password is not supported for %{class_description} provider") % {:class_description => self.class.description}
+    end
     if change_password_params_valid?(current_password, new_password)
       raw_change_password(current_password, new_password)
       update_authentication(auth_type => {:userid => authentication_userid, :password => new_password})

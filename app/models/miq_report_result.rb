@@ -24,7 +24,7 @@ class MiqReportResult < ApplicationRecord
     end
   }
   scope :for_user, lambda { |user|
-    for_groups(user.admin_user? ? nil : user.miq_group_ids)
+    for_groups(user.report_admin_user? ? nil : user.miq_group_ids)
   }
 
   before_save do
@@ -34,6 +34,20 @@ class MiqReportResult < ApplicationRecord
       self.miq_group_id ||= user.current_group_id unless user.nil?
     end
   end
+
+  # These two hooks prevent temporary chargeback aggregation data to be
+  # retained in each miq_report_results row, which was found and fixed as part
+  # of the following BZ:
+  #
+  #   https://bugzilla.redhat.com/show_bug.cgi?id=1590908
+  #
+  # These two hooks remove extra data on the `@extras` instance variable, since
+  # it is not necessary to be saved to the DB, but allows it to be retained for
+  # the remainder of the object's instantiation.  The `after_commit` hook
+  # specifically is probably overkill, but allows us to not break existing code
+  # that expects the temporary chargeback data in the instantiated object.
+  before_save  { @_extra_groupings = report.extras.delete(:grouping) if report.kind_of?(MiqReport) && report.extras }
+  after_commit { report.extras[:grouping] = @_extra_groupings if report.kind_of?(MiqReport) && report.extras }
 
   delegate :table, :to => :report_results, :allow_nil => true
 
@@ -51,6 +65,20 @@ class MiqReportResult < ApplicationRecord
 
   def status_message
     miq_task.nil? ? _("The task associated with this report is no longer available") : miq_task.message
+  end
+
+  # Use this method over `report_results` if you don't plan on using the
+  # `binary_blob` associated with the MiqReportResult (chances are you don't
+  # need it).
+  def valid_report_column?
+    report.kind_of?(MiqReport)
+  end
+
+  # Use this over `report_results.contains_records?` if you don't need to
+  # access the binary_blob associated with the MiqReportResult (chances are you
+  # don't need it)
+  def contains_records?
+    (report && (report.extras || {})[:total_html_rows].to_i.positive?) || html_details.exists?
   end
 
   def report_results
@@ -246,7 +274,7 @@ class MiqReportResult < ApplicationRecord
       new_res.report_results = user.with_my_timezone do
         case result_type.to_sym
         when :csv then rpt.to_csv
-        when :pdf then to_pdf
+        when :pdf then html_rows.join
         when :txt then rpt.to_text
         else
           raise _("Result type %{result_type} not supported") % {:result_type => result_type}
@@ -329,7 +357,7 @@ class MiqReportResult < ApplicationRecord
 
   def self.with_current_user_groups
     current_user = User.current_user
-    current_user.admin_user? ? all : where(:miq_group_id => current_user.miq_group_ids)
+    current_user.report_admin_user? ? all : where(:miq_group_id => current_user.miq_group_ids)
   end
 
   def self.with_chargeback
@@ -345,7 +373,9 @@ class MiqReportResult < ApplicationRecord
             miq_report_results.miq_report_id")
   end
 
-  private
+  def self.display_name(number = 1)
+    n_('Report Result', 'Report Results', number)
+  end
 
   def user_timezone
     user = userid.include?("|") ? nil : User.find_by_userid(userid)

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :compliance_detail do
     sequence(:id) { |n| 10_000_000 + n }
     created_on DateTime .current

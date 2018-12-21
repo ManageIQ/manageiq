@@ -1,8 +1,8 @@
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
-  let(:manager) { FactoryGirl.create(:embedded_automation_manager_ansible) }
-  let(:auth_one) { FactoryGirl.create(:authentication, :manager_ref => 6) }
-  let(:auth_two) { FactoryGirl.create(:authentication, :manager_ref => 8) }
-  subject { FactoryGirl.create(:embedded_playbook, :manager => manager) }
+  let(:manager) { FactoryBot.create(:embedded_automation_manager_ansible) }
+  let(:auth_one) { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '6') }
+  let(:auth_two) { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '8') }
+  subject { FactoryBot.create(:embedded_playbook, :manager => manager) }
 
   describe '#run' do
     it 'delegates request to playbook runner' do
@@ -21,8 +21,8 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
         :extra_vars       => '{"a":"x"}',
         :playbook         => subject.name,
         :project          => 'mref',
-        :credential       => '6',
-        :vault_credential => '8'
+        :credential       => 6,
+        :vault_credential => 8
       )
 
       allow(subject).to receive(:configuration_script_source).and_return(double(:manager_ref => 'mref'))

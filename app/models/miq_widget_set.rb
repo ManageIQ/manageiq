@@ -50,6 +50,9 @@ class MiqWidgetSet < ApplicationRecord
         end.compact
         h
       end
+
+      owner = attrs.delete("owner_description")
+      attrs["owner_id"] = MiqGroup.find_by(:description => owner).try(:id) if owner
     end
 
     if ws
@@ -73,5 +76,9 @@ class MiqWidgetSet < ApplicationRecord
   def self.find_with_same_order(ids)
     recs = where(:id => ids).index_by(&:id)
     ids.map { |id| recs[id.to_i] }
+  end
+
+  def self.display_name(number = 1)
+    n_('Dashboard', 'Dashboards', number)
   end
 end

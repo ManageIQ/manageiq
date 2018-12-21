@@ -23,7 +23,7 @@ module ActiveMetrics
 
         samples_arel = klass.where(:capture_interval_name => interval_name).where(:resource => resources).where(:timestamp => start_time..end_time)
 
-        samples_inventory_collection = ::ManagerRefresh::InventoryCollection.new(
+        samples_inventory_collection = ::InventoryRefresh::InventoryCollection.new(
           :manager_ref    => [:resource_type, :resource_id, :timestamp, :capture_interval_name],
           :name           => meth,
           :saver_strategy => :batch,
@@ -44,7 +44,7 @@ module ActiveMetrics
 
         Benchmark.realtime_block(:process_perfs_db) do
           # TODO(lsmola) where can I can take the manager from?
-          ManagerRefresh::SaveInventory.save_inventory(resources.first.ext_management_system, [samples_inventory_collection])
+          InventoryRefresh::SaveInventory.save_inventory(resources.first.ext_management_system, [samples_inventory_collection])
         end
         created_count = samples_inventory_collection.created_records.count
         updated_count = samples_inventory_collection.updated_records.count

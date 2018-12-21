@@ -4,6 +4,11 @@ class MiqRequest < ApplicationRecord
   ACTIVE_STATES = %w(active queued)
   REQUEST_UNIQUE_KEYS = %w(id state status created_on updated_on type).freeze
 
+  CANCEL_STATUS_REQUESTED  = "cancel_requested".freeze
+  CANCEL_STATUS_PROCESSING = "canceling".freeze
+  CANCEL_STATUS_FINISHED   = "canceled".freeze
+  CANCEL_STATUS            = [CANCEL_STATUS_REQUESTED, CANCEL_STATUS_PROCESSING, CANCEL_STATUS_FINISHED].freeze
+
   belongs_to :source,            :polymorphic => true
   belongs_to :destination,       :polymorphic => true
   belongs_to :requester,         :class_name  => "User"
@@ -25,6 +30,10 @@ class MiqRequest < ApplicationRecord
 
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
+
+  validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
+                                                 :allow_nil => true,
+                                                 :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
 
   validate :validate_class, :validate_request_type
 
@@ -54,6 +63,7 @@ class MiqRequest < ApplicationRecord
 
   scope :created_recently,    ->(days_ago)   { where("miq_requests.created_on > ?", days_ago.days.ago) }
   scope :with_approval_state, ->(state)      { where(:approval_state => state) }
+  scope :with_cancel_status,  ->(status)     { where(:cancelation_status => status) }
   scope :with_type,           ->(type)       { where(:type => type) }
   scope :with_request_type,   ->(type)       { where(:request_type => type) }
   scope :with_requester,      ->(id)         { where(:requester_id => User.with_same_userid(id).collect(&:id)) }
@@ -63,11 +73,6 @@ class MiqRequest < ApplicationRecord
       :AutomationRequest => {
         :automation => N_("Automation")
       }
-    },
-    :Infrastructure => {
-      :MiqHostProvisionRequest => {
-        :host_pxe_install => N_("Host Provision")
-      },
     },
     :Service        => {
       :MiqProvisionConfiguredSystemRequest => {
@@ -143,11 +148,11 @@ class MiqRequest < ApplicationRecord
   end
 
   def self.user_owned(user)
-    where(:requester_id => user.id)
+    where(:requester_id => user.regional_users.select(:id))
   end
 
   def self.group_owned(miq_group)
-    where(:requester_id => miq_group.user_ids)
+    where(:requester_id => miq_group.regional_groups.joins(:users).select("users.id"))
   end
 
   # Supports old-style requests where specific request was a seperate table connected as a resource
@@ -336,7 +341,7 @@ class MiqRequest < ApplicationRecord
   def self.request_task_class
     @request_task_class ||= begin
       case name
-      when 'MiqProvisionRequest', 'MiqHostProvisionRequest'
+      when 'MiqProvisionRequest'
         name.underscore.chomp('_request').camelize.constantize
       else
         name.underscore.gsub(/_request$/, "_task").camelize.constantize
@@ -437,6 +442,11 @@ class MiqRequest < ApplicationRecord
   end
 
   def create_request_tasks
+    if cancel_requested?
+      do_cancel
+      return
+    end
+
     # Quota denial will result in automate_event_failed? being true
     return if automate_event_failed?("request_starting")
 
@@ -586,7 +596,37 @@ class MiqRequest < ApplicationRecord
     "#{self.class::SOURCE_CLASS_NAME}:#{requested_task_idx.inspect}"
   end
 
+  def self.display_name(number = 1)
+    n_('Request', 'Requests', number)
+  end
+
+  def cancel
+    raise _("Cancel operation is not supported for %{class}") % {:class => self.class.name}
+  end
+
+  def cancel_requested?
+    cancelation_status == CANCEL_STATUS_REQUESTED
+  end
+
+  def canceling?
+    cancelation_status == CANCEL_STATUS_PROCESSING
+  end
+
+  def canceled?
+    cancelation_status == CANCEL_STATUS_FINISHED
+  end
+
   private
+
+  def do_cancel
+    update_attributes(:cancelation_status => CANCEL_STATUS_PROCESSING)
+    cancel_cleanup
+    update_attributes(:cancelation_status => CANCEL_STATUS_FINISHED, :request_state => "finished", :status => "Error", :message => "Request is canceled by user.")
+    _log.info("Request #{description} is canceled by user.")
+  end
+
+  def cancel_cleanup
+  end
 
   def clean_up_keys_for_request_task
     req_task_attributes = attributes.dup

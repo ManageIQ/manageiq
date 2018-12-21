@@ -131,12 +131,12 @@ PXEMENU
 
   context "#synchronize" do
     before do
-      @pxe_server = FactoryGirl.create(:pxe_server)
+      @pxe_server = FactoryBot.create(:pxe_server)
       allow(@pxe_server).to receive_messages(:read_file => @contents_ipxe)
     end
 
     it "on typed menu" do
-      pxe_menu = FactoryGirl.create(:pxe_menu_ipxe, :pxe_server => @pxe_server)
+      pxe_menu = FactoryBot.create(:pxe_menu_ipxe, :pxe_server => @pxe_server)
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)
@@ -145,7 +145,7 @@ PXEMENU
     end
 
     it "on untyped menu" do
-      pxe_menu = FactoryGirl.create(:pxe_menu, :pxe_server => @pxe_server)
+      pxe_menu = FactoryBot.create(:pxe_menu, :pxe_server => @pxe_server)
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)
@@ -154,7 +154,7 @@ PXEMENU
     end
 
     it "on typed menu switching to a different type" do
-      pxe_menu = FactoryGirl.create(:pxe_menu_pxelinux, :contents => @contents_pxelinux, :pxe_server => @pxe_server)
+      pxe_menu = FactoryBot.create(:pxe_menu_pxelinux, :contents => @contents_pxelinux, :pxe_server => @pxe_server)
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)

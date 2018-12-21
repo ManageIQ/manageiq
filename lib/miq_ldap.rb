@@ -43,6 +43,7 @@ class MiqLdap
     @bind_timeout     = options.delete(:bind_timeout) || ::Settings.authentication.bind_timeout.to_i_with_method
     @search_timeout   = options.delete(:search_timeout) || ::Settings.authentication.search_timeout.to_i_with_method
     @follow_referrals = options.delete(:follow_referrals) || ::Settings.authentication.follow_referrals
+    @group_attribute  = options.delete(:group_attribute) || ::Settings.authentication.group_attribute
     options[:host] ||= ::Settings.authentication.ldaphost
     options[:port] ||= ::Settings.authentication.ldapport
     options[:host] = resolve_host(options[:host], options[:port])
@@ -265,8 +266,12 @@ class MiqLdap
     dn.split(",").collect { |i| i.downcase.strip }.join(",")
   end
 
-  def is_dn?(str)
+  def dn?(str)
     !!(str =~ /^([a-z|0-9|A-Z]+ *=[^,]+[,| ]*)+$/)
+  end
+
+  def upn?(str)
+    !!(str =~ /^.+@.+$/)
   end
 
   def domain_username?(str)
@@ -274,9 +279,11 @@ class MiqLdap
   end
 
   def fqusername(username)
-    return username if self.is_dn?(username) || self.domain_username?(username)
+    return username if dn?(username) || domain_username?(username)
 
     user_type = @user_type.split("-").first
+    return username if user_type != "mail" && upn?(username)
+
     user_prefix = @user_type.split("-").last
     user_prefix = "cn" if user_prefix == "dn"
     case user_type
@@ -285,13 +292,12 @@ class MiqLdap
       return username
     when "upn", "userprincipalname"
       return username if @user_suffix.blank?
-      return username if username =~ /^.+@.+$/ # already qualified with user@domain
 
       return "#{username}@#{@user_suffix}"
     when "mail"
-      username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || username =~ /^.+@.+$/
+      username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || upn?(username)
       dbuser = User.find_by_email(username.downcase)
-      dbuser = User.find_by_userid(username.downcase) unless dbuser
+      dbuser ||= User.find_by_userid(username.downcase)
       return dbuser.userid if dbuser && dbuser.userid
 
       return username
@@ -302,9 +308,14 @@ class MiqLdap
 
   def get_user_object(username, user_type = nil)
     user_type ||= @user_type.split("-").first
-    user_type = "dn" if self.is_dn?(username)
+    if dn?(username)
+      user_type = "dn"
+    elsif upn?(username)
+      user_type = "upn"
+    end
+
     begin
-      search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", "memberof"]}
+      search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", @group_attribute]}
 
       case user_type
       when "samaccountname"
@@ -368,7 +379,7 @@ class MiqLdap
     udata
   end
 
-  def get_memberships(obj, max_depth = 0, attr = :memberof, followed = [], current_depth = 0)
+  def get_memberships(obj, max_depth = 0, attr = @group_attribute.to_sym, followed = [], current_depth = 0)
     current_depth += 1
 
     _log.debug("Enter get_memberships: #{obj.inspect}")

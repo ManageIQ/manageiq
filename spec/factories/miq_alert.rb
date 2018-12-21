@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_alert do
     sequence(:description) { |n| "Test Alert #{n}" }
     enabled         true

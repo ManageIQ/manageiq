@@ -22,17 +22,19 @@ class User < ApplicationRecord
   has_many   :notifications, :through => :notification_recipients
   has_many   :unseen_notification_recipients, -> { unseen }, :class_name => 'NotificationRecipient'
   has_many   :unseen_notifications, :through => :unseen_notification_recipients, :source => :notification
+  has_many   :authentications, :foreign_key => :evm_owner_id, :dependent => :nullify, :inverse_of => :evm_owner
   belongs_to :current_group, :class_name => "MiqGroup"
   has_and_belongs_to_many :miq_groups
   scope      :superadmins, lambda {
-    joins(:miq_groups => :miq_user_role).where(:miq_user_roles => {:name => MiqUserRole::SUPER_ADMIN_ROLE_NAME })
+    joins(:miq_groups => {:miq_user_role => :miq_product_features})
+      .where(:miq_product_features => {:identifier => MiqProductFeature::SUPER_ADMIN_FEATURE })
   }
 
   virtual_has_many :active_vms, :class_name => "VmOrTemplate"
 
   delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
              :to => :current_group, :allow_nil => true
-  delegate   :super_admin_user?, :admin_user?, :self_service?, :limited_self_service?, :disallowed_roles,
+  delegate   :super_admin_user?, :request_admin_user?, :self_service?, :limited_self_service?, :report_admin_user?, :only_my_user_tasks?,
              :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid
@@ -48,10 +50,12 @@ class User < ApplicationRecord
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
-  scope :with_same_userid, ->(id) { where(:userid => User.find(id).userid) }
+  scope :with_same_userid, ->(id) { where(:userid => User.where(:id => id).pluck(:userid)) }
 
-  def self.with_allowed_roles_for(user_or_group)
-    includes(:miq_groups => :miq_user_role).where.not(:miq_user_roles => {:name => user_or_group.disallowed_roles})
+  def self.with_roles_excluding(identifier)
+    where.not(:id => User.unscope(:select).joins(:miq_groups => :miq_product_features)
+                             .where(:miq_product_features => {:identifier => identifier})
+                             .select(:id))
   end
 
   def self.scope_by_tenant?
@@ -239,6 +243,14 @@ class User < ApplicationRecord
     end
   end
 
+  def regional_users
+    self.class.regional_users(self)
+  end
+
+  def self.regional_users(user)
+    where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:userid)]).eq(user.userid.downcase)))
+  end
+
   def self.super_admin
     in_my_region.find_by_userid("admin")
   end
@@ -285,9 +297,9 @@ class User < ApplicationRecord
     Thread.current[:user] ||= find_by_userid(current_userid)
   end
 
-  def self.with_current_user_groups(user = nil)
-    user ||= current_user
-    user.admin_user? ? all : includes(:miq_groups).where(:miq_groups => {:id => user.miq_group_ids})
+  # parallel to MiqGroup.with_groups - only show users with these groups
+  def self.with_groups(miq_group_ids)
+    includes(:miq_groups).where(:miq_groups => {:id => miq_group_ids})
   end
 
   def self.missing_user_features(db_user)

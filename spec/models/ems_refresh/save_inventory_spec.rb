@@ -1,32 +1,32 @@
 describe EmsRefresh::SaveInventory do
   context "save_vms_inventory handling duplicate uids" do
     before do
-      @zone = FactoryGirl.create(:zone)
-      @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
+      @zone = FactoryBot.create(:zone)
+      @ems  = FactoryBot.create(:ems_vmware, :zone => @zone)
     end
 
     context "check save_ems_inventory_no_disconnect" do
       before do
-        @zone = FactoryGirl.create(:zone)
-        @ems = FactoryGirl.create(:ems_redhat, :zone => @zone)
-        FactoryGirl.create(:resource_pool,
+        @zone = FactoryBot.create(:zone)
+        @ems = FactoryBot.create(:ems_redhat, :zone => @zone)
+        FactoryBot.create(:resource_pool,
                            :ext_management_system => @ems,
                            :name                  => "Default for Cluster Default",
                            :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d_respool")
-        FactoryGirl.create(:ems_folder,
+        FactoryBot.create(:ems_folder,
                            :ext_management_system => @ems,
                            :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_host",
                            :name                  => "host")
-        FactoryGirl.create(:ems_folder,
+        FactoryBot.create(:ems_folder,
                            :ext_management_system => @ems,
                            :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_vm",
                            :name                  => "vm")
-        FactoryGirl.create(:datacenter,
+        FactoryBot.create(:datacenter,
                            :ems_ref               => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
                            :ext_management_system => @ems,
                            :name                  => "Default",
                            :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180")
-        FactoryGirl.create(:ems_cluster,
+        FactoryBot.create(:ems_cluster,
                            :ems_ref               => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
                            :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d",
                            :ext_management_system => @ems,
@@ -104,8 +104,8 @@ describe EmsRefresh::SaveInventory do
 
     context "with no dups in the database" do
       before do
-        @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
-        @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
+        @vm1 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems)
+        @vm2 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems)
       end
 
       it "should handle no dups in the raw data" do
@@ -152,8 +152,8 @@ describe EmsRefresh::SaveInventory do
     context "with dups in the database" do
       before do
         @uid = SecureRandom.uuid
-        @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
-        @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
+        @vm1 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
+        @vm2 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
 
       it "should handle no dups in the raw data" do
@@ -200,8 +200,8 @@ describe EmsRefresh::SaveInventory do
     context "with disconnected dups in the database" do
       before do
         @uid = SecureRandom.uuid
-        @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => nil,  :uid_ems => @uid)
-        @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
+        @vm1 = FactoryBot.create(:vm_with_ref, :ext_management_system => nil,  :uid_ems => @uid)
+        @vm2 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
 
       it "should handle no dups in the raw data" do
@@ -248,10 +248,10 @@ describe EmsRefresh::SaveInventory do
 
     context "with non-dup on a different EMS in the database" do
       before do
-        @ems2 = FactoryGirl.create(:ems_vmware)
+        @ems2 = FactoryBot.create(:ems_vmware)
         @uid  = SecureRandom.uuid
-        @vm1  = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems2, :uid_ems => @uid)
-        @vm2  = FactoryGirl.build(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
+        @vm1  = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems2, :uid_ems => @uid)
+        @vm2  = FactoryBot.build(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
 
       it "should handle new dup in the raw_data" do
@@ -275,8 +275,8 @@ describe EmsRefresh::SaveInventory do
     context "with disconnected non-dup in the database" do
       before do
         @uid  = SecureRandom.uuid
-        @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => nil, :uid_ems => @uid)
-        @vm2 = FactoryGirl.build(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
+        @vm1 = FactoryBot.create(:vm_with_ref, :ext_management_system => nil, :uid_ems => @uid)
+        @vm2 = FactoryBot.build(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
 
       it "should handle new dup in the raw_data" do
@@ -294,8 +294,8 @@ describe EmsRefresh::SaveInventory do
 
     context "with no dups in the database, but with nil ems_refs (after upgrade)" do
       before do
-        @vm1 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
-        @vm2 = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems)
+        @vm1 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems)
+        @vm2 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems)
 
         @ems_ref1 = @vm1.ems_ref_obj
         @ems_ref2 = @vm2.ems_ref_obj

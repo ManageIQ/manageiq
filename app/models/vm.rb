@@ -1,12 +1,13 @@
 class Vm < VmOrTemplate
   default_scope { where(:template => false) }
-  has_one :container_deployment, :through => :container_deployment_node
   has_one :container_deployment_node
+  has_one :container_deployment, :through => :container_deployment_node
 
   virtual_has_one :supported_consoles, :class_name => "Hash"
 
   extend InterRegionApiMethodRelay
   include CustomActionsMixin
+  include CiFeatureMixin
 
   include_concern 'Operations'
 
@@ -121,16 +122,8 @@ class Vm < VmOrTemplate
     }
   end
 
-  def validate_v2v_migration
-    vm_as_resources = ServiceResource.where(:resource => self).includes(:service_template).where(:service_templates => {:type => "ServiceTemplateTransformationPlan"})
-
-    # VM has not been migrated before
-    return TransformationMapping::VM_VALID if vm_as_resources.blank?
-
-    return TransformationMapping::VM_MIGRATED if vm_as_resources.any? { |rsc| rsc.status == ServiceResource::STATUS_COMPLETED }
-
-    # VM failed in previous migration
-    vm_as_resources.all? { |rsc| rsc.status == ServiceResource::STATUS_FAILED } ? TransformationMapping::VM_VALID : TransformationMapping::VM_IN_OTHER_PLAN
+  def self.display_name(number = 1)
+    n_('VM and Instance', 'VMs and Instances', number)
   end
 
   private

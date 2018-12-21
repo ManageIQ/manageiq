@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cloud_tenant do
     sequence(:name)         { |n| "cloud_tenant_#{seq_padded_for_sorting(n)}" }
     sequence(:description)  { |n| "cloud_tenant_description_#{seq_padded_for_sorting(n)}" }

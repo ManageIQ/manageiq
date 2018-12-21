@@ -113,4 +113,8 @@ class MiqAeNamespace < ApplicationRecord
   def domain?
     parent_id.nil? && name != '$'
   end
+
+  def self.display_name(number = 1)
+    n_('Automate Namespace', 'Automate Namespaces', number)
+  end
 end

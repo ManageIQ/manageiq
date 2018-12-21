@@ -99,25 +99,28 @@ describe LogFile do
 
         context "with post_logs message" do
           it "#post_logs will only post current logs if flag enabled" do
-            message.deliver
             message.args.first[:only_current] = true
             expect_any_instance_of(MiqServer).to receive(:post_historical_logs).never
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
             message.delivered(*message.deliver)
           end
 
           it "#post_logs will post both historical and current logs if flag nil" do
-            message.deliver
             expect_any_instance_of(MiqServer).to receive(:post_historical_logs).once
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
             message.delivered(*message.deliver)
           end
 
           it "#post_logs will post both historical and current logs if flag false" do
-            message.deliver
             message.args.first[:only_current] = false
             expect_any_instance_of(MiqServer).to receive(:post_historical_logs).once
             expect_any_instance_of(MiqServer).to receive(:post_current_logs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_dialogs).once
+            expect_any_instance_of(MiqServer).to receive(:post_automate_models).once
             message.delivered(*message.deliver)
           end
         end

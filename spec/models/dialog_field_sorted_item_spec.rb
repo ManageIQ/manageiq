@@ -132,138 +132,20 @@ describe DialogFieldSortedItem do
     end
   end
 
-  describe "#initialize_with_values" do
+  describe "#initialize_with_given_value" do
     let(:dialog_field) do
-      described_class.new(
-        :name                => "potato_name",
-        :default_value       => default_value,
-        :dynamic             => true,
-        :load_values_on_init => load_values_on_init,
-        :show_refresh_button => show_refresh_button,
-        :values              => [%w(test test), %w(test2 test2)]
-      )
+      described_class.new(:default_value => default_value, :dynamic => true)
     end
+    let(:values) { [%w(test test), %w(test2 test2)] }
     let(:default_value) { "test2" }
 
-    context "when show_refresh_button is true" do
-      before(:each) do
-        allow(dialog_field).to receive(:force_multi_value).and_return(false)
-      end
-      let(:show_refresh_button) { true }
-
-      context "when load_values_on_init is true" do
-        let(:load_values_on_init) { true }
-
-        context "when the dialog values match the automate key name" do
-          let(:dialog_values) { {"dialog_potato_name" => "dialog potato value"} }
-
-          it "uses the values given" do
-            dialog_field.initialize_with_values(dialog_values)
-            expect(dialog_field.value).to eq("dialog potato value")
-          end
-        end
-
-        context "when the dialog values match the dialog name" do
-          let(:dialog_values) { {"potato_name" => "potato value"} }
-
-          it "uses the values given" do
-            dialog_field.initialize_with_values(dialog_values)
-            expect(dialog_field.value).to eq("potato value")
-          end
-        end
-
-        context "when the values from the passed in dialog values do not match either the automate or dialog name" do
-          let(:dialog_values) { {"not_potato_name" => "not potato value"} }
-
-          it "defaults to nil" do
-            dialog_field.initialize_with_values(dialog_values)
-            expect(dialog_field.value).to eq(nil)
-          end
-        end
-      end
-
-      context "when load_values_on_init is false" do
-        let(:load_values_on_init) { false }
-        let(:dialog_values) { "potato" }
-
-        it "sets the raw values to the initial values" do
-          dialog_field.initialize_with_values(dialog_values)
-          expect(dialog_field.instance_variable_get(:@raw_values)).to eq([[nil, "<None>"]])
-        end
-      end
+    before do
+      allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(values)
     end
 
-    context "when show_refresh_button is false" do
-      let(:show_refresh_button) { false }
-      before(:each) do
-        allow(dialog_field).to receive(:force_multi_value).and_return(false)
-      end
-
-      context "when load_values_on_init is true" do
-        let(:load_values_on_init) { true }
-
-        context "when the dialog values match the automate key name" do
-          let(:dialog_values) { {"dialog_potato_name" => "dialog potato value"} }
-
-          it "uses the values given" do
-            dialog_field.initialize_with_values(dialog_values)
-            expect(dialog_field.value).to eq("dialog potato value")
-          end
-        end
-
-        context "when the dialog values match the dialog name" do
-          let(:dialog_values) { {"potato_name" => "potato value"} }
-
-          it "uses the values given" do
-            dialog_field.initialize_with_values(dialog_values)
-            expect(dialog_field.value).to eq("potato value")
-          end
-        end
-
-        context "when the values from the passed in dialog values do not match either the automate or dialog name" do
-          let(:dialog_values) { {"not_potato_name" => "not potato value"} }
-
-          context "when the default value does not exist in the list of options" do
-            let(:default_value) { "default value" }
-
-            it "defaults to nil" do
-              dialog_field.initialize_with_values(dialog_values)
-              expect(dialog_field.value).to eq(nil)
-            end
-          end
-        end
-      end
-
-      context "when load_values_on_init is false" do
-        let(:load_values_on_init) { false }
-
-        context "when the dialog values match the automate key name" do
-          let(:dialog_values) { {"dialog_potato_name" => "dialog potato value"} }
-
-          it "uses the values given" do
-            dialog_field.initialize_with_values(dialog_values)
-            expect(dialog_field.value).to eq("dialog potato value")
-          end
-        end
-
-        context "when the dialog values match the dialog name" do
-          let(:dialog_values) { {"potato_name" => "potato value"} }
-
-          it "uses the values given" do
-            dialog_field.initialize_with_values(dialog_values)
-            expect(dialog_field.value).to eq("potato value")
-          end
-        end
-
-        context "when the values from the passed in dialog values do not match either the automate or dialog name" do
-          let(:dialog_values) { {"not_potato_name" => "not potato value"} }
-
-          it "defaults to nil" do
-            dialog_field.initialize_with_values(dialog_values)
-            expect(dialog_field.value).to eq(nil)
-          end
-        end
-      end
+    it "uses the given value as the default" do
+      dialog_field.initialize_with_given_value("test")
+      expect(dialog_field.default_value).to eq("test")
     end
   end
 
@@ -296,29 +178,6 @@ describe DialogFieldSortedItem do
         it "sets the default_value" do
           dialog_field.values
           expect(dialog_field.default_value).to eq("abc")
-        end
-      end
-
-      context "when the force_multi_value is set to true" do
-        let(:default_value) { "abc" }
-        before do
-          allow(dialog_field).to receive(:force_multi_value).and_return(true)
-          # FIXME (rblanco): this is a workaround for the tested class being
-          # DialogFieldSortedItem and not DialogFieldDropDownList as it is
-          # in real usecase
-          #
-          # The test should be moved to dialog_field_drop_down_list_spec.rb, as
-          # https://github.com/ManageIQ/manageiq/pull/17272#discussion_r180468970
-          # says.
-          allow(dialog_field).to receive(:default_value_included?).and_return(true)
-        end
-
-        it "sets the default_value" do
-          dialog_field.values
-          # while reproducing the BZ, the method
-          # `determine_selected_default_value` is called twice,
-          # not just once - could be a difference here
-          expect(dialog_field.default_value).to eq("[\"abc\"]")
         end
       end
 
@@ -372,6 +231,17 @@ describe DialogFieldSortedItem do
           context "when the field is not required" do
             it "returns the values with the first option being a nil 'None' option" do
               expect(dialog_field.values).to eq([[nil, "<None>"], %w(test test), %w(abc abc)])
+            end
+
+            context "when the values are in a seemingly random order" do
+              let(:values) { [%w(3 Three), %w(1 One), %w(2 Two)] }
+              before do
+                dialog_field.options[:sort_by] = "none"
+              end
+
+              it "does not attempt to sort them" do
+                expect(dialog_field.values).to eq([[nil, "<None>"], %w(3 Three), %w(1 One), %w(2 Two)])
+              end
             end
           end
         end

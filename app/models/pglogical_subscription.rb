@@ -32,9 +32,11 @@ class PglogicalSubscription < ActsAsArModel
     nil
   end
 
-  def save!
+  def save!(reload_failover_monitor = true)
     assert_different_region!
     id ? update_subscription : create_subscription
+  ensure
+    EvmDatabase.restart_failover_monitor_service_queue if reload_failover_monitor
   end
 
   def save
@@ -48,11 +50,13 @@ class PglogicalSubscription < ActsAsArModel
     errors = []
     subscription_list.each do |s|
       begin
-        s.save!
+        s.save!(false)
       rescue => e
         errors << "Failed to save subscription to #{s.host}: #{e.message}"
       end
     end
+
+    EvmDatabase.restart_failover_monitor_service_queue
 
     unless errors.empty?
       raise errors.join("\n")
@@ -60,17 +64,20 @@ class PglogicalSubscription < ActsAsArModel
     subscription_list
   end
 
-  def delete
+  def delete(reload_failover_monitor_service = true)
     pglogical.subscription_drop(id, true)
     MiqRegion.destroy_region(connection, provider_region)
     if self.class.count == 0
       pglogical.node_drop(MiqPglogical.local_node_name, true)
       pglogical.disable
     end
+    EvmDatabase.restart_failover_monitor_service_queue if reload_failover_monitor_service
   end
 
-  def self.delete_all
-    find(:all).each(&:delete)
+  def self.delete_all(list = nil)
+    (list.nil? ? find(:all) : list)&.each { |sub| sub.delete(false) }
+    EvmDatabase.restart_failover_monitor_service_queue
+    nil
   end
 
   def disable

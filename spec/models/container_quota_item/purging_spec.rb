@@ -24,25 +24,25 @@ describe ContainerQuotaItem do
       let(:deleted_date) { 6.months.ago }
 
       before do
-        @old_quota = FactoryGirl.create(:container_quota, :deleted_on => deleted_date - 1.day)
-        @old_quota_scope = FactoryGirl.create(:container_quota_scope, :container_quota => @old_quota)
-        @old_quota_old_item        = FactoryGirl.create(:container_quota_item, :container_quota => @old_quota,
+        @old_quota = FactoryBot.create(:container_quota, :deleted_on => deleted_date - 1.day)
+        @old_quota_scope = FactoryBot.create(:container_quota_scope, :container_quota => @old_quota)
+        @old_quota_old_item        = FactoryBot.create(:container_quota_item, :container_quota => @old_quota,
                                                                                :deleted_on      => deleted_date - 1.day)
-        @old_quota_purge_date_item = FactoryGirl.create(:container_quota_item, :container_quota => @old_quota,
+        @old_quota_purge_date_item = FactoryBot.create(:container_quota_item, :container_quota => @old_quota,
                                                                                :deleted_on      => deleted_date)
-        @old_quota_new_item        = FactoryGirl.create(:container_quota_item, :container_quota => @old_quota,
+        @old_quota_new_item        = FactoryBot.create(:container_quota_item, :container_quota => @old_quota,
                                                                                :deleted_on      => deleted_date + 1.day)
 
         # Quota items may get archived as result of quota edits, while parent quota remains active.
-        @active_quota = FactoryGirl.create(:container_quota, :deleted_on => nil)
-        @active_quota_scope = FactoryGirl.create(:container_quota_scope, :container_quota => @active_quota)
-        @active_quota_old_item        = FactoryGirl.create(:container_quota_item, :container_quota => @active_quota,
+        @active_quota = FactoryBot.create(:container_quota, :deleted_on => nil)
+        @active_quota_scope = FactoryBot.create(:container_quota_scope, :container_quota => @active_quota)
+        @active_quota_old_item        = FactoryBot.create(:container_quota_item, :container_quota => @active_quota,
                                                                                   :deleted_on      => deleted_date - 1.day)
-        @active_quota_purge_date_item = FactoryGirl.create(:container_quota_item, :container_quota => @active_quota,
+        @active_quota_purge_date_item = FactoryBot.create(:container_quota_item, :container_quota => @active_quota,
                                                                                   :deleted_on      => deleted_date)
-        @active_quota_new_item        = FactoryGirl.create(:container_quota_item, :container_quota => @active_quota,
+        @active_quota_new_item        = FactoryBot.create(:container_quota_item, :container_quota => @active_quota,
                                                                                   :deleted_on      => deleted_date + 1.day)
-        @active_quota_active_item     = FactoryGirl.create(:container_quota_item, :container_quota => @active_quota,
+        @active_quota_active_item     = FactoryBot.create(:container_quota_item, :container_quota => @active_quota,
                                                                                   :deleted_on      => nil)
       end
 

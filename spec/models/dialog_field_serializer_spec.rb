@@ -4,6 +4,7 @@ describe DialogFieldSerializer do
 
   describe "#serialize" do
     let(:dialog_field) { DialogFieldTextBox.new(expected_serialized_values.merge(:resource_action => resource_action, :dialog_field_responders => dialog_field_responders)) }
+    let(:dialog_field_with_values) { DialogFieldTextBox.new(expected_serialized_values.merge(:resource_action => resource_action, :dialog_field_responders => dialog_field_responders, :values => "drew")) }
     let(:type) { "DialogFieldTextBox" }
     let(:resource_action) { ResourceAction.new }
     let(:dialog_field_responders) { [] }
@@ -80,6 +81,18 @@ describe DialogFieldSerializer do
             ))
         end
       end
+
+      let(:all_attributes) { true }
+
+      it 'does not call values' do
+        expect(dialog_field_serializer.serialize(dialog_field_with_values, all_attributes))
+          .to include(expected_serialized_values.merge(
+                        'id'                      => dialog_field.id,
+                        'resource_action'         => 'serialized resource action',
+                        'dialog_field_responders' => [],
+                        'values'                  => nil
+          ))
+      end
     end
 
     context "when the dialog_field is not dynamic" do
@@ -110,7 +123,7 @@ describe DialogFieldSerializer do
         end
 
         context 'with associations' do
-          let(:dialog_field_responders) { [FactoryGirl.build(:dialog_field_text_box)] }
+          let(:dialog_field_responders) { [FactoryBot.build(:dialog_field_text_box)] }
 
           it 'serializes the dialog_field with all attributes and non_empty associations' do
             expect(dialog_field_serializer.serialize(dialog_field, dialog_field_responders))

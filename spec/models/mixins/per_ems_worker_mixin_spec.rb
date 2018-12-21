@@ -1,11 +1,11 @@
 describe PerEmsWorkerMixin do
   before do
     _guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => zone)
+    @ems = FactoryBot.create(:ems_vmware_with_authentication, :zone => zone)
     @ems_queue_name = "ems_#{@ems.id}"
 
     # General stubbing for testing any worker (methods called during initialize)
-    @worker_record = FactoryGirl.create(:miq_ems_refresh_core_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
+    @worker_record = FactoryBot.create(:miq_ems_refresh_core_worker, :queue_name => "ems_#{@ems.id}", :miq_server => server)
     @worker_class  = @worker_record.class
   end
 

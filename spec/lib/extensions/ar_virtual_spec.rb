@@ -612,6 +612,22 @@ describe VirtualFields do
         end
       end
 
+      context "with has_many and select" do
+        before do
+          TestClass.has_one :ref2, -> { select(:col1) }, :class_name => 'TestClass', :foreign_key => :col1
+        end
+        # child.col1 will be getting parent's (aka tc's) id
+        let(:child) { TestClass.create(:id => 1) }
+
+        # ensure virtual attribute referencing a relation with a select()
+        # does not throw an exception due to multi-column select
+        it "properly generates sub select" do
+          TestClass.virtual_delegate :col1, :prefix => 'child', :to => :ref2
+          TestClass.create(:id => 2, :ref2 => child)
+          expect { TestClass.all.select(:id, :col1, :child_col1).to_a }.to_not raise_error
+        end
+      end
+
       context "with relation in foreign table" do
         before do
           class TestOtherClass < ActiveRecord::Base
@@ -622,11 +638,19 @@ describe VirtualFields do
 
             include VirtualFields
           end
+
+          class CompSys < ComputerSystem
+            has_one :first_os, -> { order(:name) },
+                    :class_name  => "OperatingSystem",
+                    :foreign_key => "computer_system_id",
+                    :dependent   => :destroy
+          end
         end
 
         after do
           TestOtherClass.remove_connection
           Object.send(:remove_const, :TestOtherClass)
+          Object.send(:remove_const, :CompSys)
         end
 
         it "delegates to another table" do
@@ -643,6 +667,15 @@ describe VirtualFields do
           TestOtherClass.virtual_delegate :col1, :to => :oref1
           sql = TestOtherClass.all.select(:id, :ocol1, TestOtherClass.arel_attribute(:col1).as("x")).to_sql
           expect(sql).to match(/"test_classes"."col1"/i)
+        end
+
+        it "delegates has_one relationships with limit 1" do
+          CompSys.virtual_delegate :first_os_name, :to => 'first_os.name'
+          comp_sys = CompSys.create!
+          OperatingSystem.create(:name => "foo", :computer_system_id => comp_sys.id)
+          OperatingSystem.create(:name => "bar", :computer_system_id => comp_sys.id)
+          query = CompSys.all.select(:id, :first_os_name)
+          expect(query.map(&:first_os_name)).to match_array(["bar"])
         end
       end
     end
@@ -746,7 +779,7 @@ describe VirtualFields do
       end
 
       it "supports #includes with #references" do
-        vm           = FactoryGirl.create :vm_vmware
+        vm           = FactoryBot.create :vm_vmware
         table        = Vm.arel_table
         dash         = Arel::Nodes::SqlLiteral.new("'-'")
         name_dash_id = Arel::Nodes::NamedFunction.new("CONCAT", [table[:name], dash, table[:id]])
@@ -907,12 +940,12 @@ describe VirtualFields do
 
   context "preloading" do
     before do
-      FactoryGirl.create(:vm_vmware,
-                         :hardware         => FactoryGirl.create(:hardware),
-                         :operating_system => FactoryGirl.create(:operating_system),
-                         :host             => FactoryGirl.create(:host,
-                                                                 :hardware         => FactoryGirl.create(:hardware),
-                                                                 :operating_system => FactoryGirl.create(:operating_system)
+      FactoryBot.create(:vm_vmware,
+                         :hardware         => FactoryBot.create(:hardware),
+                         :operating_system => FactoryBot.create(:operating_system),
+                         :host             => FactoryBot.create(:host,
+                                                                 :hardware         => FactoryBot.create(:hardware),
+                                                                 :operating_system => FactoryBot.create(:operating_system)
                                                                 )
                         )
     end
@@ -961,6 +994,15 @@ describe VirtualFields do
       expect { Vm.includes([:platform, :host]).references(:host).where("hosts.name = 'test'").count }.not_to raise_error
       expect { Vm.includes([:platform, :host]).references(:host).where("hosts.id IS NOT NULL").count }.not_to raise_error
     end
+  end
+end
+
+describe "ActiveRecord attributes" do
+  it "doesn't botch up the attributes" do
+    hardware = Hardware.select(:id, :model).find(FactoryBot.create(:hardware).id)
+    expect(hardware.attributes.size).to eq(2)
+    hardware.save
+    expect(hardware.attributes.size).to eq(2)
   end
 end
 

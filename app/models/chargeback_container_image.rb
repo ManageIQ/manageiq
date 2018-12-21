@@ -33,7 +33,7 @@ class ChargebackContainerImage < Chargeback
     @containers = if provider_id == "all"
                     Container.all
                   elsif id == "all"
-                    Container.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
+                    Container.where(:ems_id => provider_id)
                   else
                     Container.joins(:container_group).where('container_groups.container_project_id = ? or container_groups.old_container_project_id = ?', id, id)
                   end
@@ -83,8 +83,8 @@ class ChargebackContainerImage < Chargeback
     @data_index.fetch_path(:container_project, :by_container_id, consumption.resource_id) || @unknown_project
   end
 
-  def self.where_clause(records, _options)
-    records.where(:resource_type => Container.name, :resource_id => @containers.pluck(:id))
+  def self.where_clause(records, _options, region)
+    records.where(:resource_type => Container.name, :resource_id => @containers.in_region(region).pluck(:id))
   end
 
   def self.report_static_cols
@@ -103,8 +103,6 @@ class ChargebackContainerImage < Chargeback
       "fixed_cost"                 => {:grouping => [:total]},
       "memory_used_cost"           => {:grouping => [:total]},
       "memory_used_metric"         => {:grouping => [:total]},
-      "metering_used_metric"       => {:grouping => [:total]},
-      "metering_used_cost"         => {:grouping => [:total]},
       "memory_allocated_cost"      => {:grouping => [:total]},
       "memory_allocated_metric"    => {:grouping => [:total]},
       "net_io_used_cost"           => {:grouping => [:total]},
@@ -113,9 +111,13 @@ class ChargebackContainerImage < Chargeback
     }
   end
 
+  def self.display_name(number = 1)
+    n_('Chargeback for Image', 'Chargebacks for Image', number)
+  end
+
   private
 
-  def init_extra_fields(consumption)
+  def init_extra_fields(consumption, _region)
     self.project_name  = self.class.project(consumption).name
     self.image_name    = self.class.image(consumption).try(:full_name)
     self.project_uid   = self.class.project(consumption).ems_ref

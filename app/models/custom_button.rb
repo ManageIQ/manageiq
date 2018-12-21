@@ -1,7 +1,12 @@
 class CustomButton < ApplicationRecord
   has_one :resource_action, :as => :resource, :dependent => :destroy, :autosave => true
 
-  serialize :options
+  scope :with_array_order, lambda { |ids, column = :id, column_type = :bigint|
+    order = sanitize_sql_array(["array_position(ARRAY[?]::#{column_type}[], #{table_name}.#{column}::#{column_type})", ids])
+    order(order)
+  }
+
+  serialize :options, Hash
   serialize :visibility_expression
   serialize :enablement_expression
   serialize :visibility
@@ -88,9 +93,36 @@ class CustomButton < ApplicationRecord
     end
   end
 
-  def invoke(target)
+  def invoke(target, source = nil)
     args = resource_action.automate_queue_hash(target, {}, User.current_user)
+
+    publish_event(source, target, args)
     MiqQueue.put(queue_opts(target, args))
+  end
+
+  def publish_event(source, target, args = nil)
+    args ||= resource_action.automate_queue_hash(target, {}, User.current_user)
+    Array(target).each { |t| create_event(source, t, args) }
+  end
+
+  def create_event(source, target, args)
+    CustomButtonEvent.create!(
+      :event_type => 'button.trigger.start',
+      :message    => 'Custom button launched',
+      :source     => source,
+      :target     => target,
+      :username   => args[:username],
+      :user_id    => args[:user_id],
+      :group_id   => args[:miq_group_id],
+      :tenant_id  => args[:tenant_id],
+      :timestamp  => Time.now.utc,
+      :full_data  => {
+        :args                 => args,
+        :automate_entry_point => resource_action.ae_path,
+        :button_id            => id,
+        :button_name          => name
+      }
+    )
   end
 
   def queue_opts(target, args)
@@ -104,13 +136,15 @@ class CustomButton < ApplicationRecord
     }
   end
 
-  def invoke_async(target)
+  def invoke_async(target, source = nil)
     task_opts = {
       :action => "Calling automate for user #{userid}",
       :userid => User.current_user
     }
 
     args = resource_action.automate_queue_hash(target, {}, User.current_user)
+
+    publish_event(source, target, args)
     MiqTask.generic_action_with_callback(task_opts, queue_opts(target, args))
   end
 
@@ -196,5 +230,13 @@ class CustomButton < ApplicationRecord
   def copy(options = {})
     options[:guid] = SecureRandom.uuid
     options.each_with_object(dup) { |(k, v), button| button.send("#{k}=", v) }.tap(&:save!)
+  end
+
+  def self.display_name(number = 1)
+    n_('Button', 'Buttons', number)
+  end
+
+  def open_url?
+    options[:open_url] == true
   end
 end

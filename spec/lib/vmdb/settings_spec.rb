@@ -68,7 +68,7 @@ describe Vmdb::Settings do
   end
 
   describe ".save!" do
-    let(:miq_server) { FactoryGirl.create(:miq_server) }
+    let(:miq_server) { FactoryBot.create(:miq_server) }
 
     it "does not allow invalid configuration values" do
       expect do
@@ -265,6 +265,156 @@ describe Vmdb::Settings do
       miq_server.zone.reload
       expect(miq_server.zone.settings_changes.count).to eq 0
     end
+
+    describe described_class::RESET_COMMAND do
+      let(:server_value) { "server" }
+      let(:zone_value)   { "zone" }
+      let(:region_value) { "region" }
+      let(:server_array_value) { [{:key1 => server_value}, {:key1 => server_value}] }
+      let(:zone_array_value)   { [{:key1 => zone_value},   {:key1 => zone_value}] }
+
+      let(:reset) { described_class::RESET_COMMAND }
+
+      before do
+        MiqRegion.seed
+
+        described_class.save!(
+          MiqRegion.first,
+          :api     => {
+            :token_ttl              => region_value,
+            :authentication_timeout => region_value
+          },
+          :session => {:timeout => 2}
+        )
+        described_class.save!(
+          miq_server.zone,
+          :api   => {
+            :token_ttl => zone_value
+          },
+          :array => zone_array_value
+        )
+        described_class.save!(
+          miq_server,
+          :api     => {
+            :token_ttl              => server_value,
+            :authentication_timeout => server_value,
+            :new_key                => "new value"
+          },
+          :session => {:timeout => 1},
+          :array   => server_array_value
+        )
+      end
+
+      it "inherits a leaf-level value from the parent" do
+        described_class.save!(miq_server, :api => {:token_ttl => reset})
+
+        expect(described_class.for_resource(miq_server).api.token_ttl).to eq zone_value
+      end
+
+      it "inherits a node-level value from the parent" do
+        described_class.save!(miq_server, :api => reset)
+
+        expect(described_class.for_resource(miq_server).api.token_ttl).to eq zone_value
+        expect(described_class.for_resource(miq_server).api.authentication_timeout).to eq region_value
+      end
+
+      it "inherits an array from the parent" do
+        described_class.save!(miq_server, :array => reset)
+
+        expect(described_class.for_resource(miq_server).to_hash[:array]).to eq zone_array_value
+      end
+
+      it "deletes a leaf-level value not present in the parent" do
+        described_class.save!(miq_server, :api => {:new_key => reset})
+
+        expect(described_class.for_resource(miq_server).api.new_key).to be_nil
+        expect(miq_server.reload.settings_changes.where(:key => "/api/new_key")).to_not exist
+      end
+
+      it "deletes a leaf-level value not present in the parent when reset at the node level" do
+        described_class.save!(miq_server, :api => reset)
+
+        expect(described_class.for_resource(miq_server).api.new_key).to be_nil
+        expect(described_class.for_resource(miq_server).api.token_ttl).to eq zone_value
+        expect(miq_server.reload.settings_changes.where(:key => "/api/new_key")).to_not exist
+      end
+
+      it "deletes an array value not present in the parent" do
+        described_class.save!(miq_server.zone, :array => reset)
+
+        expect(described_class.for_resource(miq_server.zone).array).to be_nil
+        expect(miq_server.zone.reload.settings_changes.where(:key => "/array")).to_not exist
+      end
+
+      it "at a parent level does not push down changes to children" do
+        described_class.save!(miq_server.zone, :api => {:token_ttl => reset})
+
+        expect(described_class.for_resource(miq_server.zone).api.token_ttl).to eq region_value
+        expect(described_class.for_resource(miq_server).api.token_ttl).to eq server_value
+      end
+
+      it "passes validation" do
+        described_class.save!(miq_server, :session => {:timeout => reset})
+
+        expect(described_class.for_resource(miq_server).session.timeout).to eq 2
+      end
+    end
+  end
+
+  describe "save_yaml!" do
+    let(:miq_server) { FactoryBot.create(:miq_server) }
+
+    it "saves the settings" do
+      data = {:api => {:token_ttl => "1.day"}}.to_yaml
+      described_class.save_yaml!(miq_server, data)
+
+      miq_server.reload
+
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/api/token_ttl",
+                                                                   :value => "1.day")
+    end
+
+    it "handles incoming unencrypted values" do
+      password  = "pa$$word"
+      encrypted = MiqPassword.encrypt(password)
+
+      data = {:authentication => {:bind_pwd => password}}.to_yaml
+      described_class.save_yaml!(miq_server, data)
+
+      miq_server.reload
+
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/authentication/bind_pwd",
+                                                                   :value => encrypted)
+    end
+
+    it "handles incoming encrypted values" do
+      password  = "pa$$word"
+      encrypted = MiqPassword.encrypt(password)
+
+      data = {:authentication => {:bind_pwd => encrypted}}.to_yaml
+      described_class.save_yaml!(miq_server, data)
+
+      miq_server.reload
+
+      expect(miq_server.settings_changes.count).to eq 1
+      expect(miq_server.settings_changes.first).to have_attributes(:key   => "/authentication/bind_pwd",
+                                                                   :value => encrypted)
+    end
+
+    {
+      "syntax"     => "--- -", # invalid YAML
+      "non-syntax" => "xxx"    # valid YAML, but invalid config
+    }.each do |type, contents|
+      it "catches #{type} errors" do
+        expect { described_class.save_yaml!(miq_server, contents) }.to raise_error(described_class::ConfigurationInvalid) do |err|
+          expect(err.errors.size).to eq 1
+          expect(err.errors[:contents]).to start_with("File contents are malformed")
+          expect(err.message).to include("contents: File contents are malformed")
+        end
+      end
+    end
   end
 
   shared_examples_for "password handling" do
@@ -342,7 +492,7 @@ describe Vmdb::Settings do
   end
 
   describe ".for_resource" do
-    let(:server) { FactoryGirl.create(:miq_server) }
+    let(:server) { FactoryBot.create(:miq_server) }
 
     it "without database changes" do
       settings = Vmdb::Settings.for_resource(server)
@@ -394,6 +544,33 @@ describe Vmdb::Settings do
 
       settings = Vmdb::Settings.for_resource(MiqServer.new(:zone => server.zone))
       expect(settings.api.token_ttl).to eq "4.hour"
+    end
+  end
+
+  describe ".for_resource_yaml" do
+    it "fetches the yaml with changes" do
+      miq_server = FactoryBot.create(:miq_server)
+      described_class.save!(miq_server, :api => {:token_ttl => "1.day"})
+
+      yaml = described_class.for_resource_yaml(miq_server)
+      expect(yaml).to_not include("Config::Options")
+
+      hash = YAML.load(yaml)
+      expect(hash).to be_kind_of Hash
+      expect(hash.fetch_path(:api, :token_ttl)).to eq "1.day"
+    end
+
+    it "ensures passwords are encrypted" do
+      password  = "pa$$word"
+      encrypted = MiqPassword.encrypt(password)
+
+      miq_server = FactoryBot.create(:miq_server)
+      described_class.save!(miq_server, :authentication => {:bind_pwd => password})
+
+      yaml = described_class.for_resource_yaml(miq_server)
+
+      hash = YAML.load(yaml)
+      expect(hash.fetch_path(:authentication, :bind_pwd)).to eq encrypted
     end
   end
 

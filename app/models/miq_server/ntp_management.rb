@@ -11,7 +11,7 @@ module MiqServer::NtpManagement
 
     # Bust the settings cache allowing this worker to apply any recent changes made by another (UI) worker
     Vmdb::Settings.reload!
-    ntp_settings = get_config("vmdb").config[:ntp]
+    ntp_settings = settings[:ntp]
 
     if @ntp_settings && @ntp_settings == ntp_settings
       _log.info("Skipping reload of ntp settings since they are unchanged")

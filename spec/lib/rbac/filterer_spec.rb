@@ -8,8 +8,8 @@ describe Rbac::Filterer do
         ]
       )
       group = create_group_with_expression(filter)
-      user = FactoryGirl.create(:user, :miq_groups => [group])
-      vm1, vm2, _vm3 = FactoryGirl.create_list(:vm_vmware, 3)
+      user = FactoryBot.create(:user, :miq_groups => [group])
+      vm1, vm2, _vm3 = FactoryBot.create_list(:vm_vmware, 3)
       vm1.tag_with("/managed/environment/prod", :ns => "*")
       vm2.tag_with("/managed/location/ny", :ns => "*")
 
@@ -27,8 +27,8 @@ describe Rbac::Filterer do
         ]
       )
       group = create_group_with_expression(filter)
-      user = FactoryGirl.create(:user, :miq_groups => [group])
-      vm1, vm2, vm3 = FactoryGirl.create_list(:vm_vmware, 3)
+      user = FactoryBot.create(:user, :miq_groups => [group])
+      vm1, vm2, vm3 = FactoryBot.create_list(:vm_vmware, 3)
       vm1.tag_with("/managed/environment/prod /managed/environment/test", :ns => "*")
       vm2.tag_with("/managed/environment/prod", :ns => "*")
       vm3.tag_with("/managed/environment/test", :ns => "*")
@@ -39,9 +39,27 @@ describe Rbac::Filterer do
       expect(actual).to match(expected)
     end
 
+    it "doesn't filter by tags on classes that are not taggable" do
+      filter = MiqExpression.new(
+        "AND" => [
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "prod"}},
+          {"CONTAINS" => {"tag" => "managed-environment", "value" => "test"}}
+        ]
+      )
+      group = create_group_with_expression(filter)
+      user = FactoryBot.create(:user, :miq_groups => [group])
+      request = FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => user)
+
+      actual, = Rbac::Filterer.search(:targets => MiqProvisionRequest, :user => user)
+
+      expect(request.class.include?(ActsAsTaggable)).to be_falsey
+      expected = [request]
+      expect(actual).to match(expected)
+    end
+
     def create_group_with_expression(expression)
-      role = FactoryGirl.create(:miq_user_role)
-      group = FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role)
+      role = FactoryBot.create(:miq_user_role)
+      group = FactoryBot.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role)
       group.entitlement = Entitlement.new
       group.entitlement.filter_expression = expression
       group.save!
@@ -108,37 +126,38 @@ describe Rbac::Filterer do
 
   let(:default_tenant)     { Tenant.seed }
 
-  let(:admin_user)         { FactoryGirl.create(:user, :role => "super_administrator") }
+  let(:admin_user)         { FactoryBot.create(:user, :role => "super_administrator") }
 
-  let(:owner_tenant)       { FactoryGirl.create(:tenant) }
-  let(:owner_group)        { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
-  let(:owner_user)         { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
-  let(:owned_vm)           { FactoryGirl.create(:vm_vmware, :tenant => owner_tenant) }
+  let(:owner_tenant)       { FactoryBot.create(:tenant) }
+  let(:owner_group)        { FactoryBot.create(:miq_group, :tenant => owner_tenant) }
+  let(:owner_user)         { FactoryBot.create(:user, :miq_groups => [owner_group]) }
+  let(:owned_vm)           { FactoryBot.create(:vm_vmware, :tenant => owner_tenant) }
 
-  let(:other_tenant)       { FactoryGirl.create(:tenant) }
-  let(:other_group)        { FactoryGirl.create(:miq_group, :tenant => other_tenant) }
-  let(:other_user)         { FactoryGirl.create(:user, :miq_groups => [other_group]) }
-  let(:other_vm)           { FactoryGirl.create(:vm_vmware, :tenant => other_tenant) }
+  let(:other_tenant)       { FactoryBot.create(:tenant) }
+  let(:other_group)        { FactoryBot.create(:miq_group, :tenant => other_tenant) }
+  let(:other_user)         { FactoryBot.create(:user, :miq_groups => [other_group]) }
+  let(:other_vm)           { FactoryBot.create(:vm_vmware, :tenant => other_tenant) }
 
-  let(:child_tenant)       { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
-  let(:child_group)        { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
-  let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
+  let(:child_tenant)       { FactoryBot.create(:tenant, :divisible => false, :parent => owner_tenant) }
+  let(:child_group)        { FactoryBot.create(:miq_group, :tenant => child_tenant) }
+  let(:child_user)         { FactoryBot.create(:user, :miq_groups => [child_group]) }
+  let(:child_openstack_vm) { FactoryBot.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
   describe ".search" do
     context 'for MiqRequests' do
       # MiqRequest for owner group
-      let!(:miq_request_user_owner) { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user) }
+      let!(:miq_request_user_owner) { FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user) }
       # User for owner group
-      let(:user_a)                        { FactoryGirl.create(:user, :miq_groups => [owner_group]) }
+      let(:user_a)                        { FactoryBot.create(:user, :miq_groups => [owner_group]) }
 
       # MiqRequests for other group
-      let!(:miq_request_user_a)     { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => other_user) }
-      let!(:miq_request_user_b)     { FactoryGirl.create(:miq_provision_request, :tenant => owner_tenant, :requester => user_b) }
+      let!(:miq_request_user_a)     { FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => other_user) }
+      let!(:miq_request_user_b)     { FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => user_b) }
 
       # other_group is from owner_tenant
-      let(:other_group)                   { FactoryGirl.create(:miq_group, :tenant => owner_tenant) }
+      let(:other_group)                   { FactoryBot.create(:miq_group, :tenant => owner_tenant) }
       # User for other group
-      let(:user_b)                        { FactoryGirl.create(:user, :miq_groups => [other_group]) }
+      let(:user_b)                        { FactoryBot.create(:user, :miq_groups => [other_group]) }
 
       context "self service user (User or group owned)" do
         before do
@@ -182,9 +201,9 @@ describe Rbac::Filterer do
     end
 
     context 'with tags' do
-      let(:role)         { FactoryGirl.create(:miq_user_role) }
-      let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
-      let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+      let(:role)         { FactoryBot.create(:miq_user_role) }
+      let(:tagged_group) { FactoryBot.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+      let(:user)         { FactoryBot.create(:user, :miq_groups => [tagged_group]) }
 
       before do
         tagged_group.entitlement = Entitlement.new
@@ -193,8 +212,26 @@ describe Rbac::Filterer do
         tagged_group.save!
       end
 
+      context 'searching for instances of Switches' do
+        let!(:switch) { FactoryBot.create_list(:switch, 2).first }
+
+        before do
+          switch.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged Switches' do
+          results = described_class.search(:class => Switch, :user => user).first
+          expect(results).to match_array [switch]
+        end
+
+        it 'lists only all Switches' do
+          results = described_class.search(:class => Switch, :user => admin_user).first
+          expect(results).to match_array Switch.all
+        end
+      end
+
       context 'searching for instances of ConfigurationScriptSource' do
-        let!(:configuration_script_source) { FactoryGirl.create_list(:embedded_ansible_configuration_script_source, 2).first }
+        let!(:configuration_script_source) { FactoryBot.create_list(:embedded_ansible_configuration_script_source, 2).first }
 
         it 'lists only tagged ConfigurationScriptSources' do
           configuration_script_source.tag_with('/managed/environment/prod', :ns => '*')
@@ -204,8 +241,45 @@ describe Rbac::Filterer do
         end
       end
 
+      %w(
+        automation_manager_authentication ManageIQ::Providers::AutomationManager::Authentication
+        embedded_automation_manager_authentication ManageIQ::Providers::EmbeddedAutomationManager::Authentication
+      ).slice(2) do |factory, klass|
+        context "searching for instances of #{klass}" do
+          let!(:automation_manager_authentication) { FactoryBot.create(factory) }
+          automation_manager_authentication.tag_with('/managed/environment/prod', :ns => '*')
+
+          results = described_class.search(:class => automation_manager_authentication.class.name, :user => user).first
+          expect(results.first).to eq(automation_manager_authentication)
+        end
+      end
+
+      it "tag entitled playbook with no tagged authentications" do
+        auth     = FactoryBot.create(:automation_manager_authentication)
+        playbook = FactoryBot.create(:ansible_playbook, :authentications => [auth])
+        playbook.tag_with('/managed/environment/prod', :ns => '*')
+
+        results = described_class.search(:class => playbook.class, :user => user).first
+        expect(results).to match_array [playbook]
+
+        results = described_class.search(:class => auth.class, :user => user).first
+        expect(results).to match_array []
+      end
+
+      it "tag entitled ansible authentications without a playbook for it" do
+        auth     = FactoryBot.create(:automation_manager_authentication)
+        playbook = FactoryBot.create(:ansible_playbook, :authentications => [auth])
+        auth.tag_with('/managed/environment/prod', :ns => '*')
+
+        results = described_class.search(:class => playbook.class, :user => user).first
+        expect(results).to match_array []
+
+        results = described_class.search(:class => auth.class, :user => user).first
+        expect(results).to match_array [auth]
+      end
+
       context 'searching for instances of AuthKeyPair' do
-        let!(:auth_key_pair_cloud) { FactoryGirl.create_list(:auth_key_pair_cloud, 2).first }
+        let!(:auth_key_pair_cloud) { FactoryBot.create_list(:auth_key_pair_cloud, 2).first }
 
         it 'lists only tagged AuthKeyPairs' do
           auth_key_pair_cloud.tag_with('/managed/environment/prod', :ns => '*')
@@ -216,7 +290,7 @@ describe Rbac::Filterer do
       end
 
       context 'searching for instances of HostAggregate' do
-        let!(:host_aggregate) { FactoryGirl.create_list(:host_aggregate, 2).first }
+        let!(:host_aggregate) { FactoryBot.create_list(:host_aggregate, 2).first }
 
         it 'lists only tagged HostAggregates' do
           host_aggregate.tag_with('/managed/environment/prod', :ns => '*')
@@ -241,15 +315,15 @@ describe Rbac::Filterer do
     context 'with virtual custom attributes' do
       let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
       let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
-      let!(:vm_1)                { FactoryGirl.create(:vm) }
-      let!(:vm_2)                { FactoryGirl.create(:vm) }
+      let!(:vm_1)                { FactoryBot.create(:vm) }
+      let!(:vm_2)                { FactoryBot.create(:vm) }
 
       let!(:custom_attribute_1) do
-        FactoryGirl.create(:custom_attribute, :name => 'attribute_1', :value => vm_1.name, :resource => vm_1)
+        FactoryBot.create(:custom_attribute, :name => 'attribute_1', :value => vm_1.name, :resource => vm_1)
       end
 
       let!(:custom_attribute_2) do
-        FactoryGirl.create(:custom_attribute, :name => 'attribute_2', :value => 'any_value', :resource => vm_1)
+        FactoryBot.create(:custom_attribute, :name => 'attribute_2', :value => 'any_value', :resource => vm_1)
       end
 
       let(:miq_expression) do
@@ -271,7 +345,7 @@ describe Rbac::Filterer do
       {
         "ExtManagementSystem"    => :ems_vmware,
         "MiqAeDomain"            => :miq_ae_domain,
-        # "MiqRequest"           => :miq_request,  # MiqRequest can't be instantuated, it is an abstract class
+        # "MiqRequest"           => :miq_request,  # MiqRequest can't be instantiated, it is an abstract class
         "MiqRequestTask"         => :miq_request_task,
         "Provider"               => :provider,
         "Service"                => :service,
@@ -280,8 +354,8 @@ describe Rbac::Filterer do
         "Vm"                     => :vm_vmware
       }.each do |klass, factory_name|
         it "with :user finds #{klass}" do
-          owned_resource = FactoryGirl.create(factory_name, :tenant => owner_tenant)
-          _other_resource = FactoryGirl.create(factory_name, :tenant => other_tenant)
+          owned_resource = FactoryBot.create(factory_name, :tenant => owner_tenant)
+          _other_resource = FactoryBot.create(factory_name, :tenant => other_tenant)
           results = described_class.filtered(klass, :user => owner_user)
           expect(results).to match_array [owned_resource]
         end
@@ -290,12 +364,12 @@ describe Rbac::Filterer do
 
     context 'when class does not participate in RBAC' do
       before do
-        @vm = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host1, :ext_management_system => @ems)
+        @vm = FactoryBot.create(:vm_vmware, :name => "VM1", :host => @host1, :ext_management_system => @ems)
         ["2010-04-14T20:52:30Z", "2010-04-14T21:51:10Z"].each do |t|
-          @vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => t)
+          @vm.metric_rollups << FactoryBot.create(:metric_rollup_vm_hr, :timestamp => t)
         end
       end
-      let(:miq_ae_domain) { FactoryGirl.create(:miq_ae_domain) }
+      let(:miq_ae_domain) { FactoryBot.create(:miq_ae_domain) }
 
       it 'returns the same class as input for MiqAeDomain' do
         User.with_user(admin_user) do
@@ -332,7 +406,9 @@ describe Rbac::Filterer do
     context "with non-sql filter" do
       subject { described_class.new }
 
-      let(:expression)        { MiqExpression.new("=" => {"field" => "Vm-vendor_display", "value" => "VMware"}) }
+      let(:nonsql_expression) { {"=" => {"field" => "Vm-vendor_display", "value" => "VMware"}} }
+      let(:raw_expression)    { nonsql_expression }
+      let(:expression)        { MiqExpression.new(raw_expression) }
       let(:search_attributes) { { :class => "Vm", :filter => expression } }
       let(:results)           { subject.search(search_attributes).first }
 
@@ -346,6 +422,23 @@ describe Rbac::Filterer do
       it "does not add references without includes" do
         expect(subject).to receive(:include_references).with(anything, Vm, nil, nil, true).and_call_original
         results
+      end
+
+      context "with a partial non-sql filter" do
+        let(:sql_expression) { { "IS EMPTY" => { "field" => "Vm.host-name" } } }
+        let(:raw_expression) { { "AND" => [nonsql_expression, sql_expression] } }
+
+        it "finds the Vms" do
+          expect(results.to_a).to match_array [owned_vm, other_vm]
+          expect(results.count).to eq 2
+        end
+
+        it "includes references" do
+          expect(subject).to receive(:include_references).with(anything, ::Vm, nil, {:host => {}}, false)
+                                                         .and_call_original
+          expect(subject).to receive(:warn).never
+          results
+        end
       end
 
       context "with :include_for_find" do
@@ -370,6 +463,18 @@ describe Rbac::Filterer do
             expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, true).and_call_original
             expect(subject).to receive(:warn).exactly(4).times
             results
+          end
+
+          context "and targets is a NullRelation scope" do
+            let(:targets)     { Vm.none }
+            let(:null_search) { search_with_where.merge(:targets => targets) }
+            let(:results)     { subject.search(null_search).first }
+
+            it "will not try to skip references" do
+              expect(subject).to receive(:include_references).with(anything, Vm, {:evm_owner => {}}, nil, false).and_call_original
+              expect(subject).to receive(:warn).never
+              results
+            end
           end
         end
       end
@@ -415,7 +520,7 @@ describe Rbac::Filterer do
       let(:search_attributes) { { :class => "Service", :extra_cols => extra_cols } }
       let(:results)           { described_class.search(search_attributes).first }
 
-      before { FactoryGirl.create :service, :evm_owner => owner_user }
+      before { FactoryBot.create :service, :evm_owner => owner_user }
 
       it "finds the Service" do
         expect(results.first.attributes["owned_by_current_user"]).to be false
@@ -491,7 +596,7 @@ describe Rbac::Filterer do
         end
 
         it "can see descendant tenant's Vms" do
-          child_vm = FactoryGirl.create(:vm_vmware, :tenant => child_tenant)
+          child_vm = FactoryBot.create(:vm_vmware, :tenant => child_tenant)
 
           results = described_class.search(:class => "Vm", :miq_group => owner_group).first
           expect(results).to match_array [owned_vm, child_vm]
@@ -521,13 +626,13 @@ describe Rbac::Filterer do
 
       context "with accessible_tenant_ids filtering (strategy = :parent_ids)" do
         it "can see parent tenant's EMS" do
-          ems = FactoryGirl.create(:ems_vmware, :tenant => owner_tenant)
+          ems = FactoryBot.create(:ems_vmware, :tenant => owner_tenant)
           results = described_class.search(:class => "ExtManagementSystem", :miq_group => child_group).first
           expect(results).to match_array [ems]
         end
 
         it "can't see descendant tenant's EMS" do
-          _ems = FactoryGirl.create(:ems_vmware, :tenant => child_tenant)
+          _ems = FactoryBot.create(:ems_vmware, :tenant => child_tenant)
           results = described_class.search(:class => "ExtManagementSystem", :miq_group => owner_group).first
           expect(results).to match_array []
         end
@@ -535,33 +640,73 @@ describe Rbac::Filterer do
 
       context "with accessible_tenant_ids filtering (strategy = nil aka tenant only)" do
         it "can see tenant's request task" do
-          task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
+          task = FactoryBot.create(:miq_request_task, :tenant => owner_tenant)
           results = described_class.search(:class => "MiqRequestTask", :miq_group => owner_group).first
           expect(results).to match_array [task]
         end
 
         it "can't see parent tenant's request task" do
-          _task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
+          _task = FactoryBot.create(:miq_request_task, :tenant => owner_tenant)
           results = described_class.search(:class => "MiqRequestTask", :miq_group => child_group).first
           expect(results).to match_array []
         end
 
         it "can't see descendant tenant's request task" do
-          _task = FactoryGirl.create(:miq_request_task, :tenant => child_tenant)
+          _task = FactoryBot.create(:miq_request_task, :tenant => child_tenant)
           results = described_class.search(:class => "MiqRequestTask", :miq_group => owner_group).first
           expect(results).to match_array []
         end
       end
 
+      context "with accessible_tenant_ids filtering (strategy = :descendants_id) through" do
+        it "can see their own request in the same tenant" do
+          request = FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user)
+          results = described_class.search(:class => "MiqRequest", :user => owner_user).first
+          expect(results).to match_array [request]
+        end
+
+        it "a child tenant user in a group with tag filters can see their own request" do
+          child_group.entitlement = Entitlement.new
+          child_group.entitlement.set_managed_filters([["/managed/environment/prod"], ["/managed/service_level/silver"]])
+          child_group.entitlement.set_belongsto_filters([])
+          child_group.save!
+
+          request = FactoryBot.create(:miq_provision_request, :tenant => child_tenant, :requester => child_user)
+          results = described_class.search(:class => "MiqRequest", :user => child_user).first
+          expect(results).to match_array [request]
+        end
+
+        it "can see other's request in the same tenant" do
+          group = FactoryBot.create(:miq_group, :tenant => owner_tenant)
+          user  = FactoryBot.create(:user, :miq_groups => [group])
+
+          request = FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user)
+          results = described_class.search(:class => "MiqRequest", :user => user).first
+          expect(results).to match_array [request]
+        end
+
+        it "can't see parent tenant's request" do
+          FactoryBot.create(:miq_provision_request, :tenant => owner_tenant, :requester => owner_user)
+          results = described_class.search(:class => "MiqRequest", :miq_group => child_group).first
+          expect(results).to match_array []
+        end
+
+        it "can see descendant tenant's request" do
+          request = FactoryBot.create(:miq_provision_request, :tenant => child_tenant, :requester => child_user)
+          results = described_class.search(:class => "MiqRequest", :miq_group => owner_group).first
+          expect(results).to match_array [request]
+        end
+      end
+
       context "tenant access strategy VMs and Templates" do
-        let(:owned_template) { FactoryGirl.create(:template_vmware, :tenant => owner_tenant) }
-        let(:child_tenant)   { FactoryGirl.create(:tenant, :divisible => false, :parent => owner_tenant) }
-        let(:child_group)    { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
+        let(:owned_template) { FactoryBot.create(:template_vmware, :tenant => owner_tenant) }
+        let(:child_tenant)   { FactoryBot.create(:tenant, :divisible => false, :parent => owner_tenant) }
+        let(:child_group)    { FactoryBot.create(:miq_group, :tenant => child_tenant) }
 
         context 'with Vm as resource of VmPerformance model' do
-          let!(:root_tenant_vm)              { FactoryGirl.create(:vm_vmware, :tenant => Tenant.root_tenant) }
-          let!(:vm_performance_root_tenant)  { FactoryGirl.create(:vm_performance, :resource => root_tenant_vm) }
-          let!(:vm_performance_other_tenant) { FactoryGirl.create(:vm_performance, :resource => other_vm) }
+          let!(:root_tenant_vm)              { FactoryBot.create(:vm_vmware, :tenant => Tenant.root_tenant) }
+          let!(:vm_performance_root_tenant)  { FactoryBot.create(:vm_performance, :resource => root_tenant_vm) }
+          let!(:vm_performance_other_tenant) { FactoryBot.create(:vm_performance, :resource => other_vm) }
 
           it 'list only other_user\'s VmPerformances' do
             results = described_class.search(:class => VmPerformance, :user => other_user).first
@@ -574,9 +719,9 @@ describe Rbac::Filterer do
           end
 
           context 'with tags' do
-            let(:role)         { FactoryGirl.create(:miq_user_role) }
-            let(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
-            let(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
+            let(:role)         { FactoryBot.create(:miq_user_role) }
+            let(:tagged_group) { FactoryBot.create(:miq_group, :tenant => Tenant.root_tenant, :miq_user_role => role) }
+            let(:user)         { FactoryBot.create(:user, :miq_groups => [tagged_group]) }
 
             before do
               tagged_group.entitlement = Entitlement.new
@@ -620,8 +765,8 @@ describe Rbac::Filterer do
         end
 
         context "searching VmOrTemplate" do
-          let(:child_child_tenant) { FactoryGirl.create(:tenant, :divisible => false, :parent => child_tenant) }
-          let(:child_child_group)  { FactoryGirl.create(:miq_group, :tenant => child_child_tenant) }
+          let(:child_child_tenant) { FactoryBot.create(:tenant, :divisible => false, :parent => child_tenant) }
+          let(:child_child_group)  { FactoryBot.create(:miq_group, :tenant => child_child_tenant) }
 
           it "can't see descendant tenant's templates but can see descendant tenant's VMs" do
             owned_template.update_attributes!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
@@ -650,12 +795,94 @@ describe Rbac::Filterer do
             expect(results).to match_array []
           end
         end
+
+        context "searching CloudTemplate" do
+          let(:group) { FactoryBot.create(:miq_group, :tenant => default_tenant) } # T1
+          let(:admin_user) { FactoryBot.create(:user, :role => "super_administrator") }
+          let!(:cloud_template_root) { FactoryBot.create(:template_openstack, :publicly_available => false) }
+
+          let(:tenant_2) { FactoryBot.create(:tenant, :parent => default_tenant, :source_type => 'CloudTenant') } # T2
+          let(:group_2) { FactoryBot.create(:miq_group, :tenant => tenant_2) } # T1
+          let(:user_2) { FactoryBot.create(:user, :miq_groups => [group_2]) }
+
+          context "when tenant is not mapped to cloud tenant" do
+            it 'returns all cloud templates when user is admin' do
+              User.current_user = admin_user
+              results = described_class.filtered(TemplateCloud, :user => admin_user)
+              expect(results).to match_array(TemplateCloud.all)
+            end
+
+            context "when user is restricted user" do
+              let(:tenant_3) { FactoryBot.create(:tenant, :parent => tenant_2) } # T3
+              let!(:cloud_template) { FactoryBot.create(:template_openstack, :tenant => tenant_3, :publicly_available => true) }
+              let!(:volume_template_openstack_1) { FactoryBot.create(:template_openstack, :tenant => tenant_3, :publicly_available => true) }
+
+              it "returns all public cloud templates and its descendants" do
+                User.current_user = user_2
+
+                results = described_class.filtered(VmOrTemplate, :user => user_2)
+                expect(results).to match_array([cloud_template, cloud_template_root, volume_template_openstack_1])
+
+                results = described_class.filtered(TemplateCloud, :user => user_2)
+                expect(results).to match_array([cloud_template, cloud_template_root, volume_template_openstack_1])
+              end
+
+              context "should ignore other tenant's private cloud templates" do
+                let!(:cloud_template) { FactoryBot.create(:template_openstack, :tenant => tenant_3, :publicly_available => false) }
+                let!(:volume_template_openstack_2) { FactoryBot.create(:template_openstack, :tenant => tenant_3, :publicly_available => false) }
+                it "returns public templates" do
+                  User.current_user = user_2
+                  results = described_class.filtered(TemplateCloud, :user => user_2)
+                  expect(results).to match_array([cloud_template_root, volume_template_openstack_1])
+                end
+              end
+            end
+          end
+
+          context "when tenant is mapped to cloud tenant" do
+            let(:tenant_2) { FactoryBot.create(:tenant, :parent => default_tenant, :source_type => 'CloudTenant', :source_id => 1) }
+
+            it "finds tenant's private cloud templates" do
+              cloud_template2 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => false)
+              User.current_user = user_2
+              results = described_class.filtered(TemplateCloud, :user => user_2)
+              expect(results).to match_array([cloud_template2])
+            end
+
+            it "finds tenant's private and public cloud templates" do
+              cloud_template2 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => false)
+              cloud_template3 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => true)
+              User.current_user = user_2
+              results = described_class.filtered(TemplateCloud, :user => user_2)
+              expect(results).to match_array([cloud_template2, cloud_template3])
+            end
+
+            it "ignores other tenant's private templates" do
+              cloud_template2 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => false)
+              cloud_template3 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => true)
+              FactoryBot.create(:template_openstack, :tenant => default_tenant, :publicly_available => false)
+              User.current_user = user_2
+              results = described_class.filtered(TemplateCloud, :user => user_2)
+              expect(results).to match_array([cloud_template2, cloud_template3])
+            end
+
+            it "finds other tenant's public templates" do
+              cloud_template2 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => false)
+              cloud_template3 = FactoryBot.create(:template_openstack, :tenant => tenant_2, :publicly_available => true)
+              cloud_template4 = FactoryBot.create(:template_openstack, :tenant => default_tenant, :publicly_available => true)
+              FactoryBot.create(:template_openstack, :tenant => default_tenant, :publicly_available => false)
+              User.current_user = user_2
+              results = described_class.filtered(TemplateCloud, :user => user_2)
+              expect(results).to match_array([cloud_template2, cloud_template3, cloud_template4])
+            end
+          end
+        end
       end
 
       context "tenant 0" do
         it "can see requests owned by any tenants" do
-          request_task = FactoryGirl.create(:miq_request_task, :tenant => owner_tenant)
-          t0_group = FactoryGirl.create(:miq_group, :tenant => default_tenant)
+          request_task = FactoryBot.create(:miq_request_task, :tenant => owner_tenant)
+          t0_group = FactoryBot.create(:miq_group, :tenant => default_tenant)
           results = described_class.search(:class => "MiqRequestTask", :miq_group => t0_group).first
           expect(results).to match_array [request_task]
         end
@@ -664,7 +891,7 @@ describe Rbac::Filterer do
 
     context "searching for hosts" do
       it "can filter results by vmm_vendor" do
-        host = FactoryGirl.create(:host, :vmm_vendor => "vmware")
+        host = FactoryBot.create(:host, :vmm_vendor => "vmware")
         expression = MiqExpression.new("=" => {"field" => "Host-vmm_vendor", "value" => "vmware"})
 
         results = described_class.search(:class => "Host", :filter => expression).first
@@ -675,7 +902,7 @@ describe Rbac::Filterer do
 
     context "searching for vms" do
       it "can filter results by vendor" do
-        vm = FactoryGirl.create(:vm_vmware, :vendor => "vmware")
+        vm = FactoryBot.create(:vm_vmware, :vendor => "vmware")
         expression = MiqExpression.new("=" => {"field" => "Vm-vendor", "value" => "vmware"})
 
         results = described_class.search(:class => "Vm", :filter => expression).first
@@ -686,8 +913,8 @@ describe Rbac::Filterer do
 
     context "for Metrics::Rollup" do
       before do
-        vm = FactoryGirl.create(:vm_vmware)
-        FactoryGirl.create(
+        vm = FactoryBot.create(:vm_vmware)
+        FactoryBot.create(
           :metric_rollup_vm_daily,
           :resource_id => vm.id,
           :timestamp   => "2010-04-14T00:00:00Z"
@@ -732,8 +959,8 @@ describe Rbac::Filterer do
   end
 
   context "common setup" do
-    let(:group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) }
-    let(:user)  { FactoryGirl.create(:user, :miq_groups => [group]) }
+    let(:group) { FactoryBot.create(:miq_group, :tenant => default_tenant) }
+    let(:user)  { FactoryBot.create(:user, :miq_groups => [group]) }
 
     before do
       @tags = {
@@ -747,7 +974,7 @@ describe Rbac::Filterer do
     def get_rbac_results_for_and_expect_objects(klass, expected_objects)
       User.current_user = user
 
-      results = described_class.search(:class => klass).first
+      results = described_class.search(:targets => klass).first
       expect(results).to match_array(expected_objects)
     end
 
@@ -771,7 +998,7 @@ describe Rbac::Filterer do
           MiddlewareServerGroup
         ).each do |middleware_model|
           it "returns tagged instance of #{middleware_model}" do
-            middleware_instances = FactoryGirl.create_list(middleware_model.tableize.singularize.to_sym,
+            middleware_instances = FactoryBot.create_list(middleware_model.tableize.singularize.to_sym,
                                                            count_of_created_instances)
             middleware_instances[0].tag_with('/managed/environment/prod', :ns => '*')
             middleware_model_class = middleware_model.constantize
@@ -784,9 +1011,9 @@ describe Rbac::Filterer do
 
     context "with User and Group" do
       context 'with tags' do
-        let!(:tagged_group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) }
-        let!(:user)         { FactoryGirl.create(:user, :miq_groups => [tagged_group]) }
-        let!(:other_user)   { FactoryGirl.create(:user, :miq_groups => [group]) }
+        let!(:tagged_group) { FactoryBot.create(:miq_group, :tenant => default_tenant) }
+        let!(:user)         { FactoryBot.create(:user, :miq_groups => [tagged_group]) }
+        let!(:other_user)   { FactoryBot.create(:user, :miq_groups => [group]) }
 
         before do
           tagged_group.entitlement = Entitlement.new
@@ -809,7 +1036,7 @@ describe Rbac::Filterer do
         end
 
         let(:tenant_administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
+          FactoryBot.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
         end
 
         it 'returns tagged groups when user\'s role has disallowed other roles' do
@@ -846,41 +1073,60 @@ describe Rbac::Filterer do
       end
 
       context 'with EvmRole-tenant_administrator' do
+        let(:rbac_tenant) do
+          FactoryBot.create(:miq_product_feature, :identifier => MiqProductFeature::TENANT_ADMIN_FEATURE)
+        end
+
         let(:tenant_administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
+          FactoryBot.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME, :miq_product_features => [rbac_tenant])
         end
 
         let!(:super_administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::SUPER_ADMIN_ROLE_NAME)
-        end
-
-        let!(:administrator_user_role) do
-          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::ADMIN_ROLE_NAME)
+          FactoryBot.create(:miq_user_role, :role => "super_administrator")
         end
 
         let(:group) do
-          FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => tenant_administrator_user_role)
+          FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => tenant_administrator_user_role)
         end
 
-        let!(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
-
-        it 'can see all roles expect to EvmRole-super_administrator' do
-          expect(MiqUserRole.count).to eq(3)
-          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role])
+        let!(:user_role) do
+          FactoryBot.create(:miq_user_role, :role => "user")
         end
 
-        it 'can see all groups expect to group with role EvmRole-super_administrator' do
+        let!(:other_group) do
+          FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => user_role)
+        end
+
+        let!(:user) { FactoryBot.create(:user, :miq_groups => [group]) }
+
+        it 'can see all roles except for EvmRole-super_administrator' do
           expect(MiqUserRole.count).to eq(3)
-          get_rbac_results_for_and_expect_objects(MiqGroup, [group])
+          get_rbac_results_for_and_expect_objects(MiqUserRole.select(:id, :name), [tenant_administrator_user_role, user_role])
+        end
+
+        it 'can see all groups except for group with role EvmRole-super_administrator' do
+          expect(MiqUserRole.count).to eq(3)
+          default_group_for_tenant = user.current_tenant.miq_groups.where(:group_type => "tenant").first
+          super_admin_group
+          get_rbac_results_for_and_expect_objects(MiqGroup.select(:id, :description), [group, other_group, default_group_for_tenant])
+        end
+
+        it 'can see all groups in the current tenant only' do
+          another_tenant = FactoryBot.create(:tenant)
+          another_tenant_group = FactoryBot.create(:miq_group, :tenant => another_tenant)
+          group.tenant = another_tenant
+
+          default_group_for_tenant = user.current_tenant.miq_groups.where(:group_type => "tenant").first
+          get_rbac_results_for_and_expect_objects(MiqGroup, [another_tenant_group, default_group_for_tenant])
         end
 
         let(:super_admin_group) do
-          FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => super_administrator_user_role)
+          FactoryBot.create(:miq_group, :tenant => default_tenant, :miq_user_role => super_administrator_user_role)
         end
 
-        let!(:super_admin_user) { FactoryGirl.create(:user, :miq_groups => [super_admin_group]) }
+        let!(:super_admin_user) { FactoryBot.create(:user, :miq_groups => [super_admin_group]) }
 
-        it 'can see all users expect to user with group with role EvmRole-super_administrator' do
+        it 'can see all users except for user with group with role EvmRole-super_administrator' do
           expect(User.count).to eq(2)
           get_rbac_results_for_and_expect_objects(User, [user])
         end
@@ -890,8 +1136,8 @@ describe Rbac::Filterer do
     context "with Hosts" do
       let(:hosts) { [@host1, @host2] }
       before do
-        @host1 = FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local")
-        @host2 = FactoryGirl.create(:host, :name => "Host2", :hostname => "host2.local")
+        @host1 = FactoryBot.create(:host, :name => "Host1", :hostname => "host1.local")
+        @host2 = FactoryBot.create(:host, :name => "Host2", :hostname => "host2.local")
       end
 
       context "having Metric data" do
@@ -907,10 +1153,10 @@ describe Rbac::Filterer do
           ]
           @timestamps.each do |t, v|
             [@host1, @host2].each do |h|
-              h.metric_rollups << FactoryGirl.create(:metric_rollup_host_hr,
+              h.metric_rollups << FactoryBot.create(:metric_rollup_host_hr,
                                                      :timestamp                  => t,
                                                      :cpu_usage_rate_average     => v,
-                                                     :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to maake it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
+                                                     :cpu_ready_delta_summation  => v * 1000, # Multiply by a factor of 1000 to make it more realistic and enable testing virtual col v_pct_cpu_ready_delta_summation
                                                      :sys_uptime_absolute_latest => v
                                                     )
             end
@@ -939,7 +1185,7 @@ describe Rbac::Filterer do
           end
 
           it ".search filters out the wrong HostPerformance rows with :match_via_descendants option" do
-            @vm = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host2)
+            @vm = FactoryBot.create(:vm_vmware, :name => "VM1", :host => @host2)
             @vm.tag_with(@tags.join(' '), :ns => '*')
 
             results, attrs = described_class.search(:targets => HostPerformance, :class => "HostPerformance", :user => user, :match_via_descendants => Vm)
@@ -966,15 +1212,15 @@ describe Rbac::Filterer do
             group.entitlement.set_managed_filters([])
             group.save!
 
-            ems1 = FactoryGirl.create(:ems_vmware, :name => 'ems1')
+            ems1 = FactoryBot.create(:ems_vmware, :name => 'ems1')
             @host1.update_attributes(:ext_management_system => ems1)
             @host2.update_attributes(:ext_management_system => ems1)
 
-            root = FactoryGirl.create(:ems_folder, :name => "Datacenters")
+            root = FactoryBot.create(:ems_folder, :name => "Datacenters")
             root.parent = ems1
-            dc = FactoryGirl.create(:ems_folder, :name => "Datacenter1")
+            dc = FactoryBot.create(:ems_folder, :name => "Datacenter1")
             dc.parent = root
-            hfolder   = FactoryGirl.create(:ems_folder, :name => "Hosts")
+            hfolder   = FactoryBot.create(:ems_folder, :name => "Hosts")
             hfolder.parent = dc
             @host1.parent = hfolder
           end
@@ -999,23 +1245,23 @@ describe Rbac::Filterer do
 
       context "with VMs and Templates" do
         before do
-          @ems = FactoryGirl.create(:ems_vmware, :name => 'ems1')
+          @ems = FactoryBot.create(:ems_vmware, :name => 'ems1')
           @host1.update_attributes(:ext_management_system => @ems)
           @host2.update_attributes(:ext_management_system => @ems)
 
-          root            = FactoryGirl.create(:ems_folder, :name => "Datacenters")
+          root            = FactoryBot.create(:ems_folder, :name => "Datacenters")
           root.parent     = @ems
-          dc              = FactoryGirl.create(:datacenter, :name => "Datacenter1")
+          dc              = FactoryBot.create(:datacenter, :name => "Datacenter1")
           dc.parent       = root
-          hfolder         = FactoryGirl.create(:ems_folder, :name => "host")
+          hfolder         = FactoryBot.create(:ems_folder, :name => "host")
           hfolder.parent  = dc
-          @vfolder        = FactoryGirl.create(:ems_folder, :name => "vm")
+          @vfolder        = FactoryBot.create(:ems_folder, :name => "vm")
           @vfolder.parent = dc
           @host1.parent   = hfolder
           @vm_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}/EmsFolder|#{root.name}/EmsFolder|#{dc.name}/EmsFolder|#{@vfolder.name}"
 
-          @vm       = FactoryGirl.create(:vm_vmware,       :name => "VM1",       :host => @host1, :ext_management_system => @ems)
-          @template = FactoryGirl.create(:template_vmware, :name => "Template1", :host => @host1, :ext_management_system => @ems)
+          @vm       = FactoryBot.create(:vm_vmware,       :name => "VM1",       :host => @host1, :ext_management_system => @ems)
+          @template = FactoryBot.create(:template_vmware, :name => "Template1", :host => @host1, :ext_management_system => @ems)
         end
 
         it "honors ems_id conditions" do
@@ -1031,12 +1277,12 @@ describe Rbac::Filterer do
 
         context "search on EMSes" do
           before do
-            @ems2 = FactoryGirl.create(:ems_vmware, :name => 'ems2')
+            @ems2 = FactoryBot.create(:ems_vmware, :name => 'ems2')
           end
 
           it "preserves order of targets" do
-            @ems3 = FactoryGirl.create(:ems_vmware, :name => 'ems3')
-            @ems4 = FactoryGirl.create(:ems_vmware, :name => 'ems4')
+            @ems3 = FactoryBot.create(:ems_vmware, :name => 'ems3')
+            @ems4 = FactoryBot.create(:ems_vmware, :name => 'ems4')
 
             targets = [@ems2, @ems4, @ems3, @ems]
 
@@ -1047,8 +1293,8 @@ describe Rbac::Filterer do
           end
 
           it "returns the correct class for different classes of targets" do
-            @ems3 = FactoryGirl.create(:ems_vmware, :name => 'ems3')
-            @ems4 = FactoryGirl.create(:ems_microsoft, :name => 'ems4')
+            @ems3 = FactoryBot.create(:ems_vmware, :name => 'ems3')
+            @ems4 = FactoryBot.create(:ems_microsoft, :name => 'ems4')
 
             targets = [@ems2, @ems4, @ems3, @ems]
 
@@ -1163,14 +1409,14 @@ describe Rbac::Filterer do
       end
 
       context "when applying a filter to the provider" do
-        let(:ems_cloud) { FactoryGirl.create(:ems_cloud) }
+        let(:ems_cloud) { FactoryBot.create(:ems_cloud) }
 
         let!(:vm_1) do
-          FactoryGirl.create(:vm, :ext_management_system => ems_cloud)
+          FactoryBot.create(:vm, :ext_management_system => ems_cloud)
         end
 
         let!(:vm_2) do
-          FactoryGirl.create(:vm, :ext_management_system => ems_cloud)
+          FactoryBot.create(:vm, :ext_management_system => ems_cloud)
         end
 
         it "returns all host's VMs and templates when host filter is set up" do
@@ -1185,32 +1431,32 @@ describe Rbac::Filterer do
 
       context "when applying a filter to the host and it's cluster (FB17114)" do
         before do
-          @ems = FactoryGirl.create(:ems_vmware, :name => 'ems')
+          @ems = FactoryBot.create(:ems_vmware, :name => 'ems')
           @ems_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}"
-          @root = FactoryGirl.create(:ems_folder, :name => "Datacenters")
+          @root = FactoryBot.create(:ems_folder, :name => "Datacenters")
           @root.parent = @ems
-          @mtc = FactoryGirl.create(:datacenter, :name => "MTC")
+          @mtc = FactoryBot.create(:datacenter, :name => "MTC")
           @mtc.parent = @root
           @mtc_folder_path = "/belongsto/ExtManagementSystem|#{@ems.name}/EmsFolder|#{@root.name}/EmsFolder|#{@mtc.name}"
 
-          @hfolder         = FactoryGirl.create(:ems_folder, :name => "host")
+          @hfolder         = FactoryBot.create(:ems_folder, :name => "host")
           @hfolder.parent  = @mtc
 
-          @cluster = FactoryGirl.create(:ems_cluster, :name => "MTC Development")
+          @cluster = FactoryBot.create(:ems_cluster, :name => "MTC Development")
           @cluster.parent = @hfolder
           @cluster_folder_path = "#{@mtc_folder_path}/EmsFolder|#{@hfolder.name}/EmsCluster|#{@cluster.name}"
 
-          @rp = FactoryGirl.create(:resource_pool, :name => "Default for MTC Development")
+          @rp = FactoryBot.create(:resource_pool, :name => "Default for MTC Development")
           @rp.parent = @cluster
 
-          @host_1 = FactoryGirl.create(:host, :name => "Host_1", :ems_cluster => @cluster, :ext_management_system => @ems)
-          @host_2 = FactoryGirl.create(:host, :name => "Host_2", :ext_management_system => @ems)
+          @host_1 = FactoryBot.create(:host, :name => "Host_1", :ems_cluster => @cluster, :ext_management_system => @ems)
+          @host_2 = FactoryBot.create(:host, :name => "Host_2", :ext_management_system => @ems)
 
-          @vm1 = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host_1, :ext_management_system => @ems)
-          @vm2 = FactoryGirl.create(:vm_vmware, :name => "VM2", :host => @host_2, :ext_management_system => @ems)
+          @vm1 = FactoryBot.create(:vm_vmware, :name => "VM1", :host => @host_1, :ext_management_system => @ems)
+          @vm2 = FactoryBot.create(:vm_vmware, :name => "VM2", :host => @host_2, :ext_management_system => @ems)
 
-          @template1 = FactoryGirl.create(:template_vmware, :name => "Template1", :host => @host_1, :ext_management_system => @ems)
-          @template2 = FactoryGirl.create(:template_vmware, :name => "Template2", :host => @host_2, :ext_management_system => @ems)
+          @template1 = FactoryBot.create(:template_vmware, :name => "Template1", :host => @host_1, :ext_management_system => @ems)
+          @template2 = FactoryBot.create(:template_vmware, :name => "Template2", :host => @host_2, :ext_management_system => @ems)
         end
 
         it "returns all host's VMs and templates when host filter is set up" do
@@ -1316,11 +1562,11 @@ describe Rbac::Filterer do
 
     context "with services" do
       before do
-        @service1 = FactoryGirl.create(:service)
-        @service2 = FactoryGirl.create(:service)
-        @service3 = FactoryGirl.create(:service, :evm_owner => user)
-        @service4 = FactoryGirl.create(:service, :miq_group => group)
-        @service5 = FactoryGirl.create(:service, :evm_owner => user, :miq_group => group)
+        @service1 = FactoryBot.create(:service)
+        @service2 = FactoryBot.create(:service)
+        @service3 = FactoryBot.create(:service, :evm_owner => user)
+        @service4 = FactoryBot.create(:service, :miq_group => group)
+        @service5 = FactoryBot.create(:service, :evm_owner => user, :miq_group => group)
       end
 
       context ".search" do
@@ -1381,10 +1627,10 @@ describe Rbac::Filterer do
 
     context 'with ansible ConfigurationScripts' do
       describe ".search" do
-        let!(:ansible_configuration_script)          { FactoryGirl.create(:ansible_configuration_script) }
-        let!(:ansible_configuration_script_with_tag) { FactoryGirl.create(:ansible_configuration_script) }
-        let!(:ansible_playbook)                      { FactoryGirl.create(:ansible_playbook) }
-        let!(:ansible_playbook_with_tag)             { FactoryGirl.create(:ansible_playbook) }
+        let!(:ansible_configuration_script)          { FactoryBot.create(:ansible_configuration_script) }
+        let!(:ansible_configuration_script_with_tag) { FactoryBot.create(:ansible_configuration_script) }
+        let!(:ansible_playbook)                      { FactoryBot.create(:ansible_playbook) }
+        let!(:ansible_playbook_with_tag)             { FactoryBot.create(:ansible_playbook) }
 
         it 'works when targets are empty' do
           User.with_user(user) do
@@ -1426,8 +1672,8 @@ describe Rbac::Filterer do
     end
 
     context "with cloud network and network manager" do
-      let!(:network_manager)   { FactoryGirl.create(:ems_openstack).network_manager }
-      let!(:network_manager_1) { FactoryGirl.create(:ems_openstack).network_manager }
+      let!(:network_manager)   { FactoryBot.create(:ems_openstack).network_manager }
+      let!(:network_manager_1) { FactoryBot.create(:ems_openstack).network_manager }
 
       context "with belongs_to_filter" do
         before do
@@ -1441,12 +1687,12 @@ describe Rbac::Filterer do
           describe ".search" do
             let!(:network_object) do
               return network_manager if network_model == ManageIQ::Providers::NetworkManager
-              FactoryGirl.create(network_model.underscore, :ext_management_system => network_manager)
+              FactoryBot.create(network_model.underscore, :ext_management_system => network_manager)
             end
 
             let!(:network_object_with_different_network_manager) do
               return network_manager_1 if network_model == ManageIQ::Providers::NetworkManager
-              FactoryGirl.create(network_model.underscore,  :ext_management_system => network_manager_1)
+              FactoryBot.create(network_model.underscore,  :ext_management_system => network_manager_1)
             end
 
             context "when records match belogns to filter" do
@@ -1479,8 +1725,8 @@ describe Rbac::Filterer do
       end
 
       context "network manager with/without tagging" do
-        let!(:cloud_network)     { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager) }
-        let!(:cloud_network_1)   { FactoryGirl.create(:cloud_network, :ext_management_system => network_manager_1) }
+        let!(:cloud_network)     { FactoryBot.create(:cloud_network, :ext_management_system => network_manager) }
+        let!(:cloud_network_1)   { FactoryBot.create(:cloud_network, :ext_management_system => network_manager_1) }
 
         context "network manager is tagged" do
           before do
@@ -1546,8 +1792,8 @@ describe Rbac::Filterer do
 
       NETWORK_MODELS.each do |network_model|
         describe ".search" do
-          let!(:network_object)          { FactoryGirl.create(network_model.underscore) }
-          let!(:network_object_with_tag) { FactoryGirl.create(network_model.underscore) }
+          let!(:network_object)          { FactoryBot.create(network_model.underscore) }
+          let!(:network_object_with_tag) { FactoryBot.create(network_model.underscore) }
           let(:network_object_ids)       { [network_object.id, network_object_with_tag.id] }
 
           it 'works when targets are empty' do
@@ -1580,19 +1826,19 @@ describe Rbac::Filterer do
     end
 
     context "with tagged VMs" do
-      let(:ems) { FactoryGirl.create(:ext_management_system) }
+      let(:ems) { FactoryBot.create(:ext_management_system) }
 
       before do
         [
-          FactoryGirl.create(:host, :name => "Host1", :hostname => "host1.local"),
-          FactoryGirl.create(:host, :name => "Host2", :hostname => "host2.local"),
-          FactoryGirl.create(:host, :name => "Host3", :hostname => "host3.local"),
-          FactoryGirl.create(:host, :name => "Host4", :hostname => "host4.local")
+          FactoryBot.create(:host, :name => "Host1", :hostname => "host1.local"),
+          FactoryBot.create(:host, :name => "Host2", :hostname => "host2.local"),
+          FactoryBot.create(:host, :name => "Host3", :hostname => "host3.local"),
+          FactoryBot.create(:host, :name => "Host4", :hostname => "host4.local")
         ].each_with_index do |host, i|
           grp = i + 1
           guest_os = %w(_none_ windows ubuntu windows ubuntu)[grp]
-          vm = FactoryGirl.build(:vm_vmware, :name => "Test Group #{grp} VM #{i}")
-          vm.hardware = FactoryGirl.build(:hardware, :cpu_sockets => (grp * 2), :memory_mb => (grp * 1.megabytes), :guest_os => guest_os)
+          vm = FactoryBot.build(:vm_vmware, :name => "Test Group #{grp} VM #{i}")
+          vm.hardware = FactoryBot.build(:hardware, :cpu_sockets => (grp * 2), :memory_mb => (grp * 1.megabytes), :guest_os => guest_os)
           vm.host = host
           vm.evm_owner_id = user.id  if i.even?
           vm.miq_group_id = group.id if i.odd?
@@ -1759,7 +2005,7 @@ describe Rbac::Filterer do
 
           it "works when class does not participate in RBAC and user filters are passed" do
             2.times do |i|
-              FactoryGirl.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
+              FactoryBot.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
             end
 
             exp = YAML.load '--- !ruby/object:MiqExpression
@@ -1780,12 +2026,12 @@ describe Rbac::Filterer do
     end
 
     context "with group's VMs" do
-      let(:group_user) { FactoryGirl.create(:user, :miq_groups => [group2, group]) }
-      let(:group2) { FactoryGirl.create(:miq_group, :role => 'support') }
+      let(:group_user) { FactoryBot.create(:user, :miq_groups => [group2, group]) }
+      let(:group2) { FactoryBot.create(:miq_group, :role => 'support') }
 
       before do
         4.times do |i|
-          FactoryGirl.create(:vm_vmware,
+          FactoryBot.create(:vm_vmware,
                              :name             => "Test VM #{i}",
                              :connection_state => i < 2 ? 'connected' : 'disconnected',
                              :miq_group        => i.even? ? group : group2)
@@ -1847,8 +2093,8 @@ describe Rbac::Filterer do
   end
 
   describe ".filtered" do
-    let(:matched_vms) { FactoryGirl.create_list(:vm_vmware, 2, :location => "good") }
-    let(:other_vms)   { FactoryGirl.create_list(:vm_vmware, 1, :location => "other") }
+    let(:matched_vms) { FactoryBot.create_list(:vm_vmware, 2, :location => "good") }
+    let(:other_vms)   { FactoryBot.create_list(:vm_vmware, 1, :location => "other") }
     let(:all_vms)     { matched_vms + other_vms }
 
     it "skips rbac on empty empty arrays" do
@@ -1900,8 +2146,8 @@ describe Rbac::Filterer do
       # force this filter to be evaluated in ruby
       expect(filter).to receive(:sql_supports_atom?).and_return(false)
 
-      FactoryGirl.create_list(:vm_vmware, 3, :location => "a")
-      FactoryGirl.create_list(:vm_vmware, 3, :location => "b")
+      FactoryBot.create_list(:vm_vmware, 3, :location => "a")
+      FactoryBot.create_list(:vm_vmware, 3, :location => "b")
       # ordering by location, so the bad records come first
       # if we limit in sql, then only bad results will come back - and final result size will be 0
       # if we limit in ruby, then all 6 records will come back, we'll filter to 3 and then limit to 2.
@@ -1910,9 +2156,9 @@ describe Rbac::Filterer do
     end
 
     it "supports order on scopes" do
-      FactoryGirl.create(:vm_vmware, :location => "a")
-      FactoryGirl.create(:vm_vmware, :location => "b")
-      FactoryGirl.create(:vm_vmware, :location => "a")
+      FactoryBot.create(:vm_vmware, :location => "a")
+      FactoryBot.create(:vm_vmware, :location => "b")
+      FactoryBot.create(:vm_vmware, :location => "a")
       expect(described_class.filtered(Vm.all.order(:location)).map(&:location)).to eq(%w(a a b))
     end
   end
@@ -2048,6 +2294,42 @@ describe Rbac::Filterer do
     end
   end
 
+  describe "using right RBAC rules to VM and Templates" do
+    let(:ems_openstack)         { FactoryBot.create(:ems_cloud) }
+    let(:tenant_1)              { FactoryBot.create(:tenant, :source => project1_cloud_tenant) }
+    let(:project1_cloud_tenant) { FactoryBot.create(:cloud_tenant, :ext_management_system => ems_openstack) }
+
+    let(:tenant_2)              { FactoryBot.create(:tenant, :source => project2_cloud_tenant, :parent => tenant_1) }
+    let(:project2_cloud_tenant) { FactoryBot.create(:cloud_tenant, :ext_management_system => ems_openstack) }
+
+    let(:project2_group) { FactoryBot.create(:miq_group, :tenant => tenant_2) }
+    let(:user_2)         { FactoryBot.create(:user, :miq_groups => [project2_group]) }
+
+    let(:tenant_2_without_mapping)       { FactoryBot.create(:tenant, :parent => tenant_1) }
+    let(:project2_group_without_mapping) { FactoryBot.create(:miq_group, :tenant => tenant_2_without_mapping) }
+    let(:user_2_without_mapping)         { FactoryBot.create(:user, :miq_groups => [project2_group_without_mapping]) }
+
+    let(:tenant_3)              { FactoryBot.create(:tenant, :source => project3_cloud_tenant, :parent => tenant_2) }
+    let(:project3_cloud_tenant) { FactoryBot.create(:cloud_tenant, :ext_management_system => ems_openstack) }
+
+    let(:ems_infra)     { FactoryBot.create(:ems_vmware) }
+    let!(:vm_tenant_1)  { FactoryBot.create(:vm_infra, :ext_management_system => ems_infra, :tenant => tenant_1) }
+    let!(:vm_tenant_2)  { FactoryBot.create(:vm_infra, :ext_management_system => ems_infra, :tenant => tenant_2) }
+    let!(:vm_tenant_3)  { FactoryBot.create(:vm_infra, :ext_management_system => ems_infra, :tenant => tenant_3) }
+
+    let!(:template_tenant_1)  { FactoryBot.create(:template_infra, :ext_management_system => ems_infra, :tenant => tenant_1) }
+    let!(:template_tenant_2)  { FactoryBot.create(:template_infra, :ext_management_system => ems_infra, :tenant => tenant_2) }
+    let!(:template_tenant_3)  { FactoryBot.create(:template_infra, :ext_management_system => ems_infra, :tenant => tenant_3) }
+
+    it "finds records according to RBAC" do
+      results = described_class.filtered(Vm, :user => user_2)
+      expect(results.ids).to match_array([vm_tenant_2.id, vm_tenant_3.id])
+
+      results = described_class.filtered(MiqTemplate, :user => user_2)
+      expect(results.ids).to match_array([template_tenant_1.id, template_tenant_2.id])
+    end
+  end
+
   it ".apply_rbac_directly?" do
     expect(described_class.new.send(:apply_rbac_directly?, Vm)).to be_truthy
     expect(described_class.new.send(:apply_rbac_directly?, Rbac)).not_to be
@@ -2059,10 +2341,10 @@ describe Rbac::Filterer do
   end
 
   describe "find_targets_with_direct_rbac" do
-    let(:host_match) { FactoryGirl.create(:host, :hostname => 'good') }
-    let(:host_other) { FactoryGirl.create(:host, :hostname => 'bad') }
-    let(:vms_match) { FactoryGirl.create_list(:vm_vmware, 2, :host => host_match) }
-    let(:vm_host2) { FactoryGirl.create_list(:vm_vmware, 1, :host => host_other) }
+    let(:host_match) { FactoryBot.create(:host, :hostname => 'good') }
+    let(:host_other) { FactoryBot.create(:host, :hostname => 'bad') }
+    let(:vms_match) { FactoryBot.create_list(:vm_vmware, 2, :host => host_match) }
+    let(:vm_host2) { FactoryBot.create_list(:vm_vmware, 1, :host => host_other) }
     let(:all_vms) { vms_match + vm_host2 }
 
     it "works with no filters" do
@@ -2080,9 +2362,9 @@ describe Rbac::Filterer do
 
   context ".lookup_user_group" do
     let(:filter) { described_class.new }
-    let(:user1) { FactoryGirl.create(:user_with_group) }
-    let(:group_list) { FactoryGirl.create_list(:miq_group, 2) }
-    let(:user2) { FactoryGirl.create(:user, :miq_groups => group_list) }
+    let(:user1) { FactoryBot.create(:user_with_group) }
+    let(:group_list) { FactoryBot.create_list(:miq_group, 2) }
+    let(:user2) { FactoryBot.create(:user, :miq_groups => group_list) }
 
     context "user_group" do
       it "uses user.current_group" do
@@ -2134,28 +2416,28 @@ describe Rbac::Filterer do
 
       it "fallsback to current_group if not member of group" do
         user1_group = user1.current_group
-        _, group = filter.send(:lookup_user_group, user1, nil, FactoryGirl.create(:miq_group), nil)
+        _, group = filter.send(:lookup_user_group, user1, nil, FactoryBot.create(:miq_group), nil)
         expect(group).to eq(user1_group)
       end
 
       it "uses group passed in when not member of group when super admin" do
-        admin = FactoryGirl.create(:user_admin)
-        random_group = FactoryGirl.create(:miq_group)
+        admin = FactoryBot.create(:user_admin)
+        random_group = FactoryBot.create(:miq_group)
         _, group = filter.send(:lookup_user_group, admin, nil, random_group, nil)
         expect(group).to eq(random_group)
       end
 
       it "uses group_id passed in when not member of group when super admin" do
-        admin = FactoryGirl.create(:user_admin)
-        random_group = FactoryGirl.create(:miq_group)
+        admin = FactoryBot.create(:user_admin)
+        random_group = FactoryBot.create(:miq_group)
         _, group = filter.send(:lookup_user_group, admin, nil, nil, random_group.id)
         expect(group).to eq(random_group)
       end
 
       it "does not update user.current_group if user is super admin" do
-        admin = FactoryGirl.create(:user_admin)
+        admin = FactoryBot.create(:user_admin)
         admin_group = admin.current_group
-        random_group = FactoryGirl.create(:miq_group)
+        random_group = FactoryBot.create(:miq_group)
         filter.send(:lookup_user_group, admin, nil, nil, random_group.id)
         expect(admin.current_group).to eq(admin_group)
       end
@@ -2175,27 +2457,27 @@ describe Rbac::Filterer do
   end
 
   describe "cloud_tenant based search" do
-    let(:ems_openstack)         { FactoryGirl.create(:ems_cloud) }
-    let(:project1_tenant)       { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
-    let(:project1_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :source_tenant => project1_tenant, :ext_management_system => ems_openstack) }
-    let(:project1_group)        { FactoryGirl.create(:miq_group, :tenant => project1_tenant) }
-    let(:project1_user)         { FactoryGirl.create(:user, :miq_groups => [project1_group]) }
-    let(:project1_volume)       { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
-    let(:project1_flavor)       { FactoryGirl.create(:flavor, :ext_management_system => ems_openstack) }
-    let(:project1_c_t_flavor)   { FactoryGirl.create(:cloud_tenant_flavor, :cloud_tenant => project1_cloud_tenant, :flavor => project1_flavor) }
-    let(:project2_tenant)       { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
-    let(:project2_cloud_tenant) { FactoryGirl.create(:cloud_tenant, :source_tenant => project2_tenant, :ext_management_system => ems_openstack) }
-    let(:project2_group)        { FactoryGirl.create(:miq_group, :tenant => project2_tenant) }
-    let(:project2_user)         { FactoryGirl.create(:user, :miq_groups => [project2_group]) }
-    let(:project2_volume)       { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
-    let(:project2_flavor)       { FactoryGirl.create(:flavor, :ext_management_system => ems_openstack) }
-    let(:project2_c_t_flavor)   { FactoryGirl.create(:cloud_tenant_flavor, :cloud_tenant => project2_cloud_tenant, :flavor => project2_flavor) }
-    let(:ems_other)             { FactoryGirl.create(:ems_cloud, :name => 'ems_other', :tenant_mapping_enabled => false) }
-    let(:volume_other)          { FactoryGirl.create(:cloud_volume, :ext_management_system => ems_other) }
-    let(:tenant_other)          { FactoryGirl.create(:tenant, :source_type => 'CloudTenant') }
-    let(:cloud_tenant_other)    { FactoryGirl.create(:cloud_tenant, :source_tenant => tenant_other, :ext_management_system => ems_other) }
-    let(:flavor_other)          { FactoryGirl.create(:flavor, :ext_management_system => ems_other) }
-    let(:c_t_flavor_other)      { FactoryGirl.create(:cloud_tenant_flavor, :cloud_tenant => cloud_tenant_other, :flavor => flavor_other) }
+    let(:ems_openstack)         { FactoryBot.create(:ems_cloud) }
+    let(:project1_tenant)       { FactoryBot.create(:tenant, :source_type => 'CloudTenant') }
+    let(:project1_cloud_tenant) { FactoryBot.create(:cloud_tenant, :source_tenant => project1_tenant, :ext_management_system => ems_openstack) }
+    let(:project1_group)        { FactoryBot.create(:miq_group, :tenant => project1_tenant) }
+    let(:project1_user)         { FactoryBot.create(:user, :miq_groups => [project1_group]) }
+    let(:project1_volume)       { FactoryBot.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
+    let(:project1_flavor)       { FactoryBot.create(:flavor, :ext_management_system => ems_openstack) }
+    let(:project1_c_t_flavor)   { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => project1_cloud_tenant, :flavor => project1_flavor) }
+    let(:project2_tenant)       { FactoryBot.create(:tenant, :source_type => 'CloudTenant') }
+    let(:project2_cloud_tenant) { FactoryBot.create(:cloud_tenant, :source_tenant => project2_tenant, :ext_management_system => ems_openstack) }
+    let(:project2_group)        { FactoryBot.create(:miq_group, :tenant => project2_tenant) }
+    let(:project2_user)         { FactoryBot.create(:user, :miq_groups => [project2_group]) }
+    let(:project2_volume)       { FactoryBot.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
+    let(:project2_flavor)       { FactoryBot.create(:flavor, :ext_management_system => ems_openstack) }
+    let(:project2_c_t_flavor)   { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => project2_cloud_tenant, :flavor => project2_flavor) }
+    let(:ems_other)             { FactoryBot.create(:ems_cloud, :name => 'ems_other', :tenant_mapping_enabled => false) }
+    let(:volume_other)          { FactoryBot.create(:cloud_volume, :ext_management_system => ems_other) }
+    let(:tenant_other)          { FactoryBot.create(:tenant, :source_type => 'CloudTenant') }
+    let(:cloud_tenant_other)    { FactoryBot.create(:cloud_tenant, :source_tenant => tenant_other, :ext_management_system => ems_other) }
+    let(:flavor_other)          { FactoryBot.create(:flavor, :ext_management_system => ems_other) }
+    let(:c_t_flavor_other)      { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => cloud_tenant_other, :flavor => flavor_other) }
     let!(:all_objects)          { [project1_volume, project2_volume, volume_other, cloud_tenant_other, project1_c_t_flavor, project2_c_t_flavor, c_t_flavor_other] }
 
     it "lists its own project's objects and other objects where tenant_mapping is not enabled" do
@@ -2258,6 +2540,61 @@ describe Rbac::Filterer do
 
       results = described_class.search(:class => Flavor, :user => other_user).first
       expect(results).to match_array [project1_flavor, project2_flavor, flavor_other]
+    end
+  end
+
+  context "multi regional environment(global region)" do
+    # 3 regions - default - 2 remotes
+    # create service template in one region
+    # user in remote region - tenant - in other region
+
+    let(:common_t2_name) { "Tenant 2" }
+    # global(default) region
+    # T1 -> T2 -> T3
+    let(:t1) { FactoryGirl.create(:tenant) }
+    let(:t2) { FactoryGirl.create(:tenant, :parent => t1, :name => common_t2_name.upcase) }
+    let(:t3) { FactoryGirl.create(:tenant, :parent => t2) }
+
+    # user with T2
+    #
+    let(:group_t2) { FactoryGirl.create(:miq_group, :tenant => t2) }
+    let(:user_t2)  { FactoryGirl.create(:user, :miq_groups => [group_t2]) }
+
+    # in other region
+    #
+    #
+    let(:other_region) { FactoryGirl.create(:miq_region) }
+
+    def id_for_model_in_region(model, other_region)
+      model.id_in_region(model.count + 1_000_000, other_region.region)
+    end
+
+    #
+    # T1 -> T2 -> T3
+    let(:t1_other_region) { FactoryGirl.create(:tenant, :id => id_for_model_in_region(Tenant, other_region)) }
+    let(:t2_other_region) { FactoryGirl.create(:tenant, :parent => t1_other_region, :id => id_for_model_in_region(Tenant, other_region), :name => common_t2_name) }
+    let(:t3_other_region) { FactoryGirl.create(:tenant, :parent => t2_other_region, :id => id_for_model_in_region(Tenant, other_region)) }
+
+    #
+    # user with T2
+    #
+    let(:group_t2_other_region) { FactoryGirl.create(:miq_group, :tenant => t2_other_region, :id => id_for_model_in_region(MiqGroup, other_region)) }
+    let(:user_t2_other_region)  { FactoryGirl.create(:user, :miq_groups => [group_t2_other_region], :id => id_for_model_in_region(User, other_region)) }
+    let!(:service_template_other_region) { FactoryGirl.create(:service_template, :tenant => t2_other_region, :id => id_for_model_in_region(ServiceTemplate, other_region)) }
+
+    let!(:vm_other_region) { FactoryGirl.create(:vm, :tenant => t2_other_region, :id => id_for_model_in_region(Vm, other_region)) }
+
+    it "finds also service templates from other region" do
+      expect(ServiceTemplate.count).to eq(1)
+      result = described_class.filtered(ServiceTemplate, :user => user_t2_other_region)
+      expect(result).to eq([service_template_other_region])
+
+      # on global region
+      result = described_class.filtered(ServiceTemplate, :user => user_t2)
+      expect(result).to eq([service_template_other_region])
+
+      result = described_class.filtered(Vm, :user => user_t2)
+      expect(result).to eq([vm_other_region])
     end
   end
 

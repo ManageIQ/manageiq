@@ -23,4 +23,8 @@ class MiqEventDefinitionSet < ApplicationRecord
   def self.fixture_path
     FIXTURE_DIR.join("#{to_s.pluralize.underscore}.csv")
   end
+
+  def self.display_name(number = 1)
+    n_('Event Definition Set', 'Event Definition Sets', number)
+  end
 end

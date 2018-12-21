@@ -47,6 +47,7 @@
 - ems-type:openstack
 - ems-type:openstack_infra
 - ems-type:openstack_network
+- ems-type:redfish_ph_infra
 - ems-type:redhat_network
 - ems-type:rhevm
 - ems-type:scvmm

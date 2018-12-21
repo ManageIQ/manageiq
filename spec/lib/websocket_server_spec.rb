@@ -5,58 +5,98 @@ describe WebsocketServer do
     Thread.list.reject { |t| t == Thread.current }.each(&:kill)
   end
 
-  let(:sockets) { @server.instance_variable_get(:@sockets) }
-  let(:pairing) { @server.instance_variable_get(:@pairing) }
+  let(:adapters) { @server.instance_variable_get(:@adapters) }
+  let(:proxy) { @server.instance_variable_get(:@proxy) }
   let(:logger) { double }
 
   let(:pipes) { IO.pipe }
   let(:left) { pipes.first }
   let(:right) { pipes.last }
-  let(:proxy) { double }
+
+  let(:hijack) { double }
+  let(:env) { {'REQUEST_URI' => "/ws/#{url}", 'rack.hijack' => hijack} }
 
   describe '#call' do
-    subject { @server.call(env) }
+    context 'notifications' do
+      let(:url) { 'notifications' }
 
-    context 'non-websocket' do
-      let(:env) { Hash.new }
+      it 'calls actioncable' do
+        expect(ActionCable.server).to receive(:call).with(env)
+        subject.call(env)
+      end
+    end
 
-      it 'returns with a not found error' do
-        is_expected.to eq(@server.send(:not_found))
+    context 'remote console' do
+      let(:url) { 'console/12345' }
+
+      it 'calls init_proxy' do
+        allow(WebSocket::Driver).to receive(:websocket?).with(env).and_return(true)
+        allow(subject).to receive(:same_origin_as_host?).with(env).and_return(true)
+
+        expect(subject).to receive(:init_proxy).with(env, '12345')
+
+        subject.call(env)
+      end
+    end
+
+    context 'any other URL' do
+      let(:url) { 'haha' }
+
+      it 'returns with 404' do
+        expect(subject.call(env)).to eq(described_class::RACK_404)
       end
     end
   end
 
-  describe '#not_found' do
-    subject { @server.send(:not_found) }
+  describe '#init_proxy' do
+    let(:proxy) { subject.instance_variable_get(:@proxy) }
+    let(:protocol) { 'vnc' }
+    let(:url) { 'console/12345' }
+    let!(:console) { FactoryBot.create(:system_console, :url_secret => '12345', :protocol => protocol) }
+    let(:init) { subject.send(:init_proxy, env, '12345') }
 
-    it '404 http response' do
-      expect(subject[0]).to eq(404)
+    before do
+      allow(hijack).to receive(:call).and_return(left)
+      allow(TCPSocket).to receive(:open).and_return(right)
     end
 
-    it 'textual content type' do
-      expect(subject[1]).to eq('Content-Type' => 'text/plain')
+    context 'nonexistent console' do
+      let(:console) { nil }
+
+      it 'raises an AR exception' do
+        expect { init }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'rack hijack fail' do
+      it 'returns with 404' do
+        allow(hijack).to receive(:call).and_raise(StandardError)
+        expect(init).to eq(described_class::RACK_404)
+      end
+    end
+
+    it 'pushes two sockets to the proxy' do
+      allow(WebsocketAdapter).to receive(:new) # prevent writing to the dummy socket
+      expect(proxy).to receive(:push).with(left, right)
+
+      expect(init).to eq(described_class::RACK_YAY)
     end
   end
 
   describe '#cleanup' do
-    subject { @server.send(:cleanup, error) }
-
     before do
-      pairing.merge!(
-        left  => WebsocketServer::Pairing.new(true, proxy),
-        right => WebsocketServer::Pairing.new(false, proxy)
-      )
-      sockets.push(left, right)
-      allow(proxy).to receive(:vm_id).and_return('unknown')
+      adapters.merge!(left => nil, right => nil)
     end
 
-    let(:error) { right }
-
     it 'removes the failed socket' do
-      expect(proxy).to receive(:cleanup)
-      subject
-      expect(sockets).to_not include(right)
-      expect(pairing.keys).to_not include(right)
+      expect(left).to receive(:close)
+      expect(right).to receive(:close)
+      expect(proxy).to receive(:pop).with(left, right)
+
+      @server.send(:cleanup, :debug, nil, left, right)
+
+      expect(adapters.keys).not_to include(left)
+      expect(adapters.keys).not_to include(right)
     end
   end
 end

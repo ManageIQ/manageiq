@@ -45,7 +45,7 @@ class DockerEmbeddedAnsible < EmbeddedAnsible
     run_web_container
     run_task_container
 
-    loop do
+    settings.setup_wait_seconds.times do
       break if alive?
 
       _log.info("Waiting for Ansible container to respond")

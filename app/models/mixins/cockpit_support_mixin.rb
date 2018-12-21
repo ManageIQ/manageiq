@@ -3,11 +3,11 @@ module CockpitSupportMixin
 
   included do
     supports :cockpit_console do
-      message = 'The web-based console is not available because the'
       if respond_to?(:platform) && platform == 'windows'
-        unsupported_reason_add(:cockpit_console, _("#{message} Windows platform is not supported"))
+        unsupported_reason_add(:cockpit_console, _("The web-based console is not available because the Windows platform is not supported"))
       end
-      unsupported_reason_add(:cockpit_console, _("#{message} 'Cockpit' role is not enabled")) unless MiqRegion.my_region.role_active?('cockpit_ws')
+      unsupported_reason_add(:cockpit_console,
+                             _("The web-based console is not available because the 'Cockpit' role is not enabled")) unless MiqRegion.my_region.role_active?('cockpit_ws')
     end
 
     supports :launch_cockpit do

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :miq_request_task do
     status "Ok"
   end
@@ -6,9 +6,6 @@ FactoryGirl.define do
   factory :miq_retire_task,    :parent => :miq_request_task,   :class => "MiqRetireTask"
   factory :miq_provision_task, :parent => :miq_request_task,   :class => "MiqProvisionTask"
   factory :miq_provision,      :parent => :miq_provision_task, :class => "MiqProvision"
-
-  # Bare Metal
-  factory :miq_host_provision, :parent => :miq_request_task, :class => "MiqHostProvision"
 
   # Infra
   factory :miq_provision_microsoft,      :parent => :miq_provision,        :class => "ManageIQ::Providers::Microsoft::InfraManager::Provision"
@@ -41,10 +38,19 @@ FactoryGirl.define do
     state        'pending'
     request_type 'clone_to_service'
   end
-  factory :service_retire_task,             :parent => :miq_retire_task,  :class => "ServiceRetireTask" do
-    request_type 'service_retire'
-    state        'pending'
+
+  factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask' do
+    request_type 'transformation_plan'
   end
 
-  factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask'
+  # Retire Tasks
+  factory :service_retire_task,             :parent => :miq_retire_task, :class => "ServiceRetireTask" do
+    state        'pending'
+  end
+  factory :vm_retire_task,                  :parent => :miq_retire_task, :class => "VmRetireTask" do
+    state        'pending'
+  end
+  factory :orchestration_stack_retire_task, :parent => :miq_retire_task, :class => "OrchestrationStackRetireTask" do
+    state        'pending'
+  end
 end

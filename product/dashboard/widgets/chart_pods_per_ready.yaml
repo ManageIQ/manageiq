@@ -15,4 +15,4 @@ miq_schedule_options:
       :value: "1"
       :unit: daily
 enabled: true
-read_only: false
+read_only: true

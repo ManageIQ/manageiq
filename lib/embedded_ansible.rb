@@ -29,6 +29,15 @@ class EmbeddedAnsible
     other_embedded_ansible.priority <=> priority
   end
 
+  def self.consolidate_plugin_playbooks(dir)
+    FileUtils.rm_rf(dir)
+    FileUtils.mkdir_p(dir)
+
+    Vmdb::Plugins.ansible_content.each do |content|
+      FileUtils.cp_r(Dir.glob("#{content.path}/*"), dir)
+    end
+  end
+
   def alive?
     return false unless configured? && running?
     begin
@@ -90,7 +99,7 @@ class EmbeddedAnsible
   end
 
   def generate_password
-    SecureRandom.base64(18).tr("+/", "-_")
+    SecureRandom.hex(18)
   end
 
   def miq_database

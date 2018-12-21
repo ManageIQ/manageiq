@@ -48,4 +48,8 @@ class PxeMenuPxelinux < PxeMenu
     options.reject! { |o| o.blank? || rejects.any? { |r| o.starts_with?(r) } }
     return options.join(' '), initrd
   end
+
+  def self.display_name(number = 1)
+    n_('PXE Menu (pxelinux)', 'PXE Menus (pxelinux)', number)
+  end
 end

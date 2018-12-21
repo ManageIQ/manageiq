@@ -27,7 +27,7 @@ class MiqRequestWorkflow
   end
 
   def self.encrypted_options_field_regs
-    encrypted_options_fields.map { |f| /\[:#{f}\]/ }
+    encrypted_options_fields.map { |f| /\[:#{f}\]/ } + [/password::/]
   end
 
   def self.all_encrypted_options_fields
@@ -843,8 +843,12 @@ class MiqRequestWorkflow
 
   def load_ems_node(item, log_header)
     @ems_xml_nodes ||= {}
-    klass_name = item.kind_of?(MiqHashStruct) ? item.evm_object_class : item.class.base_class.name
-    node = @ems_xml_nodes["#{klass_name}_#{item.id}"]
+    klass_name = if item.kind_of?(MiqHashStruct)
+                   Object.const_get(item.evm_object_class)
+                 else
+                   item.class.base_class
+                 end
+    node = @ems_xml_nodes[klass_name][item.id]
     $log.error("#{log_header} Resource <#{klass_name}_#{item.id} - #{item.name}> not found in cached resource tree.") if node.nil?
     node
   end
@@ -856,19 +860,25 @@ class MiqRequestWorkflow
   end
 
   def get_ems_folders(folder, dh = {}, full_path = "")
+    path = full_path
     if folder.evm_object_class == :EmsFolder
       if folder.hidden
         return dh if folder.name != 'vm'
       else
-        full_path += full_path.blank? ? folder.name.to_s : " / #{folder.name}"
-        dh[folder.id] = full_path unless folder.type == "Datacenter"
+        path = full_path.dup
+        if path.blank?
+          path << folder.name.to_s
+        else
+          path << " / ".freeze << folder.name
+        end
+        dh[folder.id] = path unless folder.type == "Datacenter".freeze
       end
     end
 
     # Process child folders
     @_get_ems_folders_prefix ||= _log.prefix
     node = load_ems_node(folder, @_get_ems_folders_prefix)
-    node.children.each { |child| get_ems_folders(child.attributes[:object], dh, full_path) } unless node.nil?
+    node.children.each { |child| get_ems_folders(child.attributes[:object], dh, path) } unless node.nil?
 
     dh
   end
@@ -961,7 +971,8 @@ class MiqRequestWorkflow
 
   def convert_to_xml(xml, result)
     result.each do |obj, children|
-      @ems_xml_nodes["#{obj.class.base_class}_#{obj.id}"] = node = xml.add_element(obj.class.base_class.name, :object => ci_to_hash_struct(obj))
+      @ems_xml_nodes[obj.class.base_class] ||= {}
+      @ems_xml_nodes[obj.class.base_class][obj.id] = node = xml.add_element(obj.class.base_class.name, :object => ci_to_hash_struct(obj))
       convert_to_xml(node, children)
     end
   end
@@ -1041,7 +1052,7 @@ class MiqRequestWorkflow
     return [] if hosts_ids.blank?
 
     # Remove any hosts that are no longer in the list
-    all_hosts = load_ar_obj(src[:ems]).hosts.find_all { |h| hosts_ids.include?(h.id) }
+    all_hosts = load_ar_obj(src[:ems]).hosts.where(:id => hosts_ids)
     allowed_hosts_obj_cache = process_filter(:host_filter, Host, all_hosts)
     _log.info("allowed_hosts_obj returned [#{allowed_hosts_obj_cache.length}] objects in [#{Time.now - st}] seconds")
     rails_logger('allowed_hosts_obj', 1)
@@ -1055,7 +1066,7 @@ class MiqRequestWorkflow
 
     rails_logger('allowed_storages', 0)
     st = Time.now
-    MiqPreloader.preload(hosts, :storages)
+    MiqPreloader.preload(hosts, :storages => {}, :host_storages => :storage)
 
     storages = hosts.each_with_object({}) do |host, hash|
       host.writable_storages.each { |s| hash[s.id] = s }
@@ -1195,7 +1206,7 @@ class MiqRequestWorkflow
       result = find_datacenter_for_ci(h)
       rails_logger("host_to_folder for host #{h.name}", 1)
       result
-    end.compact
+    end.compact.uniq
     datacenters.each_with_object({}) do |dc, folders|
       rails_logger("host_to_folder for dc #{dc.name}", 0)
       folders.merge!(get_ems_folders(dc))
@@ -1317,7 +1328,7 @@ class MiqRequestWorkflow
     result = []
     customization_template_id = get_value(@values[:customization_template_id])
     @values[:customization_template_script] = nil if customization_template_id.nil?
-    prov_typ = self.class == MiqHostProvisionWorkflow ? "host" : "vm"
+    prov_typ = "vm"
     image = supports_iso? ? get_iso_image : get_pxe_image
     unless image.nil?
       result = image.customization_templates.collect do |c|
@@ -1358,7 +1369,7 @@ class MiqRequestWorkflow
   def allowed_pxe_images(_options = {})
     pxe_server = get_pxe_server
     return [] if pxe_server.nil?
-    prov_typ = self.class == MiqHostProvisionWorkflow ? "host" : "vm"
+    prov_typ = "vm"
 
     pxe_server.pxe_images.collect do |p|
       next if p.pxe_image_type.nil? || p.default_for_windows

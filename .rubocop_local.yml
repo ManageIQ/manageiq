@@ -25,6 +25,7 @@ GlobalVars:
   - $vim_log
   - $websocket_log
   - $nuage_log
+  - $redfish_log
 Rails/Exit:
   Exclude:
   - lib/workers/bin/*

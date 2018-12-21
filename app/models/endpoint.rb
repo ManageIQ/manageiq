@@ -6,11 +6,13 @@ class Endpoint < ApplicationRecord
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
   validates :port, :numericality => {:only_integer => true, :allow_nil => true, :greater_than => 0}
-  validates :url, :uniqueness => true, :if => :url
+  validates :url, :uniqueness => true, :allow_blank => true, :unless => :allow_duplicate_url?
   validate :validate_certificate_authority
 
   after_create  :endpoint_created
   after_destroy :endpoint_destroyed
+
+  delegate :to_s, :to => :url, :allow_nil => true
 
   def endpoint_created
     resource.endpoint_created(role) if resource.respond_to?(:endpoint_created)
@@ -74,5 +76,9 @@ class Endpoint < ApplicationRecord
     parse_certificate_authority
   rescue OpenSSL::OpenSSLError => err
     errors.add(:certificate_authority, err.to_s)
+  end
+
+  def allow_duplicate_url?
+    resource.try(:allow_duplicate_endpoint_url?)
   end
 end

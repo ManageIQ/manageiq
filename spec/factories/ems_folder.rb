@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ems_folder do
     sequence(:name) { |n| "Test Folder #{seq_padded_for_sorting(n)}" }
   end
@@ -78,21 +78,21 @@ end
 
 def build_vmware_folder_structure!(ems)
   ems.add_child(
-    FactoryGirl.create(:vmware_folder_root, :ems_id => ems.id).tap do |root|
+    FactoryBot.create(:vmware_folder_root, :ems_id => ems.id).tap do |root|
       root.add_child(
-        FactoryGirl.create(:vmware_folder, :name => "yellow1", :ems_id => ems.id).tap do |f|
+        FactoryBot.create(:vmware_folder, :name => "yellow1", :ems_id => ems.id).tap do |f|
           f.add_child(
-            FactoryGirl.create(:vmware_datacenter, :ems_id => ems.id).tap do |dc|
+            FactoryBot.create(:vmware_datacenter, :ems_id => ems.id).tap do |dc|
               dc.add_children(
-                FactoryGirl.create(:vmware_folder_vm_root, :ems_id => ems.id) do |vm|
+                FactoryBot.create(:vmware_folder_vm_root, :ems_id => ems.id) do |vm|
                   vm.add_children(
-                    FactoryGirl.create(:vmware_folder_vm, :name => "blue1", :ems_id => ems.id),
-                    FactoryGirl.create(:vmware_folder_vm, :name => "blue2", :ems_id => ems.id)
+                    FactoryBot.create(:vmware_folder_vm, :name => "blue1", :ems_id => ems.id),
+                    FactoryBot.create(:vmware_folder_vm, :name => "blue2", :ems_id => ems.id)
                   )
                 end,
-                FactoryGirl.create(:vmware_folder_host_root, :ems_id => ems.id),
-                FactoryGirl.create(:vmware_folder_datastore_root, :ems_id => ems.id),
-                FactoryGirl.create(:vmware_folder_network_root, :ems_id => ems.id)
+                FactoryBot.create(:vmware_folder_host_root, :ems_id => ems.id),
+                FactoryBot.create(:vmware_folder_datastore_root, :ems_id => ems.id),
+                FactoryBot.create(:vmware_folder_network_root, :ems_id => ems.id)
               )
             end
           )

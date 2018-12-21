@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :chargeback_rate_detail_measure do
     step  "1024"
     name "Bytes Units"

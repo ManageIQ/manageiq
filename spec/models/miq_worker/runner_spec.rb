@@ -31,7 +31,7 @@ describe MiqWorker::Runner do
     end
 
     it "worker_monitor_drb caches DRbObject" do
-      @worker_base.instance_variable_set(:@server, FactoryGirl.create(:miq_server, :drb_uri => "druby://127.0.0.1:123456"))
+      @worker_base.instance_variable_set(:@server, FactoryBot.create(:miq_server, :drb_uri => "druby://127.0.0.1:123456"))
       require 'drb'
       allow(DRbObject).to receive(:new).and_return(0, 1)
       expect(@worker_base.worker_monitor_drb).to eq 0
@@ -58,7 +58,7 @@ describe MiqWorker::Runner do
       @miq_server = EvmSpecHelper.local_miq_server
       allow(@miq_server).to receive(:active_role).and_return("automate)")
 
-      @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :type => "MiqGenericWorker")
+      @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :type => "MiqGenericWorker")
       @worker_base = MiqWorker::Runner.new(:guid => @worker.guid)
     end
 

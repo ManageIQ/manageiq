@@ -7,12 +7,12 @@ describe "Widget Chart Content" do
     MiqReport.seed_report("Vendor and Guest OS")
     MiqWidget.seed_widget("chart_vendor_and_guest_os")
 
-    @role  = FactoryGirl.create(:miq_user_role)
-    @group = FactoryGirl.create(:miq_group, :miq_user_role => @role)
-    @user  = FactoryGirl.create(:user, :miq_groups => [@group])
+    @role  = FactoryBot.create(:miq_user_role)
+    @group = FactoryBot.create(:miq_group, :miq_user_role => @role)
+    @user  = FactoryBot.create(:user, :miq_groups => [@group])
 
     5.times do |i|
-      vm = FactoryGirl.build(:vm_vmware)
+      vm = FactoryBot.build(:vm_vmware)
       vm.evm_owner_id = @user.id           if i > 2
       vm.miq_group_id = @user.current_group.id if vm.evm_owner_id || (i > 1)
       vm.save

@@ -24,9 +24,9 @@ describe ContainerImage do
       let(:deleted_date) { 6.months.ago }
 
       before do
-        @old_container_image        = FactoryGirl.create(:container_image, :deleted_on => deleted_date - 1.day)
-        @purge_date_container_image = FactoryGirl.create(:container_image, :deleted_on => deleted_date)
-        @new_container_image        = FactoryGirl.create(:container_image, :deleted_on => deleted_date + 1.day)
+        @old_container_image        = FactoryBot.create(:container_image, :deleted_on => deleted_date - 1.day)
+        @purge_date_container_image = FactoryBot.create(:container_image, :deleted_on => deleted_date)
+        @new_container_image        = FactoryBot.create(:container_image, :deleted_on => deleted_date + 1.day)
       end
 
       def assert_unpurged_ids(unpurged_ids)

@@ -17,7 +17,8 @@ class PhysicalServer < ApplicationRecord
   }.freeze
 
   validates :vendor, :inclusion =>{:in => VENDOR_TYPES}
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_servers
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :inverse_of => :physical_servers,
+    :class_name => "ManageIQ::Providers::PhysicalInfraManager"
   belongs_to :physical_rack, :foreign_key => :physical_rack_id, :inverse_of => :physical_servers
   belongs_to :physical_chassis, :foreign_key => :physical_chassis_id, :inverse_of => :physical_servers
 
@@ -26,11 +27,16 @@ class PhysicalServer < ApplicationRecord
   has_one :host, :inverse_of => :physical_server
   has_one :asset_detail, :as => :resource, :dependent => :destroy
   has_many :guest_devices, :through => :hardware
+  has_many :miq_alert_statuses, :as => :resource, :dependent => :destroy, :inverse_of => :resource
 
   scope :with_hosts, -> { where("physical_servers.id in (select hosts.physical_server_id from hosts)") }
 
   virtual_column :v_availability, :type => :string, :uses => :host
   virtual_column :v_host_os, :type => :string, :uses => :host
+
+  has_many :physical_switches, :through => :computer_system, :source => :connected_physical_switches
+
+  supports :refresh_ems
 
   def name_with_details
     details % {

@@ -77,8 +77,14 @@ module InterRegionApiMethodRelay
     case result
     when ManageIQ::API::Client::ActionResult
       raise InterRegionApiMethodRelayError, result.message if result.failed?
+      result.attributes
     when ManageIQ::API::Client::Resource
       instance_for_resource(result)
+    when Hash
+      # Some of API invocation returning Hash object
+      # Example: retire_resource for Service
+      _log.warn("remote API invocation returned Hash object")
+      result
     else
       raise InterRegionApiMethodRelayError, "Got unexpected API result object #{result.class}"
     end

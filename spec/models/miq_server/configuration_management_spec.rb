@@ -1,21 +1,21 @@
 describe MiqServer, "::ConfigurationManagement" do
-  describe "#get_config" do
-    shared_examples_for "#get_config" do
+  describe "#settings" do
+    shared_examples_for "#settings" do
       it "with no changes in the database" do
-        config = miq_server.get_config("vmdb")
-        expect(config).to be_kind_of(VMDB::Config)
-        expect(config.config.fetch_path(:api, :token_ttl)).to eq("10.minutes")
+        settings = miq_server.settings
+        expect(settings).to be_kind_of(Hash)
+        expect(settings.fetch_path(:api, :token_ttl)).to eq("10.minutes")
       end
 
       it "with changes in the database" do
         miq_server.settings_changes = [
-          FactoryGirl.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
+          FactoryBot.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
         ]
         Settings.reload!
 
-        config = miq_server.get_config("vmdb")
-        expect(config).to be_kind_of(VMDB::Config)
-        expect(config.config.fetch_path(:api, :token_ttl)).to eq("2.minutes")
+        settings = miq_server.settings
+        expect(settings).to be_kind_of(Hash)
+        expect(settings.fetch_path(:api, :token_ttl)).to eq("2.minutes")
       end
     end
 
@@ -24,7 +24,7 @@ describe MiqServer, "::ConfigurationManagement" do
 
       before { stub_local_settings(miq_server) }
 
-      include_examples "#get_config"
+      include_examples "#settings"
     end
 
     context "remote server" do
@@ -32,7 +32,7 @@ describe MiqServer, "::ConfigurationManagement" do
 
       before { stub_local_settings(nil) }
 
-      include_examples "#get_config"
+      include_examples "#settings"
     end
   end
 
@@ -50,12 +50,12 @@ describe MiqServer, "::ConfigurationManagement" do
   end
 
   context "ConfigurationManagementMixin" do
-    let(:miq_server) { FactoryGirl.create(:miq_server) }
+    let(:miq_server) { FactoryBot.create(:miq_server) }
     describe "#config_activated" do
-      let(:zone) { FactoryGirl.create(:zone, :name => "My Zone") }
+      let(:zone) { FactoryBot.create(:zone, :name => "My Zone") }
       let(:zone_other_region) do
         other_region_id = ApplicationRecord.id_in_region(1, MiqRegion.my_region_number + 1)
-        FactoryGirl.create(:zone, :id => other_region_id).tap do |z|
+        FactoryBot.create(:zone, :id => other_region_id).tap do |z|
           z.update_column(:name, "My Zone") # Bypass validation for test purposes
         end
       end

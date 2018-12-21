@@ -1,6 +1,14 @@
 module Vmdb
   module Inflections
     def self.load_inflections
+      @loaded ||= begin
+        load_core_inflections
+        load_plugin_inflections
+        true
+      end
+    end
+
+    def self.load_core_inflections
       # Add new inflection rules using the following format
       # (all these examples are active by default):
       # ActiveSupport::Inflector.inflections do |inflect|
@@ -40,6 +48,11 @@ module Vmdb
 
         inflect.acronym('ManageIQ')
       end
+    end
+
+    def self.load_plugin_inflections
+      require_relative 'plugins'
+      Vmdb::Plugins.load_inflections
     end
   end
 end

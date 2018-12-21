@@ -1,7 +1,7 @@
 describe ManageIQ::Providers::NativeOperationWorkflow do
   context "post_refresh" do
     before do
-      vm = FactoryGirl.create(:vm)
+      vm = FactoryBot.create(:vm)
 
       options = {
         :target_id    => vm.id,

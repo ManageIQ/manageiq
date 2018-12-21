@@ -1,6 +1,9 @@
 class MiqSchedule < ApplicationRecord
-  validates :name, :uniqueness => {:scope => [:userid, :towhat]}
-  validates :name, :description, :towhat, :run_at, :presence => true
+  include DeprecationMixin
+  deprecate_attribute :towhat, :resource_type
+
+  validates :name, :uniqueness => {:scope => [:userid, :resource_type]}
+  validates :name, :description, :resource_type, :run_at, :presence => true
   validate  :validate_run_at, :validate_file_depot
 
   before_save :set_start_time_and_prod_default
@@ -11,6 +14,7 @@ class MiqSchedule < ApplicationRecord
 
   belongs_to :file_depot
   belongs_to :miq_search
+  belongs_to :resource, :polymorphic => true
   belongs_to :zone
 
   scope :in_zone, lambda { |zone_name|
@@ -21,11 +25,11 @@ class MiqSchedule < ApplicationRecord
     where("updated_at > ?", time)
   }
 
-  scope :filter_matches_with,      ->(exp)    { where(:filter => exp) }
-  scope :with_prod_default_not_in, ->(prod)   { where.not(:prod_default => prod).or(where(:prod_default => nil)) }
-  scope :without_adhoc,            ->         { where(:adhoc => nil) }
-  scope :with_towhat,              ->(towhat) { where(:towhat => towhat) }
-  scope :with_userid,              ->(userid) { where(:userid => userid) }
+  scope :filter_matches_with,      ->(exp)           { where(:filter => exp) }
+  scope :with_prod_default_not_in, ->(prod)          { where.not(:prod_default => prod).or(where(:prod_default => nil)) }
+  scope :without_adhoc,            ->                { where(:adhoc => nil) }
+  scope :with_towhat,              ->(resource_type) { where(:resource_type => resource_type) }
+  scope :with_userid,              ->(userid)        { where(:userid => userid) }
 
   serialize :sched_action
   serialize :filter
@@ -41,7 +45,7 @@ class MiqSchedule < ApplicationRecord
 
   def set_start_time_and_prod_default
     run_at # Internally this will correct :start_time to UTC
-    self.prod_default = "system" if SYSTEM_SCHEDULE_CLASSES.include?(towhat.to_s)
+    self.prod_default = "system" if SYSTEM_SCHEDULE_CLASSES.include?(resource_type.to_s)
   end
 
   def run_at
@@ -69,24 +73,27 @@ class MiqSchedule < ApplicationRecord
     end
 
     method = sched.sched_action[:method] rescue nil
-    _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]")
+    _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.resource_type}] [#{method}]")
 
     action = "action_" + method
-    unless sched.respond_to?(action)
+
+    if sched.respond_to?(action)
+      msg = MiqQueue.submit_job(
+        :class_name  => name,
+        :instance_id => sched.id,
+        :method_name => "invoke_actions",
+        :args        => [action, at],
+        :msg_timeout => 1200
+      )
+
+      _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.resource_type}] [#{method}]...complete")
+      msg
+    elsif sched.resource.respond_to?(method)
+      sched.resource.send(method, *sched.sched_action[:args])
+      sched.update_attributes(:last_run_on => Time.now.utc)
+    else
       _log.warn("[#{sched.name}] no such action: [#{method}], aborting schedule")
-      return
     end
-
-    msg = MiqQueue.submit_job(
-      :class_name  => name,
-      :instance_id => sched.id,
-      :method_name => "invoke_actions",
-      :args        => [action, at],
-      :msg_timeout => 1200
-    )
-
-    _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]...complete")
-    msg
   end
 
   def invoke_actions(action, at)
@@ -115,12 +122,12 @@ class MiqSchedule < ApplicationRecord
     # Let RBAC evaluate the filter's MiqExpression, and return the first value (the target ids)
     my_filter = get_filter
     return [] if my_filter.nil?
-    Rbac.filtered(towhat, :filter => my_filter).pluck(:id)
+    Rbac.filtered(resource_type, :filter => my_filter).pluck(:id)
   end
 
   def get_targets
     # TODO: Add support to invoke_actions, get_targets, and get_filter to call class methods in addition to the normal instance methods
-    return [Object.const_get(towhat)] if sched_action.kind_of?(Hash) && ALLOWED_CLASS_METHOD_ACTIONS.include?(sched_action[:method])
+    return [Object.const_get(resource_type)] if sched_action.kind_of?(Hash) && ALLOWED_CLASS_METHOD_ACTIONS.include?(sched_action[:method])
 
     my_filter = get_filter
     if my_filter.nil?
@@ -128,7 +135,7 @@ class MiqSchedule < ApplicationRecord
       return []
     end
 
-    Rbac.filtered(towhat, :filter => my_filter)
+    Rbac.filtered(resource_type, :filter => my_filter)
   end
 
   def get_filter
@@ -233,7 +240,8 @@ class MiqSchedule < ApplicationRecord
     opts = self.sched_action[:options]
     opts[:file_depot_id]   = file_depot.id
     opts[:miq_schedule_id] = id
-    queue_opts = {:class_name => klass.name, :method_name => "backup", :msg_timeout => 3600, :args => [opts], :role => "database_operations"}
+    queue_opts = {:class_name  => klass.name, :method_name => "backup", :args => [opts], :role => "database_operations",
+                  :msg_timeout => ::Settings.task.active_task_timeout.to_i_with_method}
     task_opts  = {:action => "Database backup", :userid => self.sched_action[:options][:userid]}
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
@@ -324,15 +332,22 @@ class MiqSchedule < ApplicationRecord
   end
 
   def verify_file_depot(params)  # TODO: This logic belongs in the UI, not sure where
-    depot_class = FileDepot.supported_protocols[params[:uri_prefix]]
-    depot       = file_depot.class.name == depot_class ? file_depot : build_file_depot(:type => depot_class)
-    depot.name  = params[:name]
-    depot.uri   = params[:uri]
+    depot_class                = FileDepot.supported_protocols[params[:uri_prefix]]
+    depot                      = file_depot.class.name == depot_class ? file_depot : build_file_depot(:type => depot_class)
+    depot.name                 = params[:name]
+    uri                        = params[:uri]
+    api_port                   = params[:swift_api_port]
+    depot.aws_region           = params[:aws_region]
+    depot.openstack_region     = params[:openstack_region]
+    depot.keystone_api_version = params[:keystone_api_version]
+    depot.v3_domain_ident      = params[:v3_domain_ident]
+    depot.security_protocol    = params[:security_protocol]
+    depot.uri                  = api_port.blank? ? uri : depot.merged_uri(URI(uri), api_port)
     if params[:save]
       file_depot.save!
       file_depot.update_authentication(:default => {:userid => params[:username], :password => params[:password]}) if (params[:username] || params[:password]) && depot.class.requires_credentials?
-    else
-      depot.verify_credentials(nil, params.slice(:username, :password)) if depot.class.requires_credentials?
+    elsif depot.class.requires_credentials?
+      depot.verify_credentials(nil, params)
     end
   end
 
@@ -440,5 +455,9 @@ class MiqSchedule < ApplicationRecord
   def v_zone_name
     return "" if zone.nil?
     zone.name
+  end
+
+  def self.display_name(number = 1)
+    n_('Schedule', 'Schedules', number)
   end
 end # class MiqSchedule

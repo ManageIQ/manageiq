@@ -16,7 +16,7 @@ module MiqLdapToSssd
       }
 
       log_configuration("Initial", Settings.authentication)
-      MiqServer.my_server.set_config(new_settings)
+      MiqServer.my_server.add_settings_for_resource(new_settings)
       log_configuration("Updated", Settings.authentication)
     end
 

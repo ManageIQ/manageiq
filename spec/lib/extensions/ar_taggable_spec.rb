@@ -1,14 +1,14 @@
 describe ActsAsTaggable do
   before do
-    @host1 = FactoryGirl.create(:host, :name => "HOST1")
+    @host1 = FactoryBot.create(:host, :name => "HOST1")
     @host1.tag_with("red blue yellow", :ns => "/test", :cat => "tags")
-    @host2 = FactoryGirl.create(:host, :name => "HOST2")
-    @host3 = FactoryGirl.create(:host, :name => "HOST3")
+    @host2 = FactoryBot.create(:host, :name => "HOST2")
+    @host3 = FactoryBot.create(:host, :name => "HOST3")
 
-    @vm1   = FactoryGirl.create(:vm_vmware, :name => "VM1")
-    @vm2   = FactoryGirl.create(:vm_vmware, :name => "VM2")
-    @vm3   = FactoryGirl.create(:vm_vmware, :name => "VM3")
-    @vm4   = FactoryGirl.create(:vm_vmware, :name => "VM4")
+    @vm1   = FactoryBot.create(:vm_vmware, :name => "VM1")
+    @vm2   = FactoryBot.create(:vm_vmware, :name => "VM2")
+    @vm3   = FactoryBot.create(:vm_vmware, :name => "VM3")
+    @vm4   = FactoryBot.create(:vm_vmware, :name => "VM4")
 
     @vm1.tag_with("red blue yellow", :ns => "/test", :cat => "tags")
     @vm3.tag_with("Red Blue Yellow", :ns => "/Test", :cat => "MixedCase")
@@ -17,8 +17,8 @@ describe ActsAsTaggable do
   end
 
   describe '#writable_classification_tags' do
-    let(:parent_classification) { FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :read_only => false) }
-    let(:classification)        { FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent => parent_classification, :read_only => true) }
+    let(:parent_classification) { FactoryBot.create(:classification, :description => "Environment", :name => "environment", :read_only => false) }
+    let(:classification)        { FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent => parent_classification, :read_only => true) }
 
     before do
       classification.assign_entry_to(@vm1)
@@ -53,7 +53,7 @@ describe ActsAsTaggable do
     end
 
     it "STI classes" do
-      vm_template = FactoryGirl.create(:template_vmware, :name => "template", :host => @host)
+      vm_template = FactoryBot.create(:template_vmware, :name => "template", :host => @host)
       vm_template.tag_with("red blue yellow", :ns => "/test", :cat => "tags")
 
       expect(Vm.find_tagged_with(:all => 'red', :ns => '/test/tags')).to eq([@vm1])
@@ -161,8 +161,8 @@ describe ActsAsTaggable do
     end
 
     it "with virtual reflections" do
-      lan = FactoryGirl.create(:lan, :name => "VM NFS Network")
-      vm  = FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :guest_devices => [FactoryGirl.create(:guest_device_nic, :lan => lan)]))
+      lan = FactoryBot.create(:lan, :name => "VM NFS Network")
+      vm  = FactoryBot.create(:vm_vmware, :hardware => FactoryBot.create(:hardware, :guest_devices => [FactoryBot.create(:guest_device_nic, :lan => lan)]))
       expect(vm).to be_is_tagged_with("/virtual/lans/name/VM NFS Network", :ns => "*")
     end
   end

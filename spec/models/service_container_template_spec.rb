@@ -6,29 +6,29 @@ describe(ServiceContainerTemplate) do
   end
 
   let(:ems) do
-    FactoryGirl.create(:ems_openshift).tap do |ems|
+    FactoryBot.create(:ems_openshift).tap do |ems|
       allow(ems).to receive(:create_project)
     end
   end
 
   let(:service) do
-    FactoryGirl.create(:service_container_template, :options => config_info_options.merge(dialog_options)).tap do |svc|
+    FactoryBot.create(:service_container_template, :options => config_info_options.merge(dialog_options)).tap do |svc|
       allow(svc).to receive(:container_manager).and_return(ems)
     end
   end
 
   let(:service_with_new_project) do
-    FactoryGirl.create(:service_container_template, :options => config_info_options.merge(dialog_options_with_new_project)).tap do |svc|
+    FactoryBot.create(:service_container_template, :options => config_info_options.merge(dialog_options_with_new_project)).tap do |svc|
       allow(svc).to receive(:container_manager).and_return(ems)
     end
   end
 
   let(:loaded_service) do
-    service_template = FactoryGirl.create(:service_template_container_template).tap do |st|
+    service_template = FactoryBot.create(:service_template_container_template).tap do |st|
       allow(st).to receive(:container_manager).and_return(ems)
     end
 
-    FactoryGirl.create(:service_container_template,
+    FactoryBot.create(:service_container_template,
                        :options          => provision_options.merge(config_info_options),
                        :service_template => service_template).tap do |svc|
       allow(svc).to receive(:container_template).and_return(container_template)
@@ -79,16 +79,16 @@ describe(ServiceContainerTemplate) do
     }
   end
 
-  let(:ctp1) { FactoryGirl.create(:container_template_parameter, :name => 'var1', :value => 'p1', :required => true) }
-  let(:ctp2) { FactoryGirl.create(:container_template_parameter, :name => 'var2', :value => 'p2', :required => true) }
-  let(:ctp3) { FactoryGirl.create(:container_template_parameter, :name => 'var3', :value => 'p3', :required => false) }
+  let(:ctp1) { FactoryBot.create(:container_template_parameter, :name => 'var1', :value => 'p1', :required => true) }
+  let(:ctp2) { FactoryBot.create(:container_template_parameter, :name => 'var2', :value => 'p2', :required => true) }
+  let(:ctp3) { FactoryBot.create(:container_template_parameter, :name => 'var3', :value => 'p3', :required => false) }
   let(:container_template) do
-    FactoryGirl.create(:container_template, :ems_id => ems.id).tap do |ct|
+    FactoryBot.create(:container_template, :ems_id => ems.id).tap do |ct|
       ct.container_template_parameters = [ctp1, ctp2, ctp3]
     end
   end
 
-  let(:created_object) { FactoryGirl.create(:orchestration_stack_resource, :name => 'my-example', :resource_category => 'ContainerRoute') }
+  let(:created_object) { FactoryBot.create(:orchestration_stack_resource, :name => 'my-example', :resource_category => 'ContainerRoute') }
   let(:object_hash) { {:apiVersion => "v1", :kind => "Route", :metadata => {:name => "dotnet-example"}} }
 
   describe '#preprocess' do

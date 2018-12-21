@@ -5,6 +5,7 @@ class EmsCluster < ApplicationRecord
   include EventMixin
   include TenantIdentityMixin
   include CustomActionsMixin
+  include ClusterUpgrade
 
   acts_as_miq_taggable
 
@@ -26,7 +27,6 @@ class EmsCluster < ApplicationRecord
   virtual_column :v_cpu_vr_ratio,      :type => :float,   :uses => [:aggregate_cpu_total_cores, :aggregate_vm_cpus]
   virtual_column :v_parent_datacenter, :type => :string,  :uses => :all_relationships
   virtual_column :v_qualified_desc,    :type => :string,  :uses => :all_relationships
-  virtual_column :last_scan_on,        :type => :time,    :uses => :last_drift_state_timestamp
   virtual_total  :total_vms,               :vms
   virtual_total  :total_miq_templates,     :miq_templates
   virtual_total  :total_vms_and_templates, :vms_and_templates
@@ -44,7 +44,7 @@ class EmsCluster < ApplicationRecord
   include FilterableMixin
 
   include DriftStateMixin
-  alias_method :last_scan_on, :last_drift_state_timestamp
+  virtual_delegate :last_scan_on, :to => "last_drift_state_timestamp_rec.timestamp", :allow_nil => true
 
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
@@ -337,5 +337,9 @@ class EmsCluster < ApplicationRecord
 
   def openstack_cluster?
     ext_management_system.class == ManageIQ::Providers::Openstack::InfraManager
+  end
+
+  def self.display_name(number = 1)
+    n_('Cluster / Deployment Role', 'Clusters / Deployment Roles', number)
   end
 end

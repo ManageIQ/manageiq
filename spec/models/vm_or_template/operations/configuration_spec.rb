@@ -4,7 +4,7 @@ describe VmOrTemplate::Operations::Configuration do
     let(:disk_size) { "123" }
 
     context "when ext_management_system does not exist" do
-      let(:vm) { FactoryGirl.create(:vm_or_template) }
+      let(:vm) { FactoryBot.create(:vm_or_template) }
 
       it "raises an exception when does not find ext_management_system" do
         message = "VM has no EMS, unable to add disk"
@@ -13,10 +13,10 @@ describe VmOrTemplate::Operations::Configuration do
     end
 
     context "when ext_management_system exists" do
-      let(:vm) { FactoryGirl.create(:vm_or_template, :ext_management_system => ems) }
-      let(:ems) { FactoryGirl.create(:ext_management_system) }
+      let(:vm) { FactoryBot.create(:vm_or_template, :ext_management_system => ems) }
+      let(:ems) { FactoryBot.create(:ext_management_system) }
       let(:storage_name) { "test_storage" }
-      let(:storage) { FactoryGirl.create(:storage, :name => storage_name) }
+      let(:storage) { FactoryBot.create(:storage, :name => storage_name) }
       let(:storages) { double("storages") }
       let(:host) { double("host", :writable_storages => storages) }
       let(:hosts) { [host] }
@@ -53,6 +53,43 @@ describe VmOrTemplate::Operations::Configuration do
           message = "Datastore does not exist or cannot be accessed, unable to add disk"
           expect { vm.raw_add_disk(disk_name, disk_size, :datastore => storage_name) }.to raise_error(message)
         end
+      end
+    end
+  end
+
+  context "#raw_remove_disk" do
+    let(:disk_name) { "[datastore1] vm1/vm1.vmdk" }
+
+    context "from an archived vm" do
+      let(:vm) { FactoryBot.create(:vm_or_template) }
+
+      it "raises an exception" do
+        expect { vm.raw_remove_disk(disk_name) }.to raise_error("VM has no EMS, unable to remove disk")
+      end
+    end
+
+    context "from an active vm" do
+      let(:ems) { FactoryBot.create(:ext_management_system) }
+      let(:vm)  { FactoryBot.create(:vm_or_template, :ext_management_system => ems) }
+
+      it "defaults to delete the backing file" do
+        expected_options = {
+          :diskName       => disk_name,
+          :delete_backing => true,
+        }
+
+        expect(vm).to receive(:run_command_via_parent).with(:vm_remove_disk, expected_options)
+        vm.raw_remove_disk(disk_name)
+      end
+
+      it "can override the delete backing file option" do
+        expected_options = {
+          :diskName       => disk_name,
+          :delete_backing => false,
+        }
+
+        expect(vm).to receive(:run_command_via_parent).with(:vm_remove_disk, expected_options)
+        vm.raw_remove_disk(disk_name, :delete_backing => false)
       end
     end
   end

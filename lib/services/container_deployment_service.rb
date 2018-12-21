@@ -53,10 +53,6 @@ class ContainerDeploymentService
     end
   end
 
-  def self.hide_deployment_wizard?
-    !Settings.product.container_deployment_wizard
-  end
-
   def optional_deployment_types
     ContainerDeployment::DEPLOYMENT_TYPES
   end

@@ -46,7 +46,7 @@ describe Provider do
     end
 
     it "works with #update_attributes" do
-      p = FactoryGirl.build(:provider_ansible_tower)
+      p = FactoryBot.build(:provider_ansible_tower)
       p.update_attributes(:verify_ssl => 0)
       p.update_attributes(:verify_ssl => 1)
 
@@ -55,16 +55,16 @@ describe Provider do
   end
 
   context "#tenant" do
-    let(:tenant) { FactoryGirl.create(:tenant) }
+    let(:tenant) { FactoryBot.create(:tenant) }
     it "has a tenant" do
-      provider = FactoryGirl.create(:provider, :tenant => tenant)
+      provider = FactoryBot.create(:provider, :tenant => tenant)
       expect(tenant.providers).to include(provider)
     end
   end
 
   context "destroying provider" do
     let!(:miq_server) { EvmSpecHelper.local_miq_server }
-    let(:provider) { FactoryGirl.create(:provider) }
+    let(:provider) { FactoryBot.create(:provider) }
     context "#destroy_queue" do
       it "queues destroy" do
         provider.destroy_queue
@@ -77,7 +77,7 @@ describe Provider do
 
     context "#destroy" do
       it "destroys its managers and itself" do
-        manager = FactoryGirl.create(:ext_management_system)
+        manager = FactoryBot.create(:ext_management_system)
         provider.managers = [manager]
         task = MiqTask.create(
           :name   => "Destroying #{self.class.name} with id: #{provider.id}",

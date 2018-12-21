@@ -21,7 +21,7 @@ class Dialog < ApplicationRecord
   def self.seed
     dialog_import_service = DialogImportService.new
 
-    Vmdb::Plugins.instance.vmdb_plugins.each do |plugin|
+    Vmdb::Plugins.each do |plugin|
       Dir.glob(plugin.root.join(DIALOG_DIR_PLUGIN, YAML_FILES_PATTERN)).each do |file|
         dialog_import_service.import_all_service_dialogs_from_yaml_file(file)
       end
@@ -76,22 +76,37 @@ class Dialog < ApplicationRecord
   end
 
   def validate_field_data
-    result = []
-    dialog_tabs.each do |dt|
+    dialog_tabs.each_with_object([]) do |dt, result|
       dt.dialog_groups.each do |dg|
         dg.dialog_fields.each do |df|
           err_msg = df.validate_field_data(dt, dg)
-          result << err_msg unless err_msg.blank?
+          result << err_msg if err_msg.present?
         end
       end
     end
-    result
   end
 
-  def load_values_into_fields(values)
+  def load_values_into_fields(values, overwrite = true)
+    values = values.with_indifferent_access
+
+    dialog_field_hash.each_value do |field|
+      field.dialog = self
+      new_value = values[field.automate_key_name] || values[field.name] || values.dig("parameters", field.name)
+      new_value ||= field.value unless overwrite
+
+      field.value = new_value
+    end
+  end
+
+  def initialize_with_given_values(values)
     dialog_field_hash.each_value do |field|
       field.dialog = self
       field.value = values[field.automate_key_name] || values[field.name]
+    end
+
+    dialog_field_hash.each_value do |field|
+      given_value = values[field.automate_key_name] || values[field.name]
+      field.initialize_with_given_value(given_value)
     end
   end
 
@@ -167,7 +182,8 @@ class Dialog < ApplicationRecord
 
   def reject_if_has_resource_actions
     if resource_actions.length > 0
-      raise _("Dialog cannot be deleted because it is connected to other components.")
+      connected_components = resource_actions.collect { |ra| ra.resource_type.constantize.find(ra.resource_id) }
+      raise _("Dialog cannot be deleted because it is connected to other components: #{connected_components.map { |cc| cc.class.name + ":" + cc.id.to_s + " - " + cc.try(:name) }}")
     end
   end
 

@@ -51,6 +51,10 @@ class MiqAlertSet < ApplicationRecord
     File.open(fixture_file) { |fd| MiqAlertSet.import_from_yaml(fd, :save => true) }
   end
 
+  def self.display_name(number = 1)
+    n_('Alert Profile', 'Alert Profiles', number)
+  end
+
   private
 
   def default_name_to_description

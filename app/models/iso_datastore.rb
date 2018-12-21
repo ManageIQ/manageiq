@@ -44,4 +44,8 @@ class IsoDatastore < ApplicationRecord
     _log.info("Synchronizing images on #{log_for}...Complete")
   rescue ManageIQ::Providers::Redhat::InfraManager::OvirtServices::Error
   end
+
+  def self.display_name(number = 1)
+    n_('ISO Datastore', 'ISO Datastores', number)
+  end
 end

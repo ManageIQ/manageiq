@@ -2,17 +2,17 @@ describe Job do
   context "With a single scan job," do
     before do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
-      @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
+      @server2 = FactoryBot.create(:miq_server, :zone => @server1.zone)
 
       @miq_server = EvmSpecHelper.local_miq_server(:is_master => true)
       @zone = @miq_server.zone
-      @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone, :name => "Test EMS")
-      @host       = FactoryGirl.create(:host)
+      @ems        = FactoryBot.create(:ems_vmware, :zone => @zone, :name => "Test EMS")
+      @host       = FactoryBot.create(:host)
 
-      @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
+      @worker = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id)
       @schedule_worker_settings = MiqScheduleWorker.worker_settings
 
-      @vm       = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id, :host_id => @host.id)
+      @vm       = FactoryBot.create(:vm_vmware, :ems_id => @ems.id, :host_id => @host.id)
       @job      = @vm.raw_scan
     end
 
@@ -121,15 +121,15 @@ describe Job do
         scan_type   = nil
         build       = '12345'
         description = "Snapshot for scan job: #{@job.guid}, EVM Server build: #{build} #{scan_type} Server Time: #{Time.now.utc.iso8601}"
-        @snapshot = FactoryGirl.create(:snapshot, :vm_or_template_id => @vm.id, :name => 'EvmSnapshot', :description => description)
+        @snapshot = FactoryBot.create(:snapshot, :vm_or_template_id => @vm.id, :name => 'EvmSnapshot', :description => description)
 
-        @zone2     = FactoryGirl.create(:zone)
-        @ems2      = FactoryGirl.create(:ems_vmware, :zone => @zone2, :name => "Test EMS 2")
-        @vm2       = FactoryGirl.create(:vm_vmware, :ems_id => @ems2.id)
+        @zone2     = FactoryBot.create(:zone)
+        @ems2      = FactoryBot.create(:ems_vmware, :zone => @zone2, :name => "Test EMS 2")
+        @vm2       = FactoryBot.create(:vm_vmware, :ems_id => @ems2.id)
         @job2      = @vm2.raw_scan
         @job2.zone = @zone2.name
         description = "Snapshot for scan job: #{@job2.guid}, EVM Server build: #{build} #{scan_type} Server Time: #{Time.now.utc.iso8601}"
-        @snapshot2 = FactoryGirl.create(:snapshot, :vm_or_template_id => @vm2.id, :name => 'EvmSnapshot', :description => description)
+        @snapshot2 = FactoryBot.create(:snapshot, :vm_or_template_id => @vm2.id, :name => 'EvmSnapshot', :description => description)
       end
 
       it "should create proper AR relationships" do
@@ -247,12 +247,12 @@ describe Job do
 
     context "where scan jobs exist for both vms and container images" do
       before do
-        User.current_user = FactoryGirl.create(:user)
-        @ems_k8s = FactoryGirl.create(
+        User.current_user = FactoryBot.create(:user)
+        @ems_k8s = FactoryBot.create(
           :ems_kubernetes, :hostname => "test.com", :zone => @zone, :port => 8443,
           :authentications => [AuthToken.new(:name => "test", :type => 'AuthToken', :auth_key => "a secret")]
         )
-        @image = FactoryGirl.create(
+        @image = FactoryBot.create(
           :container_image, :ext_management_system => @ems_k8s, :name => 'test',
           :image_ref => "docker://3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a"
         )

@@ -5,7 +5,7 @@ en:
   product:
     name: ManageIQ
     name_full: ManageIQ
-    copyright: "Copyright (c) 2018 ManageIQ. Sponsored by Red Hat Inc."
+    copyright: "Copyright (c) 2019 ManageIQ. Sponsored by Red Hat Inc."
     support_website: "http://www.manageiq.org"
     support_website_text: "ManageIQ.org"
   activerecord:
@@ -704,6 +704,7 @@ en:
       ContainerQuota:           Container Quota
       CustomButton:             Button
       CustomButtonSet:          Button Group
+      ConfigurationScript:      Template (Ansible Tower)
       ConfigurationScriptSource: Repository
       Container:                Container
       ContainerPerformance:     Performance - Container
@@ -728,6 +729,8 @@ en:
       FileDepotFtp:             FTP
       FileDepotFtpAnonymous:    Anonymous FTP
       FileDepotNfs:             NFS
+      FileDepotS3:              AWS S3
+      FileDepotSwift:           OpenStack Swift
       FileDepotSmb:             Samba
       Filesystem:               File
       Flavor:                   Flavor
@@ -755,6 +758,7 @@ en:
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential:      Credential (Vault)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential:  Credential (OpenStack)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RackspaceCredential:  Credential (Rackspace)
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RhvCredential:        Credential (RHV)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Satellite6Credential: Credential (Satellite)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential:        Credential (SCM)
       ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VmwareCredential:     Credential (VMware)
@@ -773,6 +777,7 @@ en:
       ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:     Credential (VMware)
       ManageIQ::Providers::AnsibleTower::AutomationManager:                 Automation Manager (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript: Job Template (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationWorkflow: Workflow Template (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook: Playbook (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager:                   Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
@@ -800,7 +805,7 @@ en:
       ManageIQ::Providers::InfraManager::Vm:                                Virtual Machine
       ManageIQ::Providers::InfraManager::Template:                          Template
       ManageIQ::Providers::NetworkManager:                                  Network Manager
-      ManageIQ::Providers::PhysicalInfraManager:                            Physical Infrastructure Provider 
+      ManageIQ::Providers::PhysicalInfraManager:                            Physical Infrastructure Provider
       ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (OpenStack)
       ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
       ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Red Hat)
@@ -860,7 +865,12 @@ en:
       ManageIQ::Providers::Redhat::InfraManager::Host:                      Host (Redhat)
       ManageIQ::Providers::Vmware::InfraManager::Host:                      Host (Vmware)
       ManageIQ::Providers::Vmware::InfraManager::HostEsx:                   Host (Vmware)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalRack:      Physical Rack (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalChassis:   Physical Chassis (Lenovo)
       ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalServer:    Physical Server (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalStorage:    Physical Storage (Lenovo)
+      ManageIQ::Providers::Lenovo::PhysicalInfraManager::PhysicalSwitch:    Physical Switch (Lenovo)
+      ManageIQ::Providers::Redfish::PhysicalInfraManager::PhysicalServer:   Physical Server (Redfish)
       MeteringContainerImage:   Metering for Image
       MeteringContainerProject: Metering for Project
       MeteringVm:               Metering for VM
@@ -903,6 +913,7 @@ en:
       ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate:    vApp Template
       PersistentVolume:         Persistent Volume
       PhysicalServer:           Physical Server
+      PhysicalSwitch:           Physical Switch
       PolicyEvent:              Policy Event
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
@@ -1030,9 +1041,6 @@ en:
       lans:                        vLANs
       last_compliance:             Last Compliance History
       ldap:                        LDAP
-      ldap_domain:                 LDAP Domain
-      ldap_region:                 LDAP Region
-      ldap_server:                 LDAP Server
       linux_initprocesses:         Linux Init Processes
       miq_approval_stamps:         Stamped Approvals
       miq_approvals:               Approvals
@@ -1098,3 +1106,11 @@ en:
     ui_title:
       foreman:             Foreman
       ansible_tower:       Ansible Tower
+
+  # Used in NumberHelper.number_to_human_size() and NumberHelper.number_to_human()
+  number:
+    human:
+      storage_units:
+        units:
+          pb: "PB"
+          eb: "EB"

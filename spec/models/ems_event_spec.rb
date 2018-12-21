@@ -1,10 +1,10 @@
 describe EmsEvent do
   context "model" do
-    let(:ems1) { FactoryGirl.create(:ems_kubernetes) }
-    let(:ems2) { FactoryGirl.create(:ems_kubernetes) }
+    let(:ems1) { FactoryBot.create(:ems_kubernetes) }
+    let(:ems2) { FactoryBot.create(:ems_kubernetes) }
 
     it "Find ems events and generated events for ext management systems" do
-      generated_event = FactoryGirl.create(:ems_event, :ext_management_system => ems1, :generating_ems => ems2)
+      generated_event = FactoryBot.create(:ems_event, :ext_management_system => ems1, :generating_ems => ems2)
       expect(ems1.ems_events).to match_array([generated_event])
       expect(ems2.generated_events).to match_array([generated_event])
     end
@@ -12,13 +12,13 @@ describe EmsEvent do
 
   context "container events" do
     let(:ems_ref) { "test_ems_ref" }
-    let(:ems) { FactoryGirl.create(:ems_kubernetes) }
+    let(:ems) { FactoryBot.create(:ems_kubernetes) }
     let(:event_hash) { { :ems_ref => "event-ref", :ems_id => ems.id, :event_type => "STUFF_HAPPENED" } }
-    let(:container_project) { FactoryGirl.create(:container_project, :ext_management_system => ems) }
+    let(:container_project) { FactoryBot.create(:container_project, :ext_management_system => ems) }
 
     context "on node" do
       let(:node_event_hash) { event_hash.merge(:container_node_ems_ref => ems_ref) }
-      let!(:container_node) { FactoryGirl.create(:container_node, :ext_management_system => ems, :name => "Test Node", :ems_ref => ems_ref) }
+      let!(:container_node) { FactoryBot.create(:container_node, :ext_management_system => ems, :name => "Test Node", :ems_ref => ems_ref) }
 
       it "process_container_entities_in_event! links node id to event" do
         EmsEvent.process_container_entities_in_event!(node_event_hash)
@@ -38,7 +38,7 @@ describe EmsEvent do
 
     context "on pod" do
       let(:pod_event_hash) { event_hash.merge(:container_group_ems_ref => ems_ref) }
-      let!(:container_group) { FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => container_project, :name => "Test Group", :ems_ref => ems_ref) }
+      let!(:container_group) { FactoryBot.create(:container_group, :ext_management_system => ems, :container_project => container_project, :name => "Test Group", :ems_ref => ems_ref) }
 
       it "process_container_entities_in_event! links pod id to event" do
         EmsEvent.process_container_entities_in_event!(pod_event_hash)
@@ -53,7 +53,7 @@ describe EmsEvent do
 
     context "on replicator" do
       let(:repl_event_hash) { event_hash.merge(:container_replicator_ems_ref => ems_ref) }
-      let!(:container_replicator) { FactoryGirl.create(:container_replicator, :ext_management_system => ems, :container_project => container_project, :name => "Test Replicator", :ems_ref => ems_ref) }
+      let!(:container_replicator) { FactoryBot.create(:container_replicator, :ext_management_system => ems, :container_project => container_project, :name => "Test Replicator", :ems_ref => ems_ref) }
 
       it "process_container_entities_in_event! links replicator id to event" do
         EmsEvent.process_container_entities_in_event!(repl_event_hash)
@@ -68,17 +68,17 @@ describe EmsEvent do
   end
 
   context "with availability zones" do
-    let(:vm) { FactoryGirl.create(:vm_openstack, :ems_ref => "vm1") }
-    before :each do
-      @zone = FactoryGirl.create(:small_environment)
+    let(:vm) { FactoryBot.create(:vm_openstack, :ems_ref => "vm1") }
+    before do
+      @zone = FactoryBot.create(:small_environment)
       @ems  = @zone.ext_management_systems.first
-      @availability_zone = FactoryGirl.create(:availability_zone_openstack, :ems_ref => "az1")
+      @availability_zone = FactoryBot.create(:availability_zone_openstack, :ems_ref => "az1")
     end
 
     context ".process_availability_zone_in_event!" do
       let(:event_hash) { { :vm_or_template_id => vm.id } }
       context "when the event has an availability zone" do
-        before :each do
+        before do
           event_hash[:availability_zone_ems_ref] = @availability_zone.ems_ref
         end
 
@@ -90,7 +90,7 @@ describe EmsEvent do
 
       context "when the event has no availability zone" do
         context "and the VM has an availability zone" do
-          before :each do
+          before do
             vm.availability_zone_id = @availability_zone.id
             vm.save
           end
@@ -111,7 +111,7 @@ describe EmsEvent do
     end
 
     context ".add_queue" do
-      let(:ems) { FactoryGirl.create(:ems_kubernetes) }
+      let(:ems) { FactoryBot.create(:ems_kubernetes) }
       let(:event_hash) do
         {
           :ems_ref    => "event-ref",
@@ -160,7 +160,7 @@ describe EmsEvent do
     end
 
     context ".add" do
-      before :each do
+      before do
         @event_hash = {
           :event_type  => "event_with_availability_zone",
           :target_type => vm.class.name,
@@ -221,9 +221,9 @@ describe EmsEvent do
   end
 
   context ".add" do
-    let(:ems) { FactoryGirl.create(:ext_management_system) }
+    let(:ems) { FactoryBot.create(:ext_management_system) }
     context "with a VM" do
-      let(:vm) { FactoryGirl.create(:vm, :uid_ems => '3ace5197-3d6a-4cb3-aeb2-e8348e428775', :ems_ref => 'vm-123') }
+      let(:vm) { FactoryBot.create(:vm, :uid_ems => '3ace5197-3d6a-4cb3-aeb2-e8348e428775', :ems_ref => 'vm-123') }
       let(:event) do
         {
           :ems_id     => ems.id,
@@ -252,7 +252,27 @@ describe EmsEvent do
   end
 
   context '.event_groups' do
-    let(:provider_event) { 'SomeSpecialProviderEvent' }
+    before(:each) do
+      stub_settings_merge(
+        :ems => {
+          :some_provider => {
+            :event_handling => {
+              :event_groups => {
+                :power => {
+                  :warning  => [provider_warning_event],
+                  :critical => [provider_critical_event],
+                  :detail   => [provider_detail_event],
+                }
+              }
+            }
+          }
+        }
+      )
+    end
+
+    let(:provider_critical_event) { 'SomeCriticalEvent' }
+    let(:provider_detail_event) { 'SomeDetailEvent' }
+    let(:provider_warning_event) { 'SomeWarningEvent' }
 
     it 'returns a list of expected groups' do
       event_group_names = [
@@ -264,9 +284,11 @@ describe EmsEvent do
         :firmware,
         :general,
         :import_export,
+        :login,
         :migration,
         :network,
         :power,
+        :security,
         :snapshot,
         :status,
         :storage,
@@ -275,27 +297,100 @@ describe EmsEvent do
       expect(described_class.event_groups.keys).to match_array(event_group_names)
       expect(described_class.event_groups[:addition]).to include(:name => 'Creation/Addition')
       expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
-      expect(described_class.event_groups[:addition][:critical]).not_to include(provider_event)
+      expect(described_class.event_groups[:addition][:critical]).not_to include('BogueEvent')
     end
 
-    it 'returns the provider event if configured' do
-      stub_settings_merge(
-        :ems => {
-          :some_provider => {
-            :event_handling => {
-              :event_groups => {
-                :addition => {
-                  :critical => [provider_event]
+    it 'returns the group, level and group name of an unknown event' do
+      group, level = described_class.group_and_level('BogusEvent')
+      expect(group).to eq(:other)
+      expect(level).to eq(:detail)
+      expect(described_class.group_name(group)).to eq('Other')
+    end
+
+    it 'returns the group, level and group name of a warning event' do
+      group, level = described_class.group_and_level(provider_warning_event)
+      expect(group).to eq(:power)
+      expect(level).to eq(:warning)
+      expect(described_class.group_name(group)).to eq('Power Activity')
+    end
+
+    it 'returns the group, level and group name of a critical event' do
+      group, level = described_class.group_and_level(provider_critical_event)
+      expect(group).to eq(:power)
+      expect(level).to eq(:critical)
+      expect(described_class.group_name(group)).to eq('Power Activity')
+    end
+
+    it 'returns the group, level and group name of a detail event' do
+      group, level = described_class.group_and_level(provider_detail_event)
+      expect(group).to eq(:power)
+      expect(level).to eq(:detail)
+      expect(described_class.group_name(group)).to eq('Power Activity')
+    end
+
+    context 'with provider events' do
+      before(:each) do
+        stub_settings_merge(
+          :ems => {
+            :some_provider => {
+              :event_handling => {
+                :event_groups => {
+                  :addition => {
+                    :warning  => [provider_regex],
+                    :critical => [provider_event]
+                  }
                 }
               }
             }
           }
-        }
-      )
-      allow(Vmdb::Plugins.instance).to receive(:registered_provider_plugin_names).and_return([:some_provider])
+        )
+      end
 
-      expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
-      expect(described_class.event_groups[:addition][:critical]).to include(provider_event)
+      let(:provider_event) { 'SomeSpecialProviderEvent' }
+      let(:provider_regex) { /Some.+Event/ }
+
+      it 'returns the provider event if configured' do
+        expect(described_class.event_groups[:addition][:critical]).to include('CloneTaskEvent')
+        expect(described_class.event_groups[:addition][:critical]).to include(provider_event)
+        expect(described_class.event_groups[:addition][:warning]).to include(provider_regex)
+      end
+
+      # Make sure explicitly named event types take precedence over regex
+      it 'returns the group, level and group name of a warning event' do
+        group, level = described_class.group_and_level(provider_warning_event)
+        expect(group).to eq(:power)
+        expect(level).to eq(:warning)
+        expect(described_class.group_name(group)).to eq('Power Activity')
+      end
+
+      it 'returns the group, level and group name of a critical event' do
+        group, level = described_class.group_and_level(provider_critical_event)
+        expect(group).to eq(:power)
+        expect(level).to eq(:critical)
+        expect(described_class.group_name(group)).to eq('Power Activity')
+      end
+
+      it 'returns the group, level and group name of a detail event' do
+        group, level = described_class.group_and_level(provider_detail_event)
+        expect(group).to eq(:power)
+        expect(level).to eq(:detail)
+        expect(described_class.group_name(group)).to eq('Power Activity')
+      end
+      # End make sure explicitly named event types take precedence over regex
+
+      it 'returns the group, level and group name of a regex-matched event' do
+        group, level = described_class.group_and_level('SomeMatchingEvent')
+        expect(group).to eq(:addition)
+        expect(level).to eq(:warning)
+        expect(described_class.group_name(group)).to eq('Creation/Addition')
+      end
+
+      it 'returns the group, level and group name of an unknown event' do
+        group, level = described_class.group_and_level('BogusEvent')
+        expect(group).to eq(:other)
+        expect(level).to eq(:detail)
+        expect(described_class.group_name(group)).to eq('Other')
+      end
     end
   end
 end

@@ -1,6 +1,16 @@
 # TODO: Import/Export support
 
 class MiqPolicy < ApplicationRecord
+  TOWHAT_APPLIES_TO_CLASSES = %w(ContainerGroup
+                                 ContainerImage
+                                 ContainerNode
+                                 ContainerProject
+                                 ContainerReplicator
+                                 ExtManagementSystem
+                                 Host
+                                 PhysicalServer
+                                 Vm).freeze
+
   acts_as_miq_taggable
   acts_as_miq_set_member
   include_concern 'ImportExport'
@@ -29,6 +39,7 @@ class MiqPolicy < ApplicationRecord
   validates_presence_of     :name, :description, :guid
   validates_uniqueness_of   :name, :description, :guid
   validates :mode, :inclusion => { :in => %w(compliance control) }
+  validates :towhat, :inclusion => { :in => TOWHAT_APPLIES_TO_CLASSES }
 
   scope :with_mode,   ->(mode)   { where(:mode => mode) }
   scope :with_towhat, ->(towhat) { where(:towhat => towhat) }
@@ -63,7 +74,6 @@ class MiqPolicy < ApplicationRecord
             :name        => policy.attributes["name"],
             :description => policy.attributes["description"],
             :expression  => MiqExpression.new(policy.condition),
-            :modifier    => policy.modifier,
             :towhat      => "Vm"
           )]
         else
@@ -82,10 +92,6 @@ class MiqPolicy < ApplicationRecord
   def self.clean_attrs(attrs)
     CLEAN_ATTRS.each { |a| attrs.delete(a) }
     attrs
-  end
-
-  def self.display_name
-    "Policy"
   end
 
   def copy(new_fields)
@@ -182,6 +188,11 @@ class MiqPolicy < ApplicationRecord
       MiqEventDefinition.find_by(:name => event)
     end
   end
+
+  def self.display_name(number = 1)
+    n_('Policy', 'Policies', number)
+  end
+
   private_class_method :find_event_def
 
   def self.evaluate_conditions(plist, target, mode, inputs, result)
@@ -332,13 +343,9 @@ class MiqPolicy < ApplicationRecord
   end
 
   def self.eval_condition(c, rec, inputs = {})
-    possible_results = c['modifier'] == 'allow' ? %w(allow deny) : %w(deny allow)
-    begin
-      index = Condition.evaluate(c, rec, inputs) ? 0 : 1
-      possible_results[index]
-    rescue => err
-      logger.log_backtrace(err)
-    end
+    Condition.evaluate(c, rec, inputs) ? 'allow' : 'deny'
+  rescue => err
+    logger.log_backtrace(err)
   end
   private_class_method :eval_condition
 

@@ -1,7 +1,7 @@
 require 'vmdb/loggers'
 
 module Vmdb
-  class LogProxy < Struct.new(:klass, :separator)
+  class LogProxy < Struct.new(:klass, :separator, :prefix_cache)
     LEVELS = [:debug, :info, :warn, :error]
 
     # def debug?
@@ -30,8 +30,7 @@ module Vmdb
     def prefix(location = caller_locations(1, 1))
       location = location.first if location.kind_of?(Array)
       meth = location.base_label
-      meth = meth ? "#{klass}#{separator}#{meth}" : klass
-      "MIQ(#{meth})"
+      prefix_cache[meth] ||= meth ? "MIQ(#{klass}#{separator}#{meth})" : "MIQ(#{klass})"
     end
 
     private
@@ -49,11 +48,11 @@ module Vmdb
 
   module ClassLogging
     def instance_logger
-      @instance_logger ||= LogProxy.new(name, '#')
+      @instance_logger ||= LogProxy.new(name, '#', Hash.new)
     end
 
     def _log
-      @_log ||= LogProxy.new(name, '.')
+      @_log ||= LogProxy.new(name, '.', Hash.new)
     end
   end
 

@@ -77,7 +77,7 @@ describe ProcessTasksMixin do
     end
 
     before do
-      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
     end
 
     context "when the server has an ip address" do
@@ -163,6 +163,36 @@ describe ProcessTasksMixin do
           expect(api_collection).to receive(:the_task).with({})
 
           test_class.invoke_api_tasks(api_connection, options)
+        end
+      end
+
+      it "with missing remote resource does not raise" do
+        resource0 = double("resource0", :id => 0)
+        expect(api_collection).to receive(:find).with(0).and_raise(ManageIQ::API::Client::ResourceNotFound, "Couldn't find resource with 'id' [0]")
+        options = {
+          :ids  => [0],
+          :task => "the_task",
+          :args => {:some => "args"}
+        }
+        expect(resource0).not_to receive(:the_task)
+
+        expect { test_class.invoke_api_tasks(api_connection, options) }.not_to raise_error
+      end
+
+      context "should not raise when it does not respond_to the method" do
+        let(:api_collection) { [] }
+
+        it "multiple resources (one responds, one does not, both are tried)" do
+          expect(api_collection).to receive(:find).with(0).and_return(Struct.new(:id).new(0))
+          expect(api_collection).to receive(:find).with(1).and_return(double("Something that responds", :id => 0, :the_task => nil))
+
+          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.invoke_api_tasks) undefined method `the_task' for #<struct id=0>").and_call_original
+          expect(test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task")).to eq([0, 1])
+        end
+
+        it "collection" do
+          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.invoke_api_tasks) undefined method `the_task' for []:Array").and_call_original
+          expect(test_class.invoke_api_tasks(api_connection, :task => "the_task")).to eq(true)
         end
       end
 

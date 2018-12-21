@@ -18,7 +18,7 @@ class ServiceTemplateContainerTemplate < ServiceTemplateGeneric
   #       :container_template_id or :container_template
   #
   def self.create_catalog_item(options, _auth_user = nil)
-    options     = options.merge(:service_type => 'atomic', :prov_type => 'generic_container_template')
+    options     = options.merge(:service_type => SERVICE_TYPE_ATOMIC, :prov_type => 'generic_container_template')
     config_info = validate_config_info(options[:config_info])
     enhanced_config = config_info.deep_merge(
       :provision => {
@@ -34,7 +34,7 @@ class ServiceTemplateContainerTemplate < ServiceTemplateGeneric
   end
 
   def self.validate_config_info(info)
-    info[:provision][:fqname] ||= default_provisioning_entry_point('atomic') if info.key?(:provision)
+    info[:provision][:fqname] ||= default_provisioning_entry_point(SERVICE_TYPE_ATOMIC) if info.key?(:provision)
 
     # TODO: Add more validation for required fields
     info

@@ -273,6 +273,10 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     vm.evacuate(options)
   end
 
+  def self.display_name(number = 1)
+    n_('Instance', 'Instances', number)
+  end
+
   private
 
   def raise_created_event

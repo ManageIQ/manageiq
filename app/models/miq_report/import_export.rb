@@ -4,9 +4,9 @@ module MiqReport::ImportExport
   module ClassMethods
     def view_paths
       @view_paths ||= (
-        Vmdb::Plugins.instance.vmdb_plugins.map do |engine|
-          directory = File.join(engine.root, 'product/views')
-          directory if File.directory?(directory)
+        Vmdb::Plugins.map do |engine|
+          path = engine.root.join('product/views')
+          path if path.directory?
         end.compact
       )
     end
@@ -44,7 +44,7 @@ module MiqReport::ImportExport
         # if report exists
         if options[:overwrite]
           # if report exists delete and create new
-          if user.admin_user? || user.current_group_id == rep.miq_group_id
+          if user.report_admin_user? || user.current_group_id == rep.miq_group_id
             msg = "Overwriting Report: [#{report["name"]}]"
             rep.attributes = report
             result = {:message => "Replaced Report: [#{report["name"]}]", :level => :info, :status => :update}

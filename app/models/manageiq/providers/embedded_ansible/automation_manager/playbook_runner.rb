@@ -1,4 +1,6 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < ::Job
+  DEFAULT_EXECUTION_TTL = 10 # minutes
+
   # options are job table columns, including options column which is the playbook context info
   def self.create_job(options)
     super(name, options.with_indifferent_access)
@@ -7,6 +9,11 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   def minimize_indirect
     @minimize_indirect = true if @minimize_indirect.nil?
     @minimize_indirect
+  end
+
+  def current_job_timeout(_timeout_adjustment = 1)
+    @execution_ttl ||=
+      (options[:execution_ttl].present? ? options[:execution_ttl].try(:to_i) : DEFAULT_EXECUTION_TTL) * 60
   end
 
   def start

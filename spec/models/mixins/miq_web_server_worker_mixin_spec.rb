@@ -50,7 +50,7 @@ describe MiqWebServerWorkerMixin do
   end
 
   it "#rails_server_options" do
-    w = FactoryGirl.create(:miq_ui_worker, :uri => "http://127.0.0.1:3000")
+    w = FactoryBot.create(:miq_ui_worker, :uri => "http://127.0.0.1:3000")
     expect(w.rails_server_options).to include(
       :Port        => 3000,
       :Host        => w.class.binding_address,
@@ -72,8 +72,8 @@ describe MiqWebServerWorkerMixin do
   end
 
   describe '#rails_application' do
-    let(:websocket_worker) { FactoryGirl.create(:miq_websocket_worker, :uri => 'http://127.0.0.1:3000') }
-    let(:ui_worker) { FactoryGirl.create(:miq_ui_worker, :uri => 'http://127.0.0.1:3000') }
+    let(:websocket_worker) { FactoryBot.create(:miq_websocket_worker, :uri => 'http://127.0.0.1:3000') }
+    let(:ui_worker) { FactoryBot.create(:miq_ui_worker, :uri => 'http://127.0.0.1:3000') }
 
     it 'provides access to the Rack/Rails application' do
       expect(websocket_worker.rails_application).to be_a_kind_of(WebsocketServer)

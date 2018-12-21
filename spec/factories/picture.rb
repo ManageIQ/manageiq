@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :picture do
     content   'foo'
     extension 'png'

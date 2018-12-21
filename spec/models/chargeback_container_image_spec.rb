@@ -11,7 +11,7 @@ describe ChargebackContainerImage do
     let(:month_beginning) { ts.beginning_of_month.utc }
     let(:month_end) { ts.end_of_month.utc }
     let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
-    let(:ems) { FactoryGirl.create(:ems_openshift) }
+    let(:ems) { FactoryBot.create(:ems_openshift) }
 
     let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
     let(:count_hourly_variable_tier_rate) { {:variable_rate => count_hourly_rate.to_s} }
@@ -19,38 +19,34 @@ describe ChargebackContainerImage do
     let(:detail_params) do
       {
         :chargeback_rate_detail_fixed_compute_cost  => {:tiers => [hourly_variable_tier_rate]},
-        :chargeback_rate_detail_metering_used       => {:tiers => [hourly_variable_tier_rate]},
         :chargeback_rate_detail_cpu_cores_allocated => {:tiers => [count_hourly_variable_tier_rate]},
         :chargeback_rate_detail_memory_allocated    => {:tiers => [hourly_variable_tier_rate]}
       }
     end
 
     let!(:chargeback_rate) do
-      FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+      FactoryBot.create(:chargeback_rate, :detail_params => detail_params)
     end
 
     let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
 
     before do
-      # TODO: remove metering columns form specs
-      described_class.set_columns_hash(:metering_used_metric => :integer, :metering_used_cost => :float)
-
       MiqRegion.seed
       ChargebackRateDetailMeasure.seed
       ChargeableField.seed
       MiqEnterprise.seed
 
       EvmSpecHelper.create_guid_miq_server_zone
-      @node = FactoryGirl.create(:container_node, :name => "node")
-      @image = FactoryGirl.create(:container_image, :ext_management_system => ems)
-      @label = FactoryGirl.build(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels')
-      @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems)
-      @group = FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => @project,
+      @node = FactoryBot.create(:container_node, :name => "node")
+      @image = FactoryBot.create(:container_image, :ext_management_system => ems)
+      @label = FactoryBot.build(:custom_attribute, :name => "version/1.2/_label-1", :value => "test/1.0.0  rc_2", :section => 'docker_labels')
+      @project = FactoryBot.create(:container_project, :name => "my project", :ext_management_system => ems)
+      @group = FactoryBot.create(:container_group, :ext_management_system => ems, :container_project => @project,
                                   :container_node => @node)
-      @container = FactoryGirl.create(:kubernetes_container, :container_group => @group, :container_image => @image,
+      @container = FactoryBot.create(:kubernetes_container, :container_group => @group, :container_image => @image,
                                       :limit_memory_bytes => 1.megabytes, :limit_cpu_cores => 1.0)
-      cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
-      c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
+      c = FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
       ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :tag => [c, "container_image"] }])
 
       @tag = c.tag
@@ -74,7 +70,7 @@ describe ChargebackContainerImage do
         add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
 
         Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
-          @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
+          @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
                                                                   :timestamp => t,
                                                                   :image_tag_names => "environment/prod")
         end
@@ -96,11 +92,6 @@ describe ChargebackContainerImage do
         expect(subject.fixed_compute_1_cost).to eq(hourly_rate * hours_in_day)
       end
 
-      it 'calculates metering used hours and cost' do
-        expect(subject.metering_used_metric).to eq(hours_in_day)
-        expect(subject.metering_used_cost).to eq(hours_in_day * hourly_rate)
-      end
-
       it "allocated fields" do
         skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
         expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_cpu_cores * count_hourly_rate * hours_in_day)
@@ -116,7 +107,7 @@ describe ChargebackContainerImage do
         add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
 
         Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-          @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
+          @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
                                                                   :timestamp => time,
                                                                   :image_tag_names => "environment/prod")
         end
@@ -127,11 +118,6 @@ describe ChargebackContainerImage do
       it "fixed_compute" do
         # .to be_within(0.01) is used since theres a float error here
         expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
-      end
-
-      it 'calculates metering used hours and cost' do
-        expect(subject.metering_used_metric).to eq(hours_in_month)
-        expect(subject.metering_used_cost).to eq(hours_in_month * hourly_rate)
       end
 
       it "allocated fields" do
@@ -152,7 +138,7 @@ describe ChargebackContainerImage do
         add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
 
         Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-          @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
+          @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
                                                                   :timestamp => time,
                                                                   :image_tag_names => "")
         end

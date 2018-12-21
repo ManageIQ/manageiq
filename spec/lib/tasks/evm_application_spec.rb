@@ -18,12 +18,12 @@ describe EvmApplication do
   end
 
   describe ".servers_status" do
-    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local_zone)  { FactoryBot.create(:zone, :name => 'A Zone') }
     let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
-    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+    let!(:ui)      { FactoryBot.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryBot.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:refresh) { FactoryBot.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     it "displays server status for local and remote servers" do
       expect(described_class.servers_status([local, remote])).to eq(
@@ -62,12 +62,12 @@ describe EvmApplication do
   end
 
   describe ".worker_status" do
-    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local_zone)  { FactoryBot.create(:zone, :name => 'A Zone') }
     let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
-    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+    let!(:ui)      { FactoryBot.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryBot.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:refresh) { FactoryBot.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     it "displays worker status for local and remote server" do
       expect(described_class.workers_status([local, remote])).to eq(
@@ -130,13 +130,13 @@ describe EvmApplication do
       val.to_s.send(adjust, send("#{col.downcase}_padding"))
     end
 
-    let(:local_zone)  { FactoryGirl.create(:zone, :name => 'A Zone') }
+    let(:local_zone)  { FactoryBot.create(:zone, :name => 'A Zone') }
     let(:local)    { EvmSpecHelper.local_miq_server(:started_on => 1.hour.ago, :last_heartbeat => 2.days.ago, :zone => local_zone) }
     let(:remote)   { EvmSpecHelper.remote_miq_server(:is_master => true, :last_heartbeat => nil) }
     let(:rgn)      { local.region_number }
-    let!(:ui)      { FactoryGirl.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
-    let!(:generic) { FactoryGirl.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
-    let!(:refresh) { FactoryGirl.create(:miq_ems_refresh_worker, :miq_server => remote) }
+    let!(:ui)      { FactoryBot.create(:miq_ui_worker, :miq_server => local, :pid => 80_000) }
+    let!(:generic) { FactoryBot.create(:miq_generic_worker, :miq_server => remote, :pid => 7_000) }
+    let!(:refresh) { FactoryBot.create(:miq_ems_refresh_worker, :miq_server => remote) }
 
     let(:local_started_on)  { local.started_on.strftime("%H:%M:%S%Z") }
     let(:local_heartbeat)   { local.last_heartbeat.strftime("%Y-%m-%d") }
@@ -177,21 +177,21 @@ describe EvmApplication do
       it "displays server status for the all servers and workers" do
         expected_output = <<~SERVER_INFO
           Checking EVM status...
-           #{header(:Zone, :ljust)               } | Server                    | Workers | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust).rstrip}
-          -#{line_for(:Zone)                     }-+---------------------------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)}-
-           #{pad(local.zone.name, :Zone, :ljust) } | #{      local.name     }  |       1 | #{local_started_on          } | #{local_heartbeat}
-           #{pad(remote.zone.name, :Zone, :ljust)} | #{     remote.name     }* |       2 | #{remote_started_on         } |
+           #{header(:Zone, :ljust)               } | Server                    | Status  | Workers | #{header(:Started, :ljust)  } | #{header(:Heartbeat, :ljust).rstrip}
+          -#{line_for(:Zone)                     }-+---------------------------+---------+---------+-#{line_for(:Started)        }-+-#{line_for(:Heartbeat)}-
+           #{pad(local.zone.name, :Zone, :ljust) } | #{      local.name     }  | started |       1 | #{local_started_on          } | #{local_heartbeat}
+           #{pad(remote.zone.name, :Zone, :ljust)} | #{     remote.name     }* | started |       2 | #{remote_started_on         } |
 
-          For all rows: Region=#{rgn}, Status=started, Version=9.9.9.9
+          All rows have the values: Region=#{rgn}, Version=9.9.9.9
           * marks a master appliance
 
-           #{header(:Zone, :ljust)               } | Type          | #{header(:PID)          } | Server
-          -#{line_for(:Zone)                     }-+---------------+-#{line_for(:PID)        }-+--------------------------
-           #{pad(local.zone.name, :Zone, :ljust) } | Ui            | #{pad(ui.pid, :PID)     } | #{      local.name     }
-           #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | #{pad(refresh.pid, :PID)} | #{     remote.name     }
-           #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | #{pad(generic.pid, :PID)} | #{     remote.name     }
+           #{header(:Zone, :ljust)               } | Type          | Status | #{header(:PID)          } | Server
+          -#{line_for(:Zone)                     }-+---------------+--------+-#{line_for(:PID)        }-+--------------------------
+           #{pad(local.zone.name, :Zone, :ljust) } | Ui            | ready  | #{pad(ui.pid, :PID)     } | #{      local.name     }
+           #{pad(remote.zone.name, :Zone, :ljust)} | Base::Refresh | ready  | #{pad(refresh.pid, :PID)} | #{     remote.name     }
+           #{pad(remote.zone.name, :Zone, :ljust)} | Generic       | ready  | #{pad(generic.pid, :PID)} | #{     remote.name     }
 
-          For all rows: Region=#{rgn}, Status=ready
+          All rows have the values: Region=#{rgn}
         SERVER_INFO
 
         expect { EvmApplication.status(true) }.to output(expected_output).to_stdout
@@ -202,9 +202,10 @@ describe EvmApplication do
   context ".queue_status" do
     it "calculates oldest and counts" do
       tgt_time = 2.hours.ago
-      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => 1.hour.ago)
-      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => tgt_time)
-      MiqQueue.put(:zone        => "zone1",
+      zone = FactoryBot.create(:zone)
+      MiqQueue.put(:zone => zone.name, :class_name => "X", :method_name => "x", :created_on => 1.hour.ago)
+      MiqQueue.put(:zone => zone.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      MiqQueue.put(:zone        => zone.name,
                    :class_name  => "X",
                    :method_name => "x",
                    :created_on  => 5.hours.ago,
@@ -212,7 +213,7 @@ describe EvmApplication do
       expect(described_class.queue_status).to eq(
         [
           {
-            "Zone"   => "zone1",
+            "Zone"   => zone.name,
             "Queue"  => "generic",
             "Role"   => nil,
             "method" => "X.x",
@@ -225,8 +226,10 @@ describe EvmApplication do
 
     it "groups zone together" do
       tgt_time = 2.hours.ago
-      MiqQueue.put(:zone => "zone1", :class_name => "X", :method_name => "x", :created_on => tgt_time)
-      MiqQueue.put(:zone => "zone2", :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      zone1 = FactoryBot.create(:zone, :name => "zone1")
+      zone2 = FactoryBot.create(:zone, :name => "zone2")
+      MiqQueue.put(:zone => zone1.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
+      MiqQueue.put(:zone => zone2.name, :class_name => "X", :method_name => "x", :created_on => tgt_time)
       expect(described_class.queue_status).to eq(
         [
           {

@@ -1,6 +1,6 @@
 describe Authenticator::Ldap do
   subject { Authenticator::Ldap.new(config) }
-  let!(:alice) { FactoryGirl.create(:user, :userid => 'alice') }
+  let!(:alice) { FactoryBot.create(:user, :userid => 'alice') }
   let(:config) do
     {
       :ldap_role => false,
@@ -9,33 +9,35 @@ describe Authenticator::Ldap do
     }
   end
 
-  class FakeLdap
-    def initialize(user_data)
-      @user_data = user_data
-    end
+  let(:fake_ldap) do
+    Class.new do
+      def initialize(user_data)
+        @user_data = user_data
+      end
 
-    def bind(username, password)
-      @user_data[username].try(:[], :password) == password
-    end
+      def bind(username, password)
+        @user_data[username].try(:[], :password) == password
+      end
 
-    def fqusername(username)
-      username.delete('X')
-    end
+      def fqusername(username)
+        username.delete('X')
+      end
 
-    def get_user_object(username)
-      @user_data[username]
-    end
+      def get_user_object(username)
+        @user_data[username]
+      end
 
-    def get_memberships(user_obj, _max_depth)
-      user_obj.fetch(:groups)
-    end
+      def get_memberships(user_obj, _max_depth)
+        user_obj.fetch(:groups)
+      end
 
-    def get_attr(user_obj, attr_name)
-      user_obj.fetch(attr_name)
-    end
+      def get_attr(user_obj, attr_name)
+        user_obj.fetch(attr_name)
+      end
 
-    def normalize(dn)
-      dn
+      def normalize(dn)
+        dn
+      end
     end
   end
 
@@ -50,11 +52,13 @@ describe Authenticator::Ldap do
     # Authenticator#uses_stored_password? whether it's allowed to do anything.
 
     allow(User).to receive(:authenticator).and_return(subject)
+
+    EvmSpecHelper.create_guid_miq_server_zone
   end
 
   before do
-    FactoryGirl.create(:miq_group, :description => 'wibble')
-    FactoryGirl.build_stubbed(:miq_group, :description => 'wobble')
+    FactoryBot.create(:miq_group, :description => 'wibble')
+    FactoryBot.build_stubbed(:miq_group, :description => 'wobble')
   end
 
   let(:user_data) do
@@ -112,7 +116,7 @@ describe Authenticator::Ldap do
   end
 
   before do
-    allow(MiqLdap).to receive(:new) { FakeLdap.new(user_data) }
+    allow(MiqLdap).to receive(:new) { fake_ldap.new(user_data) }
     allow(MiqLdap).to receive(:using_ldap?) { true }
   end
 
@@ -249,7 +253,7 @@ describe Authenticator::Ldap do
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it "records three successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'alice',
@@ -272,6 +276,21 @@ describe Authenticator::Ldap do
           task_id = authenticate
           task = MiqTask.find(task_id)
           expect(User.find_by_userid(task.userid)).to eq(alice)
+        end
+
+        context "new user creation" do
+          let(:username) { 'bob' }
+          it "logs the success" do
+            authenticate
+            expect(MiqQueue.count).to eq 1
+            expect(MiqQueue.first.args.last(2)).to eq(
+              ["user_created",
+                {
+                  :event_details => "User creation successful for User: Bob Builderson with ID: bob"
+                }
+              ]
+            )
+          end
         end
 
         context "with no corresponding LDAP user" do
@@ -404,11 +423,16 @@ describe Authenticator::Ldap do
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it "records three successful audit entries" do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'bob',
             :message => "User bob successfully validated by LDAP",
+          )
+          expect(AuditEvent).to receive(:success).with(
+            :event   => 'authorize',
+            :userid  => 'bob',
+            :message => "User creation successful for User: Bob Builderson with ID: bob",
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
@@ -439,11 +463,16 @@ describe Authenticator::Ldap do
             expect(authenticate).to eq(123)
           end
 
-          it "records two successful audit entries plus one failure" do
+          it "records three successful audit entries plus one failure" do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_ldap',
               :userid  => 'bob',
               :message => "User bob successfully validated by LDAP",
+            )
+            expect(AuditEvent).to receive(:success).with(
+              :event   => 'authorize',
+              :userid  => 'bob',
+              :message => "User creation successful for User: Bob Builderson with ID: bob",
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_ldap',
