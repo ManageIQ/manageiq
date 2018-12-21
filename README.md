@@ -45,9 +45,14 @@ We respectfully ask that you do not directly email any manageiq committers with
 questions or problems. The community is best served when discussions are held in
 public.
 
-## License
+## Licensing
 
-See [LICENSE.txt](LICENSE.txt)
+See [LICENSE.txt](LICENSE.txt).
+
+Except where otherwise noted, all ManageIQ source files are covered by
+the following copyright and license notice:
+
+Copyright 2014-2019 ManageIQ Authors.
 
 ## Export Notice
 
