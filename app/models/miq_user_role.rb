@@ -112,6 +112,10 @@ class MiqUserRole < ApplicationRecord
     allows?(:identifier => MiqProductFeature::TENANT_ADMIN_FEATURE)
   end
 
+  def only_my_user_tasks?
+    !allows?(:identifier => MiqProductFeature::ALL_TASKS_FEATURE) && allows?(:identifier => MiqProductFeature::MY_TASKS_FEATURE)
+  end
+
   def report_admin_user?
     allows?(:identifier => MiqProductFeature::REPORT_ADMIN_FEATURE)
   end
