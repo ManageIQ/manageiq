@@ -253,7 +253,13 @@ end
 def override_gem(name, *args)
   if dependencies.any?
     raise "Trying to override unknown gem #{name}" unless (dependency = dependencies.find { |d| d.name == name })
-    dependencies.delete(dependency)
+
+    removed_dependency = dependencies.delete(dependency)
+    if removed_dependency.source.kind_of?(Bundler::Source::Git)
+      @sources.send(:source_list_for, removed_dependency.source).delete_if do |other_source|
+        removed_dependency.source == other_source
+      end
+    end
 
     calling_file = caller_locations.detect { |loc| !loc.path.include?("lib/bundler") }.path
     calling_dir  = File.dirname(calling_file)
