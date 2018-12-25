@@ -18,8 +18,6 @@ env:
 matrix:
   allow_failures:
   - rvm: 2.5.3
-  allow_failures:
-  - rvm: 2.4.2
   exclude:
   - rvm: 2.4.2
     env: TEST_SUITE=brakeman
