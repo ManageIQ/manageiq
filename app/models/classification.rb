@@ -11,12 +11,9 @@ class Classification < ApplicationRecord
 
   validates :description, :presence => true, :length => {:maximum => 255}
   validates :description, :uniqueness => {:scope => [:parent_id]}, :if => proc { |c|
-    cond = ["parent_id = ? AND description = ?", c.parent_id, c.description]
-    unless c.new_record?
-      cond.first << " AND id != ?"
-      cond << c.id
-    end
-    c.class.in_region(region_id).exists?(cond)
+    cond = c.class.in_region(region_id).where(:parent_id => c.parent_id, :description => c.description)
+    cond = cond.where.not(:id => c.id) unless c.new_record?
+    cond.exists?
   }
 
   NAME_MAX_LENGTH = 50
