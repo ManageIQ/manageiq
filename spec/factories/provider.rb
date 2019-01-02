@@ -20,7 +20,7 @@ FactoryBot.define do
     url "example.com"
     trait(:with_authentication) do
       after(:create) do |x|
-        x.authentications << FactoryBot.create(:authentication, :status => "Valid")
+        x.authentications << FactoryBot.create(:authentication)
       end
     end
   end

@@ -70,8 +70,8 @@ describe Storage do
       @zone   = @server.zone
 
       @zone2     = FactoryBot.create(:zone, :name => 'Bedrock')
-      @ems1      = FactoryBot.create(:ems_vmware_with_valid_authentication, :name => "test_vcenter1",     :zone => @zone)
-      @ems2      = FactoryBot.create(:ems_vmware_with_authentication,       :name => "test_vcenter2",     :zone => @zone2)
+      @ems1      = FactoryBot.create(:ems_vmware_with_authentication,           :name => "test_vcenter1", :zone => @zone)
+      @ems2      = FactoryBot.create(:ems_vmware, :with_invalid_authentication, :name => "test_vcenter2", :zone => @zone2)
       @storage1  = FactoryBot.create(:storage,               :name => "test_storage_vmfs", :store_type => "VMFS")
       @storage2  = FactoryBot.create(:storage,               :name => "test_storage_nfs",  :store_type => "NFS")
       @storage3  = FactoryBot.create(:storage,               :name => "test_storage_foo",  :store_type => "FOO")
@@ -159,7 +159,7 @@ describe Storage do
     context "on a host with authentication status ok" do
       before do
         allow_any_instance_of(Authentication).to receive(:after_authentication_changed)
-        FactoryBot.create(:authentication, :resource => @host1, :status => "Valid")
+        FactoryBot.create(:authentication, :resource => @host1)
       end
 
       it "#active_hosts_with_authentication_status_ok" do
@@ -419,8 +419,8 @@ describe Storage do
 
     it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
       FactoryBot.create(:host_vmware,
-                         :ext_management_system => FactoryBot.create(:ems_vmware_with_valid_authentication),
-                         :storages              => [@storage])
+                        :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication),
+                        :storages              => [@storage])
 
       expect(@storage.supports_smartstate_analysis?).to eq(true)
     end
@@ -469,8 +469,8 @@ describe Storage do
 
     it "returns true for VMware Storage when queried whether it supports smartstate analysis" do
       FactoryBot.create(:host_vmware,
-                         :ext_management_system => FactoryBot.create(:ems_vmware_with_valid_authentication),
-                         :storages              => [@storage])
+                        :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication),
+                        :storages              => [@storage])
       expect(@storage.supports_smartstate_analysis?).to eq(true)
     end
 

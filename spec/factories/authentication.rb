@@ -3,6 +3,7 @@ FactoryBot.define do
     userid      "testuser"
     password    "secret"
     authtype    "default"
+    status      "Valid"
   end
 
   factory :authentication_status_error, :parent => :authentication do

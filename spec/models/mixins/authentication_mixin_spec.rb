@@ -489,6 +489,7 @@ describe AuthenticationMixin do
         end
 
         it "(:save => true) updates status" do
+          @host.authentications.first.update_attributes(:status => nil) # start unauthorized
           allow(@host).to receive(:verify_credentials).and_return(true)
           @host.authentication_check(:save => true)
           expect(@host.authentication_type(:default).status).to eq("Valid")
@@ -496,6 +497,7 @@ describe AuthenticationMixin do
         end
 
         it "(:save => false) does not update status" do
+          @host.authentications.first.update_attributes(:status => nil) # start unauthorized
           allow(@host).to receive(:missing_credentials?).and_return(false)
           @host.authentication_check(:save => false)
           expect(@host.authentication_type(:default).status).to be_nil
