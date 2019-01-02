@@ -551,6 +551,7 @@ describe Classification do
 
     it "creates tag with name and ns" do
       expect(Classification.name2tag("test_entry", 0, parent_ns)).to eq(entry_ns)
+      expect(Classification.name2tag("test_category", 0, root_ns)).to eq(parent_ns)
     end
 
     it "creates tag with name, ns, and parent_id" do
