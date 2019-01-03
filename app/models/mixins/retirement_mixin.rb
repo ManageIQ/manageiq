@@ -167,11 +167,16 @@ module RetirementMixin
     raise _("%{name} already retired") % {:name => name} if retired?
     $log.info("Finishing Retirement for [#{name}]")
     requester = retirement_requester
-    update_attributes(:retires_on => Time.zone.now, :retired => true, :retirement_state => "retired")
+    mark_retired
     message = "#{self.class.base_model.name}: [#{name}], Retires On: [#{retires_on.strftime("%x %R %Z")}], has been retired"
     $log.info("Calling audit event for: #{message} ")
     raise_audit_event(retired_event_name, message, requester)
     $log.info("Called audit event for: #{message} ")
+  end
+
+  def mark_retired
+    self[:retires_on] = Time.zone.now
+    update_attributes(:retired => true, :retirement_state => "retired")
   end
 
   def start_retirement
