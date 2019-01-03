@@ -169,7 +169,7 @@ class ConversionHost < ApplicationRecord
   # and the inventory host list is set to 'localhost'. Otherwise it will use
   # the IP address of the conversion host and the default connection type.
   #
-  def ansible_playbook(playbook, extra_vars, local_connection = false)
+  def ansible_playbook(playbook, extra_vars = {}, local_connection = false)
     command = "ansible-playbook #{playbook}"
 
     if local_connection
