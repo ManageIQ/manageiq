@@ -102,8 +102,17 @@ describe "VM Retirement Management" do
   end
 
   it "#finish_retirement" do
+    message = "Vm: [#{vm2.name}], Retires On: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
+    expect(vm2).to receive(:raise_audit_event).with("vm_retired", message, nil)
+
+    vm2.finish_retirement
+
+    expect(vm2.retirement_state).to eq("retired")
+  end
+
+  it "#mark_retired" do
     expect(@vm.retirement_state).to be_nil
-    @vm.finish_retirement
+    @vm.mark_retired
     @vm.reload
 
     expect(@vm.retired).to eq(true)
