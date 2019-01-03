@@ -49,6 +49,8 @@ describe ExtManagementSystem do
       "ansible_tower_automation"    => "Ansible Tower Automation",
       "azure"                       => "Azure",
       "azure_network"               => "Azure Network",
+      "azure_stack"                 => "Azure Stack",
+      "azure_stack_network"         => "Azure Stack Network",
       "ec2"                         => "Amazon EC2",
       "ec2_network"                 => "Amazon EC2 Network",
       "ec2_ebs_storage"             => "Amazon EBS",

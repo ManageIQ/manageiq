@@ -12,6 +12,9 @@ MIQ_WORKER_TYPES = {
   "ManageIQ::Providers::Azure::CloudManager::EventCatcher"                      => %i(manageiq_default),
   "ManageIQ::Providers::Azure::CloudManager::MetricsCollectorWorker"            => %i(manageiq_default),
   "ManageIQ::Providers::Azure::CloudManager::RefreshWorker"                     => %i(manageiq_default),
+  "ManageIQ::Providers::AzureStack::CloudManager::EventCatcher"                 => %i[manageiq_default],
+  "ManageIQ::Providers::AzureStack::CloudManager::RefreshWorker"                => %i[manageiq_default],
+  "ManageIQ::Providers::AzureStack::NetworkManager::RefreshWorker"              => %i[manageiq_default],
   "ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker"           => %i(manageiq_default),
   "ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker"            => %i(manageiq_default),
   "ManageIQ::Providers::Google::CloudManager::EventCatcher"                     => %i(manageiq_default),
@@ -91,6 +94,8 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   MiqEventHandler
   ManageIQ::Providers::Azure::CloudManager::RefreshWorker
   ManageIQ::Providers::Azure::NetworkManager::RefreshWorker
+  ManageIQ::Providers::AzureStack::CloudManager::RefreshWorker
+  ManageIQ::Providers::AzureStack::NetworkManager::RefreshWorker
   ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
   ManageIQ::Providers::Amazon::NetworkManager::RefreshWorker
   ManageIQ::Providers::Amazon::StorageManager::Ebs::RefreshWorker
@@ -136,6 +141,7 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Openstack::InfraManager::EventCatcher
   ManageIQ::Providers::Amazon::CloudManager::EventCatcher
   ManageIQ::Providers::Azure::CloudManager::EventCatcher
+  ManageIQ::Providers::AzureStack::CloudManager::EventCatcher
   ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher
   ManageIQ::Providers::Google::CloudManager::EventCatcher
   ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher
