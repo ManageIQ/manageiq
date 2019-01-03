@@ -161,14 +161,25 @@ class ConversionHost < ApplicationRecord
     [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
   end
 
-  def ansible_playbook(playbook, extra_vars, connection)
+  # Run the specified ansible playbook using the ansible-playbook command. The
+  # +extra_vars+ option should be a hash of key/value pairs which, if present,
+  # will be passed to the '-e' flag.
+  #
+  # If a local connection is specified the connection type is set to 'local'
+  # and the inventory host list is set to 'localhost'. Otherwise it will use
+  # the IP address of the conversion host and the default connection type.
+  #
+  def ansible_playbook(playbook, extra_vars, local_connection = false)
     command = "ansible-playbook #{playbook}"
-    if connection == 'local'
-      command += " -i localhost, -c #{connection}"
+
+    if local_connection
+      command += " -i localhost, -c local"
     else
       command += " -i #{ipaddress},"
     end
+
     extra_vars.each { |k, v| command += " -e '#{k}=#{v}'" }
+
     connect_ssh { |ssu| ssu.shell_exec(command) }
   rescue => e
     _log.error("Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]")
