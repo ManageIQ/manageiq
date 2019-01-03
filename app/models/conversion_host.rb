@@ -105,8 +105,7 @@ class ConversionHost < ApplicationRecord
   def disable_conversion_host_role
     install_conversion_host_module
     playbook = "/usr/share/ovirt-ansible-v2v-conversion-host/playbooks/conversion_host_disable.yml"
-    extra_vars = {}
-    ansible_playbook(playbook, extra_vars)
+    ansible_playbook(playbook)
   ensure
     check_conversion_host_role
   end
