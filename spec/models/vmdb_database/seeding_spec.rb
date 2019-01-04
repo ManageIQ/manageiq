@@ -1,99 +1,160 @@
 describe VmdbDatabase do
-  context "::Seeding" do
-    include_examples(".seed called multiple times")
+  describe "::Seeding" do
     let(:connection) { ApplicationRecord.connection }
 
-    it ".seed" do
-      MiqDatabase.seed
-      vmdb_database = double('vmdb_database')
-      allow(described_class).to receive(:seed_self).and_return(vmdb_database)
-      expect(vmdb_database).to receive(:seed)
-      described_class.seed
+    describe ".seed" do
+      let!(:db) { described_class.seed }
+
+      # This test is intentionally long winded instead of breaking it up into
+      # multiple tests per concern because of how long a full seed takes.
+      # Breaking it into individual tests would increase runtime a lot.
+      it "creates tables, text_tables, and indexes" do
+        # collects everything
+        expect(db.evm_tables).to_not  be_empty
+        expect(db.text_tables).to_not be_empty
+
+        # creates a table correctly
+        table = db.evm_tables.find_by(:name => "accounts")
+        expect(table).to be_kind_of(VmdbTableEvm)
+
+        # relates indexes and text tables to the table
+        expect(table.text_tables).to_not be_empty
+        expect(table.vmdb_indexes).to_not be_empty
+
+        # creates an index correctly
+        index = table.vmdb_indexes.first
+        expect(index).to be_kind_of(VmdbIndex)
+
+        # creates primary keys
+        expect(table.vmdb_indexes.sort.first.name).to eq("accounts_pkey")
+        # creates non-primary key indexes
+        expect(table.vmdb_indexes.sort.last.name).to  start_with("index_")
+
+        # creates a text table correctly
+        text_table = table.text_tables.first
+        expect(text_table).to be_kind_of(VmdbTableText)
+
+        # relates indexes to the text tables
+        expect(text_table.vmdb_indexes).to_not be_empty
+
+        # creates a text table's index correctly
+        text_table_index = text_table.vmdb_indexes.first
+        expect(text_table_index).to be_kind_of(VmdbIndex)
+
+        # called twice should not change table contents
+        dbs     = described_class.all.to_a
+        tables  = VmdbTable.pluck(:name)
+        indexes = VmdbIndex.pluck(:name)
+
+        expect(described_class).to receive(:create).never
+        expect(VmdbTable).to       receive(:create).never
+        expect(VmdbIndex).to       receive(:create).never
+
+        described_class.seed
+
+        expect(described_class.all.to_a).to eq(dbs)
+        expect(tables).to  match_array(VmdbTable.pluck(:name))
+        expect(indexes).to match_array(VmdbIndex.pluck(:name))
+      end
     end
 
-    context "#seed" do
-      before do
-        MiqDatabase.seed
-        @db = FactoryBot.create(:vmdb_database)
-      end
-
-      it "adds new tables" do
-        connection.select_value("CREATE TABLE flintstones (id BIGINT PRIMARY KEY)")
-        expect(@db.evm_tables.collect(&:name)).not_to include("flintstones")
-        @db.seed
-        expect(@db.evm_tables.collect(&:name)).to include("flintstones")
-      end
-
-      it "removes deleted tables" do
-        table = 'flintstones'
-        FactoryBot.create(:vmdb_table_evm, :vmdb_database => @db, :name => table)
-        @db.reload
-        expect(@db.evm_tables.collect(&:name)).to include(table)
-
-        @db.seed
-        @db.reload
-        expect(@db.evm_tables.collect(&:name)).not_to include(table)
-      end
-
-      it "finds existing tables" do
-        table = 'flintstones'
-        connection.select_value("CREATE TABLE #{table} (id BIGINT PRIMARY KEY)")
-        FactoryBot.create(:vmdb_table_evm, :vmdb_database => @db, :name => table)
-
-        expect(VmdbTableEvm).to receive(:create).never
-        @db.seed
-        expect(@db.evm_tables.collect(&:name)).to include(table)
-      end
-    end
-
-    context ".seed_self" do
-      it "should have empty table before seeding" do
-        expect(described_class.in_my_region.count).to eq(0)
-      end
-
-      it "should have only one record" do
-        described_class.seed_self
-        expect(described_class.in_my_region.count).to eq(1)
-      end
-
+    describe ".seed_self (private)" do
       it "should have populated columns" do
-        described_class.seed_self
-        db = described_class.my_database
-        columns =  %w( name vendor version  )
-        connection = ActiveRecord::Base.connection
-        columns << 'ipaddress'       if connection.respond_to?(:server_ip_address)
-        columns << 'data_directory'  if connection.respond_to?(:data_directory)
-        columns << 'last_start_time' if connection.respond_to?(:last_start_time)
+        expect(described_class).to receive(:db_server_ipaddress).and_return("192.255.255.1")
 
-        db.update_attributes(:data_directory => "stubbed")
+        t = 1.week.ago
+        expect(connection).to receive(:data_directory).and_return("/usr/local/var/postgres")
+        expect(connection).to receive(:last_start_time).and_return(t)
 
-        columns.each do |column|
-          expect(db.send(column)).not_to be_nil
-        end
-      end
+        db = described_class.send(:seed_self)
 
-      it "should not update table values" do
-        factory_ip_address = "127.0.0.1"
-        FactoryBot.create(:vmdb_database, :ipaddress => factory_ip_address)
+        expect(db.name).to     eq(connection.current_database)
+        expect(db.vendor).to   eq(connection.adapter_name)
+        expect(db.version).to  eq(connection.database_version)
 
-        stubbed_ip_address = "127.0.0.1"
-        allow(described_class).to receive(:db_server_ipaddress).and_return(stubbed_ip_address)
-        described_class.seed_self
-
-        db = described_class.my_database
-        expect(db.ipaddress).to eq(stubbed_ip_address)
+        expect(db.ipaddress).to       eq("192.255.255.1")
+        expect(db.data_directory).to  eq("/usr/local/var/postgres")
+        expect(db.last_start_time).to eq(t)
       end
 
       it "should update table values" do
-        factory_ip_address = "127.0.0.1"
-        FactoryBot.create(:vmdb_database, :ipaddress => factory_ip_address)
+        FactoryBot.create(:vmdb_database, :ipaddress => "127.0.0.1")
 
-        stubbed_ip_address = "192.255.255.1"
-        allow(described_class).to receive(:db_server_ipaddress).and_return(stubbed_ip_address)
-        described_class.seed_self
+        expect(described_class).to receive(:db_server_ipaddress).and_return("192.255.255.1")
 
-        db = described_class.my_database
-        expect(db.ipaddress).to eq(stubbed_ip_address)
+        db = described_class.send(:seed_self)
+
+        expect(db.ipaddress).to eq("192.255.255.1")
+      end
+    end
+
+    describe ".seed_tables (private)" do
+      let!(:db) { FactoryBot.create(:vmdb_database) }
+
+      before { described_class.send(:seed_tables) }
+
+      it "adds new tables" do
+        connection.execute("CREATE TABLE flintstones (id BIGINT PRIMARY KEY)")
+
+        described_class.send(:seed_tables)
+
+        expect(db.reload.evm_tables.pluck(:name)).to include("flintstones")
+      end
+
+      it "removes deleted tables" do
+        FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => "flintstones")
+
+        described_class.send(:seed_tables)
+
+        expect(db.reload.evm_tables.pluck(:name)).not_to include("flintstones")
+      end
+
+      it "updates existing tables" do
+        connection.execute("CREATE TABLE flintstones (id BIGINT PRIMARY KEY)")
+        FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => "flintstones")
+
+        expect(VmdbTableEvm).to receive(:create).never
+
+        described_class.send(:seed_tables)
+
+        expect(db.reload.evm_tables.pluck(:name)).to include("flintstones")
+      end
+    end
+
+    describe ".seed_indexes (private)" do
+      let!(:db)    { FactoryBot.create(:vmdb_database) }
+      let!(:table) { FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => "accounts") }
+
+      before { described_class.send(:seed_indexes) }
+
+      it "adds new indexes" do
+        connection.execute("CREATE INDEX index_flintstones ON accounts (id)")
+
+        described_class.send(:seed_indexes)
+
+        expect(db.reload.vmdb_indexes.pluck(:name)).to    include("index_flintstones")
+        expect(table.reload.vmdb_indexes.pluck(:name)).to include("index_flintstones")
+      end
+
+      it "removes deleted indexes" do
+        FactoryBot.create(:vmdb_index, :vmdb_table => table, :name => "index_flintstones")
+
+        described_class.send(:seed_indexes)
+
+        expect(db.reload.vmdb_indexes.pluck(:name)).not_to    include("index_flintstones")
+        expect(table.reload.vmdb_indexes.pluck(:name)).not_to include("index_flintstones")
+      end
+
+      it "updates existing indexes" do
+        connection.execute("CREATE INDEX index_flintstones ON accounts (id)")
+        FactoryBot.create(:vmdb_index, :vmdb_table => table, :name => "index_flintstones")
+
+        expect(VmdbIndex).to receive(:create).never
+
+        described_class.send(:seed_indexes)
+
+        expect(db.reload.vmdb_indexes.pluck(:name)).to    include("index_flintstones")
+        expect(table.reload.vmdb_indexes.pluck(:name)).to include("index_flintstones")
       end
     end
   end

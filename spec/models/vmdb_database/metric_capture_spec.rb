@@ -1,11 +1,7 @@
 describe VmdbDatabase do
   context "::MetricCapture" do
     context "#capture_database_metrics" do
-      before do
-        MiqDatabase.seed
-        described_class.seed_self
-        @db = described_class.my_database
-      end
+      let(:db) { FactoryBot.create(:vmdb_database) }
 
       context "when database is local" do
         it "populates columns from sql and os sources" do
@@ -23,12 +19,12 @@ describe VmdbDatabase do
             :used_inodes_percent => 8
           }]
 
-          @db.update_attributes(:data_directory => "stubbed")
+          db.update_attributes(:data_directory => "stubbed")
           expect(EvmDatabase).to receive(:local?).and_return(true)
           expect(MiqSystem).to receive(:disk_usage).and_return(pg_disk_usage)
 
-          @db.capture_database_metrics
-          metric = @db.latest_hourly_metric
+          db.capture_database_metrics
+          metric = db.latest_hourly_metric
           expect(metric).to be_kind_of(VmdbDatabaseMetric)
 
           (standard_capture_columns + sql_capture_columns + os_capture_columns).each do |column|
@@ -43,8 +39,8 @@ describe VmdbDatabase do
         end
 
         it "populates columns from sql sources" do
-          @db.capture_database_metrics
-          metric = @db.latest_hourly_metric
+          db.capture_database_metrics
+          metric = db.latest_hourly_metric
           expect(metric).to be_kind_of(VmdbDatabaseMetric)
 
           (standard_capture_columns + sql_capture_columns).each do |column|
@@ -58,6 +54,7 @@ describe VmdbDatabase do
       end
     end
   end
+
   context ".collect_database_metrics_os" do
     it "returns a hash of os sourced columns" do
       actual = VmdbDatabase.collect_database_metrics_os("/")

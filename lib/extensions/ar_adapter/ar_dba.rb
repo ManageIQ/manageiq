@@ -479,71 +479,29 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     select_value("SELECT pg_total_relation_size('#{table}')").to_i
   end
 
-  def text_tables(table)
-    data = select(<<-SQL, "Text Tables")
-      SELECT relname AS table_name
-      FROM pg_class,
-           (SELECT reltoastrelid
-            FROM pg_class
-            WHERE relname = '#{table}') tt
-      WHERE oid = tt.reltoastrelid
-      ORDER BY relname
+  # @return [Hash<String,String>] a hash of {table_name => text_table_name}
+  def text_table_names
+    data = select_rows(<<-SQL, "Text Table Names")
+      SELECT t.relname AS table_name, tt.relname AS text_table_name
+      FROM pg_class t
+        JOIN pg_class tt ON t.reltoastrelid = tt.oid
     SQL
 
-    data.collect { |h| h['table_name'] }
+    data.to_h
   end
 
-  # Returns an array of toast table indexes for the given toast table.
-  def text_table_indexes(table_name, name = "Text Table Indexes")
-    result = query(<<-SQL, name)
-       SELECT distinct i.relname, d.indisunique, d.indkey, i.oid
-       FROM pg_class t
-       INNER JOIN pg_index d ON t.oid = d.indrelid
-       INNER JOIN pg_class i ON d.indexrelid = i.oid
-       WHERE i.relkind = 'i'
-         AND t.relkind = 't'
-         AND i.oid = d.indexrelid
-         AND t.relname = '#{table_name}'
-         AND i.relnamespace IN (SELECT oid FROM pg_namespace WHERE nspname = 'pg_toast' )
-      ORDER BY i.relname
+  # @return [Hash<String,Array<String>>] a hash of {table_name => [index_names]}
+  def index_names
+    data = select_rows(<<-SQL, "Index Names")
+      SELECT DISTINCT t.relname AS table_name, i.relname AS index_name
+      FROM pg_class t
+        JOIN pg_index d ON t.oid = d.indrelid
+        JOIN pg_class i ON d.indexrelid = i.oid
+      WHERE i.relkind = 'i'
     SQL
 
-    result.map do |row|
-      index_name = row[0]
-      unique     = row[1] == 't'
-      indkey     = row[2].split(" ")
-      oid        = row[3]
-
-      columns = Hash[query(<<-SQL, "Columns for index #{index_name} on #{table_name}")]
-      SELECT a.attnum, a.attname
-      FROM pg_attribute a
-      WHERE a.attrelid = #{oid}
-      AND a.attnum IN (#{indkey.join(",")})
-      SQL
-
-      column_names = columns.values_at(*indkey).compact
-      column_names.empty? ? nil : IndexDefinition.new(table_name, index_name, unique, column_names)
-    end.compact
-  end
-
-  # Returns the primary-key index definition for the given table if it exists
-  def primary_key_index(table_name)
-    result = select_all(<<-SQL).cast_values.first
-      SELECT c.relname, array_agg(a.attname)
-      FROM pg_index i
-      JOIN pg_attribute a ON
-        a.attrelid = i.indrelid AND
-        a.attnum = ANY(i.indkey)
-      JOIN pg_class c ON
-        i.indexrelid = c.oid
-      WHERE
-        i.indrelid = '#{table_name}'::regclass AND
-        i.indisprimary group by c.relname;
-    SQL
-
-    return nil unless result
-
-    ActiveRecord::ConnectionAdapters::IndexDefinition.new(table_name, result[0], true, result[1])
+    result = Hash.new { |h, k| h[k] = [] }
+    data.each_with_object(result) { |(k, v), h| h[k] << v }
   end
 
   def primary_key?(table_name)
