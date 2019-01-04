@@ -128,16 +128,4 @@ class TestPersister < ManageIQ::Providers::Inventory::Persister
   def strategy
     :local_db_find_missing_references
   end
-
-  def parent
-    manager.presence
-  end
-
-  def shared_options
-    {
-      :strategy => strategy,
-      :targeted => targeted?,
-      :parent   => parent
-    }
-  end
 end
