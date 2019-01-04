@@ -342,14 +342,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @allowed_templates_filter = filter_id
     @allowed_templates_tag_filters = @values[:vm_tags]
     rails_logger('allowed_templates', 1)
-    if allowed_templates_list.blank?
-      _log.warn("Allowed Templates is returning an empty list")
-    else
-      _log.warn("Allowed Templates is returning <#{allowed_templates_list.length}> template(s)")
-      allowed_templates_list.each do |vm|
-        _log.debug("Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>")
-      end
-    end
+    log_allowed_template_list(allowed_templates_list)
 
     MiqPreloader.preload(allowed_templates_list, [:snapshots, :operating_system, :ext_management_system, {:hardware => :disks}])
     @allowed_templates_cache = allowed_templates_list.collect do |template|
@@ -1093,5 +1086,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def selected_host(src)
     raise _("Unable to find Host with Id: [%{id}]") % {:id => src[:host_id]} if src[:host].nil?
     [load_ar_obj(src[:host])]
+  end
+
+  def log_allowed_template_list(template_list)
+    if template_list.blank?
+      _log.warn("Allowed Templates is returning an empty list")
+    else
+      _log.warn("Allowed Templates is returning <#{template_list.length}> template(s)")
+      if _log.level == Logger::DEBUG # skip .each if not in DEBUG
+        template_list.each do |vm|
+          _log.debug("Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>")
+        end
+      end
+    end
   end
 end
