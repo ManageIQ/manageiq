@@ -300,6 +300,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     :vm_tags
   end
 
+  VM_OR_TEMPLATE_EXTRA_COLS = %i[mem_cpu cpu_total_cores v_total_snapshots allocated_disk_storage].freeze
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
@@ -338,13 +339,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
     end
 
-    allowed_templates_list = source_vm_rbac_filter(vms, condition).to_a
+    allowed_templates_list = source_vm_rbac_filter(vms, condition, VM_OR_TEMPLATE_EXTRA_COLS).to_a
     @allowed_templates_filter = filter_id
     @allowed_templates_tag_filters = @values[:vm_tags]
     rails_logger('allowed_templates', 1)
     log_allowed_template_list(allowed_templates_list)
 
-    MiqPreloader.preload(allowed_templates_list, [:snapshots, :operating_system, :ext_management_system, {:hardware => :disks}])
+    MiqPreloader.preload(allowed_templates_list, [:operating_system :ext_management_system])
     @allowed_templates_cache = allowed_templates_list.collect do |template|
       create_hash_struct_from_vm_or_template(template, options)
     end
@@ -358,9 +359,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ["vms.template = ? AND vms.ems_id in (?)", true, self.class.provider_model.pluck(:id)]
   end
 
-  def source_vm_rbac_filter(vms, condition = nil)
-    MiqSearch.filtered(get_value(@values[:vm_filter]).to_i, VmOrTemplate, vms,
-                       :user => @requester, :conditions => condition)
+  def source_vm_rbac_filter(vms, condition = nil, *extra_cols)
+    opts = { :user => @requester, :conditions => condition }
+    opts[:extra_cols] = extra_cols unless extra_cols.empty?
+    MiqSearch.filtered(get_value(@values[:vm_filter]).to_i, VmOrTemplate, vms, opts)
   end
 
   def allowed_provision_types(_options = {})
