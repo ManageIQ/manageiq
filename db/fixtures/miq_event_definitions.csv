@@ -21,6 +21,7 @@ evm_server_home_disk_high_usage,Server High /home Disk Usage,Default,evm_operati
 evm_server_var_disk_high_usage,Server High /var Disk Usage,Default,evm_operations
 evm_server_var_log_disk_high_usage,Server High /var/log Disk Usage,Default,evm_operations
 evm_server_var_log_audit_disk_high_usage,Server High /var/log/audit Disk Usage,Default,evm_operations
+evm_server_log_disk_high_usage,Server High /var/www/miq/vmdb/log Disk Usage,Default,evm_operations
 evm_server_miq_tmp_disk_high_usage,Server High Temp Storage Disk Usage,Default,evm_operations
 evm_server_tmp_disk_high_usage,Server High /tmp Disk Usage,Default,evm_operations
 evm_server_db_disk_high_usage,Server High DB Disk Usage,Default,evm_operations
