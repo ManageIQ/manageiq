@@ -1,7 +1,7 @@
 language: ruby
 rvm:
 - 2.4.5
-- 2.3.8
+- 2.5.3
 sudo: false
 cache:
   bundler: true
@@ -16,9 +16,9 @@ env:
   - TEST_SUITE=brakeman
 matrix:
   allow_failures:
-  - rvm: 2.4.2
+  - rvm: 2.5.3
   exclude:
-  - rvm: 2.4.2
+  - rvm: 2.5.3
     env: TEST_SUITE=brakeman
   fast_finish: true
 addons:
