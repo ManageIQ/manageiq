@@ -84,8 +84,10 @@ module Vmdb
 
     # Disable ActionCable's request forgery protection
     # This is basically matching a set of allowed origins which is not good for us
-    # Our own origin-host forgery protection is implemented in lib/websocket_server.rb
-    Rails.application.config.action_cable.disable_request_forgery_protection = true
+    config.action_cable.disable_request_forgery_protection = false
+    # Matching the origin against the HOST header is much more convenient
+    config.action_cable.allow_same_origin_as_host = true
+    config.action_cable.mount_path = '/ws/notifications'
 
     # Customize any additional options below...
 

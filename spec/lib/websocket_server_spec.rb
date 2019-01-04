@@ -17,15 +17,6 @@ describe WebsocketServer do
   let(:env) { {'REQUEST_URI' => "/ws/#{url}", 'rack.hijack' => hijack} }
 
   describe '#call' do
-    context 'notifications' do
-      let(:url) { 'notifications' }
-
-      it 'calls actioncable' do
-        expect(ActionCable.server).to receive(:call).with(env)
-        subject.call(env)
-      end
-    end
-
     context 'remote console' do
       let(:url) { 'console/12345' }
 
