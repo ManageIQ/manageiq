@@ -226,24 +226,6 @@ module ManageIQ::Providers
           )
         end
 
-        def snapshot_parent
-          snapshot_parent_save_block = lambda do |_ems, inventory_collection|
-            snapshot_collection = inventory_collection.dependency_attributes[:snapshots].try(:first)
-
-            snapshot_collection.each do |snapshot|
-              ActiveRecord::Base.transaction do
-                child = Snapshot.find(snapshot.id)
-                parent = Snapshot.find_by(:uid_ems => snapshot.parent_uid)
-                child.update_attribute(:parent_id, parent.try(:id))
-              end
-            end
-          end
-
-          add_properties(
-            :custom_save_block => snapshot_parent_save_block
-          )
-        end
-
         def customization_specs
           add_properties(:manager_ref => %i(name))
 
