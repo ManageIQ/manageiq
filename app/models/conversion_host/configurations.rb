@@ -36,14 +36,18 @@ module ConversionHost::Configurations
     end
 
     def enable(params)
+      params = params.symbolize_keys
       _log.info("Enabling a conversion_host with parameters: #{params}")
-      params.delete(:task_id) # in case this is being called through *_queue which will stick in a :task_id
-      params.delete(:miq_task_id) # miq_queue.activate_miq_task will stick in a :miq_task_id
 
-      vddk_url = params.delete("param_v2v_vddk_package_url")
+      params.delete(:task_id)     # In case this is being called through *_queue which will stick in a :task_id
+      params.delete(:miq_task_id) # The miq_queue.activate_miq_task will stick in a :miq_task_id
+
+      vddk_url = params.delete(:param_v2v_vddk_package_url)
       resource_id = params[:resource_id]
       resource_type = params[:resource_type]
-      resource = resource_type.constantize.find(resource_id)
+
+      # Effectively ignore case since we cannot guarantee it from the REST API
+      resource = resource_type.to_s.downcase.classify.constantize.find(resource_id)
 
       conversion_host = new(params.merge(:resource => resource))
       conversion_host.enable_conversion_host_role(vddk_url)
