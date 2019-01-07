@@ -314,7 +314,13 @@ describe MiqPolicy do
     end
 
     it 'reports invalid towhat' do
-      expect(FactoryBot.build(:miq_policy, :towhat => "BobsYourUncle")).not_to be_valid
+      policy = FactoryBot.build(:miq_policy, :towhat => "BobsYourUncle")
+      towhat_error = "should be one of ContainerGroup, ContainerImage, "\
+                     "ContainerNode, ContainerProject, ContainerReplicator, "\
+                     "ExtManagementSystem, Host, PhysicalServer, Vm"
+
+      expect(policy).not_to be_valid
+      expect(policy.errors.messages).to include(:towhat => [towhat_error])
     end
   end
 end
