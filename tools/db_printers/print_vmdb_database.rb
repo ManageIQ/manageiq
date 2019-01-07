@@ -2,17 +2,18 @@
 require File.expand_path('../../config/environment', __dir__)
 
 def print_records(recs, indent = '')
+  return if recs.blank?
+
   recs = recs.sort_by { |r| r.name.downcase }
   recs.each do |r|
     puts "#{indent}- #{r.class}: #{r.name}"
-    print_records(r.vmdb_indexes, "  #{indent}") if r.kind_of?(VmdbTable)
+    if r.kind_of?(VmdbDatabase)
+      print_records(r.evm_tables, "  #{indent}")
+    else
+      print_records(r.try(:vmdb_indexes), "  #{indent}")
+      print_records(r.try(:text_tables), "  #{indent}")
+    end
   end
 end
 
-db = VmdbDatabase.includes(:vmdb_tables => :vmdb_indexes).first
-puts "VmdbDatabase"
-print_records(db.vmdb_tables.where(:type => "VmdbTableEvm"))
-
-puts
-puts "Toast Tables"
-print_records(db.vmdb_tables.where(:type => "VmdbTableText"), '  ')
+print_records(VmdbDatabase.includes(:evm_tables => [:vmdb_indexes, {:text_tables => :vmdb_indexes}]))

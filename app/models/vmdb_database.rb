@@ -1,6 +1,8 @@
 class VmdbDatabase < ApplicationRecord
-  has_many :vmdb_tables,           :dependent => :destroy
+  has_many :vmdb_tables            # Destroy will be handled by seeder
   has_many :evm_tables,            :class_name => 'VmdbTableEvm'
+  has_many :text_tables,           :class_name => 'VmdbTableText'
+  has_many :vmdb_indexes,          :through => :vmdb_tables
   has_many :vmdb_database_metrics, :dependent => :destroy
   has_one  :latest_hourly_metric,  -> { where(:capture_interval_name => 'hourly').order("timestamp DESC") }, :class_name => 'VmdbDatabaseMetric'
 

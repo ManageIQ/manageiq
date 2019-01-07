@@ -7,7 +7,6 @@ class VmdbIndex < ApplicationRecord
 
   include VmdbDatabaseMetricsMixin
 
-  include_concern 'Seeding'
   include_concern 'VmdbIndex::MetricCapture'
 
   serialize :prior_raw_metrics
