@@ -28,9 +28,11 @@ module ConversionHost::Configurations
     end
 
     def enable_queue(params, auth_user = nil)
+      params = params.symbolize_keys
       resource_type = params[:resource_type]
       resource_id = params[:resource_id]
-      resource = resource_type.constantize.find(resource_id)
+
+      resource = resource_type.to_s.downcase.classify.constantize.find(resource_id)
 
       queue_configuration('enable', nil, resource, [params], auth_user)
     end
