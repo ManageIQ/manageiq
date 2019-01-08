@@ -107,19 +107,19 @@ describe DialogFieldTagControl do
 
   context "dialog field tag control and Classification seeded" do
     before do
-      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
+      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true)
       add_entry(cat, :name => "dev",  :description => "Development")
       add_entry(cat, :name => "test", :description => "Test")
       add_entry(cat, :name => "prod", :description => "Production")
 
-      cat = FactoryBot.create(:classification, :description => "Department",  :name => "department",   :single_value => false, :parent_id => 0)
+      cat = FactoryBot.create(:classification, :description => "Department", :name => "department", :single_value => false)
       add_entry(cat, :name => "accounting",  :description => "Accounting")
       add_entry(cat, :name => "engineering", :description => "Engineering")
       add_entry(cat, :name => "marketing",   :description => "Marketing")
     end
 
     it ".allowed_tag_categories" do
-      expected_array = Classification.where(:show => true, :parent_id => 0, :read_only => false).includes(:tag).collect do |cat|
+      expected_array = Classification.is_category.where(:show => true, :read_only => false).includes(:tag).collect do |cat|
         {:id => cat.id, :description => cat.description, :single_value => cat.single_value}
       end.sort_by { |cat| cat[:description] }
 

@@ -429,7 +429,7 @@ describe MiqRequest do
 
       FactoryBot.create(:classification_department_with_tags)
 
-      tag = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
+      tag = Classification.is_category.where(:description => 'Department').includes(:tag).first
       provision_request.add_tag(tag.name, tag.children.first.name)
 
       expected = [a_hash_including(:children)]

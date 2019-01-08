@@ -196,7 +196,7 @@ class Classification < ApplicationRecord
   end
 
   def self.create_category!(options)
-    self.create!(options.merge(:parent_id => 0))
+    is_category.create!(options)
   end
 
   def self.categories(region_id = my_region_number, ns = DEFAULT_NAMESPACE)

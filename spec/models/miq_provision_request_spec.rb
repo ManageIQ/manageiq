@@ -273,7 +273,7 @@ describe MiqProvisionRequest do
         it "should add and delete tags from a request" do
           expect(@pr.get_tags.length).to eq(0)
 
-          t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
+          t = Classification.is_category.where(:description => 'Department').includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
           expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String) # Single tag returns as a String
           expect(@pr.get_tags[t.name.to_sym]).to eq(t.children.first.name)
@@ -320,7 +320,7 @@ describe MiqProvisionRequest do
         it "should return classifications for tags" do
           expect(@pr.get_tags.length).to eq(0)
 
-          t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
+          t = Classification.is_category.where(:description => 'Department').includes(:tag).first
           @pr.add_tag(t.name, t.children.first.name)
           expect(@pr.get_tags[t.name.to_sym]).to be_kind_of(String)
 

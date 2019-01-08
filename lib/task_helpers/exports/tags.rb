@@ -8,10 +8,10 @@ module TaskHelpers
         export_dir = options[:directory]
 
         tags = if options[:all]
-                 Classification.includes(:tag).where(:parent_id => 0).where.not(:tags => {:name => SPECIAL_TAGS})
+                 Classification.is_category.includes(:tag).where.not(:tags => {:name => SPECIAL_TAGS})
                else
                  export_tags = []
-                 Classification.includes(:tag).where(:parent_id => 0).where.not(:tags => {:name => SPECIAL_TAGS}).each do |cat|
+                 Classification.is_category.includes(:tag).where.not(:tags => {:name => SPECIAL_TAGS}).each do |cat|
                    if !cat.default
                      export_tags << cat
                    else
