@@ -23,7 +23,7 @@ GlobalVars:
   - $scvmm_log
   - $vcloud_log
   - $vim_log
-  - $websocket_log
+  - $remote_console_log
   - $nuage_log
   - $redfish_log
 Rails/Exit:

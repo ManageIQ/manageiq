@@ -72,7 +72,7 @@ MIQ_WORKER_TYPES = {
   "MiqUiWorker"                                                                 => %i(manageiq_default ui_dependencies),
   "MiqVimBrokerWorker"                                                          => %i(manageiq_default),
   "MiqWebServiceWorker"                                                         => %i(manageiq_default),
-  "MiqWebsocketWorker"                                                          => %i(manageiq_default),
+  "MiqRemoteConsoleWorker"                                                      => %i(manageiq_default),
 }.freeze
 
 MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
@@ -151,6 +151,6 @@ MIQ_WORKER_TYPES_IN_KILL_ORDER = %w(
   ManageIQ::Providers::Openshift::MonitoringManager::EventCatcher
   ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher
   MiqUiWorker
-  MiqWebsocketWorker
+  MiqRemoteConsoleWorker
   MiqCockpitWsWorker
 ).freeze

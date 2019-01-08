@@ -1,4 +1,4 @@
-class MiqWebsocketWorker::Runner < MiqWorker::Runner
+class MiqRemoteConsoleWorker::Runner < MiqWorker::Runner
   include MiqWebServerRunnerMixin
 
   def heartbeat(*args)
@@ -9,7 +9,7 @@ class MiqWebsocketWorker::Runner < MiqWorker::Runner
 
   def check_internal_thread
     unless worker.rails_application.healthy?
-      do_exit("MiqWebsocketWorker internal thread crashed, exiting!", 1)
+      do_exit("MiqRemoteConsoleWorker internal thread crashed, exiting!", 1)
     end
   end
 end

@@ -1,13 +1,13 @@
-class MiqWebsocketWorker < MiqWorker
+class MiqRemoteConsoleWorker < MiqWorker
   require_nested :Runner
 
-  self.required_roles = ['websocket']
+  self.required_roles = ['remote_console']
 
   RACK_APPLICATION = WebsocketServer
   STARTING_PORT    = 5000
 
   def friendly_name
-    @friendly_name ||= "Websocket Worker"
+    @friendly_name ||= "Remote Console Worker"
   end
 
   include MiqWebServerWorkerMixin
