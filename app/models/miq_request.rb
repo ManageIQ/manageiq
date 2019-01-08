@@ -376,8 +376,6 @@ class MiqRequest < ApplicationRecord
       status[p.status] += 1
       total += 1
     end
-    unknown_state = task_count - total
-    states["unknown"] = unknown_state unless unknown_state.zero?
     msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
 
     req_state = (states.length == 1) ? states.keys.first : "active"
