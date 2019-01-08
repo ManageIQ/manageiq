@@ -19,23 +19,10 @@ describe CiFeatureMixin do
       expect(service.service_resources.first.resource.retireable?).to eq(false)
     end
 
-    context "service" do
-      context "with type" do
-        let(:service1) { FactoryBot.create(:service_ansible_tower, :type => ServiceAnsibleTower) }
-        it "is retireable" do
-          FactoryBot.create(:service_resource, :service => service, :resource => service1)
+    it "service is retireable" do
+      FactoryBot.create(:service_resource, :service => service, :resource => FactoryBot.create(:service_ansible_tower, :type => ServiceAnsibleTower))
 
-          expect(service.service_resources.first.resource.retireable?).to eq(true)
-        end
-      end
-
-      context "without type" do
-        it "is not retireable" do
-          FactoryBot.create(:service_resource, :service => service, :resource => FactoryBot.create(:service))
-
-          expect(service.service_resources.first.resource.retireable?).to eq(false)
-        end
-      end
+      expect(service.service_resources.first.resource.retireable?).to eq(true)
     end
   end
 end
