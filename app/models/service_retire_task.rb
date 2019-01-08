@@ -16,7 +16,9 @@ class ServiceRetireTask < MiqRetireTask
   end
 
   def task_finished
-    update_attributes(:status => status == 'Ok' ? 'Completed' : 'Failed')
+    if status != 'Ok'
+      update_attributes(:status => 'Error')
+    end
   end
 
   def task_active
@@ -26,7 +28,7 @@ class ServiceRetireTask < MiqRetireTask
   def after_request_task_create
     update_attributes(:description => get_description)
     parent_svc = Service.find_by(:id => options[:src_ids])
-    _log.info("- creating service tasks for service <#{self.class.name}:#{id}>")
+    _log.info("- creating service subtasks for service task <#{self.class.name}:#{id}>, service <#{parent_svc.id}>")
     create_retire_subtasks(parent_svc, self)
   end
 
@@ -42,7 +44,6 @@ class ServiceRetireTask < MiqRetireTask
       # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
       nh['options'][:dialog] = {}
       new_task = create_task(svc_rsc, parent_service, nh, parent_task)
-      create_retire_subtasks(svc_rsc.resource, new_task) if svc_rsc.resource.kind_of?(Service)
       new_task.after_request_task_create
       miq_request.miq_request_tasks << new_task
       new_task.tap(&:deliver_to_automate)
@@ -50,14 +51,15 @@ class ServiceRetireTask < MiqRetireTask
   end
 
   def create_task(svc_rsc, parent_service, nh, parent_task)
-    (svc_rsc.resource.type.demodulize + "RetireTask").constantize.new(nh).tap do |task|
+    resource_type = svc_rsc.resource.type.presence || "Service"
+    (resource_type.demodulize + "RetireTask").constantize.new(nh).tap do |task|
       task.options.merge!(
-        :src_id              => svc_rsc.resource.id,
+        :src_ids             => [svc_rsc.resource.id],
         :service_resource_id => svc_rsc.id,
         :parent_service_id   => parent_service.id,
         :parent_task_id      => parent_task.id,
       )
-      task.request_type = svc_rsc.resource.type.demodulize.underscore.downcase + "_retire"
+      task.request_type = resource_type.demodulize.underscore.downcase + "_retire"
       task.source = svc_rsc.resource
       parent_task.miq_request_tasks << task
       task.save!

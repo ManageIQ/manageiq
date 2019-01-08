@@ -675,6 +675,31 @@ describe Service do
     end
   end
 
+  describe "#retireable?" do
+    let(:service_with_type) { FactoryBot.create(:service, :type => "thing") }
+    let(:service_without_type) { FactoryBot.create(:service, :type => nil) }
+    let(:service_with_parent) { FactoryBot.create(:service, :service => FactoryBot.create(:service)) }
+    context "with no parent" do
+      context "with type" do
+        it "true" do
+          expect(service_with_type.retireable?).to be(true)
+        end
+      end
+
+      context "without type" do
+        it "checks type presence" do
+          expect(service_without_type.retireable?).to be(false)
+        end
+      end
+    end
+
+    context "with parent" do
+      it "true" do
+        expect(service_with_parent.retireable?).to be(true)
+      end
+    end
+  end
+
   describe "#retired" do
     it "defaults to false" do
       service = described_class.new
