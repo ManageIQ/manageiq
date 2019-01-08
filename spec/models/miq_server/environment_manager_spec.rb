@@ -97,13 +97,29 @@ describe "Server Environment Management" do
       expect(MiqQueue.count).to eql 0
     end
 
-    it "database disk exceeds usage" do
-      disks = [{:used_bytes_percent => 85, :mount_point => '/var/lib/pgsql'}]
-      expect(@miq_server.check_disk_usage(disks))
-      queue = MiqQueue.first
+    [
+      '/var/lib/pgsql',        'evm_server_db_disk_high_usage',
+      '/var/www/miq/vmdb/log', 'evm_server_log_disk_high_usage',
+      '/',                     'evm_server_system_disk_high_usage',
+      '/boot',                 'evm_server_boot_disk_high_usage',
+      '/home',                 'evm_server_home_disk_high_usage',
+      '/var',                  'evm_server_var_disk_high_usage',
+      '/var/log',              'evm_server_var_log_disk_high_usage',
+      '/var/log/audit',        'evm_server_var_log_audit_disk_high_usage',
+      '/var/www/miq/vmdb/log', 'evm_server_log_disk_high_usage',
+      '/var/www/miq_tmp',      'evm_server_miq_tmp_disk_high_usage',
+      '/tmp',                  'evm_server_tmp_disk_high_usage'
+    ].each_slice(2) do |path, event|
+      it "raises an event when disk exceeds usage for #{path}" do
+        disks = [{:used_bytes_percent => 85, :mount_point => path}]
+        expect(@miq_server.check_disk_usage(disks))
+        expect(MiqQueue.count).to eql(1)
+        queue = MiqQueue.first
 
-      expect(queue.args[1]).to eql 'evm_server_db_disk_high_usage'
-      expect(queue.args[2][:event_details]).to include disks.first[:mount_point]
+        expect(queue.method_name).to eql("raise_evm_event")
+        expect(queue.args[1]).to eql(event)
+        expect(queue.args[2][:event_details]).to include disks.first[:mount_point]
+      end
     end
   end
 end
