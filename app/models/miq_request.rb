@@ -368,13 +368,11 @@ class MiqRequest < ApplicationRecord
   def update_request_status
     states = Hash.new { |h, k| h[k] = 0 }
     status = Hash.new { |h, k| h[k] = 0 }
-    total  = 0
 
     task_count = miq_request_tasks.count
     miq_request_tasks.each do |p|
       states[p.state] += 1
       status[p.status] += 1
-      total += 1
     end
     msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
 
