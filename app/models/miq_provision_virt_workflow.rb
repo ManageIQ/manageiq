@@ -1042,18 +1042,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
                  :v_total_snapshots      => vm_or_template.v_total_snapshots,
                  :evm_object_class       => :Vm}
     data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.respond_to?(:cloud_tenant)
-    hash_struct = MiqHashStruct.new(data_hash)
-    hash_struct.operating_system = MiqHashStruct.new(
-      :product_name => vm_or_template.operating_system.product_name
-    ) if vm_or_template.operating_system
-    hash_struct.ext_management_system = MiqHashStruct.new(
-      :name => vm_or_template.ext_management_system.name
-    ) if vm_or_template.ext_management_system
+    if vm_or_template.operating_system
+      data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system.product_name)
+    end
+    if vm_or_template.ems_id
+      data_hash[:ext_management_system] = MiqHashStruct.new(:name => vm_or_template.ext_management_system.name)
+    end
     if options[:include_datacenter] == true
-      hash_struct.datacenter_name = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
+      data_hash[:datacenter_name] = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
     end
 
-    hash_struct
+    MiqHashStruct.new(data_hash)
   end
 
   def exit_pre_dialog
