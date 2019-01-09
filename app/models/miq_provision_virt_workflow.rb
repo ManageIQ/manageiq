@@ -340,7 +340,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     # Only select the colums we need
-    vms = vms.select(:id, :name, :guid, :uid_ems, :ems_id)
+    vms = vms.select(:id, :name, :guid, :uid_ems, :ems_id, :cloud_tenant_id)
 
     allowed_templates_list = source_vm_rbac_filter(vms, condition, VM_OR_TEMPLATE_EXTRA_COLS).to_a
     @allowed_templates_filter = filter_id
@@ -1046,7 +1046,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
                  :allocated_disk_storage => vm_or_template.allocated_disk_storage,
                  :v_total_snapshots      => vm_or_template.v_total_snapshots,
                  :evm_object_class       => :Vm}
-    data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.respond_to?(:cloud_tenant)
+    data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.cloud_tenant_id
     if vm_or_template.operating_system
       data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system.product_name)
     end
