@@ -300,7 +300,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     :vm_tags
   end
 
-  VM_OR_TEMPLATE_EXTRA_COLS = %i[mem_cpu cpu_total_cores v_total_snapshots allocated_disk_storage].freeze
+  VM_OR_TEMPLATE_EXTRA_COLS = %i[
+    platform
+    mem_cpu
+    cpu_total_cores
+    v_total_snapshots
+    allocated_disk_storage
+  ].freeze
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
@@ -348,7 +354,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     rails_logger('allowed_templates', 1)
     log_allowed_template_list(allowed_templates_list)
 
-    MiqPreloader.preload(allowed_templates_list, [:operating_system])
     @_ems_allowed_templates_cache = {}
     @allowed_templates_cache = allowed_templates_list.collect do |template|
       create_hash_struct_from_vm_or_template(template, options)
@@ -1048,7 +1053,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
                  :evm_object_class       => :Vm}
     data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.cloud_tenant_id
     if vm_or_template.operating_system
-      data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system.product_name)
+      data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system_product_name)
     end
     if options[:include_datacenter] == true
       data_hash[:datacenter_name] = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
