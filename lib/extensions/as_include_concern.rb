@@ -49,7 +49,8 @@ module ActiveSupport
         begin
           to_include = "#{name}::#{mod}"
           require_dependency to_include.underscore
-        rescue LoadError
+        rescue LoadError => err
+          raise unless err.message.include?(to_include.underscore)
           to_include = mod
           require_dependency to_include.underscore
         end
