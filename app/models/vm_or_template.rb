@@ -169,6 +169,8 @@ class VmOrTemplate < ApplicationRecord
   virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true, :type => :string
   virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true, :type => :string
   virtual_delegate :name, :to => :ems_cluster, :prefix => true, :allow_nil => true, :type => :string
+  virtual_delegate :platform, :to => :operating_system, :allow_nil => true
+  virtual_delegate :product_name, :to => :operating_system, :prefix => true, :allow_nil => true
   virtual_delegate :vmm_product, :to => :host, :prefix => :v_host, :allow_nil => true, :type => :string
   virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true, :type => :float
   virtual_delegate :num_cpu, :to => "hardware.cpu_sockets", :allow_nil => true, :default => 0, :type => :integer
@@ -532,7 +534,8 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def platform
-    name = OperatingSystem.platform(self)
+    name   = self[:platform] if has_attribute?(:platform)
+    name ||= OperatingSystem.platform(self)
     if name == 'unknown'
       parent = genealogy_parent
       name = OperatingSystem.platform(parent) unless parent.nil?
