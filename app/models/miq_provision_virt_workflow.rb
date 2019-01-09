@@ -345,10 +345,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     rails_logger('allowed_templates', 1)
     log_allowed_template_list(allowed_templates_list)
 
-    MiqPreloader.preload(allowed_templates_list, [:operating_system :ext_management_system])
+    MiqPreloader.preload(allowed_templates_list, [:operating_system])
+    @_ems_allowed_templates_cache = {}
     @allowed_templates_cache = allowed_templates_list.collect do |template|
       create_hash_struct_from_vm_or_template(template, options)
     end
+    @_ems_allowed_templates_cache = nil
 
     @allowed_templates_cache
   end
@@ -1045,14 +1047,34 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if vm_or_template.operating_system
       data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system.product_name)
     end
-    if vm_or_template.ems_id
-      data_hash[:ext_management_system] = MiqHashStruct.new(:name => vm_or_template.ext_management_system.name)
-    end
     if options[:include_datacenter] == true
       data_hash[:datacenter_name] = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
     end
+    assign_ems_data_to_data_hash(data_hash, vm_or_template)
 
     MiqHashStruct.new(data_hash)
+  end
+
+  def assign_ems_data_to_data_hash(data_hash, vm_or_template)
+    # Handle EMS data, either with a cache, or with the relation (assumes it is
+    # preloaded usually)
+    if @_ems_allowed_templates_cache
+      # don't have a key, so don't attempt to add to the data_hash
+      if vm_or_template.ems_id
+        ems_id = vm_or_template.ems_id
+
+        # only fetch the ems if not fetched previously
+        unless @_ems_allowed_templates_cache.key?(vm_or_template.ems_id)
+          @_ems_allowed_templates_cache[ems_id] = ExtManagementSystem.find(ems_id).try(:name)
+        end
+
+        if @_ems_allowed_templates_cache[ems_id]
+          data_hash[:ext_management_system] = MiqHashStruct.new(:name => @_ems_allowed_templates_cache[ems_id])
+        end
+      end
+    elsif vm_or_template.ems_id
+      data_hash[:ext_management_system] = MiqHashStruct.new(:name => vm_or_template.ext_management_system.name)
+    end
   end
 
   def exit_pre_dialog
