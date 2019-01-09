@@ -59,7 +59,8 @@ module MiqReport::ImportExport
 
         raise _("Neither user or group to be preserved during import were found") if report_user.nil? && group.nil?
       else
-        report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)
+        report["miq_group_id"] = user.current_group_id
+        report["user_id"] = user.id
       end
 
       report["name"] = report.delete("menu_name")
