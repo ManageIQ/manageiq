@@ -39,7 +39,7 @@ class WebsocketServer
         @proxy.each_ready do |left, right|
           begin
             @adapters[left].fetch(64.kilobytes) { |data| @adapters[right].issue(data) } # left -> right
-          rescue IOError
+          rescue IOError, IO::WaitReadable, IO::WaitWritable
             cleanup(:info, "Closing websocket proxy for VM %{vm_id}", left, right)
           rescue StandardError => ex
             cleanup(:error, "Websocket proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", left, right)
