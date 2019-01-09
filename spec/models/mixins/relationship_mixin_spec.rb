@@ -848,6 +848,14 @@ describe RelationshipMixin do
     end
   end
 
+  describe "#grandchildren" do
+    it "works with relationships" do
+      vms[0].with_relationship_type(test_rel_type) do
+        expect(vms[0].grandchildren).to match_array([vms[3], vms[4], vms[5], vms[6], vms[7]])
+      end
+    end
+  end
+
   describe "#child_and_grandchild_rels" do
     it "works with relationships" do
       vms[0].with_relationship_type(test_rel_type) do

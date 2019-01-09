@@ -405,6 +405,10 @@ module RelationshipMixin
     Relationship.filter_by_resource_type(rels, options)
   end
 
+  def grandchildren(*args)
+    Relationship.resources(grandchild_rels(*args))
+  end
+
   def child_and_grandchild_rels(*args)
     options = args.extract_options!
     rels = relationships.inject(Relationship.none) do |stmt, r|
