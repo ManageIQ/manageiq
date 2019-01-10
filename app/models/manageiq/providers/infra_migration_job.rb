@@ -67,7 +67,9 @@ class ManageIQ::Providers::InfraMigrationJob < Job
     _log.info("run_conversion")
     begin
       migration_task.run_conversion
-      _log.info("to poll_conversion")
+      _log.info("to poll_conversion: #{migration_task.options[:virtv2v_wrapper]}")
+      migration_task.reload
+      _log.info("to poll_conversion reloaded: #{migration_task.options[:virtv2v_wrapper]}")
       queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     rescue => exception
       message = "Failed to start conversion: #{exception}"

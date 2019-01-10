@@ -18,7 +18,7 @@ module ConversionHost::Operations
 
     def assign_to_tasks
       # pending_tasks = ServiceTemplateTransformationPlanTask.where(:state => 'active', :conversion_host => nil)
-      pending_tasks = InfraMigrationJob.where(:state => 'waiting_to_start')
+      pending_tasks = ManageIQ::Providers::InfraMigrationJob.where(:state => 'waiting_to_start')
       # this will become list of active InfraMigrationJob
       return if pending_tasks.empty?
       by_ems = pending_tasks.sort_by(&:created_on).each_with_object({}) do |job, hash|
@@ -37,7 +37,6 @@ module ConversionHost::Operations
             task.conversion_host = eligible_hosts.first
             task.save!
             job.queue_signal(:start)
-            # _log.info("Migration task id=#{task.id} started: virtv2v_wrapper=#{task.options[:virtv2v_wrapper]}")
             slots -= 1
           rescue StandardError => err
             _log.error("Migration task id=#{task.id} error: #{err}")

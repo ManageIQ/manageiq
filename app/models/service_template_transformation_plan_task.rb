@@ -187,16 +187,26 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     options
   end
 
+  def set_options(opts)
+    self.with_lock do
+      self.options.merge!(opts)
+      self.update_attributes(:options => self.options)
+    end
+  end
+
   def run_conversion
     start_timestamp = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
-    options[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
-    options[:virtv2v_started_on] = start_timestamp
-    options[:virtv2v_status] = 'active'
-    save!
+    updates = {}
+    updates[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
+    updates[:virtv2v_started_on] = start_timestamp
+    updates[:virtv2v_status] = 'active'
+    _log.info("InfraMigrationJob run_conversion to set_options: #{updates}")
+    set_options(updates)
   end
 
   def get_conversion_state
     begin
+      updates = {}
       virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
       updated_disks = virtv2v_disks
       if virtv2v_state['finished'].nil?
@@ -207,18 +217,19 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
           disk[:percent] = matching_disks.first['progress']
         end
       else
-        options[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+        updates[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
         if virtv2v_state['failed']
-          options[:virtv2v_status] = 'failed'
+          updates[:virtv2v_status] = 'failed'
           raise "Disks transformation failed."
         else
-          options[:virtv2v_status] = 'succeeded'
+          updates[:virtv2v_status] = 'succeeded'
           updated_disks.each { |d| d[:percent] = 100 }
         end
       end
-      options[:virtv2v_disks] = updated_disks
+      updates[:virtv2v_disks] = updated_disks
     ensure
-      save!
+      _log.info("InfraMigrationJob get_conversion_state to set_options: #{updates}")
+      set_options(updates)
     end
   end 
 
