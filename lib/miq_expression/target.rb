@@ -88,6 +88,16 @@ class MiqExpression::Target
     "#{tag_path}#{value.nil? ? '' : '/' + value.to_s.gsub(/\//, "%2f")}"
   end
 
+  def exclude_col_by_preprocess_options?(options)
+    if options.kind_of?(Hash) && options[:vim_performance_daily_adhoc]
+      Metric::Rollup.excluded_col_for_expression?(column.to_sym)
+    elsif target == Service
+      Service::AGGREGATE_ALL_VM_ATTRS.include?(column.to_sym)
+    else
+      false
+    end
+  end
+
   private
 
   def tag_path
