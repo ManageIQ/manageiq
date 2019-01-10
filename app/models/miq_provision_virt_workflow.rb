@@ -348,7 +348,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Only select the colums we need
     vms = vms.select(:id, :type, :name, :guid, :uid_ems, :ems_id, :cloud_tenant_id)
 
-    allowed_templates_list = source_vm_rbac_filter(vms, condition, VM_OR_TEMPLATE_EXTRA_COLS).to_a
+    sql = source_vm_rbac_filter(vms, condition, VM_OR_TEMPLATE_EXTRA_COLS).to_sql
+    allowed_templates_list = ActiveRecord::Base.connection.select_all(sql).to_a
     @allowed_templates_filter = filter_id
     @allowed_templates_tag_filters = @values[:vm_tags]
     rails_logger('allowed_templates', 1)
@@ -1041,22 +1042,33 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def create_hash_struct_from_vm_or_template(vm_or_template, options)
-    data_hash = {:id                     => vm_or_template.id,
-                 :name                   => vm_or_template.name,
-                 :guid                   => vm_or_template.guid,
-                 :uid_ems                => vm_or_template.uid_ems,
-                 :platform               => vm_or_template.platform,
-                 :logical_cpus           => vm_or_template.cpu_total_cores,
-                 :mem_cpu                => vm_or_template.mem_cpu,
-                 :allocated_disk_storage => vm_or_template.allocated_disk_storage,
-                 :v_total_snapshots      => vm_or_template.v_total_snapshots,
-                 :evm_object_class       => :Vm}
-    data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.cloud_tenant_id
-    if vm_or_template.operating_system
-      data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system_product_name)
-    end
-    if options[:include_datacenter] == true
-      data_hash[:datacenter_name] = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
+    if vm_or_template.kind_of?(Hash)
+      data_hash = vm_or_template
+      data_hash[:logical_cpus] = data_hash.delete(:cpu_total_cores)
+      if vm_or_template[:operating_system_product_name]
+        data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template[:operating_system_product_name])
+      end
+      # TODO: solve owning_blue_folder for the "Hash method" (if needed...)
+    else
+      data_hash = {:id                     => vm_or_template.id,
+                   :name                   => vm_or_template.name,
+                   :guid                   => vm_or_template.guid,
+                   :uid_ems                => vm_or_template.uid_ems,
+                   :platform               => vm_or_template.platform,
+                   :logical_cpus           => vm_or_template.cpu_total_cores,
+                   :mem_cpu                => vm_or_template.mem_cpu,
+                   :allocated_disk_storage => vm_or_template.allocated_disk_storage,
+                   :v_total_snapshots      => vm_or_template.v_total_snapshots}
+      data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template[:cloud_tenant_id]
+      if vm_or_template.operating_system
+        data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system_product_name)
+      end
+      if vm_or_template[:ems_id]
+        data_hash[:ext_management_system] = MiqHashStruct.new(:name => vm_or_template.ext_management_system.name)
+      end
+      if options[:include_datacenter] == true
+        data_hash[:datacenter_name] = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
+      end
     end
     assign_ems_data_to_data_hash(data_hash, vm_or_template)
 
@@ -1064,15 +1076,17 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def assign_ems_data_to_data_hash(data_hash, vm_or_template)
+    data_hash[:evm_object_class] = :Vm
+
     # Handle EMS data, either with a cache, or with the relation (assumes it is
     # preloaded usually)
     if @_ems_allowed_templates_cache
       # don't have a key, so don't attempt to add to the data_hash
-      if vm_or_template.ems_id
-        ems_id = vm_or_template.ems_id
+      if vm_or_template[:ems_id]
+        ems_id = vm_or_template[:ems_id]
 
         # only fetch the ems if not fetched previously
-        unless @_ems_allowed_templates_cache.key?(vm_or_template.ems_id)
+        unless @_ems_allowed_templates_cache.key?(vm_or_template[:ems_id])
           @_ems_allowed_templates_cache[ems_id] = ExtManagementSystem.find(ems_id).try(:name)
         end
 
@@ -1080,8 +1094,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
           data_hash[:ext_management_system] = MiqHashStruct.new(:name => @_ems_allowed_templates_cache[ems_id])
         end
       end
-    elsif vm_or_template.ems_id
-      data_hash[:ext_management_system] = MiqHashStruct.new(:name => vm_or_template.ext_management_system.name)
     end
   end
 
