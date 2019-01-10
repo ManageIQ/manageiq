@@ -65,7 +65,7 @@
     - derived_vm_count_on
 
 - :title: Virtual Machines
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off

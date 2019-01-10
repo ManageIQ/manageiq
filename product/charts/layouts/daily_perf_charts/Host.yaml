@@ -25,7 +25,7 @@
     - derived_vm_count_on
 
 - :title: Virtual Machine CPU States
-  :type: StackedArea
+  :type: Area
   :columns:
   - v_pct_cpu_ready_delta_summation
   - v_pct_cpu_used_delta_summation
@@ -107,7 +107,7 @@
     - derived_vm_count_on
 
 - :title: Virtual Machines
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off

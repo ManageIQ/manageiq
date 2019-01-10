@@ -21,7 +21,7 @@
     - derived_host_count_on
 
 - :title: Virtual Machine CPU States
-  :type: StackedArea
+  :type: Area
   :columns:
   - v_pct_cpu_ready_delta_summation
   - v_pct_cpu_used_delta_summation
@@ -99,7 +99,7 @@
     - derived_host_count_on
 
 - :title: Hosts
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_host_count_on
   - derived_host_count_off
@@ -109,7 +109,7 @@
   - Display-Hosts-off:Hosts that were stopped
 
 - :title: Virtual Machines
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off
