@@ -622,14 +622,17 @@ en:
       # Chargeback
       cpu_allocated_cost:       vCPUs Allocated Cost
       cpu_allocated_metric:     vCPUs Allocated over Time Period
+      cpu_allocated_rate:       vCPUs Allocated Rate
       cpu_cost:                 CPU Total Cost
       cpu_metric:               CPU Total
       cpu_used_cost:            CPU Used Cost
       cpu_used_metric:          CPU Used
+      cpu_used_rate:            CPU Used Rate
       disk_io_cost:             Disk I/O Total Cost
       disk_io_metric:           Disk I/O Total
       disk_io_used_cost:        Disk I/O Used Cost
       disk_io_used_metric:      Disk I/O Used
+      disk_io_used_rate:        Disk I/O Used Rate
       display_range:            Date Range
       fixed_compute_1_cost:     Fixed Compute Cost 1
       fixed_compute_2_cost:     Fixed Compute Cost 2
@@ -646,6 +649,7 @@ en:
       net_io_metric:            Network I/O Total
       net_io_used_cost:         Network I/O Used Cost
       net_io_used_metric:       Network I/O Used
+      net_io_used_rate:         Network I/O Used Rate
       owner_name:               Owner
       storage_allocated_cost:   Storage Allocated Cost
       storage_allocated_metric: Storage Allocated
