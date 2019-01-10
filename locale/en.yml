@@ -845,6 +845,7 @@ en:
       ManageIQ::Providers::Azure::CloudManager::SecurityGroup:              Security Group (Microsoft Azure)
       ManageIQ::Providers::Openstack::NetworkManager::FloatingIp:           Floating IP (OpenStack)
       ManageIQ::Providers::Amazon::NetworkManager::FloatingIp:              Floating IP (Amazon)
+      ManageIQ::Providers::Azure::NetworkManager::FloatingIp:               Floating IP (Microsoft Azure)
       ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet:          Cloud Subnet (OpenStack)
       ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter:        Network Router (OpenStack)
       ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:     Orchestration Stack (OpenStack)
