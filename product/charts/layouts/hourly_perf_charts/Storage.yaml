@@ -17,7 +17,7 @@
   :type: None
 
 - :title: Used Disk Space
-  :type: StackedArea
+  :type: Area
   :columns:
   - v_derived_storage_used
   - derived_storage_free
@@ -29,7 +29,7 @@
   :units: GB
 
 - :title: Hosts
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_host_count_on
   - derived_host_count_off
@@ -39,7 +39,7 @@
   - Display-Hosts-off:Hosts that were stopped
 
 - :title: VMs
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off

@@ -84,7 +84,7 @@
     - derived_vm_count_on
 
 - :title: Instances
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off

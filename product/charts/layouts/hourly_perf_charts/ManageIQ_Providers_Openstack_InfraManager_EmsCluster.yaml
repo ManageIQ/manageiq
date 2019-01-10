@@ -77,7 +77,7 @@
     - derived_host_count_on
 
 - :title: Hosts
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_host_count_on
   - derived_host_count_off
@@ -87,7 +87,7 @@
   - Display-Hosts-off:Hosts that were stopped
 
 - :title: Virtual Machines
-  :type: StackedArea
+  :type: Area
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off
