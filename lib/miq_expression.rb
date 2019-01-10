@@ -451,7 +451,7 @@ class MiqExpression
       return result
     end
 
-    f.collect_reflections.map(&:name).inject(result[:include]) { |a, p| a[p] ||= {} }
+    result[:include] = f.includes
 
     if f.column
       result[:data_type] = f.column_type

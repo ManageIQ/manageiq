@@ -54,7 +54,7 @@ class MiqExpression::Target
   end
 
   def reflection_supported_by_sql?
-    model.follow_associations(associations).present?
+    model&.follow_associations(associations).present?
   end
 
   # AR or virtual reflections
@@ -67,6 +67,12 @@ class MiqExpression::Target
   def collect_reflections
     model.collect_reflections(associations) ||
       raise(ArgumentError, "One or more associations are invalid: #{associations.join(", ")}")
+  end
+
+  def includes
+    ret = {}
+    model && collect_reflections.map(&:name).inject(ret) { |a, p| a[p] ||= {} }
+    ret
   end
 
   def target
