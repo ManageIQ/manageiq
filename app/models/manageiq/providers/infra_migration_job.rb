@@ -37,6 +37,7 @@ class ManageIQ::Providers::InfraMigrationJob < Job
     {
       :initializing     => {'initialize'       => 'waiting_to_start'},
       :start            => {'waiting_to_start' => 'waiting_to_start'},
+      # :pre_conversion   => {'waiting_to_start' => 'waiting_to_start'},
       :run_conversion   => {'waiting_to_start' => 'running'},
       :poll_conversion  => {'running'          => 'running'},
       :post_conversion  => {'running'          => 'running'},
@@ -53,13 +54,19 @@ class ManageIQ::Providers::InfraMigrationJob < Job
   end
 
   def start
-    if migration_task.options.key?(:source_vm_power_state)
-      # temp: let automate populating these first (TODO)
-      _log.info("start: to run_conversion")
+    # TransformationCleanup 3 things:
+      #  - kill v2v
+      #  - power_on: ignored
+      #  - check_power_on: ignore
+    migration_task.kill_virtv2v('KILL') # TODO: KILL or TERM
+
+    if migration_task.preflight_check
+      _log.info("Preflight check passed, continue")
       queue_signal(:run_conversion)
     else
-      _log.info("start: not ready to go yet")
-      queue_signal(:start)
+      _log.info("Preflight check has failed")
+      message = 'Preflight check has failed'
+      queue_signal(:abort_job, message, 'error')
     end
   end
 
@@ -88,10 +95,13 @@ class ManageIQ::Providers::InfraMigrationJob < Job
     _log.info("migration_task.options[:virtv2v_status]: #{migration_task.options[:virtv2v_status]}")
     update_attribute(:updated_on, Time.now.utc) # update self.updated_on to prevent timing out
     case migration_task.options[:virtv2v_status]
-    when 'succeeded'
-      queue_signal(:post_conversion)
     when 'active'
       queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
+    when 'failed'
+      message = "Disks transformation failed."
+      queue_signal(:abort_job, message, 'error')
+    when 'succeeded'
+      queue_signal(:post_conversion)
     else
       message = "Unknown converstion status: #{migration_task.options[:virtv2v_status]}"
       queue_signal(:error, message, 'error')

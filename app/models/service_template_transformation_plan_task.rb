@@ -52,13 +52,14 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   # This method returns true if all mappings are ok. It also preload
   #  virtv2v_disks and network_mappings in task options
   def preflight_check
+    options[:power_off] = true # TODO: This is the same as the automate version: hardcoded
+    options[:source_vm_power_state] = source.power_state # This will determine that of destination_vm
+    return false if source.power_state == 'on' && !options[:power_off]
+    save!
     destination_cluster
     virtv2v_disks
     network_mappings
-    raise if destination_ems.emstype == 'openstack' && source.power_state == 'off'
-    true
-  rescue
-    false
+    !(destination_ems.emstype == 'openstack' && source.power_state == 'off')
   end
 
   def source_cluster
@@ -234,8 +235,9 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end 
 
   def kill_virtv2v(signal = 'TERM')
-    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
-    conversion_host.kill_process(virtv2v_state['pid'].to_s, signal)
+    return false if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
+    return false unless options[:virtv2v_wrapper]['pid']
+    conversion_host.kill_process(options[:virtv2v_wrapper]['pid'], signal)
   end
 
   private
