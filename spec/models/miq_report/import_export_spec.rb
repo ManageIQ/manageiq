@@ -40,7 +40,7 @@ describe MiqReport::ImportExport do
           expect(imported_report["user_id"]).to eq(@some_user.id)
         end
 
-        it "does not preserves user_id when 'userid' is present in saved report but user does not exist" do
+        it "does not preserve user_id when 'userid' is present in saved report but user does not exist" do
           @some_user.delete
           imported_report, _ = subject
           expect(imported_report["user_id"]).to be nil
@@ -51,7 +51,7 @@ describe MiqReport::ImportExport do
           expect(imported_report["miq_group_id"]).to eq(@some_group.id)
         end
 
-        it "does not preserves miq_group_id when 'group_description' is present in saved report but group does not exist" do
+        it "does not preserve miq_group_id when 'group_description' is present in saved report but group does not exist" do
           @some_group.delete
           imported_report, _ = subject
           expect(imported_report["miq_group_id"]).to be nil
