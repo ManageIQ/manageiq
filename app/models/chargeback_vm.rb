@@ -173,11 +173,19 @@ class ChargebackVm < Chargeback
           vms &= @report_user.accessible_vms if @report_user && @report_user.self_service?
           vms
         elsif @options[:tenant_id]
-          tenant = Tenant.find(@options[:tenant_id])
+          tenant = Tenant.find_by(:id => @options[:tenant_id])
+          if tenant.nil?
+            error_message = "Unable to find tenant '#{@options[:tenant_id]}'"
+            _log.error("#{error_message}. Calculating chargeback costs aborted.")
+            raise MiqException::Error, error_message
+          end
+
+          tenant_name = tenant.name
           tenant = Tenant.in_region(region).find_by(:name => tenant.name)
           if tenant.nil?
-            _log.error("Unable to find tenant '#{@options[:tenant_id]}'. Calculating chargeback costs aborted.")
-            raise MiqException::Error, "Unable to find tenant '#{@options[:tenant_id]}'"
+            error_message = "Unable to find tenant '#{tenant_name}' (based on tenant id '#{@options[:tenant_id]}' from default region) in region #{region}"
+            _log.error("#{error_message}. Calculating chargeback costs aborted.")
+            raise MiqException::Error, error_message
           end
           Vm.where(:id => tenant.subtree.map { |t| t.vms.ids }.flatten)
         elsif @options[:service_id]
