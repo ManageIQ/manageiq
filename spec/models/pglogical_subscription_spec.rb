@@ -147,23 +147,19 @@ describe PglogicalSubscription do
 
   describe ".find_by_id" do
     it "returns the specified record with records" do
-      allow(pglogical).to receive(:subscriptions).and_return(subscriptions)
-      allow(pglogical).to receive(:enabled?).and_return(true)
-
+      with_records
       expected = expected_attrs.first
       rec = described_class.find_by_id(expected["id"])
       expect(rec.attributes).to eq(expected)
     end
 
     it "returns nil without records" do
-      allow(pglogical).to receive(:subscriptions).and_return([])
-      allow(pglogical).to receive(:enabled?).and_return(true)
-
+      with_no_records
       expect(described_class.find_by_id("some_subscription")).to be_nil
     end
 
     it "returns nil with pglogical disabled" do
-      allow(pglogical).to receive(:enabled?).and_return(false)
+      with_pglogical_disabled
       expect(described_class.find_by_id("some_subscription")).to be_nil
     end
   end
@@ -172,8 +168,7 @@ describe PglogicalSubscription do
     context "failover monitor reloading" do
       let(:sub) { described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234") }
       before do
-        allow(pglogical).to receive(:subscriptions).and_return([])
-        allow(pglogical).to receive(:enabled?).and_return(true)
+        with_no_records
         allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
         allow(pglogical).to receive(:subscription_create).and_return(double(:check => nil))
         allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
@@ -193,8 +188,7 @@ describe PglogicalSubscription do
     end
 
     it "raises when subscribing to the same region" do
-      allow(pglogical).to receive(:subscriptions).and_return([])
-      allow(pglogical).to receive(:enabled?).and_return(true)
+      with_no_records
       allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
 
@@ -203,8 +197,7 @@ describe PglogicalSubscription do
     end
 
     it "does not raise when subscribing to a different region" do
-      allow(pglogical).to receive(:subscriptions).and_return([])
-      allow(pglogical).to receive(:enabled?).and_return(true)
+      with_no_records
       allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
       allow(pglogical).to receive(:subscription_create).and_return(double(:check => nil))
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
@@ -217,8 +210,7 @@ describe PglogicalSubscription do
     end
 
     it "creates the node when there are no subscriptions" do
-      allow(pglogical).to receive(:subscriptions).and_return([])
-      allow(pglogical).to receive(:enabled?).and_return(true)
+      with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2)
 
@@ -243,8 +235,7 @@ describe PglogicalSubscription do
     end
 
     it "doesnt create the node when we are already a node" do
-      allow(pglogical).to receive(:subscriptions).and_return([])
-      allow(pglogical).to receive(:enabled?).and_return(true)
+      with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2)
 
@@ -270,8 +261,7 @@ describe PglogicalSubscription do
     end
 
     it "updates the dsn when an existing subscription is saved" do
-      allow(pglogical).to receive(:subscriptions).and_return(subscriptions)
-      allow(pglogical).to receive(:enabled?).and_return(true)
+      with_records
       allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
 
@@ -295,8 +285,7 @@ describe PglogicalSubscription do
     end
 
     it "reenables the subscription when the dsn fails to save" do
-      allow(pglogical).to receive(:subscriptions).and_return(subscriptions)
-      allow(pglogical).to receive(:enabled?).and_return(true)
+      with_records
       allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
 
@@ -342,8 +331,7 @@ describe PglogicalSubscription do
     end
 
     it "saves each of the objects" do
-      allow(pglogical).to receive(:subscriptions).and_return([])
-      allow(pglogical).to receive(:enabled?).and_return(true)
+      with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 2, 3, 3)
 
@@ -377,8 +365,7 @@ describe PglogicalSubscription do
     end
 
     it "raises a combined error when some saves fail" do
-      allow(pglogical).to receive(:subscriptions).and_return([])
-      allow(pglogical).to receive(:enabled?).and_return(true)
+      with_no_records
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 2, 3, 3, 4, 4)
 
