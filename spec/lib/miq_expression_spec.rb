@@ -2861,15 +2861,16 @@ RSpec.describe MiqExpression do
     end
 
     # TODO: think this should return same results as missing model?
-    it "return column info for managed-field" do
+    it "return column info for managed-field (no model)" do
       tag = "managed-location"
       col_info = described_class.get_col_info(tag)
       expect(col_info).to match(
         :data_type                      => :string,
         :excluded_by_preprocess_options => false,
+        :format_sub_type                => :string,
         :include                        => {},
         :tag                            => true,
-        :sql_support                    => true,
+        :sql_support                    => false,
       )
     end
 
@@ -2879,6 +2880,7 @@ RSpec.describe MiqExpression do
       expect(col_info).to match(
         :data_type                      => :string,
         :excluded_by_preprocess_options => false,
+        :format_sub_type                => :string,
         :include                        => {},
         :tag                            => true,
         :sql_support                    => true,
@@ -2891,7 +2893,8 @@ RSpec.describe MiqExpression do
       expect(col_info).to match(
         :data_type                      => :string,
         :excluded_by_preprocess_options => false,
-        :include                        => {},
+        :format_sub_type                => :string,
+        :include                        => {:host => {}},
         :tag                            => true,
         :sql_support                    => true,
       )
