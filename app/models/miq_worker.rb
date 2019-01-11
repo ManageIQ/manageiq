@@ -38,7 +38,7 @@ class MiqWorker < ApplicationRecord
   PROCESS_TITLE_PREFIX = "MIQ:".freeze
 
   def self.atShutdown
-    stop_all_workers
+    stop_workers
   end
 
   class << self
@@ -80,46 +80,30 @@ class MiqWorker < ApplicationRecord
   self.check_for_minimal_role = true
   self.required_roles         = []
 
-  def self.server_scope(server_id = nil)
+  def self.server_scope
     return current_scope if current_scope && current_scope.where_values_hash.include?('miq_server_id')
-    if server_id.nil?
-      server = MiqServer.my_server
-      server_id = server.id unless server.nil?
-    end
-    where(:miq_server_id => server_id)
+    where(:miq_server_id => MiqServer.my_server&.id)
   end
 
   CONDITION_CURRENT = {:status => STATUSES_CURRENT}
-  def self.find_current(server_id = nil)
-    server_scope(server_id).where(CONDITION_CURRENT)
-  end
-
-  def self.find_current_in_region(region)
-    in_region(region).where(CONDITION_CURRENT)
+  def self.find_current
+    server_scope.where(CONDITION_CURRENT)
   end
 
   def self.find_current_in_my_region
     in_my_region.where(CONDITION_CURRENT)
   end
 
-  def self.find_current_in_zone(zone_id)
-    where(CONDITION_CURRENT.merge(:miq_server_id => Zone.find(zone_id).miq_servers)).to_a
+  def self.find_starting
+    server_scope.where(:status => STATUSES_STARTING)
   end
 
-  def self.find_current_in_my_zone
-    where(CONDITION_CURRENT.merge(:miq_server_id => MiqServer.my_server.zone.miq_servers)).to_a
+  def self.find_current_or_starting
+    server_scope.where(:status => STATUSES_CURRENT_OR_STARTING)
   end
 
-  def self.find_starting(server_id = nil)
-    server_scope(server_id).where(:status => STATUSES_STARTING)
-  end
-
-  def self.find_current_or_starting(server_id = nil)
-    server_scope(server_id).where(:status => STATUSES_CURRENT_OR_STARTING)
-  end
-
-  def self.find_alive(server_id = nil)
-    server_scope(server_id).where(:status => STATUSES_ALIVE)
+  def self.find_alive
+    server_scope.where(:status => STATUSES_ALIVE)
   end
 
   def self.has_required_role?
@@ -235,12 +219,12 @@ class MiqWorker < ApplicationRecord
     workers.times { start_worker }
   end
 
-  def self.stop_workers(server_id = nil)
-    server_scope(server_id).each(&:stop)
+  def self.stop_workers
+    server_scope.each(&:stop)
   end
 
-  def self.restart_workers(server_id = nil)
-    find_current(server_id).each(&:restart)
+  def self.restart_workers
+    find_current.each(&:restart)
   end
 
   def self.status_update
@@ -272,18 +256,6 @@ class MiqWorker < ApplicationRecord
   end
 
   cache_with_timeout(:my_worker) { server_scope.find_by(:pid => Process.pid) }
-
-  def self.find_all_current(server_id = nil)
-    MiqWorker.find_current(server_id)
-  end
-
-  def self.stop_all_workers(server_id = nil)
-    MiqWorker.stop_workers(server_id)
-  end
-
-  def self.restart_all_workers(server_id = nil)
-    MiqWorker.restart_workers(server_id)
-  end
 
   def self.status_update_all
     MiqWorker.status_update

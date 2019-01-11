@@ -242,17 +242,6 @@ describe MiqWorker do
       expect(described_class.server_scope).to eq([@worker])
     end
 
-    it ".server_scope with a different server" do
-      expect(described_class.server_scope(@server2.id)).to eq([@worker2])
-    end
-
-    it ".server_scope after already scoping on a different server" do
-      described_class.where(:miq_server_id => @server2.id).scoping do
-        expect(described_class.server_scope).to eq([@worker2])
-        expect(described_class.server_scope(@server.id)).to eq([@worker2])
-      end
-    end
-
     describe "#worker_settings" do
       let(:config1) do
         {
