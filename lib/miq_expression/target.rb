@@ -128,6 +128,10 @@ class MiqExpression::Target
     target&.arel_attribute(column, arel_table)
   end
 
+  def virtual_attribute?
+    false
+  end
+
   private
 
   def tag_path
