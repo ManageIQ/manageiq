@@ -243,13 +243,13 @@ class MiqReport < ApplicationRecord
   end
 
   def userid=(_userid)
-    # there are no MiqReport.userid and MiqReport.group_description attributes and after adding 'userid'
-    # and 'group_description' to a saved report, we need this stub to allow mass assignment
-    # when updating attrbutes using saved output from MiqReport::ImportExport#export_to_array
+    # Stubbed method to handle 'userid' attr that may be present in the exported hash
+    # which does not exist in the MiqReport class
   end
 
   def group_description=(_group_description)
-    # need this stub to allow mass assignment when updating attrbutes
+    # Stubbed method to handle 'group_description' attr that may be present in the exported hash
+    # which does not exist in the MiqReport class
   end
 
   private
