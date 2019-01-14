@@ -1,4 +1,4 @@
-describe WebsocketAdapter do
+describe RemoteConsole::ServerAdapter do
   describe '.new' do
     let(:record) { FactoryBot.create(:system_console, :protocol => protocol) }
 
@@ -6,7 +6,7 @@ describe WebsocketAdapter do
       let(:protocol) { 'webmks-uint8utf8' }
 
       it 'calls the legacy websocket adapter' do
-        expect(WebsocketAdapter::Legacy).to receive(:new).with({}, nil)
+        expect(RemoteConsole::ServerAdapter::WebMKSLegacy).to receive(:new).with({}, nil)
 
         described_class.new(record, {}, nil)
       end
@@ -16,7 +16,7 @@ describe WebsocketAdapter do
       let(:protocol) { 'vnc' }
 
       it 'calls the standard websocket adapter' do
-        expect(WebsocketAdapter::Standard).to receive(:new).with({}, nil)
+        expect(RemoteConsole::ServerAdapter::Websocket).to receive(:new).with({}, nil)
 
         described_class.new(record, {}, nil)
       end

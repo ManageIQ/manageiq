@@ -76,7 +76,7 @@ class WebsocketServer
       console_sock = TCPSocket.open(record.host_name, record.port)
 
       @adapters[console_sock] = RemoteConsole::ClientAdapter.new(record, console_sock)
-      @adapters[ws_sock] = WebsocketAdapter.new(record, env, ws_sock)
+      @adapters[ws_sock] = RemoteConsole::ServerAdapter.new(record, env, ws_sock)
 
       @proxy.push(ws_sock, console_sock)
     rescue StandardError => ex
