@@ -39,7 +39,8 @@ class MiqPolicy < ApplicationRecord
   validates_presence_of     :name, :description, :guid
   validates_uniqueness_of   :name, :description, :guid
   validates :mode, :inclusion => { :in => %w(compliance control) }
-  validates :towhat, :inclusion => { :in => TOWHAT_APPLIES_TO_CLASSES }
+  validates :towhat, :inclusion => { :in      => TOWHAT_APPLIES_TO_CLASSES,
+                                     :message => "should be one of #{TOWHAT_APPLIES_TO_CLASSES.join(", ")}" }
 
   scope :with_mode,   ->(mode)   { where(:mode => mode) }
   scope :with_towhat, ->(towhat) { where(:towhat => towhat) }
