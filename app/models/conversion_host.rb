@@ -164,18 +164,8 @@ class ConversionHost < ApplicationRecord
   # +extra_vars+ option should be a hash of key/value pairs which, if present,
   # will be passed to the '-e' flag.
   #
-  # If a local connection is specified the connection type is set to 'local'
-  # and the inventory host list is set to 'localhost'. Otherwise it will use
-  # the IP address of the conversion host and the default connection type.
-  #
-  def ansible_playbook(playbook, extra_vars = {}, local_connection = false)
-    command = "ansible-playbook #{playbook}"
-
-    if local_connection
-      command += " -i localhost, -c local"
-    else
-      command += " -i #{ipaddress},"
-    end
+  def ansible_playbook(playbook, extra_vars = {})
+    command = "ansible-playbook #{playbook} -i #{ipaddress}"
 
     extra_vars.each { |k, v| command += " -e '#{k}=#{v}'" }
 
