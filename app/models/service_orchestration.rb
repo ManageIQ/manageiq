@@ -77,6 +77,11 @@ class ServiceOrchestration < Service
     orchestration_stack.vms
   end
 
+  def add_resource(rsc, _options = {})
+    raise "Service Orchestration subclass does not support add_resource for #{rsc.class.name}" unless rsc.kind_of?(OrchestrationStack)
+    super
+  end
+
   # This is called when provision is completed and stack is added to VMDB through a refresh
   def post_provision_configure
     add_stack_to_resource

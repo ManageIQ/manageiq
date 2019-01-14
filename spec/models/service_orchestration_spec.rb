@@ -55,6 +55,17 @@ describe ServiceOrchestration do
     end
   end
 
+  describe "#add_resource" do
+    it "doesn't allow service to be added" do
+      expect { service_with_dialog_options.add_resource(FactoryBot.create(:service), {}) }.to raise_error(/Service Orchestration subclass does not support add_resource for/)
+    end
+
+    it "allows stack to be added" do
+      service_with_dialog_options.add_resource(FactoryBot.create(:orchestration_stack))
+      expect(service_with_dialog_options.service_resources.pluck(:resource_type)).to include("OrchestrationStack", "OrchestrationTemplate")
+    end
+  end
+
   describe "#my_zone" do
     it "deployed stack, takes the zone from ext_management_system" do
       deployed_stack.ext_management_system = manager_by_setter
