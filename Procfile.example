@@ -15,9 +15,9 @@
 # So, the first ui worker will get PORT=3000 while the next will get PORT=3001
 # The first api worker will get PORT=3100 and the next will get PORT=3101
 
-# ui:        env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqUiWorker
-# api:       env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqWebServiceWorker
-# websocket: env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqWebsocketWorker
+# ui:             env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqUiWorker
+# api:            env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqWebServiceWorker
+# remote_console: env PORT=$PORT ruby lib/workers/bin/run_single_worker.rb MiqRemoteConsoleWorker
 
 # schedule: ruby lib/workers/bin/run_single_worker.rb MiqScheduleWorker
 

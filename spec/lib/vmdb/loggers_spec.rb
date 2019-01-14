@@ -131,7 +131,7 @@ describe Vmdb::Loggers do
       $log, $rails_log, $api_log, $miq_ae_logger, $aws_log, $azure_log,
       $cn_monitoring_log, $datawarehouse_log, $fog_log, $kube_log, $lenovo_log,
       $nuage_log, $policy_log, $rhevm_log, $scvmm_log, $vcloud_log, $vim_log,
-      $websocket_log
+      $remote_console_log
     ].each do |logger|
       context "for the #{File.basename(logger.filename)}" do
         include_examples "has basic logging functionality", logger.dup

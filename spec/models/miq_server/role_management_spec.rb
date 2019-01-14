@@ -18,7 +18,7 @@ describe "Server Role Management" do
         smartproxy,SmartProxy,0,false,zone
         smartstate,SmartState Analysis,0,false,zone
         user_interface,User Interface,0,false,region
-        websocket,Websocket,0,false,region
+        remote_console,Remote Consoles,0,false,region
         web_services,Web Services,0,false,region
         cockpit_ws,Cockpit,1,false,region
       CSV

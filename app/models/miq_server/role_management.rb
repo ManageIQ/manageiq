@@ -1,7 +1,7 @@
 module MiqServer::RoleManagement
   extend ActiveSupport::Concern
 
-  ROLES_NEEDING_APACHE = %w(user_interface web_services websocket embedded_ansible cockpit_ws).freeze
+  ROLES_NEEDING_APACHE = %w(user_interface web_services remote_console embedded_ansible cockpit_ws).freeze
 
   included do
     has_many :assigned_server_roles, :dependent => :destroy
@@ -49,10 +49,10 @@ module MiqServer::RoleManagement
   end
 
   def set_active_role_flags
-    self.has_active_userinterface = self.has_active_role?("user_interface")
-    self.has_active_websocket     = self.has_active_role?("websocket")
-    self.has_active_webservices   = self.has_active_role?("web_services")
-    self.has_active_cockpit_ws    = self.has_active_role?("cockpit_ws")
+    self.has_active_userinterface  = self.has_active_role?("user_interface")
+    self.has_active_remote_console = self.has_active_role?("remote_console")
+    self.has_active_webservices    = self.has_active_role?("web_services")
+    self.has_active_cockpit_ws     = self.has_active_role?("cockpit_ws")
     save
   end
 

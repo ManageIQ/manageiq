@@ -1,9 +1,9 @@
-describe MiqWebsocketWorker::Runner do
+describe MiqRemoteConsoleWorker::Runner do
   describe '#check_internal_thread' do
     subject do
       w = described_class.allocate
       allow(w).to receive(:worker_initialization)
-      w.send(:initialize, :guid => MiqWebsocketWorker.create_worker_record.guid)
+      w.send(:initialize, :guid => MiqRemoteConsoleWorker.create_worker_record.guid)
       w
     end
 

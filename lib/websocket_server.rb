@@ -27,7 +27,7 @@ class WebsocketServer
   RACK_YAY = [-1, {}, []].freeze
 
   def initialize(options = {})
-    @logger = options.fetch(:logger, $websocket_log)
+    @logger = options.fetch(:logger, $remote_console_log)
     @logger.info('Initializing websocket server!')
     @proxy = SurroGate.new(logger)
     @adapters = {}
