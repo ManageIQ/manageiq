@@ -100,8 +100,7 @@ class JobProxyDispatcher
   end
 
   def dispatch_v2v_migrations
-    # ConversionHost.assign_to_tasks
-    # ConversionHost.refresh_tasks
+    # InfraMigrationThrottler.assign_to_tasks
   end
 
   def dispatch_container_scan_jobs

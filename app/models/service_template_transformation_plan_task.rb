@@ -32,8 +32,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def update_transformation_progress(progress)
-    options[:progress] = (options[:progress] || {}).merge(progress)
-    save
+    updates = {:progress => (options[:progress] || {}).merge(progress)}
+    set_options(updates)
   end
 
   def task_finished
@@ -52,10 +52,11 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   # This method returns true if all mappings are ok. It also preload
   #  virtv2v_disks and network_mappings in task options
   def preflight_check
-    options[:power_off] = true # TODO: This is the same as the automate version: hardcoded
-    options[:source_vm_power_state] = source.power_state # This will determine that of destination_vm
+    updates = {}
+    updates[:power_off] = true # TODO: This is the same as the automate version: hardcoded
+    updates[:source_vm_power_state] = source.power_state # This will determine that of destination_vm
+    set_options(updates)
     return false if source.power_state == 'on' && !options[:power_off]
-    save!
     destination_cluster
     virtv2v_disks
     network_mappings
@@ -87,8 +88,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def virtv2v_disks
     return options[:virtv2v_disks] if options[:virtv2v_disks].present?
 
-    options[:virtv2v_disks] = calculate_virtv2v_disks
-    save!
+    updates = {:virtv2v_disks => calculate_virtv2v_disks}
+    set_options(updates)
 
     options[:virtv2v_disks]
   end
@@ -96,8 +97,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def network_mappings
     return options[:network_mappings] if options[:network_mappings].present?
 
-    options[:network_mappings] = calculate_network_mappings
-    save!
+    updates = {:network_mappings => calculate_network_mappings}
+    set_options(updates)
 
     options[:network_mappings]
   end
@@ -149,14 +150,14 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     end
 
     _log.info("Queuing the download of transformation log for #{description} with ID [#{id}]")
-    options = {:userid => userid, :action => 'transformation_log'}
+    task_options = {:userid => userid, :action => 'transformation_log'}
     queue_options = {:class_name  => self.class,
                      :method_name => 'transformation_log',
                      :instance_id => id,
                      :priority    => MiqQueue::HIGH_PRIORITY,
                      :args        => [],
                      :zone        => conversion_host.resource.my_zone}
-    MiqTask.generic_action_with_callback(options, queue_options)
+    MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
   def cancel
@@ -177,15 +178,13 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_cluster = transformation_destination(source_cluster)
     destination_storage = transformation_destination(source_storage)
 
-    options = {
+    results = {
       :source_disks     => virtv2v_disks.map { |disk| disk[:path] },
       :network_mappings => network_mappings
     }
 
-    options.merge!(send("conversion_options_source_provider_#{source_ems.emstype}_#{source_transport_method}", source_storage))
-    options.merge!(send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage))
-
-    options
+    results.merge!(send("conversion_options_source_provider_#{source_ems.emstype}_#{source_transport_method}", source_storage))
+    results.merge!(send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage))
   end
 
   def set_options(opts)
@@ -205,9 +204,15 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     set_options(updates)
   end
 
+  def options=(val)
+    _log.info("JJWW: #{val}")
+    self[:options] = val  
+  end
+
   def get_conversion_state
     begin
       updates = {}
+      # byebug
       virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
       updated_disks = virtv2v_disks
       if virtv2v_state['finished'].nil?
