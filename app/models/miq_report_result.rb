@@ -5,6 +5,7 @@ class MiqReportResult < ApplicationRecord
   belongs_to :miq_group
   belongs_to :miq_task
   has_one    :binary_blob, :as => :resource, :dependent => :destroy
+  has_one    :miq_widget_content, :dependent => :nullify
   has_many   :miq_report_result_details, :dependent => :delete_all
   has_many   :html_details, -> { where("data_type = 'html'") }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
 
@@ -50,6 +51,10 @@ class MiqReportResult < ApplicationRecord
   after_commit { report.extras[:grouping] = @_extra_groupings if report.kind_of?(MiqReport) && report.extras }
 
   delegate :table, :to => :report_results, :allow_nil => true
+
+  def friendly_title
+    report_source == MiqWidget::WIDGET_REPORT_SOURCE && miq_widget_content ? miq_widget_content.miq_widget.title : report.title
+  end
 
   def result_set
     (table || []).map(&:to_hash)
