@@ -75,7 +75,7 @@ class WebsocketServer
       ws_sock = env['rack.hijack'].call
       console_sock = TCPSocket.open(record.host_name, record.port)
 
-      @adapters[console_sock] = RemoteConsole.new(record, console_sock)
+      @adapters[console_sock] = RemoteConsole::ClientAdapter.new(record, console_sock)
       @adapters[ws_sock] = WebsocketAdapter.new(record, env, ws_sock)
 
       @proxy.push(ws_sock, console_sock)
