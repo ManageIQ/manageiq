@@ -76,7 +76,7 @@ describe MiqWebServerWorkerMixin do
     let(:ui_worker) { FactoryBot.create(:miq_ui_worker, :uri => 'http://127.0.0.1:3000') }
 
     it 'provides access to the Rack/Rails application' do
-      expect(remote_console_worker.rails_application).to be_a_kind_of(WebsocketServer)
+      expect(remote_console_worker.rails_application).to be_a_kind_of(RemoteConsole::RackServer)
       expect(ui_worker.rails_application).to be_a_kind_of(Vmdb::Application)
     end
   end
