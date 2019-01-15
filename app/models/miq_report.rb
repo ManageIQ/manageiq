@@ -242,6 +242,16 @@ class MiqReport < ApplicationRecord
     n_('Report', 'Reports', number)
   end
 
+  def userid=(_userid)
+    # Stubbed method to handle 'userid' attr that may be present in the exported hash
+    # which does not exist in the MiqReport class
+  end
+
+  def group_description=(_group_description)
+    # Stubbed method to handle 'group_description' attr that may be present in the exported hash
+    # which does not exist in the MiqReport class
+  end
+
   private
 
   def va_sql_cols

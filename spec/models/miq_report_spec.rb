@@ -847,6 +847,27 @@ describe MiqReport do
     end
   end
 
+  context "support for saving attributes which are not present in the model" do
+    let(:report) { FactoryBot.create(:miq_report) }
+
+    it "does not raise error when result of #export_to_array used for mass update" do
+      report_hash = report.export_to_array[0].values.first
+      expect { MiqReport.new.update_attributes(report_hash) }.not_to raise_error
+    end
+
+    describe "#userid=" do
+      it "does nothing and used only as stub for mass update" do
+        expect { report.userid = "something" }.not_to raise_error
+      end
+    end
+
+    describe "#group_description=" do
+      it "does nothing and used only as stub for mass update" do
+        expect { report.group_description = "something" }.not_to raise_error
+      end
+    end
+  end
+
   describe "#column_is_hidden?" do
     let(:report) do
       MiqReport.new(
