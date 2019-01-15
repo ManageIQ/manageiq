@@ -13,16 +13,8 @@ class ServerRole < ApplicationRecord
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/).each do |csv_row|
       action = csv_row.to_hash
 
-      rec = server_roles[action['name']]
-      if rec.nil?
-        _log.info("Creating Server Role [#{action['name']}]")
-        create(action)
-      else
-        rec.attributes = action
-        if rec.changed?
-          _log.info("Updating Server Role [#{action['name']}]")
-          rec.save
-        end
+      create_or_update_with_index(server_roles, action['name'], action) do |rec|
+        _log.info("#{rec.new_record? ? "Creating" : "Updating"} Server Role [#{action['name']}]")
       end
     end
     @zone_scoped_roles = @region_scoped_roles = nil

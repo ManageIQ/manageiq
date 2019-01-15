@@ -120,13 +120,7 @@ class ChargeableField < ApplicationRecord
       if measure
         f[:chargeback_rate_detail_measure_id] = measures[measure].id
       end
-      rec = existing[f[:metric]]
-      if rec.nil?
-        create(f)
-      else
-        rec.attributes = f
-        rec.save! if rec.changed?
-      end
+      create_or_update_with_index(existing, f[:metric], f)
     end
   end
 

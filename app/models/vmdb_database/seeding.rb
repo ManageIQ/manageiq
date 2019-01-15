@@ -58,20 +58,14 @@ module VmdbDatabase::Seeding
       tables.merge!(connection.text_table_names.slice(*table_names))
 
       tables.each do |t, tt|
-        table   = vmdb_tables.delete(t)
-        table ||= VmdbTableEvm.create!(:name => t, :vmdb_database => db) do
+        table = VmdbTableEvm.find_or_create_with_index(vmdb_tables, t, :name => t, :vmdb_database => db) do
           _log.info("Creating VmdbTableEvm #{t.inspect}")
         end
 
         next unless tt
 
-        text_table   = vmdb_tables.delete(tt)
-        text_table ||= VmdbTableText.new
-
-        text_table.attributes = {:name => tt, :evm_table => table, :vmdb_database => db}
-        if text_table.new_record? || text_table.changed?
-          _log.info("#{text_table.new_record? ? "Creating" : "Updating"} VmdbTableText #{tt.inspect} for VmdbTableEvm #{t.inspect}")
-          text_table.save!
+        VmdbTableText.create_or_update_with_index(vmdb_tables, tt, :name => tt, :evm_table => table, :vmdb_database => db) do |rec|
+          _log.info("#{rec.new_record? ? "Creating" : "Updating"} VmdbTableText #{tt.inspect} for VmdbTableEvm #{t.inspect}")
         end
       end
 
@@ -90,13 +84,8 @@ module VmdbDatabase::Seeding
 
       indexes.each do |t, is|
         is.each do |i|
-          index   = vmdb_indexes.delete(i)
-          index ||= VmdbIndex.new
-
-          index.attributes = {:name => i, :vmdb_table => vmdb_tables[t]}
-          if index.new_record? || index.changed?
-            _log.info("#{index.new_record? ? "Creating" : "Updating"} VmdbIndex #{i.inspect} for VmdbTable #{t.inspect}")
-            index.save!
+          VmdbIndex.create_or_update_with_index(vmdb_indexes, i, :name => i, :vmdb_table => vmdb_tables[t]) do |rec|
+            _log.info("#{rec.new_record? ? "Creating" : "Updating"} VmdbIndex #{i.inspect} for VmdbTable #{t.inspect}")
           end
         end
       end

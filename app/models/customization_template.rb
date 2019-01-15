@@ -29,17 +29,8 @@ class CustomizationTemplate < ApplicationRecord
 
     seed_data.each do |s|
       log_attrs = s.slice(:name, :type, :description)
-
-      rec = current.delete(s[:name])
-      if rec.nil?
-        _log.info("Creating #{log_attrs.inspect}")
-        create!(s)
-      else
-        rec.attributes = s.except(:type)
-        if rec.changed?
-          _log.info("Updating #{log_attrs.inspect}")
-          rec.save!
-        end
+      create_with(:type => s[:type]).create_or_update_with_index(current, s[:name], s.except(:type)) do |rec|
+        _log.info("#{rec.new_record? ? "Creating" : "Updating"} #{log_attrs.inspect}")
       end
     end
 

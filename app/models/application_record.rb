@@ -28,4 +28,22 @@ class ApplicationRecord < ActiveRecord::Base
     return super if options.delete(:ui) == true
     "#{name}: #{super}"
   end
+
+  def self.find_or_create_with_index(index, value, options, &block)
+    return unless value
+    index.delete(value) || create!(options, &block)
+  end
+
+  def self.create_or_update_with_index(index, key, attributes, &block)
+    return unless key
+    if (rec = index.delete(key))
+      rec.attributes = attributes
+      if rec.changed?
+        yield rec if block_given?
+        rec.save!
+      end
+    else
+      create!(attributes, &block)
+    end
+  end
 end
