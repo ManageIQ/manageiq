@@ -1,7 +1,8 @@
 class EvmDatabase
   include Vmdb::Logging
 
-  PRIMORDIAL_CLASSES = %w(
+  # A ordered list of classes that are seeded before server initialization.
+  PRIMORDIAL_SEEDABLE_CLASSES = %w[
     MiqDatabase
     MiqRegion
     MiqEnterprise
@@ -15,9 +16,11 @@ class EvmDatabase
     User
     MiqReport
     VmdbDatabase
-  )
+  ].freeze
 
-  ORDERED_CLASSES = %w(
+  # An ordered list of classes that will complete the seeding, but occuring
+  # after server initialization.
+  OTHER_SEEDABLE_CLASSES = %w[
     RssFeed
     MiqWidget
     MiqAction
@@ -28,71 +31,76 @@ class EvmDatabase
     ChargeableField
     ChargebackRateDetailCurrency
     ChargebackRate
-  ).freeze
 
-  RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
+    BlacklistedEvent
+    Classification
+    CustomizationTemplate
+    Dialog
+    MiqAlert
+    MiqAlertSet
+    MiqDialog
+    MiqSearch
+    MiqShortcut
+    MiqWidgetSet
+    NotificationType
+    PxeImageType
+    ScanItem
+    TimeProfile
 
-  def self.find_seedable_model_class_names
-    @found_model_class_names ||= begin
-      Dir.glob(Rails.root.join("app/models/*.rb")).collect { |f| File.basename(f, ".*").camelize if File.read(f).include?("self.seed") }.compact.sort
-    end
-  end
+    MiqAeDatastore
+  ].freeze
 
-  def self.seedable_model_class_names
-    ORDERED_CLASSES + (find_seedable_model_class_names - ORDERED_CLASSES) + RAILS_ENGINE_MODEL_CLASS_NAMES
+  SEEDABLE_CLASSES = PRIMORDIAL_SEEDABLE_CLASSES + OTHER_SEEDABLE_CLASSES
+
+  def self.seed(classes = nil, exclude_list = [])
+    classes ||= SEEDABLE_CLASSES
+    classes  -= exclude_list
+    classes   = classes.collect(&:constantize)
+
+    invalid = classes.reject { |c| c.respond_to?(:seed) }
+    raise ArgumentError, "class(es) #{invalid.join(", ")} do not respond to seed" if invalid.any?
+
+    seed_classes(classes)
   end
 
   def self.seed_primordial
-    if ENV['SKIP_SEEDING'] && MiqDatabase.count > 0
-      puts "** seedings is skipped on startup."
-      puts "** Unset SKIP_SEEDING to re-enable"
-    else
-      seed(PRIMORDIAL_CLASSES)
+    if skip_seeding?
+      puts "** Seeding is skipped on startup. Unset SKIP_SEEDING to re-enable" # rubocop:disable Rails/Output
+      return
     end
+
+    seed(PRIMORDIAL_SEEDABLE_CLASSES)
   end
 
-  def self.seed_last
-    unless ENV['SKIP_SEEDING'] && MiqDatabase.count > 0
-      seed(seedable_model_class_names - PRIMORDIAL_CLASSES)
-    end
+  def self.seed_rest
+    return if skip_seeding?
+    seed(OTHER_SEEDABLE_CLASSES)
   end
 
-  def self.seed(classes = nil, exclude_list = [])
+  def self.skip_seeding?
+    ENV['SKIP_SEEDING'] && MiqDatabase.any?
+  end
+  private_class_method :skip_seeding?
+
+  def self.seed_classes(classes)
     _log.info("Seeding...")
 
-    classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
-    classes -= exclude_list
-
     lock_timeout = (ENV["SEEDING_LOCK_TIMEOUT"].presence || 10.minutes).to_i
+
     # Only 1 machine can go through this at a time
     MiqDatabase.with_lock(lock_timeout) do
-      classes.each do |klass|
-        begin
-          klass = klass.constantize if klass.kind_of?(String)
-        rescue => err
-          _log.log_backtrace(err)
-          raise
-        end
-
-        if klass.respond_to?(:seed)
-          _log.info("Seeding #{klass}")
-          begin
-            klass.seed
-          rescue => err
-            _log.log_backtrace(err)
-            raise
-          end
-        else
-          _log.error("Class #{klass} does not have a seed")
-        end
-      end
+      classes.each(&:seed)
     end
 
     _log.info("Seeding... Complete")
   rescue Timeout::Error
-    _log.error("Timed out seeding database (#{lock_timeout} seconds).")
+    _log.error("Seeding... Timed out after #{lock_timeout} seconds")
+    raise
+  rescue StandardError => err
+    _log.log_backtrace(err)
     raise
   end
+  private_class_method :seed_classes
 
   def self.host
     ActiveRecord::Base.configurations.fetch_path(ENV['RAILS_ENV'], 'host')

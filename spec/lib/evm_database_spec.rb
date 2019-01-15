@@ -16,19 +16,71 @@ describe EvmDatabase do
     end
   end
 
-  context "#seed_primordial" do
-    it "populates seeds" do
-      described_class::PRIMORDIAL_CLASSES.each { |klass| expect(klass.constantize).to receive(:seed) }
+  describe ".seed" do
+    it "seeds primordial and non-primordial classes by default" do
+      (described_class::PRIMORDIAL_SEEDABLE_CLASSES + described_class::OTHER_SEEDABLE_CLASSES).each do |klass|
+        expect(klass.constantize).to receive(:seed)
+      end
+
+      described_class.seed
+    end
+
+    it "seeds only classes that are given" do
+      expect(MiqDatabase).to   receive(:seed)
+      expect(MiqRegion).to_not receive(:seed)
+
+      described_class.seed(["MiqDatabase"])
+    end
+
+    it "allows exclusion of classes" do
+      expect(MiqDatabase).to   receive(:seed)
+      expect(MiqRegion).to_not receive(:seed)
+
+      described_class.seed(["MiqDatabase", "MiqRegion"], ["MiqRegion"])
+    end
+
+    it "will fail if a class does not respond to .seed" do
+      expect { described_class.seed(["VmOrTemplate"]) }.to raise_error(ArgumentError, /do not respond to seed/)
+    end
+  end
+
+  describe ".seed_primordial" do
+    it "only seeds primordial classes" do
+      described_class::PRIMORDIAL_SEEDABLE_CLASSES.each do |klass|
+        expect(klass.constantize).to receive(:seed)
+      end
+      expect(described_class::OTHER_SEEDABLE_CLASSES.first.constantize).to_not receive(:seed)
+
       described_class.seed_primordial
     end
   end
 
-  describe ".find_seedable_model_class_names" do
-    it "returns ordered classes first" do
-      stub_const("EvmDatabase::ORDERED_CLASSES", %w(a z))
-      stub_const("EvmDatabase::RAILS_ENGINE_MODEL_CLASS_NAMES", [])
-      expect(described_class).to receive(:find_seedable_model_class_names).and_return(%w(a c z))
-      expect(described_class.seedable_model_class_names).to eq(%w(a z c))
+  describe ".seed_rest" do
+    it "only seeds non-primordial classes" do
+      described_class::OTHER_SEEDABLE_CLASSES.each do |klass|
+        expect(klass.constantize).to receive(:seed)
+      end
+      expect(described_class::PRIMORDIAL_SEEDABLE_CLASSES.first.constantize).to_not receive(:seed)
+
+      described_class.seed_rest
+    end
+  end
+
+  describe ".skip_seeding? (private)" do
+    it "will not skip when SKIP_SEEDING is not set" do
+      expect(ENV).to receive(:[]).with("SKIP_SEEDING").and_return(nil)
+      expect(described_class.send(:skip_seeding?)).to be_falsey
+    end
+
+    it "will not skip when SKIP_SEEDING is set but the database was never seeded" do
+      expect(ENV).to receive(:[]).with("SKIP_SEEDING").and_return("true")
+      expect(described_class.send(:skip_seeding?)).to be_falsey
+    end
+
+    it "will skip when SKIP_SEEDING is set and the database is seeded" do
+      MiqDatabase.seed
+      expect(ENV).to receive(:[]).with("SKIP_SEEDING").and_return("true")
+      expect(described_class.send(:skip_seeding?)).to be_truthy
     end
   end
 
