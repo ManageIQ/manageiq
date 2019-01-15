@@ -1,6 +1,6 @@
 module RemoteConsole
   module ServerAdapter
-    class WebMKSLegacy < Websocket
+    class WebsocketUint8Utf8 < WebsocketBinary
       def fetch(length)
         @driver.on(:message) { |msg| yield(msg.data) } if @driver.listeners(:message).length.zero?
 

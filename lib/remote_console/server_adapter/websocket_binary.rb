@@ -1,6 +1,6 @@
 module RemoteConsole
   module ServerAdapter
-    class Websocket
+    class WebsocketBinary
       attr_reader :env, :url
 
       def initialize(env, sock)

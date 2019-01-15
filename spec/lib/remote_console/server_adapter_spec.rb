@@ -6,7 +6,7 @@ describe RemoteConsole::ServerAdapter do
       let(:protocol) { 'webmks-uint8utf8' }
 
       it 'calls the legacy websocket adapter' do
-        expect(RemoteConsole::ServerAdapter::WebMKSLegacy).to receive(:new).with({}, nil)
+        expect(RemoteConsole::ServerAdapter::WebsocketUint8Utf8).to receive(:new).with({}, nil)
 
         described_class.new(record, {}, nil)
       end
@@ -16,7 +16,7 @@ describe RemoteConsole::ServerAdapter do
       let(:protocol) { 'vnc' }
 
       it 'calls the standard websocket adapter' do
-        expect(RemoteConsole::ServerAdapter::Websocket).to receive(:new).with({}, nil)
+        expect(RemoteConsole::ServerAdapter::WebsocketBinary).to receive(:new).with({}, nil)
 
         described_class.new(record, {}, nil)
       end

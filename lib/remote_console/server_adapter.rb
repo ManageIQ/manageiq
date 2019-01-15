@@ -2,9 +2,9 @@ module RemoteConsole
   module ServerAdapter
     def self.new(record, env, sock)
       if record.protocol.end_with?('uint8utf8')
-        WebMKSLegacy.new(env, sock)
+        WebsocketUint8Utf8.new(env, sock)
       else
-        Websocket.new(env, sock)
+        WebsocketBinary.new(env, sock)
       end
     end
   end
