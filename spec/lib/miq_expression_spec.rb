@@ -2553,7 +2553,6 @@ describe MiqExpression do
                                :name         => "prov_max_cpu",
                                :single_value => true,
                                :show         => true,
-                               :parent_id    => 0
                               )
       cat.add_entry(:description  => "1",
                     :read_only    => "0",

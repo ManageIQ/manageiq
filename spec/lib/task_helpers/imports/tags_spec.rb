@@ -111,7 +111,7 @@ describe TaskHelpers::Imports::Tags do
   end
 
   def assert_test_tag_category_count
-    tag_cats = Classification.where(:parent_id => 0)
+    tag_cats = Classification.is_category
     expect(tag_cats.count).to eq(2)
   end
 end

@@ -322,7 +322,7 @@ describe MiqAlert do
 
   describe ".assigned_to_target" do
     it "gets assignment by tagged VM" do
-      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment",  :single_value => true,  :parent_id => 0)
+      cat = FactoryBot.create(:classification, :description => "Environment", :name => "environment", :single_value => true)
       FactoryBot.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
 
       @vm   = FactoryBot.create(:vm_vmware)

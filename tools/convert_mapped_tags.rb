@@ -29,7 +29,7 @@ ActiveRecord::Base.transaction do
   tag_values = ContainerLabelTagMapping::TAG_PREFIXES.map { |x| "#{x}%:%" }
 
   Classification.where.not(:id => Classification.region_to_range) # only other regions(not current, we expected that current region is global)
-                .where(:classifications => {:parent_id => 0}) # only categories
+                .is_category
                 .includes(:tag, :children).references(:tag, :children)
                 .where(condition_for_mapped_tags, *tag_values) # only mapped categories
                 .find_each do |category|
