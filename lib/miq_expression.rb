@@ -374,18 +374,12 @@ class MiqExpression
   end
 
   def field_in_sql?(field)
-    # => false if operand is from a virtual reflection
-    return false if field_from_virtual_reflection?(field)
     return false unless attribute_supported_by_sql?(field)
 
     # => false if excluded by special case defined in preprocess options
     return false if field_excluded_by_preprocess_options?(field)
 
     true
-  end
-
-  def field_from_virtual_reflection?(field)
-    col_details[field][:virtual_reflection]
   end
 
   def attribute_supported_by_sql?(field)
@@ -447,7 +441,7 @@ class MiqExpression
   end
 
   def self.get_col_info(field, options = {})
-    result ||= {:data_type => nil, :virtual_reflection => false, :virtual_column => false, :sql_support => true, :excluded_by_preprocess_options => false, :tag => false, :include => {}}
+    result ||= {:data_type => nil, :sql_support => true, :excluded_by_preprocess_options => false, :tag => false, :include => {}}
 
     f = parse_field_or_tag(field)
     unless f.kind_of?(MiqExpression::Field)
@@ -458,21 +452,16 @@ class MiqExpression
     end
 
     f.collect_reflections.map(&:name).inject(result[:include]) { |a, p| a[p] ||= {} }
-    result[:virtual_reflection] = !f.reflection_supported_by_sql?
 
     if f.column
       result[:data_type] = f.column_type
       result[:format_sub_type] = f.sub_type
-      result[:virtual_column] = f.virtual_attribute?
       result[:sql_support] = f.attribute_supported_by_sql?
       result[:excluded_by_preprocess_options] = exclude_col_by_preprocess_options?(f, options)
     end
     result
   rescue ArgumentError
-    # not thrilled with these values. but making tests pass for now
-    result[:virtual_reflection] = true
     result[:sql_support] = false
-    result[:virtual_column] = true
     result
   end
 
