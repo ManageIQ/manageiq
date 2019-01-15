@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-require 'trollop'
+require 'optimist'
 
-opts = Trollop.options do
+opts = Optimist.options do
   banner "Remove extras[:grouping] from MiqReportResult#report column.\n\nUsage: ruby #{$PROGRAM_NAME} [options]\n\nOptions:\n\t"
   opt :dry_run,    "For testing, rollback any changes when the script exits.", :short => :none, :default => false
   opt :batch_size, "Limit memory usage by process this number of report results at a time.",    :default => 50
@@ -12,10 +12,10 @@ puts "Using options: #{opts.inspect}\n\n"
 
 if defined?(Rails)
   puts "Warning: Rails is already loaded!  Please do not invoke using rails runner. Exiting with help text.\n\n"
-  Trollop.educate
+  Optimist.educate
 end
 
-# Load rails after trollop options are set.  No one wants to wait for -h.
+# Load rails after optimist options are set.  No one wants to wait for -h.
 require File.expand_path('../config/environment', __dir__)
 
 # Wrap all changes in a transaction and roll them back if dry-run or an error occurs.

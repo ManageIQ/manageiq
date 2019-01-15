@@ -5,11 +5,11 @@ HEADERS_AND_COLUMNS = ['Hour', 'Date', 'Label of image (key : value)', 'Project'
 
 require File.expand_path("../../config/environment", __dir__)
 require './tools/radar/rollup_radar_mixin'
-require 'trollop'
+require 'optimist'
 
 include RollupRadarMixin
 
-opts = Trollop.options(ARGV) do
+opts = Optimist.options(ARGV) do
   banner "USAGE:  #{__FILE__} -d <number of days back to query metrics, default is 1 day>\n" \
          "        or                                                                     \n" \
          "        #{__FILE__} -s <start date to query metrics, required>                 \n" \
@@ -21,7 +21,7 @@ opts = Trollop.options(ARGV) do
 end
 
 def absolute_time_range(start_date, end_date)
-  Trollop.die "Start date is missing" if end_date && !start_date
+  Optimist.die "Start date is missing" if end_date && !start_date
 
   begin
     end_date = if end_date
@@ -32,11 +32,11 @@ def absolute_time_range(start_date, end_date)
 
     start_date = Date.strptime(start_date.to_s, "%Y%m%d").beginning_of_day.utc
   rescue ArgumentError
-    Trollop.die "Cannot parse any of input date"
+    Optimist.die "Cannot parse any of input date"
   end
 
   if start_date > end_date
-    Trollop.die "Start date cannot be greater then end date"
+    Optimist.die "Start date cannot be greater then end date"
   end
 
   [start_date..end_date]

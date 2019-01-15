@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 require 'bundler/setup'
-require 'trollop'
+require 'optimist'
 
 TYPES = %w(string integer boolean symbol float array).freeze
 
-opts = Trollop.options(ARGV) do
+opts = Optimist.options(ARGV) do
   banner "USAGE:   #{__FILE__} -s <server id> -p <settings path separated by a /> -v <new value>\n" \
          "Example (String):  #{__FILE__} -s 1 -p reporting/history/keep_reports -v 3.months\n" \
          "Example (Integer): #{__FILE__} -s 1 -p workers/worker_base/queue_worker_base/ems_metrics_collector_worker/defaults/count -v 1 -t integer\n" \
@@ -23,10 +23,10 @@ end
 
 puts opts.inspect
 
-Trollop.die :serverid, "is required" unless opts[:serverid_given]
-Trollop.die :path,     "is required" unless opts[:path_given]
-Trollop.die :value,    "is required" unless opts[:value_given]
-Trollop.die :type,     "must be one of #{TYPES.inspect}" unless TYPES.include?(opts[:type])
+Optimist.die :serverid, "is required" unless opts[:serverid_given]
+Optimist.die :path,     "is required" unless opts[:path_given]
+Optimist.die :value,    "is required" unless opts[:value_given]
+Optimist.die :type,     "must be one of #{TYPES.inspect}" unless TYPES.include?(opts[:type])
 
 # Grab the value that we have set and translate to appropriate var class
 newval =

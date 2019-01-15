@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require File.expand_path('../config/environment', __dir__)
 
-require 'trollop'
+require 'optimist'
 ARGV.shift if ARGV.first == "--" # Handle when called through script/runner
-opts = Trollop.options do
+opts = Optimist.options do
   opt :ip,     "IP address", :type => :string, :required => true
   opt :user,   "User Name",  :type => :string, :required => true
   opt :pass,   "Password",   :type => :string, :required => true
@@ -11,7 +11,7 @@ opts = Trollop.options do
   opt :bypass, "Bypass broker usage", :type => :boolean
   opt :dir,    "Output directory",    :default => "."
 end
-Trollop.die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
+Optimist.die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
 
 def process(accessor, dir)
   puts "Reading #{accessor}..."

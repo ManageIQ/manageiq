@@ -1,5 +1,5 @@
 require 'fileutils'
-require 'trollop'
+require 'optimist'
 require 'pg'
 require 'pg_inspector/error'
 require 'pg_inspector/pg_inspector_operation'
@@ -10,7 +10,7 @@ module PgInspector
     HELP_MSG_SHORT = "Dump ManageIQ server information to YAML file".freeze
 
     def parse_options(args)
-      self.options = Trollop.options(args) do
+      self.options = Optimist.options(args) do
         banner <<-BANNER
 
 #{HELP_MSG_SHORT}

@@ -5,10 +5,10 @@ if __FILE__ == $PROGRAM_NAME
   $LOAD_PATH.push(File.expand_path(__dir__))
 end
 
-require 'trollop'
+require 'optimist'
 require 'copy_reports_structure/report_structure'
 
-opts = Trollop.options(ARGV) do
+opts = Optimist.options(ARGV) do
   banner "Utility to: \n" \
          "  - make report structure configured for a group available to another group\n" \
          "  - make report structure configured for a group available to role\n" \

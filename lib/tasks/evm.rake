@@ -124,8 +124,8 @@ namespace :evm do
   #  bin/rake evm:raise_server_event -- --event db_failover_executed
   desc 'Raise evm event'
   task :raise_server_event => :environment do
-    require 'trollop'
-    opts = Trollop.options(EvmRakeHelper.extract_command_options) do
+    require 'optimist'
+    opts = Optimist.options(EvmRakeHelper.extract_command_options) do
       opt :event, "Server Event", :type => :string, :required => true
     end
     EvmDatabase.raise_server_event(opts[:event])

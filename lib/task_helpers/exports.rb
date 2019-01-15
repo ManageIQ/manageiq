@@ -6,15 +6,15 @@ module TaskHelpers
     end
 
     def self.parse_options
-      require 'trollop'
-      options = Trollop.options(EvmRakeHelper.extract_command_options) do
+      require 'optimist'
+      options = Optimist.options(EvmRakeHelper.extract_command_options) do
         opt :keep_spaces, 'Keep spaces in filenames', :type => :boolean, :short => 's', :default => false
         opt :directory, 'Directory to place exported files in', :type => :string, :required => true
         opt :all, 'Export read-only objects', :type => :boolean, :default => false
       end
 
       error = validate_directory(options[:directory])
-      Trollop.die :directory, error if error
+      Optimist.die :directory, error if error
 
       options
     end

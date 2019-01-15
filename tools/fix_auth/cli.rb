@@ -1,4 +1,4 @@
-require 'trollop'
+require 'optimist'
 
 module FixAuth
   class Cli
@@ -6,7 +6,7 @@ module FixAuth
 
     def parse(args, env = {})
       args.shift if args.first == "--" # Handle when called through script/runner
-      self.options = Trollop.options(args) do
+      self.options = Optimist.options(args) do
         banner "Usage: ruby #{$PROGRAM_NAME} [options] database [...]\n" \
                "       ruby #{$PROGRAM_NAME} [options] -P new_password database [...] to replace all passwords"
 

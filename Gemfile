@@ -54,6 +54,7 @@ gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly 
 gem "net-ldap",                       "~>0.16.1",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
 gem "openscap",                       "~>0.4.8",       :require => false
+gem "optimist",                       "~>3.0",         :require => false
 gem "pg",                             "~>0.18.2",      :require => false
 gem "pg-dsn_parser",                  "~>0.1.0",       :require => false
 gem "query_relation",                 "~>0.1.0",       :require => false
@@ -68,7 +69,6 @@ gem "rugged",                         "~>0.27.0",      :require => false
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sqlite3",                                         :require => false
-gem "trollop",                        "~>2.1.3",       :require => false
 
 # Modified gems (forked on Github)
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
