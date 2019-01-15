@@ -1,0 +1,44 @@
+---
+dims: 2
+created_on: 2008-08-14 15:05:45.108115 Z
+title: "Testing Report Title"
+conditions:
+updated_on: 2008-08-14 15:19:12.682978 Z
+order: Ascending
+graph:
+  :type: ParallelThreedColumn
+  :count: 10
+  :other: true
+menu_name: "Testing Report Name"
+rpt_group: Custom
+priority:
+col_order:
+- vendor_display
+- operating_system.product_name
+- name
+- operating_system.name
+timeline:
+id: 64
+file_mtime:
+categories:
+rpt_type: Custom
+filename:
+include:
+  operating_system:
+    columns:
+    - product_name
+    - name
+db: Vm
+cols:
+- vendor_display
+- name
+template_type: report
+group: c
+sortby:
+- vendor_display
+- operating_system.product_name
+headers:
+- Container
+- OS Product Name
+- Name
+- OS Name

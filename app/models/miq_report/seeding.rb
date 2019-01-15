@@ -1,76 +1,72 @@
 module MiqReport::Seeding
   extend ActiveSupport::Concern
 
+  REPORT_DIR  = Rails.root.join("product/reports")
+  COMPARE_DIR = Rails.root.join("product/compare")
+
   module ClassMethods
-    REPORT_DIR  = File.expand_path(File.join(Rails.root, "product/reports"))
-    COMPARE_DIR = File.expand_path(File.join(Rails.root, "product/compare"))
-
     def seed
-      # Force creation of model instances for all report yaml files that exist in the product/reports directories
-      # that don't already have an instance in the model
-      MiqReport.sync_from_dir("report")
-      MiqReport.sync_from_dir("compare")
-    end
+      reports = where(:rpt_type => 'Default').where.not(:filename => nil).index_by do |f|
+        seed_filename(f.filename)
+      end
 
-    def seed_report(pattern, type = "report")
-      dir = type == "report" ? REPORT_DIR : COMPARE_DIR
-      files = Dir.glob(File.join(dir, "**/*#{pattern}*"))
-      files.collect do |f|
-        sync_from_file(f, dir, type)
+      seed_files.each do |f|
+        seed_record(f, reports.delete(seed_filename(f)))
+      end
+
+      if reports.any?
+        _log.info("Deleting the following MiqReport(s) as they no longer exist: #{reports.keys.sort.collect(&:inspect).join(", ")}")
+
+        # TODO: Can we make this a delete by getting rid of the dependent destroy on miq_report_result and using the purger?
+        MiqReport.destroy(reports.values.map(&:id))
       end
     end
 
-    def sync_from_dir(typ)
-      if typ == "report"
-        dir = REPORT_DIR
-        pattern = "*/*.yaml"
-        cond = {:rpt_type => 'Default', :template_type => [typ, nil]}
-      else
-        dir = COMPARE_DIR
-        pattern = "*.yaml"
-        cond = {:rpt_type => 'Default', :template_type => typ}
-      end
+    # Used for seeding a specific report for test purposes
+    def seed_report(name)
+      path = seed_files.detect { |f| File.basename(f).include?(name) }
+      raise "report #{name.inspect} not found" if path.nil?
 
-      where(cond).where.not(:filename => nil).each do |f|
-        unless File.exist?(File.join(dir, f.filename))
-          $log.info("#{typ.titleize}: file [#{f.filename}] has been deleted from disk, deleting from model")
-          f.destroy
-        end
-      end
+      seed_record(path, MiqReport.find_by(:filename => seed_filename(path)))
+    end
 
-      Dir.glob(File.join(dir, pattern)).sort.each do |f|
-        sync_from_file(f, dir, typ)
+    private
+
+    def seed_record(path, report)
+      report ||= MiqReport.new
+
+      # DB and filesystem have different precision so calling round is done in
+      # order to eliminate the second fractions diff otherwise the comparison
+      # of the file time and the report time from db will always be different.
+      mtime = File.mtime(path).utc.round
+      report.file_mtime = mtime
+
+      if report.new_record? || report.changed?
+        filename = seed_filename(path)
+
+        _log.info("#{report.new_record? ? "Creating" : "Updating"} MiqReport #{filename.inspect}")
+
+        yml   = YAML.load_file(path).symbolize_keys
+        attrs = yml.slice(*column_names_symbols)
+        attrs.delete(:id)
+        attrs[:filename]      = filename
+        attrs[:file_mtime]    = mtime
+        attrs[:name]          = yml[:menu_name].strip
+        attrs[:priority]      = File.basename(path).split("_").first.to_i
+        attrs[:rpt_group]     = File.basename(File.dirname(path)).split("_").last
+        attrs[:rpt_type]      = "Default"
+        attrs[:template_type] = path.start_with?(REPORT_DIR.to_s) ? "report" : "compare"
+
+        report.update_attributes!(attrs)
       end
     end
 
-    def sync_from_file(filename, dir, typ)
-      yml = YAML.load_file(filename)
-      rpt = {}
-      column_names.each { |c| rpt[c.to_sym] = yml[c] }
-      rpt.delete(:id)
-      rpt[:name] = yml["menu_name"].strip
-      rpt[:rpt_group] = File.basename(File.dirname(filename)).split("_").last
-      rpt[:rpt_type] = "Default"
-      rpt[:filename] = filename.sub(dir + "/", "")
-      # DB and filesystem have different precision
-      # so calling round is done in order to eliminate the second fractions diff
-      # otherwise the comparison of the file time and the report time from db
-      # will always be different
-      rpt[:file_mtime] = File.mtime(filename).utc.round
-      rpt[:priority] = File.basename(filename).split("_").first.to_i
-      rpt[:template_type] = typ
-      rec = find_by_filename(rpt[:filename])
+    def seed_files
+      Dir.glob(REPORT_DIR.join("**/*.yaml")).sort + Dir.glob(COMPARE_DIR.join("**/*.yaml")).sort
+    end
 
-      if rec
-        if rec.filename
-          _log.info("#{typ.titleize}: [#{rec.name}] file exists, synchronizing with model")
-          rec.update_attributes(rpt)
-          rec.save
-        end
-      else
-        _log.info("#{typ.titleize}: [#{rpt[:name]}] file has been added to disk, adding to model")
-        create(rpt)
-      end
+    def seed_filename(path)
+      path.remove("#{REPORT_DIR}/").remove("#{COMPARE_DIR}/")
     end
   end
 end
