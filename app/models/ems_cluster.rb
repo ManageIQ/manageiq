@@ -134,7 +134,7 @@ class EmsCluster < ApplicationRecord
   end
 
   virtual_total :total_direct_vms, :direct_vm_rels
-  virtual_total :total_direct_miq_templates, :direct_miq_templates
+  virtual_total :total_direct_miq_templates, :miq_templates
 
   def total_direct_vms_and_templates
     total_direct_vms + total_direct_miq_templates
