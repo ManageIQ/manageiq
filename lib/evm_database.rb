@@ -87,12 +87,18 @@ class EvmDatabase
 
     lock_timeout = (ENV["SEEDING_LOCK_TIMEOUT"].presence || 10.minutes).to_i
 
-    # Only 1 machine can go through this at a time
-    MiqDatabase.with_lock(lock_timeout) do
-      classes.each(&:seed)
+    total = Benchmark.ms do
+      # Only 1 machine can go through this at a time
+      MiqDatabase.with_lock(lock_timeout) do
+        classes.each do |c|
+          _log.info("Seeding #{c}...")
+          ms = Benchmark.ms { c.seed }
+          _log.info("Seeding #{c}... Complete in #{ms}ms")
+        end
+      end
     end
 
-    _log.info("Seeding... Complete")
+    _log.info("Seeding... Complete in #{total}ms")
   rescue Timeout::Error
     _log.error("Seeding... Timed out after #{lock_timeout} seconds")
     raise
