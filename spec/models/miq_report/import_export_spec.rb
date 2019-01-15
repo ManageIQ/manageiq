@@ -1,29 +1,78 @@
 describe MiqReport::ImportExport do
   before do
-    @user       = FactoryBot.create(:user_admin)
+    @some_user = FactoryGirl.create(:user)
+    @some_group = FactoryGirl.create(:miq_group)
     @old_report = FactoryBot.create(:miq_report,
-                                     :name       => "Test Report",
-                                     :rpt_type   => "Custom",
-                                     :tz         => "Eastern Time (US & Canada)",
-                                     :col_order  => ["name", "boot_time", "disks_aligned"],
-                                     :cols       => ["name", "boot_time", "disks_aligned"],
-                                     :db_options => {:rpt_type => "ChargebackContainerProject"},
-                                     "include"   => {"columns" => %w(col1 col2)}
-                                    )
+                                    :name         => "Test Report",
+                                    :rpt_type     => "Custom",
+                                    :tz           => "Eastern Time (US & Canada)",
+                                    :col_order    => %w(name boot_time disks_aligned),
+                                    :cols         => %w(name boot_time disks_aligned),
+                                    :db_options   => {:rpt_type => "ChargebackContainerProject"},
+                                    "include"     => {"columns" => %w(col1 col2)},
+                                    :user_id      => @some_user.id,
+                                    :miq_group_id => @some_group.id)
   end
 
   context ".import_from_hash" do
     before do
+      @user_admin = FactoryBot.create(:user_admin)
       report_string = MiqReport.export_to_yaml([@old_report.id], MiqReport)
       @new_report   = YAML.load(report_string).first
       @from_json    = JSON.parse(@new_report.to_json)
       @options      = {
         :overwrite => true,
-        :user      => @user
+        :user      => @user_admin
       }
     end
 
     subject { MiqReport.import_from_hash(@new_report, @options) }
+
+    context "importing report" do
+      context ":preserve_owner is true" do
+        before do
+          @options[:preserve_owner] = true
+          @new_report["MiqReport"]["menu_name"] = "New Test Report"
+        end
+
+        it "preserves user_id when 'userid' is present in saved report and user exists" do
+          imported_report, _ = subject
+          expect(imported_report["user_id"]).to eq(@some_user.id)
+        end
+
+        it "does not preserve user_id when 'userid' is present in saved report but user does not exist" do
+          @some_user.delete
+          imported_report, _ = subject
+          expect(imported_report["user_id"]).to be nil
+        end
+
+        it "preserves miq_group_id when 'group_description' is present in saved report and group exist" do
+          imported_report, _ = subject
+          expect(imported_report["miq_group_id"]).to eq(@some_group.id)
+        end
+
+        it "does not preserve miq_group_id when 'group_description' is present in saved report but group does not exist" do
+          @some_group.delete
+          imported_report, _ = subject
+          expect(imported_report["miq_group_id"]).to be nil
+        end
+
+        it "raises error if neither preserved group or preserved user exist" do
+          @some_group.delete
+          @some_user.delete
+          expect { _imported_report, _ = subject }.to raise_error("Neither user or group to be preserved during import were found")
+        end
+      end
+
+      context ":preserve_owner is false" do
+        it "overrides group and users" do
+          @options[:preserve_owner] = false
+          imported_report, _ = subject
+          expect(imported_report["miq_group_id"]).to eq(@user_admin.current_group_id)
+          expect(imported_report["user_id"]).to eq(@user_admin.id)
+        end
+      end
+    end
 
     context "new report" do
       before { @old_report.destroy }
