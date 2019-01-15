@@ -238,7 +238,7 @@ class MiqServer < ApplicationRecord
     server.ntp_reload
     server.set_database_application_name
 
-    EvmDatabase.seed_last
+    EvmDatabase.seed_rest
 
     start_memcached
     MiqApache::Control.restart if MiqEnvironment::Command.supports_apache?
