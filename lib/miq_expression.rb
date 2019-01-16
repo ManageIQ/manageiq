@@ -620,9 +620,7 @@ class MiqExpression
         end
       end
     elsif ops["count"]
-      ref, count = value2tag(ops["count"])
-      field = "<count ref=#{ref}>#{count}</count>"
-      [field, quote(ops["value"], "integer")]
+      [MiqExpression::CountField.parse(ops["count"]).ruby_value, quote(ops["value"], "integer")]
     elsif ops["regkey"]
       if operator == "key exists"
         "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
