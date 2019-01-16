@@ -4,6 +4,8 @@ class CustomButtonSet < ApplicationRecord
   before_save :update_children
   def update_children
     replace_children Rbac.filtered(CustomButton.where(:id => set_data[:button_order]))
+
+    throw(:abort) if children.pluck(:id).sort != set_data[:button_order].sort
   end
 
   def self.find_all_by_class_name(class_name, class_id = nil)
