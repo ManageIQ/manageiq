@@ -9,7 +9,8 @@ module ManageIQ::Providers
 
         def configuration_script_payloads
           add_properties(
-            :manager_ref => %i(configuration_script_source manager_ref)
+            :manager_ref                  => %i(configuration_script_source manager_ref),
+            :parent_inventory_collections => %i(configuration_script_sources)
           )
           add_common_default_values
         end
