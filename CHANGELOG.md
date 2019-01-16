@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Update as of Sprint 102 ending 2019-01-07
+
+### Added
+- Mark rbac_tenant_manage_quotas as  MY TENANT FEATURE [(#18322)](https://github.com/ManageIQ/manageiq/pull/18322)
+- Detach actioncable from the WebsocketServer and run it with the UI [(#18296)](https://github.com/ManageIQ/manageiq/pull/18296)
+- Add support for exporting and importing reports [(#18284)](https://github.com/ManageIQ/manageiq/pull/18284)
+- Tenancy for central admin [(#18263)](https://github.com/ManageIQ/manageiq/pull/18263)
+
+### Fixed
+- RHV requires disconnect_storage before ems [(#18330)](https://github.com/ManageIQ/manageiq/pull/18330)
+- Don't reset retirement_requester after end of retirement [(#18325)](https://github.com/ManageIQ/manageiq/pull/18325)
+- Send 'which prince' failures to /dev/null [(#18314)](https://github.com/ManageIQ/manageiq/pull/18314)
+- Ensure a users own tasks are the only ones returned when the users role has View/My Tasks [(#18311)](https://github.com/ManageIQ/manageiq/pull/18311)
+- fix endpoint url uniqueness validation and disable it for cloud providers [(#18298)](https://github.com/ManageIQ/manageiq/pull/18298)
+- set read_only value to true [(#18295)](https://github.com/ManageIQ/manageiq/pull/18295)
+- Don't seed tenant product features for tenant from remote region [(#18286)](https://github.com/ManageIQ/manageiq/pull/18286)
+- Fix RBAC call for templates and vms [(#18128)](https://github.com/ManageIQ/manageiq/pull/18128)
+
 ## Hammer-1
 
 ### Added
