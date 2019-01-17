@@ -54,7 +54,7 @@ class MiqExpression::Target
   end
 
   def reflection_supported_by_sql?
-    model.follow_associations(associations).present?
+    model&.follow_associations(associations).present?
   end
 
   # AR or virtual reflections
@@ -69,6 +69,12 @@ class MiqExpression::Target
       raise(ArgumentError, "One or more associations are invalid: #{associations.join(", ")}")
   end
 
+  def includes
+    ret = {}
+    model && collect_reflections.map(&:name).inject(ret) { |a, p| a[p] ||= {} }
+    ret
+  end
+
   def target
     if associations.none?
       model
@@ -80,6 +86,16 @@ class MiqExpression::Target
   def tag_path_with(value = nil)
     # encode embedded / characters in values since / is used as a tag seperator
     "#{tag_path}#{value.nil? ? '' : '/' + value.to_s.gsub(/\//, "%2f")}"
+  end
+
+  def exclude_col_by_preprocess_options?(options)
+    if options.kind_of?(Hash) && options[:vim_performance_daily_adhoc]
+      Metric::Rollup.excluded_col_for_expression?(column.to_sym)
+    elsif target == Service
+      Service::AGGREGATE_ALL_VM_ATTRS.include?(column.to_sym)
+    else
+      false
+    end
   end
 
   private

@@ -451,28 +451,18 @@ class MiqExpression
       return result
     end
 
-    f.collect_reflections.map(&:name).inject(result[:include]) { |a, p| a[p] ||= {} }
+    result[:include] = f.includes
 
     if f.column
       result[:data_type] = f.column_type
       result[:format_sub_type] = f.sub_type
       result[:sql_support] = f.attribute_supported_by_sql?
-      result[:excluded_by_preprocess_options] = exclude_col_by_preprocess_options?(f, options)
+      result[:excluded_by_preprocess_options] = f.exclude_col_by_preprocess_options?(options)
     end
     result
   rescue ArgumentError
     result[:sql_support] = false
     result
-  end
-
-  def self.exclude_col_by_preprocess_options?(field, options)
-    if options.kind_of?(Hash) && options[:vim_performance_daily_adhoc]
-      Metric::Rollup.excluded_col_for_expression?(field.column.to_sym)
-    elsif field.target == Service
-      Service::AGGREGATE_ALL_VM_ATTRS.include?(field.column.to_sym)
-    else
-      false
-    end
   end
 
   def lenient_evaluate(obj, tz = nil)
