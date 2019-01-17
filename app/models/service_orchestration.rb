@@ -28,7 +28,8 @@ class ServiceOrchestration < Service
   def deploy_orchestration_stack
     creation_options = stack_options
     @orchestration_stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(
-      orchestration_manager, stack_name, orchestration_template, creation_options)
+      orchestration_manager, stack_name, orchestration_template, creation_options
+    )
   ensure
     # create options may never be saved before unless they were overridden
     save_create_options
@@ -145,9 +146,11 @@ class ServiceOrchestration < Service
   end
 
   def save_create_options
-    stack_attributes = @orchestration_stack ?
-                       @orchestration_stack.attributes.compact :
-                       {:name => stack_name}
+    stack_attributes = if @orchestration_stack
+                         @orchestration_stack.attributes.compact
+                       else
+                         {:name => stack_name}
+                       end
     stack_attributes.delete('id')
     options.merge!(:orchestration_stack => stack_attributes,
                    :create_options      => dup_and_process_password(stack_options))
