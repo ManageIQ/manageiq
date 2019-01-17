@@ -11,7 +11,7 @@ class CloudVolumeBackup < ApplicationRecord
   belongs_to :cloud_volume
   has_one :cloud_tenant, :through => :cloud_volume
 
-  def restore_queue(userid, volumeid)
+  def restore_queue(userid, volumeid = nil, name = nil)
     task_opts = {
       :action => "Restoring Cloud Volume Backup for user #{userid}",
       :userid => userid
@@ -22,13 +22,13 @@ class CloudVolumeBackup < ApplicationRecord
       :instance_id => id,
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
-      :args        => [volumeid]
+      :args        => [volumeid, name]
     }
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def restore(volume)
-    raw_restore(volume)
+  def restore(volume = nil, name = nil)
+    raw_restore(volume, name)
   end
 
   def raw_restore(*)
