@@ -9,8 +9,8 @@ describe ServiceOrchestration do
 
   let(:service_template) do
     FactoryBot.create(:service_template_orchestration,
-                       :orchestration_manager  => manager_in_st,
-                       :orchestration_template => template_in_st)
+                      :orchestration_manager  => manager_in_st,
+                      :orchestration_template => template_in_st)
   end
 
   let(:dialog_options) do
@@ -27,11 +27,11 @@ describe ServiceOrchestration do
 
   let(:service) do
     FactoryBot.create(:service_orchestration,
-                       :service_template       => service_template,
-                       :orchestration_manager  => manager_in_st,
-                       :orchestration_template => template_in_st,
-                       :evm_owner              => FactoryBot.create(:user),
-                       :miq_group              => FactoryBot.create(:miq_group))
+                      :service_template       => service_template,
+                      :orchestration_manager  => manager_in_st,
+                      :orchestration_template => template_in_st,
+                      :evm_owner              => FactoryBot.create(:user),
+                      :miq_group              => FactoryBot.create(:miq_group))
   end
 
   let(:service_with_dialog_options) do
@@ -52,6 +52,17 @@ describe ServiceOrchestration do
     it "gets stack name from overridden value" do
       service_with_dialog_options.stack_name = "new_name"
       expect(service_with_dialog_options.stack_name).to eq("new_name")
+    end
+  end
+
+  describe "#add_resource" do
+    it "doesn't allow service to be added" do
+      expect { service_with_dialog_options.add_resource(FactoryBot.create(:service), {}) }.to raise_error(/Service Orchestration subclass does not support add_resource for/)
+    end
+
+    it "allows stack to be added" do
+      service_with_dialog_options.add_resource(FactoryBot.create(:orchestration_stack))
+      expect(service_with_dialog_options.service_resources.pluck(:resource_type)).to include("OrchestrationStack", "OrchestrationTemplate")
     end
   end
 
@@ -87,7 +98,8 @@ describe ServiceOrchestration do
   describe "#stack_options" do
     before do
       allow_any_instance_of(ManageIQ::Providers::Amazon::CloudManager::OrchestrationServiceOptionConverter).to(
-        receive(:stack_create_options).and_return(dialog_options))
+        receive(:stack_create_options).and_return(dialog_options)
+      )
     end
 
     it "gets stack options set by dialog" do
@@ -255,8 +267,8 @@ describe ServiceOrchestration do
 
   describe '#post_provision_configure' do
     before do
-      allow(ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack).to receive(
-        :raw_create_stack).and_return("ems_ref")
+      allow(ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack)
+        .to receive(:raw_create_stack).and_return("ems_ref")
       @resulting_stack = service.deploy_orchestration_stack
 
       service.miq_request_task = FactoryBot.create(:service_template_provision_task)
