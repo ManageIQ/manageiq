@@ -185,22 +185,17 @@ describe ServiceTemplateTransformationPlanTask do
 
     describe '#kill_virtv2v' do
       before do
+        task.options = { :virtv2v_wrapper => { 'state_file' => '/tmp/v2v.state' }}
         task.conversion_host = conversion_host
-        task.options = { :virtv2v_wrapper => {}}
-      end
-
-      it "does nothing if pid not present in options[:virtv2v_wrapper]" do
-        expect(task.kill_virtv2v('KILL')).to eq(false)
+        allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return("pid" => 1234)
       end
 
       it "returns false if if kill command failed" do
-        task.options[:virtv2v_wrapper]['pid'] = '1234'
         allow(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(false)
         expect(task.kill_virtv2v('KILL')).to eq(false)
       end
 
       it "returns true if if kill command succeeded" do
-        task.options[:virtv2v_wrapper]['pid'] = '1234'
         allow(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(true)
         expect(task.kill_virtv2v('KILL')).to eq(true)
       end

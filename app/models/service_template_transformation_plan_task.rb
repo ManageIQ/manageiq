@@ -208,7 +208,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       options[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
       if virtv2v_state['failed']
         options[:virtv2v_status] = 'failed'
-        raise "Disks transformation failed."
       else
         options[:virtv2v_status] = 'succeeded'
         updated_disks.each { |d| d[:percent] = 100 }
@@ -218,8 +217,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end 
 
   def kill_virtv2v(signal = 'TERM')
-    return false unless options[:virtv2v_wrapper]['pid']
-    conversion_host.kill_process(options[:virtv2v_wrapper]['pid'], signal)
+    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
+    conversion_host.kill_process(virtv2v_state['pid'].to_s, signal)
   end
 
   private
