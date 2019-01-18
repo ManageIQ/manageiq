@@ -187,7 +187,7 @@ describe ServiceTemplateTransformationPlanTask do
       before do
         task.options = { :virtv2v_wrapper => { 'state_file' => '/tmp/v2v.state' }}
         task.conversion_host = conversion_host
-        allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return({ "pid" => 1234 })
+        allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return("pid" => 1234)
       end
 
       it "returns false if if kill command failed" do
