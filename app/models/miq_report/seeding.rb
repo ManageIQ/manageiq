@@ -46,18 +46,29 @@ module MiqReport::Seeding
 
         _log.info("#{report.new_record? ? "Creating" : "Updating"} MiqReport #{filename.inspect}")
 
-        yml   = YAML.load_file(path).symbolize_keys
+        yml  = YAML.load_file(path).symbolize_keys
+        name = yml[:menu_name].strip
+
         attrs = yml.slice(*column_names_symbols)
         attrs.delete(:id)
         attrs[:filename]      = filename
         attrs[:file_mtime]    = mtime
-        attrs[:name]          = yml[:menu_name].strip
+        attrs[:name]          = name
         attrs[:priority]      = File.basename(path).split("_").first.to_i
         attrs[:rpt_group]     = File.basename(File.dirname(path)).split("_").last
         attrs[:rpt_type]      = "Default"
         attrs[:template_type] = path.start_with?(REPORT_DIR.to_s) ? "report" : "compare"
 
-        report.update_attributes!(attrs)
+        begin
+          report.update_attributes!(attrs)
+        rescue ActiveRecord::RecordInvalid
+          duplicate = find_by(:name => name)
+          if duplicate&.rpt_type == "Custom"
+            _log.warn("A custom report already exists with the name #{duplicate.name.inspect}.  Skipping...")
+          else
+            raise
+          end
+        end
       end
     end
 
