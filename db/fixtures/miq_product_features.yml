@@ -4785,6 +4785,14 @@
         :description: Edit a Provider
         :feature_type: admin
         :identifier: provider_foreman_edit_provider
+      - :name: Pause
+        :description: Pause a Provider
+        :feature_type: admin
+        :identifier: provider_foreman_pause
+      - :name: Resume
+        :description: Resume a Provider
+        :feature_type: admin
+        :identifier: provider_foreman_resume
       - :name: Add Provider
         :description: Add a Provider
         :feature_type: admin
@@ -4981,6 +4989,14 @@
         :description: Edit a Provider
         :feature_type: admin
         :identifier: automation_manager_edit_provider
+      - :name: Pause
+        :description: Pause a Provider
+        :feature_type: admin
+        :identifier: automation_manager_pause
+      - :name: Resume
+        :description: Resume a Provider
+        :feature_type: admin
+        :identifier: automation_manager_resume
       - :name: Add Provider
         :description: Add a Provider
         :feature_type: admin
