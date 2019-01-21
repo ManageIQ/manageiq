@@ -529,7 +529,11 @@ class Classification < ApplicationRecord
 
   def save_tag
     tag_name = Classification.name2tag(name, parent_id, ns)
-    self.tag = Tag.in_region(region_id).find_or_create_by(:name => tag_name)
+    if tag.present?
+      tag.update_attributes(:name => tag_name)
+    else
+      self.tag = Tag.in_region(region_id).find_or_create_by(:name => tag_name)
+    end
   end
 
   def delete_all_entries
