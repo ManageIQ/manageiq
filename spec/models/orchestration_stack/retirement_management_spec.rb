@@ -1,5 +1,6 @@
 describe "Service Retirement Management" do
   let(:user) { FactoryGirl.create(:user) }
+  let(:orchestration_stack) { FactoryBot.create(:orchestration_stack) }
   before(:each) do
     @miq_server = EvmSpecHelper.local_miq_server
     @stack = FactoryGirl.create(:orchestration_stack)
@@ -71,8 +72,17 @@ describe "Service Retirement Management" do
   end
 
   it "#finish_retirement" do
+    message = "OrchestrationStack: [#{orchestration_stack.name}], Retires On: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
+    expect(orchestration_stack).to receive(:raise_audit_event).with("orchestration_stack_retired", message, nil)
+
+    orchestration_stack.finish_retirement
+
+    expect(orchestration_stack.retirement_state).to eq("retired")
+  end
+
+  it "#mark_retired" do
     expect(@stack.retirement_state).to be_nil
-    @stack.finish_retirement
+    @stack.mark_retired
     @stack.reload
     expect(@stack.retired).to be_truthy
     expect(@stack.retires_on).to be_between(Time.zone.now - 1.hour, Time.zone.now + 1.second)

@@ -143,8 +143,17 @@ describe "Service Retirement Management" do
   end
 
   it "#finish_retirement" do
-    expect(@service.retirement_state).to be_nil
+    message = "Service: [#{@service.name}], Retires On: [#{Time.zone.now.strftime("%x %R %Z")}], has been retired"
+    expect(@service).to receive(:raise_audit_event).with("service_retired", message, nil)
+
     @service.finish_retirement
+
+    expect(@service.retirement_state).to eq("retired")
+  end
+
+  it "#mark_retired" do
+    expect(@service.retirement_state).to be_nil
+    @service.mark_retired
     @service.reload
     expect(@service.retired).to be_truthy
     expect(@service.retires_on).to be_between(Time.zone.now - 1.hour, Time.zone.now + 1.second)
