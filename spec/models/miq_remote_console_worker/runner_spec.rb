@@ -8,7 +8,7 @@ describe MiqRemoteConsoleWorker::Runner do
     end
 
     let(:worker) { double }
-    let(:app) { WebsocketServer.new }
+    let(:app) { RemoteConsole::RackServer.new }
 
     it 'exits if the thread is not running' do
       subject.instance_variable_set(:@worker, worker)

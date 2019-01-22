@@ -1,4 +1,4 @@
-describe RemoteConsole::WebMKSLegacy do
+describe RemoteConsole::ClientAdapter::WebMKSLegacy do
   let(:record) { FactoryBot.create(:system_console, :url => '/12345') }
   subject { described_class.new(record, nil) }
 

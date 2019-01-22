@@ -1,4 +1,4 @@
-describe RemoteConsole do
+describe RemoteConsole::ClientAdapter do
   describe '.new' do
     let(:record) { FactoryBot.create(:system_console, :protocol => protocol, :ssl => ssl) }
     let(:ssl) { false }
@@ -7,7 +7,7 @@ describe RemoteConsole do
       let(:protocol) { 'vnc' }
 
       it 'regular socket' do
-        expect(RemoteConsole::RegularSocket).to receive(:new).with(record, nil)
+        expect(RemoteConsole::ClientAdapter::RegularSocket).to receive(:new).with(record, nil)
 
         described_class.new(record, nil)
       end
@@ -20,14 +20,14 @@ describe RemoteConsole do
         let(:ssl) { true }
 
         it 'ssl socket' do
-          expect(RemoteConsole::SSLSocket).to receive(:new).with(record, nil)
+          expect(RemoteConsole::ClientAdapter::SSLSocket).to receive(:new).with(record, nil)
 
           described_class.new(record, nil)
         end
       end
 
       it 'regular socket' do
-        expect(RemoteConsole::RegularSocket).to receive(:new).with(record, nil)
+        expect(RemoteConsole::ClientAdapter::RegularSocket).to receive(:new).with(record, nil)
 
         described_class.new(record, nil)
       end
@@ -38,7 +38,7 @@ describe RemoteConsole do
       let(:ssl) { true }
 
       it 'webmks socket' do
-        expect(RemoteConsole::WebMKS).to receive(:new).with(record, nil)
+        expect(RemoteConsole::ClientAdapter::WebMKS).to receive(:new).with(record, nil)
 
         described_class.new(record, nil)
       end
@@ -47,7 +47,7 @@ describe RemoteConsole do
         let(:protocol) { 'webmks-uint8utf8' }
 
         it 'webmks legacy socket' do
-          expect(RemoteConsole::WebMKSLegacy).to receive(:new).with(record, nil)
+          expect(RemoteConsole::ClientAdapter::WebMKSLegacy).to receive(:new).with(record, nil)
 
           described_class.new(record, nil)
         end

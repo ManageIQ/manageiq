@@ -1,4 +1,4 @@
-describe WebsocketServer do
+describe RemoteConsole::RackServer do
   before do
     allow(logger).to receive(:info)
     @server = described_class.new(:logger => logger)
@@ -67,7 +67,7 @@ describe WebsocketServer do
     end
 
     it 'pushes two sockets to the proxy' do
-      allow(WebsocketAdapter).to receive(:new) # prevent writing to the dummy socket
+      allow(RemoteConsole::ServerAdapter).to receive(:new) # prevent writing to the dummy socket
       expect(proxy).to receive(:push).with(left, right)
 
       expect(init).to eq(described_class::RACK_YAY)

@@ -3,7 +3,7 @@ class MiqRemoteConsoleWorker < MiqWorker
 
   self.required_roles = ['remote_console']
 
-  RACK_APPLICATION = WebsocketServer
+  RACK_APPLICATION = RemoteConsole::RackServer
   STARTING_PORT    = 5000
 
   def friendly_name
