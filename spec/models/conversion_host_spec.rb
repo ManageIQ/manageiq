@@ -186,4 +186,27 @@ describe ConversionHost do
       it_behaves_like "#check_ssh_connection"
     end
   end
+
+  context "address validation" do
+    let(:vm) { FactoryBot.create(:host) }
+
+    it "is invalid if the address is not a valid IP address" do
+      allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
+      conversion_host = ConversionHost.new(:name => "test", :resource => vm, :address => "xxx")
+      expect(conversion_host.valid?).to be(false)
+      expect(conversion_host.errors[:address]).to include("is invalid")
+    end
+
+    it "is invalid if the address is present but not included in the resource addresses" do
+      allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
+      conversion_host = ConversionHost.new(:name => "test", :resource => vm, :address => "127.0.0.2")
+      expect(conversion_host.valid?).to be(false)
+      expect(conversion_host.errors[:address]).to include("is not included in the list")
+    end
+
+    it "is ignored if the resource does not have any ipaddresses" do
+      conversion_host = ConversionHost.new(:name => "test", :resource => vm, :address => "127.0.0.2")
+      expect(conversion_host.valid?).to be(true)
+    end
+  end
 end
