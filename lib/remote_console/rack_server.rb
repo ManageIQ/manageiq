@@ -29,7 +29,7 @@ module RemoteConsole
 
     def initialize(options = {})
       @logger = options.fetch(:logger, $remote_console_log)
-      @logger.info('Initializing websocket server!')
+      @logger.info('Initializing RemoteConsole server!')
       @proxy = SurroGate.new(logger)
       @adapters = {}
 
@@ -41,9 +41,9 @@ module RemoteConsole
             begin
               @adapters[left].fetch(64.kilobytes) { |data| @adapters[right].issue(data) } # left -> right
             rescue IOError, IO::WaitReadable, IO::WaitWritable
-              cleanup(:info, "Closing websocket proxy for VM %{vm_id}", left, right)
+              cleanup(:info, "Closing RemoteConsole proxy for VM %{vm_id}", left, right)
             rescue StandardError => ex
-              cleanup(:error, "Websocket proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", left, right)
+              cleanup(:error, "RemoteConsole proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", left, right)
             end
           end
         end
@@ -55,10 +55,10 @@ module RemoteConsole
     def call(env)
       exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
       if WebSocket::Driver.websocket?(env) && same_origin_as_host?(env) && exp.present?
-        @logger.info("Remote console connection initiated with secret #{exp[1]}")
+        @logger.info("RemoteConsole connection initiated")
         init_proxy(env, exp[1])
       else
-        @logger.error('Invalid websocket request or URL')
+        @logger.error('Invalid RemoteConsole request or URL')
         RACK_404
       end
     end
@@ -81,10 +81,10 @@ module RemoteConsole
 
         @proxy.push(ws_sock, console_sock)
       rescue StandardError => ex
-        cleanup(:error, "Websocket proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", console_sock, ws_sock, record)
+        cleanup(:error, "RemoteConsole proxy for VM %{vm_id} errored with #{ex} #{ex.backtrace.join("\n")}", console_sock, ws_sock, record)
         RACK_404
       else
-        @logger.info("Starting websocket proxy for VM #{record.vm_id}")
+        @logger.info("Starting RemoteConsole proxy for VM #{record.vm_id}")
         RACK_YAY # Rack needs this as a return value
       ensure
         # Release the connection because one SPICE console can open multiple TCP connections
