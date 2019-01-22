@@ -15,6 +15,8 @@ class CustomButton < ApplicationRecord
   validates :name, :description, :uniqueness => {:scope => [:applies_to_class, :applies_to_id]}, :presence => true
   validates :guid, :uniqueness => true, :presence => true
 
+  virtual_attribute :uri_attributes, :string
+
   include UuidMixin
   acts_as_miq_set_member
 
