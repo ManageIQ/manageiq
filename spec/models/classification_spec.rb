@@ -571,6 +571,31 @@ describe Classification do
     end
   end
 
+  describe '#save' do
+    let(:new_name) { "new_tag_name" }
+
+    context "editing existing tag" do
+      it "updates record in Tag table which linked to this classification" do
+        classification = FactoryBot.create(:classification_tag, :name => "some_tag_name")
+        tag = classification.tag
+        classification.name = new_name
+        classification.save
+        expect(tag.id).to eq classification.tag.id
+        expect(classification.tag.name).to eq(Classification.name2tag(new_name))
+      end
+    end
+
+    context "saving new tag" do
+      it "creates new record in Tag table and links it to this classification" do
+        classification = Classification.new
+        classification.description = "some description"
+        classification.name = new_name
+        classification.save
+        expect(classification.tag).to eq(Tag.last)
+      end
+    end
+  end
+
   def all_tagged_with(target, all, category = nil)
     tagged_with(target, :all => all, :cat => category)
   end
