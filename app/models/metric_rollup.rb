@@ -1,5 +1,8 @@
 # @see Metric
 class MetricRollup < ApplicationRecord
+  # Specify the primary key for a model backed by a view
+  self.primary_key = "id"
+
   include Metric::Common
   include_concern 'Metric::ChargebackHelper'
 

@@ -33,6 +33,9 @@
 # [PostgreSQL table inheritance]: https://www.postgresql.org/docs/9.6/static/tutorial-inheritance.html
 # [PostgreSQL table partioning]: https://www.postgresql.org/docs/9.6/static/ddl-partitioning.html
 class Metric < ApplicationRecord
+  # Specify the primary key for a model backed by a view
+  self.primary_key = "id"
+
   BASE_COLS = ["id", "timestamp", "capture_interval_name", "resource_type", "resource_id", "resource_name", "tag_names", "parent_host_id", "parent_ems_cluster_id", "parent_ems_id", "parent_storage_id"]
 
   include Metric::Common
