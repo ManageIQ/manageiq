@@ -52,6 +52,7 @@ module RemoteConsole
       @transmitter.abort_on_exception = true
     end
 
+    # Rack entrypoint
     def call(env)
       exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
       if WebSocket::Driver.websocket?(env) && same_origin_as_host?(env) && exp.present?
@@ -63,19 +64,22 @@ module RemoteConsole
       end
     end
 
+    # Determine if the transmitter thread is alive or crashed
     def healthy?
       %w(run sleep).include?(@transmitter.status)
     end
 
     private
 
+    # Sets up the RemoteConsole proxy between the client request and the remote endpoint determined by the secret
     def init_proxy(env, secret)
-      record = SystemConsole.find_by!(:url_secret => secret)
+      record = SystemConsole.find_by!(:url_secret => secret) # Retrieve the ticket record using the secret
 
       begin
-        ws_sock = env['rack.hijack'].call
-        console_sock = TCPSocket.open(record.host_name, record.port)
+        ws_sock = env['rack.hijack'].call # Hijack the socket from the incoming HTTP connection
+        console_sock = TCPSocket.open(record.host_name, record.port) # Open a TCP connection to the remote endpoint
 
+        # These adapters will be used for reading/writing from/to the particular sockets
         @adapters[console_sock] = ClientAdapter.new(record, console_sock)
         @adapters[ws_sock] = ServerAdapter.new(record, env, ws_sock)
 
@@ -92,14 +96,16 @@ module RemoteConsole
       end
     end
 
+    # Cleans up a pair of sockets with the related ticket record and emits a log message
     def cleanup(log_level, message, sock_a, sock_b, record = nil)
       record ||= @adapters.values_at(sock_a, sock_b).map { |a| a.try(:record) }.find(&:itself)
 
       if record
-        record.destroy_or_mark
+        record.destroy_or_mark # Delete the ticket record from the DB
         @logger.send(log_level, message % {:vm_id => record.vm_id})
       end
 
+      # Close the sockets if they aren't closed yet
       [sock_a, sock_b].each do |sock|
         sock.try(:close)
         @adapters.delete(sock)
