@@ -6,19 +6,21 @@ module MiqReport::Seeding
 
   module ClassMethods
     def seed
-      reports = where(:rpt_type => 'Default').where.not(:filename => nil).index_by do |f|
-        seed_filename(f.filename)
-      end
+      transaction do
+        reports = where(:rpt_type => 'Default').where.not(:filename => nil).index_by do |f|
+          seed_filename(f.filename)
+        end
 
-      seed_files.each do |f|
-        seed_record(f, reports.delete(seed_filename(f)))
-      end
+        seed_files.each do |f|
+          seed_record(f, reports.delete(seed_filename(f)))
+        end
 
-      if reports.any?
-        _log.info("Deleting the following MiqReport(s) as they no longer exist: #{reports.keys.sort.collect(&:inspect).join(", ")}")
+        if reports.any?
+          _log.info("Deleting the following MiqReport(s) as they no longer exist: #{reports.keys.sort.collect(&:inspect).join(", ")}")
 
-        # TODO: Can we make this a delete by getting rid of the dependent destroy on miq_report_result and using the purger?
-        MiqReport.destroy(reports.values.map(&:id))
+          # TODO: Can we make this a delete by getting rid of the dependent destroy on miq_report_result and using the purger?
+          MiqReport.destroy(reports.values.map(&:id))
+        end
       end
     end
 
