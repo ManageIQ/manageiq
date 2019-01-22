@@ -94,6 +94,17 @@ describe MiqReport do
 
         expect { report.reload }.to  raise_error(ActiveRecord::RecordNotFound)
         expect { compare.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
+        # Duplicate custom reports by name will be skipped in seeding
+        custom_report  = FactoryBot.create(:miq_report, :name => "Testing Report Name",  :rpt_type => "Custom", :template_type => "report")
+        custom_compare = FactoryBot.create(:miq_report, :name => "Testing Compare Name", :rpt_type => "Custom", :template_type => "compare")
+
+        described_class.seed
+
+        expect(described_class.where(:name => custom_report.name).count).to eq(1)
+        expect(custom_report.reload.rpt_type).to eq("Custom")
+        expect(described_class.where(:name => custom_compare.name).count).to eq(1)
+        expect(custom_compare.reload.rpt_type).to eq("Custom")
       end
     end
   end
