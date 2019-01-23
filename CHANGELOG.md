@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Update as of Sprint 103 ending 2019-01-21
+
+### Added
+- Override add resource to no-op in service orchestration subclass [(#18358)](https://github.com/ManageIQ/manageiq/pull/18358)
+- Modify the enable ConversionHost::Configurations#enable method to handle arguments more robustly [(#18336)](https://github.com/ManageIQ/manageiq/pull/18336)
+- Alter ansible_playbook method so that some arguments are optional [(#18323)](https://github.com/ManageIQ/manageiq/pull/18323)
+- Add a 'name' parameter to backup restore and make volumeid optional [(#17952)](https://github.com/ManageIQ/manageiq/pull/17952)
+
+### Changed
+- Rename WebSocketWorker to RemoteConsoleWorker [(#18337)](https://github.com/ManageIQ/manageiq/pull/18337)
+
+### Fixed
+- V2V - Collect virt-v2v PID from conversion host in kill_virtv2v [(#18372)](https://github.com/ManageIQ/manageiq/pull/18372)
+- Give dialogs/models/archive logs unique names [(#18365)](https://github.com/ManageIQ/manageiq/pull/18365)
+- Add retired to service active states [(#18348)](https://github.com/ManageIQ/manageiq/pull/18348)
+- Fix names of chargeback rate columns [(#18346)](https://github.com/ManageIQ/manageiq/pull/18346)
+- Re-raise the LoadError if it is not for the file we are trying to load [(#18343)](https://github.com/ManageIQ/manageiq/pull/18343)
+- Do not report an error in websocket_log when closing a VNC connection [(#18342)](https://github.com/ManageIQ/manageiq/pull/18342)
+- Restore an event for the main app logs' disk usage [(#18340)](https://github.com/ManageIQ/manageiq/pull/18340)
+- Clarify the 'towhat' inclusion validation message on policy creation. [(#18338)](https://github.com/ManageIQ/manageiq/pull/18338)
+- Change Stacked Area chart for Area chart for the Virtual Machine CPU States [(#18333)](https://github.com/ManageIQ/manageiq/pull/18333)
+- Add display name for Azure Floating IP [(#18332)](https://github.com/ManageIQ/manageiq/pull/18332)
+- Fixing subservice task creation for service bundles [(#18283)](https://github.com/ManageIQ/manageiq/pull/18283)
+- Preserve group and user when importing reports [(#18270)](https://github.com/ManageIQ/manageiq/pull/18270)
+
 ## Update as of Sprint 102 ending 2019-01-07
 
 ### Added
