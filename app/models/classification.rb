@@ -525,9 +525,8 @@ class Classification < ApplicationRecord
   end
 
   def save_tag
-    tag_name = Classification.name2tag(name, parent_id, ns)
     if tag.present?
-      tag.update_attributes(:name => tag_name)
+      tag.update_attributes(:name => Classification.name2tag(name, parent_id, ns))
     else
       self.tag = Tag.find_or_create_by_classification_name(name, region_id, ns, parent_id)
     end
