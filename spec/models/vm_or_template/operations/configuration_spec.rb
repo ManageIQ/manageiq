@@ -14,21 +14,13 @@ describe VmOrTemplate::Operations::Configuration do
 
     context "when ext_management_system exists" do
       let(:vm) { FactoryBot.create(:vm_or_template, :ext_management_system => ems) }
-      let(:ems) { FactoryBot.create(:ext_management_system) }
+      let(:ems) { FactoryBot.create(:ext_management_system, :with_authentication) }
       let(:storage_name) { "test_storage" }
       let(:storage) { FactoryBot.create(:storage, :name => storage_name) }
-      let(:storages) { double("storages") }
-      let(:host) { double("host", :writable_storages => storages) }
-      let(:hosts) { [host] }
-
-      before do
-        allow(ems).to receive(:hosts).and_return(hosts)
-      end
+      let!(:host) { FactoryBot.create(:host, :ext_management_system => ems).tap { |h| h.host_storages.create!(:storage => storage) } }
 
       context "when storage exists" do
         it "adds a disk on the storage" do
-          allow(storages).to receive(:find_by).with(:name => storage_name).and_return(storage)
-          allow(ems).to receive(:authentication_status_ok?).and_return(true)
           allow(ems).to receive(:vm_add_disk)
 
           expected_options = {
@@ -48,10 +40,8 @@ describe VmOrTemplate::Operations::Configuration do
 
       context "when storage does not exist" do
         it "raises an exception when doesn't find storage by its name" do
-          allow(storages).to receive(:find_by).with(:name => storage_name).and_return(nil)
-
           message = "Datastore does not exist or cannot be accessed, unable to add disk"
-          expect { vm.raw_add_disk(disk_name, disk_size, :datastore => storage_name) }.to raise_error(message)
+          expect { vm.raw_add_disk(disk_name, disk_size, :datastore => "wrong_storage_name") }.to raise_error(message)
         end
       end
     end
