@@ -75,7 +75,7 @@ module VmOrTemplate::Operations::Configuration
     raise _("VM has no EMS, unable to add disk") unless ext_management_system
     if options[:datastore]
       datastore = ext_management_system.hosts.collect do |h|
-        h.writable_storages.find_by(:name => options[:datastore])
+        h.writable_accessible_storages.find_by(:name => options[:datastore])
       end.uniq.compact.first
       raise _("Datastore does not exist or cannot be accessed, unable to add disk") unless datastore
     end
