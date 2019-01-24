@@ -113,7 +113,7 @@ module Vmdb
     def version(engine)
       spec = bundler_specs_by_path[engine.root.realpath.to_s]
 
-      case spec.source
+      case spec&.source
       when Bundler::Source::Git
         [
           spec.source.branch || spec.source.options["tag"],
@@ -138,7 +138,11 @@ module Vmdb
     end
 
     def bundler_specs_by_path
-      @bundler_specs_by_path ||= Bundler.environment.specs.index_by { |s| File.realpath(s.full_gem_path) }
+      # NOTE: The rescue nil / delete nil dance is needed because of a bundler
+      # bug where on Ruby 2.5 the full_gem_path is a nonexistent directory for
+      # gems that are also default gems.
+      # See https://github.com/bundler/bundler/issues/6930.
+      @bundler_specs_by_path ||= Bundler.environment.specs.index_by { |s| File.realpath(s.full_gem_path) rescue nil }.tap { |s| s.delete(nil) }
     end
 
     def content_directories(engine, subfolder)
