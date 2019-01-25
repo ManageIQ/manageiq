@@ -44,8 +44,12 @@ class MiqExpression::Target
     column_type == :string
   end
 
+  def decimal?
+    column_type == :decimal
+  end
+
   def numeric?
-    [:fixnum, :integer, :float].include?(column_type)
+    [:fixnum, :integer, :decimal, :float].include?(column_type)
   end
 
   def plural?
