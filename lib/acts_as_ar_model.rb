@@ -113,7 +113,7 @@ class ActsAsArModel
   end
 
   include FakeAttributeStore
-  include VirtualFields
+  include ActiveRecord::VirtualAttributes::VirtualFields
 
   include AttributeBag
 
