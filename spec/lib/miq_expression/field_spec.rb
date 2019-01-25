@@ -325,6 +325,14 @@ RSpec.describe MiqExpression::Field do
       expect(MiqExpression::Field.parse("Vm-id")).to be_numeric
     end
 
+    it "detects decimal as numeric" do
+      expect(MiqExpression::Field.parse("MiqServer-memory_size")).to be_numeric
+    end
+
+    it "detects float as numeric" do
+      expect(MiqExpression::Field.parse("MiqServer-percent_memory")).to be_numeric
+    end
+
     it "detects string as non-numeric" do
       expect(MiqExpression::Field.parse("Vm-name")).not_to be_numeric
     end
