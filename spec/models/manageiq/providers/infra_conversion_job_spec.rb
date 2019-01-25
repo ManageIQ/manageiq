@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::InfraMigrationJob do
+describe ManageIQ::Providers::InfraConversionJob do
   let(:vm)      { FactoryBot.create(:vm_or_template) }
   let(:request) { FactoryBot.create(:service_template_transformation_plan_request) }
   let(:task)    { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :request_type => 'transformation_plan', :source => vm) }

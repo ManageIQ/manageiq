@@ -100,7 +100,7 @@ class JobProxyDispatcher
   end
 
   def dispatch_v2v_migrations
-    # InfraMigrationThrottler.assign_to_tasks
+    InfraConversionThrottler.assign_to_tasks
   end
 
   def dispatch_container_scan_jobs

@@ -205,7 +205,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     updates[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
     updates[:virtv2v_started_on] = start_timestamp
     updates[:virtv2v_status] = 'active'
-    _log.info("InfraMigrationJob run_conversion to set_options: #{updates}")
+    _log.info("InfraConversionJob run_conversion to set_options: #{updates}")
     set_options(updates)
   end
 
@@ -238,7 +238,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       end
       updates[:virtv2v_disks] = updated_disks
     ensure
-      _log.info("InfraMigrationJob get_conversion_state to set_options: #{updates}")
+      _log.info("InfraConversionJob get_conversion_state to set_options: #{updates}")
       set_options(updates)
     end
   end 

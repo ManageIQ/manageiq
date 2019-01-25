@@ -1,4 +1,4 @@
-class ManageIQ::Providers::InfraMigrationJob < Job
+class ManageIQ::Providers::InfraConversionJob < Job
   POLL_CONVERSION_INTERVAL = 60
 
   def self.create_job(options)
@@ -124,6 +124,6 @@ class ManageIQ::Providers::InfraMigrationJob < Job
   end
 
   def prep_message(contents)
-    "MiqRequestTask id=#{migration_task.id}, InfraMigrationJob id=#{id}. #{contents}"
+    "MiqRequestTask id=#{migration_task.id}, InfraConversionJob id=#{id}. #{contents}"
   end
 end
