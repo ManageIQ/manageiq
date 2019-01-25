@@ -36,11 +36,8 @@ class ManageIQ::Providers::InfraMigrationJob < Job
 
     {
       :initializing     => {'initialize'       => 'waiting_to_start'},
-      :start            => {'waiting_to_start' => 'pre_conversion'},
-      :pre_conversion   => {'pre_conversion'   => 'pre_conversion'},
-      :run_conversion   => {'pre_conversion'   => 'running'},
+      :start            => {'waiting_to_start' => 'running'},
       :poll_conversion  => {'running'          => 'running'},
-      :refresh          => {'running'          => 'refreshing'},
       :finish           => {'*'                => 'finished'},
       :abort_job        => {'*'                => 'aborting'},
       :cancel           => {'*'                => 'canceling'},
@@ -50,60 +47,44 @@ class ManageIQ::Providers::InfraMigrationJob < Job
 
   def migration_task
     @migration_task ||= target_entity
+    # valid states: %w(migrated pending finished active queued)
   end
 
   def start
     # TransformationCleanup 3 things:
-    #  - kill v2v
+    #  - kill v2v: ignored because no converion_host is there yet in the original automate-based logic
     #  - power_on: ignored
     #  - check_power_on: ignore
-    migration_task.kill_virtv2v('KILL') # TODO: KILL or TERM
 
     if migration_task.preflight_check
       _log.info(prep_message("Preflight check passed, continue"))
-      queue_signal(:pre_conversion)
+      migration_task.set_ready
+      _log.info(prep_message("task.state=#{migration_task.state}"))
+      queue_signal(:poll_conversion)
     else
       message = prep_message("Preflight check has failed")
       _log.info(message)
-      queue_signal(:abort_job, message, 'error')
+      abort_migration(message, 'error')
     end
   end
 
-  def pre_conversion
-    _log.info(prep_message(""))
-    status = migration_task.options # waiting on automate's pre_transformation
-    case status
-    when ''
-      queue_signal(:pre_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
-    when 'done'
-      _log.info(prep_message("PreTransformation in automate finished"))
-      queue_signal(:run_conversion)
-    else
-      message = prep_message("Unknown PreTransformation status: #{status}")
-      queue_signal(:abort_job, message, 'error')
-    end
-  end
-
-  def run_conversion
-    _log.info(prep_message("Starting conversion..."))
-    begin
-      migration_task.run_conversion
-      _log.info(prep_message("Conversion started. Start polling: virtv2v_wrapper=#{migration_task.options[:virtv2v_wrapper]}"))
-      queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
-    rescue => exception
-      message = prep_message("Failed to start conversion: #{exception}")
-      _log.error(message)
-      return queue_signal(:abort_job, message, 'error')
-    end
+  def abort_migration(message, status)
+    migration_task.cancel
+    queue_signal(:abort_job, message, status)
   end
 
   def poll_conversion
     _log.info(prep_message("Getting conversion state"))
+    if migration_task.options[:virtv2v_wrapper].nil? || migration_task.options[:virtv2v_wrapper]['state_file'].nil?
+      _log.info(prep_message("options[:virtv2v_wrapper]['state_file'] not available, continuing poll_conversion"))
+      return queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
+    end
+
     begin
       migration_task.get_conversion_state # task.options will be updated
     rescue => exception
       _log.log_backtrace(exception)
-      return queue_signal(:abort_job, "Conversion error: #{exception}", 'error')
+      return abort_migration("Conversion error: #{exception}", 'error')
     end
 
     status = migration_task.options[:virtv2v_status]
@@ -115,13 +96,13 @@ class ManageIQ::Providers::InfraMigrationJob < Job
     when 'failed'
       message = prep_message("conversion failed")
       _log.error(message)
-      queue_signal(:abort_job, message, 'error')
+      abort_migration(message, 'error')
     when 'succeeded'
       _log.info(prep_message("conversion succeeded"))
       queue_signal(:finish)
     else
       message = prep_message("Unknown converstion status: #{status}")
-      queue_signal(:abort_job, message, 'error')
+      abort_migration(message, 'error')
     end
   end
 

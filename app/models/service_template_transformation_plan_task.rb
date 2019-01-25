@@ -160,6 +160,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
+  def set_ready
+    update_attributes(:state => 'ready')
+  end
+
   def cancel
     update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
   end
@@ -192,6 +196,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       self.options.merge!(opts)
       self.update_attributes(:options => self.options)
     end
+    self.options
   end
 
   def run_conversion
@@ -212,7 +217,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def get_conversion_state
     begin
       updates = {}
-      # byebug
       virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
       updated_disks = virtv2v_disks
       if virtv2v_state['finished'].nil?
@@ -345,5 +349,9 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :osp_flavor_id              => destination_flavor.ems_ref,
       :osp_security_groups_ids    => [destination_security_group.ems_ref]
     }
+  end
+
+  def valid_states
+    super + %w(ready)
   end
 end

@@ -17,7 +17,7 @@ describe ManageIQ::Providers::InfraMigrationJob do
       @job = described_class.create_job(options)
     end
 
-    %w(start run_conversion poll_conversion post_conversion finish abort_job cancel error).each do |signal|
+    %w(start poll_conversion finish abort_job cancel error).each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(@job).to receive(signal.to_sym)
@@ -26,7 +26,7 @@ describe ManageIQ::Providers::InfraMigrationJob do
       end
     end
 
-    %w(start run_conversion poll_conversion post_conversion).each do |signal|
+    %w(start poll_conversion post_conversion).each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { @job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{@job.state}/)
@@ -39,13 +39,11 @@ describe ManageIQ::Providers::InfraMigrationJob do
         @job.state = 'waiting_to_start'
       end
       it_behaves_like 'allows start signal'
-      it_behaves_like 'allows run_conversion signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
 
-      it_behaves_like 'doesn\'t allow post_conversion signal'
       it_behaves_like 'doesn\'t allow poll_conversion signal'
     end
 
@@ -55,14 +53,12 @@ describe ManageIQ::Providers::InfraMigrationJob do
       end
 
       it_behaves_like 'allows poll_conversion signal'
-      it_behaves_like 'allows post_conversion signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
-      it_behaves_like 'doesn\'t allow run_conversion signal'
     end
   end
 end
