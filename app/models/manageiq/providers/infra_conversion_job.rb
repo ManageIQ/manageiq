@@ -64,11 +64,11 @@ class ManageIQ::Providers::InfraConversionJob < Job
     else
       message = prep_message("Preflight check has failed")
       _log.info(message)
-      abort_migration(message, 'error')
+      abort_conversion(message, 'error')
     end
   end
 
-  def abort_migration(message, status)
+  def abort_conversion(message, status)
     migration_task.cancel
     queue_signal(:abort_job, message, status)
   end
@@ -84,7 +84,7 @@ class ManageIQ::Providers::InfraConversionJob < Job
       migration_task.get_conversion_state # task.options will be updated
     rescue => exception
       _log.log_backtrace(exception)
-      return abort_migration("Conversion error: #{exception}", 'error')
+      return abort_conversion("Conversion error: #{exception}", 'error')
     end
 
     status = migration_task.options[:virtv2v_status]
@@ -96,13 +96,13 @@ class ManageIQ::Providers::InfraConversionJob < Job
     when 'failed'
       message = prep_message("conversion failed")
       _log.error(message)
-      abort_migration(message, 'error')
+      abort_conversion(message, 'error')
     when 'succeeded'
       _log.info(prep_message("conversion succeeded"))
       queue_signal(:finish)
     else
       message = prep_message("Unknown converstion status: #{status}")
-      abort_migration(message, 'error')
+      abort_conversion(message, 'error')
     end
   end
 
