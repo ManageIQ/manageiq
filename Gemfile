@@ -141,7 +141,7 @@ end
 
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
-  gem "vmware_web_service",             "~>0.3.0"
+  gem "vmware_web_service",             "~>0.3.3"
 end
 
 ### shared dependencies
