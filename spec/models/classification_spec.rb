@@ -580,6 +580,8 @@ describe Classification do
         tag = classification.tag
         classification.name = new_name
         classification.save
+        tag.reload
+        classification.reload
         expect(tag.id).to eq classification.tag.id
         expect(classification.tag.name).to eq(Classification.name2tag(new_name))
       end
