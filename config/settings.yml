@@ -96,6 +96,7 @@
     - BinaryBlobPart
     - CustomizationSpec
     - EventLog
+    - EventStream
     - FirewallRule
     - Host
     - Job
