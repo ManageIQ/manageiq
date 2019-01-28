@@ -145,7 +145,7 @@ end
 
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
-  gem "vmware_web_service",             "~>0.3.0"
+  gem "vmware_web_service",             "~>0.4.0"
 end
 
 ### shared dependencies
@@ -181,7 +181,7 @@ group :seed, :manageiq_default do
 end
 
 group :smartstate, :manageiq_default do
-  gem "manageiq-smartstate",            "~>0.2.18",       :require => false
+  gem "manageiq-smartstate",            "~>0.2.19",       :require => false
 end
 
 group :consumption, :manageiq_default do
