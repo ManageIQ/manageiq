@@ -1009,6 +1009,7 @@
   :custom_brand: false
   :custom_login_logo: false
   :custom_logo: false
+  :custom_favicon: false
   :events:
     :disk_usage_gt_percent: 80
   :heartbeat_timeout: 2.minutes
