@@ -17,7 +17,7 @@ describe ManageIQ::Providers::InfraConversionJob do
       @job = described_class.create_job(options)
     end
 
-    %w(start poll_conversion finish abort_job cancel error).each do |signal|
+    %w(start poll_conversion start_post_stage poll_post_stage finish abort_job cancel error).each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(@job).to receive(signal.to_sym)
@@ -26,7 +26,7 @@ describe ManageIQ::Providers::InfraConversionJob do
       end
     end
 
-    %w(start poll_conversion post_conversion).each do |signal|
+    %w(start poll_conversion start_post_stage poll_post_stage ).each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { @job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{@job.state}/)
@@ -45,6 +45,8 @@ describe ManageIQ::Providers::InfraConversionJob do
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow poll_conversion signal'
+      it_behaves_like 'doesn\'t allow start_post_stage signal'
+      it_behaves_like 'doesn\'t allow poll_post_stage signal'
     end
 
     context 'running' do
@@ -53,12 +55,30 @@ describe ManageIQ::Providers::InfraConversionJob do
       end
 
       it_behaves_like 'allows poll_conversion signal'
+      it_behaves_like 'allows start_post_stage signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow poll_post_stage signal'
+    end
+
+    context 'post_conversion' do
+      before do
+        @job.state = 'post_conversion'
+      end
+
+      it_behaves_like 'allows poll_post_stage signal'
+      it_behaves_like 'allows finish signal'
+      it_behaves_like 'allows abort_job signal'
+      it_behaves_like 'allows cancel signal'
+      it_behaves_like 'allows error signal'
+
+      it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow poll_conversion signal'
+      it_behaves_like 'doesn\'t allow start_post_stage signal'
     end
   end
 end

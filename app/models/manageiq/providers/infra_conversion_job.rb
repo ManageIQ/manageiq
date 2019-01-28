@@ -2,27 +2,25 @@ class ManageIQ::Providers::InfraConversionJob < Job
   POLL_CONVERSION_INTERVAL = 60
 
   def self.create_job(options)
-    # TODO: expect options[:target_class] and options[:target_id]
+    # expect options[:target_class] and options[:target_id]
     options[:conversion_polling_interval] = POLL_CONVERSION_INTERVAL # TODO: from settings
     super(name, options)
   end
 
   #
   # State-transition diagram:
-  #                              :poll_native_task
-  #    *                          /-------------\
-  #    | :initialize              |             |
-  #    v               :start     v             |
-  # waiting_to_start --------> running ------------------------------> refreshing <---------\
-  #                               |                     :refresh           |                |
-  #                               |                                        |                |
-  #                               |                                        |----------------/
-  #                               v                                        |   :poll_refresh
-  #                             error <------------------------------------|
-  #                                                     :error             |
-  #                                                                        |
-  #       finished <---------- post_refreshing <---------------------------/
-  #                   :finish                           :post_refresh
+  #                              :poll_conversion                         :poll_post_stage
+  #    *                          /-------------\                        /---------------\
+  #    | :initialize              |             |                        |               |
+  #    v               :start     v             |                        v               |
+  # waiting_to_start --------> running ------------------------------> post_conversion --/
+  #     |                         |                :start_post_stage       |
+  #     | :abort_job              | :abort_job                             |
+  #     \------------------------>|                                        | :finish
+  #                               v                                        |
+  #                             aborting --------------------------------->|
+  #                                                    :finish             v
+  #                                                                    finished
   #
 
   alias_method :initializing, :dispatch_start
@@ -38,6 +36,8 @@ class ManageIQ::Providers::InfraConversionJob < Job
       :initializing     => {'initialize'       => 'waiting_to_start'},
       :start            => {'waiting_to_start' => 'running'},
       :poll_conversion  => {'running'          => 'running'},
+      :start_post_stage => {'running'          => 'post_conversion'},
+      :poll_post_stage  => {'post_conversion'  => 'post_conversion'},
       :finish           => {'*'                => 'finished'},
       :abort_job        => {'*'                => 'aborting'},
       :cancel           => {'*'                => 'canceling'},
@@ -74,9 +74,12 @@ class ManageIQ::Providers::InfraConversionJob < Job
   end
 
   def poll_conversion
-    _log.info(prep_message("Getting conversion state"))
+    self.message = "Getting conversion state"
+    _log.info(prep_message(message))
+
     if migration_task.options[:virtv2v_wrapper].nil? || migration_task.options[:virtv2v_wrapper]['state_file'].nil?
-      _log.info(prep_message("options[:virtv2v_wrapper]['state_file'] not available, continuing poll_conversion"))
+      self.message = "options[:virtv2v_wrapper]['state_file'] not available, continuing poll_conversion"
+      _log.info(prep_message(message))
       return queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     end
 
@@ -87,22 +90,41 @@ class ManageIQ::Providers::InfraConversionJob < Job
       return abort_conversion("Conversion error: #{exception}", 'error')
     end
 
-    status = migration_task.options[:virtv2v_status]
-    _log.info(prep_message("virtv2v_status=#{status}"))
-    update_attributes(:updated_on => Time.now.utc) # update self.updated_on to prevent timing out
-    case status
+    v2v_status = migration_task.options[:virtv2v_status]
+    self.message = "virtv2v_status=#{status}"
+    _log.info(prep_message(message))
+
+    case v2v_status
     when 'active'
       queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     when 'failed'
-      message = prep_message("conversion failed")
-      _log.error(message)
-      abort_conversion(message, 'error')
+      self.message = "disk conversion failed"
+      abort_conversion(prep_message(message), 'error')
     when 'succeeded'
-      _log.info(prep_message("conversion succeeded"))
+      self.message = "disk conversion succeeded"
+      _log.info(prep_message(message))
+      queue_signal(:start_post_stage)
+    else
+      self.message = prep_message("Unknown converstion status: #{v2v_status}")
+      abort_conversion(message, 'error')
+    end
+  end
+
+  def start_post_stage
+    # once we refactor Automate's PostTransformation into a job, we kick start it here
+    self.message = 'To wait for PostTransformation ...'
+    _log.info(prep_message("To start polling for PostTransformation stage"))
+    queue_signal(:poll_post_stage, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
+  end
+
+  def poll_post_stage
+    self.message = "PostTransformation state=#{migration_task.state}, status=#{migration_task.status}"
+    _log.info(prep_message(message))
+    if migration_task.state == 'finished'
+      self.status = migration_task.status
       queue_signal(:finish)
     else
-      message = prep_message("Unknown converstion status: #{status}")
-      abort_conversion(message, 'error')
+      queue_signal(:poll_post_stage, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     end
   end
 
