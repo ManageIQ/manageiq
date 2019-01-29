@@ -12,6 +12,10 @@ FactoryBot.define do
       derived_vm_used_disk_storage      1.0.gigabytes
       derived_vm_allocated_disk_storage 4.0.gigabytes
     end
+
+    trait :in_other_region do
+      other_region
+    end
   end
 
   factory :metric_rollup_vm_hr, :parent => :metric_rollup, :class => :MetricRollup do

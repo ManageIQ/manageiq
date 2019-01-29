@@ -182,7 +182,7 @@ describe ChargebackContainerProject do
         metric_rollup_params[:cpu_usage_rate_average] = 0.0
         metric_rollup_params[:derived_memory_used] = 0.0
 
-        add_metric_rollups_for(@project, (month_beginning + 12.hours)...month_end, 24.hours, metric_rollup_params, nil)
+        add_metric_rollups_for(@project, (month_beginning + 12.hours)...month_end, 24.hours, metric_rollup_params, [])
 
         @metric_size = @project.metric_rollups.size
       end
@@ -206,7 +206,7 @@ describe ChargebackContainerProject do
         metric_rollup_params[:cpu_usage_rate_average] = 0.0
         metric_rollup_params[:derived_memory_used] = 0.0
 
-        add_metric_rollups_for(@project, (month_beginning + 12.hours)...month_end, 24.hours, metric_rollup_params, nil)
+        add_metric_rollups_for(@project, (month_beginning + 12.hours)...month_end, 24.hours, metric_rollup_params, [])
 
         @metric_size = @project.metric_rollups.size
 

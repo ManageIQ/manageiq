@@ -885,9 +885,9 @@ describe Tenant do
   end
 
   context "using more regions with factory" do
-    context "without MiqRegion.seed" do
-      let!(:other_region) { FactoryGirl.create(:miq_region) }
+    let!(:other_region) { FactoryGirl.create(:miq_region) }
 
+    context "without MiqRegion.seed" do
       it "uses other region" do
         expect(MiqRegion.count).to eq(1)
         exception_message = "You need to seed default MiqRegion with MiqRegion.seed"
@@ -900,7 +900,6 @@ describe Tenant do
         MiqRegion.seed
       end
 
-      let!(:other_region) { FactoryGirl.create(:miq_region) }
       let!(:tenant) { FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region) }
 
       it "uses other region" do
@@ -913,6 +912,21 @@ describe Tenant do
         exception_message = "You need to pass specific region  with :other_region: \n"\
                             "FactoryGirl.create(:tenant, :in_other_region, :other_region => <region>) "
         expect { FactoryGirl.create(:tenant, :in_other_region) }.to raise_error(exception_message)
+      end
+
+      let!(:root_tenant_other_region) do
+        tenant_other_region = FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region)
+        tenant_other_region.update_attribute(:parent, nil) # rubocop:disable Rails/SkipsModelValidations
+        tenant_other_region
+      end
+
+      let!(:root_tenant) { Tenant.seed }
+
+      it "creates root tenant in other region" do
+        expect(root_tenant.root?).to be_truthy
+        expect(Tenant.find(root_tenant_other_region.id).root?).to be_truthy
+        expect(Tenant.find(root_tenant_other_region.id).parent).to be_nil
+        expect(MiqRegion.my_region_number).not_to eq(MiqRegion.find_by(:region => root_tenant_other_region.region_id).region)
       end
     end
   end
