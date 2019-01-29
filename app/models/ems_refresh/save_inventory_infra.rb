@@ -90,19 +90,23 @@ module EmsRefresh::SaveInventoryInfra
     locs, names = hashes.partition { |h| h[:location] }
     locs.collect!  { |h| h[:location] }
     names.collect! { |h| h[:name] }
-    locs  = Storage.where(:location => locs) unless locs.empty?
-    names = Storage.where(:location => nil, :name => names) unless names.empty?
+    storages_by_location = Storage.where(:location => locs).index_by(&:location)
+    storages_by_name     = Storage.where(:location => nil, :name => names).index_by(&:name)
 
     hashes.each do |h|
       found = if h[:location]
-                locs.detect { |s| s.location == h[:location] }
+                storages_by_location[h[:location]]
               else
-                names.detect { |s| s.name == h[:name] }
+                storages_by_name[h[:name]]
               end
 
       if found.nil?
         _log.info("#{log_header} Creating Storage [#{h[:name]}] location: [#{h[:location]}]")
+
         found = Storage.create(h)
+
+        # Update cached storages with the new record to pick up duplicates
+        h[:location].nil? ? storages_by_name[h[:name]] = found : storages_by_location[h[:location]] = found
       else
         _log.info("#{log_header} Updating Storage [#{found.name}] id: [#{found.id}] location: [#{found.location}]")
         found.update_attributes!(h)

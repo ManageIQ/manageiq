@@ -109,6 +109,33 @@ describe EmsRefresh::SaveInventoryInfra do
     end
   end
 
+  context ".save_storages_inventory" do
+    let(:ems) do
+      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
+      FactoryBot.create(:ems_vmware, :zone => zone)
+    end
+
+    it "doesn't create two records with duplicate hashes" do
+      data = [
+        {
+          :location => "ds:///vmfs/volumes/5280a4c3-b5e2-7dc7-5c31-7a344d35466c/",
+          :ems_ref  => "datastore-15",
+          :name     => "NFS Storage",
+        },
+        {
+          :location => "ds:///vmfs/volumes/5280a4c3-b5e2-7dc7-5c31-7a344d35466c/",
+          :ems_ref  => "datastore-74",
+          :name     => "NFS Storage",
+        }
+
+      ]
+
+      EmsRefresh.save_storages_inventory(ems, data)
+
+      expect(Storage.count).to eq(1)
+    end
+  end
+
   context ".save_hosts_inventory" do
     before do
       @zone   = FactoryBot.create(:zone)
