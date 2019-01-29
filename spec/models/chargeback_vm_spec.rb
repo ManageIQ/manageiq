@@ -1259,6 +1259,28 @@ describe ChargebackVm do
 
           subject! { ChargebackVm.build_results_for_report_ChargebackVm(options_tenant).first }
 
+          context "tenants don't exist" do
+            let(:unknown_number) { 999_999_999 }
+            let(:options_with_tenant_only_in_default_region) { base_options.merge(:interval => 'monthly', :tenant_id => tenant_default_region.id).tap { |t| t.delete(:tag) } }
+            let!(:tenant_default_region) { FactoryBot.create(:tenant, :parent => Tenant.root_tenant) }
+
+            it "raises error" do
+              skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+              exception_message = "Unable to find tenant '#{tenant_default_region.name}' (based on tenant id '#{tenant_default_region.id}' from default region) in region #{region_1.region}"
+              expect { ChargebackVm.build_results_for_report_ChargebackVm(options_with_tenant_only_in_default_region) }.to raise_error(MiqException::Error, exception_message)
+            end
+
+            context "tenant in default region doesn't exists" do
+              let(:options_with_missing_tenant) { base_options.merge(:interval => 'monthly', :tenant_id => unknown_number).tap { |t| t.delete(:tag) } }
+
+              it "raises error" do
+                skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
+                exception_message = "Unable to find tenant '#{unknown_number}'"
+                expect { ChargebackVm.build_results_for_report_ChargebackVm(options_with_missing_tenant) }.to raise_error(exception_message)
+              end
+            end
+          end
+
           it "report from all regions and only for tenant_1" do
             skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
 
