@@ -80,9 +80,9 @@ class Classification < ApplicationRecord
     return @ns unless @ns.nil?
 
     if category?
-      @ns = tag2ns(tag.name)
+      @ns = tag2ns(tag_name)
     else
-      @ns = tag2ns(parent.tag.name) unless parent_id.nil?
+      @ns = tag2ns(parent.tag_name) unless parent_id.nil?
     end
   end
 
@@ -215,7 +215,7 @@ class Classification < ApplicationRecord
   def self.category_names_for_perf_by_tag(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
     in_region(region_id).is_category.where(:perf_by_tag => true)
       .includes(:tag)
-      .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
+      .collect { |c| c.name if c.tag2ns(c.tag_name) == ns }
       .compact
   end
 
@@ -308,10 +308,6 @@ class Classification < ApplicationRecord
     enforce_policy(obj, :unassigned_company_tag)
   end
 
-  def to_tag
-    tag.name unless tag.nil?
-  end
-
   def category?
     parent_id.nil?
   end
@@ -321,8 +317,11 @@ class Classification < ApplicationRecord
   end
 
   def tag_name
-    attribute(:tag_name)
+    return if tag_id.nil? || tag.nil?
+
+    !tag_loaded? && has_attribute?(:tag_name) ? self[:tag_name] : tag.name
   end
+  alias to_tag tag_name
 
   def name
     @name ||= tag2name(tag_name || tag.name)
@@ -547,7 +546,7 @@ class Classification < ApplicationRecord
   end
 
   def delete_assignments
-    AssignmentMixin.all_assignments(tag.name).destroy_all
+    AssignmentMixin.all_assignments(tag_name).destroy_all
   end
 
   def delete_tag_and_taggings
@@ -576,4 +575,8 @@ class Classification < ApplicationRecord
 
   # rubocop:enable Style/NumericPredicate
   # rubocop:enable Rails/DynamicFindBy
+
+  def tag_loaded?
+    association(:tag).loaded?
+  end
 end
