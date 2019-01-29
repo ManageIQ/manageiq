@@ -240,8 +240,8 @@ describe MiqScheduleWorker::Runner do
                                       MiqWorker MiqServer MiqSearch MiqScsiLun MiqScsiTarget StorageFile
                                       Tagging VimPerformanceState)
             }
-            database_config = {:metrics_collection => @metrics_collection, :metrics_history => @metrics_history}
-            stub_server_configuration(:database => database_config)
+            database_config = {:metrics_collection => @metrics_collection, :metrics_history => @metrics_history, :maintenance => @database_maintenance}
+            stub_settings(:database => database_config)
           end
 
           context "with database_owner in region" do
