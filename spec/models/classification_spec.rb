@@ -539,6 +539,47 @@ describe Classification do
     end
   end
 
+  describe "name2tag" do
+    let(:root_ns)   { "/managed" }
+    let(:parent_ns) { "/managed/test_category" }
+    let(:entry_ns)  { "/managed/test_category/test_entry" }
+    let(:parent) { FactoryBot.create(:classification, :name => "test_category") }
+
+    it "creates parent tag" do
+      expect(Classification.name2tag("test_category")).to eq(parent_ns)
+    end
+
+    it "creates tag with name and ns" do
+      expect(Classification.name2tag("test_entry", 0, parent_ns)).to eq(entry_ns)
+      expect(Classification.name2tag("test_category", 0, root_ns)).to eq(parent_ns)
+    end
+
+    it "creates tag with name, ns, and parent_id" do
+      expect(Classification.name2tag("test_entry", parent.id, root_ns)).to eq(entry_ns)
+    end
+
+    it "creates tag with name, ns and parent" do
+      expect(Classification.name2tag("test_entry", parent, root_ns)).to eq(entry_ns)
+    end
+  end
+
+  describe '.create_category!' do
+    it "is a category" do
+      c1 = Classification.create_category!(:name => 'a', :description => 'a')
+
+      expect(c1).to be_category
+    end
+  end
+
+  describe '.create' do
+    it "assigns proper tags" do
+      FactoryBot.create(:classification_department_with_tags)
+      Tag.all.each do |tag|
+        expect(tag.name).to eq(Classification.name2tag(tag.classification.name, tag.classification.parent_id))
+      end
+    end
+  end
+
   def all_tagged_with(target, all, category = nil)
     tagged_with(target, :all => all, :cat => category)
   end
