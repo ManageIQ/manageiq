@@ -34,6 +34,7 @@ class MiqWidget < ApplicationRecord
   acts_as_miq_set_member
 
   WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/widgets"))
+  WIDGET_REPORT_SOURCE = "Generated for widget".freeze
 
   before_destroy :destroy_schedule
 
@@ -318,7 +319,7 @@ class MiqWidget < ApplicationRecord
     userid_for_result = "widget_id_#{id}|#{name}|schedule"
     MiqReportResult.purge_for_user(:userid => userid_for_result)
 
-    rpt.build_create_results(:userid => userid_for_result, :report_source => "Generated for widget", :timezone => timezone, :miq_group_id => group.id)
+    rpt.build_create_results(:userid => userid_for_result, :report_source => WIDGET_REPORT_SOURCE, :timezone => timezone, :miq_group_id => group.id)
   end
 
   def find_or_build_contents_for_user(group, user, timezone = nil)

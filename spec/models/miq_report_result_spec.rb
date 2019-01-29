@@ -27,6 +27,25 @@ describe MiqReportResult do
     expect(task.state).to eq MiqTask::STATE_FINISHED
   end
 
+  describe "#friendly_title" do
+    let(:report_title) { "VMs using thin provisioned disks" }
+    let(:report) { FactoryBot.create(:miq_report, :title => report_title) }
+    let(:report_result_for_report) { FactoryBot.create(:miq_report_result, :miq_report_id => report.id, :report => report) }
+    let(:widget_title) { "Widget: VMs using thin provisioned disks" }
+    let(:widget) { FactoryBot.create(:miq_widget, :widget => widget_title) }
+    let(:widget_content) { FactoryBot.create(:miq_widget_content, :miq_widget => widget) }
+    let(:report_for_widget) { FactoryBot.create(:miq_report, :title => widget_title) }
+    let(:report_result_for_widget) { FactoryBot.create(:miq_report_result, :miq_report => report_for_widget, :report => report_for_widget, :report_source => MiqWidget::WIDGET_REPORT_SOURCE) }
+
+    it "display title for widget" do
+      expect(report_result_for_report.friendly_title).to eq(report_title)
+    end
+
+    it "display title for widget" do
+      expect(report_result_for_widget.friendly_title).to eq(widget_title)
+    end
+  end
+
   context "report result created by User 1 with current group 1" do
     before do
       @report_1 = FactoryBot.create(:miq_report)
