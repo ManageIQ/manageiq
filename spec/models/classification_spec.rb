@@ -571,6 +571,15 @@ describe Classification do
     end
   end
 
+  describe '.create' do
+    it "assigns proper tags" do
+      FactoryBot.create(:classification_department_with_tags)
+      Tag.all.each do |tag|
+        expect(tag.name).to eq(Classification.name2tag(tag.classification.name, tag.classification.parent_id))
+      end
+    end
+  end
+
   def all_tagged_with(target, all, category = nil)
     tagged_with(target, :all => all, :cat => category)
   end
