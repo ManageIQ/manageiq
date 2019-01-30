@@ -29,20 +29,16 @@ FactoryBot.define do
   #
 
   factory :classification_cost_center_with_tags, :parent => :classification_cost_center do
-    children do
-      [
-        FactoryBot.create(:classification_tag, :name => "001", :description => "Cost Center 001"),
-      ]
+    after(:create) do |c|
+      FactoryBot.create(:classification_tag, :name => "001", :description => "Cost Center 001", :parent => c)
     end
   end
 
   factory :classification_department_with_tags, :parent => :classification_department do
-    children do
-      [
-        FactoryBot.create(:classification_tag, :name => "accounting", :description => "Accounting"),
-        FactoryBot.create(:classification_tag, :name => "finance",    :description => "Financial Services"),
-        FactoryBot.create(:classification_tag, :name => "hr",         :description => "Human Resources"),
-      ]
+    after(:create) do |c|
+      FactoryBot.create(:classification_tag, :parent => c, :name => "accounting", :description => "Accounting")
+      FactoryBot.create(:classification_tag, :parent => c, :name => "finance",    :description => "Financial Services")
+      FactoryBot.create(:classification_tag, :parent => c, :name => "hr",         :description => "Human Resources")
     end
   end
 end
