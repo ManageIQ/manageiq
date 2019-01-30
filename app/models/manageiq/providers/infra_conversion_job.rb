@@ -75,11 +75,11 @@ class ManageIQ::Providers::InfraConversionJob < Job
 
   def poll_conversion
     # TODO: how much time should we wait before timing out?
-    self.message = "Getting conversion state"
+    message = "Getting conversion state"
     _log.info(prep_message(message))
 
     if migration_task.options[:virtv2v_wrapper].nil? || migration_task.options[:virtv2v_wrapper]['state_file'].nil?
-      self.message = "options[:virtv2v_wrapper]['state_file'] not available, continuing poll_conversion"
+      message = "options[:virtv2v_wrapper]['state_file'] not available, continuing poll_conversion"
       _log.info(prep_message(message))
       return queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     end
@@ -92,34 +92,34 @@ class ManageIQ::Providers::InfraConversionJob < Job
     end
 
     v2v_status = migration_task.options[:virtv2v_status]
-    self.message = "virtv2v_status=#{status}"
+    message = "virtv2v_status=#{status}"
     _log.info(prep_message(message))
 
     case v2v_status
     when 'active'
       queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     when 'failed'
-      self.message = "disk conversion failed"
+      message = "disk conversion failed"
       abort_conversion(prep_message(message), 'error')
     when 'succeeded'
-      self.message = "disk conversion succeeded"
+      message = "disk conversion succeeded"
       _log.info(prep_message(message))
       queue_signal(:start_post_stage)
     else
-      self.message = prep_message("Unknown converstion status: #{v2v_status}")
+      message = prep_message("Unknown converstion status: #{v2v_status}")
       abort_conversion(message, 'error')
     end
   end
 
   def start_post_stage
     # once we refactor Automate's PostTransformation into a job, we kick start it here
-    self.message = 'To wait for PostTransformation ...'
-    _log.info(prep_message("To start polling for PostTransformation stage"))
+    message = "To start polling for PostTransformation progress"
+    _log.info(prep_message(message))
     queue_signal(:poll_post_stage, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
   end
 
   def poll_post_stage
-    self.message = "PostTransformation state=#{migration_task.state}, status=#{migration_task.status}"
+    message = "PostTransformation state=#{migration_task.state}, status=#{migration_task.status}"
     _log.info(prep_message(message))
     if migration_task.state == 'finished'
       self.status = migration_task.status
@@ -132,13 +132,16 @@ class ManageIQ::Providers::InfraConversionJob < Job
   def queue_signal(*args, deliver_on: nil)
     role     = options[:role] || "ems_operations"
     priority = options[:priority] || MiqQueue::NORMAL_PRIORITY
+    super(*args, deliver_on, role, priority)
+  end
 
+  def queue_signal(*args, deliver_on: nil)
     MiqQueue.put(
       :class_name  => self.class.name,
       :method_name => "signal",
       :instance_id => id,
-      :priority    => priority,
-      :role        => role,
+      :priority    => MiqQueue::NORMAL_PRIORITY,
+      :role        => "ems_operations",
       :zone        => zone,
       :task_id     => guid,
       :args        => args,

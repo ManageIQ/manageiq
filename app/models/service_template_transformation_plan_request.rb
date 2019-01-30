@@ -53,7 +53,7 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
         :target_id    => req_task.id
       }
       job = ManageIQ::Providers::InfraConversionJob.create_job(job_options)
-      req_task.options[:infra_migration_job_id] = job.id
+      req_task.options[:infra_conversion_job_id] = job.id
       req_task.save!
     end
   end

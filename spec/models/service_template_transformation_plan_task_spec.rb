@@ -1,4 +1,6 @@
 describe ServiceTemplateTransformationPlanTask do
+  let(:infra_conversion_job) { FactoryBot.create(:infra_conversion_job) }
+
   describe '.base_model' do
     it { expect(described_class.base_model).to eq(ServiceTemplateTransformationPlanTask) }
   end
@@ -177,6 +179,7 @@ describe ServiceTemplateTransformationPlanTask do
 
     describe '#cancel' do
       it 'catches cancel state' do
+        task.options.merge!(:infra_conversion_job_id => infra_conversion_job.id)
         task.cancel
         expect(task.cancelation_status).to eq(MiqRequestTask::CANCEL_STATUS_REQUESTED)
         expect(task.cancel_requested?).to be_truthy
@@ -185,9 +188,12 @@ describe ServiceTemplateTransformationPlanTask do
 
     describe '#kill_virtv2v' do
       before do
-        task.options = { :virtv2v_wrapper => { 'state_file' => '/tmp/v2v.state' }}
+        task.options = {
+          :virtv2v_wrapper    => { 'state_file' => '/tmp/v2v.state', 'pid' => '1234' },
+          :virtv2v_started_on => 1
+        }
         task.conversion_host = conversion_host
-        allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return("pid" => 1234)
+        allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return({})
       end
 
       it "returns false if if kill command failed" do
@@ -319,6 +325,7 @@ describe ServiceTemplateTransformationPlanTask do
         allow(src_host).to receive(:authentication_userid).and_return('esx_user')
         allow(src_host).to receive(:authentication_password).and_return('esx_passwd')
         task_1.options[:transformation_host_id] = conversion_host.id
+        allow(task_1).to receive(:with_lock).and_yield
       end
 
       it "fails when cluster is not mapped" do

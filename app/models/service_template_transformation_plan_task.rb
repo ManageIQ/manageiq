@@ -166,6 +166,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def cancel
     update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
+    Job.find(options[:infra_conversion_job_id]).cancel
   end
 
   def canceling
@@ -192,11 +193,11 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def set_options(opts)
-    self.with_lock do
-      self.options.merge!(opts)
-      self.update_attributes(:options => self.options)
+    with_lock do
+      options.merge!(opts)
+      update_attributes(:options => options)
     end
-    self.options
+    options
   end
 
   def run_conversion

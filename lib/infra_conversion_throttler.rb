@@ -3,6 +3,7 @@ class InfraConversionThrottler
 
   def self.start_tasks
     pending = ManageIQ::Providers::InfraConversionJob.where(:state => 'waiting_to_start')
+    _log.info("Pening InfraConversionJob: #{pending.count}")
     return if pending.empty?
     by_ems = pending.sort_by(&:created_on).each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |job, hash|
       task = job.migration_task
@@ -10,7 +11,7 @@ class InfraConversionThrottler
     end
     by_ems.each do |ems, jobs|
       running = ems.conversion_hosts.inject(0) { |sum, ch| sum + ch.active_tasks.size }
-      slots = (ems.miq_custom_get('Max Transformation Runners') || DEFAULT_EMS_MAX_RUNNERS) - running
+      slots = (ems.miq_custom_get('Max Transformation Runners') || DEFAULT_EMS_MAX_RUNNERS).to_i - running
       jobs.each do |job|
         task = job.migration_task
         eligible_hosts = ems.conversion_hosts.select(&:eligible?).sort_by { |ch| ch.active_tasks.size }
@@ -20,8 +21,9 @@ class InfraConversionThrottler
           task.save!
           job.queue_signal(:start)
           slots -= 1
+          _log.info("Pening InfraConversionJob: id=#{job.id} signaled to start")
         rescue StandardError => err
-          _log.error("Migration task id=#{task.id} error: #{err}")
+          _log.error("Failed to start InfraConversionJob: id=#{job.id}, Migration task id=#{task.id} error: #{err}")
           _log.log_backtrace(err)
         end
       end
