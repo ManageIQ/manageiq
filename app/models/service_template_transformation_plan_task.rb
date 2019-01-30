@@ -209,39 +209,32 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     set_options(updates)
   end
 
-  def options=(val)
-    _log.info("JJWW: #{val}")
-    self[:options] = val  
-  end
-
   def get_conversion_state
-    begin
-      updates = {}
-      virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
-      updated_disks = virtv2v_disks
-      if virtv2v_state['finished'].nil?
-        updated_disks.each do |disk|
-          matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
-          raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
-          raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1 
-          disk[:percent] = matching_disks.first['progress']
-        end
-      else
-        updates[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
-        if virtv2v_state['failed']
-          updates[:virtv2v_status] = 'failed'
-          raise "Disks transformation failed."
-        else
-          updates[:virtv2v_status] = 'succeeded'
-          updated_disks.each { |d| d[:percent] = 100 }
-        end
+    updates = {}
+    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
+    updated_disks = virtv2v_disks
+    if virtv2v_state['finished'].nil?
+      updated_disks.each do |disk|
+        matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
+        raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
+        raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1
+        disk[:percent] = matching_disks.first['progress']
       end
-      updates[:virtv2v_disks] = updated_disks
-    ensure
-      _log.info("InfraConversionJob get_conversion_state to set_options: #{updates}")
-      set_options(updates)
+    else
+      updates[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+      if virtv2v_state['failed']
+        updates[:virtv2v_status] = 'failed'
+        raise "Disks transformation failed."
+      else
+        updates[:virtv2v_status] = 'succeeded'
+        updated_disks.each { |d| d[:percent] = 100 }
+      end
     end
-  end 
+    updates[:virtv2v_disks] = updated_disks
+  ensure
+    _log.info("InfraConversionJob get_conversion_state to set_options: #{updates}")
+    set_options(updates)
+  end
 
   def kill_virtv2v(signal = 'TERM')
     return false if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?

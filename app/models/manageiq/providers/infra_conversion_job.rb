@@ -74,6 +74,7 @@ class ManageIQ::Providers::InfraConversionJob < Job
   end
 
   def poll_conversion
+    # TODO: how much time should we wait before timing out?
     self.message = "Getting conversion state"
     _log.info(prep_message(message))
 

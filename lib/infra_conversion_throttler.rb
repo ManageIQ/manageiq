@@ -1,12 +1,11 @@
 class InfraConversionThrottler
   DEFAULT_EMS_MAX_RUNNERS = 10
 
-  def self.assign_to_tasks
+  def self.start_tasks
     pending = ManageIQ::Providers::InfraConversionJob.where(:state => 'waiting_to_start')
     return if pending.empty?
-    by_ems = pending.sort_by(&:created_on).each_with_object({}) do |job, hash|
+    by_ems = pending.sort_by(&:created_on).each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |job, hash|
       task = job.migration_task
-      hash[task.destination_ems] = hash[task.destination_ems] || []
       hash[task.destination_ems].append(job)
     end
     by_ems.each do |ems, jobs|
@@ -27,5 +26,17 @@ class InfraConversionThrottler
         end
       end
     end
+  end
+
+  def self.tune_tasks
+    # This can be triggered either by a timer or by events
+    #   - a conversion job started/ended
+    #   - arrival of an active conversion_host's metrics (cpu, memory, network)
+    #
+    # We can have each job.poll_conversion to record running parameters that this method can act on
+    # Metrics of conversion_host can be from
+    #   - existing MIQ metrics of the Vm or the Host or the EMS
+    #   - implemend a on-demand e.g. conversion_host.get_loading which ssh into host to probe
+    #
   end
 end

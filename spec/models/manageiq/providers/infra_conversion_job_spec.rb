@@ -26,7 +26,7 @@ describe ManageIQ::Providers::InfraConversionJob do
       end
     end
 
-    %w(start poll_conversion start_post_stage poll_post_stage ).each do |signal|
+    %w(start poll_conversion start_post_stage poll_post_stage).each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { @job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{@job.state}/)

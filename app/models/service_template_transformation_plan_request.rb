@@ -5,7 +5,6 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
 
   def requested_task_idx
     vm_resources.where(:status => ServiceResource::STATUS_APPROVED)
-    #  ?? vm_resources.all # ignore approval?
   end
 
   def customize_request_task_attributes(req_task_attrs, vm_resource)
@@ -30,11 +29,6 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def approve_vm(vm_id)
-  # STATUS_ACTIVE    = 'Active'.freeze
-  # STATUS_APPROVED  = 'Approved'.freeze
-  # STATUS_COMPLETED = 'Completed'.freeze
-  # STATUS_FAILED    = 'Failed'.freeze
-  # STATUS_QUEUED    = 'Queued'.freeze
     vm_resources.find_by(:resource_id => vm_id).update_attributes!(:status => ServiceResource::STATUS_APPROVED)
   end
 
