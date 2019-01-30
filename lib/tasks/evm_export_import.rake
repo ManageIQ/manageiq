@@ -9,6 +9,7 @@
 #   * SmartState Analysis Scan Profiles
 #   * Customization Templates
 #   * Reports
+#   * Widgets
 
 namespace :evm do
   namespace :export do
@@ -105,6 +106,14 @@ namespace :evm do
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
+
+    desc 'Exports all widgets to individual YAML files'
+    task :widgets => :environment do
+      options = TaskHelpers::Exports.parse_options
+      TaskHelpers::Exports::Widgets.new.export(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
   end
 
   namespace :import do
@@ -198,6 +207,14 @@ namespace :evm do
     task :reports => :environment do
       options = TaskHelpers::Imports.parse_options
       TaskHelpers::Imports::Reports.new.import(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
+
+    desc 'Imports all widgets from individual YAML files'
+    task :widgets => :environment do
+      options = TaskHelpers::Imports.parse_options
+      TaskHelpers::Imports::Widgets.new.import(options)
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
