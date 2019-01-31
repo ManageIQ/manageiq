@@ -524,17 +524,20 @@ class Classification < ApplicationRecord
     File.split(tag).last unless tag.nil?
   end
 
+  def derive_tag_name
+    Classification.name2tag(name, category? ? parent_id : parent, ns)
+  end
+
   def find_tag
-    tag_name = Classification.name2tag(name, parent, ns)
-    Tag.in_region(region_id).find_by(:name => tag_name)
+    Tag.in_region(region_id).find_by(:name => derive_tag_name)
   end
 
   def save_tag
-    tag_name = Classification.name2tag(name, parent, ns)
     if tag_id.present? || tag.present?
+      tag_name = derive_tag_name
       tag.update(:name => tag_name) unless tag.name == tag_name
     else
-      self.tag = Tag.in_region(region_id).find_or_create_by(:name => tag_name)
+      self.tag = Tag.in_region(region_id).find_or_create_by(:name => derive_tag_name)
     end
   end
 
