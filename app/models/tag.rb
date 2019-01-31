@@ -15,6 +15,8 @@ class Tag < ApplicationRecord
   scope :is_category, -> { joins(:classification).merge(Classification.is_category) }
   scope :is_entry,    -> { joins(:classification).merge(Classification.is_entry) }
 
+  validate :name_uniqueness
+
   def self.list(object, options = {})
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"
@@ -167,5 +169,11 @@ class Tag < ApplicationRecord
 
   def name_path
     @name_path ||= name.sub(%r{^/[^/]*/}, "")
+  end
+
+  def name_uniqueness
+    cond = self.class.in_region(region_id).where(:name => name)
+    cond = cond.where.not(:id => id) unless new_record?
+    errors.add(:name, "must be unique") if cond.exists?
   end
 end
