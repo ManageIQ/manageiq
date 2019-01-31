@@ -235,6 +235,7 @@
   VmOrTemplate: vm
   ManageIQ::Providers::CloudManager::Vm: vm
   ManageIQ::Providers::InfraManager::Vm: vm
+  CloudTenant: cloud_tenant
   Container: container
   ContainerBuild: container_build
   ContainerGroup: container_group
