@@ -29,11 +29,7 @@ module ConversionHost::Configurations
 
     def enable_queue(params, auth_user = nil)
       params = params.symbolize_keys
-      resource_type = params[:resource_type]
-      resource_id = params[:resource_id]
-
-      resource = resource_type.to_s.downcase.classify.constantize.find(resource_id)
-
+      resource = params.delete('resource')
       queue_configuration('enable', nil, resource, [params], auth_user)
     end
 
@@ -45,13 +41,8 @@ module ConversionHost::Configurations
       params.delete(:miq_task_id) # The miq_queue.activate_miq_task will stick in a :miq_task_id
 
       vddk_url = params.delete(:param_v2v_vddk_package_url)
-      resource_id = params[:resource_id]
-      resource_type = params[:resource_type]
 
-      # Effectively ignore case since we cannot guarantee it from the REST API
-      resource = resource_type.to_s.downcase.classify.constantize.find(resource_id)
-
-      conversion_host = new(params.merge(:resource => resource))
+      conversion_host = new(params)
       conversion_host.enable_conversion_host_role(vddk_url)
       conversion_host.save!
       conversion_host
