@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Hammer-2
+
+### Fixed
+- Use the new schema_migrations_ran table to track remote schema migrations [(#18393)](https://github.com/ManageIQ/manageiq/pull/18393)
+
 ## Update as of Sprint 103 ending 2019-01-21
 
 ### Added
@@ -48,7 +53,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Don't seed tenant product features for tenant from remote region [(#18286)](https://github.com/ManageIQ/manageiq/pull/18286)
 - Fix RBAC call for templates and vms [(#18128)](https://github.com/ManageIQ/manageiq/pull/18128)
 
-## Hammer-1
+## Hammer-1 - Released 2019-01-15
 
 ### Added
 - Add --port to evm:dba rake tasks [(#18186)](https://github.com/ManageIQ/manageiq/pull/18186)
