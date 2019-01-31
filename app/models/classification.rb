@@ -10,11 +10,7 @@ class Classification < ApplicationRecord
   before_destroy :delete_tags_and_entries
 
   validates :description, :presence => true, :length => {:maximum => 255}
-  validates :description, :uniqueness => {:scope => [:parent_id]}, :if => proc { |c|
-    cond = c.class.in_region(region_id).where(:parent_id => c.parent_id, :description => c.description)
-    cond = cond.where.not(:id => c.id) unless c.new_record?
-    cond.exists?
-  }
+  validate :description_uniqueness, :if => :description_changed?
 
   NAME_MAX_LENGTH = 50
   validates :name, :presence => true, :length => {:maximum => NAME_MAX_LENGTH}
@@ -579,4 +575,10 @@ class Classification < ApplicationRecord
 
   # rubocop:enable Style/NumericPredicate
   # rubocop:enable Rails/DynamicFindBy
+
+  def description_uniqueness
+    cond = self.class.in_region(region_id).where(:parent_id => parent_id, :description => description)
+    cond = cond.where.not(:id => id) unless new_record?
+    cond.exists?
+  end
 end
