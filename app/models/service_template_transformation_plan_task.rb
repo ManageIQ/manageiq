@@ -54,7 +54,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def preflight_check
     destination_cluster
     virtv2v_disks
-    network_mappings
+    network_mappings.each { |m| raise if m.ip_address.nil? }
     raise if destination_ems.emstype == 'openstack' && source.power_state == 'off'
     true
   rescue

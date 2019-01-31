@@ -453,6 +453,8 @@ describe ServiceTemplateTransformationPlanTask do
           )
         end
 
+        it { expect(task_1.preflight_check). to be false }
+
         context "transport method is vddk" do
           before do
             conversion_host.vddk_transport_supported = true
@@ -541,6 +543,8 @@ describe ServiceTemplateTransformationPlanTask do
             ]
           )
         end
+
+        it { expect(task_1.preflight_check). to be false }
 
         context "transport method is vddk" do
           before do
