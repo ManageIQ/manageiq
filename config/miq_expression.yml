@@ -248,6 +248,7 @@
   ContainerTemplate: container_template
   PersistentVolume: persistent_volume
   Flavor: flavor
+  CloudTenant: cloud_tenant
 :exclude_from_relats:
   ManageIQ::Providers::CloudManager:
   - hosts
