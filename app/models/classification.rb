@@ -18,8 +18,6 @@ class Classification < ApplicationRecord
   validates :name, :presence => true, :length => {:maximum => NAME_MAX_LENGTH}
   validate :validate_format_of_name
 
-  validate :validate_uniqueness_on_tag_name
-
   validates :syntax, :inclusion => {:in      => %w[string integer boolean],
                                     :message => "should be one of 'string', 'integer' or 'boolean'"}
 
@@ -505,17 +503,6 @@ class Classification < ApplicationRecord
   end
 
   private_class_method :add_entries_from_hash
-
-  def validate_uniqueness_on_tag_name
-    tag_name = Classification.name2tag(name, parent, ns)
-    exist_scope = Classification.default_scoped
-                                .includes(:tag)
-                                .where(:tags => {:name => tag_name})
-                                .merge(Tag.in_region(region_id))
-    exist_scope = exist_scope.where.not(:id => id) unless new_record?
-
-    errors.add("name", "has already been taken") if exist_scope.exists?
-  end
 
   def self.name2tag(name, parent_id = nil, ns = DEFAULT_NAMESPACE)
     if parent_id.nil?
