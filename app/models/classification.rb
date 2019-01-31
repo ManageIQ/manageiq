@@ -553,10 +553,7 @@ class Classification < ApplicationRecord
   end
 
   def delete_tag_and_taggings
-    tag = find_tag
-    return if tag.nil?
-
-    tag.destroy
+    tag&.destroy
   end
 
   def delete_tags_and_entries
