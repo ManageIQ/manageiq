@@ -25,11 +25,6 @@ class MiqDialog
         seed_record(path, MiqDialog.find_by(:filename => seed_filename(path)))
       end
 
-      # TODO: Remove this once we change all of the callers
-      def sync_from_file(path, _root)
-        seed_dialog(path)
-      end
-
       private
 
       def seed_record(path, dialog)
