@@ -30,6 +30,10 @@ module ConversionHost::Configurations
     def enable_queue(params, auth_user = nil)
       params = params.symbolize_keys
       resource = params.delete(:resource)
+
+      params[:resource_id] = resource.id
+      params[:resource_type] = resource.class.name
+
       queue_configuration('enable', nil, resource, [params], auth_user)
     end
 

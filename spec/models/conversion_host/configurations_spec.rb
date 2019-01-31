@@ -4,7 +4,8 @@ describe ConversionHost do
     {
       :name          => 'transformer',
       :resource_type => vm.class.name,
-      :resource_id   => vm.id
+      :resource_id   => vm.id,
+      :resource      => vm
     }
   end
 
@@ -75,32 +76,13 @@ describe ConversionHost do
         task_id = described_class.enable_queue(params)
         expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action)
         expect(MiqQueue.first).to have_attributes(
-          :args        => [params.merge(:task_id => task_id)],
+          :args        => [params.merge(:task_id => task_id).except(:resource)],
           :class_name  => described_class.name,
           :method_name => "enable",
           :priority    => MiqQueue::NORMAL_PRIORITY,
           :role        => "ems_operations",
           :zone        => vm.ext_management_system.my_zone
         )
-      end
-
-      it "to queue with a task even with lowercase resource type" do
-        params[:resource_type] = 'vm'
-        task_id = described_class.enable_queue(params)
-        expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action)
-        expect(MiqQueue.first).to have_attributes(
-          :args        => [params.merge(:task_id => task_id)],
-          :class_name  => described_class.name,
-          :method_name => "enable",
-          :priority    => MiqQueue::NORMAL_PRIORITY,
-          :role        => "ems_operations",
-          :zone        => vm.ext_management_system.my_zone
-        )
-      end
-
-      it "to fail when the resource is not found" do
-        vm.destroy!
-        expect { described_class.enable_queue(params) }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
