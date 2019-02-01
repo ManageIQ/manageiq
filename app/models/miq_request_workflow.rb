@@ -848,7 +848,7 @@ class MiqRequestWorkflow
                  else
                    item.class.base_class
                  end
-    node = @ems_xml_nodes[klass_name][item.id]
+    node = @ems_xml_nodes.fetch(klass_name, {})[item.id]
     $log.error("#{log_header} Resource <#{klass_name}_#{item.id} - #{item.name}> not found in cached resource tree.") if node.nil?
     node
   end
