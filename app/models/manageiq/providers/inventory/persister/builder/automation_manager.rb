@@ -2,6 +2,13 @@ module ManageIQ::Providers
   class Inventory::Persister
     class Builder
       class AutomationManager < ::ManageIQ::Providers::Inventory::Persister::Builder
+        def authentication_configuration_script_bases
+          add_properties(
+            :manager_ref                  => %i(configuration_script_base authentication),
+            :parent_inventory_collections => %i(configuration_scripts)
+          )
+        end
+
         def configuration_scripts
           default_manager_ref
           add_common_default_values
