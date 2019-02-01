@@ -53,6 +53,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :physical_servers,  :foreign_key => :ems_id, :inverse_of => :ext_management_system, :dependent => :destroy
 
   has_many :host_virtual_switches, -> { distinct }, :through => :hosts
+  has_many :host_virtual_lans,     -> { distinct }, :through => :host_virtual_switches, :source => :lans
 
   has_many :storages,       -> { distinct },          :through => :hosts
   has_many :ems_events,     -> { order("timestamp") }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
