@@ -39,6 +39,7 @@
 - ExtManagementSystem
 - ExtManagementSystemPerformance
 - Flavor
+- FloatingIp
 - GuestApplication
 - Host
 - HostAggregate
@@ -112,6 +113,7 @@
 - filesystems
 - firewall_rules
 - flavors
+- floating_ips
 - groups
 - guest_applications
 - guest_devices
@@ -249,6 +251,7 @@
   PersistentVolume: persistent_volume
   Flavor: flavor
   CloudTenant: cloud_tenant
+  FloatingIp: floating_ip
 :exclude_from_relats:
   ManageIQ::Providers::CloudManager:
   - hosts
