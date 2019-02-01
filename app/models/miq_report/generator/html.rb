@@ -83,13 +83,10 @@ module MiqReport::Generator::Html
     style_class = !style.nil? ? " class='#{style}'" : nil
     if col_name == 'resource_type'
       output << "<td#{style_class}>"
-      output << format_column(col_name, row_data, time_zone)
     elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
       output << "<td#{style_class} " + 'style="text-align:right">'
-      output << format_column(col_name, row_data, time_zone)
     elsif ['<compare>', '<drift>'].include?(db.to_s)
       output << "<td#{style_class}>"
-      output << format_column(col_name, row_data, time_zone)
     else
       if row_data[col_name].kind_of?(Time)
         output << "<td#{style_class} " + 'style="text-align:center">'
@@ -98,9 +95,8 @@ module MiqReport::Generator::Html
       else
         output << "<td#{style_class}>"
       end
-      output << format_column(col_name, row_data, time_zone, col_format)
-
     end
+    output << format_column(col_name, row_data, time_zone, col_format)
     output << '</td>'
   end
 
