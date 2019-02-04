@@ -163,6 +163,9 @@
     :refresh_interval: 15.minutes
   :embedded_ansible_automation:
     :inventory_object_refresh: true
+    :allow_targeted_refresh: true
+    :inventory_collections:
+      :saver_strategy: batch
     :refresh_interval: 15.minutes
   :foreman_configuration:
     :refresh_interval: 15.minutes

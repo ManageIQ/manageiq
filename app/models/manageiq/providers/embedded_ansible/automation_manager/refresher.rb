@@ -1,4 +1,4 @@
-class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
+class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Refresher < ManageIQ::Providers::BaseManager::ManagerRefresher
   include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Refresher
 
   def self.display_name(number = 1)
