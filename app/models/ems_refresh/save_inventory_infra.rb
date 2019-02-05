@@ -305,6 +305,9 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_switches_inventory(host, hashes)
+    ems = host.ext_management_system
+    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
+
     already_saved, not_yet_saved = hashes.partition { |h| h[:id] }
     save_inventory_multi(host.switches, not_yet_saved, [], [:uid_ems], :lans)
     host_switches_hash = already_saved.collect { |switch| {:host_id => host.id, :switch_id => switch[:id]} }
@@ -321,6 +324,11 @@ module EmsRefresh::SaveInventoryInfra
       next if sh[:lans].nil?
       sh[:lans].each do |lh|
         lan = switch.lans.detect { |l| l.uid_ems == lh[:uid_ems] }
+        if lan.nil?
+          _log.warn("#{log_header} Failed to find lan [#{lh[:uid_ems]}] for switch ID [#{switch.id}]")
+          next
+        end
+
         lh[:id] = lan.id
       end
     end
