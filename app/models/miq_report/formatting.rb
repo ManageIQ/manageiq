@@ -37,6 +37,8 @@ module MiqReport::Formatting
       end
     end
 
+    # TODO: remove this and update storing column format to instance of report in UI (this requires migration)
+    options[:format] = :_none_ if Chargeback.db_is_chargeback?(db) && Chargeback.rate_column?(col.to_s)
     col = Chargeback.default_column_for_format(col.to_s) if Chargeback.db_is_chargeback?(db)
 
     format = options.delete(:format)

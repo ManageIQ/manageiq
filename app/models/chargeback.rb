@@ -268,6 +268,10 @@ class Chargeback < ActsAsArModel
     end
   end
 
+  def self.rate_column?(col)
+    col.ends_with?("_rate")
+  end
+
   private
 
   def relevant_fields
