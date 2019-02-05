@@ -111,6 +111,9 @@ module VirtualDelegates
     #
     # this is called at schema load time (and not at class definition time)
     #
+    # Of note, klass.type_for_attribute() loads the schema of the target type.
+    # In rare cases, this can cause race conditions
+    #
     # @param  method_name [Symbol] name of the attribute on the source class to be defined
     # @param  col [Symbol] name of the attribute on the associated class to be referenced
     # @option options :to [Symbol] name of the association from the source class to be referenced
@@ -122,7 +125,7 @@ module VirtualDelegates
       end
 
       col = col.to_s
-      type = to_ref.klass.type_for_attribute(col)
+      type = options[:type] || to_ref.klass.type_for_attribute(col)
       raise "unknown attribute #{to}##{col} referenced in #{name}" unless type
       arel = virtual_delegate_arel(col, to_ref)
       define_virtual_attribute(method_name, type, :uses => (options[:uses] || to), :arel => arel)
