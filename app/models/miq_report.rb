@@ -150,7 +150,7 @@ class MiqReport < ApplicationRecord
 
     params['filter'] = MiqExpression.new("=" => {"field" => "MiqReport-id",
                                                  "value" => id})
-    params['towhat'] = "MiqReport"
+    params['resource_type'] = "MiqReport"
     params['prod_default'] = "system"
 
     MiqSchedule.create!(params)
