@@ -4,8 +4,8 @@ describe ConversionHost do
   let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
 
   context "provider independent methods" do
-    let(:host) { FactoryBot.create(:host) }
-    let(:vm) { FactoryBot.create(:vm_or_template) }
+    let(:host) { FactoryBot.create(:host_redhat) }
+    let(:vm) { FactoryBot.create(:vm_openstack) }
     let(:conversion_host_1) { FactoryBot.create(:conversion_host, :resource => host) }
     let(:conversion_host_2) { FactoryBot.create(:conversion_host, :resource => vm) }
     let(:task_1) { FactoryBot.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
@@ -188,7 +188,7 @@ describe ConversionHost do
   end
 
   context "address validation" do
-    let(:vm) { FactoryBot.create(:host) }
+    let(:vm) { FactoryBot.create(:host_redhat) }
 
     it "is invalid if the address is not a valid IP address" do
       allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
