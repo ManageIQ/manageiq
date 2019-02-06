@@ -56,16 +56,13 @@ class ManageIQ::Providers::InfraConversionJob < Job
     #  - power_on: ignored
     #  - check_power_on: ignore
 
-    if migration_task.preflight_check
-      _log.info(prep_message("Preflight check passed, continue"))
-      migration_task.set_ready
-      _log.info(prep_message("task.state=#{migration_task.state}"))
-      queue_signal(:poll_conversion)
-    else
-      message = prep_message("Preflight check has failed")
-      _log.info(message)
-      abort_conversion(message, 'error')
-    end
+    migration_task.preflight_check
+    _log.info(prep_message("Preflight check passed, task.state=#{migration_task.state}. continue ..."))
+    queue_signal(:poll_conversion)
+  rescue => error
+    message = prep_message("Preflight check has failed: #{error}")
+    _log.info(message)
+    abort_conversion(message, 'error')
   end
 
   def abort_conversion(message, status)

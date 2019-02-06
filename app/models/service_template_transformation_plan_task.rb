@@ -33,7 +33,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def update_transformation_progress(progress)
     updates = {:progress => (options[:progress] || {}).merge(progress)}
-    set_options(updates)
+    update_options(updates)
   end
 
   def task_finished
@@ -52,15 +52,21 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   # This method returns true if all mappings are ok. It also preload
   #  virtv2v_disks and network_mappings in task options
   def preflight_check
-    updates = {}
-    updates[:power_off] = true # TODO: This is the same as the automate version: hardcoded
-    updates[:source_vm_power_state] = source.power_state # This will determine that of destination_vm
-    set_options(updates)
-    return false if source.power_state == 'on' && !options[:power_off]
+    raise 'OSP destination and source power_state is off' if destination_ems.emstype == 'openstack' && source.power_state == 'off'
+    #####
+    # this block is the essence of automate method: assesstransformation and its effect
+    # https://github.com/ManageIQ/manageiq-content/blob/a9421bc26960fae1a78d335c6ab4bee28f948fbe/content/automate/ManageIQ/Transformation/Common.class/__methods__/assesstransformation.rb#L15    
+    update_options(:source_vm_power_state => source.power_state) # This will determine power_state of destination_vm
+    # The following 2 lines are the spirit of the corresponding code in the Automate, essentially cancel out each other's effect
+    # Keeping these dead code here is for reviewer to understand what they are and why
+    # Refer to https://github.com/ManageIQ/manageiq-content/blob/a9421bc26960fae1a78d335c6ab4bee28f948fbe/content/automate/ManageIQ/Transformation/Infrastructure/VM/Common.class/__methods__/poweroff.rb#L16
+    # update_options(:power_off => true)
+    # raise 'source power_state is on and options[:power_off] is false' if source.power_state == 'on' && !options[:power_off]
+    #####
     destination_cluster
     virtv2v_disks
     network_mappings
-    !(destination_ems.emstype == 'openstack' && source.power_state == 'off')
+    update_attributes(:state => 'ready')
   end
 
   def source_cluster
@@ -89,7 +95,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     return options[:virtv2v_disks] if options[:virtv2v_disks].present?
 
     updates = {:virtv2v_disks => calculate_virtv2v_disks}
-    set_options(updates)
+    update_options(updates)
 
     options[:virtv2v_disks]
   end
@@ -98,7 +104,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     return options[:network_mappings] if options[:network_mappings].present?
 
     updates = {:network_mappings => calculate_network_mappings}
-    set_options(updates)
+    update_options(updates)
 
     options[:network_mappings]
   end
@@ -160,10 +166,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
-  def set_ready
-    update_attributes(:state => 'ready')
-  end
-
   def cancel
     update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
     Job.find(options[:infra_conversion_job_id]).cancel
@@ -192,7 +194,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     results.merge!(send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage))
   end
 
-  def set_options(opts)
+  def update_options(opts)
     with_lock do
       options.merge!(opts)
       update_attributes(:options => options)
@@ -206,8 +208,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     updates[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
     updates[:virtv2v_started_on] = start_timestamp
     updates[:virtv2v_status] = 'active'
-    _log.info("InfraConversionJob run_conversion to set_options: #{updates}")
-    set_options(updates)
+    _log.info("InfraConversionJob run_conversion to update_options: #{updates}")
+    update_options(updates)
   end
 
   def get_conversion_state
@@ -233,8 +235,8 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     end
     updates[:virtv2v_disks] = updated_disks
   ensure
-    _log.info("InfraConversionJob get_conversion_state to set_options: #{updates}")
-    set_options(updates)
+    _log.info("InfraConversionJob get_conversion_state to update_options: #{updates}")
+    update_options(updates)
   end
 
   def kill_virtv2v(signal = 'TERM')
