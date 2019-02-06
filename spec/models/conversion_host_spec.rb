@@ -215,4 +215,19 @@ describe ConversionHost do
       expect(conversion_host.valid?).to be(true)
     end
   end
+
+  context "resource validation" do
+    let(:redhat_host) { FactoryBot.create(:host_redhat) }
+    let(:azure_vm) { FactoryBot.create(:vm_azure) }
+
+    it "is valid if the associated resource supports conversion hosts" do
+      conversion_host = ConversionHost.new(:name => "test", :resource => redhat_host)
+      expect(conversion_host.valid?).to be(true)
+    end
+
+    it "is invalid if the associated resource does not support conversion hosts" do
+      conversion_host = ConversionHost.new(:name => "test", :resource => azure_vm)
+      expect(conversion_host.valid?).to be(false)
+    end
+  end
 end
