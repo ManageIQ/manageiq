@@ -60,7 +60,7 @@ describe ServiceTemplateTransformationPlanRequest do
       let(:request) { FactoryBot.create(:service_template_transformation_plan_request, :source => plan) }
 
       it 'returns false' do
-        host = FactoryBot.create(:host, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone)))
+        host = FactoryBot.create(:host_redhat, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone)))
         conversion_host = FactoryBot.create(:conversion_host, :resource => host)
         expect(request.validate_conversion_hosts).to be false
       end
@@ -96,7 +96,7 @@ describe ServiceTemplateTransformationPlanRequest do
       let(:request) { FactoryBot.create(:service_template_transformation_plan_request, :source => plan) }
 
       it 'returns true' do
-        host = FactoryBot.create(:host, :ext_management_system => dst_ems, :ems_cluster => dst_cluster)
+        host = FactoryBot.create(:host_redhat, :ext_management_system => dst_ems, :ems_cluster => dst_cluster)
         conversion_host = FactoryBot.create(:conversion_host, :resource => host)
         expect(request.validate_conversion_hosts).to be true
       end
