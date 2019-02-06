@@ -66,7 +66,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_cluster
     virtv2v_disks
     network_mappings
-    update_attributes(:state => 'ready')
+    update_attributes(:state => 'migrate')
   end
 
   def source_cluster
@@ -166,9 +166,13 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
+  def infra_conversion_job
+    Job.find(options[:infra_conversion_job_id])
+  end
+
   def cancel
     update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
-    Job.find(options[:infra_conversion_job_id]).cancel
+    infra_conversion_job.cancel
   end
 
   def canceling
@@ -348,6 +352,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def valid_states
-    super + %w(ready)
+    super + %w(migrate)
   end
 end

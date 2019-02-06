@@ -82,7 +82,7 @@ class ManageIQ::Providers::InfraConversionJob < Job
     end
 
     begin
-      migration_task.get_conversion_state # task.options will be updated
+      migration_task.get_conversion_state # migration_task.options will be updated
     rescue => exception
       _log.log_backtrace(exception)
       return abort_conversion("Conversion error: #{exception}", 'error')

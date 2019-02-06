@@ -180,6 +180,8 @@ describe ServiceTemplateTransformationPlanTask do
     describe '#cancel' do
       it 'catches cancel state' do
         task.options.merge!(:infra_conversion_job_id => infra_conversion_job.id)
+        expect(task).to receive(:infra_conversion_job).and_return(infra_conversion_job)
+        expect(infra_conversion_job).to receive(:cancel)
         task.cancel
         expect(task.cancelation_status).to eq(MiqRequestTask::CANCEL_STATUS_REQUESTED)
         expect(task.cancel_requested?).to be_truthy
@@ -196,13 +198,37 @@ describe ServiceTemplateTransformationPlanTask do
         allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return({})
       end
 
+      it "returns false if not started" do
+        task.options[:virtv2v_started_on] = nil
+        expect(conversion_host).not_to receive(:kill_process)
+        expect(task.kill_virtv2v('KILL')).to eq(false)
+      end
+
+      it "returns false if finished" do
+        task.options[:virtv2v_finished_on] = 1
+        expect(conversion_host).not_to receive(:kill_process)
+        expect(task.kill_virtv2v('KILL')).to eq(false)
+      end
+
+      it "returns false if virtv2v_wrapper is absent" do
+        task.options[:virtv2v_wrapper] = nil
+        expect(conversion_host).not_to receive(:kill_process)
+        expect(task.kill_virtv2v('KILL')).to eq(false)
+      end
+
+      it "returns false if virtv2v_wrapper.pid is absent" do
+        task.options[:virtv2v_wrapper]['pid'] = nil
+        expect(conversion_host).not_to receive(:kill_process)
+        expect(task.kill_virtv2v('KILL')).to eq(false)
+      end
+
       it "returns false if if kill command failed" do
-        allow(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(false)
+        expect(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(false)
         expect(task.kill_virtv2v('KILL')).to eq(false)
       end
 
       it "returns true if if kill command succeeded" do
-        allow(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(true)
+        expect(conversion_host).to receive(:kill_process).with('1234', 'KILL').and_return(true)
         expect(task.kill_virtv2v('KILL')).to eq(true)
       end
     end
@@ -251,6 +277,12 @@ describe ServiceTemplateTransformationPlanTask do
 
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => src_vm_1) }
 
+    describe "#valid_states" do
+      it "contains 'migrate'" do
+        expect(task_1.send(:valid_states)).to include('migrate')
+      end
+    end
+  
     describe '#transformation_destination' do
       it { expect(task_1.transformation_destination(src_cluster)).to eq(dst_cluster) }
     end
@@ -470,6 +502,11 @@ describe ServiceTemplateTransformationPlanTask do
           end
         end
 
+        it "passes preflight check regardless of power_state" do
+          src_vm_1.send(:power_state=, 'anything')
+          expect { task_1.preflight_check }.not_to raise_error
+        end
+
         context "transport method is vddk" do
           before do
             conversion_host.vddk_transport_supported = true
@@ -567,6 +604,11 @@ describe ServiceTemplateTransformationPlanTask do
             allow(src_nic_2).to receive(:network).and_return(src_network_2b)
             expect { task_1.network_mappings }.to raise_error("[#{src_vm_1.name}] NIC #{src_nic_2.device_name} [#{src_lan_2.name}] has an empty IP address.")
           end
+        end
+
+        it "fails preflight check if src is power off" do
+          src_vm_1.send(:power_state=, 'off')
+          expect { task_1.preflight_check }.to raise_error('OSP destination and source power_state is off')
         end
 
         context "transport method is vddk" do
