@@ -154,6 +154,13 @@ describe ManageIQ::Providers::InfraConversionJob do
         expect(job).to receive(:abort_conversion)
         job.signal(:poll_conversion)
       end
+
+      it 'abort_conversion when poll_conversion times out' do
+        job.options['poll_conversion_max'] = 24 * 60
+        job.context['poll_conversion_count'] = 24 * 60
+        expect(job).to receive(:abort_conversion)
+        job.signal(:poll_conversion)
+      end
     end
 
     context '#start_post_stage' do
@@ -187,6 +194,13 @@ describe ManageIQ::Providers::InfraConversionJob do
           job.signal(:poll_post_stage)
           expect(job.status).to eq(task.status)
         end
+      end
+
+      it 'abort_conversion when poll_post_stage times out' do
+        job.options['poll_post_stage_max'] = 30
+        job.context['poll_post_stage_count'] = 30
+        expect(job).to receive(:abort_conversion)
+        job.signal(:poll_post_stage)
       end
     end
   end
