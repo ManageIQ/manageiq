@@ -15,7 +15,7 @@ describe ServiceTemplateTransformationPlanTask do
   context 'independent of provider' do
     let(:src) { FactoryBot.create(:ems_cluster) }
     let(:dst) { FactoryBot.create(:ems_cluster) }
-    let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone))) }
+    let(:host) { FactoryBot.create(:host, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone))) }
     let(:vm)  { FactoryBot.create(:vm_or_template) }
     let(:vm2)  { FactoryBot.create(:vm_or_template) }
     let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }

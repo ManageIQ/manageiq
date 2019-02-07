@@ -5,7 +5,7 @@ describe ConversionHost do
 
   context "provider independent methods" do
     let(:host) { FactoryBot.create(:host) }
-    let(:vm) { FactoryBot.create(:vm) }
+    let(:vm) { FactoryBot.create(:vm_or_template) }
     let(:conversion_host_1) { FactoryBot.create(:conversion_host, :skip_validate, :resource => host) }
     let(:conversion_host_2) { FactoryBot.create(:conversion_host, :skip_validate, :resource => vm) }
     let(:task_1) { FactoryBot.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
