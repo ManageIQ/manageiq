@@ -17,9 +17,7 @@ class VmdbDatabaseConnection < ApplicationRecord
   virtual_column :task_state,        :type => :string
   virtual_column :wait_resource,     :type => :integer  # oid
   virtual_column :wait_time,         :type => :integer
-  virtual_column :vmdb_database_id,  :type => :integer
 
-  virtual_belongs_to :vmdb_database
   virtual_belongs_to :zone
   virtual_belongs_to :miq_server
   virtual_belongs_to :miq_worker
@@ -47,10 +45,6 @@ class VmdbDatabaseConnection < ApplicationRecord
     rescue => err
       output.warn("MIQ(#{name}.#{__method__}) Unable to log stats, '#{err.message}'")
     end
-  end
-
-  def vmdb_database_id
-    @vmdb_database_id ||= self.class.vmdb_database.id
   end
 
   def address
@@ -109,14 +103,6 @@ class VmdbDatabaseConnection < ApplicationRecord
       'wait_time_ms'            => wait_time_ms,
       'blocked_by'              => blocked_by,
     }
-  end
-
-  def vmdb_database
-    VmdbDatabase.find_by(:id => vmdb_database_id)
-  end
-
-  def vmdb_database=(db)
-    self.vmdb_database_id = db.id
   end
 
   def miq_worker

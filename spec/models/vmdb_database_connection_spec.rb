@@ -103,16 +103,14 @@ describe VmdbDatabaseConnection do
     :task_state,
     :wait_resource,
     :wait_time,
-    :vmdb_database_id,
-    :vmdb_database,
     :zone,
     :miq_server,
     :miq_worker,
-    :pid,
+    :pid
   ].each do |field|
     it "has a #{field}" do
-      setting = VmdbDatabaseConnection.all.first
-      expect(setting).to respond_to(field)
+      connection = VmdbDatabaseConnection.first
+      expect { connection.public_send(field) }.not_to raise_error
     end
   end
 
