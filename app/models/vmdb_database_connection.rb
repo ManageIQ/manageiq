@@ -14,7 +14,6 @@ class VmdbDatabaseConnection < ApplicationRecord
   virtual_column :application,       :type => :string
   virtual_column :command,           :type => :string
   virtual_column :spid,              :type => :integer
-  virtual_column :task_state,        :type => :string
   virtual_column :wait_resource,     :type => :integer  # oid
   virtual_column :wait_time,         :type => :integer
 
@@ -63,10 +62,6 @@ class VmdbDatabaseConnection < ApplicationRecord
     read_attribute('pid')
   end
 
-  def task_state
-    waiting
-  end
-
   def wait_time
     wait_time_ms
   end
@@ -93,15 +88,16 @@ class VmdbDatabaseConnection < ApplicationRecord
       'xact_start'              => xact_start,
       'last_request_start_time' => query_start,
       'command'                 => query,
-      'task_state'              => waiting,
       'login'                   => usename,
       'application'             => application_name,
       'request_id'              => usesysid,
       'net_address'             => client_addr,
       'host_name'               => client_hostname,
       'client_port'             => client_port,
+      'wait_event_type'         => wait_event_type,
+      'wait_event'              => wait_event,
       'wait_time_ms'            => wait_time_ms,
-      'blocked_by'              => blocked_by,
+      'blocked_by'              => blocked_by
     }
   end
 
