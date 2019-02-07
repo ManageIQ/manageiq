@@ -24,7 +24,8 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                   SELECT client_addr   AS client_address
                        , datname       AS database
                        , pid           AS spid
-                       , waiting       AS is_waiting
+                       , wait_event_type
+                       , wait_event
                        , query
                     FROM pg_stat_activity
                    ORDER BY 1, 2

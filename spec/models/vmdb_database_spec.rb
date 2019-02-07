@@ -89,7 +89,7 @@ describe VmdbDatabase do
       connections = described_class.report_client_connections
       expect(connections).to be_kind_of(Array)
 
-      expected_keys = ["client_address", "database", "spid", "is_waiting", "query"]
+      expected_keys = ["client_address", "database", "spid", "wait_event_type", "wait_event", "query"]
       expect(connections.first.keys).to match_array(expected_keys)
 
       expect(connections.first['spid']).to be_kind_of(Integer)
