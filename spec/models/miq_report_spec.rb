@@ -754,16 +754,16 @@ describe MiqReport do
         @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
 
         User.current_user = user_admin
+
+        EvmSpecHelper.local_miq_server
       end
 
       it "returns expected html outputs with formatted values" do
-        allow(User).to receive(:server_timezone).and_return("UTC")
         report.generate_table
         expect(report.build_html_rows).to match_array(@expected_html_rows)
       end
 
       it "returns only rows for tenant with any tenant_quotas" do
-        allow(User).to receive(:server_timezone).and_return("UTC")
         report.generate_table
         # 6th row would be for tenant_without_quotas, but skipped now because of skip_condition, so we expecting 5
         expect(report.table.data.count).to eq(5)
