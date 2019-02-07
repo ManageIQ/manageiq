@@ -16,10 +16,10 @@ describe ServiceTemplateTransformationPlanTask do
     let(:src) { FactoryBot.create(:ems_cluster) }
     let(:dst) { FactoryBot.create(:ems_cluster) }
     let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone))) }
-    let(:vm)  { FactoryBot.create(:vm_openstack) }
-    let(:vm2)  { FactoryBot.create(:vm_openstack) }
+    let(:vm)  { FactoryBot.create(:vm_or_template) }
+    let(:vm2)  { FactoryBot.create(:vm_or_template) }
     let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
-    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => host) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :skip_validate, :resource => host) }
 
     let(:mapping) do
       FactoryBot.create(
