@@ -21,7 +21,8 @@ describe ServiceOrchestration do
       'dialog_stack_onfailure'                => 'ROLLBACK',
       'dialog_stack_timeout'                  => '30',
       'dialog_param_InstanceType'             => 'cg1.4xlarge',
-      'password::dialog_param_DBRootPassword' => 'v2:{c2XR8/Yl1CS0phoOVMNU9w==}'
+      'password::dialog_param_DBRootPassword' => 'v2:{c2XR8/Yl1CS0phoOVMNU9w==}',
+      :dialog_param_key_in_symbol             => 'not_expected'
     }
   end
 
@@ -92,6 +93,14 @@ describe ServiceOrchestration do
 
     it "gets stack options set by dialog" do
       expect(service_with_dialog_options.stack_options).to eq(dialog_options)
+    end
+
+    it "can access options key as string" do
+      expect(service_with_dialog_options.stack_options["dialog_stack_name"]).to eq('test123')
+    end
+
+    it "can access options key as symbol" do
+      expect(service_with_dialog_options.stack_options[:dialog_param_key_in_symbol]).to eq('not_expected')
     end
 
     context "cloud tenant option" do
@@ -194,7 +203,8 @@ describe ServiceOrchestration do
       allow_any_instance_of(OrchestrationStack).to receive(:raw_update_stack) do |_instance, new_template, opts|
         expect(opts[:parameters]).to include(
           'InstanceType'   => 'cg1.4xlarge',
-          'DBRootPassword' => 'admin'
+          'DBRootPassword' => 'admin',
+          'key_in_symbol'  => 'not_expected'
         )
         expect(new_template).to eq(template_by_setter)
       end
