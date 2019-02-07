@@ -1,4 +1,4 @@
-class ManageIQ::Providers::InfraConversionJob < Job
+class InfraConversionJob < Job
   POLL_CONVERSION_INTERVAL = 60
   POLL_CONVERSION_MAX = 24 * 60 # i.e. default 24 hour
   POLL_POST_STAGE_MAX = 30 # i.e. default 30 minutes
@@ -6,8 +6,8 @@ class ManageIQ::Providers::InfraConversionJob < Job
   def self.create_job(options)
     # TODO: from settings/user plan settings
     options[:conversion_polling_interval] = POLL_CONVERSION_INTERVAL
-    options['poll_conversion_max'] = POLL_CONVERSION_MAX
-    options['poll_post_stage_max'] = POLL_POST_STAGE_MAX
+    options[:poll_conversion_max] = POLL_CONVERSION_MAX
+    options[:poll_post_stage_max] = POLL_POST_STAGE_MAX
     super(name, options)
   end
 
@@ -75,14 +75,14 @@ class ManageIQ::Providers::InfraConversionJob < Job
   end
 
   def polling_timeout(poll_type)
-    count = "#{poll_type}_count"
-    max = "#{poll_type}_max"
+    count = "#{poll_type.to_s}_count".to_sym
+    max = "#{poll_type.to_s}_max".to_sym
     context[count] = (context[count] || 0) + 1
     context[count] > options[max]
   end
 
   def poll_conversion
-    return abort_conversion("Polling times out", 'error') if polling_timeout('poll_conversion')
+    return abort_conversion("Polling times out", 'error') if polling_timeout(:poll_conversion)
 
     message = "Getting conversion state"
     _log.info(prep_message(message))
@@ -129,7 +129,7 @@ class ManageIQ::Providers::InfraConversionJob < Job
 
   def poll_post_stage
 
-    return abort_conversion("Polling times out", 'error') if polling_timeout('poll_post_stage')
+    return abort_conversion("Polling times out", 'error') if polling_timeout(:poll_post_stage)
 
     message = "PostTransformation state=#{migration_task.state}, status=#{migration_task.status}"
     _log.info(prep_message(message))

@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::InfraConversionJob do
+describe InfraConversionJob do
   let(:vm)      { FactoryBot.create(:vm_or_template) }
   let(:request) { FactoryBot.create(:service_template_transformation_plan_request) }
   let(:task)    { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm) }
@@ -156,8 +156,8 @@ describe ManageIQ::Providers::InfraConversionJob do
       end
 
       it 'abort_conversion when poll_conversion times out' do
-        job.options['poll_conversion_max'] = 24 * 60
-        job.context['poll_conversion_count'] = 24 * 60
+        job.options[:poll_conversion_max] = 24 * 60
+        job.context[:poll_conversion_count] = 24 * 60
         expect(job).to receive(:abort_conversion)
         job.signal(:poll_conversion)
       end
@@ -197,8 +197,8 @@ describe ManageIQ::Providers::InfraConversionJob do
       end
 
       it 'abort_conversion when poll_post_stage times out' do
-        job.options['poll_post_stage_max'] = 30
-        job.context['poll_post_stage_count'] = 30
+        job.options[:poll_post_stage_max] = 30
+        job.context[:poll_post_stage_count] = 30
         expect(job).to receive(:abort_conversion)
         job.signal(:poll_post_stage)
       end

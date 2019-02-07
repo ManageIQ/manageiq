@@ -24,7 +24,7 @@ class InfraConversionThrottler
   end
 
   def self.pending_conversion_jobs
-    pending = ManageIQ::Providers::InfraConversionJob.where(:state => 'waiting_to_start')
+    pending = InfraConversionJob.where(:state => 'waiting_to_start')
     _log.info("Pening InfraConversionJob: #{pending.count}")
     pending.sort_by(&:created_on).each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |job, hash|
       task = job.migration_task
