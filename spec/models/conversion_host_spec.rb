@@ -140,7 +140,7 @@ describe ConversionHost do
   end
 
   context "resource provider is rhevm" do
-    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone)) }
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
     let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => host, :vddk_transport_supported => true) }
 
@@ -188,7 +188,7 @@ describe ConversionHost do
   end
 
   context "address validation" do
-    let(:vm) { FactoryBot.create(:host_redhat) }
+    let(:vm) { FactoryBot.create(:vm_openstack) }
 
     it "is invalid if the address is not a valid IP address" do
       allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
@@ -217,7 +217,8 @@ describe ConversionHost do
   end
 
   context "resource validation" do
-    let(:redhat_host) { FactoryBot.create(:host_redhat) }
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+    let(:redhat_host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
     let(:azure_vm) { FactoryBot.create(:vm_azure) }
 
     it "is valid if the associated resource supports conversion hosts" do
@@ -228,6 +229,7 @@ describe ConversionHost do
     it "is invalid if the associated resource does not support conversion hosts" do
       conversion_host = ConversionHost.new(:name => "test", :resource => azure_vm)
       expect(conversion_host.valid?).to be(false)
+      expect(conversion_host.errors.messages[:resource_type].first).to eql("Feature not available/supported")
     end
   end
 end

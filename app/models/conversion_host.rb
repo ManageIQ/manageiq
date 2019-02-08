@@ -116,8 +116,8 @@ class ConversionHost < ApplicationRecord
   # using the SupportsFeature mixin.
   #
   def resource_supports_conversion_host
-    unless resource.class.supports_conversion_host?
-      errors.add(:resource_type, "#{resource.class} does not support conversion hosts")
+    unless resource.supports_conversion_host?
+      errors.add(:resource_type, resource.unsupported_reason(:conversion_host))
     end
   end
 
