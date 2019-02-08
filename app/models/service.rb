@@ -213,17 +213,21 @@ class Service < ApplicationRecord
   end
 
   def all_states_match?(action)
-    return true if composite? && (power_states.uniq == map_power_states(action))
-    return true if atomic? && (power_states[0] == POWER_STATE_MAP[action])
-    false
+    if composite?
+      power_states.uniq == map_power_states(action)
+    else
+      power_states[0] == POWER_STATE_MAP[action]
+    end
   end
 
+  # @return true if this is a composite service
   def composite?
     children.present?
   end
 
+  # @return true if this is a single service (not made up of multiple services)
   def atomic?
-    children.empty?
+    !composite?
   end
 
   def orchestration_stacks
