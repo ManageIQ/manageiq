@@ -418,7 +418,7 @@ describe ServiceTemplateTransformationPlanTask do
       end
 
       context 'destination is rhevm' do
-        let(:dst_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone)) }
+        let(:dst_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
         let(:dst_storage) { FactoryBot.create(:storage) }
         let(:dst_lan_1) { FactoryBot.create(:lan) }
         let(:dst_lan_2) { FactoryBot.create(:lan) }
