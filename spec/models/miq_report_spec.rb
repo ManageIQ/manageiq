@@ -1074,4 +1074,33 @@ describe MiqReport do
       end
     end
   end
+
+  describe "_async_generate_table" do
+    context "timezone" do
+      let(:time_str_utc) { "02/07/19 18:55:03 UTC" }
+      let(:time_str_hst) { "02/07/19 08:55:03 HST" }
+      let(:miq_task) { FactoryBot.create(:miq_task) }
+      let(:user) { FactoryBot.create(:user, :settings => {:display => {}}) }
+      let(:report) { FactoryBot.create(:miq_report, :db => "Vm", :cols => %w(last_sync_on)) }
+
+      before do
+        EvmSpecHelper.local_miq_server
+        FactoryBot.create(:vm_vmware, :last_sync_on => DateTime.parse(time_str_utc).utc)
+      end
+
+      it "uses 'UTC' as default time zone when generating date fileds" do
+        report._async_generate_table(miq_task.id, :userid => user.userid)
+        miq_report_result_detail = miq_task.miq_report_result.miq_report_result_details.first
+        expect(miq_report_result_detail.data).to include(time_str_utc)
+      end
+
+      it "uses time zone from user's settings if it is specified" do
+        user.settings[:display][:timezone] = "HST"
+        user.save
+        report._async_generate_table(miq_task.id, :userid => user.userid)
+        miq_report_result_detail = miq_task.miq_report_result.miq_report_result_details.first
+        expect(miq_report_result_detail.data).to include(time_str_hst)
+      end
+    end
+  end
 end
