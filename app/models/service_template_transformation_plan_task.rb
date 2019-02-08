@@ -55,7 +55,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     raise 'OSP destination and source power_state is off' if destination_ems.emstype == 'openstack' && source.power_state == 'off'
     #####
     # this block is the essence of automate method: assesstransformation and its effect
-    # https://github.com/ManageIQ/manageiq-content/blob/a9421bc26960fae1a78d335c6ab4bee28f948fbe/content/automate/ManageIQ/Transformation/Common.class/__methods__/assesstransformation.rb#L15    
+    # https://github.com/ManageIQ/manageiq-content/blob/a9421bc26960fae1a78d335c6ab4bee28f948fbe/content/automate/ManageIQ/Transformation/Common.class/__methods__/assesstransformation.rb#L15
     update_options(:source_vm_power_state => source.power_state) # This will determine power_state of destination_vm
     # The following 2 lines are the spirit of the corresponding code in the Automate, essentially cancel out each other's effect
     # Keeping these dead code here is for reviewer to understand what they are and why

@@ -179,7 +179,7 @@ describe ServiceTemplateTransformationPlanTask do
 
     describe '#cancel' do
       it 'catches cancel state' do
-        task.options.merge!(:infra_conversion_job_id => infra_conversion_job.id)
+        task.options[:infra_conversion_job_id] = infra_conversion_job.id
         expect(task).to receive(:infra_conversion_job).and_return(infra_conversion_job)
         expect(infra_conversion_job).to receive(:cancel)
         task.cancel
@@ -282,7 +282,7 @@ describe ServiceTemplateTransformationPlanTask do
         expect(task_1.send(:valid_states)).to include('migrate')
       end
     end
-  
+
     describe '#transformation_destination' do
       it { expect(task_1.transformation_destination(src_cluster)).to eq(dst_cluster) }
     end

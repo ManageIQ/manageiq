@@ -75,8 +75,8 @@ class InfraConversionJob < Job
   end
 
   def polling_timeout(poll_type)
-    count = "#{poll_type.to_s}_count".to_sym
-    max = "#{poll_type.to_s}_max".to_sym
+    count = "#{poll_type}_count".to_sym
+    max = "#{poll_type}_max".to_sym
     context[count] = (context[count] || 0) + 1
     context[count] > options[max]
   end
@@ -87,8 +87,8 @@ class InfraConversionJob < Job
     message = "Getting conversion state"
     _log.info(prep_message(message))
 
-    if migration_task.options[:virtv2v_wrapper].nil? || migration_task.options[:virtv2v_wrapper]['state_file'].nil?
-      message = "options[:virtv2v_wrapper]['state_file'] not available, continuing poll_conversion"
+    unless migration_task.options.fetch_path(:virtv2v_wrapper, 'state_file')
+      message = "Virt v2v state file not available, continuing poll_conversion"
       _log.info(prep_message(message))
       return queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     end
@@ -101,7 +101,7 @@ class InfraConversionJob < Job
     end
 
     v2v_status = migration_task.options[:virtv2v_status]
-    message = "virtv2v_status=#{status}"
+    message = "virtv2v_status=#{v2v_status}"
     _log.info(prep_message(message))
 
     case v2v_status
@@ -122,13 +122,12 @@ class InfraConversionJob < Job
 
   def start_post_stage
     # once we refactor Automate's PostTransformation into a job, we kick start it here
-    message = "To start polling for PostTransformation progress"
+    message = "To wait for Post-Transformation progress"
     _log.info(prep_message(message))
     queue_signal(:poll_post_stage, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
   end
 
   def poll_post_stage
-
     return abort_conversion("Polling times out", 'error') if polling_timeout(:poll_post_stage)
 
     message = "PostTransformation state=#{migration_task.state}, status=#{migration_task.status}"
@@ -139,12 +138,6 @@ class InfraConversionJob < Job
     else
       queue_signal(:poll_post_stage, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     end
-  end
-
-  def queue_signal(*args, deliver_on: nil)
-    role     = options[:role] || "ems_operations"
-    priority = options[:priority] || MiqQueue::NORMAL_PRIORITY
-    super(*args, deliver_on, role, priority)
   end
 
   def queue_signal(*args, deliver_on: nil)
