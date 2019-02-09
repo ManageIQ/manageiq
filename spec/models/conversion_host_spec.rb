@@ -229,7 +229,13 @@ describe ConversionHost do
     it "is invalid if the associated resource does not support conversion hosts" do
       conversion_host = ConversionHost.new(:name => "test", :resource => azure_vm)
       expect(conversion_host.valid?).to be(false)
-      expect(conversion_host.errors.messages[:resource_type].first).to eql("Feature not available/supported")
+      expect(conversion_host.errors.messages[:resource].first).to eql("Feature not available/supported")
+    end
+
+    it "is invalid if there is no associated resource" do
+      conversion_host = ConversionHost.new(:name => "test2")
+      expect(conversion_host.valid?).to be(false)
+      expect(conversion_host.errors[:resource].first).to eql("can't be blank")
     end
   end
 end

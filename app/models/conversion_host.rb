@@ -9,8 +9,7 @@ class ConversionHost < ApplicationRecord
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
   validates :name, :presence => true
-  validates :resource_id, :presence => true
-  validates :resource_type, :presence => true
+  validates :resource, :presence => true
 
   validates :address,
     :uniqueness => true,
@@ -116,8 +115,8 @@ class ConversionHost < ApplicationRecord
   # using the SupportsFeature mixin.
   #
   def resource_supports_conversion_host
-    unless resource.supports_conversion_host?
-      errors.add(:resource_type, resource.unsupported_reason(:conversion_host))
+    if resource && !resource.supports_conversion_host?
+      errors.add(:resource, resource.unsupported_reason(:conversion_host))
     end
   end
 
