@@ -3,13 +3,13 @@ FactoryBot.define do
 
   factory :miq_group do
     transient do
-      features nil
-      role nil
+      features { nil }
+      role { nil }
 
       # Temporary: Allows entitlements, a new table, to be invisible to current spec setup code
       # Do NOT use these if possible.
-      miq_user_role_id nil
-      miq_user_role nil
+      miq_user_role_id { nil }
+      miq_user_role { nil }
     end
 
     sequence(:sequence)  # don't want to spend time looking these up
@@ -34,7 +34,7 @@ FactoryBot.define do
     end
 
     transient do
-      default_tenant nil
+      default_tenant { nil }
     end
 
     trait :in_other_region do

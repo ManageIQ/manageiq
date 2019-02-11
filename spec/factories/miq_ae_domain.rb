@@ -4,21 +4,21 @@ FactoryBot.define do
   end
 
   factory :miq_ae_domain_enabled, :parent => :miq_ae_domain do
-    enabled true
+    enabled { true }
   end
 
   factory :miq_ae_domain_disabled, :parent => :miq_ae_domain do
-    enabled false
+    enabled { false }
   end
 
   factory :miq_ae_system_domain, :parent => :miq_ae_domain do
-    enabled false
+    enabled { false }
     source { MiqAeDomain::SYSTEM_SOURCE }
   end
 
   factory :miq_ae_system_domain_enabled, :parent => :miq_ae_domain do
     source { MiqAeDomain::SYSTEM_SOURCE }
-    enabled true
+    enabled { true }
   end
 
   factory :miq_ae_git_domain, :parent => :miq_ae_domain do
@@ -29,7 +29,7 @@ FactoryBot.define do
   factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
     tenant { Tenant.seed }
-    enabled true
+    enabled { true }
     source { MiqAeDomain::USER_SOURCE }
     trait :with_methods do
       transient do
@@ -71,8 +71,8 @@ FactoryBot.define do
 
     trait :with_small_model do
       transient do
-        ae_class 'CLASS1'
-        ae_namespace 'NS1/NS2'
+        ae_class { 'CLASS1' }
+        ae_namespace { 'NS1/NS2' }
       end
 
       after :create do |aedomain, evaluator|

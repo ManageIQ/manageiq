@@ -4,7 +4,7 @@ FactoryBot.define do
     sequence(:description) { |n| "custom_button_set_#{seq_padded_for_sorting(n)}" }
 
     transient do
-      members []
+      members { [] }
     end
 
     after(:create) do |custom_button_set, evaluator|

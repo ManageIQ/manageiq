@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :miq_queue do
-    state  'ready'
-    args   []
+    state  { 'ready' }
+    args   { [] }
   end
 end

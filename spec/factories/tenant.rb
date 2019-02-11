@@ -18,6 +18,6 @@ FactoryBot.define do
   end
 
   factory :tenant_project, :parent => :tenant do
-    divisible false
+    divisible { false }
   end
 end

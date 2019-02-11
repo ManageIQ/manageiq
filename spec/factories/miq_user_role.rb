@@ -4,9 +4,9 @@ FactoryBot.define do
   factory :miq_user_role do
     transient do
       # e.g.: miq_request_approval
-      features nil
+      features { nil }
       # e.g.: super_administrator
-      role nil
+      role { nil }
     end
 
     name { |ur| ur.role ? "EvmRole-#{ur.role}" : generate(:miq_user_role_name) }

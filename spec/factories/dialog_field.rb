@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :dialog_field do
-    name "Dialog Field"
+    name { "Dialog Field" }
   end
 
   factory :dialog_field_button,      :parent => :dialog_field, :class => "DialogFieldButton"

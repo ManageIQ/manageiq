@@ -18,7 +18,7 @@ FactoryBot.define do
   end
 
   factory :host_small_environment, :parent => :host_with_ref do
-    vmm_product  "Workstation"
+    vmm_product  { "Workstation" }
     vms          { [FactoryBot.create(:vm_with_ref, :name => "vmtest1"), FactoryBot.create(:vm_with_ref, :name => "vmtest2")] }
   end
 end

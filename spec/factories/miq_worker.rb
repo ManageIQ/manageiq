@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :miq_worker do
     pid    { rand(99999) }
-    status "ready"
+    status { "ready" }
   end
 
   factory :miq_generic_worker, :class => "MiqGenericWorker", :parent => :miq_worker

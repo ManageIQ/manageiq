@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :miq_request_task do
-    status "Ok"
+    status { "Ok" }
   end
 
   factory :miq_retire_task,    :parent => :miq_request_task,   :class => "MiqRetireTask"
@@ -14,12 +14,12 @@ FactoryBot.define do
   factory :miq_provision_redhat_via_pxe, :parent => :miq_provision_redhat, :class => "ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe"
   factory :miq_provision_vmware,         :parent => :miq_provision,        :class => "ManageIQ::Providers::Vmware::InfraManager::Provision" do
     trait :clone_to_vm do
-      request_type "clone_to_vm"
+      request_type { "clone_to_vm" }
     end
   end
   factory :miq_provision_vmware_via_pxe, :parent => :miq_provision_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe"
   factory :vm_migrate_task,              :parent => :miq_request_task,     :class => "VmMigrateTask" do
-    request_type "vm_migrate"
+    request_type { "vm_migrate" }
   end
 
   # Cloud
@@ -35,22 +35,22 @@ FactoryBot.define do
   # Services
   factory :service_reconfigure_task,        :parent => :miq_request_task, :class => "ServiceReconfigureTask"
   factory :service_template_provision_task, :parent => :miq_request_task, :class => "ServiceTemplateProvisionTask" do
-    state        'pending'
-    request_type 'clone_to_service'
+    state        { 'pending' }
+    request_type { 'clone_to_service' }
   end
 
   factory :service_template_transformation_plan_task, :parent => :service_template_provision_task, :class => 'ServiceTemplateTransformationPlanTask' do
-    request_type 'transformation_plan'
+    request_type { 'transformation_plan' }
   end
 
   # Retire Tasks
   factory :service_retire_task,             :parent => :miq_retire_task, :class => "ServiceRetireTask" do
-    state        'pending'
+    state        { 'pending' }
   end
   factory :vm_retire_task,                  :parent => :miq_retire_task, :class => "VmRetireTask" do
-    state        'pending'
+    state        { 'pending' }
   end
   factory :orchestration_stack_retire_task, :parent => :miq_retire_task, :class => "OrchestrationStackRetireTask" do
-    state        'pending'
+    state        { 'pending' }
   end
 end

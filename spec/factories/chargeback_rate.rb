@@ -2,11 +2,11 @@ FactoryBot.define do
   factory :chargeback_rate do
     guid                   { SecureRandom.uuid }
     sequence(:description) { |n| "Chargeback Rate ##{n}" }
-    rate_type 'Compute'
+    rate_type { 'Compute' }
 
     transient do
-      per_time      'hourly'
-      detail_params nil
+      per_time      { 'hourly' }
+      detail_params { nil }
     end
 
     after(:create) do |chargeback_rate, evaluator|
@@ -51,7 +51,7 @@ FactoryBot.define do
     end
 
     trait :with_storage_details do
-      rate_type 'Storage'
+      rate_type { 'Storage' }
 
       after(:create) do |chargeback_rate, evaluator|
         %i(

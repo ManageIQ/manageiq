@@ -4,10 +4,10 @@ FactoryBot.define do
   end
 
   factory :time_profile_with_rollup, :parent => :time_profile do
-    rollup_daily_metrics true
+    rollup_daily_metrics { true }
   end
 
   factory :time_profile_utc, :parent => :time_profile_with_rollup do
-    tz "UTC"
+    tz { "UTC" }
   end
 end

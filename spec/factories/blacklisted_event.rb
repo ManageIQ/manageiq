@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :blacklisted_event do
-    enabled true
+    enabled { true }
   end
 end

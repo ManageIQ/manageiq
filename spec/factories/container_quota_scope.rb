@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :container_quota_scope do
-    scope "NotTerminating"
+    scope { "NotTerminating" }
   end
 end

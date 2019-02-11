@@ -4,7 +4,7 @@ FactoryBot.define do
     detail_currency { FactoryBot.create(:chargeback_rate_detail_currency) }
 
     transient do
-      tiers_params nil
+      tiers_params { nil }
     end
 
     trait :tiers do
@@ -31,43 +31,43 @@ FactoryBot.define do
   end
 
   trait :megabytes do
-    per_unit "megabytes"
+    per_unit { "megabytes" }
   end
 
   trait :kbps do
-    per_unit "kbps"
+    per_unit { "kbps" }
   end
 
   trait :gigabytes do
-    per_unit "gigabytes"
+    per_unit { "gigabytes" }
   end
 
   trait :daily do
-    per_time "daily"
+    per_time { "daily" }
   end
 
   trait :hourly do
-    per_time "hourly"
+    per_time { "hourly" }
   end
 
   factory :chargeback_rate_detail_cpu_used, :parent => :chargeback_rate_detail do
-    per_unit    "megahertz"
+    per_unit    { "megahertz" }
     chargeable_field { FactoryBot.build(:chargeable_field_cpu_used) }
   end
 
   factory :chargeback_rate_detail_cpu_cores_used, :parent => :chargeback_rate_detail do
-    per_unit    "cores"
+    per_unit    { "cores" }
     chargeable_field { FactoryBot.build(:chargeable_field_cpu_cores_used) }
   end
 
   factory :chargeback_rate_detail_cpu_cores_allocated, :parent => :chargeback_rate_detail do
-    per_unit    "cores"
+    per_unit    { "cores" }
     chargeable_field { FactoryBot.build(:chargeable_field_cpu_cores_allocated) }
   end
 
   factory :chargeback_rate_detail_cpu_allocated, :traits => [:daily],
                                                  :parent => :chargeback_rate_detail do
-    per_unit    "cpu"
+    per_unit    { "cpu" }
     chargeable_field { FactoryBot.build(:chargeable_field_cpu_allocated) }
   end
 
