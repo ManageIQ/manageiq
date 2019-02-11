@@ -10,7 +10,7 @@ describe ConversionHost do
   end
 
   context "processing configuration requests" do
-    let(:vm) { FactoryGirl.create(:vm) }
+    let(:vm) { FactoryBot.create(:vm_openstack) }
     before(:each) do
       allow(ConversionHost).to receive(:new).and_return(conversion_host)
     end
@@ -66,7 +66,7 @@ describe ConversionHost do
 
   context "queuing configuration requests" do
     let(:ext_management_system) { FactoryGirl.create(:ext_management_system) }
-    let(:vm) { FactoryGirl.create(:vm, :ext_management_system => ext_management_system) }
+    let(:vm) { FactoryBot.create(:vm_openstack, :ext_management_system => ext_management_system) }
     let(:expected_task_action) { "Configuring a conversion_host: operation=#{op} resource=(type: #{vm.class.name} id:#{vm.id})" }
 
     context ".enable_queue" do

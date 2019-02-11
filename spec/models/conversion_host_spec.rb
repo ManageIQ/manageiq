@@ -4,8 +4,9 @@ describe ConversionHost do
   let(:apst) { FactoryGirl.create(:service_template_ansible_playbook) }
 
   context "provider independent methods" do
-    let(:host) { FactoryGirl.create(:host) }
-    let(:vm) { FactoryGirl.create(:vm) }
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+    let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
+    let(:vm) { FactoryBot.create(:vm_openstack) }
     let(:conversion_host_1) { FactoryGirl.create(:conversion_host, :resource => host, :address => '10.0.0.1') }
     let(:conversion_host_2) { FactoryGirl.create(:conversion_host, :resource => vm, :address => '10.0.1.1') }
     let(:task_1) { FactoryGirl.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
@@ -140,7 +141,7 @@ describe ConversionHost do
   end
 
   context "resource provider is rhevm" do
-    let(:ems) { FactoryGirl.create(:ems_redhat, :zone => FactoryGirl.create(:zone)) }
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
     let(:host) { FactoryGirl.create(:host_redhat, :ext_management_system => ems) }
     let(:conversion_host) { FactoryGirl.create(:conversion_host, :resource => host, :vddk_transport_supported => true) }
 
@@ -184,6 +185,29 @@ describe ConversionHost do
       end
 
       it_behaves_like "#check_ssh_connection"
+    end
+  end
+
+  context "resource validation" do
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+    let(:redhat_host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
+    let(:azure_vm) { FactoryBot.create(:vm_azure) }
+
+    it "is valid if the associated resource supports conversion hosts" do
+      conversion_host = ConversionHost.new(:name => "test", :resource => redhat_host)
+      expect(conversion_host.valid?).to be(true)
+    end
+
+    it "is invalid if the associated resource does not support conversion hosts" do
+      conversion_host = ConversionHost.new(:name => "test", :resource => azure_vm)
+      expect(conversion_host.valid?).to be(false)
+      expect(conversion_host.errors.messages[:resource].first).to eql("Feature not available/supported")
+    end
+
+    it "is invalid if there is no associated resource" do
+      conversion_host = ConversionHost.new(:name => "test2")
+      expect(conversion_host.valid?).to be(false)
+      expect(conversion_host.errors[:resource].first).to eql("can't be blank")
     end
   end
 end
