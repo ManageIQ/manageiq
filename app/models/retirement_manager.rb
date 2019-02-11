@@ -1,7 +1,7 @@
 class RetirementManager
   def self.check
     ems_ids = MiqServer.my_server.zone.ext_management_system_ids
-    [LoadBalancer, OrchestrationStack, Vm, Service].flat_map do |i|
+    [OrchestrationStack, Vm, Service].flat_map do |i|
       instances = not_retired_with_ems(i, ems_ids)
       instances.each(&:retirement_check)
     end

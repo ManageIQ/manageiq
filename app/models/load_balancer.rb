@@ -2,7 +2,6 @@ class LoadBalancer < ApplicationRecord
   include NewWithTypeStiMixin
   include AsyncDeleteMixin
   include ProcessTasksMixin
-  include RetirementMixin
   include TenantIdentityMixin
   include CloudTenancyMixin
   include CustomActionsMixin
