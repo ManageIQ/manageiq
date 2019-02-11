@@ -33,8 +33,6 @@
 - ems-type:s3
 - ems-type:foreman_configuration
 - ems-type:foreman_provisioning
-- ems-type:gce
-- ems-type:gce_network
 - ems-type:hawkular
 - ems-type:hawkular_datawarehouse
 - ems-type:kubernetes

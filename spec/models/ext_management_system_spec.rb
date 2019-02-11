@@ -52,6 +52,8 @@ describe ExtManagementSystem do
     }
   end
 
+  let(:downstream_unsupported_types) { %w(gce gce_network) }
+
   it ".types" do
     expect(described_class.types).to match_array(all_types_and_descriptions.keys)
   end
@@ -74,7 +76,7 @@ describe ExtManagementSystem do
     it "permissions.tmpl.yml should contain all EMS types" do
       types = YAML.load_file(Rails.root.join("config/permissions.tmpl.yml"))
       stub_vmdb_permission_store_with_types(types) do
-        expect(described_class.supported_types_and_descriptions_hash).to eq(all_types_and_descriptions)
+        expect(described_class.supported_types_and_descriptions_hash).to eq(all_types_and_descriptions.reject { |type, _desc| downstream_unsupported_types.include?(type) })
       end
     end
   end
