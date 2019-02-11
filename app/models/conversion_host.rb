@@ -1,8 +1,6 @@
 class ConversionHost < ApplicationRecord
   include NewWithTypeStiMixin
 
-  VALID_RESOURCE_TYPES = %w(VmOrTemplate Host).freeze
-
   acts_as_miq_taggable
 
   belongs_to :resource, :polymorphic => true
@@ -11,14 +9,15 @@ class ConversionHost < ApplicationRecord
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
   validates :name, :presence => true
-  validates :resource_id, :presence => true
-  validates :resource_type, :presence => true, :inclusion => { :in => VALID_RESOURCE_TYPES }
+  validates :resource, :presence => true
 
   validates :address,
     :uniqueness => true,
     :format     => { :with => Resolv::AddressRegex },
     :inclusion  => { :in => ->(conversion_host) { conversion_host.resource.ipaddresses } },
     :unless     => ->(conversion_host) { conversion_host.resource.blank? || conversion_host.resource.ipaddresses.blank? }
+
+  validate :resource_supports_conversion_host
 
   include_concern 'Configurations'
 
@@ -111,6 +110,15 @@ class ConversionHost < ApplicationRecord
   end
 
   private
+
+  # The Vm or Host provider subclass must support conversion hosts
+  # using the SupportsFeature mixin.
+  #
+  def resource_supports_conversion_host
+    if resource && !resource.supports_conversion_host?
+      errors.add(:resource, resource.unsupported_reason(:conversion_host))
+    end
+  end
 
   def check_resource_credentials(fatal = false, extra_msg = nil)
     success = send("check_resource_credentials_#{resource.ext_management_system.emstype}")

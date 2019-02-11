@@ -19,7 +19,7 @@ describe ServiceTemplateTransformationPlanTask do
     let(:vm)  { FactoryBot.create(:vm_or_template) }
     let(:vm2)  { FactoryBot.create(:vm_or_template) }
     let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
-    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => host) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :skip_validate, :resource => host) }
 
     let(:mapping) do
       FactoryBot.create(
@@ -301,8 +301,8 @@ describe ServiceTemplateTransformationPlanTask do
 
       let(:src_hardware) { FactoryBot.create(:hardware, :nics => [src_nic_1, src_nic_2]) }
 
-      let(:src_vm_1) { FactoryBot.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host, :hardware => src_hardware) }
-      let(:src_vm_2) { FactoryBot.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
+      let(:src_vm_1) { FactoryBot.create(:vm_openstack, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host, :hardware => src_hardware) }
+      let(:src_vm_2) { FactoryBot.create(:vm_openstack, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
 
       let(:src_network) { FactoryBot.create(:network, :ipaddress => '10.0.0.1') }
 
@@ -418,11 +418,11 @@ describe ServiceTemplateTransformationPlanTask do
       end
 
       context 'destination is rhevm' do
-        let(:dst_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone)) }
+        let(:dst_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
         let(:dst_storage) { FactoryBot.create(:storage) }
         let(:dst_lan_1) { FactoryBot.create(:lan) }
         let(:dst_lan_2) { FactoryBot.create(:lan) }
-        let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:host, :ext_management_system => dst_ems)) }
+        let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:host_redhat, :ext_management_system => dst_ems)) }
 
         let(:mapping) do
           FactoryBot.create(
