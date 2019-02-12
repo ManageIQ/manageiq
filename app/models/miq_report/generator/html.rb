@@ -1,6 +1,6 @@
 module MiqReport::Generator::Html
   def build_html_rows(clickable_rows = false)
-    get_time_zone(Time.zone.name) if Time.zone
+    time_zone = get_time_zone(Time.zone)
     html_rows = []
     group_counter = 0
     row = 0
@@ -47,7 +47,7 @@ module MiqReport::Generator::Html
         col_order.each_with_index do |c, c_idx|
           next if column_is_hidden?(c)
 
-          build_html_col(output, c, self.col_formats[c_idx], d.data)
+          build_html_col(output, c, self.col_formats[c_idx], d.data, time_zone)
         end
 
         output << "</tr>"
@@ -66,8 +66,8 @@ module MiqReport::Generator::Html
     html_rows
   end
 
-  def build_html_col(output, col_name, col_format, row_data)
-    style = get_style_class(col_name, row_data, tz)
+  def build_html_col(output, col_name, col_format, row_data, time_zone)
+    style = get_style_class(col_name, row_data, time_zone)
     style_class = !style.nil? ? " class='#{style}'" : nil
     if col_name == 'resource_type'
       output << "<td#{style_class}>"
@@ -87,7 +87,7 @@ module MiqReport::Generator::Html
         output << "<td#{style_class}>"
       end
       output << CGI.escapeHTML(format(col_name.split("__").first, row_data[col_name],
-                                      :format => col_format || :_default_, :tz => tz))
+                                      :format => col_format || :_default_, :tz => time_zone))
     end
     output << '</td>'
   end
