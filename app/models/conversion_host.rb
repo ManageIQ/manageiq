@@ -27,29 +27,36 @@ class ConversionHost < ApplicationRecord
   after_create :tag_resource_as_enabled
   after_destroy :tag_resource_as_disabled
 
-  # Comply with AuthenticationMixin interface. Check using all associated
-  # authentications.
+  # Check using all associated authentications if any are directly associated
+  # with the conversion host. Otherwise, use the default check which uses the
+  # associated resource's authentications.
+  #
+  # This method is necessary to comply with AuthenticationMixin interface.
   #
   def verify_credentials(_auth_type = nil, _options = {})
     require 'net/ssh'
     host = hostname || ipaddress
 
-    authentications.each do |auth|
-      user = auth.userid || ENV['USER']
+    if authentications.empty?
+      check_ssh_connection
+    else
+      authentications.each do |auth|
+        user = auth.userid || ENV['USER']
 
-      ssh_options = { :timeout => 3 }
+        ssh_options = { :timeout => 3 }
 
-      if auth.password
-        ssh_options[:password] = auth.password
-        ssh_options[:auth_methods] = ['password']
+        if auth.password
+          ssh_options[:password] = auth.password
+          ssh_options[:auth_methods] = ['password']
+        end
+
+        if auth.auth_key
+          ssh_options[:keys] = [auth.auth_key]
+          ssh_options[:auth_methods] = ['public_key', 'host_based']
+        end
+
+        Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
       end
-
-      if auth.auth_key
-        ssh_options[:keys] = [auth.auth_key]
-        ssh_options[:auth_methods] = ['public_key', 'host_based']
-      end
-
-      Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
     end
   end
 
@@ -72,6 +79,10 @@ class ConversionHost < ApplicationRecord
     active_tasks.size < max_tasks
   end
 
+  # Check to see if we can connect to the conversion host using a simple 'uname -a'
+  # command on the connection. The exact nature of the connection will depend on the
+  # underlying provider.
+  #
   def check_ssh_connection
     connect_ssh { |ssu| ssu.shell_exec('uname -a') }
     true
@@ -87,6 +98,10 @@ class ConversionHost < ApplicationRecord
     return 'ssh' if ssh_transport_supported?
   end
 
+  # Returns the associated IP address for the conversion host in the given +family+.
+  # If an address is set for the conversion host, then that address will be
+  # returned. Otherwise, it will return the IP address of the associated resource.
+  #
   def ipaddress(family = 'ipv4')
     return address if address.present? && IPAddr.new(address).send("#{family}?")
     resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
@@ -99,6 +114,9 @@ class ConversionHost < ApplicationRecord
     raise "Starting conversion failed on '#{resource.name}' with [#{e.class}: #{e}]"
   end
 
+  # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
+  # if no signal is specified.
+  #
   def kill_process(pid, signal = 'TERM')
     connect_ssh { |ssu| ssu.shell_exec("/bin/kill -s #{signal} #{pid}") }
     true
@@ -106,6 +124,12 @@ class ConversionHost < ApplicationRecord
     false
   end
 
+  # Get the conversion state by reading from a remote json file at +path+
+  # and return the parsed data.
+  #--
+  # TODO: This should be more clear on failure, since it could fail because
+  # it's not found or because the contents were invalid.
+  #
   def get_conversion_state(path)
     json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
     JSON.parse(json_state)
@@ -113,6 +137,8 @@ class ConversionHost < ApplicationRecord
     raise "Could not get state file '#{path}' from '#{resource.name}' with [#{e.class}: #{e}"
   end
 
+  # Get and return the contents of the remote conversion log at +path+.
+  #
   def get_conversion_log(path)
     connect_ssh { |ssu| ssu.get_file(path, nil) }
   rescue => e
