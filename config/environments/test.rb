@@ -12,11 +12,10 @@ Vmdb::Application.configure do
 
   # Print deprecation notices to the stderr
   #ActiveSupport::Deprecation.behavior = :stderr
-  ActiveSupport::Deprecation.behavior = :silence
 
   # Configure static asset server for tests with Cache-Control for performance
   config.public_file_server.enabled = true
-  config.static_cache_control = "public, max-age=3600"
+  config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=3600' }
 
   # Avoid potential warnings and race conditions
   config.assets.configure do |env|

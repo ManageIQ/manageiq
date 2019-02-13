@@ -6,7 +6,7 @@ FactoryBot.define do
   end
 
   factory :provider_foreman, :class => "ManageIQ::Providers::Foreman::Provider", :parent => :provider do
-    url "example.com"
+    url { "example.com" }
 
     after(:build) do |provider|
       provider.authentications << FactoryBot.build(:authentication,
@@ -17,7 +17,7 @@ FactoryBot.define do
 
   factory :provider_openstack, :class => "ManageIQ::Providers::Openstack::Provider", :parent => :provider
   factory(:provider_ansible_tower, :class => "ManageIQ::Providers::AnsibleTower::Provider", :parent => :provider) do
-    url "example.com"
+    url { "example.com" }
     trait(:with_authentication) do
       after(:create) do |x|
         x.authentications << FactoryBot.create(:authentication)

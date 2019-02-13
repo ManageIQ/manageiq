@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :entitlement do
     transient do
-      features nil
-      role nil
+      features { nil }
+      role { nil }
     end
 
     after :build do |entitlement, e|

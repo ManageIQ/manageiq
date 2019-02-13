@@ -5,6 +5,6 @@ FactoryBot.define do
           :aliases => ["manageiq/providers/foreman/configuration_manager/configuration_profile"],
           :class   => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile",
           :parent  => :configuration_profile do
-    name "foreman config profile"
+    name { "foreman config profile" }
   end
 end

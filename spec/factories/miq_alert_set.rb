@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :miq_alert_set do
-    transient { alerts nil }
+    transient { alerts { nil } }
     sequence(:name)         { |n| "alert_profile_#{seq_padded_for_sorting(n)}" }
     sequence(:description)  { |n| "alert_profile_#{seq_padded_for_sorting(n)}" }
 
@@ -14,10 +14,10 @@ FactoryBot.define do
   end
 
   factory :miq_alert_set_vm, :parent => :miq_alert_set do
-    mode "VmOrTemplate" # VmOrTemplate.base_model.name
+    mode { "VmOrTemplate" } # VmOrTemplate.base_model.name
   end
 
   factory :miq_alert_set_host, :parent => :miq_alert_set do
-    mode "Host" # Host.base_model.name
+    mode { "Host" } # Host.base_model.name
   end
 end

@@ -31,7 +31,7 @@ FactoryBot.define do
 
     trait :of_domain do
       transient do
-        domain nil
+        domain { nil }
       end
 
       before(:create) do |ae_class, evaluator|

@@ -10,7 +10,7 @@ FactoryBot.define do
     # authorizations
 
     transient do
-      authtype nil
+      authtype { nil }
     end
 
     after(:create) do |ems, ev|
@@ -21,7 +21,7 @@ FactoryBot.define do
 
     trait :with_clusters do
       transient do
-        cluster_count 3
+        cluster_count { 3 }
       end
 
       after :create do |ems, evaluator|
@@ -31,7 +31,7 @@ FactoryBot.define do
 
     trait :with_storages do
       transient do
-        storage_count 3
+        storage_count { 3 }
       end
 
       after :create do |ems, evaluator|
@@ -40,7 +40,7 @@ FactoryBot.define do
     end
 
     trait :with_authentication do
-      authtype "default"
+      authtype { "default" }
     end
 
     trait :with_unvalidated_authentication do
@@ -144,7 +144,7 @@ FactoryBot.define do
 
   factory :ems_vmware_with_authentication,
           :parent => :ems_vmware do
-    authtype "default"
+    authtype { "default" }
   end
 
   factory :ems_microsoft,
@@ -154,7 +154,7 @@ FactoryBot.define do
 
   factory :ems_microsoft_with_authentication,
           :parent => :ems_microsoft do
-    authtype "default"
+    authtype { "default" }
   end
 
   factory :ems_redhat,
@@ -164,17 +164,17 @@ FactoryBot.define do
 
   factory :ems_redhat_v3,
           :parent => :ems_redhat do
-    api_version '3.5'
+    api_version { '3.5' }
   end
 
   factory :ems_redhat_v4,
           :parent => :ems_redhat do
-    api_version '4.0'
+    api_version { '4.0' }
   end
 
   factory :ems_redhat_with_authentication,
           :parent => :ems_redhat do
-    authtype "default"
+    authtype { "default" }
   end
 
   trait :skip_validate do
@@ -183,8 +183,8 @@ FactoryBot.define do
 
   factory :ems_redhat_with_authentication_with_ca,
           :parent => :ems_redhat do
-    certificate_authority "cert108"
-    authtype "default"
+    certificate_authority { "cert108" }
+    authtype { "default" }
   end
 
   factory :ems_redhat_with_metrics_authentication,
@@ -218,7 +218,7 @@ FactoryBot.define do
 
   factory :ems_openstack_infra_with_authentication,
           :parent => :ems_openstack_infra do
-    authtype %w(default amqp)
+    authtype { %w(default amqp) }
   end
 
   factory :ems_vmware_cloud,
@@ -237,19 +237,19 @@ FactoryBot.define do
           :aliases => ["manageiq/providers/amazon/cloud_manager"],
           :class   => "ManageIQ::Providers::Amazon::CloudManager",
           :parent  => :ems_cloud do
-    provider_region "us-east-1"
+    provider_region { "us-east-1" }
   end
 
   factory :ems_amazon_network,
           :aliases => ["manageiq/providers/amazon/network_manager"],
           :class   => "ManageIQ::Providers::Amazon::NetworkManager",
           :parent  => :ems_network do
-    provider_region "us-east-1"
+    provider_region { "us-east-1" }
   end
 
   factory :ems_amazon_with_authentication,
           :parent => :ems_amazon do
-    authtype "default"
+    authtype { "default" }
   end
 
   factory :ems_amazon_with_cloud_networks,
@@ -271,9 +271,9 @@ FactoryBot.define do
 
   factory :ems_azure_with_authentication,
           :parent => :ems_azure do
-    azure_tenant_id "ABCDEFGHIJABCDEFGHIJ0123456789AB"
-    subscription "0123456789ABCDEFGHIJABCDEFGHIJKL"
-    authtype "default"
+    azure_tenant_id { "ABCDEFGHIJABCDEFGHIJ0123456789AB" }
+    subscription { "0123456789ABCDEFGHIJABCDEFGHIJKL" }
+    authtype { "default" }
   end
 
   factory :ems_openstack,
@@ -283,7 +283,7 @@ FactoryBot.define do
 
   factory :ems_openstack_with_authentication,
           :parent => :ems_openstack do
-    authtype %w(default amqp)
+    authtype { %w(default amqp) }
   end
 
   factory :ems_openstack_network,
@@ -303,7 +303,7 @@ FactoryBot.define do
 
   factory :ems_google_with_authentication,
           :parent => :ems_google do
-    authtype "default"
+    authtype { "default" }
   end
 
   factory :ems_google_network,

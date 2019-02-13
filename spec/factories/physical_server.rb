@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :physical_server do
-    vendor "lenovo"
+    vendor { "lenovo" }
   end
 end

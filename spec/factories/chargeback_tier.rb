@@ -1,29 +1,29 @@
 FactoryBot.define do
   factory :chargeback_tier do
-    start 0
-    finish Float::INFINITY
-    fixed_rate 0.0
-    variable_rate 0.0
+    start { 0 }
+    finish { Float::INFINITY }
+    fixed_rate { 0.0 }
+    variable_rate { 0.0 }
 
     trait :first_of_three do
-      start 0.0
-      finish 20.0
-      fixed_rate 0.1
-      variable_rate 0.2
+      start { 0.0 }
+      finish { 20.0 }
+      fixed_rate { 0.1 }
+      variable_rate { 0.2 }
     end
 
     trait :second_of_three do
-      start 20.0
-      finish 40.0
-      fixed_rate 0.3
-      variable_rate 0.4
+      start { 20.0 }
+      finish { 40.0 }
+      fixed_rate { 0.3 }
+      variable_rate { 0.4 }
     end
 
     trait :third_of_three do
-      start 40.0
-      finish Float::INFINITY
-      fixed_rate 0.5
-      variable_rate 0.6
+      start { 40.0 }
+      finish { Float::INFINITY }
+      fixed_rate { 0.5 }
+      variable_rate { 0.6 }
     end
   end
 

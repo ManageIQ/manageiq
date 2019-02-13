@@ -14,7 +14,7 @@ FactoryBot.define do
   end
 
   trait :orderable do
-    display true
+    display { true }
     service_template_catalog
   end
 end

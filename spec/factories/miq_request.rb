@@ -3,7 +3,7 @@ FactoryBot.define do
     requester { create(:user) }
 
     factory :automation_request, :class => "AutomationRequest" do
-      request_type "automation"
+      request_type { "automation" }
     end
 
     factory :service_reconfigure_request,        :class => "ServiceReconfigureRequest"
@@ -22,7 +22,7 @@ FactoryBot.define do
 
     trait :with_approval do
       transient do
-        reason ""
+        reason { "" }
       end
 
       after(:create) do |request, evaluator|

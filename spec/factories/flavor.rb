@@ -4,7 +4,7 @@ FactoryBot.define do
   end
 
   factory :flavor_openstack, :parent => :flavor, :class => "ManageIQ::Providers::Openstack::CloudManager::Flavor" do
-    root_disk_size 1_073_741_824
+    root_disk_size { 1_073_741_824 }
   end
 
   factory :flavor_amazon,    :parent => :flavor, :class => "ManageIQ::Providers::Amazon::CloudManager::Flavor"

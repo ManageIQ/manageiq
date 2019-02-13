@@ -45,28 +45,28 @@ FactoryBot.define do
   end
 
   factory :vmware_folder_root, :parent => :vmware_folder do
-    name   "Datacenters"
-    hidden true
+    name   { "Datacenters" }
+    hidden { true }
   end
 
   factory :vmware_folder_vm_root, :parent => :vmware_folder_vm do
-    name   "vm"
-    hidden true
+    name   { "vm" }
+    hidden { true }
   end
 
   factory :vmware_folder_host_root, :parent => :vmware_folder_host do
-    name   "host"
-    hidden true
+    name   { "host" }
+    hidden { true }
   end
 
   factory :vmware_folder_datastore_root, :parent => :vmware_folder_datastore do
-    name   "datastore"
-    hidden true
+    name   { "datastore" }
+    hidden { true }
   end
 
   factory :vmware_folder_network_root, :parent => :vmware_folder_network do
-    name   "network"
-    hidden true
+    name   { "network" }
+    hidden { true }
   end
 
   factory :vmware_datacenter, :parent => :vmware_folder, :class => "Datacenter" do

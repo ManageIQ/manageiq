@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :classification do
     sequence(:name)        { |n| "category_#{seq_padded_for_sorting(n)}" }
     sequence(:description) { |n| "category #{seq_padded_for_sorting(n)}" }
-    parent_id 0
+    parent_id { 0 }
   end
 
   factory :classification_tag, :class => :Classification do
@@ -15,13 +15,13 @@ FactoryBot.define do
   #
 
   factory :classification_cost_center, :parent => :classification do
-    name        "cc"
-    description "Cost Center"
+    name        { "cc" }
+    description { "Cost Center" }
   end
 
   factory :classification_department, :parent => :classification do
-    name        "department"
-    description "Department"
+    name        { "department" }
+    description { "Department" }
   end
 
   #

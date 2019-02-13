@@ -2,9 +2,9 @@ FactoryBot.define do
   factory :user do
     transient do
       # e.g. "super_administrtor"
-      role nil
+      role { nil }
       # e.g.: "miq_request_approval"
-      features nil
+      features { nil }
       tenant { Tenant.seed }
     end
 
@@ -12,7 +12,7 @@ FactoryBot.define do
     sequence(:name)   { |s| "Test User #{s}" }
 
     # encrypted password for "dummy"
-    password_digest "$2a$10$FTbGT/y/PQ1HvoOoc1FcyuuTtHzfop/uG/mcEAJLYpzmsUIJcGT7W"
+    password_digest { "$2a$10$FTbGT/y/PQ1HvoOoc1FcyuuTtHzfop/uG/mcEAJLYpzmsUIJcGT7W" }
 
     after :build do |u, e|
       if e.miq_groups.blank? && (e.role || e.features)
@@ -24,14 +24,14 @@ FactoryBot.define do
     end
 
     trait :with_miq_edit_features do
-      features %w(
+      features { %w(
         miq_ae_class_edit
         miq_ae_domain_edit
         miq_ae_class_copy
         miq_ae_instance_copy
         miq_ae_method_copy
         miq_ae_namespace_edit
-      )
+      ) }
     end
   end
 
@@ -48,10 +48,10 @@ FactoryBot.define do
   end
 
   factory :user_admin, :parent => :user do
-    role "super_administrator"
+    role { "super_administrator" }
   end
 
   factory :user_miq_request_approver, :parent => :user do
-    features "miq_request_approval"
+    features { "miq_request_approval" }
   end
 end

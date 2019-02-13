@@ -6,8 +6,8 @@ FactoryBot.define do
   end
 
   factory :miq_dialog_provision, :parent => :miq_dialog do
-    name        "miq_provision_dialogs"
-    dialog_type "MiqProvisionWorkflow"
+    name        { "miq_provision_dialogs" }
+    dialog_type { "MiqProvisionWorkflow" }
 
     content do
       {
@@ -29,7 +29,7 @@ FactoryBot.define do
   end
 
   factory :miq_provision_configured_system_foreman_dialog, :parent => :miq_dialog do
-    name        "miq_provision_configured_system_foreman_dialogs"
-    dialog_type "MiqProvisionConfiguredSystemWorkflow"
+    name        { "miq_provision_configured_system_foreman_dialogs" }
+    dialog_type { "MiqProvisionConfiguredSystemWorkflow" }
   end
 end
