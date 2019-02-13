@@ -210,7 +210,13 @@ class MiqWorker < ApplicationRecord
         # Clean up the configuration values in a format like "30.seconds"
         unless raw
           settings.keys.each do |k|
-            settings[k] = settings[k].to_i_with_method if settings[k].respond_to?(:to_i_with_method) && settings[k].number_with_method?
+            if settings[k].kind_of?(String)
+              if settings[k].number_with_method?
+                settings[k] = settings[k].to_i_with_method
+              elsif settings[k] =~ /\A\d+(.\d+)?\z/ # case where int/float saved as string
+                settings[k] = settings[k].to_i
+              end
+            end
           end
         end
       end
