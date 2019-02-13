@@ -114,6 +114,10 @@ module Vmdb
     require_relative '../lib/request_started_on_middleware'
     config.middleware.use RequestStartedOnMiddleware
 
+    # enable to log session id for every request
+    # require_relative '../lib/request_log_session_middleware'
+    # config.middleware.use RequestLogSessionMiddleware
+
     # config.eager_load_paths accepts an array of paths from which Rails will eager load on boot if cache classes is enabled.
     # Defaults to every folder in the app directory of the application.
 
