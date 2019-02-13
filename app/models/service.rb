@@ -262,7 +262,9 @@ class Service < ApplicationRecord
   end
 
   def update_power_status(action)
-    options[:power_status] = "#{action}_complete"
+    expected_status = "#{action}_complete"
+    return true if options[:power_status] == expected_status
+    options[:power_status] = expected_status
     update_attributes(:options => options)
   end
 
