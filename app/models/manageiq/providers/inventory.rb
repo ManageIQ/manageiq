@@ -27,6 +27,11 @@ module ManageIQ::Providers
       @parsers   = parsers.kind_of?(Array) ? parsers : [parsers]
     end
 
+    # Call inventory collector to allow collection of inventory in separate step from parsing
+    def collect!
+      collector.collect
+    end
+
     # Invokes all associated parsers storing parsed data into persister.inventory_collections
     #
     # @return [ManageIQ::Providers::Inventory::Persister] persister object, to allow chaining

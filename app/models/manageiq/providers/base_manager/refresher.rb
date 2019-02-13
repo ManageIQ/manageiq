@@ -68,21 +68,8 @@ module ManageIQ
       end
 
       def preprocess_targets
-        @full_refresh_threshold = options[:full_refresh_threshold] || 10
-
-        # See if any should be escalated to a full refresh
-        @targets_by_ems_id.each do |ems_id, targets|
-          ems = @ems_by_ems_id[ems_id]
-          ems_in_list = targets.any? { |t| t.kind_of?(ExtManagementSystem) }
-
-          if ems_in_list
-            _log.info("Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].") if targets.length > 1
-            targets.clear << ems
-          elsif targets.length >= @full_refresh_threshold
-            _log.info("Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
-            targets.clear << ems
-          end
-        end
+        preprocess_targets_manager_refresh
+        preprocess_targets_full_refresh_threshold
       end
 
       def refresh_targets_for_ems(ems, targets)
@@ -134,49 +121,35 @@ module ManageIQ
 
         return [[ems, nil]] unless ems.inventory_object_refresh?
 
-        provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class).name
-
-        targets_to_collectors = targets.each_with_object({}) do |target, memo|
-          # expect collector at <provider>/Inventory/Collector/<target_name>
-          memo[target] = "#{provider_module}::Inventory::Collector::#{target.class.name.demodulize}".safe_constantize
-        end
-
-        if targets_to_collectors.values.all?
-          log_header = format_ems_for_logging(ems)
-          targets_to_collectors.map do |target, collector_class|
-            log_msg = "#{log_header} Inventory Collector for #{target.class} [#{target.try(:name)}] id: [#{target.id}]"
-            _log.info("#{log_msg}...")
-            collector = collector_class.new(ems, target)
-            _log.info("#{log_msg}...Complete")
-            [target, collector]
-          end
-        else
-          # no collector for target available, fallback to full ems / manager refresh
-          [[ems, nil]]
+        targets.map do |target|
+          inventory = inventory_class_for(ems.class).build(ems, target)
+          inventory.collect!
+          [target, inventory]
         end
       end
 
-      def parse_targeted_inventory(ems, target, collector)
+      def parse_targeted_inventory(ems, _target, inventory)
         # legacy refreshers collect inventory during the parse phase
         # new refreshers should override this method to parse inventory
         # TODO: remove this call after all refreshers support retrieving
         # inventory separate from parsing
-        if collector.kind_of?(ManageIQ::Providers::Inventory::Collector)
-          log_header = format_ems_for_logging(ems)
-          _log.debug("#{log_header} Parsing inventory...")
-          persister, = Benchmark.realtime_block(:parse_inventory) do
-            persister = ManageIQ::Providers::Inventory.persister_class_for(ems, target, target.class.name.demodulize).new(ems, target)
-            parser = ManageIQ::Providers::Inventory.parser_class_for(ems, target, target.class.name.demodulize).new
+        log_header = format_ems_for_logging(ems)
+        _log.debug("#{log_header} Parsing inventory...")
 
-            i = ManageIQ::Providers::Inventory.new(persister, collector, parser)
-            i.parse
+        hashes_or_persister =
+          if ems.inventory_object_refresh?
+            inventory.parse
+          else
+            parse_legacy_inventory(ems)
           end
-          _log.debug("#{log_header} Parsing inventory...Complete")
-          persister
-        else
-          parsed, _ = Benchmark.realtime_block(:parse_legacy_inventory) { parse_legacy_inventory(ems) }
-          parsed
-        end
+
+        _log.debug("#{log_header} Parsing inventory...Complete")
+
+        hashes_or_persister
+      end
+
+      def parse_legacy_inventory(ems)
+        ems.class::RefreshParser.ems_inv_to_hashes(ems, refresher_options)
       end
 
       # Saves the inventory to the DB
@@ -218,6 +191,11 @@ module ManageIQ
         @ems_type ||= parent.ems_type.to_sym
       end
 
+      def inventory_class_for(klass)
+        provider_module = ManageIQ::Providers::Inflector.provider_module(klass)
+        "#{provider_module}::Inventory".constantize
+      end
+
       def group_targets_by_ems(targets)
         non_ems_targets = targets.select { |t| !t.kind_of?(ExtManagementSystem) && t.respond_to?(:ext_management_system) }
         MiqPreloader.preload(non_ems_targets, :ext_management_system)
@@ -242,6 +220,54 @@ module ManageIQ
 
             ems_by_ems_id[ems.id] ||= ems
             targets_by_ems_id[ems.id] << t
+          end
+        end
+      end
+
+      # We preprocess targets to merge all non ExtManagementSystem class targets into one
+      # InventoryRefresh::TargetCollection. This way we can do targeted refresh of all queued targets in 1 refresh
+      def preprocess_targets_manager_refresh
+        @targets_by_ems_id.each do |ems_id, targets|
+          ems = @ems_by_ems_id[ems_id]
+
+          if targets.any? { |t| t.kind_of?(ExtManagementSystem) }
+            targets_for_log = targets.map { |t| "#{t.class} [#{t.name}] id [#{t.id}] " }
+            _log.info("Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}], from targets: #{targets_for_log}") if targets.length > 1
+          end
+
+          # We want all targets of class EmsEvent to be merged into one target, so they can be refreshed together, otherwise
+          # we could be missing some crosslinks in the refreshed data
+          all_targets, sub_ems_targets = targets.partition { |x| x.kind_of?(ExtManagementSystem) }
+
+          if sub_ems_targets.present?
+            if ems.allow_targeted_refresh?
+              # We can disable targeted refresh with a setting, then we will just do full ems refresh on any event
+              ems_event_collection = InventoryRefresh::TargetCollection.new(:targets    => sub_ems_targets,
+                                                                            :manager_id => ems_id)
+              all_targets << ems_event_collection
+            else
+              all_targets << @ems_by_ems_id[ems_id]
+            end
+          end
+
+          @targets_by_ems_id[ems_id] = all_targets
+        end
+      end
+
+      def preprocess_targets_full_refresh_threshold
+        @full_refresh_threshold = options[:full_refresh_threshold] || 10
+
+        # See if any should be escalated to a full refresh
+        @targets_by_ems_id.each do |ems_id, targets|
+          ems = @ems_by_ems_id[ems_id]
+          ems_in_list = targets.any? { |t| t.kind_of?(ExtManagementSystem) }
+
+          if ems_in_list
+            _log.info("Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].") if targets.length > 1
+            targets.clear << ems
+          elsif targets.length >= @full_refresh_threshold
+            _log.info("Escalating to full refresh for EMS: [#{ems.name}], id: [#{ems.id}].")
+            targets.clear << ems
           end
         end
       end
