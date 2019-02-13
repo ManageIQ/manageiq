@@ -47,12 +47,12 @@ class ConversionHost < ApplicationRecord
 
         if auth.password
           ssh_options[:password] = auth.password
-          ssh_options[:auth_methods] = ['password']
+          ssh_options[:auth_methods] = %w[password]
         end
 
         if auth.auth_key
           ssh_options[:keys] = [auth.auth_key]
-          ssh_options[:auth_methods] = ['public_key', 'host_based']
+          ssh_options[:auth_methods] = %w[public_key host_based]
         end
 
         Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
