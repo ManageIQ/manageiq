@@ -208,6 +208,7 @@ module ManageIQ::Providers
         def host_virtual_switches
           add_properties(
             :manager_ref                  => %i(host uid_ems),
+            :model_class                  => Switch,
             :parent_inventory_collections => %i(hosts)
           )
         end
