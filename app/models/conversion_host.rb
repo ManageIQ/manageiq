@@ -53,14 +53,20 @@ class ConversionHost < ApplicationRecord
     end
   end
 
-  # To be eligible, a conversion host must have the following properties
-  #  - A transport mechanism is configured for source (set by 3rd party)
-  #  - Credentials are set on the resource and SSH connection works
-  #  - The number of concurrent tasks has not reached the limit
+  # Returns a boolean indicating whether or not the conversion host is eligible
+  # for use. To be eligible, a conversion host must have the following properties:
+  #
+  #  - A transport mechanism is configured for source (set by 3rd party).
+  #  - Credentials are set on the conversion host and the SSH connection works.
+  #  - The number of concurrent tasks has not reached the limit.
+  #
   def eligible?
     source_transport_method.present? && verify_credentials && check_concurrent_tasks
   end
 
+  # Returns a boolean indicating whether or not the current number of active tasks
+  # exceeds the maximum number of allowable concurrent tasks specified in settings.
+  #
   def check_concurrent_tasks
     max_tasks = max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
     active_tasks.size < max_tasks
@@ -73,6 +79,9 @@ class ConversionHost < ApplicationRecord
     false
   end
 
+  # If set, returns a string indicating the source transport method. This is
+  # either 'vddk' or 'ssh'. If not set, returns nil.
+  #
   def source_transport_method
     return 'vddk' if vddk_transport_supported?
     return 'ssh' if ssh_transport_supported?
@@ -173,6 +182,9 @@ class ConversionHost < ApplicationRecord
     !ssh_authentications.empty?
   end
 
+  # Connect to the conversion host using the MiqSshUtil wrapper using the authentication
+  # parameters appropriate for that type of resource.
+  #
   def connect_ssh
     require 'MiqSshUtil'
     MiqSshUtil.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
@@ -183,14 +195,27 @@ class ConversionHost < ApplicationRecord
     raise e
   end
 
+  # Collect appropriate authentication information based on the resource type.
+  #--
+  # TODO: This should be handled by a ConversionHost subclass within each supported provider.
+  #
   def miq_ssh_util_args
     send("miq_ssh_util_args_#{resource.type.gsub('::', '_').downcase}")
   end
 
+  # For the Redhat provider, use the userid and password associated directly with the resource.
+  #--
+  # TODO: Move this to ManageIQ::Providers::Redhat::InfraManager::ConversionHost
+  #
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
     [hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil]
   end
 
+  # For the OpenStack provider, use the first authentication containing an ssh keypair that has
+  # both a userid and auth key.
+  #--
+  # TODO: Move this to ManageIQ::Providers::OpenStack::CloudManager::ConversionHost
+  #
   def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
     authentication = resource.ext_management_system.authentications
                              .where(:authtype => 'ssh_keypair')
