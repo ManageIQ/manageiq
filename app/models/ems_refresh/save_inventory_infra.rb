@@ -3,6 +3,8 @@
 # - ems
 #   - storages
 #   - storage_profiles
+#   - distributed_virtual_switches
+#     - lans
 #   - ems_clusters
 #   - hosts
 #     - storages (link)
@@ -16,6 +18,8 @@
 #           - miq_scsi_luns
 #       - networks (if not already saved via guest_devices)
 #     - system_services
+#     - host_storages
+#     - host_switches
 #   - vms
 #     - storages (link)
 #     - operating_system
@@ -55,6 +59,7 @@ module EmsRefresh::SaveInventoryInfra
     child_keys = [
       :storages,
       :storage_profiles,
+      :distributed_virtual_switches,
       :clusters,
       :hosts,
       :vms,
@@ -64,7 +69,7 @@ module EmsRefresh::SaveInventoryInfra
       :orchestration_templates,
       :orchestration_stacks
     ]
-    old_switch_ids = ems.switches.pluck(:id)
+
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target, disconnect)
 
@@ -78,7 +83,6 @@ module EmsRefresh::SaveInventoryInfra
 
     new_relats = hashes_relats(hashes)
     link_ems_inventory(ems, target, prev_relats, new_relats, disconnect)
-    remove_obsolete_switches(ems, old_switch_ids)
 
     ems
   end
@@ -112,6 +116,14 @@ module EmsRefresh::SaveInventoryInfra
     end
   end
 
+  def save_distributed_virtual_switches_inventory(ems, hashes, target = nil, disconnect = true)
+    target = ems if target.nil?
+    deletes = determine_deletes_using_association(ems, target, disconnect)
+
+    save_inventory_multi(ems.distributed_virtual_switches, hashes, deletes, [:uid_ems], [:lans])
+    store_ids_for_new_records(ems.distributed_virtual_switches, hashes, :uid_ems)
+  end
+
   def save_hosts_inventory(ems, hashes, target = nil, disconnect = true)
     target = ems if target.nil? && disconnect
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
@@ -124,7 +136,7 @@ module EmsRefresh::SaveInventoryInfra
                     []
                   end
 
-    child_keys = [:operating_system, :switches, :hardware, :system_services, :host_storages]
+    child_keys = [:operating_system, :switches, :hardware, :system_services, :host_storages, :host_switches]
     extra_keys = [:ems_cluster, :storages, :vms, :power_state, :ems_children]
     remove_keys = child_keys + extra_keys
 
@@ -305,43 +317,13 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def save_switches_inventory(host, hashes)
-    ems = host.ext_management_system
-    log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
-
-    already_saved, not_yet_saved = hashes.partition { |h| h[:id] }
-    save_inventory_multi(host.switches, not_yet_saved, [], [:uid_ems], :lans)
-    host_switches_hash = already_saved.collect { |switch| {:host_id => host.id, :switch_id => switch[:id]} }
-    save_inventory_multi(host.host_switches, host_switches_hash, [], [:host_id, :switch_id])
-    host.switches(true)
-
-    host.save!
-
-    # Collect the ids of switches and lans after saving
-    hashes.each do |sh|
-      switch = host.switches.detect { |s| s.uid_ems == sh[:uid_ems] }
-      sh[:id] = switch.id
-
-      next if sh[:lans].nil?
-      sh[:lans].each do |lh|
-        lan = switch.lans.detect { |l| l.uid_ems == lh[:uid_ems] }
-        if lan.nil?
-          _log.warn("#{log_header} Failed to find lan [#{lh[:uid_ems]}] for switch ID [#{switch.id}]")
-          next
-        end
-
-        lh[:id] = lan.id
-      end
-    end
-
-    # handle deletes here instead of inside #save_inventory_multi
-    switch_ids = Set.new(hashes.collect { |s| s[:id] })
-    deletes = host.switches.select { |s| !switch_ids.include?(s.id) }
-    host.switches.delete(deletes)
+    save_inventory_multi(host.host_virtual_switches, hashes, :use_association, [:uid_ems], [:lans])
+    store_ids_for_new_records(host.host_virtual_switches, hashes, :uid_ems)
   end
 
-  def remove_obsolete_switches(ems, old_switch_ids)
-    obsolete_switch_ids = old_switch_ids - ems.switches.reload.pluck(:id)
-    Switch.where(:id => obsolete_switch_ids).destroy_all
+  def save_host_switches_inventory(host, switches)
+    hashes = switches.collect { |switch| {:host_id => host.id, :switch_id => switch[:id]} }
+    save_inventory_multi(host.host_switches, hashes, [], [:host_id, :switch_id])
   end
 
   def save_lans_inventory(switch, hashes)
