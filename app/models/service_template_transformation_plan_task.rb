@@ -288,7 +288,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :scheme   => 'ssh',
         :userinfo => 'root',
         :host     => source.host.ipaddress,
-        :path => "/vmfs/volumes/#{URI.escape(storage.name)}/#{URI.escape(source.location)}"
+        :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
       ).to_s,
       :transport_method => 'ssh'
     }
