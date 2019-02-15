@@ -289,7 +289,7 @@ describe ServiceTemplateTransformationPlanTask do
     context 'source is vmwarews' do
       let(:src_ems) { FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone)) }
       let(:src_host) { FactoryBot.create(:host, :ext_management_system => src_ems, :ipaddress => '10.0.0.1') }
-      let(:src_storage) { FactoryBot.create(:storage, :ext_management_system => src_ems) }
+      let(:src_storage) { FactoryBot.create(:storage, :ext_management_system => src_ems, name: 'stockage récent') }
 
       let(:src_lan_1) { FactoryBot.create(:lan) }
       let(:src_lan_2) { FactoryBot.create(:lan) }
@@ -497,7 +497,7 @@ describe ServiceTemplateTransformationPlanTask do
 
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
-              :vm_name             => "ssh://root@10.0.0.1/vmfs/volumes/#{src_storage.name}/#{src_vm_1.location}",
+              :vm_name             => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :transport_method    => 'ssh',
               :rhv_url             => "https://#{dst_ems.hostname}/ovirt-engine/api",
               :rhv_cluster         => dst_cluster.name,
@@ -606,7 +606,7 @@ describe ServiceTemplateTransformationPlanTask do
 
           it "generates conversion options hash" do
             expect(task_1.conversion_options).to eq(
-              :vm_name                    => "ssh://root@10.0.0.1/vmfs/volumes/#{src_storage.name}/#{src_vm_1.location}",
+              :vm_name                    => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :transport_method           => 'ssh',
               :osp_environment            => {
                 :os_auth_url             => URI::Generic.build(
