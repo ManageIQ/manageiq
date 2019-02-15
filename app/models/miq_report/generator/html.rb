@@ -96,10 +96,10 @@ module MiqReport::Generator::Html
     style_class = !style.nil? ? " class='#{style}'" : nil
     if col_name == 'resource_type'
       output << open_td(style_class)
-    elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
-      output << open_td(style_class, :right)
     elsif ['<compare>', '<drift>'].include?(db.to_s)
       output << open_td(style_class)
+    elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
+      output << open_td(style_class, :right)
     else
       if row_data[col_name].kind_of?(Time)
         output << open_td(style_class, :center)
