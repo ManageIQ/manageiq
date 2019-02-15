@@ -100,8 +100,6 @@ module MiqReport::Generator::Html
       output << open_td(style_class, :center)
     elsif row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
       output << open_td(style_class, :right)
-    elsif col_name == 'resource_type' || ['<compare>', '<drift>'].include?(db.to_s)
-      output << open_td(style_class)
     else
       output << open_td(style_class)
     end
