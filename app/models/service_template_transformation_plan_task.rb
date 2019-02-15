@@ -256,11 +256,12 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       source_network = nic.lan
       destination_network = transformation_destination(source_network)
       raise "[#{source.name}] NIC #{nic.device_name} [#{source_network.name}] has no mapping." if destination_network.nil?
+      raise "[#{source.name}] NIC #{nic.device_name} [#{source_network.name}] has an empty IP address." if nic.network.try(:ipaddress).nil?
       {
         :source      => source_network.name,
         :destination => destination_network_ref(destination_network),
         :mac_address => nic.address,
-        :ip_address  => nic.network.try(:ipaddress)
+        :ip_address  => nic.network.ipaddress
       }
     end
   end
