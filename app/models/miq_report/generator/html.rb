@@ -98,14 +98,12 @@ module MiqReport::Generator::Html
       output << open_td(style_class)
     elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
       output << open_td(style_class, :right)
+    elsif row_data[col_name].kind_of?(Time)
+      output << open_td(style_class, :center)
+    elsif row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
+      output << open_td(style_class, :right)
     else
-      if row_data[col_name].kind_of?(Time)
-        output << open_td(style_class, :center)
-      elsif row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
-        output << open_td(style_class, :right)
-      else
-        output << open_td(style_class)
-      end
+      output << open_td(style_class)
     end
     output << format_column(col_name, row_data, time_zone, col_format)
     output << '</td>'
