@@ -94,14 +94,14 @@ module MiqReport::Generator::Html
   def build_html_col(output, col_name, col_format, row_data, time_zone)
     style = get_style_class(col_name, row_data, time_zone)
     style_class = !style.nil? ? " class='#{style}'" : nil
-    if col_name == 'resource_type' || ['<compare>', '<drift>'].include?(db.to_s)
-      output << open_td(style_class)
-    elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
+    if db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
       output << open_td(style_class, :right)
     elsif row_data[col_name].kind_of?(Time)
       output << open_td(style_class, :center)
     elsif row_data[col_name].kind_of?(Integer) || row_data[col_name].kind_of?(Float)
       output << open_td(style_class, :right)
+    elsif col_name == 'resource_type' || ['<compare>', '<drift>'].include?(db.to_s)
+      output << open_td(style_class)
     else
       output << open_td(style_class)
     end
