@@ -284,7 +284,12 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def conversion_options_source_provider_vmwarews_ssh(storage)
     {
-      :vm_name          => URI::Generic.build(:scheme => 'ssh', :userinfo => 'root', :host => source.host.ipaddress, :path => "/vmfs/volumes").to_s + "/#{storage.name}/#{source.location}",
+      :vm_name          => URI::Generic.build(
+        :scheme   => 'ssh',
+        :userinfo => 'root',
+        :host     => source.host.ipaddress,
+        :path     => "/vmfs/volumes/#{Addressable::URI.escape(storage.name)}/#{Addressable::URI.escape(source.location)}"
+      ).to_s,
       :transport_method => 'ssh'
     }
   end
