@@ -5,6 +5,7 @@ module RemoteConsole
 
       def initialize(record, socket)
         super(record, socket)
+        # Initialize the WebSocket::Driver client
         @url = URI::Generic.build(:scheme => 'wss',
                                   :host   => @record.host_name,
                                   :port   => @record.port,
@@ -15,10 +16,11 @@ module RemoteConsole
       end
 
       def fetch(length)
+        # This callback should be set just once, yielding with the parsed message
         @driver.on(:message) { |msg| yield(msg.data) } if @driver.listeners(:message).length.zero?
 
-        data = @ssl.sysread(length)
-        @driver.parse(data)
+        data = @ssl.sysread(length) # Read from the socket
+        @driver.parse(data) # Parse the incoming data, run the callback from above
       end
 
       def issue(data)

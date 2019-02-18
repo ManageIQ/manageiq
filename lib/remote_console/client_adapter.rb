@@ -1,5 +1,6 @@
 module RemoteConsole
   module ClientAdapter
+    # This module contains adapters for the remote console client connections
     def self.new(record, socket)
       case record.protocol
       when 'vnc'
