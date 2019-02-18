@@ -182,6 +182,12 @@ module Vmdb
       # since the railtie for it is loaded first and will include
       # `Rails::ConsoleMethods` before we have a chance to modify them here.
       TOPLEVEL_BINDING.eval('self').extend(Vmdb::ConsoleMethods)
+
+      # In test mode automatically load the spec helper which will, among other
+      # things, find the factory definitions and load factory related methods.
+      if Rails.env.test?
+        require_relative '../spec/spec_helper'
+      end
     end
   end
 end
