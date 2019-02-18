@@ -1,22 +1,46 @@
 describe "VM Retirement Management" do
-  let!(:user) { FactoryBot.create(:user_miq_request_approver) }
+  let(:user) { FactoryBot.create(:user_miq_request_approver) }
+  let(:vm_with_owner) { FactoryBot.create(:vm, :evm_owner => user) }
   let(:region) { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number) }
   let(:vm2) { FactoryBot.create(:vm) }
 
   before do
     @zone = EvmSpecHelper.local_miq_server.zone
     @ems = FactoryBot.create(:ems_vmware, :zone => @zone)
-    @vm = FactoryBot.create(:vm_vmware, :ems_id => @ems.id, :evm_owner => user)
+    @vm = FactoryBot.create(:vm_vmware, :ems_id => @ems.id)
   end
 
-  it "#retirement_check" do
-    expect(MiqEvent).to receive(:raise_evm_event).once
-    @vm.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-    expect(@vm.retirement_last_warn).to be_nil
-    @vm.retirement_check
-    @vm.reload
-    expect(@vm.retirement_last_warn).not_to be_nil
-    expect(@vm.retirement_requester).to eq(user.userid)
+  describe "#retirement_check" do
+    context "with user" do
+      it "uses user as requester" do
+        expect(MiqEvent).to receive(:raise_evm_event)
+        vm_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        expect(vm_with_owner.retirement_last_warn).to be_nil
+        vm_with_owner.retirement_check
+        vm_with_owner.reload
+        expect(vm_with_owner.retirement_last_warn).not_to be_nil
+        expect(vm_with_owner.retirement_requester).to eq(user.userid)
+      end
+    end
+
+    context "without user" do
+      before do
+        # system_context_retirement relies on the presence of a user with this userid
+        FactoryBot.create(:user, :userid => 'admin', :role => 'super_administrator')
+        user.destroy
+        vm_with_owner.reload
+      end
+
+      it "uses admin as requester" do
+        expect(MiqEvent).to receive(:raise_evm_event)
+        vm_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        expect(vm_with_owner.retirement_last_warn).to be_nil
+        vm_with_owner.retirement_check
+        vm_with_owner.reload
+        expect(vm_with_owner.retirement_last_warn).not_to be_nil
+        expect(vm_with_owner.retirement_requester).to eq('admin')
+      end
+    end
   end
 
   it "#start_retirement" do
