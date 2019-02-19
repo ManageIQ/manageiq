@@ -301,8 +301,8 @@ describe ServiceTemplateTransformationPlanTask do
 
       let(:src_hardware) { FactoryGirl.create(:hardware, :nics => [src_nic_1, src_nic_2]) }
 
-      let(:src_vm_1) { FactoryGirl.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host, :hardware => src_hardware) }
-      let(:src_vm_2) { FactoryGirl.create(:vm_vmware, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
+      let(:src_vm_1) { FactoryGirl.create(:vm_openstack, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host, :hardware => src_hardware) }
+      let(:src_vm_2) { FactoryGirl.create(:vm_openstack, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
 
       let(:src_network_1) { FactoryBot.create(:network, :ipaddress => '10.0.1.1') }
       let(:src_network_2a) { FactoryBot.create(:network, :ipaddress => '10.0.1.2') }
