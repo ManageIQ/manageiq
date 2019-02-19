@@ -1,8 +1,6 @@
 describe "Service Retirement Management" do
-  let(:user) { FactoryBot.create(:user_miq_request_approver) }
+  let!(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => "admin") }
   let(:orchestration_stack) { FactoryBot.create(:orchestration_stack) }
-  let(:stack_with_owner) { FactoryBot.create(:orchestration_stack, :evm_owner => user) }
-
   context "with zone/ems" do
     before do
       @miq_server = EvmSpecHelper.local_miq_server
@@ -11,37 +9,14 @@ describe "Service Retirement Management" do
       @stack = FactoryGirl.create(:orchestration_stack, :ext_management_system => ems)
     end
 
-    describe "#retirement_check" do
-      context "with user" do
-        it "uses user as requester" do
-          expect(MiqEvent).to receive(:raise_evm_event)
-          stack_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-          expect(stack_with_owner.retirement_last_warn).to be_nil
-          stack_with_owner.retirement_check
-          stack_with_owner.reload
-          expect(stack_with_owner.retirement_last_warn).not_to be_nil
-          expect(stack_with_owner.retirement_requester).to eq(user.userid)
-        end
-      end
-
-      context "with deleted user" do
-        before do
-          # system_context_retirement relies on the presence of a user with this userid
-          FactoryBot.create(:user, :userid => 'admin', :role => 'super_administrator')
-          user.destroy
-          stack_with_owner.reload
-        end
-
-        it "uses admin as requester" do
-          expect(MiqEvent).to receive(:raise_evm_event)
-          stack_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-          expect(stack_with_owner.retirement_last_warn).to be_nil
-          stack_with_owner.retirement_check
-          stack_with_owner.reload
-          expect(stack_with_owner.retirement_last_warn).not_to be_nil
-          expect(stack_with_owner.retirement_requester).to eq("admin")
-        end
-      end
+    it "#retirement_check" do
+      expect(MiqEvent).to receive(:raise_evm_event)
+      @stack.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+      expect(@stack.retirement_last_warn).to be_nil
+      @stack.retirement_check
+      @stack.reload
+      expect(@stack.retirement_last_warn).not_to be_nil
+      expect(@stack.retirement_requester).to eq(user.userid)
     end
 
     it "#start_retirement" do

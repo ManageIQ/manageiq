@@ -253,12 +253,12 @@ module RetirementMixin
   end
 
   def system_context_requester
-    if evm_owner.blank?
-      $log.info("System context defaulting to admin user because owner of #{name} (#{self.class}) not set or owner no longer found in database.")
-      return User.super_admin
+    if try(:evm_owner_id).present?
+      User.find(evm_owner_id)
+    else
+      $log.info("System context defaulting to admin user because owner of #{name} not set.")
+      User.super_admin
     end
-    $log.info("Setting retirement requester of #{name} to #{evm_owner_id}.")
-    evm_owner
   end
 
   def current_user
