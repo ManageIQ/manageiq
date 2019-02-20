@@ -8,6 +8,8 @@ class ChargebackRateDetailCurrency < ApplicationRecord
 
   has_many :chargeback_rate_detail, :foreign_key => "chargeback_rate_detail_currency_id"
 
+  CURRENCY_FILE = "chargeback_rate_detail_currencies.yml".freeze
+
   def self.currencies_for_select
     # Return a hash where the keys are the possible currencies and the values are their ids
     ChargebackRateDetailCurrency.all.each_with_object({}) do |currency, hsh|
@@ -16,11 +18,14 @@ class ChargebackRateDetailCurrency < ApplicationRecord
     end
   end
 
+  def self.currency_file_source
+    File.join(FIXTURE_DIR, CURRENCY_FILE)
+  end
+
   def self.seed
-    fixture_file_currency = File.join(FIXTURE_DIR, 'chargeback_rate_detail_currencies.yml')
-    if File.exist?(fixture_file_currency)
-      fixture = YAML.load_file(fixture_file_currency)
-      fixture_mtime_currency = File.mtime(fixture_file_currency).utc
+    if File.exist?(currency_file_source)
+      fixture = YAML.load_file(currency_file_source)
+      fixture_mtime_currency = File.mtime(currency_file_source).utc
       fixture.each do |cbr|
         rec = ChargebackRateDetailCurrency.find_by(:name => cbr[:name])
         if rec.nil?
