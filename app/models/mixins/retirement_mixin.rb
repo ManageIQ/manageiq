@@ -273,10 +273,10 @@ module RetirementMixin
   end
 
   def q_user_info(q_options, requester)
-    if requester.present?
-      if requester.kind_of?(String)
-        requester = User.find_by(:userid => requester)
-      end
+    if requester && requester.kind_of?(String)
+      requester = User.find_by(:userid => requester)
+    end
+    if requester
       q_options[:user_id] = requester.id
       if requester.current_group.present? && requester.current_tenant.present?
         q_options[:group_id] = requester.current_group.id

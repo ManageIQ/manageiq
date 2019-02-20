@@ -164,7 +164,7 @@ describe "Service Retirement Management" do
       expect(@stack.retirement_due?).to be_truthy
     end
 
-    it "#raise_retirement_event" do
+    it "#raise_retirement_event without user" do
       event_name = 'foo'
       event_hash = {
         :userid              => nil,
@@ -174,6 +174,18 @@ describe "Service Retirement Management" do
 
       expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, :zone => @zone.name)
       @stack.raise_retirement_event(event_name)
+    end
+
+    it "#raise_retirement_event with user" do
+      event_name = 'foo'
+      event_hash = {
+        :userid              => user.userid,
+        :orchestration_stack => @stack,
+        :type                => "OrchestrationStack",
+      }
+
+      expect(MiqEvent).to receive(:raise_evm_event).with(@stack, event_name, event_hash, :zone => @zone.name, :user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id)
+      @stack.raise_retirement_event(event_name, user.userid)
     end
 
     it "#raise_audit_event" do

@@ -228,11 +228,27 @@ describe "Service Retirement Management" do
     expect(@service.retirement_due?).to be_truthy
   end
 
-  it "#raise_retirement_event" do
-    event_name = 'foo'
-    event_hash = {:userid => nil, :service => @service, :type => "Service"}
-    expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {})
-    @service.raise_retirement_event(event_name)
+  describe "#raise_retirement_event " do
+    it "without user" do
+      event_name = 'foo'
+      event_hash = {:userid => nil, :service => @service, :type => "Service"}
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {})
+      @service.raise_retirement_event(event_name)
+    end
+
+    it "with user" do
+      event_name = 'foo'
+      event_hash = {:userid => "admin", :service => @service, :type => "Service"}
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, :user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id)
+      @service.raise_retirement_event(event_name, "admin")
+    end
+
+    it "with user that isn't found" do
+      event_name = 'foo'
+      event_hash = {:userid => "nonexistent_username", :service => @service, :type => "Service"}
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {})
+      @service.raise_retirement_event(event_name, "nonexistent_username")
+    end
   end
 
   it "#raise_audit_event" do
