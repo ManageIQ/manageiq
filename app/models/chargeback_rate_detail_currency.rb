@@ -22,11 +22,14 @@ class ChargebackRateDetailCurrency < ApplicationRecord
     File.join(FIXTURE_DIR, CURRENCY_FILE)
   end
 
+  def self.currencies
+    YAML.load_file(currency_file_source)
+  end
+
   def self.seed
     if File.exist?(currency_file_source)
-      fixture = YAML.load_file(currency_file_source)
       fixture_mtime_currency = File.mtime(currency_file_source).utc
-      fixture.each do |cbr|
+      currencies.each do |cbr|
         rec = ChargebackRateDetailCurrency.find_by(:name => cbr[:name])
         if rec.nil?
           _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")
