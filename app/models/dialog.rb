@@ -119,6 +119,8 @@ class Dialog < ApplicationRecord
   end
 
   def init_fields_with_values_for_request(values)
+    values = values.with_indifferent_access
+
     dialog_field_hash.each do |_key, field|
       field.value = values[field.automate_key_name] || values[field.name]
     end
