@@ -8,7 +8,8 @@ class ChargebackRateDetailCurrency < ApplicationRecord
 
   has_many :chargeback_rate_detail, :foreign_key => "chargeback_rate_detail_currency_id"
 
-  CURRENCY_FILE = "chargeback_rate_detail_currencies.yml".freeze
+  CURRENCY_FILE = "/currency_iso.json".freeze
+  FIXTURE_DIR = Money::Currency::Loader::DATA_PATH.freeze
 
   def self.currencies_for_select
     # Return a hash where the keys are the possible currencies and the values are their ids
@@ -23,7 +24,15 @@ class ChargebackRateDetailCurrency < ApplicationRecord
   end
 
   def self.currencies
-    YAML.load_file(currency_file_source)
+    parse_currency_file.transform_values.map do |x|
+      {:code => x[:iso_code], :name => x[:name], :full_name => x[:name], :symbol => x[:symbol]}
+    end
+  end
+
+  def self.parse_currency_file
+    json = File.read(currency_file_source)
+    json.force_encoding(::Encoding::UTF_8) if defined?(::Encoding)
+    JSON.parse(json, :symbolize_names => true)
   end
 
   def self.seed
