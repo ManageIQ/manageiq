@@ -229,6 +229,10 @@ describe "Service Retirement Management" do
   end
 
   describe "#raise_retirement_event " do
+    before do
+      User.super_admin || FactoryBot.create(:user, :userid => 'admin', :role => 'super_administrator')
+    end
+
     it "without user" do
       event_name = 'foo'
       event_hash = {:userid => nil, :service => @service, :type => "Service"}
@@ -236,14 +240,21 @@ describe "Service Retirement Management" do
       @service.raise_retirement_event(event_name)
     end
 
-    it "with user" do
+    it "with string user" do
       event_name = 'foo'
       event_hash = {:userid => "admin", :service => @service, :type => "Service"}
-      expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, :user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id)
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, :user_id => User.find_by(:userid => "admin").id, :group_id => User.find_by(:userid => "admin").current_group.id, :tenant_id => User.find_by(:userid => "admin").current_tenant.id)
       @service.raise_retirement_event(event_name, "admin")
     end
 
-    it "with user that isn't found" do
+    it "with user object" do
+      event_name = 'foo'
+      event_hash = {:userid => user, :service => @service, :type => "Service"}
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, :user_id => user.id, :group_id => user.current_group.id, :tenant_id => user.current_tenant.id)
+      @service.raise_retirement_event(event_name, user)
+    end
+
+    it "with string user that isn't found" do
       event_name = 'foo'
       event_hash = {:userid => "nonexistent_username", :service => @service, :type => "Service"}
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash, {})
