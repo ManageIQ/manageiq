@@ -326,7 +326,7 @@ class MiqWidget < ApplicationRecord
     settings_for_build = {:miq_group_id => group.id}
     settings_for_build[:user_id]  = user.id  if user
     settings_for_build[:timezone] = timezone if timezone
-    contents = contents_for_owner(group, user, timezone) || miq_widget_contents.build(settings_for_build)
+    contents = miq_widget_contents.find_by(settings_for_build) || miq_widget_contents.build(settings_for_build)
     contents.updated_at = Time.now.utc # Force updated timestamp to change when saved even if the new contents are the same
 
     contents
@@ -354,20 +354,22 @@ class MiqWidget < ApplicationRecord
     end
   end
 
-  def contents_for_owner(group, user, timezone = nil)
-    return unless group
-    timezone = "UTC" if timezone && !timezone_matters?
-    conditions = {:miq_group_id => group.id}
-    conditions[:user_id]   = user.id if user
-    conditions[:timezone] = timezone if timezone
-    miq_widget_contents.find_by(conditions)
-  end
-
   def contents_for_user(user)
     user = self.class.get_user(user)
     timezone = timezone_matters? ? user.get_timezone : "UTC"
-    contents = contents_for_owner(user.current_group, user, timezone)
-    contents ||= contents_for_owner(user.current_group, nil, timezone)
+    conditions = {:miq_group_id => user.current_group.id}
+    conditions[:user_id] = user.id
+    conditions[:timezone] = timezone
+    contents = miq_widget_contents.find_by(conditions)
+
+    conditions.delete(:user_id)
+    contents ||= miq_widget_contents.find_by(conditions)
+
+    if contents.nil?
+      _log.warn("No contents found for Widget: '#{title}' Group: #{user.current_group.description} in Timezone '#{timezone}'. Attempting to get widget's contents from any Timezone ...")
+      conditions.delete(:timezone)
+      contents = miq_widget_contents.find_by(conditions)
+    end
     contents
   end
 

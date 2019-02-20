@@ -165,7 +165,7 @@ describe MiqWidget do
     end
 
     context "#contents_for_user" do
-      it "user owned" do
+      it "returns user owned widget contents in UTC timezone if user's timezone not specified" do
         content = FactoryGirl.create(:miq_widget_content,
                                      :miq_widget   => @widget_report_vendor_and_guest_os,
                                      :user_id      => @user1.id,
@@ -175,24 +175,26 @@ describe MiqWidget do
         expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content)
       end
 
-      it "owned by miq_group and in user's timezone" do
+      it "returns widget contents in user's timezone when content from different timezone also available" do
         @user1.settings.store_path(:display, :timezone, "Eastern Time (US & Canada)")
-        content = FactoryGirl.create(:miq_widget_content,
-                                     :miq_widget   => @widget_report_vendor_and_guest_os,
-                                     :miq_group_id => @group1.id,
-                                     :timezone     => "Eastern Time (US & Canada)"
-                                    )
-        expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content)
+        FactoryBot.create(:miq_widget_content,
+                          :miq_widget   => @widget_report_vendor_and_guest_os,
+                          :miq_group_id => @group1.id,
+                          :timezone     => "UTC")
+        content_user_timezone = FactoryBot.create(:miq_widget_content,
+                                                  :miq_widget   => @widget_report_vendor_and_guest_os,
+                                                  :miq_group_id => @group1.id,
+                                                  :timezone     => "Eastern Time (US & Canada)")
+        expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content_user_timezone)
       end
 
-      it "owned by miq_group and not in user's timezone" do
+      it "returns widget contents if only content available is not in user's timezone" do
         @user1.settings.store_path(:display, :timezone, "Eastern Time (US & Canada)")
-        FactoryGirl.create(:miq_widget_content,
-                                     :miq_widget   => @widget_report_vendor_and_guest_os,
-                                     :miq_group_id => @group1.id,
-                                     :timezone     => "UTC"
-                                    )
-        expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to be_nil
+        content_utc = FactoryBot.create(:miq_widget_content,
+                                        :miq_widget   => @widget_report_vendor_and_guest_os,
+                                        :miq_group_id => @group1.id,
+                                        :timezone     => "UTC")
+        expect(@widget_report_vendor_and_guest_os.contents_for_user(@user1)).to eq(content_utc)
       end
 
       it "both user and miq_group owned" do
