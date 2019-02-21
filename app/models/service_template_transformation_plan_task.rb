@@ -32,8 +32,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def update_transformation_progress(progress)
-    updates = {:progress => (options[:progress] || {}).merge(progress)}
-    update_options(updates)
+    update_options(:progress => (options[:progress] || {}).merge(progress))
   end
 
   def task_finished
@@ -53,16 +52,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   #  virtv2v_disks and network_mappings in task options
   def preflight_check
     raise 'OSP destination and source power_state is off' if destination_ems.emstype == 'openstack' && source.power_state == 'off'
-    #####
-    # this block is the essence of automate method: assesstransformation and its effect
-    # https://github.com/ManageIQ/manageiq-content/blob/a9421bc26960fae1a78d335c6ab4bee28f948fbe/content/automate/ManageIQ/Transformation/Common.class/__methods__/assesstransformation.rb#L15
     update_options(:source_vm_power_state => source.power_state) # This will determine power_state of destination_vm
-    # The following 2 lines are the spirit of the corresponding code in the Automate, essentially cancel out each other's effect
-    # Keeping these dead code here is for reviewer to understand what they are and why
-    # Refer to https://github.com/ManageIQ/manageiq-content/blob/a9421bc26960fae1a78d335c6ab4bee28f948fbe/content/automate/ManageIQ/Transformation/Infrastructure/VM/Common.class/__methods__/poweroff.rb#L16
-    # update_options(:power_off => true)
-    # raise 'source power_state is on and options[:power_off] is false' if source.power_state == 'on' && !options[:power_off]
-    #####
     destination_cluster
     virtv2v_disks
     network_mappings
@@ -93,19 +83,13 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def virtv2v_disks
     return options[:virtv2v_disks] if options[:virtv2v_disks].present?
-
-    updates = {:virtv2v_disks => calculate_virtv2v_disks}
-    update_options(updates)
-
+    update_options(:virtv2v_disks => calculate_virtv2v_disks)
     options[:virtv2v_disks]
   end
 
   def network_mappings
     return options[:network_mappings] if options[:network_mappings].present?
-
-    updates = {:network_mappings => calculate_network_mappings}
-    update_options(updates)
-
+    update_options(:network_mappings => calculate_network_mappings)
     options[:network_mappings]
   end
 
@@ -200,6 +184,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def update_options(opts)
     with_lock do
+      # Automate is updating this options hash (various keys) as well, using with_lock.
       options.merge!(opts)
       update_attributes(:options => options)
     end
@@ -352,6 +337,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def valid_states
-    super + %w(migrate)
+    super << 'migrate'
   end
 end

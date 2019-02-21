@@ -1,13 +1,9 @@
 class InfraConversionJob < Job
-  POLL_CONVERSION_INTERVAL = 60
-  POLL_CONVERSION_MAX = 24 * 60 # i.e. default 24 hour
-  POLL_POST_STAGE_MAX = 30 # i.e. default 30 minutes
-
   def self.create_job(options)
     # TODO: from settings/user plan settings
-    options[:conversion_polling_interval] = POLL_CONVERSION_INTERVAL
-    options[:poll_conversion_max] = POLL_CONVERSION_MAX
-    options[:poll_post_stage_max] = POLL_POST_STAGE_MAX
+    options[:conversion_polling_interval] ||= 60 # in seconds
+    options[:poll_conversion_max] ||= 24 * 60 # i.e. default 24 hour (with 60s per-interval)
+    options[:poll_post_stage_max] ||= 30 # i.e. default 30 minutes
     super(name, options)
   end
 
@@ -145,7 +141,6 @@ class InfraConversionJob < Job
       :class_name  => self.class.name,
       :method_name => "signal",
       :instance_id => id,
-      :priority    => MiqQueue::NORMAL_PRIORITY,
       :role        => "ems_operations",
       :zone        => zone,
       :task_id     => guid,
