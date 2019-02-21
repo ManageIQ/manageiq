@@ -622,4 +622,18 @@ describe User do
       expect(user.regional_users).to match_array([user, regional_user])
     end
   end
+
+  describe "#check_reference" do
+    let(:user) { FactoryBot.create(:user) }
+
+    it "invoked from 'before_destroy' callback" do
+      expect(user).to receive(:check_reference)
+      user.destroy
+    end
+
+    it "throws 'abort' if reference to this user present in miq_requests table" do
+      FactoryBot.create(:vm_migrate_request, :requester => user)
+      expect { user.check_reference }.to throw_symbol(:abort)
+    end
+  end
 end
