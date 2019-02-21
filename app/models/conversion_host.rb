@@ -35,9 +35,14 @@ class ConversionHost < ApplicationRecord
   # with the conversion host. Otherwise, use the default check which uses the
   # associated resource's authentications.
   #
-  # This method is necessary to comply with AuthenticationMixin interface.
+  # Subclasses should pass provider-specific +options+, such as proxy information.
   #
-  def verify_credentials(_auth_type = nil, _options = {})
+  # This method is necessary to comply with AuthenticationMixin interface.
+  #--
+  # TODO: Use the verify_credentials_ssh method in host.rb? Move that to the
+  # AuthenticationMixin?
+  #
+  def verify_credentials(_auth_type = nil, options = {})
     require 'net/ssh'
     host = hostname || ipaddress
 
@@ -45,9 +50,9 @@ class ConversionHost < ApplicationRecord
       check_ssh_connection
     else
       authentications.each do |auth|
-        user = auth.userid || ENV['USER']
+        user = auth.userid || ENV['USER'] || Etc.getlogin
 
-        ssh_options = { :timeout => 3 }
+        ssh_options = { :timeout => 10 }
 
         if auth.password
           ssh_options[:password] = auth.password
@@ -59,9 +64,19 @@ class ConversionHost < ApplicationRecord
           ssh_options[:auth_methods] = %w[public_key host_based]
         end
 
+        ssh_options.merge!(options)
+
         Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
       end
     end
+  rescue Net::SSH::AuthenticationFailed => err
+    raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
+  rescue Net::SSH::HostKeyMismatch => err
+    raise MiqException::MiqSshUtilHostKeyMismatch, _("Host key mismatch - %{error_message}") % {:error_message => err.message}
+  rescue StandardError => err
+    raise _("Unknown error - %{error_message}") % {:error_message => err.message}
+  else
+    true
   end
 
   # Returns a boolean indicating whether or not the conversion host is eligible
