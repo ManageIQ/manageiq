@@ -7,10 +7,12 @@ module Vmdb::Loggers
       super()
     end
 
-    def write(string)
-      @buffer ||= ""
-      @buffer << string
-      dump_buffer if string.include?("\n")
+    def write(*args)
+      args.each do |arg|
+        @buffer ||= ""
+        @buffer << arg
+        dump_buffer if arg.include?("\n")
+      end
     end
 
     def <<(string)
