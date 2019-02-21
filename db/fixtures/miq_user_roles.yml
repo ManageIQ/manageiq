@@ -382,7 +382,9 @@
   - ems_infra_delete
   - ems_infra_discover
   - ems_infra_edit
+  - ems_infra_pause
   - ems_infra_refresh
+  - ems_infra_resume
   - ems_infra_scale
   - ems_infra_show
   - ems_infra_show_list
