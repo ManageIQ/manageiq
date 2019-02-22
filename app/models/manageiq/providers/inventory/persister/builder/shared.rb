@@ -82,9 +82,31 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
     end
 
     def operating_systems
+      custom_save_block = lambda do |_ems, inventory_collection|
+        vms_and_templates_ids = inventory_collection.data.map { |os| os.vm_or_template&.id }.compact
+
+        vms_and_templates_index = VmOrTemplate.where(:id => vms_and_templates_ids).index_by(&:id)
+        operating_systems_index = OperatingSystem.where(:vm_or_template_id => vms_and_templates_ids).index_by(&:vm_or_template_id)
+
+        inventory_collection.each do |inventory_object|
+          vm_or_template = vms_and_templates_index[inventory_object.vm_or_template.id]
+
+          # If a VM has had smartstate run on it (drift_states are present) then don't overwrite the
+          # operating system record with one from the provider.  This is because typically far more
+          # details and correct information can be found from smartstate.
+          next unless vm_or_template.drift_states.blank? || vm_or_template.operating_system.nil? ||
+                      vm_or_template.operating_system.product_name.blank?
+
+          operating_system = operating_systems_index[inventory_object.vm_or_template.id] ||
+                             inventory_object.model_class.new
+          operating_system.update_attributes!(inventory_object.attributes)
+        end
+      end
+
       add_properties(
         :manager_ref                  => %i(vm_or_template),
-        :parent_inventory_collections => %i(vms miq_templates)
+        :parent_inventory_collections => %i(vms miq_templates),
+        :custom_save_block            => custom_save_block
       )
     end
 

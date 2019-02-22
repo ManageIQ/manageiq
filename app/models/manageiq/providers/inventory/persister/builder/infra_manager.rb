@@ -55,13 +55,6 @@ module ManageIQ::Providers
           )
         end
 
-        def operating_systems
-          add_properties(
-            :manager_ref                  => %i(vm_or_template),
-            :parent_inventory_collections => %i(vms miq_templates),
-          )
-        end
-
         def host_operating_systems
           add_properties(
             :model_class                  => ::OperatingSystem,
