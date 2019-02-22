@@ -43,16 +43,16 @@ class ConversionHost < ApplicationRecord
   # AuthenticationMixin?
   #
   def verify_credentials(_auth_type = nil, options = {})
-    require 'net/ssh'
-    host = hostname || ipaddress
-
     if authentications.empty?
       check_ssh_connection
     else
+      require 'net/ssh'
+      host = hostname || ipaddress
+
       authentications.each do |auth|
         user = auth.userid || ENV['USER'] || Etc.getlogin
 
-        ssh_options = { :timeout => 10 }
+        ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
 
         if auth.password
           ssh_options[:password] = auth.password
@@ -64,6 +64,7 @@ class ConversionHost < ApplicationRecord
           ssh_options[:auth_methods] = %w[public_key host_based]
         end
 
+        # Options from STI subclasses will override the defaults we've set above.
         ssh_options.merge!(options)
 
         Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
@@ -105,7 +106,7 @@ class ConversionHost < ApplicationRecord
   def check_ssh_connection
     connect_ssh { |ssu| ssu.shell_exec('uname -a') }
     true
-  rescue => e
+  rescue
     false
   end
 
