@@ -41,7 +41,7 @@ class GenericObjectDefinition < ApplicationRecord
                     :normalize_property_associations,
                     :normalize_property_methods
 
-  before_destroy    :check_not_in_use
+  before_destroy    :check_not_in_use, :prepend => true
 
   delegate :count, :to => :generic_objects, :prefix => true, :allow_nil => false
   virtual_column :generic_objects_count, :type => :integer
