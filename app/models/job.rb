@@ -10,7 +10,7 @@ class Job < ApplicationRecord
   serialize :context
   alias_attribute :jobid, :guid
 
-  before_destroy :check_active_on_destroy
+  before_destroy :check_active_on_destroy, :prepend => true
   after_update_commit :update_linked_task
 
   DEFAULT_TIMEOUT = 300
