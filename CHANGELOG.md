@@ -5,7 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-2
+## Update as of Sprint 105 ending 2019-02-18
+
+### Added
+- Targeted refresh for Embedded ansible provider [(#18429)](https://github.com/ManageIQ/manageiq/pull/18429)
+- Update host switch association [(#18427)](https://github.com/ManageIQ/manageiq/pull/18427)
+- Add empty IP address check to preflight check [(#18425)](https://github.com/ManageIQ/manageiq/pull/18425)
+- Add uri_attributes as virtual_attribute to CustomButton [(#18379)](https://github.com/ManageIQ/manageiq/pull/18379)
+
+### Fixed
+- [MiqWorker::worker_settings] Handle number strings [(#18453)](https://github.com/ManageIQ/manageiq/pull/18453)
+- Escape characters in SSH URI for virt-v2v [(#18451)](https://github.com/ManageIQ/manageiq/pull/18451)
+- Don't retire load balancers [(#18443)](https://github.com/ManageIQ/manageiq/pull/18443)
+- Fixed: Timezone set-up in MySettings was not honored when displaying date fields in the report [(#18438)](https://github.com/ManageIQ/manageiq/pull/18438)
+- Add check for existence of user for system_context [(#18437)](https://github.com/ManageIQ/manageiq/pull/18437)
+- Fix save_inventory error if lan can't be found [(#18433)](https://github.com/ManageIQ/manageiq/pull/18433)
+- Let stack_parameters support symbol hash keys for now [(#18373)](https://github.com/ManageIQ/manageiq/pull/18373)
+
+## Hammer-2 - Released 2019-02-07
 
 ### Fixed
 - Use the new schema_migrations_ran table to track remote schema migrations [(#18393)](https://github.com/ManageIQ/manageiq/pull/18393)
