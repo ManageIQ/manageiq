@@ -1,5 +1,5 @@
 describe "VM Retirement Management" do
-  let!(:user) { FactoryGirl.create(:user_miq_request_approver) }
+  let!(:user) { FactoryGirl.create(:user_miq_request_approver, :userid => "admin") }
   let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
   let(:vm2) { FactoryGirl.create(:vm) }
 
@@ -9,14 +9,48 @@ describe "VM Retirement Management" do
     @vm = FactoryGirl.create(:vm_vmware, :ems_id => @ems.id, :evm_owner => user)
   end
 
-  it "#retirement_check" do
-    expect(MiqEvent).to receive(:raise_evm_event).once
-    @vm.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-    expect(@vm.retirement_last_warn).to be_nil
-    @vm.retirement_check
-    @vm.reload
-    expect(@vm.retirement_last_warn).not_to be_nil
-    expect(@vm.retirement_requester).to eq(user.userid)
+  describe "#retirement_check" do
+    context "with user" do
+      it "uses user info" do
+        expect(MiqEvent).to receive(:raise_evm_event).once
+        @vm.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        expect(@vm.retirement_last_warn).to be_nil
+        @vm.retirement_check
+        @vm.reload
+        expect(@vm.retirement_last_warn).not_to be_nil
+        expect(@vm.retirement_requester).to eq(user.userid)
+      end
+    end
+
+    context "with deleted user" do
+      let(:user_for_deletion) { FactoryGirl.create(:user_miq_request_approver) }
+      let(:vm_with_non_admin_user) { FactoryGirl.create(:vm) }
+      it "uses admin default" do
+        User.with_user(user_for_deletion) do
+          user_for_deletion.destroy
+          expect(MiqEvent).to receive(:raise_evm_event)
+          vm_with_non_admin_user.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+          expect(vm_with_non_admin_user.retirement_last_warn).to be_nil
+          vm_with_non_admin_user.retirement_check
+          vm_with_non_admin_user.reload
+          expect(vm_with_non_admin_user.retirement_last_warn).not_to be_nil
+          expect(vm_with_non_admin_user.retirement_requester).to eq("admin")
+        end
+      end
+    end
+
+    context "without user" do
+      it "uses admin default" do
+        expect(MiqEvent).to receive(:raise_evm_event)
+        vm2.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        expect(vm2.retirement_last_warn).to be_nil
+        vm2.retirement_check
+        vm2.reload
+        expect(vm2.retirement_last_warn).not_to be_nil
+        expect(vm2.retirement_requester).to eq(user.userid)
+        expect(MiqRequest.first.userid).to eq("admin")
+      end
+    end
   end
 
   it "#start_retirement" do

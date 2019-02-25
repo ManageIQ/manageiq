@@ -9,14 +9,48 @@ describe "Service Retirement Management" do
       @stack = FactoryGirl.create(:orchestration_stack, :ext_management_system => ems)
     end
 
-    it "#retirement_check" do
-      expect(MiqEvent).to receive(:raise_evm_event)
-      @stack.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-      expect(@stack.retirement_last_warn).to be_nil
-      @stack.retirement_check
-      @stack.reload
-      expect(@stack.retirement_last_warn).not_to be_nil
-      expect(@stack.retirement_requester).to eq(user.userid)
+    describe "#retirement_check" do
+      context "with user" do
+        it "uses user" do
+          expect(MiqEvent).to receive(:raise_evm_event)
+          @stack.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+          expect(@stack.retirement_last_warn).to be_nil
+          @stack.retirement_check
+          @stack.reload
+          expect(@stack.retirement_last_warn).not_to be_nil
+          expect(@stack.retirement_requester).to eq(user.userid)
+        end
+      end
+
+      context "with deleted user" do
+        let(:user_for_deletion) { FactoryGirl.create(:user_miq_request_approver) }
+        let(:stack_with_non_admin_user) { FactoryGirl.create(:orchestration_stack) }
+        it "uses admin default" do
+          User.with_user(user_for_deletion) do
+            user_for_deletion.destroy
+            expect(MiqEvent).to receive(:raise_evm_event)
+            stack_with_non_admin_user.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+            expect(stack_with_non_admin_user.retirement_last_warn).to be_nil
+            stack_with_non_admin_user.retirement_check
+            stack_with_non_admin_user.reload
+            expect(stack_with_non_admin_user.retirement_last_warn).not_to be_nil
+            expect(stack_with_non_admin_user.retirement_requester).to eq("admin")
+          end
+        end
+      end
+
+      context "without user" do
+        it "uses admin default" do
+          expect(MiqEvent).to receive(:raise_evm_event)
+          orchestration_stack.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+          expect(orchestration_stack.retirement_last_warn).to be_nil
+          orchestration_stack.retirement_check
+          orchestration_stack.reload
+          expect(orchestration_stack.retirement_last_warn).not_to be_nil
+          expect(orchestration_stack.retirement_requester).to eq(user.userid)
+          expect(MiqRequest.first.userid).to eq("admin")
+        end
+      end
     end
 
     it "#start_retirement" do
