@@ -438,7 +438,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def dup
-    super.tap { |obj| obj.update_attributes(:guid => nil) }
+    super.tap { |obj| obj.guid = nil }
   end
 
   def add_resource(rsc, options = {})
