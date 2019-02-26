@@ -2,6 +2,11 @@ module UuidMixin
   extend ActiveSupport::Concern
   included do
     before_validation :set_guid, :on => :create if respond_to?(:before_validation)
+    validates :guid,  :uniqueness => true, :presence => true
+  end
+
+  def dup
+    super.tap { |obj| obj.guid = nil }
   end
 
   private

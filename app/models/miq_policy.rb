@@ -36,8 +36,8 @@ class MiqPolicy < ApplicationRecord
 
   virtual_has_many :miq_event_definitions, :uses => {:miq_policy_contents => :miq_event_definition}
 
-  validates_presence_of     :name, :description, :guid
-  validates_uniqueness_of   :name, :description, :guid
+  validates :description, :presence => true, :uniqueness => true
+  validates :name, :presence => true, :uniqueness => true
   validates :mode, :inclusion => { :in => %w(compliance control) }
   validates :towhat, :inclusion => { :in      => TOWHAT_APPLIES_TO_CLASSES,
                                      :message => "should be one of #{TOWHAT_APPLIES_TO_CLASSES.join(", ")}" }

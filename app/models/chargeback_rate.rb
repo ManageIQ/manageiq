@@ -19,8 +19,7 @@ class ChargebackRate < ApplicationRecord
 
   has_many :chargeback_rate_details, :dependent => :destroy, :autosave => true
 
-  validates_presence_of     :description, :guid
-  validates_uniqueness_of   :guid
+  validates :description, :presence => true
   validates_uniqueness_of   :description, :scope => :rate_type
 
   delegate :symbol, :to => :currency, :prefix => true, :allow_nil => true
