@@ -5,6 +5,27 @@ describe Metric do
     _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
   end
 
+  describe "metrics view" do
+    it "creates an object with an id" do
+      metric = described_class.create!(:timestamp => Time.now.utc)
+      expect(metric.id).to be > 0
+    end
+
+    it "initializes an object's id after save" do
+      metric = described_class.new
+      metric.timestamp = Time.now.utc
+      metric.save!
+      expect(metric.id).to be > 0
+    end
+
+    it "updates an existing object correctly" do
+      metric = described_class.create!(:timestamp => Time.now.utc)
+      old_id = metric.id
+      metric.update_attributes!(:timestamp => Time.now.utc - 1.day)
+      expect(metric.id).to eq(old_id)
+    end
+  end
+
   context "as vmware" do
     before do
       @ems_vmware = FactoryBot.create(:ems_vmware, :zone => @zone)
