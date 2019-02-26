@@ -21,6 +21,10 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
     MiqProvision
   end
 
+  def service_template_resource_copy
+    dup.tap(&:save!)
+  end
+
   def execute
     # Should not be called.
     raise _("Provision Request Templates do not support the execute method.")

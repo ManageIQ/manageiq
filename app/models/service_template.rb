@@ -43,7 +43,9 @@ class ServiceTemplate < ApplicationRecord
   include ArchivedMixin
   include CiFeatureMixin
   include_concern 'Filter'
+  include_concern 'Copy'
 
+  validates :name, :presence => true
   belongs_to :tenant
   # # These relationships are used to specify children spawned from a parent service
   # has_many   :child_services, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
@@ -433,6 +435,10 @@ class ServiceTemplate < ApplicationRecord
     ResourceActionWorkflow.new(dialog_options, user, provision_action, ra_options).tap do |wf|
       wf.request_options = request_options
     end
+  end
+
+  def dup
+    super.tap { |obj| obj.update_attributes(:guid => nil) }
   end
 
   def add_resource(rsc, options = {})
