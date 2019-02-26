@@ -536,4 +536,12 @@ describe MiqAction do
       it_behaves_like "#workflow check"
     end
   end
+
+  describe "#destroy" do
+    it "does not destroy this action if it referenced in at least one policy" do
+      action = FactoryBot.create(:miq_action, :name => "custom_automation")
+      FactoryBot.create(:miq_policy_content, :miq_action => action)
+      expect { action.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+    end
+  end
 end
