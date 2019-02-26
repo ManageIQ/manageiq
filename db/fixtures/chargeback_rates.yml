@@ -8,7 +8,7 @@
     :metric: cpu_usagemhz_rate_average
     :per_time: hourly
     :per_unit: megahertz
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -18,7 +18,7 @@
     :metric: v_derived_cpu_total_cores_used
     :per_time: hourly
     :per_unit: cpu core
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -28,7 +28,7 @@
     :metric: derived_vm_numvcpus
     :per_time: hourly
     :per_unit: cpu
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -38,7 +38,7 @@
     :metric: derived_vm_numvcpu_cores
     :per_time: hourly
     :per_unit: cpu core
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -48,7 +48,7 @@
     :metric: derived_memory_used
     :per_time: hourly
     :per_unit: megabytes
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -58,7 +58,7 @@
     :metric: derived_memory_available
     :per_time: hourly
     :per_unit: megabytes
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -68,7 +68,7 @@
     :metric: net_usage_rate_average
     :per_time: hourly
     :per_unit: kbps
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: 100
@@ -82,7 +82,7 @@
     :metric: disk_usage_rate_average
     :per_time: hourly
     :per_unit: kbps
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -91,7 +91,7 @@
   - :description: Fixed Compute Cost 1
     :metric: fixed_compute_1
     :per_time: hourly
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -100,7 +100,7 @@
   - :description: Fixed Compute Cost 2
     :metric: fixed_compute_2
     :per_time: hourly
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -115,7 +115,7 @@
     :metric: derived_vm_allocated_disk_storage
     :per_time: hourly
     :per_unit: gigabytes
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -125,7 +125,7 @@
     :metric: derived_vm_used_disk_storage
     :per_time: hourly
     :per_unit: gigabytes
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -134,7 +134,7 @@
   - :description: Fixed Storage Cost 1
     :metric: fixed_storage_1
     :per_time: hourly
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -143,7 +143,7 @@
   - :description: Fixed Storage Cost 2
     :metric: fixed_storage_2
     :per_time: hourly
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -158,7 +158,7 @@
     :metric: cpu_usagemhz_rate_average
     :per_time: hourly
     :per_unit: megahertz
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -168,7 +168,7 @@
     :metric: v_derived_cpu_total_cores_used
     :per_time: hourly
     :per_unit: cpu core
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -178,7 +178,7 @@
     :metric: derived_vm_numvcpus
     :per_time: hourly
     :per_unit: cpu
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -188,7 +188,7 @@
     :metric: derived_vm_numvcpu_cores
     :per_time: hourly
     :per_unit: cpu core
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -198,7 +198,7 @@
     :metric: derived_memory_used
     :per_time: hourly
     :per_unit: megabytes
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -208,7 +208,7 @@
     :metric: derived_memory_available
     :per_time: hourly
     :per_unit: megabytes
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -218,7 +218,7 @@
     :metric: net_usage_rate_average
     :per_time: hourly
     :per_unit: kbps
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: 100
@@ -232,7 +232,7 @@
     :metric: disk_usage_rate_average
     :per_time: hourly
     :per_unit: kbps
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -241,7 +241,7 @@
   - :description: Fixed Compute Cost 1
     :metric: fixed_compute_1
     :per_time: hourly
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity
@@ -250,7 +250,7 @@
   - :description: Fixed Compute Cost 2
     :metric: fixed_compute_2
     :per_time: hourly
-    :type_currency: Dollars
+    :type_currency: USD
     :tiers:
     - :start: 0
       :finish: Infinity

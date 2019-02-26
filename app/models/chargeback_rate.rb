@@ -85,7 +85,7 @@ class ChargebackRate < ApplicationRecord
         rates = cbr.delete(:rates)
 
         rates.each do |rate_detail|
-          currency = ChargebackRateDetailCurrency.find_by(:name => rate_detail.delete(:type_currency))
+          currency = ChargebackRateDetailCurrency.find_by(:code => rate_detail.delete(:type_currency))
           field = ChargeableField.find_by(:metric => rate_detail.delete(:metric))
           rate_detail[:chargeable_field_id] = field.id
           if currency

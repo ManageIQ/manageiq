@@ -39,15 +39,13 @@ class ChargebackRateDetailCurrency < ApplicationRecord
     if File.exist?(currency_file_source)
       fixture_mtime_currency = File.mtime(currency_file_source).utc
       currencies.each do |currency|
-        rec = ChargebackRateDetailCurrency.find_by(:name => currency[:name])
+        rec = ChargebackRateDetailCurrency.find_by(:code => currency[:code])
         if rec.nil?
-          _log.info("Creating [#{currency[:name]}] with symbols=[#{currency[:symbol]}]")
+          _log.info("Creating [#{currency[:code]}] with symbols=[#{currency[:symbol]}]")
           ChargebackRateDetailCurrency.create(currency)
         elsif fixture_mtime_currency > rec.created_at
-          _log.info("Updating [#{currency[:name]}] with symbols=[#{currency[:symbol]}]")
-          rec.update_attributes(currency)
-          rec.created_at = fixture_mtime_currency
-          rec.save
+          _log.info("Updating [#{currency[:code]}] with symbols=[#{currency[:symbol]}]")
+          rec.update_attributes(currency.merge(:created_at => fixture_mtime_currency))
         end
       end
     end
