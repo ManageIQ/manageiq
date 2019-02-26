@@ -940,7 +940,10 @@ class MiqAction < ApplicationRecord
   end
 
   def check_policy_contents_empty_on_destroy
-    raise _("Action is referenced in at least one policy and connot be deleted") unless miq_policy_contents.empty?
+    unless miq_policy_contents.empty?
+      errors.add(:base, _("Action is referenced in at least one policy and cannot be deleted"))
+      throw :abort
+    end
   end
 
   def round_if_memory_reconfigured
