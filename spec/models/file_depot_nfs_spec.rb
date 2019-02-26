@@ -12,12 +12,8 @@ describe FileDepotNfs do
       file_depot_nfs.uri = uri
     end
 
-    it "should return the uri set on the depot object and ignore the uri parameter" do
-      expect(file_depot_nfs.merged_uri(swift_uri, nil)).to eq uri
-    end
-
-    it "should return the uri set on the depot object and ignore an empty uri parameter" do
-      expect(file_depot_nfs.merged_uri(nil, nil)).to eq uri
+    it "should ignore the uri set on the depot object and return the uri parameter" do
+      expect(file_depot_nfs.merged_uri(swift_uri, nil)).to eq swift_uri
     end
   end
 end
