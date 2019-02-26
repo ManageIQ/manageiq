@@ -8,6 +8,9 @@ class ChargebackRateDetailCurrency < ApplicationRecord
 
   has_many :chargeback_rate_detail, :foreign_key => "chargeback_rate_detail_currency_id"
 
+  CURRENCY_FILE = "/currency_iso.json".freeze
+  FIXTURE_DIR = Money::Currency::Loader::DATA_PATH.freeze
+
   def self.currencies_for_select
     # Return a hash where the keys are the possible currencies and the values are their ids
     ChargebackRateDetailCurrency.all.each_with_object({}) do |currency, hsh|
@@ -16,21 +19,33 @@ class ChargebackRateDetailCurrency < ApplicationRecord
     end
   end
 
+  def self.currency_file_source
+    File.join(FIXTURE_DIR, CURRENCY_FILE)
+  end
+
+  def self.currencies
+    parse_currency_file.transform_values.map do |x|
+      {:code => x[:iso_code], :name => x[:name], :full_name => x[:name], :symbol => x[:symbol]}
+    end
+  end
+
+  def self.parse_currency_file
+    json = File.read(currency_file_source)
+    json.force_encoding(::Encoding::UTF_8) if defined?(::Encoding)
+    JSON.parse(json, :symbolize_names => true)
+  end
+
   def self.seed
-    fixture_file_currency = File.join(FIXTURE_DIR, 'chargeback_rate_detail_currencies.yml')
-    if File.exist?(fixture_file_currency)
-      fixture = YAML.load_file(fixture_file_currency)
-      fixture_mtime_currency = File.mtime(fixture_file_currency).utc
-      fixture.each do |cbr|
-        rec = ChargebackRateDetailCurrency.find_by(:name => cbr[:name])
+    if File.exist?(currency_file_source)
+      fixture_mtime_currency = File.mtime(currency_file_source).utc
+      currencies.each do |currency|
+        rec = ChargebackRateDetailCurrency.find_by(:code => currency[:code])
         if rec.nil?
-          _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")
-          rec = ChargebackRateDetailCurrency.create(cbr)
+          _log.info("Creating [#{currency[:code]}] with symbols=[#{currency[:symbol]}]")
+          ChargebackRateDetailCurrency.create(currency)
         elsif fixture_mtime_currency > rec.created_at
-          _log.info("Updating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]")
-          rec.update_attributes(cbr)
-          rec.created_at = fixture_mtime_currency
-          rec.save
+          _log.info("Updating [#{currency[:code]}] with symbols=[#{currency[:symbol]}]")
+          rec.update_attributes(currency.merge(:created_at => fixture_mtime_currency))
         end
       end
     end

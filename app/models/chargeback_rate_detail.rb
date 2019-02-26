@@ -278,7 +278,7 @@ class ChargebackRateDetail < ApplicationRecord
 
       chargeback_rate[:rates].each do |detail|
         detail_new = ChargebackRateDetail.new(detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES))
-        detail_new.detail_currency = ChargebackRateDetailCurrency.find_by(:name => detail[:type_currency])
+        detail_new.detail_currency = ChargebackRateDetailCurrency.find_by(:code => detail[:type_currency])
         detail_new.metric = detail[:metric]
         detail_new.chargeable_field = ChargeableField.find_by(:metric => detail.delete(:metric))
 
