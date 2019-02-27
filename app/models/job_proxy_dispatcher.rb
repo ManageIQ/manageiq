@@ -15,6 +15,7 @@ class JobProxyDispatcher
 
   def dispatch
     _dummy, t = Benchmark.realtime_block(:total_time) do
+      Benchmark.realtime_block(:v2v_dispatching) { dispatch_v2v_migrations }
       Benchmark.realtime_block(:container_dispatching) { dispatch_container_scan_jobs }
       jobs_to_dispatch, = Benchmark.realtime_block(:pending_vm_jobs) { pending_jobs }
       Benchmark.current_realtime[:vm_jobs_to_dispatch_count] = jobs_to_dispatch.length
@@ -96,6 +97,10 @@ class JobProxyDispatcher
 
   def container_image_scan_class
     ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job
+  end
+
+  def dispatch_v2v_migrations
+    InfraConversionThrottler.start_conversions
   end
 
   def dispatch_container_scan_jobs
