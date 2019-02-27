@@ -498,7 +498,12 @@ describe ServiceTemplateTransformationPlanTask do
 
           it "fails if network IP address is nil" do
             allow(src_nic_2).to receive(:network).and_return(src_network_2b)
-            expect { task_1.network_mappings }.to raise_error("[#{src_vm_1.name}] NIC #{src_nic_2.device_name} [#{src_lan_2.name}] has an empty IP address.")
+            expect(task_1.network_mappings).to eq(
+              [
+                { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
+                { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address, :ip_address => nil }
+              ]
+            )
           end
         end
 
