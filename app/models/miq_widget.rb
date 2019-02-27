@@ -1,6 +1,5 @@
 # Dashboard widget
 #
-require 'simple-rss'
 
 class MiqWidget < ApplicationRecord
   default_value_for :enabled, true
