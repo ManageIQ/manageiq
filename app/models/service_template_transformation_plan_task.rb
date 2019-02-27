@@ -32,8 +32,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def update_transformation_progress(progress)
-    options[:progress] = (options[:progress] || {}).merge(progress)
-    save
+    update_options(:progress => (options[:progress] || {}).merge(progress))
   end
 
   def task_finished
@@ -52,13 +51,12 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   # This method returns true if all mappings are ok. It also preload
   #  virtv2v_disks and network_mappings in task options
   def preflight_check
+    raise 'OSP destination and source power_state is off' if destination_ems.emstype == 'openstack' && source.power_state == 'off'
+    update_options(:source_vm_power_state => source.power_state) # This will determine power_state of destination_vm
     destination_cluster
     virtv2v_disks
     network_mappings
-    raise if destination_ems.emstype == 'openstack' && source.power_state == 'off'
-    true
-  rescue
-    false
+    update_attributes(:state => 'migrate')
   end
 
   def source_cluster
@@ -85,19 +83,13 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def virtv2v_disks
     return options[:virtv2v_disks] if options[:virtv2v_disks].present?
-
-    options[:virtv2v_disks] = calculate_virtv2v_disks
-    save!
-
+    update_options(:virtv2v_disks => calculate_virtv2v_disks)
     options[:virtv2v_disks]
   end
 
   def network_mappings
     return options[:network_mappings] if options[:network_mappings].present?
-
-    options[:network_mappings] = calculate_network_mappings
-    save!
-
+    update_options(:network_mappings => calculate_network_mappings)
     options[:network_mappings]
   end
 
@@ -148,18 +140,23 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     end
 
     _log.info("Queuing the download of transformation log for #{description} with ID [#{id}]")
-    options = {:userid => userid, :action => 'transformation_log'}
+    task_options = {:userid => userid, :action => 'transformation_log'}
     queue_options = {:class_name  => self.class,
                      :method_name => 'transformation_log',
                      :instance_id => id,
                      :priority    => MiqQueue::HIGH_PRIORITY,
                      :args        => [],
                      :zone        => conversion_host.resource.my_zone}
-    MiqTask.generic_action_with_callback(options, queue_options)
+    MiqTask.generic_action_with_callback(task_options, queue_options)
+  end
+
+  def infra_conversion_job
+    Job.find(options[:infra_conversion_job_id])
   end
 
   def cancel
     update_attributes(:cancelation_status => MiqRequestTask::CANCEL_STATUS_REQUESTED)
+    infra_conversion_job.cancel
   end
 
   def canceling
@@ -176,49 +173,65 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_cluster = transformation_destination(source_cluster)
     destination_storage = transformation_destination(source_storage)
 
-    options = {
+    results = {
       :source_disks     => virtv2v_disks.map { |disk| disk[:path] },
       :network_mappings => network_mappings
     }
 
-    options.merge!(send("conversion_options_source_provider_#{source_ems.emstype}_#{source_transport_method}", source_storage))
-    options.merge!(send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage))
+    results.merge!(send("conversion_options_source_provider_#{source_ems.emstype}_#{source_transport_method}", source_storage))
+    results.merge!(send("conversion_options_destination_provider_#{destination_ems.emstype}", destination_cluster, destination_storage))
+  end
 
+  def update_options(opts)
+    with_lock do
+      # Automate is updating this options hash (various keys) as well, using with_lock.
+      options.merge!(opts)
+      update_attributes(:options => options)
+    end
     options
   end
 
   def run_conversion
     start_timestamp = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
-    options[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
-    options[:virtv2v_started_on] = start_timestamp
-    options[:virtv2v_status] = 'active'
+    updates = {}
+    updates[:virtv2v_wrapper] = conversion_host.run_conversion(conversion_options)
+    updates[:virtv2v_started_on] = start_timestamp
+    updates[:virtv2v_status] = 'active'
+    _log.info("InfraConversionJob run_conversion to update_options: #{updates}")
+    update_options(updates)
   end
 
   def get_conversion_state
+    updates = {}
     virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
     updated_disks = virtv2v_disks
     if virtv2v_state['finished'].nil?
       updated_disks.each do |disk|
         matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }
         raise "No disk matches '#{disk[:path]}'. Aborting." if matching_disks.length.zero?
-        raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1 
+        raise "More than one disk matches '#{disk[:path]}'. Aborting." if matching_disks.length > 1
         disk[:percent] = matching_disks.first['progress']
       end
     else
-      options[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
+      updates[:virtv2v_finished_on] = Time.now.utc.strftime('%Y-%m-%d %H:%M:%S')
       if virtv2v_state['failed']
-        options[:virtv2v_status] = 'failed'
+        updates[:virtv2v_status] = 'failed'
+        raise "Disks transformation failed."
       else
-        options[:virtv2v_status] = 'succeeded'
+        updates[:virtv2v_status] = 'succeeded'
         updated_disks.each { |d| d[:percent] = 100 }
       end
     end
-    options[:virtv2v_disks] = updated_disks
-  end 
+    updates[:virtv2v_disks] = updated_disks
+  ensure
+    _log.info("InfraConversionJob get_conversion_state to update_options: #{updates}")
+    update_options(updates)
+  end
 
   def kill_virtv2v(signal = 'TERM')
-    virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
-    conversion_host.kill_process(virtv2v_state['pid'].to_s, signal)
+    return false if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
+    return false unless options[:virtv2v_wrapper]['pid']
+    conversion_host.kill_process(options[:virtv2v_wrapper]['pid'], signal)
   end
 
   private
@@ -326,5 +339,9 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       :osp_flavor_id              => destination_flavor.ems_ref,
       :osp_security_groups_ids    => [destination_security_group.ems_ref]
     }
+  end
+
+  def valid_states
+    super << 'migrate'
   end
 end

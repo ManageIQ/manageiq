@@ -45,4 +45,16 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
       Notification.create(:type => "transformation_plan_request_failed", :options => {:plan_name => description}, :subject => self)
     end
   end
+
+  def post_create_request_tasks
+    miq_request_tasks.each do |req_task|
+      job_options = {
+        :target_class => req_task.class.name,
+        :target_id    => req_task.id
+      }
+      job = InfraConversionJob.create_job(job_options)
+      req_task.options[:infra_conversion_job_id] = job.id
+      req_task.save!
+    end
+  end
 end
