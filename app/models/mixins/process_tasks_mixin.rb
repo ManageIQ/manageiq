@@ -168,6 +168,7 @@ module ProcessTasksMixin
         :instance_id  => instance.id,
         :method_name  => options[:task],
         :args         => args,
+        :miq_task_id  => task&.id,
         :miq_callback => cb
       }
       user = User.current_user

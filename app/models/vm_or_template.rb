@@ -464,6 +464,7 @@ class VmOrTemplate < ApplicationRecord
           :instance_id  => vm.id,
           :method_name  => options[:task],
           :args         => args,
+          :miq_task_id  => task&.id,
           :miq_callback => cb,
         }
       else
@@ -474,6 +475,7 @@ class VmOrTemplate < ApplicationRecord
           :instance_id  => vm.id,
           :method_name  => options[:task],
           :args         => args,
+          :miq_task_id  => task&.id,
           :miq_callback => cb,
         }
       end
