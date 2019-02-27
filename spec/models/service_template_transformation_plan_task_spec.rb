@@ -343,8 +343,8 @@ describe ServiceTemplateTransformationPlanTask do
       let(:src_vm_2) { FactoryBot.create(:vm_openstack, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
 
       let(:src_network_1) { FactoryBot.create(:network, :ipaddress => '10.0.1.1') }
-      let(:src_network_2a) { FactoryBot.create(:network, :ipaddress => '10.0.1.2') }
-      let(:src_network_2b) { FactoryBot.create(:network, :ipaddress => nil) }
+      let(:src_network_2) { FactoryBot.create(:network, :ipaddress => '10.0.1.2') }
+      let(:src_network_nil_ip) { FactoryBot.create(:network, :ipaddress => nil) }
 
       # Disks have to be stubbed because there's no factory for Disk class
       before do
@@ -479,7 +479,7 @@ describe ServiceTemplateTransformationPlanTask do
 
         before do
           task_1.conversion_host = conversion_host
-          allow(src_nic_2).to receive(:network).and_return(src_network_2a)
+          allow(src_nic_2).to receive(:network).and_return(src_network_2)
         end
 
         it { expect(task_1.destination_cluster).to eq(dst_cluster) }
@@ -496,8 +496,8 @@ describe ServiceTemplateTransformationPlanTask do
             )
           end
 
-          it "fails if network IP address is nil" do
-            allow(src_nic_2).to receive(:network).and_return(src_network_2b)
+          it "generates network_mappings has even if one IP is nil" do
+            allow(src_nic_2).to receive(:network).and_return(src_network_nil_ip)
             expect(task_1.network_mappings).to eq(
               [
                 { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
@@ -588,7 +588,7 @@ describe ServiceTemplateTransformationPlanTask do
 
         before do
           task_1.conversion_host = conversion_host
-          allow(src_nic_2).to receive(:network).and_return(src_network_2a)
+          allow(src_nic_2).to receive(:network).and_return(src_network_2)
         end
 
         it { expect(task_1.destination_cluster).to eq(dst_cloud_tenant) }
@@ -606,7 +606,7 @@ describe ServiceTemplateTransformationPlanTask do
           end
 
           it "fails if network IP address is nil" do
-            allow(src_nic_2).to receive(:network).and_return(src_network_2b)
+            allow(src_nic_2).to receive(:network).and_return(src_network_nil_ip)
             expect { task_1.network_mappings }.to raise_error("[#{src_vm_1.name}] NIC #{src_nic_2.device_name} [#{src_lan_2.name}] has an empty IP address.")
           end
         end
