@@ -84,7 +84,7 @@ module EmsRefresh::SaveInventoryNetwork
   def save_network_groups_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
-    ems.network_groups(true)
+    ems.network_groups.reload
     deletes = if target == ems
                 ems.network_groups.dup
               else
