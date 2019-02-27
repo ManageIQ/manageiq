@@ -231,7 +231,7 @@ module EmsRefresh::SaveInventoryInfra
       h[:storage_id] = h.fetch_path(:storage, :id)
     end
 
-    host.host_storages(true)
+    host.host_storages.reload
     deletes = if disconnect && target == host
                 host.host_storages.dup
               else
