@@ -271,6 +271,8 @@ describe ServiceTemplate do
   context "#template_copy" do
     let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower, :name => "thing") }
     let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration, :name => "thing2") }
+    let(:custom_button) { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
+    let(:custom_button_set) { FactoryBot.create(:custom_button_set, :owner => @st1) }
     before do
       @st1 = FactoryBot.create(:service_template)
     end
@@ -283,6 +285,28 @@ describe ServiceTemplate do
         expect(ServiceTemplate.find_by(:name => "drew")).not_to be(nil)
         expect(ServiceTemplate.find_by(:name => "drew").display).to be(false)
         expect(ServiceTemplate.find_by(:name => "drew").guid).not_to eq(@st1.guid)
+      end
+
+      it "with custom button" do
+        custom_button
+        expect(@st1.custom_buttons.count).to eq(1)
+        @st1.template_copy("drew")
+        expect(ServiceTemplate.count).to eq(2)
+        expect(ServiceTemplate.find_by(:name => "drew")).not_to be(nil)
+        expect(ServiceTemplate.find_by(:name => "drew").display).to be(false)
+        expect(ServiceTemplate.find_by(:name => "drew").guid).not_to eq(@st1.guid)
+        expect(ServiceTemplate.find_by(:name => "drew").custom_buttons.count).to eq(2)
+      end
+
+      it "with custom button set" do
+        custom_button_set.add_member(custom_button)
+        expect(@st1.custom_button_sets.count).to eq(1)
+        @st1.template_copy("drew")
+        expect(ServiceTemplate.count).to eq(2)
+        expect(ServiceTemplate.find_by(:name => "drew")).not_to be(nil)
+        expect(ServiceTemplate.find_by(:name => "drew").display).to be(false)
+        expect(ServiceTemplate.find_by(:name => "drew").guid).not_to eq(@st1.guid)
+        expect(ServiceTemplate.find_by(:name => "drew").custom_button_sets.count).to eq(1)
       end
 
       it "with non-copyable resource (configuration script base)" do
