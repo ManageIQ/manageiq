@@ -7,12 +7,13 @@ describe UuidMixin do
     end
   end
 
-  let(:service_template) { FactoryBot.create(:service_template) }
-  let(:dialog_field) { FactoryBot.create(:dialog_field) }
+  it '#dup resets guid' do
+    original = test_class.create!
+    expect(original.guid).to be_guid
 
-  context 'with dup overriden' do
-    it 'resets guid' do
-      expect(service_template.dup.guid).not_to eq(service_template.guid)
-    end
+    duplicate = original.dup.tap(&:save!)
+    expect(duplicate).to be_valid
+    expect(duplicate.guid).to be_guid
+    expect(duplicate.guid).not_to eq(original.guid)
   end
 end
