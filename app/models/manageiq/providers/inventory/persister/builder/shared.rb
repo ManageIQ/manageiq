@@ -37,6 +37,16 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
       'unknown'
     end
 
+    def ext_management_system
+      add_properties(
+        :manager_ref       => %i(guid),
+        :custom_save_block => lambda do |ems, inventory_collection|
+          ems_attrs = inventory_collection.data.first&.attributes
+          ems.update_attributes!(ems_attrs) if ems_attrs
+        end
+      )
+    end
+
     def vms
       vm_template_shared
     end
