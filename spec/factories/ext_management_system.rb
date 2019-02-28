@@ -3,7 +3,6 @@ FactoryBot.define do
     sequence(:name)      { |n| "ems_#{seq_padded_for_sorting(n)}" }
     sequence(:hostname)  { |n| "ems-#{seq_padded_for_sorting(n)}" }
     sequence(:ipaddress) { |n| ip_from_seq(n) }
-    guid                 { SecureRandom.uuid }
     zone                 { FactoryBot.create(:zone) }
     storage_profiles     { [] }
 
