@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :provider do
     sequence(:name) { |n| "provider_#{seq_padded_for_sorting(n)}" }
-    guid            { SecureRandom.uuid }
     zone            { FactoryBot.create(:zone) }
   end
 

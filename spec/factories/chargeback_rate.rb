@@ -1,6 +1,5 @@
 FactoryBot.define do
   factory :chargeback_rate do
-    guid                   { SecureRandom.uuid }
     sequence(:description) { |n| "Chargeback Rate ##{n}" }
     rate_type { 'Compute' }
 
