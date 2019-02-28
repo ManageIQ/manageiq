@@ -96,13 +96,6 @@ describe Dialog do
       expect(err_msg).to eq("Dialog cannot be deleted because it is connected to other components: [\"Dialog:#{dialog.id} - #{dialog.name}\"]")
       expect(Dialog.count).to eq(1)
     end
-
-    describe "#reject_if_has_resource_actions" do
-      it "before_destroy callback throws :abort if dialog has associatex resource" do
-        FactoryBot.create(:resource_action, :action => "Provision", :dialog => dialog, :resource_type => Dialog, :resource_id => dialog.id)
-        expect { dialog.send(:reject_if_has_resource_actions) }.to throw_symbol(:abort)
-      end
-    end
   end
 
   describe "dialog structures" do
