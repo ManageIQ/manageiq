@@ -127,6 +127,7 @@ describe Vm do
       expect(MiqQueue.count).to eq(1)
       msg = MiqQueue.first
       expect(msg.miq_callback).to eq({:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id, :args => ["Finished"]})
+      expect(msg.miq_task_id).to eq(task.id)
     end
 
     it "sets up powerops callback for Power Operations" do
@@ -137,6 +138,7 @@ describe Vm do
       expect(MiqQueue.count).to eq(1)
       msg = MiqQueue.first
       expect(msg.miq_callback).to eq({:class_name => @vm.class.base_class.name, :method_name => :powerops_callback, :instance_id => @vm.id, :args => [task.id]})
+      expect(msg.miq_task_id).to eq(task.id)
 
       allow(Vm).to receive(:start).and_raise(MiqException::MiqVimBrokerUnavailable)
       msg.deliver
