@@ -1,6 +1,9 @@
 module ManageIQ::Providers
   class NetworkManager < BaseManager
     include SupportsFeatureMixin
+
+    PROVIDER_NAME = "Network Manager".freeze
+
     class << model_name
       define_method(:route_key) { "ems_networks" }
       define_method(:singular_route_key) { "ems_network" }
@@ -88,7 +91,7 @@ module ManageIQ::Providers
     end
 
     def name
-      "#{parent_manager.try(:name)} Network Manager"
+      "#{parent_manager.try(:name)} #{PROVIDER_NAME}"
     end
   end
 
