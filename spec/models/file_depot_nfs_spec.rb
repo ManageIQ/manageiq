@@ -1,6 +1,6 @@
 describe FileDepotNfs do
-  let(:uri)            { "nfs://foo.com/directory" }
-  let(:swift_uri)      { "swift://foo_bucket/doo_directory" }
+  let(:ignore_uri)     { "nfs://ignore.com/directory" }
+  let(:actual_uri)     { "nfs://actual_bucket/doo_directory" }
   let(:file_depot_nfs) { FileDepotNfs.new(:uri => uri) }
 
   it "should return a valid prefix" do
@@ -9,11 +9,11 @@ describe FileDepotNfs do
 
   describe "#merged_uri" do
     before do
-      file_depot_nfs.uri = uri
+      file_depot_nfs.uri = ignore_uri
     end
 
     it "should ignore the uri set on the depot object and return the uri parameter" do
-      expect(file_depot_nfs.merged_uri(swift_uri, nil)).to eq swift_uri
+      expect(file_depot_nfs.merged_uri(actual_uri, nil)).to eq actual_uri
     end
   end
 end
