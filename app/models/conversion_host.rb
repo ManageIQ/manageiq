@@ -198,26 +198,30 @@ class ConversionHost < ApplicationRecord
     send("tag_resource_as_#{status}")
   end
 
-  # Tag the associated resource as enabled. The following tags are set:
+  # Tag the associated resource as enabled. The following tags are set or removed:
   #
-  # - 'v2v_transformation_host/true'
-  # - 'v2v_transformation_host/vddk' (if vddk supported)
-  # - 'v2v_transformation_host/ssh'  (if ssh supported)
+  # - 'v2v_transformation_host/true'  (added)
+  # - 'v2v_transformation_host/vddk'  (added if vddk supported)
+  # - 'v2v_transformation_host/ssh'   (added if ssh supported)
+  # - 'v2v_transformation_host/false' (removed if present)
   #
   def tag_resource_as_enabled
     resource.tag_add('v2v_transformation_host/true')
     resource.tag_add('v2v_transformation_method/vddk') if vddk_transport_supported?
     resource.tag_add('v2v_transformation_method/ssh') if ssh_transport_supported?
+    resource.tag_remove('v2v_transformation_host/false')
   end
 
   # Tag the associated resource as disabled. The following tags are set or removed:
   #
-  # - 'v2v_transformation_host/true' (added)
-  # - 'v2v_transformation_host/vddk' (removed if present)
-  # - 'v2v_transformation_host/ssh'  (removed if present)
+  # - 'v2v_transformation_host/false' (added)
+  # - 'v2v_transformation_host/true'  (removed if present)
+  # - 'v2v_transformation_host/vddk'  (removed if present)
+  # - 'v2v_transformation_host/ssh'   (removed if present)
   #
   def tag_resource_as_disabled
     resource.tag_add('v2v_transformation_host/false')
+    resource.tag_remove('v2v_transformation_host/true')
     resource.tag_remove('v2v_transformation_method/vddk')
     resource.tag_remove('v2v_transformation_method/ssh')
   end
