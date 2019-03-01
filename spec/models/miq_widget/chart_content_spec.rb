@@ -3,7 +3,6 @@ describe "Widget Chart Content" do
   before do
     _guid, _server, _zone = EvmSpecHelper.create_guid_miq_server_zone
 
-    RssFeed.sync_from_yml_dir
     MiqReport.seed_report("Vendor and Guest OS")
     MiqWidget.seed_widget("chart_vendor_and_guest_os")
 

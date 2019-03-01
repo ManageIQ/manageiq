@@ -1,6 +1,5 @@
 # Dashboard widget
 #
-require 'simple-rss'
 
 class MiqWidget < ApplicationRecord
   default_value_for :enabled, true
@@ -493,16 +492,6 @@ class MiqWidget < ApplicationRecord
 
     widget.sync_schedule(schedule_info)
     widget
-  end
-
-  def set_rss_properties(feed_type, rss_feed_id = nil, url = nil)
-    if feed_type == 'internal'
-      self.resource = RssFeed.find(rss_feed_id) if rss_feed_id
-      options.delete(:url)
-    else
-      options[:url] = url
-      self.resource = nil
-    end
   end
 
   def sync_schedule(schedule_info)

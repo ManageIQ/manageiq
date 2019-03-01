@@ -21,7 +21,6 @@ class EvmDatabase
   # An ordered list of classes that will complete the seeding, but occuring
   # after server initialization.
   OTHER_SEEDABLE_CLASSES = %w[
-    RssFeed
     MiqWidget
     MiqAction
     MiqEventDefinitionSet

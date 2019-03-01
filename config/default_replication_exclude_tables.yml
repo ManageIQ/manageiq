@@ -81,7 +81,6 @@
 - repl_events
 - repl_monitor
 - repl_nodes
-- rss_feeds
 - scan_items
 - schema_migrations
 - server_roles
