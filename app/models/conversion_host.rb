@@ -21,6 +21,9 @@ class ConversionHost < ApplicationRecord
 
   include_concern 'Configurations'
 
+  after_create :tag_resource_as_enabled
+  after_destroy :tag_resource_as_disabled
+
   # To be eligible, a conversion host must have the following properties
   #  - A transport mechanism is configured for source (set by 3rd party)
   #  - Credentials are set on the resource and SSH connection works
@@ -42,8 +45,8 @@ class ConversionHost < ApplicationRecord
   end
 
   def source_transport_method
-    return 'vddk' if vddk_transport_supported
-    return 'ssh' if ssh_transport_supported
+    return 'vddk' if vddk_transport_supported?
+    return 'ssh' if ssh_transport_supported?
   end
 
   def ipaddress(family = 'ipv4')
@@ -189,17 +192,33 @@ class ConversionHost < ApplicationRecord
     _log.error("Ansible module installation failed for '#{resource.name}'}with [#{e.class}: #{e.message}]")
   end
 
+  # Wrapper method for the various tag_resource_as_xxx methods.
+  #
   def tag_resource_as(status)
     send("tag_resource_as_#{status}")
   end
 
+  # Tag the associated resource as enabled. The following tags are set:
+  #
+  # - 'v2v_transformation_host/true'
+  # - 'v2v_transformation_host/vddk' (if vddk supported)
+  # - 'v2v_transformation_host/ssh'  (if ssh supported)
+  #
   def tag_resource_as_enabled
     resource.tag_add('v2v_transformation_host/true')
-    resource.tag_add('v2v_transformation_method/vddk')
+    resource.tag_add('v2v_transformation_method/vddk') if vddk_transport_supported?
+    resource.tag_add('v2v_transformation_method/ssh') if ssh_transport_supported?
   end
 
+  # Tag the associated resource as disabled. The following tags are set or removed:
+  #
+  # - 'v2v_transformation_host/true' (added)
+  # - 'v2v_transformation_host/vddk' (removed if present)
+  # - 'v2v_transformation_host/ssh'  (removed if present)
+  #
   def tag_resource_as_disabled
     resource.tag_add('v2v_transformation_host/false')
     resource.tag_remove('v2v_transformation_method/vddk')
+    resource.tag_remove('v2v_transformation_method/ssh')
   end
 end
