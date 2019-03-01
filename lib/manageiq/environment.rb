@@ -121,6 +121,46 @@ module ManageIQ
       File.read(gemfile).match(/gem\s+['"]bundler['"],\s+['"](.+?)['"]/)[1]
     end
 
+    def self.warn_if_branch_out_of_date
+      return if %w(production test).include?(ENV['RAILS_ENV'].to_s)
+
+      Dir.chdir(APP_ROOT) do
+        commits =
+          if upstream_tracking_branch.empty?
+            system!("git fetch upstream")
+            commits_behind_upstream
+          else
+            system!("git fetch")
+            commits_behind_tracked_branch
+          end
+
+        if commits.positive?
+          warn "\n== Your branch is #{commits} commits out of date, please pull or fetch + merge."
+        end
+      end
+    end
+
+    def self.upstream_tracking_branch
+      `git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)`.strip
+    end
+
+    def self.commits_behind_tracked_branch
+      # Show short status + branch information:
+      # ## master...upstream/master [behind 10]
+      # git 1.8.5+ shows upstream branch status, catch STDERR just in case
+      command = 'git status -sb 2>&1 | grep -oE "\[behind.+\]" | grep -oE "[0-9]+"'
+      `#{command}`.strip.to_i
+    end
+
+    def self.commits_behind_upstream
+      # Assume your remote is called upstream, returns early if you're special
+      `git branch -r | grep upstream`
+      return 0 unless $?.exitstatus.zero?
+
+      merge_base = `git merge-base upstream/master HEAD`.strip
+      `git rev-list --count #{merge_base}..upstream/master`.strip.to_i
+    end
+
     def self.run_rake_task(task, root: APP_ROOT)
       system!("bin/rails #{task}", :chdir => root)
     end
