@@ -339,6 +339,15 @@ class ExtManagementSystem < ApplicationRecord
     self::ProvisionWorkflow
   end
 
+  BELONGS_TO_DESCENDANTS_CLASSES_BY_NAME = {
+    'Network Manager' => 'ManageIQ::Providers::NetworkManager'
+  }.freeze
+
+  def self.belongsto_descendant_class(name)
+    return unless (descendant = BELONGS_TO_DESCENDANTS_CLASSES_BY_NAME.keys.detect { |x| name.end_with?(x) })
+    BELONGS_TO_DESCENDANTS_CLASSES_BY_NAME[descendant]
+  end
+
   # UI methods for determining availability of fields
   def supports_port?
     false

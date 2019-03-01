@@ -48,5 +48,15 @@ describe MiqFilter do
       host_object_path = [ems, datacenter, mtc, host_folder, host_1]
       expect(belongsto2object_list(mtc_folder_path_with_host_1)).to match_array(host_object_path)
     end
+
+    context "with network manager" do
+      let(:ems_openstack) { FactoryBot.create(:ems_openstack) }
+      let(:network_manager_folder_path) { "/belongsto/ExtManagementSystem|#{ems_openstack.name} Network Manager" }
+
+      it "converts path with network manager" do
+        ems_openstack.update_attributes(:name => "XXX")
+        expect(belongsto2object_list(network_manager_folder_path)).to match_array([ems_openstack.network_manager])
+      end
+    end
   end
 end

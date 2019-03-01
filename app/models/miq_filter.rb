@@ -1,11 +1,38 @@
 module MiqFilter
+  ALLOWED_DESCENDANT_CLASSES_FROM_MODEL = %w[ExtManagementSystem].freeze
+
   def self.belongsto2object(tag)
     belongsto2object_list(tag).last
   end
 
+  def self.find_descendant_class_by(klass, name)
+    if ALLOWED_DESCENDANT_CLASSES_FROM_MODEL.include?(klass.to_s) && (descendant_class = klass.try(:belongsto_descendant_class, name))
+      return descendant_class.constantize
+    else
+      _log.warn("Unable to find descendant class for belongsto filter: #{klass}/#{name}")
+    end
+
+    nil
+  end
+
+  def self.find_object_by_special_class(klass, name)
+    if (descendant_class = find_descendant_class_by(klass, name)) && descendant_class.respond_to?(:find_object_for_belongs_to_filter)
+      return descendant_class.find_object_for_belongs_to_filter(name)
+    else
+      _log.warn("#{klass} is not supported for loading objects of descendants classes.(belongsto filter: #{klass}/#{name}, descendant class: #{descendant_class}")
+    end
+
+    nil
+  end
+
   def self.find_object_by_name(klass, name)
     klass = klass.constantize
-    klass.find_by(:name => name)
+    object = klass.find_by(:name => name)
+    if object.nil?
+      find_object_by_special_class(klass, name)
+    else
+      object
+    end
   end
 
   def self.belongsto2object_list(tag)
