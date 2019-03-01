@@ -5,6 +5,7 @@ class Provider < ApplicationRecord
   include EmsRefresh::Manager
   include SupportsFeatureMixin
   include TenancyMixin
+  include UuidMixin
 
   belongs_to :tenant
   belongs_to :zone
