@@ -127,7 +127,6 @@ end
 
 group :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-openshift"
-  gem "htauth",                         "2.0.0",         :require => false # used by container deployment
 end
 
 group :openstack, :manageiq_default do
