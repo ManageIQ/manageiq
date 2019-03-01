@@ -43,7 +43,7 @@ describe ConversionHost do
       it "tags the associated resource as expected" do
         allow(conversion_host).to receive(:enable_conversion_host_role)
         taggings = conversion_host.resource.taggings
-        tag_names = taggings.map{ |tagging| tagging.tag.name }
+        tag_names = taggings.map { |tagging| tagging.tag.name }
 
         expect(tag_names).to contain_exactly(
           '/user/v2v_transformation_host/true',
@@ -81,7 +81,7 @@ describe ConversionHost do
         expect(Notification).to receive(:create).with(expected_notify)
         conversion_host.disable
         taggings = conversion_host.resource.taggings
-        tag_names = taggings.map{ |tagging| tagging.tag.name }
+        tag_names = taggings.map { |tagging| tagging.tag.name }
 
         expect(tag_names).to contain_exactly('/user/v2v_transformation_host/false')
       end
