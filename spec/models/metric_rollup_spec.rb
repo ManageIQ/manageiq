@@ -13,9 +13,9 @@ describe MetricRollup do
     end
 
     it "updates an existing object correctly" do
-      metric = described_class.create!(:timestamp => Time.now.utc)
+      metric = described_class.create!(:timestamp => Time.now.utc, :cpu_usage_rate_average => 50.0)
       old_id = metric.id
-      metric.update_attributes!(:timestamp => Time.now.utc - 1.day)
+      metric.update_attributes!(:cpu_usage_rate_average => 75.0)
       expect(metric.id).to eq(old_id)
     end
   end
