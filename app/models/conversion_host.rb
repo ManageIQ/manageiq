@@ -193,6 +193,8 @@ class ConversionHost < ApplicationRecord
   end
 
   # Wrapper method for the various tag_resource_as_xxx methods.
+  #--
+  # TODO: Do we need this?
   #
   def tag_resource_as(status)
     send("tag_resource_as_#{status}")
