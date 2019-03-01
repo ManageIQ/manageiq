@@ -113,7 +113,11 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     SecurityGroup.find_by(:id => vm_resource.options["osp_security_group_id"])
   end
 
-  def transformation_log(log_type)
+  def valid_transformation_log_types
+    %w(v2v wrapper)
+  end
+
+  def transformation_log(log_type = 'v2v')
     if conversion_host.nil?
       msg = "Conversion host was not found. Download of transformation log aborted."
       _log.error(msg)
@@ -133,7 +137,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   # Intend to be called by UI to display transformation log. The log is stored in MiqTask#task_results
   # Since the task_results may contain a large block of data, it is desired to remove the task upon receiving the data
   def transformation_log_queue(userid = nil, log_type = 'v2v')
-    raise "Transformation log type '#{log_type}' not supported" unless %w(v2v wrapper).include?(log_type)
+    raise "Transformation log type '#{log_type}' not supported" unless valid_transformation_log_types.include?(log_type)
     userid ||= User.current_userid || 'system'
     if conversion_host.nil?
       msg = "Conversion host was not found. Cannot queue the download of #{log_type} log."
