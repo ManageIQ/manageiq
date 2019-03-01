@@ -120,6 +120,11 @@ describe ServiceTemplateTransformationPlanTask do
           end
         end
 
+        it 'raises when log type is invalid' do
+          msg = "Transformation log type 'invalid' not supported"
+          expect { task.transformation_log_queue('user', 'invalid') }.to raise_error(msg)
+        end
+
         it 'gets the transformation log from conversion host' do
           expect(task).to receive(:transformation_log).and_return('transformation migration log content')
           taskid = task.transformation_log_queue('user')
@@ -144,7 +149,7 @@ describe ServiceTemplateTransformationPlanTask do
         it 'returns an error message' do
           taskid = task.transformation_log_queue('user')
           expect(MiqTask.find(taskid)).to have_attributes(
-            :message => "Conversion host was not found. Cannot queue the download of transformation log.",
+            :message => "Conversion host was not found. Cannot queue the download of v2v log.",
             :status  => 'Error'
           )
         end
@@ -160,13 +165,13 @@ describe ServiceTemplateTransformationPlanTask do
 
       it 'requires transformation log location in options' do
         task.options.store_path(:virtv2v_wrapper, "v2v_log", "")
-        expect { task.transformation_log }.to raise_error(MiqException::Error)
+        expect { task.transformation_log("v2v") }.to raise_error(MiqException::Error)
       end
 
       it 'gets the transformation log content' do
         msg = 'my transformation migration log'
         allow(conversion_host).to receive(:get_conversion_log).with(task.options[:virtv2v_wrapper]['v2v_log']).and_return(msg)
-        expect(task.transformation_log).to eq(msg)
+        expect(task.transformation_log("v2v")).to eq(msg)
       end
     end
 
