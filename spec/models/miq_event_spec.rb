@@ -122,7 +122,7 @@ describe MiqEvent do
       before do
         @cluster    = FactoryBot.create(:ems_cluster)
         @zone       = FactoryBot.create(:zone, :name => "test")
-        @miq_server = FactoryBot.create(:miq_server, :guid => @guid, :zone => @zone)
+        @miq_server = FactoryBot.create(:miq_server, :zone => @zone)
       end
 
       it "will do policy, alerts, and children events for supported policy target" do
