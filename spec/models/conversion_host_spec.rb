@@ -25,28 +25,28 @@ describe ConversionHost do
     context "#eligible?" do
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return(nil)
-        allow(conversion_host_1).to receive(:check_ssh_connection).and_return(true)
+        allow(conversion_host_1).to receive(:verify_credentials).and_return(true)
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(true)
         expect(conversion_host_1.eligible?).to eq(false)
       end
 
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('vddk')
-        allow(conversion_host_1).to receive(:check_ssh_connection).and_return(false)
+        allow(conversion_host_1).to receive(:verify_credentials).and_return(false)
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(true)
         expect(conversion_host_1.eligible?).to eq(false)
       end
 
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('vddk')
-        allow(conversion_host_1).to receive(:check_ssh_connection).and_return(true)
+        allow(conversion_host_1).to receive(:verify_credentials).and_return(true)
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(false)
         expect(conversion_host_1.eligible?).to eq(false)
       end
 
       it "succeeds when all criteria are met" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('vddk')
-        allow(conversion_host_1).to receive(:check_ssh_connection).and_return(true)
+        allow(conversion_host_1).to receive(:verify_credentials).and_return(true)
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(true)
         expect(conversion_host_1.eligible?).to eq(true)
       end
