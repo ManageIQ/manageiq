@@ -1,6 +1,6 @@
 ---
 - MiqWidget:
-    guid: d52ee383-6906-4312-bf48-b1bfaa4d8391
+    guid: e13a219f-4d46-4690-9e3b-4d0c1ea913be
     description: Test Widget
     invalid_title: Test Widget
     content_type: report
