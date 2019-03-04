@@ -37,6 +37,7 @@ describe ServiceRetireTask do
 
         expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
         expect(VmRetireTask.count).to eq(0)
+        expect(ServiceRetireTask.count).to eq(1)
       end
     end
 
@@ -47,26 +48,49 @@ describe ServiceRetireTask do
         miq_request.approve(approver, reason)
       end
 
-      context "resource lacks type" do
-        it "creates service retire subtask" do
-          resource = FactoryBot.create(:service_resource, :resource_type => nil, :service_id => service.id, :resource_id => vm.id)
-          service.service_resources << resource
-          service_retire_task.after_request_task_create
+      it "creates service retire subtask" do
+        service.add_resource!(FactoryBot.create(:service_orchestration))
+        service_retire_task.after_request_task_create
 
-          expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
-          expect(ServiceRetireTask.count).to eq(1)
-        end
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(ServiceRetireTask.count).to eq(2)
       end
 
-      context "resource has type" do
-        it "creates vm retire subtask" do
-          resource = FactoryBot.create(:service_resource, :resource_type => "VmOrTemplate", :service_id => service.id, :resource_id => vm.id)
-          service.service_resources << resource
-          service_retire_task.after_request_task_create
+      it "creates service retire subtask" do
+        service.add_resource!(FactoryBot.create(:service))
+        service_retire_task.after_request_task_create
 
-          expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
-          expect(VmRetireTask.count).to eq(1)
-        end
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(ServiceRetireTask.count).to eq(2)
+      end
+
+      it "creates stack retire subtask" do
+        service.add_resource!(FactoryBot.create(:orchestration_stack))
+        service_retire_task.after_request_task_create
+
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(OrchestrationStackRetireTask.count).to eq(1)
+        expect(ServiceRetireTask.count).to eq(1)
+      end
+
+      it "doesn't create subtask for miq_provision_request_template" do
+        admin = FactoryBot.create(:user_admin)
+        vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
+        service.add_resource!(FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id))
+        service_retire_task.after_request_task_create
+
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(MiqRetireTask.count).to eq(1)
+        expect(ServiceRetireTask.count).to eq(1)
+      end
+
+      it "creates vm retire subtask" do
+        service.add_resource!(FactoryBot.create(:vm_openstack))
+        service_retire_task.after_request_task_create
+
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(VmRetireTask.count).to eq(1)
+        expect(ServiceRetireTask.count).to eq(1)
       end
     end
 
