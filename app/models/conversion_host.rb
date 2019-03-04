@@ -8,7 +8,6 @@ class ConversionHost < ApplicationRecord
   has_many :active_tasks, -> { where(:state => 'active') }, :class_name => ServiceTemplateTransformationPlanTask, :inverse_of => :conversion_host
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
-  validates :name, :presence => true
   validates :resource, :presence => true
 
   validates :address,
@@ -18,6 +17,9 @@ class ConversionHost < ApplicationRecord
     :unless     => ->(conversion_host) { conversion_host.resource.blank? || conversion_host.resource.ipaddresses.blank? }
 
   validate :resource_supports_conversion_host
+
+  # Default to the resource name if no name is provided
+  before_save { name ||= resource.name }
 
   include_concern 'Configurations'
 
