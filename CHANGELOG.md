@@ -5,29 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Update as of Sprint 105 ending 2019-02-18
+## Hammer-3
+
+### Added
+- Add empty IP address check to preflight check [(#18425)](https://github.com/ManageIQ/manageiq/pull/18425)
+
+### Fixed
+- Include /etc/manageiq/postgresql.conf.d/ directory to log collection [(#18262)](https://github.com/ManageIQ/manageiq/pull/18262)
+- Restore an event for the main app logs' disk usage [(#18340)](https://github.com/ManageIQ/manageiq/pull/18340)
+- V2V - Collect virt-v2v PID from conversion host in kill_virtv2v [(#18372)](https://github.com/ManageIQ/manageiq/pull/18372)
+- Add retired to service active states [(#18348)](https://github.com/ManageIQ/manageiq/pull/18348)
+- Let stack_parameters support symbol hash keys, for now [(#18373)](https://github.com/ManageIQ/manageiq/pull/18373)
+- [MiqWorker::worker_settings] Handle number strings [(#18453)](https://github.com/ManageIQ/manageiq/pull/18453)
+- Escape characters in SSH URI for virt-v2v [(#18451)](https://github.com/ManageIQ/manageiq/pull/18451)
+- Don't retire load balancers [(#18443)](https://github.com/ManageIQ/manageiq/pull/18443)
+- Add check for existence of user for system_context [(#18437)](https://github.com/ManageIQ/manageiq/pull/18437)
+
+## Unreleased as of Sprint 105 ending 2019-02-18
 
 ### Added
 - Targeted refresh for Embedded ansible provider [(#18429)](https://github.com/ManageIQ/manageiq/pull/18429)
 - Update host switch association [(#18427)](https://github.com/ManageIQ/manageiq/pull/18427)
-- Add empty IP address check to preflight check [(#18425)](https://github.com/ManageIQ/manageiq/pull/18425)
 - Add uri_attributes as virtual_attribute to CustomButton [(#18379)](https://github.com/ManageIQ/manageiq/pull/18379)
 
 ### Fixed
-- [MiqWorker::worker_settings] Handle number strings [(#18453)](https://github.com/ManageIQ/manageiq/pull/18453)
-- Escape characters in SSH URI for virt-v2v [(#18451)](https://github.com/ManageIQ/manageiq/pull/18451)
-- Don't retire load balancers [(#18443)](https://github.com/ManageIQ/manageiq/pull/18443)
 - Fixed: Timezone set-up in MySettings was not honored when displaying date fields in the report [(#18438)](https://github.com/ManageIQ/manageiq/pull/18438)
-- Add check for existence of user for system_context [(#18437)](https://github.com/ManageIQ/manageiq/pull/18437)
 - Fix save_inventory error if lan can't be found [(#18433)](https://github.com/ManageIQ/manageiq/pull/18433)
-- Let stack_parameters support symbol hash keys for now [(#18373)](https://github.com/ManageIQ/manageiq/pull/18373)
 
 ## Hammer-2 - Released 2019-02-07
 
 ### Fixed
 - Use the new schema_migrations_ran table to track remote schema migrations [(#18393)](https://github.com/ManageIQ/manageiq/pull/18393)
 
-## Update as of Sprint 103 ending 2019-01-21
+## Unreleased as of Sprint 103 ending 2019-01-21
 
 ### Added
 - Override add resource to no-op in service orchestration subclass [(#18358)](https://github.com/ManageIQ/manageiq/pull/18358)
@@ -39,20 +49,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Rename WebSocketWorker to RemoteConsoleWorker [(#18337)](https://github.com/ManageIQ/manageiq/pull/18337)
 
 ### Fixed
-- V2V - Collect virt-v2v PID from conversion host in kill_virtv2v [(#18372)](https://github.com/ManageIQ/manageiq/pull/18372)
 - Give dialogs/models/archive logs unique names [(#18365)](https://github.com/ManageIQ/manageiq/pull/18365)
-- Add retired to service active states [(#18348)](https://github.com/ManageIQ/manageiq/pull/18348)
 - Fix names of chargeback rate columns [(#18346)](https://github.com/ManageIQ/manageiq/pull/18346)
 - Re-raise the LoadError if it is not for the file we are trying to load [(#18343)](https://github.com/ManageIQ/manageiq/pull/18343)
 - Do not report an error in websocket_log when closing a VNC connection [(#18342)](https://github.com/ManageIQ/manageiq/pull/18342)
-- Restore an event for the main app logs' disk usage [(#18340)](https://github.com/ManageIQ/manageiq/pull/18340)
 - Clarify the 'towhat' inclusion validation message on policy creation. [(#18338)](https://github.com/ManageIQ/manageiq/pull/18338)
 - Change Stacked Area chart for Area chart for the Virtual Machine CPU States [(#18333)](https://github.com/ManageIQ/manageiq/pull/18333)
 - Add display name for Azure Floating IP [(#18332)](https://github.com/ManageIQ/manageiq/pull/18332)
 - Fixing subservice task creation for service bundles [(#18283)](https://github.com/ManageIQ/manageiq/pull/18283)
 - Preserve group and user when importing reports [(#18270)](https://github.com/ManageIQ/manageiq/pull/18270)
 
-## Update as of Sprint 102 ending 2019-01-07
+## Unreleased as of Sprint 102 ending 2019-01-07
 
 ### Added
 - Mark rbac_tenant_manage_quotas as  MY TENANT FEATURE [(#18322)](https://github.com/ManageIQ/manageiq/pull/18322)
@@ -564,7 +571,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Add ConversionHost validations [(#18277)](https://github.com/ManageIQ/manageiq/pull/18277)
 
 ### Fixed
-- Include  /etc/manageiq/postgresql.conf.d/ directory to log collection [(#18262)](https://github.com/ManageIQ/manageiq/pull/18262)
 
 ## Unreleased as of Sprint 100 ending 2018-12-03
 
