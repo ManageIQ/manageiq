@@ -229,11 +229,7 @@ module ManageIQ
       def preprocess_targets_manager_refresh
         @targets_by_ems_id.each do |ems_id, targets|
           ems = @ems_by_ems_id[ems_id]
-
-          if targets.any? { |t| t.kind_of?(ExtManagementSystem) }
-            targets_for_log = targets.map { |t| "#{t.class} [#{t.name}] id [#{t.id}] " }
-            _log.info("Defaulting to full refresh for EMS: [#{ems.name}], id: [#{ems.id}], from targets: #{targets_for_log}") if targets.length > 1
-          end
+          next unless ems.inventory_object_refresh?
 
           # We want all targets of class EmsEvent to be merged into one target, so they can be refreshed together, otherwise
           # we could be missing some crosslinks in the refreshed data
