@@ -17,8 +17,7 @@ describe MiqAction do
       group  = FactoryBot.create(:miq_group, :tenant => tenant)
       @user = FactoryBot.create(:user, :userid => "test", :miq_groups => [group])
       @vm   = FactoryBot.create(:vm_vmware, :evm_owner => @user, :miq_group => group)
-      FactoryBot.create(:miq_action, :name => "custom_automation")
-      @action = MiqAction.find_by(:name => "custom_automation")
+      @action = FactoryBot.create(:miq_action)
       expect(@action).not_to be_nil
       @action.options = {:ae_request => "test_custom_automation"}
       @args = {
@@ -534,6 +533,14 @@ describe MiqAction do
       let(:dialog_options) { {:hosts => 'ip1, ip2' } }
 
       it_behaves_like "#workflow check"
+    end
+  end
+
+  describe "#destroy" do
+    it "does not destroy this action if it referenced in at least one policy" do
+      action = FactoryBot.create(:miq_action)
+      FactoryBot.create(:miq_policy_content, :miq_action => action)
+      expect { action.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
     end
   end
 end
