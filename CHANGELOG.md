@@ -21,7 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Don't retire load balancers [(#18443)](https://github.com/ManageIQ/manageiq/pull/18443)
 - Add check for existence of user for system_context [(#18437)](https://github.com/ManageIQ/manageiq/pull/18437)
 
-## Update as of Sprint 105 ending 2019-02-18
+## Unreleased as of Sprint 105 ending 2019-02-18
 
 ### Added
 - Targeted refresh for Embedded ansible provider [(#18429)](https://github.com/ManageIQ/manageiq/pull/18429)
@@ -37,7 +37,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Fixed
 - Use the new schema_migrations_ran table to track remote schema migrations [(#18393)](https://github.com/ManageIQ/manageiq/pull/18393)
 
-## Update as of Sprint 103 ending 2019-01-21
+## Unreleased as of Sprint 103 ending 2019-01-21
 
 ### Added
 - Override add resource to no-op in service orchestration subclass [(#18358)](https://github.com/ManageIQ/manageiq/pull/18358)
@@ -59,7 +59,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Fixing subservice task creation for service bundles [(#18283)](https://github.com/ManageIQ/manageiq/pull/18283)
 - Preserve group and user when importing reports [(#18270)](https://github.com/ManageIQ/manageiq/pull/18270)
 
-## Update as of Sprint 102 ending 2019-01-07
+## Unreleased as of Sprint 102 ending 2019-01-07
 
 ### Added
 - Mark rbac_tenant_manage_quotas as  MY TENANT FEATURE [(#18322)](https://github.com/ManageIQ/manageiq/pull/18322)
