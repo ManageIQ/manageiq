@@ -17,7 +17,7 @@ describe ManageIQ::Providers::BaseManager::Refresher do
       let(:vm)  { FactoryBot.create(:vm, :ext_management_system => ems) }
       let(:lots_of_vms) do
         num_targets = Settings.ems_refresh.full_refresh_threshold + 1
-        num_targets.times.map { FactoryBot.create(:vm, :ext_management_system => ems) }
+        Array.new(num_targets) { FactoryBot.create(:vm, :ext_management_system => ems) }
       end
 
       it "keeps a single vm target" do
