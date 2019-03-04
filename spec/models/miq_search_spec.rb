@@ -96,4 +96,21 @@ describe MiqSearch do
       expect(results).to match_array(partial_vms)
     end
   end
+
+  describe "#destroy" do
+    let(:search) { FactoryBot.create(:miq_search) }
+
+    it "destroys search if miq_schedule does not use it" do
+      expect { search.destroy! }.not_to raise_error
+    end
+
+    it "does not destroy search if it referenced in at least one miq_schedule" do
+      schedules = double
+      allow(search).to receive(:miq_schedules).and_return(schedules)
+      allow(schedules).to receive(:empty?).and_return(false)
+
+      expect { expect { search.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqSearch.count })
+      expect(search.errors[:base][0]).to eq("Search is referenced in a schedule and cannot be deleted")
+    end
+  end
 end
