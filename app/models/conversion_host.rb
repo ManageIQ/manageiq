@@ -8,8 +8,8 @@ class ConversionHost < ApplicationRecord
   has_many :active_tasks, -> { where(:state => 'active') }, :class_name => ServiceTemplateTransformationPlanTask, :inverse_of => :conversion_host
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
-  validates :resource, :presence => true
   validates :name, :presence => true
+  validates :resource, :presence => true
 
   validates :address,
     :uniqueness => true,
