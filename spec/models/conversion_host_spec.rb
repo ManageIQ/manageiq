@@ -242,13 +242,12 @@ describe ConversionHost do
 
   context "name validation" do
     let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
-    let(:redhat_host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
+    let(:redhat_host) { FactoryBot.create(:host_redhat, :name => 'foo', :ext_management_system => ems) }
 
     it "defaults to the associated resource name if no name is explicitly provided" do
-      conversion_host1 = ConversionHost.new(:name => 'foo')
-      #conversion_host2 = ConversionHost.new
-      expect(conversion_host1.name).to eql('foo')
-      #expect(conversion_host2.name).to eql(redhat_host.name)
+      conversion_host = ConversionHost.new(:resource => redhat_host)
+      expect(conversion_host.valid?).to be(true)
+      expect(conversion_host.name).to eql(redhat_host.name)
     end
   end
 end

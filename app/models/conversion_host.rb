@@ -9,6 +9,7 @@ class ConversionHost < ApplicationRecord
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
   validates :resource, :presence => true
+  validates :name, :presence => true
 
   validates :address,
     :uniqueness => true,
@@ -18,8 +19,7 @@ class ConversionHost < ApplicationRecord
 
   validate :resource_supports_conversion_host
 
-  # Default to the resource name if no name is provided
-  before_save { name ||= resource.name }
+  before_validation :name, :default_name, :on => :create
 
   include_concern 'Configurations'
 
@@ -203,5 +203,11 @@ class ConversionHost < ApplicationRecord
   def tag_resource_as_disabled
     resource.tag_add('v2v_transformation_host/false')
     resource.tag_remove('v2v_transformation_method/vddk')
+  end
+
+  # Set the default name to the name of the associated resource.
+  #
+  def default_name
+    self.name ||= self.resource&.name
   end
 end
