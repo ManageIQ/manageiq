@@ -229,6 +229,7 @@ module ManageIQ
       def preprocess_targets_manager_refresh
         @targets_by_ems_id.each do |ems_id, targets|
           ems = @ems_by_ems_id[ems_id]
+          next unless ems.inventory_object_refresh?
 
           if targets.any? { |t| t.kind_of?(ExtManagementSystem) }
             targets_for_log = targets.map { |t| "#{t.class} [#{t.name}] id [#{t.id}] " }
