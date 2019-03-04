@@ -206,6 +206,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :supports_volume_resizing, :type => :boolean
   virtual_column :supports_cloud_object_store_container_create, :type => :boolean
   virtual_column :supports_cinder_volume_types, :type => :boolean
+  virtual_column :supports_volume_availability_zones, :type => :boolean
 
   virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
   virtual_aggregate :total_memory, :hosts, :sum, :ram_size
@@ -663,6 +664,10 @@ class ExtManagementSystem < ApplicationRecord
 
   def supports_cinder_volume_types
     supports_cinder_volume_types?
+  end
+
+  def supports_volume_availability_zones
+    supports_volume_availability_zones?
   end
 
   def get_reserve(field)
