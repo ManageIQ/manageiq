@@ -1,5 +1,5 @@
 describe FileDepotNfs do
-  let(:ignore_uri)     { "nfs://ignore.com/directory" }
+  let(:uri)            { "nfs://ignore.com/directory" }
   let(:actual_uri)     { "nfs://actual_bucket/doo_directory" }
   let(:file_depot_nfs) { FileDepotNfs.new(:uri => uri) }
 
@@ -9,7 +9,7 @@ describe FileDepotNfs do
 
   describe "#merged_uri" do
     before do
-      file_depot_nfs.uri = ignore_uri
+      file_depot_nfs.uri = uri
     end
 
     it "should ignore the uri set on the depot object and return the uri parameter" do
