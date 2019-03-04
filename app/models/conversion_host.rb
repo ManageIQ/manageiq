@@ -208,6 +208,6 @@ class ConversionHost < ApplicationRecord
   # Set the default name to the name of the associated resource.
   #
   def default_name
-    self.name ||= self.resource&.name
+    self.name ||= resource&.name
   end
 end
