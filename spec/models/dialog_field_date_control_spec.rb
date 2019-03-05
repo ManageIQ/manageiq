@@ -85,8 +85,18 @@ describe DialogFieldDateControl do
     end
 
     context "when the automate hash has a value" do
-      context "when the value is a date format" do
+      context "when the value is a string" do
         let(:value) { "01/02/2015" }
+
+        it_behaves_like "DialogFieldDateControl#normalize_automate_values"
+
+        it "returns the value in iso format" do
+          expect(dialog_field.normalize_automate_values(automate_hash)).to eq("2015-01-02T00:00:00+00:00")
+        end
+      end
+
+      context "when the value is a date object" do
+        let(:value) { Time.utc(2015, 1, 2) }
 
         it_behaves_like "DialogFieldDateControl#normalize_automate_values"
 
