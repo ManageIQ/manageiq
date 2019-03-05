@@ -310,8 +310,7 @@ describe ServiceTemplateTransformationPlanTask do
       let(:src_vm_2) { FactoryGirl.create(:vm_openstack, :ext_management_system => src_ems, :ems_cluster => src_cluster, :host => src_host) }
 
       let(:src_network_1) { FactoryBot.create(:network, :ipaddress => '10.0.1.1') }
-      let(:src_network_2a) { FactoryBot.create(:network, :ipaddress => '10.0.1.2') }
-      let(:src_network_2b) { FactoryBot.create(:network, :ipaddress => nil) }
+      let(:src_network_2) { FactoryBot.create(:network, :ipaddress => nil) }
 
       # Disks have to be stubbed because there's no factory for Disk class
       before do
@@ -320,6 +319,7 @@ describe ServiceTemplateTransformationPlanTask do
         allow(src_disk_2).to receive(:storage).and_return(src_storage)
         allow(src_vm_1).to receive(:allocated_disk_storage).and_return(34_359_738_368)
         allow(src_nic_1).to receive(:network).and_return(src_network_1)
+        allow(src_nic_2).to receive(:network).and_return(src_network_2)
         allow(src_host).to receive(:thumbprint_sha1).and_return('01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67')
         allow(src_host).to receive(:authentication_userid).and_return('esx_user')
         allow(src_host).to receive(:authentication_password).and_return('esx_passwd')
@@ -445,7 +445,6 @@ describe ServiceTemplateTransformationPlanTask do
 
         before do
           task_1.conversion_host = conversion_host
-          allow(src_nic_2).to receive(:network).and_return(src_network_2a)
         end
 
         it { expect(task_1.destination_cluster).to eq(dst_cluster) }
@@ -457,14 +456,9 @@ describe ServiceTemplateTransformationPlanTask do
             expect(task_1.network_mappings).to eq(
               [
                 { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address, :ip_address => '10.0.1.2' }
+                { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address }
               ]
             )
-          end
-
-          it "fails if network IP address is nil" do
-            allow(src_nic_2).to receive(:network).and_return(src_network_2b)
-            expect { task_1.network_mappings }.to raise_error("[#{src_vm_1.name}] NIC #{src_nic_2.device_name} [#{src_lan_2.name}] has an empty IP address.")
           end
         end
 
@@ -523,8 +517,6 @@ describe ServiceTemplateTransformationPlanTask do
         let(:dst_cloud_volume_type) { FactoryGirl.create(:cloud_volume_type) }
         let(:dst_cloud_network_1) { FactoryGirl.create(:cloud_network) }
         let(:dst_cloud_network_2) { FactoryGirl.create(:cloud_network) }
-        let(:dst_net_1) { dst_cloud_network_1 }
-        let(:dst_net_2) { dst_cloud_network_2 }
         let(:dst_flavor) { FactoryGirl.create(:flavor) }
         let(:dst_security_group) { FactoryGirl.create(:security_group) }
         let(:conversion_host_vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant) }
@@ -544,7 +536,6 @@ describe ServiceTemplateTransformationPlanTask do
 
         before do
           task_1.conversion_host = conversion_host
-          allow(src_nic_2).to receive(:network).and_return(src_network_2a)
         end
 
         it { expect(task_1.destination_cluster).to eq(dst_cloud_tenant) }
@@ -556,14 +547,9 @@ describe ServiceTemplateTransformationPlanTask do
             expect(task_1.network_mappings).to eq(
               [
                 { :source => src_lan_1.name, :destination => dst_cloud_network_1.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lan_2.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address, :ip_address => '10.0.1.2' }
+                { :source => src_lan_2.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address }
               ]
             )
-          end
-
-          it "fails if network IP address is nil" do
-            allow(src_nic_2).to receive(:network).and_return(src_network_2b)
-            expect { task_1.network_mappings }.to raise_error("[#{src_vm_1.name}] NIC #{src_nic_2.device_name} [#{src_lan_2.name}] has an empty IP address.")
           end
         end
 
