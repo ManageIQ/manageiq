@@ -6,9 +6,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
   alias_attribute :manager_id, :resource_id
   alias_attribute :manager, :resource
 
-  include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Credential
-  include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::TowerApi
-
   FRIENDLY_NAME = "Ansible Automation Inside Credential".freeze
 
   def self.provider_params(params)

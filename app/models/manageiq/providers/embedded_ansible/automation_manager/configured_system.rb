@@ -1,6 +1,3 @@
-class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfiguredSystem <
-  ManageIQ::Providers::EmbeddedAutomationManager::ConfiguredSystem
-
-  include ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ConfiguredSystem
+class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfiguredSystem < ManageIQ::Providers::EmbeddedAutomationManager::ConfiguredSystem
   include ProviderObjectMixin
 end
