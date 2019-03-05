@@ -1,5 +1,5 @@
 describe ConversionHost do
-  let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
+  let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm, :ssh_transport_supported => true) }
   let(:params) do
     {
       :name          => 'transformer',
@@ -11,9 +11,11 @@ describe ConversionHost do
 
   context "processing configuration requests" do
     let(:vm) { FactoryBot.create(:vm_openstack) }
+
     before(:each) do
       allow(ConversionHost).to receive(:new).and_return(conversion_host)
     end
+
     context ".enable" do
       let(:expected_notify) do
         {
@@ -24,6 +26,7 @@ describe ConversionHost do
           }
         }
       end
+
       it "to succeed and send notification" do
         allow(conversion_host).to receive(:enable_conversion_host_role)
         expect(Notification).to receive(:create).with(expected_notify)
@@ -35,6 +38,17 @@ describe ConversionHost do
         allow(conversion_host).to receive(:enable_conversion_host_role).and_raise
         expect(Notification).to receive(:create).with(expected_notify)
         expect { described_class.enable(params) }.to raise_error(StandardError)
+      end
+
+      it "tags the associated resource as expected" do
+        allow(conversion_host).to receive(:enable_conversion_host_role)
+        taggings = conversion_host.resource.taggings
+        tag_names = taggings.map { |tagging| tagging.tag.name }
+
+        expect(tag_names).to contain_exactly(
+          '/user/v2v_transformation_host/true',
+          '/user/v2v_transformation_method/ssh'
+        )
       end
     end
 
@@ -60,6 +74,16 @@ describe ConversionHost do
         allow(conversion_host).to receive(:disable_conversion_host_role).and_raise
         expect(Notification).to receive(:create).with(expected_notify)
         expect { conversion_host.disable }.to raise_error(StandardError)
+      end
+
+      it "tags the associated resource as expected" do
+        allow(conversion_host).to receive(:disable_conversion_host_role)
+        expect(Notification).to receive(:create).with(expected_notify)
+        conversion_host.disable
+        taggings = conversion_host.resource.taggings
+        tag_names = taggings.map { |tagging| tagging.tag.name }
+
+        expect(tag_names).to contain_exactly('/user/v2v_transformation_host/false')
       end
     end
   end
