@@ -274,7 +274,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         :destination => destination_network_ref(destination_network),
         :mac_address => nic.address,
         :ip_address  => nic.network.try(:ipaddress)
-      }.delete_if { |_, v| v.nil? }
+      }.compact
     end
   end
 
