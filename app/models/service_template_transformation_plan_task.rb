@@ -149,7 +149,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     queue_options = {:class_name  => self.class,
                      :method_name => 'transformation_log',
                      :instance_id => id,
-                     :priority    => MiqQueue::HIGH_PRIORITY,
                      :args        => [log_type],
                      :zone        => conversion_host.resource.my_zone}
     MiqTask.generic_action_with_callback(task_options, queue_options)
