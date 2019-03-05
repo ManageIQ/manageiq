@@ -501,11 +501,6 @@ describe ServiceTemplateTransformationPlanTask do
           expect { task_1.preflight_check }.not_to raise_error
         end
 
-        it "passes preflight check regardless of power_state" do
-          src_vm_1.send(:power_state=, 'anything')
-          expect { task_1.preflight_check }.not_to raise_error
-        end
-
         context "transport method is vddk" do
           before do
             conversion_host.vddk_transport_supported = true
@@ -561,8 +556,6 @@ describe ServiceTemplateTransformationPlanTask do
         let(:dst_cloud_volume_type) { FactoryBot.create(:cloud_volume_type) }
         let(:dst_cloud_network_1) { FactoryBot.create(:cloud_network) }
         let(:dst_cloud_network_2) { FactoryBot.create(:cloud_network) }
-        let(:dst_net_1) { dst_cloud_network_1 }
-        let(:dst_net_2) { dst_cloud_network_2 }
         let(:dst_flavor) { FactoryBot.create(:flavor) }
         let(:dst_security_group) { FactoryBot.create(:security_group) }
         let(:conversion_host_vm) { FactoryBot.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant) }
@@ -597,11 +590,6 @@ describe ServiceTemplateTransformationPlanTask do
               ]
             )
           end
-        end
-
-        it "fails preflight check if src is power off" do
-          src_vm_1.send(:power_state=, 'off')
-          expect { task_1.preflight_check }.to raise_error('OSP destination and source power_state is off')
         end
 
         it "fails preflight check if src is power off" do
