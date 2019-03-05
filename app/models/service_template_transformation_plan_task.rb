@@ -113,16 +113,20 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     SecurityGroup.find_by(:id => vm_resource.options["osp_security_group_id"])
   end
 
-  def transformation_log
+  def valid_transformation_log_types
+    %w(v2v wrapper)
+  end
+
+  def transformation_log(log_type = 'v2v')
     if conversion_host.nil?
       msg = "Conversion host was not found. Download of transformation log aborted."
       _log.error(msg)
       raise MiqException::Error, msg
     end
 
-    logfile = options.fetch_path(:virtv2v_wrapper, "v2v_log")
+    logfile = options.fetch_path(:virtv2v_wrapper, "#{log_type}_log")
     if logfile.blank?
-      msg = "The location of transformation log was not set. Download of transformation log aborted."
+      msg = "The location of #{log_type} log was not set. Download of #{log_type} log aborted."
       _log.error(msg)
       raise MiqException::Error, msg
     end
@@ -132,20 +136,21 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   # Intend to be called by UI to display transformation log. The log is stored in MiqTask#task_results
   # Since the task_results may contain a large block of data, it is desired to remove the task upon receiving the data
-  def transformation_log_queue(userid = nil)
+  def transformation_log_queue(userid = nil, log_type = 'v2v')
+    raise "Transformation log type '#{log_type}' not supported" unless valid_transformation_log_types.include?(log_type)
     userid ||= User.current_userid || 'system'
     if conversion_host.nil?
-      msg = "Conversion host was not found. Cannot queue the download of transformation log."
+      msg = "Conversion host was not found. Cannot queue the download of #{log_type} log."
       return create_error_status_task(userid, msg).id
     end
 
-    _log.info("Queuing the download of transformation log for #{description} with ID [#{id}]")
+    _log.info("Queuing the download of #{log_type} log for #{description} with ID [#{id}]")
     task_options = {:userid => userid, :action => 'transformation_log'}
     queue_options = {:class_name  => self.class,
                      :method_name => 'transformation_log',
                      :instance_id => id,
                      :priority    => MiqQueue::HIGH_PRIORITY,
-                     :args        => [],
+                     :args        => [log_type],
                      :zone        => conversion_host.resource.my_zone}
     MiqTask.generic_action_with_callback(task_options, queue_options)
   end
