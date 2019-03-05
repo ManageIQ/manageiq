@@ -129,23 +129,6 @@
   :history:
     :keep_drift_states: 6.months
     :purge_window_size: 10000
-:embedded_ansible:
-  :job_data_retention_days: 120
-  :docker:
-    :task_image_name: ansible/awx_task
-    :task_image_tag: latest
-    :web_image_name: ansible/awx_web
-    :web_image_tag: latest
-    :rabbitmq_image_name: rabbitmq
-    :rabbitmq_image_tag: 3
-    :setup_wait_seconds: 1200
-    :memcached_image_name: memcached
-    :memcached_image_tag: alpine
-  :container:
-    :image_name: manageiq/embedded-ansible
-    :image_tag: latest
-    :service_account: miq-privileged
-    :setup_wait_seconds: 1200
 :ems:
 # provider specific settings are nested here, but they are in the provider repos
 # e.g.:
@@ -161,12 +144,6 @@
   :ansible_tower_automation:
     :inventory_object_refresh: true
     :allow_targeted_refresh: true
-    :refresh_interval: 15.minutes
-  :embedded_ansible_automation:
-    :inventory_object_refresh: true
-    :allow_targeted_refresh: true
-    :inventory_collections:
-      :saver_strategy: batch
     :refresh_interval: 15.minutes
   :foreman_configuration:
     :refresh_interval: 15.minutes
@@ -1150,11 +1127,6 @@
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
       :systemd_enabled: false
-    :embedded_ansible_worker:
-      :starting_timeout: 20.minutes
-      :poll: 10.seconds
-      :memory_threshold: 0.megabytes
-      :sync_provider_with_server_interval: 1.minute
     :agent_coordinator_worker:
       :heartbeat_timeout: 30.minutes
       :poll: 30.seconds
@@ -1176,8 +1148,6 @@
         :nice_delta: 1
         :poll: 1.seconds
       :event_catcher_ansible_tower:
-        :poll: 20.seconds
-      :event_catcher_embedded_ansible:
         :poll: 20.seconds
       :event_catcher_google:
         :poll: 15.seconds
@@ -1214,7 +1184,6 @@
           :restart_interval: 2.hours
           :dequeue_method: :sql
         :ems_refresh_worker_ansible_tower_automation: {}
-        :ems_refresh_worker_embedded_ansible_automation: {}
         :ems_refresh_worker_foreman_configuration: {}
         :ems_refresh_worker_foreman_provisioning: {}
         :ems_refresh_worker_google: {}
