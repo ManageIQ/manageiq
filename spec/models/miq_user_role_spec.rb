@@ -207,18 +207,25 @@ describe MiqUserRole do
     end
   end
 
-  it "deletes with no group assigned" do
-    role = FactoryBot.create(:miq_user_role, :name => "test role")
-    role.destroy
-    expect(MiqUserRole.count).to eq(0)
-  end
+  describe "#delete" do
+    let(:role) { FactoryBot.create(:miq_user_role) }
 
-  it "does not delete with group assigned" do
-    role = FactoryBot.create(:miq_user_role, :name => "test role")
-    FactoryBot.create(:miq_group, :description => "test group", :miq_user_role => role)
+    it "deletes with no group assigned" do
+      role.destroy
+      expect(MiqUserRole.count).to eq(0)
+    end
 
-    expect { role.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError)
-    expect(MiqUserRole.count).to eq(1)
+    it "does not delete with group assigned" do
+      FactoryBot.create(:miq_group, :description => "test group", :miq_user_role => role)
+      expect { role.destroy }.to raise_error(ActiveRecord::DeleteRestrictionError)
+      expect(MiqUserRole.count).to eq(1)
+    end
+
+    it "does not destroy if 'read only' attribute for this role is true" do
+      role.update_attributes(:read_only => true)
+      expect { expect { role.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqUserRole.count })
+      expect(role.errors.full_messages[0]).to eq("Read only roles cannot be deleted.")
+    end
   end
 
   let(:super_admin_role) { FactoryBot.create(:miq_user_role, :features => MiqProductFeature::SUPER_ADMIN_FEATURE) }
