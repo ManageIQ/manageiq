@@ -71,6 +71,10 @@ module ManageIQ::Providers
              :resource_groups,
              :vms,
              :total_vms,
+             :vms_and_templates,
+             :total_vms_and_templates,
+             :miq_templates,
+             :total_miq_templates,
              :hosts,
              :to        => :parent_manager,
              :allow_nil => true
