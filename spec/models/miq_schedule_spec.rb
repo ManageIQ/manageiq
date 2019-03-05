@@ -690,6 +690,24 @@ describe MiqSchedule do
       expect(FileDepot.count).to      eq(1)
       expect(MiqSchedule.count).to    eq(0)
     end
+
+    let(:swift_file_depot) { FactoryBot.create(:file_depot_swift_with_authentication) }
+    let(:swift_params) { {:uri_prefix => "swift", :uri => "swift://swift.example.com/test_depot", :name => "Test Backup Swift Depot", :username => "user", :password => "password"} }
+    let(:swift_run_at) { {:interval => {:value => "1", :unit => "hourly"}, :start_time => "2012-03-10 01:35:00 Z", :tz => "Central Time (US & Canada)"} }
+
+    it "does not merge the swift uri if the port is blank" do
+      swift_schedule = FactoryBot.create(:miq_schedule_validation, :run_at => swift_run_at, :file_depot => swift_file_depot, :sched_action => {:method => "db_backup"}, :resource_type => "DatabaseBackup")
+      swift_schedule.verify_file_depot(swift_params.merge(:save => true))
+      expect(swift_schedule.file_depot.uri).to eq(swift_params[:uri])
+    end
+
+    it "merges the swift uri and port if the port is specified" do
+      another_swift_schedule = FactoryBot.create(:miq_schedule_validation, :run_at => swift_run_at, :file_depot => swift_file_depot, :sched_action => {:method => "db_backup"}, :resource_type => "DatabaseBackup")
+      swift_api_port = 5000
+      merged_uri = "swift://swift.example.com:5000/test_depot"
+      another_swift_schedule.verify_file_depot(swift_params.merge(:swift_api_port => swift_api_port, :save => true))
+      expect(another_swift_schedule.file_depot.uri).to eq(merged_uri)
+    end
   end
 
   describe ".updated_since" do

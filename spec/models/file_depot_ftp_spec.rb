@@ -122,8 +122,8 @@ describe FileDepotFtp do
       file_depot_ftp.uri = uri
     end
 
-    it "should return the uri attribute from the file depot object and ignore the parameter" do
-      expect(file_depot_ftp.merged_uri(nil, nil)).to eq uri
+    it "should ignore the uri attribute from the file depot object and return the parameter" do
+      expect(file_depot_ftp.merged_uri(nil, nil)).to eq nil
     end
   end
 end
