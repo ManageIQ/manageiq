@@ -49,12 +49,6 @@
 # vmware_event_<id>:        ruby lib/workers/bin/run_single_worker.rb --ems-id <id> ManageIQ::Providers::Vmware::InfraManager::EventCatcher
 # vmware_refresh_core_<id>: ruby lib/workers/bin/run_single_worker.rb --ems-id <id> MiqEmsRefreshCoreWorker
 
-# Embedded Ansible workers
-
-# ansible: ruby lib/workers/bin/run_single_worker.rb EmbeddedAnsibleWorker
-# embedded_ansible_refresh: ruby lib/workers/bin/run_single_worker.rb --ems-id <id> ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RefreshWorker
-# embedded_ansible_event:   ruby lib/workers/bin/run_single_worker.rb --ems-id <id> ManageIQ::Providers::EmbeddedAnsible::AutomationManager::EventCatcher
-
 # Logs
 #
 # If you also want to see the log output in the same terminal session that you see the foreman output, uncomment these lines
