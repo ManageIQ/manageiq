@@ -31,16 +31,6 @@ describe Vmdb::Plugins do
     expect(domain).to_not be
   end
 
-  it ".system_automate_domains" do
-    automate_domains = described_class.system_automate_domains
-
-    domain = automate_domains.detect { |ac| ac.name == "ManageIQ" }
-    expect(domain.system?).to be_truthy
-
-    domain = automate_domains.detect { |ac| ac.path.to_s.include?("manageiq-ui-classic") }
-    expect(domain).to_not be
-  end
-
   describe ".asset_paths" do
     it "with normal engines" do
       asset_paths = described_class.asset_paths
