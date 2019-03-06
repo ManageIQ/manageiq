@@ -91,7 +91,7 @@ describe ConversionHost do
   context "queuing configuration requests" do
     let(:ext_management_system) { FactoryBot.create(:ext_management_system) }
     let(:vm) { FactoryBot.create(:vm_openstack, :ext_management_system => ext_management_system) }
-    let(:expected_task_action) { "Configuring a conversion_host: operation=#{op} resource=(type: #{vm.class.name} id:#{vm.id})" }
+    let(:expected_task_action) { "Configuring a conversion_host: operation=#{op} resource=(name: #{vm.name} type: #{vm.class.name} id:#{vm.id})" }
 
     context ".enable_queue" do
       let(:op) { 'enable' }
