@@ -13,7 +13,7 @@ module ConversionHost::Configurations
 
     def queue_configuration(op, instance_id, resource, params, auth_user = nil)
       task_opts = {
-        :action => "Configuring a conversion_host: operation=#{op} resource=(name: #{resource.name} type: #{resource.class.name} id:#{resource.id})",
+        :action => "Configuring a conversion_host: operation=#{op} resource=(name: #{resource.name} type: #{resource.class.name} id: #{resource.id})",
         :userid => auth_user
       }
       queue_opts = {
