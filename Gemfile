@@ -2,6 +2,9 @@ raise "Ruby versions less than 2.3.1 are unsupported!" if RUBY_VERSION < "2.3.1"
 
 source 'https://rubygems.org'
 
+plugin "bundler-inject", "~> 1.0.0"
+require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
+
 #
 # VMDB specific gems
 #
@@ -26,7 +29,7 @@ gem "activerecord-session_store",     "~>1.1"
 gem "acts_as_tree",                   "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>3.0.4",       :require => false
 gem "bcrypt",                         "~> 3.1.10",     :require => false
-gem "bundler",                        ">=1.11.1",      :require => false
+gem "bundler",                        ">=1.15",        :require => false
 gem "byebug",                                          :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.6.0",       :require => false
@@ -241,36 +244,3 @@ unless ENV["APPLIANCE"]
     gem "rspec-rails",      "~>3.6.0"
   end
 end
-
-#
-# Custom Gemfile modifications
-#
-# To develop a gem locally and override its source to a checked out repo
-#   you can use this helper method in Gemfile.dev.rb e.g.
-#
-# override_gem 'manageiq-ui-classic', :path => "../manageiq-ui-classic"
-#
-def override_gem(name, *args)
-  if dependencies.any?
-    raise "Trying to override unknown gem #{name}" unless (dependency = dependencies.find { |d| d.name == name })
-
-    removed_dependency = dependencies.delete(dependency)
-    if removed_dependency.source.kind_of?(Bundler::Source::Git)
-      @sources.send(:source_list_for, removed_dependency.source).delete_if do |other_source|
-        removed_dependency.source == other_source
-      end
-    end
-
-    calling_file = caller_locations.detect { |loc| !loc.path.include?("lib/bundler") }.path
-    calling_dir  = File.dirname(calling_file)
-
-    args.last[:path] = File.expand_path(args.last[:path], calling_dir) if args.last.kind_of?(Hash) && args.last[:path]
-    gem(name, *args).tap do
-      warn "** override_gem: #{name}, #{args.inspect}, caller: #{calling_file}" unless ENV["RAILS_ENV"] == "production"
-    end
-  end
-end
-
-# Load other additional Gemfiles
-#   Developers can create a file ending in .rb under bundler.d/ to specify additional development dependencies
-Dir.glob(File.join(__dir__, 'bundler.d/*.rb')).each { |f| eval_gemfile(File.expand_path(f, __dir__)) }
