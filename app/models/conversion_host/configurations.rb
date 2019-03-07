@@ -49,10 +49,22 @@ module ConversionHost::Configurations
       vmware_ssh_private_key = params.delete(:vmware_ssh_private_key)
       params[:ssh_transport_supported] = !vmware_ssh_private_key.nil?
 
-      conversion_host = new(params)
-      conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
-      conversion_host.save!
-      conversion_host
+      ssh_key = params.delete(:ssh_key)
+
+      new(params).tap do |conversion_host|
+        conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
+
+        if ssh_key
+          conversion_host.authentications << Authentication.new(
+            :name     => conversion_host.name,
+            :type     => 'ConversionHost',
+            :authtype => 'ssh_keypair',
+            :auth_key => ssh_key,
+          )
+        end
+
+        conversion_host.save!
+      end
     rescue StandardError => error
       raise
     ensure
