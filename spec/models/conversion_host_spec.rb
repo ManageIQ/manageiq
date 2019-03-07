@@ -250,4 +250,44 @@ describe ConversionHost do
       expect(conversion_host.name).to eql(redhat_host.name)
     end
   end
+
+  context "authentication associations" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host_vm) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:auth_authkey) { FactoryBot.create(:authentication_ssh_keypair, :resource => conversion_host_vm) }
+
+    it "finds associated authentications" do
+      expect(conversion_host_vm.authentications).to contain_exactly(auth_authkey)
+    end
+
+    it "allows a resource to add an authentication" do
+      auth_authkey2 = FactoryBot.create(:authentication_ssh_keypair)
+      conversion_host_vm.authentications << auth_authkey2
+      expect(conversion_host_vm.authentications).to contain_exactly(auth_authkey, auth_authkey2)
+    end
+  end
+
+  context "verify credentials" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host_vm) { FactoryBot.create(:conversion_host, :resource => vm) }
+
+    it "works with no associated authentications" do
+      allow(conversion_host_vm).to receive(:connect_ssh).and_return(true)
+      expect(conversion_host_vm.verify_credentials).to be_truthy
+    end
+
+    it "works if there is an associated validation" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair)
+      conversion_host_vm.authentications << authentication
+      allow(Net::SSH).to receive(:start).and_return(true)
+      expect(conversion_host_vm.verify_credentials).to be_truthy
+    end
+
+    it "works if there are multiple associated validations" do
+      authentications = [FactoryBot.create(:authentication_ssh_keypair)] * 2
+      conversion_host_vm.authentications << authentications
+      allow(Net::SSH).to receive(:start).and_return(true)
+      expect(conversion_host_vm.verify_credentials).to be_truthy
+    end
+  end
 end
