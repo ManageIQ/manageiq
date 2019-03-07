@@ -1,7 +1,7 @@
 describe ArPglogicalMigrationHelper do
   shared_context "without the schema_migrations_ran table" do
     before do
-      allow(ActiveRecord::Base.connection).to receive(:table_exists?).with("schema_migrations_ran").and_return(false)
+      allow(ActiveRecord::Base.connection).to receive(:data_source_exists?).with("schema_migrations_ran").and_return(false)
     end
   end
 

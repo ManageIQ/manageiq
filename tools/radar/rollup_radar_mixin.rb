@@ -18,7 +18,7 @@ module RollupRadarMixin
       :database => "db/radar.sqlite3"
     )
 
-    unless connection.table_exists?(:max_by_labels)
+    unless connection.data_source_exists?(:max_by_labels)
       connection.create_table :max_by_labels do |t|
         t.datetime :timestamp
         t.string   :label_name
