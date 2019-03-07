@@ -1,6 +1,26 @@
 class CustomButtonSet < ApplicationRecord
   acts_as_miq_set
 
+  before_save :validate_children
+  after_save :update_children
+
+  def validate_children
+    return if set_data.try(:[], :button_order).nil?
+
+    children = Rbac.filtered(CustomButton.where(:id => set_data[:button_order]))
+    throw(:abort) if children.pluck(:id).sort != set_data[:button_order].sort
+  end
+
+  def update_children
+    if set_data.try(:[], :button_order).nil?
+      remove_all_children
+      return
+    end
+
+    children = Rbac.filtered(CustomButton.where(:id => set_data[:button_order]))
+    replace_children(children)
+  end
+
   def self.find_all_by_class_name(class_name, class_id = nil)
     ordering = ->(o) { [o.set_data[:group_index].to_s, o.name] }
 

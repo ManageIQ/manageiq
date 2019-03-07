@@ -79,4 +79,28 @@ describe CustomButtonSet do
     expect(CustomButton.count).to eq(2)
     expect(CustomButtonSet.count).to eq(2)
   end
+
+  context '#update_children' do
+    let(:vm)                { FactoryBot.create(:vm_vmware, :name => 'vm') }
+    let(:custom_button_1)   { FactoryBot.create(:custom_button, :applies_to => vm) }
+    let(:custom_button_2)   { FactoryBot.create(:custom_button, :applies_to => vm) }
+    let(:custom_button_3)   { FactoryBot.create(:custom_button, :applies_to => vm) }
+    let(:set_data)          { {:applies_to_class => "Vm", :button_order => [custom_button_1.id, custom_button_2.id]} }
+    let(:custom_button_set) { FactoryBot.create(:custom_button_set, :name => "set_1", :set_data => set_data) }
+
+    it "updates children after setting button_order" do
+      expect(custom_button_set.children.count).to eq(2)
+
+      custom_button_set.set_data[:button_order] = [
+        custom_button_2.id,
+        custom_button_3.id,
+      ]
+      custom_button_set.save!
+
+      expect(custom_button_set.children.count).to eq(2)
+      expect(custom_button_set.children).not_to include(custom_button_1)
+      expect(custom_button_set.children).to include(custom_button_2)
+      expect(custom_button_set.children).to include(custom_button_3)
+    end
+  end
 end

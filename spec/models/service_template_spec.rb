@@ -8,7 +8,8 @@ describe ServiceTemplate do
       FactoryGirl.create(:custom_button, :name => "generic_no_group", :applies_to_class => "Service")
       generic_group = FactoryGirl.create(:custom_button, :name => "generic_group", :applies_to_class => "Service")
       generic_group_set = FactoryGirl.create(:custom_button_set, :name => "generic_group_set")
-      generic_group_set.add_member(generic_group)
+      generic_group_set.set_data = {:button_order => [generic_group.id]}
+      generic_group_set.save!
 
       service_template = FactoryGirl.create(:service_template)
       FactoryGirl.create(
@@ -24,7 +25,9 @@ describe ServiceTemplate do
         :applies_to_id    => service_template.id
       )
       assigned_group_set = FactoryGirl.create(:custom_button_set, :name => "assigned_group_set")
-      assigned_group_set.add_member(assigned_group)
+      assigned_group_set.set_data = {:button_order => [assigned_group.id]}
+      assigned_group_set.save!
+
       service_template.update(:custom_button_sets => [assigned_group_set])
 
       expected = {

@@ -30,14 +30,15 @@ module TaskHelpers
           klass = class_name.camelize.constantize
 
           obj_array.collect do |obj|
-            begin
-              klass.create!(obj['attributes']&.except('guid')).tap do |new_obj|
-                add_children(obj, new_obj)
-                add_associations(obj, new_obj)
-                try("#{class_name}_post", new_obj)
-              end
-            rescue StandardError
-              raise
+            if klass.name == "CustomButtonSet"
+              order = obj.fetch_path('attributes', 'set_data', :button_order)
+              obj['attributes']['set_data'][:button_order] = nil if order.present?
+            end
+
+            klass.create!(obj['attributes']&.except('guid')).tap do |new_obj|
+              add_children(obj, new_obj)
+              add_associations(obj, new_obj)
+              try("#{class_name}_post", new_obj)
             end
           end
         end
