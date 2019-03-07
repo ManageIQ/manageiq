@@ -106,7 +106,7 @@ class ConversionHost < ApplicationRecord
   def check_ssh_connection
     connect_ssh { |ssu| ssu.shell_exec('uname -a') }
     true
-  rescue
+  rescue StandardError
     false
   end
 
