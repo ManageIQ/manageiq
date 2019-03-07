@@ -1108,7 +1108,10 @@
     :purge_window_size: 1000
 :transformation:
   :limits:
+    :max_concurrent_tasks_per_ems: 10
     :max_concurrent_tasks_per_host: 10
+    :cpu_limit_per_host: unlimited
+    :network_limit_per_host: unlimited
 :ui:
   :mark_translated_strings: false
   :url:
