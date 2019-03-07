@@ -239,4 +239,15 @@ describe ConversionHost do
       expect(conversion_host.errors[:resource].first).to eql("can't be blank")
     end
   end
+
+  context "name validation" do
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+    let(:redhat_host) { FactoryBot.create(:host_redhat, :name => 'foo', :ext_management_system => ems) }
+
+    it "defaults to the associated resource name if no name is explicitly provided" do
+      conversion_host = ConversionHost.new(:resource => redhat_host)
+      expect(conversion_host.valid?).to be(true)
+      expect(conversion_host.name).to eql(redhat_host.name)
+    end
+  end
 end

@@ -19,6 +19,8 @@ class ConversionHost < ApplicationRecord
 
   validate :resource_supports_conversion_host
 
+  before_validation :name, :default_name, :on => :create
+
   include_concern 'Configurations'
 
   after_create :tag_resource_as_enabled
@@ -226,5 +228,11 @@ class ConversionHost < ApplicationRecord
     resource.tag_remove('v2v_transformation_host/true')
     resource.tag_remove('v2v_transformation_method/vddk')
     resource.tag_remove('v2v_transformation_method/ssh')
+  end
+
+  # Set the default name to the name of the associated resource.
+  #
+  def default_name
+    self.name ||= resource&.name
   end
 end
