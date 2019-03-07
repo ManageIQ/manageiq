@@ -2,7 +2,7 @@ raise "Ruby versions less than 2.3.1 are unsupported!" if RUBY_VERSION < "2.3.1"
 
 source 'https://rubygems.org'
 
-plugin "bundler-inject", "~> 1.0.0"
+plugin "bundler-inject", "~> 1.1"
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
 
 #
