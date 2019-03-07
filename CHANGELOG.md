@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 106 ending 2019-03-04
+
+### Added
+- Add custom_button and custom_button_set copy to service_template copy [(#18494)](https://github.com/ManageIQ/manageiq/pull/18494)
+- Use currencies from money gem in Chargeback [(#18486)](https://github.com/ManageIQ/manageiq/pull/18486)
+- Add an inventory_collection for the EMS [(#18484)](https://github.com/ManageIQ/manageiq/pull/18484)
+- Add method to copy service templates [(#18464)](https://github.com/ManageIQ/manageiq/pull/18464)
+- v2v Throttling [(#18415)](https://github.com/ManageIQ/manageiq/pull/18415)
+- Explicitly specify the primary key for the metrics tables [(#18384)](https://github.com/ManageIQ/manageiq/pull/18384)
+- Allow user to select Network Port for provisioning [(#18303)](https://github.com/ManageIQ/manageiq/pull/18303)
+
+### Fixed
+- Only run preprocess_targets_manager_refresh when doing graph refresh and add specs [(#18513)](https://github.com/ManageIQ/manageiq/pull/18513)
+- Fix the dynamic service task naming generation for subclasses [(#18511)](https://github.com/ManageIQ/manageiq/pull/18511)
+- Fixed: started_on column is empty in task which power-on VM [(#18498)](https://github.com/ManageIQ/manageiq/pull/18498)
+- Dup should just dup and not save... [(#18490)](https://github.com/ManageIQ/manageiq/pull/18490)
+- Redo presence check after possible reset of user to nil [(#18462)](https://github.com/ManageIQ/manageiq/pull/18462)
+- Don't rely on false return from callbacks to halt execution [(#18456)](https://github.com/ManageIQ/manageiq/pull/18456)
+- Fix: When user changing display timezone than some widgets show no data [(#18448)](https://github.com/ManageIQ/manageiq/pull/18448)
+
 ## Hammer-3
 
 ### Added
