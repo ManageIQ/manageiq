@@ -252,6 +252,24 @@ class MiqReport < ApplicationRecord
     # which does not exist in the MiqReport class
   end
 
+  def columns_for_sorting(columns)
+    columns || sortby || col_order
+  end
+
+  def validate_sorting_columns(columns)
+    validate_columns(columns_for_sorting(columns))
+  end
+
+  def validate_columns(sorting_columns)
+    sorting_columns.split(",").collect do |attr|
+      if col_order&.include?(attr)
+        attr
+      else
+        raise ArgumentError, "#{attr} is not a valid attribute for #{name}"
+      end
+    end.compact
+  end
+
   private
 
   def va_sql_cols
