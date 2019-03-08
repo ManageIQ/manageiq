@@ -83,10 +83,8 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
 
     def operating_systems
       custom_save_block = lambda do |_ems, inventory_collection|
-        vms_and_templates_ids = inventory_collection.data.map { |os| os.vm_or_template&.id }.compact
-
-        vms_and_templates_index = VmOrTemplate.where(:id => vms_and_templates_ids).index_by(&:id)
-        operating_systems_index = OperatingSystem.where(:vm_or_template_id => vms_and_templates_ids).index_by(&:vm_or_template_id)
+        vms_and_templates_ids   = inventory_collection.data.map { |os| os.vm_or_template&.id }.compact
+        vms_and_templates_index = VmOrTemplate.includes(:operating_system).where(:id => vms_and_templates_ids).index_by(&:id)
 
         inventory_collection.each do |inventory_object|
           vm_or_template = vms_and_templates_index[inventory_object.vm_or_template.id]
@@ -97,8 +95,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
           next unless vm_or_template.drift_states.blank? || vm_or_template.operating_system.nil? ||
                       vm_or_template.operating_system.product_name.blank?
 
-          operating_system = operating_systems_index[inventory_object.vm_or_template.id] ||
-                             inventory_object.model_class.new
+          operating_system = vm_or_template.operating_system || inventory_object.model_class.new
           operating_system.update_attributes!(inventory_object.attributes)
         end
       end
