@@ -3,6 +3,7 @@ class TransformationMapping::VmMigrationValidator
 
   VM_CONFLICT = "conflict".freeze
   VM_EMPTY_NAME = "empty_name".freeze
+  VM_UNSUPPORTED_NAME = 'unsupported_name'.freeze
   VM_IN_OTHER_PLAN = "in_other_plan".freeze
   VM_INACTIVE = "inactive".freeze
   VM_INVALID = "invalid".freeze
@@ -84,6 +85,10 @@ class TransformationMapping::VmMigrationValidator
     validate_result = vm_migration_status(vm)
     return validate_result unless validate_result == VM_VALID
 
+    # The VM name must be valid in the destination provider
+    valid_vm_name = validate_vm_name(vm)
+    return valid_vm_name unless valid_vm_name == VM_VALID
+
     # a valid vm must find all resources in the mapping and has never been migrated
     invalid_list = []
     issue = no_mapping_list(invalid_list, "storages", vm.datastores - mapped_storages)
@@ -126,6 +131,22 @@ class TransformationMapping::VmMigrationValidator
 
   def mapped_lans
     @mapped_lans ||= Lan.where(:id => @mapping.transformation_mapping_items.where(:source_type => 'Lan').select(:source_id))
+  end
+
+  def destination_cluster(vm)
+    @mapping.transformation_mapping_items.find(:source_type => 'EmsCluster', :source_id => vm.ems_cluster.id).destination
+  end
+
+  def validate_vm_name(vm)
+    send("validate_vm_name_#{destination_cluster(vm).emstype}", vm) ? VM_VALID : VM_UNSUPPORTED_NAME
+  end
+
+  def validate_vm_name_rhevm(vm)
+    vm.name =~ /^[\\p{L}0-9._-]*$/
+  end
+
+  def validate_vm_name_openstack(vm)
+    true
   end
 
   class VmMigrateStruct < MiqHashStruct
