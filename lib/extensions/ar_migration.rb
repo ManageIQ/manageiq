@@ -15,7 +15,10 @@ module ArPglogicalMigrationHelper
     new_migrations = ActiveRecord::SchemaMigration.normalized_versions
     new_migrations << version if direction == :up
 
-    (new_migrations - schema_migrations_ran_class.pluck(:version)).each do |v|
+    to_add = (new_migrations - schema_migrations_ran_class.pluck(:version))
+    puts "Seeding :schema_migrations_ran table..." if to_add.size > 1
+
+    to_add.each do |v|
       schema_migrations_ran_class.find_or_create_by(:version => v)
     end
 
