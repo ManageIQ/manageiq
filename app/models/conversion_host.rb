@@ -54,14 +54,15 @@ class ConversionHost < ApplicationRecord
 
         ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
 
-        if auth.password
-          ssh_options[:password] = auth.password
-          ssh_options[:auth_methods] = %w[password]
-        end
-
-        if auth.auth_key
-          ssh_options[:keys] = [auth.auth_key]
-          ssh_options[:auth_methods] = %w[public_key host_based]
+        case auth
+          when AuthUseridPassword
+            ssh_options[:password] = auth.password
+            ssh_options[:auth_methods] = %w[password]
+          when AuthPrivateKey
+            ssh_options[:keys] = [auth.auth_key]
+            ssh_options[:auth_methods] = %w[public_key host_based]
+          else
+            next # Skip anything we don't recognize and aren't sure how to handle
         end
 
         # Options from STI subclasses will override the defaults we've set above.
