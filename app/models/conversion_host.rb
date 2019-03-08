@@ -84,30 +84,29 @@ class ConversionHost < ApplicationRecord
   end
 
   def check_conversion_host_role
-    install_conversion_host_module
     playbook = "/usr/share/ovirt-ansible-v2v-conversion-host/playbooks/conversion_host_check.yml"
-    extra_vars = { :v2v_manageiq_conversion_host_check => true }
-    ansible_playbook(playbook, extra_vars)
+    ansible_playbook(playbook)
     tag_resource_as('enabled')
   rescue
     tag_resource_as('disabled')
   end
 
-  def enable_conversion_host_role(v2v_vddk_package_url = nil)
-    install_conversion_host_module
-    v2v_vddk_package_url ||= "http://#{resource.ext_management_system.hostname}/vddk/VMware-vix-disklib-stable.tar.gz"
+  def enable_conversion_host_role(vddk_package_url = nil, ssh_private_key = nil)
+    raise "vddk_package_url is mandatory if transformation method is vddk") if vddk_transport_supported && v2v_vddk_package_url.nil?
+    raise "ssh_private_key is mandatory if transformation_method is ssh") if ssh_transport_support && ssh_private_key.nil?
     playbook = "/usr/share/ovirt-ansible-v2v-conversion-host/playbooks/conversion_host_enable.yml"
     extra_vars = {
-      :v2v_vddk_package_name => "VMware-vix-disklib-stable.tar.gz",
-      :v2v_vddk_package_url  => v2v_vddk_package_url
-    }
+      :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh',
+      :v2v_vddk_package_url => vddk_package_url,
+      :v2v_ssh_private_key  => ssh_private_key,
+      :v2v_ca_bundle            => resource.ext_management_system.connection_configurations['default'].certificate_authority
+    }.compact
     ansible_playbook(playbook, extra_vars)
   ensure
     check_conversion_host_role
   end
 
   def disable_conversion_host_role
-    install_conversion_host_module
     playbook = "/usr/share/ovirt-ansible-v2v-conversion-host/playbooks/conversion_host_disable.yml"
     ansible_playbook(playbook)
   ensure
@@ -180,18 +179,13 @@ class ConversionHost < ApplicationRecord
   def ansible_playbook(playbook, extra_vars = {})
     command = "ansible-playbook #{playbook} -i #{ipaddress}"
 
+    extra_vars[:v2v_host_type] = resource.ext_management_system.emstype
     extra_vars.each { |k, v| command += " -e '#{k}=#{v}'" }
 
     connect_ssh { |ssu| ssu.shell_exec(command) }
   rescue => e
     _log.error("Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]")
     raise e
-  end
-
-  def install_conversion_host_module
-    connect_ssh { |ssu| ssu.shell_exec("yum install -y ovirt-ansible-v2v-conversion-host") }
-  rescue => e
-    _log.error("Ansible module installation failed for '#{resource.name}'}with [#{e.class}: #{e.message}]")
   end
 
   # Wrapper method for the various tag_resource_as_xxx methods.
