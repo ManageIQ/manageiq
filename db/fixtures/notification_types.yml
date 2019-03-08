@@ -191,12 +191,12 @@
   :level: :error
   :audience: global
 - :name: conversion_host_config_success
-  :message: 'Conversion Host %{op_name} of resource %{resource} completed successfully.'
+  :message: 'Conversion Host %{op_name} of resource %{op_arg} completed successfully.'
   :expires_in: 24.hours
   :level: :success
   :audience: global
 - :name: conversion_host_config_failure
-  :message: 'Conversion Host %{op_name} of resource %{resource} failed. Please check the logs for further details.'
+  :message: 'Conversion Host %{op_name} of resource %{op_arg} failed. Please check the logs for further details.'
   :expires_in: 24.hours
   :level: :error
   :audience: global
