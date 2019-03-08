@@ -134,7 +134,7 @@ class TransformationMapping::VmMigrationValidator
   end
 
   def destination_cluster(vm)
-    @mapping.transformation_mapping_items.find(:source_type => 'EmsCluster', :source_id => vm.ems_cluster.id).destination
+    @mapping.transformation_mapping_items.find_by(:source_type => 'EmsCluster', :source_id => vm.ems_cluster.id).destination
   end
 
   def validate_vm_name(vm)
