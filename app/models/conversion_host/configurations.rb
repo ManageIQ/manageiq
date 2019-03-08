@@ -59,7 +59,8 @@ module ConversionHost::Configurations
           conversion_host.authentications << AuthPrivateKey.new(
             :name     => conversion_host.name,
             :auth_key => ssh_key,
-            :userid   => params[:auth_user]
+            :userid   => params[:auth_user],
+            :authtype => 'v2v'
           )
         end
 
