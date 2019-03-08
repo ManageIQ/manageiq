@@ -138,7 +138,7 @@ class TransformationMapping::VmMigrationValidator
   end
 
   def validate_vm_name(vm)
-    send("validate_vm_name_#{destination_cluster(vm).emstype}", vm) ? VM_VALID : VM_UNSUPPORTED_NAME
+    send("validate_vm_name_#{destination_cluster(vm).ext_management_system.emstype}", vm) ? VM_VALID : VM_UNSUPPORTED_NAME
   end
 
   def validate_vm_name_rhevm(vm)
