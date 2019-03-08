@@ -66,10 +66,6 @@ module Vmdb
       end
     end
 
-    def system_automate_domains
-      @system_automate_domains ||= automate_domains.select(&:system?)
-    end
-
     def provider_plugins
       @provider_plugins ||= select { |engine| engine.name.start_with?("ManageIQ::Providers::") }
     end
