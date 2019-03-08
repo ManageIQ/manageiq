@@ -210,7 +210,6 @@ module Rbac
 
       if targets.nil?
         scope = apply_scope(klass, scope)
-        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       elsif targets.kind_of?(Array)
         if targets.first.kind_of?(Numeric)
           target_ids = targets
@@ -222,7 +221,6 @@ module Rbac
           klass       = safe_base_class(klass) if is_sti?(klass) # always scope to base class if model is STI
         end
         scope = apply_scope(klass, scope)
-        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
 
         ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
       else # targets is a class_name, scope, class, or acts_as_ar_model class (VimPerformanceDaily in particular)
@@ -235,7 +233,6 @@ module Rbac
           # working around MiqAeDomain not being in rbac_class
           klass = base_class if (base_class = rbac_base_class(klass))
         end
-        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       end
 
       user_filters['match_via_descendants'] = to_class(options[:match_via_descendants])
@@ -254,6 +251,7 @@ module Rbac
 
       scope = include_references(scope, klass, include_for_find, exp_includes, skip_references)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
+      scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       targets = scope
 
       unless options[:skip_counts]
