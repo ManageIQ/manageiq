@@ -239,6 +239,7 @@ class ConversionHost < ApplicationRecord
 
     if authentication.nil? && resource.authentication_userid && resource.authentication_password
       authentication = AuthUseridPassword.new(
+        :name     => resource.name,
         :resource => resource,
         :userid   => resource.authentication_userid,
         :password => resource.authentication.password
