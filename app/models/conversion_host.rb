@@ -219,7 +219,7 @@ class ConversionHost < ApplicationRecord
     authentication = send("find_resource_credentials_#{resource.ext_management_system.emstype}")
 
     unless authentication
-      msg = "Credential not found for #{resource.name}"
+      msg = "Credentials not found for conversion host #{name} or resource #{resource.name}"
       msg << " #{msg}" if msg
       _log.error(msg)
       raise MiqException::Error, msg
