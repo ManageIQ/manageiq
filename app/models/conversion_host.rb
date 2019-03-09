@@ -50,7 +50,7 @@ class ConversionHost < ApplicationRecord
       host = hostname || ipaddress
 
       authentications.each do |auth|
-        user = auth.userid || ENV['USER'] || Etc.getlogin
+        user = auth.userid || ENV['USER']
 
         ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
 
