@@ -207,26 +207,55 @@ class ConversionHost < ApplicationRecord
     end
   end
 
-  def check_resource_credentials(fatal = false, extra_msg = nil)
-    success = send("check_resource_credentials_#{resource.ext_management_system.emstype}")
-    if !success and fatal
-      msg = "Credential not found for #{resource.name}."
-      msg += " #{extra_msg}" unless extra_msg.blank?
-      _log.error(:msg)
+  # Find the associated credentials for the current conversion host based
+  # on the type of provider. Each provider should look for a directly
+  # associated authentication first, and default to the authentication
+  # for the resource second.
+  #--
+  # TODO: Each provider subclass should define their own method for
+  # finding credentials.
+  #
+  def find_credentials(msg = nil)
+    authentication = send("find_resource_credentials_#{resource.ext_management_system.emstype}")
+
+    unless authentication
+      msg = "Credential not found for #{resource.name}"
+      msg << " #{msg}" if msg
+      _log.error(msg)
       raise MiqException::Error, msg
     end
-    success
+
+    authentication
   end
 
-  def check_resource_credentials_rhevm
-    !(resource.authentication_userid.nil? || resource.authentication_password.nil?)
+  # Find the credentials for the associated Redhat resource. If an AuthUseridPassword
+  # object is not found, but the associated userid and password are found, automatically
+  # create a new AuthUseridPassword record associated with that resource.
+  #--
+  # TODO: Move this into the provider specific subclass.
+  #
+  def find_credentials_redhat
+    authentication = AuthUseridPassword.find_by(:resource => resource)
+
+    if authentication.nil? && resource.authentication_userid && resource.authentication_password
+      authentication = AuthUseridPassword.new(
+        :resource => resource,
+        :userid   => resource.authentication_userid,
+        :password => resource.authentication.password
+      ).save
+    end
+
+    authentication
   end
 
-  def check_resource_credentials_openstack
-    ssh_authentications = resource.ext_management_system.authentications
-                                  .where(:authtype => 'ssh_keypair')
-                                  .where.not(:userid => nil, :auth_key => nil)
-    !ssh_authentications.empty?
+  # Find the credentials for the associated with the Openstack resource. This will
+  # look for an AuthPrivateKey associated with the resource, or the EMS of the
+  # associated resource if one cannot be found.
+  #--
+  # TODO: Move this into the provider specific subclass.
+  #
+  def find_credentials_openstack
+    AuthPrivateKey.find_by(:resource => resource) || resource.ext_management_system.authentication_type('ssh_keypair')
   end
 
   # Connect to the conversion host using the MiqSshUtil wrapper using the authentication
@@ -255,7 +284,8 @@ class ConversionHost < ApplicationRecord
   # TODO: Move this to ManageIQ::Providers::Redhat::InfraManager::ConversionHost
   #
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
-    [hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil]
+    authentication = find_credentials_redhat
+    [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
   end
 
   # For the OpenStack provider, use the first authentication containing an ssh keypair that has
@@ -264,10 +294,7 @@ class ConversionHost < ApplicationRecord
   # TODO: Move this to ManageIQ::Providers::OpenStack::CloudManager::ConversionHost
   #
   def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
-    authentication = resource.ext_management_system.authentications
-                             .where(:authtype => 'ssh_keypair')
-                             .where.not(:userid => nil, :auth_key => nil)
-                             .first
+    authentication = find_credentials_openstack
     [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
   end
 
