@@ -229,8 +229,8 @@ class ConversionHost < ApplicationRecord
   end
 
   # Find the credentials for the associated Redhat resource. If an AuthUseridPassword
-  # object is not found, but the associated userid and password are found, automatically
-  # create a new AuthUseridPassword record associated with that resource.
+  # object is not found, but the associated userid and password are found, return
+  # a (temporary, unsaved) AuthUseridPassword object using those values.
   #--
   # TODO: Move this into the provider specific subclass.
   #
@@ -243,7 +243,7 @@ class ConversionHost < ApplicationRecord
         :resource => resource,
         :userid   => resource.authentication_userid,
         :password => resource.authentication.password
-      ).save
+      )
     end
 
     authentication
