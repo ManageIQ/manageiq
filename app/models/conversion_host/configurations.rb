@@ -44,11 +44,13 @@ module ConversionHost::Configurations
       params.delete(:task_id)     # In case this is being called through *_queue which will stick in a :task_id
       params.delete(:miq_task_id) # The miq_queue.activate_miq_task will stick in a :miq_task_id
 
-      vddk_package_url = params.delete(:vddk_package_url)
+      vmware_vddk_package_url = params.delete(:vmware_vddk_package_url)
+      params[:vddk_transport_supported] = !vmware_vddk_package_url.nil?
       vmware_ssh_private_key = params.delete(:vmware_ssh_private_key)
-
+      params[:ssh_transport_supported] = !vmware_ssh_private_key.nil?
+      
       conversion_host = new(params)
-      conversion_host.enable_conversion_host_role(vddk_package_url, vmware_ssh_private_key)
+      conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
       conversion_host.save!
       conversion_host
     rescue StandardError => error
