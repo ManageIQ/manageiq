@@ -41,12 +41,20 @@ module ConversionHost::Configurations
       params = params.symbolize_keys
       _log.info("Enabling a conversion_host with parameters: #{params}")
 
-      params.delete(:task_id)     # In case this is being called through *_queue which will stick in a :task_id
-      params.delete(:miq_task_id) # The miq_queue.activate_miq_task will stick in a :miq_task_id
+      task_id = params.delete(:task_id)         # In case this is being called through *_queue which will stick in a :task_id
+      miq_task_id = params.delete(:miq_task_id) # The miq_queue.activate_miq_task will stick in a :miq_task_id
+      task_id ||= miq_task_id
 
       vddk_url = params.delete(:param_v2v_vddk_package_url)
 
       conversion_host = new(params)
+
+      unless task_id.nil?
+        task = MiqTask.find(task_id)
+        task.options[:conversion_host_id] = conversion_host.id
+        task.save!
+      end
+
       conversion_host.enable_conversion_host_role(vddk_url)
       conversion_host.save!
       conversion_host
