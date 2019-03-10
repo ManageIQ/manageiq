@@ -91,9 +91,9 @@ class ConversionHost < ApplicationRecord
     tag_resource_as('disabled')
   end
 
-  def enable_conversion_host_role(vddk_package_url = nil, ssh_private_key = nil)
-    raise "vddk_package_url is mandatory if transformation method is vddk" if vddk_transport_supported && v2v_vddk_package_url.nil?
-    raise "ssh_private_key is mandatory if transformation_method is ssh" if ssh_transport_support && ssh_private_key.nil?
+  def enable_conversion_host_role(vmware_vddk_package_url = nil, vmware_ssh_private_key = nil)
+    raise "vddk_package_url is mandatory if transformation method is vddk" if vddk_transport_supported && vmware_vddk_package_url.nil?
+    raise "ssh_private_key is mandatory if transformation_method is ssh" if ssh_transport_support && vmware_ssh_private_key.nil?
     playbook = "/usr/share/ovirt-ansible-v2v-conversion-host/playbooks/conversion_host_enable.yml"
     extra_vars = {
       :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh',

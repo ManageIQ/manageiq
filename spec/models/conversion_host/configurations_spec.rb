@@ -1,5 +1,3 @@
-require 'byebug'
-
 describe ConversionHost do
   let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
   let(:conversion_host_ssh) { FactoryBot.create(:conversion_host, :resource => vm, :ssh_transport_supported => true) }

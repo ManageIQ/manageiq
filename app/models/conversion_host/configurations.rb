@@ -48,7 +48,7 @@ module ConversionHost::Configurations
       params[:vddk_transport_supported] = !vmware_vddk_package_url.nil?
       vmware_ssh_private_key = params.delete(:vmware_ssh_private_key)
       params[:ssh_transport_supported] = !vmware_ssh_private_key.nil?
-      
+
       conversion_host = new(params)
       conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
       conversion_host.save!
