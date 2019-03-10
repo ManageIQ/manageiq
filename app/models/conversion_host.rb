@@ -99,7 +99,7 @@ class ConversionHost < ApplicationRecord
       :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh',
       :v2v_vddk_package_url => vddk_package_url,
       :v2v_ssh_private_key  => ssh_private_key,
-      :v2v_ca_bundle            => resource.ext_management_system.connection_configurations['default'].certificate_authority
+      :v2v_ca_bundle        => resource.ext_management_system.connection_configurations['default'].certificate_authority
     }.compact
     ansible_playbook(playbook, extra_vars)
   ensure
