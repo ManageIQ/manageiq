@@ -26,7 +26,17 @@ module ConversionHost::Configurations
         :args        => [params, auth_user]
       }
 
-      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+      task_id = MiqTask.generic_action_with_callback(task_opts, queue_opts)
+
+      # Set the context_data after the fact because the above call only accepts certain
+      # options while ignoring the rest. Useful for a retry option in the UI.
+      #
+      MiqTask.find(task_id).tap do |task|
+        task.context_data = params.first&.except(:task_id, :miq_task_id)
+        task.save
+      end
+
+      task_id
     end
 
     def enable_queue(params, auth_user = nil)

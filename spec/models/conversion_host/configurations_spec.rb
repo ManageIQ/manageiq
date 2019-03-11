@@ -119,7 +119,9 @@ describe ConversionHost do
 
       it "to queue with a task" do
         task_id = described_class.enable_queue(params)
-        expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action)
+        expected_context_data = params.except(:resource)
+
+        expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action, :context_data => expected_context_data)
         expect(MiqQueue.first).to have_attributes(
           :args        => [params.merge(:task_id => task_id).except(:resource), nil],
           :class_name  => described_class.name,
