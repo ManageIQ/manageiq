@@ -256,6 +256,11 @@ module Rbac
       end
 
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
+      # putting this into an inner view will allow us to apply the virtual attributes to LIMIT rows not all of them.
+      if attrs[:apply_limit_in_sql] && options[:extra_cols]
+        scope = scope.select('*')
+        scope = klass.from(Arel.sql("(#{scope.to_sql})").as(klass.table_name))
+      end
       scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       targets = scope
 
