@@ -531,7 +531,7 @@ describe Rbac::Filterer do
         # a MiqExpression filter and the user filter, which is deduped in
         # ActiveRecord's internals and results in a `.references(nil)`
         # effectively
-        expect(results.references_values).to match_array [""]
+        expect(results.references_values.reject(&:blank?)).to be_empty
       end
 
       context "with :include_for_find" do

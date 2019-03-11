@@ -250,12 +250,17 @@ module Rbac
               .order(order)
 
       scope = include_references(scope, klass, include_for_find, exp_includes, skip_references)
+
+      if !options[:skip_counts] && (attrs[:apply_limit_in_sql] && limit)
+        auth_count = scope.except(:offset, :limit, :order).count(:all)
+      end
+
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
       scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       targets = scope
 
-      unless options[:skip_counts]
-        auth_count = attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
+      if !options[:skip_counts] && !(attrs[:apply_limit_in_sql] && limit)
+        auth_count = targets.length
       end
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
