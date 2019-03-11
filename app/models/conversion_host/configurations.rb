@@ -48,15 +48,15 @@ module ConversionHost::Configurations
       vddk_url = params.delete(:param_v2v_vddk_package_url)
 
       conversion_host = new(params)
+      conversion_host.enable_conversion_host_role(vddk_url)
+      conversion_host.save!
 
-      unless task_id.nil?
+      if task_id.present?
         task = MiqTask.find(task_id)
         task.options[:conversion_host_id] = conversion_host.id
         task.save!
       end
 
-      conversion_host.enable_conversion_host_role(vddk_url)
-      conversion_host.save!
       conversion_host
     rescue StandardError => error
       raise
