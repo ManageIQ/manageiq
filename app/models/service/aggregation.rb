@@ -149,7 +149,7 @@ module Service::Aggregation
     def aggregation_where_clause(arel, subtree_services)
       arel.grouping(
         subtree_services[:id].eq(arel[:id])
-         .or(subtree_services[:ancestry].matches(ancestry_ilike))
+         .or(subtree_services[:ancestry].matches(ancestry_ilike, nil, true))
       ).or(subtree_services[:ancestry].eq(service_id_cast))
     end
 
