@@ -28,11 +28,14 @@ module ConversionHost::Configurations
 
       task_id = MiqTask.generic_action_with_callback(task_opts, queue_opts)
 
-      # Set the context_data after the fact because the above call only accepts certain
-      # options while ignoring the rest. Useful for a retry option in the UI.
+      # Set the context_data after the fact because the above call only accepts
+      # certain options while ignoring the rest. We also don't want to store
+      # any ssh key information. Useful for a retry option in the UI, and
+      # informational purposes in general.
       #
       MiqTask.find(task_id).tap do |task|
-        task.context_data = params.first&.except(:task_id, :miq_task_id)
+        params = params.first&.except(:task_id, :miq_task_id)
+        task.context_data = params&.reject { |key, value| key.to_s.end_with?('_key') }
         task.save
       end
 

@@ -131,6 +131,13 @@ describe ConversionHost do
           :zone        => vm.ext_management_system.my_zone
         )
       end
+
+      it "rejects ssh key information as context data" do
+        task_id = described_class.enable_queue(params.merge(:ssh_key => 'xxx', :vmware_ssh_private_key => 'yyy'))
+        expected_context_data = params.except(:resource)
+
+        expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action, :context_data => expected_context_data)
+      end
     end
 
     context "#disable_queue" do
