@@ -12,11 +12,11 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def xlog_location
-    select_value("SELECT pg_current_xlog_insert_location()")
+    select_value("SELECT pg_current_wal_insert_lsn()")
   end
 
   def xlog_location_diff(lsn1, lsn2)
-    select_value("SELECT pg_xlog_location_diff(#{quote(lsn1)}, #{quote(lsn2)})").to_i
+    select_value("SELECT pg_wal_lsn_diff(#{quote(lsn1)}, #{quote(lsn2)})").to_i
   end
 
   def client_connections
@@ -24,7 +24,8 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                   SELECT client_addr   AS client_address
                        , datname       AS database
                        , pid           AS spid
-                       , waiting       AS is_waiting
+                       , wait_event_type
+                       , wait_event
                        , query
                     FROM pg_stat_activity
                    ORDER BY 1, 2

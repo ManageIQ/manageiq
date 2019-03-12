@@ -5,7 +5,7 @@ describe MiqPglogical do
 
     before do
       skip "pglogical must be installed" unless pglogical.installed?
-      MiqServer.seed
+      EvmSpecHelper.local_miq_server
     end
 
     describe "#active_excludes" do

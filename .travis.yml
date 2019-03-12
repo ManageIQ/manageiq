@@ -1,3 +1,4 @@
+dist: xenial
 language: ruby
 rvm:
 - 2.4.5
@@ -22,7 +23,7 @@ matrix:
     env: TEST_SUITE=brakeman
   fast_finish: true
 addons:
-  postgresql: '9.5'
+  postgresql: '10'
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
