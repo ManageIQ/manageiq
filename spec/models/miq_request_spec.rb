@@ -73,7 +73,7 @@ describe MiqRequest do
 
       expect(MiqQueue.count).to eq(0)
 
-      request.call_automate_event_queue(event_name)
+      User.with_user(fred) { request.call_automate_event_queue(event_name) }
       msg = MiqQueue.first
 
       expect(MiqQueue.count).to  eq(1)
@@ -83,6 +83,8 @@ describe MiqRequest do
       expect(msg.zone).to        eq(zone.name)
       expect(msg.args).to        eq([event_name])
       expect(msg.msg_timeout).to eq(1.hour)
+      expect(msg.user_id).to     eq(fred.id)
+      expect(msg.group_id).to    eq(fred.current_group.id)
     end
 
     context "#call_automate_event" do
@@ -325,12 +327,27 @@ describe MiqRequest do
       end
     end
 
+    shared_examples_for "#calls create_request_tasks with the proper user" do
+      it "runs successfully" do
+        expect(request).to receive(:approved?).and_return(true)
+        expect(MiqQueue.count).to eq(0)
+
+        User.with_user(fred) { request.execute }
+        expect(MiqQueue.count).to eq(1)
+
+        msg = MiqQueue.first
+        expect(msg.user_id).to  eq(fred.id)
+        expect(msg.group_id).to eq(fred.current_group.id)
+      end
+    end
+
     context 'Service provisioning' do
       let(:request) { FactoryBot.create(:service_template_provision_request, :approval_state => 'approved', :requester => fred) }
       let(:role)    { 'automate' }
 
       context "uses the automate role" do
         it_behaves_like "#calls create_request_tasks with the proper role"
+        it_behaves_like "#calls create_request_tasks with the proper user"
       end
     end
 
@@ -341,6 +358,7 @@ describe MiqRequest do
 
       context "uses the ems_operations role" do
         it_behaves_like "#calls create_request_tasks with the proper role"
+        it_behaves_like "#calls create_request_tasks with the proper user"
       end
     end
   end

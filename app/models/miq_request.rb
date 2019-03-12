@@ -191,14 +191,18 @@ class MiqRequest < ApplicationRecord
   end
 
   def call_automate_event_queue(event_name)
-    MiqQueue.put(
+    q_options = {
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "call_automate_event",
       :args        => [event_name],
       :zone        => options.fetch(:miq_zone, my_zone),
       :msg_timeout => 3600
-    )
+    }
+    user = User.current_user
+    q_options[:user_id] = user.id if user
+    q_options[:group_id] = user.current_group.id if user
+    MiqQueue.put(q_options)
   end
 
   def build_request_event(event_name)
@@ -424,8 +428,7 @@ class MiqRequest < ApplicationRecord
       deliver_on = get_option(:schedule_time).utc rescue nil
     end
 
-    # self.create_request_tasks
-    MiqQueue.put(
+    q_options = {
       :class_name     => self.class.name,
       :instance_id    => id,
       :method_name    => "create_request_tasks",
@@ -434,7 +437,13 @@ class MiqRequest < ApplicationRecord
       :tracking_label => tracking_label_id,
       :msg_timeout    => 3600,
       :deliver_on     => deliver_on
-    )
+    }
+    user = User.current_user
+    q_options[:user_id] = user.id if user
+    q_options[:group_id] = user.current_group.id if user
+
+    # self.create_request_tasks
+    MiqQueue.put(q_options)
   end
 
   def create_request_tasks
