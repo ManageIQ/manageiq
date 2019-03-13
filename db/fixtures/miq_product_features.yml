@@ -5080,6 +5080,18 @@
         :description: Display Lists of Instances related to a CI
         :feature_type: view
         :identifier: instance_show_list
+      - :name: List Archived
+        :description: Display Lists of archived Instances related to a CI
+        :feature_type: view
+        :identifier: instance_show_list_archived
+      - :name: List Orphaned
+        :description: Display Lists of orphaned Instances related to a CI
+        :feature_type: view
+        :identifier: instance_show_list_orphaned
+      - :name: List Retired
+        :description: Display Lists of retired Instances related to a CI
+        :feature_type: view
+        :identifier: instance_show_list_retired
       - :name: Show
         :description: Display Individual Instances related to a CI
         :feature_type: view
@@ -5387,6 +5399,18 @@
         :description: Display Lists of VMs related to a CI
         :feature_type: view
         :identifier: vm_show_list
+      - :name: List Archived
+        :description: Display Lists of archived Vms related to a CI
+        :feature_type: view
+        :identifier: vm_show_list_archived
+      - :name: List Orphaned
+        :description: Display Lists of orphaned Vms related to a CI
+        :feature_type: view
+        :identifier: vm_show_list_orphaned
+      - :name: List Retired
+        :description: Display Lists of retired Vms related to a CI
+        :feature_type: view
+        :identifier: vm_show_list_retired
       - :name: Show
         :description: Display Individual VMs related to a CI
         :feature_type: view
