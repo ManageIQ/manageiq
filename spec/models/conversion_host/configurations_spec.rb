@@ -1,5 +1,7 @@
 describe ConversionHost do
-  let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm, :ssh_transport_supported => true) }
+  let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
+  let(:conversion_host_ssh) { FactoryBot.create(:conversion_host, :resource => vm, :ssh_transport_supported => true) }
+  let(:conversion_host_vddk) { FactoryBot.create(:conversion_host, :resource => vm, :vddk_transport_supported => true) }
   let(:params) do
     {
       :name          => 'transformer',
@@ -40,15 +42,34 @@ describe ConversionHost do
         expect { described_class.enable(params) }.to raise_error(StandardError)
       end
 
-      it "tags the associated resource as expected" do
-        allow(conversion_host).to receive(:enable_conversion_host_role)
-        taggings = conversion_host.resource.taggings
-        tag_names = taggings.map { |tagging| tagging.tag.name }
+      context "transport method is SSH" do
+        let(:conversion_host) { conversion_host_ssh }
 
-        expect(tag_names).to contain_exactly(
-          '/user/v2v_transformation_host/true',
-          '/user/v2v_transformation_method/ssh'
-        )
+        it "tags the associated resource as expected" do
+          allow(conversion_host).to receive(:enable_conversion_host_role)
+          taggings = conversion_host.resource.taggings
+          tag_names = taggings.map { |tagging| tagging.tag.name }
+
+          expect(tag_names).to contain_exactly(
+            '/user/v2v_transformation_host/true',
+            '/user/v2v_transformation_method/ssh'
+          )
+        end
+      end
+
+      context "transport method is VDDK" do
+        let(:conversion_host) { conversion_host_vddk }
+
+        it "tags the associated resource as expected" do
+          allow(conversion_host).to receive(:enable_conversion_host_role)
+          taggings = conversion_host.resource.taggings
+          tag_names = taggings.map { |tagging| tagging.tag.name }
+
+          expect(tag_names).to contain_exactly(
+            '/user/v2v_transformation_host/true',
+            '/user/v2v_transformation_method/vddk'
+          )
+        end
       end
     end
 
