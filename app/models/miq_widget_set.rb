@@ -69,6 +69,15 @@ class MiqWidgetSet < ApplicationRecord
     end
   end
 
+  def self.copy_dashboard(source_widget_set, destination_name, destination_description, assign_to_group_id = nil)
+    assign_to_group = MiqGroup.find(assign_to_group_id || source_widget_set.group_id || source_widget_set.owner_id)
+    MiqWidgetSet.create!(:name        => destination_name,
+                         :description => destination_description,
+                         :owner_type  => "MiqGroup",
+                         :set_type    => source_widget_set.set_type,
+                         :owner_id    => assign_to_group.id)
+  end
+
   def self.seed
     sync_from_dir
   end
