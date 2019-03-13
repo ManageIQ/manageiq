@@ -142,11 +142,13 @@ class TransformationMapping::VmMigrationValidator
   end
 
   def validate_vm_name_rhevm(vm)
-    vm.name =~ /^[\\p{L}0-9._-]*$/
+    # Regexp from oVirt code: frontend/webadmin/modules/uicommonweb/src/main/java/org/ovirt/engine/ui/uicommonweb/validation/BaseI18NValidation.java
+    vm.name =~ /^[\p{L}0-9._-]*$/
   end
 
   def validate_vm_name_openstack(vm)
-    true
+    # Regexp decided after discussion with Bernard Cafarelli
+    vm.name =~ /^[[:graph:]\s]*$/
   end
 
   class VmMigrateStruct < MiqHashStruct
