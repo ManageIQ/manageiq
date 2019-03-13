@@ -1,6 +1,6 @@
 module ArPglogicalMigrationHelper
   def self.discover_schema_migrations_ran_class
-    return unless ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
+    return unless ActiveRecord::Base.connection.data_source_exists?("schema_migrations_ran")
     Class.new(ActiveRecord::Base) do
       require 'active_record-id_regions'
       include ActiveRecord::IdRegions
