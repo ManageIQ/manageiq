@@ -97,6 +97,7 @@ module MiqReport::Search
                                   )
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if order
     search_options[:extra_cols] = va_sql_cols if va_sql_cols.present?
+    search_options[:use_sql_view] = true if db_options && db_options[:use_sql_view]
 
     if options[:parent]
       targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])

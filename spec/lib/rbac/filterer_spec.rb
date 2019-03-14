@@ -2090,6 +2090,77 @@ describe Rbac::Filterer do
         expect(results.length).to eq(VmdbDatabaseSetting.all.length)
       end
     end
+
+    describe "with inline view" do
+      let!(:tagged_group) { FactoryBot.create(:miq_group, :tenant => default_tenant) }
+      let!(:user)         { FactoryBot.create(:user, :miq_groups => [tagged_group]) }
+
+      before do
+        # the user can see production environments
+        tagged_group.entitlement = Entitlement.new
+        tagged_group.entitlement.set_belongsto_filters([])
+        tagged_group.entitlement.set_managed_filters([["/managed/environment/prod"]])
+        tagged_group.save!
+      end
+
+      it "handles added include from miq_expression" do
+        st = FactoryBot.create(:service_template)
+        service1, service2, _service3 = FactoryBot.create_list(:service, 3, :service_template => st)
+        service1.tag_with("/managed/environment/prod", :ns => "*")
+        service2.tag_with("/managed/environment/prod", :ns => "*")
+        service2.update_attributes(:service_template => nil)
+
+        # exclude service2 (no service template)
+        exp = YAML.safe_load("--- !ruby/object:MiqExpression
+        exp:
+          and:
+          - IS NOT EMPTY:
+              field: Service.service_template-name
+          - IS NOT EMPTY:
+              field: Service-name
+        ")
+        results = described_class.search(:class            => "Service",
+                                         :filter           => exp,
+                                         :limit            => 20,
+                                         :extra_cols       => "v_total_vms",
+                                         :use_sql_view     => true,
+                                         :user             => user,
+                                         :include_for_find => {:service_templates => :pictures},
+                                         :order            => "services.name desc")
+        expect(results.first).to eq([service1])
+        expect(results.last[:auth_count]).to eq(1)
+      end
+
+      it "handles ruby and sql miq_expression" do
+        root_service = FactoryBot.create(:service)
+        services1 = FactoryBot.create_list(:service, 4, :parent => root_service) # matches both (NOTE: more than limit)
+        services2 = FactoryBot.create_list(:service, 2) # matches rbac, and sql filter, not ruby filter
+        services1.each { |s| s.tag_with("/managed/environment/prod", :ns => "*") }
+        services2.each { |s| s.tag_with("/managed/environment/prod", :ns => "*") }
+        FactoryBot.create_list(:service, 1, :parent => root_service) # matches ruby and sql filter, not rbac
+
+        # expression with sql AND ruby
+        exp = YAML.safe_load("--- !ruby/object:MiqExpression
+        exp:
+          and:
+          - IS NOT EMPTY:
+              field: Service-name
+          - EQUAL:
+              field: Service-service_id
+              value: #{root_service.id}
+        ")
+
+        results = described_class.search(:class        => "Service",
+                                         :filter       => exp,
+                                         :limit        => 3,
+                                         :extra_cols   => "v_total_vms",
+                                         :use_sql_view => true,
+                                         :user         => user,
+                                         :order        => "services.id")
+        expect(results.first).to eq(services1[0..2])
+        expect(results.last[:auth_count]).to eq(4)
+      end
+    end
   end
 
   describe ".filtered" do
