@@ -56,6 +56,9 @@ class ServiceTemplate < ApplicationRecord
   has_many   :service_templates, :through => :service_resources, :source => :resource, :source_type => 'ServiceTemplate'
   has_many   :services
 
+  has_many :service_template_tenants, :dependent => :destroy
+  has_many :additional_tenants, :through => :service_template_tenants, :source => :tenant, :dependent => :destroy
+
   has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
   belongs_to :service_template_catalog
@@ -84,6 +87,10 @@ class ServiceTemplate < ApplicationRecord
   scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
   scope :displayed,                                 ->         { where(:display => true) }
   scope :public_service_templates,                  ->         { where(:internal => [false, nil]) }
+
+  def self.with_additional_tenants
+    includes(:service_template_tenants => :tenant)
+  end
 
   def self.catalog_item_types
     ci_types = Set.new(Rbac.filtered(ExtManagementSystem.all).flat_map(&:supported_catalog_types))
