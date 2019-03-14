@@ -301,7 +301,6 @@ module MiqReport::Generator
     targets = db_class.find_entries(ext_options) if targets.respond_to?(:find_entries)
     # TODO: add once only_cols is fixed
     # targets = targets.select(only_cols)
-    where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
 
     # Remove custom_attributes as part of the `includes` if all of them exist
     # in the select statement
@@ -314,6 +313,7 @@ module MiqReport::Generator
       :filter           => conditions,
       :include_for_find => get_include_for_find,
       :where_clause     => where_clause,
+      :conditions       => options[:where_clause],
       :skip_counts      => true
     )
 
