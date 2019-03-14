@@ -56,8 +56,10 @@ class ConversionHost < ApplicationRecord
 
         case auth
           when AuthUseridPassword
+            ssh_options[:auth_methods] = %w[password]
             ssh_options[:password] = auth.password
           when AuthPrivateKey
+            ssh_options[:auth_methods] = %w[publickey hostbased]
             ssh_options[:key_data] = auth.auth_key
           else
             next # Skip anything we don't recognize and aren't sure how to handle
