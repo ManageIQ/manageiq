@@ -86,6 +86,7 @@ class InfraConversionJob < Job
     unless migration_task.options.fetch_path(:virtv2v_wrapper, 'state_file')
       message = "Virt v2v state file not available, continuing poll_conversion"
       _log.info(prep_message(message))
+      update_attributes(:message => message)
       return queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     end
 
@@ -99,6 +100,7 @@ class InfraConversionJob < Job
     v2v_status = migration_task.options[:virtv2v_status]
     message = "virtv2v_status=#{v2v_status}"
     _log.info(prep_message(message))
+    update_attributes(:message => message)
 
     case v2v_status
     when 'active'
@@ -120,6 +122,7 @@ class InfraConversionJob < Job
     # once we refactor Automate's PostTransformation into a job, we kick start it here
     message = "To wait for Post-Transformation progress"
     _log.info(prep_message(message))
+    update_attributes(:message => message)
     queue_signal(:poll_post_stage, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
   end
 
@@ -128,6 +131,7 @@ class InfraConversionJob < Job
 
     message = "PostTransformation state=#{migration_task.state}, status=#{migration_task.status}"
     _log.info(prep_message(message))
+    update_attributes(:message => message)
     if migration_task.state == 'finished'
       self.status = migration_task.status
       queue_signal(:finish)
