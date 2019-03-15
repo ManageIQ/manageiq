@@ -18,10 +18,6 @@ describe MiqCockpitWsWorker::Authenticator do
         @vm = FactoryBot.create(:vm_openstack, :hardware => @hardware)
         @hardware.networks << FactoryBot.create(:network, :ipaddress => "10.0.0.1", :hostname => "vm-host1")
         @hardware.networks << FactoryBot.create(:network, :ipaddress => "10.0.0.2", :hostname => "vm-host2")
-        @container_deployment = FactoryBot.create(:container_deployment,
-                                                   :method_type => "non_managed",
-                                                   :version     => "v2",
-                                                   :kind        => "openshift-enterprise")
 
         @vmkey = "-----BEGIN RSA PRIVATE KEY----- vm-key -----END RSA PRIVATE KEY-----"
         @deploykey = "-----BEGIN RSA PRIVATE KEY----- deploy-key -----END RSA PRIVATE KEY-----"
@@ -59,49 +55,6 @@ describe MiqCockpitWsWorker::Authenticator do
                                   :public_key => "public_key",
                                   :type       => "AuthPrivateKey")
         pair.vms << @vm
-      end
-
-      it "a container node name returns known vm with no auth" do
-        FactoryBot.create(:container_node, :name => "kube-node.name")
-        expect(@auth.authenticate_for_host(@token, "kube-node.name")).to eq(@found)
-      end
-
-      it "a container deployment node address uses container deploy auth" do
-        FactoryBot.create(:container_deployment_node,
-                           :address              => "cd-node.address",
-                           :container_deployment => @container_deployment)
-
-        expect(@auth.authenticate_for_host(@token, "cd-node.address")).to eq(@found)
-
-        @container_deployment.create_deployment_authentication("userid"     => "root",
-                                                               "auth_key"   => @deploykey,
-                                                               "public_key" => "public_key",
-                                                               "type"       => "AuthPrivateKey")
-
-        expect(@auth.authenticate_for_host(@token, "cd-node.address")).to eq(
-          :valid  => true,
-          :known  => true,
-          :key    => @deploykey,
-          :userid => "root",
-        )
-      end
-
-      it "a container deployment node vm uses container deployment auth" do
-        @container_deployment.create_deployment_authentication("userid"     => "root",
-                                                               "auth_key"   => @deploykey,
-                                                               "public_key" => "public_key",
-                                                               "type"       => "AuthPrivateKey")
-
-        FactoryBot.create(:container_deployment_node,
-                           :vm                   => @vm,
-                           :container_deployment => @container_deployment)
-
-        expect(@auth.authenticate_for_host(@token, "vm-host1")).to eq(
-          :valid  => true,
-          :known  => true,
-          :key    => @deploykey,
-          :userid => "root",
-        )
       end
     end
   end

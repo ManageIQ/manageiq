@@ -23,7 +23,6 @@ module ManageIQ::Providers
     has_many :container_builds, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_build_pods, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_templates, :foreign_key => :ems_id, :dependent => :destroy
-    has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
 
     # Shortcuts to chained joins, mostly used by inventory refresh.
     has_many :computer_systems, :through => :container_nodes

@@ -1,2 +1,0 @@
-class AuthenticationRequestHeader < Authentication
-end
