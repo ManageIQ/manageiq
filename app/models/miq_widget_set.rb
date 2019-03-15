@@ -18,6 +18,10 @@ class MiqWidgetSet < ApplicationRecord
     MiqWidgetSet.with_users.where(:name => name, :group_id => owner_id).destroy_all
   end
 
+  def self.destroy_user_versions
+    MiqWidgetSet.with_users.destroy_all
+  end
+
   def self.where_unique_on(name, user = nil)
     userid = user.try(:userid)
     group_id = user.try(:current_group_id)

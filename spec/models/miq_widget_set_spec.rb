@@ -40,6 +40,19 @@ describe MiqWidgetSet do
     end
   end
 
+  describe ".destroy_user_versions" do
+    before do
+      FactoryBot.create(:miq_widget_set, :name => 'User_Home', :userid => user.userid)
+    end
+
+    it "destroys all user's versions of dashboards (dashboards been customized by user)" do
+      expect(MiqWidgetSet.count).to eq(2)
+      MiqWidgetSet.destroy_user_versions
+      expect(MiqWidgetSet.count).to eq(1)
+      expect(MiqWidgetSet.first).to eq(@ws_group)
+    end
+  end
+
   describe "#where_unique_on" do
     let(:group2) { FactoryBot.create(:miq_group, :description => 'dev group2') }
     let(:ws_1)   { FactoryBot.create(:miq_widget_set, :name => 'Home', :userid => user.userid, :group_id => group.id) }
