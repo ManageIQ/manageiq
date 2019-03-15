@@ -2,6 +2,10 @@ module Metering
   extend ActiveSupport::Concern
   DISALLOWED_SUFFIXES = %w(_cost chargeback_rates).freeze
   METERING_ALLOCATED_FIELDS = %w(metering_allocated_cpu_cores_metric metering_allocated_cpu_metric metering_allocated_memory_metric).freeze
+  ALLOWED_FIELD_SUFFIXES = %w[
+    -beginning_of_resource_existence_in_report_interval
+    -end_of_resource_existence_in_report_interval
+  ].freeze
 
   included do
     def self.attribute_names
