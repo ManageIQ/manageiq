@@ -452,6 +452,8 @@ describe Service do
           expect(args).to include(:class_name  => described_class.name,
                                   :method_name => "generate_chargeback_report",
                                   :args        => {:report_source => "Test Run"})
+          expect(args).to have_key(:miq_task_id)
+          expect(args).to have_key(:miq_callback)
         end
         expect(@service.queue_chargeback_report_generation(:report_source => "Test Run")).to be_kind_of(MiqTask)
       end
