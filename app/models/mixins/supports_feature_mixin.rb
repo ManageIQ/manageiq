@@ -146,6 +146,7 @@ module SupportsFeatureMixin
     :object_storage                      => 'Object Storage',
     :vm_import                           => 'VM Import',
     :volume_multiattachment              => 'Volume Multiattachment',
+    :volume_resizing                     => 'Volume Resizing',
     :change_password                     => 'Change Password'
   }.freeze
 
