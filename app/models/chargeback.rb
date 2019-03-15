@@ -11,6 +11,20 @@ class Chargeback < ActsAsArModel
     :fixed_compute_metric => :integer,
   )
 
+  ALLOWED_FIELD_SUFFIXES = %w[
+    _rate
+    _cost
+    -owner_name
+    _metric
+    -provider_name
+    -provider_uid
+    -project_uid
+    -archived
+    -chargeback_rates
+    -vm_guid
+    -vm_uid
+  ].freeze
+
   def self.dynamic_rate_columns
     @chargeable_fields = {}
     @chargeable_fields[self.class] ||=
