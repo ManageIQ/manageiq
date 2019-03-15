@@ -242,12 +242,14 @@ describe Tenant do
 
     it "wouldn't delete tenant with groups associated" do
       FactoryBot.create(:miq_group, :tenant => tenant)
-      expect { tenant.destroy! }.to raise_error(RuntimeError, /A tenant with groups.*cannot be deleted/)
+      expect { tenant.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+      expect(tenant.errors.full_messages[0]).to eq("A tenant with groups associated cannot be deleted.")
     end
 
     it "does not delete tenant created by tenant mapping process" do
       tenant.source = cloud_tenant
-      expect { tenant.destroy! }.to raise_error(RuntimeError, /A tenant created by tenant mapping cannot be deleted/)
+      expect { tenant.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+      expect(tenant.errors.full_messages[0]).to eq("A tenant created by tenant mapping cannot be deleted.")
     end
   end
 
