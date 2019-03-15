@@ -128,4 +128,34 @@ describe MiqWidgetSet do
       end
     end
   end
+
+  describe ".copy_dashboard" do
+    let(:name) { "New Dashboard Name" }
+    let(:tab) { "Dashboard Tab" }
+
+    it "raises error if passed name already taken" do
+      expect { MiqWidgetSet.copy_dashboard(@ws_group, @ws_group.name, tab) }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqWidgetSet: Name has already been taken")
+    end
+
+    it "raises error if passed tab name is empty" do
+      expect { MiqWidgetSet.copy_dashboard(@ws_group, name, "") }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqWidgetSet: Description can't be blank")
+    end
+
+    it "raises error if group with passed id does not exist" do
+      expect { MiqWidgetSet.copy_dashboard(@ws_group, name, tab, "9999") }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find MiqGroup with 'id'=9999")
+    end
+
+    it "copy dashboard and set its owner to the group with passed group_id" do
+      another_group = FactoryBot.create(:miq_group, :description => 'some_group')
+      MiqWidgetSet.copy_dashboard(@ws_group, name, tab, another_group.id)
+      dashboard = MiqWidgetSet.find_by(:owner_id => another_group.id)
+      expect(dashboard.name).to eq(name)
+    end
+
+    it "copy dashboard and set its owner to the same group if no group_id parameter passed" do
+      expect(MiqWidgetSet.where(:owner_id => group.id).count).to eq(1)
+      dashboard = MiqWidgetSet.copy_dashboard(@ws_group, name, tab)
+      expect(MiqWidgetSet.find_by(:owner_id => group.id, :name => name)).to eq dashboard
+    end
+  end
 end
