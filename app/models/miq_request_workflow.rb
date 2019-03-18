@@ -760,9 +760,9 @@ class MiqRequestWorkflow
     self.class.encrypted_options_fields.each do |pwd_key|
       next if values[pwd_key].blank?
       if encrypt
-        values[pwd_key].replace(MiqPassword.try_encrypt(values[pwd_key]))
+        values[pwd_key].replace(ManageIQ::Password.try_encrypt(values[pwd_key]))
       else
-        values[pwd_key].replace(MiqPassword.try_decrypt(values[pwd_key]))
+        values[pwd_key].replace(ManageIQ::Password.try_decrypt(values[pwd_key]))
       end
     end
   end

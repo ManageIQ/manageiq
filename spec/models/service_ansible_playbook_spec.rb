@@ -9,8 +9,8 @@ describe(ServiceAnsiblePlaybook) do
   let(:credential_2)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '3') }
   let(:credential_3)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '4') }
   let(:decrpyted_val)  { 'my secret' }
-  let(:encrypted_val)  { MiqPassword.encrypt(decrpyted_val) }
-  let(:encrypted_val2) { MiqPassword.encrypt(decrpyted_val + "new") }
+  let(:encrypted_val)  { ManageIQ::Password.encrypt(decrpyted_val) }
+  let(:encrypted_val2) { ManageIQ::Password.encrypt(decrpyted_val + "new") }
 
   let(:loaded_service) do
     service_template = FactoryBot.create(:service_template_ansible_playbook)

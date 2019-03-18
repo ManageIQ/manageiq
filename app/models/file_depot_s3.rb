@@ -18,7 +18,7 @@ class FileDepotS3 < FileDepot
 
     Aws::S3::Resource.new(
       :access_key_id     => username,
-      :secret_access_key => MiqPassword.try_decrypt(password),
+      :secret_access_key => ManageIQ::Password.try_decrypt(password),
       :region            => aws_region,
       :logger            => $aws_log,
       :log_level         => :debug,

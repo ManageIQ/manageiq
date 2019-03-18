@@ -21,11 +21,11 @@ module PasswordMixin
 
       mod.send(:define_method, column) do
         val = send("#{column}_encrypted")
-        val.blank? ? val : MiqPassword.decrypt(val)
+        val.blank? ? val : ManageIQ::Password.decrypt(val)
       end
 
       mod.send(:define_method, "#{column}=") do |val|
-        val = MiqPassword.try_encrypt(val) unless val.blank?
+        val = ManageIQ::Password.try_encrypt(val) unless val.blank?
         send("#{column}_encrypted=", val)
       end
 

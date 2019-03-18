@@ -5,8 +5,8 @@ module RegistrationSystem
 
   def self.available_organizations_queue(options = {})
     options = options.clone
-    options[:password] = MiqPassword.try_encrypt(options[:password])
-    options[:registration_http_proxy_password] = MiqPassword.try_encrypt(options[:registration_http_proxy_password])
+    options[:password] = ManageIQ::Password.try_encrypt(options[:password])
+    options[:registration_http_proxy_password] = ManageIQ::Password.try_encrypt(options[:registration_http_proxy_password])
 
     task_opts = {
       :action => "Fetching Available Organizations",
@@ -25,8 +25,8 @@ module RegistrationSystem
 
   def self.verify_credentials_queue(options = {})
     options = options.clone
-    options[:password] = MiqPassword.try_encrypt(options[:password])
-    options[:registration_http_proxy_password] = MiqPassword.try_encrypt(options[:registration_http_proxy_password])
+    options[:password] = ManageIQ::Password.try_encrypt(options[:password])
+    options[:registration_http_proxy_password] = ManageIQ::Password.try_encrypt(options[:registration_http_proxy_password])
 
     task_opts = {
       :action => "Verifying Credentials",
@@ -45,8 +45,8 @@ module RegistrationSystem
 
   def self.update_rhsm_conf_queue(options = {})
     options = options.dup
-    options[:password] = MiqPassword.try_encrypt(options[:password])
-    options[:registration_http_proxy_password] = MiqPassword.try_encrypt(options[:registration_http_proxy_password])
+    options[:password] = ManageIQ::Password.try_encrypt(options[:password])
+    options[:registration_http_proxy_password] = ManageIQ::Password.try_encrypt(options[:registration_http_proxy_password])
     options.delete_blanks
 
     task_opts = {
@@ -94,12 +94,12 @@ module RegistrationSystem
     options = database_options if options.blank?
     {
       :username          => options[:userid],
-      :password          => MiqPassword.try_decrypt(options[:password]),
+      :password          => ManageIQ::Password.try_decrypt(options[:password]),
       :server_url        => options[:registration_server],
       :registration_type => options[:registration_type],
       :proxy_address     => options[:registration_http_proxy_server],
       :proxy_username    => options[:registration_http_proxy_username],
-      :proxy_password    => MiqPassword.try_decrypt(options[:registration_http_proxy_password]),
+      :proxy_password    => ManageIQ::Password.try_decrypt(options[:registration_http_proxy_password]),
     }.delete_blanks
   end
   private_class_method :assemble_options

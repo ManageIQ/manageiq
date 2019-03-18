@@ -141,7 +141,7 @@ describe ServiceOrchestration do
     it "encrypts password when saves to DB" do
       new_options = {:parameters => {"my_password" => "secret"}}
       service_with_dialog_options.stack_options = new_options
-      expect(service_with_dialog_options.options[:create_options][:parameters]["my_password"]).to eq(MiqPassword.encrypt("secret"))
+      expect(service_with_dialog_options.options[:create_options][:parameters]["my_password"]).to eq(ManageIQ::Password.encrypt("secret"))
     end
 
     context "overwrite selections for orchestration manager and template" do

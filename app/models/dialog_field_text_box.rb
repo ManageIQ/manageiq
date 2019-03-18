@@ -26,12 +26,12 @@ class DialogFieldTextBox < DialogField
 
   def value_from_dialog_fields(dialog_values)
     value_from_dialog_field = dialog_values[automate_key_name]
-    self.protected? ? MiqPassword.decrypt(value_from_dialog_field) : value_from_dialog_field
+    self.protected? ? ManageIQ::Password.decrypt(value_from_dialog_field) : value_from_dialog_field
   end
 
   def automate_output_value
     return nil if @value.nil?
-    return MiqPassword.try_encrypt(@value) if self.protected?
+    return ManageIQ::Password.try_encrypt(@value) if self.protected?
     convert_value_to_type
   end
 

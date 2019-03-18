@@ -197,7 +197,7 @@ class EvmApplication
     db.csrf_secret_token
 
     true
-  rescue MiqPassword::MiqPasswordError
+  rescue ManageIQ::Password::PasswordError
     false
   end
 

@@ -426,7 +426,7 @@ class VmScan < Job
       if miqVimHost && !miqVimHost[:password].nil?
         server = miqVimHost[:hostname] || miqVimHost[:ipaddress]
         begin
-          password_decrypt = MiqPassword.decrypt(miqVimHost[:password])
+          password_decrypt = ManageIQ::Password.decrypt(miqVimHost[:password])
           if MiqServer.use_broker_for_embedded_proxy?(ems_type)
             $vim_broker_client ||= MiqVimBroker.new(:client, MiqVimBrokerWorker.drb_port)
             miqVim = $vim_broker_client.getMiqVim(server, miqVimHost[:username], password_decrypt)

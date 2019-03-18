@@ -223,11 +223,11 @@ module Authenticator
     end
 
     def decrypt_ldap_password(config)
-      config[:bind_pwd] = MiqPassword.try_decrypt(config[:bind_pwd])
+      config[:bind_pwd] = ManageIQ::Password.try_decrypt(config[:bind_pwd])
     end
 
     def encrypt_ldap_password(config)
-      config[:bind_pwd] = MiqPassword.try_encrypt(config[:bind_pwd])
+      config[:bind_pwd] = ManageIQ::Password.try_encrypt(config[:bind_pwd])
     end
 
     def authorize_queue(username, _request, _options, *args)

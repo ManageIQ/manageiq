@@ -53,14 +53,14 @@ module Vmdb
       #
       # @param settings (see .walk)
       def decrypt_passwords!(settings)
-        walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_decrypt(v) }
+        walk_passwords(settings) { |k, v, h| h[k] = ManageIQ::Password.try_decrypt(v) }
       end
 
       # Walks the settings and encrypts passwords it finds
       #
       # @param settings (see .walk)
       def encrypt_passwords!(settings)
-        walk_passwords(settings) { |k, v, h| h[k] = MiqPassword.try_encrypt(v) }
+        walk_passwords(settings) { |k, v, h| h[k] = ManageIQ::Password.try_encrypt(v) }
       end
     end
 

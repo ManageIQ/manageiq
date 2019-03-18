@@ -1,4 +1,4 @@
-require 'util/miq-password'
+require 'manageiq-password'
 
 module FixAuth
   module AuthModel
@@ -27,14 +27,14 @@ module FixAuth
       end
 
       def hardcode(_old_value, new_value)
-        MiqPassword.encrypt(new_value)
+        ManageIQ::Password.encrypt(new_value)
       end
 
       def recrypt(old_value, options = {})
         if options[:hardcode]
           hardcode(old_value, options[:hardcode])
         else
-          MiqPassword.new.recrypt(old_value)
+          ManageIQ::Password.new.recrypt(old_value)
         end
       rescue
         if options[:invalid]
@@ -56,9 +56,9 @@ module FixAuth
 
       def highlight_password(value, options)
         return if value.blank?
-        if options[:hardcode] && (value == MiqPassword.encrypt(options[:hardcode]))
+        if options[:hardcode] && (value == ManageIQ::Password.encrypt(options[:hardcode]))
           "#{value} HARDCODED"
-        elsif options[:invalid] && (value == MiqPassword.encrypt(options[:invalid]))
+        elsif options[:invalid] && (value == ManageIQ::Password.encrypt(options[:invalid]))
           "#{value} HARDCODED (WAS INVALID)"
         else
           value

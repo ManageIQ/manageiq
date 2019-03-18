@@ -8,8 +8,7 @@ if __FILE__ == $PROGRAM_NAME
 end
 
 require 'yaml'
-require 'manageiq-gems-pending'
-require 'util/miq-password'
+require 'manageiq-password'
 
 BASE_DIR = __dir__
 LOG_DIR = '/var/www/miq/vmdb/log'.freeze
@@ -20,7 +19,7 @@ production_db = YAML.load_file(DATABASE_YML_FILE_PATH)["production"]
 
 db_user = production_db["username"]
 db_password_encrypt = production_db["password"]
-db_password = MiqPassword.try_decrypt(db_password_encrypt)
+db_password = ManageIQ::Password.try_decrypt(db_password_encrypt)
 db_host = production_db["host"]
 
 # system "#{BASE_DIR}/../pg_inspector.rb -h"

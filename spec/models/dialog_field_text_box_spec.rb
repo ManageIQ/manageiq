@@ -406,7 +406,7 @@ describe DialogFieldTextBox do
         let(:protected_attr) { true }
 
         before do
-          allow(MiqPassword).to receive(:encrypt).with("12test").and_return("lol")
+          allow(ManageIQ::Password).to receive(:encrypt).with("12test").and_return("lol")
         end
 
         it "returns the encrypted value" do
@@ -430,7 +430,7 @@ describe DialogFieldTextBox do
         let(:protected_attr) { true }
 
         before do
-          allow(MiqPassword).to receive(:encrypt).with("12test").and_return("lol")
+          allow(ManageIQ::Password).to receive(:encrypt).with("12test").and_return("lol")
         end
 
         it "returns the encrypted value" do

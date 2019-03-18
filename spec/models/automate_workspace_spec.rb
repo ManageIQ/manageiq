@@ -2,7 +2,7 @@ describe AutomateWorkspace do
   describe "#merge_output!" do
     let(:aw) { FactoryBot.create(:automate_workspace, :input => input) }
     let(:password) { "ca$hc0w" }
-    let(:encrypted) { MiqPassword.encrypt(password) }
+    let(:encrypted) { ManageIQ::Password.encrypt(password) }
     let(:input) do
       { "objects"           => {
         "root" => {
