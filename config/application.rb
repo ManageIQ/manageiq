@@ -158,7 +158,7 @@ module Vmdb
     config.after_initialize do
       Vmdb::Initializer.init
       ActiveRecord::Base.connection_pool.release_connection
-      puts "** #{Vmdb::Appliance.BANNER}"
+      puts "** #{Vmdb::Appliance.BANNER}" unless Rails.env.production?
     end
 
     console do
