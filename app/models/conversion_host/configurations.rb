@@ -76,7 +76,7 @@ module ConversionHost::Configurations
   end
 
   def disable_queue(auth_user = nil)
-    self.class.queue_configuration('disable', id, resource, [], auth_user)
+    self.class.queue_configuration('disable', id, resource, {}, auth_user)
   end
 
   def disable
