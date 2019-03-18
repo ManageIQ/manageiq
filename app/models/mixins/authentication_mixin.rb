@@ -70,6 +70,10 @@ module AuthenticationMixin
     authentications.select { |a| a.kind_of?(ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair) }
   end
 
+  def authentication_private_keys
+    authentications.select { |a| a.kind_of?(AuthPrivateKey) }
+  end
+
   def authentication_for_providers
     authentications.where.not(:authtype => nil)
   end
@@ -433,7 +437,7 @@ module AuthenticationMixin
   end
 
   def available_authentications
-    authentication_userid_passwords + authentication_key_pairs + authentication_tokens
+    authentication_userid_passwords + authentication_key_pairs + authentication_tokens + authentication_private_keys
   end
 
   def authentication_types

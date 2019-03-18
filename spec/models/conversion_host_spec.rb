@@ -289,5 +289,12 @@ describe ConversionHost do
       allow(Net::SSH).to receive(:start).and_return(true)
       expect(conversion_host_vm.verify_credentials).to be_truthy
     end
+
+    it "works if an auth_type is explicitly specified" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair)
+      conversion_host_vm.authentications << authentication
+      allow(Net::SSH).to receive(:start).and_return(true)
+      expect(conversion_host_vm.verify_credentials('v2v')).to be_truthy
+    end
   end
 end

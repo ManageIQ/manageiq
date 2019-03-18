@@ -42,34 +42,36 @@ class ConversionHost < ApplicationRecord
   # TODO: Use the verify_credentials_ssh method in host.rb? Move that to the
   # AuthenticationMixin?
   #
-  def verify_credentials(_auth_type = nil, options = {})
+  def verify_credentials(auth_type = nil, options = {})
     if authentications.empty?
       check_ssh_connection
     else
       require 'net/ssh'
       host = hostname || ipaddress
 
-      authentications.each do |auth|
-        user = auth.userid || ENV['USER']
+      # Default to the authentication type from the +auth_type+ argument if
+      # present. Otherwise, default to the first associated authentication. In
+      # practice there should not be more than one.
+      auth = authentication_type(auth_type) || authentications.first
+      user = auth.userid || ENV['USER']
 
-        ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
+      ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
 
-        case auth
-          when AuthUseridPassword
-            ssh_options[:auth_methods] = %w[password]
-            ssh_options[:password] = auth.password
-          when AuthPrivateKey
-            ssh_options[:auth_methods] = %w[publickey hostbased]
-            ssh_options[:key_data] = auth.auth_key
-          else
-            next # Skip anything we don't recognize and aren't sure how to handle
-        end
-
-        # Options from STI subclasses will override the defaults we've set above.
-        ssh_options.merge!(options)
-
-        Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
+      case auth
+        when AuthUseridPassword
+          ssh_options[:auth_methods] = %w[password]
+          ssh_options[:password] = auth.password
+        when AuthPrivateKey
+          ssh_options[:auth_methods] = %w[publickey hostbased]
+          ssh_options[:key_data] = auth.auth_key
+        else
+          raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
       end
+
+      # Options from STI subclasses will override the defaults we've set above.
+      ssh_options.merge!(options)
+
+      Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
     end
   rescue Net::SSH::AuthenticationFailed => err
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
