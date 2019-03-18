@@ -30,8 +30,8 @@ describe MiqWidgetSet do
     end
 
     it "the belong to group is being deleted" do
-      expect { group.destroy }.to raise_error(RuntimeError, /The group has users assigned that do not belong to any other group/)
-      expect(MiqWidgetSet.count).to eq(2)
+      expect { expect { group.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqWidgetSet.count })
+      expect(group.errors[:base][0]).to eq("The group has users assigned that do not belong to any other group")
     end
 
     it "being deleted" do

@@ -226,38 +226,42 @@ describe MiqGroup do
     let(:group) { FactoryBot.create(:miq_group) }
 
     it "can succeed" do
-      expect { group.destroy }.not_to raise_error
+      expect { group.destroy! }.not_to raise_error
     end
 
     it "fails if referenced by user#current_group" do
       FactoryBot.create(:user, :miq_groups => [group])
 
-      expect { expect { group.destroy }.to raise_error(RuntimeError, /The group has users assigned that do not belong to any other group/) }.to_not change { MiqGroup.count }
+      expect { expect { group.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqGroup.count })
+      expect(group.errors[:base][0]).to eq("The group has users assigned that do not belong to any other group")
     end
 
     it "succeeds if referenced by multiple user#miq_groups" do
       group2 = FactoryBot.create(:miq_group)
       FactoryBot.create(:user, :miq_groups => [group, group2], :current_group => group2)
-      expect { group.destroy }.not_to raise_error
+      expect { group.destroy! }.not_to raise_error
     end
 
     it "fails if trying to delete the current user's group" do
       group2 = FactoryBot.create(:miq_group)
       user = FactoryBot.create(:user, :miq_groups => [group, group2], :current_group => group)
       User.current_user = user
-      expect { expect { group.destroy }.to raise_error(RuntimeError, /The login group cannot be deleted/) }.to_not change { MiqGroup.count }
+      expect { expect { group.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqGroup.count })
+      expect(group.errors[:base][0]).to eq("The login group cannot be deleted")
     end
 
     it "fails if one user in the group does not belong to any other group" do
       group2 = FactoryBot.create(:miq_group)
       FactoryBot.create(:user, :miq_groups => [group, group2], :current_group => group2)
       FactoryBot.create(:user, :miq_groups => [group], :current_group => group)
-      expect { expect { group.destroy }.to raise_error(RuntimeError, /The group has users assigned that do not belong to any other group/) }.to_not change { MiqGroup.count }
+      expect { expect { group.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqGroup.count })
+      expect(group.errors[:base][0]).to eq("The group has users assigned that do not belong to any other group")
     end
 
     it "fails if referenced by a tenant#default_miq_group" do
-      expect { FactoryBot.create(:tenant).default_miq_group.reload.destroy }
-        .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
+      group2 = FactoryBot.create(:tenant).default_miq_group
+      expect { group2.reload.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+      expect(group2.errors[:base][0]).to eq("A tenant default group can not be deleted")
     end
   end
 
