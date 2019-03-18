@@ -209,6 +209,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     updates = {}
     virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
     updated_disks = virtv2v_disks
+    updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
     if virtv2v_state['finished'].nil?
       updated_disks.each do |disk|
         matching_disks = virtv2v_state['disks'].select { |d| d['path'] == disk[:path] }

@@ -387,21 +387,26 @@ describe ServiceTemplateTransformationPlanTask do
         it "raises when conversion is failed" do
           allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return(
             {
-              "failed"      => true,
-              "finished"    => true,
-              "started"     => true,
-              "disks"       => [
+              "failed"       => true,
+              "finished"     => true,
+              "started"      => true,
+              "disks"        => [
                 { "path" => src_disk_1.filename, "progress" => 23.0 },
                 { "path" => src_disk_1.filename, "progress" => 0.0 }
               ],
-              "pid"         => 5855,
-              "return_code" => 1,
-              "disk_count"  => 2
+              "pid"          => 5855,
+              "return_code"  => 1,
+              "disk_count"   => 2,
+              "last_message" => {
+                "message" => "virt-v2v failed somehow",
+                "type"    => "error"
+              }
             }
           )
           expect { task_1.get_conversion_state }.to raise_error("Disks transformation failed.")
           expect(task_1.options[:virtv2v_status]).to eq('failed')
-          epxect(task_1.options[:virtv2v_finished_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
+          expect(task_1.options[:virtv2v_finished_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
+          expect(task_1.options[:virtv2v_message]).to eq('virt-v2v failed somehow')
         end
 
         it "updates disks progress" do
@@ -449,6 +454,7 @@ describe ServiceTemplateTransformationPlanTask do
           )
           expect(task_1.options[:virtv2v_status]).to eq('finished')
           epxect(task_1.options[:virtv2v_finished_on]).to eq(time)
+          expect(task_1.options[:virtv2v_message]).to be_nil
         end
       end
 
