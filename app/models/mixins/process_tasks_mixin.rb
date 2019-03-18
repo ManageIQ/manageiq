@@ -123,15 +123,10 @@ module ProcessTasksMixin
         resource_ids.each do |id|
           begin
             obj = collection.find(id)
-          rescue ManageIQ::API::Client::ResourceNotFound => err
-            _log.error(err.message)
-          else
             _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
-            begin
-              obj.send(action, post_args)
-            rescue NoMethodError => err
-              _log.error(err.message)
-            end
+            obj.send(action, post_args)
+          rescue NoMethodError, ManageIQ::API::Client::ResourceNotFound => err
+            _log.error(err.message)
           end
         end
       else
