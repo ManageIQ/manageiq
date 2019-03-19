@@ -93,6 +93,40 @@ describe CustomAttributeMixin do
     end
   end
 
+  context ".add_custom_attribute" do
+    it "regular key" do
+      test_class.add_custom_attribute("foo")
+      expect(test_class.new).to respond_to(:foo)
+      expect(test_class.new).to respond_to(:foo=)
+    end
+
+    it "key with a letter followed by a number" do
+      test_class.add_custom_attribute("fun4all")
+      expect(test_class.new).to respond_to(:"fun4all")
+      expect(test_class.new).to respond_to(:"fun4all=")
+    end
+
+    it "key with a space(deprecated)" do
+      ActiveSupport::Deprecation.silence { test_class.add_custom_attribute("exit message") }
+      expect(test_class.new).to respond_to(:"exit message")
+      expect(test_class.new).to respond_to(:"exit message=")
+    end
+
+    it "key with leading number(deprecated)" do
+      ActiveSupport::Deprecation.silence { test_class.add_custom_attribute("4fun") }
+      expect(test_class.new).to respond_to(:"4fun")
+      expect(test_class.new).to respond_to(:"4fun=")
+    end
+  end
+
+  it "#miq_custom_set with a space(deprecated)" do
+    object = test_class.create!
+    ActiveSupport::Deprecation.silence { object.miq_custom_set("hello world", "baz") }
+    ca = CustomAttribute.find_by(:resource_type => test_class.name, :resource_id => object.id)
+    expect(ca.name).to  eq("hello world")
+    expect(ca.value).to eq("baz")
+  end
+
   it "#miq_custom_set" do
     supported_factories.each do |factory_name|
       object = FactoryBot.create(factory_name)
