@@ -30,14 +30,6 @@ class MiqEnterprise < ApplicationRecord
 
   cache_with_timeout(:my_enterprise) { in_my_region.first }
 
-  def self.is_enterprise?
-    # TODO: Need to implement a way to determine whether we're running on an "enterprise" server or a "regional" server.
-    #       This will do for now...
-    MiqRegion.count > 1
-  end
-
-  delegate :is_enterprise?, :to => :class
-
   def my_zone
     MiqServer.my_zone
   end
