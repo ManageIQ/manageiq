@@ -37,6 +37,14 @@ class Chargeback
       [Time.current, @end_time, resource_end_of_life].compact.min
     end
 
+    def report_interval_start
+      @start_time
+    end
+
+    def report_interval_end
+      [Time.current, @end_time].min
+    end
+
     private
 
     def hours_in_interval

@@ -4,6 +4,7 @@ class Chargeback < ActsAsArModel
     :end_date             => :datetime,
     :interval_name        => :string,
     :display_range        => :string,
+    :report_interval_range => :string,
     :chargeback_rates     => :string,
     :entity               => :binary,
     :tag_name             => :string,
@@ -16,6 +17,7 @@ class Chargeback < ActsAsArModel
     _cost
     -owner_name
     _metric
+    -report_interval_range
     -provider_name
     -provider_uid
     -project_uid
@@ -186,6 +188,8 @@ class Chargeback < ActsAsArModel
   def calculate_costs(consumption, rates)
     calculate_fixed_compute_metric(consumption)
     self.class.try(:refresh_dynamic_metric_columns)
+    self.report_interval_range = "#{consumption.report_interval_start.strftime('%m/%d/%Y')} - #{consumption.report_interval_end.strftime('%m/%d/%Y')}"
+
     _log.debug("Consumption Type: #{consumption.class}")
     rates.each do |rate|
       _log.debug("Calculation with rate: #{rate.id} #{rate.description}(#{rate.rate_type})")

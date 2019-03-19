@@ -423,6 +423,34 @@ describe ChargebackVm do
             expect(subject.cpu_allocated_cost).to eq(1200) # ?
           end
         end
+
+        context "current month and previous month" do
+          let(:options) { base_options.merge(:interval => 'monthly') }
+          let(:finish_time) { Time.current }
+          let(:report_start) { month_end + 2.days }
+          subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first }
+
+          let(:first_month_beginning) { month_beginning }
+          let(:first_month_beginning_formatted) { first_month_beginning.strftime('%m/%d/%Y') }
+          let(:second_month_beginning) { month_beginning + 1.month }
+          let(:second_month_beginning_formatted) { second_month_beginning.strftime('%m/%d/%Y') }
+
+          before do
+            Timecop.travel(report_start)
+            @vm1.update_attributes(:retires_on => finish_time)
+            add_metric_rollups_for(@vm1, month_beginning...finish_time, 8.hours, metric_rollup_params)
+          end
+
+          it "reports report interval range and report generation date" do
+            # reporting of first month
+            report_range = "#{first_month_beginning_formatted} - #{second_month_beginning_formatted}"
+            expect(subject.first.report_interval_range).to eq(report_range)
+
+            # reporting of second month
+            report_range = "#{second_month_beginning_formatted} - #{(second_month_beginning + 2.days).strftime('%m/%d/%Y')}"
+            expect(subject.second.report_interval_range).to eq(report_range)
+          end
+        end
       end
 
       context 'monthly report, group by tenants' do
