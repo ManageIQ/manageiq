@@ -31,9 +31,11 @@ class ConversionHost < ApplicationRecord
   after_create :tag_resource_as_enabled
   after_destroy :tag_resource_as_disabled
 
-  # Check using all associated authentications if any are directly associated
-  # with the conversion host. Otherwise, use the default check which uses the
-  # associated resource's authentications.
+  # Use the +auth_type+ if present, or check the first associated authentication
+  # if any are directly associated with the conversion host. Otherwise, use the
+  # default check which uses the associated resource's authentications.
+  #
+  # In practice there should only be one associated authentication.
   #
   # Subclasses should pass provider-specific +options+, such as proxy information.
   #
@@ -49,9 +51,6 @@ class ConversionHost < ApplicationRecord
       require 'net/ssh'
       host = hostname || ipaddress
 
-      # Default to the authentication type from the +auth_type+ argument if
-      # present. Otherwise, default to the first associated authentication. In
-      # practice there should not be more than one.
       auth = authentication_type(auth_type) || authentications.first
       user = auth.userid || ENV['USER']
 
