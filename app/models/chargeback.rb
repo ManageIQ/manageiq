@@ -1,15 +1,15 @@
 class Chargeback < ActsAsArModel
   set_columns_hash( # Fields common to any chargeback type
-    :start_date           => :datetime,
-    :end_date             => :datetime,
-    :interval_name        => :string,
-    :display_range        => :string,
+    :start_date            => :datetime,
+    :end_date              => :datetime,
+    :interval_name         => :string,
+    :display_range         => :string,
     :report_interval_range => :string,
-    :chargeback_rates     => :string,
-    :entity               => :binary,
-    :tag_name             => :string,
-    :label_name           => :string,
-    :fixed_compute_metric => :integer,
+    :chargeback_rates      => :string,
+    :entity                => :binary,
+    :tag_name              => :string,
+    :label_name            => :string,
+    :fixed_compute_metric  => :integer,
   )
 
   ALLOWED_FIELD_SUFFIXES = %w[
