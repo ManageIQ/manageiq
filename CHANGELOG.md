@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 107 ending 2019-03-18
+
+### Added
+- [V2V] Expose virt-v2v-wrapper error message in options hash [(#18564)](https://github.com/ManageIQ/manageiq/pull/18564)
+- Add Volume Resizing capability to SupportsFeatureMixin [(#18560)](https://github.com/ManageIQ/manageiq/pull/18560)
+- Added ability to destroy all users dashboards [(#18555)](https://github.com/ManageIQ/manageiq/pull/18555)
+- Added MiqWidgetSet.copy_dashboard [(#18550)](https://github.com/ManageIQ/manageiq/pull/18550)
+- Loosen the Postgres version initializer check [(#18547)](https://github.com/ManageIQ/manageiq/pull/18547)
+- [V2V] Throttler - Replace class constant with global setting [(#18539)](https://github.com/ManageIQ/manageiq/pull/18539)
+- [V2V] Generate extra vars for conversion host playbooks [(#18537)](https://github.com/ManageIQ/manageiq/pull/18537)
+- [V2V] Add default setting for CPU and network limits per conversion host
+- Add the resource name to the task action for conversion hosts [(#18525)](https://github.com/ManageIQ/manageiq/pull/18525)
+- [V2V] Allow downloading wrapper log file [(#18506)](https://github.com/ManageIQ/manageiq/pull/18506)
+- Tag associated resource for conversion hosts [(#18505)](https://github.com/ManageIQ/manageiq/pull/18505)
+- Add volume multiattachment capability [(#18371)](https://github.com/ManageIQ/manageiq/pull/18371)
+
+### Fixed
+- update infra_migration_job when polling to prevent timing out [(#18557)](https://github.com/ManageIQ/manageiq/pull/18557)
+- use like (vs ilike) for service query [(#18549)](https://github.com/ManageIQ/manageiq/pull/18549)
+- Fix: started_on and state attributes for task linked to chargeback for service [(#18542)](https://github.com/ManageIQ/manageiq/pull/18542)
+- [V2V] Fix placeholder name for conversion hosts [(#18535)](https://github.com/ManageIQ/manageiq/pull/18535)
+- [V2V] Use default queue priority for log download [(#18524)](https://github.com/ManageIQ/manageiq/pull/18524)
+- dynamic DatePicker value isn't being set correctly [(#18523)](https://github.com/ManageIQ/manageiq/pull/18523)
+- [V2V] Remove fatal nil IP check in preflight check [(#18496)](https://github.com/ManageIQ/manageiq/pull/18496)
+- Delegate vms_and_templates and miq_templates to parent_manager [(#18488)](https://github.com/ManageIQ/manageiq/pull/18488)
+- Fix graph refresh overwriting smartstate OS info [(#18477)](https://github.com/ManageIQ/manageiq/pull/18477)
+- Fix for inability to see dialog details passed to catalog after upgrade from 5.9.4 to 5.9.6 [(#18469)](https://github.com/ManageIQ/manageiq/pull/18469)
+- Don't print the release codename in production mode [(#18444)](https://github.com/ManageIQ/manageiq/pull/18444)
+- Add OrchestrationTemplateRunner to queue up orchestration stack deployment [(#18374)](https://github.com/ManageIQ/manageiq/pull/18374)
+- CustomButtonSet - make sure children follow button_order [(#18368)](https://github.com/ManageIQ/manageiq/pull/18368)
+
 ## Unreleased as of Sprint 106 ending 2019-03-04
 
 ### Added
