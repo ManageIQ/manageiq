@@ -168,7 +168,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def decrypt_options(opts)
     opts.tap do
-      opts[:extra_vars].transform_values! { |val| val.kind_of?(String) ? MiqPassword.try_decrypt(val) : val }
+      opts[:extra_vars].transform_values! { |val| val.kind_of?(String) ? ManageIQ::Password.try_decrypt(val) : val }
     end
   end
 

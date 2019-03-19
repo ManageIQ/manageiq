@@ -215,7 +215,7 @@ describe Vmdb::Settings do
 
     it "encrypts password fields" do
       password  = "pa$$word"
-      encrypted = MiqPassword.encrypt(password)
+      encrypted = ManageIQ::Password.encrypt(password)
 
       described_class.save!(miq_server,
         :authentication => {
@@ -377,7 +377,7 @@ describe Vmdb::Settings do
 
     it "handles incoming unencrypted values" do
       password  = "pa$$word"
-      encrypted = MiqPassword.encrypt(password)
+      encrypted = ManageIQ::Password.encrypt(password)
 
       data = {:authentication => {:bind_pwd => password}}.to_yaml
       described_class.save_yaml!(miq_server, data)
@@ -391,7 +391,7 @@ describe Vmdb::Settings do
 
     it "handles incoming encrypted values" do
       password  = "pa$$word"
-      encrypted = MiqPassword.encrypt(password)
+      encrypted = ManageIQ::Password.encrypt(password)
 
       data = {:authentication => {:bind_pwd => encrypted}}.to_yaml
       described_class.save_yaml!(miq_server, data)
@@ -470,14 +470,14 @@ describe Vmdb::Settings do
   describe ".encrypt_passwords!" do
     let(:method)   { :encrypt_passwords! }
     let(:initial)  { "pa$$word" }
-    let(:expected) { MiqPassword.encrypt(initial) }
+    let(:expected) { ManageIQ::Password.encrypt(initial) }
 
     include_examples "password handling"
   end
 
   describe ".decrypt_passwords!" do
     let(:method)   { :decrypt_passwords! }
-    let(:initial)  { MiqPassword.encrypt(expected) }
+    let(:initial)  { ManageIQ::Password.encrypt(expected) }
     let(:expected) { "pa$$word" }
 
     include_examples "password handling"
@@ -562,7 +562,7 @@ describe Vmdb::Settings do
 
     it "ensures passwords are encrypted" do
       password  = "pa$$word"
-      encrypted = MiqPassword.encrypt(password)
+      encrypted = ManageIQ::Password.encrypt(password)
 
       miq_server = FactoryBot.create(:miq_server)
       described_class.save!(miq_server, :authentication => {:bind_pwd => password})

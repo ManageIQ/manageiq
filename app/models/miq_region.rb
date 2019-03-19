@@ -271,7 +271,7 @@ class MiqRegion < ApplicationRecord
       :userid      => userid,
       :timestamp   => Time.now.utc
     }
-    MiqPassword.encrypt(token_hash.to_yaml)
+    ManageIQ::Password.encrypt(token_hash.to_yaml)
   end
 
   def self.api_system_auth_token_for_region(region_id, user)

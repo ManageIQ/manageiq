@@ -63,8 +63,8 @@ describe MiqProvisionWorkflow do
             {'owner_email' => 'admin'}, {'owner_first_name' => 'test'},
             {'owner_last_name' => 'test'}, nil, nil, nil, nil)
 
-          expect(MiqPassword.encrypted?(request.options[:root_password])).to be_truthy
-          expect(MiqPassword.decrypt(request.options[:root_password])).to eq(password_input)
+          expect(ManageIQ::Password.encrypted?(request.options[:root_password])).to be_truthy
+          expect(ManageIQ::Password.decrypt(request.options[:root_password])).to eq(password_input)
         end
 
         it "should set values when extra '|' are passed in for multiple values" do

@@ -18,7 +18,7 @@
     Install info\ninstall\ntext\nlang en_US.UTF-8\nkeyboard us\nfirewall --service=ssh\nauthconfig
     --enableshadow --passalgo=sha512\nselinux --enforcing\ntimezone --utc America/New_York\nzerombr\npoweroff\n\n#
     Configure Networking based on values from provisioning dialog\n<%= network_string
-    %>\n\nrootpw --iscrypted <%= MiqPassword.md5crypt(evm[:root_password]) %>\n\n#
+    %>\n\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password]) %>\n\n#
     Source Files Location\nurl --url=<%= repo_source_url %>\nrepo --name=\"<%= os_ver
     %>\"  --baseurl=<%= repo_source_url %> --cost=100\n\n\n### Pre Install Scripts\n%pre\n#
     Get the first hard disk and use it for installation\nhd=/dev/`grep '[hsv]d[a-z]'
@@ -41,7 +41,7 @@
     chmod +x /tmp/miq-firstboot.sh\n# # Install the script to run at boot\n# echo
     \"/tmp/miq-firstboot.sh\" >> /etc/rc.local\n# ## Done Installing MIQ First-Boot
     Script\n\n# Add a user called admin\ngroupadd admin\nuseradd -g admin -c \"Admin
-    User\" -p '<%= MiqPassword.md5crypt(\"smartvm\") %>' -m admin\n\n# Dump of evm
+    User\" -p '<%= ManageIQ::Password.md5crypt(\"smartvm\") %>' -m admin\n\n# Dump of evm
     object to ks-post.log if debug is set true\n<%= evm.inspect if debug == true %>\n\n#
     Callback to EVM during post-install\nwget --no-check-certificate <%= evm[:post_install_callback_url]
     %>\n\n%end\n\n\n### Server Packages\n%packages\n@base\n@console-internet\n@core\n@debugging\n@hardware-monitoring\n@large-systems\n@network-file-system-client\n@performance\n@perl-runtime\n@server-platform\n@server-policy\npax\noddjob\nsgpio\ncertmonger\npam_krb5\nkrb5-workstation\nperl-DBD-SQLite\n%end\n\n\n#####
@@ -50,7 +50,7 @@
   :system: true
 - :name: ESXi 4.1
   :description: ESXi 4.1
-  :script: ! "vmaccepteula\nrootpw --iscrypted <%= MiqPassword.md5crypt(evm[:root_password])
+  :script: ! "vmaccepteula\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password])
     %>\nautopart --firstdisk --overwritevmfs\ninstall url http://<pxe_server>/tftpboot/VMware-VMvisor-Installer-4.1.0-260247/\n<%=\n
     \ network_string = \"network --bootproto=static --device=vmnic0\"\n  [\"ip\",
     :ip_addr, \"netmask\", :subnet_mask, \"gateway\", :gateway, \"hostname\", :hostname,
@@ -79,7 +79,7 @@
     Install info\ninstall\ntext\nlang en_US.UTF-8\nkeyboard us\nfirewall --service=ssh\nauthconfig
     --enableshadow --passalgo=sha512\nselinux --enforcing\ntimezone --utc America/New_York\nzerombr\ncdrom\n\n#
     Configure Networking based on values from provisioning dialog\n<%= network_string
-    %>\n\nrootpw --iscrypted <%= MiqPassword.md5crypt(evm[:root_password]) %>\n\n\n###
+    %>\n\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password]) %>\n\n\n###
     Post Install Scripts\n%post --log=/root/ks-post.log\n\n# Register to RHN or Download
     locally and Install RHEV Agent\n<% if rhn_activation_key.blank? %>\n  wget <%=
     rhev_agent_url %>\n  rpm -ivh rhev-agent-2.3.16-3.el6.x86_64.rpm\n<% else %>\n
@@ -92,7 +92,7 @@
     # Make the script executable\n# chmod +x /tmp/miq-firstboot.sh\n# # Install the
     script to run at boot\n# echo \"/tmp/miq-firstboot.sh\" >> /etc/rc.local\n# ##
     Done Installing MIQ First-Boot Script\n\n# Add a user called admin\ngroupadd admin\nuseradd
-    -g admin -c \"Admin User\" -p '<%= MiqPassword.md5crypt(\"smartvm\") %>' -m admin\n\n#
+    -g admin -c \"Admin User\" -p '<%= ManageIQ::Password.md5crypt(\"smartvm\") %>' -m admin\n\n#
     Dump of evm object to ks-post.log if debug is set true\n<%= evm.inspect if debug
     == true %>\n\n# Callback to EVM during post-install\nwget --no-check-certificate
     <%= evm[:post_install_callback_url] %>\n\n%end\n\n\n### Server Packages\n%packages\n@base\n@console-internet\n@core\n@debugging\n@hardware-monitoring\n@large-systems\n@network-file-system-client\n@performance\n@perl-runtime\n@server-platform\n@server-policy\npax\noddjob\nsgpio\ncertmonger\npam_krb5\nkrb5-workstation\nperl-DBD-SQLite\n%end\n\n\n#####
@@ -119,7 +119,7 @@
     Install info\ninstall\ntext\nlang en_US.UTF-8\nkeyboard us\nfirewall --service=ssh\nauthconfig
     --enableshadow --passalgo=sha512\nselinux --enforcing\ntimezone --utc America/New_York\nzerombr\npoweroff\n\n#
     Configure Networking based on values from provisioning dialog\n<%= network_string
-    %>\n\nrootpw --iscrypted <%= MiqPassword.md5crypt(evm[:root_password]) %>\n\n#
+    %>\n\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password]) %>\n\n#
     Source Files Location\nurl --url=<%= repo_source_url %>\nrepo --name=\"<%= os_ver
     %>\"  --baseurl=<%= repo_source_url %> --cost=100\n\n\n### Pre Install Scripts\n%pre\n#
     Get the first hard disk and use it for installation\nhd=/dev/`grep '[hsv]d[a-z]'
@@ -144,7 +144,7 @@
     # Make the script executable\n# chmod +x /tmp/miq-firstboot.sh\n# # Install the
     script to run at boot\n# echo \"/tmp/miq-firstboot.sh\" >> /etc/rc.local\n# ##
     Done Installing MIQ First-Boot Script\n\n# Add a user called admin\ngroupadd admin\nuseradd
-    -g admin -c \"Admin User\" -p '<%= MiqPassword.md5crypt(\"smartvm\") %>' -m admin\n\n#
+    -g admin -c \"Admin User\" -p '<%= ManageIQ::Password.md5crypt(\"smartvm\") %>' -m admin\n\n#
     Dump of evm object to ks-post.log if debug is set true\n<%= evm.inspect if debug
     == true %>\n\n# Callback to EVM during post-install\nwget --no-check-certificate
     <%= evm[:post_install_callback_url] %>\n\n%end\n\n\n### Server Packages\n%packages\n@base\n@console-internet\n@core\n@debugging\n@hardware-monitoring\n@large-systems\n@network-file-system-client\n@performance\n@perl-runtime\n@server-platform\n@server-policy\npax\noddjob\nsgpio\ncertmonger\npam_krb5\nkrb5-workstation\nperl-DBD-SQLite\n%end\n\n\n#####
@@ -171,7 +171,7 @@
     Install info\ninstall\ntext\nlang en_US.UTF-8\nkeyboard us\nfirewall --service=ssh\nauthconfig
     --enableshadow --passalgo=sha512\nselinux --enforcing\ntimezone --utc America/New_York\nzerombr\npoweroff\n\n#
     Configure Networking based on values from provisioning dialog\n<%= network_string
-    %>\n\nrootpw --iscrypted <%= MiqPassword.md5crypt(evm[:root_password]) %>\n\n#
+    %>\n\nrootpw --iscrypted <%= ManageIQ::Password.md5crypt(evm[:root_password]) %>\n\n#
     Source Files Location\nurl --url=<%= repo_source_url %>\nrepo --name=\"<%= os_ver
     %>\"  --baseurl=<%= repo_source_url %> --cost=100\n\n\n### Pre Install Scripts\n%pre\n#
     Get the first hard disk and use it for installation\nhd=/dev/`grep '[hsv]d[a-z]'
@@ -196,7 +196,7 @@
     # Make the script executable\n# chmod +x /tmp/miq-firstboot.sh\n# # Install the
     script to run at boot\n# echo \"/tmp/miq-firstboot.sh\" >> /etc/rc.local\n# ##
     Done Installing MIQ First-Boot Script\n\n# Add a user called admin\ngroupadd admin\nuseradd
-    -g admin -c \"Admin User\" -p '<%= MiqPassword.md5crypt(\"smartvm\") %>' -m admin\n\n#
+    -g admin -c \"Admin User\" -p '<%= ManageIQ::Password.md5crypt(\"smartvm\") %>' -m admin\n\n#
     Dump of evm object to ks-post.log if debug is set true\n<%= evm.inspect if debug
     == true %>\n\n# Callback to EVM during post-install\nwget --no-check-certificate
     <%= evm[:post_install_callback_url] %>\n\n%end\n\n\n### Desktop Packages\n%packages\n@base\n@client-mgmt-tools\n@core\n@debugging\n@basic-desktop\n@desktop-debugging\n@desktop-platform\n@directory-client\n@fonts\n@general-desktop\n@graphical-admin-tools\n@input-methods\n@internet-applications\n@internet-browser\n@java-platform\n@legacy-x\n@network-file-system-client\n@office-suite\n@print-client\n@remote-desktop-clients\n@server-platform\n@workstation-policy\n@x11\npax\npython-dmidecode\noddjob\nwodim\nsgpio\ngenisoimage\nmtools\nabrt-gui\ncertmonger\npam_krb5\nkrb5-workstation\ngnome-pilot\nlibXmu\n%end\n\n\n#####
@@ -233,7 +233,7 @@
     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n            <OOBE>\n
     \               <HideEULAPage>true</HideEULAPage>\n                <NetworkLocation>Work</NetworkLocation>\n
     \           </OOBE>\n            <UserAccounts>\n                <AdministratorPassword>\n
-    \                   <Value><%= MiqPassword.sysprep_crypt(evm[:root_password])
+    \                   <Value><%= ManageIQ::Password.sysprep_crypt(evm[:root_password])
     %></Value>\n                    <PlainText>false</PlainText>\n                </AdministratorPassword>\n
     \           </UserAccounts>\n            <RegisteredOrganization><%= registered_organization
     %></RegisteredOrganization>\n            <RegisteredOwner><%= registered_owner
@@ -389,7 +389,7 @@
 
 - :name: Basic root pass template
   :description: This template takes use of rootpassword defined in the UI
-  :script: "#cloud-config\nchpasswd:\n  list: |\n    root:<%= MiqPassword.decrypt(evm[:root_password]) %>\n  expire: False"
+  :script: "#cloud-config\nchpasswd:\n  list: |\n    root:<%= ManageIQ::Password.decrypt(evm[:root_password]) %>\n  expire: False"
   :type: CustomizationTemplateCloudInit
   :system: true
 
@@ -405,7 +405,7 @@
     # Configure basic host parameeters:
     host_name: <%= evm[:hostname] %>
     user_name: root
-    root_password: <%= MiqPassword.decrypt(evm[:root_password]) %>
+    root_password: <%= ManageIQ::Password.decrypt(evm[:root_password]) %>
 
     # Run commands to configure the network using the NetworkManager command
     # line tool. Note that this expects the subnet mask in the prefix format,

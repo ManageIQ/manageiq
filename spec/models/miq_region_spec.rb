@@ -156,7 +156,7 @@ describe MiqRegion do
       server = FactoryBot.create(:miq_server, :has_active_webservices => true)
 
       token = region.api_system_auth_token(user)
-      token_hash = YAML.load(MiqPassword.decrypt(token))
+      token_hash = YAML.load(ManageIQ::Password.decrypt(token))
 
       expect(token_hash[:server_guid]).to eq(server.guid)
       expect(token_hash[:userid]).to eq(user)

@@ -138,8 +138,8 @@ module Vmdb
       require_relative 'environments/patches/database_configuration'
 
       # To evaluate settings or database.yml with encrypted passwords
-      require 'miq-password'
-      MiqPassword.key_root = Rails.root.join("certs")
+      require 'manageiq-password'
+      ManageIQ::Password.key_root = Rails.root.join("certs")
 
       require 'vmdb_helper'
     end

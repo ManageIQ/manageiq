@@ -50,7 +50,7 @@ describe ServiceAnsibleTower do
     it "encrypts password when saves to DB" do
       new_options = {:extra_vars => {"my_password" => "secret"}}
       service_with_dialog_options.job_options = new_options
-      expect(service_with_dialog_options.options[:create_options][:extra_vars]["my_password"]).to eq(MiqPassword.encrypt("secret"))
+      expect(service_with_dialog_options.options[:create_options][:extra_vars]["my_password"]).to eq(ManageIQ::Password.encrypt("secret"))
     end
 
     it "prefers the job template set by dialog" do

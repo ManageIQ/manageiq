@@ -1,4 +1,4 @@
-require 'util/miq-password'
+require 'manageiq-password'
 
 module FixAuth
   class FixAuth
@@ -39,7 +39,7 @@ module FixAuth
     end
 
     def generate_password
-      MiqPassword.generate_symmetric("#{cert_dir}/v2_key")
+      ManageIQ::Password.generate_symmetric("#{cert_dir}/v2_key")
     rescue Errno::EEXIST => e
       $stderr.puts
       $stderr.puts "Only generate one encryption_key (v2_key) per installation."
@@ -83,10 +83,10 @@ module FixAuth
     end
 
     def set_passwords
-      MiqPassword.key_root = cert_dir if cert_dir
-      MiqPassword.add_legacy_key("v0_key", :v0)
-      MiqPassword.add_legacy_key("v1_key", :v1)
-      if options[:legacy_key] && !MiqPassword.add_legacy_key(options[:legacy_key])
+      ManageIQ::Password.key_root = cert_dir if cert_dir
+      ManageIQ::Password.add_legacy_key("v0_key", :v0)
+      ManageIQ::Password.add_legacy_key("v1_key", :v1)
+      if options[:legacy_key] && !ManageIQ::Password.add_legacy_key(options[:legacy_key])
         puts "WARNING: key #{k} not found"
       end
     end

@@ -20,16 +20,16 @@ class AutomateWorkspace < ApplicationRecord
   end
 
   def decrypt(object_name, attribute)
-    MiqPassword.decrypt(encrypted_value(object_name, attribute))
+    ManageIQ::Password.decrypt(encrypted_value(object_name, attribute))
   rescue ArgumentError
     ""
-  rescue MiqPassword::MiqPasswordError
+  rescue ManageIQ::Password::PasswordError
     ""
   end
 
   def encrypt(object_name, attribute, value)
     hash = {'objects' => {}, 'state_vars' => {}}
-    hash.store_path('objects', object_name, attribute, "password::#{MiqPassword.encrypt(value)}")
+    hash.store_path('objects', object_name, attribute, "password::#{ManageIQ::Password.encrypt(value)}")
     merge_output!(hash)
   end
 

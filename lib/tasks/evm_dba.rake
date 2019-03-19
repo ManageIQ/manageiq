@@ -268,8 +268,8 @@ namespace :evm do
 
     # loads the v1 key into the enviroment
     task :environmentlegacykey => :environment do
-      MiqPassword.add_legacy_key('v0_key', :v0)
-      MiqPassword.add_legacy_key('v1_key', :v1)
+      ManageIQ::Password.add_legacy_key('v0_key', :v0)
+      ManageIQ::Password.add_legacy_key('v1_key', :v1)
     end
   end
 end

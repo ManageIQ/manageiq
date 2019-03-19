@@ -24,7 +24,7 @@ class ManageIQ::Providers::<%= class_name %>::CloudManager < ManageIQ::Providers
 
   def self.validate_authentication_args(params)
     # return args to be used in raw_connect
-    return [params[:default_userid], MiqPassword.encrypt(params[:default_password])]
+    return [params[:default_userid], ManageIQ::Password.encrypt(params[:default_password])]
   end
 
   def self.hostname_required?

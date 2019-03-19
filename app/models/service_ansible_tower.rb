@@ -67,7 +67,7 @@ class ServiceAnsibleTower < Service
       if attr.start_with?(PARAM_PREFIX)
         params[attr[PARAM_PREFIX_LEN..-1]] = val
       elsif attr.start_with?(PASSWORD_PREFIX)
-        params[attr[PASSWORD_PREFIX_LEN..-1]] = MiqPassword.decrypt(val)
+        params[attr[PASSWORD_PREFIX_LEN..-1]] = ManageIQ::Password.decrypt(val)
       end
     end
   end

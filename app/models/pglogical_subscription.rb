@@ -246,7 +246,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def decrypted_password
-    MiqPassword.try_decrypt(password)
+    ManageIQ::Password.try_decrypt(password)
   end
 
   def remote_replication_lsn
