@@ -11,7 +11,7 @@ describe ConversionHost do
     let(:conversion_host_2) { FactoryBot.create(:conversion_host, :resource => vm) }
     let(:task_1) { FactoryBot.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_1) }
     let(:task_2) { FactoryBot.create(:service_template_transformation_plan_task, :conversion_host => conversion_host_1) }
-    let(:task_3) { FactoryBot.create(:service_template_transformation_plan_task, :state => 'active', :conversion_host => conversion_host_2) }
+    let(:task_3) { FactoryBot.create(:service_template_transformation_plan_task, :state => 'migrate', :conversion_host => conversion_host_2) }
 
     before do
       allow(conversion_host_1).to receive(:active_tasks).and_return([task_1])
