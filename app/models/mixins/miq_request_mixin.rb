@@ -170,6 +170,18 @@ module MiqRequestMixin
     DialogSerializer.new.serialize(Array[dialog]).first
   end
 
+  def dialog_zone
+    zone = options.fetch_path(:dialog, "dialog_zone")
+    return nil if zone.blank?
+
+    unless Zone.where(:name => zone).exists?
+      _log.warn("unknown zone #{zone} specified in dialog, ignored.")
+      return nil
+    end
+
+    zone
+  end
+
   def mark_execution_servers
     options[:executed_on_servers] ||= []
     options[:executed_on_servers] << MiqServer.my_server.id

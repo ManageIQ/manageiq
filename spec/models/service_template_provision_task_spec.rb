@@ -76,35 +76,61 @@ describe ServiceTemplateProvisionTask do
     end
 
     describe "#deliver_to_automate" do
-      it "delivers to the queue when the state is not active" do
-        @service              = FactoryBot.create(:service, :name => 'Test Service')
-        @task_0.destination   = @service
-        @task_0.state         = 'pending'
-        zone                  = FactoryBot.create(:zone, :name => "special")
-        orchestration_manager = FactoryBot.create(:ext_management_system, :zone => zone)
-        @task_0.source        = FactoryBot.create(:service_template_orchestration, :orchestration_manager => orchestration_manager)
-        automate_args         = {
-          :object_type      => 'ServiceTemplateProvisionTask',
-          :object_id        => @task_0.id,
-          :namespace        => 'Service/Provisioning/StateMachines',
-          :class_name       => 'ServiceProvision_Template',
-          :instance_name    => 'clone_to_service',
-          :automate_message => 'create',
-          :attrs            => {'request' => 'clone_to_service', 'Service::Service' => @service.id},
-          :user_id          => @admin.id,
-          :miq_group_id     => @admin.current_group_id,
-          :tenant_id        => @admin.current_tenant.id,
-        }
-        allow(@request).to receive(:approved?).and_return(true)
-        expect(MiqQueue).to receive(:put).with(
-          :class_name     => 'MiqAeEngine',
-          :method_name    => 'deliver',
-          :args           => [automate_args],
-          :role           => 'automate',
-          :zone           => 'special',
-          :tracking_label => tracking_label
-        )
-        @task_0.deliver_to_automate
+      context "when the state is not active" do
+        before do
+          @st_zone            = FactoryBot.create(:zone, :name => "service_template_zone")
+          @service            = FactoryBot.create(:service, :name => 'Test Service')
+          @task_0.source      = FactoryBot.create(:service_template, :zone => @st_zone)
+          @task_0.destination = @service
+          @task_0.state       = 'pending'
+          allow(MiqServer).to receive(:my_zone).and_return('a_server_zone')
+          allow(@request).to receive(:approved?).and_return(true)
+        end
+
+        it "delivers to the queue" do
+          zone                  = FactoryBot.create(:zone, :name => "special")
+          orchestration_manager = FactoryBot.create(:ext_management_system, :zone => zone)
+          @task_0.source        = FactoryBot.create(:service_template_orchestration, :orchestration_manager => orchestration_manager)
+          automate_args         = {
+            :object_type      => 'ServiceTemplateProvisionTask',
+            :object_id        => @task_0.id,
+            :namespace        => 'Service/Provisioning/StateMachines',
+            :class_name       => 'ServiceProvision_Template',
+            :instance_name    => 'clone_to_service',
+            :automate_message => 'create',
+            :attrs            => {'request' => 'clone_to_service', 'Service::Service' => @service.id},
+            :user_id          => @admin.id,
+            :miq_group_id     => @admin.current_group_id,
+            :tenant_id        => @admin.current_tenant.id,
+          }
+          expect(MiqQueue).to receive(:put).with(
+            :class_name     => 'MiqAeEngine',
+            :method_name    => 'deliver',
+            :args           => [automate_args],
+            :role           => 'automate',
+            :zone           => 'special',
+            :tracking_label => tracking_label
+          )
+          @task_0.deliver_to_automate
+        end
+
+        it "sets queue item to zone specified in dialog" do
+          zone = FactoryBot.create(:zone, :name => 'dialog_zone')
+          @task_0.update_attributes(:options => {:dialog => {"dialog_zone" => zone.name}})
+          expect(MiqQueue).to receive(:put).with(hash_including(:zone => zone.name))
+          @task_0.deliver_to_automate
+        end
+
+        it "sets queue item to zone specified in service template without dialog" do
+          expect(MiqQueue).to receive(:put).with(hash_including(:zone => @st_zone.name))
+          @task_0.deliver_to_automate
+        end
+
+        it "sets queue item to server's zone if not specified in dialog and service template" do
+          @task_0.source.update_attributes(:zone => nil)
+          expect(MiqQueue).to receive(:put).with(hash_including(:zone => 'a_server_zone'))
+          @task_0.deliver_to_automate
+        end
       end
 
       it "raises an error when the state is already active" do

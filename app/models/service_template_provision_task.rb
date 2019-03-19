@@ -9,6 +9,10 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     ServiceTemplateProvisionTask
   end
 
+  def my_zone
+    dialog_zone || source.my_zone || MiqServer.my_zone
+  end
+
   def provision_priority
     return 0 if service_resource.nil?
     service_resource.provision_index
@@ -97,6 +101,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       :class_name     => self.class.name,
       :instance_id    => id,
       :method_name    => "do_post_provision",
+      :zone           => my_zone,
       :deliver_on     => 1.minutes.from_now.utc,
       :tracking_label => tracking_label_id,
       :miq_callback   => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
@@ -143,13 +148,12 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       args[:miq_group_id] = get_user.current_group.id
       args[:tenant_id]    = get_user.current_tenant.id
 
-      zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
         :class_name     => 'MiqAeEngine',
         :method_name    => 'deliver',
         :args           => [args],
         :role           => 'automate',
-        :zone           => options.fetch(:miq_zone, zone),
+        :zone           => options.fetch(:miq_zone, my_zone),
         :tracking_label => tracking_label_id
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")

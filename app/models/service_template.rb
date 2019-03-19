@@ -59,6 +59,7 @@ class ServiceTemplate < ApplicationRecord
   has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
   belongs_to :service_template_catalog
+  belongs_to :zone
 
   has_many   :dialogs, -> { distinct }, :through => :resource_actions
   has_many   :miq_schedules, :as => :resource, :dependent => :destroy
@@ -448,6 +449,12 @@ class ServiceTemplate < ApplicationRecord
 
   def self.display_name(number = 1)
     n_('Service Catalog Item', 'Service Catalog Items', number)
+  end
+
+  def my_zone
+    # Catalog items can specify a zone to run in.
+    # Catalog bundle are used for grouping catalog items and are therefore treated as zone-agnostic.
+    zone&.name if atomic?
   end
 
   private
