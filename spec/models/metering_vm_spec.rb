@@ -222,6 +222,8 @@ describe MeteringVm do
        tenant_name
        beginning_of_resource_existence_in_report_interval
        end_of_resource_existence_in_report_interval
+       report_interval_range
+       report_generation_date
   )
   end
 

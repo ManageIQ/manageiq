@@ -427,6 +427,7 @@ describe ChargebackVm do
         context "current month and previous month" do
           let(:options) { base_options.merge(:interval => 'monthly') }
           let(:finish_time) { Time.current }
+          let(:finish_time_formatted) { finish_time.strftime('%m/%d/%Y') }
           let(:report_start) { month_end + 2.days }
           subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first }
 
@@ -442,13 +443,17 @@ describe ChargebackVm do
           end
 
           it "reports report interval range and report generation date" do
+            skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
+
             # reporting of first month
             report_range = "#{first_month_beginning_formatted} - #{second_month_beginning_formatted}"
             expect(subject.first.report_interval_range).to eq(report_range)
+            expect(subject.first.report_generation_date.strftime('%m/%d/%Y')).to eq(finish_time_formatted)
 
             # reporting of second month
             report_range = "#{second_month_beginning_formatted} - #{(second_month_beginning + 2.days).strftime('%m/%d/%Y')}"
             expect(subject.second.report_interval_range).to eq(report_range)
+            expect(subject.second.report_generation_date.strftime('%m/%d/%Y')).to eq(finish_time_formatted)
           end
         end
       end

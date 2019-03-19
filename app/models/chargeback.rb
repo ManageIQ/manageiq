@@ -5,6 +5,7 @@ class Chargeback < ActsAsArModel
     :interval_name         => :string,
     :display_range         => :string,
     :report_interval_range => :string,
+    :report_generation_date => :datetime,
     :chargeback_rates      => :string,
     :entity                => :binary,
     :tag_name              => :string,
@@ -18,6 +19,7 @@ class Chargeback < ActsAsArModel
     -owner_name
     _metric
     -report_interval_range
+    -report_generation_date
     -provider_name
     -provider_uid
     -project_uid
@@ -189,6 +191,7 @@ class Chargeback < ActsAsArModel
     calculate_fixed_compute_metric(consumption)
     self.class.try(:refresh_dynamic_metric_columns)
     self.report_interval_range = "#{consumption.report_interval_start.strftime('%m/%d/%Y')} - #{consumption.report_interval_end.strftime('%m/%d/%Y')}"
+    self.report_generation_date = Time.current
 
     _log.debug("Consumption Type: #{consumption.class}")
     rates.each do |rate|
