@@ -193,11 +193,13 @@ class VmOrTemplate < ApplicationRecord
   before_validation :set_tenant_from_group
   after_save :save_genealogy_information
 
-  scope :active,    ->       { where.not(:ems_id => nil) }
-  scope :with_type, ->(type) { where(:type => type) }
-  scope :archived,  ->       { where(:ems_id => nil, :storage_id => nil) }
-  scope :orphaned,  ->       { where(:ems_id => nil).where.not(:storage_id => nil) }
-  scope :with_ems,  ->       { where.not(:ems_id => nil) }
+  scope :active,       ->       { where.not(:ems_id => nil) }
+  scope :with_type,    ->(type) { where(:type => type) }
+  scope :archived,     ->       { where(:ems_id => nil, :storage_id => nil) }
+  scope :orphaned,     ->       { where(:ems_id => nil).where.not(:storage_id => nil) }
+  scope :with_ems,     ->       { where.not(:ems_id => nil) }
+  scope :not_archived, ->       { where.not(:ems_id => nil).or(where.not(:storage_id => nil)) }
+  scope :not_orphaned, ->       { where.not(:ems_id => nil).or(where(:storage_id => nil)) }
 
   # The SQL form of `#registered?`, with it's inverse as well.
   # TODO: Vmware Specific (copied (old) TODO from #registered?)
