@@ -10,7 +10,7 @@ describe ChargebackRateDetailCurrency do
 
     it "returns supported currencies" do
       expect(ChargebackRateDetailCurrency.count).to eq(164)
-      expect(ChargebackRateDetailCurrency.all.map(&:code)).to eq(expected_currencies)
+      expect(ChargebackRateDetailCurrency.all.map(&:code)).to match_array(expected_currencies)
     end
   end
 
