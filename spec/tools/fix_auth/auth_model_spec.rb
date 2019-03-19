@@ -111,14 +111,16 @@ describe FixAuth::AuthModel do
     it "uses random numbers for hardcode" do
       subject.fix_passwords(v1, :hardcode => "newpass")
       expect(v1.session_secret_token).to be_encrypted_version(2)
-      expect(v1.session_secret_token).not_to be_encrypted("newpass")
+      expect(v1.session_secret_token).to be_encrypted
+      expect(ManageIQ::Password.decrypt(v1.session_secret_token)).to_not eq "newpass"
       expect(v1.session_secret_token).not_to eq(enc_v2)
     end
 
     it "uses random numbers for invalid" do
       subject.fix_passwords(bad, :invalid => "newpass")
       expect(bad.session_secret_token).to be_encrypted_version(2)
-      expect(bad.session_secret_token).not_to be_encrypted("newpass")
+      expect(bad.session_secret_token).to be_encrypted
+      expect(ManageIQ::Password.decrypt(bad.session_secret_token)).to_not eq "newpass"
       expect(bad.session_secret_token).not_to eq(enc_v2)
     end
 
