@@ -54,8 +54,6 @@ module ConversionHost::Configurations
       ssh_key = params.delete(:conversion_host_ssh_private_key)
 
       new(params).tap do |conversion_host|
-        conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
-
         if ssh_key
           conversion_host.authentications << AuthPrivateKey.create!(
             :name     => conversion_host.name,
@@ -65,6 +63,7 @@ module ConversionHost::Configurations
           )
         end
 
+        conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
         conversion_host.save!
       end
     rescue StandardError => error
