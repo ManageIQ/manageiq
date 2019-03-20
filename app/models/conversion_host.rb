@@ -136,11 +136,11 @@ class ConversionHost < ApplicationRecord
   end
 
   def get_network_limit
-    value = network_limit || Setting.transformation.limits.network_limit_per_host
+    value = network_limit || Settings.transformation.limits.network_limit_per_host
     value == 'unlimited' ? value : "#{value.to_i / active_tasks.size}"
   end
 
-  def apply_virtv2v_limits(path, limits)
+  def apply_virtv2v_limits(path, limits = {})
     connect_ssh { |ssu| ssu.put_file(path, JSON.dump(limits)) }
   rescue => e
     raise "Could not apply the limits in '#{path}' on '#{resource.name}' with [#{e.class}: #{e}]"
