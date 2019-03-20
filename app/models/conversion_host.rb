@@ -131,18 +131,18 @@ class ConversionHost < ApplicationRecord
   end
 
   def cpu_limit
-    value = read_attribute(:cpu_limit) || Settings.transformation.limits.cpu_limit_per_host
-    value == 'unlimited' ? value : "#{value.to_i / active_tasks.size}"
+    value = self[:cpu_limit] || Settings.transformation.limits.cpu_limit_per_host
+    value == 'unlimited' ? value : (value.to_i / active_tasks.size).to_s
   end
 
   def network_limit
-    value = read_attribute(:network_limit) || Settings.transformation.limits.network_limit_per_host
-    value == 'unlimited' ? value : "#{value.to_i / active_tasks.size}"
+    value = self[:network_limit] || Settings.transformation.limits.network_limit_per_host
+    value == 'unlimited' ? value : (value.to_i / active_tasks.size).to_s
   end
 
   def apply_virtv2v_limits(path, limits = {})
     connect_ssh { |ssu| ssu.put_file(path, JSON.dump(limits)) }
-  rescue => e
+  rescue StandardError => e
     raise "Could not apply the limits in '#{path}' on '#{resource.name}' with [#{e.class}: #{e}]"
   end
 
