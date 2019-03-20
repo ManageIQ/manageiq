@@ -35,6 +35,7 @@ class EvmDatabase
     Classification
     CustomizationTemplate
     Dialog
+    ManageIQ::Providers::EmbeddedAnsible
     MiqAlert
     MiqAlertSet
     MiqDialog
