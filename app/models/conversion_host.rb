@@ -20,6 +20,7 @@ class ConversionHost < ApplicationRecord
   validate :resource_supports_conversion_host
 
   before_validation :name, :default_name, :on => :create
+  before_validation :address, :default_address, :on => :create
 
   include_concern 'Configurations'
 
@@ -53,7 +54,7 @@ class ConversionHost < ApplicationRecord
 
   def ipaddress(family = 'ipv4')
     return address if address.present? && IPAddr.new(address).send("#{family}?")
-    resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
+    resource&.ipaddresses&.detect { |ip| IPAddr.new(ip).send("#{family}?") }
   end
 
   def run_conversion(conversion_options)
@@ -228,5 +229,11 @@ class ConversionHost < ApplicationRecord
   #
   def default_name
     self.name ||= resource&.name
+  end
+
+  # Set the default address to the first IP address associated with the resource.
+  #
+  def default_address
+    self.address ||= self.ipaddress
   end
 end

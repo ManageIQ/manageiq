@@ -215,6 +215,13 @@ describe ConversionHost do
       conversion_host = ConversionHost.new(:name => "test", :resource => vm, :address => "127.0.0.2")
       expect(conversion_host.valid?).to be(true)
     end
+
+    it "defaults to the first associated ip address if no address is explicitly provided" do
+      allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1', '127.0.0.2'])
+      conversion_host = ConversionHost.new(:name => "test", :resource => vm)
+      expect(conversion_host.valid?).to be(true)
+      expect(conversion_host.address).to eql(vm.ipaddresses.first)
+    end
   end
 
   context "resource validation" do
