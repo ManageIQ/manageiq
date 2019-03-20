@@ -6,9 +6,4 @@ class ManageIQ::Providers::EmbeddedAnsible::Provider < ::Provider
           :class_name  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
           :dependent   => :destroy, # to be removed after ansible_tower side code is updated
           :autosave    => true
-
-  def self.raw_connect(base_url, username, password, verify_ssl)
-    return super if MiqRegion.my_region.role_active?('embedded_ansible')
-    raise StandardError, 'Embedded ansible is disabled'
-  end
 end
