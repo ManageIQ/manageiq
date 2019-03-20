@@ -233,6 +233,16 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     update_options(updates)
   end
 
+  # Applies the limits for the task.
+  # CPU and network limits are set at the host level but other limits may not.
+  def apply_virtv2v_limits
+    limits = {
+      :cpu     => conversion_host.get_cpu_limit,
+      :network => conversion_host.get_network_limit
+    }
+    conversion_host.apply_virtv2v_limits(options[:virtv2v_wrapper]['throttling_file'], limits)
+  end
+
   def kill_virtv2v(signal = 'TERM')
     return false if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
     return false unless options[:virtv2v_wrapper]['pid']

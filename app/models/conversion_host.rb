@@ -130,6 +130,22 @@ class ConversionHost < ApplicationRecord
     resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
   end
 
+  def get_cpu_limit
+    value = cpu_limit || Settings.transformation.limits.cpu_limit_per_host
+    value == 'unlimited' ? value : "#{value.to_i / active_tasks.size}"
+  end
+
+  def get_network_limit
+    value = network_limit || Setting.transformation.limits.network_limit_per_host
+    value == 'unlimited' ? value : "#{value.to_i / active_tasks.size}"
+  end
+
+  def apply_virtv2v_limits(path, limits)
+    connect_ssh { |ssu| ssu.put_file(path, JSON.dump(limits)) }
+  rescue => e
+    raise "Could not apply the limits in '#{path}' on '#{resource.name}' with [#{e.class}: #{e}]"
+  end
+
   def run_conversion(conversion_options)
     result = connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', nil, nil, conversion_options.to_json) }
     JSON.parse(result)

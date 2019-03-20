@@ -104,6 +104,11 @@ class InfraConversionJob < Job
 
     case v2v_status
     when 'active'
+      begin
+        migration_task.apply_virtv2v_limits if migration_task.options.fetch_path(:virtv2v_wrapper, 'throttling_file')
+      rescue => exception
+        _log.log_backtrace(exception)
+      end
       queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
     when 'failed'
       message = "disk conversion failed"
