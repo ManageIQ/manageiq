@@ -164,6 +164,27 @@ describe ProcessTasksMixin do
 
           test_class.invoke_api_tasks(api_connection, options)
         end
+
+        it "sends :success AuditEvent if task invocation successful" do
+          allow(api_collection).to receive(:the_task)
+          expect(AuditEvent).to receive(:success)
+          expect(AuditEvent).not_to receive(:failure)
+          test_class.invoke_api_tasks(api_connection, :task => "the_task")
+        end
+
+        it "sends :failure AuditEvent and does not raised error if task invocation raised NoMethodError" do
+          allow(api_collection).to receive(:the_task).and_raise(NoMethodError)
+          expect(AuditEvent).to receive(:failure)
+          expect(AuditEvent).not_to receive(:success)
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.not_to raise_error
+        end
+
+        it "sends :failure AuditEvent and raises error if task invocation raised StandardError other than NoMethodError" do
+          allow(api_collection).to receive(:the_task).and_raise(StandardError)
+          expect(AuditEvent).to receive(:failure)
+          expect(AuditEvent).not_to receive(:success)
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.to raise_error(StandardError)
+        end
       end
 
       it "with missing remote resource does not raise" do
@@ -192,7 +213,7 @@ describe ProcessTasksMixin do
 
         it "collection" do
           expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.invoke_api_tasks) undefined method `the_task' for []:Array").and_call_original
-          expect(test_class.invoke_api_tasks(api_connection, :task => "the_task")).to eq(true)
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.not_to raise_error
         end
       end
 
@@ -201,8 +222,8 @@ describe ProcessTasksMixin do
         let(:resource1)     { double("resource1", :id => 1) }
 
         before do
-          expect(api_collection).to receive(:find).with(0).and_return(resource0)
-          expect(api_collection).to receive(:find).with(1).and_return(resource1)
+          allow(api_collection).to receive(:find).with(0).and_return(resource0)
+          allow(api_collection).to receive(:find).with(1).and_return(resource1)
         end
 
         it "executes the task on each resource" do
@@ -226,6 +247,30 @@ describe ProcessTasksMixin do
           expect(resource1).to receive(:the_task).with({})
 
           test_class.invoke_api_tasks(api_connection, options)
+        end
+
+        it "sends :success AuditEvent if task invocation successful" do
+          allow(resource0).to receive(:the_task)
+          allow(resource1).to receive(:the_task)
+
+          expect(AuditEvent).to receive(:success).twice
+          test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task")
+        end
+
+        it "sends :failure AuditEvent and does not raised error if task invocation raised NoMethodError or ManageIQ::API::Client::ResourceNotFound" do
+          allow(resource0).to receive(:the_task).and_raise(NoMethodError)
+          allow(resource1).to receive(:the_task).and_raise(ManageIQ::API::Client::ResourceNotFound)
+
+          expect(AuditEvent).to receive(:failure).twice
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task") }.not_to raise_error
+        end
+
+        it "sends :failure AuditEvent and raises error if task invocation raised StandardError other than NoMethodError or ManageIQ::API::Client::ResourceNotFound" do
+          allow(resource0).to receive(:the_task).and_raise(StandardError)
+          allow(resource1).to receive(:the_task).and_raise(StandardError)
+
+          expect(AuditEvent).to receive(:failure).once
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task") }.to raise_error(StandardError)
         end
       end
     end
