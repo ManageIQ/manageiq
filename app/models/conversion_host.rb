@@ -130,13 +130,13 @@ class ConversionHost < ApplicationRecord
     resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
   end
 
-  def get_cpu_limit
-    value = cpu_limit || Settings.transformation.limits.cpu_limit_per_host
+  def cpu_limit
+    value = read_attribute(:cpu_limit) || Settings.transformation.limits.cpu_limit_per_host
     value == 'unlimited' ? value : "#{value.to_i / active_tasks.size}"
   end
 
-  def get_network_limit
-    value = network_limit || Settings.transformation.limits.network_limit_per_host
+  def network_limit
+    value = read_attribute(:network_limit) || Settings.transformation.limits.network_limit_per_host
     value == 'unlimited' ? value : "#{value.to_i / active_tasks.size}"
   end
 
