@@ -259,42 +259,54 @@ class MiqTask < ApplicationRecord
     binary_blob.binary = YAML.dump(value)
   end
 
-  def self.generic_action_with_callback(options, queue_options)
-    # Pre-reqs:
-    # options hash contains the following required keys:
-    #   :action => the human friendly name of the action to be run
-    #   :userid => the user this is being run for... aka, the logged on user who invoked the action in the UI
-    #
-    # queue options is a hash containing the following required keys:
-    #   :class_name
-    #   :method_name
-    #   :args
-    # queue_options keys that are not required but may be needed:
-    #   :instance_id (if using an instance method...an id)
-    #   :queue_name (which queue, priority?)
-    #   :zone (zone of the request)
-    #   :guid (guid of the server to run the action)
-    #   :role (role of the server to run the action)
-    #   :msg_timeout => how long you want to wait before pulling the plug on the action (seconds)
+  # Create an MiqQueue object with an associated MiqTask object as its callback.
+  # Returns the ID of the generated task, or the full task object if the
+  # +return_task_object+ argument is set to true.
+  #
+  # Pre-reqs:
+  #
+  # The +options+ hash must contain the following required keys:
+  #
+  #   :name   => the human friendly name of the action to be run
+  #   :userid => the user this is being run for, i.e the logged on user who invoked the action in the UI
+  #
+  # You may alternatively specify :action instead of :name. All other options
+  # are passed through the task.
+  #
+  # The +queue_options+ is a hash containing the following required keys:
+  #
+  #   :class_name
+  #   :method_name
+  #   :args
+  #
+  # The +queue_options+ keys that are not required but may be needed:
+  #
+  #   :instance_id (if using an instance method...an id)
+  #   :queue_name (which queue, priority?)
+  #   :zone (zone of the request)
+  #   :guid (guid of the server to run the action)
+  #   :role (role of the server to run the action)
+  #   :msg_timeout => how long you want to wait before pulling the plug on the action (seconds)
+  #
+  def self.generic_action_with_callback(options, queue_options, return_task_object = false)
+    options[:name] ||= options.delete(:action) # Backwards compatibility
 
-    msg =  "Queued the action: [#{options[:action]}] being run for user: [#{options[:userid]}]"
-    task = MiqTask.create(
-      :name    => options[:action],
-      :userid  => options[:userid],
-      :state   => STATE_QUEUED,
-      :status  => STATUS_OK,
-      :message => msg)
+    msg = "Queued the action: [#{options[:name]}] being run for user: [#{options[:userid]}]"
+    options = {:state => STATE_QUEUED, :status => STATUS_OK, :message => msg}.merge(options)
+
+    task = MiqTask.create(options)
 
     # Set the callback for this task to set the status based on the results of the actions
     queue_options[:miq_callback] = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback, :args => ['Finished']}
     queue_options[:miq_task_id] = task.id
     method_opts = queue_options[:args].first
     method_opts[:task_id] = task.id if method_opts.kind_of?(Hash)
+
     MiqQueue.put(queue_options)
 
     # return task id to the UI
     _log.info("Task: [#{task.id}] #{msg}")
-    task.id
+    return_task_object ? task : task.id
   end
 
   def self.wait_for_taskid(task_id, options = {})
