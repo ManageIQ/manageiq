@@ -80,11 +80,11 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
   def remove_clone
     return unless repo_dir.exist?
-    repo_dir = repo_dir.to_s
-    _log.info "Ensuring removal of git repo located at #{repo_dir.inspect}..."
-    raise ArgumentError, "invalid repo dir #{repo_dir.inspect}" unless repo_dir.start_with?(REPO_DIR.to_s)
-    FileUtils.rm_rf(repo_dir)
-    _log.info "Ensuring removal of git repo located at #{repo_dir.inspect}...Complete"
+    dir = repo_dir.to_s
+    _log.info "Ensuring removal of git repo located at #{dir.inspect}..."
+    raise ArgumentError, "invalid repo dir #{dir.inspect}" unless dir.start_with?(REPO_DIR.to_s)
+    FileUtils.rm_rf(dir)
+    _log.info "Ensuring removal of git repo located at #{dir.inspect}...Complete"
   end
 
   def sync_playbooks
