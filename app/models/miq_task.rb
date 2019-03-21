@@ -290,9 +290,9 @@ class MiqTask < ApplicationRecord
   #
   def self.generic_action_with_callback(options, queue_options, return_task_object = false)
     options[:name] ||= options.delete(:action) # Backwards compatibility
-    options = {:state => STATE_QUEUED, :status => STATUS_OK, :message => msg}.merge(options)
 
     msg = "Queued the action: [#{options[:name]}] being run for user: [#{options[:userid]}]"
+    options = {:state => STATE_QUEUED, :status => STATUS_OK, :message => msg}.merge(options)
 
     task = MiqTask.create(options)
 
