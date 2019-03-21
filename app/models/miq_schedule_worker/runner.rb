@@ -371,7 +371,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   def sync_updated_user_schedules
     rufus_remove_stale_schedules
     threshold = @last_checked || Time.at(0)
-    schedules = MiqSchedule.updated_since(threshold)
+    schedules = MiqSchedule.in_my_region.updated_since(threshold)
     @last_checked = Time.now.utc
     reload_schedules(schedules)
   end
