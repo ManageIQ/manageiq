@@ -437,7 +437,7 @@ module AuthenticationMixin
   end
 
   def available_authentications
-    authentication_userid_passwords + authentication_key_pairs + authentication_tokens + authentication_private_keys
+    authentication_userid_passwords + authentication_tokens + authentication_private_keys
   end
 
   def authentication_types
