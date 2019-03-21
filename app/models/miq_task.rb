@@ -289,10 +289,10 @@ class MiqTask < ApplicationRecord
   #   :msg_timeout => how long you want to wait before pulling the plug on the action (seconds)
   #
   def self.generic_action_with_callback(options, queue_options, return_task_object = false)
-    msg = "Queued the action: [#{options[:action]}] being run for user: [#{options[:userid]}]"
-
+    options[:name] ||= options.delete(:action) # Backwards compatibility
     options = {:state => STATE_QUEUED, :status => STATUS_OK, :message => msg}.merge(options)
-    options[:name] ||= options.delete(:action)
+
+    msg = "Queued the action: [#{options[:name]}] being run for user: [#{options[:userid]}]"
 
     task = MiqTask.create(options)
 
