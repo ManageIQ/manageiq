@@ -76,6 +76,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
   def sync
     ensure_clone
+    sync_playbooks
   end
 
   private
@@ -108,11 +109,35 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def remove_clone
+    return unless repo_dir.exist?
     repo_dir = repo_dir.to_s
     _log.info "Ensuring removal of git repo located at #{repo_dir.inspect}..."
     raise ArgumentError, "invalid repo dir #{repo_dir.inspect}" unless repo_dir.start_with?(REPO_DIR.to_s)
     FileUtils.rm_rf(repo_dir)
     _log.info "Ensuring removal of git repo located at #{repo_dir.inspect}...Complete"
+  end
+
+  def sync_playbooks
+    transaction do
+      current = configuration_script_payloads.index_by(&:name)
+
+      playbooks_in_repo_dir.each do |e|
+        found = current.delete(e[:name]) || self.class.parent::Playbook.new(:configuration_script_source_id => id)
+        found.update_attributes!(e)
+      end
+
+      current.values.each(&:destroy)
+
+      configuration_script_payloads.reload
+    end
+  end
+
+  def playbooks_in_repo_dir
+    Dir.glob(repo_dir.join("*.y{a,}ml")).collect do |file|
+      name = File.basename(file)
+      description = YAML.safe_load(File.read(file)).fetch_path(0, "name") rescue nil
+      {:name => name, :description => description, :manager_id => manager_id}
+    end
   end
 
   def repo_dir
