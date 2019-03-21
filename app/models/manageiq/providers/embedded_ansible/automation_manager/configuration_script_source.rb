@@ -9,69 +9,39 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   default_value_for :scm_type,   "git"
   default_value_for :scm_branch, "master"
 
-  class << self
-    delegate :queue, :notify, :to => ManageIQ::Providers::EmbeddedAnsible
-  end
-  delegate :queue, :notify, :to => :class
+  include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
 
   def self.display_name(number = 1)
     n_('Repository (Embedded Ansible)', 'Repositories (Embedded Ansible)', number)
   end
 
-  def self.create_in_provider(manager_id, params)
-    error = nil
+  def self.notify_on_provider_interaction?
+    true
+  end
 
+  def self.raw_create_in_provider(manager, params)
     params.delete(:scm_type)   if params[:scm_type].blank?
     params.delete(:scm_branch) if params[:scm_branch].blank?
 
-    create!(params.merge(:manager_id => manager_id)).tap do |source|
-      source.sync
+    transaction do
+      create!(params.merge(:manager => manager)).tap do |source|
+        source.sync
+      end
     end
-    # TODO: Should this return the new object since it will be put on the task with a binary blob part?
-    #   or should this just put a new item on the queue to do the "refresh"
-  rescue => error
-    _log.debug error.result.error if error.is_a?(AwesomeSpawn::CommandResultError)
-    raise
-  ensure
-    notify(self, 'creation', manager_id, params, error.nil?)
   end
 
-  def self.create_in_provider_queue(manager_id, params, auth_user = nil)
-    manager = parent.find(manager_id)
-    action = "Creating #{self::FRIENDLY_NAME} (name=#{params[:name]})"
-    queue(self, manager.my_zone, nil, "create_in_provider", [manager_id, params], action, auth_user)
+  def raw_update_in_provider(params)
+    transaction do
+      update_attributes!(params.except(:task_id, :miq_task_id))
+      sync
+    end
   end
 
-  def update_in_provider(params)
-    error = nil
-    update_attributes!(params.except(:task_id, :miq_task_id))
-    sync
-    self
-  rescue => error
-    raise
-  ensure
-    notify(self.class, 'update', manager.id, params, error.nil?)
-  end
-
-  def update_in_provider_queue(params, auth_user = nil)
-    action = "Updating #{self.class::FRIENDLY_NAME}"
-    queue(self.class, manager.my_zone, id, "update_in_provider", [params], action, auth_user)
-  end
-
-  def delete_in_provider
-    error = nil
-    destroy!
-    remove_clone
-    self
-  rescue => error
-    raise
-  ensure
-    notify(self.class, 'deletion', manager.id, {:manager_ref => manager_ref}, error.nil?)
-  end
-
-  def delete_in_provider_queue(auth_user = nil)
-    action = "Deleting #{self.class::FRIENDLY_NAME}"
-    queue(self.class, manager.my_zone, id, "delete_in_provider", [], action, auth_user)
+  def raw_delete_in_provider
+    transaction do
+      destroy!
+      remove_clone
+    end
   end
 
   def sync
