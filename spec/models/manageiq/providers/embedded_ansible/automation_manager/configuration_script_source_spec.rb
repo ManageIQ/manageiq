@@ -29,7 +29,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
 
     context "with valid params" do
       it "creates a record and initializes a git repo" do
-        expect(Notification).to receive(:create).with(notify_creation_args)
+        expect(Notification).to receive(:create!).with(notify_creation_args)
 
         result = described_class.create_in_provider(manager.id, params)
 
@@ -46,7 +46,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         notify_creation_args[:type] = :tower_op_failure
 
         expect(AwesomeSpawn).to receive(:run!).never
-        expect(Notification).to receive(:create).with(notify_creation_args)
+        expect(Notification).to receive(:create!).with(notify_creation_args)
 
         expect do
           described_class.create_in_provider manager.id, params
@@ -82,7 +82,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         record   = build_record
         repo_dir = record.send(:repo_dir)
 
-        expect(Notification).to receive(:create).with(notify_update_args)
+        expect(Notification).to receive(:create!).with(notify_update_args)
 
         result = record.update_in_provider update_params
 
@@ -99,7 +99,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         notify_update_args[:type] = :tower_op_failure
 
         expect(AwesomeSpawn).to receive(:run!).never
-        expect(Notification).to receive(:create).with(notify_update_args)
+        expect(Notification).to receive(:create!).with(notify_update_args)
 
         expect do
           record.update_in_provider update_params
@@ -112,7 +112,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
     it "creates a task and queue item" do
       record    = build_record
       task_id   = record.update_in_provider_queue({})
-      task_name = "Updating #{described_class::FRIENDLY_NAME}"
+      task_name = "Updating #{described_class::FRIENDLY_NAME} (name=#{record.name})"
 
       expect(MiqTask.find(task_id)).to have_attributes(:name => task_name)
       expect(MiqQueue.first).to have_attributes(
@@ -132,7 +132,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
       record   = build_record
       repo_dir = record.send(:repo_dir)
 
-      expect(Notification).to receive(:create).with(notification_args('deletion', {}))
+      expect(Notification).to receive(:create!).with(notification_args('deletion', {}))
       record.delete_in_provider
 
       expect { record.reload }.to raise_error ActiveRecord::RecordNotFound
@@ -144,7 +144,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
     it "creates a task and queue item" do
       record    = build_record
       task_id   = record.delete_in_provider_queue
-      task_name = "Deleting #{described_class::FRIENDLY_NAME}"
+      task_name = "Deleting #{described_class::FRIENDLY_NAME} (name=#{record.name})"
 
       expect(MiqTask.find(task_id)).to have_attributes(:name => task_name)
       expect(MiqQueue.first).to have_attributes(
@@ -160,7 +160,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
   end
 
   def build_record
-    expect(Notification).to receive(:create).with(any_args)
+    expect(Notification).to receive(:create!).with(any_args)
     described_class.create_in_provider manager.id, params
   end
 
