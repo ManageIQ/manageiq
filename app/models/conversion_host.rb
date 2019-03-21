@@ -52,7 +52,6 @@ class ConversionHost < ApplicationRecord
       host = hostname || ipaddress
 
       auth = authentication_type(auth_type) || authentications.first
-      user = auth.userid || ENV['USER']
 
       ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
 
@@ -70,7 +69,7 @@ class ConversionHost < ApplicationRecord
       # Options from STI subclasses will override the defaults we've set above.
       ssh_options.merge!(options)
 
-      Net::SSH.start(host, user, ssh_options) { |ssh| ssh.exec!('uname -a') }
+      Net::SSH.start(host, auth.userid, ssh_options) { |ssh| ssh.exec!('uname -a') }
     end
   rescue Net::SSH::AuthenticationFailed => err
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
