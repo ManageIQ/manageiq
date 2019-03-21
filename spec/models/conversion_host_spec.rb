@@ -190,6 +190,8 @@ describe ConversionHost do
 
   context "address validation" do
     let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+    let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
 
     it "is invalid if the address is not a valid IP address" do
       allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
@@ -216,11 +218,18 @@ describe ConversionHost do
       expect(conversion_host.valid?).to be(true)
     end
 
-    it "defaults to the first associated ip address if no address is explicitly provided" do
+    it "defaults to the first associated ip address if no address is explicitly provided for a vm" do
       allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1', '127.0.0.2'])
       conversion_host = ConversionHost.new(:name => "test", :resource => vm)
       expect(conversion_host.valid?).to be(true)
       expect(conversion_host.address).to eql(vm.ipaddresses.first)
+    end
+
+    it "defaults to the first associated ip address if no address is explicitly provided for a host" do
+      allow(vm).to receive(:ipaddresses).and_return(['127.0.0.3', '127.0.0.4'])
+      conversion_host = ConversionHost.new(:name => "test", :resource => host)
+      expect(conversion_host.valid?).to be(true)
+      expect(conversion_host.address).to eql(host.ipaddresses.first)
     end
   end
 
