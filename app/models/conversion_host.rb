@@ -57,14 +57,14 @@ class ConversionHost < ApplicationRecord
       ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
 
       case auth
-        when AuthUseridPassword
-          ssh_options[:auth_methods] = %w[password]
-          ssh_options[:password] = auth.password
-        when AuthPrivateKey
-          ssh_options[:auth_methods] = %w[publickey hostbased]
-          ssh_options[:key_data] = auth.auth_key
-        else
-          raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
+      when AuthUseridPassword
+        ssh_options[:auth_methods] = %w[password]
+        ssh_options[:password] = auth.password
+      when AuthPrivateKey
+        ssh_options[:auth_methods] = %w[publickey hostbased]
+        ssh_options[:key_data] = auth.auth_key
+      else
+        raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
       end
 
       # Options from STI subclasses will override the defaults we've set above.
