@@ -1,3 +1,5 @@
+require 'manageiq-api-client'
+
 module ProcessTasksMixin
   extend ActiveSupport::Concern
   include RetirementMixin
