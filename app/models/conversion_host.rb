@@ -228,25 +228,18 @@ class ConversionHost < ApplicationRecord
     authentication
   end
 
-  # Find the credentials for the associated Redhat resource. If an AuthUseridPassword
-  # object is not found, but the associated userid and password are found, return
-  # a (temporary, unsaved) AuthUseridPassword object using those values.
+  # Find the credentials for the associated Redhat resource. By default it will
+  # look for a v2v auth type. If that is not found, it will look for the
+  # authentication associated with the resource using ipmi, ssh_keypair or default,
+  # in that order, as the authtype.
   #--
   # TODO: Move this into the provider specific subclass.
   #
   def find_credentials_redhat
-    authentication = AuthUseridPassword.find_by(:resource => resource)
-
-    if authentication.nil? && resource.authentication_userid && resource.authentication_password
-      authentication = AuthUseridPassword.new(
-        :name     => resource.name,
-        :resource => resource,
-        :userid   => resource.authentication_userid,
-        :password => resource.authentication.password
-      )
-    end
-
-    authentication
+    authentication_type('v2v') ||
+      resource.authentication_type('ipmi') ||
+      resource.authentication_type('ssh_keypair') ||
+      resource.authentication_type('default')
   end
 
   # Find the credentials for the associated with the Openstack resource. This will
@@ -256,7 +249,9 @@ class ConversionHost < ApplicationRecord
   # TODO: Move this into the provider specific subclass.
   #
   def find_credentials_openstack
-    AuthPrivateKey.find_by(:resource => resource) || resource.ext_management_system.authentication_type('ssh_keypair')
+    authentication_type('v2v') ||
+      resource.ext_management_system.authentication_type('ssh_keypair') ||
+      resource.ext_management_system.authentication_type('default')
   end
 
   # Connect to the conversion host using the MiqSshUtil wrapper using the authentication
