@@ -207,16 +207,15 @@ class ConversionHost < ApplicationRecord
     end
   end
 
-  # Find the associated credentials for the current conversion host based
-  # on the type of provider. Each provider should look for a directly
-  # associated authentication first, and default to the authentication
-  # for the resource second.
-  #--
-  # TODO: Each provider subclass should define their own method for
-  # finding credentials.
+  # Find the credentials for the associated resource. By default it will
+  # look for a v2v auth type. If that is not found, it will look for the
+  # authentication associated with the resource using ssh_keypair or default,
+  # in that order, as the authtype.
   #
   def find_credentials(msg = nil)
-    authentication = send("find_resource_credentials_#{resource.ext_management_system.emstype}")
+    authentication = authentication_type('v2v') ||
+      resource.authentication_type('ssh_keypair') ||
+      resource.authentication_type('default')
 
     unless authentication
       msg = "Credentials not found for conversion host #{name} or resource #{resource.name}"
@@ -226,31 +225,6 @@ class ConversionHost < ApplicationRecord
     end
 
     authentication
-  end
-
-  # Find the credentials for the associated Redhat resource. By default it will
-  # look for a v2v auth type. If that is not found, it will look for the
-  # authentication associated with the resource using ssh_keypair or default,
-  # in that order, as the authtype.
-  #--
-  # TODO: Move this into the provider specific subclass.
-  #
-  def find_credentials_redhat
-    authentication_type('v2v') ||
-      resource.authentication_type('ssh_keypair') ||
-      resource.authentication_type('default')
-  end
-
-  # Find the credentials for the associated with the Openstack resource. This will
-  # look for an AuthPrivateKey associated with the resource, or the EMS of the
-  # associated resource if one cannot be found.
-  #--
-  # TODO: Move this into the provider specific subclass.
-  #
-  def find_credentials_openstack
-    authentication_type('v2v') ||
-      resource.ext_management_system.authentication_type('ssh_keypair') ||
-      resource.ext_management_system.authentication_type('default')
   end
 
   # Connect to the conversion host using the MiqSshUtil wrapper using the authentication
