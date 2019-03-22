@@ -3,6 +3,8 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
 
   include PerEmsWorkerMixin
 
+  # Don't allow multiple refresh workers to run at once
+  self.include_stopping_workers_on_synchronize = true
   self.required_roles = "ems_inventory"
 
   def friendly_name
