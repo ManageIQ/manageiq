@@ -230,14 +230,13 @@ class ConversionHost < ApplicationRecord
 
   # Find the credentials for the associated Redhat resource. By default it will
   # look for a v2v auth type. If that is not found, it will look for the
-  # authentication associated with the resource using ipmi, ssh_keypair or default,
+  # authentication associated with the resource using ssh_keypair or default,
   # in that order, as the authtype.
   #--
   # TODO: Move this into the provider specific subclass.
   #
   def find_credentials_redhat
     authentication_type('v2v') ||
-      resource.authentication_type('ipmi') ||
       resource.authentication_type('ssh_keypair') ||
       resource.authentication_type('default')
   end
