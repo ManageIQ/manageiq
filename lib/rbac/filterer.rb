@@ -254,10 +254,22 @@ module Rbac
 
       scope = include_references(scope, klass, include_for_find, exp_includes, skip_references)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
+
+      if inline_view?(options, scope)
+        inner_scope = scope.except(:select, :includes, :references)
+        scope.includes_values.each { |hash| inner_scope = add_joins(klass, inner_scope, hash) }
+        scope = scope.from(Arel.sql("(#{inner_scope.to_sql})").as(scope.table_name))
+                     .except(:offset, :limit, :order, :where)
+
+        # the auth_count needs to come from the inner query (the query with the limit)
+        if !options[:skip_counts] && (attrs[:apply_limit_in_sql] && limit)
+          auth_count = inner_scope.except(:offset, :limit, :order).count(:all)
+        end
+      end
       targets = scope
 
       unless options[:skip_counts]
-        auth_count = attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
+        auth_count ||= attrs[:apply_limit_in_sql] && limit ? targets.except(:offset, :limit, :order).count(:all) : targets.length
       end
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
@@ -284,6 +296,20 @@ module Rbac
 
     def is_sti?(klass)
       klass.respond_to?(:finder_needs_type_condition?) ? klass.finder_needs_type_condition? : false
+    end
+
+    # We would like to use an inline view if:
+    #   - we enabled viewing an inline view
+    #   - we have virtual attributes
+    #   - we are not bringing back the whole table (i.e. we do have a where() or a limit())
+    #   - we have a non qualified table name (otherwise our inline view will blow up)
+    #   - we are using a scope (instead of a relation - which doesn't do includes so well)
+    def inline_view?(options, scope)
+      options[:use_sql_view] &&
+        options[:extra_cols] &&
+        (scope.limit_value || scope.where_values_hash.present?) &&
+        !scope.table_name&.include?(".") &&
+        scope.respond_to?(:includes_values)
     end
 
     # This is a very primitive way of determining whether we want to skip
@@ -342,6 +368,24 @@ module Rbac
         scope = scope.references(include_for_find).references(exp_includes)
       end
       scope
+    end
+
+    # @param includes [Array, Hash]
+    def add_joins(klass, scope, includes)
+      return scope unless includes
+      includes = Array(includes) unless includes.kind_of?(Enumerable)
+      includes.each do |association, value|
+        if table_include?(klass, association)
+          scope = value ? scope.left_outer_joins(association => value) : scope.left_outer_joins(association)
+        end
+      end
+      scope
+    end
+
+    # this is a reference to a non polymorphic table
+    def table_include?(target_klass, association)
+      reflection = target_klass.reflect_on_association(association)
+      reflection && !reflection.polymorphic?
     end
 
     def polymorphic_include?(target_klass, includes)
