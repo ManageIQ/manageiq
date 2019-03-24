@@ -36,6 +36,7 @@ gem "config",                         "~>1.6.0",       :require => false
 gem "dalli",                          "=2.7.6",        :require => false
 gem "default_value_for",              "~>3.0.3"
 gem "docker-api",                     "~>1.33.6",      :require => false
+gem "dry-validation",                 "< 0.13.1",      :require => false #if RUBY_VERSION < "2.4.0"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
