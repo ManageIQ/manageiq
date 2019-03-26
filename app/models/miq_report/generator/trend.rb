@@ -98,7 +98,7 @@ module MiqReport::Generator::Trend
       end
 
       begin
-        slope_arr = MiqStats.slope(x_array, y_array)
+        slope_arr = Math.linear_regression(*(x_array.zip(y_array))) || []
       rescue ZeroDivisionError
         slope_arr = []
       rescue => err

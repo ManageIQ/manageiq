@@ -574,7 +574,7 @@ module VimPerformanceAnalysis
     end
 
     begin
-      slope_arr = MiqStats.slope(x_array.to_miq_a, y_array.to_miq_a)
+      slope_arr = Math.linear_regression(*(x_array.zip(y_array))) || []
     rescue ZeroDivisionError
       slope_arr = []
     rescue => err
