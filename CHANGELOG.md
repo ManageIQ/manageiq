@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Hammer-4
+
+### Added
+- [V2V] Allow downloading wrapper log file [(#18506)](https://github.com/ManageIQ/manageiq/pull/18506)
+- [V2V] Add default setting for CPU and network limits per conversion host and max concurrent tasks per EMS [(#18528)](https://github.com/ManageIQ/manageiq/pull/18528)
+- v2v Throttling [(#18415)](https://github.com/ManageIQ/manageiq/pull/18415) 
+
+### Fixed
+- Fix the dynamic service task naming generation for subclasses [(#18511)](https://github.com/ManageIQ/manageiq/pull/18511)
+- [V2V] Use default queue priority for log download [(#18524)](https://github.com/ManageIQ/manageiq/pull/18524) 
+- [V2V] Remove fatal nil IP check in preflight check [(#18496)](https://github.com/ManageIQ/manageiq/pull/18496)
+- Add OrchestrationTemplateRunner to queue up orchestration stack deployment [(#18374)](https://github.com/ManageIQ/manageiq/pull/18374)
+- Fix for inability to see dialog details passed to catalog after upgrade from 5.9.4 to 5.9.6 [(#18469)](https://github.com/ManageIQ/manageiq/pull/18469)
+- update infra_migration_job when polling to prevent timing out [(#18557)](https://github.com/ManageIQ/manageiq/pull/18557)
+- [V2V] Fix ConversionHost active_tasks method to use state == 'migrate' [(#18570)](https://github.com/ManageIQ/manageiq/pull/18570)
+
 ## Unreleased as of Sprint 107 ending 2019-03-18
 
 ### Added
@@ -17,23 +33,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - [V2V] Generate extra vars for conversion host playbooks [(#18537)](https://github.com/ManageIQ/manageiq/pull/18537)
 - [V2V] Add default setting for CPU and network limits per conversion host and max concurrent tasks per EMS [(#18528)](https://github.com/ManageIQ/manageiq/pull/18528)
 - Add the resource name to the task action for conversion hosts [(#18525)](https://github.com/ManageIQ/manageiq/pull/18525)
-- [V2V] Allow downloading wrapper log file [(#18506)](https://github.com/ManageIQ/manageiq/pull/18506)
 - Tag associated resource for conversion hosts [(#18505)](https://github.com/ManageIQ/manageiq/pull/18505)
 - Add volume multiattachment capability [(#18371)](https://github.com/ManageIQ/manageiq/pull/18371)
 
 ### Fixed
-- update infra_migration_job when polling to prevent timing out [(#18557)](https://github.com/ManageIQ/manageiq/pull/18557)
 - use like (vs ilike) for service query [(#18549)](https://github.com/ManageIQ/manageiq/pull/18549)
 - Fix: started_on and state attributes for task linked to chargeback for service [(#18542)](https://github.com/ManageIQ/manageiq/pull/18542)
 - [V2V] Fix placeholder name for conversion hosts [(#18535)](https://github.com/ManageIQ/manageiq/pull/18535)
-- [V2V] Use default queue priority for log download [(#18524)](https://github.com/ManageIQ/manageiq/pull/18524)
 - dynamic DatePicker value isn't being set correctly [(#18523)](https://github.com/ManageIQ/manageiq/pull/18523)
-- [V2V] Remove fatal nil IP check in preflight check [(#18496)](https://github.com/ManageIQ/manageiq/pull/18496)
 - Delegate vms_and_templates and miq_templates to parent_manager [(#18488)](https://github.com/ManageIQ/manageiq/pull/18488)
 - Fix graph refresh overwriting smartstate OS info [(#18477)](https://github.com/ManageIQ/manageiq/pull/18477)
-- Fix for inability to see dialog details passed to catalog after upgrade from 5.9.4 to 5.9.6 [(#18469)](https://github.com/ManageIQ/manageiq/pull/18469)
 - Don't print the release codename in production mode [(#18444)](https://github.com/ManageIQ/manageiq/pull/18444)
-- Add OrchestrationTemplateRunner to queue up orchestration stack deployment [(#18374)](https://github.com/ManageIQ/manageiq/pull/18374)
 - CustomButtonSet - make sure children follow button_order [(#18368)](https://github.com/ManageIQ/manageiq/pull/18368)
 
 ## Unreleased as of Sprint 106 ending 2019-03-04
@@ -43,13 +53,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Use currencies from money gem in Chargeback [(#18486)](https://github.com/ManageIQ/manageiq/pull/18486)
 - Add an inventory_collection for the EMS [(#18484)](https://github.com/ManageIQ/manageiq/pull/18484)
 - Add method to copy service templates [(#18464)](https://github.com/ManageIQ/manageiq/pull/18464)
-- v2v Throttling [(#18415)](https://github.com/ManageIQ/manageiq/pull/18415)
 - Explicitly specify the primary key for the metrics tables [(#18384)](https://github.com/ManageIQ/manageiq/pull/18384)
 - Allow user to select Network Port for provisioning [(#18303)](https://github.com/ManageIQ/manageiq/pull/18303)
 
 ### Fixed
 - Only run preprocess_targets_manager_refresh when doing graph refresh and add specs [(#18513)](https://github.com/ManageIQ/manageiq/pull/18513)
-- Fix the dynamic service task naming generation for subclasses [(#18511)](https://github.com/ManageIQ/manageiq/pull/18511)
 - Fixed: started_on column is empty in task which power-on VM [(#18498)](https://github.com/ManageIQ/manageiq/pull/18498)
 - Dup should just dup and not save... [(#18490)](https://github.com/ManageIQ/manageiq/pull/18490)
 - Redo presence check after possible reset of user to nil [(#18462)](https://github.com/ManageIQ/manageiq/pull/18462)
