@@ -309,4 +309,33 @@ describe ConversionHost do
       expect(conversion_host_vm.verify_credentials('v2v')).to be_truthy
     end
   end
+
+  context "#get_conversion_state" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:path) { 'some_path' }
+
+    it "works as expected if the connection is successful and the JSON is valid" do
+      allow(conversion_host).to receive(:connect_ssh).and_return({:alpha => {:beta => 'hello'}}.to_json)
+      expect(conversion_host.get_conversion_state(path)).to eql({'alpha' => {'beta' => 'hello'}})
+    end
+
+    it "works as expected if the connection is successful but the JSON is invalid" do
+      allow(conversion_host).to receive(:connect_ssh).and_return('bogus')
+      expected_message = "Could not parse conversion state data from file '#{path}': bogus"
+      expect { conversion_host.get_conversion_state(path) }.to raise_error(expected_message)
+    end
+
+    it "works as expected if the connection is unsuccessful" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
+      expected_message = "Failed to connect and retrieve conversion state data from file '#{path}'"
+      expect { conversion_host.get_conversion_state(path) }.to raise_error(/#{expected_message}/)
+    end
+
+    it "works as expected if an unknown error occurs" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise(StandardError)
+      expected_message = "Error retrieving and parsing conversion state file '#{path}' from '#{vm.name}'"
+      expect { conversion_host.get_conversion_state(path) }.to raise_error(/#{expected_message}/)
+    end
+  end
 end

@@ -151,7 +151,7 @@ class ConversionHost < ApplicationRecord
   def get_conversion_state(path)
     json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
     JSON.parse(json_state)
-  rescue Net::SSH::Exception => err
+  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and retrieve conversion state data from file '#{path}' with [#{err.class}: #{err}"
   rescue JSON::ParserError
     raise "Could not parse conversion state data from file '#{path}': #{json_state}"
