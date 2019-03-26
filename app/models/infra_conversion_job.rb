@@ -1,9 +1,9 @@
 class InfraConversionJob < Job
   def self.create_job(options)
     # TODO: from settings/user plan settings
-    options[:conversion_polling_interval] ||= 15 # in seconds
-    options[:poll_conversion_max] ||= 4 * 60 * 24 # i.e. default 24 hour (with 15s per-interval)
-    options[:poll_post_stage_max] ||= 4 * 60 * 7 # i.e. default 7 hours (with 15s per-interval)
+    options[:conversion_polling_interval] ||= Settings.transformation.limits.conversion_polling_interval # in seconds
+    options[:poll_conversion_max] ||= Settings.transformation.limits.poll_conversion_max
+    options[:poll_post_stage_max] ||= Settings.transformation.limits.poll_post_stage_max
     super(name, options)
   end
 
