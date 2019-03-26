@@ -9,7 +9,7 @@ NAME=$(basename $0)
 DIR=$(dirname $0)
 miqhosts_cmd="$DIR/miqhosts.rb"
 miqhosts_file="$DIR/miqhosts"
-USER="root"
+USER=$(whoami)
 REQUEST=false
 
 if [ ! -f $miqhosts_file ]
