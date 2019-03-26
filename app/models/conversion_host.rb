@@ -254,7 +254,8 @@ class ConversionHost < ApplicationRecord
   # TODO: Move this to ManageIQ::Providers::Redhat::InfraManager::ConversionHost
   #
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
-    [hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil]
+    authentication = find_credentials
+    [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
   end
 
   # For the OpenStack provider, use the first authentication containing an ssh keypair that has
