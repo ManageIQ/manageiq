@@ -16,11 +16,6 @@ env:
   - TEST_SUITE=vmdb PARALLEL=true
   - TEST_SUITE=brakeman
 matrix:
-  allow_failures:
-  - rvm: 2.5.3
-  exclude:
-  - rvm: 2.5.3
-    env: TEST_SUITE=brakeman
   fast_finish: true
 addons:
   postgresql: '10'
