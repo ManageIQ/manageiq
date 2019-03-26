@@ -16,14 +16,16 @@ module ConversionHost::Configurations
         :action => "Configuring a conversion_host: operation=#{op} resource=(name: #{resource.name} type: #{resource.class.name} id: #{resource.id})",
         :userid => auth_user
       }
+
       queue_opts = {
         :class_name  => name,
         :method_name => op,
         :instance_id => instance_id,
         :role        => 'ems_operations',
         :zone        => resource.ext_management_system.my_zone,
-        :args        => params
+        :args        => [params, auth_user]
       }
+
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
     end
 
@@ -34,10 +36,10 @@ module ConversionHost::Configurations
       params[:resource_id] = resource.id
       params[:resource_type] = resource.class.name
 
-      queue_configuration('enable', nil, resource, [params], auth_user)
+      queue_configuration('enable', nil, resource, params, auth_user)
     end
 
-    def enable(params)
+    def enable(params, auth_user = nil)
       params = params.symbolize_keys
       _log.info("Enabling a conversion_host with parameters: #{params}")
 
@@ -49,10 +51,21 @@ module ConversionHost::Configurations
       vmware_ssh_private_key = params.delete(:vmware_ssh_private_key)
       params[:ssh_transport_supported] = !vmware_ssh_private_key.nil?
 
-      conversion_host = new(params)
-      conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
-      conversion_host.save!
-      conversion_host
+      ssh_key = params.delete(:conversion_host_ssh_private_key)
+
+      new(params).tap do |conversion_host|
+        if ssh_key
+          conversion_host.authentications << AuthPrivateKey.create!(
+            :name     => conversion_host.name,
+            :auth_key => ssh_key,
+            :userid   => auth_user,
+            :authtype => 'v2v'
+          )
+        end
+
+        conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
+        conversion_host.save!
+      end
     rescue StandardError => error
       raise
     ensure
@@ -62,7 +75,7 @@ module ConversionHost::Configurations
   end
 
   def disable_queue(auth_user = nil)
-    self.class.queue_configuration('disable', id, resource, [], auth_user)
+    self.class.queue_configuration('disable', id, resource, {}, auth_user)
   end
 
   def disable

@@ -67,7 +67,7 @@ module AuthenticationMixin
   end
 
   def authentication_key_pairs
-    authentications.select { |a| a.kind_of?(ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair) }
+    authentications.select { |a| a.kind_of?(AuthPrivateKey) }
   end
 
   def authentication_for_providers

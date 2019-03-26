@@ -1,11 +1,16 @@
 class ConversionHost < ApplicationRecord
   include NewWithTypeStiMixin
+  include AuthenticationMixin
 
   acts_as_miq_taggable
 
   belongs_to :resource, :polymorphic => true
   has_many :service_template_transformation_plan_tasks, :dependent => :nullify
-  has_many :active_tasks, -> { where(:state => ['active', 'migrate']) }, :class_name => ServiceTemplateTransformationPlanTask, :inverse_of => :conversion_host
+
+  has_many :active_tasks, -> { where(:state => ['active', 'migrate']) },
+    :class_name => ServiceTemplateTransformationPlanTask,
+    :inverse_of => :conversion_host
+
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
   validates :name, :presence => true
@@ -26,31 +31,98 @@ class ConversionHost < ApplicationRecord
   after_create :tag_resource_as_enabled
   after_destroy :tag_resource_as_disabled
 
-  # To be eligible, a conversion host must have the following properties
-  #  - A transport mechanism is configured for source (set by 3rd party)
-  #  - Credentials are set on the resource and SSH connection works
-  #  - The number of concurrent tasks has not reached the limit
-  def eligible?
-    source_transport_method.present? && check_ssh_connection && check_concurrent_tasks
+  # Use the +auth_type+ if present, or check the first associated authentication
+  # if any are directly associated with the conversion host. Otherwise, use the
+  # default check which uses the associated resource's authentications.
+  #
+  # In practice there should only be one associated authentication.
+  #
+  # Subclasses should pass provider-specific +options+, such as proxy information.
+  #
+  # This method is necessary to comply with AuthenticationMixin interface.
+  #--
+  # TODO: Use the verify_credentials_ssh method in host.rb? Move that to the
+  # AuthenticationMixin?
+  #
+  def verify_credentials(auth_type = nil, options = {})
+    if authentications.empty?
+      check_ssh_connection
+    else
+      require 'net/ssh'
+      host = hostname || ipaddress
+
+      auth = authentication_type(auth_type) || authentications.first
+
+      ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
+
+      case auth
+      when AuthUseridPassword
+        ssh_options[:auth_methods] = %w[password]
+        ssh_options[:password] = auth.password
+      when AuthPrivateKey
+        ssh_options[:auth_methods] = %w[publickey hostbased]
+        ssh_options[:key_data] = auth.auth_key
+      else
+        raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
+      end
+
+      # Options from STI subclasses will override the defaults we've set above.
+      ssh_options.merge!(options)
+
+      Net::SSH.start(host, auth.userid, ssh_options) { |ssh| ssh.exec!('uname -a') }
+    end
+  rescue Net::SSH::AuthenticationFailed => err
+    raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
+  rescue Net::SSH::HostKeyMismatch => err
+    raise MiqException::MiqSshUtilHostKeyMismatch, _("Host key mismatch - %{error_message}") % {:error_message => err.message}
+  rescue Exception => err
+    raise _("Unknown error - %{error_message}") % {:error_message => err.message}
+  else
+    true
   end
 
+  # Returns a boolean indicating whether or not the conversion host is eligible
+  # for use. To be eligible, a conversion host must have the following properties:
+  #
+  #  - A transport mechanism is configured for source (set by 3rd party).
+  #  - Credentials are set on the conversion host and the SSH connection works.
+  #  - The number of concurrent tasks has not reached the limit.
+  #
+  def eligible?
+    source_transport_method.present? && verify_credentials && check_concurrent_tasks
+  end
+
+  # Returns a boolean indicating whether or not the current number of active tasks
+  # exceeds the maximum number of allowable concurrent tasks specified in settings.
+  #
   def check_concurrent_tasks
     max_tasks = max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
     active_tasks.size < max_tasks
   end
 
+  # Check to see if we can connect to the conversion host using a simple 'uname -a'
+  # command on the connection. The exact nature of the connection will depend on the
+  # underlying provider.
+  #
   def check_ssh_connection
     connect_ssh { |ssu| ssu.shell_exec('uname -a') }
     true
-  rescue => e
+  rescue StandardError
     false
   end
 
+  # If set, returns a string indicating the source transport method. This is
+  # either 'vddk' or 'ssh'. If not set, returns nil.
+  #
   def source_transport_method
     return 'vddk' if vddk_transport_supported?
     return 'ssh' if ssh_transport_supported?
   end
 
+  # Returns the associated IP address for the conversion host in the given +family+.
+  # If an address is set for the conversion host, then that address will be
+  # returned. Otherwise, it will return the IP address of the associated resource.
+  #
   def ipaddress(family = 'ipv4')
     return address if address.present? && IPAddr.new(address).send("#{family}?")
     resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
@@ -63,6 +135,9 @@ class ConversionHost < ApplicationRecord
     raise "Starting conversion failed on '#{resource.name}' with [#{e.class}: #{e}]"
   end
 
+  # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
+  # if no signal is specified.
+  #
   def kill_process(pid, signal = 'TERM')
     connect_ssh { |ssu| ssu.shell_exec("/bin/kill -s #{signal} #{pid}") }
     true
@@ -70,6 +145,12 @@ class ConversionHost < ApplicationRecord
     false
   end
 
+  # Get the conversion state by reading from a remote json file at +path+
+  # and return the parsed data.
+  #--
+  # TODO: This should be more clear on failure, since it could fail because
+  # it's not found or because the contents were invalid.
+  #
   def get_conversion_state(path)
     json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
     JSON.parse(json_state)
@@ -77,6 +158,8 @@ class ConversionHost < ApplicationRecord
     raise "Could not get state file '#{path}' from '#{resource.name}' with [#{e.class}: #{e}"
   end
 
+  # Get and return the contents of the remote conversion log at +path+.
+  #
   def get_conversion_log(path)
     connect_ssh { |ssu| ssu.get_file(path, nil) }
   rescue => e
@@ -124,28 +207,29 @@ class ConversionHost < ApplicationRecord
     end
   end
 
-  def check_resource_credentials(fatal = false, extra_msg = nil)
-    success = send("check_resource_credentials_#{resource.ext_management_system.emstype}")
-    if !success and fatal
-      msg = "Credential not found for #{resource.name}."
-      msg += " #{extra_msg}" unless extra_msg.blank?
-      _log.error(:msg)
+  # Find the credentials for the associated resource. By default it will
+  # look for a v2v auth type. If that is not found, it will look for the
+  # authentication associated with the resource using ssh_keypair or default,
+  # in that order, as the authtype.
+  #
+  def find_credentials(msg = nil)
+    authentication = authentication_type('v2v') ||
+      resource.authentication_type('ssh_keypair') ||
+      resource.authentication_type('default')
+
+    unless authentication
+      msg = "Credentials not found for conversion host #{name} or resource #{resource.name}"
+      msg << " #{msg}" if msg
+      _log.error(msg)
       raise MiqException::Error, msg
     end
-    success
+
+    authentication
   end
 
-  def check_resource_credentials_rhevm
-    !(resource.authentication_userid.nil? || resource.authentication_password.nil?)
-  end
-
-  def check_resource_credentials_openstack
-    ssh_authentications = resource.ext_management_system.authentications
-                                  .where(:authtype => 'ssh_keypair')
-                                  .where.not(:userid => nil, :auth_key => nil)
-    !ssh_authentications.empty?
-  end
-
+  # Connect to the conversion host using the MiqSshUtil wrapper using the authentication
+  # parameters appropriate for that type of resource.
+  #
   def connect_ssh
     require 'MiqSshUtil'
     MiqSshUtil.shell_with_su(*miq_ssh_util_args) do |ssu, _shell|
@@ -156,19 +240,30 @@ class ConversionHost < ApplicationRecord
     raise e
   end
 
+  # Collect appropriate authentication information based on the resource type.
+  #--
+  # TODO: This should be handled by a ConversionHost subclass within each supported provider.
+  #
   def miq_ssh_util_args
     send("miq_ssh_util_args_#{resource.type.gsub('::', '_').downcase}")
   end
 
+  # For the Redhat provider, use the userid and password associated directly with the resource.
+  #--
+  # TODO: Move this to ManageIQ::Providers::Redhat::InfraManager::ConversionHost
+  #
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
-    [hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil]
+    authentication = find_credentials
+    [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
   end
 
+  # For the OpenStack provider, use the first authentication containing an ssh keypair that has
+  # both a userid and auth key.
+  #--
+  # TODO: Move this to ManageIQ::Providers::OpenStack::CloudManager::ConversionHost
+  #
   def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
-    authentication = resource.ext_management_system.authentications
-                             .where(:authtype => 'ssh_keypair')
-                             .where.not(:userid => nil, :auth_key => nil)
-                             .first
+    authentication = find_credentials
     [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
   end
 
