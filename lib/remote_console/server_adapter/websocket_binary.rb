@@ -1,3 +1,5 @@
+require 'websocket/driver'
+
 module RemoteConsole
   module ServerAdapter
     class WebsocketBinary

@@ -20,6 +20,8 @@
 # always returns with a socket to read and a socket to write, the `@adapters`
 # hash has been used to access the corresponding wrappers.
 
+require 'surro-gate'
+
 module RemoteConsole
   class RackServer
     attr_accessor :logger

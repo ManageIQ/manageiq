@@ -210,8 +210,8 @@ group :web_server, :manageiq_default do
 end
 
 group :web_socket, :manageiq_default do
-  gem "surro-gate",                     "~>1.0.5"
-  gem "websocket-driver",               "~>0.6.3"
+  gem "surro-gate",                     "~>1.0.5", :require => false
+  gem "websocket-driver",               "~>0.6.3", :require => false
 end
 
 ### Start of gems excluded from the appliances.
