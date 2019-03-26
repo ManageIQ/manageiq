@@ -253,7 +253,7 @@ class ConversionHost < ApplicationRecord
   # TODO: Move this to ManageIQ::Providers::Redhat::InfraManager::ConversionHost
   #
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
-    authentication = find_credentials_redhat
+    authentication = find_credentials
     [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
   end
 
@@ -263,7 +263,7 @@ class ConversionHost < ApplicationRecord
   # TODO: Move this to ManageIQ::Providers::OpenStack::CloudManager::ConversionHost
   #
   def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
-    authentication = find_credentials_openstack
+    authentication = find_credentials
     [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
   end
 
