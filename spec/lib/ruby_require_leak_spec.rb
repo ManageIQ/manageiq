@@ -36,12 +36,13 @@ describe "Ruby 'require' leak with Pathnames" do
       #     * https://github.com/ManageIQ/manageiq-ui-classic/pull/3266
       #     * https://github.com/ManageIQ/manageiq-graphql/pull/34
       #
-      it "is running on ruby >= 2.5.0" do
-        current_ruby_version = Gem::Version.new(RbConfig::CONFIG["ruby_version"])
+      it "is running on ruby >= 2.5.0 on travis only" do
         ruby_2_5_0_version   = Gem::Version.new("2.5.0")
-        err_msg              = "expected ruby to be less than 2.5.0"
+        travis_yaml          = YAML.load_file(File.expand_path("../../.travis.yml", __dir__))
+        travis_ruby_versions = travis_yaml["rvm"].map { |rb_ver| Gem::Version.new(rb_ver) }
+        err_msg              = "expected at least 1 ruby to be less than 2.5.0"
 
-        expect(current_ruby_version).to be < ruby_2_5_0_version, err_msg
+        expect(travis_ruby_versions.any? { |rb_ver| rb_ver < ruby_2_5_0_version }).to be_truthy, err_msg
       end
     end
   end
