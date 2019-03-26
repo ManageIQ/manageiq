@@ -75,7 +75,7 @@ class ConversionHost < ApplicationRecord
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
   rescue Net::SSH::HostKeyMismatch => err
     raise MiqException::MiqSshUtilHostKeyMismatch, _("Host key mismatch - %{error_message}") % {:error_message => err.message}
-  rescue StandardError => err
+  rescue Exception => err
     raise _("Unknown error - %{error_message}") % {:error_message => err.message}
   else
     true
