@@ -1,14 +1,16 @@
 class Chargeback < ActsAsArModel
   set_columns_hash( # Fields common to any chargeback type
-    :start_date           => :datetime,
-    :end_date             => :datetime,
-    :interval_name        => :string,
-    :display_range        => :string,
-    :chargeback_rates     => :string,
-    :entity               => :binary,
-    :tag_name             => :string,
-    :label_name           => :string,
-    :fixed_compute_metric => :integer,
+    :start_date             => :datetime,
+    :end_date               => :datetime,
+    :interval_name          => :string,
+    :display_range          => :string,
+    :report_interval_range  => :string,
+    :report_generation_date => :datetime,
+    :chargeback_rates       => :string,
+    :entity                 => :binary,
+    :tag_name               => :string,
+    :label_name             => :string,
+    :fixed_compute_metric   => :integer,
   )
 
   ALLOWED_FIELD_SUFFIXES = %w[
@@ -16,6 +18,8 @@ class Chargeback < ActsAsArModel
     _cost
     -owner_name
     _metric
+    -report_interval_range
+    -report_generation_date
     -provider_name
     -provider_uid
     -project_uid
@@ -186,6 +190,9 @@ class Chargeback < ActsAsArModel
   def calculate_costs(consumption, rates)
     calculate_fixed_compute_metric(consumption)
     self.class.try(:refresh_dynamic_metric_columns)
+    self.report_interval_range = "#{consumption.report_interval_start.strftime('%m/%d/%Y')} - #{consumption.report_interval_end.strftime('%m/%d/%Y')}"
+    self.report_generation_date = Time.current
+
     _log.debug("Consumption Type: #{consumption.class}")
     rates.each do |rate|
       _log.debug("Calculation with rate: #{rate.id} #{rate.description}(#{rate.rate_type})")

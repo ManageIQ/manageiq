@@ -191,7 +191,7 @@ describe MeteringVm do
   end
 
   let(:allowed_attributes) do
-    %w(start_date
+    %w[start_date
        end_date
        interval_name
        display_range
@@ -222,7 +222,8 @@ describe MeteringVm do
        tenant_name
        beginning_of_resource_existence_in_report_interval
        end_of_resource_existence_in_report_interval
-  )
+       report_interval_range
+       report_generation_date]
   end
 
   it 'lists proper attributes' do
