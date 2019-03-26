@@ -278,7 +278,7 @@ describe ConversionHost do
 
     it "works as expected with no associated authentications if the connect_ssh method fails" do
       allow(conversion_host_vm).to receive(:connect_ssh).and_raise(Exception.new)
-      expect{ conversion_host_vm.verify_credentials }.to raise_error{ RuntimeError }
+      expect { conversion_host_vm.verify_credentials }.to raise_error(RuntimeError)
     end
 
     it "works if there is an associated validation" do
@@ -292,7 +292,7 @@ describe ConversionHost do
       authentication = FactoryBot.create(:authentication_ssh_keypair)
       conversion_host_vm.authentications << authentication
       allow(Net::SSH).to receive(:start).and_raise(Net::SSH::AuthenticationFailed.new)
-      expect{ conversion_host_vm.verify_credentials }.to raise_error{ MiqException::MiqInvalidCredentialsError }
+      expect { conversion_host_vm.verify_credentials }.to raise_error(MiqException::MiqInvalidCredentialsError)
     end
 
     it "works if there are multiple associated validations" do
