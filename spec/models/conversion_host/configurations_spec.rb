@@ -119,7 +119,7 @@ describe ConversionHost do
 
       it "to queue with a task" do
         task_id = described_class.enable_queue(params)
-        expected_context_data = params.except(:resource)
+        expected_context_data = {:request_params => params.except(:resource)}
 
         expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action, :context_data => expected_context_data)
         expect(MiqQueue.first).to have_attributes(
@@ -133,8 +133,8 @@ describe ConversionHost do
       end
 
       it "rejects ssh key information as context data" do
-        task_id = described_class.enable_queue(params.merge(:ssh_key => 'xxx', :vmware_ssh_private_key => 'yyy'))
-        expected_context_data = params.except(:resource)
+        task_id = described_class.enable_queue(params.merge(:conversion_host_ssh_private_key => 'xxx', :vmware_ssh_private_key => 'yyy'))
+        expected_context_data = {:request_params => params.except(:resource)}
 
         expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action, :context_data => expected_context_data)
       end

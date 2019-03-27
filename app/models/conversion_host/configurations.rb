@@ -34,8 +34,9 @@ module ConversionHost::Configurations
       # informational purposes in general.
       #
       MiqTask.find(task_id).tap do |task|
-        params = params.first&.except(:task_id, :miq_task_id)
-        task.context_data = params&.reject { |key, value| key.to_s.end_with?('_key') }
+        params = params&.except(:task_id, :miq_task_id)
+        hash = {:request_params => params&.reject { |key, value| key.to_s.end_with?('private_key') }}
+        task.context_data = hash
         task.save
       end
 
@@ -56,13 +57,14 @@ module ConversionHost::Configurations
       params = params.symbolize_keys
       _log.info("Enabling a conversion_host with parameters: #{params}")
 
-      params.delete(:task_id)     # In case this is being called through *_queue which will stick in a :task_id
-      params.delete(:miq_task_id) # The miq_queue.activate_miq_task will stick in a :miq_task_id
+      params.delete(:task_id) # In case this is being called through *_queue which will stick in a :task_id
+      miq_task_id = params.delete(:miq_task_id) # The miq_queue.activate_miq_task will stick in a :miq_task_id
 
       vmware_vddk_package_url = params.delete(:vmware_vddk_package_url)
-      params[:vddk_transport_supported] = !vmware_vddk_package_url.nil?
+      params[:vddk_transport_supported] = vmware_vddk_package_url.present?
+
       vmware_ssh_private_key = params.delete(:vmware_ssh_private_key)
-      params[:ssh_transport_supported] = !vmware_ssh_private_key.nil?
+      params[:ssh_transport_supported] = vmware_ssh_private_key.present?
 
       ssh_key = params.delete(:conversion_host_ssh_private_key)
 
@@ -78,6 +80,13 @@ module ConversionHost::Configurations
 
         conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key)
         conversion_host.save!
+
+        if miq_task_id
+          MiqTask.find(miq_task_id).tap do |task|
+            task.context_data.to_h[:conversion_host_id] = conversion_host.id
+            task.save
+          end
+        end
       end
     rescue StandardError => error
       raise
