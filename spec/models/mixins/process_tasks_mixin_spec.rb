@@ -115,6 +115,31 @@ describe ProcessTasksMixin do
         expect(MiqQueue).not_to receive(:put)
         test_class.invoke_tasks_remote(test_options)
       end
+
+      context "failing actions" do
+        let(:api_collection) { double("ManageIQ::API::Client collection") }
+        before do
+          api_config = double("Api::CollectionConfig")
+          allow(Api::CollectionConfig).to receive(:new).and_return(api_config)
+          allow(api_config).to receive(:name_for_klass)
+        end
+
+        it "does not requeue if resource not found" do
+          allow(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
+          allow(api_collection).to receive(:find).and_raise(ManageIQ::API::Client::ResourceNotFound)
+          expect(MiqQueue).not_to receive(:put)
+          test_class.invoke_tasks_remote(test_options)
+        end
+
+        it "does not requeue if NoMethodError raised on resource" do
+          resource0 = double("resource0")
+          allow(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
+          allow(api_collection).to receive(:find).and_return(resource0)
+          allow(resource0).to receive(:send).and_raise(NoMethodError)
+          expect(MiqQueue).not_to receive(:put)
+          test_class.invoke_tasks_remote(test_options)
+        end
+      end
     end
 
     it "requeues if the server does not have an address" do
