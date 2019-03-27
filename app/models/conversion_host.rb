@@ -70,11 +70,18 @@ class ConversionHost < ApplicationRecord
     false
   end
 
+  # Retrieve the conversion state information from a remote file as a stream.
+  # Then parse and return the stream data as a hash using JSON.parse.
+  #
   def get_conversion_state(path)
     json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
     JSON.parse(json_state)
-  rescue => e
-    raise "Could not get state file '#{path}' from '#{resource.name}' with [#{e.class}: #{e}"
+  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+    raise "Failed to connect and retrieve conversion state data from file '#{path}' with [#{err.class}: #{err}"
+  rescue JSON::ParserError
+    raise "Could not parse conversion state data from file '#{path}': #{json_state}"
+  rescue StandardError => err
+    raise "Error retrieving and parsing conversion state file '#{path}' from '#{resource.name}' with [#{err.class}: #{err}"
   end
 
   def get_conversion_log(path)
