@@ -35,7 +35,7 @@ module ConversionHost::Configurations
       #
       MiqTask.find(task_id).tap do |task|
         params = params&.except(:task_id, :miq_task_id)
-        hash = {:request_params => params&.reject { |key, value| key.to_s.end_with?('private_key') }}
+        hash = {:request_params => params&.reject { |key, _value| key.to_s.end_with?('private_key') }}
         task.context_data = hash
         task.save
       end
