@@ -124,7 +124,6 @@ module ProcessTasksMixin
       end
     end
 
-
     def send_action(action, collection_name, collection, remote_options, id = nil)
       post_args = remote_options[:args] || {}
       begin

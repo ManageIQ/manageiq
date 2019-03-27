@@ -185,6 +185,18 @@ describe ProcessTasksMixin do
           expect(AuditEvent).not_to receive(:success)
           expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.to raise_error(StandardError)
         end
+
+        it "forms proper error message for AuditEvent in case of :failure on collection" do
+          allow(api_collection).to receive(:the_task).and_raise(StandardError)
+          expect(test_class).to receive(:task_audit_event).with(:failure, {:task => "the_task"}, {:message => "'the_task' failed to be initiated on remote collection test_class_collection, with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.to raise_error(StandardError)
+        end
+
+        it "forms proper error message for AuditEvent in case of :success on collection" do
+          allow(api_collection).to receive(:the_task)
+          expect(test_class).to receive(:task_audit_event).with(:success, {:task => "the_task"}, {:message => "'the_task' successfully initiated on remote collection test_class_collection, with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.not_to raise_error
+        end
       end
 
       it "with missing remote resource does not raise" do
@@ -207,12 +219,12 @@ describe ProcessTasksMixin do
           expect(api_collection).to receive(:find).with(0).and_return(Struct.new(:id).new(0))
           expect(api_collection).to receive(:find).with(1).and_return(double("Something that responds", :id => 0, :the_task => nil))
 
-          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.invoke_api_tasks) undefined method `the_task' for #<struct id=0>").and_call_original
+          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.send_action) undefined method `the_task' for #<struct id=0>").and_call_original
           expect(test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task")).to eq([0, 1])
         end
 
         it "collection" do
-          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.invoke_api_tasks) undefined method `the_task' for []:Array").and_call_original
+          expect($log).to receive(:error).with("MIQ(ProcessTasksMixinTestClass.send_action) undefined method `the_task' for []:Array").and_call_original
           expect { test_class.invoke_api_tasks(api_connection, :task => "the_task") }.not_to raise_error
         end
       end
@@ -271,6 +283,24 @@ describe ProcessTasksMixin do
 
           expect(AuditEvent).to receive(:failure).once
           expect { test_class.invoke_api_tasks(api_connection, :ids => [0, 1], :task => "the_task") }.to raise_error(StandardError)
+        end
+
+        it "forms proper error message for AuditEvent when invocation raises StandardError" do
+          allow(resource0).to receive(:the_task).and_raise(StandardError)
+          expect(test_class).to receive(:task_audit_event).with(:failure, {:ids => [0], :task => "the_task"}, {:message => "'the_task' failed to be initiated on remote object: 0 for collection test_class_collection,  with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0], :task => "the_task") }.to raise_error(StandardError)
+        end
+
+        it "forms proper error message if remote resource not found" do
+          allow(resource0).to receive(:the_task).and_raise(ManageIQ::API::Client::ResourceNotFound)
+          expect(test_class).to receive(:task_audit_event).with(:failure, {:ids => [0], :task => "the_task"}, {:message => "'the_task' failed to be initiated on remote object: 0 for collection test_class_collection,  with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0], :task => "the_task") }.not_to raise_error
+        end
+
+        it "forms proper message for AuditEvent in case of :success on individual object" do
+          allow(resource0).to receive(:the_task)
+          expect(test_class).to receive(:task_audit_event).with(:success, {:ids => [0], :task => "the_task"}, {:message => "'the_task' successfully initiated on remote object: 0 for collection test_class_collection,  with args {}"})
+          expect { test_class.invoke_api_tasks(api_connection, :ids => [0], :task => "the_task") }.not_to raise_error
         end
       end
     end
