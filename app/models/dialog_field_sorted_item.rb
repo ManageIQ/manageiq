@@ -2,7 +2,7 @@ class DialogFieldSortedItem < DialogField
   AUTOMATE_VALUE_FIELDS = %w(sort_by sort_order data_type default_value required read_only visible description).freeze
 
   def initialize_value_context
-    if load_values_on_init?
+    if load_values_on_init
       raw_values
     else
       @raw_values = initial_values
@@ -154,11 +154,6 @@ class DialogFieldSortedItem < DialogField
     else
       []
     end
-  end
-
-  def load_values_on_init?
-    return true unless show_refresh_button
-    load_values_on_init
   end
 
   def value_modifier
