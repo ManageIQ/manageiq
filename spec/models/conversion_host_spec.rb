@@ -317,7 +317,7 @@ describe ConversionHost do
 
     it "works as expected if the connection is successful and the JSON is valid" do
       allow(conversion_host).to receive(:connect_ssh).and_return({:alpha => {:beta => 'hello'}}.to_json)
-      expect(conversion_host.get_conversion_state(path)).to eql({'alpha' => {'beta' => 'hello'}})
+      expect(conversion_host.get_conversion_state(path)).to eql('alpha' => {'beta' => 'hello'})
     end
 
     it "works as expected if the connection is successful but the JSON is invalid" do
