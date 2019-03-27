@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Hammer-4
+
+### Added
+- [V2V] Allow downloading wrapper log file [(#18506)](https://github.com/ManageIQ/manageiq/pull/18506)
+- [V2V] Add default setting for CPU and network limits per conversion host and max concurrent tasks per EMS [(#18528)](https://github.com/ManageIQ/manageiq/pull/18528)
+- v2v Throttling [(#18415)](https://github.com/ManageIQ/manageiq/pull/18415) 
+
+### Fixed
+- Fix the dynamic service task naming generation for subclasses [(#18511)](https://github.com/ManageIQ/manageiq/pull/18511)
+- [V2V] Use default queue priority for log download [(#18524)](https://github.com/ManageIQ/manageiq/pull/18524) 
+- [V2V] Remove fatal nil IP check in preflight check [(#18496)](https://github.com/ManageIQ/manageiq/pull/18496)
+- Add OrchestrationTemplateRunner to queue up orchestration stack deployment [(#18374)](https://github.com/ManageIQ/manageiq/pull/18374)
+- Fix for inability to see dialog details passed to catalog after upgrade from 5.9.4 to 5.9.6 [(#18469)](https://github.com/ManageIQ/manageiq/pull/18469)
+- update infra_migration_job when polling to prevent timing out [(#18557)](https://github.com/ManageIQ/manageiq/pull/18557)
+- [V2V] Fix ConversionHost active_tasks method to use state == 'migrate' [(#18570)](https://github.com/ManageIQ/manageiq/pull/18570)
+
 ## Hammer-3
 
 ### Added
