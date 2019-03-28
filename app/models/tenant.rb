@@ -51,7 +51,7 @@ class Tenant < ApplicationRecord
   validates :name, :uniqueness => {:scope      => :ancestry,
                                    :conditions => -> { in_my_region },
                                    :message    => "should be unique per parent"}
-  validate :validate_default_tenant, :on => :update, :if => :default_miq_group_id_changed?
+  validate :validate_default_tenant, :on => :update, :if => :saved_change_to_default_miq_group_id?
 
   scope :all_tenants,  -> { where(:divisible => true) }
   scope :all_projects, -> { where(:divisible => false) }

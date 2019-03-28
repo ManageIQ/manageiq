@@ -221,7 +221,7 @@ class ExtManagementSystem < ApplicationRecord
 
   default_value_for :enabled, true
 
-  after_save :change_maintenance_for_child_managers, :if => proc { |ems| ems.enabled_changed? }
+  after_save :change_maintenance_for_child_managers, :if => proc { |ems| ems.saved_change_to_enabled? }
 
   # Move ems to maintenance zone and backup current one
   # @param orig_zone [Integer] because of zone of child manager can be changed by parent manager's ensure_managers() callback

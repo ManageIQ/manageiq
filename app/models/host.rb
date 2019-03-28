@@ -213,9 +213,9 @@ class Host < ApplicationRecord
   end
 
   def process_events
-    return unless ems_cluster_id_changed?
+    return unless saved_change_to_ems_cluster_id?
 
-    raise_cluster_event(ems_cluster_id_was, "host_remove_from_cluster") if ems_cluster_id_was
+    raise_cluster_event(ems_cluster_id_before_last_save, "host_remove_from_cluster") if ems_cluster_id_before_last_save
     raise_cluster_event(ems_cluster, "host_add_to_cluster") if ems_cluster_id
   end # after_save
 

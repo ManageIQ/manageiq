@@ -157,8 +157,8 @@ class TimeProfile < ApplicationRecord
 
   def rebuild_daily_metrics_on_save
     if rollup_daily_metrics
-      rebuild_daily_metrics_queue if @rebuild_daily_metrics_on_create || changed.include_any?("profile", "rollup_daily_metrics")
-    elsif changed.include?("rollup_daily_metrics")
+      rebuild_daily_metrics_queue if @rebuild_daily_metrics_on_create || saved_change_to_profile? || saved_change_to_rollup_daily_metrics?
+    elsif saved_change_to_rollup_daily_metrics?
       destroy_metric_rollups_queue
     end
   ensure
