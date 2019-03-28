@@ -43,6 +43,7 @@ describe DialogFieldTextBox do
 
       context "when show_refresh_button is false" do
         let(:show_refresh_button) { false }
+        let(:load_values_on_init) { true }
 
         it "sets the value to the automate value" do
           field.initialize_value_context
