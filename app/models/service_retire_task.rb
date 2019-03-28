@@ -28,8 +28,10 @@ class ServiceRetireTask < MiqRetireTask
   def after_request_task_create
     update_attributes(:description => get_description)
     parent_svc = Service.find_by(:id => options[:src_ids])
-    _log.info("- creating service subtasks for service task <#{self.class.name}:#{id}>, service <#{parent_svc.id}>")
-    create_retire_subtasks(parent_svc, self)
+    if create_subtasks?(parent_svc)
+      _log.info("- creating service subtasks for service task <#{self.class.name}:#{id}>, service <#{parent_svc.id}>")
+      create_retire_subtasks(parent_svc, self)
+    end
   end
 
   def create_retire_subtasks(parent_service, parent_task)
@@ -67,6 +69,10 @@ class ServiceRetireTask < MiqRetireTask
   end
 
   private
+
+  def create_subtasks?(parent_svc)
+    !parent_svc.try(:retain_resources_on_retirement?)
+  end
 
   def retire_task_type(resource_type)
     (resource_type.base_class.name + "RetireTask").safe_constantize || (resource_type.name.demodulize + "RetireTask").safe_constantize

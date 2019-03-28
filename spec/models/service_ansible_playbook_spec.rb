@@ -78,6 +78,42 @@ describe(ServiceAnsiblePlaybook) do
     }
   end
 
+  shared_examples_for "#retain_resources_on_retirement" do
+    it "has config_info retirement options" do
+      service_options = service.options
+      service_options[:config_info][:retirement] = service_options[:config_info][:provision]
+      service_options[:config_info][:retirement][:remove_resources] = remove_resources
+      service.update_attributes(:options => service_options)
+      expect(service.retain_resources_on_retirement?).to eq(!can_children_be_retired?)
+    end
+  end
+
+  describe '#retain_resources_on_retirement?' do
+    context "no_with_playbook returns true" do
+      let(:remove_resources) { 'no_with_playbook' }
+      let(:can_children_be_retired?) { false }
+      it_behaves_like "#retain_resources_on_retirement"
+    end
+
+    context "no_without_playbook returns true" do
+      let(:remove_resources) { 'no_without_playbook' }
+      let(:can_children_be_retired?) { false }
+      it_behaves_like "#retain_resources_on_retirement"
+    end
+
+    context "yes_with_playbook returns false" do
+      let(:remove_resources) { 'yes_with_playbook' }
+      let(:can_children_be_retired?) { true }
+      it_behaves_like "#retain_resources_on_retirement"
+    end
+
+    context "yes_without_playbook returns false" do
+      let(:remove_resources) { 'yes_without_playbook' }
+      let(:can_children_be_retired?) { true }
+      it_behaves_like "#retain_resources_on_retirement"
+    end
+  end
+
   describe '#preprocess' do
     context 'basic service' do
       it 'prepares job options from service template' do
