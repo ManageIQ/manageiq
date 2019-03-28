@@ -1,3 +1,5 @@
+require 'resolv'
+
 class ConversionHost < ApplicationRecord
   include NewWithTypeStiMixin
   include AuthenticationMixin
