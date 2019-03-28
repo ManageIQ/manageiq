@@ -94,9 +94,6 @@ module ProcessTasksMixin
           MiqQueue.submit_job(q_hash)
           next
         end
-
-        msg = "'#{options[:task]}' successfully initiated for remote VMs: #{ids.sort.inspect}"
-        task_audit_event(:success, options, :message => msg)
       end
     end
 
@@ -114,33 +111,37 @@ module ProcessTasksMixin
 
       collection   = api_client.send(collection_name)
       action       = action_for_task(remote_options[:task])
-      post_args    = remote_options[:args] || {}
       resource_ids = remote_options[:ids]
 
       if resource_ids.present?
         resource_ids.each do |id|
-          begin
-            obj = collection.find(id)
-          rescue ManageIQ::API::Client::ResourceNotFound => err
-            _log.error(err.message)
-          else
-            _log.info("Invoking task #{action} on collection #{collection_name}, object #{obj.id}, with args #{post_args}")
-            begin
-              obj.send(action, post_args)
-            rescue NoMethodError => err
-              _log.error(err.message)
-            end
-          end
+          send_action(action, collection_name, collection, remote_options, id)
         end
       else
-        _log.info("Invoking task #{action} on collection #{collection_name}, with args #{post_args}")
-        begin
-          collection.send(action, post_args)
-        rescue NoMethodError => err
-          _log.error(err.message)
-        end
+        send_action(action, collection_name, collection, remote_options)
       end
     end
+
+    def send_action(action, collection_name, collection, remote_options, id = nil)
+      post_args = remote_options[:args] || {}
+      begin
+        if id.present?
+          msg_desination = "remote object: #{id} for collection #{collection_name},  with args #{post_args}"
+          destination = collection.find(id)
+        else
+          msg_desination = "remote collection #{collection_name}, with args #{post_args}"
+          destination = collection
+        end
+        _log.info("Invoking task #{action} on #{msg_desination}")
+        destination.send(action, post_args)
+        task_audit_event(:success, remote_options, :message => "'#{action}' successfully initiated on #{msg_desination}")
+      rescue StandardError => err
+        task_audit_event(:failure, remote_options, :message => "'#{action}' failed to be initiated on #{msg_desination}")
+        _log.error(err.message)
+        raise err unless err.kind_of?(NoMethodError) || err.kind_of?(ManageIQ::API::Client::ResourceNotFound)
+      end
+    end
+    private :send_action
 
     # default: invoked by task, can be overridden
     def task_invoked_by(_options)
