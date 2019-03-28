@@ -27,7 +27,7 @@ module MiqPreloader
     if (inverse_association = association.inverse_of)
       target_klass.where(inverse_association.name.to_sym => records).where(association.scope)
     else # assume it is a belongs_to
-      join_key = association.join_keys(target_klass)
+      join_key = association.join_keys
       target_klass.where(join_key.key.to_sym => records.select(join_key.foreign_key.to_sym))
     end
   end
