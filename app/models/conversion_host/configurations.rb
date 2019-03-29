@@ -34,7 +34,7 @@ module ConversionHost::Configurations
       resource = params.delete(:resource)
 
       params[:resource_id] = resource.id
-      params[:resource_type] = resource.class.name
+      params[:resource_type] = resource.class.base_class.name
 
       queue_configuration('enable', nil, resource, params, auth_user)
     end

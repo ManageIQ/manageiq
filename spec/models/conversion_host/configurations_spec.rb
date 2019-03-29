@@ -5,7 +5,7 @@ describe ConversionHost do
   let(:params) do
     {
       :name          => 'transformer',
-      :resource_type => vm.class.name,
+      :resource_type => vm.class.base_class.name,
       :resource_id   => vm.id,
       :resource      => vm
     }
