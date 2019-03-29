@@ -139,4 +139,12 @@ module PerEmsWorkerMixin
   def unit_environment_variables
     super << "EMS_ID=#{ems_id}"
   end
+
+  def worker_settings
+    super.merge(per_ems_worker_settings)
+  end
+
+  def per_ems_worker_settings
+    ext_management_system.options&.dig(:worker_settings, normalized_type.to_sym) || {}
+  end
 end
