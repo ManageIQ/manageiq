@@ -145,6 +145,6 @@ module PerEmsWorkerMixin
   end
 
   def per_ems_worker_settings
-    ext_management_system.options&.dig(:worker_settings, normalized_type.to_sym) || {}
+    ext_management_system&.options&.dig(:worker_settings, normalized_type.to_sym) || {}
   end
 end
