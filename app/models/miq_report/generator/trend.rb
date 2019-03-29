@@ -82,30 +82,26 @@ module MiqReport::Generator::Trend
       next unless self.class.is_trend_column?(c)
       @trend_data[c] = {}
 
-      y_array, x_array = recs.inject([]) do |arr, r|
-        arr[0] ||= []
-        arr[1] ||= []
-        next(arr) unless  r.respond_to?(CHART_X_AXIS_COLUMN) && r.respond_to?(c[6..-1])
+      coordinates = recs.each_with_object([]) do |r, arr|
+        next unless r.respond_to?(CHART_X_AXIS_COLUMN) && r.respond_to?(c[6..-1])
         if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
           _log.debug("Timestamp: [#{r.timestamp}] is outside of time profile: [#{time_profile.description}]")
-          next(arr)
+          next
         end
-        arr[0] << r.send(c[6..-1]).to_f
-        # arr[1] << r.send(CHART_X_AXIS_COLUMN).to_i # Calculate normal way by using the integer value of the timestamp
-        r.send("#{CHART_X_AXIS_COLUMN_ADJUSTED}=", (recs.first.send(CHART_X_AXIS_COLUMN).to_i + arr[1].length.days.to_i))
-        arr[1] << r.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i # Caculate by using the number of days out from the first timestamp
-        arr
+        y = r.send(c[6..-1]).to_f
+        # y = r.send(CHART_X_AXIS_COLUMN).to_i # Calculate normal way by using the integer value of the timestamp
+        r.send("#{CHART_X_AXIS_COLUMN_ADJUSTED}=", (recs.first.send(CHART_X_AXIS_COLUMN).to_i + arr.length.days.to_i))
+        x = r.send(CHART_X_AXIS_COLUMN_ADJUSTED).to_i # Calculate by using the number of days out from the first timestamp
+        arr << [x, y]
       end
 
-      begin
-        slope_arr = MiqStats.slope(x_array, y_array)
-      rescue ZeroDivisionError
-        slope_arr = []
-      rescue => err
-        _log.warn("#{err.message}, calculating slope")
-        slope_arr = []
-      end
-      @trend_data[c][:slope], @trend_data[c][:yint], @trend_data[c][:corr] = slope_arr
+      @trend_data[c][:slope], @trend_data[c][:yint], @trend_data[c][:corr] =
+        begin
+          Math.linear_regression(*coordinates)
+        rescue StandardError => err
+          _log.warn("#{err.message}, calculating slope") unless err.kind_of?(ZeroDivisionError)
+          nil
+        end
     end
   end
 

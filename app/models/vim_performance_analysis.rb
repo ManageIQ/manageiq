@@ -553,35 +553,30 @@ module VimPerformanceAnalysis
   def self.calc_slope_from_data(recs, x_attr, y_attr)
     recs = recs.sort_by { |r| r.send(x_attr) } if recs.first.respond_to?(x_attr)
 
-    y_array, x_array = recs.inject([]) do |arr, r|
-      arr[0] ||= []
-      arr[1] ||= []
-      next(arr) unless  r.respond_to?(x_attr) && r.respond_to?(y_attr)
+    coordinates = recs.each_with_object([]) do |r, arr|
+      next unless r.respond_to?(x_attr) && r.respond_to?(y_attr)
       if r.respond_to?(:inside_time_profile) && r.inside_time_profile == false
         _log.debug("Class: [#{r.class}], [#{r.resource_type} - #{r.resource_id}], Timestamp: [#{r.timestamp}] is outside of time profile")
-        next(arr)
+        next
       end
-      arr[0] << r.send(y_attr).to_f
-      # arr[1] << r.send(x_attr).to_i # Calculate normal way by using the integer value of the timestamp
+      y = r.send(y_attr).to_f
+      # y = r.send(x_attr).to_i # Calculate normal way by using the integer value of the timestamp
       adj_x_attr = "time_profile_adjusted_#{x_attr}"
       if r.respond_to?(adj_x_attr)
-        r.send("#{adj_x_attr}=", (recs.first.send(x_attr).to_i + arr[1].length.days.to_i))
-        arr[1] << r.send(adj_x_attr).to_i # Caculate by using the number of days out from the first timestamp
+        r.send("#{adj_x_attr}=", (recs.first.send(x_attr).to_i + arr.length.days.to_i))
+        x = r.send(adj_x_attr).to_i # Calculate by using the number of days out from the first timestamp
       else
-        arr[1] << r.send(x_attr).to_i
+        x = r.send(x_attr).to_i
       end
-      arr
+      arr << [x, y]
     end
 
     begin
-      slope_arr = MiqStats.slope(x_array.to_miq_a, y_array.to_miq_a)
-    rescue ZeroDivisionError
-      slope_arr = []
-    rescue => err
-      _log.warn("#{err.message}, calculating slope")
-      slope_arr = []
+      Math.linear_regression(*coordinates)
+    rescue StandardError => err
+      _log.warn("#{err.message}, calculating slope") unless err.kind_of?(ZeroDivisionError)
+      nil
     end
-    slope_arr
   end
 
   def self.get_daily_perf(obj, range, ext_options, perf_cols)

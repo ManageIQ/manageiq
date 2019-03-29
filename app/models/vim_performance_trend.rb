@@ -144,19 +144,20 @@ class VimPerformanceTrend < ActsAsArModel
 
   def self.build_trend_data(col, recs)
     trend_data = {}
-    y_array = recs.collect { |r| r.send(col).to_f if r.respond_to?(col) }.compact
-    x_array = recs.collect { |r| r.send(CHART_X_AXIS_COL).to_i if r.respond_to?(CHART_X_AXIS_COL) }.compact
 
-    begin
-      slope_arr = MiqStats.slope(x_array, y_array)
-    rescue ZeroDivisionError
-      slope_arr = []
-    rescue => err
-      _log.warn("#{err.message}, calculating slope")
-      slope_arr = []
-    end
-    trend_data[:slope], trend_data[:yint], trend_data[:corr] = slope_arr
-    trend_data[:count] = x_array.length
+    coordinates = recs.collect do |r|
+      next unless r.respond_to?(CHART_X_AXIS_COL) && r.respond_to?(col)
+      [r.send(CHART_X_AXIS_COL).to_i, r.send(col).to_f]
+    end.compact
+
+    trend_data[:count] = coordinates.length
+    trend_data[:slope], trend_data[:yint], trend_data[:corr] =
+      begin
+        Math.linear_regression(*coordinates)
+      rescue StandardError => err
+        _log.warn("#{err.message}, calculating slope") unless err.kind_of?(ZeroDivisionError)
+        nil
+      end
 
     trend_data
   end
