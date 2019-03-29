@@ -79,6 +79,8 @@ describe InfraConversionJob do
   end
 
   context 'operations' do
+    let(:poll_interval) { Settings.transformation.limits.conversion_polling_interval }
+
     before do
       allow(job).to receive(:migration_task).and_return(task)
     end
@@ -106,7 +108,7 @@ describe InfraConversionJob do
       it 'to poll_conversion when migration_task.options[:virtv2v_wrapper] is nil' do
         task.options[:virtv2v_wrapper] = nil
         Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + 60)
+          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + poll_interval)
           job.signal(:poll_conversion)
         end
       end
@@ -114,7 +116,7 @@ describe InfraConversionJob do
       it 'to poll_conversion when migration_task.options[:virtv2v_wrapper][:state_file] is nil' do
         task.options[:virtv2v_wrapper] = {'state_file' => nil}
         Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + 60)
+          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + poll_interval)
           job.signal(:poll_conversion)
         end
       end
@@ -129,7 +131,7 @@ describe InfraConversionJob do
         task.options[:virtv2v_status] = 'active'
         Timecop.freeze(2019, 2, 6) do
           expect(task).to receive(:get_conversion_state)
-          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + 60)
+          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + poll_interval)
           job.signal(:poll_conversion)
         end
       end
@@ -167,7 +169,7 @@ describe InfraConversionJob do
       it 'to poll_post_stage when signaled :start_post_stage' do
         job.state = 'running'
         Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_post_stage, :deliver_on => Time.now.utc + 60)
+          expect(job).to receive(:queue_signal).with(:poll_post_stage, :deliver_on => Time.now.utc + poll_interval)
           job.signal(:start_post_stage)
         end
       end
@@ -181,7 +183,7 @@ describe InfraConversionJob do
       it 'to poll_post_stage when migration_task.state is not finished' do
         task.state = 'not-finished'
         Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_post_stage, :deliver_on => Time.now.utc + 60)
+          expect(job).to receive(:queue_signal).with(:poll_post_stage, :deliver_on => Time.now.utc + poll_interval)
           job.signal(:poll_post_stage)
         end
       end
