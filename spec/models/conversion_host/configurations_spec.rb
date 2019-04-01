@@ -4,8 +4,7 @@ describe ConversionHost do
     {
       :name          => 'transformer',
       :resource_type => vm.class.name,
-      :resource_id   => vm.id,
-      :resource      => vm
+      :resource_id   => vm.id
     }
   end
 
@@ -76,13 +75,18 @@ describe ConversionHost do
         task_id = described_class.enable_queue(params)
         expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action)
         expect(MiqQueue.first).to have_attributes(
-          :args        => [params.except(:resource)],
+          :args        => [params],
           :class_name  => described_class.name,
           :method_name => "enable",
           :priority    => MiqQueue::NORMAL_PRIORITY,
           :role        => "ems_operations",
           :zone        => vm.ext_management_system.my_zone
         )
+      end
+
+      it "to fail when the resource is not found" do
+        vm.destroy!
+        expect { described_class.enable_queue(params) }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
