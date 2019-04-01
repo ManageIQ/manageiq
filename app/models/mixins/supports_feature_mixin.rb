@@ -73,7 +73,6 @@ module SupportsFeatureMixin
     :backup_restore                      => 'CloudVolume backup restore',
     :cinder_service                      => 'Cinder storage service',
     :cinder_volume_types                 => 'Cinder volume types',
-    :conversion_host                     => 'Conversion host capable',
     :create_floating_ip                  => 'Floating IP Creation',
     :create_host_aggregate               => 'Host Aggregate Creation',
     :create_security_group               => 'Security Group Creation',
