@@ -130,11 +130,11 @@ class MiqRegion < ApplicationRecord
     tables.each do |t|
       pk = conn.primary_key(t)
       if pk
-        conditions = sanitize_conditions(region_to_conditions(region, pk))
+        conditions = sanitize_sql(region_to_conditions(region, pk))
       else
         id_cols = connection.columns(t).select { |c| c.name.ends_with?("_id") }
         next if id_cols.empty?
-        conditions = id_cols.collect { |c| "(#{sanitize_conditions(region_to_conditions(region, c.name))})" }.join(" OR ")
+        conditions = id_cols.collect { |c| "(#{sanitize_sql(region_to_conditions(region, c.name))})" }.join(" OR ")
       end
 
       rows = conn.delete("DELETE FROM #{t} WHERE #{conditions}")
