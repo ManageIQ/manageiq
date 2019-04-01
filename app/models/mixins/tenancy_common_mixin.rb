@@ -16,4 +16,8 @@ module TenancyCommonMixin
   def tenant_id_clause_format(tenant_ids)
     {table_name => {:tenant_id => tenant_ids}}
   end
+
+  def additional_tenants_clause(tenant)
+    where(table_name => {:tenants => {:id => tenant.id}})
+  end
 end
