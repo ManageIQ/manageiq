@@ -2,7 +2,7 @@ require 'fileutils'
 
 describe MiqDialog do
   describe "::Seeding" do
-    include_examples(".seed called multiple times", 15)
+    include_examples(".seed called multiple times", 20)
 
     describe ".seed" do
       let(:tmpdir)     { Pathname.new(Dir.mktmpdir) }
