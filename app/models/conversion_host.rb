@@ -283,7 +283,7 @@ class ConversionHost < ApplicationRecord
     command = "ansible-playbook #{playbook} --inventory #{host}, --become -vvv"
 
     auth = authentication_type(auth_type) || authentications.first
-    command += " --user #{auth.userid}"
+    command << " --user #{auth.userid}"
 
     case auth
     when AuthUseridPassword
@@ -291,13 +291,12 @@ class ConversionHost < ApplicationRecord
     when AuthPrivateKey
       ssh_private_key_file = Tempfile.new('ansible_key')
       ssh_private_key_file.write(auth.auth_key)
-      command += " --private-key #{ssh_private_key_file.path}"
+      command << " --private-key #{ssh_private_key_file.path}"
     else
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
     end
 
-
-    extra_vars.each { |k, v| command += " --extra-vars '#{k}=#{v}'" }
+    extra_vars.each { |k, v| command << " --extra-vars '#{k}=#{v}'" }
 
     _log.info("FDUPONT - Calling Ansible playbook: #{command}")
     result = AwesomeSpawn.run(command)
