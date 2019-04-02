@@ -5,7 +5,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
-    unless add_options.blank?
+    if add_options.present?
       _log.info("Override with new options:")
       $log.log_hashes(add_options)
     end
@@ -66,6 +66,10 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     postprocess(action)
   end
 
+  def retain_resources_on_retirement?
+    options.fetch_path(:config_info, :retirement, :remove_resources).to_s.start_with?("no_")
+  end
+
   private
 
   def service_manageiq_env(action)
@@ -73,7 +77,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
       'service' => href_slug,
       'action'  => action
     }.merge(manageiq_env(evm_owner, miq_group, miq_request_task))
-     .merge(request_options_extra_vars)
+      .merge(request_options_extra_vars)
   end
 
   def request_options_extra_vars
@@ -92,7 +96,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     job_options.deep_merge!(parse_dialog_options) unless action == ResourceAction::RETIREMENT
     job_options.deep_merge!(overrides)
 
-    %i(credential vault_credential).each do |cred|
+    %i[credential vault_credential].each do |cred|
       cred_sym = "#{cred}_id".to_sym
       credential_id = job_options.delete(cred_sym)
       job_options[cred] = Authentication.find(credential_id).native_ref if credential_id.present?
