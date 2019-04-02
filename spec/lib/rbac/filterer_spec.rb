@@ -2104,7 +2104,7 @@ describe Rbac::Filterer do
       end
 
       it "handles added include from miq_expression" do
-        st = FactoryBot.create(:service_template)
+        st = FactoryBot.create(:service_template, :name => "st")
         service1, service2, _service3 = FactoryBot.create_list(:service, 3, :service_template => st)
         service1.tag_with("/managed/environment/prod", :ns => "*")
         service2.tag_with("/managed/environment/prod", :ns => "*")
