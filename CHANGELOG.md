@@ -5,7 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-4
+## Unreleased as of Sprint 108 ending 2019-04-01
+
+### Added
+- Add zone to service provisioning. [(#18601)](https://github.com/ManageIQ/manageiq/pull/18601)
+- updating infra conversion job polling timers [(#18597)](https://github.com/ManageIQ/manageiq/pull/18597)
+- Add report interval date and report generation to Chargeback reports [(#18569)](https://github.com/ManageIQ/manageiq/pull/18569)
+- [V2V] Set context data for the task associated with conversion host creation [(#18541)](https://github.com/ManageIQ/manageiq/pull/18541)
+- Speed up Service access  [(#18487)](https://github.com/ManageIQ/manageiq/pull/18487)
+- [V2V] Refactor ConversionHost to use AuthenticationMixin [(#18309)](https://github.com/ManageIQ/manageiq/pull/18309)
+
+### Fixed
+- Conversion host base class [(#18604)](https://github.com/ManageIQ/manageiq/pull/18604)
+- Don't start another refresh worker while another is stopping [(#18583)](https://github.com/ManageIQ/manageiq/pull/18583)
+- ProcessTasksMixinin.invoke_tasks_remote should not send AuditEvent(:success) if invocation failed [(#18565)](https://github.com/ManageIQ/manageiq/pull/18565)
+- Rbac virtual attributes [(#18543)](https://github.com/ManageIQ/manageiq/pull/18543)
+- Add region checking for all user schedules [(#18512)](https://github.com/ManageIQ/manageiq/pull/18512)
+- Fix saving network manager in belongsto filter [(#18504)](https://github.com/ManageIQ/manageiq/pull/18504)
+
+## Hammer-4 - Released 2019-03-29
 
 ### Added
 - [V2V] Allow downloading wrapper log file [(#18506)](https://github.com/ManageIQ/manageiq/pull/18506)
@@ -63,7 +81,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Don't rely on false return from callbacks to halt execution [(#18456)](https://github.com/ManageIQ/manageiq/pull/18456)
 - Fix: When user changing display timezone than some widgets show no data [(#18448)](https://github.com/ManageIQ/manageiq/pull/18448)
 
-## Hammer-3
+## Hammer-3 - Released 2019-03-06
 
 ### Added
 - Add empty IP address check to preflight check [(#18425)](https://github.com/ManageIQ/manageiq/pull/18425)
