@@ -53,7 +53,7 @@ module EmsRefresh::SaveInventory
     ]
     remove_keys = child_keys + extra_infra_keys + extra_cloud_keys
 
-    vms_by_ems_ref = ems.vms_and_templates.group_by(&:ems_ref).except(nil)
+    vms_by_ems_ref = ems.vms_and_templates.index_by(&:ems_ref).except(nil)
 
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
@@ -101,7 +101,6 @@ module EmsRefresh::SaveInventory
             # build a type-specific vm or template
             found = ems.vms_and_templates.klass.new(h)
           else
-            vms_by_uid_ems[h[:uid_ems]]&.delete(found)
             h.delete(:type)
 
             _log.info("#{log_header} Updating #{type} [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
@@ -379,20 +378,34 @@ module EmsRefresh::SaveInventory
   end
 
   def find_vm(h, vms_by_ems_ref, vms_by_uid_ems)
+    # First check for vms with the same ems_ref on this ems
+    found = vms_by_ems_ref[h[:ems_ref]]
+    return found if found.present?
+
     # Find the Vm in the database with the current uid_ems.  In the event
     #   of duplicates, try to determine which one is correct.
-    found = vms_by_ems_ref[h[:ems_ref]] || vms_by_uid_ems[h[:uid_ems]] || []
+    duplicates = vms_by_uid_ems[h[:uid_ems]] || []
 
-    if found.length > 1 || (found.length == 1 && found.first.ems_id)
-      found_dups = found
-      found = found_dups.select { |v| v.ems_id == h[:ems_id] && (v.ems_ref.nil? || v.ems_ref == h[:ems_ref]) }
-      if found.empty?
-        found_dups = found_dups.select { |v| v.ems_id.nil? }
-        found = found_dups.select { |v| v.ems_ref == h[:ems_ref] }
-        found = found_dups if found.empty?
-      end
-    end
+    # Reject any VMs which are active on other EMSs
+    duplicates.reject! { |vm| vm.ems_id.present? && vm.ems_id != h[:ems_id] }
 
-    found.first
+    # No vms with this uid_ems were found, create a new record
+    return if duplicates.blank?
+
+    active_duplicates, archived_duplicates = duplicates.partition { |vm| vm.ems_id.present? }
+
+    # Prioritize VMs on the current EMS with the same ems_ref or a nil ems_ref
+    found = active_duplicates.detect { |v| v.ems_ref.nil? || v.ems_ref == h[:ems_ref] }
+
+    # Next select an archived VM with the same ems_ref as the current vm
+    found ||= archived_duplicates.detect { |v| v.ems_ref == h[:ems_ref] }
+
+    # Lastly fall back on the first archived VM with the same uid_ems
+    found ||= archived_duplicates.first
+
+    # Remove record from the by_uid_ems hash to drop it from future consideration
+    vms_by_uid_ems[h[:uid_ems]].delete(found) if found
+
+    found
   end
 end
