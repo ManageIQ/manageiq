@@ -10,9 +10,9 @@ conditions: !ruby/object:MiqExpression
         IS NOT EMPTY:
           field: Vm.hardware.volumes-name
       checkany:
-        "<=":
-          field: Vm.hardware.volumes-free_space_percent
-          value: 20
+        ">=":
+          field: Vm.hardware.volumes-used_space_percent
+          value: 80
 updated_on: 2008-10-23 17:23:34.503804 Z
 order: Ascending
 graph:
