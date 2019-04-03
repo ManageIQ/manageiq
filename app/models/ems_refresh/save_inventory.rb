@@ -89,23 +89,9 @@ module EmsRefresh::SaveInventory
         begin
           raise MiqException::MiqIncompleteData if h[:invalid]
 
-          # Find the Vm in the database with the current uid_ems.  In the event
-          #   of duplicates, try to determine which one is correct.
-          found = vms_by_ems_ref[h[:ems_ref]] || vms_by_uid_ems[h[:uid_ems]] || []
-
-          if found.length > 1 || (found.length == 1 && found.first.ems_id)
-            found_dups = found
-            found = found_dups.select { |v| v.ems_id == h[:ems_id] && (v.ems_ref.nil? || v.ems_ref == h[:ems_ref]) }
-            if found.empty?
-              found_dups = found_dups.select { |v| v.ems_id.nil? }
-              found = found_dups.select { |v| v.ems_ref == h[:ems_ref] }
-              found = found_dups if found.empty?
-            end
-          end
-
           type = h[:template] ? "Template" : "Vm"
 
-          found = found.first
+          found = find_vm(h, vms_by_ems_ref, vms_by_uid_ems)
           if found.nil?
             _log.info("#{log_header} Creating #{type} [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
 
@@ -390,5 +376,23 @@ module EmsRefresh::SaveInventory
   def save_ems_storage_inventory(ems, hashes, target = nil)
     save_ems_block_storage_inventory(ems, hashes, target) if ems.supports?(:block_storage)
     save_ems_object_storage_inventory(ems, hashes, target) if ems.supports?(:object_storage)
+  end
+
+  def find_vm(h, vms_by_ems_ref, vms_by_uid_ems)
+    # Find the Vm in the database with the current uid_ems.  In the event
+    #   of duplicates, try to determine which one is correct.
+    found = vms_by_ems_ref[h[:ems_ref]] || vms_by_uid_ems[h[:uid_ems]] || []
+
+    if found.length > 1 || (found.length == 1 && found.first.ems_id)
+      found_dups = found
+      found = found_dups.select { |v| v.ems_id == h[:ems_id] && (v.ems_ref.nil? || v.ems_ref == h[:ems_ref]) }
+      if found.empty?
+        found_dups = found_dups.select { |v| v.ems_id.nil? }
+        found = found_dups.select { |v| v.ems_ref == h[:ems_ref] }
+        found = found_dups if found.empty?
+      end
+    end
+
+    found.first
   end
 end
