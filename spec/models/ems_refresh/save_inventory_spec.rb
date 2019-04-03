@@ -128,24 +128,14 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        expect(vms.length).to eq(3)
+        expect(vms.length).to eq(2)
+        v1, v2 = vms.sort_by(&:id)
 
-        disconnected, connected = vms.partition { |v| v.ems_id.nil? }
-        expect(disconnected.length).to eq(1)
-        expect(connected.length).to eq(2)
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
 
-        d      = disconnected.first
-        c1, c2 = connected.sort_by(&:id)
-
-        expect(d.id).to eq(@vm2.id)
-        expect(d.uid_ems).to eq(@vm2.uid_ems)
-
-        expect(c1.id).to eq(@vm1.id)
-        expect(c1.uid_ems).to eq(@vm1.uid_ems)
-
-        expect(c2.id).not_to eq(@vm1.id)
-        expect(c2.id).not_to eq(@vm2.id)
-        expect(c2.uid_ems).to eq(@vm1.uid_ems)
+        expect(v2.id).to eq(@vm2.id)
+        expect(v2.uid_ems).to eq(@vm1.uid_ems)
       end
     end
 
@@ -161,24 +151,14 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        expect(vms.length).to eq(3)
+        expect(vms.length).to eq(2)
+        v1, v2 = vms.sort_by(&:id)
 
-        disconnected, connected = vms.partition { |v| v.ems_id.nil? }
-        expect(disconnected.length).to eq(1)
-        expect(connected.length).to eq(2)
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
 
-        d      = disconnected.first
-        c1, c2 = connected.sort_by(&:id)
-
-        expect(d.id).to eq(@vm2.id)
-        expect(d.uid_ems).to eq(@vm2.uid_ems)
-
-        expect(c1.id).to eq(@vm1.id)
-        expect(c1.uid_ems).to eq(@vm1.uid_ems)
-
-        expect(c2.id).not_to eq(@vm1.id)
-        expect(c2.id).not_to eq(@vm2.id)
-        expect(c2.uid_ems).not_to eq(@vm1.uid_ems)
+        expect(v2.id).to eq(@vm2.id)
+        expect(v2.uid_ems).not_to eq(@vm1.uid_ems)
       end
 
       it "should handle dups in the raw data" do
@@ -209,24 +189,14 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        expect(vms.length).to eq(3)
+        expect(vms.length).to eq(2)
+        v1, v2 = vms.sort_by(&:id)
 
-        disconnected, connected = vms.partition { |v| v.ems_id.nil? }
-        expect(disconnected.length).to eq(1)
-        expect(connected.length).to eq(2)
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
 
-        d      = disconnected.first
-        c1, c2 = connected.sort_by(&:id)
-
-        expect(d.id).to eq(@vm2.id)
-        expect(d.uid_ems).to eq(@vm2.uid_ems)
-
-        expect(c1.id).to eq(@vm1.id)
-        expect(c1.uid_ems).to eq(@vm1.uid_ems)
-
-        expect(c2.id).not_to eq(@vm1.id)
-        expect(c2.id).not_to eq(@vm2.id)
-        expect(c2.uid_ems).not_to eq(@vm1.uid_ems)
+        expect(v2.id).to eq(@vm2.id)
+        expect(v2.uid_ems).not_to eq(@vm2.uid_ems)
       end
 
       it "should handle dups in the raw data" do
@@ -329,24 +299,14 @@ describe EmsRefresh::SaveInventory do
         EmsRefresh.save_vms_inventory(@ems, data)
 
         vms = Vm.all
-        expect(vms.length).to eq(3)
+        expect(vms.length).to eq(2)
+        v1, v2 = vms.sort_by(&:id)
 
-        disconnected, connected = vms.partition { |v| v.ems_id.nil? }
-        expect(disconnected.length).to eq(1)
-        expect(connected.length).to eq(2)
+        expect(v1.id).to eq(@vm1.id)
+        expect(v1.uid_ems).to eq(@vm1.uid_ems)
 
-        d      = disconnected.first
-        c1, c2 = connected.sort_by(&:id)
-
-        expect(d.id).to eq(@vm2.id)
-        expect(d.uid_ems).to eq(@vm2.uid_ems)
-
-        expect(c1.id).to eq(@vm1.id)
-        expect(c1.uid_ems).to eq(@vm1.uid_ems)
-
-        expect(c2.id).not_to eq(@vm1.id)
-        expect(c2.id).not_to eq(@vm2.id)
-        expect(c2.uid_ems).to eq(@vm1.uid_ems)
+        expect(v2.id).to eq(@vm2.id)
+        expect(v2.uid_ems).not_to eq(@vm2.uid_ems)
       end
     end
   end
