@@ -2737,12 +2737,6 @@
   :feature_type: node
   :identifier: utilization
 
-# Planning
-- :name: Planning
-  :description: Display of Planning Data
-  :feature_type: node
-  :identifier: planning
-
 # Bottlenecks
 - :name: Bottlenecks
   :description: Display of Bottlenecks data
