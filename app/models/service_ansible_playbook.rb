@@ -59,6 +59,10 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     postprocess(action)
   end
 
+  def retain_resources_on_retirement?
+    options.fetch_path(:config_info, :retirement, :remove_resources).to_s.start_with?("no_")
+  end
+
   private
 
   def manageiq_extra_vars(action)
