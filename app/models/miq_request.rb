@@ -529,7 +529,7 @@ class MiqRequest < ApplicationRecord
 
     if process_on_create?
       call_automate_event_queue("request_created")
-      approve(requester, "Auto-Approved") if auto_approve
+      approve(User.super_admin.userid, "Auto-Approved") if auto_approve
       reload if auto_approve
     end
 

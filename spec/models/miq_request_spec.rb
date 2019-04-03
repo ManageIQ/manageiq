@@ -192,6 +192,18 @@ describe MiqRequest do
         end
       end
 
+      it "with auto approval" do
+        FactoryBot.create(:user_admin, :userid => 'admin')
+        allow(MiqServer).to receive_messages(:my_zone => "default")
+
+        expect(request).to receive(:set_description)
+        expect(request).to receive(:log_request_success)
+        expect(request).to receive(:call_automate_event_queue).with("request_created")
+        expect(request).to receive(:call_automate_event_queue).with("request_approved")
+        expect(request).to receive(:execute)
+        request.post_create(true)
+      end
+
       context "with user approvals" do
         let(:reason)          { "Why Not?" }
         let(:fred_approval)   { FactoryBot.create(:miq_approval, :approver => fred, :reason => reason, :stamper => barney, :stamped_on => Time.now) }

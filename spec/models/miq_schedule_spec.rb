@@ -531,6 +531,7 @@ describe MiqSchedule do
       end
 
       it "should create 1 automation request" do
+        FactoryBot.create(:user_admin, :userid => 'admin')
         automate_sched.action_automation_request(AutomationRequest, '')
         expect(AutomationRequest.where(:description => "Automation Task", :userid => admin.userid).count).to eq(1)
       end
