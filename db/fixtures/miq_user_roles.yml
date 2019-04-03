@@ -74,7 +74,6 @@
   - physical_server
   - physical_storage
   - physical_infra_topology
-  - planning
   - policy_import_export
   - provider_foreman_explorer
   - pxe
@@ -243,7 +242,6 @@
   - physical_switch_view
   - physical_server_view
   - physical_storage_view
-  - planning
   - policy_log
   - policy_profile
   - policy_simulation
@@ -976,7 +974,6 @@
   - miq_request
   - miq_template
   - orchestration_stack
-  - planning
   - policy_import_export
   - provider_foreman_explorer
   - pxe
@@ -1033,7 +1030,6 @@
   - miq_request
   - miq_template
   - orchestration_stack
-  - planning
   - policy_import_export
   - provider_foreman_explorer
   - pxe
@@ -1230,7 +1226,6 @@
   - physical_switch_view
   - physical_server_view
   - physical_storage_view
-  - planning
   - policy_log
   - provider_foreman_view
   - pxe_image_type_view

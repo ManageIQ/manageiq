@@ -6901,11 +6901,6 @@ msgid "Display of Bottlenecks data"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb:1482
-msgid "Display of Planning Data"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1478
 msgid "Display of Utilization Data"
 msgstr ""
@@ -14534,11 +14529,6 @@ msgstr ""
 msgid "Pictures"
 msgstr ""
 
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb:1480
-msgid "Planning"
-msgstr ""
-
 #. TRANSLATORS: file: product/compare/hosts.yaml
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
 #: ../config/yaml_strings.rb:4127
@@ -17921,10 +17911,6 @@ msgstr ""
 msgid "Target"
 msgstr ""
 
-#: ../app/models/vim_performance_planning.rb:36
-msgid "Targets must contain a cluster or a host key"
-msgstr ""
-
 #. TRANSLATORS: en.yml key: dictionary.model.MiqTask
 #. TRANSLATORS: en.yml key: dictionary.table.miq_task
 #: ../app/models/miq_task.rb:359 ../config/dictionary_strings.rb:2088 ../config/dictionary_strings.rb:2656
@@ -19636,11 +19622,6 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
 #: ../config/yaml_strings.rb:4525
 msgid "VM Performance - daily over last week"
-msgstr ""
-
-#. TRANSLATORS: file: product/charts/layouts/planning_charts.yaml
-#: ../config/yaml_strings.rb:3543
-msgid "VM Planning"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
