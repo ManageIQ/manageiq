@@ -255,7 +255,7 @@ describe EmsRefresh::SaveInventory do
 
     private
 
-    RAW_DATA_ATTRS = [:name, :ems_ref_obj, :ems_ref, :vendor, :location, :uid_ems, :type]
+    RAW_DATA_ATTRS = [:name, :ems_ref_obj, :ems_ref, :vendor, :location, :uid_ems, :type].freeze
 
     def raw_data_process(*args)
       args.collect do |v|
@@ -293,27 +293,27 @@ describe EmsRefresh::SaveInventory do
       @zone = FactoryBot.create(:zone)
       @ems = FactoryBot.create(:ems_redhat, :zone => @zone)
       FactoryBot.create(:resource_pool,
-                         :ext_management_system => @ems,
-                         :name                  => "Default for Cluster Default",
-                         :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d_respool")
+                        :ext_management_system => @ems,
+                        :name                  => "Default for Cluster Default",
+                        :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d_respool")
       FactoryBot.create(:ems_folder,
-                         :ext_management_system => @ems,
-                         :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_host",
-                         :name                  => "host")
+                        :ext_management_system => @ems,
+                        :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_host",
+                        :name                  => "host")
       FactoryBot.create(:ems_folder,
-                         :ext_management_system => @ems,
-                         :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_vm",
-                         :name                  => "vm")
+                        :ext_management_system => @ems,
+                        :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_vm",
+                        :name                  => "vm")
       FactoryBot.create(:datacenter,
-                         :ems_ref               => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
-                         :ext_management_system => @ems,
-                         :name                  => "Default",
-                         :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180")
+                        :ems_ref               => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
+                        :ext_management_system => @ems,
+                        :name                  => "Default",
+                        :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180")
       FactoryBot.create(:ems_cluster,
-                         :ems_ref               => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
-                         :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d",
-                         :ext_management_system => @ems,
-                         :name                  => "Default")
+                        :ems_ref               => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
+                        :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d",
+                        :ext_management_system => @ems,
+                        :name                  => "Default")
     end
 
     it "should not disconnect" do
