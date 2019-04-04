@@ -9,11 +9,9 @@ module MiqReportResult::ResultSetOperations
     def format_result_set(miq_report, result_set)
       tz = miq_report.get_time_zone(Time.zone)
 
-      col_format_hash = miq_report.col_order.zip(miq_report.col_formats).to_h
-
       result_set.map! do |row|
         row.map do |key, _|
-          [key, miq_report.format_column(key, row, tz, col_format_hash[key])]
+          [key, miq_report.format_column(key, row, tz, miq_report.col_format_hash[key])]
         end.to_h
       end
     end

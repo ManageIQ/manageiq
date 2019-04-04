@@ -270,6 +270,10 @@ class MiqReport < ApplicationRecord
     end.compact
   end
 
+  def col_format_hash
+    @col_format_hash ||= col_order.zip(col_formats).to_h
+  end
+
   private
 
   def va_sql_cols
