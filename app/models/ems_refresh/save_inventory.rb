@@ -53,7 +53,7 @@ module EmsRefresh::SaveInventory
     ]
     remove_keys = child_keys + extra_infra_keys + extra_cloud_keys
 
-    vms_by_ems_ref = ems.vms_and_templates.index_by(&:ems_ref)
+    vms_by_ems_ref = ems.vms_and_templates.index_by(&:ems_ref).except(nil)
 
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
