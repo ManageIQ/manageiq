@@ -32,8 +32,8 @@ module MiqReportResult::ResultSetOperations
       count_of_full_result_set = result_set.count
       if result_set.present? && report
         result_set, count_of_full_result_set = filter_result_set(report, result_set, options) if options.key?(:filter_column) && options.key?(:filter_string)
-        result_set = result_set.stable_sort_by(sorting_columns, options[:sort_order])
         result_set.map! { |x| x.slice(*report.col_order) }
+        result_set = result_set.stable_sort_by(sorting_columns, options[:sort_order])
         result_set = apply_limit_and_offset(result_set, options)
       end
 
