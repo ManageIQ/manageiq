@@ -274,6 +274,23 @@ class MiqReport < ApplicationRecord
     @col_format_hash ||= col_order.zip(col_formats).to_h
   end
 
+  def format_result_set(result_set)
+    tz = get_time_zone(Time.zone)
+
+    result_set.map! do |row|
+      row.map do |key, _|
+        [key, format_column(key, row, tz, col_format_hash[key])]
+      end.to_h
+    end
+  end
+
+  def filter_result_set(result_set, options)
+    filter_columns = validate_columns(options[:filter_column]) + ['id']
+    formatted_result_set = format_result_set(result_set.map { |x| x.slice(*filter_columns) })
+    result_set_filtered_ids = formatted_result_set.map { |x| x[options[:filter_column]].include?(options[:filter_string]) ? x['id'].to_i : nil }.compact
+    [result_set.select! { |x| result_set_filtered_ids.include?(x['id']) }, result_set_filtered_ids.count]
+  end
+
   private
 
   def va_sql_cols
