@@ -41,7 +41,7 @@ class TenantQuota < ApplicationRecord
             :uniqueness => {:scope => :tenant_id, :message => "should be unique per tenant"}
   validates :unit, :value, :presence => true
   validates :value, :numericality => {:greater_than => 0}
-  validates :warn_value, :numericality => {:greater_than => 0}, :if => "warn_value.present?"
+  validates :warn_value, :numericality => {:greater_than => 0}, :if => -> { warn_value.present? }
 
   validate :check_for_over_allocation
 
