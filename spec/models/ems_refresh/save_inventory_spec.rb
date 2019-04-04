@@ -1,105 +1,8 @@
 describe EmsRefresh::SaveInventory do
-  context "save_vms_inventory handling duplicate uids" do
+  context ".save_vms_inventory" do
     before do
       @zone = FactoryBot.create(:zone)
       @ems  = FactoryBot.create(:ems_vmware, :zone => @zone)
-    end
-
-    context "check save_ems_inventory_no_disconnect" do
-      before do
-        @zone = FactoryBot.create(:zone)
-        @ems = FactoryBot.create(:ems_redhat, :zone => @zone)
-        FactoryBot.create(:resource_pool,
-                           :ext_management_system => @ems,
-                           :name                  => "Default for Cluster Default",
-                           :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d_respool")
-        FactoryBot.create(:ems_folder,
-                           :ext_management_system => @ems,
-                           :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_host",
-                           :name                  => "host")
-        FactoryBot.create(:ems_folder,
-                           :ext_management_system => @ems,
-                           :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_vm",
-                           :name                  => "vm")
-        FactoryBot.create(:datacenter,
-                           :ems_ref               => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
-                           :ext_management_system => @ems,
-                           :name                  => "Default",
-                           :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180")
-        FactoryBot.create(:ems_cluster,
-                           :ems_ref               => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
-                           :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d",
-                           :ext_management_system => @ems,
-                           :name                  => "Default")
-      end
-
-      it "should not disconnect" do
-        vms = {
-          :type        => "ManageIQ::Providers::Redhat::InfraManager::Vm",
-          :ems_ref     => "/api/vms/6420a429-5ef5-441d-b88c-046dd2501382",
-          :ems_ref_obj => "/api/vms/6420a429-5ef5-441d-b88c-046dd2501382",
-          :uid_ems     => "6420a429-5ef5-441d-b88c-046dd2501382",
-          :vendor      => "redhat",
-          :name        => "vm",
-          :location    => "6420a429-5ef5-441d-b88c-046dd2501382.ovf",
-          :template    => false,
-        }
-        resource_pools = {
-          :name         => "Default for Cluster Default",
-          :uid_ems      => "5a09acd2-025c-0118-0172-00000000006d_respool",
-          :is_default   => true,
-          :ems_children => {
-            :vms => [vms]
-          }
-        }
-        clusters = {
-          :ems_ref      => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
-          :ems_ref_obj  => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
-          :uid_ems      => "5a09acd2-025c-0118-0172-00000000006d",
-          :name         => "Default",
-          :ems_children => {
-            :resource_pools => [resource_pools]
-          }
-        }
-        vms[:ems_cluster] = clusters
-        vm_folder = {
-          :type         => "EmsFolder",
-          :name         => "vm",
-          :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180_vm",
-          :hidden       => true,
-          :ems_children => {
-            :vms => [vms]
-          }
-        }
-        folders = [
-          {:type         => "Datacenter",
-           :ems_ref      => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
-           :ems_ref_obj  => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
-           :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180",
-           :ems_children => {
-             :folders => [vm_folder]
-           }},
-          vm_folder,
-          {:type         => "EmsFolder",
-           :name         => "host",
-           :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180_host",
-           :hidden       => true,
-           :ems_children => {
-             :clusters => [clusters]
-           }},
-        ]
-        target_hash = {
-          :vms            => [vms],
-          :clusters       => [clusters],
-          :resource_pools => [resource_pools],
-          :folders        => folders
-        }
-
-        EmsRefresh.save_ems_inventory_no_disconnect(@ems, target_hash)
-
-        expect(@ems).not_to receive(:remove_all_children)
-        expect(@ems).not_to receive(:replace_children)
-      end
     end
 
     context "with no dups in the database" do
@@ -349,39 +252,124 @@ describe EmsRefresh::SaveInventory do
         expect(c2.uid_ems).to eq(@vm1.uid_ems)
       end
     end
-  end
 
-  private
+    private
 
-  RAW_DATA_ATTRS = [:name, :ems_ref_obj, :ems_ref, :vendor, :location, :uid_ems, :type]
+    RAW_DATA_ATTRS = [:name, :ems_ref_obj, :ems_ref, :vendor, :location, :uid_ems, :type].freeze
 
-  def raw_data_process(*args)
-    args.collect do |v|
-      RAW_DATA_ATTRS.each_with_object({}) { |s, h| h[s] = v.send(s) }
+    def raw_data_process(*args)
+      args.collect do |v|
+        RAW_DATA_ATTRS.each_with_object({}) { |s, h| h[s] = v.send(s) }
+      end
+    end
+
+    def raw_data_with_dups(*args)
+      data = raw_data_process(*args)
+      data[1][:uid_ems] = data[0][:uid_ems]
+      data
+    end
+
+    def raw_data_without_dups(*args)
+      data = raw_data_process(*args)
+      data[1][:uid_ems] = SecureRandom.uuid if data[0][:uid_ems] == data[1][:uid_ems]
+      data
     end
   end
 
-  def raw_data_with_dups(*args)
-    data = raw_data_process(*args)
-    data[1][:uid_ems] = data[0][:uid_ems]
-    data
-  end
+  context ".save_ems_inventory_no_disconnect" do
+    before do
+      @zone = FactoryBot.create(:zone)
+      @ems = FactoryBot.create(:ems_redhat, :zone => @zone)
+      FactoryBot.create(:resource_pool,
+                        :ext_management_system => @ems,
+                        :name                  => "Default for Cluster Default",
+                        :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d_respool")
+      FactoryBot.create(:ems_folder,
+                        :ext_management_system => @ems,
+                        :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_host",
+                        :name                  => "host")
+      FactoryBot.create(:ems_folder,
+                        :ext_management_system => @ems,
+                        :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180_vm",
+                        :name                  => "vm")
+      FactoryBot.create(:datacenter,
+                        :ems_ref               => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
+                        :ext_management_system => @ems,
+                        :name                  => "Default",
+                        :uid_ems               => "5a09acd2-00e1-02d4-0257-000000000180")
+      FactoryBot.create(:ems_cluster,
+                        :ems_ref               => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
+                        :uid_ems               => "5a09acd2-025c-0118-0172-00000000006d",
+                        :ext_management_system => @ems,
+                        :name                  => "Default")
+    end
 
-  def raw_data_without_dups(*args)
-    data = raw_data_process(*args)
-    data[1][:uid_ems] = SecureRandom.uuid if data[0][:uid_ems] == data[1][:uid_ems]
-    data
-  end
+    it "should not disconnect" do
+      vms = {
+        :type        => "ManageIQ::Providers::Redhat::InfraManager::Vm",
+        :ems_ref     => "/api/vms/6420a429-5ef5-441d-b88c-046dd2501382",
+        :ems_ref_obj => "/api/vms/6420a429-5ef5-441d-b88c-046dd2501382",
+        :uid_ems     => "6420a429-5ef5-441d-b88c-046dd2501382",
+        :vendor      => "redhat",
+        :name        => "vm",
+        :location    => "6420a429-5ef5-441d-b88c-046dd2501382.ovf",
+        :template    => false,
+      }
+      resource_pools = {
+        :name         => "Default for Cluster Default",
+        :uid_ems      => "5a09acd2-025c-0118-0172-00000000006d_respool",
+        :is_default   => true,
+        :ems_children => {
+          :vms => [vms]
+        }
+      }
+      clusters = {
+        :ems_ref      => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
+        :ems_ref_obj  => "/api/clusters/5a09acd2-025c-0118-0172-00000000006d",
+        :uid_ems      => "5a09acd2-025c-0118-0172-00000000006d",
+        :name         => "Default",
+        :ems_children => {
+          :resource_pools => [resource_pools]
+        }
+      }
+      vms[:ems_cluster] = clusters
+      vm_folder = {
+        :type         => "EmsFolder",
+        :name         => "vm",
+        :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180_vm",
+        :hidden       => true,
+        :ems_children => {
+          :vms => [vms]
+        }
+      }
+      folders = [
+        {:type         => "Datacenter",
+         :ems_ref      => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
+         :ems_ref_obj  => "/api/datacenters/5a09acd2-00e1-02d4-0257-000000000180",
+         :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180",
+         :ems_children => {
+           :folders => [vm_folder]
+         }},
+        vm_folder,
+        {:type         => "EmsFolder",
+         :name         => "host",
+         :uid_ems      => "5a09acd2-00e1-02d4-0257-000000000180_host",
+         :hidden       => true,
+         :ems_children => {
+           :clusters => [clusters]
+         }},
+      ]
+      target_hash = {
+        :vms            => [vms],
+        :clusters       => [clusters],
+        :resource_pools => [resource_pools],
+        :folders        => folders
+      }
 
-  def dump_before(data)
-    puts "**VMS BEFORE"
-    puts Vm.all.collect { |v| [v.id, v.name, v.uid_ems, v.ems_ref_obj, v.ems_ref, v.ems_id].inspect }.join("\n")
-    puts "**DATA"
-    puts data.collect(&:inspect).join("\n")
-  end
+      EmsRefresh.save_ems_inventory_no_disconnect(@ems, target_hash)
 
-  def dump_after
-    puts "**VMS AFTER"
-    puts Vm.all.collect { |v| [v.id, v.name, v.uid_ems, v.ems_ref_obj, v.ems_ref, v.ems_id].inspect }.join("\n")
+      expect(@ems).not_to receive(:remove_all_children)
+      expect(@ems).not_to receive(:replace_children)
+    end
   end
 end
