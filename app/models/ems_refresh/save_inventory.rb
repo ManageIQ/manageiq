@@ -53,7 +53,7 @@ module EmsRefresh::SaveInventory
     ]
     remove_keys = child_keys + extra_infra_keys + extra_cloud_keys
 
-    vms_by_ems_ref = ems.vms_and_templates.index_by(&:ems_ref).except(nil)
+    vms_by_ems_ref = ems.vms_and_templates.group_by(&:ems_ref).except(nil)
 
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
@@ -91,7 +91,7 @@ module EmsRefresh::SaveInventory
 
           # Find the Vm in the database with the current uid_ems.  In the event
           #   of duplicates, try to determine which one is correct.
-          found = Array(vms_by_ems_ref[h[:ems_ref]] || vms_by_uid_ems[h[:uid_ems]])
+          found = vms_by_ems_ref[h[:ems_ref]] || vms_by_uid_ems[h[:uid_ems]] || []
 
           if found.length > 1 || (found.length == 1 && found.first.ems_id)
             found_dups = found
