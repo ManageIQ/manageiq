@@ -278,7 +278,9 @@ describe EmsRefresh::SaveInventory do
       # TODO: DRY up these tests with the others just like them
       it "should handle no dups in the raw data" do
         data = raw_data_without_dups(@vm1, @vm2)
+        data[0][:ems_ref]     = @ems_ref1
         data[0][:ems_ref_obj] = @ems_ref1
+        data[1][:ems_ref]     = @ems_ref2
         data[1][:ems_ref_obj] = @ems_ref2
         EmsRefresh.save_vms_inventory(@ems, data)
 
@@ -295,7 +297,9 @@ describe EmsRefresh::SaveInventory do
 
       it "should handle dups in the raw data" do
         data = raw_data_with_dups(@vm1, @vm2)
+        data[0][:ems_ref]     = @ems_ref1
         data[0][:ems_ref_obj] = @ems_ref1
+        data[1][:ems_ref]     = @ems_ref2
         data[1][:ems_ref_obj] = @ems_ref2
         EmsRefresh.save_vms_inventory(@ems, data)
 
