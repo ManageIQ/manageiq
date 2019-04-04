@@ -274,14 +274,16 @@ class MiqReport < ApplicationRecord
     @col_format_hash ||= col_order.zip(col_formats).to_h
   end
 
-  def format_result_set(result_set)
-    tz = get_time_zone(Time.zone)
+  def format_row(row)
+    @tz ||= get_time_zone(Time.zone)
 
-    result_set.map! do |row|
-      row.map do |key, _|
-        [key, format_column(key, row, tz, col_format_hash[key])]
-      end.to_h
-    end
+    row.map do |key, _|
+      [key, format_column(key, row, @tz, col_format_hash[key])]
+    end.to_h
+  end
+
+  def format_result_set(result_set)
+    result_set.map { |row| format_row(row) }
   end
 
   def filter_result_set(result_set, options)
