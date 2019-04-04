@@ -278,6 +278,11 @@ describe ConversionHost do
         conversion_host.enable_conversion_host_role(nil, 'fake ssh private key')
       end
     end
+
+    it "is valid if an address is not provided" do
+      conversion_host = ConversionHost.new(:name => "test", :resource => vm)
+      expect(conversion_host.valid?).to be(true)
+    end
   end
 
   context "resource validation" do
