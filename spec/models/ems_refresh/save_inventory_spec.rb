@@ -123,7 +123,7 @@ describe EmsRefresh::SaveInventory do
         expect(v2.uid_ems).to eq(@vm2.uid_ems)
       end
 
-      it "should handle dups in the raw data" do
+      it "should update the existing vm's uid_ems even if it is a duplicate" do
         data = raw_data_with_dups(@vm1, @vm2)
         EmsRefresh.save_vms_inventory(@ems, data)
 
@@ -146,7 +146,7 @@ describe EmsRefresh::SaveInventory do
         @vm2 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
 
-      it "should handle no dups in the raw data" do
+      it "should update the duplicate records in the database with the new uid_ems" do
         data = raw_data_without_dups(@vm1, @vm2)
         EmsRefresh.save_vms_inventory(@ems, data)
 
@@ -184,7 +184,7 @@ describe EmsRefresh::SaveInventory do
         @vm2 = FactoryBot.create(:vm_with_ref, :ext_management_system => @ems, :uid_ems => @uid)
       end
 
-      it "should handle no dups in the raw data" do
+      it "should reconnect the disconnected vm and update the active vm" do
         data = raw_data_without_dups(@vm1, @vm2)
         EmsRefresh.save_vms_inventory(@ems, data)
 
