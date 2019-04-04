@@ -215,6 +215,11 @@ describe ConversionHost do
       conversion_host = ConversionHost.new(:name => "test", :resource => vm, :address => "127.0.0.2")
       expect(conversion_host.valid?).to be(true)
     end
+
+    it "is valid if an address is not provided" do
+      conversion_host = ConversionHost.new(:name => "test", :resource => vm)
+      expect(conversion_host.valid?).to be(true)
+    end
   end
 
   context "resource validation" do

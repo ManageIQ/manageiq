@@ -22,7 +22,8 @@ class ConversionHost < ApplicationRecord
     :uniqueness => true,
     :format     => { :with => Resolv::AddressRegex },
     :inclusion  => { :in => ->(conversion_host) { conversion_host.resource.ipaddresses } },
-    :unless     => ->(conversion_host) { conversion_host.resource.blank? || conversion_host.resource.ipaddresses.blank? }
+    :unless     => ->(conversion_host) { conversion_host.resource.blank? || conversion_host.resource.ipaddresses.blank? },
+    :presence   => false
 
   validate :resource_supports_conversion_host
 
