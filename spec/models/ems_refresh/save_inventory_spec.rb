@@ -274,18 +274,6 @@ describe EmsRefresh::SaveInventory do
       data[1][:uid_ems] = SecureRandom.uuid if data[0][:uid_ems] == data[1][:uid_ems]
       data
     end
-
-    def dump_before(data)
-      puts "**VMS BEFORE"
-      puts Vm.all.collect { |v| [v.id, v.name, v.uid_ems, v.ems_ref_obj, v.ems_ref, v.ems_id].inspect }.join("\n")
-      puts "**DATA"
-      puts data.collect(&:inspect).join("\n")
-    end
-
-    def dump_after
-      puts "**VMS AFTER"
-      puts Vm.all.collect { |v| [v.id, v.name, v.uid_ems, v.ems_ref_obj, v.ems_ref, v.ems_id].inspect }.join("\n")
-    end
   end
 
   context ".save_ems_inventory_no_disconnect" do
