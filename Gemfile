@@ -39,10 +39,12 @@ gem "dalli",                          "=2.7.6",        :require => false
 gem "default_value_for",              "~>3.0.3"
 gem "docker-api",                     "~>1.33.6",      :require => false
 gem "elif",                           "=0.1.0",        :require => false
+gem "erubi",                          "~>1.8"
 gem "fast_gettext",                   "~>2.0.1"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.3.0"
 gem "hamlit",                         "~>2.8.5"
+gem "haml",                           "~>5.0"
 gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "inventory_refresh",              "~>0.2.0",       :require => false
@@ -234,7 +236,7 @@ end
 unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
-    gem "haml_lint",           "~>0.20.0", :require => false
+    gem "haml_lint",           "~>0.22.0", :require => false
     gem "rubocop",             "~>0.69.0", :require => false
     gem "rubocop-performance", "~>1.3",    :require => false
     # ruby_parser is required for i18n string extraction
