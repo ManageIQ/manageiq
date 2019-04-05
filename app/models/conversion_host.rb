@@ -171,7 +171,10 @@ class ConversionHost < ApplicationRecord
 
   def check_conversion_host_role
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml"
-    extra_vars = { :v2v_host_type => resource.ext_management_system.emstype }
+    extra_vars = {
+      :v2v_host_type        => resource.ext_management_system.emstype,
+      :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh'
+    }
     ansible_playbook(playbook, extra_vars)
     tag_resource_as('enabled')
   rescue
@@ -196,7 +199,10 @@ class ConversionHost < ApplicationRecord
 
   def disable_conversion_host_role
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_disable.yml"
-    extra_vars = { :v2v_host_type => resource.ext_management_system.emstype }
+    extra_vars = {
+      :v2v_host_type        => resource.ext_management_system.emstype,
+      :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh'
+    }
     ansible_playbook(playbook, extra_vars)
   ensure
     check_conversion_host_role
@@ -278,37 +284,44 @@ class ConversionHost < ApplicationRecord
   # will be passed to the '-e' flag.
   #
   def ansible_playbook(playbook, extra_vars = {}, auth_type = nil)
-    host = hostname || ipaddress
+    task = MiqTask.all.select { |t| t.context_data.present? && t.context_data[:conversion_host_id] == id }.sort_by(&:created_on).last
+    runner_basedir = Dir.mktmpdir("ansible-runner")
+    %w(env inventory).each { |d| Dir.mkdir(File.join(runner_basedir, d)) }
 
-    command = "ansible-playbook #{playbook} --inventory #{host}, --become -vvv"
+    host = hostname || ipaddress
+    File.open(File.join(runner_basedir, 'inventory', 'hosts'), 'w') { |f| f.write(host) }
 
     auth = authentication_type(auth_type) || authentications.first
-    command << " --user #{auth.userid}"
-
+    extra_vars[:ansible_user] = auth.userid
+    extra_vars[:ansible_become] = true unless auth.userid == 'root'
     case auth
     when AuthUseridPassword
-      extra_vars[:ansible_ssh_pass] = auth.password
+      runner_password_file = File.join(runner_basedir, 'env', 'password')
+      File.open(runner_password_file, 'w') { |f| f.write("---\n\"Password:\\s*?$\": \"#{auth.password}\"") }
     when AuthPrivateKey
-      ssh_private_key_file = Tempfile.new('ansible_key')
-      ssh_private_key_file.write(auth.auth_key)
-      command << " --private-key #{ssh_private_key_file.path}"
+      runner_ssh_key_file = File.join(runner_basedir, 'env', 'ssh_key')
+      File.open(runner_ssh_key_file, 'w') { |f| f.write(auth.auth_key) }
     else
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
     end
 
-    extra_vars.each { |k, v| command << " --extra-vars '#{k}=#{v}'" }
+    File.open(File.join(runner_basedir, 'env', 'extravars'), 'w') { |f| f.write(extra_vars.to_json) }
 
-    _log.info("FDUPONT - Calling Ansible playbook: #{command}")
-    result = AwesomeSpawn.run(command)
-    _log.info("FDUPONT - Result of playbook (#{result.exit_status}):\nOUTPUT: #{result.output}\nERROR: #{result.error}")
+    runner_args = {}
+    runner_args[:playbook] = playbook
+    runner_args[:ident] = "result"
+    runner_params = ['run', runner_basedir, :json, runner_args]
+
+    result = AwesomeSpawn.run("ansible-runner", :params => runner_params)
+    raise result.error unless result.exit_status.zero?
   rescue => e
     _log.error("Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]")
+    task.status = 'Error' unless task.nil?
     raise e
   ensure
-    if !ssh_private_key_file.nil? && File.exist?(ssh_private_key_file)
-      ssh_private_key_file.close unless ssh_private_key_file.closed?
-      File.delete(ssh_private_key_file)
-    end
+     task.context_data[:ansible_output] = result.output unless task.nil? || result.nil?
+     File.delete(runner_password_file) if !runner_password_file.nil? && File.exist?(runner_password_file)
+     File.delete(runner_ssh_key_file) if !runner_ssh_key_file.nil? && File.exist?(runner_ssh_key_file)
   end
 
   # Wrapper method for the various tag_resource_as_xxx methods.
