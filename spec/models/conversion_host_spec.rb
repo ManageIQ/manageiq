@@ -25,21 +25,21 @@ describe ConversionHost do
     context "#eligible?" do
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return(nil)
-        allow(conversion_host_1).to receive(:check_ssh_connection).and_return(true)
+        allow(conversion_host_1).to receive(:verify_credentials).and_return(true)
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(true)
         expect(conversion_host_1.eligible?).to eq(false)
       end
 
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('vddk')
-        allow(conversion_host_1).to receive(:check_ssh_connection).and_return(false)
+        allow(conversion_host_1).to receive(:verify_credentials).and_return(false)
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(true)
         expect(conversion_host_1.eligible?).to eq(false)
       end
 
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('vddk')
-        allow(conversion_host_1).to receive(:check_ssh_connection).and_return(true)
+        allow(conversion_host_1).to receive(:verify_credentials).and_return(true)
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(false)
         expect(conversion_host_1.eligible?).to eq(false)
       end
@@ -278,6 +278,65 @@ describe ConversionHost do
       allow(conversion_host).to receive(:connect_ssh).and_raise(StandardError, 'fake error')
       expected_message = "Could not apply the limits in '#{path}' on '#{vm.name}' with [StandardError: fake error]"
       expect { conversion_host.apply_task_limits(path, limits) }.to raise_error(expected_message)
+    end
+  end
+
+  context "authentication associations" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host_vm) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:auth_authkey) { FactoryBot.create(:authentication_ssh_keypair, :resource => conversion_host_vm) }
+
+    it "finds associated authentications" do
+      expect(conversion_host_vm.authentications).to contain_exactly(auth_authkey)
+    end
+
+    it "allows a resource to add an authentication" do
+      auth_authkey2 = FactoryBot.create(:authentication_ssh_keypair)
+      conversion_host_vm.authentications << auth_authkey2
+      expect(conversion_host_vm.authentications).to contain_exactly(auth_authkey, auth_authkey2)
+    end
+  end
+
+  context "verify credentials" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host_vm) { FactoryBot.create(:conversion_host, :resource => vm) }
+
+    it "works with no associated authentications" do
+      allow(conversion_host_vm).to receive(:connect_ssh).and_return(true)
+      expect(conversion_host_vm.verify_credentials).to be_truthy
+    end
+
+    it "works as expected with no associated authentications if the connect_ssh method fails" do
+      allow(conversion_host_vm).to receive(:connect_ssh).and_raise(Exception.new)
+      expect { conversion_host_vm.verify_credentials }.to raise_error(RuntimeError)
+    end
+
+    it "works if there is an associated validation" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair)
+      conversion_host_vm.authentications << authentication
+      allow(Net::SSH).to receive(:start).and_return(true)
+      expect(conversion_host_vm.verify_credentials).to be_truthy
+    end
+
+    it "works as expected if there is an associated validation that is invalid" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair)
+      conversion_host_vm.authentications << authentication
+      allow(Net::SSH).to receive(:start).and_raise(Net::SSH::AuthenticationFailed.new)
+      expect { conversion_host_vm.verify_credentials }.to raise_error(MiqException::MiqInvalidCredentialsError)
+    end
+
+    it "works if there are multiple associated validations" do
+      authentications = [FactoryBot.create(:authentication_ssh_keypair)] * 2
+      conversion_host_vm.authentications << authentications
+      allow(Net::SSH).to receive(:start).and_return(true)
+      expect(conversion_host_vm.verify_credentials).to be_truthy
+    end
+
+    it "works if an auth_type is explicitly specified" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair)
+      conversion_host_vm.authentications << authentication
+      allow(Net::SSH).to receive(:start).and_return(true)
+      expect(conversion_host_vm.verify_credentials('v2v')).to be_truthy
     end
   end
 end
