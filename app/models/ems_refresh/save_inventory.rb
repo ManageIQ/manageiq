@@ -384,10 +384,7 @@ module EmsRefresh::SaveInventory
 
     # Find the Vm in the database with the current uid_ems.  In the event
     #   of duplicates, try to determine which one is correct.
-    duplicates = vms_by_uid_ems[h[:uid_ems]] || []
-
-    # Reject any VMs which are active on other EMSs
-    duplicates.reject! { |vm| vm.ems_id.present? && vm.ems_id != h[:ems_id] }
+    duplicates = vms_by_uid_ems[h[:uid_ems]]
 
     # No vms with this uid_ems were found, create a new record
     return if duplicates.blank?
@@ -395,7 +392,7 @@ module EmsRefresh::SaveInventory
     active_duplicates, archived_duplicates = duplicates.partition { |vm| vm.ems_id.present? }
 
     # Prioritize VMs on the current EMS with the same ems_ref or a nil ems_ref
-    found = active_duplicates.detect { |v| v.ems_ref.nil? || v.ems_ref == h[:ems_ref] }
+    found = active_duplicates.detect { |v| v.ems_id == h[:ems_id] && (v.ems_ref.nil? || v.ems_ref == h[:ems_ref]) }
 
     # Next select an archived VM with the same ems_ref as the current vm
     found ||= archived_duplicates.detect { |v| v.ems_ref == h[:ems_ref] }
