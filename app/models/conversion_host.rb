@@ -286,7 +286,7 @@ class ConversionHost < ApplicationRecord
   def ansible_playbook(playbook, extra_vars = {}, auth_type = nil)
     task = MiqTask.all.select { |t| t.context_data.present? && t.context_data[:conversion_host_id] == id }.sort_by(&:created_on).last
     runner_basedir = Dir.mktmpdir("ansible-runner")
-    %w(env inventory).each { |d| Dir.mkdir(File.join(runner_basedir, d)) }
+    %w[env inventory].each { |d| Dir.mkdir(File.join(runner_basedir, d)) }
 
     host = hostname || ipaddress
     File.open(File.join(runner_basedir, 'inventory', 'hosts'), 'w') { |f| f.write(host) }
@@ -319,9 +319,9 @@ class ConversionHost < ApplicationRecord
     task.status = 'Error' unless task.nil?
     raise e
   ensure
-     task.context_data[:ansible_output] = result.output unless task.nil? || result.nil?
-     File.delete(runner_password_file) if !runner_password_file.nil? && File.exist?(runner_password_file)
-     File.delete(runner_ssh_key_file) if !runner_ssh_key_file.nil? && File.exist?(runner_ssh_key_file)
+    task.context_data[:ansible_output] = result.output unless task.nil? || result.nil?
+    File.delete(runner_password_file) if !runner_password_file.nil? && File.exist?(runner_password_file)
+    File.delete(runner_ssh_key_file) if !runner_ssh_key_file.nil? && File.exist?(runner_ssh_key_file)
   end
 
   # Wrapper method for the various tag_resource_as_xxx methods.
