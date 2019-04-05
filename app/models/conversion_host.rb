@@ -175,7 +175,7 @@ class ConversionHost < ApplicationRecord
       :v2v_host_type        => resource.ext_management_system.emstype,
       :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh'
     }
-    ansible_playbook(playbook, extra_vars)
+    ansible_playbook(playbook, extra_vars, false)
     tag_resource_as('enabled')
   rescue
     tag_resource_as('disabled')
@@ -283,8 +283,8 @@ class ConversionHost < ApplicationRecord
   # +extra_vars+ option should be a hash of key/value pairs which, if present,
   # will be passed to the '-e' flag.
   #
-  def ansible_playbook(playbook, extra_vars = {}, auth_type = nil)
-    task = MiqTask.all.select { |t| t.context_data.present? && t.context_data[:conversion_host_id] == id }.sort_by(&:created_on).last
+  def ansible_playbook(playbook, extra_vars = {}, update_task = true, auth_type = nil)
+    task = MiqTask.all.select { |t| t.context_data.present? && t.context_data[:conversion_host_id] == id }.sort_by(&:created_on).last if update_task
     runner_basedir = Dir.mktmpdir("ansible-runner")
     %w[env inventory].each { |d| Dir.mkdir(File.join(runner_basedir, d)) }
 
@@ -313,13 +313,15 @@ class ConversionHost < ApplicationRecord
     runner_params = ['run', runner_basedir, :json, runner_args]
 
     result = AwesomeSpawn.run("ansible-runner", :params => runner_params)
-    raise result.error unless result.exit_status.zero?
+    raise unless result.exit_status.zero?
   rescue => e
-    _log.error("Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]")
-    task.status = 'Error' unless task.nil?
+    errormsg = "Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]"
+    _log.error(errormsg)
+    task.error(errormsg) unless task.nil?
     raise e
   ensure
-    task.context_data[:ansible_output] = result.output unless task.nil? || result.nil?
+    context = task.context_data
+    task.update_context(task.context_data.merge!(:ansible_output => result.output)) unless task.nil? || result.nil?
     File.delete(runner_password_file) if !runner_password_file.nil? && File.exist?(runner_password_file)
     File.delete(runner_ssh_key_file) if !runner_ssh_key_file.nil? && File.exist?(runner_ssh_key_file)
   end
