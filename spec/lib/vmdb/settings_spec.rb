@@ -35,36 +35,61 @@ describe Vmdb::Settings do
     end
   end
 
-  it ".walk" do
-    stub_settings(:a => {:b => 'c'}, :d => {:e => {:f => 'g'}}, :i => [{:j => 'k'}, {:l => 'm'}])
+  describe ".walk" do
+    it "traverses tree properly" do
+      stub_settings(:a => {:b => 'c'}, :d => {:e => {:f => 'g'}}, :i => [{:j => 'k'}, {:l => 'm'}])
 
-    walked = []
-    described_class.walk do |key, value, path, owning|
-      expect(owning).to be_kind_of(Config::Options)
+      walked = []
+      described_class.walk do |key, value, path, owning|
+        expect(owning).to be_kind_of(Config::Options)
 
-      if %i(a d e).include?(key)
-        expect(value).to be_kind_of(Config::Options)
-        value = value.to_hash
-      elsif %i(i).include?(key)
-        expect(value).to be_kind_of(Array)
-        value.each { |v| expect(v).to be_kind_of(Config::Options) }
-        value = value.collect(&:to_hash)
+        if %i(a d e).include?(key)
+          expect(value).to be_kind_of(Config::Options)
+          value = value.to_hash
+        elsif %i(i).include?(key)
+          expect(value).to be_kind_of(Array)
+          value.each { |v| expect(v).to be_kind_of(Config::Options) }
+          value = value.collect(&:to_hash)
+        end
+
+        walked << [key, value, path]
       end
 
-      walked << [key, value, path]
+      expect(walked).to eq [
+        #key value                       path
+        [:a, {:b => 'c'},                [:a]],
+        [:b, 'c',                        [:a, :b]],
+        [:d, {:e => {:f => 'g'}},        [:d]],
+        [:e, {:f => 'g'},                [:d, :e]],
+        [:f, 'g',                        [:d, :e, :f]],
+        [:i, [{:j => 'k'}, {:l => 'm'}], [:i]],
+        [:j, 'k',                        [:i, 0, :j]],
+        [:l, 'm',                        [:i, 1, :l]],
+      ]
     end
 
-    expect(walked).to eq [
-      #key value                       path
-      [:a, {:b => 'c'},                [:a]],
-      [:b, 'c',                        [:a, :b]],
-      [:d, {:e => {:f => 'g'}},        [:d]],
-      [:e, {:f => 'g'},                [:d, :e]],
-      [:f, 'g',                        [:d, :e, :f]],
-      [:i, [{:j => 'k'}, {:l => 'm'}], [:i]],
-      [:j, 'k',                        [:i, 0, :j]],
-      [:l, 'm',                        [:i, 1, :l]],
-    ]
+    it "handles basic recursion (value == settings)" do
+      y = YAML.load(<<~CONFIG)
+        ---
+        :hash:
+        - &1
+          A: *1
+        CONFIG
+
+      expect { described_class.walk(y) { |_k, _v, _p, _o| } }.not_to raise_error
+    end
+
+    it "handles hash recursion (embedded array == settings)" do
+      s = {:a => []}
+      s[:a] << s
+      expect { described_class.walk(s) { |_k, _v, _p, _o| } }.not_to raise_error
+    end
+
+    it "handles array recursion (key == settings)" do
+      s = []
+      s << s
+      expect { described_class.walk(s) { |_k, _v, _p, _o| } }.not_to raise_error
+    end
   end
 
   describe ".save!" do

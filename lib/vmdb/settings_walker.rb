@@ -20,13 +20,14 @@ module Vmdb
           key_path = path.dup << key
 
           yield key, value, key_path, settings
+          next if key == settings || value == settings
 
           case value
           when settings.class
             walk(value, key_path, &block)
           when Array
             value.each_with_index do |v, i|
-              walk(v, key_path.dup << i, &block) if v.kind_of?(settings.class)
+              walk(v, key_path.dup << i, &block) if v.kind_of?(settings.class) && v != settings
             end
           end
         end
