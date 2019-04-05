@@ -12,13 +12,17 @@ module MiqReportResult::ResultSetOperations
       result_set = report_result.result_set
       count_of_full_result_set = result_set.count
       if result_set.present? && report
-        result_set, count_of_full_result_set = report.filter_result_set(result_set, options) if options.key?(:filter_column) && options.key?(:filter_string)
+        if options.key?(:filter_column) && options.key?(:filter_string)
+          result_set, count_of_full_result_set = report.filter_result_set(result_set, options)
+          allowed_columns_to_format = report.col_order - [options[:filter_column]]
+        end
+
         result_set.map! { |x| x.slice(*report.col_order) }
         result_set = result_set.stable_sort_by(sorting_columns, options[:sort_order])
         result_set = apply_limit_and_offset(result_set, options)
       end
 
-      {:result_set => report.format_result_set(result_set), :count_of_full_result_set => count_of_full_result_set}
+      {:result_set => report.format_result_set(result_set, allowed_columns_to_format), :count_of_full_result_set => count_of_full_result_set}
     end
   end
 end

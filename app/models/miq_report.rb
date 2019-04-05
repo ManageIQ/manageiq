@@ -289,9 +289,9 @@ class MiqReport < ApplicationRecord
   def filter_result_set(result_set, options)
     filter_columns = validate_columns(options[:filter_column])
     formatted_result_set = format_result_set(result_set, filter_columns)
-    result_set_filtered_ids = formatted_result_set.map { |x| x[options[:filter_column]].include?(options[:filter_string]) ? x['id'].to_i : nil }.compact
+    result_set_filtered = formatted_result_set.select { |x| x[options[:filter_column]].include?(options[:filter_string]) }
 
-    [result_set.select! { |x| result_set_filtered_ids.include?(x['id']) }, result_set_filtered_ids.count]
+    [result_set_filtered, result_set_filtered.count]
   end
 
   private
