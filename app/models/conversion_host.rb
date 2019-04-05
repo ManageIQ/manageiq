@@ -317,11 +317,10 @@ class ConversionHost < ApplicationRecord
   rescue => e
     errormsg = "Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]"
     _log.error(errormsg)
-    task.error(errormsg) unless task.nil?
+    task&.error(errormsg)
     raise e
   ensure
-    context = task.context_data
-    task.update_context(task.context_data.merge!(:ansible_output => result.output)) unless task.nil? || result.nil?
+    task&.update_context(task.context_data.merge!(:ansible_output => result.output)) unless result.nil?
     File.delete(runner_password_file) if !runner_password_file.nil? && File.exist?(runner_password_file)
     File.delete(runner_ssh_key_file) if !runner_ssh_key_file.nil? && File.exist?(runner_ssh_key_file)
   end
