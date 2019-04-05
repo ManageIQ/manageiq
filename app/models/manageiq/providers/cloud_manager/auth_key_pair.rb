@@ -1,4 +1,4 @@
-class ManageIQ::Providers::CloudManager::AuthKeyPair < ::AuthPrivateKey
+class ManageIQ::Providers::CloudManager::AuthKeyPair < ::Authentication
   include AvailabilityMixin
 
   acts_as_miq_taggable

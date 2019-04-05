@@ -27,7 +27,7 @@ module ManageIQ::Providers
     has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_services,                :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_databases,               :foreign_key => :ems_id, :dependent => :destroy
-    has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
+    has_many :key_pairs,                     :class_name  => "AuthKeyPair", :as => :resource, :dependent => :destroy
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
     has_one  :source_tenant, :as => :source, :class_name  => 'Tenant'
     has_many :vm_and_template_labels,        :through     => :vms_and_templates, :source => :labels
