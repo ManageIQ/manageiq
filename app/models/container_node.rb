@@ -15,7 +15,7 @@ class ContainerNode < ApplicationRecord
   # :name, :uid, :creation_timestamp, :resource_version
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many   :container_groups, -> { active }
-  has_many   :container_conditions, :class_name => ContainerCondition, :as => :container_entity, :dependent => :destroy
+  has_many   :container_conditions, :class_name => "ContainerCondition", :as => :container_entity, :dependent => :destroy
   has_many   :containers, :through => :container_groups
   has_many   :container_images, -> { distinct }, :through => :container_groups
   has_many   :container_services, -> { distinct }, :through => :container_groups

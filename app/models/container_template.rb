@@ -6,7 +6,7 @@ class ContainerTemplate < ApplicationRecord
   belongs_to :container_project
   has_many :container_template_parameters, :dependent => :destroy
   has_many :labels, -> { where(:section => "labels") },
-           :class_name => CustomAttribute,
+           :class_name => "CustomAttribute",
            :as         => :resource,
            :dependent  => :destroy
 

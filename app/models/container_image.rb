@@ -24,9 +24,9 @@ class ContainerImage < ApplicationRecord
   has_one :operating_system, :through => :computer_system
   has_one :openscap_result, :dependent => :destroy
   has_many :openscap_rule_results, :through => :openscap_result
-  has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
-  has_many :docker_labels, -> { where(:section => "docker_labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
-  has_one :last_scan_result, :class_name => ScanResult, :as => :resource, :dependent => :destroy, :autosave => true
+  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many :docker_labels, -> { where(:section => "docker_labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_one :last_scan_result, :class_name => "ScanResult", :as => :resource, :dependent => :destroy, :autosave => true
 
   serialize :exposed_ports, Hash
   serialize :environment_variables, Hash
