@@ -253,6 +253,8 @@ class MiqReport < ApplicationRecord
   end
 
   def columns_for_sorting(columns)
+    columns = columns.split(",") if columns && columns.kind_of?(String)
+
     columns || sortby || col_order
   end
 
@@ -261,7 +263,7 @@ class MiqReport < ApplicationRecord
   end
 
   def validate_columns(sorting_columns)
-    sorting_columns.split(",").collect do |attr|
+    Array(sorting_columns).collect do |attr|
       if col_order&.include?(attr)
         attr
       else
