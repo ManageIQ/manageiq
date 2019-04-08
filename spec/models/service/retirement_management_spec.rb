@@ -103,12 +103,12 @@ describe "Service Retirement Management" do
   end
 
   it "with one src_id" do
-    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@service.id], :__request_type__ => "service_retire"}, user, true)
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@service.id], :__request_type__ => "service_retire"}, user)
     @service.class.to_s.demodulize.constantize.make_retire_request(@service.id, user)
   end
 
   it "with src_ids" do
-    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@service.id, service_with_owner.id], :__request_type__ => "service_retire"}, user, true)
+    expect(ServiceRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@service.id, service_with_owner.id], :__request_type__ => "service_retire"}, user)
     @service.class.to_s.demodulize.constantize.make_retire_request(@service.id, service_with_owner.id, user)
   end
 
