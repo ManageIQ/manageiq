@@ -48,7 +48,10 @@ class Service
 
       def retirement_warning
         warn_value = parse_retirement_warn
-        @attributes[:retirement_warn] = warn_value if warn_value
+        if warn_value
+          days_between_warn_and_retirement = (@attributes[:retires_on] - warn_value).to_i / 1.day
+          @attributes[:retirement_warn] = days_between_warn_and_retirement
+        end
       end
 
       def parse_retirement_warn
