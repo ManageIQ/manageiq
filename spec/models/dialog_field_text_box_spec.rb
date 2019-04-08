@@ -44,9 +44,23 @@ describe DialogFieldTextBox do
       context "when show_refresh_button is false" do
         let(:show_refresh_button) { false }
 
-        it "sets the value to the automate value" do
-          field.initialize_value_context
-          expect(field.instance_variable_get(:@value)).to eq("value from automate")
+
+        context "when load_values_on_init is true" do
+          let(:load_values_on_init) { true }
+
+          it "sets the value to the automate value" do
+            field.initialize_value_context
+            expect(field.instance_variable_get(:@value)).to eq("value from automate")
+          end
+        end
+
+        context "when load_values_on_init is false" do
+          let(:load_values_on_init) { false }
+
+          it "uses the default value" do
+            field.initialize_value_context
+            expect(field.instance_variable_get(:@value)).to eq("default value")
+          end
         end
       end
     end

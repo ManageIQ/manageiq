@@ -12,6 +12,7 @@ describe DialogFieldSortedItem do
     end
     let(:default_value) { "test2" }
     let(:automate_values) { [%w(test1 test1), %w(test2 test2), %w(test3 test3)] }
+    let(:empty_values) { [[nil, "<None>"]] }
 
     before do
       allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).and_return(automate_values)
@@ -104,14 +105,14 @@ describe DialogFieldSortedItem do
         context "when the default_value is not included in the list of values" do
           let(:default_value) { "test4" }
 
-          it "uses the first value as the default" do
+          it "uses the given value as the default" do
             dialog_field.initialize_value_context
-            expect(dialog_field.default_value).to eq("test1")
+            expect(dialog_field.default_value).to eq("test4")
           end
 
-          it "sets the values to what should be returned from automate" do
+          it "sets the values to empty" do
             dialog_field.initialize_value_context
-            expect(dialog_field.extract_dynamic_values).to eq(automate_values)
+            expect(dialog_field.extract_dynamic_values).to eq(empty_values)
           end
         end
 
@@ -123,9 +124,9 @@ describe DialogFieldSortedItem do
             expect(dialog_field.default_value).to eq("test2")
           end
 
-          it "sets the values to what should be returned from automate" do
+          it "sets the values to empty" do
             dialog_field.initialize_value_context
-            expect(dialog_field.extract_dynamic_values).to eq(automate_values)
+            expect(dialog_field.extract_dynamic_values).to eq(empty_values)
           end
         end
       end

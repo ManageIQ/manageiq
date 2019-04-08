@@ -30,6 +30,7 @@ class DialogField < ApplicationRecord
 
   default_value_for :required, false
   default_value_for(:visible, :allows_nil => false) { true }
+  default_value_for :load_values_on_init, true
 
   serialize :values
   serialize :values_method_options,   Hash
