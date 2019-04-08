@@ -57,7 +57,7 @@ module EmsRefresh::SaveInventory
 
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
-    vms = VmOrTemplate.where(:uid_ems => vms_uids).to_a
+    vms = VmOrTemplate.where(:uid_ems => vms_uids, :ems_id => [nil, ems.id]).to_a
     disconnects_index = disconnects.index_by { |vm| vm }
     vms_by_uid_ems = vms.group_by(&:uid_ems)
     dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
@@ -392,7 +392,7 @@ module EmsRefresh::SaveInventory
     active_duplicates, archived_duplicates = duplicates.partition { |vm| vm.ems_id.present? }
 
     # Prioritize VMs on the current EMS with the same ems_ref or a nil ems_ref
-    found = active_duplicates.detect { |v| v.ems_id == h[:ems_id] && (v.ems_ref.nil? || v.ems_ref == h[:ems_ref]) }
+    found = active_duplicates.detect { |v| v.ems_ref.nil? || v.ems_ref == h[:ems_ref] }
 
     # Next select an archived VM with the same ems_ref as the current vm
     found ||= archived_duplicates.detect { |v| v.ems_ref == h[:ems_ref] }
