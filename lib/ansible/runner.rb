@@ -162,11 +162,17 @@ module Ansible
       #         ansible_runner_method
       def response(base_dir, ansible_runner_method, result)
         if async?(ansible_runner_method)
-          Ansible::Runner::ResponseAsync.new(:base_dir => base_dir)
+          Ansible::Runner::ResponseAsync.new(
+            :base_dir     => base_dir,
+            :command_line => result.command_line
+          )
         else
-          Ansible::Runner::Response.new(:base_dir => base_dir,
-                                        :stdout   => result.output,
-                                        :stderr   => result.error)
+          Ansible::Runner::Response.new(
+            :base_dir     => base_dir,
+            :command_line => result.command_line,
+            :stdout       => result.output,
+            :stderr       => result.error
+          )
         end
       end
 

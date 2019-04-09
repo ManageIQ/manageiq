@@ -9,12 +9,14 @@ module Ansible
       #
       # @param base_dir [String] Base directory containing Runner metadata (project, inventory, etc). ansible-runner
       #        refers to it as 'private_data_dir'
+      # @param command_line [String] Command line of the ansible-runner run
       # @param ident [String] An identifier that will be used when generating the artifacts directory and can be used to
       #        uniquely identify a playbook run. We use unique base dir per run, so this identifier can be static for
       #        most cases.
-      def initialize(base_dir:, ident: "result")
-        @base_dir = base_dir
-        @ident    = ident
+      def initialize(base_dir:, command_line:, ident: "result")
+        @base_dir     = base_dir
+        @ident        = ident
+        @command_line = command_line
       end
 
       # @return [Boolean] true if the ansible job is still running, false when it's finished

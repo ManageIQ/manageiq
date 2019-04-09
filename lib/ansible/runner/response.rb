@@ -3,18 +3,20 @@ module Ansible
     class Response
       include Vmdb::Logging
 
-      attr_reader :base_dir, :ident
+      attr_reader :base_dir, :command_line, :ident
 
       # Response object designed for holding full response from ansible-runner
       #
       # @param base_dir [String] ansible-runner private_data_dir parameter
+      # @param command_line [String] Command line of the ansible-runner run
       # @param return_code [Integer] Return code of the ansible-runner run, 0 == ok, others mean failure
       # @param stdout [String] Stdout from ansible-runner run
       # @param stderr [String] Stderr from ansible-runner run
       # @param ident [String] ansible-runner ident parameter
-      def initialize(base_dir:, return_code: nil, stdout: nil, stderr: nil, ident: "result")
+      def initialize(base_dir:, command_line:, return_code: nil, stdout: nil, stderr: nil, ident: "result")
         @base_dir      = base_dir
         @ident         = ident
+        @command_line  = command_line
         @return_code   = return_code
         @stdout        = stdout
         @parsed_stdout = parse_stdout(stdout) if stdout
