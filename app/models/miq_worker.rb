@@ -358,6 +358,20 @@ class MiqWorker < ApplicationRecord
     self.class.containerized_worker?
   end
 
+  def self.supports_systemd?
+    # Override this in a sub-class that supports being run as
+    # a systemd unit
+    false
+  end
+
+  def self.systemd_worker?
+    MiqEnvironment::Command.supports_systemd? && supports_systemd?
+  end
+
+  def systemd_worker?
+    self.class.systemd_worker?
+  end
+
   def start_runner
     if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
       start_runner_via_spawn
