@@ -260,7 +260,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.start_worker(*params)
-    w = containerized_worker? ? init_worker_object(*params) : create_worker_record(*params)
+    w = containerized_worker? || systemd_worker? ? init_worker_object(*params) : create_worker_record(*params)
     w.start
     w
   end
@@ -379,11 +379,19 @@ class MiqWorker < ApplicationRecord
   def start_runner
     if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
       start_runner_via_spawn
+    elsif systemd_worker?
+      start_runner_via_systemd
     elsif containerized_worker?
       start_runner_via_container
     else
       start_runner_via_fork
     end
+  end
+
+  def start_runner_via_systemd
+    ensure_systemd_files
+    enable_systemd_unit
+    start_systemd_unit
   end
 
   def start_runner_via_container
@@ -434,7 +442,7 @@ class MiqWorker < ApplicationRecord
 
   def start
     self.pid = start_runner
-    save unless containerized_worker?
+    save unless containerized_worker? || systemd_worker?
 
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
     MiqEvent.raise_evm_event_queue(miq_server || MiqServer.my_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
