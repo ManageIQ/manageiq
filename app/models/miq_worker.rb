@@ -389,7 +389,6 @@ class MiqWorker < ApplicationRecord
   end
 
   def start_runner_via_systemd
-    ensure_systemd_files
     enable_systemd_unit
     start_systemd_unit
   end
@@ -566,14 +565,22 @@ class MiqWorker < ApplicationRecord
 
   delegate :normalized_type, :to => :class
 
-  def abbreviated_class_name
-    type.sub(/^ManageIQ::Providers::/, "")
+  def self.abbreviated_class_name
+    self.name.sub(/^ManageIQ::Providers::/, "")
   end
 
-  def minimal_class_name
+  def abbreviated_class_name
+    self.class.abbreviated_class_name
+  end
+
+  def self.minimal_class_name
     abbreviated_class_name
       .sub(/Miq/, "")
       .sub(/Worker/, "")
+  end
+
+  def minimal_class_name
+    self.class.minimal_class_name
   end
 
   def database_application_name
