@@ -7,6 +7,18 @@ class DialogFieldImporter
       dialog_field_attributes["dynamic"] = true
     end
 
+    if export_version < 2
+      dialog_field_attributes["load_values_on_init"] = if !dialog_field_attributes["show_refresh_button"]
+                                                         # no refresh button, always true
+                                                         true
+                                                       elsif dialog_field_attributes["load_values_on_init"].nil?
+                                                         # unspecified, default to true
+                                                         true
+                                                       else
+                                                         !!dialog_field_attributes["load_values_on_init"]
+                                                       end
+    end
+
     if DialogField::DIALOG_FIELD_TYPES.include?(dialog_field_attributes["type"])
       dialog_field_type_class = dialog_field_attributes["type"].constantize
       resource_action_attributes = dialog_field_attributes.delete("resource_action")
