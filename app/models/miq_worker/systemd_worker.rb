@@ -6,7 +6,7 @@ class MiqWorker
 
     class_methods do
       def supports_systemd?
-        true
+        worker_settings[:systemd_enabled]
       end
 
       def sync_workers
