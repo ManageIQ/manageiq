@@ -5,11 +5,6 @@ class MiqWorker
     extend ActiveSupport::Concern
 
     class_methods do
-      def sync_workers
-        ensure_systemd_files
-        super
-      end
-
       def ensure_systemd_files
         File.write(target_file_path, target_file) unless target_file_path.exist?
         File.write(service_file_path, unit_file) unless service_file_path.exist?
