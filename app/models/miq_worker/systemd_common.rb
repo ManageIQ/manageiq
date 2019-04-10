@@ -70,12 +70,17 @@ class MiqWorker
           [Install]
           WantedBy=#{target_file_name}
           [Service]
-          #{service_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
+          Environment=HOME=/root
           WorkingDirectory=#{working_directory}
           ExecStart=/bin/bash -lc '#{exec_start}'
           Restart=always
           Slice=#{slice_name}
         UNIT_FILE
+      end
+
+      def working_directory
+        # TODO pull this dynamically
+        "/var/www/miq/vmdb"
       end
 
       def exec_start
@@ -87,22 +92,18 @@ class MiqWorker
       end
 
       def service_environment_variables
-        # TODO get user's home dir dynamically
-        ["HOME=/root"]
+        # Override this in a child class to add env vars
+        []
       end
 
       def service_settings_file
         <<~WORKER_SETTINGS_FILE
           [Service]
+          #{service_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
           MemoryHigh=#{worker_settings[:memory_threshold].bytes}
           TimeoutStartSec=#{worker_settings[:starting_timeout]}
           TimeoutStopSec=#{worker_settings[:stopping_timeout]}
         WORKER_SETTINGS_FILE
-      end
-
-      def working_directory
-        # TODO pull this dynamically
-        "/var/www/miq/vmdb"
       end
     end
 
