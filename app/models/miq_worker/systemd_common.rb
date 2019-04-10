@@ -72,10 +72,18 @@ class MiqWorker
           [Service]
           #{service_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
           WorkingDirectory=#{working_directory}
-          ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb #{self.name} --heartbeat --guid=%i'
+          ExecStart=/bin/bash -lc '#{exec_start}'
           Restart=always
           Slice=#{slice_name}
         UNIT_FILE
+      end
+
+      def exec_start
+        "exec ruby lib/workers/bin/run_single_worker.rb #{self.name} #{run_single_worker_args}"
+      end
+
+      def run_single_worker_args
+        "--heartbeat --guid=%i"
       end
 
       def service_environment_variables
