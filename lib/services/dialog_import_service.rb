@@ -3,6 +3,8 @@ class DialogImportService
   class ParsedNonDialogYamlError < StandardError; end
   class DialogFieldAssociationCircularReferenceError < StandardError; end
 
+  CURRENT_DIALOG_VERSION = 2
+
   def initialize(dialog_field_importer = DialogFieldImporter.new, dialog_import_validator = DialogImportValidator.new, dialog_field_association_validator = DialogFieldAssociationValidator.new)
     @dialog_field_importer = dialog_field_importer
     @dialog_import_validator = dialog_import_validator
@@ -25,7 +27,7 @@ class DialogImportService
         if dialog_with_label?(dialog["label"])
           yield dialog if block_given?
         else
-          Dialog.create(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog)))
+          Dialog.create(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog, dialog['export_version'] || 1)))
         end
       end
     rescue DialogFieldImporter::InvalidDialogFieldTypeError
@@ -65,23 +67,23 @@ class DialogImportService
     queue_deletion(import_file_upload.id)
   end
 
-  def build_dialog_tabs(dialog)
+  def build_dialog_tabs(dialog, export_version = CURRENT_DIALOG_VERSION)
     dialog["dialog_tabs"].collect do |dialog_tab|
-      DialogTab.create(dialog_tab.merge("dialog_groups" => build_dialog_groups(dialog_tab)))
+      DialogTab.create(dialog_tab.merge("dialog_groups" => build_dialog_groups(dialog_tab, export_version)))
     end
   end
 
-  def build_dialog_groups(dialog_tab)
+  def build_dialog_groups(dialog_tab, export_version = CURRENT_DIALOG_VERSION)
     dialog_tab["dialog_groups"].collect do |dialog_group|
-      DialogGroup.create(dialog_group.merge("dialog_fields" => build_dialog_fields(dialog_group)))
+      DialogGroup.create(dialog_group.merge("dialog_fields" => build_dialog_fields(dialog_group, export_version)))
     end
   end
 
-  def build_dialog_fields(dialog_group)
+  def build_dialog_fields(dialog_group, export_version = CURRENT_DIALOG_VERSION)
     check_field_associations(dialog_group["dialog_fields"])
     dialog_group["dialog_fields"].collect do |dialog_field|
       dialog_field["options"].try(:symbolize_keys!)
-      @dialog_field_importer.import_field(dialog_field)
+      @dialog_field_importer.import_field(dialog_field, export_version)
     end
   end
 
@@ -98,9 +100,9 @@ class DialogImportService
 
   def import(dialog)
     @dialog_import_validator.determine_dialog_validity(dialog)
-    new_dialog = Dialog.create(dialog.except('dialog_tabs'))
+    new_dialog = Dialog.create(dialog.except('dialog_tabs', 'export_version'))
     association_list = build_association_list(dialog)
-    new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog)))
+    new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog, dialog['export_version'] || 1)))
     build_associations(new_dialog, association_list)
     new_dialog
   end
@@ -146,8 +148,8 @@ class DialogImportService
       dialog['id'] = new_or_existing_dialog.id
       new_associations = build_association_list(dialog)
       new_or_existing_dialog.update_attributes(
-        dialog.merge(
-          "dialog_tabs"      => build_dialog_tabs(dialog),
+        dialog.except('export_version').merge(
+          "dialog_tabs"      => build_dialog_tabs(dialog, dialog['export_version'] || 1),
           "resource_actions" => build_resource_actions(dialog)
         )
       )

@@ -1,7 +1,7 @@
 class DialogFieldImporter
   class InvalidDialogFieldTypeError < StandardError; end
 
-  def import_field(dialog_field_attributes)
+  def import_field(dialog_field_attributes, export_version = DialogImportService::CURRENT_DIALOG_VERSION)
     if dialog_field_attributes["type"] == "DialogFieldDynamicList"
       dialog_field_attributes["type"] = "DialogFieldDropDownList"
       dialog_field_attributes["dynamic"] = true
