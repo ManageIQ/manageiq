@@ -5,10 +5,6 @@ class MiqWorker
     extend ActiveSupport::Concern
 
     class_methods do
-      def supports_systemd?
-        worker_settings[:systemd_enabled]
-      end
-
       def sync_workers
         ensure_systemd_files
         super

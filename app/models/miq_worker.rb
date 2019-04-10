@@ -2,6 +2,7 @@ require 'io/wait'
 
 class MiqWorker < ApplicationRecord
   include_concern 'ContainerCommon'
+  include_concern 'SystemdWorker'
   include UuidMixin
 
   before_destroy :log_destroy_of_worker_messages
@@ -367,9 +368,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.supports_systemd?
-    # Override this in a sub-class that supports being run as
-    # a systemd unit
-    false
+    worker_settings[:systemd_enabled]
   end
 
   def self.systemd_worker?
