@@ -107,22 +107,38 @@ class MiqWorker
       end
     end
 
-    def enable_systemd_unit
+    def enable_systemd_unit(runtime: false, replace: true)
+      systemd.EnableUnitFiles([unit_name], runtime, replace)
     end
 
-    def disable_systemd_unit
+    def disable_systemd_unit(runtime: false)
+      systemd.DisableUnitFiles([unit_name], runtime)
     end
 
-    def start_systemd_unit
+    def start_systemd_unit(mode: "replace")
+      systemd.StartUnit(unit_name, mode)
     end
 
-    def stop_systemd_unit
+    def stop_systemd_unit(mode: "replace")
+      systemd.StopUnit(unit_name, mode)
     end
 
     private
 
     def systemd
       @systemd ||= DBus::Systemd::Manager.new
+    end
+
+    def service_base_name
+      self.class.service_base_name
+    end
+
+    def unit_name
+      "#{service_base_name}#{unit_instance}.service"
+    end
+
+    def unit_instance
+      singleton_worker? ? "" : "@#{guid}"
     end
   end
 end
