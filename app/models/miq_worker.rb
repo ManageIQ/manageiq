@@ -264,7 +264,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.start_worker(*params)
-    w = containerized_worker? || systemd_worker? ? init_worker_object(*params) : create_worker_record(*params)
+    w = containerized_worker? ? init_worker_object(*params) : create_worker_record(*params)
     w.start
     w
   end
