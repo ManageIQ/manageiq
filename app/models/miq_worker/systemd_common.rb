@@ -53,7 +53,7 @@ class MiqWorker
       end
 
       def systemd_unit_dir
-        Pathname.new("/").join("etc", "systemd", "system")
+        Pathname.new("/etc/systemd/system")
       end
 
       def target_file
@@ -70,7 +70,7 @@ class MiqWorker
           [Install]
           WantedBy=#{target_file_name}
           [Service]
-          #{unit_environment_variables.join("\n")}
+          #{service_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
           WorkingDirectory=#{working_directory}
           ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb #{self.name} --heartbeat --guid=%i'
           Restart=always
@@ -78,9 +78,9 @@ class MiqWorker
         UNIT_FILE
       end
 
-      def unit_environment_variables
+      def service_environment_variables
         # TODO get user's home dir dynamically
-        ["Environment=HOME=/root"]
+        ["HOME=/root"]
       end
 
       def service_settings_file
