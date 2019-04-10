@@ -1,4 +1,6 @@
 require 'manageiq'
+require 'manageiq-loggers'
+require 'miq_environment'
 require 'util/vmdb-logger'
 
 module Vmdb
@@ -19,6 +21,7 @@ module Vmdb
 
     def self.apply_config(config)
       apply_config_value(config, $log,                :level)
+      apply_config_value(config, $journald_log,       :level)
       apply_config_value(config, $rails_log,          :level_rails)
       apply_config_value(config, $ansible_tower_log,  :level_ansible_tower)
       apply_config_value(config, $api_log,            :level_api)
@@ -45,6 +48,7 @@ module Vmdb
 
       $audit_log          = AuditLogger.new(path_dir.join("audit.log"))
       $container_log      = ContainerLogger.new
+      $journald_log       = ManageIQ::Loggers::Journald.new
       $log                = create_multicast_logger(path_dir.join("evm.log"))
       $rails_log          = create_multicast_logger(path_dir.join("#{Rails.env}.log"))
       $api_log            = create_multicast_logger(path_dir.join("api.log"))
@@ -73,6 +77,7 @@ module Vmdb
     def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
       logger_class.new(log_file_path).tap do |logger|
         logger.extend(ActiveSupport::Logger.broadcast($container_log)) if ENV["CONTAINER"]
+        logger.extend(ActiveSupport::Logger.broadcast($journald_log)) if MiqEnvironment::Command.supports_systemd?
       end
     end
     private_class_method :create_multicast_logger
