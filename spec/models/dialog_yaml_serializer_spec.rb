@@ -22,10 +22,11 @@ describe DialogYamlSerializer do
 
     let(:expected_data) do
       {
-        "description"  => description,
-        "buttons"      => buttons,
-        "label"        => label,
-        "dialog_tabs"  => ["serialized_dialog1", "serialized_dialog2"],
+        "description"    => description,
+        "buttons"        => buttons,
+        "label"          => label,
+        "dialog_tabs"    => %w[serialized_dialog1 serialized_dialog2],
+        "export_version" => DialogImportService::CURRENT_DIALOG_VERSION,
       }
     end
 
