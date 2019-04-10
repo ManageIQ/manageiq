@@ -110,6 +110,14 @@ class MiqWorker
       ["Environment=HOME=/root"]
     end
 
+    def service_settings_file
+      <<~WORKER_SETTINGS_FILE
+        [Service]
+        MemoryHigh=#{worker_settings[:memory_threshold].bytes}
+        TimeoutStartSec=#{worker_settings[:starting_timeout]}
+        TimeoutStopSec=#{worker_settings[:stopping_timeout]}
+      WORKER_SETTINGS_FILE
+    end
     def working_directory
       # TODO pull this dynamically
       "/var/www/miq/vmdb"
