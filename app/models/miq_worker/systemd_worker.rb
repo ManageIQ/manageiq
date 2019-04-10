@@ -77,7 +77,7 @@ class MiqWorker
           [Service]
           #{unit_environment_variables.join("\n")}
           WorkingDirectory=#{working_directory}
-          ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb #{self.name} --heartbeat'
+          ExecStart=/bin/bash -lc 'exec ruby lib/workers/bin/run_single_worker.rb #{self.name} --heartbeat --guid=%i'
           Restart=always
           Slice=#{slice_name}
         UNIT_FILE
