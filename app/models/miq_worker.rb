@@ -2,7 +2,7 @@ require 'io/wait'
 
 class MiqWorker < ApplicationRecord
   include_concern 'ContainerCommon'
-  include_concern 'SystemdWorker'
+  include_concern 'SystemdCommon'
   include UuidMixin
 
   before_destroy :log_destroy_of_worker_messages
