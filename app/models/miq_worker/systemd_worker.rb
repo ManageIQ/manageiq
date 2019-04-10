@@ -38,7 +38,7 @@ class MiqWorker
       end
 
       def service_file_path
-        systemd_unit_dir.join(service_name)
+        systemd_unit_dir.join(service_file_name)
       end
 
       def service_config_name
