@@ -39,6 +39,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
       if MiqEnvironment::Command.is_podified? && w.containerized_worker?
         w.delete_container_objects
       elsif w.systemd_worker?
+        w.stop_systemd_unit
         w.disable_systemd_unit
       else
         stop_worker(w)
