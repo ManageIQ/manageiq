@@ -52,6 +52,10 @@ class MiqWorker < ApplicationRecord
     workers_configured_count
   end
 
+  def self.singleton_worker?
+    maximum_workers_count.kind_of?(Integer) && maximum_workers_count == 1
+  end
+
   def self.workers_configured_count
     count = worker_settings[:count]
     if maximum_workers_count.kind_of?(Integer)
