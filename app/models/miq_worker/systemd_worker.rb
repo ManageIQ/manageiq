@@ -34,7 +34,7 @@ class MiqWorker
       end
 
       def slice_name
-        "cfme-#{service_name}.slice"
+        "cfme-#{service_base_name}.slice"
       end
 
       def service_file_path
