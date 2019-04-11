@@ -17,7 +17,9 @@ class DialogFieldSerializer < Serializer
     }
 
     if dialog_field.dynamic?
-      extra_attributes["values"] = dialog_field.extract_dynamic_values
+      key_to_update = dialog_field.kind_of?(DialogFieldSortedItem) ? "values" : "default_value"
+
+      extra_attributes[key_to_update] = dialog_field.extract_dynamic_values
     end
 
     if dialog_field.type == "DialogFieldTagControl"
