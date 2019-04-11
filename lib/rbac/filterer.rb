@@ -714,13 +714,24 @@ module Rbac
         # typically, this is the only one we want:
         vcmeta = vcmeta_list.last
 
-        if ([ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) } && klass <= VmOrTemplate) ||
-           (vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)        && NETWORK_MODELS_FOR_BELONGSTO_FILTER.any? { |association_class| klass <= association_class.safe_constantize })
+        if belongsto_association_filtered?(vcmeta, klass)
           vcmeta.send(association_name).to_a
         else
           vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)
         end
       end.uniq
+    end
+
+    def belongsto_association_filtered?(vcmeta, klass)
+      if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) }
+        return true if klass <= VmOrTemplate
+      end
+
+      if vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)
+        NETWORK_MODELS_FOR_BELONGSTO_FILTER.any? do |association_class|
+          klass <= association_class.safe_constantize
+        end
+      end
     end
 
     def get_belongsto_matches_for_host(blist)
