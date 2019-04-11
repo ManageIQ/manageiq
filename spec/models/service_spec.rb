@@ -895,19 +895,20 @@ describe Service do
     let(:service) { described_class.new(:options => {:dialog => "dialog_options"}) }
     let(:dialog_serializer) { instance_double("DialogSerializer") }
     let(:workflow) { instance_double("ResourceActionWorkflow", :dialog => "workflow_dialog") }
+    let(:ra) { FactoryBot.create(:resource_action, :dialog_id => 58, :ae_namespace => "foo", :ae_class => "bar", :ae_instance => "baz", :ae_attributes => {:service_action=>"reconfigure"}) }
 
     before do
       allow(DialogSerializer).to receive(:new).and_return(dialog_serializer)
       allow(dialog_serializer).to receive(:serialize).and_return("serialized_reconfigure_dialog")
       allow(ResourceActionWorkflow).to receive(:new).and_return(workflow)
-      allow(service).to receive(:reconfigure_resource_action).and_return("reconfigure_resource_action")
+      allow(service).to receive(:reconfigure_resource_action).and_return(ra)
     end
 
     it "creates a new resource action workflow" do
       expect(ResourceActionWorkflow).to receive(:new).with(
         "dialog_options",
         User.current_user,
-        "reconfigure_resource_action",
+        ra,
         :target => service, :reconfigure => true
       )
       service.reconfigure_dialog
