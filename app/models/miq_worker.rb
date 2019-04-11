@@ -135,8 +135,6 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.sync_workers
-    ensure_systemd_files if systemd_worker?
-
     w       = include_stopping_workers_on_synchronize ? find_alive : find_current_or_starting
     current = w.length
     desired = self.has_required_role? ? workers : 0

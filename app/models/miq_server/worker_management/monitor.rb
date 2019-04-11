@@ -50,6 +50,7 @@ module MiqServer::WorkerManagement::Monitor
     self.class.monitor_class_names.each do |class_name|
       begin
         c = class_name.constantize
+        c.ensure_systemd_files if c.systemd_worker?
         result[c.name] = c.sync_workers
         result[c.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
       rescue => error

@@ -33,8 +33,6 @@ module PerEmsWorkerMixin
     end
 
     def sync_workers
-      ensure_systemd_files if systemd_worker?
-
       ws      = find_current_or_starting
       current = ws.collect(&:queue_name).sort
       desired = self.has_required_role? ? desired_queue_names.sort : []

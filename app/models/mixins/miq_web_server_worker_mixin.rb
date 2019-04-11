@@ -50,8 +50,6 @@ module MiqWebServerWorkerMixin
     end
 
     def sync_workers
-      ensure_systemd_files if systemd_worker?
-
       # TODO: add an at_exit to remove all registered ports and gracefully stop apache
       self.registered_ports ||= []
 
