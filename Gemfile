@@ -132,6 +132,10 @@ group :qpid_proton, :optional => true do
   gem "qpid_proton",                    "~>0.26.0",      :require => false
 end
 
+group :systemd_journal, :optional => true do
+  gem "systemd-journal", "~>1.4.0", :require => false
+end
+
 group :openshift, :manageiq_default do
   manageiq_plugin "manageiq-providers-openshift"
 end
