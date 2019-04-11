@@ -21,7 +21,7 @@ module Vmdb
 
     def self.apply_config(config)
       apply_config_value(config, $log,                :level)
-      apply_config_value(config, $journald_log,       :level) if MiqEnvironment::Command.supports_systemd?
+      apply_config_value(config, $journald_log,       :level) if $journald_log
       apply_config_value(config, $rails_log,          :level_rails)
       apply_config_value(config, $ansible_tower_log,  :level_ansible_tower)
       apply_config_value(config, $api_log,            :level_api)
