@@ -68,6 +68,18 @@ module Rbac
     ).freeze
 
     BELONGSTO_FILTER_CLASSES = %w(
+      Container
+      ContainerBuild
+      ContainerGroup
+      ContainerImage
+      ContainerImageRegistry
+      ContainerNode
+      ContainerProject
+      ContainerReplicator
+      ContainerRoute
+      ContainerService
+      ContainerTemplate
+      ContainerVolume
       EmsCluster
       EmsFolder
       ExtManagementSystem
@@ -76,6 +88,22 @@ module Rbac
       Storage
       VmOrTemplate
     ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
+
+    ASSOCIATED_BELONGSTO_MODELS = [
+      VmOrTemplate,
+      Container,
+      ContainerBuild,
+      ContainerGroup,
+      ContainerImage,
+      ContainerImageRegistry,
+      ContainerNode,
+      ContainerProject,
+      ContainerReplicator,
+      ContainerRoute,
+      ContainerService,
+      ContainerTemplate,
+      ContainerVolume
+    ].freeze
 
     # key: descendant::klass
     # value:
@@ -724,7 +752,8 @@ module Rbac
 
     def belongsto_association_filtered?(vcmeta, klass)
       if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) }
-        return true if klass <= VmOrTemplate
+        # Eject early if true
+        return true if ASSOCIATED_BELONGSTO_MODELS.any? { |associated| klass <= associated }
       end
 
       if vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)
