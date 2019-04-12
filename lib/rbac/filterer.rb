@@ -89,22 +89,6 @@ module Rbac
       VmOrTemplate
     ) + NETWORK_MODELS_FOR_BELONGSTO_FILTER
 
-    ASSOCIATED_BELONGSTO_MODELS = [
-      VmOrTemplate,
-      Container,
-      ContainerBuild,
-      ContainerGroup,
-      ContainerImage,
-      ContainerImageRegistry,
-      ContainerNode,
-      ContainerProject,
-      ContainerReplicator,
-      ContainerRoute,
-      ContainerService,
-      ContainerTemplate,
-      ContainerVolume
-    ].freeze
-
     # key: descendant::klass
     # value:
     #   if it is a symbol/method_name:
@@ -753,7 +737,7 @@ module Rbac
     def belongsto_association_filtered?(vcmeta, klass)
       if [ExtManagementSystem, Host].any? { |x| vcmeta.kind_of?(x) }
         # Eject early if true
-        return true if ASSOCIATED_BELONGSTO_MODELS.any? { |associated| klass <= associated }
+        return true if associated_belongsto_models.any? { |associated| klass <= associated }
       end
 
       if vcmeta.kind_of?(ManageIQ::Providers::NetworkManager)
@@ -761,6 +745,24 @@ module Rbac
           klass <= association_class.safe_constantize
         end
       end
+    end
+
+    def associated_belongsto_models
+      [
+        VmOrTemplate,
+        Container,
+        ContainerBuild,
+        ContainerGroup,
+        ContainerImage,
+        ContainerImageRegistry,
+        ContainerNode,
+        ContainerProject,
+        ContainerReplicator,
+        ContainerRoute,
+        ContainerService,
+        ContainerTemplate,
+        ContainerVolume
+      ]
     end
 
     def get_belongsto_matches_for_host(blist)
