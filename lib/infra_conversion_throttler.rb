@@ -8,7 +8,7 @@ class InfraConversionThrottler
         break if slots <= 0 || eligible_hosts.empty?
         job.migration_task.update_attributes!(:conversion_host => eligible_hosts.first)
         job.queue_signal(:start)
-        _log.info("Pening InfraConversionJob: id=#{job.id} signaled to start")
+        _log.info("Pending InfraConversionJob: id=#{job.id} signaled to start")
         slots -= 1
       end
     end
@@ -16,7 +16,7 @@ class InfraConversionThrottler
 
   def self.pending_conversion_jobs
     pending = InfraConversionJob.where(:state => 'waiting_to_start')
-    _log.info("Pening InfraConversionJob: #{pending.count}")
+    _log.info("Pending InfraConversionJob: #{pending.count}")
     pending.group_by { |job| job.migration_task.destination_ems }
   end
 end
