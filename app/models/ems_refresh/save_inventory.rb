@@ -391,8 +391,8 @@ module EmsRefresh::SaveInventory
 
     active_duplicates, archived_duplicates = duplicates.partition { |vm| vm.ems_id.present? }
 
-    # Prioritize VMs on the current EMS with the same ems_ref or a nil ems_ref
-    found = active_duplicates.detect { |v| v.ems_ref.nil? || v.ems_ref == h[:ems_ref] }
+    # Prioritize VMs on the current EMS with a nil ems_ref
+    found = active_duplicates.detect { |v| v.ems_ref.nil? }
 
     # Next select an archived VM with the same ems_ref as the current vm
     found ||= archived_duplicates.detect { |v| v.ems_ref == h[:ems_ref] }
