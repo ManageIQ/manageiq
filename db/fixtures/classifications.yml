@@ -1087,3 +1087,118 @@
   :parent_id: 0
   :default: true
   :single_value: "1"
+- :description: Quota - Max VMs
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "6"
+    :read_only: "0"
+    :syntax: string
+    :name: "6"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "7"
+    :read_only: "0"
+    :syntax: string
+    :name: "7"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "8"
+    :read_only: "0"
+    :syntax: string
+    :name: "8"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "9"
+    :read_only: "0"
+    :syntax: string
+    :name: "9"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "10"
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "20"
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "40"
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "50"
+    :read_only: "0"
+    :syntax: string
+    :name: "50"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "100"
+    :read_only: "0"
+    :syntax: string
+    :name: "100"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_max_vms
+  :example_text: Maximum number of VMs allowed by Quota
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
