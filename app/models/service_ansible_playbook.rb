@@ -167,7 +167,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     hosts = 'localhost' if use_default_inventory?(hosts)
     host_array = hosts.split(',')
     playbook_id = options.fetch_path(:config_info, action.downcase.to_sym, :playbook_id)
-    job.update_attributes(:configuration_script_base_id => playbook_id, :hosts => host_array)
+    job.update_attributes!(:configuration_script_base_id => playbook_id, :hosts => host_array)
   end
 
   def decrypt_options(opts)

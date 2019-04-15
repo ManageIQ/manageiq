@@ -49,6 +49,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     sync_playbooks
   end
 
+  def path_to_playbook(playbook_name)
+    repo_dir.join(playbook_name)
+  end
+
   private
 
   def git(*params, chdir: true)

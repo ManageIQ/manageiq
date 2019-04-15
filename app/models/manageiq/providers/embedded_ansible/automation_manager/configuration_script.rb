@@ -27,4 +27,22 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   def raw_delete_in_provider
     destroy!
   end
+
+  def run(vars = {})
+    options = vars.merge(merge_extra_vars(vars[:extra_vars]))
+
+    ManageIQ::Providers::AnsiblePlaybookWorkflow.create_job({}, options[:extra_vars], {:playbook_path => parent.path}).tap do |job|
+      job.signal(:start)
+    end
+  end
+
+  private
+
+  def merge_extra_vars(external)
+    extra_vars = variables.merge(external || {}).each_with_object({}) do |(k, v), hash|
+      match_data = v.kind_of?(String) && /password::/.match(v)
+      hash[k] = match_data ? ManageIQ::Password.decrypt(v.gsub(/password::/, '')) : v
+    end
+    {:extra_vars => extra_vars}
+  end
 end
