@@ -271,7 +271,8 @@ describe(ServiceAnsiblePlaybook) do
 
     context 'require log stdout when job failed' do
       before do
-        status = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status.new('failed', nil)
+        task   = MiqTask.new(:state => MiqTask::STATE_FINISHED, :status => MiqTask::STATUS_ERROR)
+        status = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status.new(task, nil)
         allow(tower_job).to receive(:raw_status).and_return(status)
       end
 

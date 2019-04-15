@@ -24,6 +24,82 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
   #
   #     it_behaves_like 'ansible configuration_script'
   #
+  # Below are `let` calls from there was well.
+  #
+
+  let(:manager)      { manager_with_configuration_scripts }
+
+  it "belongs_to the manager" do
+    expect(manager.configuration_scripts.size).to eq 1
+    expect(manager.configuration_scripts.first.variables).to eq :instance_ids => ['i-3434']
+    expect(manager.configuration_scripts.first).to be_a ConfigurationScript
+  end
+
+  context "#run" do
+    it "launches the referenced ansible job template" do
+      job = manager.configuration_scripts.first.run
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:env_vars]).to eq({})
+      expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"])
+      expect(job.options[:playbook_path]).to eq(playbook.path)
+    end
+
+    it "accepts different variables to launch a job template against" do
+      added_extras = {:extra_vars => {:some_key => :some_value}}
+      job          = manager.configuration_scripts.first.run(added_extras)
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:env_vars]).to eq({})
+      expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"], :some_key => :some_value)
+      expect(job.options[:playbook_path]).to eq(playbook.path)
+    end
+  end
+
+  context "#merge_extra_vars" do
+    it "merges internal and external hashes to send out to ansible_runner" do
+      config_script = manager.configuration_scripts.first
+      external      = {:some_key => :some_value}
+      internal      = config_script.variables
+      merged        = config_script.send(:merge_extra_vars, external)
+
+      expect(internal).to be_a Hash
+      expect(merged).to eq(:instance_ids => ["i-3434"], :some_key => :some_value)
+    end
+
+    it "merges an internal hash and an empty hash to send out to ansible_runner" do
+      config_script = manager.configuration_scripts.first
+      external      = nil
+      merged        = config_script.send(:merge_extra_vars, external)
+
+      expect(merged).to eq(:instance_ids => ["i-3434"])
+    end
+
+    it "merges an empty internal hash and a hash to send out to the tower gem" do
+      config_script = manager.configuration_scripts.first.tap { |cs| cs.variables = {} }
+      external      = {:some_key => :some_value}
+      merged        = config_script.send(:merge_extra_vars, external)
+
+      expect(merged).to eq(external)
+    end
+
+    it "merges all empty arguments to send out to the tower gem" do
+      config_script = manager.configuration_scripts.first.tap { |cs| cs.variables = {} }
+      external      = nil
+      merged        = config_script.send(:merge_extra_vars, external)
+
+      expect(merged).to eq({})
+    end
+
+    it "decrypts extra_vars before sending out to the tower gem" do
+      config_script = manager.configuration_scripts.first
+      password      = "password::#{ManageIQ::Password.encrypt("some_value")}"
+      external      = {:some_key => password}
+      merged        = config_script.send(:merge_extra_vars, external)
+
+      expect(merged).to eq(:instance_ids => ["i-3434"], :some_key => "some_value")
+    end
+  end
 
   # was `context "CUD via the API"`
   context "CRUD operations" do
