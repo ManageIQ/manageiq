@@ -173,7 +173,7 @@ class ConversionHost < ApplicationRecord
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml"
     extra_vars = {
       :v2v_host_type        => resource.ext_management_system.emstype,
-      :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh'
+      :v2v_transport_method => source_transport_method
     }
     ansible_playbook(playbook, extra_vars, false)
     tag_resource_as('enabled')
@@ -187,7 +187,7 @@ class ConversionHost < ApplicationRecord
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_enable.yml"
     extra_vars = {
       :v2v_host_type        => resource.ext_management_system.emstype,
-      :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh',
+      :v2v_transport_method => source_transport_method,
       :v2v_vddk_package_url => vmware_vddk_package_url,
       :v2v_ssh_private_key  => vmware_ssh_private_key,
       :v2v_ca_bundle        => resource.ext_management_system.connection_configurations['default'].certificate_authority
@@ -201,7 +201,7 @@ class ConversionHost < ApplicationRecord
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_disable.yml"
     extra_vars = {
       :v2v_host_type        => resource.ext_management_system.emstype,
-      :v2v_transport_method => vddk_transport_supported ? 'vddk' : 'ssh'
+      :v2v_transport_method => source_transport_method
     }
     ansible_playbook(playbook, extra_vars)
   ensure
