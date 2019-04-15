@@ -163,12 +163,58 @@ describe ConversionHost do
         it_behaves_like "#check_ssh_connection"
       end
     end
+
+    context "#ansible_playbook" do
+      it "check_conversion_host_role calls ansible_playbook with extra_vars" do
+        check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
+        check_extra_vars = {
+          :v2v_host_type        => 'rhevm',
+          :v2v_transport_method => 'vddk'
+        }
+        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars, false)
+        conversion_host.check_conversion_host_role
+      end
+
+      it "disable_conversion_host_role calls ansible_playbook with extra_vars" do
+        disable_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_disable.yml'
+        check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
+        disable_extra_vars = {
+          :v2v_host_type        => 'rhevm',
+          :v2v_transport_method => 'vddk'
+        }
+        check_extra_vars = disable_extra_vars
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, false)
+        conversion_host.disable_conversion_host_role
+      end
+
+      it "enable_conversion_host_role raises if vmware_vddk_package_url is nil" do
+        expect { conversion_host.enable_conversion_host_role }.to raise_error("vmware_vddk_package_url is mandatory if transformation method is vddk")
+      end
+
+      it "enable_conversion_host_role calls ansible_playbook with extra_vars" do
+        enable_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_enable.yml'
+        check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
+        enable_extra_vars = {
+          :v2v_host_type        => 'rhevm',
+          :v2v_transport_method => 'vddk',
+          :v2v_vddk_package_url => 'http://file.example.com/vddk-stable.tar.gz'
+        }
+        check_extra_vars = {
+          :v2v_host_type        => 'rhevm',
+          :v2v_transport_method => 'vddk'
+        }
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, false)
+        conversion_host.enable_conversion_host_role('http://file.example.com/vddk-stable.tar.gz', nil)
+      end
+    end
   end
 
   context "resource provider is openstack" do
     let(:ems) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
     let(:vm) { FactoryBot.create(:vm_openstack, :ext_management_system => ems) }
-    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm, :vddk_transport_supported => true) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm, :ssh_transport_supported => true) }
 
     context "ems authentications is empty" do
       it { expect(conversion_host.check_ssh_connection).to be(false) }
@@ -185,6 +231,52 @@ describe ConversionHost do
       end
 
       it_behaves_like "#check_ssh_connection"
+    end
+
+    context "#ansible_playbook" do
+      it "check_conversion_host_role calls ansible_playbook with extra_vars" do
+        check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
+        check_extra_vars = {
+          :v2v_host_type        => 'openstack',
+          :v2v_transport_method => 'ssh'
+        }
+        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars, false)
+        conversion_host.check_conversion_host_role
+      end
+
+      it "disable_conversion_host_role calls ansible_playbook with extra_vars" do
+        disable_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_disable.yml'
+        check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
+        disable_extra_vars = {
+          :v2v_host_type        => 'openstack',
+          :v2v_transport_method => 'ssh'
+        }
+        check_extra_vars = disable_extra_vars
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, false)
+        conversion_host.disable_conversion_host_role
+      end
+
+      it "enable_conversion_host_role raises if vmware_ssh_private_key is nil" do
+        expect { conversion_host.enable_conversion_host_role }.to raise_error("vmware_ssh_private_key is mandatory if transformation_method is ssh")
+      end
+
+      it "enable_conversion_host_role calls ansible_playbook with extra_vars" do
+        enable_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_enable.yml'
+        check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
+        enable_extra_vars = {
+          :v2v_host_type        => 'openstack',
+          :v2v_transport_method => 'ssh',
+          :v2v_ssh_private_key  => 'fake ssh private key'
+        }
+        check_extra_vars = {
+          :v2v_host_type        => 'openstack',
+          :v2v_transport_method => 'ssh'
+        }
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, false)
+        conversion_host.enable_conversion_host_role(nil, 'fake ssh private key')
+      end
     end
   end
 
