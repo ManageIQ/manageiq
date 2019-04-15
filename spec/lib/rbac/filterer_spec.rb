@@ -362,6 +362,79 @@ describe Rbac::Filterer do
       end
     end
 
+    context "with ContainerManagers with user roles" do
+      let(:owned_ems) { FactoryBot.create(:ems_openshift) }
+      let(:other_ems) { FactoryBot.create(:ems_openshift) }
+
+      before do
+        filters = ["/belongsto/ExtManagementSystem|#{owned_ems.name}"]
+
+        owner_group.entitlement = Entitlement.new
+        owner_group.entitlement.set_managed_filters([])
+        owner_group.entitlement.set_belongsto_filters(filters)
+        owner_group.save!
+      end
+
+      %w[
+        Container
+        ContainerBuild
+        ContainerGroup
+        ContainerImage
+        ContainerImageRegistry
+        ContainerNode
+        ContainerProject
+        ContainerReplicator
+        ContainerRoute
+        ContainerService
+        ContainerTemplate
+      ].each do |object_klass|
+        context "with #{object_klass}s" do
+          let(:subklass) { owned_ems.class.const_get(object_klass) }
+          let!(:object1) { subklass.create(:ems_id => owned_ems.id) }
+          let!(:object2) { subklass.create(:ems_id => owned_ems.id) }
+          let!(:object3) { subklass.create(:ems_id => other_ems.id) }
+          let!(:object4) { subklass.create(:ems_id => other_ems.id) }
+
+          it "properly filters" do
+            search_opts = {
+              :targets => subklass,
+              :userid  => owner_user.userid
+            }
+            results = described_class.search(search_opts)
+            objects = results.first
+
+            expect(objects.length).to eq(2)
+            expect(objects.to_a).to match_array([object1, object2])
+          end
+        end
+      end
+
+      # ContainerVolumes are the only class that has a `has_many :through`
+      # relationship with EMS.
+      context "with ContainerVolumes" do
+        let(:subklass)     { owned_ems.class.const_get(:ContainerGroup) }
+        let(:volume_klass) { owned_ems.class.const_get(:ContainerVolume) }
+        let!(:group1)      { subklass.create(:ems_id => owned_ems.id) }
+        let!(:group2)      { subklass.create(:ems_id => other_ems.id) }
+        let!(:volume1)     { volume_klass.create(:parent => group1) }
+        let!(:volume2)     { volume_klass.create(:parent => group1) }
+        let!(:volume3)     { volume_klass.create(:parent => group2) }
+        let!(:volume4)     { volume_klass.create(:parent => group2) }
+
+        it "properly filters" do
+          search_opts = {
+            :targets => volume_klass,
+            :userid  => owner_user.userid
+          }
+          results = described_class.search(search_opts)
+          objects = results.first
+
+          expect(objects.length).to eq(2)
+          expect(objects.to_a).to match_array([volume1, volume2])
+        end
+      end
+    end
+
     context 'when class does not participate in RBAC' do
       before do
         @vm = FactoryGirl.create(:vm_vmware, :name => "VM1", :host => @host1, :ext_management_system => @ems)
