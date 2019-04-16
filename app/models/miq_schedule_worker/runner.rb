@@ -303,6 +303,22 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       :tags => %i(database_operations database_maintenance_vacuum_schedule),
     ) { enqueue(:database_maintenance_vacuum_timer) }
 
+    every    = worker_settings[:performance_realtime_purging_interval]
+    first_in = worker_settings[:performance_realtime_purging_start_delay]
+    scheduler.schedule_every(
+      every,
+      :first_in => first_in,
+      :tags     => [:database_operations, :purge_realtime_timer]
+    ) { enqueue(:metric_purging_purge_realtime_timer) }
+
+    every    = worker_settings[:performance_rollup_purging_interval]
+    first_in = worker_settings[:performance_rollup_purging_start_delay]
+    scheduler.schedule_every(
+      every,
+      :first_in => first_in,
+      :tags     => [:database_operations, :purge_rollup_timer]
+    ) { enqueue(:metric_purging_purge_rollup_timer) }
+
     @schedules[:database_operations]
   end
 
@@ -318,22 +334,6 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       :first_in => first_in,
       :tags     => [:ems_metrics_coordinator, :perf_capture_timer]
     ) { enqueue(:metric_capture_perf_capture_timer) }
-
-    every    = worker_settings[:performance_realtime_purging_interval]
-    first_in = worker_settings[:performance_realtime_purging_start_delay]
-    scheduler.schedule_every(
-      every,
-      :first_in => first_in,
-      :tags     => [:ems_metrics_coordinator, :purge_realtime_timer]
-    ) { enqueue(:metric_purging_purge_realtime_timer) }
-
-    every    = worker_settings[:performance_rollup_purging_interval]
-    first_in = worker_settings[:performance_rollup_purging_start_delay]
-    scheduler.schedule_every(
-      every,
-      :first_in => first_in,
-      :tags     => [:ems_metrics_coordinator, :purge_rollup_timer]
-    ) { enqueue(:metric_purging_purge_rollup_timer) }
 
     @schedules[:ems_metrics_coordinator]
   end

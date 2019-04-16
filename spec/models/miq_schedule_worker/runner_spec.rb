@@ -245,6 +245,13 @@ describe MiqScheduleWorker::Runner do
               :metrics_history    => @metrics_history,
             }
             stub_settings(:database => database_config)
+            purging_intervals = {
+              :performance_realtime_purging_interval    => 21.minutes,
+              :performance_realtime_purging_start_delay => 5.minutes,
+              :performance_rollup_purging_interval      => 4.hours,
+              :performance_rollup_purging_start_delay   => 5.minutes
+            }
+            allow(@schedule_worker).to receive(:worker_settings).and_return(purging_intervals)
           end
 
           context "with database_owner in region" do
@@ -254,11 +261,9 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
-              expect(scheduled_jobs.size).to be(5)
+              expect(scheduled_jobs.size).to be(7)
 
               scheduled_jobs.each do |job|
-                expect(job).to be_a_kind_of(Rufus::Scheduler::CronJob)
-
                 while_calling_job(job) do
                   case job.tags
                   when %w(database_operations database_metrics_collection_schedule)
@@ -294,6 +299,18 @@ describe MiqScheduleWorker::Runner do
                       message = MiqQueue.where(:class_name => class_name, :method_name => "vacuum").first
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
+                  when %w[database_operations purge_realtime_timer]
+                    expect(job.original).to eq(21.minutes)
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name  => "Metric::Purging",
+                                             :method_name => "purge_realtime_timer").first
+                    expect(message).to have_attributes(:zone => nil)
+                  when %w[database_operations purge_rollup_timer]
+                    expect(job.original).to eq(4.hours)
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name  => "Metric::Purging",
+                                             :method_name => "purge_rollup_timer").first
+                    expect(message).to have_attributes(:zone => nil)
                   else
                     raise_unexpected_job_error(job)
                   end
@@ -309,11 +326,9 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
-              expect(scheduled_jobs.size).to be(5)
+              expect(scheduled_jobs.size).to be(7)
 
               scheduled_jobs.each do |job|
-                expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
-
                 while_calling_job(job) do
                   case job.tags
                   when %w(database_operations database_metrics_collection_schedule)
@@ -350,6 +365,18 @@ describe MiqScheduleWorker::Runner do
                       message = MiqQueue.where(:class_name => class_name, :method_name => "vacuum").first
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
+                  when %w[database_operations purge_realtime_timer]
+                    expect(job.original).to eq(21.minutes)
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name  => "Metric::Purging",
+                                             :method_name => "purge_realtime_timer").first
+                    expect(message).to have_attributes(:zone => nil)
+                  when %w[database_operations purge_rollup_timer]
+                    expect(job.original).to eq(4.hours)
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name  => "Metric::Purging",
+                                             :method_name => "purge_rollup_timer").first
+                    expect(message).to have_attributes(:zone => nil)
                   else
                     raise_unexpected_job_error(job)
                   end
