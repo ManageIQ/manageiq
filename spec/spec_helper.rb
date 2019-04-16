@@ -48,13 +48,13 @@ RSpec.configure do |config|
   config.filter_run_when_matching :focus
   config.shared_context_metadata_behavior = :apply_to_host_groups
   config.order = :random
-  config.warnings = true
 
   unless ENV['CI']
     # File store for --only-failures option
     config.example_status_persistence_file_path = Rails.root.join("tmp/rspec_example_store.txt")
     config.profile_examples = 10
     config.default_formatter = "doc" if config.files_to_run.one?
+    config.warnings = true
   end
 
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
