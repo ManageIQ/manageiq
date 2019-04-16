@@ -48,6 +48,7 @@ RSpec.configure do |config|
   config.filter_run_when_matching :focus
   config.shared_context_metadata_behavior = :apply_to_host_groups
   config.order = :random
+  config.warnings = true
 
   unless ENV['CI']
     # File store for --only-failures option
