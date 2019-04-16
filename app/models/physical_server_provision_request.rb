@@ -1,24 +1,28 @@
-class PhysicalServerProvisionRequest < MiqProvisionConfiguredSystemRequest
+class PhysicalServerProvisionRequest < MiqRequest
   TASK_DESCRIPTION  = 'Physical Server Provisioning'.freeze
   SOURCE_CLASS_NAME = 'PhysicalServer'.freeze
 
   def description
-    "Apply configuration pattern"
+    'Physical Server Provisioning'
   end
 
-  def src_configured_systems
-    PhysicalServer.where(:id => options[:src_configured_system_ids])
+  def my_role(_action = nil)
+    'ems_operations'
   end
 
-  def self.request_task_class_from(_attribs)
-    ManageIQ::Providers::Lenovo::PhysicalInfraManager::ProvisionTask
+  def self.request_task_class
+    PhysicalServerProvisionTask
   end
 
-  def event_name(mode)
-    "physical_server_provision_request_#{mode}"
+  def self.new_request_task(attribs)
+    source = source_physical_server(attribs[:source_id])
+    source.ext_management_system.class.provision_class(nil).new(attribs)
   end
 
-  def originating_controller
-    "physical_server"
+  def self.source_physical_server(source_id)
+    PhysicalServer.find_by(:id => source_id).tap do |source|
+      raise MiqException::MiqProvisionError, "Unable to find source PhysicalServer with id [#{source_id}]" if source.nil?
+      raise MiqException::MiqProvisionError, "Source PhysicalServer with id [#{source_id}] has no EMS, unable to provision" if source.ext_management_system.nil?
+    end
   end
 end

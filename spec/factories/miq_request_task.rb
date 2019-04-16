@@ -29,6 +29,9 @@ FactoryBot.define do
   factory :miq_provision_google,    :parent => :miq_provision_cloud, :class => "ManageIQ::Providers::Google::CloudManager::Provision"
   factory :miq_provision_openstack, :parent => :miq_provision_cloud, :class => "ManageIQ::Providers::Openstack::CloudManager::Provision"
 
+  # Physical Infrastructure
+  factory :physical_server_provision_task, :parent => :miq_provision, :class => "PhysicalServerProvisionTask"
+
   # Automate
   factory :automation_task, :parent => :miq_request_task, :class => "AutomationTask"
 
