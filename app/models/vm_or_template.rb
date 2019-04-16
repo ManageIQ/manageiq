@@ -225,7 +225,7 @@ class VmOrTemplate < ApplicationRecord
   }
   REQUIRED_ADVANCED_SETTINGS.each do |k, (m, t)|
     define_method(m) do
-      as = advanced_settings.detect { |as| as.name == k }
+      as = advanced_settings.detect { |setting| setting.name == k }
       return nil if as.nil? || as.value.nil?
 
       return case t
@@ -1185,7 +1185,7 @@ class VmOrTemplate < ApplicationRecord
 
     # Loop through the found VM's and set their create times
     found.each do |vmh|
-      v = vms_to_update.detect { |v| v.id == vmh[:id] }
+      v = vms_to_update.detect { |vm| vm.id == vmh[:id] }
       v.update_attribute(:ems_created_on, vmh[:created_time])
     end
   end

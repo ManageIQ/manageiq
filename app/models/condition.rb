@@ -149,7 +149,7 @@ class Condition < ApplicationRecord
 
     listexp = /<value([^>]*)>(.+)<\/value>/im
     search =~ listexp
-    opts, ref, object = options2hash($1, rec)
+    opts, _ref, _object = options2hash($1, rec)
     methods = $2.split("/")
     methods.shift
     methods.shift

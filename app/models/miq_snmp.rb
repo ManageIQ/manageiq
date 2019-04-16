@@ -53,9 +53,9 @@ class MiqSnmp
     vars = create_var_bind_list(object_list)
 
     hosts = host.kind_of?(Array) ? host : [host]
-    hosts.each do |host|
-      _log.info("Sending SNMP Trap (v1) to host=[#{host}], port=[#{port}], enterprise_id=[#{enterprise}], generic_trap=[#{generic_trap}], specific_trap=[#{specific_trap}], uptime=[#{uptime}], agent=[#{agent_address}], vars=#{vars.inspect}")
-      SNMP::Manager.open(:Host => host, :TrapPort => port) do |manager|
+    hosts.each do |lhost|
+      _log.info("Sending SNMP Trap (v1) to host=[#{lhost}], port=[#{port}], enterprise_id=[#{enterprise}], generic_trap=[#{generic_trap}], specific_trap=[#{specific_trap}], uptime=[#{uptime}], agent=[#{agent_address}], vars=#{vars.inspect}")
+      SNMP::Manager.open(:Host => lhost, :TrapPort => port) do |manager|
         manager.trap_v1(enterprise, agent_address, generic_trap, specific_trap, uptime, vars)
       end
     end
@@ -79,9 +79,9 @@ class MiqSnmp
     vars = create_var_bind_list(object_list, trap_oid)
 
     hosts = host.kind_of?(Array) ? host : [host]
-    hosts.each do |host|
-      _log.info("Sending SNMP Trap (v2) to host=[#{host}], port=[#{port}], trap_oid=[#{trap_oid}], vars=#{vars.inspect}")
-      SNMP::Manager.open(:Host => host, :TrapPort => port) do |manager|
+    hosts.each do |lhost|
+      _log.info("Sending SNMP Trap (v2) to host=[#{lhost}], port=[#{port}], trap_oid=[#{trap_oid}], vars=#{vars.inspect}")
+      SNMP::Manager.open(:Host => lhost, :TrapPort => port) do |manager|
         manager.trap_v2(uptime, trap_oid, vars)
       end
     end
