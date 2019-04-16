@@ -26,12 +26,15 @@ Dir[ManageIQ::Gems::Pending.root.join("spec/support/custom_matchers/*.rb")].each
 require "manageiq/password/rspec_matchers"
 
 RSpec.configure do |config|
-  config.expect_with :rspec do |c|
-    c.syntax = :expect
+  config.expect_with :rspec do |expectations|
+    expectations.syntax = :expect
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
-  config.mock_with :rspec do |c|
-    c.allow_message_expectations_on_nil = false
-    c.syntax = :expect
+
+  config.mock_with :rspec do |mocks|
+    mocks.allow_message_expectations_on_nil = false
+    mocks.syntax = :expect
+    mocks.verify_partial_doubles = true
   end
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -42,9 +45,15 @@ RSpec.configure do |config|
   # `post` methods in spec/controllers, without specifying type
   config.infer_spec_type_from_file_location!
 
+  config.filter_run_when_matching :focus
+  config.shared_context_metadata_behavior = :apply_to_host_groups
+  config.order = :random
+
   unless ENV['CI']
     # File store for --only-failures option
     config.example_status_persistence_file_path = Rails.root.join("tmp/rspec_example_store.txt")
+    config.profile_examples = 10
+    config.default_formatter = "doc" if config.files_to_run.one?
   end
 
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
