@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 109 ending 2019-04-15
+
+### Added
+- Add a tool to assist in reconnecting vms [(#18615)](https://github.com/ManageIQ/manageiq/pull/18615)
+
+### Fixed
+- Fix for incorrect key sent back for dynamic non sorted items [(#18650)](https://github.com/ManageIQ/manageiq/pull/18650)
+- Retirement - remove auto_approve flag on request creation. [(#18638)](https://github.com/ManageIQ/manageiq/pull/18638)
+- Check that reconfigure is supported before we try it [(#18636)](https://github.com/ManageIQ/manageiq/pull/18636)
+- Fix Key Pairs from refresh being returned with provider AuthPrivateKeys [(#18633)](https://github.com/ManageIQ/manageiq/pull/18633)
+- swap makes vms out of disk space report false positive [(#18623)](https://github.com/ManageIQ/manageiq/pull/18623)
+- Check ems_ref before uid_ems when saving VMs [(#18616)](https://github.com/ManageIQ/manageiq/pull/18616)
+
 ## Unreleased as of Sprint 108 ending 2019-04-01
 
 ### Added
