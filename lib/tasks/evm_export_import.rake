@@ -1,6 +1,7 @@
 # Rake script to export and import
 #   * Alerts and AlertSets (Alert Profiles)
 #   * Policies and PolicySets (Policy Profiles)
+#   * Generic Object Definitions
 #   * Roles
 #   * Tags
 #   * Service Dialogs
@@ -111,6 +112,14 @@ namespace :evm do
     task :widgets => :environment do
       options = TaskHelpers::Exports.parse_options
       TaskHelpers::Exports::Widgets.new.export(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
+
+    desc 'Exports all generic object definitions to individual YAML files'
+    task :generic_object_definitions => :environment do
+      options = TaskHelpers::Exports.parse_options
+      TaskHelpers::Exports::GenericObjectDefinitions.new.export(options)
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end

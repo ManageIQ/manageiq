@@ -151,6 +151,12 @@ class GenericObjectDefinition < ApplicationRecord
     n_('Generic Object Class', 'Generic Object Classes', number)
   end
 
+  def export_to_array
+    god_attrs = attributes
+    ["id", "created_at", "updated_at"].each { |god| god_attrs.delete(god) }
+    [{self.class.to_s => god_attrs}]
+  end
+
   private
 
   def get_objects_of_association(attr, values)
