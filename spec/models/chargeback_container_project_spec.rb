@@ -224,17 +224,5 @@ describe ChargebackContainerProject do
     end
   end
 
-  context "Old Chargeback" do
-    include_examples "ChargebackContainerProject"
-  end
-
-  context "New Chargeback" do
-    before do
-      ManageIQ::Showback::InputMeasure.seed
-
-      stub_settings(:new_chargeback => '1')
-    end
-
-    include_examples "ChargebackContainerProject"
-  end
+  include_examples "ChargebackContainerProject"
 end
