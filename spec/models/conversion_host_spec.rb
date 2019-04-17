@@ -171,7 +171,7 @@ describe ConversionHost do
           :v2v_host_type        => 'rhevm',
           :v2v_transport_method => 'vddk'
         }
-        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars, false)
+        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars)
         conversion_host.check_conversion_host_role
       end
 
@@ -184,7 +184,7 @@ describe ConversionHost do
         }
         check_extra_vars = disable_extra_vars
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars)
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, false)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars)
         conversion_host.disable_conversion_host_role
       end
 
@@ -205,7 +205,7 @@ describe ConversionHost do
           :v2v_transport_method => 'vddk'
         }
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars)
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, false)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars)
         conversion_host.enable_conversion_host_role('http://file.example.com/vddk-stable.tar.gz', nil)
       end
     end
@@ -240,7 +240,7 @@ describe ConversionHost do
           :v2v_host_type        => 'openstack',
           :v2v_transport_method => 'ssh'
         }
-        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars, false)
+        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars)
         conversion_host.check_conversion_host_role
       end
 
@@ -253,7 +253,7 @@ describe ConversionHost do
         }
         check_extra_vars = disable_extra_vars
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars)
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, false)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars)
         conversion_host.disable_conversion_host_role
       end
 
@@ -274,7 +274,7 @@ describe ConversionHost do
           :v2v_transport_method => 'ssh'
         }
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars)
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, false)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars)
         conversion_host.enable_conversion_host_role(nil, 'fake ssh private key')
       end
     end

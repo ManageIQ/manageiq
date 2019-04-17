@@ -175,7 +175,7 @@ class ConversionHost < ApplicationRecord
       :v2v_host_type        => resource.ext_management_system.emstype,
       :v2v_transport_method => source_transport_method
     }
-    ansible_playbook(playbook, extra_vars, false)
+    ansible_playbook(playbook, extra_vars)
     tag_resource_as('enabled')
   rescue
     tag_resource_as('disabled')
@@ -283,46 +283,46 @@ class ConversionHost < ApplicationRecord
   # +extra_vars+ option should be a hash of key/value pairs which, if present,
   # will be passed to the '-e' flag.
   #
-  def ansible_playbook(playbook, extra_vars = {}, update_task = true, auth_type = nil)
-    task = MiqTask.all.select { |t| t.context_data.present? && t.context_data[:conversion_host_id] == id }.sort_by(&:created_on).last if update_task
-    runner_basedir = Dir.mktmpdir("ansible-runner")
-    %w[env inventory].each { |d| Dir.mkdir(File.join(runner_basedir, d)) }
+  def ansible_playbook(playbook, extra_vars = {}, auth_type = nil)
+    task = MiqTask.all.select { |t| t.context_data.present? && t.context_data[:conversion_host_id] == id }.sort_by(&:created_on).last
 
     host = hostname || ipaddress
-    File.open(File.join(runner_basedir, 'inventory', 'hosts'), 'w') { |f| f.write(host) }
+
+    command = "ansible-playbook #{playbook} --inventory #{host}, --become --extra-vars=\"ansible_ssh_common_args='-o StrictHostKeyChecking=no'\""
 
     auth = authentication_type(auth_type) || authentications.first
-    extra_vars[:ansible_user] = auth.userid
-    extra_vars[:ansible_become] = true unless auth.userid == 'root'
+    command += " --user #{auth.userid}"
+
     case auth
     when AuthUseridPassword
-      runner_password_file = File.join(runner_basedir, 'env', 'password')
-      File.open(runner_password_file, 'w') { |f| f.write("---\n\"Password:\\s*?$\": \"#{auth.password}\"") }
+      extra_vars[:ansible_ssh_pass] = auth.password
     when AuthPrivateKey
-      runner_ssh_key_file = File.join(runner_basedir, 'env', 'ssh_key')
-      File.open(runner_ssh_key_file, 'w') { |f| f.write(auth.auth_key) }
+      ssh_private_key_file = Tempfile.new('ansible_key')
+      ssh_private_key_file.write(auth.auth_key)
+      ssh_private_key_file.close
+      command += " --private-key #{ssh_private_key_file.path}"
     else
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
     end
 
-    File.open(File.join(runner_basedir, 'env', 'extravars'), 'w') { |f| f.write(extra_vars.to_json) }
+    extra_vars.each { |k, v| command += " --extra-vars '#{k}=#{v}'" }
 
-    runner_args = {}
-    runner_args[:playbook] = playbook
-    runner_args[:ident] = "result"
-    runner_params = ['run', runner_basedir, :json, runner_args]
-
-    result = AwesomeSpawn.run("ansible-runner", :params => runner_params)
-    raise unless result.exit_status.zero?
+    result = AwesomeSpawn.run(command)
+    raise unless result.exit_status.zero? 
   rescue => e
     errormsg = "Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]"
     _log.error(errormsg)
     task&.error(errormsg)
     raise e
   ensure
-    task&.update_context(task.context_data.merge!(:ansible_output => result.output)) unless result.nil?
-    File.delete(runner_password_file) if !runner_password_file.nil? && File.exist?(runner_password_file)
-    File.delete(runner_ssh_key_file) if !runner_ssh_key_file.nil? && File.exist?(runner_ssh_key_file)
+    unless result.nil?
+      ansible_output_name = playbook.split('/').last.split('.').first
+      task&.update_context(task.context_data.merge!(ansible_output_name => result.output))
+    end
+    if !ssh_private_key_file.nil? && File.exist?(ssh_private_key_file.path)
+      ssh_private_key_file.close unless ssh_private_key_file.closed?
+      File.delete(ssh_private_key_file)
+    end
   end
 
   # Wrapper method for the various tag_resource_as_xxx methods.
