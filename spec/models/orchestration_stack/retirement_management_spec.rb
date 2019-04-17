@@ -58,6 +58,11 @@ describe "Service Retirement Management" do
       @stack.reload
     end
 
+    it "#retire_request" do
+      expect(@stack.retirement_state).to be_nil
+      expect(@stack.retire_request(user)).to eq(OrchestrationStackRetireRequest.first)
+    end
+
     it "#retire_now with userid" do
       expect(@stack.retirement_state).to be_nil
       expect(OrchestrationStackRetireRequest).to_not receive(:make_request)

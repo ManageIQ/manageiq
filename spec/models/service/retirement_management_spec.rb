@@ -53,6 +53,11 @@ describe "Service Retirement Management" do
     expect(@service.retirement_state).to eq('initializing')
   end
 
+  it "#retire_request" do
+    expect(@service.retirement_state).to be_nil
+    expect(@service.retire_request(user)).to eq(ServiceRetireRequest.first)
+  end
+
   it "#retire_now when called more than once" do
     expect(@service.retirement_state).to be_nil
     expect(MiqEvent).to receive(:raise_evm_event).once

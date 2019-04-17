@@ -47,6 +47,10 @@ module RetirementMixin
     end
   end
 
+  def retire_request(user)
+    self.class.make_retire_request(id, user)
+  end
+
   def retirement_warned?
     !retirement_last_warn.nil?
   end

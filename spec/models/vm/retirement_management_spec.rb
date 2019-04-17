@@ -57,6 +57,11 @@ describe "VM Retirement Management" do
     expect(@vm.retirement_state).to eq('initializing')
   end
 
+  it "#retire_request" do
+    expect(@vm.retirement_state).to be_nil
+    expect(@vm.retire_request(user)).to eq(VmRetireRequest.first)
+  end
+
   it "#retire_now when called more than once" do
     expect(MiqEvent).to receive(:raise_evm_event).once
     3.times { @vm.retire_now(user) }
