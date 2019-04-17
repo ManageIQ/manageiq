@@ -308,7 +308,7 @@ class ConversionHost < ApplicationRecord
     extra_vars.each { |k, v| command << " --extra-vars '#{k}=#{v}'" }
 
     result = AwesomeSpawn.run(command)
-    raise unless result.exit_status.zero? 
+    raise unless result.exit_status.zero?
   rescue => e
     errormsg = "Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]"
     _log.error(errormsg)
