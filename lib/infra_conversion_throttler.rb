@@ -41,7 +41,7 @@ class InfraConversionThrottler
   def self.apply_limits
     running_conversion_jobs.each do |ch, jobs|
       number_of_jobs = jobs.size
-  
+
       cpu_limit = ch.cpu_limit || Settings.transformation.limits.cpu_limit_per_host
       cpu_limit = (cpu_limit.to_i / number_of_jobs).to_s unless cpu_limit == "unlimited"
 
