@@ -435,4 +435,34 @@ describe ConversionHost do
       expect { conversion_host.get_conversion_state(path) }.to raise_error(/#{expected_message}/)
     end
   end
+
+  context "#apply_task_limits" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:path) { 'some_path' }
+    let(:limits) { { :cpu => '50', :network => '10' } }
+
+    it "works as expected if the connection is successful and the JSON is generated" do
+      allow(conversion_host).to receive(:connect_ssh).and_return(true)
+      expect(conversion_host.apply_task_limits(path, limits)).to be_truthy
+    end
+
+    it "works as expected if the connection is successful but the JSON is invalid" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise(JSON::GeneratorError, 'fake unparser error')
+      expected_message = "Could not generate JSON from limits '#{limits}' with [JSON::GeneratorError: fake unparser error]"
+      expect { conversion_host.apply_task_limits(path, limits) }.to raise_error(expected_message)
+    end
+
+    it "works as expected if the connection is unsuccessful" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
+      expected_message = "Failed to connect and apply limits in file '#{path}'"
+      expect { conversion_host.apply_task_limits(path, limits) }.to raise_error(/#{expected_message}/)
+    end
+
+    it "works as expected if an unknown error occurs" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise(StandardError, 'fake error')
+      expected_message = "Could not apply the limits in '#{path}' on '#{vm.name}' with [StandardError: fake error]"
+      expect { conversion_host.apply_task_limits(path, limits) }.to raise_error(expected_message)
+    end
+  end
 end
