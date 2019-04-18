@@ -72,6 +72,18 @@ describe InfraConversionThrottler do
       task.options[:virtv2v_wrapper] = { 'throttling_file' => path }
       expect(conversion_host).to receive(:apply_task_limits).with(path, limits)
       described_class.apply_limits
+      expect(task.reload.options[:virtv2v_limits]).to eq(limits)
+    end
+
+    it 'does not call apply_task_limits when limits have not changed' do
+      path = '/tmp/fake_throttling_file'
+      limits = {
+        :cpu     => '25',
+        :network => 'unlimited'
+      }
+      task.update_options(:virtv2v_limits => limits)
+      expect(conversion_host).not_to receive(:apply_task_limits).with(path, limits)
+      described_class.apply_limits
     end
   end
 end

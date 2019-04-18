@@ -130,6 +130,17 @@ class ConversionHost < ApplicationRecord
     resource.ipaddresses.detect { |ip| IPAddr.new(ip).send("#{family}?") }
   end
 
+  # Write the limits calculated by InfraConversionThrottler to a specific task.
+  #
+  # @param [String] path The path of the throttling file for the task
+  # @param [Hash] limits The limits to apply, accordingly to virt-v2v-wrapper documentation
+  #
+  # @return [Integer] length of data written to file
+  #
+  # @raise [MiqException::MiqInvalidCredentialsError] if conversion host credentials are invalid
+  # @raise [MiqException::MiqSshUtilHostKeyMismatch] if conversion host key has changed
+  # @raise [JSON::GeneratorError] if limits hash can't be converted to JSON
+  # @raise [StandardError] if any other problem happens
   def apply_task_limits(path, limits = {})
     connect_ssh { |ssu| ssu.put_file(path, limits.to_json) }
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
