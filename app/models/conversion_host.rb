@@ -313,11 +313,8 @@ class ConversionHost < ApplicationRecord
     result = AwesomeSpawn.run(command)
     raise unless result.exit_status.zero?
   ensure
-    unless result.nil?
-      ansible_output_name = playbook.split('/').last.split('.').first
-      task&.update_context(task.context_data.merge!(ansible_output_name => result.output))
-    end
-    File.delete(ssh_private_key_file) if ssh_private_key_file.present? && File.exist?(ssh_private_key_file.path)
+    task&.update_context(task.context_data.merge!(File.basename(playbook, '.yml') => result.output)) unless result.nil?
+    ssh_private_key_file&.unlink
   end
 
   # Wrapper method for the various tag_resource_as_xxx methods.
