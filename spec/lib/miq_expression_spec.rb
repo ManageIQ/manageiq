@@ -17,7 +17,7 @@ describe MiqExpression do
 
     it 'lists custom attributes in ChargebackVm' do
       skip('removing of virtual custom attributes is needed to do first in other specs')
-      
+
       displayed_columms = described_class.reporting_available_fields('ChargebackVm').map(&:second)
       expected_columns = (ChargebackVm.attribute_names - extra_fields).map { |x| "ChargebackVm-#{x}" }
 
@@ -219,6 +219,25 @@ describe MiqExpression do
         }
       )
       expect(expression).not_to be_valid
+    end
+  end
+
+  describe "#preprocess_for_sql" do
+    it "convert size value in units to integer for comparasing operators on integer field" do
+      expession_hash = {"=" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes"}}
+      expession = MiqExpression.new(expession_hash)
+      exp, _ = expession.preprocess_for_sql(expession_hash)
+      expect(exp.values.first["value"]).to eq("5.megabyte".to_i_with_method)
+
+      expession_hash = {">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.kilobytes"}}
+      expession = MiqExpression.new(expession_hash)
+      exp, _ = expession.preprocess_for_sql(expession_hash)
+      expect(exp.values.first["value"]).to eq("5.kilobytes".to_i_with_method)
+
+      expession_hash = {"<" => {"field" => "Vm-allocated_disk_storage", "value" => "2.terabytes"}}
+      expession = MiqExpression.new(expession_hash)
+      exp, _ = expession.preprocess_for_sql(expession_hash)
+      expect(exp.values.first["value"]).to eq(2.terabytes.to_i_with_method)
     end
   end
 
