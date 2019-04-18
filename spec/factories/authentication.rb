@@ -87,6 +87,10 @@ FactoryBot.define do
           :parent => :embedded_ansible_credential,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential"
 
+  factory :embedded_ansible_cloud_credential,
+          :parent => :embedded_ansible_credential,
+          :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::CloudCredential"
+
   factory :embedded_ansible_scm_credential,
           :parent => :embedded_ansible_credential,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential"
