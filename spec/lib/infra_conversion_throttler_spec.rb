@@ -2,9 +2,12 @@ describe InfraConversionThrottler do
   let(:ems) { FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone)) }
   let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
   let(:vm) { FactoryBot.create(:vm_or_template, :ext_management_system => ems) }
-  let(:task) { FactoryBot.create(:service_template_transformation_plan_task, :source => vm) }
+  let(:task_waiting) { FactoryBot.create(:service_template_transformation_plan_task, :source => vm) }
+  let(:task_running_1) { FactoryBot.create(:service_template_transformation_plan_task, :source => vm) }
+  let(:task_running_2) { FactoryBot.create(:service_template_transformation_plan_task, :source => vm) }
   let(:job_waiting) { FactoryBot.create(:infra_conversion_job, :state => 'waiting_to_start') }
-  let(:job_running) { FactoryBot.create(:infra_conversion_job, :state => 'running') }
+  let(:job_running_1) { FactoryBot.create(:infra_conversion_job, :state => 'running') }
+  let(:job_running_2) { FactoryBot.create(:infra_conversion_job, :state => 'running') }
 
   before do
     allow(host).to receive(:supports_conversion_host?).and_return(true)
@@ -16,8 +19,8 @@ describe InfraConversionThrottler do
     let(:conversion_host2) { FactoryBot.create(:conversion_host, :max_concurrent_tasks => 2, :vddk_transport_supported => true, :resource => vm) }
 
     before do
-      allow(task).to receive(:destination_ems).and_return(ems)
-      allow(job_waiting).to receive(:migration_task).and_return(task)
+      allow(task_waiting).to receive(:destination_ems).and_return(ems)
+      allow(job_waiting).to receive(:migration_task).and_return(task_waiting)
       allow(described_class).to receive(:pending_conversion_jobs).and_return(ems => [job_waiting])
       allow(ems).to receive(:conversion_hosts).and_return([conversion_host1, conversion_host2])
       allow(conversion_host1).to receive(:check_ssh_connection).and_return(true)
@@ -45,7 +48,7 @@ describe InfraConversionThrottler do
       allow(conversion_host2).to receive(:active_tasks).and_return([1])
       expect(job_waiting).to receive(:queue_signal).with(:start)
       described_class.start_conversions
-      expect(task.conversion_host.id).to eq(conversion_host2.id)
+      expect(task_waiting.conversion_host.id).to eq(conversion_host2.id)
     end
   end
 
@@ -53,9 +56,10 @@ describe InfraConversionThrottler do
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm, :cpu_limit => '50') }
 
     before do
-      allow(described_class).to receive(:running_conversion_jobs).and_return(conversion_host => [job_running])
+      allow(described_class).to receive(:running_conversion_jobs).and_return(conversion_host => [job_running_1, job_running_2])
       allow(conversion_host).to receive(:active_tasks).and_return([1, 2])
-      allow(job_running).to receive(:migration_task).and_return(task)
+      allow(job_running_1).to receive(:migration_task).and_return(task_running_1)
+      allow(job_running_2).to receive(:migration_task).and_return(task_running_2)
     end
 
     it 'does not set limit when virt-v2v-wrapper has not started' do
@@ -69,10 +73,12 @@ describe InfraConversionThrottler do
         :cpu     => '25',
         :network => 'unlimited'
       }
-      task.options[:virtv2v_wrapper] = { 'throttling_file' => path }
-      expect(conversion_host).to receive(:apply_task_limits).with(path, limits)
+      task_running_1.options[:virtv2v_wrapper] = { 'throttling_file' => path }
+      task_running_2.options[:virtv2v_wrapper] = { 'throttling_file' => path }
+      expect(conversion_host).to receive(:apply_task_limits).twice.with(path, limits)
       described_class.apply_limits
-      expect(task.reload.options[:virtv2v_limits]).to eq(limits)
+      expect(task_running_1.reload.options[:virtv2v_limits]).to eq(limits)
+      expect(task_running_2.reload.options[:virtv2v_limits]).to eq(limits)
     end
 
     it 'does not call apply_task_limits when limits have not changed' do
@@ -81,7 +87,8 @@ describe InfraConversionThrottler do
         :cpu     => '25',
         :network => 'unlimited'
       }
-      task.update_options(:virtv2v_limits => limits)
+      task_running_1.update_options(:virtv2v_limits => limits)
+      task_running_2.update_options(:virtv2v_limits => limits)
       expect(conversion_host).not_to receive(:apply_task_limits).with(path, limits)
       described_class.apply_limits
     end

@@ -40,16 +40,21 @@ class InfraConversionThrottler
   # Applying the limits is done via the conversion_host which handles the writing.
   def self.apply_limits
     running_conversion_jobs.each do |ch, jobs|
-      number_of_jobs = ch.active_tasks.size
+      number_of_jobs = jobs.size
+  
       cpu_limit = ch.cpu_limit || Settings.transformation.limits.cpu_limit_per_host
+      cpu_limit = (cpu_limit.to_i / number_of_jobs).to_s unless cpu_limit == "unlimited"
+
       network_limit = ch.network_limit || Settings.transformation.limits.network_limit_per_host
+      network_limit = (network_limit.to_i / number_of_jobs).to_s unless network_limit == "unlimited"
+
       jobs.each do |job|
         migration_task = job.migration_task
         throttling_file_path = migration_task.options.fetch_path(:virtv2v_wrapper, 'throttling_file')
         next unless throttling_file_path
         limits = {
-          :cpu     => cpu_limit == 'unlimited' ? cpu_limit : (cpu_limit.to_i / number_of_jobs).to_s,
-          :network => network_limit == 'unlimited' ? network_limit : (network_limit.to_i / number_of_jobs).to_s
+          :cpu     => cpu_limit,
+          :network => network_limit
         }
         unless migration_task.options[:virtv2v_limits] == limits
           ch.apply_task_limits(throttling_file_path, limits)
