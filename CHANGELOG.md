@@ -5,7 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-4
+## Hammer-5
+
+### Added
+- Deprecate invalid custom attribute names [(#18538)](https://github.com/ManageIQ/manageiq/pull/18538)
+- Add ConversionHost validations [(#18277)](https://github.com/ManageIQ/manageiq/pull/18277)
+- Alter ansible_playbook method so that some arguments are optional [(#18323)](https://github.com/ManageIQ/manageiq/pull/18323)
+- Tenancy for central admin [(#18263)](https://github.com/ManageIQ/manageiq/pull/18263)
+- [V2V] Expose virt-v2v-wrapper error message in options hash [(#18564)](https://github.com/ManageIQ/manageiq/pull/18564)
+- updating infra conversion job polling timers [(#18597)](https://github.com/ManageIQ/manageiq/pull/18597)
+- [V2V] Throttler - Replace class constant with global setting [(#18539)](https://github.com/ManageIQ/manageiq/pull/18539)
+
+### Fixed
+- Rbac virtual attributes [(#18543)](https://github.com/ManageIQ/manageiq/pull/18543)
+- Preserve group and user when importing reports [(#18270)](https://github.com/ManageIQ/manageiq/pull/18270)
+- default merged_uri should return the parameter not the attribute [(#18497)](https://github.com/ManageIQ/manageiq/pull/18497)
+- ProcessTasksMixinin.invoke_tasks_remote should not send AuditEvent(:success) if invocation failed [(#18565)](https://github.com/ManageIQ/manageiq/pull/18565)
+- Don't print the release codename in production mode [(#18444)](https://github.com/ManageIQ/manageiq/pull/18444)
+- fix: swap makes vms out of disk space report false positive [(#18623)](https://github.com/ManageIQ/manageiq/pull/18623)
+
+## Hammer-4 - Released 2019-03-29
 
 ### Added
 - [V2V] Allow downloading wrapper log file [(#18506)](https://github.com/ManageIQ/manageiq/pull/18506)
@@ -21,7 +40,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - update infra_migration_job when polling to prevent timing out [(#18557)](https://github.com/ManageIQ/manageiq/pull/18557)
 - [V2V] Fix ConversionHost active_tasks method to use state == 'migrate' [(#18570)](https://github.com/ManageIQ/manageiq/pull/18570)
 
-## Hammer-3
+## Hammer-3 - Released 2019-03-06
 
 ### Added
 - Add empty IP address check to preflight check [(#18425)](https://github.com/ManageIQ/manageiq/pull/18425)
