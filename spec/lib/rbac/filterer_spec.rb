@@ -16,7 +16,7 @@ describe Rbac::Filterer do
       actual, = Rbac::Filterer.search(:targets => Vm, :user => user)
 
       expected = [vm1, vm2]
-      expect(actual).to match(expected)
+      expect(actual).to match_array(expected)
     end
 
     it "supports AND conditions within categories" do
