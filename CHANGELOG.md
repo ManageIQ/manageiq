@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Hammer-5
+
+### Added
+- Deprecate invalid custom attribute names [(#18538)](https://github.com/ManageIQ/manageiq/pull/18538)
+- Add ConversionHost validations [(#18277)](https://github.com/ManageIQ/manageiq/pull/18277)
+- Alter ansible_playbook method so that some arguments are optional [(#18323)](https://github.com/ManageIQ/manageiq/pull/18323)
+- Tenancy for central admin [(#18263)](https://github.com/ManageIQ/manageiq/pull/18263)
+- [V2V] Expose virt-v2v-wrapper error message in options hash [(#18564)](https://github.com/ManageIQ/manageiq/pull/18564)
+- updating infra conversion job polling timers [(#18597)](https://github.com/ManageIQ/manageiq/pull/18597)
+- [V2V] Throttler - Replace class constant with global setting [(#18539)](https://github.com/ManageIQ/manageiq/pull/18539)
+
+### Fixed
+- Rbac virtual attributes [(#18543)](https://github.com/ManageIQ/manageiq/pull/18543)
+- Preserve group and user when importing reports [(#18270)](https://github.com/ManageIQ/manageiq/pull/18270)
+- default merged_uri should return the parameter not the attribute [(#18497)](https://github.com/ManageIQ/manageiq/pull/18497)
+- ProcessTasksMixinin.invoke_tasks_remote should not send AuditEvent(:success) if invocation failed [(#18565)](https://github.com/ManageIQ/manageiq/pull/18565)
+- Don't print the release codename in production mode [(#18444)](https://github.com/ManageIQ/manageiq/pull/18444)
+- fix: swap makes vms out of disk space report false positive [(#18623)](https://github.com/ManageIQ/manageiq/pull/18623)
+
 ## Unreleased as of Sprint 109 ending 2019-04-15
 
 ### Added
@@ -131,7 +150,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Added
 - Override add resource to no-op in service orchestration subclass [(#18358)](https://github.com/ManageIQ/manageiq/pull/18358)
 - Modify the enable ConversionHost::Configurations#enable method to handle arguments more robustly [(#18336)](https://github.com/ManageIQ/manageiq/pull/18336)
-- Alter ansible_playbook method so that some arguments are optional [(#18323)](https://github.com/ManageIQ/manageiq/pull/18323)
 - Add a 'name' parameter to backup restore and make volumeid optional [(#17952)](https://github.com/ManageIQ/manageiq/pull/17952)
 
 ### Changed
@@ -654,17 +672,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - remove 'require_nested :ConfigurationWorkflow' from parent space [(#17782)](https://github.com/ManageIQ/manageiq/pull/17782)
 - Remove ui_lookup_for_title() [(#17691)](https://github.com/ManageIQ/manageiq/pull/17691)
 
-## Unreleased as of Sprint 101 ending 2018-12-17
-
-### Added
-- Add ConversionHost validations [(#18277)](https://github.com/ManageIQ/manageiq/pull/18277)
-
-### Fixed
-
 ## Unreleased as of Sprint 100 ending 2018-12-03
-
-### Added
-- Add conversion_host option to the SupportsFeatureMixin module [(#18232)](https://github.com/ManageIQ/manageiq/pull/18232)
 
 ### Fixed
 - Properly generate report yml include with virtual attributes [(#18205)](https://github.com/ManageIQ/manageiq/pull/18205)
