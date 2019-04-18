@@ -309,8 +309,11 @@ class MiqExpression
       preprocess_for_sql(exp[operator], attrs)
       exp.delete(operator) if exp[operator].empty? # Clean out empty operands
     else
-      # check operands to see if they can be represented in sql
-      unless sql_supports_atom?(exp)
+      if sql_supports_atom?(exp)
+        # if field type is Integer and value is String representing size in units (like "2.megabytes") than convert
+        # this string to correct number using sub_type mappong defined in db/fixtures/miq_report_formats.yml:sub_types_by_column:
+        convert_size_in_units_to_integer(exp) if %w[= != <= >= > <].include?(operator)
+      else
         attrs[:supported_by_sql] = false
         exp.delete(operator)
       end
@@ -1299,6 +1302,27 @@ class MiqExpression
   end
 
   private
+
+  def convert_size_in_units_to_integer(exp)
+    return if (column_details = col_details[exp.values.first["field"]]).nil?
+    # attempt to do conversion only if db type of column is integer and value to compare to is String
+    return unless column_details[:data_type] == :integer && (value = exp.values.first["value"]).class == String
+
+    sub_type = column_details[:format_sub_type]
+
+    return if %i[mhz_avg hours kbps kbps_precision_2 mhz elapsed_time].include?(sub_type)
+
+    case sub_type
+    when :bytes
+      exp.values.first["value"] = value.to_i_with_method
+    when :kilobytes
+      exp.values.first["value"] = value.to_i_with_method / 1_024
+    when :megabytes, :megabytes_precision_2
+      exp.values.first["value"] = value.to_i_with_method / 1_048_576
+    else
+      _log.warn("No subtype defined for column #{exp.values.first["field"]} in 'miq_report_formats.yml'")
+    end
+  end
 
   # example:
   #   ruby_for_date_compare(:updated_at, :date, tz, "==", Time.now)
