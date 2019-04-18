@@ -1,0 +1,5 @@
+---
+- GenericObjectDefinition:
+    name:
+    description: Ancient Egyptian deity who embodied chaos
+    properties:

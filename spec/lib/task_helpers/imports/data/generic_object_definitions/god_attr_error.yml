@@ -1,0 +1,18 @@
+---
+- GenericObjectDefinition:
+    name: Apep
+    invalid_attribute: Apophis
+    description: Ancient Egyptian deity who embodied chaos
+    properties:
+      :attributes:
+        weapon: :string
+        is_tired: :boolean
+        created: :datetime
+        retirement: :datetime
+      :associations:
+        cloud_tenant: CloudTenant
+      :methods:
+      - kick
+      - laugh_at
+      - punch
+      - parseltongue
