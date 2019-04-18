@@ -131,9 +131,13 @@ class ConversionHost < ApplicationRecord
   end
 
   def apply_task_limits(path, limits = {})
-    connect_ssh { |ssu| ssu.put_file(path, JSON.dump(limits)) }
-  rescue StandardError => e
-    raise "Could not apply the limits in '#{path}' on '#{resource.name}' with [#{e.class}: #{e}]"
+    connect_ssh { |ssu| ssu.put_file(path, limits.to_json) }
+  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+    raise "Failed to connect and apply limits in file '#{path}' with [#{err.class}: #{err}"
+  rescue JSON::GeneratorError => err
+    raise "Could not generate JSON from limits '#{limits}' with [#{err.class}: #{err}]"
+  rescue StandardError => err
+    raise "Could not apply the limits in '#{path}' on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
   def run_conversion(conversion_options)
