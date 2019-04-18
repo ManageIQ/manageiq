@@ -51,10 +51,10 @@ describe InfraConversionThrottler do
 
   context '.apply_limits' do
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm, :cpu_limit => '50') }
-    
+
     before do
       allow(described_class).to receive(:running_conversion_jobs).and_return(conversion_host => [job_running])
-      allow(conversion_host).to receive(:active_tasks).and_return([1,2])
+      allow(conversion_host).to receive(:active_tasks).and_return([1, 2])
       allow(job_running).to receive(:migration_task).and_return(task)
     end
 
@@ -66,7 +66,7 @@ describe InfraConversionThrottler do
     it 'calls apply_task_limits with limits hash when virt-v2v-wrapper has started' do
       path = '/tmp/fake_throttling_file'
       limits = {
-        :cpu => '25',
+        :cpu     => '25',
         :network => 'unlimited'
       }
       task.options[:virtv2v_wrapper] = { 'throttling_file' => path }
