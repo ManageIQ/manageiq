@@ -143,5 +143,17 @@ describe DialogImportValidator do
         end.to raise_error(DialogImportValidator::ParsedNonDialogError)
       end
     end
+
+    context 'when the loaded yaml has invalid version' do
+      let(:dialog_with_invalid_version) do
+        {"label" => "Test", "dialog_tabs" => [], 'export_version' => DialogImportService::CURRENT_DIALOG_VERSION + 1}
+      end
+
+      it "raises a InvalidDialogVersionError" do
+        expect do
+          dialog_import_validator.determine_dialog_validity(dialog_with_invalid_version)
+        end.to raise_error(DialogImportValidator::InvalidDialogVersionError)
+      end
+    end
   end
 end
