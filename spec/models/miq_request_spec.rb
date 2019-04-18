@@ -511,6 +511,12 @@ describe MiqRequest do
       expect(user.current_group).to eq(group1)
       expect(request.get_user.current_group).to eq(group1)
     end
+
+    it "returns superadmin if user was deleted" do
+      request = FactoryBot.create(:miq_provision_request, :requester => user)
+      user.destroy
+      expect(request.get_user).to eq(User.super_admin)
+    end
   end
 
   context "#update_request" do
