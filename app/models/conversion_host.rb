@@ -169,19 +169,19 @@ class ConversionHost < ApplicationRecord
     raise "Could not get conversion log '#{path}' from '#{resource.name}' with [#{e.class}: #{e}"
   end
 
-  def check_conversion_host_role
+  def check_conversion_host_role(miq_task_id = nil)
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml"
     extra_vars = {
       :v2v_host_type        => resource.ext_management_system.emstype,
       :v2v_transport_method => source_transport_method
     }
-    ansible_playbook(playbook, extra_vars)
+    ansible_playbook(playbook, extra_vars, miq_task_id)
     tag_resource_as('enabled')
   rescue
     tag_resource_as('disabled')
   end
 
-  def enable_conversion_host_role(vmware_vddk_package_url = nil, vmware_ssh_private_key = nil)
+  def enable_conversion_host_role(vmware_vddk_package_url = nil, vmware_ssh_private_key = nil, miq_task_id = nil)
     raise "vmware_vddk_package_url is mandatory if transformation method is vddk" if vddk_transport_supported && vmware_vddk_package_url.nil?
     raise "vmware_ssh_private_key is mandatory if transformation_method is ssh" if ssh_transport_supported && vmware_ssh_private_key.nil?
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_enable.yml"
@@ -192,20 +192,20 @@ class ConversionHost < ApplicationRecord
       :v2v_ssh_private_key  => vmware_ssh_private_key,
       :v2v_ca_bundle        => resource.ext_management_system.connection_configurations['default'].certificate_authority
     }.compact
-    ansible_playbook(playbook, extra_vars)
+    ansible_playbook(playbook, extra_vars, miq_task_id)
   ensure
-    check_conversion_host_role
+    check_conversion_host_role(miq_task_id)
   end
 
-  def disable_conversion_host_role
+  def disable_conversion_host_role(miq_task_id = nil)
     playbook = "/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_disable.yml"
     extra_vars = {
       :v2v_host_type        => resource.ext_management_system.emstype,
       :v2v_transport_method => source_transport_method
     }
-    ansible_playbook(playbook, extra_vars)
+    ansible_playbook(playbook, extra_vars, miq_task_id)
   ensure
-    check_conversion_host_role
+    check_conversion_host_role(miq_task_id)
   end
 
   private
@@ -283,8 +283,8 @@ class ConversionHost < ApplicationRecord
   # +extra_vars+ option should be a hash of key/value pairs which, if present,
   # will be passed to the '-e' flag.
   #
-  def ansible_playbook(playbook, extra_vars = {}, auth_type = nil)
-    task = MiqTask.all.select { |t| t.context_data.present? && t.context_data[:conversion_host_id] == id }.sort_by(&:created_on).last
+  def ansible_playbook(playbook, extra_vars = {}, miq_task_id = nil, auth_type = nil)
+    task = MiqTask.find(miq_task_id) if miq_task_id.present?
 
     host = hostname || ipaddress
 
@@ -298,8 +298,11 @@ class ConversionHost < ApplicationRecord
       extra_vars[:ansible_ssh_pass] = auth.password
     when AuthPrivateKey
       ssh_private_key_file = Tempfile.new('ansible_key')
-      ssh_private_key_file.write(auth.auth_key)
-      ssh_private_key_file.close
+      begin
+        ssh_private_key_file.write(auth.auth_key)
+      ensure
+        ssh_private_key_file.close
+      end
       command << " --private-key #{ssh_private_key_file.path}"
     else
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
@@ -309,20 +312,12 @@ class ConversionHost < ApplicationRecord
 
     result = AwesomeSpawn.run(command)
     raise unless result.exit_status.zero?
-  rescue => e
-    errormsg = "Ansible playbook '#{playbook}' failed for '#{resource.name}' with [#{e.class}: #{e}]"
-    _log.error(errormsg)
-    task&.error(errormsg)
-    raise e
   ensure
     unless result.nil?
       ansible_output_name = playbook.split('/').last.split('.').first
       task&.update_context(task.context_data.merge!(ansible_output_name => result.output))
     end
-    if !ssh_private_key_file.nil? && File.exist?(ssh_private_key_file.path)
-      ssh_private_key_file.close unless ssh_private_key_file.closed?
-      File.delete(ssh_private_key_file)
-    end
+    File.delete(ssh_private_key_file) if ssh_private_key_file.present? && File.exist?(ssh_private_key_file.path)
   end
 
   # Wrapper method for the various tag_resource_as_xxx methods.

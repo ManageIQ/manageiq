@@ -171,8 +171,8 @@ describe ConversionHost do
           :v2v_host_type        => 'rhevm',
           :v2v_transport_method => 'vddk'
         }
-        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars)
-        conversion_host.check_conversion_host_role
+        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars, 1)
+        conversion_host.check_conversion_host_role(1)
       end
 
       it "disable_conversion_host_role calls ansible_playbook with extra_vars" do
@@ -183,9 +183,9 @@ describe ConversionHost do
           :v2v_transport_method => 'vddk'
         }
         check_extra_vars = disable_extra_vars
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars)
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars)
-        conversion_host.disable_conversion_host_role
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars, 1)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, 1)
+        conversion_host.disable_conversion_host_role(1)
       end
 
       it "enable_conversion_host_role raises if vmware_vddk_package_url is nil" do
@@ -204,8 +204,8 @@ describe ConversionHost do
           :v2v_host_type        => 'rhevm',
           :v2v_transport_method => 'vddk'
         }
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars)
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars, nil)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, nil)
         conversion_host.enable_conversion_host_role('http://file.example.com/vddk-stable.tar.gz', nil)
       end
     end
@@ -240,8 +240,8 @@ describe ConversionHost do
           :v2v_host_type        => 'openstack',
           :v2v_transport_method => 'ssh'
         }
-        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars)
-        conversion_host.check_conversion_host_role
+        expect(conversion_host).to receive(:ansible_playbook).with(check_playbook, check_extra_vars, 1)
+        conversion_host.check_conversion_host_role(1)
       end
 
       it "disable_conversion_host_role calls ansible_playbook with extra_vars" do
@@ -252,9 +252,9 @@ describe ConversionHost do
           :v2v_transport_method => 'ssh'
         }
         check_extra_vars = disable_extra_vars
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars)
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars)
-        conversion_host.disable_conversion_host_role
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(disable_playbook, disable_extra_vars, 1)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, 1)
+        conversion_host.disable_conversion_host_role(1)
       end
 
       it "enable_conversion_host_role raises if vmware_ssh_private_key is nil" do
@@ -273,8 +273,8 @@ describe ConversionHost do
           :v2v_host_type        => 'openstack',
           :v2v_transport_method => 'ssh'
         }
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars)
-        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars, nil)
+        expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, nil)
         conversion_host.enable_conversion_host_role(nil, 'fake ssh private key')
       end
     end
