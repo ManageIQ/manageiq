@@ -34,14 +34,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Retirement - remove auto_approve flag on request creation. [(#18638)](https://github.com/ManageIQ/manageiq/pull/18638)
 - Check that reconfigure is supported before we try it [(#18636)](https://github.com/ManageIQ/manageiq/pull/18636)
 - Fix Key Pairs from refresh being returned with provider AuthPrivateKeys [(#18633)](https://github.com/ManageIQ/manageiq/pull/18633)
-- swap makes vms out of disk space report false positive [(#18623)](https://github.com/ManageIQ/manageiq/pull/18623)
 - Check ems_ref before uid_ems when saving VMs [(#18616)](https://github.com/ManageIQ/manageiq/pull/18616)
 
 ## Unreleased as of Sprint 108 ending 2019-04-01
 
 ### Added
 - Add zone to service provisioning. [(#18601)](https://github.com/ManageIQ/manageiq/pull/18601)
-- updating infra conversion job polling timers [(#18597)](https://github.com/ManageIQ/manageiq/pull/18597)
 - Add report interval date and report generation to Chargeback reports [(#18569)](https://github.com/ManageIQ/manageiq/pull/18569)
 - [V2V] Set context data for the task associated with conversion host creation [(#18541)](https://github.com/ManageIQ/manageiq/pull/18541)
 - Speed up Service access  [(#18487)](https://github.com/ManageIQ/manageiq/pull/18487)
@@ -50,8 +48,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ### Fixed
 - Conversion host base class [(#18604)](https://github.com/ManageIQ/manageiq/pull/18604)
 - Don't start another refresh worker while another is stopping [(#18583)](https://github.com/ManageIQ/manageiq/pull/18583)
-- ProcessTasksMixinin.invoke_tasks_remote should not send AuditEvent(:success) if invocation failed [(#18565)](https://github.com/ManageIQ/manageiq/pull/18565)
-- Rbac virtual attributes [(#18543)](https://github.com/ManageIQ/manageiq/pull/18543)
 - Add region checking for all user schedules [(#18512)](https://github.com/ManageIQ/manageiq/pull/18512)
 - Fix saving network manager in belongsto filter [(#18504)](https://github.com/ManageIQ/manageiq/pull/18504)
 
@@ -74,12 +70,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 ## Unreleased as of Sprint 107 ending 2019-03-18
 
 ### Added
-- [V2V] Expose virt-v2v-wrapper error message in options hash [(#18564)](https://github.com/ManageIQ/manageiq/pull/18564)
 - Add Volume Resizing capability to SupportsFeatureMixin [(#18560)](https://github.com/ManageIQ/manageiq/pull/18560)
 - Added ability to destroy all users dashboards [(#18555)](https://github.com/ManageIQ/manageiq/pull/18555)
 - Added MiqWidgetSet.copy_dashboard [(#18550)](https://github.com/ManageIQ/manageiq/pull/18550)
 - Loosen the Postgres version initializer check [(#18547)](https://github.com/ManageIQ/manageiq/pull/18547)
-- [V2V] Throttler - Replace class constant with global setting [(#18539)](https://github.com/ManageIQ/manageiq/pull/18539)
 - [V2V] Generate extra vars for conversion host playbooks [(#18537)](https://github.com/ManageIQ/manageiq/pull/18537)
 - Add the resource name to the task action for conversion hosts [(#18525)](https://github.com/ManageIQ/manageiq/pull/18525)
 - Tag associated resource for conversion hosts [(#18505)](https://github.com/ManageIQ/manageiq/pull/18505)
@@ -92,7 +86,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - dynamic DatePicker value isn't being set correctly [(#18523)](https://github.com/ManageIQ/manageiq/pull/18523)
 - Delegate vms_and_templates and miq_templates to parent_manager [(#18488)](https://github.com/ManageIQ/manageiq/pull/18488)
 - Fix graph refresh overwriting smartstate OS info [(#18477)](https://github.com/ManageIQ/manageiq/pull/18477)
-- Don't print the release codename in production mode [(#18444)](https://github.com/ManageIQ/manageiq/pull/18444)
 - CustomButtonSet - make sure children follow button_order [(#18368)](https://github.com/ManageIQ/manageiq/pull/18368)
 
 ## Unreleased as of Sprint 106 ending 2019-03-04
@@ -164,7 +157,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Change Stacked Area chart for Area chart for the Virtual Machine CPU States [(#18333)](https://github.com/ManageIQ/manageiq/pull/18333)
 - Add display name for Azure Floating IP [(#18332)](https://github.com/ManageIQ/manageiq/pull/18332)
 - Fixing subservice task creation for service bundles [(#18283)](https://github.com/ManageIQ/manageiq/pull/18283)
-- Preserve group and user when importing reports [(#18270)](https://github.com/ManageIQ/manageiq/pull/18270)
 
 ## Unreleased as of Sprint 102 ending 2019-01-07
 
@@ -172,7 +164,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Mark rbac_tenant_manage_quotas as  MY TENANT FEATURE [(#18322)](https://github.com/ManageIQ/manageiq/pull/18322)
 - Detach actioncable from the WebsocketServer and run it with the UI [(#18296)](https://github.com/ManageIQ/manageiq/pull/18296)
 - Add support for exporting and importing reports [(#18284)](https://github.com/ManageIQ/manageiq/pull/18284)
-- Tenancy for central admin [(#18263)](https://github.com/ManageIQ/manageiq/pull/18263)
 
 ### Fixed
 - RHV requires disconnect_storage before ems [(#18330)](https://github.com/ManageIQ/manageiq/pull/18330)
