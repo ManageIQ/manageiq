@@ -93,7 +93,6 @@ describe ChargebackContainerImage do
       end
 
       it "allocated fields" do
-        skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
         expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_cpu_cores * count_hourly_rate * hours_in_day)
         expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_cpu_cores)
         expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_memory_bytes / 1.megabytes * count_hourly_rate * hours_in_day)
@@ -121,7 +120,6 @@ describe ChargebackContainerImage do
       end
 
       it "allocated fields" do
-        skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
         expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_cpu_cores * count_hourly_rate * hours_in_month)
         expect(subject.cpu_cores_allocated_metric).to eq(@container.limit_cpu_cores)
         expect(subject.cpu_cores_allocated_cost).to eq(@container.limit_memory_bytes / 1.megabytes * count_hourly_rate * hours_in_month)
@@ -153,17 +151,5 @@ describe ChargebackContainerImage do
     end
   end
 
-  context "Old Chargeback" do
-    include_examples "ChargebackContainerImage"
-  end
-
-  context "New Chargeback" do
-    before do
-      ManageIQ::Showback::InputMeasure.seed
-
-      stub_settings(:new_chargeback => '1')
-    end
-
-    include_examples "ChargebackContainerImage"
-  end
+  include_examples "ChargebackContainerImage"
 end

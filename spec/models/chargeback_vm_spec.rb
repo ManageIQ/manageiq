@@ -134,8 +134,6 @@ describe ChargebackVm do
         let(:cloud_volume) { FactoryBot.create(:cloud_volume_openstack) }
 
         it 'contains also columns with sub_metric(from cloud_volume)' do
-          skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
-
           cloud_volume_type_chargeback_colums = []
           %w(metric cost).each do |key|
             cloud_volume_type_chargeback_colums << "storage_allocated_#{cloud_volume.volume_type}_#{key}"
@@ -178,8 +176,6 @@ describe ChargebackVm do
           end
 
           it 'charges sub metrics as cloud volume types' do
-            skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
-
             expect(subject.storage_allocated_sdd_metric).to eq(3.gigabytes)
             expect(subject.storage_allocated_sdd_cost).to eq(state_data[:allocated_disk_types]['sdd'] / 1.gigabytes * count_hourly_rate * hours_in_day)
 
@@ -188,7 +184,6 @@ describe ChargebackVm do
           end
 
           it 'shows rates' do
-            skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
             expect(subject.storage_allocated_sdd_rate).to eq("0.0/1.0")
             expect(subject.storage_allocated_hdd_rate).to eq("0.0/1.0")
           end
@@ -246,7 +241,6 @@ describe ChargebackVm do
             end
 
             it 'reports sub metric and costs' do
-              skip('this case needs to be fixed in new chargeback') if Settings.new_chargeback
               expect(subject.storage_allocated_ssd_metric).to eq(ssd_size_1 + ssd_size_2)
             end
           end
@@ -262,8 +256,6 @@ describe ChargebackVm do
           end
 
           it "calculates allocated cpu cost and metric values" do
-            skip('this case needs to be fixed in new chargeback') if Settings.new_chargeback
-
             expect(subject.cpu_allocated_metric).to eq(cpu_count)
             expect(subject.cpu_allocated_cost).to eq(cpu_count * count_hourly_rate * hours_in_day)
             expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
@@ -443,8 +435,6 @@ describe ChargebackVm do
           end
 
           it "reports report interval range and report generation date" do
-            skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
-
             # reporting of first month
             report_range = "#{first_month_beginning_formatted} - #{second_month_beginning_formatted}"
             expect(subject.first.report_interval_range).to eq(report_range)
@@ -679,8 +669,6 @@ describe ChargebackVm do
             end
 
             it 'is grouping values per date' do
-              skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
-
               ((month_end - 5.days)..month_end).step_value(1.day) do |display_range|
                 display_range = display_range.strftime('%m/%d/%Y')
                 rs1 = result_row_by(result_group_by_date_only, display_range)
@@ -753,8 +741,6 @@ describe ChargebackVm do
           let(:hourly_variable_tier_rate) { {:fixed_rate => 100, :variable_rate => hourly_rate.to_s} }
 
           it 'shows rates' do
-            skip('this case needs to be added in new chargeback') if Settings.new_chargeback
-
             expect(subject.cpu_allocated_rate).to eq("0.0/1.0")
             expect(subject.cpu_used_rate).to eq("100.0/0.01")
             expect(subject.disk_io_used_rate).to eq("100.0/0.01")
@@ -917,16 +903,12 @@ describe ChargebackVm do
           end
 
           it "chooses rate according to cloud_volume\'s tag" do
-            skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
-
             cloud_volume_sdd.tag_with([classification.tag.name], :ns => '*')
 
             expect(subject).to eq(storage_chargeback_rate)
           end
 
           it "doesn't choose rate thanks to missing tag on cloud_volume" do
-            skip('this feature needs to be added to new chargeback assignments') if Settings.new_chargeback
-
             expect(subject).to be_nil
           end
         end
@@ -1051,8 +1033,6 @@ describe ChargebackVm do
         subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
         it 'calculates accumulations' do
-          skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
-
           descriptions = [chargeback_rate_1.description, chargeback_rate_2.description].sort
           expect(subject.chargeback_rates).to eq(descriptions.join(", "))
 
@@ -1133,8 +1113,6 @@ describe ChargebackVm do
           let(:hourly_variable_tier_rate_2) { {:variable_rate => hourly_rate_2.to_s, :fixed_rate => fixed_rate.to_s} }
 
           it 'calculates accumulations' do
-            skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
-
             # memory
             expect(subject.memory_allocated_metric).to eq(memory_available)
 
@@ -1184,8 +1162,6 @@ describe ChargebackVm do
         end
 
         it "return only one chargeback rate according to tag name of Vm" do
-          skip('this feature needs to be added to new chargeback') if Settings.new_chargeback
-
           [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
             metric_rollup.update_attributes!(:tag_names => rate_assignment[:tag].first.tag.send(:name_path))
             @vm.tag_with(["/managed/#{metric_rollup.tag_names}"], :ns => '*')
@@ -1295,7 +1271,6 @@ describe ChargebackVm do
             let!(:tenant_default_region) { FactoryBot.create(:tenant, :parent => Tenant.root_tenant) }
 
             it "raises error" do
-              skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
               exception_message = "Unable to find tenant '#{tenant_default_region.name}' (based on tenant id '#{tenant_default_region.id}' from default region) in region #{region_1.region}"
               expect { ChargebackVm.build_results_for_report_ChargebackVm(options_with_tenant_only_in_default_region) }.to raise_error(MiqException::Error, exception_message)
             end
@@ -1304,7 +1279,6 @@ describe ChargebackVm do
               let(:options_with_missing_tenant) { base_options.merge(:interval => 'monthly', :tenant_id => unknown_number).tap { |t| t.delete(:tag) } }
 
               it "raises error" do
-                skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
                 exception_message = "Unable to find tenant '#{unknown_number}'"
                 expect { ChargebackVm.build_results_for_report_ChargebackVm(options_with_missing_tenant) }.to raise_error(exception_message)
               end
@@ -1312,8 +1286,6 @@ describe ChargebackVm do
           end
 
           it "report from all regions and only for tenant_1" do
-            skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
-
             # report only VMs from tenant 1
             vm_ids = subject.map(&:vm_id)
             vm_ids_from_tenant = [tenant_1, tenant_1_region_1].map { |t| t.subtree.map(&:vms).map(&:ids) }.flatten
@@ -1436,17 +1408,5 @@ describe ChargebackVm do
     end
   end
 
-  context "Old Chargeback" do
-    include_examples "ChargebackVm"
-  end
-
-  context "New Chargeback" do
-    before do
-      ManageIQ::Showback::InputMeasure.seed
-
-      stub_settings(:new_chargeback => '1')
-    end
-
-    include_examples "ChargebackVm", :skip
-  end
+  include_examples "ChargebackVm"
 end
