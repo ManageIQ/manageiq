@@ -4,6 +4,7 @@ class PhysicalServer < ApplicationRecord
   include TenantIdentityMixin
   include SupportsFeatureMixin
   include EventMixin
+  include ProviderObjectMixin
 
   include_concern 'Operations'
 
