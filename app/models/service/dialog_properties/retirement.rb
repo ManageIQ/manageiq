@@ -23,9 +23,6 @@ class Service
         if @options['dialog_service_retires_on'].present?
           field_name = 'dialog_service_retires_on'
           self.retire_on_date = time_parse(@options[field_name])
-        elsif @options['dialog_service_retires_in_hours'].present?
-          field_name = 'dialog_service_retires_in_hours'
-          retires_in_duration(@options[field_name], :hours)
         elsif @options['dialog_service_retires_in_days'].present?
           field_name = 'dialog_service_retires_in_days'
           retires_in_duration(@options[field_name], :days)
@@ -51,7 +48,10 @@ class Service
 
       def retirement_warning
         warn_value = parse_retirement_warn
-        @attributes[:retirement_warn] = warn_value if warn_value
+        if warn_value
+          days_between_warn_and_retirement = (@attributes[:retires_on] - warn_value).to_i / 1.day
+          @attributes[:retirement_warn] = days_between_warn_and_retirement
+        end
       end
 
       def parse_retirement_warn
@@ -62,12 +62,8 @@ class Service
           time_parse(value)
         when 'warn_in_days'
           time_now + offset_set(value, :days)
-        when 'warn_in_hours'
-          time_now + offset_set(value, :hours)
         when 'warn_offset_days'
           @attributes[:retires_on] - offset_set(value, :days)
-        when 'warn_offset_hours'
-          @attributes[:retires_on] - offset_set(value, :hours)
         end
       end
 

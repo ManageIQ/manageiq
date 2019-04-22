@@ -42,26 +42,6 @@ describe Service::DialogProperties::Retirement do
       end
     end
 
-    describe 'retires_in_hours' do
-      it 'with invalid time' do
-        options = {'dialog_service_retires_in_hours' => 'xyz'}
-        parsed_results = described_class.parse(options, nil)
-
-        expect(parsed_results[:retires_on]).to be_nil
-        expect(parsed_results[:retirement_warn]).to be_nil
-      end
-
-      it 'with valid time' do
-        Timecop.freeze(time) do
-          options = {'dialog_service_retires_in_hours' => 5}
-          parsed_results = described_class.parse(options, nil)
-
-          expect(parsed_results[:retires_on]).to eq(time + 5.hours)
-          expect(parsed_results[:retirement_warn]).to be_nil
-        end
-      end
-    end
-
     describe 'retires_in_days' do
       it 'with invalid time' do
         options = {'dialog_service_retires_in_days' => 'xyz'}
@@ -94,51 +74,29 @@ describe Service::DialogProperties::Retirement do
         parsed_results = described_class.parse(options, user)
 
         expect(parsed_results[:retires_on]).to eq(time + 5.days)
-        expect(parsed_results[:retirement_warn]).to eq(time + 1.day)
+        expect(parsed_results[:retirement_warn]).to eq(4)
       end
     end
 
     it 'with retirement_warn_in_days' do
       Timecop.freeze(time) do
         options = {'dialog_service_retires_in_days'         => 5,
-                   'dialog_service_retirement_warn_in_days' => 1}
+                   'dialog_service_retirement_warn_in_days' => 2}
         parsed_results = described_class.parse(options, nil)
 
         expect(parsed_results[:retires_on]).to eq(time + 5.days)
-        expect(parsed_results[:retirement_warn]).to eq(time + 1.day)
+        expect(parsed_results[:retirement_warn]).to eq(3)
       end
     end
 
     it 'with retirement_warn_offset_days' do
       Timecop.freeze(time) do
-        options = {'dialog_service_retires_in_days'             => 5,
-                   'dialog_service_retirement_warn_offset_days' => 4}
+        options = {'dialog_service_retires_in_days'             => 10,
+                   'dialog_service_retirement_warn_offset_days' => 3}
         parsed_results = described_class.parse(options, nil)
 
-        expect(parsed_results[:retires_on]).to eq(time + 5.days)
-        expect(parsed_results[:retirement_warn]).to eq(time + 1.day)
-      end
-    end
-
-    it 'with retirement_warn_in_hours' do
-      Timecop.freeze(time) do
-        options = {'dialog_service_retires_in_hours'         => 5,
-                   'dialog_service_retirement_warn_in_hours' => 1}
-        parsed_results = described_class.parse(options, nil)
-
-        expect(parsed_results[:retires_on]).to eq(time + 5.hours)
-        expect(parsed_results[:retirement_warn]).to eq(time + 1.hour)
-      end
-    end
-
-    it 'with retirement_warn_offset_hours' do
-      Timecop.freeze(time) do
-        options = {'dialog_service_retires_in_hours'             => 5,
-                   'dialog_service_retirement_warn_offset_hours' => 4}
-        parsed_results = described_class.parse(options, nil)
-
-        expect(parsed_results[:retires_on]).to eq(time + 5.hours)
-        expect(parsed_results[:retirement_warn]).to eq(time + 1.hour)
+        expect(parsed_results[:retires_on]).to eq(time + 10.days)
+        expect(parsed_results[:retirement_warn]).to eq(3)
       end
     end
   end
