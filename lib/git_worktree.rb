@@ -1,4 +1,3 @@
-require 'rugged'
 require_relative 'git_worktree_exception'
 
 class GitWorktree
@@ -8,6 +7,8 @@ class GitWorktree
   LOCK_REFERENCE = 'refs/locks'
 
   def initialize(options = {})
+    require 'rugged'
+
     raise ArgumentError, "Must specify path" unless options.key?(:path)
     @path          = options[:path]
     @email         = options[:email]
