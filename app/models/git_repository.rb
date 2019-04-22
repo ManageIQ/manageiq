@@ -1,6 +1,8 @@
 class GitRepository < ApplicationRecord
   include AuthenticationMixin
 
+  GIT_REPO_DIRECTORY = Rails.root.join('data/git_repos')
+
   validates :url, :format => URI::regexp(%w(http https)), :allow_nil => false
   validate  :check_path
 
@@ -38,7 +40,7 @@ class GitRepository < ApplicationRecord
   def directory_name
     parsed = URI.parse(url)
     raise "Invalid URL missing path" if parsed.path.blank?
-    File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, parsed.path)
+    File.join(GIT_REPO_DIRECTORY, parsed.path)
   end
 
   def self_signed_cert_cb(_valid, _host)
