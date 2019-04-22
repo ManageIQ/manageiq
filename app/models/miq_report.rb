@@ -252,6 +252,50 @@ class MiqReport < ApplicationRecord
     # which does not exist in the MiqReport class
   end
 
+  def columns_for_sorting(columns)
+    columns = columns.split(",") if columns && columns.kind_of?(String)
+
+    columns || sortby || col_order
+  end
+
+  def validate_sorting_columns(columns)
+    validate_columns(columns_for_sorting(columns))
+  end
+
+  def validate_columns(sorting_columns)
+    Array(sorting_columns).collect do |attr|
+      if col_order&.include?(attr)
+        attr
+      else
+        raise ArgumentError, N_("#{attr} is not a valid attribute for #{name}")
+      end
+    end.compact
+  end
+
+  def col_format_hash
+    @col_format_hash ||= col_order.zip(col_formats).to_h
+  end
+
+  def format_row(row, allowed_columns = nil)
+    @tz ||= get_time_zone(Time.zone)
+
+    row.map do |key, _|
+      [key, allowed_columns.nil? || allowed_columns&.include?(key) ? format_column(key, row, @tz, col_format_hash[key]) : row[key]]
+    end.to_h
+  end
+
+  def format_result_set(result_set, skip_columns = nil)
+    result_set.map { |row| format_row(row, skip_columns) }
+  end
+
+  def filter_result_set(result_set, options)
+    filter_columns = validate_columns(options[:filter_column])
+    formatted_result_set = format_result_set(result_set, filter_columns)
+    result_set_filtered = formatted_result_set.select { |x| x[options[:filter_column]].include?(options[:filter_string]) }
+
+    [result_set_filtered, result_set_filtered.count]
+  end
+
   private
 
   def va_sql_cols

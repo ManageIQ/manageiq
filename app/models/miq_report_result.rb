@@ -1,5 +1,6 @@
 class MiqReportResult < ApplicationRecord
   include_concern 'Purging'
+  include_concern 'ResultSetOperations'
 
   belongs_to :miq_report
   belongs_to :miq_group
@@ -51,6 +52,14 @@ class MiqReportResult < ApplicationRecord
   after_commit { report.extras[:grouping] = @_extra_groupings if report.kind_of?(MiqReport) && report.extras }
 
   delegate :table, :to => :report_results, :allow_nil => true
+
+  def result_set_for_reporting(options)
+    self.class.result_set_for_reporting(self, options)
+  end
+
+  def report_or_miq_report
+    report || miq_report
+  end
 
   def friendly_title
     report_source == MiqWidget::WIDGET_REPORT_SOURCE && miq_widget_content ? miq_widget_content.miq_widget.title : report.title
