@@ -2741,12 +2741,6 @@
   :feature_type: node
   :identifier: utilization
 
-# Bottlenecks
-- :name: Bottlenecks
-  :description: Display of Bottlenecks data
-  :feature_type: node
-  :identifier: bottlenecks
-
 # My Settings
 - :name: My Settings
   :description: Everything under My Settings

@@ -414,11 +414,6 @@
   :url: /utilization
   :rbac_feature_name: utilization
   :startup: true
-- :name: bottlenecks
-  :description: Optimize / Bottlenecks
-  :url: /bottlenecks
-  :rbac_feature_name: bottlenecks
-  :startup: true
 - :name: monitor_alerts_overview
   :description: Monitor / Alerts / Overview
   :url: /alerts_overview
