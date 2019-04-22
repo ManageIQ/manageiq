@@ -14,7 +14,7 @@ describe GitRepository do
   it "default dirname" do
     repo = FactoryBot.create(:git_repository,
                               :url => "http://www.example.com/repos/manageiq")
-    expect(repo.directory_name).to eq(File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, 'repos/manageiq'))
+    expect(repo.directory_name).to eq(File.join(described_class::GIT_REPO_DIRECTORY, 'repos/manageiq'))
   end
 
   context "repo" do
