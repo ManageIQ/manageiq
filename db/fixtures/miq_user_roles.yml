@@ -16,7 +16,6 @@
   - host_aggregate
   - flavor
   - floating_ip
-  - bottlenecks
   - chargeback
   - catalog
   - cloud_network
@@ -190,7 +189,6 @@
   - about
   - automation_manager
   - embedded_automation_manager
-  - bottlenecks
   - chargeback
   - chargeback_reports
   - customization_template_view
@@ -944,7 +942,6 @@
   - cloud_subnet
   - flavor
   - floating_ip
-  - bottlenecks
   - chargeback
   - catalog
   - cloud_tenant
@@ -1004,7 +1001,6 @@
   - host_aggregate
   - all_vm_rules
   - flavor
-  - bottlenecks
   - chargeback
   - catalog
   - cloud_tenant
@@ -1153,7 +1149,6 @@
   - automation_manager_configured_system_view
   - automation_manager_providers_view
   - availability_zone_view
-  - bottlenecks
   - catalog_items_view
   - cloud_network_view
   - cloudobject_store_container_view
