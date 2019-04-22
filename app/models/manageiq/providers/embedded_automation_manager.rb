@@ -6,6 +6,10 @@ class ManageIQ::Providers::EmbeddedAutomationManager < ManageIQ::Providers::Auto
   require_nested :ConfiguredSystem
   require_nested :OrchestrationStack
 
+  def supported_for_create?
+    false
+  end
+
   def supported_catalog_types
     %w(generic_ansible_playbook)
   end
