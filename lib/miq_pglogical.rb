@@ -5,7 +5,7 @@ require 'pg/pglogical/active_record_extension'
 class MiqPglogical
   include Vmdb::Logging
 
-  REPLICATION_SET_NAME = 'miq'.freeze
+  PUBLICATION_NAME = 'miq'.freeze
   NODE_PREFIX = "region_".freeze
   ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
 
@@ -31,7 +31,7 @@ class MiqPglogical
   # Returns whether or not this server is configured as a provider node
   # @return Boolean
   def provider?
-    pglogical.enabled? && pglogical.replication_sets.include?(REPLICATION_SET_NAME)
+    pglogical.enabled? && pglogical.replication_sets.include?(PUBLICATION_NAME)
   end
 
   # Returns whether or not this server is configured as a subscriber node
@@ -71,7 +71,7 @@ class MiqPglogical
   # database
   def destroy_provider
     return unless provider?
-    pglogical.replication_set_drop(REPLICATION_SET_NAME)
+    pglogical.replication_set_drop(PUBLICATION_NAME)
     drop_node
     pglogical.disable
   end
@@ -79,12 +79,12 @@ class MiqPglogical
   # Lists the tables currently being replicated by pglogical
   # @return Array<String> the table list
   def included_tables
-    pglogical.tables_in_replication_set(REPLICATION_SET_NAME)
+    pglogical.tables_in_replication_set(PUBLICATION_NAME)
   end
 
   # Creates the 'miq' replication set and refreshes the excluded tables
   def create_replication_set
-    pglogical.replication_set_create(REPLICATION_SET_NAME)
+    pglogical.replication_set_create(PUBLICATION_NAME)
     refresh_excludes
   end
 
@@ -104,17 +104,17 @@ class MiqPglogical
 
   # Aligns the contents of the 'miq' replication set with the currently configured vmdb excludes
   def refresh_excludes
-    pglogical.with_replication_set_lock(REPLICATION_SET_NAME) do
+    pglogical.with_replication_set_lock(PUBLICATION_NAME) do
       # remove newly excluded tables from replication set
       newly_excluded_tables.each do |table|
-        _log.info("Removing #{table} from #{REPLICATION_SET_NAME} replication set")
-        pglogical.replication_set_remove_table(REPLICATION_SET_NAME, table)
+        _log.info("Removing #{table} from #{PUBLICATION_NAME} replication set")
+        pglogical.replication_set_remove_table(PUBLICATION_NAME, table)
       end
 
       # add tables to the set which are no longer excluded (or new)
       newly_included_tables.each do |table|
-        _log.info("Adding #{table} to #{REPLICATION_SET_NAME} replication set")
-        pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+        _log.info("Adding #{table} to #{PUBLICATION_NAME} replication set")
+        pglogical.replication_set_add_table(PUBLICATION_NAME, table, true)
       end
     end
   end
