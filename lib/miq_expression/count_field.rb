@@ -22,6 +22,10 @@ class MiqExpression::CountField < MiqExpression::Target
     [model, *associations].join(".")
   end
 
+  def column_type
+    :integer
+  end
+
   private
 
   def tag_values

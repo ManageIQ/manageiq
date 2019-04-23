@@ -967,7 +967,7 @@ describe MiqExpression do
 
   describe "#to_ruby" do
     it "generates the ruby for a = expression with count" do
-      actual = described_class.new("=" => {"count" => "Vm-snapshots", "value" => "1"}).to_ruby
+      actual = described_class.new("=" => {"count" => "Vm.snapshots", "value" => "1"}).to_ruby
       expected = "<count ref=vm>/virtual/snapshots</count> == 1"
       expect(actual).to eq(expected)
     end
@@ -985,7 +985,7 @@ describe MiqExpression do
     end
 
     it "generates the ruby for a < expression with count" do
-      actual = described_class.new("<" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      actual = described_class.new("<" => {"count" => "Vm.snapshots", "value" => "2"}).to_ruby
       expected = "<count ref=vm>/virtual/snapshots</count> < 2"
       expect(actual).to eq(expected)
     end
@@ -997,7 +997,7 @@ describe MiqExpression do
     end
 
     it "generates the ruby for a > expression with count" do
-      actual = described_class.new(">" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      actual = described_class.new(">" => {"count" => "Vm.snapshots", "value" => "2"}).to_ruby
       expected = "<count ref=vm>/virtual/snapshots</count> > 2"
       expect(actual).to eq(expected)
     end
@@ -1009,7 +1009,7 @@ describe MiqExpression do
     end
 
     it "generates the ruby for a >= expression with count" do
-      actual = described_class.new(">=" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      actual = described_class.new(">=" => {"count" => "Vm.snapshots", "value" => "2"}).to_ruby
       expected = "<count ref=vm>/virtual/snapshots</count> >= 2"
       expect(actual).to eq(expected)
     end
@@ -1021,7 +1021,7 @@ describe MiqExpression do
     end
 
     it "generates the ruby for a <= expression with count" do
-      actual = described_class.new("<=" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      actual = described_class.new("<=" => {"count" => "Vm.snapshots", "value" => "2"}).to_ruby
       expected = "<count ref=vm>/virtual/snapshots</count> <= 2"
       expect(actual).to eq(expected)
     end
@@ -1033,7 +1033,7 @@ describe MiqExpression do
     end
 
     it "generates the ruby for a != expression with count" do
-      actual = described_class.new("!=" => {"count" => "Vm-snapshots", "value" => "2"}).to_ruby
+      actual = described_class.new("!=" => {"count" => "Vm.snapshots", "value" => "2"}).to_ruby
       expected = "<count ref=vm>/virtual/snapshots</count> != 2"
       expect(actual).to eq(expected)
     end
