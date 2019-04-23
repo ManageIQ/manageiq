@@ -264,6 +264,55 @@ module ManageIQ::Providers
           )
         end
 
+        def parent_blue_folders
+          skip_auto_inventory_attributes
+          skip_model_class
+
+          add_properties(
+            :custom_save_block => relationship_save_block(:relationship_key => :parent)
+          )
+
+          add_dependency_attributes(
+            :ems_clusters   => ->(persister) { [persister.collections[:ems_clusters]] },
+            :ems_folders    => ->(persister) { [persister.collections[:ems_folders]] },
+            :hosts          => ->(persister) { [persister.collections[:hosts]] },
+            :resource_pools => ->(persister) { [persister.collections[:resource_pools]] },
+            :storages       => ->(persister) { [persister.collections[:storages]] },
+          )
+        end
+
+        def vm_parent_blue_folders
+          skip_auto_inventory_attributes
+          skip_model_class
+
+          add_properties(
+            :custom_save_block => relationship_save_block(:relationship_key => :parent, :parent_type => "EmsFolder")
+          )
+
+          add_dependency_attributes(
+            :vms_and_templates => ->(persister) do
+              persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact
+            end
+          )
+        end
+
+        def vm_resource_pools
+          skip_auto_inventory_attributes
+          skip_model_class
+
+          add_properties(
+            :custom_save_block => relationship_save_block(
+              :relationship_key => :resource_pool, :parent_type => "ResourcePool"
+            )
+          )
+
+          add_dependency_attributes(
+            :vms_and_templates => ->(persister) do
+              persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact
+            end
+          )
+        end
+
         private
 
         def root_folder_relationship_save_block
@@ -280,7 +329,7 @@ module ManageIQ::Providers
           end
         end
 
-        def relationship_save_block(relationship_key, relationship_type, parent_type)
+        def relationship_save_block(relationship_key:, relationship_type: :ems_metadata, parent_type: nil)
           lambda do |_ems, inventory_collection|
             children_by_parent = Hash.new { |h, k| h[k] = Hash.new { |hh, kk| hh[kk] = [] } }
             parent_by_child    = Hash.new { |h, k| h[k] = {} }
