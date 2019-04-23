@@ -70,8 +70,8 @@ describe ChargebackContainerImage do
 
       Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
         @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
-                                                                :timestamp => t,
-                                                                :image_tag_names => "environment/prod")
+                                                               :timestamp       => t,
+                                                               :image_tag_names => "environment/prod")
       end
     end
 
@@ -106,8 +106,8 @@ describe ChargebackContainerImage do
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
-                                                                :timestamp => time,
-                                                                :image_tag_names => "environment/prod")
+                                                               :timestamp       => time,
+                                                               :image_tag_names => "environment/prod")
       end
     end
 
@@ -136,8 +136,8 @@ describe ChargebackContainerImage do
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @container.vim_performance_states << FactoryBot.create(:vim_performance_state,
-                                                                :timestamp => time,
-                                                                :image_tag_names => "")
+                                                               :timestamp       => time,
+                                                               :image_tag_names => "")
       end
     end
 

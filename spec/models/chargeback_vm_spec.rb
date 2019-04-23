@@ -27,15 +27,15 @@ describe ChargebackVm do
 
   let(:detail_params) do
     {
-        :chargeback_rate_detail_cpu_used           => {:tiers => [hourly_variable_tier_rate]},
-        :chargeback_rate_detail_cpu_allocated      => {:tiers => [count_hourly_variable_tier_rate]},
-        :chargeback_rate_detail_memory_allocated   => {:tiers => [hourly_variable_tier_rate]},
-        :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate]},
-        :chargeback_rate_detail_disk_io_used       => {:tiers => [hourly_variable_tier_rate]},
-        :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
-        :chargeback_rate_detail_storage_used       => {:tiers => [count_hourly_variable_tier_rate]},
-        :chargeback_rate_detail_storage_allocated  => {:tiers => [count_hourly_variable_tier_rate]},
-        :chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]}
+      :chargeback_rate_detail_cpu_used           => {:tiers => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_cpu_allocated      => {:tiers => [count_hourly_variable_tier_rate]},
+      :chargeback_rate_detail_memory_allocated   => {:tiers => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_disk_io_used       => {:tiers => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_storage_used       => {:tiers => [count_hourly_variable_tier_rate]},
+      :chargeback_rate_detail_storage_allocated  => {:tiers => [count_hourly_variable_tier_rate]},
+      :chargeback_rate_detail_fixed_compute_cost => {:tiers => [hourly_variable_tier_rate]}
     }
   end
 
@@ -93,7 +93,7 @@ describe ChargebackVm do
       @ems_cluster.hosts << @host1
     end
 
-    let(:report_static_fields) { %w(vm_name) }
+    let(:report_static_fields) { %w[vm_name] }
 
     it "uses static fields" do
       expect(described_class.report_static_cols).to match_array(report_static_fields)
@@ -134,7 +134,7 @@ describe ChargebackVm do
 
       it 'contains also columns with sub_metric(from cloud_volume)' do
         cloud_volume_type_chargeback_colums = []
-        %w(metric cost).each do |key|
+        %w[metric cost].each do |key|
           cloud_volume_type_chargeback_colums << "storage_allocated_#{cloud_volume.volume_type}_#{key}"
         end
 
@@ -338,7 +338,7 @@ describe ChargebackVm do
       end
 
       context "only memory_cost instead of all report columns" do
-        let(:options) { base_options.merge(:interval => 'daily', :report_cols => %w(memory_cost)) }
+        let(:options) { base_options.merge(:interval => 'daily', :report_cols => %w[memory_cost]) }
 
         it "brings in relevant fields needed for calculation" do
           memory_allocated_cost = memory_available * hourly_rate * hours_in_day
@@ -673,7 +673,7 @@ describe ChargebackVm do
               rs1 = result_row_by(result_group_by_date_only, display_range)
               rs2 = result_row_by(result_group_by_date, display_range)
 
-              %w(cpu_allocated_metric
+              %w[cpu_allocated_metric
                  cpu_allocated_cost
                  cpu_used_metric
                  cpu_used_cost
@@ -688,7 +688,7 @@ describe ChargebackVm do
                  storage_allocated_metric
                  storage_allocated_cost
                  storage_used_metric
-                 storage_used_cost).each { |field| expect(rs2.map { |x| x.send(field) }.sum).to eq(rs1.map { |x| x.send(field) }.sum) }
+                 storage_used_cost].each { |field| expect(rs2.map { |x| x.send(field) }.sum).to eq(rs1.map { |x| x.send(field) }.sum) }
             end
           end
         end
@@ -1254,12 +1254,12 @@ describe ChargebackVm do
           metric_rollup_params_with_other_region = metric_rollup_params
           metric_rollup_params_with_other_region[:other_region] = region_1
           # region 1
-          add_metric_rollups_for(vm_1_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
-          add_metric_rollups_for(vm_2_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
-          add_metric_rollups_for(vm_1_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
-          add_metric_rollups_for(vm_2_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
-          add_metric_rollups_for(vm_1_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
-          add_metric_rollups_for(vm_2_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i(with_data in_other_region))
+          add_metric_rollups_for(vm_1_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i[with_data in_other_region])
+          add_metric_rollups_for(vm_2_region_1_t_1, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i[with_data in_other_region])
+          add_metric_rollups_for(vm_1_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i[with_data in_other_region])
+          add_metric_rollups_for(vm_2_region_1_t_2, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i[with_data in_other_region])
+          add_metric_rollups_for(vm_1_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i[with_data in_other_region])
+          add_metric_rollups_for(vm_2_region_1_t_3, month_beginning...month_end, 12.hours, metric_rollup_params_with_other_region, %i[with_data in_other_region])
         end
 
         subject! { ChargebackVm.build_results_for_report_ChargebackVm(options_tenant).first }
