@@ -32,6 +32,14 @@ class ExtManagementSystem < ApplicationRecord
     %w[]
   end
 
+  def self.supported_types_for_create
+    leaf_subclasses.select(&:supported_for_create?)
+  end
+
+  def self.supported_for_create?
+    !reflections.include?("parent_manager")
+  end
+
   belongs_to :provider
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
 
