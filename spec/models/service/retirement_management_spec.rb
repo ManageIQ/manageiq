@@ -8,30 +8,49 @@ describe "Service Retirement Management" do
   end
 
   # shouldn't be running make_retire_request because it's the bimodal not from ui part
-  context "with user" do
-    it "#retirement_check" do
-      User.with_user(user) do
-        expect(MiqEvent).to receive(:raise_evm_event)
-        @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-        expect(@service.retirement_last_warn).to be_nil
-        @service.retirement_check
-        @service.reload
-        expect(@service.retirement_last_warn).not_to be_nil
-        expect(@service.retirement_requester).to eq(user.userid)
+  describe "#retirement_check" do
+    context "with user" do
+      it "uses user info" do
+        User.with_user(user) do
+          expect(MiqEvent).to receive(:raise_evm_event)
+          @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+          expect(@service.retirement_last_warn).to be_nil
+          @service.retirement_check
+          @service.reload
+          expect(@service.retirement_last_warn).not_to be_nil
+          expect(@service.retirement_requester).to eq(user.userid)
+        end
       end
     end
-  end
 
-  context "without user" do
-    it "#retirement_check" do
-      expect(MiqEvent).to receive(:raise_evm_event)
-      service_without_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
-      expect(service_without_owner.retirement_last_warn).to be_nil
-      service_without_owner.retirement_check
-      service_without_owner.reload
-      expect(service_without_owner.retirement_last_warn).not_to be_nil
-      expect(service_without_owner.retirement_requester).to eq(user.userid)
-      expect(MiqRequest.first.userid).to eq("admin")
+    context "with deleted user" do
+      let(:user_for_deletion) { FactoryGirl.create(:user_miq_request_approver) }
+      let(:service_with_non_admin_user) { FactoryGirl.create(:service) }
+      it "uses admin default" do
+        User.with_user(user_for_deletion) do
+          user_for_deletion.destroy
+          expect(MiqEvent).to receive(:raise_evm_event)
+          service_with_non_admin_user.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+          expect(service_with_non_admin_user.retirement_last_warn).to be_nil
+          service_with_non_admin_user.retirement_check
+          service_with_non_admin_user.reload
+          expect(service_with_non_admin_user.retirement_last_warn).not_to be_nil
+          expect(service_with_non_admin_user.retirement_requester).to eq("admin")
+        end
+      end
+    end
+
+    context "without user" do
+      it "uses admin default" do
+        expect(MiqEvent).to receive(:raise_evm_event)
+        service_without_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        expect(service_without_owner.retirement_last_warn).to be_nil
+        service_without_owner.retirement_check
+        service_without_owner.reload
+        expect(service_without_owner.retirement_last_warn).not_to be_nil
+        expect(service_without_owner.retirement_requester).to eq(user.userid)
+        expect(MiqRequest.first.userid).to eq("admin")
+      end
     end
   end
 
