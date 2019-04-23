@@ -6,7 +6,7 @@ class ManageIQ::Providers::EmbeddedAutomationManager < ManageIQ::Providers::Auto
   require_nested :ConfiguredSystem
   require_nested :OrchestrationStack
 
-  def supported_for_create?
+  def self.supported_for_create?
     false
   end
 
