@@ -351,7 +351,7 @@ class MiqWorker < ApplicationRecord
   def self.containerized_worker?
     # un-rearch containers until further notice
     return false
-    MiqEnvironment::Command.is_podified? && supports_container?
+    # MiqEnvironment::Command.is_podified? && supports_container?
   end
 
   def containerized_worker?

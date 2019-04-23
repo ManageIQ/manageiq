@@ -214,10 +214,10 @@ class VimPerformanceTrend < ActsAsArModel
     return [] unless TREND_COLS[db.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym][:limit_cols]
-    TREND_COLS[db.to_sym][col.to_sym][:limit_cols].inject([]) do |arr, col|
-      cols = interval == "daily" ? ["max_#{col}"] : [col] # add in max if daily
-      cols.each { |c| arr.push([Dictionary.gettext([db, c.to_s].join("."), :type => "column"), c]) }
-      arr
+    TREND_COLS[db.to_sym][col.to_sym][:limit_cols].inject([]) do |array, column|
+      cols = interval == "daily" ? ["max_#{column}"] : [column] # add in max if daily
+      cols.each { |c| array.push([Dictionary.gettext([db, c.to_s].join("."), :type => "column"), c]) }
+      array
     end
   end
 

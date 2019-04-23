@@ -196,7 +196,7 @@ class Condition < ApplicationRecord
 
     result = true
     list.each do |obj|
-      opts, ref, object = options2hash(raw_opts, obj)
+      opts, _ref, _object = options2hash(raw_opts, obj)
       value = MiqExpression.quote(obj.send(checkattr), opts[:type])
       value = value.gsub(/\\/, '\&\&') if value.kind_of?(String)
       e = check.gsub(/<value[^>]*>.+<\/value>/im, value.to_s)
