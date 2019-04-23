@@ -235,7 +235,8 @@ class MiqWidget < ApplicationRecord
 
     begin
       if content_type_klass.based_on_miq_report?
-        report = generate_report(group)
+        user = User.find_by(:userid => miq_task.userid) if miq_task&.userid
+        report = generate_report(group, user)
         miq_report_result = generate_report_result(report, group, timezone)
       end
 
