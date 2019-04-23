@@ -370,8 +370,8 @@ class MiqRequestWorkflow
     # Tags are passed as category|value.  Example: cc|001|environment|test
     ws_tags = send(parser, tag_string)
 
-    tags = allowed_tags.each_with_object({}) do |v, tags|
-      tags[v[:name]] = v[:children].each_with_object({}) { |(k, v), tc| tc[v[:name]] = k }
+    tags = allowed_tags.each_with_object({}) do |h, atags|
+      atags[h[:name]] = h[:children].each_with_object({}) { |(k, v), tc| tc[v[:name]] = k }
     end
 
     ws_tags.collect { |cat, tag| tags.fetch_path(cat.to_s.downcase, tag.downcase) }.compact

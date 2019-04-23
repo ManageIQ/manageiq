@@ -371,7 +371,7 @@ describe MiqQueue do
     end
 
     it "should skip putting message on queue in maintenance zone" do
-      msg = MiqQueue.put(
+      MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
         :args        => [1, 2],
