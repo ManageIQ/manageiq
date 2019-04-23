@@ -22,8 +22,8 @@ class MiqExpression::CountField < MiqExpression::Target
     [model, *associations].join(".")
   end
 
-  def ruby_value
-    "<count ref=#{model.to_s.downcase}>#{tag_path_with}</count>"
+  def column_type
+    :integer
   end
 
   private

@@ -620,7 +620,9 @@ class MiqExpression
         end
       end
     elsif ops["count"]
-      [MiqExpression::CountField.parse(ops["count"]).ruby_value, quote(ops["value"], "integer")]
+      target = parse_field_or_tag(ops["count"])
+      fld = "<count ref=#{target.model.to_s.downcase}>#{target.tag_path_with}</count>"
+      [fld, quote(ops["value"], target.column_type)]
     elsif ops["regkey"]
       if operator == "key exists"
         "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
