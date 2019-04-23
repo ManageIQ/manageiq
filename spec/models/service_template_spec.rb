@@ -940,6 +940,20 @@ describe ServiceTemplate do
   let(:ra1) { FactoryBot.create(:resource_action, :action => 'Provision') }
   let(:ra2) { FactoryBot.create(:resource_action, :action => 'Retirement') }
   let(:ems) { FactoryBot.create(:ems_amazon) }
+  let(:content) do
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGP"\
+      "C/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3Cc"\
+      "ulE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2Jl"\
+      "LnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIg"\
+      "eDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpy"\
+      "ZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1u"\
+      "cyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAg"\
+      "ICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYv"\
+      "MS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3Jp"\
+      "ZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpS"\
+      "REY+CjwveDp4bXBtZXRhPgpMwidZAAAADUlEQVQIHWNgYGCwBQAAQgA+3N0+"\
+      "xQAAAABJRU5ErkJggg=="
+  end
   let(:vm) { FactoryBot.create(:vm_amazon, :ext_management_system => ems) }
   let(:flavor) { FactoryBot.create(:flavor_amazon) }
   let(:request_dialog) { FactoryBot.create(:miq_dialog_provision) }
@@ -950,6 +964,7 @@ describe ServiceTemplate do
       :service_type => 'atomic',
       :prov_type    => 'amazon',
       :display      => 'false',
+      :picture      => { :content => content, :extension => 'jpg' },
       :description  => 'a description',
       :config_info  => {
         :miq_request_dialog_name => request_dialog.name,
@@ -990,10 +1005,12 @@ describe ServiceTemplate do
 
   describe '#update_catalog_item' do
     let(:new_vm) { FactoryBot.create(:vm_amazon, :ext_management_system => ems) }
+    let(:new_picture_content) { "iVBORw0KGgoAAAAN" }
     let(:updated_catalog_item_options) do
       {
         :name        => 'Updated Template Name',
         :display     => 'false',
+        :picture     => { :content => new_picture_content, :extension => 'jpg' },
         :description => 'a description',
         :config_info => {
           :miq_request_dialog_name => request_dialog.name,
@@ -1031,6 +1048,7 @@ describe ServiceTemplate do
       expect(updated.resource_actions.last.dialog).to eq(service_dialog)
       expect(updated.resource_actions.last.fqname).to eq('/x1/y1/z1')
       expect(updated.name).to eq('Updated Template Name')
+      expect(Base64.strict_encode64(updated.picture.content)).to eq('aVZCT1J3MEtHZ29BQUFBTg==')
       expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
       expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
       expect(updated.options.key?(:foo)).to be_truthy # Test that the options were merged

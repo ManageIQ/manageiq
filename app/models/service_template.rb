@@ -388,7 +388,11 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def self.create_from_options(options)
-    create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+    create(options.except(:config_info, :picture).merge(:options => { :config_info => options[:config_info] })).tap do |tmp|
+      if options[:picture]
+        tmp.update_attributes!(:picture => Picture.create(:content => options[:picture][:content], :extension => options[:picture][:extension]))
+      end
+    end
   end
   private_class_method :create_from_options
 
@@ -516,7 +520,10 @@ class ServiceTemplate < ApplicationRecord
 
   def update_from_options(params)
     options[:config_info] = params[:config_info]
-    update_attributes!(params.except(:config_info))
+    if params[:picture]
+      update_attributes!(:picture => Picture.create(:content => params[:picture][:content], :extension => params[:picture][:extension]))
+    end
+    update_attributes!(params.except(:config_info, :picture))
   end
 
   def construct_config_info
