@@ -208,7 +208,9 @@ module ManageIQ::Providers
 
         def distributed_virtual_switches
           add_properties(
-            :manager_ref => %i(uid_ems)
+            :manager_ref          => %i(uid_ems),
+            :attributes_blacklist => %i(parent),
+            :secondary_refs       => {:by_switch_uuid => %i(switch_uuid)}
           )
           add_common_default_values
         end
