@@ -138,6 +138,8 @@ module Rbac
       MiqRequest
     ).freeze
 
+    ADDITIONAL_TENANT_CLASSES = %w[ServiceTemplate].freeze
+
     include Vmdb::Logging
 
     def self.search(*args)
@@ -552,6 +554,18 @@ module Rbac
       scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
     end
 
+    def scope_to_additional_tenants(scope, user, miq_group)
+      user_or_group = user || miq_group
+
+      tenant = user_or_group.try(:current_tenant)
+
+      if tenant && !tenant.root?
+        scope.additional_tenants_clause(tenant)
+      else
+        scope
+      end
+    end
+
     def scope_to_tenant(scope, user, miq_group)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       user_or_group = user || miq_group
@@ -588,6 +602,10 @@ module Rbac
       end
     end
 
+    def scope_to_additional_tenants?(klass)
+      ADDITIONAL_TENANT_CLASSES.include?(safe_base_class(klass).name)
+    end
+
     ##
     # Main scoping method
     #
@@ -596,7 +614,16 @@ module Rbac
       # with a few manual exceptions (User, Tenant). Note that the classes in
       # TENANT_ACCESS_STRATEGY are a consolidated list of them.
       if klass.respond_to?(:scope_by_tenant?) && klass.scope_by_tenant?
-        scope = scope_to_tenant(scope, user, miq_group)
+        scope = scope.with_additional_tenants if scope_to_additional_tenants?(klass) # for eager load
+
+        tenant_scope = scope_to_tenant(scope, user, miq_group)
+
+        scope = if scope_to_additional_tenants?(klass)
+                  tenant_scope.or(scope_to_additional_tenants(scope, user, miq_group))
+                else
+                  tenant_scope
+                end
+
       elsif klass.respond_to?(:scope_by_cloud_tenant?) && klass.scope_by_cloud_tenant?
         scope = scope_to_cloud_tenant(scope, user, miq_group)
       end

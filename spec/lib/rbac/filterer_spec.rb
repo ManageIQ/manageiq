@@ -2742,6 +2742,85 @@ describe Rbac::Filterer do
     end
   end
 
+  context "additional tenancy on ServiceTemplates" do
+    # tenant_root
+    #   \___ tenant_pineapple
+    #     \__ subtenant_tenant_pineapple_1
+    #     \__ subtenant_tenant_pineapple_2
+    #     \__ subtenant_tenant_pineapple_3  <- service_template_1_1 shared for subtenant_tenant_pineapple_3 (TEST CASE 3)
+    #   \___ tenant_eye_bee_em (service_template_eye_bee_em)
+    #     \__ subtenant_tenant_eye_bee_em_1 (service_template_1)
+    #       \__ subtenant_tenant_eye_bee_em_1_1 (service_template_1_1)  <- SHARED TENANT (for test cases below)
+    #       \__ subtenant_tenant_eye_bee_em_1_2                         <- service_template_1_1 shared for subtenant_tenant_eye_bee_em_1_2 (TEST CASE 1)
+    #     \__ subtenant_tenant_eye_bee_em_2 (service_template_2)
+    #     \__ subtenant_tenant_eye_bee_em_3  (service_template_3)       <- service_template_1_1 shared for subtenant_tenant_eye_bee_em_3 (TEST CASE 2)
+
+    let!(:tenant_root) { Tenant.seed }
+
+    let!(:tenant_pineapple)             { FactoryBot.create(:tenant, :parent => tenant_root) }
+    let!(:subtenant_tenant_pineapple_1) { FactoryBot.create(:tenant, :parent => tenant_pineapple) }
+    let!(:subtenant_tenant_pineapple_2) { FactoryBot.create(:tenant, :parent => tenant_pineapple) }
+    let!(:subtenant_tenant_pineapple_3) { FactoryBot.create(:tenant, :parent => tenant_pineapple) }
+
+    let!(:tenant_eye_bee_em) { FactoryBot.create(:tenant, :parent => tenant_root) }
+    let!(:subtenant_tenant_eye_bee_em_1) { FactoryBot.create(:tenant, :parent => tenant_eye_bee_em) }
+    let!(:subtenant_tenant_eye_bee_em_2) { FactoryBot.create(:tenant, :parent => tenant_eye_bee_em) }
+    let!(:subtenant_tenant_eye_bee_em_3) { FactoryBot.create(:tenant, :parent => tenant_eye_bee_em) }
+
+    let!(:subtenant_tenant_eye_bee_em_1_1) { FactoryBot.create(:tenant, :parent => subtenant_tenant_eye_bee_em_1) }
+    let!(:subtenant_tenant_eye_bee_em_1_2) { FactoryBot.create(:tenant, :parent => subtenant_tenant_eye_bee_em_1) }
+
+    let!(:service_template_eye_bee_em) { FactoryBot.create(:service_template, :tenant => tenant_eye_bee_em) }
+    let!(:service_template_1)          { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_1) }
+    let!(:service_template_2)          { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_2) }
+    let!(:service_template_3)          { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_3) }
+    let!(:service_template_1_1)        { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_1_1) }
+
+    let!(:group_eye_bee_em_subtenant_tenant_1_2) { FactoryBot.create(:miq_group, :tenant => subtenant_tenant_eye_bee_em_1_2) }
+    let!(:user_subtenant_tenant_eye_bee_em_1_2) { FactoryBot.create(:user, :miq_groups => [group_eye_bee_em_subtenant_tenant_1_2]) }
+
+    it "shares service_template_1_1 for subtenant_tenant_eye_bee_em_2 (TEST CASE 1)" do
+      # ancestors for subtenant_tenant_eye_bee_em_1_2: tenant_eye_bee_em, subtenant_tenant_eye_bee_em_1
+      result = described_class.filtered(ServiceTemplate, :user => user_subtenant_tenant_eye_bee_em_1_2)
+      expect(result.ids).to match_array([service_template_eye_bee_em.id, service_template_1.id])
+
+      service_template_1_1.additional_tenants << subtenant_tenant_eye_bee_em_1_2
+      result = described_class.filtered(ServiceTemplate, :user => user_subtenant_tenant_eye_bee_em_1_2)
+
+      # ancestors for subtenant_tenant_eye_bee_em_1_2: tenant_eye_bee_em, subtenant_tenant_eye_bee_em_1
+      expect(result.ids).to match_array([service_template_eye_bee_em.id, service_template_1.id, service_template_1_1.id])
+    end
+
+    let!(:group_eye_bee_em_subtenant_tenant_3) { FactoryBot.create(:miq_group, :tenant => subtenant_tenant_eye_bee_em_3) }
+    let!(:user_subtenant_tenant_eye_bee_em_3) { FactoryBot.create(:user, :miq_groups => [group_eye_bee_em_subtenant_tenant_3]) }
+
+    it "shares service_template_1_1 for subtenant_tenant_eye_bee_em_3 (TEST CASE 2)" do
+      # ancestors for subtenant_tenant_eye_bee_em_3: tenant_eye_bee_em
+      result = described_class.filtered(ServiceTemplate, :user => user_subtenant_tenant_eye_bee_em_3)
+
+      expect(result.ids).to match_array([service_template_eye_bee_em.id, service_template_3.id])
+
+      service_template_1_1.additional_tenants << subtenant_tenant_eye_bee_em_3
+      result = described_class.filtered(ServiceTemplate, :user => user_subtenant_tenant_eye_bee_em_3)
+
+      expect(result.ids).to match_array([service_template_eye_bee_em.id, service_template_3.id, service_template_1_1.id])
+    end
+
+    let!(:group_pineapple_3) { FactoryBot.create(:miq_group, :tenant => subtenant_tenant_pineapple_3) }
+    let!(:user_pineapple_3) { FactoryBot.create(:user, :miq_groups => [group_pineapple_3]) }
+
+    it "shares service_template_1_1 for subtenant_tenant_pineapple_3 (TEST CASE 3)" do
+      # no ancestors for tenant_pineapple_3
+      result = described_class.filtered(ServiceTemplate, :user => user_pineapple_3)
+      expect(result.ids).to be_empty
+
+      service_template_1_1.additional_tenants << subtenant_tenant_pineapple_3
+      result = described_class.filtered(ServiceTemplate, :user => user_pineapple_3)
+
+      expect(result.ids).to match_array([service_template_1_1.id])
+    end
+  end
+
   private
 
   # separate them to match easier for failures
