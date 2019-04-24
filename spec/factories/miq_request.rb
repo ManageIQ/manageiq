@@ -7,6 +7,7 @@ FactoryGirl.define do
     end
 
     factory :service_reconfigure_request,        :class => "ServiceReconfigureRequest"
+    factory :service_retire_request,             :class => "ServiceRetireRequest"
     factory :service_template_provision_request, :class => "ServiceTemplateProvisionRequest" do
       source { create(:service_template) }
     end
