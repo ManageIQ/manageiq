@@ -208,9 +208,9 @@ module ManageIQ::Providers
 
         def distributed_virtual_switches
           add_properties(
-            :manager_ref          => %i(uid_ems),
-            :attributes_blacklist => %i(parent),
-            :secondary_refs       => {:by_switch_uuid => %i(switch_uuid)}
+            :manager_ref          => %i[uid_ems],
+            :attributes_blacklist => %i[parent],
+            :secondary_refs       => {:by_switch_uuid => %i[switch_uuid]}
           )
           add_common_default_values
         end
@@ -292,9 +292,7 @@ module ManageIQ::Providers
           )
 
           add_dependency_attributes(
-            :vms_and_templates => ->(persister) do
-              persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact
-            end
+            :vms => ->(persister) { persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact }
           )
         end
 
@@ -309,9 +307,7 @@ module ManageIQ::Providers
           )
 
           add_dependency_attributes(
-            :vms_and_templates => ->(persister) do
-              persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact
-            end
+            :vms => ->(persister) { persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact }
           )
         end
 
