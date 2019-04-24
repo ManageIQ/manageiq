@@ -17,7 +17,7 @@ class MiqAeMethod < ApplicationRecord
 
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
-  AVAILABLE_LOCATIONS = %w(builtin inline expression playbook).freeze
+  AVAILABLE_LOCATIONS = %w(builtin inline expression playbook ansible_job_template ansible_workflow_template).freeze
   validates_inclusion_of  :location,  :in => AVAILABLE_LOCATIONS
   AVAILABLE_SCOPES     = ["class", "instance"]
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
