@@ -163,6 +163,7 @@ end
 
 group :replication, :manageiq_default do
   gem "pg-pglogical",                   "~>2.1.2",       :require => false
+  gem "pg-logical_replication", "~>0.1", :git => "https://github.com/ManageIQ/pg-logical_replication.git", :require => false, :branch => "master"
 end
 
 group :rest_api, :manageiq_default do
