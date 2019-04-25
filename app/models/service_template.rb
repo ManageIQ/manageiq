@@ -209,7 +209,7 @@ class ServiceTemplate < ApplicationRecord
 
     nh['initiator'] = service_task.options[:initiator] if service_task.options[:initiator]
 
-    service = Service.create(nh) do |svc|
+    service = Service.create!(nh) do |svc|
       svc.service_template = self
       set_ownership(svc, service_task.get_user)
 
