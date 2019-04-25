@@ -81,7 +81,7 @@ module Vmdb
     def self.create_multicast_logger(log_file_path, logger_class = VMDBLogger)
       logger_class.new(log_file_path).tap do |logger|
         logger.extend(ActiveSupport::Logger.broadcast($container_log)) if ENV["CONTAINER"]
-        logger.extend(ActiveSupport::Logger.broadcast($journald_log))  if MiqEnvironment::Command.supports_systemd?
+        logger.extend(ActiveSupport::Logger.broadcast($journald_log))  if $journald_log
       end
     end
     private_class_method :create_multicast_logger
