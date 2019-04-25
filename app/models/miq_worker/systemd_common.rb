@@ -1,5 +1,3 @@
-require "dbus/systemd"
-
 class MiqWorker
   module SystemdCommon
     extend ActiveSupport::Concern
@@ -126,7 +124,10 @@ class MiqWorker
     private
 
     def systemd
-      @systemd ||= DBus::Systemd::Manager.new
+      @systemd ||= begin
+        require "dbus/systemd"
+        DBus::Systemd::Manager.new
+      end
     end
 
     def service_base_name
