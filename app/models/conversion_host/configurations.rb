@@ -100,7 +100,7 @@ module ConversionHost::Configurations
     self.class.queue_configuration('disable', id, resource, {}, auth_user)
   end
 
-  def disable
+  def disable(_params, _auth_user = nil)
     resource_info = "type=#{resource.class.name} id=#{resource.id}"
     _log.debug("Disabling a conversion_host #{resource_info}")
 
