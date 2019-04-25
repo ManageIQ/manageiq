@@ -27,7 +27,6 @@ module MiqReport::ImportExport
     def import_from_hash(report, options = nil)
       raise _("No Report to Import") if report.nil?
 
-      report = report["MiqReport"] if report.keys.first == "MiqReport"
       if !report["menu_name"] || !report["col_order"] || !report["cols"] || report["rpt_type"] != "Custom"
         raise _("Incorrect format, only policy records can be imported.")
       end

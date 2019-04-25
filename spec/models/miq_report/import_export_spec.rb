@@ -18,7 +18,7 @@ describe MiqReport::ImportExport do
     before do
       @user_admin = FactoryBot.create(:user_admin)
       report_string = MiqReport.export_to_yaml([@old_report.id], MiqReport)
-      @new_report   = YAML.load(report_string).first
+      @new_report   = YAML.load(report_string).first["MiqReport"]
       @from_json    = JSON.parse(@new_report.to_json)
       @options      = {
         :overwrite => true,
@@ -32,7 +32,7 @@ describe MiqReport::ImportExport do
       context ":preserve_owner is true" do
         before do
           @options[:preserve_owner] = true
-          @new_report["MiqReport"]["menu_name"] = "New Test Report"
+          @new_report["menu_name"] = "New Test Report"
         end
 
         it "preserves user_id when 'userid' is present in saved report and user exists" do
@@ -141,15 +141,6 @@ describe MiqReport::ImportExport do
           expect(result[:status]).to eq(:keep)
           expect(MiqReport.first.tz).to eq("UTC")
         end
-      end
-    end
-
-    context "legacy report" do
-      it "import" do
-        @new_report = @new_report["MiqReport"]
-
-        _, result = subject
-        expect(result[:status]).to eq(:update)
       end
     end
   end
