@@ -2,6 +2,7 @@ require 'resolv'
 
 class ConversionHost < ApplicationRecord
   include NewWithTypeStiMixin
+  include AuthenticationMixin
 
   acts_as_miq_taggable
 
@@ -28,12 +29,62 @@ class ConversionHost < ApplicationRecord
   after_create :tag_resource_as_enabled
   after_destroy :tag_resource_as_disabled
 
+  # Use the +auth_type+ if present, or check the first associated authentication
+  # if any are directly associated with the conversion host. Otherwise, use the
+  # default check which uses the associated resource's authentications.
+  #
+  # In practice there should only be one associated authentication.
+  #
+  # Subclasses should pass provider-specific +options+, such as proxy information.
+  #
+  # This method is necessary to comply with AuthenticationMixin interface.
+  #--
+  # TODO: Use the verify_credentials_ssh method in host.rb? Move that to the
+  # AuthenticationMixin?
+  #
+  def verify_credentials(auth_type = nil, options = {})
+    if authentications.empty?
+      check_ssh_connection
+    else
+      require 'net/ssh'
+      host = hostname || ipaddress
+
+      auth = authentication_type(auth_type) || authentications.first
+
+      ssh_options = { :timeout => 10, :logger => $log, :verbose => :error }
+
+      case auth
+      when AuthUseridPassword
+        ssh_options[:auth_methods] = %w[password]
+        ssh_options[:password] = auth.password
+      when AuthPrivateKey
+        ssh_options[:auth_methods] = %w[publickey hostbased]
+        ssh_options[:key_data] = auth.auth_key
+      else
+        raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
+      end
+
+      # Options from STI subclasses will override the defaults we've set above.
+      ssh_options.merge!(options)
+
+      Net::SSH.start(host, auth.userid, ssh_options) { |ssh| ssh.exec!('uname -a') }
+    end
+  rescue Net::SSH::AuthenticationFailed => err
+    raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - %{error_message}") % {:error_message => err.message}
+  rescue Net::SSH::HostKeyMismatch => err
+    raise MiqException::MiqSshUtilHostKeyMismatch, _("Host key mismatch - %{error_message}") % {:error_message => err.message}
+  rescue Exception => err
+    raise _("Unknown error - %{error_message}") % {:error_message => err.message}
+  else
+    true
+  end
+
   # To be eligible, a conversion host must have the following properties
   #  - A transport mechanism is configured for source (set by 3rd party)
   #  - Credentials are set on the resource and SSH connection works
   #  - The number of concurrent tasks has not reached the limit
   def eligible?
-    source_transport_method.present? && check_ssh_connection && check_concurrent_tasks
+    source_transport_method.present? && verify_credentials && check_concurrent_tasks
   end
 
   def check_concurrent_tasks
@@ -154,26 +205,24 @@ class ConversionHost < ApplicationRecord
     end
   end
 
-  def check_resource_credentials(fatal = false, extra_msg = nil)
-    success = send("check_resource_credentials_#{resource.ext_management_system.emstype}")
-    if !success and fatal
-      msg = "Credential not found for #{resource.name}."
-      msg += " #{extra_msg}" unless extra_msg.blank?
-      _log.error(:msg)
+  # Find the credentials for the associated resource. By default it will
+  # look for a v2v auth type. If that is not found, it will look for the
+  # authentication associated with the resource using ssh_keypair or default,
+  # in that order, as the authtype.
+  #
+  def find_credentials(msg = nil)
+    authentication = authentication_type('v2v') ||
+      resource.authentication_type('ssh_keypair') ||
+      resource.authentication_type('default')
+
+    unless authentication
+      msg = "Credentials not found for conversion host #{name} or resource #{resource.name}"
+      msg << " #{msg}" if msg
+      _log.error(msg)
       raise MiqException::Error, msg
     end
-    success
-  end
 
-  def check_resource_credentials_rhevm
-    !(resource.authentication_userid.nil? || resource.authentication_password.nil?)
-  end
-
-  def check_resource_credentials_openstack
-    ssh_authentications = resource.ext_management_system.authentications
-                                  .where(:authtype => 'ssh_keypair')
-                                  .where.not(:userid => nil, :auth_key => nil)
-    !ssh_authentications.empty?
+    authentication
   end
 
   def connect_ssh
@@ -191,14 +240,12 @@ class ConversionHost < ApplicationRecord
   end
 
   def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
-    [hostname || ipaddress, resource.authentication_userid, resource.authentication_password, nil, nil]
+    authentication = find_credentials
+    [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
   end
 
   def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
-    authentication = resource.ext_management_system.authentications
-                             .where(:authtype => 'ssh_keypair')
-                             .where.not(:userid => nil, :auth_key => nil)
-                             .first
+    authentication = find_credentials
     [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
   end
 

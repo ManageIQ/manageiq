@@ -121,7 +121,7 @@ describe ConversionHost do
         task_id = described_class.enable_queue(params)
         expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action)
         expect(MiqQueue.first).to have_attributes(
-          :args        => [params.merge(:task_id => task_id).except(:resource)],
+          :args        => [params.merge(:task_id => task_id).except(:resource), nil],
           :class_name  => described_class.name,
           :method_name => "enable",
           :priority    => MiqQueue::NORMAL_PRIORITY,
@@ -138,7 +138,7 @@ describe ConversionHost do
         task_id = conversion_host.disable_queue
         expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action)
         expect(MiqQueue.first).to have_attributes(
-          :args        => [],
+          :args        => [{:task_id => task_id}, nil],
           :class_name  => described_class.name,
           :instance_id => conversion_host.id,
           :method_name => "disable",
