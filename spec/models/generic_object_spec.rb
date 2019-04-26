@@ -378,7 +378,7 @@ describe GenericObject do
     end
 
     describe '#custom_button_events' do
-      let(:cb_event) { FactoryBot.create(:custom_button_event, :target => go) }
+      let(:cb_event) { CustomButtonEvent.create(:target => go) }
 
       it 'returns list of custom button events' do
         expect(go.custom_button_events).to match_array([cb_event])

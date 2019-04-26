@@ -32,8 +32,8 @@ describe CustomActionsMixin do
   context 'with RBAC' do
     let(:user)                         { FactoryBot.create(:user_admin) }
     let(:cloud_tenant)                 { FactoryBot.create(:cloud_tenant) }
-    let!(:custom_button_event_1) { FactoryBot.create(:custom_button_event, :target => cloud_tenant) }
-    let!(:custom_button_event_2) { FactoryBot.create(:custom_button_event, :target => cloud_tenant) }
+    let!(:custom_button_event_1) { CustomButtonEvent.create(:target => cloud_tenant) }
+    let!(:custom_button_event_2) { CustomButtonEvent.create(:target => cloud_tenant) }
 
     before do
       EvmSpecHelper.create_guid_miq_server_zone
