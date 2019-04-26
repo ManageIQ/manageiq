@@ -27,7 +27,7 @@ FactoryBot.define do
       end
 
       after(:create) do |request, evaluator|
-        request.miq_approvals << FactoryBot.create(:miq_approval, :reason => evaluator.reason)
+        request.miq_approvals << MiqApproval.create(:reason => evaluator.reason)
       end
     end
   end

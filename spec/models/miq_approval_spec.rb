@@ -1,6 +1,6 @@
 describe MiqApproval do
   it "#approver= also sets approver_name" do
-    approval = FactoryBot.build(:miq_approval)
+    approval = MiqApproval.new
     user     = FactoryBot.create(:user)
 
     expect(approval.approver_name).to be_nil
@@ -17,7 +17,7 @@ describe MiqApproval do
       user     = FactoryBot.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
       approver = FactoryBot.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
 
-      approval = FactoryBot.create(:miq_approval)
+      approval = MiqApproval.create
       reason   = "Why Not?"
 
       allow(approval).to receive(:authorized?).and_return(false)
@@ -41,7 +41,7 @@ describe MiqApproval do
       vm_template = FactoryBot.create(:template_vmware)
       user        = FactoryBot.create(:user_miq_request_approver)
       request     = FactoryBot.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :requester => user)
-      approval    = FactoryBot.create(:miq_approval, :miq_request => request)
+      approval    = MiqApproval.create(:miq_request => request)
 
       expect { approval.approve(user, 'Why Not') }.to_not raise_error
     end
@@ -50,7 +50,7 @@ describe MiqApproval do
       vm_template = FactoryBot.create(:template_vmware)
       user        = FactoryBot.create(:user_miq_request_approver)
       request     = FactoryBot.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => vm_template.id, :requester => user)
-      approval    = FactoryBot.create(:miq_approval, :miq_request => request)
+      approval    = MiqApproval.create(:miq_request => request)
 
       expect { approval.approve(user, 'Why Not') }.to_not raise_error
     end
@@ -60,7 +60,7 @@ describe MiqApproval do
     user     = FactoryBot.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
     approver = FactoryBot.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
 
-    approval = FactoryBot.create(:miq_approval)
+    approval = MiqApproval.create
     reason   = "Why Not?"
 
     allow(approval).to receive(:authorized?).and_return(false)
@@ -81,7 +81,7 @@ describe MiqApproval do
   end
 
   context "#authorized?" do
-    let(:approval) { FactoryBot.create(:miq_approval) }
+    let(:approval) { MiqApproval.create }
     let(:user)     { FactoryBot.create(:user, :userid => "user1") }
     let(:user2)    { FactoryBot.create(:user, :userid => "user2") }
     let(:approver) { FactoryBot.create(:user_miq_request_approver) }

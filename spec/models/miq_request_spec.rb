@@ -194,8 +194,8 @@ describe MiqRequest do
 
       context "with user approvals" do
         let(:reason)          { "Why Not?" }
-        let(:fred_approval)   { FactoryBot.create(:miq_approval, :approver => fred, :reason => reason, :stamper => barney, :stamped_on => Time.now) }
-        let(:barney_approval) { FactoryBot.create(:miq_approval, :approver => barney) }
+        let(:fred_approval)   { MiqApproval.create(:approver => fred, :reason => reason, :stamper => barney, :stamped_on => Time.now) }
+        let(:barney_approval) { MiqApproval.create(:approver => barney) }
 
         before { request.miq_approvals = [fred_approval, barney_approval] }
 
@@ -288,7 +288,7 @@ describe MiqRequest do
 
           def approvals
             reason.collect do |r|
-              FactoryBot.create(:miq_approval, :approver => fred, :reason => r, :stamper => barney, :stamped_on => Time.now.utc)
+              MiqApproval.create(:approver => fred, :reason => r, :stamper => barney, :stamped_on => Time.now.utc)
             end
           end
         end
