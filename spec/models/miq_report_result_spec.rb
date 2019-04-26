@@ -33,7 +33,7 @@ describe MiqReportResult do
     let(:report_result_for_report) { FactoryBot.create(:miq_report_result, :miq_report_id => report.id, :report => report) }
     let(:widget_title) { "Widget: VMs using thin provisioned disks" }
     let(:widget) { FactoryBot.create(:miq_widget, :widget => widget_title) }
-    let(:widget_content) { FactoryBot.create(:miq_widget_content, :miq_widget => widget) }
+    let(:widget_content) { MiqWidgetContent.create(:miq_widget => widget) }
     let(:report_for_widget) { FactoryBot.create(:miq_report, :title => widget_title) }
     let(:report_result_for_widget) { FactoryBot.create(:miq_report_result, :miq_report => report_for_widget, :report => report_for_widget, :report_source => MiqWidget::WIDGET_REPORT_SOURCE) }
 

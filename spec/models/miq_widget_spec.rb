@@ -166,7 +166,7 @@ describe MiqWidget do
 
     context "#contents_for_user" do
       it "returns user owned widget contents in UTC timezone if user's timezone not specified" do
-        content = FactoryBot.create(:miq_widget_content,
+        content = MiqWidgetContent.create(
                                      :miq_widget   => @widget_report_vendor_and_guest_os,
                                      :user_id      => @user1.id,
                                      :miq_group_id => @user1.current_group_id,
@@ -177,11 +177,11 @@ describe MiqWidget do
 
       it "returns widget contents in user's timezone when content from different timezone also available" do
         @user1.settings.store_path(:display, :timezone, "Eastern Time (US & Canada)")
-        FactoryBot.create(:miq_widget_content,
+        MiqWidgetContent.create(
                           :miq_widget   => @widget_report_vendor_and_guest_os,
                           :miq_group_id => @group1.id,
                           :timezone     => "UTC")
-        content_user_timezone = FactoryBot.create(:miq_widget_content,
+        content_user_timezone = MiqWidgetContent.create(
                                                   :miq_widget   => @widget_report_vendor_and_guest_os,
                                                   :miq_group_id => @group1.id,
                                                   :timezone     => "Eastern Time (US & Canada)")
@@ -190,7 +190,7 @@ describe MiqWidget do
 
       it "returns widget contents if only content available is not in user's timezone" do
         @user1.settings.store_path(:display, :timezone, "Eastern Time (US & Canada)")
-        content_utc = FactoryBot.create(:miq_widget_content,
+        content_utc = MiqWidgetContent.create(
                                         :miq_widget   => @widget_report_vendor_and_guest_os,
                                         :miq_group_id => @group1.id,
                                         :timezone     => "UTC")
@@ -198,12 +198,12 @@ describe MiqWidget do
       end
 
       it "both user and miq_group owned" do
-        FactoryBot.create(:miq_widget_content,
+        MiqWidgetContent.create(
                                       :miq_widget   => @widget_report_vendor_and_guest_os,
                                       :miq_group_id => @group1.id,
                                       :timezone     => "Eastern Time (US & Canada)"
                                      )
-        content2 = FactoryBot.create(:miq_widget_content,
+        content2 = MiqWidgetContent.create(
                                       :miq_widget   => @widget_report_vendor_and_guest_os,
                                       :miq_group_id => @group1.id,
                                       :user_id      => @user1.id,
