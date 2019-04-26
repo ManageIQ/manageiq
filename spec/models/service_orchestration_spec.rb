@@ -217,7 +217,7 @@ describe ServiceOrchestration do
     end
 
     it 'calls OrchestrationTemplateRunner' do
-      job = FactoryBot.create(:job)
+      job = Job.create
       allow(job).to receive(:signal).with(:update)
       allow(ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner).to receive(:create_job) do |options|
         expect(options[:update_options][:parameters]).to include(
