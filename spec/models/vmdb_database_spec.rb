@@ -146,7 +146,7 @@ describe VmdbDatabase do
 
     context 'with metrics' do
       before do
-        db.vmdb_database_metrics = [FactoryBot.create(:vmdb_database_metric, :capture_interval_name => 'hourly')]
+        db.vmdb_database_metrics = [VmdbDatabaseMetric.create(:capture_interval_name => 'hourly')]
       end
 
       it { is_expected.to be_truthy }
