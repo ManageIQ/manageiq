@@ -1,6 +1,6 @@
 describe ServiceTemplateContainerTemplate do
   let(:service_template_catalog) { FactoryBot.create(:service_template_catalog) }
-  let(:container_template) { FactoryBot.create(:container_template, :ems_id => ems.id) }
+  let(:container_template) { ContainerTemplate.create(:ems_id => ems.id) }
   let(:ems) { FactoryBot.create(:ems_openshift) }
   let(:dialog) { FactoryBot.create(:dialog) }
   let(:dialog2) { FactoryBot.create(:dialog) }

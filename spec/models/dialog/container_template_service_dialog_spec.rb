@@ -1,6 +1,6 @@
 describe Dialog::ContainerTemplateServiceDialog do
   describe "#create_dialog" do
-    let(:container_template) { FactoryBot.create(:container_template) }
+    let(:container_template) { ContainerTemplate.create }
     let(:params) { [] }
     before do
       params << FactoryBot.create(:container_template_parameter, :name => "name_1", :value => "value_1", :required => true)

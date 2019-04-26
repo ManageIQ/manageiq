@@ -83,7 +83,7 @@ describe(ServiceContainerTemplate) do
   let(:ctp2) { FactoryBot.create(:container_template_parameter, :name => 'var2', :value => 'p2', :required => true) }
   let(:ctp3) { FactoryBot.create(:container_template_parameter, :name => 'var3', :value => 'p3', :required => false) }
   let(:container_template) do
-    FactoryBot.create(:container_template, :ems_id => ems.id).tap do |ct|
+    ContainerTemplate.create(:ems_id => ems.id).tap do |ct|
       ct.container_template_parameters = [ctp1, ctp2, ctp3]
     end
   end
