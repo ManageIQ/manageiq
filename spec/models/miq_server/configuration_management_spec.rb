@@ -9,7 +9,7 @@ describe MiqServer, "::ConfigurationManagement" do
 
       it "with changes in the database" do
         miq_server.settings_changes = [
-          FactoryBot.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
+          SettingsChange.create(:key => "/api/token_ttl", :value => "2.minutes")
         ]
         Settings.reload!
 
