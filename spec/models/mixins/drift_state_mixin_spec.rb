@@ -5,8 +5,8 @@ describe DriftStateMixin do
 
   let(:drift_states) do
     [
-      FactoryBot.create(:drift_state, :resource => host, :timestamp => recent_timestamp, :data => "bogus"),
-      FactoryBot.create(:drift_state, :resource => host, :timestamp => old_timestamp, :data => "bogus")
+      DriftState.create(:resource => host, :timestamp => recent_timestamp, :data => "bogus"),
+      DriftState.create(:resource => host, :timestamp => old_timestamp, :data => "bogus")
     ]
   end
 
