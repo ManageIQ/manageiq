@@ -168,7 +168,9 @@ describe ConversionHost do
       end
 
       it "calls the disable method if delivered" do
-        allow_any_instance_of(ConversionHost).to receive(:disable_conversion_host_role)
+        allow(conversion_host).to receive(:disable_conversion_host_role)
+        allow(ConversionHost).to receive(:find).with(conversion_host.id).and_return(conversion_host)
+
         expect(Notification).to receive(:create).with(expected_notify)
         conversion_host.disable_queue
         expect(MiqQueue.first.deliver).to include("ok")
