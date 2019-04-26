@@ -8,5 +8,5 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-# Load Gemfile with dependencies from manageiq
-eval_gemfile(File.expand_path("spec/manageiq/Gemfile", __dir__))
+plugin "bundler-inject", "~> 1.1"
+require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
