@@ -1,6 +1,6 @@
 describe IsoDatastore do
   let(:ems) { FactoryBot.create(:ems_redhat) }
-  let(:iso_datastore) { FactoryBot.create(:iso_datastore, :ext_management_system => ems) }
+  let(:iso_datastore) { IsoDatastore.create(:ext_management_system => ems) }
 
   describe "#advertised_images" do
     subject(:advertised_images) { iso_datastore.advertised_images }
