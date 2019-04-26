@@ -2,7 +2,7 @@
 
 describe BinaryBlobPart do
   context "#data= and #data" do
-    let(:part) { FactoryBot.build(:binary_blob_part) }
+    let(:part) { BinaryBlobPart.new }
 
     subject do
       part.data = @data
