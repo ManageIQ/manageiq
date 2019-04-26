@@ -1,6 +1,6 @@
 describe VmdbIndex do
   context "#capture_metrics" do
-    let(:index) { FactoryBot.create(:vmdb_index, :name => "accounts_pkey") }
+    let(:index) { VmdbIndex.create(:name => "accounts_pkey") }
 
     it "creates a vmdb_metrics record" do
       # The first capture just gets the raw data
@@ -34,7 +34,7 @@ describe VmdbIndex do
   context "#rollup_metrics" do
     let(:db)    { VmdbDatabase.create }
     let(:table) { FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => "accounts") }
-    let(:index) { FactoryBot.create(:vmdb_index, :vmdb_table => table, :name => "accounts_pkey") }
+    let(:index) { VmdbIndex.create(:vmdb_table => table, :name => "accounts_pkey") }
 
     before do
       ts = Time.gm(2012, 8, 15, 10, 00, 01)         # Need specific date in order to keep track of rollup data...

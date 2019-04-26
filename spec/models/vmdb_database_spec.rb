@@ -4,8 +4,8 @@ describe VmdbDatabase do
   let(:table) { FactoryBot.create(:vmdb_table_evm,  :vmdb_database => db) }
   let(:text)  { FactoryBot.create(:vmdb_table_text, :vmdb_database => db, :evm_table => table) }
 
-  let(:table_index) { FactoryBot.create(:vmdb_index, :vmdb_table => table) }
-  let(:text_index)  { FactoryBot.create(:vmdb_index, :vmdb_table => text) }
+  let(:table_index) { VmdbIndex.create(:vmdb_table => table) }
+  let(:text_index)  { VmdbIndex.create(:vmdb_table => text) }
 
   it "#size" do
     expect(db.size).to be >= 0

@@ -137,7 +137,7 @@ describe VmdbDatabase do
       end
 
       it "removes deleted indexes" do
-        FactoryBot.create(:vmdb_index, :vmdb_table => table, :name => "index_flintstones")
+        VmdbIndex.create(:vmdb_table => table, :name => "index_flintstones")
 
         described_class.send(:seed_indexes)
 
@@ -147,7 +147,7 @@ describe VmdbDatabase do
 
       it "updates existing indexes" do
         connection.execute("CREATE INDEX index_flintstones ON accounts (id)")
-        FactoryBot.create(:vmdb_index, :vmdb_table => table, :name => "index_flintstones")
+        VmdbIndex.create(:vmdb_table => table, :name => "index_flintstones")
 
         expect(VmdbIndex).to receive(:create).never
 

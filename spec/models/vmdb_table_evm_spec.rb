@@ -27,7 +27,7 @@ describe VmdbTableEvm do
     end
 
     it "captures index metrics" do
-      FactoryBot.create(:vmdb_index, :vmdb_table => table, :name => "accounts_pkey")
+      VmdbIndex.create(:vmdb_table => table, :name => "accounts_pkey")
       expect(table.vmdb_indexes[0]).to receive(:capture_metrics)
       table.capture_metrics
     end

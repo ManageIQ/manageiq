@@ -286,7 +286,7 @@ describe MiqReport do
   it "paged_view_search on vmdb_* tables" do
     # Create EVM tables/indexes and hourly metric data...
     table = FactoryBot.create(:vmdb_table_evm, :name => "accounts")
-    index = FactoryBot.create(:vmdb_index, :name => "accounts_pkey", :vmdb_table => table)
+    index = VmdbIndex.create(:name => "accounts_pkey", :vmdb_table => table)
     FactoryBot.create(:vmdb_metric, :resource => index, :timestamp => Time.now.utc, :capture_interval_name => 'hourly', :size => 102, :rows => 102, :pages => 102, :wasted_bytes => 102, :percent_bloat => 102)
 
     report_args = {
