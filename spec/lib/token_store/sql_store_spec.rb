@@ -17,11 +17,8 @@ RSpec.describe TokenStore::SqlStore do
     it "updates a session if it exists" do
       store = build_sql_store("TEST")
       token = SecureRandom.hex
-      session = FactoryBot.create(
-        :session,
-        :session_id => "TEST:#{token}",
-        :raw_data   => {:expires_on => 1.second.from_now}
-      )
+      session = Session.create(:session_id => "TEST:#{token}",
+                               :raw_data   => {:expires_on => 1.second.from_now})
 
       store.write(token, :expires_on => 1.hour.from_now)
 
@@ -33,11 +30,8 @@ RSpec.describe TokenStore::SqlStore do
     it "reads a valid token" do
       store = build_sql_store("TEST")
       token = SecureRandom.hex
-      FactoryBot.create(
-        :session,
-        :session_id => "TEST:#{token}",
-        :raw_data   => {:userid => "alice", :expires_on => 1.second.from_now}
-      )
+      Session.create(:session_id => "TEST:#{token}",
+                     :raw_data   => {:userid => "alice", :expires_on => 1.second.from_now})
 
       data = store.read(token)
 
@@ -47,11 +41,8 @@ RSpec.describe TokenStore::SqlStore do
     it "returns nil for an expired token" do
       store = build_sql_store("TEST")
       token = SecureRandom.hex
-      FactoryBot.create(
-        :session,
-        :session_id => "TEST:#{token}",
-        :raw_data   => {:userid => "alice", :expires_on => 1.second.ago}
-      )
+      Session.create(:session_id => "TEST:#{token}",
+                     :raw_data   => {:userid => "alice", :expires_on => 1.second.ago})
 
       data = store.read(token)
 
@@ -72,11 +63,8 @@ RSpec.describe TokenStore::SqlStore do
     it "deletes a token" do
       store = build_sql_store("TEST")
       token = SecureRandom.hex
-      FactoryBot.create(
-        :session,
-        :session_id => "TEST:#{token}",
-        :raw_data   => {:userid => "alice", :expires_on => 1.hour.from_now}
-      )
+      Session.create(:session_id => "TEST:#{token}",
+                     :raw_data   => {:userid => "alice", :expires_on => 1.hour.from_now})
 
       expect { store.delete(token) }.to change(Session, :count).by(-1)
     end
