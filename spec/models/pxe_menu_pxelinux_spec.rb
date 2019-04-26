@@ -89,7 +89,7 @@ PXEMENU
   context "#synchronize_images" do
     before do
       @pxe_server = FactoryBot.create(:pxe_server)
-      @pxe_menu = FactoryBot.create(:pxe_menu_pxelinux, :contents => @contents, :pxe_server => @pxe_server)
+      @pxe_menu = PxeMenuPxelinux.create(:contents => @contents, :pxe_server => @pxe_server)
     end
 
     it "finds correct number of menu items" do

@@ -154,7 +154,7 @@ PXEMENU
     end
 
     it "on typed menu switching to a different type" do
-      pxe_menu = FactoryBot.create(:pxe_menu_pxelinux, :contents => @contents_pxelinux, :pxe_server => @pxe_server)
+      pxe_menu = PxeMenuPxelinux.create(:contents => @contents_pxelinux, :pxe_server => @pxe_server)
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)
