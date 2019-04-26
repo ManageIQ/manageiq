@@ -58,7 +58,7 @@ describe VmScan do
 
     context "without Broker Running and with valid MiqVimBrokerWorker record," do
       before do
-        @vim_broker_worker = FactoryBot.create(:miq_vim_broker_worker, :miq_server_id => @server.id)
+        @vim_broker_worker = MiqVimBrokerWorker.create(:miq_server_id => @server.id)
       end
 
       context "in status of 'starting'," do
