@@ -145,7 +145,7 @@ PXEMENU
     end
 
     it "on untyped menu" do
-      pxe_menu = FactoryBot.create(:pxe_menu, :pxe_server => @pxe_server)
+      pxe_menu = PxeMenu.create(:pxe_server => @pxe_server)
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)

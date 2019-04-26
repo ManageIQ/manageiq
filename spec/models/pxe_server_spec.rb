@@ -293,7 +293,7 @@ PXE
 
   context "with pxe images" do
     before do
-      pxe_menu          = FactoryBot.create(:pxe_menu,  :pxe_server => @pxe_server)
+      pxe_menu          = PxeMenu.create( :pxe_server => @pxe_server)
       @advertised_image = FactoryBot.create(:pxe_image, :pxe_server => @pxe_server, :pxe_menu => pxe_menu)
       @discovered_image = FactoryBot.create(:pxe_image, :pxe_server => @pxe_server)
     end
