@@ -564,7 +564,7 @@ describe ServiceTemplateTransformationPlanTask do
       context 'destination is openstack' do
         let(:dst_ems) { FactoryBot.create(:ems_openstack, :api_version => 'v3', :zone => FactoryBot.create(:zone)) }
         let(:dst_cloud_tenant) { FactoryBot.create(:cloud_tenant, :name => 'fake tenant', :ext_management_system => dst_ems) }
-        let(:dst_cloud_volume_type) { FactoryBot.create(:cloud_volume_type) }
+        let(:dst_cloud_volume_type) { CloudVolumeType.create }
         let(:dst_cloud_network_1) { FactoryBot.create(:cloud_network) }
         let(:dst_cloud_network_2) { FactoryBot.create(:cloud_network) }
         let(:dst_flavor) { FactoryBot.create(:flavor) }
