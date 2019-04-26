@@ -9,7 +9,7 @@ FactoryBot.define do
 
       after :create do |aemethod, evaluator|
         evaluator.params.each do |name, f|
-          FactoryBot.create(:miq_ae_field,
+          MiqAeField.create(
                              :name          => name,
                              :datatype      => f['datatype'],
                              :aetype        => f['aetype'],

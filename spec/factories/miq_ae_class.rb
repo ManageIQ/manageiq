@@ -11,7 +11,7 @@ FactoryBot.define do
 
       after :create do |aeclass, evaluator|
         aeclass.ae_fields << evaluator.ae_fields.collect do |name, f|
-          FactoryBot.build(:miq_ae_field, {:name => name}.merge(f))
+          MiqAeField.new({:name => name}.merge(f))
         end
 
         evaluator.ae_instances.each do |name, values|
