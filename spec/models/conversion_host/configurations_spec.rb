@@ -1,4 +1,4 @@
-describe ConversionHost do
+RSpec.describe ConversionHost, :v2v do
   let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
   let(:conversion_host_ssh) { FactoryBot.create(:conversion_host, :resource => vm, :ssh_transport_supported => true) }
   let(:conversion_host_vddk) { FactoryBot.create(:conversion_host, :resource => vm, :vddk_transport_supported => true) }
