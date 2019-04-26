@@ -64,7 +64,7 @@ describe MiqReport do
     before do
       @user     = FactoryBot.create(:user_with_group)
 
-      @registry = FactoryBot.create(:registry_item, :name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall",
+      @registry = RegistryItem.create(:name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall",
                                                      :data => 0)
       @vm       = FactoryBot.create(:vm_vmware, :registry_items => [@registry])
       EvmSpecHelper.local_miq_server

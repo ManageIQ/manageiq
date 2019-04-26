@@ -97,9 +97,9 @@ describe Condition do
 
     context "expression with <registry>" do
       let(:vm) { FactoryBot.create(:vm_vmware, :registry_items => [reg_num, @reg_string]) }
-      let(:reg_num) { FactoryBot.create(:registry_item, :name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall", :data => 0) }
+      let(:reg_num) { RegistryItem.create(:name => "HKLM\\SOFTWARE\\WindowsFirewall : EnableFirewall", :data => 0) }
       before do
-        @reg_string = FactoryBot.create(:registry_item, :name => "HKLM\\SOFTWARE\\Microsoft\\Ole : EnableDCOM", :data => 'y')
+        @reg_string = RegistryItem.create(:name => "HKLM\\SOFTWARE\\Microsoft\\Ole : EnableDCOM", :data => 'y')
       end
 
       it "string type registry key data is single quoted" do
