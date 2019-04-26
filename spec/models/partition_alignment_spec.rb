@@ -8,30 +8,30 @@ describe "PartitionAlignment" do
       Disk.create(
                          :device_type => "floppy",
                          :hardware_id => @vm1.hardware.id,
-                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [Partition.create(:start_address => not_aligned)]
                         )
       Disk.create(
                          :device_type => "cdrom-raw",
                          :hardware_id => @vm1.hardware.id,
-                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [Partition.create(:start_address => not_aligned)]
                         )
       Disk.create(
                          :device_type => "disk",
                          :disk_type   => "rdm-raw",
                          :hardware_id => @vm1.hardware.id,
-                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [Partition.create(:start_address => not_aligned)]
                         )
       Disk.create(
                          :device_type => "disk",
                          :hardware_id => @vm1.hardware.id,
-                         :partitions  => [FactoryBot.create(:partition, :start_address => aligned)]
+                         :partitions  => [Partition.create(:start_address => aligned)]
                         )
       Disk.create(
                          :device_type => "disk",
                          :hardware_id => @vm1.hardware.id,
                          :partitions  => [
-                           FactoryBot.create(:partition, :start_address => aligned),
-                           FactoryBot.create(:partition, :start_address => aligned)
+                           Partition.create(:start_address => aligned),
+                           Partition.create(:start_address => aligned)
                          ]
                         )
 
@@ -39,30 +39,30 @@ describe "PartitionAlignment" do
       Disk.create(
                          :device_type => "floppy",
                          :hardware_id => @vm2.hardware.id,
-                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [Partition.create(:start_address => not_aligned)]
                         )
       Disk.create(
                          :device_type => "cdrom-raw",
                          :hardware_id => @vm2.hardware.id,
-                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [Partition.create(:start_address => not_aligned)]
                         )
       Disk.create(
                          :device_type => "disk",
                          :disk_type   => "rdm-raw",
                          :hardware_id => @vm2.hardware.id,
-                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [Partition.create(:start_address => not_aligned)]
                         )
       Disk.create(
                          :device_type => "disk",
                          :hardware_id => @vm2.hardware.id,
-                         :partitions  => [FactoryBot.create(:partition, :start_address => not_aligned)]
+                         :partitions  => [Partition.create(:start_address => not_aligned)]
                         )
       Disk.create(
                          :device_type => "disk",
                          :hardware_id => @vm2.hardware.id,
                          :partitions  => [
-                           FactoryBot.create(:partition, :start_address => aligned),
-                           FactoryBot.create(:partition, :start_address => not_aligned)
+                           Partition.create(:start_address => aligned),
+                           Partition.create(:start_address => not_aligned)
                          ]
                         )
 
@@ -79,8 +79,8 @@ describe "PartitionAlignment" do
                          :device_type => "disk",
                          :hardware_id => @vm5.hardware.id,
                          :partitions  => [
-                           FactoryBot.create(:partition, :start_address => aligned),
-                           FactoryBot.create(:partition)
+                           Partition.create(:start_address => aligned),
+                           Partition.create
                          ]
                         )
     end
