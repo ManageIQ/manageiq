@@ -143,6 +143,16 @@ describe ConversionHost do
     context "#disable_queue" do
       let(:op) { 'disable' }
 
+      let(:expected_notify) do
+        {
+          :type    => :conversion_host_config_success,
+          :options => {
+            :op_name => "disable",
+            :op_arg  => "type=#{vm.class.name} id=#{vm.id}"
+          }
+        }
+      end
+
       it "to queue with a task" do
         task_id = conversion_host.disable_queue
         expect(MiqTask.find(task_id)).to have_attributes(:name => expected_task_action)
@@ -155,6 +165,13 @@ describe ConversionHost do
           :role        => "ems_operations",
           :zone        => conversion_host.resource.ext_management_system.my_zone
         )
+      end
+
+      it "calls the disable method if delivered" do
+        allow_any_instance_of(ConversionHost).to receive(:disable_conversion_host_role)
+        expect(Notification).to receive(:create).with(expected_notify)
+        conversion_host.disable_queue
+        expect(MiqQueue.first.deliver).to include("ok")
       end
     end
   end
