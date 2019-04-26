@@ -4,14 +4,14 @@ describe MiqTask do
       before do
         Timecop.freeze(8.days.ago) do
           @old_task = Job.create_job("VmScan", :guid => "old").miq_task
-          FactoryBot.create(:binary_blob, :name => "old", :resource_type => 'MiqTask', :resource_id => @old_task.id)
+          BinaryBlob.create(:name => "old", :resource_type => 'MiqTask', :resource_id => @old_task.id)
           FactoryBot.create(:log_file, :name => "old", :miq_task_id => @old_task.id)
         end
 
         Timecop.freeze(6.days.ago) do
           @new_task = Job.create_job("VmScan", :guid => "recent").miq_task
           @new_task.state_finished
-          FactoryBot.create(:binary_blob, :name => "recent", :resource_type => 'MiqTask', :resource_id => @new_task.id)
+          BinaryBlob.create(:name => "recent", :resource_type => 'MiqTask', :resource_id => @new_task.id)
           FactoryBot.create(:log_file, :name => "recent", :miq_task_id => @new_task.id)
         end
       end
