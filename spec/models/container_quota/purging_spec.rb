@@ -26,16 +26,16 @@ describe ContainerQuota do
       before do
         @old_quota = ContainerQuota.create(:deleted_on => deleted_date - 1.day)
         @old_quota_scope = FactoryBot.create(:container_quota_scope, :container_quota => @old_quota)
-        @old_quota_old_item    = FactoryBot.create(:container_quota_item, :container_quota => @old_quota,
+        @old_quota_old_item    = ContainerQuotaItem.create(:container_quota => @old_quota,
                                                                            :deleted_on      => deleted_date - 1.day)
-        @old_quota_active_item = FactoryBot.create(:container_quota_item, :container_quota => @old_quota,
+        @old_quota_active_item = ContainerQuotaItem.create(:container_quota => @old_quota,
                                                                            :deleted_on      => nil)
 
         @purge_date_quota = ContainerQuota.create(:deleted_on => deleted_date)
 
         @new_quota = ContainerQuota.create(:deleted_on => deleted_date + 1.day)
         @new_quota_scope = FactoryBot.create(:container_quota_scope, :container_quota => @new_quota)
-        @new_quota_old_item = FactoryBot.create(:container_quota_item, :container_quota => @new_quota,
+        @new_quota_old_item = ContainerQuotaItem.create(:container_quota => @new_quota,
                                                                         :deleted_on      => deleted_date - 1.day)
       end
 
