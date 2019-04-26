@@ -83,10 +83,10 @@ describe MiqProvisionVirtWorkflow do
 
     context 'vlans' do
       before do
-        s11 = FactoryBot.create(:switch, :name => "A")
-        s12 = FactoryBot.create(:switch, :name => "B")
-        s13 = FactoryBot.create(:switch, :name => "C")
-        s14 = FactoryBot.create(:switch, :name => "D")
+        s11 = Switch.create(:name => "A")
+        s12 = Switch.create(:name => "B")
+        s13 = Switch.create(:name => "C")
+        s14 = Switch.create(:name => "D")
         @src_vm.host.switches   = [s11, s12, s13]
         @other_vm.host.switches = [s14]
         @lan11 = FactoryBot.create(:lan, :name => "lan_A", :switch_id => s11.id)
@@ -126,8 +126,8 @@ describe MiqProvisionVirtWorkflow do
       end
       workflow.instance_variable_set(:@target_resource, nil)
 
-      s1 = FactoryBot.create(:switch, :name => "A")
-      s2 = FactoryBot.create(:switch, :name => "B")
+      s1 = Switch.create(:name => "A")
+      s2 = Switch.create(:name => "B")
       @host1.switches = [s1]
       @host2.switches = [s2]
       @lan1 = FactoryBot.create(:lan, :name => "lan_A", :switch_id => s1.id)

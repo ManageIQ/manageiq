@@ -213,7 +213,7 @@ describe Rbac::Filterer do
       end
 
       context 'searching for instances of Switches' do
-        let!(:switch) { FactoryBot.create_list(:switch, 2).first }
+        let!(:switch) { Switch.create && Switch.create }
 
         before do
           switch.tag_with('/managed/environment/prod', :ns => '*')
