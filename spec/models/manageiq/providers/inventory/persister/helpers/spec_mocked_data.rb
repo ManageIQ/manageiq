@@ -95,30 +95,10 @@ module SpecMockedData
       )
     )
 
-    @disk1 = FactoryBot.create(
-      :disk,
-      disk_data(1).merge(
-        :hardware => @hardware1,
-      )
-    )
-    @disk12 = FactoryBot.create(
-      :disk,
-      disk_data(12).merge(
-        :hardware => @hardware12,
-      )
-    )
-    @disk13 = FactoryBot.create(
-      :disk,
-      disk_data(13).merge(
-        :hardware => @hardware12,
-      )
-    )
-    @disk2 = FactoryBot.create(
-      :disk,
-      disk_data(2).merge(
-        :hardware => @hardware2,
-      )
-    )
+    @disk1  = Disk.create(disk_data(1).merge(:hardware => @hardware1))
+    @disk12 = Disk.create(disk_data(12).merge(:hardware => @hardware12))
+    @disk13 = Disk.create(disk_data(13).merge(:hardware => @hardware12))
+    @disk2  = Disk.create(disk_data(2).merge(:hardware => @hardware2))
 
     @public_network1 = FactoryBot.create(
       :network,

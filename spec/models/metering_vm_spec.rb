@@ -65,7 +65,7 @@ describe MeteringVm do
       FactoryBot.create(:hardware,
                          :cpu_total_cores => cores,
                          :memory_mb       => mem_mb,
-                         :disks           => [FactoryBot.create(:disk, :size => disk_b)])
+                         :disks           => [Disk.create(:size => disk_b)])
     end
 
     context 'for SCVMM (hyper-v)' do

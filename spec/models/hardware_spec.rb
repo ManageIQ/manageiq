@@ -132,9 +132,9 @@ describe Hardware do
 
     context "with disks" do
       before do
-        FactoryBot.create(:disk, :size_on_disk => 1024, :size => 10240, :hardware => hardware)
-        FactoryBot.create(:disk, :size => 1024, :hardware => hardware)
-        FactoryBot.create(:disk, :hardware => hardware)
+        Disk.create(:size_on_disk => 1024, :size => 10240, :hardware => hardware)
+        Disk.create(:size => 1024, :hardware => hardware)
+        Disk.create(:hardware => hardware)
       end
 
       it "calculates in ruby" do
@@ -164,9 +164,9 @@ describe Hardware do
 
     context "with disks" do
       before do
-        FactoryBot.create(:disk, :size_on_disk => 1024, :size => 10240, :hardware => hardware)
-        FactoryBot.create(:disk, :size => 1024, :hardware => hardware)
-        FactoryBot.create(:disk, :hardware => hardware)
+        Disk.create(:size_on_disk => 1024, :size => 10240, :hardware => hardware)
+        Disk.create(:size => 1024, :hardware => hardware)
+        Disk.create(:hardware => hardware)
       end
 
       it "calculates in ruby" do
@@ -223,9 +223,9 @@ describe Hardware do
 
     context "with disks AND no memory" do
       before do
-        FactoryBot.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
-        FactoryBot.create(:disk, :size => 1024, :hardware => hardware)
-        FactoryBot.create(:disk, :hardware => hardware)
+        Disk.create(:size_on_disk => 1024, :size => 10_240, :hardware => hardware)
+        Disk.create(:size => 1024, :hardware => hardware)
+        Disk.create(:hardware => hardware)
       end
 
       it "calculates in ruby" do
@@ -254,9 +254,9 @@ describe Hardware do
     context "with disks and memory" do
       let(:hardware) { FactoryBot.create(:hardware, :memory_mb => 5) }
       before do
-        FactoryBot.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
-        FactoryBot.create(:disk, :size => 1024, :hardware => hardware)
-        FactoryBot.create(:disk, :hardware => hardware)
+        Disk.create(:size_on_disk => 1024, :size => 10_240, :hardware => hardware)
+        Disk.create(:size => 1024, :hardware => hardware)
+        Disk.create(:hardware => hardware)
       end
 
       it "works in ruby" do

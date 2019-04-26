@@ -41,10 +41,10 @@ module Spec
       end
 
       def create_disks
-        @disk1 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
-        @disk2 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
-        @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
-        @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
+        @disk1 = Disk.create(:device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
+        @disk2 = Disk.create(:device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
+        @disk3 = Disk.create(:device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
+        @disk3 = Disk.create(:device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
       end
 
       def create_tenant_quota

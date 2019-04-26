@@ -562,7 +562,7 @@ describe Tenant do
           :hardware,
           :memory_mb       => 1024,
           :cpu_total_cores => 1,
-          :disks           => [FactoryBot.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :disks           => [Disk.create(:size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
@@ -577,7 +577,7 @@ describe Tenant do
           :hardware,
           :memory_mb       => 1024,
           :cpu_total_cores => 1,
-          :disks           => [FactoryBot.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :disks           => [Disk.create(:size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end
@@ -595,7 +595,7 @@ describe Tenant do
           :hardware,
           :memory_mb       => 1024,
           :cpu_total_cores => 1,
-          :disks           => [FactoryBot.create(:disk, :size => 12_345_678, :size_on_disk => 12_345)]
+          :disks           => [Disk.create(:size => 12_345_678, :size_on_disk => 12_345)]
         )
       )
     end

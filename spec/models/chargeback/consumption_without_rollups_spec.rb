@@ -6,7 +6,7 @@ describe Chargeback::ConsumptionWithoutRollups do
     FactoryBot.build(:hardware,
                       :cpu_total_cores => cores,
                       :memory_mb       => mem_mb,
-                      :disks           => [FactoryBot.build(:disk, :size => disk_size)])
+                      :disks           => [Disk.new(:size => disk_size)])
   end
   let(:vm) { FactoryBot.build(:vm_microsoft, :hardware => hardware) }
   let(:consumption) { described_class.new(vm, nil, nil) }

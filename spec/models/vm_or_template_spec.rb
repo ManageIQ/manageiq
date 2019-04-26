@@ -719,7 +719,7 @@ describe VmOrTemplate do
     it "calculates in ruby" do
       hardware = FactoryBot.create(:hardware, :memory_mb => 10)
       vm = FactoryBot.create(:vm_vmware, :hardware => hardware)
-      disk = FactoryBot.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware)
+      disk = Disk.create(:size_on_disk => 1024, :size => 10_240, :hardware => hardware)
       expect(vm.used_storage).to eq(10 * 1024 * 1024 + 1024) # memory_mb + size on disk
     end
   end
@@ -728,7 +728,7 @@ describe VmOrTemplate do
   describe "#provisioned_storage" do
     let(:vm) { FactoryBot.create(:vm_vmware, :hardware => hardware) }
     let(:hardware) { FactoryBot.create(:hardware, :memory_mb => 10) }
-    let(:disk) { FactoryBot.create(:disk, :size_on_disk => 1024, :size => 10_240, :hardware => hardware) }
+    let(:disk) { Disk.create(:size_on_disk => 1024, :size => 10_240, :hardware => hardware) }
 
     it "calculates in ruby with null hardware" do
       vm = FactoryBot.create(:vm_vmware)

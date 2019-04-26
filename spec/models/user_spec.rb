@@ -281,10 +281,10 @@ describe User do
       @hw2 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
       @hw3 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
       @hw4 = FactoryBot.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @disk1 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
-      @disk2 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
-      @disk3 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
-      @disk4 = FactoryBot.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
+      @disk1 = Disk.create(:device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
+      @disk2 = Disk.create(:device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
+      @disk3 = Disk.create(:device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
+      @disk4 = Disk.create(:device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryBot.create(:vm_vmware,
                                       :name         => "Active VM",

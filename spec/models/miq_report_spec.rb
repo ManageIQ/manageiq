@@ -575,7 +575,7 @@ describe MiqReport do
       template = FactoryBot.create(:template_vmware, :ext_management_system => ems)
       vm       = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
       hardware = FactoryBot.create(:hardware, :vm => vm)
-      FactoryBot.create(:disk, :hardware => hardware, :disk_type => "thin")
+      Disk.create(:hardware => hardware, :disk_type => "thin")
 
       options = {
         :vm_name        => vm.name,

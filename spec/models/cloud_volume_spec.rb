@@ -1,6 +1,6 @@
 describe CloudVolume do
   it ".available" do
-    disk = FactoryBot.create(:disk)
+    disk = Disk.create
     FactoryBot.create(:cloud_volume, :attachments => [disk])
     cv2 = FactoryBot.create(:cloud_volume)
 

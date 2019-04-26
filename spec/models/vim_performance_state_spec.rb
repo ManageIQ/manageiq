@@ -49,10 +49,10 @@ RSpec.describe VimPerformanceState do
     let(:hdd1_size) { 5_678 }
     let(:hdd2_size) { 9_101 }
     let(:ssd_volume) { FactoryBot.create(:cloud_volume_openstack, :volume_type => 'ssd') }
-    let(:ssd_disk) { FactoryBot.create(:disk, :size => ssd_size, :backing => ssd_volume) }
+    let(:ssd_disk) { Disk.create(:size => ssd_size, :backing => ssd_volume) }
     let(:hdd_volume) { FactoryBot.create(:cloud_volume_openstack, :volume_type => nil) }
-    let(:hdd1_disk) { FactoryBot.create(:disk, :size => hdd1_size, :backing => hdd_volume) }
-    let(:hdd2_disk) { FactoryBot.create(:disk, :size => hdd2_size) }
+    let(:hdd1_disk) { Disk.create(:size => hdd1_size, :backing => hdd_volume) }
+    let(:hdd2_disk) { Disk.create(:size => hdd2_size) }
     let(:hardware) { FactoryBot.create(:hardware, :disks => [ssd_disk, hdd1_disk, hdd2_disk]) }
     let(:vm) { FactoryBot.create(:vm_openstack, :hardware => hardware) }
 
@@ -61,13 +61,13 @@ RSpec.describe VimPerformanceState do
     it { is_expected.to match('ssd' => ssd_size, 'unclassified' => hdd1_size + hdd2_size) }
 
     context 'when disk size is nil' do
-      let!(:hdd1_disk) { FactoryBot.create(:disk, :size => nil, :backing => hdd_volume) }
+      let!(:hdd1_disk) { Disk.create(:size => nil, :backing => hdd_volume) }
 
       it { is_expected.to match('ssd' => ssd_size, 'unclassified' => hdd2_size) }
 
       context "when all disk's sizes are nil" do
-        let!(:hdd2_disk) { FactoryBot.create(:disk, :size => nil, :backing => hdd_volume) }
-        let!(:ssd_disk)  { FactoryBot.create(:disk, :size => nil, :backing => ssd_volume) }
+        let!(:hdd2_disk) { Disk.create(:size => nil, :backing => hdd_volume) }
+        let!(:ssd_disk)  { Disk.create(:size => nil, :backing => ssd_volume) }
 
         it { is_expected.to be_empty }
       end

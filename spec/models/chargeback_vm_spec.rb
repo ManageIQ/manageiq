@@ -207,12 +207,12 @@ describe ChargebackVm do
           let(:ssd_size_1) { 1_234 }
           let!(:cloud_volume_1) { FactoryBot.create(:cloud_volume_openstack, :volume_type => ssd_volume_type, :size => ssd_size_1) }
 
-          let(:ssd_disk_1) { FactoryBot.create(:disk, :size => ssd_size_1, :backing => cloud_volume_1) }
+          let(:ssd_disk_1) { Disk.create(:size => ssd_size_1, :backing => cloud_volume_1) }
 
           let(:ssd_size_2) { 4_234 }
           let!(:cloud_volume_2) { FactoryBot.create(:cloud_volume_openstack, :volume_type => ssd_volume_type, :size => ssd_size_2) }
 
-          let(:ssd_disk_2) { FactoryBot.create(:disk, :size => ssd_size_2, :backing => cloud_volume_2) }
+          let(:ssd_disk_2) { Disk.create(:size => ssd_size_2, :backing => cloud_volume_2) }
 
           let(:hardware) { FactoryBot.create(:hardware, :disks => [ssd_disk_1, ssd_disk_2]) }
 
@@ -881,7 +881,7 @@ describe ChargebackVm do
         let!(:cloud_volume_sdd) { FactoryBot.create(:cloud_volume_openstack, :volume_type => 'sdd') }
 
         let(:ssd_size) { 1_234 }
-        let(:ssd_disk) { FactoryBot.create(:disk, :size => ssd_size, :backing => cloud_volume_sdd) }
+        let(:ssd_disk) { Disk.create(:size => ssd_size, :backing => cloud_volume_sdd) }
         let(:hardware) { FactoryBot.create(:hardware, :disks => [ssd_disk]) }
 
         let(:resource) { FactoryBot.create(:vm_vmware_cloud, :hardware => hardware, :created_on => month_beginning) }
@@ -1328,7 +1328,7 @@ describe ChargebackVm do
       FactoryBot.create(:hardware,
                         :cpu_total_cores => cores,
                         :memory_mb       => mem_mb,
-                        :disks           => [FactoryBot.create(:disk, :size => disk_b)])
+                        :disks           => [Disk.create(:size => disk_b)])
     end
 
     let(:fixed_cost) { hourly_rate * 24 }
