@@ -42,7 +42,7 @@ describe ServiceTemplateProvisionTask do
     end
 
     def service_resource_id(index, scaling_max)
-      FactoryBot.create(:service_resource,
+      ServiceResource.create(
                          :provision_index => index,
                          :scaling_min     => 1,
                          :scaling_max     => scaling_max,

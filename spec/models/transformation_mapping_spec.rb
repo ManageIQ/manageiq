@@ -22,7 +22,7 @@ describe TransformationMapping do
 
   describe '#service_templates' do
     let(:plan) { FactoryBot.create(:service_template_transformation_plan) }
-    before { FactoryBot.create(:service_resource, :resource => mapping, :service_template => plan) }
+    before { ServiceResource.create(:resource => mapping, :service_template => plan) }
 
     it 'finds the transformation plans' do
       expect(mapping.service_templates).to match([plan])
@@ -89,12 +89,9 @@ describe TransformationMapping do
 
         it 'if VM is in another migration plan' do
           %w(Queued Approved Active).each do |status|
-            FactoryBot.create(
-              :service_resource,
-              :resource         => vm,
-              :service_template => FactoryBot.create(:service_template_transformation_plan),
-              :status           => status
-            )
+            ServiceResource.create(:resource         => vm,
+                                   :service_template => FactoryBot.create(:service_template_transformation_plan),
+                                   :status           => status)
 
             result = mapping.search_vms_and_validate(['name' => vm.name])
             expect(result['invalid'].first.reason).to match(/in_other_plan/)
@@ -102,12 +99,9 @@ describe TransformationMapping do
         end
 
         it 'if VM has been migrated' do
-          FactoryBot.create(
-            :service_resource,
-            :resource         => vm,
-            :service_template => FactoryBot.create(:service_template_transformation_plan),
-            :status           => 'Completed'
-          )
+          ServiceResource.create(:resource         => vm,
+                                 :service_template => FactoryBot.create(:service_template_transformation_plan),
+                                 :status           => 'Completed')
 
           result = mapping.search_vms_and_validate(['name' => vm.name])
           expect(result['invalid'].first.reason).to match(/migrated/)
@@ -131,12 +125,9 @@ describe TransformationMapping do
       it 'returns valid vms when a ServiceTemplate record is edited with CSV containing the same VM already included in the ServiceTemplate record' do
         service_template = FactoryBot.create(:service_template_transformation_plan)
 
-        FactoryBot.create(
-          :service_resource,
-          :resource         => vm2,
-          :service_template => service_template,
-          :status           => "Active"
-        )
+        ServiceResource.create(:resource         => vm2,
+                               :service_template => service_template,
+                               :status           => "Active")
         result = mapping.search_vms_and_validate(['name' => vm2.name], service_template.id.to_s)
         expect(result['valid'].first.reason).to match(/ok/)
       end
@@ -145,12 +136,9 @@ describe TransformationMapping do
         service_template = FactoryBot.create(:service_template_transformation_plan)
         service_template2 = FactoryBot.create(:service_template_transformation_plan)
 
-        FactoryBot.create(
-          :service_resource,
-          :resource         => vm2,
-          :service_template => service_template,
-          :status           => "Active"
-        )
+        ServiceResource.create(:resource         => vm2,
+                               :service_template => service_template,
+                               :status           => "Active")
         result = mapping.search_vms_and_validate(['name' => vm2.name], service_template2.id.to_s)
         expect(result['invalid'].first.reason).to match(/in_other_plan/)
       end

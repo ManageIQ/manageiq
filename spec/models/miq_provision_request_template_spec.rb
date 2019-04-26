@@ -9,7 +9,7 @@ describe MiqProvisionRequestTemplate do
     FactoryBot.create(:service, :guid => SecureRandom.uuid, :options => {:dialog => {}})
   end
   let(:service_resource) do
-    FactoryBot.create(:service_resource,
+    ServiceResource.create(
                        :resource_type => 'MiqRequest',
                        :resource_id   => service_template_request.id)
   end
@@ -20,12 +20,12 @@ describe MiqProvisionRequestTemplate do
     FactoryBot.create(:service_template)
   end
   let(:service_template_resource) do
-    FactoryBot.create(:service_resource,
+    ServiceResource.create(
                        :resource_type => 'ServiceTemplate',
                        :resource_id   => service_template.id)
   end
   let(:bundle_service_template_resource) do
-    FactoryBot.create(:service_resource,
+    ServiceResource.create(
                        :resource_type => 'ServiceTemplate',
                        :resource_id   => bundle_service_template.id)
   end

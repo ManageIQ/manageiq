@@ -583,7 +583,7 @@ describe ServiceTemplate do
       end
       let(:service_template_request) { FactoryBot.create(:service_template_provision_request, :requester => user) }
       let(:service_resource) do
-        FactoryBot.create(:service_resource,
+        ServiceResource.create(
                            :resource_type => 'MiqRequest',
                            :resource_id   => service_template_request.id)
       end
