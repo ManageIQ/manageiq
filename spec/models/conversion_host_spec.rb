@@ -309,6 +309,7 @@ describe ConversionHost do
     end
 
     it "is valid if an address is not provided" do
+      allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
       conversion_host = ConversionHost.new(:name => "test", :resource => vm)
       expect(conversion_host.valid?).to be(true)
     end
