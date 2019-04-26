@@ -52,7 +52,7 @@ describe MiqProvisionRequestTemplate do
                        :options      => {:service_resource_id => bundle_service_template_resource.id})
   end
   let(:provision_request_template) do
-    FactoryBot.create(:miq_provision_request_template,
+    MiqProvisionRequestTemplate.create(
                        :requester    => user,
                        :src_vm_id    => template.id,
                        :options      => {

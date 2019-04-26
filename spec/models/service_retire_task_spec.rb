@@ -128,7 +128,7 @@ describe ServiceRetireTask do
       it "doesn't create subtask for miq_provision_request_template" do
         admin = FactoryBot.create(:user_admin)
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
-        service.add_resource!(FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id))
+        service.add_resource!(MiqProvisionRequestTemplate.create(:requester => admin, :src_vm_id => vm_template.id))
         service_retire_task.after_request_task_create
 
         expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")

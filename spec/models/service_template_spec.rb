@@ -354,7 +354,7 @@ describe ServiceTemplate do
       it "with copyable resource" do
         admin = FactoryBot.create(:user_admin)
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
-        ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
+        ptr = MiqProvisionRequestTemplate.create(:requester => admin, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
         expect(ServiceTemplate.count).to eq(1)
         @st1.template_copy("new_template")
@@ -370,7 +370,7 @@ describe ServiceTemplate do
       it "with copyable resource copies sr options" do
         admin = FactoryBot.create(:user_admin)
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
-        ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
+        ptr = MiqProvisionRequestTemplate.create(:requester => admin, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
         @st1.service_resources.first.update_attributes(:scaling_min => 4)
         expect(ServiceTemplate.count).to eq(1)
@@ -388,7 +388,7 @@ describe ServiceTemplate do
       it "service template ansible tower with copyable resource" do
         admin = FactoryBot.create(:user_admin)
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
-        ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
+        ptr = MiqProvisionRequestTemplate.create(:requester => admin, :src_vm_id => vm_template.id)
         service_template_ansible_tower.add_resource(ptr)
         expect(ServiceTemplate.count).to eq(2)
         service_template_ansible_tower.template_copy("new_template_copy")
@@ -404,7 +404,7 @@ describe ServiceTemplate do
       it "service template orchestration with copyable resource" do
         admin = FactoryBot.create(:user_admin)
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
-        ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
+        ptr = MiqProvisionRequestTemplate.create(:requester => admin, :src_vm_id => vm_template.id)
         service_template_orchestration.add_resource(ptr)
         expect(ServiceTemplate.count).to eq(2)
         service_template_orchestration.template_copy("new_template")
@@ -473,7 +473,7 @@ describe ServiceTemplate do
       it "with copyable resource" do
         admin = FactoryBot.create(:user_admin)
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
-        ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
+        ptr = MiqProvisionRequestTemplate.create(:requester => admin, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
         expect(ServiceTemplate.count).to eq(1)
         @st1.template_copy
@@ -747,7 +747,7 @@ describe ServiceTemplate do
         admin = FactoryBot.create(:user_admin)
 
         vm_template = Vm.first
-        ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
+        ptr = MiqProvisionRequestTemplate.create(:requester => admin, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
       end
 
@@ -773,7 +773,7 @@ describe ServiceTemplate do
 
       user         = FactoryBot.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
       @vm_template = FactoryBot.create(:template_vmware, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
-      @ptr = FactoryBot.create(:miq_provision_request_template, :requester => user, :src_vm_id => @vm_template.id)
+      @ptr = MiqProvisionRequestTemplate.create(:requester => user, :src_vm_id => @vm_template.id)
     end
 
     context 'atomic' do

@@ -22,7 +22,7 @@ module Spec
           options = value[:request]
           options ||= {}
           options[:dialog] = {}
-          mprt = FactoryBot.create(:miq_provision_request_template,
+          mprt = MiqProvisionRequestTemplate.create(
                                     :requester => get_user(options),
                                     :src_vm_id => options[:src_vm_id],
                                     :options   => options)
