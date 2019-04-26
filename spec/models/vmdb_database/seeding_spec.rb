@@ -78,7 +78,7 @@ describe VmdbDatabase do
       end
 
       it "should update table values" do
-        FactoryBot.create(:vmdb_database, :ipaddress => "127.0.0.1")
+        VmdbDatabase.create(:ipaddress => "127.0.0.1")
 
         expect(described_class).to receive(:db_server_ipaddress).and_return("192.255.255.1")
 
@@ -89,7 +89,7 @@ describe VmdbDatabase do
     end
 
     describe ".seed_tables (private)" do
-      let!(:db) { FactoryBot.create(:vmdb_database) }
+      let!(:db) { VmdbDatabase.create }
 
       before { described_class.send(:seed_tables) }
 
@@ -122,7 +122,7 @@ describe VmdbDatabase do
     end
 
     describe ".seed_indexes (private)" do
-      let!(:db)    { FactoryBot.create(:vmdb_database) }
+      let!(:db)    { VmdbDatabase.create }
       let!(:table) { FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => "accounts") }
 
       before { described_class.send(:seed_indexes) }

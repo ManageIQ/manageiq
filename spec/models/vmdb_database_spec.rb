@@ -1,5 +1,5 @@
 describe VmdbDatabase do
-  let(:db) { FactoryBot.create(:vmdb_database, :name => ActiveRecord::Base.connection.current_database) }
+  let(:db) { VmdbDatabase.create(:name => ActiveRecord::Base.connection.current_database) }
 
   let(:table) { FactoryBot.create(:vmdb_table_evm,  :vmdb_database => db) }
   let(:text)  { FactoryBot.create(:vmdb_table_text, :vmdb_database => db, :evm_table => table) }

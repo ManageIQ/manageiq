@@ -1,6 +1,6 @@
 describe VmdbTable do
   context "#latest_hourly_metric" do
-    let(:db)    { FactoryBot.create(:vmdb_database) }
+    let(:db)    { VmdbDatabase.create }
     let(:table) { FactoryBot.create(:vmdb_table, :vmdb_database => db, :name => 'foo') }
 
     it "fetches latest metric record" do

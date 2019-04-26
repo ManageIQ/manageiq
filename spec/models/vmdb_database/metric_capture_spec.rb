@@ -1,7 +1,7 @@
 describe VmdbDatabase do
   context "::MetricCapture" do
     context "#capture_database_metrics" do
-      let(:db) { FactoryBot.create(:vmdb_database) }
+      let(:db) { VmdbDatabase.create }
 
       context "when database is local" do
         it "populates columns from sql and os sources" do

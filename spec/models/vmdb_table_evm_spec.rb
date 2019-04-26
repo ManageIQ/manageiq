@@ -1,5 +1,5 @@
 describe VmdbTableEvm do
-  let(:db)    { FactoryBot.create(:vmdb_database) }
+  let(:db)    { VmdbDatabase.create }
   let(:table) { FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => "accounts") }
 
   describe "#capture_metrics" do
@@ -34,7 +34,7 @@ describe VmdbTableEvm do
   end
 
   context "#rollup_metrics" do
-    let(:db)    { FactoryBot.create(:vmdb_database) }
+    let(:db)    { VmdbDatabase.create }
     let(:table) { FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => 'accounts') }
 
     before do

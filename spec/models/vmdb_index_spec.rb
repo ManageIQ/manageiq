@@ -32,7 +32,7 @@ describe VmdbIndex do
   end
 
   context "#rollup_metrics" do
-    let(:db)    { FactoryBot.create(:vmdb_database) }
+    let(:db)    { VmdbDatabase.create }
     let(:table) { FactoryBot.create(:vmdb_table_evm, :vmdb_database => db, :name => "accounts") }
     let(:index) { FactoryBot.create(:vmdb_index, :vmdb_table => table, :name => "accounts_pkey") }
 
