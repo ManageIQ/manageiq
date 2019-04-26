@@ -51,7 +51,7 @@ describe ContainerImage do
     image = FactoryBot.create(:container_image)
     expect(image.computer_system).to be_nil
 
-    image.operating_system = FactoryBot.create(:operating_system)
+    image.operating_system = OperatingSystem.create
     expect(image.computer_system).not_to be_nil
     expect(image.operating_system).to eq(image.computer_system.operating_system)
   end

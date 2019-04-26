@@ -714,7 +714,7 @@ describe MiqWidget do
           vm = FactoryBot.build(:vm_vmware,
                                  :name             => "vm_win_#{i}",
                                  :vendor           => "vmware",
-                                 :operating_system => FactoryBot.create(:operating_system,
+                                 :operating_system => OperatingSystem.create(
                                                                          :product_name => @winos_pruduct_name,
                                                                          :name         => 'my_pc'),
                                 )
@@ -727,7 +727,7 @@ describe MiqWidget do
           vm = FactoryBot.build(:vm_redhat,
                                  :name             => "vm_rh_#{i}",
                                  :vendor           => "redhat",
-                                 :operating_system => FactoryBot.create(:operating_system,
+                                 :operating_system => OperatingSystem.create(
                                                                          :product_name => @rhos_product_name,
                                                                          :name         => 'my_linux'),
                                 )

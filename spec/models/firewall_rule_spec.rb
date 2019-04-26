@@ -3,7 +3,7 @@ describe FirewallRule do
 
   context "#operating_system" do
     it "with an OperatingSystem" do
-      os = FactoryBot.create(:operating_system)
+      os = OperatingSystem.create
       firewall_rule.update_attributes(:resource_type => "OperatingSystem", :resource_id => os.id)
 
       expect(firewall_rule.operating_system).to eq(os)
@@ -19,7 +19,7 @@ describe FirewallRule do
 
   context "#operating_system=" do
     it "with an OperatingSystem" do
-      os = FactoryBot.create(:operating_system)
+      os = OperatingSystem.create
 
       firewall_rule.operating_system = os
 

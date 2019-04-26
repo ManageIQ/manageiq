@@ -271,7 +271,7 @@ describe Host do
   end
 
   context "#get_ports" do
-    let(:os) { FactoryBot.create(:operating_system) }
+    let(:os) { OperatingSystem.create }
     subject  { FactoryBot.create(:host, :operating_system => os) }
 
     before do
