@@ -1,5 +1,5 @@
 describe MiqAlertStatusAction do
-  let(:alert) { FactoryBot.create(:miq_alert_status) }
+  let(:alert) { MiqAlertStatus.create }
   let(:user) { FactoryBot.create(:user) }
   let(:user2) { FactoryBot.create(:user, :name => 'user2') }
 

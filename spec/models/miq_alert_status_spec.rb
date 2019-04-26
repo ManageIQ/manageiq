@@ -1,6 +1,6 @@
 describe MiqAlertStatus do
   let(:ems)                    { FactoryBot.create(:ems_vmware, :name => 'ems') }
-  let(:alert)                  { FactoryBot.create(:miq_alert_status) }
+  let(:alert)                  { MiqAlertStatus.create }
   let(:user1)                  { FactoryBot.create(:user, :name => 'user1') }
   let(:user2)                  { FactoryBot.create(:user, :name => 'user2') }
   let(:acknowledgement_action) do
@@ -21,7 +21,7 @@ describe MiqAlertStatus do
   describe "Validation" do
     it "should reject unexpected severities" do
       expect do
-        FactoryBot.create(:miq_alert_status, :severity => 'awesome')
+        MiqAlertStatus.create!(:severity => 'awesome')
       end.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: MiqAlertStatus: Severity must be accepted")
     end
   end
