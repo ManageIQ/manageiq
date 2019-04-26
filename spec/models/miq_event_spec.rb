@@ -128,7 +128,7 @@ describe MiqEvent do
       it "will do policy, alerts, and children events for supported policy target" do
         event = 'vm_start'
         FactoryBot.create(:miq_event_definition, :name => event)
-        FactoryBot.create(:miq_event, :event_type => event, :target => @cluster)
+        MiqEvent.create(:event_type => event, :target => @cluster)
         inputs = {:type => @cluster.class.name, :triggering_type => event, :triggering_data => nil}
         expect(MiqPolicy).to receive(:enforce_policy).with(@cluster, event, inputs)
         expect(MiqAlert).to receive(:evaluate_alerts).with(@cluster, event, inputs)
@@ -141,7 +141,7 @@ describe MiqEvent do
       it "will not raise to automate for supported policy target" do
         raw_event = "evm_server_start"
         FactoryBot.create(:miq_event_definition, :name => raw_event)
-        FactoryBot.create(:miq_event, :event_type => raw_event, :target => @miq_server)
+        MiqEvent.create(:event_type => raw_event, :target => @miq_server)
 
         expect(MiqAeEvent).to receive(:raise_evm_event).never
         MiqEvent.first.process_evm_event
@@ -149,7 +149,7 @@ describe MiqEvent do
 
       it "will do nothing for unsupported policy target" do
         FactoryBot.create(:miq_event_definition, :name => "some_event")
-        FactoryBot.create(:miq_event, :event_type => "some_event", :target => @zone)
+        MiqEvent.create(:event_type => "some_event", :target => @zone)
 
         expect(MiqPolicy).to receive(:enforce_policy).never
         expect(MiqAlert).to receive(:evaluate_alerts).never
@@ -161,7 +161,7 @@ describe MiqEvent do
         event = 'ems_auth_changed'
         ems = FactoryBot.create(:ext_management_system)
         FactoryBot.create(:miq_event_definition, :name => event)
-        FactoryBot.create(:miq_event, :event_type => event, :target => ems)
+        MiqEvent.create(:event_type => event, :target => ems)
         inputs = {:type => ems.class.name, :triggering_type => event, :triggering_data => nil}
 
         expect(MiqPolicy).to receive(:enforce_policy).with(ems, event, inputs)

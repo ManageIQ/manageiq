@@ -429,9 +429,9 @@ describe MiqServer do
 
       describe ".destroy_linked_events" do
         it "destroys all events associated with destroyed server" do
-          FactoryBot.create(:miq_event, :event_type => "Local TestEvent", :target => @miq_server)
-          FactoryBot.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
-          FactoryBot.create(:miq_event, :event_type => "Remote TestEvent 1", :target => remote_server)
+          MiqEvent.create(:event_type => "Local TestEvent", :target => @miq_server)
+          MiqEvent.create(:event_type => "Remote TestEvent 1", :target => remote_server)
+          MiqEvent.create(:event_type => "Remote TestEvent 1", :target => remote_server)
 
           expect(MiqEvent.count).to eq 3
 
