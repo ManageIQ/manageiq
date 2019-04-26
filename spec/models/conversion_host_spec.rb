@@ -439,7 +439,7 @@ describe ConversionHost do
   end
 
   context "address validation" do
-    let(:vm) { FactoryBot.create(:host) }
+    let(:vm) { FactoryBot.create(:vm_openstack) }
 
     it "is invalid if the address is not a valid IP address" do
       allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
@@ -463,6 +463,12 @@ describe ConversionHost do
 
     it "is ignored if the resource does not have any ipaddresses" do
       conversion_host = ConversionHost.new(:name => "test", :resource => vm, :address => "127.0.0.2")
+      expect(conversion_host.valid?).to be(true)
+    end
+
+    it "is valid if an address is not provided" do
+      allow(vm).to receive(:ipaddresses).and_return(['127.0.0.1'])
+      conversion_host = ConversionHost.new(:name => "test", :resource => vm)
       expect(conversion_host.valid?).to be(true)
     end
   end
