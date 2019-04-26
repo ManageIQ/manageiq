@@ -559,7 +559,7 @@ describe MiqRequest do
   end
 
   context "retire request source classes" do
-    let(:vm_retire_request)      { FactoryBot.create(:vm_retire_request, :requester => fred) }
+    let(:vm_retire_request)      { VmRetireRequest.create(:requester => fred) }
     let(:service_retire_request) { FactoryBot.create(:service_retire_request, :requester => fred) }
     let(:orch_stack_request)     { OrchestrationStackRetireRequest.create(:requester => fred) }
 
