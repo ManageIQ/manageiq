@@ -51,7 +51,7 @@ describe Metric::Helper do
     end
 
     let(:ems_event) do
-      FactoryBot.create(:ems_event, :timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000"))
+      EmsEvent.create(:timestamp => Time.zone.parse("2016-01-12T01:00:00.00000000"))
     end
 
     it "returns origin set of records, some input records are not MetricRollup and Metric" do

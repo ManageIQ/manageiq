@@ -110,12 +110,12 @@ describe MiqAlert do
       it "should update the existing status on susesquent evaluations" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(:ems_event)
+          :ems_event => EmsEvent.create
         )
         Timecop.travel 10.minutes do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryBot.create(:ems_event)
+            :ems_event => EmsEvent.create
           )
           statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
           expect(statuses.length).to eq(1)
@@ -125,12 +125,12 @@ describe MiqAlert do
       it "should update the existing status if event has the same ems_ref" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(:ems_event, :ems_ref => 'same')
+          :ems_event => EmsEvent.create(:ems_ref => 'same')
         )
         Timecop.travel 10.minutes do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryBot.create(:ems_event, :ems_ref => 'same')
+            :ems_event => EmsEvent.create(:ems_ref => 'same')
           )
           statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
           expect(statuses.length).to eq(1)
@@ -140,12 +140,12 @@ describe MiqAlert do
       it "should create a new status if event has a different ems_ref" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(:ems_event, :ems_ref => 'same')
+          :ems_event => EmsEvent.create(:ems_ref => 'same')
         )
         Timecop.travel 10.minutes do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryBot.create(:ems_event, :ems_ref => 'different')
+            :ems_event => EmsEvent.create(:ems_ref => 'different')
           )
           statuses = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id)
           expect(statuses.length).to eq(2)
@@ -159,7 +159,7 @@ describe MiqAlert do
       it "miq_alert_status.description = miq_alert.description event if overriden by ems_event.description" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(:ems_event, :message => "oh no!")
+          :ems_event => EmsEvent.create(:message => "oh no!")
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.description).to eq("VM Unregistered")
@@ -168,7 +168,7 @@ describe MiqAlert do
       it "miq_alert_status.description = ems_event.message if present and datawarehouse_alert" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(:ems_event, :message => "oh no!", :event_type => "datawarehouse_alert")
+          :ems_event => EmsEvent.create(:message => "oh no!", :event_type => "datawarehouse_alert")
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.description).to eq("oh no!")
@@ -177,7 +177,7 @@ describe MiqAlert do
       it "miq_alert_status.severity = ems_event.full_data.severity if present" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(:ems_event, :full_data => {:severity => 'warning'})
+          :ems_event => EmsEvent.create(:full_data => {:severity => 'warning'})
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.severity).to eq('warning')
@@ -187,7 +187,7 @@ describe MiqAlert do
         @alert.severity = "error"
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(:ems_event, :full_data => {})
+          :ems_event => EmsEvent.create(:full_data => {})
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.severity).to eq('error')
@@ -197,7 +197,7 @@ describe MiqAlert do
         @alert.severity = "error"
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(:ems_event, :full_data => {:severity => 'info'})
+          :ems_event => EmsEvent.create(:full_data => {:severity => 'info'})
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.severity).to eq('info')
@@ -213,7 +213,7 @@ describe MiqAlert do
         expect do
           @alert.evaluate(
             [@vm.class.base_class.name, @vm.id],
-            :ems_event => FactoryBot.create(:ems_event, :full_data => {:severity => 'undefined'})
+            :ems_event => EmsEvent.create(:full_data => {:severity => 'undefined'})
           )
         end.to raise_error(ActiveRecord::RecordInvalid)
       end
@@ -221,10 +221,7 @@ describe MiqAlert do
       it "miq_alert_status.url = ems_event.full_data.url if present" do
         @alert.evaluate(
           [@vm.class.base_class.name, @vm.id],
-          :ems_event => FactoryBot.create(
-            :ems_event,
-            :full_data => {:url => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
-          )
+          :ems_event => EmsEvent.create(:full_data => {:url => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'})
         )
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.url).to eq('https://www.youtube.com/watch?v=dQw4w9WgXcQ')

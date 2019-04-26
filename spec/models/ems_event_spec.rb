@@ -4,7 +4,7 @@ describe EmsEvent do
     let(:ems2) { FactoryBot.create(:ems_kubernetes) }
 
     it "Find ems events and generated events for ext management systems" do
-      generated_event = FactoryBot.create(:ems_event, :ext_management_system => ems1, :generating_ems => ems2)
+      generated_event = EmsEvent.create(:ext_management_system => ems1, :generating_ems => ems2)
       expect(ems1.ems_events).to match_array([generated_event])
       expect(ems2.generated_events).to match_array([generated_event])
     end

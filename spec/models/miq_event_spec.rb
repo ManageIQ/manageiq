@@ -171,10 +171,8 @@ describe MiqEvent do
       it"will pass EmsEvent to policy if set" do
         event = 'vm_clone_start'
         vm = FactoryBot.create(:vm_vmware)
-        ems_event = FactoryBot.create(
-          :ems_event,
-          :event_type => "CloneVM_Task",
-          :full_data  => { "info" => {"task" => "task-5324"}})
+        ems_event = EmsEvent.create(:event_type => "CloneVM_Task",
+                                    :full_data  => { "info" => {"task" => "task-5324"}})
         FactoryBot.create(:miq_event_definition, :name => event)
         FactoryBot.create(
           :miq_event,

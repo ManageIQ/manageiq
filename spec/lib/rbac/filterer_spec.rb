@@ -2078,7 +2078,7 @@ describe Rbac::Filterer do
 
           it "works when class does not participate in RBAC and user filters are passed" do
             2.times do |i|
-              FactoryBot.create(:ems_event, :timestamp => Time.now.utc, :message => "Event #{i}")
+              EmsEvent.create(:timestamp => Time.now.utc, :message => "Event #{i}")
             end
 
             exp = YAML.load '--- !ruby/object:MiqExpression

@@ -34,7 +34,7 @@ describe EmsEventHelper do
       @username = 'fred'
       @chain_id = 12345
       @ems_events = []
-      @ems_events << FactoryBot.create(:ems_event,
+      @ems_events << EmsEvent.create(
                                         :event_type            => 'PowerOnVM_Task',
                                         :message               => 'Task: Power On virtual machine',
                                         :host_name             => @host.ipaddress,
@@ -50,7 +50,7 @@ describe EmsEventHelper do
                                         :username              => @username
                                        )
 
-      @ems_events << FactoryBot.create(:ems_event,
+      @ems_events << EmsEvent.create(
                                         :event_type            => 'VmStartingEvent',
                                         :message               => "#{@vm.name} on host #{@host.ipaddress} in DC1 is starting",
                                         :host_name             => @host.ipaddress,
@@ -66,7 +66,7 @@ describe EmsEventHelper do
                                         :username              => @username
                                        )
 
-      @ems_events << FactoryBot.create(:ems_event,
+      @ems_events << EmsEvent.create(
                                         :event_type            => 'VmPoweredOnEvent',
                                         :message               => "#{@vm.name} on  #{@host.ipaddress} in DC1 is powered on",
                                         :host_name             => @host.ipaddress,
@@ -82,7 +82,7 @@ describe EmsEventHelper do
                                         :username              => @username
                                        )
 
-      @ems_events << FactoryBot.create(:ems_event,
+      @ems_events << EmsEvent.create(
                                         :event_type            => 'PowerOnVM_Task_Complete',
                                         :message               => 'PowerOnVM_Task Completed',
                                         :host_name             => @host.ipaddress,

@@ -7,10 +7,10 @@ describe "MiqAlert Evaluation Internal" do
     context "evaluating an event threshold alert" do
       before do
         @events = []
-        @events << FactoryBot.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => Time.now.utc)
-        @events << FactoryBot.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 1.day.ago.utc)
-        @events << FactoryBot.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 2.days.ago.utc)
-        @events << FactoryBot.create(:ems_event, :vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 3.days.ago.utc)
+        @events << EmsEvent.create(:vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => Time.now.utc)
+        @events << EmsEvent.create(:vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 1.day.ago.utc)
+        @events << EmsEvent.create(:vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 2.days.ago.utc)
+        @events << EmsEvent.create(:vm_or_template_id => @vm.id, :event_type => "MigrateVM_Task_Complete", :timestamp => 3.days.ago.utc)
 
         expression = {
           :eval_method => "event_threshold",

@@ -13,11 +13,11 @@ describe EventMixin do
 
     before do
       @ts_1 = 5.days.ago
-      FactoryBot.create(:ems_event, :ems_id => 1, :timestamp => @ts_1)
+      EmsEvent.create(:ems_id => 1, :timestamp => @ts_1)
       @ts_2 = 4.days.ago
-      FactoryBot.create(:ems_event, :ems_id => 1, :timestamp => @ts_2)
+      EmsEvent.create(:ems_id => 1, :timestamp => @ts_2)
       @ts_3 = 3.days.ago
-      FactoryBot.create(:ems_event, :ems_id => 1, :timestamp => @ts_3)
+      EmsEvent.create(:ems_id => 1, :timestamp => @ts_3)
     end
 
     it "#first_event" do

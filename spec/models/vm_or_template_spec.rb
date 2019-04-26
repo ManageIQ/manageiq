@@ -621,7 +621,7 @@ describe VmOrTemplate do
   it "with ems_events" do
     ems       = FactoryBot.create(:ems_vmware_with_authentication)
     vm        = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
-    ems_event = FactoryBot.create(:ems_event)
+    ems_event = EmsEvent.create
     vm.ems_events << ems_event
     expect(vm.ems_events.first).to be_kind_of(EmsEvent)
     expect(vm.ems_events.first.id).to eq(ems_event.id)
