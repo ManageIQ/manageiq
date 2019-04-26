@@ -136,7 +136,7 @@ PXEMENU
     end
 
     it "on typed menu" do
-      pxe_menu = FactoryBot.create(:pxe_menu_ipxe, :pxe_server => @pxe_server)
+      pxe_menu = PxeMenuIpxe.create(:pxe_server => @pxe_server)
       pxe_menu.synchronize
 
       new_pxe_menu = PxeMenu.find(pxe_menu.id)
