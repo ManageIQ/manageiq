@@ -10,7 +10,7 @@ FactoryBot.define do
       after :create do |aeinstance, evaluator|
         aeinstance.ae_values << aeinstance.ae_class.ae_fields.collect do |field|
           next unless evaluator.values.key?(field.name)
-          FactoryBot.build(:miq_ae_value, {:field_id => field.id}.merge(evaluator.values[field.name]))
+          MiqAeValue.new({:field_id => field.id}.merge(evaluator.values[field.name]))
         end
       end
     end
