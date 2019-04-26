@@ -20,7 +20,7 @@ describe PurgingMixin do
   describe ".purge" do
     let(:events) do
       (-2..2).collect do |date_modifier|
-        FactoryBot.create(:policy_event, :timestamp => purge_date + date_modifier.days)
+        PolicyEvent.create(:timestamp => purge_date + date_modifier.days)
       end
     end
     let(:all_ids) { events.collect(&:id) }

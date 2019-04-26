@@ -23,7 +23,7 @@ describe MiqEnterprise do
     end
 
     it "#policy_events" do
-      policy_events = [FactoryBot.create(:policy_event), FactoryBot.create(:policy_event)]
+      policy_events = [PolicyEvent.create, PolicyEvent.create]
 
       expect(enterprise.policy_events).to match_array(policy_events)
     end

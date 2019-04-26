@@ -1307,7 +1307,7 @@ describe VmOrTemplate do
 
   context "#policy_events" do
     it "returns the policy events with target class of VmOrTemplate and target_id of the vm" do
-      policy_event = FactoryBot.create(:policy_event, :target_class => "VmOrTemplate", :target_id => vm.id)
+      policy_event = PolicyEvent.create(:target_class => "VmOrTemplate", :target_id => vm.id)
 
       expect(vm.policy_events).to eq([policy_event])
     end
