@@ -59,7 +59,7 @@ describe MiqPolicy do
 
     describe '#miq_event_definitions' do
       before do
-        policy.miq_policy_contents.push(FactoryBot.create(:miq_policy_content))
+        policy.miq_policy_contents.push(MiqPolicyContent.create)
       end
 
       it 'lists event definition' do

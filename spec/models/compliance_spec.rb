@@ -96,11 +96,7 @@ describe Compliance do
         let(:policy_set) { FactoryBot.create(:miq_policy_set) }
         let(:template)   { FactoryBot.create(:template_vmware, :host => host1, :ext_management_system => ems_vmware) }
         let(:action)     { FactoryBot.create(:miq_action, :name => 'compliance_failed', :action_type => 'default') }
-        let(:content) do
-          FactoryBot.create(
-            :miq_policy_content, :qualifier => 'failure', :failure_sequence => 1, :failure_synchronous => true
-          )
-        end
+        let(:content)    { MiqPolicyContent.create(:qualifier => 'failure', :failure_sequence => 1, :failure_synchronous => true) }
         let(:event_definition) { MiqEventDefinition.find_by(:name => "vm_compliance_check") }
 
         before do

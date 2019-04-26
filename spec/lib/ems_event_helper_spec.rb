@@ -106,7 +106,7 @@ describe EmsEventHelper do
       @action     = FactoryBot.create(:miq_action, :description => 'create_incident', :action_type => 'custom_automation', :options => automate_options)
       @policy_set.add_member(@policy)
 
-      @policy_content  = FactoryBot.create(:miq_policy_content,
+      @policy_content  = MiqPolicyContent.create(
                                             :miq_policy           => @policy,
                                             :miq_action           => @action,
                                             :miq_event_definition => @miq_event_vm_start,
