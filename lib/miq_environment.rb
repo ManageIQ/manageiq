@@ -11,12 +11,12 @@ module MiqEnvironment
 
     def self.supports_apache?
       return @supports_apache unless @supports_apache.nil?
-      @supports_apache = self.is_appliance? && self.supports_command?('apachectl')
+      @supports_apache = is_appliance? && supports_command?('apachectl')
     end
 
     def self.supports_nohup_and_backgrounding?
       return @supports_nohup unless @supports_nohup.nil?
-      @supports_nohup = self.is_appliance? && self.supports_command?('nohup')
+      @supports_nohup = is_appliance? && supports_command?('nohup')
     end
 
     def self.is_container?
@@ -31,7 +31,7 @@ module MiqEnvironment
 
     def self.is_appliance?
       return @is_appliance unless @is_appliance.nil?
-      @is_appliance = self.is_linux? && File.exist?('/var/www/miq/vmdb')
+      @is_appliance = is_linux? && File.exist?('/var/www/miq/vmdb')
     end
 
     def self.is_production?
