@@ -1,4 +1,4 @@
-describe ServiceTemplateTransformationPlanTask do
+RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
   let(:infra_conversion_job) { FactoryBot.create(:infra_conversion_job) }
 
   describe '.base_model' do

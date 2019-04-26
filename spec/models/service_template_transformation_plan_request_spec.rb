@@ -1,4 +1,4 @@
-describe ServiceTemplateTransformationPlanRequest do
+RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
   let(:vms) { Array.new(3) { FactoryBot.create(:vm_or_template) } }
   let(:vm_requests) do
     [ServiceResource::STATUS_QUEUED, ServiceResource::STATUS_FAILED, ServiceResource::STATUS_APPROVED].zip(vms).collect do |status, vm|
