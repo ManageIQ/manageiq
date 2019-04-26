@@ -79,9 +79,9 @@ describe(ServiceContainerTemplate) do
     }
   end
 
-  let(:ctp1) { FactoryBot.create(:container_template_parameter, :name => 'var1', :value => 'p1', :required => true) }
-  let(:ctp2) { FactoryBot.create(:container_template_parameter, :name => 'var2', :value => 'p2', :required => true) }
-  let(:ctp3) { FactoryBot.create(:container_template_parameter, :name => 'var3', :value => 'p3', :required => false) }
+  let(:ctp1) { ContainerTemplateParameter.create(:name => 'var1', :value => 'p1', :required => true) }
+  let(:ctp2) { ContainerTemplateParameter.create(:name => 'var2', :value => 'p2', :required => true) }
+  let(:ctp3) { ContainerTemplateParameter.create(:name => 'var3', :value => 'p3', :required => false) }
   let(:container_template) do
     ContainerTemplate.create(:ems_id => ems.id).tap do |ct|
       ct.container_template_parameters = [ctp1, ctp2, ctp3]
