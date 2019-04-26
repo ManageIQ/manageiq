@@ -561,7 +561,7 @@ describe MiqRequest do
   context "retire request source classes" do
     let(:vm_retire_request)      { FactoryBot.create(:vm_retire_request, :requester => fred) }
     let(:service_retire_request) { FactoryBot.create(:service_retire_request, :requester => fred) }
-    let(:orch_stack_request)     { FactoryBot.create(:orchestration_stack_retire_request, :requester => fred) }
+    let(:orch_stack_request)     { OrchestrationStackRetireRequest.create(:requester => fred) }
 
     it "gets the right source class names" do
       expect(vm_retire_request.class::SOURCE_CLASS_NAME).to eq('Vm')
