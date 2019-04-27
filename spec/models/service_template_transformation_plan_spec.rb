@@ -1,4 +1,4 @@
-describe ServiceTemplateTransformationPlan do
+RSpec.describe ServiceTemplateTransformationPlan, :v2v do
   subject { FactoryBot.create(:service_template_transformation_plan) }
 
   describe '#request_class' do
