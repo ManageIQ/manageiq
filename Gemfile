@@ -36,7 +36,6 @@ gem "byebug",                                          :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.6.0",       :require => false
 gem "dalli",                          "=2.7.6",        :require => false
-gem "dbus-systemd",                   "~>1.1.0",       :require => false
 gem "default_value_for",              "~>3.0.3"
 gem "docker-api",                     "~>1.33.6",      :require => false
 gem "elif",                           "=0.1.0",        :require => false
@@ -132,7 +131,8 @@ group :qpid_proton, :optional => true do
   gem "qpid_proton",                    "~>0.26.0",      :require => false
 end
 
-group :systemd_journal, :optional => true do
+group :systemd, :optional => true do
+  gem "dbus-systemd",    "~>1.1.0", :require => false
   gem "systemd-journal", "~>1.4.0", :require => false
 end
 
