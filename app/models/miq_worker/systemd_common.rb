@@ -61,7 +61,7 @@ class MiqWorker
       def target_file
         <<~TARGET_FILE
           [Unit]
-          PartOf=cfme.target
+          PartOf=miq.target
         TARGET_FILE
       end
 
