@@ -383,17 +383,12 @@ class MiqWorker < ApplicationRecord
     if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
       start_runner_via_spawn
     elsif systemd_worker?
-      start_runner_via_systemd
+      start_systemd_worker
     elsif containerized_worker?
       start_runner_via_container
     else
       start_runner_via_fork
     end
-  end
-
-  def start_runner_via_systemd
-    enable_systemd_unit
-    start_systemd_unit
   end
 
   def start_runner_via_container

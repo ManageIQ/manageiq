@@ -109,6 +109,16 @@ class MiqWorker
       end
     end
 
+    def start_systemd_worker
+      enable_systemd_unit
+      start_systemd_unit
+    end
+
+    def stop_systemd_worker
+      stop_systemd_unit
+      disable_systemd_unit
+    end
+
     def enable_systemd_unit(runtime: false, replace: true)
       systemd.EnableUnitFiles([unit_name], runtime, replace)
     end
