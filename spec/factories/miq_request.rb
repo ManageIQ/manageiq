@@ -16,6 +16,7 @@ FactoryBot.define do
     factory :miq_provision_request,              :class => "MiqProvisionRequest" do
       source { create(:miq_template) }
     end
+    factory :physical_server_provision_request,  :class => "PhysicalServerProvisionRequest"
 
     factory :service_template_transformation_plan_request, :class => "ServiceTemplateTransformationPlanRequest" do
       source { create(:service_template_transformation_plan) }
