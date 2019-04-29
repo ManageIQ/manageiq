@@ -174,13 +174,13 @@ class Classification < ApplicationRecord
 
     if failed_deletes.any? || failed_adds.any?
       msg = _("Failures occurred during bulk reassignment.")
-      failed_deletes.each do |ltarget, deletes|
-        names = deletes.collect(&:name).sort
+      failed_deletes.each do |ltarget, ldeletes|
+        names = ldeletes.collect(&:name).sort
         msg += _("  Unable to remove the following tags from %{class_name} %{id}: %{names}.") %
                  {:class_name => ltarget.class.name, :id => ltarget.id, :names => names.join(", ")}
       end
-      failed_adds.each do |ltarget, adds|
-        names = adds.collect(&:name).sort
+      failed_adds.each do |ltarget, ladds|
+        names = ladds.collect(&:name).sort
         msg += _("  Unable to add the following tags to %{class_name} %{id}: %{names}.") %
                  {:class_name => ltarget.class.name, :id => ltarget.id, :names => names.join(", ")}
       end
