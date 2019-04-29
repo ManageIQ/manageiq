@@ -60,6 +60,8 @@ end
 ENV["DISABLE_MIQ_WORKER_HEARTBEAT"] ||= options[:heartbeat] ? nil : '1'
 ENV["BUNDLER_GROUPS"] = MIQ_WORKER_TYPES[worker_class].join(',')
 
+options[:ems_id] ||= ENV["EMS_ID"]
+
 require File.expand_path("../../../config/environment", __dir__)
 
 worker_class = worker_class.constantize
