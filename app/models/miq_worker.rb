@@ -444,7 +444,7 @@ class MiqWorker < ApplicationRecord
 
   def start
     self.pid = start_runner
-    save unless containerized_worker? || systemd_worker?
+    save if !containerized_worker? && !systemd_worker?
 
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
     MiqEvent.raise_evm_event_queue(miq_server || MiqServer.my_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
@@ -569,7 +569,7 @@ class MiqWorker < ApplicationRecord
   delegate :normalized_type, :to => :class
 
   def self.abbreviated_class_name
-    self.name.sub(/^ManageIQ::Providers::/, "")
+    name.sub(/^ManageIQ::Providers::/, "")
   end
 
   def abbreviated_class_name
