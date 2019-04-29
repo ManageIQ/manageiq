@@ -6,7 +6,7 @@ class MiqWorker
       def ensure_systemd_files
         File.write(target_file_path, target_file) unless target_file_path.exist?
         File.write(service_file_path, unit_file) unless service_file_path.exist?
-        Dir.mkdir(service_config_path) unless service_config_path.exist?
+        FileUtils.mkdir_p(service_config_path) unless service_config_path.exist?
         File.write(service_config_file_path, service_settings_file) unless service_config_file_path.exist?
       end
 
