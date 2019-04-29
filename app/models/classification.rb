@@ -93,7 +93,7 @@ class Classification < ApplicationRecord
   def self.classify(obj, category_name, entry_name, is_request = true)
     cat = Classification.find_by_name(category_name, obj.region_id)
     unless cat.nil?
-      ent = cat.find_entry_by_name(entry_name, obj.region_id)
+      ent = cat.find_entry_by_name(entry_name)
       ent.assign_entry_to(obj, is_request) unless ent.nil? || obj.is_tagged_with?(ent.to_tag, :ns => "none")
     end
   end
@@ -101,7 +101,7 @@ class Classification < ApplicationRecord
   def self.unclassify(obj, category_name, entry_name, is_request = true)
     cat = Classification.find_by_name(category_name, obj.region_id)
     unless cat.nil?
-      ent = cat.find_entry_by_name(entry_name, obj.region_id)
+      ent = cat.find_entry_by_name(entry_name)
       ent.remove_entry_from(obj, is_request) unless ent.nil? || !obj.is_tagged_with?(ent.to_tag, :ns => "none")
     end
   end
@@ -323,8 +323,8 @@ class Classification < ApplicationRecord
 
   attr_writer :name
 
-  def find_entry_by_name(name, region_id = my_region_number)
-    self.class.find_by_name(name, region_id, ns, self)
+  def find_entry_by_name(name)
+    self.class.find_by_name(name, my_region_number, ns, self)
   end
 
   def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = 0)
