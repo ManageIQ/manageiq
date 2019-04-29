@@ -12,6 +12,12 @@ describe MiqPglogical do
     end
   end
 
+  describe "#subscriber?" do
+    it "is false when a subscription is not configured" do
+      expect(subject.subscriber?).to be false
+    end
+  end
+
   describe "#provider?" do
     it "is false when a provider is not configured" do
       expect(subject.provider?).to be false

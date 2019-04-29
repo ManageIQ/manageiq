@@ -14,6 +14,8 @@ class MiqPglogical
     self.configured_excludes = provider? ? active_excludes : self.class.default_excludes
   end
 
+  delegate :subscriber?, :to => :pglogical
+
   # Sets the tables that should be used to create the publication using refresh_excludes
   def configured_excludes=(new_excludes)
     @configured_excludes = new_excludes | ALWAYS_EXCLUDED_TABLES
@@ -28,10 +30,6 @@ class MiqPglogical
 
   def provider?
     pglogical.publications.map { |p| p["name"] }.include?(PUBLICATION_NAME)
-  end
-
-  def subscriber?
-    !pglogical.subscriptions.empty?
   end
 
   def configure_provider
