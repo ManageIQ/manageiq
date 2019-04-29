@@ -149,7 +149,7 @@ class MiqExpression
   def to_ruby(tz = nil)
     return "" unless valid?
     tz ||= "UTC"
-    @ruby ||= self.class._to_ruby(@exp.deep_clone, @context_type, tz)
+    @ruby ||= self.class._to_ruby(@exp.deep_clone, context_type, tz)
     @ruby.dup
   end
 
