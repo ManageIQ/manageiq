@@ -18,6 +18,7 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
+    @preprocess_options = {}
   end
 
   def valid?(component = exp)
