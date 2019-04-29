@@ -35,7 +35,7 @@ class MiqWorker
       end
 
       def service_config_name
-        "#{service_name}.d"
+        "#{service_file_name}.d"
       end
 
       def service_config_path
