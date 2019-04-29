@@ -1759,6 +1759,12 @@
   :feature_type: node
   :identifier: consumption
 
+# Red Hat Cloud Services
+- :name: Red Hat Cloud Service
+  :description: Everything under Red Hat Cloud Services
+  :feature_type: node
+  :identifier: red_hat_cloud_services
+
 # Chargeback
 - :name: Chargeback
   :description: Everything under Chargeback
