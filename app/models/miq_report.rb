@@ -89,6 +89,23 @@ class MiqReport < ApplicationRecord
     q
   end
 
+  # Returns the menu hierarchy for default reports
+  def self.default_reports_menu
+    # Retrieve the default reports' groups and their corresponding reports
+    # -> Array [rpt_group, report_name]
+    records = MiqReport.where(:rpt_type => 'Default', :template_type => 'report').order(:rpt_type, :name).pluck(:rpt_group, :name)
+    # Split up the reports' groups into two levels at the '-' character and group them by the first level
+    # -> Hash(rpt_group_1, [rpt_group_2, report_name])
+    grouped = records.map { |grp, items| [grp.split(/ *- */), items].flatten }.group_by(&:first)
+    # Map to the final structure, logically a hash of hashes recursively converted to an array
+    # -> Hash(rpt_group_1, Hash(rpt_group_2, report_name))
+    grouped.map do |grp, items|
+      # Group the items by the secondary group
+      # -> Hash(rpt_group_2, report_name)
+      [grp, items.group_by(&:second).map { |subgroup, subitems| [subgroup, subitems.map(&:third)] }]
+    end
+  end
+
   # NOTE: this can by dynamically manipulated
   def cols
     self[:cols] ||= (self[:col_order] || []).reject { |x| x.include?(".") }
