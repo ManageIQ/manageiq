@@ -1002,6 +1002,27 @@ describe ServiceTemplate do
       expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
     end
+
+    context "with an existing picture" do
+      let(:picture) { Picture.create(catalog_item_options.delete(:picture)) }
+
+      it "creates the picture without error" do
+        expect {
+          service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
+          service_template.picture = picture
+        }.not_to raise_error
+      end
+
+      it "has the picture assigned properly" do
+        service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
+        service_template.picture = picture
+        service_template.save
+
+        service_template.reload
+
+        expect(service_template.picture.id).to eq picture.id
+      end
+    end
   end
 
   describe '#update_catalog_item' do
