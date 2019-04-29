@@ -86,7 +86,7 @@ class MiqWorker
       end
 
       def exec_start
-        "exec ruby lib/workers/bin/run_single_worker.rb #{self.name} #{run_single_worker_args}"
+        "exec ruby lib/workers/bin/run_single_worker.rb #{name} #{run_single_worker_args}"
       end
 
       def run_single_worker_args
