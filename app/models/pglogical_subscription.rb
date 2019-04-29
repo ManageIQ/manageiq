@@ -106,6 +106,10 @@ class PglogicalSubscription < ActsAsArModel
     nil
   end
 
+  def sync_tables
+    pglogical.sync_subscription(id)
+  end
+
   # translate the output from the pglogical stored proc to our object columns
   def self.subscription_to_columns(sub)
     cols = sub.symbolize_keys

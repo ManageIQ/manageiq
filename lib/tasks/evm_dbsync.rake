@@ -23,6 +23,7 @@ namespace :evm do
       require 'miq_pglogical'
       pgl = MiqPglogical.new
       pgl.refresh_excludes if pgl.provider?
+      PglogicalSubscription.all.each(&:sync_tables)
     end
   end
 end
