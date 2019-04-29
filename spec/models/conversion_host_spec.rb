@@ -1,6 +1,6 @@
 require "MiqSshUtil"
 
-describe ConversionHost do
+RSpec.describe ConversionHost, :v2v do
   let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
 
   context "provider independent methods" do

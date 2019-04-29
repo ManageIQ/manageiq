@@ -1,4 +1,4 @@
-describe TransformationMapping do
+RSpec.describe TransformationMapping, :v2v do
   let(:src) { FactoryBot.create(:ems_cluster) }
   let(:dst) { FactoryBot.create(:ems_cluster) }
   let(:vm)  { FactoryBot.create(:vm_vmware, :ems_cluster => src) }
