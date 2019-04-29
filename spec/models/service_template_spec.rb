@@ -993,6 +993,7 @@ describe ServiceTemplate do
 
       expect(service_template.name).to eq('Atomic Service Template')
       expect(service_template.service_resources.count).to eq(1)
+      expect(Base64.strict_encode64(service_template.picture.content)).to start_with('aVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQUFFQUFBQUJDQVlBQ')
       expect(service_template.service_resources.first.resource_type).to eq('MiqRequest')
       expect(service_template.dialogs.first).to eq(service_dialog)
       expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
@@ -1038,20 +1039,40 @@ describe ServiceTemplate do
       @catalog_item.update_attributes!(:options => @catalog_item.options.merge(:foo => 'bar'))
     end
 
-    it 'updates the catalog item' do
-      updated = @catalog_item.update_catalog_item(updated_catalog_item_options, user)
+    context "without config info" do
+      it 'updates the catalog item' do
+        updated = @catalog_item.update_catalog_item(updated_catalog_item_options, user)
 
-      # Removes Retirement / Adds Reconfigure
-      expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
-      expect(updated.resource_actions.first.dialog_id).to be_nil # Removes the dialog from Provision
-      expect(updated.resource_actions.first.fqname).to eq('/a1/b1/c1')
-      expect(updated.resource_actions.last.dialog).to eq(service_dialog)
-      expect(updated.resource_actions.last.fqname).to eq('/x1/y1/z1')
-      expect(updated.name).to eq('Updated Template Name')
-      expect(Base64.strict_encode64(updated.picture.content)).to eq('aVZCT1J3MEtHZ29BQUFBTg==')
-      expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
-      expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
-      expect(updated.options.key?(:foo)).to be_truthy # Test that the options were merged
+        # Removes Retirement / Adds Reconfigure
+        expect(updated.resource_actions.pluck(:action)).to match_array(%w[Provision Reconfigure])
+        expect(updated.resource_actions.first.dialog_id).to be_nil # Removes the dialog from Provision
+        expect(updated.resource_actions.first.fqname).to eq('/a1/b1/c1')
+        expect(updated.resource_actions.last.dialog).to eq(service_dialog)
+        expect(updated.resource_actions.last.fqname).to eq('/x1/y1/z1')
+        expect(updated.name).to eq('Updated Template Name')
+        expect(Base64.strict_encode64(updated.picture.content)).to eq('aVZCT1J3MEtHZ29BQUFBTg==')
+        expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
+        expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
+        expect(updated.options.key?(:foo)).to be_truthy # Test that the options were merged
+      end
+    end
+
+    context "with config info" do
+      it 'updates the catalog item' do
+        @catalog_item.update_attributes!(:options => @catalog_item.options.merge(:config_info => 'bar'))
+        updated = @catalog_item.update_catalog_item(updated_catalog_item_options, user)
+
+        expect(updated.resource_actions.pluck(:action)).to match_array(%w[Provision Reconfigure])
+        expect(updated.resource_actions.first.dialog_id).to be_nil # Removes the dialog from Provision
+        expect(updated.resource_actions.first.fqname).to eq('/a1/b1/c1')
+        expect(updated.resource_actions.last.dialog).to eq(service_dialog)
+        expect(updated.resource_actions.last.fqname).to eq('/x1/y1/z1')
+        expect(updated.name).to eq('Updated Template Name')
+        expect(Base64.strict_encode64(updated.picture.content)).to eq('aVZCT1J3MEtHZ29BQUFBTg==')
+        expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
+        expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
+        expect(updated.options.key?(:foo)).to be_truthy # Test that the options were merged
+      end
     end
 
     it 'does not allow service_type to be changed' do

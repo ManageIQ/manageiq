@@ -209,7 +209,7 @@ class ServiceTemplate < ApplicationRecord
 
     nh['initiator'] = service_task.options[:initiator] if service_task.options[:initiator]
 
-    service = Service.create(nh) do |svc|
+    service = Service.create!(nh) do |svc|
       svc.service_template = self
       set_ownership(svc, service_task.get_user)
 
@@ -388,11 +388,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def self.create_from_options(options)
-    create(options.except(:config_info, :picture).merge(:options => { :config_info => options[:config_info] })).tap do |tmp|
-      if options[:picture]
-        tmp.update_attributes!(:picture => Picture.create(:content => options[:picture][:content], :extension => options[:picture][:extension]))
-      end
-    end
+    create!(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
   end
   private_class_method :create_from_options
 
@@ -401,6 +397,14 @@ class ServiceTemplate < ApplicationRecord
     result = order(user, options, request_options)
     raise result[:errors].join(", ") if result[:errors].any?
     result[:request]
+  end
+
+  def picture=(value)
+    if value
+      super unless value.kind_of?(Hash)
+
+      super(create_picture(value))
+    end
   end
 
   def queue_order(user_id, options, request_options)
@@ -520,10 +524,7 @@ class ServiceTemplate < ApplicationRecord
 
   def update_from_options(params)
     options[:config_info] = params[:config_info]
-    if params[:picture]
-      update_attributes!(:picture => Picture.create(:content => params[:picture][:content], :extension => params[:picture][:extension]))
-    end
-    update_attributes!(params.except(:config_info, :picture))
+    update_attributes!(params.except(:config_info))
   end
 
   def construct_config_info
