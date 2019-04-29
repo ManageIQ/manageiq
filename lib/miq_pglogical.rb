@@ -10,7 +10,7 @@ class MiqPglogical
   attr_reader :configured_excludes
 
   def initialize
-    @connection = ApplicationRecord.connection.raw_connection
+    @pg_connection = ApplicationRecord.connection.raw_connection
     self.configured_excludes = provider? ? active_excludes : self.class.default_excludes
   end
 
@@ -105,6 +105,6 @@ class MiqPglogical
 
   def pglogical(refresh = false)
     @pglogical = nil if refresh
-    @pglogical ||= PG::LogicalReplication::Client.new(@connection)
+    @pglogical ||= PG::LogicalReplication::Client.new(@pg_connection)
   end
 end
