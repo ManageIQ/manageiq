@@ -29,7 +29,7 @@ class MiqPglogical
   end
 
   def provider?
-    pglogical.publications.map { |p| p["name"] }.include?(PUBLICATION_NAME)
+    pglogical.publishes?(PUBLICATION_NAME)
   end
 
   def configure_provider
