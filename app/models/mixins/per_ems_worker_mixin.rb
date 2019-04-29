@@ -136,10 +136,7 @@ module PerEmsWorkerMixin
     super.merge(:ems_id => ems_id)
   end
 
-  def unit_config_file
-    <<~UNIT_CONFIG_FILE
-      [Service]
-      Environment=EMS_ID=#{ems_id}
-    UNIT_CONFIG_FILE
+  def unit_environment_variables
+    super << "EMS_ID=#{ems_id}"
   end
 end

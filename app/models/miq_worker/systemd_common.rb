@@ -6,8 +6,6 @@ class MiqWorker
       def ensure_systemd_files
         target_file_path.write(target_file) unless target_file_path.exist?
         service_file_path.write(unit_file) unless service_file_path.exist?
-        FileUtils.mkdir_p(service_config_path) unless service_config_path.exist?
-        service_config_file_path.write(service_settings_file) unless service_config_file_path.exist?
       end
 
       def service_base_name
@@ -32,18 +30,6 @@ class MiqWorker
 
       def service_file_path
         systemd_unit_dir.join(service_file_name)
-      end
-
-      def service_config_name
-        "#{service_file_name}.d"
-      end
-
-      def service_config_path
-        systemd_unit_dir.join(service_config_name)
-      end
-
-      def service_config_file_path
-        service_config_path.join("settings.conf")
       end
 
       def target_file_name
@@ -72,7 +58,6 @@ class MiqWorker
           [Install]
           WantedBy=#{target_file_name}
           [Service]
-          Environment=HOME=/root
           WorkingDirectory=#{working_directory}
           ExecStart=/bin/bash -lc '#{exec_start}'
           Restart=always
@@ -91,21 +76,6 @@ class MiqWorker
 
       def run_single_worker_args
         "--heartbeat --guid=%i"
-      end
-
-      def service_environment_variables
-        # Override this in a child class to add env vars
-        []
-      end
-
-      def service_settings_file
-        <<~WORKER_SETTINGS_FILE
-          [Service]
-          #{service_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
-          MemoryHigh=#{worker_settings[:memory_threshold].bytes}
-          TimeoutStartSec=#{worker_settings[:starting_timeout]}
-          TimeoutStopSec=#{worker_settings[:stopping_timeout]}
-        WORKER_SETTINGS_FILE
       end
     end
 
@@ -159,18 +129,11 @@ class MiqWorker
     end
 
     def write_unit_settings_file
-      # Only write a per-instance settings file if the worker is not a singleton,
-      # otherwise all settings could go to the main settings file (also the file
-      # paths would collide).
-      return if singleton_worker? || unit_config_file.blank?
-
       FileUtils.mkdir_p(unit_config_path)           unless unit_config_path.exist?
       unit_config_file_path.write(unit_config_file) unless unit_config_file_path.exist?
     end
 
     def cleanup_unit_settings_file
-      return if singleton_worker?
-
       unit_config_file_path.delete if unit_config_file_path.exist?
       unit_config_path.delete      if unit_config_path.exist?
     end
@@ -184,13 +147,26 @@ class MiqWorker
     end
 
     def unit_config_file_path
-      unit_config_path.join("settings.conf")
+      unit_config_path.join("override.conf")
     end
 
     def unit_config_file
       # Override this in a sub-class if the specific instance needs
       # any additional config
-      nil
+      <<~UNIT_CONFIG_FILE
+        [Service]
+        MemoryHigh=#{worker_settings[:memory_threshold].bytes}
+        TimeoutStartSec=#{worker_settings[:starting_timeout]}
+        TimeoutStopSec=#{worker_settings[:stopping_timeout]}
+        #{unit_environment_variables.map { |env_var| "Environment=#{env_var}" }.join("\n")}
+      UNIT_CONFIG_FILE
+    end
+
+    def unit_environment_variables
+      # Override this in a child class to add env vars
+      [
+        "HOME=/root"
+      ]
     end
   end
 end
