@@ -36,7 +36,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     worker_monitor_poll = (@worker_monitor_settings[:poll] || 1.seconds).to_i_with_method
 
     miq_workers.each do |w|
-      if MiqEnvironment::Command.is_podified? && w.containerized_worker?
+      if w.containerized_worker?
         w.delete_container_objects
       elsif w.systemd_worker?
         w.stop_systemd_unit
