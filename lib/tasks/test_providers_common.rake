@@ -3,7 +3,7 @@ require_relative './evm_test_helper'
 if defined?(RSpec)
 namespace :test do
   desc "Run all specs tagged 'providers_common'"
-  RSpec::Core::RakeTask.new(:providers_common => ["test:initialize", "evm:compile_sti_loader"]) do |t|
+  RSpec::Core::RakeTask.new(:providers_common => :spec_deps) do |t|
     EvmTestHelper.init_rspec_task(t, ['--tag', 'providers_common'])
 
     if defined?(ENGINE_ROOT)

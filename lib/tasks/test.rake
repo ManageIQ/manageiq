@@ -30,6 +30,8 @@ namespace :test do
     reset_task = defined?(ENGINE_ROOT) ? 'app:evm:db:reset' : 'evm:db:reset'
     Rake::Task[reset_task].invoke
   end
+
+  task :spec_deps => [:initialize, 'evm:compile_sti_loader']
 end
 
 task :default => 'test:vmdb'

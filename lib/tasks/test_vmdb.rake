@@ -34,13 +34,13 @@ namespace :test do
   end
 
   # TODO: Send a patch upstream to avoid adding a Rake task description; remove the parallel one too
-  RSpec::Core::RakeTask.new(:vmdb_sequential => [:initialize, "evm:compile_sti_loader"]) do |t|
+  RSpec::Core::RakeTask.new(:vmdb_sequential => :spec_deps) do |t|
     EvmTestHelper.init_rspec_task(t)
     t.pattern = EvmTestHelper.vmdb_spec_directories
   end
 
   desc "Run RSpec code examples in parallel"
-  task :vmdb_parallel => [:initialize, "evm:compile_sti_loader"] do
+  task :vmdb_parallel => :spec_deps do
     # Check that '<name_of_test_database>2' exists, else you need additional setup
     test_config = Rails.configuration.database_configuration['test'].tap { |config| config['database'].concat('2') }
     begin
