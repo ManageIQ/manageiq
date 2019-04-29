@@ -11,11 +11,15 @@ class MiqWorker
       end
 
       def service_base_name
-        "#{minimal_class_name.underscore.tr("/", "_")}"
+        minimal_class_name.underscore.tr("/", "_")
+      end
+
+      def slice_base_name
+        "miq"
       end
 
       def service_name
-        singleton_worker? ? "#{service_base_name}" : "#{service_base_name}@"
+        singleton_worker? ? service_base_name : "#{service_base_name}@"
       end
 
       def service_file_name
@@ -23,7 +27,7 @@ class MiqWorker
       end
 
       def slice_name
-        "cfme-#{service_base_name}.slice"
+        "#{slice_base_name}-#{service_base_name}.slice"
       end
 
       def service_file_path
@@ -77,7 +81,7 @@ class MiqWorker
       end
 
       def working_directory
-        # TODO pull this dynamically
+        # TODO: pull this dynamically
         "/var/www/miq/vmdb"
       end
 
