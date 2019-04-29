@@ -1,6 +1,7 @@
 module ManageIQ
   class PluginGenerator < Rails::Generators::NamedBase
     source_root File.expand_path('templates', __dir__)
+    source_paths << source_root
 
     remove_class_option :skip_namespace
 
@@ -16,10 +17,11 @@ module ManageIQ
       base_path = File.expand_path(options[:path], destination_root)
       self.destination_root = File.expand_path(plugin_name, base_path)
       empty_directory "."
-      git :init => destination_root
+      git :init => destination_root unless Dir.exist?(File.join(destination_root, ".git"))
+      FileUtils.cd(destination_root)
     end
 
-    def create_files
+    def create_plugin_files
       template "%plugin_name%.gemspec"
       template ".codeclimate.yml"
       template ".gitignore"
@@ -53,7 +55,7 @@ module ManageIQ
       template "spec/spec_helper.rb"
     end
 
-    def create_manageiq_gem
+    def insert_manageiq_gem
       data = <<~GEMFILE
         group :#{file_name}, :manageiq_default do
           manageiq_plugin "#{plugin_name}" # TODO: Sort alphabetically...
