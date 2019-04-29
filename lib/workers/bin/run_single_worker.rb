@@ -63,9 +63,8 @@ ENV["BUNDLER_GROUPS"] = MIQ_WORKER_TYPES[worker_class].join(',')
 require File.expand_path("../../../config/environment", __dir__)
 
 worker_class = worker_class.constantize
-missing_roles = ServerRole.where(:name => worker_class.required_roles) - MiqServer.my_server.active_roles
-unless missing_roles.empty?
-  STDERR.puts "ERR:  Server roles are not sufficient for `#{worker_class}` worker. Missing: #{missing_roles.collect(&:name)}"
+unless worker_class.has_required_role?
+  STDERR.puts "ERR:  Server roles are not sufficient for `#{worker_class}` worker."
   exit 1 unless options[:force]
 end
 
