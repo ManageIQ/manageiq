@@ -111,12 +111,13 @@ class MiqWorker
 
     def start_systemd_worker
       enable_systemd_unit
-      write_unit_settings_file unless singleton_worker?
+      write_unit_settings_file
       start_systemd_unit
     end
 
     def stop_systemd_worker
       stop_systemd_unit
+      cleanup_unit_settings_file
       disable_systemd_unit
     end
 
@@ -158,10 +159,20 @@ class MiqWorker
     end
 
     def write_unit_settings_file
-      return unless unit_config_file.present?
+      # Only write a per-instance settings file if the worker is not a singleton,
+      # otherwise all settings could go to the main settings file (also the file
+      # paths would collide).
+      return if singleton_worker? || unit_config_file.blank?
 
-      FileUtils.mkdir_p(unit_config_path) unless unit_config_path.exist?
+      FileUtils.mkdir_p(unit_config_path)           unless unit_config_path.exist?
       unit_config_file_path.write(unit_config_file) unless unit_config_file_path.exist?
+    end
+
+    def cleanup_unit_settings_file
+      return if singleton_worker?
+
+      unit_config_file_path.delete if unit_config_file_path.exist?
+      unit_config_path.delete      if unit_config_path.exist?
     end
 
     def unit_config_name
