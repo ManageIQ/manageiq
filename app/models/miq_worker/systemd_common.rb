@@ -111,6 +111,7 @@ class MiqWorker
 
     def start_systemd_worker
       enable_systemd_unit
+      write_unit_settings_file unless singleton_worker?
       start_systemd_unit
     end
 
@@ -154,6 +155,31 @@ class MiqWorker
 
     def unit_instance
       singleton_worker? ? "" : "@#{guid}"
+    end
+
+    def write_unit_settings_file
+      return unless unit_config_file.present?
+
+      FileUtils.mkdir_p(unit_config_path) unless unit_config_path.exist?
+      unit_config_file_path.write(unit_config_file) unless unit_config_file_path.exist?
+    end
+
+    def unit_config_name
+      "#{unit_name}.d"
+    end
+
+    def unit_config_path
+      self.class.systemd_unit_dir.join(unit_config_name)
+    end
+
+    def unit_config_file_path
+      unit_config_path.join("settings.conf")
+    end
+
+    def unit_config_file
+      # Override this in a sub-class if the specific instance needs
+      # any additional config
+      nil
     end
   end
 end
