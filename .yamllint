@@ -1,5 +1,6 @@
 ---
 ignore: |
+  /lib/generators/**/templates/**
   /locale/**
   /spec/tools/openstack_data/**
   /vendor/**
