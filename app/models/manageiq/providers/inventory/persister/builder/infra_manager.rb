@@ -208,7 +208,9 @@ module ManageIQ::Providers
 
         def distributed_virtual_switches
           add_properties(
-            :manager_ref => %i(uid_ems)
+            :manager_ref          => %i[uid_ems],
+            :attributes_blacklist => %i[parent],
+            :secondary_refs       => {:by_switch_uuid => %i[switch_uuid]}
           )
           add_common_default_values
         end
@@ -249,6 +251,80 @@ module ManageIQ::Providers
 
         def storage_profiles
           add_common_default_values
+        end
+
+        def root_folder_relationship
+          skip_auto_inventory_attributes
+          skip_model_class
+
+          add_properties(
+            :custom_save_block => root_folder_relationship_save_block
+          )
+
+          add_dependency_attributes(
+            :ems_folders => ->(persister) { [persister.collections[:ems_folders]] },
+          )
+        end
+
+        def parent_blue_folders
+          skip_auto_inventory_attributes
+          skip_model_class
+
+          add_properties(
+            :custom_save_block => relationship_save_block(:relationship_key => :parent)
+          )
+
+          add_dependency_attributes(
+            :ems_clusters   => ->(persister) { [persister.collections[:ems_clusters]] },
+            :ems_folders    => ->(persister) { [persister.collections[:ems_folders]] },
+            :hosts          => ->(persister) { [persister.collections[:hosts]] },
+            :resource_pools => ->(persister) { [persister.collections[:resource_pools]] },
+            :storages       => ->(persister) { [persister.collections[:storages]] },
+          )
+        end
+
+        def vm_parent_blue_folders
+          skip_auto_inventory_attributes
+          skip_model_class
+
+          add_properties(
+            :custom_save_block => relationship_save_block(:relationship_key => :parent, :parent_type => "EmsFolder")
+          )
+
+          add_dependency_attributes(
+            :vms => ->(persister) { persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact }
+          )
+        end
+
+        def vm_resource_pools
+          skip_auto_inventory_attributes
+          skip_model_class
+
+          add_properties(
+            :custom_save_block => relationship_save_block(
+              :relationship_key => :resource_pool, :parent_type => "ResourcePool"
+            )
+          )
+
+          add_dependency_attributes(
+            :vms => ->(persister) { persister.collections.values_at(:vms, :miq_templates, :vms_and_templates).compact }
+          )
+        end
+
+        private
+
+        def root_folder_relationship_save_block
+          lambda do |ems, inventory_collection|
+            folder_inv_collection = inventory_collection.dependency_attributes[:ems_folders]&.first
+            return if folder_inv_collection.nil?
+
+            # All folders must have a parent except for the root folder
+            root_folder_obj = folder_inv_collection.data.detect { |obj| obj.data[:parent].nil? }
+            return if root_folder_obj.nil?
+
+            root_folder = folder_inv_collection.model_class.find(root_folder_obj.id)
+            root_folder.with_relationship_type(:ems_metadata) { root_folder.parent = ems }
+          end
         end
       end
     end
