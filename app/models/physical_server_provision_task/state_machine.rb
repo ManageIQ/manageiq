@@ -6,7 +6,6 @@ module PhysicalServerProvisionTask::StateMachine
   end
 
   def start_provisioning
-    update_and_notify_parent(:message => msg('start provisioning'))
     # Implement provisioning in subclass, user-defined values are stored in options field.
     raise NotImplementedError, 'Must be implemented in subclass and signal :done_provisioning when done'
   end
