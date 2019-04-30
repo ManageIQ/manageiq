@@ -2,7 +2,7 @@ class MiqDialog < ApplicationRecord
   include_concern "Seeding"
 
   validates :name, :description, :presence => true
-  validates :name, :uniqueness => { :scope => :dialog_type, :case_sensitive => false }
+  validates :name, :unique_within_region => { :scope => :dialog_type, :match_case => false }
 
   scope :with_dialog_type, ->(dialog_type) { where(:dialog_type => dialog_type) }
 
