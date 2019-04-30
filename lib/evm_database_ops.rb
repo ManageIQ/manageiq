@@ -186,13 +186,8 @@ class EvmDatabaseOps
     end
 
     MiqRegion.replication_type = :none
-    60.times do
-      break if VmdbDatabaseConnection.where("application_name LIKE 'pglogical manager%'").count.zero?
-      _log.info("Waiting for pglogical connections to close...")
-      sleep 5
-    end
 
-    connection_count = backup_type == :basebackup ? VmdbDatabaseConnection.unscoped.count : VmdbDatabaseConnection.count
+    connection_count = backup_type == :basebackup ? VmdbDatabaseConnection.unscoped.where(:backend_type => "client backend").count : VmdbDatabaseConnection.count
     if connection_count > 1
       message = "Database restore failed. #{connection_count - 1} connections remain to the database."
       _log.error(message)
