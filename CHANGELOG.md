@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 110 ending 2019-04-29
+
+### Fixed
+- Fix: convert string representation of sizes to numbers when generating SQL for expression [(#18649)](https://github.com/ManageIQ/manageiq/pull/18649)
+
 ## Hammer-5
 
 ### Added
