@@ -1,0 +1,3 @@
+inherit_from:
+- https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_base.yml
+- .rubocop_local.yml

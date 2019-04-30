@@ -29,11 +29,6 @@ plugins:
     enabled: true
     config: ".rubocop_cc.yml"
 exclude_patterns:
-- config/dictionary_strings.rb
-- config/model_attributes.rb
-- config/yaml_strings.rb
-- db/schema.rb
-- lib/generators/**/templates/
 - node_modules/
 - spec/
 - test/

@@ -1,6 +1,6 @@
 AllCops:
   Exclude:
-  - lib/generators/provider/templates/**/*
+  - lib/generators/**/templates/**/*
   - db/schema.rb
 GlobalVars:
   AllowedVariables:

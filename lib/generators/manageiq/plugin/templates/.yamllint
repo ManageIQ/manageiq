@@ -1,9 +1,7 @@
 ---
 ignore: |
-  /lib/generators/**/templates/**
-  /locale/**
-  /spec/tools/openstack_data/**
   /vendor/**
+  /spec/manageiq/**
 
 extends: relaxed
 
@@ -11,4 +9,4 @@ rules:
   indentation:
     indent-sequences: false
   line-length:
-    max: 1000
+    max: 120
