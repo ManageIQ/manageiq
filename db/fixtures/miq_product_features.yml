@@ -2856,7 +2856,7 @@
       :identifier: miq_task_canceljob
 
 # Configuration
-- :name: Configuration
+- :name: Main Configuration
   :description: Everything under Configuration
   :feature_type: node
   :identifier: ops_explorer
