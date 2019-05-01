@@ -4,12 +4,14 @@ describe MiqProvision do
       @os = OperatingSystem.new(:product_name => 'Microsoft Windows')
       @admin = FactoryBot.create(:user_with_group, :role => "admin")
       @target_vm_name = 'clone test'
+      @password = "pa$$word"
       @options = {
         :pass          => 1,
         :vm_name       => @target_vm_name,
         :number_of_vms => 1,
         :cpu_limit     => -1,
-        :cpu_reserve   => 0
+        :cpu_reserve   => 0,
+        :mypass        => "password::#{ManageIQ::Password.encrypt(@password)}"
       }
     end
 
@@ -35,6 +37,19 @@ describe MiqProvision do
           expect(@vm_prov.get_option_last(:src_vm_id)).to eq(@vm_template.name)
           expect(@vm_prov.get_option_last(:number_of_vms)).to eq(1)
           expect(@vm_prov.get_option(nil, @vm_prov.options[:src_vm_id])).to eq(@vm_template.id)
+        end
+
+        it "get decrypted value from options hash" do
+          expect(@vm_prov.get_option_decrypted(:mypass)).to eq(@password)
+        end
+
+        it "raises Arugment Error for non encrypted fields" do
+          expect { @vm_prov.get_option_decrypted(:src_vm_id) }.to raise_error(ArgumentError)
+        end
+
+        it "check if a option key is encrypted" do
+          expect(@vm_prov.option_encrypted?(:src_vm_id)).to be_falsey
+          expect(@vm_prov.option_encrypted?(:mypass)).to be_truthy
         end
 
         it "should return a user object" do
