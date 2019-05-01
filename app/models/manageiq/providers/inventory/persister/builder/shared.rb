@@ -61,7 +61,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
     def vm_template_shared
       add_properties(
         :delete_method          => :disconnect_inv,
-        :attributes_blacklist   => %i(genealogy_parent),
+        :attributes_blacklist   => %i[genealogy_parent parent resource_pool],
         :use_ar_object          => true, # Because of raw_power_state setter and hooks are needed for settings user
         :saver_strategy         => :default,
         :batch_extra_attributes => %i(power_state state_changed_on previous_state),

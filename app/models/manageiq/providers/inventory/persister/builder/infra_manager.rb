@@ -85,42 +85,42 @@ module ManageIQ::Providers
 
         def ems_folders
           add_properties(
-            :manager_ref          => %i(uid_ems),
-            :attributes_blacklist => %i(ems_children),
+            :manager_ref          => %i[uid_ems],
+            :attributes_blacklist => %i[parent],
           )
           add_common_default_values
         end
 
         def datacenters
+          add_properties(:attributes_blacklist => %i[parent])
           add_common_default_values
         end
 
         def resource_pools
           add_properties(
-            :manager_ref          => %i(uid_ems),
-            :attributes_blacklist => %i(ems_children),
+            :manager_ref          => %i[uid_ems],
+            :attributes_blacklist => %i[parent],
           )
           add_common_default_values
         end
 
         def ems_clusters
-          add_properties(
-            :attributes_blacklist => %i(ems_children datacenter_id),
-          )
-
-          add_inventory_attributes(%i(datacenter_id))
+          add_properties(:attributes_blacklist => %i[datacenter_id parent])
+          add_inventory_attributes(%i[datacenter_id])
           add_common_default_values
         end
 
         def storages
           add_properties(
-            :manager_ref => %i(location),
-            :complete    => false,
-            :arel        => Storage,
+            :manager_ref          => %i[location],
+            :complete             => false,
+            :arel                 => Storage,
+            :attributes_blacklist => %i[parent],
           )
         end
 
         def hosts
+          add_properties(:attributes_blacklist => %i[parent])
           add_common_default_values
 
           add_custom_reconnect_block(
@@ -180,7 +180,8 @@ module ManageIQ::Providers
           end
 
           add_properties(
-            :custom_reconnect_block => custom_reconnect_block
+            :custom_reconnect_block => custom_reconnect_block,
+            :attributes_blacklist   => %i[parent]
           )
         end
 
