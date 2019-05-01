@@ -230,6 +230,24 @@ describe Rbac::Filterer do
         end
       end
 
+      context 'searching for instances of Lans' do
+        let!(:lan) { FactoryBot.create_list(:lan, 2).first }
+
+        before do
+          lan.tag_with('/managed/environment/prod', :ns => '*')
+        end
+
+        it 'lists only tagged Lans' do
+          results = described_class.search(:class => Lan, :user => user).first
+          expect(results).to match_array [lan]
+        end
+
+        it 'lists only all Lans' do
+          results = described_class.search(:class => Lan, :user => admin_user).first
+          expect(results).to match_array Lan.all
+        end
+      end
+
       context 'searching for instances of ConfigurationScriptSource' do
         let!(:configuration_script_source) { FactoryBot.create_list(:embedded_ansible_configuration_script_source, 2).first }
 
