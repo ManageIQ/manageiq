@@ -187,6 +187,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def update_options(opts)
+    save if changed?
     with_lock do
       # Automate is updating this options hash (various keys) as well, using with_lock.
       options.merge!(opts)
