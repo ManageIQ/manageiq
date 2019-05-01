@@ -18,7 +18,7 @@
 - file_depots
 - jobs
 - log_files
-- metrics
+- metrics_base
 - metrics_00
 - metrics_01
 - metrics_02
@@ -43,7 +43,6 @@
 - metrics_21
 - metrics_22
 - metrics_23
-- metric_rollups
 - miq_actions
 - miq_ae_classes
 - miq_ae_fields
