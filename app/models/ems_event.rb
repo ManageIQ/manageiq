@@ -268,6 +268,10 @@ class EmsEvent < EventStream
   end
   alias_method :src_vm_refresh_target, :vm_refresh_target
 
+  def src_vm_or_dest_host_refresh_target
+    vm_or_template ? vm_refresh_target : dest_host_refresh_target
+  end
+
   def host_refresh_target
     (host && host.ext_management_system ? host : ems_refresh_target)
   end
