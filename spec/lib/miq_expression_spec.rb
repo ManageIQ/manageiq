@@ -379,14 +379,14 @@ describe MiqExpression do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
       sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
-      expect(sql).to eq("\"vms\".\"name\" LIKE 'foo%' AND \"vms\".\"name\" LIKE '%bar'")
+      expect(sql).to eq("(\"vms\".\"name\" LIKE 'foo%' AND \"vms\".\"name\" LIKE '%bar')")
     end
 
     it "generates the SQL for an AND expression where only one is supported by SQL" do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
       sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
-      expect(sql).to eq("\"vms\".\"name\" LIKE 'foo%'")
+      expect(sql).to eq("(\"vms\".\"name\" LIKE 'foo%')")
     end
 
     it "returns nil for an AND expression where none is supported by SQL" do
@@ -417,12 +417,30 @@ describe MiqExpression do
       expect(sql).to be_nil
     end
 
-    it "properly groups the items in an AND/OR expression" do
-      exp = {"AND" => [{"EQUAL" => {"field" => "Vm-power_state", "value" => "on"}},
-                       {"OR" => [{"EQUAL" => {"field" => "Vm-name", "value" => "foo"}},
-                                 {"EQUAL" => {"field" => "Vm-name", "value" => "bar"}}]}]}
-      sql, * = described_class.new(exp).to_sql
-      expect(sql).to eq(%q("vms"."power_state" = 'on' AND ("vms"."name" = 'foo' OR "vms"."name" = 'bar')))
+    context "nested expressions" do
+      it "properly groups the items in an AND/OR expression" do
+        exp = {"AND" => [{"EQUAL" => {"field" => "Vm-power_state", "value" => "on"}},
+                         {"OR" => [{"EQUAL" => {"field" => "Vm-name", "value" => "foo"}},
+                                   {"EQUAL" => {"field" => "Vm-name", "value" => "bar"}}]}]}
+        sql, * = described_class.new(exp).to_sql
+        expect(sql).to eq(%q(("vms"."power_state" = 'on' AND ("vms"."name" = 'foo' OR "vms"."name" = 'bar'))))
+      end
+
+      it "properly groups the items in an OR/AND expression" do
+        exp = {"OR" => [{"EQUAL" => {"field" => "Vm-power_state", "value" => "on"}},
+                        {"AND" => [{"EQUAL" => {"field" => "Vm-name", "value" => "foo"}},
+                                   {"EQUAL" => {"field" => "Vm-name", "value" => "bar"}}]}]}
+        sql, * = described_class.new(exp).to_sql
+        expect(sql).to eq(%q(("vms"."power_state" = 'on' OR ("vms"."name" = 'foo' AND "vms"."name" = 'bar'))))
+      end
+
+      it "properly groups the items in an OR/OR expression" do
+        exp = {"OR" => [{"EQUAL" => {"field" => "Vm-power_state", "value" => "on"}},
+                        {"OR" => [{"EQUAL" => {"field" => "Vm-name", "value" => "foo"}},
+                                  {"EQUAL" => {"field" => "Vm-name", "value" => "bar"}}]}]}
+        sql, * = described_class.new(exp).to_sql
+        expect(sql).to eq(%q(("vms"."power_state" = 'on' OR ("vms"."name" = 'foo' OR "vms"."name" = 'bar'))))
+      end
     end
 
     it "generates the SQL for a NOT expression" do

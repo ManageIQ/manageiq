@@ -1400,7 +1400,7 @@ class MiqExpression
         next if arel.blank?
         result << arel
       end
-      Arel::Nodes::And.new(operands)
+      Arel::Nodes::Grouping.new(Arel::Nodes::And.new(operands))
     when "or"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
