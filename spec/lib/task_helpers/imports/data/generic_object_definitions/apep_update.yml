@@ -1,0 +1,18 @@
+---
+- GenericObjectDefinition:
+    name: Apep
+    description: Updated description
+    properties:
+      :attributes:
+        weapon: :string
+        is_tired: :boolean
+        created: :datetime
+        retirement: :datetime
+      :associations:
+        cloud_tenant: CloudTenant
+      :methods:
+      - kick
+      - laugh_at
+      - punch
+      - parseltongue
+      - updated_method

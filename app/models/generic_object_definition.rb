@@ -1,4 +1,7 @@
 class GenericObjectDefinition < ApplicationRecord
+  include YAMLImportExportMixin
+  include_concern 'ImportExport'
+
   TYPE_MAP = {
     :boolean  => ActiveModel::Type::Boolean.new,
     :datetime => ActiveModel::Type::DateTime.new,
