@@ -153,36 +153,12 @@ module ManageIQ::Providers
 
         def vms
           super
+          vm_template_infra_shared_properties
+        end
 
-          custom_reconnect_block = lambda do |inventory_collection, inventory_objects_index, attributes_index|
-            relation = inventory_collection.model_class.where(:ems_id => nil)
-
-            return if relation.count <= 0
-
-            inventory_objects_index.each_slice(100) do |batch|
-              relation.where(inventory_collection.manager_ref.first => batch.map(&:first)).each do |record|
-                index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
-
-                # We need to delete the record from the inventory_objects_index and attributes_index, otherwise it
-                # would be sent for create.
-                inventory_object = inventory_objects_index.delete(index)
-                hash = attributes_index.delete(index)
-
-                record.assign_attributes(hash.except(:id, :type))
-                if !inventory_collection.check_changed? || record.changed?
-                  record.save!
-                  inventory_collection.store_updated_records(record)
-                end
-
-                inventory_object.id = record.id
-              end
-            end
-          end
-
-          add_properties(
-            :custom_reconnect_block => custom_reconnect_block,
-            :attributes_blacklist   => %i[parent]
-          )
+        def miq_templates
+          super
+          vm_template_infra_shared_properties
         end
 
         def host_storages
@@ -275,13 +251,11 @@ module ManageIQ::Providers
             :custom_save_block => relationship_save_block(:relationship_key => :parent)
           )
 
-          add_dependency_attributes(
-            :ems_clusters   => ->(persister) { [persister.collections[:ems_clusters]] },
-            :ems_folders    => ->(persister) { [persister.collections[:ems_folders]] },
-            :hosts          => ->(persister) { [persister.collections[:hosts]] },
-            :resource_pools => ->(persister) { [persister.collections[:resource_pools]] },
-            :storages       => ->(persister) { [persister.collections[:storages]] },
-          )
+          dependency_collections = %i[ems_clusters ems_folders datacenters hosts resource_pools storages]
+          dependency_attributes = dependency_collections.each_with_object({}) do |collection, hash|
+            hash[collection] = ->(persister) { [persister.collections[collection]].compact }
+          end
+          add_dependency_attributes(dependency_attributes)
         end
 
         def vm_parent_blue_folders
@@ -325,6 +299,38 @@ module ManageIQ::Providers
 
             root_folder = folder_inv_collection.model_class.find(root_folder_obj.id)
             root_folder.with_relationship_type(:ems_metadata) { root_folder.parent = ems }
+          end
+        end
+
+        def vm_template_infra_shared_properties
+          add_inventory_attributes(%i[resource_pool])
+          add_properties(:custom_reconnect_block => vm_template_infra_reconnect_block)
+        end
+
+        def vm_template_infra_reconnect_block
+          lambda do |inventory_collection, inventory_objects_index, attributes_index|
+            relation = inventory_collection.model_class.where(:ems_id => nil)
+
+            return if relation.count <= 0
+
+            inventory_objects_index.each_slice(100) do |batch|
+              relation.where(inventory_collection.manager_ref.first => batch.map(&:first)).each do |record|
+                index = inventory_collection.object_index_with_keys(inventory_collection.manager_ref_to_cols, record)
+
+                # We need to delete the record from the inventory_objects_index and attributes_index, otherwise it
+                # would be sent for create.
+                inventory_object = inventory_objects_index.delete(index)
+                hash = attributes_index.delete(index)
+
+                record.assign_attributes(hash.except(:id, :type))
+                if !inventory_collection.check_changed? || record.changed?
+                  record.save!
+                  inventory_collection.store_updated_records(record)
+                end
+
+                inventory_object.id = record.id
+              end
+            end
           end
         end
       end
