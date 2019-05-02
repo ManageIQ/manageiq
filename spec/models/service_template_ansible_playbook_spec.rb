@@ -240,7 +240,7 @@ describe ServiceTemplateAnsiblePlaybook do
       info[:dialog_id] = service_template.dialogs.first.id
 
       expect(service_template.dialogs.first.id).to eq info[:dialog_id]
-      expect(described_class).to receive(:create_new_dialog).never
+      expect(service_template).to receive(:create_new_dialog).never
       expect(job_template).to receive(:update_in_provider_queue).once
       service_template.update_catalog_item(catalog_item_options_three, user)
       service_template.reload
@@ -291,8 +291,7 @@ describe ServiceTemplateAnsiblePlaybook do
       service_template = prebuild_service_template(:job_template => false)
       adjust_resource_actions(service_template, nil)
 
-      expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript)
-        .to receive(:delete_in_provider_queue).never
+      expect(job_template).to receive(:delete_in_provider_queue).never
       service_template.send(:delete_job_templates, [])
     end
 
