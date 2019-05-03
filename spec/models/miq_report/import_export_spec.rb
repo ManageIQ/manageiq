@@ -172,4 +172,31 @@ describe MiqReport::ImportExport do
       expect(MiqReport.view_yaml_filename(VmCloud.name, user, {})).to include("ManageIQ_Providers_CloudManager_Vm.yaml")
     end
   end
+
+  context ".load_from_view_options" do
+    let(:current_user) { FactoryBot.create(:user_admin) }
+
+    before do
+      EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
+    end
+
+    it "saves filename in extras" do
+      view = MiqReport.load_from_view_options(VmCloud.name, current_user)
+      expect(view.extras[:filename]).to eq("ManageIQ_Providers_CloudManager_Vm")
+    end
+  end
+
+  context ".load_from_filename" do
+    let(:current_user) { FactoryBot.create(:user_admin) }
+
+    before do
+      EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
+    end
+
+    it "saves filename in extras" do
+      filename = MiqReport.view_yaml_filename(VmCloud.name, current_user, {})
+      view = MiqReport.load_from_filename(filename, {})
+      expect(view.extras[:filename]).to eq("ManageIQ_Providers_CloudManager_Vm")
+    end
+  end
 end
