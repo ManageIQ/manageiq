@@ -5,6 +5,10 @@ module MiqFilter
     belongsto2object_list(tag).last
   end
 
+  def self.belongsto2path_human(tag)
+    tag.split("/").map { |x| x.split("|").second }.compact.join(" -> ")
+  end
+
   def self.find_descendant_class_by(klass, name)
     if ALLOWED_DESCENDANT_CLASSES_FROM_MODEL.include?(klass.to_s) && (descendant_class = klass.try(:belongsto_descendant_class, name))
       return descendant_class.constantize
@@ -58,7 +62,7 @@ module MiqFilter
         obj.children.grep(tag_part_klass).detect { |c| c.name == name }
       end
 
-      return result unless obj
+      return [] unless obj
       result.push(obj)
     end
   end
