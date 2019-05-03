@@ -3,6 +3,10 @@ module MiqFilter
     belongsto2object_list(tag).last
   end
 
+  def self.belongsto2path_human(tag)
+    tag.split("/").map { |x| x.split("|").second }.compact.join(" -> ")
+  end
+
   def self.belongsto2object_list(tag)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
     raise _("invalid tag: %{tag}") % {:tag => tag} unless tag.starts_with?("/belongsto/ExtManagementSystem")
@@ -27,7 +31,7 @@ module MiqFilter
         obj.children.grep(tag_part_klass).detect { |c| c.name == name }
       end
 
-      return result unless obj
+      return [] unless obj
       result.push(obj)
     end
   end

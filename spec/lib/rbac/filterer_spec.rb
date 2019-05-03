@@ -1317,17 +1317,17 @@ describe Rbac::Filterer do
       end
 
       context "with VMs and Templates" do
+        let(:root) { FactoryBot.create(:ems_folder, :name => "Datacenters").tap { |ems_folder| ems_folder.parent = @ems } }
+
+        let(:dc) { FactoryBot.create(:ems_folder, :name => "Datacenter1").tap { |data_center| data_center.parent = root } }
+
+        let(:hfolder) { FactoryBot.create(:ems_folder, :name => "host").tap { |hfolder| hfolder.parent = dc } }
+
         before do
           @ems = FactoryGirl.create(:ems_vmware, :name => 'ems1')
           @host1.update_attributes(:ext_management_system => @ems)
           @host2.update_attributes(:ext_management_system => @ems)
 
-          root            = FactoryGirl.create(:ems_folder, :name => "Datacenters")
-          root.parent     = @ems
-          dc              = FactoryGirl.create(:datacenter, :name => "Datacenter1")
-          dc.parent       = root
-          hfolder         = FactoryGirl.create(:ems_folder, :name => "host")
-          hfolder.parent  = dc
           @vfolder        = FactoryGirl.create(:ems_folder, :name => "vm")
           @vfolder.parent = dc
           @host1.parent   = hfolder
@@ -1391,6 +1391,31 @@ describe Rbac::Filterer do
             results = described_class.search(:class => "ExtManagementSystem", :user => user)
             objects = results.first
             expect(objects).to eq([@ems])
+          end
+
+          context "deleted cluster from belongsto filter" do
+            let!(:group)   { FactoryBot.create(:miq_group, :tenant => default_tenant) }
+            let!(:user)    { FactoryBot.create(:user, :miq_groups => [group]) }
+            let(:cluster_1) { FactoryBot.create(:ems_cluster, :name => "MTC Development 1").tap { |cluster| cluster.parent = hfolder } }
+            let(:cluster_2) { FactoryBot.create(:ems_cluster, :name => "MTC Development 2").tap { |cluster| cluster.parent = hfolder } }
+            let(:vm_folder_path) { "/belongsto/ExtManagementSystem|#{@ems.name}/EmsFolder|#{root.name}/EmsFolder|#{dc.name}/EmsFolder|#{hfolder.name}/EmsCluster|#{cluster_1.name}" }
+
+            it "honors ems_id conditions" do
+              group.entitlement = Entitlement.new
+              group.entitlement.set_belongsto_filters([vm_folder_path])
+              group.entitlement.set_managed_filters([])
+              group.save!
+
+              results = described_class.filtered(EmsCluster, :user => user)
+
+              expect(results).to match_array([cluster_1])
+
+              cluster_1.destroy
+
+              results = described_class.filtered(EmsCluster, :user => user)
+
+              expect(results).to be_empty
+            end
           end
         end
 
@@ -1517,6 +1542,7 @@ describe Rbac::Filterer do
 
           @cluster = FactoryGirl.create(:ems_cluster, :name => "MTC Development")
           @cluster.parent = @hfolder
+
           @cluster_folder_path = "#{@mtc_folder_path}/EmsFolder|#{@hfolder.name}/EmsCluster|#{@cluster.name}"
 
           @rp = FactoryGirl.create(:resource_pool, :name => "Default for MTC Development")
