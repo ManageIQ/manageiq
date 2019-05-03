@@ -311,7 +311,7 @@ class ConversionHost < ApplicationRecord
 
     command = "ansible-playbook #{playbook} --inventory #{host}, --become --extra-vars=\"ansible_ssh_common_args='-o StrictHostKeyChecking=no'\""
 
-    auth = authentication_type(auth_type) || authentications.first
+    auth = authentication_type(auth_type) || authentications.first || find_credentials
     command << " --user #{auth.userid}"
 
     case auth
