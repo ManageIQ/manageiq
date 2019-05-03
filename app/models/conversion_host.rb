@@ -251,10 +251,10 @@ class ConversionHost < ApplicationRecord
       resource.authentication_type('default')
 
     unless authentication
-      msg = "Credentials not found for conversion host #{name} or resource #{resource.name}"
-      msg << " #{msg}" if msg
-      _log.error(msg)
-      raise MiqException::Error, msg
+      error_msg = "Credentials not found for conversion host #{name} or resource #{resource.name}"
+      error_msg << " #{msg}" if msg
+      _log.error(error_msg)
+      raise MiqException::Error, error_msg
     end
 
     authentication
