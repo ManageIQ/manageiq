@@ -11,6 +11,12 @@ class TransformationMappingItem < ApplicationRecord
   validate :destination_cluster, :if => -> { destination_type.casecmp?('EmsCluster') }
   validate :source_cluster, :if => -> { source_type.casecmp?('EmsCluster') }
 
+  validate :destination_datastore, :if => -> { destination_type.casecmp?('Storage') }
+  validate :source_datastore,      :if => -> { destination_type.casecmp?('Storage') }
+
+  validate :destination_network, :if => -> { destination_type.casecmp?('Lan') }
+  validate :source_network,      :if => -> { destination_type.casecmp?('Lan') }
+
   VALID_SOURCE_CLUSTER_PROVIDERS    = %w[vmwarews]
   VALID_DESTINATION_CLUSTER_TYPES   = %w[EmsCluster CloudTenant]
 
@@ -57,7 +63,7 @@ class TransformationMappingItem < ApplicationRecord
 
   # Check the storage types are valid.
   #
-  def destination_datastores
+  def destination_datastore
     # transformation_mapping_items.where(:destination_type => 'Storage').map(&:source)
     #
     # check the storages are valid types.
@@ -69,7 +75,18 @@ class TransformationMappingItem < ApplicationRecord
     #
     # from IRB: tm.transformation_mapping_items.first.source.storages.second.store_type
     # => "NFS"
-    unless VALID_DESTINATION_DATASTORE_TYPES.include?(destination.where(:destination_type => 'Storage').map(&:store_type))
+    # unless VALID_DESTINATION_DATASTORE_TYPES.include?(destination.ext_management_system.where(:destination_type => 'Storage').source.map(&:store_type))
+
+    # from irb
+    # myds.destination.hosts.collect{ |host| host.ems_cluster }.collect{ |cluster| cluster.storages }.flatten.include?(myds.destination)
+    hosts    = destination.hosts
+    clusters = hosts.collect { |host| host.ems_cluster }
+    storages = clusters.collect { |cluster| cluster.storages}.flatten
+
+    # storages.include?(myds.destination)
+    # unless VALID_DESTINATION_DATASTORE_TYPES.include?(destination.store_type)
+    # unless storages.include?(VALID_DESTINATION_DATASTORE_TYPES.collect { |type| type })
+    unless storages.include?(VALID_DESTINATION_DATASTORE_TYPES.first)
       store_types = VALID_DESTINATION_DATASTORE_TYPES.join(', ')
       errors.add(:store_type, "The type of destination type must be in: #{store_types}")
     end
@@ -77,10 +94,16 @@ class TransformationMappingItem < ApplicationRecord
 
   # How to check the datastore(s) belong to the source.
   #
-  def source_datastores
+  def source_datastore
     # transformation_mapping_items.where(:source_type => 'Storage').map(&:source)
-    unless VALID_SOURCE_DATASTORE_TYPES.include?(destination.where(:source_type => 'Storage').map(&:store_type))
-      errors.add(:store_type, "The type of destination type must be in: #{store_types}")
+    # unless VALID_SOURCE_DATASTORE_TYPES.include?(source.ext_management_system.where(:source_type => 'Storage').map(&:store_type))
+    #  errors.add(:store_type, "The type of destination type must be in: #{store_types}")
+    # endon
+
+    cluster   = find_by(:source_type => "EmsCluster")
+    datastore = cluster.datastores.include?(destination.source)
+    unless VALID_SOURCE_DATASTORE_TYPES.include?(datastore)
+
     end
   end
 
@@ -88,13 +111,13 @@ class TransformationMappingItem < ApplicationRecord
   # irb(main):043:0> tm.transformation_mapping_items.first.source.lans.count
   # => 16
   #
-  def source_networks
+  def source_network
     transformation_mapping_items.where(:source_type => 'Lan').map(&:source)
   end
 
   # Verify that Network type is LAN or CloudNetwork and belongs the destination cluster.
   #
-  def destination_networks
+  def destination_network
     transformation_mapping_items.where(:destination_type => 'Lan').map(&:source)
   end
 
