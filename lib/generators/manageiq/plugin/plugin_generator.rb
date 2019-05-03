@@ -74,6 +74,10 @@ module ManageIQ
       @plugin_name ||= plugin_path.tr("/", "-")
     end
 
+    def plugin_human_name
+      @plugin_human_name ||= class_name.titleize.tr("/", " ")
+    end
+
     def plugin_description
       @plugin_description ||= "#{file_name.titleize} plugin for #{Vmdb::Appliance.PRODUCT_NAME}"
     end
