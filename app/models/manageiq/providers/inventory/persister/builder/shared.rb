@@ -147,21 +147,19 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
         children_by_parent = Hash.new { |h, k| h[k] = Hash.new { |hh, kk| hh[kk] = [] } }
         parent_by_child    = Hash.new { |h, k| h[k] = {} }
 
-        inventory_collection.dependency_attributes.each_value do |dependency_collections|
-          next if dependency_collections.blank?
+        dependency_collections = inventory_collection.dependency_attributes.flat_map(&:last)
+        dependency_collections.each do |collection|
+          next if collection.blank?
 
-          dependency_collections.each do |collection|
-            next if collection.blank?
+          collection.data.each do |obj|
+            parent = obj.data[relationship_key].try(&:load)
+            next if parent.nil?
 
-            collection.data.each do |obj|
-              parent = obj.data[relationship_key].try(&:load)
-              next if parent.nil?
+            parent_klass = parent.inventory_collection.model_class.base_class
+            child_klass  = collection.model_class.base_class
 
-              parent_klass = parent.inventory_collection.model_class
-
-              children_by_parent[parent_klass][parent.id] << [collection.model_class, obj.id]
-              parent_by_child[collection.model_class][obj.id] = [parent_klass, parent.id]
-            end
+            children_by_parent[parent_klass][parent.id] << [child_klass, obj.id]
+            parent_by_child[collection.model_class][obj.id] = [parent_klass, parent.id]
           end
         end
 
