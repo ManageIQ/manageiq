@@ -132,12 +132,21 @@ class MiqAeInstance < ApplicationRecord
     end
   end
 
-  def self.get_homonymic_across_domains(user, fqname, enabled = nil)
+  def self.display_name(number = 1)
+    n_('Automate Instance', 'Automate Instances', number)
+  end
+
+  def self.get_homonymic_across_domains(user, fqname, enabled = nil, prefix: true)
+    return get_homonymic_across_domains_noprefix(user, fqname, enabled) unless prefix
+
     MiqAeDatastore.get_homonymic_across_domains(user, ::MiqAeInstance, fqname, enabled)
   end
 
-  def self.display_name(number = 1)
-    n_('Automate Instance', 'Automate Instances', number)
+  private_class_method def self.get_homonymic_across_domains_noprefix(user, path, enabled = nil)
+    return [] if path.blank?
+
+    ns, klass, instance, _ = MiqAeEngine::MiqAePath.split(path)
+    MiqAeDatastore.get_sorted_matching_objects(user, ::MiqAeInstance, ns, klass, instance, enabled)
   end
 
   private
