@@ -1,4 +1,4 @@
-describe LogFile do
+RSpec.describe LogFile do
   context "With server and zone" do
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
@@ -166,7 +166,6 @@ describe LogFile do
           allow(VMDB::Util).to receive(:zip_logs).and_return('/tmp/blah')
           allow(VMDB::Util).to receive(:get_evm_log_for_date).and_return('/tmp/blah')
           allow(VMDB::Util).to receive(:get_log_start_end_times).and_return((Time.now.utc - 600), Time.now.utc)
-          allow_any_instance_of(described_class).to receive(:add).and_return("smb://blah.com/share1")
         end
 
         context "with VMDB::Util.zip_logs raising exception" do
