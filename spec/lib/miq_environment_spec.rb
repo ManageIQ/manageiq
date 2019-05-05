@@ -1,4 +1,4 @@
-describe MiqEnvironment do
+RSpec.describe MiqEnvironment do
   context "with linux platform" do
     before do
       @old_impl = Sys::Platform::IMPL
