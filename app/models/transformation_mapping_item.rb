@@ -2,6 +2,8 @@ class TransformationMappingItem < ApplicationRecord
   belongs_to :transformation_mapping
   belongs_to :source,      :polymorphic => true
   belongs_to :destination, :polymorphic => true
+  # TODO, What is the MIQ wide logging syntax and way
+  tmilogger = Rails.logger
 
   validates :source_id, :uniqueness => {:scope => [:transformation_mapping_id, :source_type]}
 
@@ -64,6 +66,7 @@ class TransformationMappingItem < ApplicationRecord
   # Check the storage types are valid.
   #
   def destination_datastore
+    tmilogger = Rails.logger
     # transformation_mapping_items.where(:destination_type => 'Storage').map(&:source)
     #
     # check the storages are valid types.
@@ -80,42 +83,14 @@ class TransformationMappingItem < ApplicationRecord
     # from irb
     # myds.destination.hosts.collect{ |host| host.ems_cluster }.collect{ |cluster| cluster.storages }.flatten.include?(myds.destination)
 
-    tmilogger = Rails.logger
-    hosts             = destination.hosts
-    tmilogger.info("****** ARIF ******")
-    tmilogger.info(hosts.to_s)
+    storageClassNames = destination.hosts.     # Get hosts using this source storage
+        collect { |host| host.ems_cluster }.   # How many clusters does each host has
+        collect { |cluster| cluster.storages}. # How many storages each host is mapped to that belong to the cluster
+        flatten.collect { |s| s.class.name }   # Get storage types represented by its class name
 
-    clusters          = hosts.collect { |host| host.ems_cluster }
-    tmilogger.info("****** ARIF ******" + clusters.to_s)
-    tmilogger.info(clusters.to_s)
+    tmilogger.info( "#{__method__.to_s} :  #{storageClassNames.to_s}" )
 
-    mystores          = clusters.collect { |cluster| cluster.storages}.flatten
-    tmilogger.info("****** ARIF ******")
-    tmilogger.info(mystores.to_s)
-
-    storageClassNames = []
-    storageClassNames = mystores.collect { |s| s.class.name }
-    tmilogger.info("****** ARIF ******")
-    tmilogger.info(storageClassNames.to_s)
-
-    tmilogger.info("******* Calling storageClassNames.include? *******")
-    # storages.include?(myds.destination)
-    # unless VALID_DESTINATION_DATASTORE_TYPES.include?(destination.store_type)
-    # unless storages.include?(VALID_DESTINATION_DATASTORE_TYPES.collect { |type| type })
-    #
-=begin
-    unless storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.first)
-      # unless storageClassNames.include?("Storage")
-      store_types = VALID_DESTINATION_DATASTORE_TYPES.join(', ')
-      errors.add(:store_type, "The type of destination type must be in: #{store_types}")
-    end
-    unless storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.second)
-      # unless storageClassNames.include?("Storage")
-      store_types = VALID_DESTINATION_DATASTORE_TYPES.join(', ')
-      errors.add(:store_type, "The type of destination type must be in: #{store_types}")
-    end
-=end
-
+    # check if desitination storage belongs to cluster storage.
     if storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.first)
       result = true
     elsif storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.second)
@@ -130,15 +105,14 @@ class TransformationMappingItem < ApplicationRecord
   #
   def source_datastore
     tmilogger = Rails.logger
-    storageClassNames = source.hosts.                 # Get hosts using this source storage
-        collect { |host| host.ems_cluster }.          # How many clusters does each host has
-        collect { |cluster| cluster.storages}.        # How many storages each host is mapped to that belong to the cluster
-        flatten.collect { |s| s.class.name } # Get storage types represented by its class name
-    tmilogger.info("****** ARIF ******")
-    tmilogger.info(storageClassNames.to_s)
+    storageClassNames = source.hosts.          # Get hosts using this source storage
+        collect { |host| host.ems_cluster }.   # How many clusters does each host has
+        collect { |cluster| cluster.storages}. # How many storages each host is mapped to that belong to the cluster
+        flatten.collect { |s| s.class.name }   # Get storage types represented by its class name
 
-    tmilogger.info("******* Calling storageClassNames.include? *******")
+    tmilogger.info( "#{__method__.to_s} :  #{storageClassNames.to_s}" )
 
+    # check if source storage belongs to cluster storage.
     # the only valid storage type is "Storage"
     if storageClassNames.include?(VALID_SOURCE_DATASTORE_TYPES.first)
       result = true
