@@ -10,17 +10,17 @@ module MiqRequestMixin
   end
 
   def get_option_decrypted(key, value = nil)
-    enc_value = MiqRequestMixin.get_option(key, value, options)
-    if enc_value.kind_of?(String) && enc_value.start_with?("password::")
-      MiqPassword.decrypt(enc_value.split("password::").last)
-    else
-      raise ArgumentError, "#{key} cannot be decrypted"
-    end
+    raise ArgumentError, "#{key} cannot be decrypted" unless option_encrypted?(key)
+    enc_value = MiqRequestMixin.get_option(password_prefixed_symbol_key(key), value, options)
+    MiqPassword.decrypt(enc_value)
   end
 
   def option_encrypted?(key)
-    enc_value = MiqRequestMixin.get_option(key, nil, options)
-    enc_value.kind_of?(String) && enc_value.start_with?("password::") ? true : false
+    options.key?(password_prefixed_symbol_key(key))
+  end
+
+  def password_prefixed_symbol_key(key)
+    key.to_s.start_with?("password::") ? key : "password::#{key}".to_sym
   end
 
   def display_message(default_msg = nil)

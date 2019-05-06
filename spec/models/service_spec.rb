@@ -941,4 +941,39 @@ describe Service do
       expect(service.reconfigure_dialog).to eq("serialized_reconfigure_dialog")
     end
   end
+
+  context "dialog_options" do
+    let(:password) { "Gnocchi" }
+    let(:enc_value) { "#{ManageIQ::Password.encrypt(password)}" }
+    let(:dialog_opts) { {'password::dialog_psighetti' => enc_value, 'dialog_netti' => 'hundley' } }
+    let(:service) { Service.create(:name => 'test', :options => {:dialog => dialog_opts}) }
+
+    context "#get_dialog_option_decrypted" do
+      it "by symbol" do
+        expect(service.get_dialog_option_decrypted(:psighetti)).to eq(password)
+      end
+
+      it "by name" do
+        expect(service.get_dialog_option_decrypted('psighetti')).to eq(password)
+      end
+
+      it "with full name" do
+        expect(service.get_dialog_option_decrypted('password::dialog_psighetti')).to eq(password)
+      end
+
+      it "raises error if key not encrypted" do
+        expect { service.get_dialog_option_decrypted('netti') }.to raise_error(ArgumentError)
+      end
+    end
+
+    context "#get_dialog_option" do
+      it "by symbol" do
+        expect(service.get_dialog_option(:netti)).to eq('hundley')
+      end
+
+      it "by name" do
+        expect(service.get_dialog_option('netti')).to eq('hundley')
+      end
+    end
+  end
 end

@@ -63,6 +63,7 @@ class Service < ApplicationRecord
   include CiFeatureMixin
   include CustomActionsMixin
   include CustomAttributeMixin
+  include DialogOptionMixin
   include ExternalUrlMixin
   include LifecycleMixin
   include Metric::CiMixin
