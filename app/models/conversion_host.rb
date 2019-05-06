@@ -247,7 +247,7 @@ class ConversionHost < ApplicationRecord
   # using the 'ssh_keypair' auth type, and finally 'default'.
   #
   def find_credentials(auth_type = nil)
-    authentication = authentication_type(auth_type) || authentication_type('v2v') || authentications.first                         ||
+    authentication = authentication_type(auth_type) || authentication_type('v2v') || authentications.first
 
     if authentication.blank?
       if resource.respond_to?(:authentication_type)
