@@ -241,16 +241,22 @@ class ConversionHost < ApplicationRecord
   end
 
   # Find the credentials for the associated resource. By default it will
-  # look for a v2v auth type. If that is not found, it will look for the
-  # first associated authentication. If one still isn't found, then it will
-  # look for the authentication associated with the resource using the
-  # 'ssh_keypair' auth type, and finally 'default'.
+  # look for a v2v auth type if no argument is passed in. If that is not found,
+  # it will look for the first associated authentication. If one still isn't
+  # found, then it will look for the authentication associated with the resource
+  # using the 'ssh_keypair' auth type, and finally 'default'.
   #
-  def find_credentials(auth_type = 'v2v')
-    authentication = authentication_type(auth_type) ||
-      authentications.first ||
-      resource.authentication_type('ssh_keypair') ||
-      resource.authentication_type('default')
+  def find_credentials(auth_type = nil)
+    authentication = authentication_type(auth_type) || authentication_type('v2v') || authentications.first                         ||
+
+    if authentication.blank?
+      if resource.respond_to?(:authentication_type)
+        authentication ||= resource.authentication_type('ssh_keypair') || resource.authentication_type('default')
+      else
+        ems = resource.ext_management_system
+        authentication ||= ems.authentication_type('ssh_keypair') || ems.authentication_type('default')
+      end
+    end
 
     unless authentication
       error_msg = "Credentials not found for conversion host #{name} or resource #{resource.name}"
@@ -312,7 +318,7 @@ class ConversionHost < ApplicationRecord
 
     command = "ansible-playbook #{playbook} --inventory #{host}, --become --extra-vars=\"ansible_ssh_common_args='-o StrictHostKeyChecking=no'\""
 
-    auth = find_credentials
+    auth = find_credentials(auth_type)
     command << " --user #{auth.userid}"
 
     case auth
