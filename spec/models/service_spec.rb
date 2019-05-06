@@ -949,11 +949,11 @@ describe Service do
     let(:service) { Service.create(:name => 'test', :options => {:dialog => dialog_opts}) }
 
     context "#get_dialog_option_decrypted" do
-      it "by symbol" do
+      it "with symbol" do
         expect(service.get_dialog_option_decrypted(:psighetti)).to eq(password)
       end
 
-      it "by name" do
+      it "with string" do
         expect(service.get_dialog_option_decrypted('psighetti')).to eq(password)
       end
 
@@ -967,11 +967,11 @@ describe Service do
     end
 
     context "#get_dialog_option" do
-      it "by symbol" do
+      it "with symbol" do
         expect(service.get_dialog_option(:netti)).to eq('hundley')
       end
 
-      it "by name" do
+      it "with string" do
         expect(service.get_dialog_option('netti')).to eq('hundley')
       end
     end
