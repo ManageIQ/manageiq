@@ -606,6 +606,15 @@ describe Classification do
     end
   end
 
+  describe '.tag2human' do
+    let!(:classification) { FactoryBot.create(:classification_department_with_tags) }
+
+    it 'returns a human readible name' do
+      tag = Tag.find_by(:name => "/managed/department/hr")
+      expect(described_class.tag2human(tag.name)).to eq("Department: Human Resources")
+    end
+  end
+
   def all_tagged_with(target, all, category = nil)
     tagged_with(target, :all => all, :cat => category)
   end
