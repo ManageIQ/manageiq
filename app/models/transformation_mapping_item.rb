@@ -133,10 +133,6 @@ class TransformationMappingItem < ApplicationRecord
   # Verify that Network type is LAN or CloudNetwork and belongs the destination cluster.
   #
   def destination_network
-    # transformation_mapping_items.where(:destination_type => 'Lan').map(&:source)
-    #
-    # source is a TransformationMappingItem
-    # tmi_lan = TransformationMappingItem.where(:source_type => "Lan").first
     destination_lan = destination
 
     tmi_cluster = TransformationMappingItem.where(:source_type => "EmsCluster").first  #TODO: handle collection?
