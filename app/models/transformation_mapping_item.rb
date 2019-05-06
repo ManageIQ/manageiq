@@ -12,7 +12,7 @@ class TransformationMappingItem < ApplicationRecord
   validate :source_cluster, :if => -> { source_type.casecmp?('EmsCluster') }
 
   validate :destination_datastore, :if => -> { destination_type.casecmp?('Storage') }
-  validate :source_datastore,      :if => -> { destination_type.casecmp?('Storage') }
+  validate :source_datastore,      :if => -> { source_type.casecmp?('Storage') }
 
   validate :destination_network, :if => -> { destination_type.casecmp?('Lan') }
   validate :source_network,      :if => -> { destination_type.casecmp?('Lan') }
@@ -79,14 +79,48 @@ class TransformationMappingItem < ApplicationRecord
 
     # from irb
     # myds.destination.hosts.collect{ |host| host.ems_cluster }.collect{ |cluster| cluster.storages }.flatten.include?(myds.destination)
-    hosts    = destination.hosts
-    clusters = hosts.collect { |host| host.ems_cluster }
-    storages = clusters.collect { |cluster| cluster.storages}.flatten
 
+    tmilogger = Rails.logger
+    hosts             = destination.hosts
+    tmilogger.info("****** ARIF ******")
+    tmilogger.info(hosts.to_s)
+
+    clusters          = hosts.collect { |host| host.ems_cluster }
+    tmilogger.info("****** ARIF ******" + clusters.to_s)
+    tmilogger.info(clusters.to_s)
+
+    mystores          = clusters.collect { |cluster| cluster.storages}.flatten
+    tmilogger.info("****** ARIF ******")
+    tmilogger.info(mystores.to_s)
+
+    storageClassNames = []
+    storageClassNames = mystores.collect { |s| s.class.name }
+    tmilogger.info("****** ARIF ******")
+    tmilogger.info(storageClassNames.to_s)
+
+    tmilogger.info("******* Calling storageClassNames.include? *******")
     # storages.include?(myds.destination)
     # unless VALID_DESTINATION_DATASTORE_TYPES.include?(destination.store_type)
     # unless storages.include?(VALID_DESTINATION_DATASTORE_TYPES.collect { |type| type })
-    unless storages.include?(VALID_DESTINATION_DATASTORE_TYPES.first)
+    #
+=begin
+    unless storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.first)
+      # unless storageClassNames.include?("Storage")
+      store_types = VALID_DESTINATION_DATASTORE_TYPES.join(', ')
+      errors.add(:store_type, "The type of destination type must be in: #{store_types}")
+    end
+    unless storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.second)
+      # unless storageClassNames.include?("Storage")
+      store_types = VALID_DESTINATION_DATASTORE_TYPES.join(', ')
+      errors.add(:store_type, "The type of destination type must be in: #{store_types}")
+    end
+=end
+
+    if storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.first)
+      result = true
+    elsif storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.second)
+      result = true
+    else
       store_types = VALID_DESTINATION_DATASTORE_TYPES.join(', ')
       errors.add(:store_type, "The type of destination type must be in: #{store_types}")
     end
@@ -95,15 +129,22 @@ class TransformationMappingItem < ApplicationRecord
   # How to check the datastore(s) belong to the source.
   #
   def source_datastore
-    # transformation_mapping_items.where(:source_type => 'Storage').map(&:source)
-    # unless VALID_SOURCE_DATASTORE_TYPES.include?(source.ext_management_system.where(:source_type => 'Storage').map(&:store_type))
-    #  errors.add(:store_type, "The type of destination type must be in: #{store_types}")
-    # endon
+    tmilogger = Rails.logger
+    storageClassNames = source.hosts.                 # Get hosts using this source storage
+        collect { |host| host.ems_cluster }.          # How many clusters does each host has
+        collect { |cluster| cluster.storages}.        # How many storages each host is mapped to that belong to the cluster
+        flatten.collect { |s| s.class.name } # Get storage types represented by its class name
+    tmilogger.info("****** ARIF ******")
+    tmilogger.info(storageClassNames.to_s)
 
-    cluster   = find_by(:source_type => "EmsCluster")
-    datastore = cluster.datastores.include?(destination.source)
-    unless VALID_SOURCE_DATASTORE_TYPES.include?(datastore)
+    tmilogger.info("******* Calling storageClassNames.include? *******")
 
+    # the only valid storage type is "Storage"
+    if storageClassNames.include?(VALID_SOURCE_DATASTORE_TYPES.first)
+      result = true
+    else
+      storage_types = VALID_SOURCE_DATASTORE_TYPES.join(', ')
+      errors.add(:storage_type, "The type of destination type must be in: #{storage_types}")
     end
   end
 
