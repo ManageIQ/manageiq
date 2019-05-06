@@ -11,7 +11,7 @@ describe MiqProvision do
         :number_of_vms            => 1,
         :cpu_limit                => -1,
         :cpu_reserve              => 0,
-        "password::mypass".to_sym => "#{ManageIQ::Password.encrypt(@password)}"
+        "password::mypass".to_sym => ManageIQ::Password.encrypt(@password)
       }
     end
 
