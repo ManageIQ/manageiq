@@ -1,6 +1,34 @@
 describe ServiceTemplate do
   include_examples "OwnershipMixin"
 
+  describe ".with_tenant" do
+    # tenant_root
+    #   \___ tenant_eye_bee_em (service_template_eye_bee_em)
+    #     \__ subtenant_tenant_eye_bee_em_1 (service_template_1)
+    #       \__ subtenant_tenant_eye_bee_em_1_1 (service_template_1_1, service_template_1_1a)
+    #     \__ subtenant_tenant_eye_bee_em_3  (service_template_3, service_template_3_a)
+
+    let!(:tenant_root) { Tenant.seed }
+
+    let!(:tenant_eye_bee_em) { FactoryBot.create(:tenant, :parent => tenant_root) }
+    let!(:subtenant_tenant_eye_bee_em_1) { FactoryBot.create(:tenant, :parent => tenant_eye_bee_em) }
+    let!(:subtenant_tenant_eye_bee_em_3) { FactoryBot.create(:tenant, :parent => tenant_eye_bee_em) }
+
+    let!(:subtenant_tenant_eye_bee_em_1_1) { FactoryBot.create(:tenant, :parent => subtenant_tenant_eye_bee_em_1) }
+
+    let!(:service_template_eye_bee_em) { FactoryBot.create(:service_template, :tenant => tenant_eye_bee_em) }
+    let!(:service_template_1)          { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_1) }
+    let!(:service_template_3)          { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_3) }
+    let!(:service_template_3_a)          { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_3) }
+    let!(:service_template_1_1)        { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_1_1) }
+    let!(:service_template_1_1_a)      { FactoryBot.create(:service_template, :tenant => subtenant_tenant_eye_bee_em_1_1) }
+
+    it "lists ancestor service templates" do
+      expect(ServiceTemplate.with_tenant(subtenant_tenant_eye_bee_em_1_1.id).ids).to match_array([service_template_1_1.id, service_template_1_1_a.id, service_template_1.id, service_template_eye_bee_em.id])
+      expect(ServiceTemplate.with_tenant(subtenant_tenant_eye_bee_em_3.id).ids).to match_array([service_template_3.id, service_template_3_a.id, service_template_eye_bee_em.id])
+    end
+  end
+
   let(:service_user) { FactoryBot.build(:user) }
 
   describe "#custom_actions" do
