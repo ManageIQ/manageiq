@@ -6,11 +6,11 @@ describe MiqProvision do
       @target_vm_name = 'clone test'
       @password = "pa$$word"
       @options = {
-        :pass          => 1,
-        :vm_name       => @target_vm_name,
-        :number_of_vms => 1,
-        :cpu_limit     => -1,
-        :cpu_reserve   => 0,
+        :pass                     => 1,
+        :vm_name                  => @target_vm_name,
+        :number_of_vms            => 1,
+        :cpu_limit                => -1,
+        :cpu_reserve              => 0,
         "password::mypass".to_sym => "#{ManageIQ::Password.encrypt(@password)}"
       }
     end

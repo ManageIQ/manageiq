@@ -944,7 +944,7 @@ describe Service do
 
   context "dialog_options" do
     let(:password) { "Gnocchi" }
-    let(:enc_value) { "#{ManageIQ::Password.encrypt(password)}" }
+    let(:enc_value) { ManageIQ::Password.encrypt(password) }
     let(:dialog_opts) { {'password::dialog_psighetti' => enc_value, 'dialog_netti' => 'hundley' } }
     let(:service) { Service.create(:name => 'test', :options => {:dialog => dialog_opts}) }
 
