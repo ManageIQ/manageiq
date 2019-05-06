@@ -61,7 +61,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def delete(reload_failover_monitor_service = true)
-    pglogical.drop_subscription(id, true)
+    safe_delete
     MiqRegion.destroy_region(connection, provider_region)
     EvmDatabase.restart_failover_monitor_service_queue if reload_failover_monitor_service
   end
@@ -174,6 +174,15 @@ class PglogicalSubscription < ActsAsArModel
   private_class_method :find_id
 
   private
+
+  def safe_delete
+    pglogical.drop_subscription(id, true)
+  rescue PG::InternalError => e
+    raise unless e.message =~ /could not connect to publisher/ || e.message =~ /replication slot .* does not exist/
+    disable
+    pglogical.alter_subscription_options(id, "slot_name" => "NONE")
+    pglogical.drop_subscription(id, true)
+  end
 
   def remote_region_number
     with_remote_connection do |_conn|

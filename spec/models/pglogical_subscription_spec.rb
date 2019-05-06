@@ -316,6 +316,54 @@ describe PglogicalSubscription do
 
       sub.delete(false)
     end
+
+    it "removes the subscription when the publisher is unreachable" do
+      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
+      exception = PG::InternalError.new(<<~MESSAGE)
+        ERROR:  could not connect to publisher when attempting to drop the replication slot "region_#{remote_region1}_subscription"
+        DETAIL:  The error was: could not connect to server: Connection refused
+                Is the server running on host "example.com" and accepting
+                TCP/IP connections on port 5432?
+        HINT:  Use ALTER SUBSCRIPTION ... SET (slot_name = NONE) to disassociate the subscription from the slot.
+      MESSAGE
+
+      expect(pglogical).to receive(:drop_subscription).with("region_#{remote_region1}_subscription", true).ordered.and_raise(exception)
+      expect(sub).to receive(:disable)
+      expect(pglogical).to receive(:alter_subscription_options).with(sub.id, "slot_name" => "NONE")
+      expect(pglogical).to receive(:drop_subscription).with("region_#{remote_region1}_subscription", true).ordered
+      expect(MiqRegion).to receive(:destroy_region)
+        .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), remote_region1)
+
+      sub.delete
+    end
+
+    it "removes the subscription when the replication slot is missing" do
+      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
+      exception = PG::InternalError.new(<<~MESSAGE)
+        ERROR:  could not drop the replication slot "NONE" on publisher
+        DETAIL:  The error was: ERROR:  replication slot "NONE" does not exist
+      MESSAGE
+
+      expect(pglogical).to receive(:drop_subscription).with("region_#{remote_region1}_subscription", true).ordered.and_raise(exception)
+      expect(sub).to receive(:disable)
+      expect(pglogical).to receive(:alter_subscription_options).with(sub.id, "slot_name" => "NONE")
+      expect(pglogical).to receive(:drop_subscription).with("region_#{remote_region1}_subscription", true).ordered
+      expect(MiqRegion).to receive(:destroy_region)
+        .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), remote_region1)
+
+      sub.delete
+    end
+
+    it "re-raises other PG::InternalErrors" do
+      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
+      exception = PG::InternalError.new(<<~MESSAGE)
+        ERROR:  badness happened :(
+      MESSAGE
+
+      expect(pglogical).to receive(:drop_subscription).with("region_#{remote_region1}_subscription", true).ordered.and_raise(exception)
+
+      expect { sub.delete }.to raise_error(exception)
+    end
   end
 
   describe "#validate" do
