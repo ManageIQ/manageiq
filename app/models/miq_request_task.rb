@@ -24,6 +24,7 @@ class MiqRequestTask < ApplicationRecord
 
   include MiqRequestMixin
   include TenancyMixin
+  include DialogOptionMixin
 
   CANCEL_STATUS_REQUESTED  = "cancel_requested".freeze
   CANCEL_STATUS_PROCESSING = "canceling".freeze
