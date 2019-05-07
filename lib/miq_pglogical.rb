@@ -7,26 +7,11 @@ class MiqPglogical
   PUBLICATION_NAME = 'miq'.freeze
   ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
 
-  attr_reader :configured_excludes
-
   def initialize
     @pg_connection = ApplicationRecord.connection.raw_connection
-    self.configured_excludes = provider? ? active_excludes : self.class.default_excludes
   end
 
   delegate :subscriber?, :to => :pglogical
-
-  # Sets the tables that should be used to create the publication using refresh_excludes
-  def configured_excludes=(new_excludes)
-    @configured_excludes = new_excludes | ALWAYS_EXCLUDED_TABLES
-  end
-
-  # Returns the excluded tables that are currently being used
-  # @return Array<String> the table list
-  def active_excludes
-    return [] unless provider?
-    ApplicationRecord.connection.tables - included_tables
-  end
 
   def provider?
     pglogical.publishes?(PUBLICATION_NAME)
@@ -54,23 +39,9 @@ class MiqPglogical
     refresh_excludes
   end
 
-  def self.refresh_excludes_queue(new_excludes)
-    MiqQueue.put(
-      :class_name  => "MiqPglogical",
-      :method_name => "refresh_excludes",
-      :args        => [new_excludes]
-    )
-  end
-
-  def self.refresh_excludes(new_excludes)
-    pgl = new
-    pgl.configured_excludes = new_excludes
-    pgl.refresh_excludes
-  end
-
   # Aligns the contents of the 'miq' publication with the currently configured excludes
   def refresh_excludes
-    tables = ApplicationRecord.connection.tables - configured_excludes
+    tables = ApplicationRecord.connection.tables - default_excludes
     pglogical.set_publication_tables(PUBLICATION_NAME, tables)
   end
 
@@ -82,15 +53,12 @@ class MiqPglogical
     pglogical.wal_retained_bytes
   end
 
-  def self.default_excludes
-    YAML.load_file(Rails.root.join("config/default_replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
+  def default_excludes
+    self.class.default_excludes
   end
 
-  def self.save_remote_region(exclusion_list)
-    # part of `MiqRegion.replication_type=` is initialization of default subscription list
-    MiqRegion.replication_type = :remote
-    # UI is passing empty 'exclution_list' if there are no changes to default subscription list
-    refresh_excludes(YAML.safe_load(exclusion_list)) unless exclusion_list.empty?
+  def self.default_excludes
+    YAML.load_file(Rails.root.join("config/default_replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
   end
 
   def self.save_global_region(subscriptions_to_save, subscriptions_to_remove)
