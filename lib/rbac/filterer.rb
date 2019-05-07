@@ -34,6 +34,7 @@ module Rbac
       FloatingIp
       Host
       HostAggregate
+      Lan
       LoadBalancer
       MiddlewareDatasource
       MiddlewareDeployment
