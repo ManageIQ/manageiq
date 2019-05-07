@@ -68,52 +68,35 @@ class TransformationMappingItem < ApplicationRecord
   #
   def source_datastore
     tmilogger = Rails.logger
-    storageClassNames = source.hosts.          # Get hosts using this source storage
-        collect { |host| host.ems_cluster }.   # How many clusters does each host has
-        collect { |cluster| cluster.storages}. # How many storages each host is mapped to that belong to the cluster
-        flatten.collect { |s| s.class.name }   # Get storage types represented by its class name
+    source_storage = source
 
-    tmilogger.info( "#{__method__.to_s} :  #{storageClassNames.to_s}" )
+    cluster_storages = source.hosts.                # Get hosts using this source storage
+      collect { |host| host.ems_cluster }.          # How many clusters does each host has
+      collect { |cluster| cluster.storages}.flatten # How many storages each host is mapped to that belong to the cluster
 
-    # check if source storage belongs to cluster storage.
-    # the only valid storage type is "Storage"
-    if storageClassNames.include?(VALID_SOURCE_DATASTORE_TYPES.first)
-      result = true
-    else
+    unless cluster_storages.include?(source_storage)
       storage_types = VALID_SOURCE_DATASTORE_TYPES.join(', ')
       errors.add(:storage_type, "The type of destination type must be in: #{storage_types}")
     end
   end # of source_datastore
 
-  # Check the storage types are valid.
+  # check if destination storage belongs to the cluster
   #
   def destination_datastore
     tmilogger = Rails.logger
-    # from irb
-    # myds.destination.hosts.collect{ |host| host.ems_cluster }.collect{ |cluster| cluster.storages }.flatten.include?(myds.destination)
+    destination_storage = destination
 
-    storageClassNames = destination.hosts. # Get hosts using this source storage
-    collect { |host| host.ems_cluster }.   # How many clusters does each host has
-    collect { |cluster| cluster.storages}. # How many storages each host is mapped to that belong to the cluster
-    flatten.collect { |s| s.class.name }   # Get storage types represented by its class name
+    cluster_storages = destination.hosts.           # Get hosts using this source storage
+      collect { |host| host.ems_cluster }.          # How many clusters does each host has
+      collect { |cluster| cluster.storages}.flatten # How many storages each host is mapped to that belong to the cluster
 
-    logger.info("ARIF ARIF ARIF TEST TEST TEST")
-    tmilogger.info( "#{__method__.to_s} :  #{storageClassNames.to_s}" )
-
-    # check if desitination storage belongs to cluster storage.
-    if storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.first)
-      result = true
-    elsif storageClassNames.include?(VALID_DESTINATION_DATASTORE_TYPES.second)
-      result = true
-    else
+    unless cluster_storages.include?(destination_storage)
       tistore_types = VALID_DESTINATION_DATASTORE_TYPES.join(', ')
       errors.add(:store_type, "The type of destination type must be in: #{store_types}")
     end
   end # of destination_datastore
 
   # Verify that Network type is LAN and belongs the source cluster .
-  # irb(main):043:0> tm.transformation_mapping_items.first.source.lans.count
-  # => 16
   #
   def source_network
     source_lan = source
@@ -147,4 +130,4 @@ class TransformationMappingItem < ApplicationRecord
     end
   end # of destination_network
 
-end # of cla
+end # of class
