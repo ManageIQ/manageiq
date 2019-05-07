@@ -7,6 +7,7 @@ describe PglogicalSubscription do
     [
       {
         "subscription_name"      => "region_#{remote_region1}_subscription",
+        "database_name"          => "vmdb_production",
         "owner"                  => "root",
         "worker_count"           => 1,
         "enabled"                => true,
@@ -18,6 +19,7 @@ describe PglogicalSubscription do
       },
       {
         "subscription_name"      => "region_#{remote_region3}_subscription",
+        "database_name"          => "vmdb_production",
         "owner"                  => "root",
         "worker_count"           => 0,
         "enabled"                => true,
@@ -29,6 +31,7 @@ describe PglogicalSubscription do
       },
       {
         "subscription_name"      => "region_#{remote_region4}_subscription",
+        "database_name"          => "vmdb_production",
         "owner"                  => "root",
         "worker_count"           => 4,
         "enabled"                => true,
@@ -40,6 +43,7 @@ describe PglogicalSubscription do
       },
       {
         "subscription_name"      => "region_#{remote_region2}_subscription",
+        "database_name"          => "vmdb_production",
         "owner"                  => "root",
         "worker_count"           => 0,
         "enabled"                => false,

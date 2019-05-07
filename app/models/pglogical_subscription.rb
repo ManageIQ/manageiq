@@ -115,6 +115,7 @@ class PglogicalSubscription < ActsAsArModel
     cols = sub.symbolize_keys
 
     # delete the things we dont care about
+    cols.delete(:database_name)
     cols.delete(:owner)
     cols.delete(:slot_name)
     cols.delete(:publications)
@@ -164,7 +165,7 @@ class PglogicalSubscription < ActsAsArModel
   private_class_method :remote_region_attributes
 
   def self.subscriptions
-    pglogical.subscriptions
+    pglogical.subscriptions(connection.current_database)
   end
   private_class_method :subscriptions
 
