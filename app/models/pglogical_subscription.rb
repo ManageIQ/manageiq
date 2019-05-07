@@ -121,8 +121,8 @@ class PglogicalSubscription < ActsAsArModel
     cols.delete(:remote_replication_lsn)
     cols.delete(:local_replication_lsn)
 
-    cols[:id] = cols.delete(:subscription_name)
-    cols[:status] = cols.delete(:enabled) ? "replicating" : "down"
+    cols[:id]     = cols.delete(:subscription_name)
+    cols[:status] = subscription_status(cols.delete(:worker_count), cols.delete(:enabled))
 
     # create the individual dsn columns
     cols.merge!(dsn_attributes(cols.delete(:subscription_dsn)))
@@ -130,6 +130,20 @@ class PglogicalSubscription < ActsAsArModel
     cols.merge!(remote_region_attributes(cols[:id]))
   end
   private_class_method :subscription_to_columns
+
+  def self.subscription_status(workers, enabled)
+    return "disabled" unless enabled
+
+    case workers
+    when 0
+      "down"
+    when 1
+      "replicating"
+    else
+      "initializing"
+    end
+  end
+  private_class_method :subscription_status
 
   def self.dsn_attributes(dsn)
     attrs = PG::DSNParser.parse(dsn)

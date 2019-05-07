@@ -162,8 +162,7 @@ group :automate, :seed, :manageiq_default do
 end
 
 group :replication, :manageiq_default do
-  gem "pg-pglogical",                   "~>2.1.2",       :require => false
-  gem "pg-logical_replication", "~>0.1", :git => "https://github.com/ManageIQ/pg-logical_replication.git", :require => false, :branch => "master"
+  gem "pg-logical_replication", "~>0.1", :git => "https://github.com/carbonin/pg-logical_replication.git", :require => false, :branch => "add_subscription_worker_count"
 end
 
 group :rest_api, :manageiq_default do

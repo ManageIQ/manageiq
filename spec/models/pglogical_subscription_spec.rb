@@ -1,11 +1,14 @@
 describe PglogicalSubscription do
   let(:remote_region1) { ApplicationRecord.my_region_number + 1 }
   let(:remote_region2) { ApplicationRecord.my_region_number + 2 }
+  let(:remote_region3) { ApplicationRecord.my_region_number + 3 }
+  let(:remote_region4) { ApplicationRecord.my_region_number + 4 }
   let(:subscriptions) do
     [
       {
         "subscription_name"      => "region_#{remote_region1}_subscription",
         "owner"                  => "root",
+        "worker_count"           => 1,
         "enabled"                => true,
         "subscription_dsn"       => "dbname = 'vmdb\\'s_test' host='example.com' user='root' port='' password='p=as\\' s\\''",
         "slot_name"              => "region_#{remote_region1}_subscription",
@@ -14,8 +17,31 @@ describe PglogicalSubscription do
         "local_replication_lsn"  => "18/72DE8268"
       },
       {
+        "subscription_name"      => "region_#{remote_region3}_subscription",
+        "owner"                  => "root",
+        "worker_count"           => 0,
+        "enabled"                => true,
+        "subscription_dsn"       => "dbname=vmdb_development host=example.com user='root' port=5432",
+        "slot_name"              => "region_#{remote_region3}_subscription",
+        "publications"           => ["miq"],
+        "remote_replication_lsn" => "0/420D9A0",
+        "local_replication_lsn"  => "18/72DE8268"
+      },
+      {
+        "subscription_name"      => "region_#{remote_region4}_subscription",
+        "owner"                  => "root",
+        "worker_count"           => 4,
+        "enabled"                => true,
+        "subscription_dsn"       => "dbname=vmdb_production host=example.com user='root' port=5432",
+        "slot_name"              => "region_#{remote_region4}_subscription",
+        "publications"           => ["miq"],
+        "remote_replication_lsn" => "0/420D9A0",
+        "local_replication_lsn"  => "18/72DE8268"
+      },
+      {
         "subscription_name"      => "region_#{remote_region2}_subscription",
         "owner"                  => "root",
+        "worker_count"           => 0,
         "enabled"                => false,
         "subscription_dsn"       => "dbname = vmdb_test2 host=test.example.com user = postgres port=5432 fallback_application_name='bin/rails'",
         "slot_name"              => "region_#{remote_region2}_subscription",
@@ -38,8 +64,26 @@ describe PglogicalSubscription do
         "provider_region_name" => "The region"
       },
       {
-        "id"              => "region_#{remote_region2}_subscription",
+        "id"              => "region_#{remote_region3}_subscription",
         "status"          => "down",
+        "dbname"          => "vmdb_development",
+        "host"            => "example.com",
+        "user"            => "root",
+        "port"            => 5432,
+        "provider_region" => remote_region3
+      },
+      {
+        "id"              => "region_#{remote_region4}_subscription",
+        "status"          => "initializing",
+        "dbname"          => "vmdb_production",
+        "host"            => "example.com",
+        "user"            => "root",
+        "port"            => 5432,
+        "provider_region" => remote_region4
+      },
+      {
+        "id"              => "region_#{remote_region2}_subscription",
+        "status"          => "disabled",
         "dbname"          => "vmdb_test2",
         "host"            => "test.example.com",
         "user"            => "postgres",
