@@ -1,20 +1,10 @@
 require 'fileutils'
+require 'auth_template_files'
 
 module MiqLdapToSssd
   class ConfigureApacheError < StandardError; end
 
-  class ConfigureApache
-    TEMPLATE_DIR     = "/var/www/miq/system/TEMPLATE".freeze
-    ALT_TEMPLATE_DIR = "/opt/rh/cfme-appliance/TEMPLATE".freeze
-    HTTPD_CONF_DIR   = "/etc/httpd/conf.d".freeze
-    PAM_CONF_DIR     = "/etc/pam.d".freeze
-
-    attr_reader :initial_settings, :template_dir
-
-    def initialize(initial_settings)
-      @initial_settings = initial_settings
-      @template_dir = Dir.exist?(TEMPLATE_DIR) ? TEMPLATE_DIR : ALT_TEMPLATE_DIR
-    end
+  class ConfigureApache < AuthTemplateFiles
 
     def configure
       LOGGER.debug("Invoked #{self.class}\##{__method__} template_dir #{template_dir}")

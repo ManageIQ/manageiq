@@ -10,7 +10,7 @@ $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(miqldap_to_sssd))))
 
 require File.expand_path('../config/environment', __dir__)
 
-require 'authconfig'
+require 'auth_select_config'
 require 'cli'
 require 'configure_apache'
 require 'configure_appliance_settings'
@@ -31,3 +31,5 @@ module MiqLdapToSssd
 
   MiqLdapToSssd::Cli.run(ARGV) if __FILE__ == $PROGRAM_NAME
 end
+
+
