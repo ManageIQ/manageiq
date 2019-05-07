@@ -558,6 +558,11 @@ describe MiqRequest do
     end
   end
 
+  let(:vm_retire_request) { FactoryBot.create(:vm_retire_request, :requester => fred) }
+  it "retire_request has source" do
+    expect(vm_retire_request.source_type).not_to eq(nil)
+  end
+
   context "retire request source classes" do
     let(:vm_retire_request)      { FactoryBot.create(:vm_retire_request, :requester => fred) }
     let(:service_retire_request) { FactoryBot.create(:service_retire_request, :requester => fred) }
