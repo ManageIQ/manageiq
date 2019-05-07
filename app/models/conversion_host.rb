@@ -241,10 +241,10 @@ class ConversionHost < ApplicationRecord
   end
 
   # Find the credentials for the associated resource. By default it will
-  # look for a v2v auth type if no argument is passed in. If that is not found,
-  # it will look for the first associated authentication. If one still isn't
-  # found, then it will look for the authentication associated with the resource
-  # using the 'ssh_keypair' auth type, and finally 'default'.
+  # look for a v2v auth type if no argument is passed in.
+  #
+  # If one isn't found, then it will look for the authentication associated
+  # with the resource using the 'ssh_keypair' auth type, and finally 'default'.
   #
   def find_credentials(auth_type = 'v2v')
     authentication = authentication_type(auth_type)
