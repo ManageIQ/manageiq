@@ -224,7 +224,7 @@ class Classification < ApplicationRecord
     end
 
     tag_ids = obj.tagged_with(:ns => ns).collect(&:id)
-    where(:tag_id => tag_ids) rescue []
+    where(:tag_id => tag_ids)
   end
 
   def self.first_cat_entry(name, obj)
