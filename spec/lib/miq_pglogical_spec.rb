@@ -45,7 +45,7 @@ describe MiqPglogical do
 
     describe "#create_replication_set" do
       it "creates the correct initial set" do
-        expected_excludes = subject.default_excludes
+        expected_excludes = subject.excludes
         actual_excludes = ar_connection.tables - subject.included_tables
         expect(actual_excludes | MiqPglogical::ALWAYS_EXCLUDED_TABLES).to match_array(expected_excludes)
       end

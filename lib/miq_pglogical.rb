@@ -39,9 +39,9 @@ class MiqPglogical
     refresh_excludes
   end
 
-  # Aligns the contents of the 'miq' publication with the currently configured excludes
+  # Aligns the contents of the 'miq' publication with the excludes file
   def refresh_excludes
-    tables = ApplicationRecord.connection.tables - default_excludes
+    tables = ApplicationRecord.connection.tables - excludes
     pglogical.set_publication_tables(PUBLICATION_NAME, tables)
   end
 
@@ -53,12 +53,12 @@ class MiqPglogical
     pglogical.wal_retained_bytes
   end
 
-  def default_excludes
-    self.class.default_excludes
+  def excludes
+    self.class.excludes
   end
 
-  def self.default_excludes
-    YAML.load_file(Rails.root.join("config/default_replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
+  def self.excludes
+    YAML.load_file(Rails.root.join("config", "replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
   end
 
   def self.save_global_region(subscriptions_to_save, subscriptions_to_remove)
