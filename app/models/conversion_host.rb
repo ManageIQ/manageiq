@@ -251,10 +251,10 @@ class ConversionHost < ApplicationRecord
 
     if authentication.blank?
       if resource.respond_to?(:authentication_type)
-        authentication ||= resource.authentication_type('ssh_keypair') || resource.authentication_type('default')
+        authentication = resource.authentication_type('ssh_keypair') || resource.authentication_type('default')
       else
         ems = resource.ext_management_system
-        authentication ||= ems.authentication_type('ssh_keypair') || ems.authentication_type('default')
+        authentication = ems.authentication_type('ssh_keypair') || ems.authentication_type('default')
       end
     end
 
