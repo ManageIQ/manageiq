@@ -20,16 +20,20 @@ describe DialogFieldTextAreaBox do
         dialog_field.normalize_automate_values(automate_hash)
       end
 
+      it "does not set the data_type" do
+        expect(dialog_field.data_type).to be_nil
+      end
+
       it "does not set the protected" do
         expect(dialog_field.protected?).to be_falsey
       end
 
-      it "does not set the validator type" do
-        expect(dialog_field.validator_type).to be_nil
+      it "sets the validator type" do
+        expect(dialog_field.validator_type).to eq("regex")
       end
 
-      it "does not set the validator rule" do
-        expect(dialog_field.validator_rule).to be_nil
+      it "sets the validator rule" do
+        expect(dialog_field.validator_rule).to eq("rule")
       end
 
       it "sets the required" do
