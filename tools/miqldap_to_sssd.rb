@@ -6,11 +6,11 @@
 # Alternatively, it will update all user records to have a userid in UPN format
 
 $LOAD_PATH.push(File.expand_path(__dir__))
-$LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(miqldap_to_sssd))))
+$LOAD_PATH.push(File.expand_path(File.join(__dir__, %w[miqldap_to_sssd])))
 
 require File.expand_path('../config/environment', __dir__)
 
-require 'authconfig'
+require 'auth_establish'
 require 'cli'
 require 'configure_apache'
 require 'configure_appliance_settings'
@@ -29,5 +29,5 @@ module MiqLdapToSssd
     "[#{time}] #{severity}: #{msg}\n"
   end
 
-  MiqLdapToSssd::Cli.run(ARGV) if __FILE__ == $PROGRAM_NAME
+  MiqLdapToSssd::Cli.run(ARGV) if $PROGRAM_NAME == __FILE__
 end
