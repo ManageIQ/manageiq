@@ -78,8 +78,8 @@ module ConversionHost::Configurations
           )
         end
 
-        conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key, miq_task_id)
         conversion_host.save!
+        conversion_host.enable_conversion_host_role(vmware_vddk_package_url, vmware_ssh_private_key, miq_task_id)
 
         if miq_task_id
           MiqTask.find(miq_task_id).tap do |task|
