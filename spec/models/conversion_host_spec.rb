@@ -165,6 +165,10 @@ RSpec.describe ConversionHost, :v2v do
     end
 
     context "#ansible_playbook" do
+      let(:auth_v2v) { FactoryBot.create(:authentication_v2v, :resource => conversion_host) }
+      let(:package_url) { 'http://file.example.com/vddk-stable.tar.gz' }
+      let(:enable_playbook) { '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_enable.yml' }
+
       it "check_conversion_host_role calls ansible_playbook with extra_vars" do
         check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
         check_extra_vars = {
@@ -193,12 +197,11 @@ RSpec.describe ConversionHost, :v2v do
       end
 
       it "enable_conversion_host_role calls ansible_playbook with extra_vars" do
-        enable_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_enable.yml'
         check_playbook = '/usr/share/v2v-conversion-host-ansible/playbooks/conversion_host_check.yml'
         enable_extra_vars = {
           :v2v_host_type        => 'rhevm',
           :v2v_transport_method => 'vddk',
-          :v2v_vddk_package_url => 'http://file.example.com/vddk-stable.tar.gz'
+          :v2v_vddk_package_url => package_url
         }
         check_extra_vars = {
           :v2v_host_type        => 'rhevm',
@@ -207,6 +210,18 @@ RSpec.describe ConversionHost, :v2v do
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars, nil)
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, nil)
         conversion_host.enable_conversion_host_role('http://file.example.com/vddk-stable.tar.gz', nil)
+      end
+
+      it "logs an error message if the ansible_playbook command fails" do
+        command = "ansible_playbook #{enable_playbook}"
+        result = instance_double(AwesomeSpawn::CommandResult, :command_line => command, :failure? => true, :error => "oops")
+
+        allow(conversion_host).to receive(:check_conversion_host_role)
+        allow(conversion_host).to receive(:find_credentials).and_return(auth_v2v)
+        allow(AwesomeSpawn).to receive(:run).and_return(result)
+
+        expect($log).to receive(:error).with("MIQ(ConversionHost#ansible_playbook) #{command} => oops")
+        expect { conversion_host.enable_conversion_host_role(package_url, nil) }.to raise_error(RuntimeError)
       end
     end
   end
@@ -380,7 +395,6 @@ RSpec.describe ConversionHost, :v2v do
     let(:ems_redhat) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
     let(:ems_openstack) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
     let(:auth_default) { FactoryBot.create(:authentication) }
-    let(:auth_v2v) { FactoryBot.create(:authentication_v2v) }
 
     let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => ems_redhat) }
     let(:vm) { FactoryBot.create(:vm_openstack, :ext_management_system => ems_openstack) }
@@ -398,6 +412,17 @@ RSpec.describe ConversionHost, :v2v do
       host.authentications << auth_default
       expect(conversion_host_vm.send(:find_credentials)).to eq(auth_default)
       expect(conversion_host_host.send(:find_credentials)).to eq(auth_default)
+    end
+
+    it "logs the expected warning if a v2v authentication was not found" do
+      vm.ext_management_system.authentications << auth_default
+
+      warning_message = "MIQ(ConversionHost#find_credentials) Unable to find v2v "\
+                        "authentication for conversion host: #{conversion_host_vm.name}. "\
+                        "Defaulting to authentication: #{auth_default.name}/#{auth_default.class}."
+
+      expect($log).to receive(:warn).with(warning_message)
+      conversion_host_vm.send(:find_credentials)
     end
   end
 

@@ -252,6 +252,11 @@ class ConversionHost < ApplicationRecord
     if authentication.blank?
       res = resource.respond_to?(:authentication_type) ? resource : resource.ext_management_system
       authentication = res.authentication_type('ssh_keypair') || res.authentication_type('default')
+      if authentication
+        warning_message = "Unable to find v2v authentication for conversion host: #{name}. "\
+                          "Defaulting to authentication: #{authentication.name}/#{authentication.class}."
+        _log.warn(warning_message)
+      end
     end
 
     unless authentication
@@ -335,7 +340,12 @@ class ConversionHost < ApplicationRecord
     extra_vars.each { |k, v| command << " --extra-vars '#{k}=#{v}'" }
 
     result = AwesomeSpawn.run(command)
-    raise unless result.exit_status.zero?
+
+    if result.failure?
+      error_message = result.error.presence || result.output
+      _log.error("#{result.command_line} => #{error_message}")
+      raise
+    end
   ensure
     task&.update_context(task.context_data.merge!(File.basename(playbook, '.yml') => result.output)) unless result.nil?
     ssh_private_key_file&.unlink
