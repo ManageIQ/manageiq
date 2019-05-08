@@ -80,22 +80,5 @@ describe MiqLdapToSssd::SssdConf do
 
       expect(File.read("#{@sssd_conf_dir}/sssd.conf")).to eq(sssd_conf)
     end
-
-=begin
-    it 'silently ignores missing KrbAuthRealms when creating the gssapi httpd config file' do
-      File.open("#{@sssd_template_dir}/manageiq-external-auth.conf.erb", "w") do |f|
-        f.write(manageiq_external_auth_gssapi_conf)
-      end
-
-      described_class.new(@initial_settings).configure
-      expect(File.read("#{@sssd_conf_dir}/manageiq-external-auth.conf")).to eq(manageiq_external_auth_gssapi_conf)
-    end
-
-    it 'raises an error when a TEMPLATE file is missing' do
-      FileUtils.rm_f("#{@pam_template_dir}/httpd-auth")
-      expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
-      expect { described_class.new(@initial_settings).configure }.to raise_error(MiqLdapToSssd::ConfigureApacheError)
-    end
-=end
   end
 end

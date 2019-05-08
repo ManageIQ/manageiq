@@ -10,7 +10,7 @@ $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(miqldap_to_sssd))))
 
 require File.expand_path('../config/environment', __dir__)
 
-require 'auth_select_config'
+require 'auth_establish'
 require 'cli'
 require 'configure_apache'
 require 'configure_appliance_settings'
