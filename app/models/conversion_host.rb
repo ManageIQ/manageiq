@@ -320,7 +320,7 @@ class ConversionHost < ApplicationRecord
     case auth
     when AuthUseridPassword
       extra_vars[:ansible_ssh_pass] = auth.password
-    when AuthPrivateKey
+    when AuthPrivateKey, AuthToken
       ssh_private_key_file = Tempfile.new('ansible_key')
       begin
         ssh_private_key_file.write(auth.auth_key)
