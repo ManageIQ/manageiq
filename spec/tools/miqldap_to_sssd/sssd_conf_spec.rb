@@ -14,7 +14,6 @@ describe MiqLdapToSssd::SssdConf do
     let(:sssd_conf_erb) do
       <<-SSSD_CONF_ERB.strip_heredoc
         [domain/default]
-
         autofs_provider = ldap
         ldap_schema = rfc2307bis
         ldap_search_base = <%= ldapbasedn %>
@@ -27,55 +26,59 @@ describe MiqLdapToSssd::SssdConf do
         ldap_tls_cacertdir = /etc/openldap/cacerts
         [sssd]
         services = nss, pam, autofs
-
         domains = default
-        [nss]
-        homedir_substring = /home
-
         [pam]
-
-        [sudo]
-
-        [autofs]
-
-        [ssh]
-
-        [pac]
-
         [ifp]
+      SSSD_CONF_ERB
+    end
 
-        [secrets]
-
-        [session_recording]
-
+    let(:sssd_conf) do
+      <<-SSSD_CONF_ERB.strip_heredoc
+        [domain/default]
+        autofs_provider = ldap
+        ldap_schema = rfc2307bis
+        ldap_search_base = my_basedn
+        id_provider = ldap
+        auth_provider = ldap
+        chpass_provider = ldap
+        ldap_uri = ldap://ldap_host:2
+        ldap_id_use_start_tls = False
+        cache_credentials = True
+        ldap_tls_cacertdir = /etc/openldap/cacerts
+        [sssd]
+        services = nss, pam, autofs
+        domains = default
+        [pam]
+        [ifp]
       SSSD_CONF_ERB
     end
 
 
     before do
-      @initial_settings = {:mode => "ldap", :ldaphost => "ldap_host", :ldapprot => "2", :basedn => "my_basedn" }
+      @initial_settings = {:mode => "ldap", :ldaphost => ["ldap_host"], :ldapport => "2", :basedn => "my_basedn" }
 
       @test_dir = "#{Dir.tmpdir}/#{@spec_name}"
-      puts("JJV Invoked #{self.class}\##{__method__}")
       @template_dir = "#{@test_dir}/TEMPLATE"
       stub_const("MiqLdapToSssd::AuthTemplateFiles::TEMPLATE_DIR", @template_dir)
 
       @sssd_conf_dir = "#{@test_dir}/etc/sssd"
+      @sssd_conf_file = "#{@sssd_conf_dir}/sssd.conf"
       FileUtils.mkdir_p @sssd_conf_dir
       @sssd_template_dir = FileUtils.mkdir_p("#{@template_dir}/#{@sssd_conf_dir}")[0]
       stub_const("MiqLdapToSssd::AuthTemplateFiles::SSSD_CONF_DIR", @sssd_conf_dir)
+      stub_const("MiqLdapToSssd::SSSD_CONF_FILE", @sssd_conf_file)
     end
 
     after do
-      # JJV FileUtils.rm_rf(@test_dir)
+      FileUtils.rm_rf(@test_dir)
     end
 
     it 'will create the sssd config file if needed' do
-      File.open("#{@sssd_template_dir}/etc/sssd/sssd.conf.erb", "w") { |f| f.write(sssd_conf_erb) }
+      File.open("#{@sssd_template_dir}/sssd.conf.erb", "w") { |f| f.write(sssd_conf_erb) }
 
       described_class.new(@initial_settings)
 
-      expect(File.read("#{@sssd_conf_dir}/sssd.conf")).to eq(sssd_conf_erb)
+      expect(File.read("#{@sssd_conf_dir}/sssd.conf")).to eq(sssd_conf)
     end
 
 =begin

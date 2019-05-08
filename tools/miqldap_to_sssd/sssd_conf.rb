@@ -16,7 +16,6 @@ module MiqLdapToSssd
 
     def initialize(initial_settings)
       LOGGER.debug("Invoked #{self.class}\##{__method__}")
-      puts("JJV Invoked #{self.class}\##{__method__}")
 
       super
 
@@ -42,7 +41,6 @@ module MiqLdapToSssd
 
     def create
       LOGGER.debug("Invoked #{self.class}\##{__method__}")
-      puts("JJV Invoked #{self.class}\##{__method__}")
 
       begin
         File.write(dest_path, ERB.new(File.read(src_path), nil, '-').result(binding))
