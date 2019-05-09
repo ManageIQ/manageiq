@@ -5,7 +5,7 @@ module OwnershipMixin
     belongs_to :evm_owner, :class_name => "User"
     belongs_to :miq_group
 
-    virtual_delegate :email, :name, :userid, :to => :evm_owner, :prefix => true, :allow_nil => true
+    virtual_delegate :email, :name, :userid, :to => :evm_owner, :prefix => true, :allow_nil => true, :type => :string
 
     # Determine whether the selected object is owned by the current user
     # Resulting SQL:
@@ -25,7 +25,7 @@ module OwnershipMixin
       t.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(userid))
     end)
 
-    virtual_delegate :owning_ldap_group, :to => "miq_group.description", :allow_nil => true
+    virtual_delegate :owning_ldap_group, :to => "miq_group.description", :allow_nil => true, :type => :string
 
     # Determine whether to return objects owned by the current user's miq_group
     # or not.

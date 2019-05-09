@@ -11,10 +11,12 @@ module ComplianceMixin
 
     virtual_delegate :last_compliance_status,
                      :to        => "last_compliance.compliant",
+                     :type      => :string,
                      :allow_nil => true
     virtual_delegate :timestamp,
                      :to        => :last_compliance,
                      :allow_nil => true,
+                     :type      => :datetime,
                      :prefix    => true
   end
 
