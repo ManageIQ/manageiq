@@ -248,6 +248,7 @@ class ConversionHost < ApplicationRecord
   #
   def find_credentials(auth_type = 'v2v')
     authentication = authentication_type(auth_type)
+    authentication ||= authentications.detect { |a| a.authtype == auth_type }
 
     if authentication.blank?
       res = resource.respond_to?(:authentication_type) ? resource : resource.ext_management_system
