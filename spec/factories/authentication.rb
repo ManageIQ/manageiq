@@ -35,6 +35,10 @@ FactoryBot.define do
     status      { "SomeMockedStatus" }
   end
 
+  factory :authentication_v2v, :parent => :authentication_ssh_keypair do
+    authtype    { "v2v" }
+  end
+
   factory :authentication_redhat_metric, :parent => :authentication do
     authtype { "metrics" }
   end
