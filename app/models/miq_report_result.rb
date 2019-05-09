@@ -10,7 +10,7 @@ class MiqReportResult < ApplicationRecord
 
   serialize :report
 
-  virtual_delegate :description, :to => :miq_group, :prefix => true, :allow_nil => true
+  virtual_delegate :description, :to => :miq_group, :prefix => true, :allow_nil => true, :type => :string
   virtual_attribute :status, :string
   virtual_column :status_message,        :type => :string, :uses => :miq_task
   virtual_has_one :result_set,           :class_name => "Hash"

@@ -661,6 +661,37 @@ describe VirtualFields do
           query = CompSys.all.select(:id, :first_os_name)
           expect(query.map(&:first_os_name)).to match_array(["bar"])
         end
+
+        it "detects bad reference" do
+          TestOtherClass.virtual_delegate :bogus, :to => :oref1, :type => :integer
+          expect { TestOtherClass.new }.not_to raise_error
+          expect { TestOtherClass.new(:oref1 => TestClass.new).bogus }.to raise_error(NoMethodError)
+        end
+
+        it "detects bad reference in sql" do
+          TestOtherClass.virtual_delegate :bogus, :to => :oref1, :type => :integer
+          # any exception will do
+          expect { TestOtherClass.select(:bogus).first }.to raise_error(ActiveRecord::StatementInvalid)
+        end
+
+        it "doesn't reference target class when :type is specified" do
+          TestOtherClass.has_many :others, :class_name => "InvalidType"
+          TestOtherClass.virtual_delegate :col4, :to => :others, :type => :integer
+          # doesn't lookup InvalidType class with this model
+          expect { TestOtherClass.new }.not_to raise_error
+          # referencing the relation still accesses the model (which is invalid so blows up)
+          expect { TestOtherClass.new.col4 }.to raise_error(NameError)
+        end
+
+        it "catches invalid references" do
+          TestOtherClass.virtual_delegate :col4, :to => :others, :type => :integer
+          expect { model.new }.to raise_error(NameError)
+        end
+
+        it "catches invalid column" do
+          TestOtherClass.virtual_delegate :col4, :to => :oref1, :type => :integer
+          expect { model.new }.to raise_error(NameError)
+        end
       end
     end
 

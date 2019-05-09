@@ -11,7 +11,7 @@ class MiqProductFeature < ApplicationRecord
   has_many :shares, :through => :miq_product_features_shares
   belongs_to :tenant
 
-  virtual_delegate :identifier, :to => :parent, :prefix => true, :allow_nil => true
+  virtual_delegate :identifier, :to => :parent, :prefix => true, :allow_nil => true, :type => :string
 
   validates_presence_of   :identifier
   validates_uniqueness_of :identifier
