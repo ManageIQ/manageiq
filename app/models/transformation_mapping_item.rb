@@ -2,8 +2,6 @@ class TransformationMappingItem < ApplicationRecord
   belongs_to :transformation_mapping
   belongs_to :source,      :polymorphic => true
   belongs_to :destination, :polymorphic => true
-  # TODO, What is the MIQ wide logging syntax and way
-  tmilogger = Rails.logger # todo remove me
 
   validates :source_id, :uniqueness => {:scope => [:transformation_mapping_id, :source_type]}
 
@@ -67,7 +65,6 @@ class TransformationMappingItem < ApplicationRecord
   # How to check the datastore(s) belong to the source.
   #
   def source_datastore
-    tmilogger = Rails.logger # todo remove me
     source_storage = source
 
     cluster_storages = source.hosts.                # Get hosts using this source storage
@@ -83,7 +80,6 @@ class TransformationMappingItem < ApplicationRecord
   # check if destination storage belongs to the cluster
   #
   def destination_datastore
-    tmilogger = Rails.logger # todo remove me
     destination_storage = destination
 
     cluster_storages = destination.hosts.           # Get hosts using this source storage
