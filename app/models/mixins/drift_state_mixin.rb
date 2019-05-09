@@ -9,8 +9,8 @@ module DriftStateMixin
     has_one  :first_drift_state_timestamp_rec, -> { select("id, timestamp, resource_type, resource_id").order("timestamp") }, :as => :resource, :class_name => 'DriftState'
     has_one :last_drift_state_timestamp_rec, -> { order("timestamp DESC").select("id, timestamp, resource_type, resource_id") }, :as => :resource, :class_name => 'DriftState'
 
-    virtual_delegate :first_drift_state_timestamp, :to => "first_drift_state_timestamp_rec.timestamp", :allow_nil => true
-    virtual_delegate :last_drift_state_timestamp, :to => "last_drift_state_timestamp_rec.timestamp", :allow_nil => true
+    virtual_delegate :first_drift_state_timestamp, :to => "first_drift_state_timestamp_rec.timestamp", :allow_nil => true, :type => :datetime
+    virtual_delegate :last_drift_state_timestamp, :to => "last_drift_state_timestamp_rec.timestamp", :allow_nil => true, :type => :datetime
   end
 
   def drift_state_timestamps
