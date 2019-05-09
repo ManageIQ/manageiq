@@ -35,34 +35,34 @@ conditions: !ruby/object:MiqExpression
     "=":
       field: Host.ext_management_system-type
       value: ManageIQ::Providers::Vmware::InfraManager
-  context_type: 
+  context_type:
 order: Ascending
 sortby:
 - ext_management_system.name
 - name
 group: c
-graph: 
-dims: 
-filename: 
-file_mtime: 
+graph:
+dims:
+filename:
+file_mtime:
 categories: []
-timeline: 
+timeline:
 template_type: report
-where_clause: 
+where_clause:
 db_options: {}
-generate_cols: 
-generate_rows: 
+generate_cols:
+generate_rows:
 col_formats:
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-tz: 
-time_profile_id: 
-display_filter: 
+-
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
 col_options:
   vmm_version:
     :break_label: 'VMM Version: '
@@ -78,7 +78,7 @@ col_options:
 rpt_options:
   :pdf:
     :page_size: A4 - 210mm x 297mm (default)
-  :queue_timeout: 
+  :queue_timeout:
   :summary:
     :hide_detail_rows: false
 menu_name: VMware Environment Summary
