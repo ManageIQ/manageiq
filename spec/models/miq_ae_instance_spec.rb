@@ -249,4 +249,49 @@ describe MiqAeInstance do
     i1 = FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
     expect(i1.domain.name).to eql('dom1')
   end
+
+  describe '#get_homonymic_across_domains' do
+    let(:u1) { FactoryBot.create(:user_with_group, :name => 'user1') }
+    let(:d1) { FactoryBot.create(:miq_ae_domain, :name => 'dom1', :priority => 1) }
+    let(:d2) { FactoryBot.create(:miq_ae_domain, :name => 'dom2', :priority => 2) }
+    let(:n1) { FactoryBot.create(:miq_ae_namespace, :parent_id => d1.id, :name => "namespace") }
+    let(:n2) { FactoryBot.create(:miq_ae_namespace, :parent_id => d2.id, :name => "namespace") }
+    let(:c1) { FactoryBot.create(:miq_ae_class, :namespace_id => n1.id, :name => "class") }
+    let(:c2) { FactoryBot.create(:miq_ae_class, :namespace_id => n2.id, :name => "class") }
+    let!(:i1) { FactoryBot.create(:miq_ae_instance, :class_id => c1.id, :name => "instance") }
+    let!(:i2) { FactoryBot.create(:miq_ae_instance, :class_id => c2.id, :name => "instance") }
+
+    it 'returns sorted matches' do
+      expect(run_method(u1, "namespace/class/instance", true, false)).to eq([i2, i1])
+    end
+
+    context 'with disabled domains' do
+      before { d1.update(:enabled => false) }
+
+      it 'returns only enabled domains' do
+        expect(run_method(u1, "namespace/class/instance", true, false)).to eq([i2])
+      end
+
+      it 'returns all domains' do
+        expect(run_method(u1, "namespace/class/instance", false, false)).to eq([i2, i1])
+      end
+    end
+
+    context 'with tenancy' do
+      let(:t1) { FactoryBot.create(:tenant, :name => 'tenant1') }
+      let(:t2) { FactoryBot.create(:tenant, :name => 'tenant2') }
+      let(:g1) { FactoryBot.create(:miq_group, :tenant => t1) }
+      let(:u1) { FactoryBot.create(:user, :name => 'user1', :miq_groups => [g1]) }
+      let(:d1) { FactoryBot.create(:miq_ae_domain, :name => 'dom1', :priority => 1, :tenant => t1) }
+      let(:d2) { FactoryBot.create(:miq_ae_domain, :name => 'dom2', :priority => 2, :tenant => t2) }
+
+      it 'returns only visible domains' do
+        expect(run_method(u1, "namespace/class/instance", true, false)).to eq([i1])
+      end
+    end
+
+    def run_method(user, path, enabled, prefix)
+      MiqAeInstance.get_homonymic_across_domains(user, path, enabled, :prefix => prefix)
+    end
+  end
 end
