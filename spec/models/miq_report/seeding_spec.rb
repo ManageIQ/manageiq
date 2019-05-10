@@ -2,7 +2,7 @@ require 'fileutils'
 
 describe MiqReport do
   describe "::Seeding" do
-    include_examples(".seed called multiple times", 143)
+    include_examples(".seed called multiple times", 145)
 
     describe ".seed" do
       let(:tmpdir)      { Pathname.new(Dir.mktmpdir) }
