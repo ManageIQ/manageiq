@@ -1,4 +1,4 @@
-describe MiqEnvironment do
+RSpec.describe MiqEnvironment do
   context "with linux platform" do
     before do
       @old_impl = Sys::Platform::IMPL
@@ -32,9 +32,10 @@ describe MiqEnvironment do
       end
 
       context ".is_production?" do
-        it "should return false if Rails undefined" do
-          allow(Object).to receive(:defined?).with(:Rails).and_return(false)
-          expect(MiqEnvironment::Command.is_production?).to be_falsey
+        it "should return true if Rails undefined" do
+          hide_const('Rails')
+          expect { Rails }.to raise_error(NameError)
+          expect(MiqEnvironment::Command.is_production?).to be_truthy
         end
 
         it "will return true if linux and /var/www/miq/vmdb exists and cache the result" do

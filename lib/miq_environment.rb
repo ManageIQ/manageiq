@@ -34,9 +34,11 @@ module MiqEnvironment
       @is_appliance = is_linux? && File.exist?('/var/www/miq/vmdb')
     end
 
+    # Return whether or not the current ManageIQ environment is a production
+    # environment. Assumes production if Rails is not defined or if the Rails
+    # environment is set to 'production'.
+    #
     def self.is_production?
-      # Note: This method could be called outside of Rails, so check defined?(Rails)
-      # Assume production if not defined or if set to 'production'
       defined?(Rails) ? Rails.env.production? : true
     end
 
