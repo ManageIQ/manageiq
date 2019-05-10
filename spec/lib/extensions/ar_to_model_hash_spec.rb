@@ -1,4 +1,4 @@
-describe ToModelHash do
+RSpec.describe ToModelHash do
   context "#to_model_hash" do
     let(:test_disk_class) do
       Class.new(ActiveRecord::Base) do
@@ -65,7 +65,7 @@ describe ToModelHash do
       test_vm_class.has_one          :test_operating_system, :anonymous_class => test_os_class,       :inverse_of => false,          :dependent => :destroy
 
       # we're testing the preload of associations, skip the recursive .to_model_hash
-      allow_any_instance_of(ActiveRecord::Base).to receive(:to_model_hash_recursive)
+      allow_any_instance_of(test_vm_class).to receive(:to_model_hash_recursive)
       allow(ActiveRecord::Associations::Preloader).to receive(:new).and_return(mocked_preloader)
     end
 
