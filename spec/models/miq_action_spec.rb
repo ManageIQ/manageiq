@@ -1,4 +1,4 @@
-describe MiqAction do
+RSpec.describe MiqAction do
   describe "#invoke_or_queue" do
     before do
       @action = MiqAction.new
@@ -207,13 +207,19 @@ describe MiqAction do
     end
 
     it "avoids non container images" do
-      expect(container_image_registry).to receive(:scan).exactly(0).times
-      action.action_container_image_analyze(action, container_image_registry, :event => event)
+      error_message = "MIQ(action_container_image_analyze): Unable to perform action [#{action.description}],"\
+        " object [#{container_image_registry.inspect}] is not a Container Image"
+
+      expect(MiqPolicy.logger).to receive(:error).with(error_message)
+      expect(action.action_container_image_analyze(action, container_image_registry, :event => event)).to be_nil
     end
 
     it "avoids an event loop" do
-      expect(container_image_registry).to receive(:scan).exactly(0).times
-      action.action_container_image_analyze(action, container_image_registry, :event => event_loop)
+      error_message = "MIQ(action_container_image_analyze): Invoking action [#{action.description}] for event"\
+        " [#{event_loop.description}] would cause infinite loop, skipping"
+
+      expect(MiqPolicy.logger).to receive(:warn).with(error_message)
+      expect(action.action_container_image_analyze(action, container_image, :event => event_loop)).to be_nil
     end
   end
 
