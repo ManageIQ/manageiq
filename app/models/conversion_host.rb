@@ -247,7 +247,7 @@ class ConversionHost < ApplicationRecord
   # with the resource using the 'ssh_keypair' auth type, and finally 'default'.
   #
   def find_credentials(auth_type = 'v2v')
-    authentication = authentication_type(auth_type)
+    authentication = authentications.detect { |a| a.authtype == auth_type }
 
     if authentication.blank?
       res = resource.respond_to?(:authentication_type) ? resource : resource.ext_management_system
@@ -307,7 +307,7 @@ class ConversionHost < ApplicationRecord
   # +extra_vars+ option should be a hash of key/value pairs which, if present,
   # will be passed to the '-e' flag.
   #
-  def ansible_playbook(playbook, extra_vars = {}, miq_task_id = nil, auth_type = nil)
+  def ansible_playbook(playbook, extra_vars = {}, miq_task_id = nil, auth_type = 'v2v')
     task = MiqTask.find(miq_task_id) if miq_task_id.present?
 
     host = hostname || ipaddress

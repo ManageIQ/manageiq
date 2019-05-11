@@ -351,17 +351,53 @@ RSpec.describe ConversionHost, :v2v do
 
   context "authentication associations" do
     let(:vm) { FactoryBot.create(:vm_openstack) }
-    let(:conversion_host_vm) { FactoryBot.create(:conversion_host, :resource => vm) }
-    let(:auth_authkey) { FactoryBot.create(:authentication_ssh_keypair, :resource => conversion_host_vm) }
+    let(:ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+    let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
 
-    it "finds associated authentications" do
-      expect(conversion_host_vm.authentications).to contain_exactly(auth_authkey)
+    let(:conversion_host_vm) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:conversion_host_host) { FactoryBot.create(:conversion_host, :resource => host) }
+
+    let(:auth_keypair) { FactoryBot.create(:authentication_ssh_keypair, :resource => conversion_host_vm) }
+    let(:auth_v2v) { FactoryBot.create(:authentication_v2v, :resource => conversion_host_host) }
+
+    it "finds associated ssh_keypair authentications" do
+      expect(conversion_host_vm.authentications).to contain_exactly(auth_keypair)
+    end
+
+    it "finds associated v2v authentications" do
+      expect(conversion_host_host.authentications).to contain_exactly(auth_v2v)
     end
 
     it "allows a resource to add an authentication" do
-      auth_authkey2 = FactoryBot.create(:authentication_ssh_keypair)
-      conversion_host_vm.authentications << auth_authkey2
-      expect(conversion_host_vm.authentications).to contain_exactly(auth_authkey, auth_authkey2)
+      auth_keypair2 = FactoryBot.create(:authentication_ssh_keypair)
+      conversion_host_vm.authentications << auth_keypair2
+      expect(conversion_host_vm.authentications).to contain_exactly(auth_keypair, auth_keypair2)
+    end
+  end
+
+  context "find_credentials" do
+    let(:auth_v2v) { FactoryBot.create(:authentication_v2v, :resource => conversion_host_vm) }
+    let(:ems_redhat) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+    let(:ems_openstack) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
+    let(:auth_default) { FactoryBot.create(:authentication) }
+    let(:auth_v2v) { FactoryBot.create(:authentication_v2v) }
+
+    let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => ems_redhat) }
+    let(:vm) { FactoryBot.create(:vm_openstack, :ext_management_system => ems_openstack) }
+
+    let(:conversion_host_vm) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:conversion_host_host) { FactoryBot.create(:conversion_host, :resource => host) }
+
+    it "finds the v2v credentials as expected when associated directly with the conversion host" do
+      conversion_host_vm.authentications << auth_v2v
+      expect(conversion_host_vm.send(:find_credentials)).to eq(auth_v2v)
+    end
+
+    it "finds the credentials associated with the resource if credentials cannot be found for the conversion host" do
+      vm.ext_management_system.authentications << auth_default
+      host.authentications << auth_default
+      expect(conversion_host_vm.send(:find_credentials)).to eq(auth_default)
+      expect(conversion_host_host.send(:find_credentials)).to eq(auth_default)
     end
   end
 
