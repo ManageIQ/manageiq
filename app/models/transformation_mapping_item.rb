@@ -23,7 +23,7 @@ class TransformationMappingItem < ApplicationRecord
   validate :source_network,      :if => -> { destination_type.casecmp?('Lan') }
 
   VALID_SOURCE_CLUSTER_PROVIDERS    = %w[vmwarews]
-  VALID_DESTINATION_CLUSTER_TYPES   = %w[EmsCluster CloudTenant]
+  VALID_DESTINATION_CLUSTER_TYPES   = %w[rhevm]
 
   VALID_SOURCE_DATASTORE_TYPES      = %w[Storage]
   VALID_DESTINATION_DATASTORE_TYPES = %w[Storage CloudVolumeType]
@@ -45,7 +45,7 @@ class TransformationMappingItem < ApplicationRecord
       errors.add(:source_type, "EMS type of source cluster must be in: #{source_types}")
     end
 
-    unless VALID_DESTINATION_CLUSTER_TYPES.include?(destination_type)
+    unless VALID_DESTINATION_CLUSTER_TYPES.include?(destination.ext_management_system.emstype)
       destination_types = VALID_DESTINATION_CLUSTER_TYPES.join(', ')
       errors.add(:destination_type, "Class of target cluster must be in: #{destination_types}")
     end
