@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
+RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
   include Spec::Support::WorkflowHelper
 
   let(:admin) { FactoryBot.create(:user_with_group) }
@@ -31,7 +31,6 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
     it "should retrieve cloud-init templates when cloning" do
       options = {'key' => 'value' }
-      allow(workflow).to receive(:supports_native_clone?).and_return(true)
 
       result = workflow.allowed_customization_templates(options)
       customization_template = workflow.instance_variable_get(:@values)[:customization_template_script]
@@ -46,7 +45,6 @@ describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
     it "should retrieve sysprep templates when cloning" do
       options = {'key' => 'value' }
-      allow(sysprep_workflow).to receive(:supports_native_clone?).and_return(true)
       allow(sysprep_workflow).to receive(:supports_sysprep?).and_return(true)
       allow(sysprep_workflow).to receive(:load_ar_obj).and_return(template)
       allow(template).to receive(:platform).and_return('windows')
