@@ -65,6 +65,7 @@ RSpec.describe LocaleResolver do
   end
 
   def stub_server_settings_with_locale(locale)
-    allow(Settings.server).to receive(:locale).and_return(locale)
+    server = Config::Options.new(:locale => locale)
+    allow(Settings).to receive(:server).and_return(server)
   end
 end
