@@ -194,9 +194,11 @@ class PglogicalSubscription < ActsAsArModel
     pglogical.drop_subscription(id, true)
   rescue PG::InternalError => e
     raise unless e.message =~ /could not connect to publisher/ || e.message =~ /replication slot .* does not exist/
-    disable
-    pglogical.alter_subscription_options(id, "slot_name" => "NONE")
-    pglogical.drop_subscription(id, true)
+    connection.transaction do
+      disable
+      pglogical.alter_subscription_options(id, "slot_name" => "NONE")
+      pglogical.drop_subscription(id, true)
+    end
   end
 
   def remote_region_number
