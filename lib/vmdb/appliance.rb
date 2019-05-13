@@ -36,6 +36,18 @@ module Vmdb
       "#{self.PRODUCT_NAME}/#{self.VERSION}".freeze
     end
 
+    def self.check_automate_disk_version_against_db(fh)
+      ae_domains = MiqAeDomain.where(:source => MiqAeDomain::SYSTEM_SOURCE)
+      ae_domains.each do |domain|
+        if domain.version.blank? || domain.available_version.blank?
+          fh.warn("Cannot check #{domain.name} Automate domain version because version information not found")
+        elsif domain.version != domain.available_version
+          fh.warn("#{domain.name} domain version on disk differs from db version:")
+          fh.warn("Current version - #{domain.version}, Available version - #{domain.available_version}")
+        end
+      end
+    end
+
     def self.log_config(*args)
       options = args.extract_options!
       fh = options[:logger] || $log
@@ -50,6 +62,7 @@ module Vmdb
       fh.info("Codename: #{self.CODENAME}")
       fh.info("RUBY Environment:  #{Object.const_defined?(:RUBY_DESCRIPTION) ? RUBY_DESCRIPTION : "ruby #{RUBY_VERSION} (#{RUBY_RELEASE_DATE} patchlevel #{RUBY_PATCHLEVEL}) [#{RUBY_PLATFORM}]"}")
       fh.info("RAILS Environment: #{Rails.env} version #{Rails.version}")
+      check_automate_disk_version_against_db(fh)
 
       fh.info("VMDB settings:")
       VMDBLogger.log_hashes(fh, ::Settings, :filter => Vmdb::Settings::PASSWORD_FIELDS)
