@@ -31,25 +31,25 @@ RSpec.describe 'Tests transformation items', :v2v do
     let(:source_cluster) { FactoryBot.create(:ems_cluster)}
     let(:source_host) { FactoryBot.create(:host, :ems_cluster => source_cluster) }
     let(:src) { FactoryBot.create(:storage, :hosts => [source_host] ) }
-    
+
     let(:destination_storage) { FactoryBot.create(:storage) }
     let(:destination_cluster) { FactoryBot.create(:ems_cluster)}
     let(:destination_host) { FactoryBot.create(:host, :ems_cluster => destination_cluster) }
     let(:dst) { FactoryBot.create(:storage, :hosts => [destination_host] ) }
 
     let(:tmi) { FactoryBot.create(:transformation_mapping_item, :source => src, :destination => dst) }
-   
-    # add the src storage to the source cluster, then call valid  
+
+    # add the src storage to the source cluster, then call valid
     before do
-	allow(source_cluster).to receive(:storages).and_return([src])
+      allow(source_cluster).to receive(:storages).and_return([src])
     end
     it "Source datastore is valid" do
       expect(tmi.valid?).to be (true)
     end
 
-    # add the dst storage to the destination cluster, then call valid  
+    # add the dst storage to the destination cluster, then call valid
     before do
-	allow(destination_cluster).to receive(:storages).and_return([dst])
+      allow(destination_cluster).to receive(:storages).and_return([dst])
     end
     it "Destination datastore is valid" do
       expect(tmi.valid?).to be (true)
@@ -62,15 +62,32 @@ RSpec.describe 'Tests transformation items', :v2v do
     # 2. Add cluster to a host
     # 3. Add host to a switch
     # 4. Add switch to the lan
-    let(:src) { FactoryBot.create(:lan)}
-    let(:dst) { FactoryBot.create(:lan)}
-    let(:tmi) { FactoryBot.create(:transformation_mapping_item, :source => src, :destination => dst)}
+    let(:source_cluster) { FactoryBot.create(:ems_cluster) }
+    let(:source_host) { FactoryBot.create(:host, :ems_cluster => source_cluster) }
+    let(:source_switch) { FactoryBot.create(:switch, :host => source_host) }
+    let(:source_lan) { FactoryBot.create(:lan, :switch => source_switch)}
+
+    let(:destination_cluster) { FactoryBot.create(:ems_cluster) }
+    let(:destination_host) { FactoryBot.create(:host, :ems_cluster => destination_cluster) }
+    let(:destination_switch) { FactoryBot.create(:switch, :host => destination_host) }
+    let(:destination_lan) { FactoryBot.create(:lan, :switch => destination_switch)}
+
+    let(:tmi) { FactoryBot.create(:transformation_mapping_item, :source => source_lan, :destination => destination_lan)}
+
+    before do
+      allow(source_cluster).to receive(:ems_cluster).and_return([source_cluster])
+    end
+
     it "Source is valid" do
-      expect(true).to be (true)
+      expect(tmi).to be_valid
       # expect(tmi.valid?).to be (true)
     end
+
+     before do
+      allow(destination_cluster).to receive(:ems_cluster).and_return([destination_cluster])
+    end
     it "Destination is valid" do
-      expect(true).to be (true)
+      expect(tmi).to be_valid
     end
   end # end of lan context
 

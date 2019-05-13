@@ -98,9 +98,20 @@ class TransformationMappingItem < ApplicationRecord
     source_lan    = source
     source_cluster = source_lan.switch.host.ems_cluster
 
+    logger.info ("Arif source_cluster: " + source_cluster.inspect.to_s )
+    logger.info ("Arif source_lan: " + source_lan.inspect.to_s )
+    logger.info ("Arif source_lan.switch: " + source_lan.switch.inspect.to_s)
+    logger.info ("Arif source_lan.switch.host" + source_lan.switch.host.inspect.to_s)
+    logger.info ("Arif source_lan.switch.host.ems_cluster" + source_lan.switch.host.ems_cluster.inspect.to_s)
+
     tmi_for_emsclusters = TransformationMappingItem.where(:source_type => "EmsCluster")
 
-    unless tmi_for_emsclusters.any? { |tmi| tmi.source == source_cluster }
+    logger.info ("Arif tmi_for_sourcecluster: " + tmi_for_emsclusters.to_s)
+
+    unless tmi_for_emsclusters.any? { |tmi|
+        logger.info("Arif tmi.source: " + tmi.source.inspect.to_s)
+        tmi.source == source_cluster
+      }
       network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
       errors.add(:network_types, "The network type must be in: #{network_types}")
     end
@@ -112,9 +123,20 @@ class TransformationMappingItem < ApplicationRecord
     destination_lan = destination
     destination_cluster = destination_lan.switch.host.ems_cluster
 
+    logger.info ("Arif destination_cluster: " + destination_cluster.inspect.to_s)
+    logger.info ("Arif destination_lan: " + destination_lan.inspect.to_s )
+    logger.info ("Arif destination_lan.switch: " + destination_lan.switch.inspect.to_s)
+    logger.info ("Arif destination_lan.switch.host" + destination_lan.switch.host.inspect.to_s)
+    logger.info ("Arif destination_lan.switch.host.ems_cluster" + destination_lan.switch.host.ems_cluster.inspect.to_s)
+
     tmi_for_emsclusters = TransformationMappingItem.where(:source_type => "EmsCluster")
 
-    unless tmi_for_emsclusters.any? { |tmi| tmi.destination == destination_cluster }
+    logger.info("Arif tmi_for_destionationclusters: " + tmi_for_emsclusters.inspect.to_s) # to deleteme
+
+    unless tmi_for_emsclusters.any? { |tmi|
+        logger.info("Arif tmi.destination: " + tmi.destination.inspect.to_s)
+        tmi.destination == destination_cluster
+      }
       network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
       errors.add(:network_types, "The network type must be in: #{network_types}")
     end
