@@ -253,9 +253,9 @@ class ConversionHost < ApplicationRecord
       res = resource.respond_to?(:authentication_type) ? resource : resource.ext_management_system
       authentication = res.authentication_type('ssh_keypair') || res.authentication_type('default')
       if authentication
-        warning_message = "Unable to find v2v authentication for conversion host: #{name}. "\
-                          "Defaulting to authentication: #{authentication.name}/#{authentication.class}."
-        _log.warn(warning_message)
+        debug_message = "Unable to find v2v authentication for conversion host: #{name}. "\
+                        "Defaulting to authentication: #{authentication.name}/#{authentication.class}."
+        _log.debug(debug_message)
       end
     end
 

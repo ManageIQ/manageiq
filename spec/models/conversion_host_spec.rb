@@ -414,14 +414,14 @@ RSpec.describe ConversionHost, :v2v do
       expect(conversion_host_host.send(:find_credentials)).to eq(auth_default)
     end
 
-    it "logs the expected warning if a v2v authentication was not found" do
+    it "logs the expected debug message if a v2v authentication was not found" do
       vm.ext_management_system.authentications << auth_default
 
-      warning_message = "MIQ(ConversionHost#find_credentials) Unable to find v2v "\
+      debug_message = "MIQ(ConversionHost#find_credentials) Unable to find v2v "\
                         "authentication for conversion host: #{conversion_host_vm.name}. "\
                         "Defaulting to authentication: #{auth_default.name}/#{auth_default.class}."
 
-      expect($log).to receive(:warn).with(warning_message)
+      expect($log).to receive(:debug).with(debug_message)
       conversion_host_vm.send(:find_credentials)
     end
   end
