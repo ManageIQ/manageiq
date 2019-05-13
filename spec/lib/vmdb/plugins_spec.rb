@@ -237,4 +237,9 @@ describe Vmdb::Plugins do
       end
     end
   end
+
+  it "all plugins will implement .plugin_name" do
+    bad_plugins = described_class.select { |plugin| plugin.try(:plugin_name).blank? }
+    expect(bad_plugins).to be_empty
+  end
 end
