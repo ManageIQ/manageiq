@@ -26,6 +26,8 @@ class AutomationRequest < MiqRequest
     options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, "")  # Strip blanks and slashes from beginning and end of string
     options[:class_name]    = (options.delete(:class) || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
     options[:instance_name] = (options.delete(:instance) || DEFAULT_INSTANCE).strip
+    options[:schedule_type] = parameters['schedule_time'].present? ? "schedule" : "immediately"
+    options[:schedule_time] = parameters['schedule_time'] if parameters['schedule_time']
 
     object_parameters = parse_out_objects(parameters)
     attrs = MiqRequestWorkflow.parse_ws_string(parameters)
