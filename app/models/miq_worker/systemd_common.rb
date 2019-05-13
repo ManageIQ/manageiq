@@ -17,7 +17,7 @@ class MiqWorker
       end
 
       def service_name
-        singleton_worker? ? service_base_name : "#{service_base_name}@"
+        scalable? ? service_base_name : "#{service_base_name}@"
       end
 
       def service_file_name
@@ -125,7 +125,7 @@ class MiqWorker
     end
 
     def unit_instance
-      singleton_worker? ? "" : "@#{guid}"
+      scalable? ? "" : "@#{guid}"
     end
 
     def write_unit_settings_file

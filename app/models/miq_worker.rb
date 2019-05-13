@@ -53,12 +53,12 @@ class MiqWorker < ApplicationRecord
     workers_configured_count
   end
 
-  def self.singleton_worker?
+  def self.scalable?
     maximum_workers_count.kind_of?(Integer) && maximum_workers_count == 1
   end
 
-  def singleton_worker?
-    self.class.singleton_worker?
+  def scalable?
+    self.class.scalable?
   end
 
   def self.workers_configured_count
