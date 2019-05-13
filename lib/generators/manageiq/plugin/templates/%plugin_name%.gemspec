@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = <%= class_name %>::VERSION
   spec.authors       = ["ManageIQ Authors"]
 
-  spec.summary       = "<%= file_name.camelize %> plugin for ManageIQ"
-  spec.description   = "<%= file_name.camelize %> plugin for ManageIQ"
+  spec.summary       = "<%= plugin_description %>"
+  spec.description   = "<%= plugin_description %>"
   spec.homepage      = "https://github.com/ManageIQ/<%= plugin_name %>"
   spec.license       = "Apache-2.0"
 
