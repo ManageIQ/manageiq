@@ -100,7 +100,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def backlog
-    connection.xlog_location_diff(remote_region_lsn, subscription_status["remote_replication_lsn"])
+    connection.xlog_location_diff(remote_region_lsn, subscription_attributes["remote_replication_lsn"])
   rescue PG::Error => e
     _log.error(e.message)
     nil
@@ -220,7 +220,7 @@ class PglogicalSubscription < ActsAsArModel
   # sets this instance's password field to the one in the subscription dsn in the database
   def find_password
     return password if password.present?
-    s = subscription_status.symbolize_keys
+    s = subscription_attributes.symbolize_keys
     dsn_hash = PG::DSNParser.parse(s.delete(:subscription_dsn))
     self.password = dsn_hash[:password]
   end
@@ -262,7 +262,7 @@ class PglogicalSubscription < ActsAsArModel
     end
   end
 
-  def subscription_status
+  def subscription_attributes
     pglogical.subscriptions.find { |s| s["subscription_name"] == id }
   end
 end
