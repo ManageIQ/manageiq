@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 111 ending 2019-05-13
+
+### Added
+- Add option to schedule automation requests via workflow [(#18741)](https://github.com/ManageIQ/manageiq/pull/18741)
+- Add support for exporting and importing generic object definitions [(#18688)](https://github.com/ManageIQ/manageiq/pull/18688)
+
+### Fixed
+- Group AND expressions properly to account for nesting [(#18709)](https://github.com/ManageIQ/manageiq/pull/18709)
+- Rename Configuration feature to Main Configuration [(#18707)](https://github.com/ManageIQ/manageiq/pull/18707)
+
 ## Unreleased as of Sprint 110 ending 2019-04-29
 
 ### Fixed
