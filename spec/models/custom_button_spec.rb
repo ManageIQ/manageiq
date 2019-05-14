@@ -292,7 +292,7 @@ describe CustomButton do
 
       it "returns the button as a serializable hash with the resource action serialized hash" do
         expect(test_button.expanded_serializable_hash).to eq(
-          expected_hash.merge(:resource_action => "resource_action_hash")
+          expected_hash.merge("guid" => test_button.guid, :resource_action => "resource_action_hash")
         )
       end
     end
@@ -301,7 +301,7 @@ describe CustomButton do
       let(:resource_action) { nil }
 
       it "returns the button as a serializable hash" do
-        expect(test_button.expanded_serializable_hash).to eq(expected_hash)
+        expect(test_button.expanded_serializable_hash).to eq(expected_hash.merge("guid" => test_button.guid))
       end
     end
   end

@@ -2,8 +2,8 @@ class Condition < ApplicationRecord
   include UuidMixin
   before_validation :default_name_to_guid, :on => :create
 
-  validates :name, :description, :guid, :expression, :towhat, :presence => true
-  validates :name, :description, :guid, :uniqueness => true
+  validates :name, :description, :expression, :towhat, :presence => true
+  validates :name, :description, :uniqueness => true
 
   acts_as_miq_taggable
   acts_as_miq_set_member

@@ -455,10 +455,6 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
-  def dup
-    super.tap { |obj| obj.guid = nil }
-  end
-
   def add_resource(rsc, options = {})
     super
     adjust_service_type
