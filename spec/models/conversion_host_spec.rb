@@ -282,7 +282,8 @@ RSpec.describe ConversionHost, :v2v do
         enable_extra_vars = {
           :v2v_host_type        => 'openstack',
           :v2v_transport_method => 'ssh',
-          :v2v_ssh_private_key  => 'fake ssh private key'
+          :v2v_ssh_private_key  => 'fake ssh private key',
+          :v2v_ca_bundle        => 'fake CA bundle'
         }
         check_extra_vars = {
           :v2v_host_type        => 'openstack',
@@ -290,7 +291,7 @@ RSpec.describe ConversionHost, :v2v do
         }
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(enable_playbook, enable_extra_vars, nil)
         expect(conversion_host).to receive(:ansible_playbook).once.ordered.with(check_playbook, check_extra_vars, nil)
-        conversion_host.enable_conversion_host_role(nil, 'fake ssh private key')
+        conversion_host.enable_conversion_host_role(nil, 'fake ssh private key', 'fake CA bundle')
       end
     end
   end
