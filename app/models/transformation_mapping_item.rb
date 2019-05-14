@@ -95,9 +95,11 @@ class TransformationMappingItem < ApplicationRecord
   # Verify that Network type is LAN and belongs the source cluster .
   #
   def source_network
-    source_lan    = source
-    source_cluster = source_lan.switch.host.ems_cluster
-
+    source_lan       = source
+    ems_cluster_lans = source_lan.switch.host.ems_cluster.lans
+    logger.info ("Arif ems_source_cluster_lans: " + ems_cluster_lans.inspect)
+    logger.info ("Arif ems_source_cluster_lans_count: " + ems_cluster_lans.count.to_s)
+=begin
     logger.info ("Arif source_cluster: " + source_cluster.inspect.to_s )
     logger.info ("Arif source_lan: " + source_lan.inspect.to_s )
     logger.info ("Arif source_lan.switch: " + source_lan.switch.inspect.to_s)
@@ -112,7 +114,9 @@ class TransformationMappingItem < ApplicationRecord
         logger.info("Arif tmi.source: " + tmi.source.inspect.to_s)
         tmi.source == source_cluster
       }
-      network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
+=end
+    unless ems_cluster_lans.include?(source_lan)
+    network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
       errors.add(:network_types, "The network type must be in: #{network_types}")
     end
   end # of source_network
@@ -121,8 +125,11 @@ class TransformationMappingItem < ApplicationRecord
   #
   def destination_network
     destination_lan = destination
-    destination_cluster = destination_lan.switch.host.ems_cluster
+    ems_cluster_lans = destination_lan.switch.host.ems_cluster.lans
+    logger.info ("Arif ems_destination_cluster_lans: " + ems_cluster_lans.inspect)
+    logger.info ("Arif ems_destination_cluster_lans_count: " + ems_cluster_lans.count.to_s)
 
+=begin
     logger.info ("Arif destination_cluster: " + destination_cluster.inspect.to_s)
     logger.info ("Arif destination_lan: " + destination_lan.inspect.to_s )
     logger.info ("Arif destination_lan.switch: " + destination_lan.switch.inspect.to_s)
@@ -137,7 +144,9 @@ class TransformationMappingItem < ApplicationRecord
         logger.info("Arif tmi.destination: " + tmi.destination.inspect.to_s)
         tmi.destination == destination_cluster
       }
-      network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
+=end
+    unless ems_cluster_lans.include?(destination_lan)
+    network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
       errors.add(:network_types, "The network type must be in: #{network_types}")
     end
   end # of destination_network
