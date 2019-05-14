@@ -96,7 +96,7 @@ class TransformationMappingItem < ApplicationRecord
   #
   def source_network
     source_lan       = source
-    ems_cluster_lans = source_lan.switch.host.ems_cluster.lans
+    ems_cluster_lans = source_lan.switch.host.ems_cluster.lans.flatten
     logger.info ("Arif ems_source_cluster_lans: " + ems_cluster_lans.inspect)
     logger.info ("Arif ems_source_cluster_lans_count: " + ems_cluster_lans.count.to_s)
 =begin
@@ -125,7 +125,7 @@ class TransformationMappingItem < ApplicationRecord
   #
   def destination_network
     destination_lan = destination
-    ems_cluster_lans = destination_lan.switch.host.ems_cluster.lans
+    ems_cluster_lans = destination_lan.switch.host.ems_cluster.lans.flatten
     logger.info ("Arif ems_destination_cluster_lans: " + ems_cluster_lans.inspect)
     logger.info ("Arif ems_destination_cluster_lans_count: " + ems_cluster_lans.count.to_s)
 
