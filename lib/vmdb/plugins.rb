@@ -16,10 +16,7 @@ module Vmdb
     end
 
     def all
-      @all ||=
-        Rails::Engine.subclasses.select do |engine|
-          engine.name.start_with?("ManageIQ::Providers::") || engine.try(:vmdb_plugin?)
-        end.sort_by(&:name)
+      @all ||= Rails::Engine.subclasses.select { |engine| engine.try(:vmdb_plugin?) }.sort_by(&:name)
     end
 
     def each(&block)
