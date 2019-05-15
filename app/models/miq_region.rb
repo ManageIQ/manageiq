@@ -150,10 +150,6 @@ class MiqRegion < ApplicationRecord
     MiqPglogical.new.subscriber?
   end
 
-  def self.replication_enabled?
-    MiqPglogical.new.node?
-  end
-
   def self.replication_type
     if global_replication_type?
       :global

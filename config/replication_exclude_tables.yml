@@ -85,7 +85,6 @@
 - server_roles
 - sessions
 - vim_performance_states
-- vim_performance_tag_values
 - vmdb_database_metrics
 - vmdb_databases
 - vmdb_indexes
