@@ -444,6 +444,36 @@ RSpec.describe ConversionHost, :v2v do
     end
   end
 
+  context "#run_conversion" do
+    let(:vm) { FactoryBot.create(:vm_openstack) }
+    let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }
+    let(:conversion_options) { {:foo => 1, :bar => 'hello' } }
+
+    it "works as expected if the connection is successful and the JSON is valid" do
+      allow(conversion_host).to receive(:connect_ssh).and_return({:alpha => {:beta => 'hello'}}.to_json)
+      expect(conversion_host.run_conversion(conversion_options)).to eql('alpha' => {'beta' => 'hello'})
+    end
+
+    it "works as expected if the connection is successful but the JSON is invalid" do
+      allow(conversion_host).to receive(:connect_ssh).and_return('bogus')
+      expected_message = "Could not parse result data after running virt-v2v-wrapper.py using "\
+        "options: #{conversion_options}. Result was: bogus."
+      expect { conversion_host.run_conversion(conversion_options) }.to raise_error(expected_message)
+    end
+
+    it "works as expected if the connection is unsuccessful" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise(MiqException::MiqInvalidCredentialsError)
+      expected_message = "Failed to connect and run conversion using options #{conversion_options}"
+      expect { conversion_host.run_conversion(conversion_options) }.to raise_error(/#{expected_message}/)
+    end
+
+    it "works as expected if an unknown error occurs" do
+      allow(conversion_host).to receive(:connect_ssh).and_raise(StandardError)
+      expected_message = "Starting conversion failed on '#{vm.name}'"
+      expect { conversion_host.run_conversion(conversion_options) }.to raise_error(/#{expected_message}/)
+    end
+  end
+
   context "#get_conversion_state" do
     let(:vm) { FactoryBot.create(:vm_openstack) }
     let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => vm) }

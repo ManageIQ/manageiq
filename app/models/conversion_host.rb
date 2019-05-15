@@ -144,7 +144,7 @@ class ConversionHost < ApplicationRecord
   def apply_task_limits(path, limits = {})
     connect_ssh { |ssu| ssu.put_file(path, limits.to_json) }
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
-    raise "Failed to connect and apply limits in file '#{path}' with [#{err.class}: #{err}"
+    raise "Failed to connect and apply limits in file '#{path}' with [#{err.class}: #{err}]"
   rescue JSON::GeneratorError => err
     raise "Could not generate JSON from limits '#{limits}' with [#{err.class}: #{err}]"
   rescue StandardError => err
@@ -154,8 +154,12 @@ class ConversionHost < ApplicationRecord
   def run_conversion(conversion_options)
     result = connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', nil, nil, conversion_options.to_json) }
     JSON.parse(result)
-  rescue => e
-    raise "Starting conversion failed on '#{resource.name}' with [#{e.class}: #{e}]"
+  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+    raise "Failed to connect and run conversion using options #{conversion_options} with [#{err.class}: #{err}]"
+  rescue JSON::ParserError
+    raise "Could not parse result data after running virt-v2v-wrapper.py using options: #{conversion_options}. Result was: #{result}."
+  rescue StandardError => err
+    raise "Starting conversion failed on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
   # Kill a specific remote process over ssh, sending the specified +signal+, or 'TERM'
