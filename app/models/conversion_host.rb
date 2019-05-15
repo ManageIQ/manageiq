@@ -335,7 +335,12 @@ class ConversionHost < ApplicationRecord
     extra_vars.each { |k, v| command << " --extra-vars '#{k}=#{v}'" }
 
     result = AwesomeSpawn.run(command)
-    raise unless result.exit_status.zero?
+
+    if result.failure?
+      error_message = result.error.presence || result.output
+      _log.error("#{result.command_line} ==> #{error_message}")
+      raise
+    end
   ensure
     task&.update_context(task.context_data.merge!(File.basename(playbook, '.yml') => result.output)) unless result.nil?
     ssh_private_key_file&.unlink
