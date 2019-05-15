@@ -90,3 +90,4 @@ bundler.d/*
 # yardoc
 /doc/
 .yardoc
+.rspec-local

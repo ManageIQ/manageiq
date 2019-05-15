@@ -1,6 +1,9 @@
 RSpec.describe TransformationMapping, :v2v do
-  let(:src) { FactoryBot.create(:ems_cluster) }
-  let(:dst) { FactoryBot.create(:ems_cluster) }
+  let(:ems_redhat) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+  let(:ems_vmware) { FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone)) }
+
+  let(:src) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
+  let(:dst) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_redhat) }
   let(:vm)  { FactoryBot.create(:vm_vmware, :ems_cluster => src) }
 
   let(:mapping) do
@@ -10,12 +13,16 @@ RSpec.describe TransformationMapping, :v2v do
     )
   end
 
+  logger = Rails.logger
+
   describe '#destination' do
     it "finds the destination" do
+      logger.info("TESTCASE: finds the destination" )
       expect(mapping.destination(src)).to eq(dst)
     end
 
     it "returns nil for unmapped source" do
+      logger.info("TESTCASE: returns nil for unmapped source" )
       expect(mapping.destination(FactoryBot.create(:ems_cluster))).to be_nil
     end
   end
@@ -25,39 +32,81 @@ RSpec.describe TransformationMapping, :v2v do
     before { FactoryBot.create(:service_resource, :resource => mapping, :service_template => plan) }
 
     it 'finds the transformation plans' do
+      logger.info("TESTCASE: finds the transformation plans" )
       expect(mapping.service_templates).to match([plan])
     end
   end
 
   describe '#search_vms_and_validate' do
+
+    let(:source_cluster) { FactoryBot.create(:ems_cluster)}
+    let(:source_host) { FactoryBot.create(:host, :ems_cluster => source_cluster) }
+    let(:source_storage) { FactoryBot.create(:storage, :hosts => [source_host] ) }
+
+    let(:destination_storage) { FactoryBot.create(:storage) }
+    let(:destination_cluster) { FactoryBot.create(:ems_cluster)}
+    let(:destination_host) { FactoryBot.create(:host, :ems_cluster => destination_cluster) }
+    let(:destination_storage) { FactoryBot.create(:storage, :hosts => [destination_host] ) }
+
+    let(:source_cluster) { FactoryBot.create(:ems_cluster ) }
+    let(:source_host) { FactoryBot.create(:host, :ems_cluster => source_cluster) }
+    let(:source_switch) { FactoryBot.create(:switch, :host => source_host) }
+    let(:source_lan) { FactoryBot.create(:lan, :switch => source_switch)}
+
+    let(:destination_cluster) { FactoryBot.create(:ems_cluster) }
+    let(:destination_host) { FactoryBot.create(:host, :ems_cluster => destination_cluster) }
+    let(:destination_switch) { FactoryBot.create(:switch, :host => destination_host) }
+    let(:destination_lan) { FactoryBot.create(:lan, :switch => destination_switch)}
+
     let(:vm) { FactoryBot.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system)) }
     let(:vm2) { FactoryBot.create(:vm_vmware, :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system)) }
     let(:inactive_vm) { FactoryBot.create(:vm_vmware, :name => 'test_vm_inactive', :ems_cluster => src, :ext_management_system => nil) }
-    let(:storage) { FactoryBot.create(:storage) }
-    let(:lan) { FactoryBot.create(:lan) }
-    let(:nic) { FactoryBot.create(:guest_device_nic, :lan => lan) }
+    let(:nic) { FactoryBot.create(:guest_device_nic, :lan => source_lan) }
 
     before do
-      mapping.transformation_mapping_items << TransformationMappingItem.new(:source => storage, :destination => storage)
-      mapping.transformation_mapping_items << TransformationMappingItem.new(:source => lan, :destination => lan)
-      vm.storages << storage
+      mapping.transformation_mapping_items << TransformationMappingItem.new(:source => source_storage, :destination => destination_storage)
+      mapping.transformation_mapping_items << TransformationMappingItem.new(:source => source_lan, :destination => destination_lan)
+      vm.storages << source_storage
       vm.hardware = FactoryBot.create(:hardware, :guest_devices => [nic])
     end
 
-    context 'with VM list' do
+   context 'with VM list' do
+      logger.info("CONTEXT: with VM list")
+      it 'returns valid vms' do
+        logger.info("TESTCASE: returns valid vms" )
+
+        this_vm = FactoryBot.create(:vm_vmware, :name => 'this_test_vm', :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system))
+        this_mapping = FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [TransformationMappingItem.new(:source => src, :destination => dst)] )
+        result = this_mapping.search_vms_and_validate(['name' => this_vm.name])
+
+        expect(result['valid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_VALID)
+        expect(result['valid'].first.ems_cluster_id).to eq(vm.ems_cluster_id.to_s)
+      end
+
+      it 'returns conflict vms' do
+        logger.info("TESTCASE: returns conflict vms" )
+        FactoryBot.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system))
+        result = mapping.search_vms_and_validate(['name' => vm.name])
+        expect(result['conflicted'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_CONFLICT)
+      end
+
       context 'returns invalid vms' do
+        logger.info("CONTEXT: with VM list::returns invalid")
         it 'if VM does not exist' do
+          logger.info("TESTCASE: if VM does not exist" )
           result = mapping.search_vms_and_validate(['name' => 'vm1'])
           expect(result['invalid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_NOT_EXIST)
         end
 
         it 'if VM is inactive' do
+          logger.info("TESTCASE: if VM is inactive" )
           inactive_vm.storages << FactoryBot.create(:storage, :name => 'storage_for_inactive_vm')
           result = mapping.search_vms_and_validate(['name' => 'test_vm_inactive'])
           expect(result['invalid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_INACTIVE)
         end
 
         it "if VM's cluster is not in the mapping" do
+          logger.info("TESTCASE: if VM's cluster is not in the mapping" )
           FactoryBot.create(
             :vm_vmware,
             :name                  => 'vm2',
@@ -69,18 +118,21 @@ RSpec.describe TransformationMapping, :v2v do
         end
 
         it "if VM's storages are not all in the mapping" do
+          logger.info("TESTCASE: if VM's storages are not all in the mapping" )
           vm.storages << FactoryBot.create(:storage, :name => 'storage2')
           result = mapping.search_vms_and_validate(['name' => vm.name])
           expect(result['invalid'].first.reason).to match(/Mapping source not found - storages: storage2/)
         end
 
         it "if VM's lans are not all in the mapping" do
+          logger.info("TESTCASE: if VM's lans are not all in the mapping" )
           vm.hardware.guest_devices << FactoryBot.create(:guest_device_nic, :lan =>FactoryBot.create(:lan, :name => 'lan2'))
           result = mapping.search_vms_and_validate(['name' => vm.name])
           expect(result['invalid'].first.reason).to match(/Mapping source not found - lans: lan2/)
         end
 
         it "if any source is invalid" do
+          logger.info("TESTCASE: if any source is invalid" )
           vm.storages << FactoryBot.create(:storage, :name => 'storage2')
           vm.hardware.guest_devices << FactoryBot.create(:guest_device_nic, :lan =>FactoryBot.create(:lan, :name => 'lan2'))
           result = mapping.search_vms_and_validate(['name' => vm.name])
@@ -88,6 +140,7 @@ RSpec.describe TransformationMapping, :v2v do
         end
 
         it 'if VM is in another migration plan' do
+          logger.info("TESTCASE: if VM is in another migration plan" )
           %w(Queued Approved Active).each do |status|
             FactoryBot.create(
               :service_resource,
@@ -102,6 +155,7 @@ RSpec.describe TransformationMapping, :v2v do
         end
 
         it 'if VM has been migrated' do
+          logger.info("TESTCASE: if VM has been migrated" )
           FactoryBot.create(
             :service_resource,
             :resource         => vm,
@@ -114,21 +168,12 @@ RSpec.describe TransformationMapping, :v2v do
         end
       end
 
-      it 'returns valid vms' do
-        result = mapping.search_vms_and_validate(['name' => vm.name])
-        expect(result['valid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_VALID)
-        expect(result['valid'].first.ems_cluster_id).to eq(vm.ems_cluster_id.to_s)
-      end
-
-      it 'returns conflict vms' do
-        FactoryBot.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system))
-        result = mapping.search_vms_and_validate(['name' => vm.name])
-        expect(result['conflicted'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_CONFLICT)
-      end
     end
 
     context 'with VM list and service_template_id' do
+      logger.info("CONTEXT: with VM list and service_template_it")
       it 'returns valid vms when a ServiceTemplate record is edited with CSV containing the same VM already included in the ServiceTemplate record' do
+        logger.info("TESTCASE: returns valid vms when a ServiceTemplate record is edited with CSV containing the same VM already included in the ServiceTemplate record" )
         service_template = FactoryBot.create(:service_template_transformation_plan)
 
         FactoryBot.create(
@@ -142,6 +187,7 @@ RSpec.describe TransformationMapping, :v2v do
       end
 
       it 'returns invalid vms when the Service Template record is edited with CSV containing a different VM that belongs to a different ServiceTemplate record' do
+        logger.info("TESTCASE: returns invalid vms when the Service Template record is edited with CSV containing a different VM that belongs to a different ServiceTemplate record" )
         service_template = FactoryBot.create(:service_template_transformation_plan)
         service_template2 = FactoryBot.create(:service_template_transformation_plan)
 
@@ -157,20 +203,32 @@ RSpec.describe TransformationMapping, :v2v do
     end
 
     context 'without VM list' do
+      logger.info("CONTEXT: without VM list")
       it 'returns valid vms' do
+        logger.info("TESTCASE: returns valid vms" )
         result = mapping.search_vms_and_validate
+
+        Rails.logger.info("ARIF - mapping in \"without VM list returns valid VMs\": " + mapping.to_s)
+
         expect(result['valid'].count).to eq(1)
+        # expect(result['valid'].count).to eq(0) # added for testing
       end
 
       it 'skips invalid vms' do
+        logger.info("TESTCASE: skips invalid vms" )
         FactoryBot.create(
           :vm_vmware,
           :name                  => 'vm2',
           :ems_cluster           => FactoryBot.create(:ems_cluster, :name => 'cluster1'),
           :ext_management_system => FactoryBot.create(:ext_management_system)
         )
+        Rails.logger.info("ARIF - mapping in \"without VM list - skips invalid VMs\": " + mapping.to_s)
+
         result = mapping.search_vms_and_validate
-        expect(result['valid'].count).to eq(1)
+
+        Rails.logger.info("ARIF - mapping in \"without VM list - skips invalid VMs\": " + mapping.to_s)
+        expect(result['valid'].count).to eq(1) # original
+        # expect(result['valid'].count).to eq(0) # added for testing
       end
     end
   end

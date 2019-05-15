@@ -46,6 +46,7 @@ describe EvmDatabaseOps do
 
     it "without enough free space" do
       EvmSpecHelper.create_guid_miq_server_zone
+      allow(file_storage).to receive(:class).and_return(MiqSmbSession)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(100.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(200.megabytes)
       expect { EvmDatabaseOps.backup(@db_opts, @connect_opts) }.to raise_error(MiqException::MiqDatabaseBackupInsufficientSpace)
@@ -74,6 +75,8 @@ describe EvmDatabaseOps do
       allow(described_class).to receive(:backup_file_name).and_return("miq_backup")
       expect(PostgresAdmin).to receive(:backup).with(run_db_ops)
 
+      allow(file_storage).to receive(:class).and_return(MiqSmbSession)
+
       log_stub = instance_double("_log")
       expect(described_class).to receive(:_log).twice.and_return(log_stub)
       expect(log_stub).to        receive(:info).with(any_args)
@@ -88,8 +91,8 @@ describe EvmDatabaseOps do
     before do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
-      allow(MiqSmbSession).to receive(:runcmd)
       allow(file_storage).to  receive(:settings_mount_point).and_return(tmpdir)
+      allow(file_storage).to  receive(:uri_to_local_path).and_return(tmpdir.join("share").to_s)
       allow(file_storage).to  receive(:add).and_yield(input_path)
 
       allow(MiqUtil).to        receive(:runcmd)
@@ -122,6 +125,7 @@ describe EvmDatabaseOps do
 
     it "without enough free space" do
       EvmSpecHelper.create_guid_miq_server_zone
+      allow(file_storage).to receive(:class).and_return(MiqSmbSession)
       allow(EvmDatabaseOps).to receive(:backup_destination_free_space).and_return(100.megabytes)
       allow(EvmDatabaseOps).to receive(:database_size).and_return(200.megabytes)
       expect(PostgresAdmin).to receive(:backup_pg_dump).never
@@ -149,8 +153,6 @@ describe EvmDatabaseOps do
       @connect_opts = {:username => 'blah', :password => 'blahblah'}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
 
-      allow(MiqSmbSession).to receive(:runcmd)
-      allow(MiqSmbSession).to receive(:raw_disconnect)
       allow(file_storage).to  receive(:settings_mount_point).and_return(tmpdir)
       allow(file_storage).to  receive(:magic_number_for).and_return(:pgdump)
       allow(file_storage).to  receive(:download).and_yield(input_path)
