@@ -7,9 +7,7 @@ class TransformationMapping < ApplicationRecord
 
   validates :name, :presence => true, :uniqueness => true
 
-  VALID_SOURCE_CLUSTER_TYPES = %w[
-    ManageIQ::Providers::Vmware::InfraManager
-  ]
+  VALID_SOURCE_CLUSTER_TYPES = %w[ManageIQ::Providers::Vmware::InfraManager].freeze
 
   def destination(source)
     transformation_mapping_items.find_by(:source => source).try(:destination)
@@ -56,3 +54,4 @@ class TransformationMapping < ApplicationRecord
     transformation_mapping_items.where(:destination_type => 'Lan').map(&:source)
   end
 end
+

@@ -13,7 +13,7 @@ RSpec.describe 'Tests transformation items', :v2v do
   context "Cluster validation" do
     let(:src) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
     let(:dst) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_redhat) }
-    let(:tmi) { FactoryBot.create(:transformation_mapping_item, :source => src, :destination => dst)}
+    let(:tmi) { FactoryBot.create(:transformation_mapping_item, :source => src, :destination => dst) }
     it "Source is valid" do
       expect(tmi).to be_valid
     end
@@ -23,19 +23,19 @@ RSpec.describe 'Tests transformation items', :v2v do
   end # end of cluster context
 
   context "Storage validation" do
-    #todo
+    # todo
     # 1.  Create a host
     # 2.  Add host to a cluster
     # 3.  Add cluster to a storage
     let(:source_storage) { FactoryBot.create(:storage) }
-    let(:source_cluster) { FactoryBot.create(:ems_cluster)}
+    let(:source_cluster) { FactoryBot.create(:ems_cluster) }
     let(:source_host) { FactoryBot.create(:host, :ems_cluster => source_cluster) }
-    let(:src) { FactoryBot.create(:storage, :hosts => [source_host] ) }
+    let(:src) { FactoryBot.create(:storage, :hosts => [source_host]) }
 
     let(:destination_storage) { FactoryBot.create(:storage) }
-    let(:destination_cluster) { FactoryBot.create(:ems_cluster)}
+    let(:destination_cluster) { FactoryBot.create(:ems_cluster) }
     let(:destination_host) { FactoryBot.create(:host, :ems_cluster => destination_cluster) }
-    let(:dst) { FactoryBot.create(:storage, :hosts => [destination_host] ) }
+    let(:dst) { FactoryBot.create(:storage, :hosts => [destination_host]) }
 
     let(:tmi) { FactoryBot.create(:transformation_mapping_item, :source => src, :destination => dst) }
 
@@ -44,7 +44,7 @@ RSpec.describe 'Tests transformation items', :v2v do
       allow(source_cluster).to receive(:storages).and_return([src])
     end
     it "Source datastore is valid" do
-      expect(tmi.valid?).to be (true)
+      expect(tmi.valid?).to be true
     end
 
     # add the dst storage to the destination cluster, then call valid
@@ -52,7 +52,7 @@ RSpec.describe 'Tests transformation items', :v2v do
       allow(destination_cluster).to receive(:storages).and_return([dst])
     end
     it "Destination datastore is valid" do
-      expect(tmi.valid?).to be (true)
+      expect(tmi.valid?).to be true
     end
   end # end of storage context
 
@@ -63,17 +63,17 @@ RSpec.describe 'Tests transformation items', :v2v do
     # 3. Add host to a switch
     # 4. Add switch to the lan
 
-    let(:source_cluster) { FactoryBot.create(:ems_cluster ) }
+    let(:source_cluster) { FactoryBot.create(:ems_cluster) }
     let(:source_host) { FactoryBot.create(:host, :ems_cluster => source_cluster) }
     let(:source_switch) { FactoryBot.create(:switch, :host => source_host) }
-    let(:source_lan) { FactoryBot.create(:lan, :switch => source_switch)}
+    let(:source_lan) { FactoryBot.create(:lan, :switch => source_switch) }
 
     let(:destination_cluster) { FactoryBot.create(:ems_cluster) }
     let(:destination_host) { FactoryBot.create(:host, :ems_cluster => destination_cluster) }
     let(:destination_switch) { FactoryBot.create(:switch, :host => destination_host) }
-    let(:destination_lan) { FactoryBot.create(:lan, :switch => destination_switch)}
+    let(:destination_lan) { FactoryBot.create(:lan, :switch => destination_switch) }
 
-    let(:tmi) { FactoryBot.create(:transformation_mapping_item, :source => source_lan, :destination => destination_lan)}
+    let(:tmi) { FactoryBot.create(:transformation_mapping_item, :source => source_lan, :destination => destination_lan) }
 
     before do
       allow(source_cluster).to receive(:lans).and_return([source_lan])
@@ -83,12 +83,11 @@ RSpec.describe 'Tests transformation items', :v2v do
       expect(tmi).to be_valid
     end
 
-     before do
+    before do
       allow(destination_cluster).to receive(:lans).and_return([destination_lan])
     end
     it "Destination is valid" do
       expect(tmi).to be_valid
     end
   end # end of lan context
-
 end # describe
