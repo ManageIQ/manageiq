@@ -66,8 +66,7 @@ class MiqWorker
       end
 
       def working_directory
-        # TODO: pull this dynamically
-        "/var/www/miq/vmdb"
+        Rails.root
       end
 
       def exec_start
