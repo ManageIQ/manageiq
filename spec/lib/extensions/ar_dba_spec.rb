@@ -23,9 +23,5 @@ describe "ar_dba extension" do
     it "returns true for a table with a primary key" do
       expect(connection.primary_key?("miq_databases")).to be true
     end
-
-    it "returns true for composite primary keys" do
-      expect(connection.primary_key?("storages_vms_and_templates")).to be true
-    end
   end
 end
