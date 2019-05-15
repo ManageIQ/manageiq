@@ -220,7 +220,7 @@ RSpec.describe ConversionHost, :v2v do
         allow(conversion_host).to receive(:find_credentials).and_return(auth_v2v)
         allow(AwesomeSpawn).to receive(:run).and_return(result)
 
-        expect($log).to receive(:error).with("MIQ(ConversionHost#ansible_playbook) #{command} => oops")
+        expect($log).to receive(:error).with("MIQ(ConversionHost#ansible_playbook) #{command} ==> oops")
         expect { conversion_host.enable_conversion_host_role(package_url, nil) }.to raise_error(RuntimeError)
       end
     end
@@ -412,17 +412,6 @@ RSpec.describe ConversionHost, :v2v do
       host.authentications << auth_default
       expect(conversion_host_vm.send(:find_credentials)).to eq(auth_default)
       expect(conversion_host_host.send(:find_credentials)).to eq(auth_default)
-    end
-
-    it "logs the expected debug message if a v2v authentication was not found" do
-      vm.ext_management_system.authentications << auth_default
-
-      debug_message = "MIQ(ConversionHost#find_credentials) Unable to find v2v "\
-                        "authentication for conversion host: #{conversion_host_vm.name}. "\
-                        "Defaulting to authentication: #{auth_default.name}/#{auth_default.class}."
-
-      expect($log).to receive(:debug).with(debug_message)
-      conversion_host_vm.send(:find_credentials)
     end
   end
 
