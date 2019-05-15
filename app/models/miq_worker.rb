@@ -54,7 +54,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.scalable?
-    maximum_workers_count.kind_of?(Integer) && maximum_workers_count == 1
+    maximum_workers_count.nil? || maximum_workers_count > 1
   end
 
   def scalable?
