@@ -88,7 +88,6 @@ describe EvmDatabaseOps do
     before do
       @connect_opts = {:username => 'blah', :password => 'blahblah', :uri => "smb://myserver.com/share"}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
-      allow(MiqSmbSession).to receive(:runcmd)
       allow(file_storage).to  receive(:settings_mount_point).and_return(tmpdir)
       allow(file_storage).to  receive(:add).and_yield(input_path)
 
@@ -149,8 +148,6 @@ describe EvmDatabaseOps do
       @connect_opts = {:username => 'blah', :password => 'blahblah'}
       @db_opts =      {:dbname => 'vmdb_production', :username => 'root'}
 
-      allow(MiqSmbSession).to receive(:runcmd)
-      allow(MiqSmbSession).to receive(:raw_disconnect)
       allow(file_storage).to  receive(:settings_mount_point).and_return(tmpdir)
       allow(file_storage).to  receive(:magic_number_for).and_return(:pgdump)
       allow(file_storage).to  receive(:download).and_yield(input_path)
