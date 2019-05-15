@@ -220,11 +220,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     # Schedule every 24 hours
     at = worker_settings[:storage_file_collection_time_utc]
-    if Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc) < Time.now.utc
-      time_at = 1.day.from_now.utc.strftime("%Y-%m-%d #{at}").to_time(:utc)
-    else
-      time_at = Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc)
-    end
+    time_at = if Time.zone.today.to_time(:utc) + at.seconds < Time.now.utc
+                Time.zone.today.to_time(:utc) + at.seconds + 1.day
+              else
+                Time.zone.today.to_time(:utc) + at.seconds
+              end
     scheduler.schedule_every(
       worker_settings[:storage_file_collection_interval],
       :first_at => time_at
