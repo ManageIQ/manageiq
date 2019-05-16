@@ -1,0 +1,92 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://fwreg_rest_api_depot_host/images/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+      Authorization:
+      - Basic AUTHORIZATION
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1559'
+      Server:
+      - Werkzeug/0.15.4 Python/3.5.2
+      Date:
+      - Mon, 10 Jun 2019 13:17:30 GMT
+    body:
+      encoding: UTF-8
+      string: |
+        [
+            {
+                "filename": "dell-bios-2019-03-23.bin",
+                "compatible_server_models": [
+                    {
+                        "manufacturer": "Dell",
+                        "model": "PowerEdge R740"
+                    }
+                ],
+                "version": "10.4.3",
+                "description": "DELL BIOS update",
+                "id": 1,
+                "urls": [
+                    "http://172.16.93.126:8080/files/dell-bios-2019-03-23.bin",
+                    "https://172.16.93.126:8443/files/dell-bios-2019-03-23.bin"
+                ]
+            },
+            {
+                "filename": "dell-bios-2019-04-13.bin",
+                "compatible_server_models": [
+                    {
+                        "manufacturer": "Dell",
+                        "model": "PowerEdge R740"
+                    }
+                ],
+                "version": "10.4.4",
+                "description": "DELL BIOS update",
+                "id": 2,
+                "urls": [
+                    "http://172.16.93.126:8080/files/dell-bios-2019-04-13.bin",
+                    "https://172.16.93.126:8443/files/dell-bios-2019-04-13.bin"
+                ]
+            },
+            {
+                "filename": "nic-update-3.exe",
+                "compatible_server_models": [
+                    {
+                        "manufacturer": "SuperMicro",
+                        "model": "SYS-5019D-FN8TP"
+                    },
+                    {
+                        "manufacturer": "SuperMicro",
+                        "model": "SYS-6033A-GHJ7Z"
+                    }
+                ],
+                "version": "4.3.2-101-z",
+                "description": "SuperMicro NIC firmware",
+                "id": 3,
+                "urls": [
+                    "http://172.16.93.126:8080/files/nic-update-3.exe",
+                    "https://172.16.93.126:8443/files/nic-update-3.exe"
+                ]
+            }
+        ]
+    http_version: 
+  recorded_at: Mon, 10 Jun 2019 13:17:30 GMT
+recorded_with: VCR 3.0.3

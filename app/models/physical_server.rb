@@ -112,4 +112,13 @@ class PhysicalServer < ApplicationRecord
   def v_host_os
     host.try(:vmm_product).nil? ? N_("") : host.vmm_product
   end
+
+  def compatible_firmware_binaries
+    FirmwareTarget.find_compatible_with(asset_detail.attributes)&.firmware_binaries || []
+  end
+
+  def firmware_compatible?(firmware_binary)
+    filter = asset_detail.attributes.slice(*FirmwareTarget::MATCH_ATTRIBUTES).transform_values(&:downcase)
+    firmware_binary.firmware_targets.find_by(filter).present?
+  end
 end
