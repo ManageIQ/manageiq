@@ -332,7 +332,7 @@ class ConversionHost < ApplicationRecord
       raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
     end
 
-    extra_vars.each { |k, v| command << " --extra-vars '#{k}=#{v}'" }
+    command << " --extra-vars '#{extra_vars.to_json}'"
 
     result = AwesomeSpawn.run(command)
 
