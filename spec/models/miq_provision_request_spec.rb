@@ -1,4 +1,4 @@
-describe MiqProvisionRequest do
+RSpec.describe MiqProvisionRequest do
   context "#request_task_class_from" do
     it "retrieves the provision class when the vm has EMS" do
       ems = FactoryBot.create(:ems_vmware)
@@ -30,7 +30,6 @@ describe MiqProvisionRequest do
   end
 
   context "A new provision request," do
-    before            { allow_any_instance_of(User).to receive(:role).and_return("admin") }
     let(:approver)    { FactoryBot.create(:user_miq_request_approver) }
     let(:user)        { FactoryBot.create(:user) }
     let(:ems)         { FactoryBot.create(:ems_vmware) }
