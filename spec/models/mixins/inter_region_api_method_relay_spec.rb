@@ -1,4 +1,4 @@
-describe InterRegionApiMethodRelay do
+RSpec.describe InterRegionApiMethodRelay do
   let(:collection_name) { :test_class_collection }
   let(:api_config)      { double("Api::CollectionConfig") }
 
@@ -8,7 +8,12 @@ describe InterRegionApiMethodRelay do
       allow(api_config).to receive(:name_for_klass).and_return(collection_name)
 
       Class.new do
+        include ActiveRecord::IdRegions
         extend InterRegionApiMethodRelay
+
+        def id
+          1
+        end
 
         def self.name
           "RegionalMethodRelayTestClass"
