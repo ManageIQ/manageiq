@@ -407,7 +407,7 @@
         :feature_type: admin
         :identifier: service_delete
       - :name: Set Ownership
-        :description: Set Ownership of VMs
+        :description: Set Ownership of Services
         :feature_type: control
         :identifier: service_ownership
       - :name: Reconfigure Services
