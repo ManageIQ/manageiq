@@ -1,6 +1,9 @@
 RSpec.describe TransformationMapping, :v2v do
-  let(:src) { FactoryBot.create(:ems_cluster) }
-  let(:dst) { FactoryBot.create(:ems_cluster) }
+  let(:ems_redhat) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+  let(:ems_vmware) { FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone)) }
+
+  let(:src) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
+  let(:dst) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_redhat) }
   let(:vm)  { FactoryBot.create(:vm_vmware, :ems_cluster => src) }
 
   let(:mapping) do
@@ -30,17 +33,35 @@ RSpec.describe TransformationMapping, :v2v do
   end
 
   describe '#search_vms_and_validate' do
+
+    let(:source_cluster) { FactoryBot.create(:ems_cluster)}
+    let(:source_host) { FactoryBot.create(:host, :ems_cluster => source_cluster) }
+    let(:source_storage) { FactoryBot.create(:storage, :hosts => [source_host] ) }
+
+    let(:destination_storage) { FactoryBot.create(:storage) }
+    let(:destination_cluster) { FactoryBot.create(:ems_cluster)}
+    let(:destination_host) { FactoryBot.create(:host, :ems_cluster => destination_cluster) }
+    let(:destination_storage) { FactoryBot.create(:storage, :hosts => [destination_host] ) }
+
+    let(:source_cluster) { FactoryBot.create(:ems_cluster ) }
+    let(:source_host) { FactoryBot.create(:host, :ems_cluster => source_cluster) }
+    let(:source_switch) { FactoryBot.create(:switch, :host => source_host) }
+    let(:source_lan) { FactoryBot.create(:lan, :switch => source_switch)}
+
+    let(:destination_cluster) { FactoryBot.create(:ems_cluster) }
+    let(:destination_host) { FactoryBot.create(:host, :ems_cluster => destination_cluster) }
+    let(:destination_switch) { FactoryBot.create(:switch, :host => destination_host) }
+    let(:destination_lan) { FactoryBot.create(:lan, :switch => destination_switch)}
+
     let(:vm) { FactoryBot.create(:vm_vmware, :name => 'test_vm', :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system)) }
     let(:vm2) { FactoryBot.create(:vm_vmware, :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system)) }
     let(:inactive_vm) { FactoryBot.create(:vm_vmware, :name => 'test_vm_inactive', :ems_cluster => src, :ext_management_system => nil) }
-    let(:storage) { FactoryBot.create(:storage) }
-    let(:lan) { FactoryBot.create(:lan) }
-    let(:nic) { FactoryBot.create(:guest_device_nic, :lan => lan) }
+    let(:nic) { FactoryBot.create(:guest_device_nic, :lan => source_lan) }
 
     before do
-      mapping.transformation_mapping_items << TransformationMappingItem.new(:source => storage, :destination => storage)
-      mapping.transformation_mapping_items << TransformationMappingItem.new(:source => lan, :destination => lan)
-      vm.storages << storage
+      mapping.transformation_mapping_items << TransformationMappingItem.new(:source => source_storage, :destination => destination_storage)
+      mapping.transformation_mapping_items << TransformationMappingItem.new(:source => source_lan, :destination => destination_lan)
+      vm.storages << source_storage
       vm.hardware = FactoryBot.create(:hardware, :guest_devices => [nic])
     end
 
@@ -115,7 +136,12 @@ RSpec.describe TransformationMapping, :v2v do
       end
 
       it 'returns valid vms' do
+        Rails.logger.info("ARIF - vm.name: " + vm.name)
+
         result = mapping.search_vms_and_validate(['name' => vm.name])
+
+        Rails.logger.info("ARIF - mapping.search_vms_and_validate: " + result.to_s)
+
         expect(result['valid'].first.reason).to eq(TransformationMapping::VmMigrationValidator::VM_VALID)
         expect(result['valid'].first.ems_cluster_id).to eq(vm.ems_cluster_id.to_s)
       end
@@ -158,8 +184,14 @@ RSpec.describe TransformationMapping, :v2v do
 
     context 'without VM list' do
       it 'returns valid vms' do
+        Rails.logger.info("ARIF - mapping in \"without VM list returns valid VMs\": " + mapping.to_s)
+
         result = mapping.search_vms_and_validate
+
+        Rails.logger.info("ARIF - mapping in \"without VM list returns valid VMs\": " + mapping.to_s)
+
         expect(result['valid'].count).to eq(1)
+        # expect(result['valid'].count).to eq(0)
       end
 
       it 'skips invalid vms' do
@@ -169,8 +201,13 @@ RSpec.describe TransformationMapping, :v2v do
           :ems_cluster           => FactoryBot.create(:ems_cluster, :name => 'cluster1'),
           :ext_management_system => FactoryBot.create(:ext_management_system)
         )
+        Rails.logger.info("ARIF - mapping in \"without VM list - skips invalid VMs\": " + mapping.to_s)
+
         result = mapping.search_vms_and_validate
-        expect(result['valid'].count).to eq(1)
+
+        Rails.logger.info("ARIF - mapping in \"without VM list - skips invalid VMs\": " + mapping.to_s)
+        expect(result['valid'].count).to eq(1) # original
+        # expect(result['valid'].count).to eq(0)
       end
     end
   end

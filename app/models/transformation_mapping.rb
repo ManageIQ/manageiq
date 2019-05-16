@@ -17,6 +17,7 @@ class TransformationMapping < ApplicationRecord
 
   # vm_list: collection of hashes, each descriping a VM.
   def search_vms_and_validate(vm_list = nil, service_template_id = nil)
+    Rails.logger.info("ARIF - search_vms_and_validate - self: " + self.inspect.to_s)
     VmMigrationValidator.new(self, vm_list, service_template_id).validate
   end
 

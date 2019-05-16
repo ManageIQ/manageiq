@@ -11,25 +11,27 @@ class TransformationMappingItem < ApplicationRecord
   validate :destination_cluster, :if => -> { destination_type.casecmp?('EmsCluster') }
   validate :source_cluster, :if => -> { source_type.casecmp?('EmsCluster') }
 
-  validate :destination_datastore, :if => -> { destination_type.casecmp?('Storage') ||
-                                               destination_type.casecmp?('CloudVolumeType')
-                                             }
+  validate :destination_datastore, :if => lambda {
+                                            destination_type.casecmp?('Storage') ||
+                                              destination_type.casecmp?('CloudVolumeType')
+                                          }
 
   validate :source_datastore, :if => -> { source_type.casecmp?('Storage') }
 
-  validate :destination_network, :if => -> { source_type.casecmp?('Lan') ||
-                                             source_type.casecmp?('CloudNetwork')
-                                           }
+  validate :destination_network, :if => lambda {
+                                          source_type.casecmp?('Lan') ||
+                                            source_type.casecmp?('CloudNetwork')
+                                        }
   validate :source_network,      :if => -> { destination_type.casecmp?('Lan') }
 
-  VALID_SOURCE_CLUSTER_PROVIDERS    = %w[vmwarews]
-  VALID_DESTINATION_CLUSTER_TYPES   = %w[rhevm]
+  VALID_SOURCE_CLUSTER_PROVIDERS    = %w[vmwarews].freeze
+  VALID_DESTINATION_CLUSTER_TYPES   = %w[rhevm].freeze
 
-  VALID_SOURCE_DATASTORE_TYPES      = %w[Storage]
-  VALID_DESTINATION_DATASTORE_TYPES = %w[Storage CloudVolumeType]
+  VALID_SOURCE_DATASTORE_TYPES      = %w[Storage].freeze
+  VALID_DESTINATION_DATASTORE_TYPES = %w[Storage CloudVolumeType].freeze
 
-  VALID_SOURCE_NETWORK_TYPES        = %w[Lan]
-  VALID_DESTINATION_NETWORK_TYPES   = %w[Lan CloudNetwork]
+  VALID_SOURCE_NETWORK_TYPES        = %w[Lan].freeze
+  VALID_DESTINATION_NETWORK_TYPES   = %w[Lan CloudNetwork].freeze
 
   private
 
@@ -67,9 +69,9 @@ class TransformationMappingItem < ApplicationRecord
   def source_datastore
     source_storage = source
 
-    cluster_storages = source.hosts.                # Get hosts using this source storage
-      collect { |host| host.ems_cluster }.          # How many clusters does each host has
-      collect { |cluster| cluster.storages}.flatten # How many storages each host is mapped to that belong to the cluster
+    cluster_storages = source.hosts # Get hosts using this source storage
+                             .collect(&:ems_cluster) # How many clusters does each host has
+                             .collect(&:storages).flatten # How many storages each host is mapped to that belong to the cluster
 
     unless cluster_storages.include?(source_storage)
       storage_types = VALID_SOURCE_DATASTORE_TYPES.join(', ')
@@ -82,9 +84,9 @@ class TransformationMappingItem < ApplicationRecord
   def destination_datastore
     destination_storage = destination
 
-    cluster_storages = destination.hosts.           # Get hosts using this source storage
-      collect { |host| host.ems_cluster }.          # How many clusters does each host has
-      collect { |cluster| cluster.storages}.flatten # How many storages each host is mapped to that belong to the cluster
+    cluster_storages = destination.hosts # Get hosts using this source storage
+                                  .collect(&:ems_cluster) # How many clusters does each host has
+                                  .collect(&:storages).flatten # How many storages each host is mapped to that belong to the cluster
 
     unless cluster_storages.include?(destination_storage)
       store_types = VALID_DESTINATION_DATASTORE_TYPES.join(', ')
@@ -97,11 +99,11 @@ class TransformationMappingItem < ApplicationRecord
   def source_network
     source_lan       = source
     ems_cluster_lans = source_lan.switch.host.ems_cluster.lans.flatten
-    logger.info ("******* source_cluster_lans: " + ems_cluster_lans.inspect)
-    logger.info ("******* source_cluster_lans_count: " + ems_cluster_lans.count.to_s)
+    logger.info("******* source_cluster_lans: " + ems_cluster_lans.inspect)
+    logger.info("******* source_cluster_lans_count: " + ems_cluster_lans.count.to_s)
 
     unless ems_cluster_lans.include?(source_lan)
-    network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
+      network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
       errors.add(:network_types, "The network type must be in: #{network_types}")
     end
   end # of source_network
@@ -112,13 +114,12 @@ class TransformationMappingItem < ApplicationRecord
     destination_lan = destination
     ems_cluster_lans = destination_lan.switch.host.ems_cluster.lans.flatten
 
-    logger.info ("******* destination_cluster_lans: " + ems_cluster_lans.inspect)
-    logger.info ("******* destination_cluster_lans_count: " + ems_cluster_lans.count.to_s)
+    logger.info("******* destination_cluster_lans: " + ems_cluster_lans.inspect)
+    logger.info("******* destination_cluster_lans_count: " + ems_cluster_lans.count.to_s)
 
     unless ems_cluster_lans.include?(destination_lan)
-    network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
+      network_types = VALID_SOURCE_NETWORK_TYPES.join(', ')
       errors.add(:network_types, "The network type must be in: #{network_types}")
     end
   end # of destination_network
-
 end # of class
