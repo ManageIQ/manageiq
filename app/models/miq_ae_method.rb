@@ -3,7 +3,8 @@ require 'manageiq/automation_engine/syntax_checker'
 class MiqAeMethod < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
-  default_value_for :embedded_methods, :value => [], :allows_nil => false
+  default_value_for(:embedded_methods) { [] }
+  validates :embedded_methods, :exclusion => { :in => [nil] }
   serialize :options, Hash
 
   belongs_to :ae_class, :class_name => "MiqAeClass", :foreign_key => :class_id
