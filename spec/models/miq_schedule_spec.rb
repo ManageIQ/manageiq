@@ -1,5 +1,58 @@
 describe MiqSchedule do
   before { EvmSpecHelper.create_guid_miq_server_zone }
+
+  context "exporting " do
+    let(:user) { FactoryBot.create(:user) }
+    let(:miq_group) { FactoryBot.create(:miq_group) }
+    let(:options) do
+      {
+        :method           => 'generate_widget',
+        :send_email       => true,
+        :email_url_prefix => "/report/show_saved/",
+        :miq_group_id     => miq_group.id,
+        :email            => {
+          :send_if_empty => true,
+          :to            => %w[xxx@xxx.com yyy@xxx.com],
+          :attach        => [:csv],
+          :from          => "cfadmin@cfserver.com"
+        }
+      }
+    end
+
+    let(:sched_action) { { :method => "run_report", :options => options } }
+    let(:miq_report) { FactoryBot.create(:miq_report) }
+    let(:miq_expression) { MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => miq_report.id}) }
+
+    let(:miq_schedule) do
+      FactoryBot.create(:miq_schedule, :updated_at => 1.year.ago, :filter => miq_expression, :sched_action => sched_action, :userid => user.userid, :last_run_on => Time.zone.now)
+    end
+
+    context "MiqReport" do
+      it "exports to array" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+        expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
+        expect(miq_schedule_array['sched_action'][:options]).to eq(options.merge(:miq_group_description => miq_group.description))
+        expect(miq_schedule_array['filter_resource_name']).to eq(miq_report.name)
+      end
+    end
+
+    context "SmartState" do
+
+    end
+
+    context "DatabaseBackup" do
+
+    end
+
+    context "AutomationTask" do
+
+    end
+
+    context "with resource (ServiceTemplate)" do
+
+    end
+  end
+
   context 'with schedule infrastructure and valid run_ats' do
     before do
       @valid_run_ats =  [{:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily", :value => "1"}},

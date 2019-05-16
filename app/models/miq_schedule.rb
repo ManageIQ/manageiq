@@ -1,5 +1,7 @@
 class MiqSchedule < ApplicationRecord
   include DeprecationMixin
+  include_concern 'ImportExport'
+  include YAMLImportExportMixin
   deprecate_attribute :towhat, :resource_type
 
   validates :name, :uniqueness => {:scope => [:userid, :resource_type]}
@@ -38,6 +40,7 @@ class MiqSchedule < ApplicationRecord
   SYSTEM_SCHEDULE_CLASSES = %w(MiqReport MiqAlert MiqWidget).freeze
   VALID_INTERVAL_UNITS = %w(minutely hourly daily weekly monthly once).freeze
   ALLOWED_CLASS_METHOD_ACTIONS = %w(db_backup db_gc automation_request).freeze
+  IMPORT_CLASS_NAMES = %w[MiqSchedule].freeze
 
   default_value_for :userid,  "system"
   default_value_for :enabled, true
