@@ -43,7 +43,7 @@ module MiqReport::ImportExport
 
         report_user = userid.present? ? User.find_by_userid(userid) : User.find_by(:id => report["user_id"])
         if report_user.nil?
-          _log.warn("User '#{userid.presence || report["user_id"]}' for imporeted report '#{report["name"]}' was not found")
+          _log.warn("User '#{userid.presence || report["user_id"]}' for imported report '#{report["name"]}' was not found")
           report.delete("user_id")
         else
           report["user_id"] = report_user.id
@@ -51,7 +51,7 @@ module MiqReport::ImportExport
 
         group = group_description.present? ? MiqGroup.in_my_region.find_by(:description => group_description) : MiqGroup.find_by(:id => report["miq_group_id"])
         if group.nil?
-          _log.warn("Group '#{group_description}' for imporeted report '#{report["name"]}' was not found")
+          _log.warn("Group '#{group_description}' for imported report '#{report["name"]}' was not found")
           report.delete("miq_group_id")
         else
           report["miq_group_id"] = group.id
