@@ -55,7 +55,6 @@ class EvmDatabaseOps
     #   :remote_file_name => "backup_1",     - Provide a base file name for the uploaded file
 
     uri = with_file_storage(:backup, db_opts, connect_opts) do |database_opts|
-      validate_free_space(database_opts)
       backup_result = PostgresAdmin.backup(database_opts)
       backup_result
     end
@@ -67,11 +66,6 @@ class EvmDatabaseOps
     # db_opts and connect_opts similar to .backup
 
     uri = with_file_storage(:dump, db_opts, connect_opts) do |database_opts|
-      # For database dumps, this isn't going to be as accurate (since the dump
-      # size will probably be larger than the calculated BD size), but it still
-      # won't hurt to do as a generic way to get a rough idea if we have enough
-      # disk space or the appliance for the task.
-      validate_free_space(database_opts)
       PostgresAdmin.backup_pg_dump(database_opts)
     end
     _log.info("[#{merged_db_opts(db_opts)[:dbname]}] database has been dumped up to file: [#{uri}]")
@@ -168,6 +162,16 @@ class EvmDatabaseOps
         if action == :restore
           yield(db_opts, backup_type)
         else
+          if file_storage.class <= MiqGenericMountSession
+            # Only check free space on "mountable" storages
+            #
+            # For database dumps, this isn't going to be as accurate (since the
+            # dump size will probably be larger than the calculated DB size), but
+            # it still won't hurt to do as a generic way to get a rough idea if
+            # we have enough disk space on the appliance for the task.
+            free_space_opts = db_opts.merge(:local_file => file_storage.uri_to_local_path(uri))
+            validate_free_space(free_space_opts)
+          end
           yield(db_opts)
         end
       end
