@@ -14,19 +14,8 @@ module VmdbDatabase::Seeding
     private
 
     def seed_self
-      require 'sys-filesystem'
-
       (my_database || new).tap do |db|
         data_directory = connection.try(:data_directory)
-
-        data_disk = if data_directory && EvmDatabase.local?
-          begin
-            mount_point = Sys::Filesystem.mount_point(data_directory)
-            Sys::Filesystem.mounts.find { |fs| fs.mount_point == mount_point }.name
-          rescue Errno::ENOENT
-            nil
-          end
-        end
 
         db.name            = connection.current_database
         db.vendor          = connection.adapter_name
@@ -34,7 +23,7 @@ module VmdbDatabase::Seeding
         db.ipaddress       = db_server_ipaddress
         db.data_directory  = data_directory
         db.last_start_time = connection.try(:last_start_time)
-        db.data_disk       = data_disk
+        db.data_disk       = data_disk_name(data_directory)
 
         if db.changed?
           _log.info("#{db.new_record? ? "Creating" : "Updating"} VmdbDatabase #{db.name.inspect}")
@@ -50,6 +39,18 @@ module VmdbDatabase::Seeding
         host   = server.ipaddress if server && server.ipaddress
       end
       host
+    end
+
+    def data_disk_name(disk)
+      if disk && EvmDatabase.local?
+        require 'sys-filesystem'
+        begin
+          mount_point = Sys::Filesystem.mount_point(disk)
+          Sys::Filesystem.mounts.find { |fs| fs.mount_point == mount_point }.name
+        rescue Errno::ENOENT
+          nil
+        end
+      end
     end
 
     def seed_tables
