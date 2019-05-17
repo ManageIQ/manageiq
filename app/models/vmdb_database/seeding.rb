@@ -14,9 +14,19 @@ module VmdbDatabase::Seeding
     private
 
     def seed_self
+      require 'sys-filesystem'
+
       (my_database || new).tap do |db|
         data_directory = connection.try(:data_directory)
-        disk_size      = db_disk_size(data_directory) if data_directory && EvmDatabase.local?
+
+        data_disk = if data_directory && EvmDatabase.local?
+          begin
+            mount_point = Sys::Filesystem.mount_point(data_directory)
+            Sys::Filesystem.mounts.find { |fs| fs.mount_point == mount_point }.name
+          rescue Errno::ENOENT
+            nil
+          end
+        end
 
         db.name            = connection.current_database
         db.vendor          = connection.adapter_name
@@ -24,7 +34,7 @@ module VmdbDatabase::Seeding
         db.ipaddress       = db_server_ipaddress
         db.data_directory  = data_directory
         db.last_start_time = connection.try(:last_start_time)
-        db.data_disk       = disk_size
+        db.data_disk       = data_disk
 
         if db.changed?
           _log.info("#{db.new_record? ? "Creating" : "Updating"} VmdbDatabase #{db.name.inspect}")
@@ -40,13 +50,6 @@ module VmdbDatabase::Seeding
         host   = server.ipaddress if server && server.ipaddress
       end
       host
-    end
-
-    def db_disk_size(disk)
-      MiqSystem.disk_usage(disk).first[:filesystem]
-    rescue RuntimeError => err
-      return nil if err.message.include?("does not exist")
-      raise
     end
 
     def seed_tables
