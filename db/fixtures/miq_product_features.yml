@@ -256,6 +256,10 @@
         :description: Remove Catalog Items
         :feature_type: admin
         :identifier: catalogitem_delete
+      - :name: Set Ownership
+        :description: Set Ownership of Catalog Item
+        :feature_type: control
+        :identifier: catalogitem_ownership
       - :name: Edit Composite Catalog Item
         :description: Edit a Composite Catalog Item
         :feature_type: admin
