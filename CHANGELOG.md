@@ -9,9 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 - Add conversion_host option to the SupportsFeatureMixin module [(#18232)](https://github.com/ManageIQ/manageiq/pull/18232)
-- Alter ansible_playbook method so that some arguments are optional [(#18323)](https://github.com/ManageIQ/manageiq/pull/18323)
 - Modify the enable ConversionHost::Configurations#enable method to handle arguments more robustly [(#18336)](https://github.com/ManageIQ/manageiq/pull/18336)
-- Add ConversionHost validations [(#18277)](https://github.com/ManageIQ/manageiq/pull/18277)
 - Tag associated resource for conversion hosts [(#18505)](https://github.com/ManageIQ/manageiq/pull/18505)
 - Add the resource name to the task action for conversion hosts [(#18525)](https://github.com/ManageIQ/manageiq/pull/18525)
 - Default to resource name for conversion hosts [(#18516)](https://github.com/ManageIQ/manageiq/pull/18516)
@@ -51,6 +49,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Added
 - Deprecate invalid custom attribute names [(#18538)](https://github.com/ManageIQ/manageiq/pull/18538)
+- Add ConversionHost validations [(#18277)](https://github.com/ManageIQ/manageiq/pull/18277)
+- Alter ansible_playbook method so that some arguments are optional [(#18323)](https://github.com/ManageIQ/manageiq/pull/18323)
 - Tenancy for central admin [(#18263)](https://github.com/ManageIQ/manageiq/pull/18263)
 - [V2V] Expose virt-v2v-wrapper error message in options hash [(#18564)](https://github.com/ManageIQ/manageiq/pull/18564)
 - updating infra conversion job polling timers [(#18597)](https://github.com/ManageIQ/manageiq/pull/18597)
