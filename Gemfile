@@ -246,5 +246,5 @@ unless ENV["APPLIANCE"]
 end
 
 group :windows do
-  gem "tzinfo-data", "~>1.2", :require => false
+  gem "tzinfo-data", "~>1.2", :require => false, :platform => [:mswin, :mingw]
 end
