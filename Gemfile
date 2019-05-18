@@ -14,9 +14,13 @@ gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => 
 gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
-def manageiq_plugin(plugin_name)
+def manageiq_plugin(plugin_name, platforms = [])
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    if platforms.empty?
+      gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    else
+      gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master", :platform => [platforms.join(',')]
+    end
   end
 end
 
@@ -136,10 +140,10 @@ group :openstack, :manageiq_default do
   manageiq_plugin "manageiq-providers-openstack"
 end
 
-#group :ovirt, :manageiq_default do
-#  manageiq_plugin "manageiq-providers-ovirt"
-#  gem "ovirt_metrics",                  "~>2.0.0",       :require => false
-#end
+group :ovirt, :manageiq_default do
+  manageiq_plugin("manageiq-providers-ovirt", [:ruby])
+  gem "ovirt_metrics", "~>2.0.0", :require => false, :platform => [:ruby]
+end
 
 group :scvmm, :manageiq_default do
   manageiq_plugin "manageiq-providers-scvmm"
@@ -246,5 +250,5 @@ unless ENV["APPLIANCE"]
 end
 
 group :windows do
-  gem "tzinfo-data", "~>1.2", :require => false, :platform => [:mswin, :mingw]
+  gem "tzinfo-data", "~>1.2", :require => false, :platform => [:mswin, :mingw, :x64_mingw]
 end
