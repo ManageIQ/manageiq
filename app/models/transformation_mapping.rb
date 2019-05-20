@@ -9,7 +9,7 @@ class TransformationMapping < ApplicationRecord
 
   VALID_SOURCE_CLUSTER_TYPES = %w[
     ManageIQ::Providers::Vmware::InfraManager
-  ]
+  ].freeze
 
   def destination(source)
     transformation_mapping_items.find_by(:source => source).try(:destination)
