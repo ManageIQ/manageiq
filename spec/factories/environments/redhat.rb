@@ -5,11 +5,11 @@ FactoryBot.define do
     ems  { FactoryBot.build(:ems_redhat, :zone => zone, :api_version => '4.2.4') }
 
     transient do
-      with_host { true }
-      with_vm { true }
+      num_host { 1 }
     end
 
-    host { FactoryBot.build(:host_redhat, :ext_management_system => ems) if with_host }
-    vm { FactoryBot.build(:vm_redhat, :ext_management_system => ems) if with_vm }
+    after(:build) do |env, evaluator|
+      FactoryBot.build_list(:host_redhat, evaluator.num_host, :ext_management_system => env.ems)
+    end
   end
 end
