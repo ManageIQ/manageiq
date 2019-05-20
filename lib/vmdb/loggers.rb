@@ -48,11 +48,7 @@ module Vmdb
 
       $audit_log          = AuditLogger.new(path_dir.join("audit.log"))
       $container_log      = ContainerLogger.new
-      if MiqEnvironment::Command.supports_systemd?
-        require "manageiq/loggers/journald"
-        $journald_log = ManageIQ::Loggers::Journald.new
-      end
-
+      $journald_log       = create_journald_logger
       $log                = create_multicast_logger(path_dir.join("evm.log"))
       $rails_log          = create_multicast_logger(path_dir.join("#{Rails.env}.log"))
       $api_log            = create_multicast_logger(path_dir.join("api.log"))
@@ -85,6 +81,15 @@ module Vmdb
       end
     end
     private_class_method :create_multicast_logger
+
+    private_class_method def self.create_journald_logger
+      return unless MiqEnvironment::Command.supports_systemd?
+
+      require "manageiq/loggers/journald"
+      ManageIQ::Loggers::Journald.new
+    rescue LoadError
+      nil
+    end
 
     def self.configure_external_loggers
       require 'awesome_spawn'
