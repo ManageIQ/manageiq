@@ -47,7 +47,7 @@ module VmdbDatabase::Seeding
         begin
           mount_point = Sys::Filesystem.mount_point(disk)
           Sys::Filesystem.mounts.find { |fs| fs.mount_point == mount_point }.name
-        rescue Errno::ENOENT
+        rescue StandardError
           nil
         end
       end

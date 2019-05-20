@@ -86,6 +86,14 @@ describe VmdbDatabase do
 
         expect(db.ipaddress).to eq("192.255.255.1")
       end
+
+      it "returns nil for the data disk name if it cannot be determined" do
+        FactoryBot.create(:vmdb_database, :ipaddress => "127.0.0.1")
+        db = described_class.send(:seed_self)
+
+        allow(Sys::Filesystem).to receive(:mount_point).with(db.data_directory).and_raise(Errno::EACCES)
+        expect(db.data_disk).to be_nil
+      end
     end
 
     describe ".seed_tables (private)" do
