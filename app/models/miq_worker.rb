@@ -367,10 +367,6 @@ class MiqWorker < ApplicationRecord
     self.class.containerized_worker?
   end
 
-  def self.supports_systemd?
-    worker_settings[:systemd_enabled]
-  end
-
   def self.systemd_worker?
     MiqEnvironment::Command.supports_systemd? && supports_systemd?
   end

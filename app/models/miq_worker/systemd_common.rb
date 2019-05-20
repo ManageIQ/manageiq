@@ -3,6 +3,13 @@ class MiqWorker
     extend ActiveSupport::Concern
 
     class_methods do
+      def supports_systemd?
+        return unless worker_settings[:systemd_enabled]
+        require "dbus/systemd"
+      rescue LoadError
+        false
+      end
+
       def ensure_systemd_files
         target_file_path.write(target_file) unless target_file_path.exist?
         service_file_path.write(unit_file) unless service_file_path.exist?
