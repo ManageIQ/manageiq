@@ -88,7 +88,7 @@ describe VmdbDatabase do
       end
 
       it "returns nil for the data disk name if it cannot be determined" do
-        allow(Sys::Filesystem).to receive(:mount_point).with(any_args).and_raise(Errno::EACCES)
+        allow(::Sys::Filesystem).to receive(:mount_point).with(any_args).and_raise(Errno::EACCES)
         db = described_class.send(:seed_self)
         expect(db.data_disk).to be_nil
       end

@@ -41,11 +41,17 @@ module VmdbDatabase::Seeding
       host
     end
 
+    # Get the name of the data disk, if possible. If an error occurs for any
+    # reason just bail and return nil.
+    #--
+    # Note that we scope the the Sys::Filesystem class in order to prevent it
+    # from accidentally picking up the local Filesystem model from our app.
+    #
     def data_disk_name(disk)
       if disk && EvmDatabase.local?
         begin
-          mount_point = Sys::Filesystem.mount_point(disk)
-          Sys::Filesystem.mounts.find { |fs| fs.mount_point == mount_point }.name
+          mount_point = ::Sys::Filesystem.mount_point(disk)
+          ::Sys::Filesystem.mounts.find { |fs| fs.mount_point == mount_point }.name
         rescue StandardError
           nil
         end
