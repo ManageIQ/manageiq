@@ -1,27 +1,6 @@
-describe "Server Monitor" do
+RSpec.describe "Server Monitor" do
   context "After Setup," do
     before do
-      @csv = <<-CSV.gsub(/^\s+/, "")
-        name,description,max_concurrent,external_failover,role_scope
-        automate,Automation Engine,0,false,region
-        database_operations,Database Operations,0,false,region
-        database_owner,Database Owner,1,false,database
-        ems_inventory,Management System Inventory,1,false,zone
-        ems_metrics_collector,Capacity & Utilization Data Collector,0,false,zone
-        ems_metrics_coordinator,Capacity & Utilization Coordinator,1,false,zone
-        ems_metrics_processor,Capacity & Utilization Data Processor,0,false,zone
-        ems_operations,Management System Operations,0,false,zone
-        event,Event Monitor,1,false,zone
-        notifier,Alert Processor,1,false,region
-        reporting,Reporting,0,false,region
-        scheduler,Scheduler,1,false,region
-        smartproxy,SmartProxy,0,false,zone
-        smartstate,SmartState Analysis,0,false,zone
-        user_interface,User Interface,0,false,region
-        remote_console,Remote Consoles,0,false,region
-        web_services,Web Services,0,false,region
-      CSV
-      allow(ServerRole).to receive(:seed_data).and_return(@csv)
       MiqRegion.seed
       ServerRole.seed
 
