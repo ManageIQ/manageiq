@@ -11,16 +11,19 @@ class TransformationMapping::VmMigrationValidator
   VM_VALID = "ok".freeze
 
   def initialize(mapping, vm_list = nil, service_template_id = nil)
+    Rails.logger.info("ARIF - TM::VM.initialize entering...")
     @mapping = mapping
     @vm_list = vm_list
     @service_template_id = service_template_id.try(:to_i)
   end
 
   def validate
+    Rails.logger.info("ARIF - TM::VM.validate entering...")
     @vm_list.present? ? identify_vms : select_vms
   end
 
   def select_vms
+    Rails.logger.info("ARIF - TM::VM.select_vms entering...")
     valid_list = []
 
     Vm.where(:ems_cluster => mapped_clusters).includes(:lans, :storages).each do |vm|
@@ -32,12 +35,18 @@ class TransformationMapping::VmMigrationValidator
   end
 
   def identify_vms
+    Rails.logger.info("ARIF - TM::VM.identify_vms entering...")
     valid_list = []
     invalid_list = []
     conflict_list = []
 
     vm_names = @vm_list.collect { |row| row['name'] }
+    Rails.logger.info("ARIF - TM::VM.identify_vms vm_name: " + vm_names.to_s)
+
     vm_objects = Vm.where(:name => vm_names).includes(:ems_cluster, :lans, :storages, :host, :ext_management_system)
+
+    # require 'pp'
+    # PP.pp(vm_objects)
 
     @vm_list.each do |row|
       vm_name = row['name']
@@ -81,6 +90,7 @@ class TransformationMapping::VmMigrationValidator
   end
 
   def validate_vm(vm, quick = true)
+    Rails.logger.info("ARIF - TM::VM.validate_vm entering...")
     validate_result = vm_migration_status(vm)
     return validate_result unless validate_result == VM_VALID
 
@@ -95,6 +105,7 @@ class TransformationMapping::VmMigrationValidator
   end
 
   def vm_migration_status(vm)
+    Rails.logger.info("ARIF - TM::VM.vm_migration_status entering...")
     vm_as_resources = ServiceResource.joins(:service_template).where(:resource => vm, :service_templates => {:type => 'ServiceTemplateTransformationPlan'})
 
     # VM has not been migrated before
@@ -107,29 +118,35 @@ class TransformationMapping::VmMigrationValidator
   end
 
   def no_mapping_list(invalid_list, data_type, new_records)
+    Rails.logger.info("ARIF - TM::VM.no_mapping_list entering...")
     return false if new_records.blank?
     invalid_list << "#{data_type}: %{list}" % {:list => new_records.collect(&:name).join(", ")}
     true
   end
 
   def no_mapping_msg(list)
+    Rails.logger.info("ARIF - TM::VM.no_mapping_msg entering...")
     "Mapping source not found - %{list}" % {:list => list.join('. ')}
   end
 
   def mapped_clusters
+    Rails.logger.info("ARIF - TM::VM.mapped_clusters entering...")
     @mapped_clusters ||= EmsCluster.where(:id => @mapping.transformation_mapping_items.where(:source_type => 'EmsCluster').select(:source_id))
   end
 
   def mapped_storages
+    Rails.logger.info("ARIF - TM::VM.mapped_storages entering...")
     @mapped_storages ||= Storage.where(:id => @mapping.transformation_mapping_items.where(:source_type => 'Storage').select(:source_id))
   end
 
   def mapped_lans
+    Rails.logger.info("ARIF - TM::VM.mapped_lans entering...")
     @mapped_lans ||= Lan.where(:id => @mapping.transformation_mapping_items.where(:source_type => 'Lan').select(:source_id))
   end
 
   class VmMigrateStruct < MiqHashStruct
     def initialize(vm_name, vm, status, reason)
+    Rails.logger.info("ARIF - TM::VM::VMS.initialize entering...")
       options = {"name" => vm_name, "status" => status, "reason" => reason}
 
       if vm.present?
