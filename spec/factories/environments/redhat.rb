@@ -1,7 +1,7 @@
 # Create a small environment for Redhat
 FactoryBot.define do
   factory :environment_redhat, class: OpenStruct do
-    zone { FactoryBot.build(:zone) }
+    zone { FactoryBot.build(:zone, :name => "ozone") }
     ems  { FactoryBot.build(:ems_redhat, :zone => zone, :api_version => '4.2.4') }
 
     transient do
@@ -9,7 +9,7 @@ FactoryBot.define do
     end
 
     after(:build) do |env, evaluator|
-      FactoryBot.build_list(:host_redhat, evaluator.num_host, :ext_management_system => env.ems)
+      env.ems.hosts = FactoryBot.build_list(:host_redhat, evaluator.num_host)
     end
   end
 end
