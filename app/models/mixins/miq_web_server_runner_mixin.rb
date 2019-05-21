@@ -25,7 +25,8 @@ module MiqWebServerRunnerMixin
   end
 
   def start_rails_server(options)
-    require "rails/commands/server"
+    require 'rails/command'
+    require 'rails/commands/server/server_command'
 
     _log.info("With options: #{options.except(:app).inspect}")
     Rails::Server.new(options).tap do |server|
