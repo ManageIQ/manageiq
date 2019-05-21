@@ -139,6 +139,10 @@ module ManageIQ::Providers
       CloudTenant.create_cloud_tenant(self, options)
     end
 
+    def valid_service_orchestration_resource
+      true
+    end
+
     def self.display_name(number = 1)
       n_('Cloud Manager', 'Cloud Managers', number)
     end

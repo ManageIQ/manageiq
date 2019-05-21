@@ -81,6 +81,10 @@ class OrchestrationTemplate < ApplicationRecord
     joins(:stacks).distinct
   end
 
+  def valid_service_orchestration_resource
+    true
+  end
+
   # Find all not in use thus editable templates
   def self.not_in_use
     includes(:stacks).where(:orchestration_stacks => {:orchestration_template_id => nil})

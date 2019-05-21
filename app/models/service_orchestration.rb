@@ -100,7 +100,7 @@ class ServiceOrchestration < Service
   end
 
   def add_resource(rsc, _options = {})
-    raise "Service Orchestration subclass does not support add_resource for #{rsc.class.name}" unless rsc.kind_of?(OrchestrationStack)
+    raise "Service Orchestration subclass does not support add_resource for #{rsc.class.name}" unless rsc.try(:valid_service_orchestration_resource)
     super
   end
 
