@@ -42,6 +42,13 @@ describe EvmDatabase do
     it "will fail if a class does not respond to .seed" do
       expect { described_class.seed(["VmOrTemplate"]) }.to raise_error(ArgumentError, /do not respond to seed/)
     end
+
+    # this spec takes about 30 seconds but is the only check that db:seed won't fail
+    it "doesn't fail" do
+      expect do
+        described_class.seed
+      end.not_to raise_error
+    end
   end
 
   describe ".seed_primordial" do
