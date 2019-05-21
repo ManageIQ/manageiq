@@ -113,8 +113,12 @@ class ConversionHost < ApplicationRecord
   def run_conversion(conversion_options)
     result = connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', nil, nil, conversion_options.to_json) }
     JSON.parse(result)
-  rescue => e
-    raise "Starting conversion failed on '#{resource.name}' with [#{e.class}: #{e}]"
+  rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
+    raise "Failed to connect and run conversion using options #{conversion_options} with [#{err.class}: #{err}]"
+  rescue JSON::ParserError
+    raise "Could not parse result data after running virt-v2v-wrapper.py using options: #{conversion_options}. Result was: #{result}."
+  rescue StandardError => err
+    raise "Starting conversion failed on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
   def kill_process(pid, signal = 'TERM')
