@@ -2,13 +2,36 @@ require 'awesome_spawn'
 require 'miqldap_configuration'
 
 module MiqLdapToSssd
-  class AuthConfigError < StandardError; end
+  class AuthEstablishError < StandardError; end
 
-  class AuthConfig
+  class AuthEstablish
     attr_reader :initial_settings
 
     def initialize(initial_settings)
       @initial_settings = initial_settings
+    end
+
+    def run_auth_establish
+      authselect_found? ? run_auth_select : run_auth_config
+    end
+
+    private
+
+    def authselect_found?
+      ENV['PATH'].split(':').any? { |dir| File.exist?("#{dir}/authselect") }
+    end
+
+    def run_auth_select
+      LOGGER.debug("Invoked #{self.class}\##{__method__}")
+
+      result = AwesomeSpawn.run("authselect select sssd --force")
+      LOGGER.debug("Ran command: #{result.command_line}")
+
+      if result.failure?
+        error_message = "authselect failed with: #{result.error}"
+        LOGGER.fatal(error_message)
+        raise AuthEstablishError, error_message
+      end
     end
 
     def run_auth_config
@@ -35,7 +58,7 @@ module MiqLdapToSssd
       if result.failure?
         error_message = "authconfig failed with: #{result.error}"
         LOGGER.fatal(error_message)
-        raise AuthConfigError, error_message
+        raise AuthEstablishError, error_message
       end
     end
   end

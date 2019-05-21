@@ -31,7 +31,7 @@ module MiqLdapToSssd
 
     def do_conversion
       exit_if_sssd_is_already_configured
-      AuthConfig.new(initial_settings).run_auth_config
+      AuthEstablish.new(initial_settings).run_auth_establish
       SssdConf.new(initial_settings).update
       disable_tls
       ConfigureApache.new(initial_settings).configure
