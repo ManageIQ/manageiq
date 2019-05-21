@@ -393,4 +393,23 @@ describe EmsEvent do
       end
     end
   end
+
+  context 'refresh target' do
+    describe 'src_vm_or_dest_host_refresh_target' do
+      let(:ems)   { FactoryBot.create(:ems_vmware) }
+      let(:vm)    { FactoryBot.create(:vm_vmware, :ext_management_system => ems) }
+      let(:host1) { FactoryBot.create(:host, :ext_management_system => ems) }
+      let(:host2) { FactoryBot.create(:host, :ext_management_system => ems) }
+
+      it 'returns src_vm when it exists' do
+        event = FactoryBot.create(:ems_event, :vm_or_template => vm, :host => host1, :dest_host => host2)
+        expect(event.get_target("src_vm_or_dest_host_refresh_target")).to eq(vm)
+      end
+
+      it 'returns dest_host when src_vm does not exists' do
+        event = FactoryBot.create(:ems_event, :vm_or_template_id => 123, :host => host1, :dest_host => host2)
+        expect(event.get_target("src_vm_or_dest_host_refresh_target")).to eq(host2)
+      end
+    end
+  end
 end
