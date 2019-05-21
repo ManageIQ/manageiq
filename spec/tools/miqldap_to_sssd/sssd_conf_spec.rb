@@ -3,14 +3,14 @@ $LOAD_PATH << Rails.root.join("tools").to_s
 require "miqldap_to_sssd"
 require "tempfile"
 require "fileutils"
-require 'auth_template_files'
+require "auth_template_files"
 
 describe MiqLdapToSssd::SssdConf do
   before do
     @spec_name = File.basename(__FILE__).split(".rb").first.freeze
   end
 
-  describe '#onfigure' do
+  describe '#configure' do
     let(:sssd_conf_erb) do
       <<-SSSD_CONF_ERB.strip_heredoc
         [domain/default]
