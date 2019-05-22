@@ -115,6 +115,10 @@ class OrchestrationStack < ApplicationRecord
     raise NotImplementedError, _("raw_update_stack must be implemented in a subclass")
   end
 
+  def valid_service_orchestration_resource
+    true
+  end
+
   def my_zone
     ext_management_system.try(:my_zone)
   end
