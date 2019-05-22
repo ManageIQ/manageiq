@@ -130,8 +130,10 @@ PXEMENU
   end
 
   context "#synchronize" do
+    let(:auth) { FactoryBot.create(:authentication) }
+
     before do
-      @pxe_server = FactoryBot.create(:pxe_server)
+      @pxe_server = FactoryBot.create(:pxe_server, :authentications => [auth])
       allow(@pxe_server).to receive_messages(:read_file => @contents_ipxe)
     end
 

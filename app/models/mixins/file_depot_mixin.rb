@@ -12,7 +12,7 @@ module FileDepotMixin
 
   included do
     include AuthenticationMixin
-    before_save :verify_uri_prefix_before_save
+    before_validation :verify_uri_prefix_before_save, :validate_depot_credentials
   end
 
   module ClassMethods

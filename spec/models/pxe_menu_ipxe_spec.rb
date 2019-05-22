@@ -87,8 +87,10 @@ PXEMENU
   end
 
   context "#synchronize_images" do
+    let(:auth) { FactoryBot.create(:authentication) }
+
     before do
-      @pxe_server = FactoryBot.create(:pxe_server)
+      @pxe_server = FactoryBot.create(:pxe_server, :authentications => [auth])
       @pxe_menu   = FactoryBot.create(:pxe_menu_ipxe, :contents => @contents, :pxe_server => @pxe_server)
     end
 
