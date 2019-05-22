@@ -3,8 +3,8 @@ class DialogImportService
   class ParsedNonDialogYamlError < StandardError; end
   class DialogFieldAssociationCircularReferenceError < StandardError; end
 
-  DEFAULT_DIALOG_VERSION = '5.10' # assumed for dialogs without version info
-  CURRENT_DIALOG_VERSION = '5.11'
+  DEFAULT_DIALOG_VERSION = '5.10'.freeze # assumed for dialogs without version info
+  CURRENT_DIALOG_VERSION = '5.11'.freeze
 
   def initialize(dialog_field_importer = DialogFieldImporter.new, dialog_import_validator = DialogImportValidator.new, dialog_field_association_validator = DialogFieldAssociationValidator.new)
     @dialog_field_importer = dialog_field_importer
