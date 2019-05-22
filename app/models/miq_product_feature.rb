@@ -148,12 +148,25 @@ class MiqProductFeature < ApplicationRecord
     where(:identifier => TENANT_FEATURE_ROOT_IDENTIFIERS)
   end
 
-  def self.seed_tenant_miq_product_features
-    result = with_tenant_feature_root_features.map.each do |tenant_miq_product_feature|
-      Tenant.in_my_region.all.map { |tenant| tenant.build_miq_product_feature(tenant_miq_product_feature) }
-    end.flatten
+  def self.seed_single_tenant_miq_product_features(tenant)
+    result = MiqProductFeature.with_tenant_feature_root_features.map do |miq_product_feature|
+      {
+        :name         => miq_product_feature.name,
+        :description  => miq_product_feature.description,
+        :feature_type => 'admin',
+        :hidden       => false,
+        :identifier   => tenant_identifier(miq_product_feature.identifier, tenant.id),
+        :tenant_id    => tenant.id,
+        :parent_id    => miq_product_feature.id
+      }
+    end
 
+    MiqProductFeature.invalidate_caches
     MiqProductFeature.create(result).map(&:identifier)
+  end
+
+  def self.seed_tenant_miq_product_features
+    Tenant.in_my_region.all.flat_map { |t| seed_single_tenant_miq_product_features(t) }
   end
 
   def self.seed_features(path = FIXTURE_PATH)
