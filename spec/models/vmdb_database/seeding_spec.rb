@@ -86,6 +86,12 @@ describe VmdbDatabase do
 
         expect(db.ipaddress).to eq("192.255.255.1")
       end
+
+      it "returns nil for the data disk name if it cannot be determined" do
+        allow(::Sys::Filesystem).to receive(:mount_point).with(any_args).and_raise(Errno::EACCES)
+        db = described_class.send(:seed_self)
+        expect(db.data_disk).to be_nil
+      end
     end
 
     describe ".seed_tables (private)" do
