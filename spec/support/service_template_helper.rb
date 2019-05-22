@@ -131,7 +131,6 @@ module Spec
       end
 
       def user_helper
-        allow_any_instance_of(User).to receive(:role).and_return("admin")
         @user = FactoryBot.create(:user_with_group, :name => 'Wilma', :userid => 'wilma')
       end
     end
