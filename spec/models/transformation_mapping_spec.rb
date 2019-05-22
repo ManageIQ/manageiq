@@ -90,7 +90,7 @@ RSpec.describe TransformationMapping, :v2v do
         end
 
         it 'if VM is in another migration plan' do
-          %w(Queued Approved Active).each do |status|
+          %w[Queued Approved Active].each do |status|
             FactoryBot.create(
               :service_resource,
               :resource         => vm,

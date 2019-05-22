@@ -18,9 +18,9 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     let(:src_ems) { FactoryBot.create(:ems_vmware) }
     let(:dst_ems) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
     let(:src) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
-    let(:dst) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => dst_ems ) }
+    let(:dst) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => dst_ems) }
     let(:host) { FactoryBot.create(:host, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone))) }
-    let(:vm)  { FactoryBot.create(:vm_or_template) }
+    let(:vm) { FactoryBot.create(:vm_or_template) }
     let(:vm2)  { FactoryBot.create(:vm_or_template) }
     let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
     let(:conversion_host) { FactoryBot.create(:conversion_host, :skip_validate, :resource => host) }
@@ -117,7 +117,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
           allow(MiqTask).to receive(:wait_for_taskid) do
             request = MiqQueue.find_by(:class_name => described_class.name)
-            request.update_attributes(:state => MiqQueue::STATE_DEQUEUE)
+            request.update(:state => MiqQueue::STATE_DEQUEUE)
             request.delivered(*request.deliver)
           end
         end
@@ -309,25 +309,21 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       before do
         allow(Time).to receive(:now).and_return(time_now)
         allow(conversion_host).to receive(:run_conversion).with(task_1.conversion_options).and_return(
-          {
-            "wrapper_log" => "/tmp/wrapper.log",
-            "v2v_log"     => "/tmp/v2v.log",
-            "state_file"  => "/tmp/v2v.state"
-          }
+          "wrapper_log" => "/tmp/wrapper.log",
+          "v2v_log"     => "/tmp/v2v.log",
+          "state_file"  => "/tmp/v2v.state"
         )
       end
 
       it "collects the wrapper state hash" do
         task_1.run_conversion
         expect(task_1.options[:virtv2v_wrapper]).to eq(
-          {
-            "wrapper_log" => "/tmp/wrapper.log",
-            "v2v_log"     => "/tmp/v2v.log",
-            "state_file"  => "/tmp/v2v.state"
-          }
+          "wrapper_log" => "/tmp/wrapper.log",
+          "v2v_log"     => "/tmp/v2v.log",
+          "state_file"  => "/tmp/v2v.state"
         )
-       expect(task_1.options[:virtv2v_started_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
-       expect(task_1.options[:virtv2v_status]).to eq('active')
+        expect(task_1.options[:virtv2v_started_on]).to eq(time_now.strftime('%Y-%m-%d %H:%M:%S'))
+        expect(task_1.options[:virtv2v_status]).to eq('active')
       end
     end
 
@@ -388,21 +384,19 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "raises when conversion is failed" do
           allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return(
-            {
-              "failed"       => true,
-              "finished"     => true,
-              "started"      => true,
-              "disks"        => [
-                { "path" => src_disk_1.filename, "progress" => 23.0 },
-                { "path" => src_disk_1.filename, "progress" => 0.0 }
-              ],
-              "pid"          => 5855,
-              "return_code"  => 1,
-              "disk_count"   => 2,
-              "last_message" => {
-                "message" => "virt-v2v failed somehow",
-                "type"    => "error"
-              }
+            "failed"       => true,
+            "finished"     => true,
+            "started"      => true,
+            "disks"        => [
+              { "path" => src_disk_1.filename, "progress" => 23.0 },
+              { "path" => src_disk_1.filename, "progress" => 0.0 }
+            ],
+            "pid"          => 5855,
+            "return_code"  => 1,
+            "disk_count"   => 2,
+            "last_message" => {
+              "message" => "virt-v2v failed somehow",
+              "type"    => "error"
             }
           )
           expect { task_1.get_conversion_state }.to raise_error("Disks transformation failed.")
@@ -413,21 +407,19 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "updates disks progress" do
           allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return(
-            {
-              "started"     => true,
-              "disks"       => [
-                { "path" => src_disk_1.filename, "progress" => 100.0 },
-                { "path" => src_disk_1.filename, "progress" => 50.0 }
-              ],
-              "pid"         => 5855,
-              "disk_count"  => 2
-            }
+            "started"    => true,
+            "disks"      => [
+              { "path" => src_disk_1.filename, "progress" => 100.0 },
+              { "path" => src_disk_1.filename, "progress" => 50.0 }
+            ],
+            "pid"        => 5855,
+            "disk_count" => 2
           )
           task_1.get_conversion_state
           expect(task_1.options[:virtv2v_disks]).to eq(
             [
-              { :path => src_disk_1.filename, :size => disk.size, :percent => 100, :weight  => 50 },
-              { :path => src_disk_2.filename, :size => disk.size, :percent => 50, :weight  => 50 }
+              { :path => src_disk_1.filename, :size => disk.size, :percent => 100, :weight => 50 },
+              { :path => src_disk_2.filename, :size => disk.size, :percent => 50, :weight => 50 }
             ]
           )
           expect(task_1.options[:virtv2v_status]).to eq('active')
@@ -435,17 +427,15 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "sets disks progress to 100% when conversion is finished and successful" do
           allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return(
-            {
-              "finished"    => true,
-              "started"     => true,
-              "disks"       => [
-                { "path" => src_disk_1.filename, "progress" => 100.0},
-                { "path" => src_disk_1.filename, "progress" => 100.0}
-              ],
-              "pid"         => 5855,
-              "return_code" => 0,
-              "disk_count"  => 1
-            }
+            "finished"    => true,
+            "started"     => true,
+            "disks"       => [
+              { "path" => src_disk_1.filename, "progress" => 100.0},
+              { "path" => src_disk_1.filename, "progress" => 100.0}
+            ],
+            "pid"         => 5855,
+            "return_code" => 0,
+            "disk_count"  => 1
           )
           task_1.get_conversion_state
           expect(task.options[:virtv2v_disks]).to eq(
