@@ -7,7 +7,7 @@ class DialogFieldImporter
       dialog_field_attributes["dynamic"] = true
     end
 
-    if export_version < 2
+    if Gem::Version.new(export_version) < Gem::Version.new('5.11')
       dialog_field_attributes["load_values_on_init"] = if !dialog_field_attributes["show_refresh_button"]
                                                          # no refresh button, always true
                                                          true

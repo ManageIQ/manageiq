@@ -299,12 +299,12 @@ describe DialogFieldImporter do
       context "from version 1" do
         context "load_values_on_init" do
           it "is set to true when no refresh button" do
-            dialog_field_importer.import_field(dialog_field_show_false, 1)
+            dialog_field_importer.import_field(dialog_field_show_false, DialogImportService::DEFAULT_DIALOG_VERSION)
             expect(DialogField.first.load_values_on_init).to eq(true)
           end
 
           it "is preserved when refresh button" do
-            dialog_field_importer.import_field(dialog_field_load_false, 1)
+            dialog_field_importer.import_field(dialog_field_load_false, DialogImportService::DEFAULT_DIALOG_VERSION)
             expect(DialogField.first.load_values_on_init).to eq(false)
           end
         end

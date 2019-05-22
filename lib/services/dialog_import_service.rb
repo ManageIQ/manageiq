@@ -3,7 +3,8 @@ class DialogImportService
   class ParsedNonDialogYamlError < StandardError; end
   class DialogFieldAssociationCircularReferenceError < StandardError; end
 
-  CURRENT_DIALOG_VERSION = 2
+  DEFAULT_DIALOG_VERSION = '5.10' # assumed for dialogs without version info
+  CURRENT_DIALOG_VERSION = '5.11'
 
   def initialize(dialog_field_importer = DialogFieldImporter.new, dialog_import_validator = DialogImportValidator.new, dialog_field_association_validator = DialogFieldAssociationValidator.new)
     @dialog_field_importer = dialog_field_importer
@@ -27,7 +28,7 @@ class DialogImportService
         if dialog_with_label?(dialog["label"])
           yield dialog if block_given?
         else
-          Dialog.create(dialog.except('export_version').merge("dialog_tabs" => build_dialog_tabs(dialog, dialog['export_version'] || 1)))
+          Dialog.create(dialog.except('export_version').merge("dialog_tabs" => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION)))
         end
       end
     rescue DialogFieldImporter::InvalidDialogFieldTypeError
@@ -102,7 +103,7 @@ class DialogImportService
     @dialog_import_validator.determine_dialog_validity(dialog)
     new_dialog = Dialog.create(dialog.except('dialog_tabs', 'export_version'))
     association_list = build_association_list(dialog)
-    new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog, dialog['export_version'] || 1)))
+    new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION)))
     build_associations(new_dialog, association_list)
     new_dialog
   end
@@ -149,7 +150,7 @@ class DialogImportService
       new_associations = build_association_list(dialog)
       new_or_existing_dialog.update_attributes(
         dialog.except('export_version').merge(
-          "dialog_tabs"      => build_dialog_tabs(dialog, dialog['export_version'] || 1),
+          "dialog_tabs"      => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION),
           "resource_actions" => build_resource_actions(dialog)
         )
       )
