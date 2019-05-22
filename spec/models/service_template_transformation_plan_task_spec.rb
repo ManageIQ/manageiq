@@ -15,8 +15,10 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
   end
 
   context 'independent of provider' do
-    let(:src) { FactoryBot.create(:ems_cluster) }
-    let(:dst) { FactoryBot.create(:ems_cluster) }
+    let(:src_ems) { FactoryBot.create(:ems_vmware) }
+    let(:dst_ems) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
+    let(:src) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
+    let(:dst) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => dst_ems ) }
     let(:host) { FactoryBot.create(:host, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone))) }
     let(:vm)  { FactoryBot.create(:vm_or_template) }
     let(:vm2)  { FactoryBot.create(:vm_or_template) }
@@ -240,9 +242,9 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
   end
 
   context 'populated request and task' do
-    let(:src_ems) { FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone)) }
+    let(:src_ems) { FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone)) }
     let(:src_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
-    let(:dst_ems) { FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone)) }
+    let(:dst_ems) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
     let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
 
     let(:src_vm_1)  { FactoryBot.create(:vm_or_template, :ext_management_system => src_ems, :ems_cluster => src_cluster) }
