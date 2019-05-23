@@ -237,7 +237,7 @@ class ConversionHost < ApplicationRecord
     when 'AuthPrivateKey', 'AuthToken'
       return [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
     when 'AuthUseridPassword'
-      return[hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
+      return [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
     else
       raise 'Unsupported authentication type: #{authentication.type}'
     end
