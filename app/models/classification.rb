@@ -181,13 +181,13 @@ class Classification < ApplicationRecord
 
     if failed_deletes.any? || failed_adds.any?
       msg = _("Failures occurred during bulk reassignment.")
-      failed_deletes.each do |target, local_deletes|
-        names = local_deletes.collect(&:name).sort
+      failed_deletes.each do |target, deletes|
+        names = deletes.collect(&:name).sort
         msg += _("  Unable to remove the following tags from %{class_name} %{id}: %{names}.") %
                {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
       end
-      failed_adds.each do |target, local_adds|
-        names = local_adds.collect(&:name).sort
+      failed_adds.each do |target, adds|
+        names = adds.collect(&:name).sort
         msg += _("  Unable to add the following tags to %{class_name} %{id}: %{names}.") %
                {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
       end
@@ -213,9 +213,9 @@ class Classification < ApplicationRecord
 
   def self.category_names_for_perf_by_tag(region_id = my_region_number, ns = DEFAULT_NAMESPACE)
     in_region(region_id).is_category.where(:perf_by_tag => true)
-                        .includes(:tag)
-                        .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
-                        .compact
+      .includes(:tag)
+      .collect { |c| c.name if c.tag2ns(c.tag.name) == ns }
+      .compact
   end
 
   def self.find_assigned_entries(obj, ns = DEFAULT_NAMESPACE)
@@ -248,7 +248,7 @@ class Classification < ApplicationRecord
   def self.tag_name_to_objects(tag_name)
     ns, cat, entry = tag_name_split(tag_name)
     cat_obj = find_by_name(cat)
-    entry_obj = cat_obj&.find_entry_by_name(entry)
+    entry_obj = cat_obj && cat_obj.find_entry_by_name(entry)
     return ns, cat_obj, entry_obj
   end
 
@@ -309,7 +309,7 @@ class Classification < ApplicationRecord
   end
 
   def to_tag
-    tag&.name
+    tag.name unless tag.nil?
   end
 
   def category?
@@ -438,7 +438,7 @@ class Classification < ApplicationRecord
   def self.import_from_yaml(fd)
     stats = {"categories" => 0, "entries" => 0}
 
-    input = YAML.safe_load(fd)
+    input = YAML.load(fd)
     input.each do |c|
       stat, _c = import_from_hash(c)
       stats.each_key { |k| stats[k] += stat[k] }
