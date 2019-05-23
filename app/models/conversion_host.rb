@@ -291,7 +291,7 @@ class ConversionHost < ApplicationRecord
     when 'AuthUseridPassword'
       [host, authentication.userid, authentication.password, nil, nil]
     else
-      raise 'Unsupported authentication type: #{authentication.type}'
+      raise "Unsupported authentication type: #{authentication.type}"
     end
   end
 
