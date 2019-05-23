@@ -62,6 +62,7 @@ class Service < ApplicationRecord
   include ServiceMixin
   include OwnershipMixin
   include CustomAttributeMixin
+  include LifecycleMixin
   include NewWithTypeStiMixin
   include ProcessTasksMixin
   include TenancyMixin
@@ -88,6 +89,7 @@ class Service < ApplicationRecord
   default_value_for :display, false
   default_value_for :retired, false
   default_value_for :initiator, 'user'
+  default_value_for :lifecycle_state, 'unprovisioned'
 
   validates :display, :inclusion => { :in => [true, false] }
   validates :retired, :inclusion => { :in => [true, false] }

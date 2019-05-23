@@ -94,6 +94,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       update_and_notify_parent(:message => message)
       queue_post_provision
     end
+    destination.update_lifecycle_state
   end
 
   def queue_post_provision
@@ -210,7 +211,10 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def task_finished
     service = destination
-    service.raise_provisioned_event unless service.nil?
+    return if service.nil?
+
+    service.raise_provisioned_event
+    service.update_lifecycle_state if miq_request_task.nil?
   end
 
   private

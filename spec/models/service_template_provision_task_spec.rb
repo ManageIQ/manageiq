@@ -258,6 +258,29 @@ describe ServiceTemplateProvisionTask do
         @task_1_2.destination = @service
         @task_1_2.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       end
+
+      it 'set service lifecycle_state to provisioning' do
+        @task_3.source      = FactoryBot.create(:service_template)
+        @task_3.destination = @service
+        @task_3.do_request
+        expect(@service.lifecycle_state).to eq(Service::STATE_PROVISIONING)
+      end
+
+      it 'set service lifecycle_state to provisioned' do
+        expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_provisioned)
+        @task_0.destination = @service
+        @request.miq_request_tasks.except(@task_0).each { |t| t.update(:state => "finished") }
+        @task_0.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
+        expect(@service.provisioned?).to be true
+      end
+
+      it 'set service lifecycle_state to error_provisioned' do
+        expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_provisioned)
+        @task_0.destination = @service
+        @request.miq_request_tasks.except(@task_0).each { |t| t.update(:state => "finished") }
+        @task_0.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Test Message")
+        expect(@service.provision_failed?).to be true
+      end
     end
 
     describe "#mark_execution_servers" do

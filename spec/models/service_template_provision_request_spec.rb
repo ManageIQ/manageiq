@@ -103,6 +103,7 @@ describe ServiceTemplateProvisionRequest do
     end
 
     it "generic service do_request" do
+      @task_1_1.destination = FactoryBot.create(:service)
       expect { @task_1_1.do_request }.not_to raise_error
       expect(@task_1_1.state).to eq('provisioned')
     end
