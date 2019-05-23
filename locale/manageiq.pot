@@ -233,10 +233,6 @@ msgstr ""
 msgid "%{value_name} value must not be blank"
 msgstr ""
 
-#: ../app/models/bottleneck_event.rb:44
-msgid "'%{name}', calculation not supported"
-msgstr ""
-
 #: ../app/models/miq_request_workflow/dialog_field_validation.rb:35
 msgid ". %{details}"
 msgstr ""
@@ -1794,21 +1790,6 @@ msgstr ""
 #. TRANSLATORS: file: product/compare/vms.yaml
 #: ../config/yaml_strings.rb:3937
 msgid "Boot Time"
-msgstr ""
-
-#. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent
-#: ../config/dictionary_strings.rb:1266
-msgid "Bottleneck Event"
-msgstr ""
-
-#. TRANSLATORS: en.yml key: dictionary.model.BottleneckEvent (plural form)
-#: ../config/dictionary_strings.rb:1268
-msgid "Bottleneck Events"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb:1484
-msgid "Bottlenecks"
 msgstr ""
 
 #: ../app/models/dialog_group.rb:43
@@ -6896,16 +6877,6 @@ msgid "Display notifications"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb:1486
-msgid "Display of Bottlenecks data"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb:1482
-msgid "Display of Planning Data"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1478
 msgid "Display of Utilization Data"
 msgstr ""
@@ -8287,7 +8258,6 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
 #. TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
 #. TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
@@ -11822,7 +11792,6 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
 #. TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
 #. TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
 #: ../config/dictionary_strings.rb:1024 ../config/yaml_strings.rb:5065
@@ -12660,10 +12629,6 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/030_Clusters Relationships.yaml
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
 #. TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-#: ../config/yaml_strings.rb:3910
-msgid "Name"
-msgstr ""
 
 #: ../lib/rbac/filterer.rb:635
 msgid "Named scope '%{scope_name}' is not defined for class '%{class_name}'"
@@ -14532,11 +14497,6 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1064
 msgid "Pictures"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#: ../config/yaml_strings.rb:1480
-msgid "Planning"
 msgstr ""
 
 #. TRANSLATORS: file: product/compare/hosts.yaml
@@ -17023,10 +16983,6 @@ msgid "Settings Accordion"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/130_Images by Failed OpenSCAP Rule Results.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-#: ../config/yaml_strings.rb:5204
-msgid "Severity"
-msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2576
@@ -17921,10 +17877,6 @@ msgstr ""
 msgid "Target"
 msgstr ""
 
-#: ../app/models/vim_performance_planning.rb:36
-msgid "Targets must contain a cluster or a host key"
-msgstr ""
-
 #. TRANSLATORS: en.yml key: dictionary.model.MiqTask
 #. TRANSLATORS: en.yml key: dictionary.table.miq_task
 #: ../app/models/miq_task.rb:359 ../config/dictionary_strings.rb:2088 ../config/dictionary_strings.rb:2656
@@ -18232,19 +18184,10 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
 #. TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
 #. TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-#: ../config/yaml_strings.rb:5056
-msgid "Time Stamp"
-msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:303
 msgid "Timeline"
-msgstr ""
-
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-#: ../config/yaml_strings.rb:5948
-msgid "Timeline All Bottleneck Events"
 msgstr ""
 
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
@@ -18558,10 +18501,6 @@ msgstr ""
 #. TRANSLATORS: en.yml key: dictionary.column.mode
 #. TRANSLATORS: file: product/compare/vms.yaml
 #. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/010_Summary.yaml
-#. TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-#: ../config/dictionary_strings.rb:158 ../config/dictionary_strings.rb:596 ../config/yaml_strings.rb:4040
-msgid "Type"
-msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.emstype_description
 #: ../config/dictionary_strings.rb:388
@@ -19636,11 +19575,6 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
 #: ../config/yaml_strings.rb:4525
 msgid "VM Performance - daily over last week"
-msgstr ""
-
-#. TRANSLATORS: file: product/charts/layouts/planning_charts.yaml
-#: ../config/yaml_strings.rb:3543
-msgid "VM Planning"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
