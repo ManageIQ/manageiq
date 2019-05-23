@@ -1,7 +1,7 @@
 describe ArPglogicalMigrationHelper do
   shared_context "without the schema_migrations_ran table" do
     before do
-      allow(ActiveRecord::Base.connection).to receive(:table_exists?).with("schema_migrations_ran").and_return(false)
+      allow(ActiveRecord::Base.connection).to receive(:data_source_exists?).with("schema_migrations_ran").and_return(false)
     end
   end
 
@@ -23,7 +23,6 @@ describe ArPglogicalMigrationHelper do
         include_context "without the schema_migrations_ran table"
 
         it "does nothing" do
-          expect(ActiveRecord::SchemaMigration).not_to receive(:normalized_versions)
           described_class.update_local_migrations_ran("12345", :up)
         end
       end
