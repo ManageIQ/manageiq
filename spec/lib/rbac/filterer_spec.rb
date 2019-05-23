@@ -2201,7 +2201,7 @@ describe Rbac::Filterer do
                               :named_scope         => nil,
                               :display_filter_hash => nil,
                               :conditions          => nil,
-                              :include_for_find    => {:description => {}, :minimum_value => {}, :maximum_value => {}}
+                              :include_for_find    => {:description => {}}
                              ).first
 
         expect(results.length).to eq(VmdbDatabaseSetting.all.length)
@@ -2242,7 +2242,7 @@ describe Rbac::Filterer do
                                          :extra_cols       => "v_total_vms",
                                          :use_sql_view     => true,
                                          :user             => user,
-                                         :include_for_find => {:service_templates => :pictures},
+                                         :include_for_find => {:service_template => :picture},
                                          :order            => "services.name desc")
         expect(results.first).to eq([service1])
         expect(results.last[:auth_count]).to eq(1)
