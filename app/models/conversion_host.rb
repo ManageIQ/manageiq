@@ -232,17 +232,15 @@ class ConversionHost < ApplicationRecord
   end
 
   def miq_ssh_util_args
-    send("miq_ssh_util_args_#{resource.type.gsub('::', '_').downcase}")
-  end
-
-  def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
     authentication = find_credentials
-    [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
-  end
-
-  def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
-    authentication = find_credentials
-    [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
+    case authentication.type
+    when 'AuthPrivateKey'
+      return [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
+    when 'AuthUseridPassword'
+      return[hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
+    else
+      raise 'Unsupported authentication type: #{authentication.type}'
+    end
   end
 
   # Run the specified ansible playbook using the ansible-playbook command. The
