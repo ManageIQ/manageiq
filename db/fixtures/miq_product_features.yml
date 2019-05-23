@@ -2961,50 +2961,38 @@
           :feature_type: admin
           :hidden: true
           :identifier: schedule_disable
-    - :name: Zones
-      :description: Zones
-      :feature_type: node
+    - :name: Modify Zone
+      :description: Modify Zones
+      :feature_type: admin
+      :identifier: zone_admin
       :hidden: true
-      :identifier: zone
       :children:
-      - :name: Modify
-        :description: Modify Zones
+      - :name: Add
+        :description: Add a Zone
         :feature_type: admin
-        :identifier: zone_admin
         :hidden: true
-        :children:
-        - :name: Add
-          :description: Add a Zone
-          :feature_type: admin
-          :hidden: true
-          :identifier: zone_new
-        - :name: Edit
-          :description: Edit a Zone
-          :feature_type: admin
-          :hidden: true
-          :identifier: zone_edit
-        - :name: Delete
-          :description: Delete a Zone
-          :feature_type: admin
-          :hidden: true
-          :identifier: zone_delete
-    - :name: Regions
-      :description: Regions
-      :feature_type: node
+        :identifier: zone_new
+      - :name: Edit
+        :description: Edit a Zone
+        :feature_type: admin
+        :hidden: true
+        :identifier: zone_edit
+      - :name: Delete
+        :description: Delete a Zone
+        :feature_type: admin
+        :hidden: true
+        :identifier: zone_delete
+    - :name: Modify Region
+      :description: Modify Regions
+      :feature_type: admin
+      :identifier: region_admin
       :hidden: true
-      :identifier: region
       :children:
-      - :name: Modify
-        :description: Modify Regions
+      - :name: Edit
+        :description: Edit a Region
         :feature_type: admin
-        :identifier: region_admin
         :hidden: true
-        :children:
-        - :name: Edit
-          :description: Edit a Region
-          :feature_type: admin
-          :hidden: true
-          :identifier: region_edit
+        :identifier: region_edit
   - :name: Access Control
     :description: Access Control Accordion
     :feature_type: node
@@ -3442,6 +3430,15 @@
   :description: Show the About Information
   :feature_type: node
   :identifier: about
+  :children:
+  - :name: Zones
+    :description: Zones
+    :feature_type: node
+    :identifier: zone
+  - :name:
+    :description: Regions
+    :feature_type: node
+    :identifier: region
 
 # PXE Explorer
 - :name: PXE
