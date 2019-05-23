@@ -89,6 +89,9 @@ class MiqRequest < ApplicationRecord
       :PhysicalServerProvisionRequest      => {
         :provision_physical_server => N_("Physical Server Provision")
       },
+      :PhysicalServerFirmwareUpdateRequest => {
+        :physical_server_firmware_update => N_("Physical Server Firmware Update")
+      },
       :ServiceRetireRequest                => {
         :service_retire => N_("Service Retire")
       },
