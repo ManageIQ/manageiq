@@ -32,9 +32,9 @@ module ConversionHost::Configurations
       # certain options while ignoring the rest. We also don't want to store
       # any ssh key information. Useful for a retry option in the UI, and
       # informational purposes in general.
-      #
+
       MiqTask.find(task_id).tap do |task|
-        params = params&.except(:task_id, :miq_task_id)
+        params = params&.except(:task_id, :miq_task_id)&.update(:resource_type => resource.class.name)
         hash = {:request_params => params&.reject { |key, _value| key.to_s.end_with?('private_key') }}
         task.context_data = hash
         task.save
