@@ -145,6 +145,12 @@ namespace :evm do
     desc "Resets the ManageIQ EVM Database (VMDB) of all tables, views and indices"
     task :reset => [:destroy, 'db:migrate']
 
+    # schema.rb doesn't support views which is used by metrics
+    task :db_setup_not_supported do
+      warn "db:setup and db:reset are not supported! Please use evm:db:reset, db:migrate, or test:vmdb:setup instead."
+      exit 1
+    end
+
     # Example usage:
     #   RAILS_ENV=production bin/rake evm:db:region -- --region 99
 
@@ -276,6 +282,5 @@ end
 
 Rake::Task["db:migrate"].enhance(["evm:db:environmentlegacykey"])
 
-Rake::Task["db:reset"].enhance do
-  warn "Caution: You ran db:reset which resets the DB from schema.rb. You probably want to re-run all the migrations with the current ruby/rails versions, so run bin/rake evm:db:reset instead."
-end
+Rake::Task["db:setup"].prerequisites.unshift("evm:db:db_setup_not_supported")
+Rake::Task["db:reset"].prerequisites.unshift("evm:db:db_setup_not_supported")
