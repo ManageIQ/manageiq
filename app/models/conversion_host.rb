@@ -280,31 +280,18 @@ class ConversionHost < ApplicationRecord
     raise e
   end
 
-  # Collect appropriate authentication information based on the resource type.
-  #--
-  # TODO: This should be handled by a ConversionHost subclass within each supported provider.
+  # Collect appropriate authentication information based on the authentication type.
   #
   def miq_ssh_util_args
-    send("miq_ssh_util_args_#{resource.type.gsub('::', '_').downcase}")
-  end
-
-  # For the Redhat provider, use the userid and password associated directly with the resource.
-  #--
-  # TODO: Move this to ManageIQ::Providers::Redhat::InfraManager::ConversionHost
-  #
-  def miq_ssh_util_args_manageiq_providers_redhat_inframanager_host
     authentication = find_credentials
-    [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
-  end
-
-  # For the OpenStack provider, use the first authentication containing an ssh keypair that has
-  # both a userid and auth key.
-  #--
-  # TODO: Move this to ManageIQ::Providers::OpenStack::CloudManager::ConversionHost
-  #
-  def miq_ssh_util_args_manageiq_providers_openstack_cloudmanager_vm
-    authentication = find_credentials
-    [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
+    case authentication.type
+    when 'AuthPrivateKey', 'AuthToken'
+      return [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
+    when 'AuthUseridPassword'
+      return [hostname || ipaddress, authentication.userid, authentication.password, nil, nil]
+    else
+      raise 'Unsupported authentication type: #{authentication.type}'
+    end
   end
 
   # Run the specified ansible playbook using the ansible-playbook command. The
