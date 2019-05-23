@@ -15,7 +15,7 @@ class MiqExpression::Target
     # {:model_name => 'User', :associations => ...}
     parsed_params = Hash[match.names.map(&:to_sym).zip(match.to_a[1..-1])]
     begin
-      parsed_params[:model_name] = parsed_params[:model_name].classify.safe_constantize
+      parsed_params[:model_name] = parsed_params[:model_name].capitalize.classify.safe_constantize
     rescue LoadError # issues for case sensitivity (e.g.: VM vs vm)
       parsed_params[:model_name] = nil
     end
