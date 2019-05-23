@@ -234,7 +234,7 @@ class ConversionHost < ApplicationRecord
   def miq_ssh_util_args
     authentication = find_credentials
     case authentication.type
-    when 'AuthPrivateKey'
+    when 'AuthPrivateKey', 'AuthToken'
       return [hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
     when 'AuthUseridPassword'
       return[hostname || ipaddress, authentication.userid, nil, nil, nil, { :key_data => authentication.auth_key, :passwordless_sudo => true }]
