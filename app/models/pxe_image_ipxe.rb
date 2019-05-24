@@ -1,14 +1,9 @@
 class PxeImageIpxe < PxeImage
   def build_pxe_contents(ks_access_path, ks_device)
-    new_kernel  = kernel.to_s.dup
-    new_kernel << " #{super}"
-
-    <<-PXE
-#!ipxe
-kernel #{new_kernel.strip}
-initrd #{initrd}
-boot
-PXE
+    pxe = "#!ipxe\n"
+    pxe << "kernel #{kernel} #{super}\n"
+    pxe << "initrd #{initrd}\n" if initrd.present?
+    pxe << "boot\n"
   end
 
   def self.pxe_server_filename(mac_address)
