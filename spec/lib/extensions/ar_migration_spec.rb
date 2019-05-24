@@ -23,6 +23,7 @@ describe ArPglogicalMigrationHelper do
         include_context "without the schema_migrations_ran table"
 
         it "does nothing" do
+          expect(ActiveRecord::SchemaMigration).not_to receive(:normalized_versions)
           described_class.update_local_migrations_ran("12345", :up)
         end
       end
