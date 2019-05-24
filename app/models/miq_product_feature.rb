@@ -6,6 +6,8 @@ class MiqProductFeature < ApplicationRecord
   ALL_TASKS_FEATURE     = "miq_task_all_ui".freeze
   TENANT_ADMIN_FEATURE  = "rbac_tenant".freeze
 
+  include_concern "Seeding"
+
   acts_as_tree
 
   has_and_belongs_to_many :miq_user_roles, :join_table => :miq_roles_features
@@ -17,8 +19,6 @@ class MiqProductFeature < ApplicationRecord
 
   validates_presence_of   :identifier
   validates_uniqueness_of :identifier
-
-  FIXTURE_PATH = Rails.root.join(*["db", "fixtures", table_name])
 
   DETAIL_ATTRS = [
     :name,
@@ -60,10 +60,6 @@ class MiqProductFeature < ApplicationRecord
 
   def self.current_tenant_identifier(identifier)
     tenant_identifier(identifier, User.current_tenant.id) if identifier && feature_details(identifier) && root_tenant_identifier?(identifier)
-  end
-
-  def self.feature_yaml(path = FIXTURE_PATH)
-    "#{path}.yml".freeze
   end
 
   def self.feature_root
@@ -148,29 +144,51 @@ class MiqProductFeature < ApplicationRecord
     where(:identifier => TENANT_FEATURE_ROOT_IDENTIFIERS)
   end
 
-  def self.seed_tenant_miq_product_features
-    result = with_tenant_feature_root_features.map.each do |tenant_miq_product_feature|
-      Tenant.in_my_region.all.map { |tenant| tenant.build_miq_product_feature(tenant_miq_product_feature) }
-    end.flatten
+  def self.seed_single_tenant_miq_product_features(tenant)
+    result = MiqProductFeature.with_tenant_feature_root_features.map do |miq_product_feature|
+      {
+        :name         => miq_product_feature.name,
+        :description  => miq_product_feature.description,
+        :feature_type => 'admin',
+        :hidden       => false,
+        :identifier   => tenant_identifier(miq_product_feature.identifier, tenant.id),
+        :tenant_id    => tenant.id,
+        :parent_id    => miq_product_feature.id
+      }
+    end
 
+    MiqProductFeature.invalidate_caches
     MiqProductFeature.create(result).map(&:identifier)
   end
 
-  def self.seed_features(path = FIXTURE_PATH)
-    fixture_yaml = feature_yaml(path)
+  def self.seed_tenant_miq_product_features
+    Tenant.in_my_region.all.flat_map { |t| seed_single_tenant_miq_product_features(t) }
+  end
 
-    features = all.to_a.index_by(&:identifier)
-    seen     = seed_from_hash(YAML.load_file(fixture_yaml), seen, nil, features)
+  def self.seed_features
+    transaction do
+      features = all.index_by(&:identifier)
 
-    root_feature = MiqProductFeature.find_by(:identifier => SUPER_ADMIN_FEATURE)
-    Dir.glob(path.join("*.yml")).each do |fixture|
-      seed_from_hash(YAML.load_file(fixture), seen, root_feature)
+      root_file, other_files = seed_files
+
+      seen = seed_from_hash(YAML.load_file(root_file), seen, nil, features)
+      root_feature = find_by(:identifier => SUPER_ADMIN_FEATURE)
+
+      other_files.each do |file|
+        seed_from_array(YAML.load_file(file), seen, root_feature)
+      end
+
+      tenant_identifiers = seed_tenant_miq_product_features
+      deletes = where.not(:identifier => seen.values.flatten + tenant_identifiers).destroy_all
+      _log.info("Deleting product features: #{deletes.collect(&:identifier).inspect}") unless deletes.empty?
+      seen
     end
+  end
 
-    tenant_identifiers = seed_tenant_miq_product_features
-    deletes = where.not(:identifier => seen.values.flatten + tenant_identifiers).destroy_all
-    _log.info("Deleting product features: #{deletes.collect(&:identifier).inspect}") unless deletes.empty?
-    seen
+  def self.seed_from_array(array, seen = nil, parent = nil, features = nil)
+    Array.wrap(array).each do |hash|
+      seed_from_hash(hash, seen, parent, features)
+    end
   end
 
   def self.seed_from_hash(hash, seen = nil, parent = nil, features = nil)

@@ -876,12 +876,10 @@ describe Tenant do
         end
       end
 
-      describe "#destroy_tenant_feature_for_tenant_node" do
-        it "destroys product features" do
-          tenant_product_feature.destroy
+      it "destroys product features on destroy" do
+        tenant_product_feature.destroy
 
-          expect(MiqProductFeature.where(:identifier => ["dialog_edit_editor_tenant_#{tenant_product_feature.id}", "ab_group_admin_tenant_#{tenant_product_feature.id}"], :feature_type => 'tenant').count).to be_zero
-        end
+        expect(MiqProductFeature.where(:identifier => ["dialog_edit_editor_tenant_#{tenant_product_feature.id}", "ab_group_admin_tenant_#{tenant_product_feature.id}"], :feature_type => 'tenant').count).to be_zero
       end
     end
   end

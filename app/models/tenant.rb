@@ -302,27 +302,7 @@ class Tenant < ApplicationRecord
   end
 
   def create_miq_product_features_for_tenant_nodes
-    result = MiqProductFeature.with_tenant_feature_root_features.map.each do |tenant_miq_product_feature|
-      build_miq_product_feature(tenant_miq_product_feature)
-    end.flatten
-
-    result = MiqProductFeature.create(result).map(&:identifier)
-
-    MiqProductFeature.invalidate_caches
-    result
-  end
-
-  def build_miq_product_feature(miq_product_feature)
-    attrs = {
-      :name => miq_product_feature.name, :description => miq_product_feature.description,
-      :feature_type  => 'admin',
-      :hidden        => false,
-      :identifier    => MiqProductFeature.tenant_identifier(miq_product_feature.identifier, id),
-      :tenant_id     => id,
-      :parent_id     => miq_product_feature.id
-    }
-
-    attrs
+    MiqProductFeature.seed_single_tenant_miq_product_features(self)
   end
 
   private

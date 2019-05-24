@@ -1,6 +1,3 @@
-require 'tmpdir'
-require 'pathname'
-
 describe MiqProductFeature do
   let(:miq_product_feature_class) do
     Class.new(described_class) do
@@ -26,40 +23,51 @@ describe MiqProductFeature do
     )
   end
 
-  it "is properly configured" do
-    everything = YAML.load_file(described_class.feature_yaml)
-    traverse_product_features(everything) do |pf|
-      expect(pf).to include(*described_class::REQUIRED_ATTRIBUTES)
-      expect(pf.keys - described_class::ALLOWED_ATTRIBUTES).to be_empty
-      expect(pf[:children]).not_to be_empty if pf.key?(:children)
+  def assert_product_feature_attributes(pf)
+    expect(pf).to include(*described_class::REQUIRED_ATTRIBUTES)
+    expect(pf.keys - described_class::ALLOWED_ATTRIBUTES).to be_empty
+    expect(pf[:children]).not_to be_empty if pf.key?(:children)
+  end
+
+  def traverse_product_feature_children(pfs, &block)
+    pfs.each do |pf|
+      yield pf
+      traverse_product_feature_children(pf[:children], &block) if pf.key?(:children)
     end
   end
 
-  def traverse_product_features(product_feature, &block)
-    block.call(product_feature)
-    if product_feature.key?(:children)
-      product_feature[:children].each { |child| traverse_product_features(child, &block) }
+  it "is properly configured" do
+    root_file, other_files = described_class.seed_files
+
+    hash = YAML.load_file(root_file)
+    assert_product_feature_attributes(hash)
+
+    traverse_product_feature_children(hash[:children]) do |pf|
+      assert_product_feature_attributes(pf)
+    end
+
+    other_files.each do |f|
+      hash = YAML.load_file(f)
+      traverse_product_feature_children(Array.wrap(hash)) do |pf|
+        assert_product_feature_attributes(pf)
+      end
     end
   end
 
   context ".seed" do
     it "creates feature identifiers once on first seed, changes nothing on second seed" do
-      status_seed1 = nil
-      expect { status_seed1 = MiqProductFeature.seed }.to change(MiqProductFeature, :count)
-      expect(status_seed1[:created]).to match_array status_seed1[:created].uniq
-      expect(status_seed1[:updated]).to match_array []
-      expect(status_seed1[:unchanged]).to match_array []
-
-      status_seed2 = nil
-      expect { status_seed2 = MiqProductFeature.seed }.not_to change(MiqProductFeature, :count)
-      expect(status_seed2[:created]).to match_array []
-      expect(status_seed2[:updated]).to match_array []
-      expect(status_seed2[:unchanged]).to match_array status_seed1[:created]
+      expect { MiqProductFeature.seed }.to change(MiqProductFeature, :count)
+      orig_ids = MiqProductFeature.pluck(:id)
+      expect { MiqProductFeature.seed }.not_to change(MiqProductFeature, :count)
+      expect(MiqProductFeature.pluck(:id)).to match_array orig_ids
     end
   end
 
   context ".seed_features" do
-    let(:feature_path) { Pathname.new(@tempfile.path.sub(/\.yml/, '')) }
+    let(:tempdir)      { Dir.mktmpdir }
+    let(:feature_path) { File.join(tempdir, "miq_product_features") }
+    let(:root_file)    { File.join(tempdir, "miq_product_features.yml") }
+
     let(:base) do
       {
         :feature_type => "node",
@@ -76,47 +84,56 @@ describe MiqProductFeature do
     end
 
     before do
-      @tempdir  = Dir.mktmpdir
-      @tempfile = Tempfile.new(['feature', '.yml'], @tempdir)
-      @tempfile.write(YAML.dump(base))
-      @tempfile.close
+      File.write(root_file, base.to_yaml)
+
+      expect(described_class).to receive(:seed_files).at_least(:once) do
+        [root_file, Dir.glob(File.join(feature_path, "*.yml"))]
+      end
     end
 
     after do
-      @tempfile.unlink
-      Dir.rmdir(@tempdir)
+      FileUtils.rm_rf(tempdir)
     end
 
-    it "existing records" do
+    it "creates/updates/deletes records" do
       deleted   = FactoryBot.create(:miq_product_feature, :identifier => "xxx")
       changed   = FactoryBot.create(:miq_product_feature, :identifier => "dialog_new_editor", :name => "XXX")
       unchanged = FactoryBot.create(:miq_product_feature_everything)
       unchanged_orig_updated_at = unchanged.updated_at
 
-      MiqProductFeature.seed_features(feature_path)
+      MiqProductFeature.seed_features
+
       expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect(changed.reload.name).to eq("One")
       expect(unchanged.reload.updated_at).to be_within(0.1).of unchanged_orig_updated_at
     end
 
-    it "additional yaml feature" do
-      additional = {
-        :feature_type => "node",
-        :identifier   => "dialog_edit_editor",
-        :children     => []
-      }
+    context "additional yaml feature" do
+      before do
+        additional_hash = {
+          :feature_type => "node",
+          :identifier   => "dialog_edit_editor",
+          :children     => []
+        }
 
-      Dir.mkdir(feature_path)
-      additional_file = Tempfile.new(['additional', '.yml'], feature_path)
-      additional_file.write(YAML.dump(additional))
-      additional_file.close
+        additional_array = [
+          {
+            :feature_type => "node",
+            :identifier   => "policy_edit_editor",
+            :children     => []
+          }
+        ]
 
-      status_seed = MiqProductFeature.seed_features(feature_path)
-      expect(MiqProductFeature.count).to eq(3)
-      expect(status_seed[:created]).to match_array %w(everything dialog_new_editor dialog_edit_editor)
+        FileUtils.mkdir_p(feature_path)
+        File.write(File.join(feature_path, "additional_hash.yml"), additional_hash.to_yaml)
+        File.write(File.join(feature_path, "additional_array.yml"), additional_array.to_yaml)
+      end
 
-      additional_file.unlink
-      Dir.rmdir(feature_path)
+      it "creates/updates/deletes records" do
+        MiqProductFeature.seed_features
+
+        expect(MiqProductFeature.pluck(:identifier)).to match_array %w(everything dialog_new_editor dialog_edit_editor policy_edit_editor)
+      end
     end
 
     context 'dynamic product features' do
@@ -151,7 +168,7 @@ describe MiqProductFeature do
         let!(:tenant) { FactoryBot.create(:tenant, :parent => root_tenant) }
 
         before do
-          MiqProductFeature.seed_features(feature_path)
+          MiqProductFeature.seed_features
         end
 
         it "creates tenant features" do
