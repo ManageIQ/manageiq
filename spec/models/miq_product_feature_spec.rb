@@ -26,7 +26,10 @@ describe MiqProductFeature do
   def assert_product_feature_attributes(pf)
     expect(pf).to include(*described_class::REQUIRED_ATTRIBUTES)
     expect(pf.keys - described_class::ALLOWED_ATTRIBUTES).to be_empty
-    expect(pf[:children]).not_to be_empty if pf.key?(:children)
+    pf.each do |k, v|
+      next if k == :hidden
+      expect(v).not_to be_blank, "Identifier: '#{pf[:identifier]}'  Key: '#{k}' is blank"
+    end
   end
 
   def traverse_product_feature_children(pfs, &block)
