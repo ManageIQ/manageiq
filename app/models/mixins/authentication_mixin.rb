@@ -13,6 +13,7 @@ module AuthenticationMixin
     virtual_delegate :authentication_status,
                      :to        => "authentication_status_severity_level.status",
                      :default   => "None",
+                     :type      => :string,
                      :allow_nil => true
 
     def self.authentication_check_schedule
