@@ -163,9 +163,21 @@ module AuthenticationMixin
       current = {:new => nil, :old => nil}
 
       unless value.key?(:userid) && value[:userid].blank?
-        current[:new] = {:user => value[:userid], :password => value[:password], :auth_key => value[:auth_key]}
+        current[:new] = {
+          :user            => value[:userid],
+          :password        => value[:password],
+          :auth_key        => value[:auth_key],
+          :service_account => value[:service_account].presence,
+        }
       end
-      current[:old] = {:user => cred.userid, :password => cred.password, :auth_key => cred.auth_key} if cred
+      if cred
+        current[:old] = {
+          :user            => cred.userid,
+          :password        => cred.password,
+          :auth_key        => cred.auth_key,
+          :service_account => cred.service_account,
+        }
+      end
 
       # Raise an error if required fields are blank
       Array(options[:required]).each { |field| raise(ArgumentError, "#{field} is required") if value[field].blank? }
@@ -197,9 +209,10 @@ module AuthenticationMixin
                                             :type => "AuthUseridPassword")
         end
       end
-      cred.userid = value[:userid]
-      cred.password = value[:password]
-      cred.auth_key = value[:auth_key]
+      cred.userid          = value[:userid]
+      cred.password        = value[:password]
+      cred.auth_key        = value[:auth_key]
+      cred.service_account = value[:service_account].presence
 
       cred.save if options[:save] && id
     end
