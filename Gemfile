@@ -243,6 +243,6 @@ unless ENV["APPLIANCE"]
 
   group :development, :test do
     gem "parallel_tests"
-    gem "rspec-rails",      "~>3.6.0"
+    gem "rspec-rails", "~>3.8.0"
   end
 end
