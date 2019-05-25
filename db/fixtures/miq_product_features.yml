@@ -3423,7 +3423,7 @@
     :description: Zones
     :feature_type: node
     :identifier: zone
-  - :name:
+  - :name: Regions
     :description: Regions
     :feature_type: node
     :identifier: region
