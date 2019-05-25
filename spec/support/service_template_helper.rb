@@ -131,7 +131,7 @@ module Spec
       end
 
       def user_helper
-        @user = FactoryBot.create(:user_with_group, :name => 'Wilma', :userid => 'wilma')
+        @user = FactoryBot.create(:user_admin)
       end
     end
   end
