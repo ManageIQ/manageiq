@@ -230,6 +230,14 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def ems_extensions
+          add_common_default_values
+        end
+
+        def ems_licenses
+          add_common_default_values
+        end
+
         def root_folder_relationship
           skip_auto_inventory_attributes
           skip_model_class
