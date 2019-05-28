@@ -140,7 +140,6 @@ describe Vm do
       expect(msg.miq_callback).to eq({:class_name => @vm.class.base_class.name, :method_name => :powerops_callback, :instance_id => @vm.id, :args => [task.id]})
       expect(msg.miq_task_id).to eq(task.id)
 
-      allow(Vm).to receive(:start).and_raise(MiqException::MiqVimBrokerUnavailable)
       msg.deliver
     end
 
@@ -284,11 +283,6 @@ describe Vm do
 
   context "#cockpit_url" do
     before do
-      @csv = <<-CSV.gsub(/^\s+/, "")
-        name,description,max_concurrent,external_failover,role_scope
-        cockpit_ws,Cockpit,1,false,zone
-      CSV
-      allow(ServerRole).to receive(:seed_data).and_return(@csv)
       ServerRole.seed
       _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryBot.create(:ext_management_system, :zone => @zone)
