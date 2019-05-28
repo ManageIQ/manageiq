@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 112 ending 2019-05-27
+
+### Added
+- Make MiqProductFeature seeding pluggable [(#18806)](https://github.com/ManageIQ/manageiq/pull/18806)
+- Add currency to service template. [(#18754)](https://github.com/ManageIQ/manageiq/pull/18754)
+- Use new replication gem [(#18686)](https://github.com/ManageIQ/manageiq/pull/18686)
+- Add logging to standard output for report generator tool [(#18640)](https://github.com/ManageIQ/manageiq/pull/18640)
+
+### Fixed
+- honor storage_file_collection_time_utc setting [(#18585)](https://github.com/ManageIQ/manageiq/pull/18585)
+
+### Removed
+- Remove deprecated Optimize Planning - shortcuts and user roles [(#18624)](https://github.com/ManageIQ/manageiq/pull/18624)
+
 ## Hammer-6
 
 ### Added
