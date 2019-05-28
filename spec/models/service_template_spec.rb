@@ -1123,6 +1123,12 @@ describe ServiceTemplate do
       end.to change(@catalog_item, :name)
       expect(@catalog_item.reload.name).to eq('new_name')
     end
+
+    it 'removes the picture from the catalog item' do
+      updated = @catalog_item.update_catalog_item({:picture => nil}, user)
+
+      expect(updated.picture).to eq(nil)
+    end
   end
 
   context "#order" do
