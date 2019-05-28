@@ -31,6 +31,8 @@
 #   - ems_folders
 #   - resource_pools
 #   - customization_specs
+#   - ems_extensions
+#   - ems_licenses
 #
 #   - link
 #   - orchestration_stacks
@@ -66,6 +68,8 @@ module EmsRefresh::SaveInventoryInfra
       :folders,
       :resource_pools,
       :customization_specs,
+      :ems_extensions,
+      :ems_licenses,
       :orchestration_templates,
       :orchestration_stacks
     ]
@@ -306,6 +310,26 @@ module EmsRefresh::SaveInventoryInfra
 
     deletes = determine_deletes_using_association(ems, target, disconnect)
     save_inventory_multi(ems.customization_specs, hashes, deletes, [:name])
+  end
+
+  def save_ems_extensions_inventory(ems, hashes, target = nil, disconnect = true)
+    target = ems if target.nil?
+
+    ems.ems_extensions.reset
+    deletes = determine_deletes_using_association(ems, target, disconnect)
+
+    save_inventory_multi(ems.ems_extensions, hashes, deletes, [:ems_ref], nil)
+    store_ids_for_new_records(ems.ems_extensions, hashes, :ems_ref)
+  end
+
+  def save_ems_licenses_inventory(ems, hashes, target = nil, disconnect = true)
+    target = ems if target.nil?
+
+    ems.ems_licenses.reset
+    deletes = determine_deletes_using_association(ems, target, disconnect)
+
+    save_inventory_multi(ems.ems_licenses, hashes, deletes, [:ems_ref], nil)
+    store_ids_for_new_records(ems.ems_licenses, hashes, :ems_ref)
   end
 
   def save_miq_scsi_targets_inventory(guest_device, hashes)
