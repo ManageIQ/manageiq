@@ -66,4 +66,8 @@ class CustomizationTemplate < ApplicationRecord
     require 'erb'
     ERB.new(erb_text).result(binding)
   end
+
+  def self.kernel_args(_pxe_server, _pxe_image, _mac_address)
+    {}
+  end
 end

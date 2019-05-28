@@ -1,5 +1,5 @@
 class PxeImagePxelinux < PxeImage
-  def build_pxe_contents(ks_access_path, ks_device)
+  def build_pxe_contents(kernel_args)
     options = super
     options.insert(0, "initrd=#{initrd} ") unless initrd.blank?
 
