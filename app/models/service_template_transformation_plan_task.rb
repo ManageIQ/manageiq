@@ -250,7 +250,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
         _log.info("Attempting to kill virtv2v process: #{pid}")
         rv = conversion_host.kill_process(pid, signal)
       else
-        _log.warn("Could not find pid for InfraConversionJob using virtv2v wrapper: #{options[:virtv2v_wrapper]}")
+        _log.warn("Could not find PID for task using virtv2v wrapper: #{options[:virtv2v_wrapper]}")
       end
     end
 
