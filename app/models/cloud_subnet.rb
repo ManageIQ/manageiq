@@ -45,7 +45,7 @@ class CloudSubnet < ApplicationRecord
   def dns_nameservers_show
     dns_nameservers.join(", ") if dns_nameservers
   end
-  virtual_column :dns_nameservers_show, :type => :string, :uses => :dns_nameservers
+  virtual_column :dns_nameservers_show, :type => :string
 
   virtual_total :total_vms, :vms, :uses => :vms
 
