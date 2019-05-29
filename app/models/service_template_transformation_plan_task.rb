@@ -235,9 +235,26 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def kill_virtv2v(signal = 'TERM')
-    return false if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
-    return false unless options[:virtv2v_wrapper]['pid']
-    conversion_host.kill_process(options[:virtv2v_wrapper]['pid'], signal)
+    rv = false
+
+    if options[:virtv2v_started_on].blank?
+      _log.warn("No start time found for task, ignoring kill attempt")
+    elsif options[:virtv2v_finished_on].present?
+      _log.warn("The task already appears to be complete, ignoring kill attempt")
+    elsif options[:virtv2v_wrapper].blank?
+      _log.warn("Could not find virtv2v wrapper, ignoring kill attempt")
+    else
+      pid = options[:virtv2v_wrapper]['pid']
+
+      if pid
+        _log.info("Attempting to kill virtv2v process: #{pid}")
+        rv = conversion_host.kill_process(pid, signal)
+      else
+        _log.warn("Could not find pid for InfraConversionJob using virtv2v wrapper: #{options[:virtv2v_wrapper]}")
+      end
+    end
+
+    rv
   end
 
   private
