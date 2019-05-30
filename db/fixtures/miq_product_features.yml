@@ -6450,7 +6450,7 @@
     - :name: Operate
       :description: Service Operations
       :feature_type: node
-      :identifier: sui_servics_operations
+      :identifier: sui_services_operations
       :children:
       - :name: Start
         :description: Start services
