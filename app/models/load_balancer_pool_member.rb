@@ -22,8 +22,6 @@ class LoadBalancerPoolMember < ApplicationRecord
                  :type => :string_set,
                  :uses => :load_balancer_health_check_members
 
-  virtual_total :total_vms, :vms, :uses => :vms
-
   def load_balancer_health_check_states
     @load_balancer_health_check_states ||= load_balancer_health_check_members.collect(&:status)
   end

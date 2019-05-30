@@ -39,7 +39,11 @@ class ContainerGroup < ApplicationRecord
   virtual_column :running_containers_summary, :type => :string
 
   def ready_condition
-    container_conditions.find_by(:name => "Ready")
+    if container_conditions.loaded?
+      container_conditions.detect { |condition| condition.name == "Ready" }
+    else
+      container_conditions.find_by(:name => "Ready")
+    end
   end
 
   def ready_condition_status
