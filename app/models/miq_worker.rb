@@ -2,6 +2,7 @@ require 'io/wait'
 
 class MiqWorker < ApplicationRecord
   include_concern 'ContainerCommon'
+  include_concern 'SystemdCommon'
   include UuidMixin
 
   before_destroy :log_destroy_of_worker_messages
@@ -50,6 +51,14 @@ class MiqWorker < ApplicationRecord
     return @workers.call if @workers.kind_of?(Proc)
     return @workers unless @workers.nil?
     workers_configured_count
+  end
+
+  def self.scalable?
+    maximum_workers_count.nil? || maximum_workers_count > 1
+  end
+
+  def scalable?
+    self.class.scalable?
   end
 
   def self.workers_configured_count
@@ -358,9 +367,19 @@ class MiqWorker < ApplicationRecord
     self.class.containerized_worker?
   end
 
+  def self.systemd_worker?
+    MiqEnvironment::Command.supports_systemd? && supports_systemd?
+  end
+
+  def systemd_worker?
+    self.class.systemd_worker?
+  end
+
   def start_runner
     if ENV['MIQ_SPAWN_WORKERS'] || !Process.respond_to?(:fork)
       start_runner_via_spawn
+    elsif systemd_worker?
+      start_systemd_worker
     elsif containerized_worker?
       start_runner_via_container
     else
@@ -416,7 +435,7 @@ class MiqWorker < ApplicationRecord
 
   def start
     self.pid = start_runner
-    save unless containerized_worker?
+    save if !containerized_worker? && !systemd_worker?
 
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
     MiqEvent.raise_evm_event_queue(miq_server || MiqServer.my_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
@@ -540,14 +559,22 @@ class MiqWorker < ApplicationRecord
 
   delegate :normalized_type, :to => :class
 
-  def abbreviated_class_name
-    type.sub(/^ManageIQ::Providers::/, "")
+  def self.abbreviated_class_name
+    name.sub(/^ManageIQ::Providers::/, "")
   end
 
-  def minimal_class_name
+  def abbreviated_class_name
+    self.class.abbreviated_class_name
+  end
+
+  def self.minimal_class_name
     abbreviated_class_name
       .sub(/Miq/, "")
       .sub(/Worker/, "")
+  end
+
+  def minimal_class_name
+    self.class.minimal_class_name
   end
 
   def database_application_name

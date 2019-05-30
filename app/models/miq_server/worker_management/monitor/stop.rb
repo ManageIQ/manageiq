@@ -39,6 +39,8 @@ module MiqServer::WorkerManagement::Monitor::Stop
 
     if w.containerized_worker?
       w.stop_container
+    elsif w.systemd_worker?
+      w.stop_systemd_worker
     elsif w.respond_to?(:terminate)
       w.terminate
     else
