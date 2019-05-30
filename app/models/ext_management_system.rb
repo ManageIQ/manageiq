@@ -95,6 +95,9 @@ class ExtManagementSystem < ApplicationRecord
   has_many :host_conversion_hosts, :through => :hosts, :source => :conversion_host
   has_many :vm_conversion_hosts, :through => :vms, :source => :conversion_host
 
+  has_many :ems_licenses,   :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :ems_extensions, :foreign_key => :ems_id, :dependent => :destroy, :inverse_of => :ext_management_system
+
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
