@@ -1,6 +1,6 @@
 class ServiceTemplateTransformationPlan < ServiceTemplate
   include_concern 'ValidateConfigInfo'
-  virtual_has_one :transformation_mapping, :uses => :transformation_mapping
+  virtual_has_one :transformation_mapping
   def request_class
     ServiceTemplateTransformationPlanRequest
   end
