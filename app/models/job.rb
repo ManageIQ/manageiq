@@ -16,14 +16,8 @@ class Job < ApplicationRecord
   DEFAULT_TIMEOUT = 300
   DEFAULT_USERID  = 'system'.freeze
 
-  def self.get_job_class(process_type)
-    return Object.const_get(process_type)
-  rescue NameError
-    raise "Cannot Find Job Class=<#{process_type}> because it is not defined"
-  end
-
   def self.create_job(process_type, options = {})
-    klass = get_job_class(process_type)
+    klass = Object.const_get(process_type)
     ar_options = options.dup.delete_if { |k, _v| !Job.column_names.include?(k.to_s) }
     job = klass.new(ar_options)
     job.options = options
