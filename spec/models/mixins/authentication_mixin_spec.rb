@@ -271,7 +271,7 @@ describe AuthenticationMixin do
       let(:queue_opts) do
         {
           :args        => [*args],
-          :class_name  => ExtManagementSystem,
+          :class_name  => "ExtManagementSystem",
           :method_name => "raw_connect?",
           :queue_name  => "generic",
           :role        => "ems_operations",

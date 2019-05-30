@@ -237,7 +237,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
       :userid => userid
     }
     queue_opts = {
-      :class_name  => vm.class,
+      :class_name  => vm.class.name,
       :method_name => 'live_migrate',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
@@ -253,7 +253,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
       :userid => userid
     }
     queue_opts = {
-      :class_name  => vm.class,
+      :class_name  => vm.class.name,
       :method_name => 'evacuate',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
