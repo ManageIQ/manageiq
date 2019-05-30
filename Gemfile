@@ -11,6 +11,8 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 
 gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
+gem "manageiq-loggers",      ">0", :require => false,                   :git => "https://github.com/ManageIQ/manageiq-loggers",          :branch => "master"
+
 # Modified gems for gems-pending.  Setting sources here since they are git references
 gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
 
@@ -128,6 +130,11 @@ end
 
 group :qpid_proton, :optional => true do
   gem "qpid_proton",                    "~>0.26.0",      :require => false
+end
+
+group :systemd, :optional => true do
+  gem "dbus-systemd",    "~>1.1.0", :require => false
+  gem "systemd-journal", "~>1.4.0", :require => false
 end
 
 group :openshift, :manageiq_default do

@@ -1149,6 +1149,7 @@
       :restart_interval: 0.hours
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
+      :systemd_enabled: false
     :embedded_ansible_worker:
       :starting_timeout: 20.minutes
       :poll: 10.seconds

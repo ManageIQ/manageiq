@@ -2,7 +2,7 @@ require 'sys-uname'
 
 module MiqEnvironment
   class Command
-    EVM_KNOWN_COMMANDS = %w( memcached memcached-tool service apachectl nohup)
+    EVM_KNOWN_COMMANDS = %w[apachectl memcached memcached-tool nohup service systemctl].freeze
 
     def self.supports_memcached?
       return @supports_memcached unless @supports_memcached.nil?
@@ -12,6 +12,11 @@ module MiqEnvironment
     def self.supports_apache?
       return @supports_apache unless @supports_apache.nil?
       @supports_apache = is_appliance? && supports_command?('apachectl')
+    end
+
+    def self.supports_systemd?
+      return @supports_systemd unless @supports_systemd.nil?
+      @supports_systemd = is_appliance? && supports_command?('systemctl')
     end
 
     def self.supports_nohup_and_backgrounding?
