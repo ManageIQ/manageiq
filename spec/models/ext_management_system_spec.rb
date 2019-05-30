@@ -85,6 +85,15 @@ describe ExtManagementSystem do
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
   end
 
+  it ".with_eligible_manager_types" do
+    v = FactoryBot.create(:ems_vmware)
+    r = FactoryBot.create(:ems_redhat)
+
+    expect(described_class.with_eligible_manager_types([v.class, r.class]).count).to eq(2)
+    expect(described_class.with_eligible_manager_types([v.class]).count).to eq(1)
+    expect(described_class.with_eligible_manager_types(r.class).count).to eq(1)
+  end
+
   context "#ipaddress / #ipaddress=" do
     it "will delegate to the default endpoint" do
       ems = FactoryBot.build(:ems_vmware, :ipaddress => "1.2.3.4")
