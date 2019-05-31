@@ -1,7 +1,12 @@
 RSpec.describe TransformationMappingItem, :v2v do
-  let(:vmware_cluster) { FactoryBot.create(:ems_cluster, :vmware_ems) }
-  let(:redhat_cluster) { FactoryBot.create(:ems_cluster, :redhat_ems) }
-  let(:openstack_cluster) { FactoryBot.create(:ems_cluster_openstack, :openstack_ems) }
+  let(:ems_vmware) { FactoryBot.create(:ems_vmware) }
+  let(:vmware_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
+
+  let(:ems_redhat) { FactoryBot.create(:ems_redhat) }
+  let(:redhat_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_redhat) }
+
+  let(:ems_openstack) { FactoryBot.create(:ems_openstack) }
+  let(:openstack_cluster) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => ems_openstack) }
 
   context "source cluster validation" do
     let(:valid_mapping_item) do
