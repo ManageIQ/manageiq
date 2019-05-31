@@ -565,11 +565,17 @@ class MiqQueue < ApplicationRecord
 
   # default values for get operations
   def self.default_get_options(options)
-    options.reverse_merge(
+    result = options.reverse_merge(
       :queue_name => DEFAULT_QUEUE,
       :state      => STATE_READY,
       :zone       => Zone.determine_queue_zone(options)
     )
+
+    if result[:class_name].kind_of?(Class)
+      ActiveSupport::Deprecation.warn("Rails 5.1 dropped support for Class query values, use a String for class_name.", caller[1..-1])
+      result[:class_name] = result[:class_name].name
+    end
+    result
   end
 
   private_class_method :default_get_options
