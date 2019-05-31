@@ -6,7 +6,7 @@ class TransformationMappingItem < ApplicationRecord
   validates :source_id, :uniqueness => {:scope => [:transformation_mapping_id, :source_type]}
 
   validate :source_cluster,      :if => -> { source.kind_of?(EmsCluster) }
-  validate :destination_cluster, :if => -> { source.kind_of?(EmsCluster) || source.kind_of?(CloudTenant) }
+  validate :destination_cluster, :if => -> { destination.kind_of?(EmsCluster) || destination.kind_of?(CloudTenant) }
 
   VALID_SOURCE_CLUSTER_PROVIDERS = %w[vmwarews].freeze
   VALID_DESTINATION_CLUSTER_PROVIDERS = %w[rhevm openstack].freeze
