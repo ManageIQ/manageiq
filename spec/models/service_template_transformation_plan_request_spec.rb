@@ -31,8 +31,9 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
 
   describe '#validate_conversion_hosts' do
     context 'no conversion host exists in EMS' do
-      let(:dst_ems) { FactoryBot.create(:ext_management_system) }
-      let(:src_cluster) { FactoryBot.create(:ems_cluster) }
+      let(:src_ems) { FactoryBot.create(:ems_vmware) }
+      let(:dst_ems) { FactoryBot.create(:ems_openstack) }
+      let(:src_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
       let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
 
       let(:mapping) do
@@ -67,8 +68,9 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
     end
 
     context 'conversion host exists in EMS and resource is a Host' do
+      let(:src_ems) { FactoryBot.create(:ems_vmware) }
       let(:dst_ems) { FactoryBot.create(:ems_redhat, :api_version => '4.2.4') }
-      let(:src_cluster) { FactoryBot.create(:ems_cluster) }
+      let(:src_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
       let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
 
       let(:mapping) do
@@ -103,8 +105,9 @@ RSpec.describe ServiceTemplateTransformationPlanRequest, :v2v do
     end
 
     context 'conversion host exists in EMS and resource is a Vm' do
+      let(:src_ems) { FactoryBot.create(:ems_vmware) }
       let(:dst_ems) { FactoryBot.create(:ems_openstack) }
-      let(:src_cluster) { FactoryBot.create(:ems_cluster) }
+      let(:src_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
       let(:dst_cloud_tenant) { FactoryBot.create(:cloud_tenant, :ext_management_system => dst_ems) }
 
       let(:mapping) do
