@@ -153,7 +153,7 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_vm_stats(vms_method, options)
-    result = {:count => 0, :memory => 0, :cpu => 0, :snapshot_storage => 0, :used_storage => 0, :allocated_storage => 0, :ids => [], :class_name => Vm.name}
+    result = {:count => 0, :memory => 0, :cpu => 0, :snapshot_storage => 0, :used_storage => 0, :allocated_storage => 0, :ids => [], :class_name => "Vm"}
     vms = send(vms_method, options)
     result[:count] = vms.length
     vms.each do |vm|
@@ -330,9 +330,9 @@ module MiqProvisionQuotaMixin
   end
 
   def quota_provision_stats(prov_method, options)
-    result = {:count => 0, :memory => 0, :cpu => 0, :storage => 0, :ids => [], :class_name => MiqProvisionRequest.name,
+    result = {:count => 0, :memory => 0, :cpu => 0, :storage => 0, :ids => [], :class_name => "MiqProvisionRequest",
               :active => {
-                :class_name => MiqProvision.name, :ids => [], :storage_by_id => Hash.new { |k, v| k[v] = 0 },
+                :class_name => "MiqProvision", :ids => [], :storage_by_id => Hash.new { |k, v| k[v] = 0 },
                 :memory_by_host_id => Hash.new { |k, v| k[v] = 0 },  :cpu_by_host_id => Hash.new { |k, v| k[v] = 0 },
                 :vms_by_storage_id => Hash.new { |k, v| k[v] = [] }
               }

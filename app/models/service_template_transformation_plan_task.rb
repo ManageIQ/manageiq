@@ -146,7 +146,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
     _log.info("Queuing the download of #{log_type} log for #{description} with ID [#{id}]")
     task_options = {:userid => userid, :action => 'transformation_log'}
-    queue_options = {:class_name  => self.class,
+    queue_options = {:class_name  => self.class.name,
                      :method_name => 'transformation_log',
                      :instance_id => id,
                      :args        => [log_type],
