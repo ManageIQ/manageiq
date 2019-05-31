@@ -22,7 +22,7 @@ class Classification < ApplicationRecord
 
   validate :validate_uniqueness_on_tag_name
 
-  validates :syntax, :inclusion => {:in      => %w( string integer boolean ),
+  validates :syntax, :inclusion => {:in      => %w[string integer boolean],
                                     :message => "should be one of 'string', 'integer' or 'boolean'"}
 
   scope :visible,    -> { where(:show => true) }
@@ -34,7 +34,7 @@ class Classification < ApplicationRecord
 
   scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => { :read_only => false}) }
 
-  DEFAULT_NAMESPACE = "/managed"
+  DEFAULT_NAMESPACE = "/managed".freeze
 
   default_value_for :read_only,    false
   default_value_for :syntax,       "string"
@@ -77,7 +77,7 @@ class Classification < ApplicationRecord
   attr_writer :ns
 
   def ns
-    @ns ||= DEFAULT_NAMESPACE if self.new_record?
+    @ns ||= DEFAULT_NAMESPACE if new_record?
 
     return @ns if tag.nil?
 
@@ -89,6 +89,13 @@ class Classification < ApplicationRecord
       @ns = tag2ns(parent.tag.name) unless parent_id.nil?
     end
   end
+
+  # Disable certain rubocop rules that don't really work here. Namely the
+  # find_by warnings and .zero? warnings because of custom methods and
+  # cases where objects could be zero or a real object.
+
+  # rubocop:disable Rails/DynamicFindBy
+  # rubocop:disable Style/NumericPredicate
 
   def self.classify(obj, category_name, entry_name, is_request = true)
     cat = Classification.find_by_name(category_name, obj.region_id)
@@ -152,7 +159,7 @@ class Classification < ApplicationRecord
 
         begin
           d.remove_entry_from(t)
-        rescue => err
+        rescue StandardError => err
           _log.error("Error occurred while removing entry name: [#{d.name}] from #{options[:model]} name: #{t.name}")
           _log.error("#{err.class} - #{err}")
           failed_deletes[t] << d
@@ -164,7 +171,7 @@ class Classification < ApplicationRecord
 
         begin
           a.assign_entry_to(t)
-        rescue => err
+        rescue StandardError => err
           _log.error("Error occurred while adding entry name: [#{a.name}] to #{options[:model]} name: #{t.name}")
           _log.error("#{err.class} - #{err}")
           failed_adds[t] << a
@@ -177,12 +184,12 @@ class Classification < ApplicationRecord
       failed_deletes.each do |target, deletes|
         names = deletes.collect(&:name).sort
         msg += _("  Unable to remove the following tags from %{class_name} %{id}: %{names}.") %
-                 {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
+               {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
       end
       failed_adds.each do |target, adds|
         names = adds.collect(&:name).sort
         msg += _("  Unable to add the following tags to %{class_name} %{id}: %{names}.") %
-                 {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
+               {:class_name => target.class.name, :id => target.id, :names => names.join(", ")}
       end
       raise msg
     end
@@ -217,7 +224,7 @@ class Classification < ApplicationRecord
     end
 
     tag_ids = obj.tagged_with(:ns => ns).collect(&:id)
-    where(:tag_id => tag_ids) rescue []
+    where(:tag_id => tag_ids)
   end
 
   def self.first_cat_entry(name, obj)
@@ -250,8 +257,8 @@ class Classification < ApplicationRecord
     ns, cat, entry = tag_name_to_objects(tag.name)
 
     h = {:id => tag.id, :name => tag.name, :namespace => ns}
-    %w(id name description single_value).each { |m| h[:"category_#{m}"] = cat.send(m) } unless cat.nil?
-    %w(id name description).each { |m| h[:"entry_#{m}"] = entry.send(m) } unless entry.nil?
+    %w[id name description single_value].each { |m| h[:"category_#{m}"] = cat.send(m) } unless cat.nil?
+    %w[id name description].each { |m| h[:"entry_#{m}"] = entry.send(m) } unless entry.nil?
     h
   end
 
@@ -440,6 +447,8 @@ class Classification < ApplicationRecord
     stats
   end
 
+  # rubocop:disable Rails/SkipsModelValidations
+
   def self.seed
     YAML.load_file(FIXTURE_FILE).each do |c|
       category = find_by_name(c[:name], my_region_number, (c[:ns] || DEFAULT_NAMESPACE))
@@ -455,6 +464,8 @@ class Classification < ApplicationRecord
     # Fix categories that have a nill parent_id
     where(:parent_id => nil).update_all(:parent_id => 0)
   end
+
+  # rubocop:enable Rails/SkipsModelValidations
 
   def self.sanitize_name(name)
     name.downcase.tr('^a-z0-9_:', '_')[0, NAME_MAX_LENGTH]
@@ -479,8 +490,6 @@ class Classification < ApplicationRecord
     "#{cname}: #{ename}"
   end
 
-  private
-
   def self.add_entries_from_hash(cat, entries)
     entries.each do |entry|
       ent = cat.find_entry_by_name(entry[:name])
@@ -494,17 +503,11 @@ class Classification < ApplicationRecord
     tag = find_tag
     return if tag.nil?
     cond = ["tag_id = ?", tag.id]
-    unless self.new_record?
+    unless new_record?
       cond[0] << " and id <> ?"
       cond << id
     end
     errors.add("name", "has already been taken") if Classification.exists?(cond)
-  end
-
-  def validate_format_of_name
-    unless (name =~ /[^a-z0-9_:]/).nil?
-      errors.add("name", "must be lowercase alphanumeric characters, colons and underscores without spaces")
-    end
   end
 
   def self.name2tag(name, parent_id = 0, ns = DEFAULT_NAMESPACE)
@@ -513,6 +516,14 @@ class Classification < ApplicationRecord
     else
       c = parent_id.kind_of?(Classification) ? parent_id : Classification.find(parent_id)
       File.join(ns, c.name, name) if c
+    end
+  end
+
+  private
+
+  def validate_format_of_name
+    unless (name =~ /[^a-z0-9_:]/).nil?
+      errors.add("name", "must be lowercase alphanumeric characters, colons and underscores without spaces")
     end
   end
 
@@ -561,4 +572,7 @@ class Classification < ApplicationRecord
 
     delete_tag_and_taggings
   end
+
+  # rubocop:enable Style/NumericPredicate
+  # rubocop:enable Rails/DynamicFindBy
 end
