@@ -718,6 +718,16 @@ describe MiqQueue do
       expect(MiqQueue.first.args).to eq([3, 3])
     end
 
+    it "supports a Class object for the class name(deprecated)" do
+      expect(ActiveSupport::Deprecation).to receive(:warn).with(/use a String for class_name/, anything)
+      msg = MiqQueue.put_or_update(:class_name => MiqServer, :instance_id => @miq_server.id, :method_name => "my_zone")
+
+      status, message, result = msg.deliver
+      expect(status).to eq(MiqQueue::STATUS_OK)
+      expect(message).to eq("Message delivered successfully")
+      expect(result).to eq(@miq_server.my_zone)
+    end
+
     it "should use args param to find messages on the queue" do
       MiqQueue.put(
         :class_name  => 'MyClass',
