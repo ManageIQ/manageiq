@@ -95,7 +95,7 @@ module Vmdb
         startup.info("Server EVM id and name: #{s.id} #{s.name}")
 
         startup.info("Currently assigned server roles:")
-        s.assigned_server_roles(:include => :server_role).each { |r| startup.info("Role: #{r.server_role.name}, Priority: #{r.priority}") }
+        s.assigned_server_roles.includes(:server_role).each { |r| startup.info("Role: #{r.server_role.name}, Priority: #{r.priority}") }
 
         issue = `cat /etc/issue 2> /dev/null` rescue nil
         startup.info("OS: #{issue.chomp}") unless issue.blank?
