@@ -104,7 +104,7 @@ class ExtManagementSystem < ApplicationRecord
 
   validate :validate_ems_enabled_when_zone_changed?, :validate_zone_not_maintenance_when_ems_enabled?
 
-  scope :with_eligible_manager_types, ->(eligible_types) { where(:type => eligible_types) }
+  scope :with_eligible_manager_types, ->(eligible_types) { where(:type => Array(eligible_types).collect(&:to_s)) }
 
   serialize :options
 
