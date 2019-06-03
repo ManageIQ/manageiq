@@ -91,3 +91,7 @@ bundler.d/*
 # yardoc
 /doc/
 .yardoc
+
+# mac hidden dirs
+.DS_Store
+spec/.DS_Store
