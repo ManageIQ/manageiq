@@ -1,6 +1,7 @@
 module ArPglogicalMigrationHelper
   def self.discover_schema_migrations_ran_class
-    return unless ActiveRecord::Base.connection.table_exists?("schema_migrations_ran")
+    raise "Remove 'silence' block now that Rails version is >= 5.1" if Rails.version >= "5.1"
+    ActiveSupport::Deprecation.silence { return unless ActiveRecord::Base.connection.table_exists?("schema_migrations_ran") }
     Class.new(ActiveRecord::Base) do
       require 'active_record-id_regions'
       include ActiveRecord::IdRegions
