@@ -4,6 +4,7 @@ class DialogImportValidator
   class ParsedNonDialogYamlError < StandardError; end
   class ParsedNonDialogError < StandardError; end
   class DialogFieldAssociationCircularReferenceError < StandardError; end
+  class InvalidDialogVersionError < StandardError; end
 
   def initialize(dialog_field_association_validator = DialogFieldAssociationValidator.new)
     @dialog_field_association_validator = dialog_field_association_validator
@@ -17,8 +18,7 @@ class DialogImportValidator
   end
 
   def determine_dialog_validity(dialog)
-    raise ParsedNonDialogError unless dialog['dialog_tabs']
-    check_dialog_tabs_for_validity(dialog['dialog_tabs'])
+    check_dialog_for_validity(dialog)
   rescue ParsedNonDialogYamlError
     raise ParsedNonDialogError, 'Not a valid dialog'
   end
@@ -27,9 +27,17 @@ class DialogImportValidator
 
   def check_dialogs_for_validity(dialogs)
     dialogs.each do |dialog|
-      raise ParsedNonDialogYamlError unless dialog["dialog_tabs"]
-      check_dialog_tabs_for_validity(dialog["dialog_tabs"])
+      check_dialog_for_validity(dialog)
     end
+  rescue TypeError
+    raise ParsedNonDialogYamlError
+  end
+
+  def check_dialog_for_validity(dialog)
+    raise ParsedNonDialogYamlError unless dialog['dialog_tabs']
+    raise InvalidDialogVersionError if dialog['export_version'].present? && dialog['export_version'] > DialogImportService::CURRENT_DIALOG_VERSION
+
+    check_dialog_tabs_for_validity(dialog['dialog_tabs'])
   rescue TypeError
     raise ParsedNonDialogYamlError
   end

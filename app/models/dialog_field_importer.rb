@@ -1,10 +1,22 @@
 class DialogFieldImporter
   class InvalidDialogFieldTypeError < StandardError; end
 
-  def import_field(dialog_field_attributes)
+  def import_field(dialog_field_attributes, export_version = DialogImportService::CURRENT_DIALOG_VERSION)
     if dialog_field_attributes["type"] == "DialogFieldDynamicList"
       dialog_field_attributes["type"] = "DialogFieldDropDownList"
       dialog_field_attributes["dynamic"] = true
+    end
+
+    if Gem::Version.new(export_version) < Gem::Version.new('5.11')
+      dialog_field_attributes["load_values_on_init"] = if !dialog_field_attributes["show_refresh_button"]
+                                                         # no refresh button, always true
+                                                         true
+                                                       elsif dialog_field_attributes["load_values_on_init"].nil?
+                                                         # unspecified, default to true
+                                                         true
+                                                       else
+                                                         !!dialog_field_attributes["load_values_on_init"]
+                                                       end
     end
 
     if DialogField::DIALOG_FIELD_TYPES.include?(dialog_field_attributes["type"])

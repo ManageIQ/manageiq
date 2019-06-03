@@ -20,7 +20,7 @@ class DialogSerializer < Serializer
   def serialize_dialogs(dialogs, all_attributes)
     dialogs.map do |dialog|
       serialized_dialog_tabs = serialize_dialog_tabs(dialog.dialog_tabs, all_attributes)
-      included_attributes(dialog.attributes, all_attributes).merge("dialog_tabs" => serialized_dialog_tabs)
+      included_attributes(dialog.attributes, all_attributes).merge("dialog_tabs" => serialized_dialog_tabs, 'export_version' => DialogImportService::CURRENT_DIALOG_VERSION)
     end
   end
 end

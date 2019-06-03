@@ -25,6 +25,10 @@ describe DialogImportService do
        {"label" => "Test2", "dialog_tabs" => dialog_tabs, "description" => "potato", "blueprint_id" => "456"}]
     end
 
+    let(:dialogs_with_current_version) do
+      [{"label" => "Test", "dialog_tabs" => dialog_tabs, 'export_version' => DialogImportService::CURRENT_DIALOG_VERSION}]
+    end
+
     let(:not_dialogs) { [{"this is not" => "a dialog"}] }
 
     before do
@@ -111,7 +115,7 @@ describe DialogImportService do
         end
 
         it "imports the dialog fields" do
-          expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0])
+          expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0], DialogImportService::DEFAULT_DIALOG_VERSION)
           dialog_import_service.import_from_file(filename)
         end
       end
@@ -141,6 +145,29 @@ describe DialogImportService do
         expect do
           dialog_import_service.import_from_file(filename)
         end.to raise_error(DialogImportService::ParsedNonDialogYamlError)
+      end
+    end
+
+    context "when the loaded yaml has unspecified version" do
+      before do
+        allow(YAML).to receive(:load_file).with(filename).and_return(dialogs)
+      end
+
+      it "defaults to DEFAULT_DIALOG_VERSION" do
+        expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0], DialogImportService::DEFAULT_DIALOG_VERSION)
+        dialog_import_service.import_from_file(filename)
+      end
+    end
+
+    context "when the loaded yaml has valid version" do
+      let(:version) { DialogImportService::CURRENT_DIALOG_VERSION }
+      before do
+        allow(YAML).to receive(:load_file).with(filename).and_return(dialogs_with_current_version)
+      end
+
+      it "the version gets used" do
+        expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0], version)
+        dialog_import_service.import_from_file(filename)
       end
     end
   end
@@ -182,7 +209,7 @@ describe DialogImportService do
       end
 
       it "imports the dialog fields" do
-        expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0])
+        expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0], DialogImportService::DEFAULT_DIALOG_VERSION)
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
       end
 
@@ -293,7 +320,7 @@ describe DialogImportService do
         end
 
         it "imports the dialog fields" do
-          expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0])
+          expect(dialog_field_importer).to receive(:import_field).with(dialog_fields[0], DialogImportService::DEFAULT_DIALOG_VERSION)
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
         end
       end

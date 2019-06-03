@@ -284,5 +284,40 @@ describe DialogFieldImporter do
         end.to raise_error(DialogFieldImporter::InvalidDialogFieldTypeError)
       end
     end
+
+    context "version migrations" do
+      let(:type) { "DialogFieldDynamicList" }
+      let(:dialog_field_show_false) do
+        dialog_field.merge('show_refresh_button' => false,
+                           'load_values_on_init' => false)
+      end
+      let(:dialog_field_load_false) do
+        dialog_field.merge('show_refresh_button' => true,
+                           'load_values_on_init' => false)
+      end
+
+      context "from version 1" do
+        context "load_values_on_init" do
+          it "is set to true when no refresh button" do
+            dialog_field_importer.import_field(dialog_field_show_false, DialogImportService::DEFAULT_DIALOG_VERSION)
+            expect(DialogField.first.load_values_on_init).to eq(true)
+          end
+
+          it "is preserved when refresh button" do
+            dialog_field_importer.import_field(dialog_field_load_false, DialogImportService::DEFAULT_DIALOG_VERSION)
+            expect(DialogField.first.load_values_on_init).to eq(false)
+          end
+        end
+      end
+
+      context "from current version" do
+        context "load_values_on_init" do
+          it "is not touched" do
+            dialog_field_importer.import_field(dialog_field_show_false)
+            expect(DialogField.first.load_values_on_init).to eq(false)
+          end
+        end
+      end
+    end
   end
 end
