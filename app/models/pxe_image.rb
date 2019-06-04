@@ -43,7 +43,7 @@ class PxeImage < ApplicationRecord
     filepath = self.class.pxe_server_filepath(pxe_server, mac_address)
 
     # If the customization_template is nil, we set :ks and :ksdevice set to
-    # nil for backwards compatibility. This will remova any ks and ksdevice
+    # nil for backwards compatibility. This will remove any ks and ksdevice
     # arguments from final kernel command line.
     kernel_args = customization_template&.class&.kernel_args(
       pxe_server, self, mac_address
