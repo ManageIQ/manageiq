@@ -52,18 +52,14 @@ describe Service do
 
     it "queues a power calculation if the next_group_index is nil" do
       expect(@service).to receive(:next_group_index).and_return(nil)
-      expect(@service).to receive(:queue_power_calculation).never
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_started)
-
       @service.process_group_action(:start, 0, 1)
     end
 
     it "does not queue a power calculation if the next_group_index is not nil" do
       expect(@service).to receive(:next_group_index).and_return(1)
-      expect(@service).to receive(:queue_power_calculation).never
       expect(@service).to receive(:queue_group_action).once
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_started).never
-
       @service.process_group_action(:start, 0, 1)
     end
   end
