@@ -20,11 +20,9 @@ class PxeImage < ApplicationRecord
     @corresponding_menu ||= "PxeMenu#{model_suffix}".constantize
   end
 
-  def build_pxe_contents(ks_access_path, ks_device)
+  def build_pxe_contents(kernel_args)
     options = kernel_options.to_s.split(" ")
-    update_pxe_content_option(options, "ks=",       ks_access_path)
-    update_pxe_content_option(options, "ksdevice=", ks_device)
-
+    kernel_args.each { |k, v| update_pxe_content_option(options, "#{k}=", v) }
     options.compact.join(" ").strip
   end
 
@@ -44,12 +42,13 @@ class PxeImage < ApplicationRecord
   def create_files_on_server(pxe_server, mac_address, customization_template = nil)
     filepath = self.class.pxe_server_filepath(pxe_server, mac_address)
 
-    if customization_template.kind_of?(CustomizationTemplateKickstart)
-      ks_settings = CustomizationTemplateKickstart.ks_settings_for_pxe_image(pxe_server, self, mac_address)
-    else
-      ks_settings = {}
-    end
-    contents = build_pxe_contents(*ks_settings.values_at(:ks_access_path, :ks_device))
+    # If the customization_template is nil, we set :ks and :ksdevice set to
+    # nil for backwards compatibility. This will remove any ks and ksdevice
+    # arguments from final kernel command line.
+    kernel_args = customization_template&.class&.kernel_args(
+      pxe_server, self, mac_address
+    ) || { :ks => nil, :ksdevice => nil }
+    contents = build_pxe_contents(kernel_args)
 
     pxe_server.write_file(filepath, contents)
   end

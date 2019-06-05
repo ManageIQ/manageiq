@@ -11,7 +11,9 @@ describe PxeImageIpxe do
 
       image.kernel_options += " ks=abc ksdevice="
 
-      expect(image.build_pxe_contents("http://1.1.1.1/", "00:00:00:00:00:00")).to eq(expected_output)
+      expect(image.build_pxe_contents(:ks       => "http://1.1.1.1/",
+                                      :ksdevice => "00:00:00:00:00:00"))
+        .to eq(expected_output)
     end
 
     it "inserts initrd option if present" do
@@ -24,7 +26,9 @@ describe PxeImageIpxe do
 
       image.initrd = "/path/to/init.rd"
 
-      expect(image.build_pxe_contents("http://1.2.3.4/", "12:34:56:78:90:ab")).to eq(expected_output)
+      expect(image.build_pxe_contents(:ks       => "http://1.2.3.4/",
+                                      :ksdevice => "12:34:56:78:90:ab"))
+        .to eq(expected_output)
     end
   end
 end

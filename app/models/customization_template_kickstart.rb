@@ -9,7 +9,7 @@ class CustomizationTemplateKickstart < CustomizationTemplate
     File.join(pxe_server.customization_directory, pxe_server_filename(pxe_image, mac_address))
   end
 
-  def self.ks_settings_for_pxe_image(pxe_server, pxe_image, mac_address)
+  def self.kernel_args(pxe_server, pxe_image, mac_address)
     ks_access_path =
       if pxe_server.access_url.nil?
         nil
@@ -17,7 +17,7 @@ class CustomizationTemplateKickstart < CustomizationTemplate
         File.join(pxe_server.access_url, pxe_server_filepath(pxe_server, pxe_image, mac_address))
       end
 
-    {:ks_access_path => ks_access_path, :ks_device => mac_address}
+    { :ks => ks_access_path, :ksdevice => mac_address }
   end
 
   def default_filename
