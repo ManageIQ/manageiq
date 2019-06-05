@@ -52,13 +52,12 @@ module CustomAttributeMixin
       ca_sym                 = custom_attribute.to_sym
       without_prefix         = custom_attribute.sub(CUSTOM_ATTRIBUTES_PREFIX, "")
       name_val, section      = without_prefix.split(SECTION_SEPARATOR)
-      sanatized_column_alias = custom_attribute.tr('.', 'DOT').tr('/', 'BS').tr(':', 'CLN')
-      ca_arel                = custom_attribute_arel(name_val, section, sanatized_column_alias)
+      ca_arel                = custom_attribute_arel(name_val, section)
 
       virtual_column(ca_sym, :type => :string, :uses => :custom_attributes, :arel => ca_arel)
 
       define_method(ca_sym) do
-        return self[sanatized_column_alias] if has_attribute?(sanatized_column_alias)
+        return self[custom_attribute] if has_attribute?(custom_attribute)
 
         where_args           = {}
         where_args[:name]    = name_val
@@ -68,7 +67,7 @@ module CustomAttributeMixin
       end
     end
 
-    def self.custom_attribute_arel(name_val, section, column_alias)
+    def self.custom_attribute_arel(name_val, section)
       lambda do |t|
         ca_field    = CustomAttribute.arel_table
 
@@ -81,7 +80,7 @@ module CustomAttributeMixin
         # using a `take(1)` here as well, since a limit is assumed in each.
         # Without it, there can be some invalid queries if more than one result
         # is returned.
-        ca_field.project(:value).where(field_where).take(1).as(column_alias)
+        t.grouping(ca_field.project(:value).where(field_where).take(1))
       end
     end
   end
