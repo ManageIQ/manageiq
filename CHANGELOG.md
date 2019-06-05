@@ -5,7 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-6
+## Hammer-7
+
+### Added
+- [V2V] Have ConversionHost explicitly search authentications for auth type [(#18748)](https://github.com/ManageIQ/manageiq/pull/18748)
+
+### Fixed
+- Doesn't count with selection of belongsto filter if any object doesn't exist in the filter sentence [(#18651)](https://github.com/ManageIQ/manageiq/pull/18651)
+- [V2V] Conversion Host - Use JSON format for extra vars [(#18772)](https://github.com/ManageIQ/manageiq/pull/18772)
+- [V2V] Conversion Host - Handle CA bundle from UI [(#18762)](https://github.com/ManageIQ/manageiq/pull/18762)
+- [V2V] Add default credentials to ansible_playbook method [(#18724)](https://github.com/ManageIQ/manageiq/pull/18724)
+- Add src_vm_or_dest_host_refresh_target. [(#18715)](https://github.com/ManageIQ/manageiq/pull/18715)
+- Allow ssh auth for RHV [(#18805)](https://github.com/ManageIQ/manageiq/pull/18805)
+
+## Hammer-6 - Released 2019-05-22
 
 ### Added
 - Add conversion_host option to the SupportsFeatureMixin module [(#18232)](https://github.com/ManageIQ/manageiq/pull/18232)
@@ -32,7 +45,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Service template picture [(#18689)](https://github.com/ManageIQ/manageiq/pull/18689)
 - Fix ServiceTemplate#picture= with models [(#18705)](https://github.com/ManageIQ/manageiq/pull/18705)
 - Add source to retire request to parse in parse_prov_category in engine [(#18738)](https://github.com/ManageIQ/manageiq/pull/18738)
-- [V2V] Add default credentials to ansible_playbook method [(#18724)](https://github.com/ManageIQ/manageiq/pull/18724)
 - Allow textarea boxes to dynamically set validator type and rule [(#18743)](https://github.com/ManageIQ/manageiq/pull/18743)
 
 ## Hammer-5 - Released 2019-04-23
