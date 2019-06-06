@@ -1,5 +1,6 @@
 FactoryBot.define do
-  factory :ext_management_system do
+  factory :ext_management_system,
+          :class   => "ManageIQ::Providers::Vmware::InfraManager" do
     sequence(:name)      { |n| "ems_#{seq_padded_for_sorting(n)}" }
     sequence(:hostname)  { |n| "ems-#{seq_padded_for_sorting(n)}" }
     sequence(:ipaddress) { |n| ip_from_seq(n) }
@@ -56,35 +57,32 @@ FactoryBot.define do
   end
 
   # Intermediate classes
-
+  # using leaf classes...
   factory :ems_infra,
           :aliases => ["manageiq/providers/infra_manager"],
-          :class   => "ManageIQ::Providers::InfraManager",
+          :class   => "ManageIQ::Providers::Vmware::InfraManager",
           :parent  => :ext_management_system
 
   factory :ems_physical_infra,
           :aliases => ["manageiq/providers/physical_infra_manager"],
-          :class   => "ManageIQ::Providers::PhysicalInfraManager",
+          :class   => "ManageIQ::Providers::Redfish::PhysicalInfraManager",
           :parent  => :ext_management_system
 
-  factory :ems_cloud,
+  factory(:ems_cloud,
           :aliases => ["manageiq/providers/cloud_manager"],
-          :class   => "ManageIQ::Providers::CloudManager",
-          :parent  => :ext_management_system
-
-  factory :ems_datawarehouse,
-          :aliases => ["manageiq/providers/datawarehouse_manager"],
-          :class   => "ManageIQ::Providers::DatawarehouseManager",
-          :parent  => :ext_management_system
+          :class   => "ManageIQ::Providers::Amazon::CloudManager",
+          :parent  => :ext_management_system) do
+    provider_region { "us-east-1" }
+  end
 
   factory :ems_network,
           :aliases => ["manageiq/providers/network_manager"],
-          :class   => "ManageIQ::Providers::NetworkManager",
+          :class   => "ManageIQ::Providers::Openstack::NetworkManager",
           :parent  => :ext_management_system
 
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
-          :class   => "ManageIQ::Providers::StorageManager",
+          :class   => "ManageIQ::Providers::StorageManager::SwiftManager",
           :parent  => :ext_management_system
 
   factory :ems_cinder,
@@ -99,39 +97,34 @@ FactoryBot.define do
 
   factory :ems_container,
           :aliases => ["manageiq/providers/container_manager"],
-          :class   => "ManageIQ::Providers::ContainerManager",
-          :parent  => :ext_management_system
-
-  factory :ems_middleware,
-          :aliases => ["manageiq/providers/middleware_manager"],
-          :class   => "ManageIQ::Providers::MiddlewareManager",
+          :class   => "ManageIQ::Providers::Openshift::ContainerManager",
           :parent  => :ext_management_system
 
   factory :configuration_manager,
           :aliases => ["manageiq/providers/configuration_manager"],
-          :class   => "ManageIQ::Providers::ConfigurationManager",
+          :class   => "ManageIQ::Providers::Foreman::ConfigurationManager",
           :parent  => :ext_management_system
 
   # Automation managers
 
   factory :automation_manager,
           :aliases => ["manageiq/providers/automation_manager"],
-          :class   => "ManageIQ::Providers::AutomationManager",
+          :class   => "ManageIQ::Providers::AnsibleTower::AutomationManager",
           :parent  => :ext_management_system
 
   factory :external_automation_manager,
           :aliases => ["manageiq/providers/external_automation_manager"],
-          :class   => "ManageIQ::Providers::ExternalAutomationManager",
+          :class   => "ManageIQ::Providers::AnsibleTower::AutomationManager",
           :parent  => :automation_manager
 
   factory :embedded_automation_manager,
           :aliases => ["manageiq/providers/embedded_automation_manager"],
-          :class   => "ManageIQ::Providers::EmbeddedAutomationManager",
+          :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
           :parent  => :automation_manager
 
   factory :provisioning_manager,
           :aliases => ["manageiq/providers/provisioning_manager"],
-          :class   => "ManageIQ::Providers::ProvisioningManager",
+          :class   => "ManageIQ::Providers::Foreman::ProvisioningManager",
           :parent  => :ext_management_system
 
   # Leaf classes for ems_infra
@@ -373,18 +366,4 @@ FactoryBot.define do
           :aliases => ["manageiq/providers/foreman/provisioning_manager"],
           :class   => "ManageIQ::Providers::Foreman::ProvisioningManager",
           :parent  => :provisioning_manager
-
-  # Leaf classes for middleware_manager
-
-  factory :ems_hawkular,
-          :aliases => ["manageiq/providers/hawkular/middleware_manager"],
-          :class   => "ManageIQ::Providers::Hawkular::MiddlewareManager",
-          :parent  => :ems_middleware
-
-  # Leaf classes for datawarehouse_manager
-
-  factory :ems_hawkular_datawarehouse,
-          :aliases => ["manageiq/providers/hawkular/datawarehouse_manager"],
-          :class   => "ManageIQ::Providers::Hawkular::DatawarehouseManager",
-          :parent  => :ems_datawarehouse
 end

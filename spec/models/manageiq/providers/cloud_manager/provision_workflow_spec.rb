@@ -3,7 +3,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
   let(:admin) { FactoryBot.create(:user_with_group) }
   let(:ems) { FactoryBot.create(:ems_cloud) }
-  let(:network_manager) { FactoryBot.create(:ems_network, :parent_ems_id => ems.id) }
+  let(:network_manager) { ems.network_manager }
   let(:template) { FactoryBot.create(:miq_template, :name => "template", :ext_management_system => ems) }
 
   let(:cloud_init_template) { FactoryBot.create(:customization_template_cloud_init) }
@@ -189,9 +189,7 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
 
     context "#allowed_cloud_networks" do
       it "without a zone", :skip_before do
-        network_manager
-
-        expect(workflow.allowed_cloud_networks.length).to be_zero
+        expect(workflow.allowed_cloud_networks.length).to eq(1)
       end
 
       it "with a zone" do

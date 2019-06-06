@@ -558,7 +558,7 @@ describe VmOrTemplate do
 
   context "#supports_terminate?" do
     let(:ems_does_vm_destroy) { FactoryBot.create(:ems_vmware) }
-    let(:ems_doesnot_vm_destroy) { FactoryBot.create(:ems_cloud) }
+    let(:ems_doesnot_vm_destroy) { FactoryBot.create(:ems_storage) }
     let(:host) { FactoryBot.create(:host) }
 
     it "returns true for a VM not terminated" do
