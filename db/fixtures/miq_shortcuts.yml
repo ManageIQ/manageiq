@@ -169,6 +169,46 @@
   :url: /infra_topology
   :rbac_feature_name: infra_topology_view
   :startup: true
+- :name: physical_infra_overview
+  :description: Compute / Physical Infrastructure / Overview
+  :url: /physical_infra_overview/show
+  :rbac_feature_name: physical_infra_overview
+  :startup: true
+- :name: ems_physical_infra
+  :description: Compute / Physical Infrastructure / Providers
+  :url: /ems_physical_infra/show_list
+  :rbac_feature_name: ems_physical_infra_show_list
+  :startup: true
+- :name: physical_chassis
+  :description: Compute / Physical Infrastructure / Chassis
+  :url: /physical_chassis/show_list
+  :rbac_feature_name: physical_chassis_show_list
+  :startup: true
+- :name: physical_rack
+  :description: Compute / Physical Infrastructure / Racks
+  :url: /physical_rack/show_list
+  :rbac_feature_name: physical_rack_show_list
+  :startup: true
+- :name: physical_server
+  :description: Compute / Physical Infrastructure / Servers
+  :url: /physical_server/show_list
+  :rbac_feature_name: physical_server_show_list
+  :startup: true
+- :name: physical_storage
+  :description: Compute / Physical Infrastructure / Storages
+  :url: /physical_storage/show_list
+  :rbac_feature_name: physical_storage_show_list
+  :startup: true
+- :name: physical_switch
+  :description: Compute / Physical Infrastructure / Switches
+  :url: /physical_switch/show_list
+  :rbac_feature_name: physical_switch_show_list
+  :startup: true
+- :name: physical_infra_topology
+  :description: Compute / Physical Infrastructure / Topology
+  :url: /physical_infra_topology/show
+  :rbac_feature_name: physical_infra_topology
+  :startup: true
 - :name: container_dashboard
   :description: Compute / Containers / Overview
   :url: /container_dashboard
@@ -309,10 +349,15 @@
   :url: /cloud_volume_snapshot/show_list
   :rbac_feature_name: cloud_volume_snapshot_show_list
   :startup: true
-- :name: volume_backups
+- :name: cloud_volume_backups
   :description: Storage / Block Storage / Volume Backups
   :url: /cloud_volume_backup/show_list
   :rbac_feature_name: cloud_volume_backup_show_list
+  :startup: true
+- :name: cloud_volume_types
+  :description: Storage / Block Storage / Volume Types
+  :url: /cloud_volume_type/show_list
+  :rbac_feature_name: cloud_volume_type_show_list
   :startup: true
 - :name: ems_object_storage
   :description: Storage / Object Storage / Managers
@@ -384,15 +429,15 @@
   :url: /miq_ae_tools/resolve
   :rbac_feature_name: miq_ae_class_simulation
   :startup: true
+- :name: generic_object_definition
+  :description: Automation / Automate / Generic Objects
+  :url: /generic_object_definition/show_list
+  :rbac_feature_name: generic_object_definition_show_list
+  :startup: true
 - :name: miq_ae_customization_explorer
   :description: Automation / Automate / Customization
   :url: /miq_ae_customization/explorer
   :rbac_feature_name: miq_ae_customization_explorer
-  :startup: true
-- :name: generic_object_definition
-  :description: Automation / Automate / Generic Objects
-  :url: /generic_object_definition
-  :rbac_feature_name: generic_object_definition_show_list
   :startup: true
 - :name: miq_ae_class_import_export
   :description: Automation / Automate / Import / Export
@@ -409,11 +454,6 @@
   :url: /miq_request?typ=ae
   :rbac_feature_name: miq_request_show_list
   :startup: true
-- :name: utilization
-  :description: Optimize / Utilization
-  :url: /utilization
-  :rbac_feature_name: utilization
-  :startup: true
 - :name: monitor_alerts_overview
   :description: Monitor / Alerts / Overview
   :url: /alerts_overview
@@ -424,13 +464,13 @@
   :url: /alerts_list
   :rbac_feature_name: monitor_alerts_list
   :startup: true
-- :name: monitor_alerts_most_recent
-  :description: Monitor / Alerts / Most Recent Alerts
-  :url: /alerts_most_recent
-  :rbac_feature_name: monitor_alerts_most_recent
-  :startup: true
 - :name: miq_proxy_tasks
   :description: Settings / Tasks
   :url: /miq_task/index?jobs_tab=tasks
   :rbac_feature_name: tasks
+  :startup: true
+- :name: product
+  :description: GraphQL / Explorer
+  :url: /graphql_explorer
+  :rbac_feature_name: product
   :startup: true
