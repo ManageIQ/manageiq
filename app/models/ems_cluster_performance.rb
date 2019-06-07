@@ -1,5 +1,5 @@
 class EmsClusterPerformance < MetricRollup
-  default_scope { where("resource_type = 'EmsCluster' and resource_id IS NOT NULL") }
+  default_scope { where(:resource_type => "EmsCluster").where.not(:resource_id => nil) }
 
   belongs_to :ems_cluster, :foreign_key => :resource_id
 
