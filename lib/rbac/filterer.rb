@@ -577,8 +577,11 @@ module Rbac
     def scope_to_cloud_tenant(scope, user, miq_group)
       klass = scope.respond_to?(:klass) ? scope.klass : scope
       user_or_group = user || miq_group
-      tenant_id_clause = klass.tenant_id_clause(user_or_group)
-      klass.tenant_joins_clause(scope).where(tenant_id_clause)
+      if (tenant_id_clause = klass.tenant_id_clause(user_or_group))
+        klass.tenant_joins_clause(scope).where(tenant_id_clause)
+      else
+        scope
+      end
     end
 
     def scope_for_user_role_group(klass, scope, miq_group, user, managed_filters)
