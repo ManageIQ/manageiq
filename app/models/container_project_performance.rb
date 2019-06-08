@@ -1,5 +1,5 @@
 class ContainerProjectPerformance < MetricRollup
-  default_scope { where("resource_type = 'ContainerProject' and resource_id IS NOT NULL") }
+  default_scope { where(:resource_type => 'ContainerProject').where.not(:resource_id => nil) }
 
   belongs_to :container_node, :foreign_key => :resource_id, :class_name => "ContainerProject"
 

@@ -1,5 +1,5 @@
 class ExtManagementSystemPerformance < MetricRollup
-  default_scope { where("resource_type = 'ExtManagementSystem' and resource_id IS NOT NULL") }
+  default_scope { where(:resource_type => 'ExtManagementSystem').where.not(:resource_id => nil) }
 
   belongs_to :ext_management_system, :foreign_key => :resource_id
 
