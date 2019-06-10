@@ -60,8 +60,12 @@ Vmdb::Application.configure do
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = [I18n.default_locale]
 
-  # Send deprecation notices to registered listeners
-  config.active_support.deprecation = :notify
+  # Send deprecation notices to registered listeners.
+  # config.active_support.deprecation = :notify
+
+  # Change from rails :notify default since it's unlikely we'll have users setup
+  # notifications for deprecation warnings.
+  config.active_support.deprecation = :log
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
