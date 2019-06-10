@@ -123,12 +123,8 @@ class MiqReport < ApplicationRecord
     reports.each_with_object({}) { |report, hash| hash[report.name] = report.id }
   end
 
-  def self.get_col_type(path)
-    MiqExpression.get_col_type(path)
-  end
-
   def self.get_col_info(path)
-    data_type = get_col_type(path)
+    data_type = parse_field_or_tag(path).try(:column_type)
     {
       :data_type         => data_type,
       :available_formats => get_available_formats(path, data_type),

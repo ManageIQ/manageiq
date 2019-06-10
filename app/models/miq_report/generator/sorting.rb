@@ -15,7 +15,7 @@ module MiqReport::Generator::Sorting
     sb_nil_sub = []
     new_sortby.each_with_index do |sb, idx|
       base_col_name = sb.split(SORT_COL_SUFFIX).first
-      ctype = self.class.get_col_type(col_to_expression_col(base_col_name)) || :string
+      ctype = MiqExpression.parse_field_or_tag(col_to_expression_col(base_col_name)) || :string
       sb_nil_sub[idx] = case ctype
                         when :string, :text, :boolean             then "00ff".hex.chr   # "\xFF"
                         when :integer, :fixnum, :decimal, :float  then @table.data.collect { |d| d.data[sb] }.compact.max.to_i + 1
