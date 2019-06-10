@@ -237,20 +237,32 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def kill_virtv2v(signal = 'TERM')
     rv = false
 
-    if options[:virtv2v_started_on].blank?
-      _log.warn("No start time found for task, ignoring kill attempt")
-    elsif options[:virtv2v_finished_on].present?
-      _log.warn("The task already appears to be complete, ignoring kill attempt")
-    elsif options[:virtv2v_wrapper].blank?
+    wrapper = options[:virtv2v_wrapper]&.symbolize_keys
+
+    if wrapper.blank?
       _log.warn("Could not find virtv2v wrapper, ignoring kill attempt")
+      return rv
+    end
+
+    if wrapper[:state_file].blank?
+      _log.warn("Could not find state file using virtv2v wrapper #{wrapper}, ignoring kill attempt")
+      return rv
+    end
+
+    state = conversion_host.get_conversion_state(wrapper[:state_file])
+
+    if state[:virtv2v_started_on].blank?
+      _log.warn("No start time found for task, ignoring kill attempt")
+    elsif state[:virtv2v_finished_on].present?
+      _log.warn("The task already appears to be complete, ignoring kill attempt")
     else
-      pid = options[:virtv2v_wrapper]['pid']
+      pid = state[:pid]
 
       if pid
         _log.info("Attempting to kill virtv2v process: #{pid}")
         rv = conversion_host.kill_process(pid, signal)
       else
-        _log.warn("Could not find PID for task using virtv2v wrapper: #{options[:virtv2v_wrapper]}")
+        _log.warn("Could not find PID for task using state: #{state}")
       end
     end
 
