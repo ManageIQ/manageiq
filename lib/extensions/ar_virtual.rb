@@ -122,7 +122,8 @@ module VirtualDelegates
       end
 
       col = col.to_s
-      type = to_ref.klass.type_for_attribute(col)
+      type = options[:type] || to_ref.klass.type_for_attribute(col)
+      type = ActiveRecord::Type.lookup(type) if type.kind_of?(Symbol)
       raise "unknown attribute #{to}##{col} referenced in #{name}" unless type
       arel = virtual_delegate_arel(col, to_ref)
       define_virtual_attribute(method_name, type, :uses => (options[:uses] || to), :arel => arel)
@@ -194,7 +195,7 @@ module VirtualDelegates
     def virtual_delegate_arel(col, to_ref)
       # ensure the column has sql and the association is reachable via sql
       # There is currently no way to propagate sql over a virtual association
-      if to_ref.klass.arel_attribute(col) && reflect_on_association(to_ref.name)
+      if reflect_on_association(to_ref.name)
         if to_ref.macro == :has_one
           lambda do |t|
             src_model_id = arel_attribute(to_ref.association_primary_key, t)
