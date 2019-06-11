@@ -237,8 +237,18 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def kill_virtv2v(signal = 'TERM')
     get_conversion_state
-    return false if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
-    return false unless options[:virtv2v_pid]
+
+    if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
+      _log.info("virt-v2v is not running, so there is nothing to do.")
+      return false
+    end
+    
+    unless options[:virtv2v_pid]
+      _log.info("No PID has been reported by virt-v2v-wrapper, so we can't kill it.")
+      return false
+    end
+
+    _log.info("Killing virt-v2v (PID: #{options[:virtv2v_pid]}) with #{signal} signal.")
     conversion_host.kill_process(options[:virtv2v_pid], signal)
   end
 
