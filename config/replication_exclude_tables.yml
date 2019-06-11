@@ -15,6 +15,7 @@
 - customization_specs
 - database_backups
 - event_logs
+- external_urls
 - file_depots
 - jobs
 - log_files
