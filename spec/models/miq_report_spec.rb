@@ -1103,4 +1103,31 @@ describe MiqReport do
       end
     end
   end
+
+  context '.get_col_info' do
+    it "calls MiqExpression" do
+      expect(MiqExpression).to receive(:parse_field_or_tag).once
+      MiqReport.get_col_info('Vm-name')
+    end
+
+    it "is numeric for id columns" do
+      expect(MiqReport.get_col_info('Vm-id')[:numeric]).to eq(true)
+    end
+
+    it "is not numeric for string columns" do
+      expect(MiqReport.get_col_info('Vm-name')[:numeric]).to eq(false)
+    end
+
+    it "has default_format" do
+      expect(MiqReport.get_col_info('Vm-id')[:default_format]).to be_present
+    end
+
+    it "has available_formats" do
+      expect(MiqReport.get_col_info('Vm-id')[:available_formats]).to be_present
+    end
+
+    it "has data_type" do
+      expect(MiqReport.get_col_info('Vm-name')[:data_type]).to eq(:string)
+    end
+  end
 end
