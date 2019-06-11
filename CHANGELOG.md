@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-7
+## Unreleased as of Sprint 113 ending 2019-06-10
+
+### Added
+- Use rails deprecation behavior but log in production [(#18847)](https://github.com/ManageIQ/manageiq/pull/18847)
+- Allow use of systemd for worker management [(#18648)](https://github.com/ManageIQ/manageiq/pull/18648)
+
+### Fixed
+- Updated MiqShortcuts for MySettings Start At Login dropdown [(#18416)](https://github.com/ManageIQ/manageiq/pull/18416)
+
+## Hammer-7 - Released 2019-06-10
 
 ### Added
 - [V2V] Have ConversionHost explicitly search authentications for auth type [(#18748)](https://github.com/ManageIQ/manageiq/pull/18748)
