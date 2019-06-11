@@ -242,7 +242,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
       _log.info("virt-v2v is not running, so there is nothing to do.")
       return false
     end
-    
+
     unless options[:virtv2v_pid]
       _log.info("No PID has been reported by virt-v2v-wrapper, so we can't kill it.")
       return false
