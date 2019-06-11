@@ -23,7 +23,6 @@ def manageiq_plugin(plugin_name)
   end
 end
 
-manageiq_plugin "manageiq-providers-ansible_tower" # can't move this down yet, because we can't autoload ManageIQ::Providers::AnsibleTower::Shared
 manageiq_plugin "manageiq-schema"
 
 # Unmodified gems
@@ -76,6 +75,7 @@ gem "rugged",                         "~>0.27.0",      :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
 gem "sys-filesystem",                 "~>1.2.0"
+gem "terminal",                                        :require => false
 
 # Modified gems (forked on Github)
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
@@ -93,6 +93,10 @@ gem "american_date"
 group :amazon, :manageiq_default do
   manageiq_plugin "manageiq-providers-amazon"
   gem "amazon_ssa_support",                          :require => false, :git => "https://github.com/ManageIQ/amazon_ssa_support.git", :branch => "master" # Temporary dependency to be moved to manageiq-providers-amazon when officially release
+end
+
+group :ansible_tower, :manageiq_default do
+  manageiq_plugin "manageiq-providers-ansible_tower"
 end
 
 group :azure, :manageiq_default do

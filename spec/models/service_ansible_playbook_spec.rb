@@ -1,20 +1,20 @@
 describe(ServiceAnsiblePlaybook) do
-  let(:tower_job)      { FactoryBot.create(:embedded_ansible_job) }
-  let(:tower_job_temp) { FactoryBot.create(:ansible_configuration_script) }
-  let(:basic_service)  { FactoryBot.create(:service_ansible_playbook, :options => config_info_options) }
-  let(:service)        { FactoryBot.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
-  let(:action)         { ResourceAction::PROVISION }
-  let(:credential_0)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '1') }
-  let(:credential_1)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '2') }
-  let(:credential_2)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '3') }
-  let(:credential_3)   { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '4') }
-  let(:decrpyted_val)  { 'my secret' }
-  let(:encrypted_val)  { ManageIQ::Password.encrypt(decrpyted_val) }
-  let(:encrypted_val2) { ManageIQ::Password.encrypt(decrpyted_val + "new") }
+  let(:runner_job)      { FactoryBot.create(:embedded_ansible_job) }
+  let(:runner_job_temp) { FactoryBot.create(:ansible_configuration_script) }
+  let(:basic_service)   { FactoryBot.create(:service_ansible_playbook, :options => config_info_options) }
+  let(:service)         { FactoryBot.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
+  let(:action)          { ResourceAction::PROVISION }
+  let(:credential_0)    { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '1') }
+  let(:credential_1)    { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '2') }
+  let(:credential_2)    { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '3') }
+  let(:credential_3)    { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '4') }
+  let(:decrpyted_val)   { 'my secret' }
+  let(:encrypted_val)   { ManageIQ::Password.encrypt(decrpyted_val) }
+  let(:encrypted_val2)  { ManageIQ::Password.encrypt(decrpyted_val + "new") }
 
   let(:loaded_service) do
     service_template = FactoryBot.create(:service_template_ansible_playbook)
-    service_template.resource_actions.build(:action => action, :configuration_template => tower_job_temp)
+    service_template.resource_actions.build(:action => action, :configuration_template => runner_job_temp)
     service_template.save!
     FactoryBot.create(:service_ansible_playbook,
                        :options          => provision_options.merge(config_info_options),
@@ -24,7 +24,7 @@ describe(ServiceAnsiblePlaybook) do
   let(:executed_service) do
     FactoryBot.create(:service_ansible_playbook, :options => provision_options).tap do |service|
       regex = /(#{ResourceAction::PROVISION})|(#{ResourceAction::RETIREMENT})/
-      allow(service).to receive(:job).with(regex).and_return(tower_job)
+      allow(service).to receive(:job).with(regex).and_return(runner_job)
     end
   end
 
@@ -187,9 +187,9 @@ describe(ServiceAnsiblePlaybook) do
                                        :miq_request_task => miq_request_task)
     end
 
-    it 'creates an Ansible Tower job' do
+    it 'creates an Ansible Runner job' do
       expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job) do |jobtemp, opts|
-        expect(jobtemp).to eq(tower_job_temp)
+        expect(jobtemp).to eq(runner_job_temp)
         exposed_miq = %w(api_url api_token service user group X_MIQ_Group request_task request) + control_extras.keys
         exposed_connection = %w(url token X_MIQ_Group)
         expect(opts[:extra_vars].delete('manageiq').keys).to include(*exposed_miq)
@@ -198,11 +198,11 @@ describe(ServiceAnsiblePlaybook) do
         expected_opts = provision_options[:provision_job_options].except(:hosts)
         expected_opts[:extra_vars]['pswd'] = decrpyted_val
         expect(opts).to include(expected_opts)
-        tower_job
+        runner_job
       end
       loaded_service.execute(action)
       expected_job_attributes = {
-        :id                           => tower_job.id,
+        :id                           => runner_job.id,
         :hosts                        => config_info_options.fetch_path(:config_info, :provision, :hosts).split(','),
         :configuration_script_base_id => config_info_options.fetch_path(:config_info, :provision, :playbook_id)
       }
@@ -213,7 +213,7 @@ describe(ServiceAnsiblePlaybook) do
   describe '#check_completed' do
     shared_examples 'checking progress for job execution' do |raw_status, expected_return|
       before do
-        allow(tower_job).to receive(:raw_status).and_return(double(:normalized_status => raw_status))
+        allow(runner_job).to receive(:raw_status).and_return(double(:normalized_status => raw_status))
       end
 
       it { expect(executed_service.check_completed(action)).to eq(expected_return) }
@@ -233,8 +233,8 @@ describe(ServiceAnsiblePlaybook) do
   end
 
   describe '#refresh' do
-    it 'syncs with the tower for the completed job' do
-      expect(tower_job).to receive(:refresh_ems)
+    it 'syncs with the runner for the completed job' do
+      expect(runner_job).to receive(:refresh_ems)
       executed_service.refresh(action)
     end
   end
@@ -271,12 +271,13 @@ describe(ServiceAnsiblePlaybook) do
 
     context 'require log stdout when job failed' do
       before do
-        status = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status.new('failed', nil)
-        allow(tower_job).to receive(:raw_status).and_return(status)
+        task   = MiqTask.new(:state => MiqTask::STATE_FINISHED, :status => MiqTask::STATUS_ERROR)
+        status = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status.new(task, nil)
+        allow(runner_job).to receive(:raw_status).and_return(status)
       end
 
       it 'writes stdout to log' do
-        expect(tower_job).to receive(:raw_stdout).with('txt_download')
+        expect(runner_job).to receive(:raw_stdout).with('txt_download')
         expect(executed_service).to receive(:delete_inventory)
         executed_service.postprocess(action)
       end
@@ -286,14 +287,14 @@ describe(ServiceAnsiblePlaybook) do
   describe '#on_error' do
     it 'handles retirement error' do
       executed_service.update_attributes(:retirement_state => 'Retiring')
-      expect(tower_job).to receive(:refresh_ems)
+      expect(runner_job).to receive(:refresh_ems)
       expect(executed_service).to receive(:postprocess)
       executed_service.on_error(ResourceAction::RETIREMENT)
       expect(executed_service.retirement_state).to eq('error')
     end
 
     it 'handles provisioning error' do
-      expect(tower_job).to receive(:refresh_ems)
+      expect(runner_job).to receive(:refresh_ems)
       expect(executed_service).to receive(:postprocess)
       executed_service.on_error(action)
       expect(executed_service.retirement_state).to be_nil
@@ -301,10 +302,10 @@ describe(ServiceAnsiblePlaybook) do
   end
 
   describe '#job' do
-    before { service.add_resource!(tower_job, :name => action) }
+    before { service.add_resource!(runner_job, :name => action) }
 
     it 'retrieves an executed job' do
-      expect(service.job(action)).to eq(tower_job)
+      expect(service.job(action)).to eq(runner_job)
     end
 
     it 'returns nil for non-existing job' do

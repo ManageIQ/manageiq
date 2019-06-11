@@ -130,10 +130,4 @@ namespace :evm do
     end
     EvmDatabase.raise_server_event(opts[:event])
   end
-
-  desc "Write all plugin ansible content to a directory"
-  task :write_plugin_ansible_content => :environment do
-    dest_dir = ENV["ANSIBLE_CONTENT_DIR"] || Rails.root.join("tmp", "ansible_content")
-    EmbeddedAnsible.consolidate_plugin_playbooks(dest_dir)
-  end
 end

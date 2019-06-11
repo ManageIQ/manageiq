@@ -119,7 +119,7 @@ describe ServiceTemplateAnsiblePlaybook do
       end.to raise_error(Exception)
     end
 
-    it '#build_parameter_list' do
+    it '.build_parameter_list' do
       name = catalog_item_options[:name]
       catalog_extra_vars = catalog_item_options_two
       description = catalog_item_options[:description]
