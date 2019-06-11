@@ -2,7 +2,7 @@
 title: VM Right-sizing
 rpt_group: Custom
 rpt_type: Custom
-priority: 
+priority:
 db: Vm
 cols:
 - v_owning_cluster
@@ -47,35 +47,35 @@ conditions: !ruby/object:MiqExpression
     - "!=":
         field: Vm-conservative_vcpus_recommended_change
         value: '0'
-  context_type: 
+  context_type:
 order: Ascending
 sortby:
 - v_owning_cluster
 group: y
-graph: 
-dims: 
-filename: 
-file_mtime: 
+graph:
+dims:
+filename:
+file_mtime:
 categories: []
-timeline: 
+timeline:
 template_type: report
-where_clause: 
+where_clause:
 db_options: {}
-generate_cols: 
-generate_rows: 
+generate_cols:
+generate_rows:
 col_formats:
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-- 
-tz: 
-time_profile_id: 
-display_filter: 
+-
+-
+-
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
 col_options:
   conservative_vcpus_recommended_change:
     :style:
@@ -107,7 +107,7 @@ col_options:
 rpt_options:
   :pdf:
     :page_size: US-Letter
-  :queue_timeout: 
+  :queue_timeout:
   :summary:
     :hide_detail_rows: false
 miq_group_id: 2
