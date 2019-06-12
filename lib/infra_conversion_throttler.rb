@@ -11,7 +11,7 @@ class InfraConversionThrottler
       jobs.each do |job|
         sleep 0.5
         eligible_hosts = ems.conversion_hosts.select(&:eligible?).sort_by { |ch| ch.active_tasks.size }
-        _log.warn("Eligible hosts: #{eligible_hosts}")
+        _log.warn("Total eligible hosts: #{eligible_hosts.size}")
         break if slots <= 0 || eligible_hosts.empty?
         job.migration_task.update_attributes!(:conversion_host => eligible_hosts.first)
         job.queue_signal(:start)
