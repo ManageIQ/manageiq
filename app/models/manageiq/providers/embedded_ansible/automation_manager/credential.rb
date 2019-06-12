@@ -12,8 +12,28 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
 
   FRIENDLY_NAME = "Ansible Automation Inside Credential".freeze
 
+  include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
+
   def self.provider_params(params)
     super.merge(:organization => ManageIQ::Providers::EmbeddedAnsible::AutomationManager.first.provider.default_organization)
+  end
+
+  def self.params_to_attributes(_manager, params)
+    obj_attributes = {:options => {}}
+
+    params.except(:id).each do |key, value|
+      if column_names.include?(key.to_s)
+        obj_attributes[key] = value
+      else
+        obj_attributes[:options][key] = value
+      end
+    end
+
+    obj_attributes
+  end
+
+  def self.raw_create_in_provider(manager, params)
+    create!(params_to_attributes(manager, params))
   end
 
   def self.notify_on_provider_interaction?
