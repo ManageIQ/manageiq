@@ -9,7 +9,7 @@ class InfraConversionThrottler
 
       conversion_hosts.each do |ch|
         max = ch.max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
-        _log.warn("Conversion host: #{ch.name}, max concurrent tasks: #{max}")
+        _log.warn("Conversion host: #{ch.name}, max concurrent tasks: #{max}, eligible?: #{ch.eligible?}")
       end
 
       #running = ems.conversion_hosts.inject(0) { |sum, ch| sum + ch.active_tasks.size }
