@@ -83,8 +83,12 @@ class InfraConversionJob < Job
     message = "Getting conversion state"
     _log.info(prep_message(message))
 
-    unless migration_task.options.fetch_path(:virtv2v_wrapper, 'state_file')
+    wrapper = migration_task.options[:virt2v_wrapper]
+
+    #unless migration_task.options.fetch_path(:virtv2v_wrapper, 'state_file')
+    unless wrapper['state_file']
       message = "Virt v2v state file not available, continuing poll_conversion"
+      _log.warn("migration task id: #{migration_task.id}, virt2v2wrapper: #{wrapper}")
       _log.info(prep_message(message))
       update_attributes(:message => message)
       return queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
