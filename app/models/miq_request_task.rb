@@ -22,9 +22,9 @@ class MiqRequestTask < ApplicationRecord
 
   validates_inclusion_of :status, :in => %w( Ok Warn Error Timeout )
 
+  include DialogOptionMixin
   include MiqRequestMixin
   include TenancyMixin
-  include DialogOptionMixin
 
   CANCEL_STATUS_REQUESTED  = "cancel_requested".freeze
   CANCEL_STATUS_PROCESSING = "canceling".freeze

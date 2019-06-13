@@ -60,8 +60,8 @@ class MiqRequest < ApplicationRecord
 
   before_validation :initialize_attributes, :on => :create
 
-  include MiqRequestMixin
   include DialogOptionMixin
+  include MiqRequestMixin
 
   scope :created_recently,    ->(days_ago)   { where("miq_requests.created_on > ?", days_ago.days.ago) }
   scope :with_approval_state, ->(state)      { where(:approval_state => state) }
