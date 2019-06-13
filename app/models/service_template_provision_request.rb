@@ -58,6 +58,10 @@ class ServiceTemplateProvisionRequest < MiqRequest
     req_task_attrs['options'][:pass] = idx
   end
 
+  def originating_controller
+    "service"
+  end
+
   def my_records
     "#{self.class::SOURCE_CLASS_NAME}:#{get_option(:src_id)}"
   end
