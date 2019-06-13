@@ -209,6 +209,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     updates = {}
     virtv2v_state = conversion_host.get_conversion_state(options[:virtv2v_wrapper]['state_file'])
     updated_disks = virtv2v_disks
+    updates[:virtv2v_pid] = virtv2v_state['pid'] if virtv2v_state['pid'].present?
     updates[:virtv2v_message] = virtv2v_state['last_message']['message'] if virtv2v_state['last_message'].present?
     if virtv2v_state['finished'].nil?
       updated_disks.each do |disk|
@@ -234,9 +235,20 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def kill_virtv2v(signal = 'TERM')
-    return false if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
-    return false unless options[:virtv2v_wrapper]['pid']
-    conversion_host.kill_process(options[:virtv2v_wrapper]['pid'], signal)
+    get_conversion_state
+
+    if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
+      _log.info("virt-v2v is not running, so there is nothing to do.")
+      return false
+    end
+
+    unless options[:virtv2v_pid]
+      _log.info("No PID has been reported by virt-v2v-wrapper, so we can't kill it.")
+      return false
+    end
+
+    _log.info("Killing virt-v2v (PID: #{options[:virtv2v_pid]}) with #{signal} signal.")
+    conversion_host.kill_process(options[:virtv2v_pid], signal)
   end
 
   private
