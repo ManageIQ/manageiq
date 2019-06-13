@@ -198,11 +198,12 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     describe '#kill_virtv2v' do
       before do
         task.options = {
-          :virtv2v_wrapper    => { 'state_file' => '/tmp/v2v.state', 'pid' => '1234' },
+          :virtv2v_pid        => '1234',
+          :virtv2v_wrapper    => { 'state_file' => '/tmp/v2v.state' },
           :virtv2v_started_on => 1
         }
         task.conversion_host = conversion_host
-        allow(conversion_host).to receive(:get_conversion_state).with(task.options[:virtv2v_wrapper]['state_file']).and_return({})
+        allow(task).to receive(:get_conversion_state).and_return([])
       end
 
       it "returns false if not started" do
@@ -223,8 +224,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         expect(task.kill_virtv2v('KILL')).to eq(false)
       end
 
-      it "returns false if virtv2v_wrapper.pid is absent" do
-        task.options[:virtv2v_wrapper]['pid'] = nil
+      it "returns false if virtv2v_pid is absent" do
+        task.options[:virtv2v_pid] = nil
         expect(conversion_host).not_to receive(:kill_process)
         expect(task.kill_virtv2v('KILL')).to eq(false)
       end
