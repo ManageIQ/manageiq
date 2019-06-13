@@ -16,10 +16,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
 
   include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
 
-  def self.provider_params(params)
-    super.merge(:organization => ManageIQ::Providers::EmbeddedAnsible::AutomationManager.first.provider.default_organization)
-  end
-
   def self.params_to_attributes(_params)
     raise NotImplementedError, "must be implemented in a subclass"
   end
