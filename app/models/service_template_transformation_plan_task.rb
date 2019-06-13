@@ -238,7 +238,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   def kill_virtv2v(signal = 'TERM')
     get_conversion_state
 
-    if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
+    unless virtv2v_running?
       _log.info("virt-v2v is not running, so there is nothing to do.")
       return false
     end
@@ -256,6 +256,10 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
 
   def vm_resource
     miq_request.vm_resources.find_by(:resource => source)
+  end
+
+  def virtv2v_running?
+    options[:virtv2v_started_on].present? && options[:virtv2v_finished_on].blank? && options[:virtv2v_wrapper].present?
   end
 
   def create_error_status_task(userid, msg)
