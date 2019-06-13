@@ -259,8 +259,7 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
   end
 
   def virtv2v_running?
-    return false if options[:virtv2v_started_on].blank? || options[:virtv2v_finished_on].present? || options[:virtv2v_wrapper].blank?
-    true
+    options[:virtv2v_started_on].present? && options[:virtv2v_finished_on].blank? && options[:virtv2v_wrapper].present?
   end
 
   def create_error_status_task(userid, msg)
