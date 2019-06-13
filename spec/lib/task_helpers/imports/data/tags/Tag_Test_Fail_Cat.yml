@@ -5,7 +5,6 @@
   syntax: string
   single_value: true
   example_text: Brant Test
-  parent_id: 0
   show: true
   default:
   perf_by_tag: false

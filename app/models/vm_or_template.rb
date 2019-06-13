@@ -1382,10 +1382,9 @@ class VmOrTemplate < ApplicationRecord
     cat_name = "folder_path_#{folder_type}"
     cat = Classification.find_by_name(cat_name)
     unless cat
-      cat = Classification.new(
+      cat = Classification.is_category.new(
         :name         => cat_name,
         :description  => "Parent Folder Path (#{folder_type == :blue ? "VMs & Templates" : "Hosts & Clusters"})",
-        :parent_id    => 0,
         :single_value => true,
         :read_only    => true
       )

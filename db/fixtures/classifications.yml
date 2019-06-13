@@ -34,7 +34,6 @@
   :show: true
   :name: location
   :example_text: The geographic location of the resource, such as New York, Chicago, or London.
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Workload
@@ -107,7 +106,6 @@
   :show: true
   :name: function
   :example_text: The workloads a resource provides, such as Web Server, Database, or Firewall.
-  :parent_id: 0
   :default: true
   :single_value: "0"
 - :description: Owner
@@ -138,7 +136,6 @@
   :show: true
   :name: owner
   :example_text: The individual or group that owns the resource.
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Environment
@@ -183,7 +180,6 @@
   :show: true
   :name: environment
   :example_text: The resource environment, such as Development, QA, Test, or Production
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: User roles
@@ -242,7 +238,6 @@
   :show: true
   :name: role
   :example_text:
-  :parent_id: 0
   :default: true
   :single_value: "1"
   :ns: /managed/user
@@ -274,7 +269,6 @@
   :show: true
   :name: service_level
   :example_text: The level of service associated with this resource.
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Customer
@@ -285,7 +279,6 @@
   :show: true
   :name: customer
   :example_text: The name of the customer associated with this resource.
-  :parent_id: 0
   :default: true
   :single_value: t
 - :description: Line of Business
@@ -296,7 +289,6 @@
   :show: true
   :name: lob
   :example_text: The Line of Business the resource is assigned to, such as Retail, Trading, or Manufacturing.
-  :parent_id: 0
   :default: true
   :single_value: "0"
 - :description: Department
@@ -418,7 +410,6 @@
   :show: true
   :name: department
   :example_text: The department the resource is assigned to, such as HR, Accounting, or Sales.
-  :parent_id: 0
   :default: true
   :single_value: "0"
 - :description: Cost Center
@@ -442,7 +433,6 @@
   :show: true
   :name: cc
   :example_text: Cost Center
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Network Location
@@ -473,7 +463,6 @@
   :show: true
   :name: network_location
   :example_text: The network location the resource is to be used, such as DMZ, Internal network or Cloud
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Exclusions
@@ -497,7 +486,6 @@
   :show: true
   :name: exclusions
   :example_text: Operations that the resource may be excluded from, such as Analysis or Cloning.
-  :parent_id: 0
   :default: true
   :single_value: "0"
 - :description: Provisioning Scope
@@ -521,7 +509,6 @@
   :show: true
   :name: prov_scope
   :example_text: Provisioning Scope
-  :parent_id: 0
   :default: true
   :single_value: "0"
 - :description: EVM Operations
@@ -552,7 +539,6 @@
   :show: true
   :name: operations
   :example_text: Operations
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Quota - Max CPUs
@@ -632,7 +618,6 @@
   :show: true
   :name: quota_max_cpu
   :example_text: Maximum number of CPUs allowed by Quota
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Auto Approve - Max CPU
@@ -677,7 +662,6 @@
   :show: true
   :name: prov_max_cpu
   :example_text: Maximum number of CPUs allowed by Auto Approval
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Auto Approve - Max VM
@@ -722,7 +706,6 @@
   :show: true
   :name: prov_max_vm
   :example_text: Maximum number of VMs allowed by Auto Approval
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Quota - Max  Memory
@@ -788,7 +771,6 @@
   :show: true
   :name: quota_max_memory
   :example_text: Maximum Memory allowed by Quota (GB)
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Auto Approve - Max Memory
@@ -826,7 +808,6 @@
   :show: true
   :name: prov_max_memory
   :example_text: Maximum Memory allowed by Auto Approval (GB)
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Quota - Max  Storage
@@ -885,7 +866,6 @@
   :show: true
   :name: quota_max_storage
   :example_text: Maximum Storage allowed by Quota (GB)
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Auto Approve - Max Retirement Days
@@ -923,7 +903,6 @@
   :show: true
   :name: prov_max_retirement_days
   :example_text: Maximum Days for Retirement allowed by Auto Approval
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: LifeCycle
@@ -940,7 +919,6 @@
   :show: true
   :name: lifecycle
   :example_text: LifeCycle Options
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Migration Group
@@ -971,7 +949,6 @@
   :show: true
   :name: migration_group
   :example_text: Group of VMs prepared for migration.
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Network Mapping
@@ -988,7 +965,6 @@
   :show: true
   :name: network_mapping
   :example_text: Mapping between source network(s) and a destination network for migration.
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Storage Mapping
@@ -1019,7 +995,6 @@
   :show: true
   :name: storage_mapping
   :example_text: Mapping between source storage(s) and a destination storage for migration.
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: V2V - Transformation Host
@@ -1043,7 +1018,6 @@
   :show: true
   :name: v2v_transformation_host
   :example_text: Transformation Host role enabled for V2V.
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: V2V - Transformation Method
@@ -1067,7 +1041,6 @@
   :show: true
   :name: v2v_transformation_method
   :example_text: Transformation methods supported for V2V.
-  :parent_id: 0
   :default: true
   :single_value: "0"
 - :description: Transformation Status
@@ -1084,6 +1057,5 @@
   :show: true
   :name: transformation_status
   :example_text: VM has been migrated.
-  :parent_id: 0
   :default: true
   :single_value: "1"

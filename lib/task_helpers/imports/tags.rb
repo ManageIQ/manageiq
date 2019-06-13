@@ -57,6 +57,7 @@ module TaskHelpers
       def import_classification(tag_category)
         ns = tag_category["ns"] ? tag_category["ns"] : "/managed"
         tag_category["name"] = tag_category["name"].to_s
+        tag_category.delete("parent_id")
 
         classification = Classification.find_by_name(tag_category['name'], REGION_NUMBER, ns)
 
@@ -65,7 +66,7 @@ module TaskHelpers
         if classification
           classification.update_attributes(tag_category.select { |k| UPDATE_CAT_FIELDS.include?(k) })
         else
-          classification = Classification.create(tag_category)
+          classification = Classification.is_category.create(tag_category)
         end
 
         raise ClassificationYamlError.new("Tag Category error", classification.errors.full_messages) unless classification.valid?
