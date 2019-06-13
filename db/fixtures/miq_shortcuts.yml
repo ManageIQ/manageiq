@@ -14,16 +14,6 @@
   :url: /chargeback/explorer
   :rbac_feature_name: chargeback
   :startup: true
-- :name: timelines
-  :description: Cloud Intel / Timelines
-  :url: /dashboard/timeline
-  :rbac_feature_name: timeline
-  :startup: true
-- :name: rss
-  :description: Cloud Intel / RSS
-  :url: /alert/show_list
-  :rbac_feature_name: rss
-  :startup: true
 - :name: services
   :description: Services / My Services
   :url: /service/explorer
@@ -468,9 +458,4 @@
   :description: Settings / Tasks
   :url: /miq_task/index?jobs_tab=tasks
   :rbac_feature_name: tasks
-  :startup: true
-- :name: product
-  :description: GraphQL / Explorer
-  :url: /graphql_explorer
-  :rbac_feature_name: product
   :startup: true
