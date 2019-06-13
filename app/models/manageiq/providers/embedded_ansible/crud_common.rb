@@ -55,7 +55,7 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
     private
 
     def send_notification(op_type, manager_id, params, success)
-      op_arg = params.except(:name, :manager_ref).collect { |k, v| "#{k}=#{v}" }.join(', ')
+      op_arg = params.except(*notification_excludes).collect { |k, v| "#{k}=#{v}" }.join(', ')
       _log.send(success ? :info : :error, "#{name} #{op_type} with parameters: #{op_arg.inspect} #{success ? 'succeeded' : 'failed'}")
       Notification.create!(
         :type    => success ? :tower_op_success : :tower_op_failure,
@@ -65,6 +65,11 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
           :tower   => "EMS(manager_id=#{manager_id})"
         }
       )
+    end
+
+    # Override in subclass if necessary
+    def notification_excludes
+      [:name, :manager_ref] + Authentication.encrypted_columns
     end
   end
 
