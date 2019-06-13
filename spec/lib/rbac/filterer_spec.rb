@@ -1030,8 +1030,7 @@ describe Rbac::Filterer do
           :max_disk_usage_rate_average     => {},
           :min_net_usage_rate_average      => {},
           :max_net_usage_rate_average      => {},
-          :v_derived_storage_used          => {},
-          :resource                        => {}
+          :v_derived_storage_used          => {}
         }
       end
 

@@ -235,7 +235,6 @@ module MiqReport::Generator
         db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
         :category  => performance[:group_by_category],
         :cat_model => options[:cat_model],
-        :include   => get_include_for_find
       )
       build_correlate_tag_cols
     end
