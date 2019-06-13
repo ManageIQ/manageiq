@@ -2,7 +2,6 @@ FactoryBot.define do
   factory :classification do
     sequence(:name)        { |n| "category_#{seq_padded_for_sorting(n)}" }
     sequence(:description) { |n| "category #{seq_padded_for_sorting(n)}" }
-    parent_id { 0 }
   end
 
   factory :classification_tag, :class => :Classification do

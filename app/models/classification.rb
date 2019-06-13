@@ -29,8 +29,8 @@ class Classification < ApplicationRecord
   scope :read_only,  -> { where(:read_only => true) }
   scope :writeable,  -> { where(:read_only => false) }
 
-  scope :is_category, -> { where(:parent_id => 0) }
-  scope :is_entry,    -> { where.not(:parent_id => 0) }
+  scope :is_category, -> { where(:parent_id => nil) }
+  scope :is_entry,    -> { where.not(:parent_id => nil) }
 
   scope :with_writable_parents, -> { includes(:parent).where(:parents_classifications => { :read_only => false}) }
 
@@ -313,7 +313,7 @@ class Classification < ApplicationRecord
   end
 
   def category?
-    parent_id == 0
+    parent_id.nil?
   end
 
   def category
@@ -334,11 +334,13 @@ class Classification < ApplicationRecord
     self.class.find_by_name(name, region_id, ns, self)
   end
 
-  def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = 0)
+  # @param parent_id [Integer|Parent] node for the parent. This is only passed in for find_entry_by_name
+  def self.find_by_name(name, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = nil)
     find_by_names([name], region_id, ns, parent_id).first
   end
 
-  def self.find_by_names(names, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = 0)
+  # @param parent_id [Integer|Parent] node for the parent. This is only passed in for find_entry_by_name
+  def self.find_by_names(names, region_id = my_region_number, ns = DEFAULT_NAMESPACE, parent_id = nil)
     tag_names = names.map { |name| name2tag(name, parent_id, ns) }
     # NOTE: tags is a subselect - not an array of ids
     tags = Tag.in_region(region_id).where(:name => tag_names).select(:id)
@@ -503,8 +505,8 @@ class Classification < ApplicationRecord
     errors.add("name", "has already been taken") if Classification.exists?(cond)
   end
 
-  def self.name2tag(name, parent_id = 0, ns = DEFAULT_NAMESPACE)
-    if parent_id == 0
+  def self.name2tag(name, parent_id = nil, ns = DEFAULT_NAMESPACE)
+    if parent_id.nil?
       File.join(ns, name)
     else
       c = parent_id.kind_of?(Classification) ? parent_id : Classification.find(parent_id)
@@ -525,12 +527,12 @@ class Classification < ApplicationRecord
   end
 
   def find_tag
-    tag_name = Classification.name2tag(name, parent_id, ns)
+    tag_name = Classification.name2tag(name, parent, ns)
     Tag.in_region(region_id).find_by(:name => tag_name)
   end
 
   def save_tag
-    tag_name = Classification.name2tag(name, parent_id, ns)
+    tag_name = Classification.name2tag(name, parent, ns)
     if tag_id.present? || tag.present?
       tag.update_attributes(:name => tag_name) unless tag.name == tag_name
     else
