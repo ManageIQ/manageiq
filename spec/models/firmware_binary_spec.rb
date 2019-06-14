@@ -21,7 +21,9 @@ describe FirmwareBinary do
     it 'lists from all endpoints' do
       subject.endpoints << FactoryBot.create(:endpoint, :url => 'url1')
       subject.endpoints << FactoryBot.create(:endpoint, :url => 'url2')
-      expect(subject.urls).to eq(%w[url1 url2])
+      expect(subject.urls).to match_array(%w[url1 url2])
+      subject.endpoints.load
+      expect(subject.urls).to match_array(%w[url1 url2])
     end
   end
 
