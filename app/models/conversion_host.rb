@@ -12,6 +12,7 @@ class ConversionHost < ApplicationRecord
     :class_name => "ServiceTemplateTransformationPlanTask",
     :inverse_of => :conversion_host
 
+  virtual_total :total_active_tasks, :active_tasks
   delegate :ext_management_system, :hostname, :ems_ref, :to => :resource, :allow_nil => true
 
   validates :name, :presence => true
@@ -99,7 +100,7 @@ class ConversionHost < ApplicationRecord
   #
   def check_concurrent_tasks
     max_tasks = max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
-    active_tasks.size < max_tasks
+    total_active_tasks < max_tasks
   end
 
   # Check to see if we can connect to the conversion host using a simple 'uname -a'

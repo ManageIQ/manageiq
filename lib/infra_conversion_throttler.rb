@@ -1,10 +1,10 @@
 class InfraConversionThrottler
   def self.start_conversions
     pending_conversion_jobs.each do |ems, jobs|
-      running = ems.conversion_hosts.inject(0) { |sum, ch| sum + ch.active_tasks.size }
+      running = ems.total_active_tasks
       slots = (ems.miq_custom_get('Max Transformation Runners') || Settings.transformation.limits.max_concurrent_tasks_per_ems).to_i - running
       jobs.each do |job|
-        eligible_hosts = ems.conversion_hosts.select(&:eligible?).sort_by { |ch| ch.active_tasks.size }
+        eligible_hosts = ems.conversion_hosts.select(&:eligible?).sort_by { |ch| ch.total_active_tasks }
         break if slots <= 0 || eligible_hosts.empty?
         job.migration_task.update_attributes!(:conversion_host => eligible_hosts.first)
         job.queue_signal(:start)

@@ -694,6 +694,10 @@ class ExtManagementSystem < ApplicationRecord
     host_conversion_hosts + vm_conversion_hosts
   end
 
+  def total_active_tasks
+    host_conversion_hosts.sum(:total_active_tasks) + vm_conversion_hosts.sum(:total_active_tasks)
+  end
+
   #
   # Metric methods
   #
