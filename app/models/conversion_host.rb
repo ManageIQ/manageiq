@@ -46,7 +46,7 @@ class ConversionHost < ApplicationRecord
   # TODO: Use the verify_credentials_ssh method in host.rb? Move that to the
   # AuthenticationMixin?
   #
-  def verify_credentials(auth_type = nil, options = {})
+  def verify_credentials(auth_type = 'v2v', options = {})
     if authentications.empty?
       check_ssh_connection
     else
@@ -67,6 +67,10 @@ class ConversionHost < ApplicationRecord
       else
         raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
       end
+
+      # Don't connect again if the authentication was valid within the last 15
+      # minutes. This helps reduce unnecessary ssh connections.
+      return true if auth.last_valid_on && auth.last_valid_on > 15.minutes.ago
 
       # Options from STI subclasses will override the defaults we've set above.
       ssh_options.merge!(options)
@@ -91,7 +95,7 @@ class ConversionHost < ApplicationRecord
   #  - The number of concurrent tasks has not reached the limit.
   #
   def eligible?
-    source_transport_method.present? && verify_credentials && check_concurrent_tasks
+    source_transport_method.present? && authentication_check('v2v').first && check_concurrent_tasks
   end
 
   # Returns a boolean indicating whether or not the current number of active tasks

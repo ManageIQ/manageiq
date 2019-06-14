@@ -25,28 +25,28 @@ RSpec.describe ConversionHost, :v2v do
     context "#eligible?" do
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return(nil)
-        allow(conversion_host_1).to receive(:verify_credentials).and_return(true)
+        allow(conversion_host_1).to receive(:authentication_check).and_return([true, 'worked'])
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(true)
         expect(conversion_host_1.eligible?).to eq(false)
       end
 
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('vddk')
-        allow(conversion_host_1).to receive(:verify_credentials).and_return(false)
+        allow(conversion_host_1).to receive(:authentication_check).and_return([false, 'failed'])
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(true)
         expect(conversion_host_1.eligible?).to eq(false)
       end
 
       it "fails when no source transport method is enabled" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('vddk')
-        allow(conversion_host_1).to receive(:verify_credentials).and_return(true)
+        allow(conversion_host_1).to receive(:authentication_check).and_return([true, 'worked'])
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(false)
         expect(conversion_host_1.eligible?).to eq(false)
       end
 
       it "succeeds when all criteria are met" do
         allow(conversion_host_1).to receive(:source_transport_method).and_return('vddk')
-        allow(conversion_host_1).to receive(:verify_credentials).and_return(true)
+        allow(conversion_host_1).to receive(:authentication_check).and_return([true, 'worked'])
         allow(conversion_host_1).to receive(:check_concurrent_tasks).and_return(true)
         expect(conversion_host_1.eligible?).to eq(true)
       end
@@ -435,6 +435,20 @@ RSpec.describe ConversionHost, :v2v do
       conversion_host_vm.authentications << authentication
       allow(Net::SSH).to receive(:start).and_return(true)
       expect(conversion_host_vm.verify_credentials).to be_truthy
+    end
+
+    it "makes an ssh call if the authentication was not valid within the last 15 minutes" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair, :last_valid_on => Time.now.utc - 20.minutes)
+      conversion_host_vm.authentications << authentication
+      expect(Net::SSH).to receive(:start)
+      conversion_host_vm.verify_credentials
+    end
+
+    it "does not make an ssh call if the authentication was valid within the last 15 minutes" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair, :last_valid_on => Time.now.utc - 5.minutes)
+      conversion_host_vm.authentications << authentication
+      expect(Net::SSH).not_to receive(:start)
+      conversion_host_vm.verify_credentials
     end
 
     it "works as expected if there is an associated validation that is invalid" do

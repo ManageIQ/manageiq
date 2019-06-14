@@ -1,7 +1,7 @@
-describe InfraConversionThrottler do
-  let(:ems) { FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone)) }
-  let(:host) { FactoryBot.create(:host, :ext_management_system => ems) }
-  let(:vm) { FactoryBot.create(:vm_or_template, :ext_management_system => ems) }
+RSpec.describe InfraConversionThrottler, :v2v do
+  let(:ems) { FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+  let(:host) { FactoryBot.create(:host_redhat, :ext_management_system => ems) }
+  let(:vm) { FactoryBot.create(:vm_openstack, :ext_management_system => ems) }
   let(:task_waiting) { FactoryBot.create(:service_template_transformation_plan_task, :source => vm) }
   let(:task_running_1) { FactoryBot.create(:service_template_transformation_plan_task, :source => vm) }
   let(:task_running_2) { FactoryBot.create(:service_template_transformation_plan_task, :source => vm) }
@@ -25,10 +25,12 @@ describe InfraConversionThrottler do
       allow(ems).to receive(:conversion_hosts).and_return([conversion_host1, conversion_host2])
       allow(conversion_host1).to receive(:check_ssh_connection).and_return(true)
       allow(conversion_host2).to receive(:check_ssh_connection).and_return(true)
+      allow(conversion_host1).to receive(:authentication_check).and_return([true, 'passed'])
+      allow(conversion_host2).to receive(:authentication_check).and_return([true, 'passed'])
     end
 
     it 'will not start a job when ems limit hit' do
-      ems.miq_custom_set('Max Transformation Runners', 2)
+      ems.miq_custom_set('MaxTransformationRunners', 2)
       allow(conversion_host1).to receive(:active_tasks).and_return([1])
       allow(conversion_host2).to receive(:active_tasks).and_return([1])
       expect(job_waiting).not_to receive(:queue_signal)
@@ -36,7 +38,7 @@ describe InfraConversionThrottler do
     end
 
     it 'will not start a job when conversion_host limit hit' do
-      ems.miq_custom_set('Max Transformation Runners', 100)
+      ems.miq_custom_set('MaxTransformationRunners', 100)
       allow(conversion_host1).to receive(:active_tasks).and_return([1, 2])
       allow(conversion_host2).to receive(:active_tasks).and_return([1, 2])
       expect(job_waiting).not_to receive(:queue_signal)
