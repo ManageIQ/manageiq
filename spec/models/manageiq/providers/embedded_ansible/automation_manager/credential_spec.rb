@@ -320,4 +320,53 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
       end
     end
   end
+
+  context "AzureCredential" do
+    it_behaves_like 'an embedded_ansible credential' do
+      let(:credential_class) { embedded_ansible::AzureCredential }
+
+      let(:params) do
+        {
+          :name         => "Azure Credential",
+          :userid       => "userid",
+          :password     => "secret1",
+          :secret       => "secret2",
+          :client       => "client",
+          :tenant       => "tenant",
+          :subscription => "subscription"
+        }
+      end
+      let(:params_to_attributes) do
+        {
+          :name     => "Azure Credential",
+          :userid   => "userid",
+          :password => "secret1",
+          :auth_key => "secret2",
+          :options  => {
+            :client       => "client",
+            :tenant       => "tenant",
+            :subscription => "subscription"
+          }
+        }
+      end
+      let(:expected_values) do
+        {
+          :name               => "Azure Credential",
+          :userid             => "userid",
+          :password           => "secret1",
+          :secret             => "secret2",
+          :client             => "client",
+          :tenant             => "tenant",
+          :subscription       => "subscription",
+          :password_encrypted => ManageIQ::Password.try_encrypt("secret1"),
+          :auth_key_encrypted => ManageIQ::Password.try_encrypt("secret2"),
+          :options            => {
+            :client       => "client",
+            :tenant       => "tenant",
+            :subscription => "subscription"
+          }
+        }
+      end
+    end
+  end
 end
