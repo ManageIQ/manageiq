@@ -406,4 +406,49 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
       end
     end
   end
+
+  context "OpenstackCredential" do
+    it_behaves_like 'an embedded_ansible credential' do
+      let(:credential_class) { embedded_ansible::OpenstackCredential }
+
+      let(:params) do
+        {
+          :name     => "OpenstackCredential Credential",
+          :userid   => "userid",
+          :password => "secret1",
+          :host     => "host",
+          :domain   => "domain",
+          :project  => "project"
+        }
+      end
+      let(:params_to_attributes) do
+        {
+          :name     => "OpenstackCredential Credential",
+          :userid   => "userid",
+          :password => "secret1",
+          :options  => {
+            :host    => "host",
+            :domain  => "domain",
+            :project => "project"
+          }
+        }
+      end
+      let(:expected_values) do
+        {
+          :name               => "OpenstackCredential Credential",
+          :userid             => "userid",
+          :password           => "secret1",
+          :host               => "host",
+          :domain             => "domain",
+          :project            => "project",
+          :password_encrypted => ManageIQ::Password.try_encrypt("secret1"),
+          :options            => {
+            :host    => "host",
+            :domain  => "domain",
+            :project => "project"
+          }
+        }
+      end
+    end
+  end
 end

@@ -47,4 +47,31 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredenti
   def self.display_name(number = 1)
     n_('Credential (OpenStack)', 'Credentials (OpenStack)', number)
   end
+
+  def self.params_to_attributes(params)
+    attrs = params.dup
+
+    if %i[host domain project].any? {|opt| attrs.has_key? opt }
+      attrs[:options] = {
+        :host    => attrs.delete(:host),
+        :domain  => attrs.delete(:domain),
+        :project => attrs.delete(:project)
+      }
+    end
+
+
+    attrs
+  end
+
+  def host
+    options && options[:host]
+  end
+
+  def domain
+    options && options[:domain]
+  end
+
+  def project
+    options && options[:project]
+  end
 end
