@@ -1158,6 +1158,12 @@
   :feature_type: node
   :identifier: migration_settings
 
+# V2V
+- :name: Migration Analytics
+  :description: Migration Analytics
+  :feature_type: node
+  :identifier: migration_analytics
+
 # Datacenters
 - :name: Datacenters
   :description: Datacenters
