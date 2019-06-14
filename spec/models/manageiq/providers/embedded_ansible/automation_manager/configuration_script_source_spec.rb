@@ -1,19 +1,69 @@
+require 'rugged'
+
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource do
+  CLONE_DIR  = File.expand_path(File.join("..", "clone_dir"), described_class::REPO_DIR)
+  LOCAL_REPO = File.join(CLONE_DIR, "hello_world_local")
+
   let(:manager) do
     FactoryBot.create(:provider_embedded_ansible, :default_organization => 1).managers.first
   end
 
-  # TODO:  Create a local repo instead... this will probably fail sporatically
-  # using a live repo
   let(:params) do
     {
       :name    => "hello_world",
-      :scm_url => "https://github.com/NickLaMuro/ansible-tower-samples"
+      :scm_url => "file://#{LOCAL_REPO}"
     }
   end
 
   let(:repo_dir) { described_class::REPO_DIR }
   let(:repos)    { Dir.glob(File.join(repo_dir, "*")) }
+
+  # Setup local repo used for this spec
+  before(:all) do
+    FileUtils.mkdir_p(LOCAL_REPO)
+    File.write(File.join(LOCAL_REPO, "hello_world.yaml"), <<~PLAYBOOK)
+      - name: Hello World Sample
+        hosts: all
+        tasks:
+          - name: Hello Message
+            debug:
+              msg: "Hello World!"
+
+    PLAYBOOK
+
+    # Init new repo at LOCAL_REPO
+    #
+    #   $ cd /tmp/clone_dir/hello_world_local && git init .
+    repo  = Rugged::Repository.init_at LOCAL_REPO
+    index = repo.index
+
+    # Add new files to index
+    #
+    #   $ git add .
+    index.add_all
+    index.write
+
+    # Create initial commit
+    # 
+    #   $ git commit -m "Initial Commit"
+    Rugged::Commit.create(
+      repo,
+      :message    => "Initial Commit",
+      :parents    => [],
+      :tree       => index.write_tree(repo),
+      :update_ref => "HEAD"
+    )
+
+    # Create a new branch (don't checkout)
+    #
+    #   $ git branch other_branch
+    repo.create_branch "other_branch"
+  end
+
+  # Clean up the local repo we used for this spec
+  after(:all) do
+    FileUtils.rm_rf(CLONE_DIR)
+  end
 
   before do
     EvmSpecHelper.assign_embedded_ansible_role
@@ -37,6 +87,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect(result.scm_type).to eq("git")
         expect(result.scm_branch).to eq("master")
         expect(File).to exist(File.join(result.send(:repo_dir), ".git"))
+        expect(File).to exist(File.join(result.send(:repo_dir), "hello_world.yaml"))
       end
     end
 
@@ -89,6 +140,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect(result).to be_an(described_class)
         expect(result.scm_branch).to eq("other_branch")
         expect(File).to exist(File.join(repo_dir, ".git"))
+        expect(File).to exist(File.join(result.send(:repo_dir), "hello_world.yaml"))
       end
     end
 
