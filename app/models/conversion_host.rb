@@ -97,9 +97,12 @@ class ConversionHost < ApplicationRecord
   # Returns a boolean indicating whether or not the current number of active tasks
   # exceeds the maximum number of allowable concurrent tasks specified in settings.
   #
+  # Note that we force a reload of the active tasks via .count because we don't
+  # want that value cached.
+  #
   def check_concurrent_tasks
     max_tasks = max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
-    active_tasks.size < max_tasks
+    active_tasks.count < max_tasks
   end
 
   # Check to see if we can connect to the conversion host using a simple 'uname -a'
