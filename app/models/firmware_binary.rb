@@ -10,6 +10,6 @@ class FirmwareBinary < ApplicationRecord
   end
 
   def urls
-    endpoints.pluck(:url)
+    endpoints.loaded? ? endpoints.map(&:url) : endpoints.pluck(:url)
   end
 end
