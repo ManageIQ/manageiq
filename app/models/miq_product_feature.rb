@@ -112,7 +112,8 @@ class MiqProductFeature < ApplicationRecord
     @feature_cache ||= begin
       # create hash with parent identifier and details
       features = select(:id, :identifier).select(*DETAIL_ATTRS)
-                                         .select(arel_attribute(:parent_identifier).as("parent_identifier"))
+                                         .select(:parent_identifier)
+                                         .includes(:tenant)
                                          .each_with_object({}) do |f, h|
         parent_ident = f.parent_identifier
         details      = DETAIL_ATTRS.each_with_object({}) { |a, dh| dh[a] = f.send(a) }
