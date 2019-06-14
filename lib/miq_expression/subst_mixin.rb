@@ -78,16 +78,20 @@ module MiqExpression::SubstMixin
   # Find an expression atom based on the token
   def exp_find_by_token(exp, token, parent_is_not = false)
     if exp.kind_of?(Array)                             # Is this and AND or OR
-      exp.find { |e| exp_find_by_token(e, token) }     # Look for token
+      result = nil
+      exp.find do |e|
+        result = exp_find_by_token(e, token) # Look for token
+      end
+      result
     elsif exp[:token] && exp[:token] == token       # This is the token exp
       @parent_is_not = true if parent_is_not        # Remember that token exp's parent is a NOT
-      exp                                           #   return it
+      exp # return it
     elsif exp["not"]
-      exp_find_by_token(exp["not"], token, true)    # Look for token under NOT (indicate we are a NOT)
+      exp_find_by_token(exp["not"], token, true) # Look for token under NOT (indicate we are a NOT)
     elsif exp["and"]
-      exp_find_by_token(exp["and"], token)          # Look for token under AND
+      exp_find_by_token(exp["and"], token) # Look for token under AND
     elsif exp["or"]
-      exp_find_by_token(exp["or"], token)           # Look for token under OR
+      exp_find_by_token(exp["or"], token) # Look for token under OR
     end
   end
 
