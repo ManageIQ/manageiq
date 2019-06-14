@@ -451,4 +451,41 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
       end
     end
   end
+
+  context "RhvCredential" do
+    it_behaves_like 'an embedded_ansible credential' do
+      let(:credential_class) { embedded_ansible::RhvCredential }
+
+      let(:params) do
+        {
+          :name     => "Rhv Credential",
+          :userid   => "userid",
+          :password => "secret1",
+          :host     => "host"
+        }
+      end
+      let(:params_to_attributes) do
+        {
+          :name     => "Rhv Credential",
+          :userid   => "userid",
+          :password => "secret1",
+          :options  => {
+            :host => "host"
+          }
+        }
+      end
+      let(:expected_values) do
+        {
+          :name               => "Rhv Credential",
+          :userid             => "userid",
+          :password           => "secret1",
+          :host               => "host",
+          :password_encrypted => ManageIQ::Password.try_encrypt("secret1"),
+          :options            => {
+            :host => "host"
+          }
+        }
+      end
+    end
+  end
 end
