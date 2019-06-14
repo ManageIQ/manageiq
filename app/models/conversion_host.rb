@@ -84,15 +84,16 @@ class ConversionHost < ApplicationRecord
     true
   end
 
-  # Returns a boolean indicating whether or not the conversion host is eligible
-  # for use. To be eligible, a conversion host must have the following properties:
+  # @return [Boolean] true if the conversion host is eligible for use.
+  # To be eligible, a conversion host must have the following properties:
   #
   #  - A transport mechanism is configured for source (set by 3rd party).
   #  - Credentials are set on the conversion host and the SSH connection works.
-  #  - The number of concurrent tasks has not reached the limit.
+  #
+  # Note: caller needs to check the task limit (via check_concurrent_tasks) closer to the time of use
   #
   def eligible?
-    source_transport_method.present? && verify_credentials && check_concurrent_tasks
+    source_transport_method.present? && verify_credentials
   end
 
   # Returns a boolean indicating whether or not the current number of active tasks
