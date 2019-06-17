@@ -92,6 +92,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   end
 
   def post_ansible_run(message, status)
+    save_playbook_set_stats
     inventory_not_deleted = !delete_inventory
     jt_not_deleted = !delete_job_template
 
@@ -198,5 +199,12 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   rescue => err
     _log.error("Failed to get stdout from playbook #{playbook.name}")
     _log.log_backtrace(err)
+  end
+
+  def save_playbook_set_stats
+    #
+    # save playbook set_stats data into MiqTask#task_results for future usage
+    #
+    miq_task.update(:task_results => {'ansible_stats' => ansible_job.raw_stdout('json').dig(-1, 'event_data', 'artifact_data')})
   end
 end
