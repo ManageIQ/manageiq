@@ -201,7 +201,6 @@ end
 
 group :consumption, :manageiq_default do
   manageiq_plugin "manageiq-consumption"
-  gem 'hashdiff'
 end
 
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
