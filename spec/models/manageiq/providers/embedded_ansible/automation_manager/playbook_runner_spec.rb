@@ -205,6 +205,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
 
     context 'playbook runs successfully' do
       it 'removes temporary inventory and job template and finishes the job' do
+        expect(subject).to receive(:save_playbook_set_stats)
         expect(subject).to receive(:delete_inventory)
         expect(subject).to receive(:delete_job_template)
         subject.post_ansible_run('Playbook ran successfully', 'ok')
@@ -214,6 +215,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
 
     context 'playbook runs with error' do
       it 'removes temporary inventory and job template and finishes the job with error' do
+        expect(subject).to receive(:save_playbook_set_stats)
         expect(subject).to receive(:delete_inventory)
         expect(subject).to receive(:delete_job_template)
         subject.post_ansible_run('Ansible engine returned an error for the job', 'error')
@@ -223,6 +225,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
 
     context 'cleaning up has error' do
       it 'does fail the job but logs the error' do
+        expect(subject).to receive(:save_playbook_set_stats)
         expect(subject).to receive(:delete_inventory)
         allow(subject).to receive(:temp_configuration_script).and_raise('fake error')
         expect($log).to receive(:log_backtrace)

@@ -165,6 +165,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
 
   def temp_configuration_script
     ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript.new(
+      :name        => playbook.name,
       :manager     => playbook.manager,
       :manager_ref => options[:job_template_ref],
       :parent_id   => playbook.id,
