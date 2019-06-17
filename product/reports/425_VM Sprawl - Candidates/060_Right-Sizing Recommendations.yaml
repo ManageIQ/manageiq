@@ -1,0 +1,115 @@
+---
+title: VM Right-sizing
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: Vm
+cols:
+- v_owning_cluster
+- name
+- num_cpu
+- conservative_recommended_vcpus
+- conservative_vcpus_recommended_change
+- mem_cpu
+- conservative_recommended_mem
+- conservative_mem_recommended_change
+- disk_1_used_percent_of_provisioned
+include: {}
+col_order:
+- v_owning_cluster
+- name
+- num_cpu
+- conservative_recommended_vcpus
+- conservative_vcpus_recommended_change
+- mem_cpu
+- conservative_recommended_mem
+- conservative_mem_recommended_change
+- disk_1_used_percent_of_provisioned
+headers:
+- Parent Cluster
+- Name
+- Number of CPUs
+- Recommended CPU
+- CPU Savings
+- Memory
+- Recommended RAM
+- RAM Savings
+- "% Disk Used"
+conditions: !ruby/object:MiqExpression
+  exp:
+    and:
+    - IS NOT EMPTY:
+        field: Vm-v_owning_cluster
+        value: ''
+    - ">":
+        field: Vm-conservative_recommended_vcpus
+        value: '0'
+    - "!=":
+        field: Vm-conservative_vcpus_recommended_change
+        value: '0'
+  context_type:
+order: Ascending
+sortby:
+- v_owning_cluster
+group: y
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options:
+  conservative_vcpus_recommended_change:
+    :style:
+    - :class: :miq_rpt_red_bg
+      :operator: "<"
+      :value: '0'
+    - :class: :miq_rpt_green_bg
+      :operator: ">"
+      :value: '0'
+    :grouping:
+    - :total
+  v_owning_cluster:
+    :break_label: '[" Parent Cluster"]: '
+  mem_cpu:
+    :grouping:
+    - :total
+  conservative_recommended_vcpus:
+    :grouping:
+    - :total
+  conservative_mem_recommended_change:
+    :grouping:
+    - :total
+  conservative_recommended_mem:
+    :grouping:
+    - :total
+  num_cpu:
+    :grouping:
+    - :total
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+  :summary:
+    :hide_detail_rows: false
+miq_group_id: 2
+user_id: 1
+menu_name: Right-Sizing Recommendations
