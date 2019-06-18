@@ -148,7 +148,7 @@ class TransformationMapping::VmMigrationValidator
 
   def validate_vm_name_openstack(vm)
     # Regexp decided after discussion with Bernard Cafarelli
-    vm.name =~ /^[[:graph:]\s]*$/
+    vm.name =~ /^[[:graph:]\s]+$/
   end
 
   class VmMigrateStruct < MiqHashStruct
