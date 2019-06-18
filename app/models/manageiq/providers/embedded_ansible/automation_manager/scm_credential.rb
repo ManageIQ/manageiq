@@ -39,7 +39,19 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential < M
     :attributes => API_ATTRIBUTES
   }.freeze
 
+  alias ssh_key_data   auth_key
+  alias ssh_key_unlock auth_key_password
+
   def self.display_name(number = 1)
     n_('Credential (SCM)', 'Credentials (SCM)', number)
+  end
+
+  def self.params_to_attributes(params)
+    attrs = params.dup
+
+    attrs[:auth_key]          = attrs.delete(:ssh_key_data)
+    attrs[:auth_key_password] = attrs.delete(:ssh_key_unlock)
+
+    attrs
   end
 end

@@ -236,4 +236,41 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
       end
     end
   end
+
+  context "ScmCredential" do
+    it_behaves_like 'an embedded_ansible credential' do
+      let(:credential_class) { embedded_ansible::ScmCredential }
+
+      let(:params) do
+        {
+          :name           => "Scm Credential",
+          :userid         => "userid",
+          :password       => "secret1",
+          :ssh_key_data   => "secret2",
+          :ssh_key_unlock => "secret3"
+        }
+      end
+      let(:params_to_attributes) do
+        {
+          :name              => "Scm Credential",
+          :userid            => "userid",
+          :password          => "secret1",
+          :auth_key          => "secret2",
+          :auth_key_password => "secret3",
+        }
+      end
+      let(:expected_values) do
+        {
+          :name                        => "Scm Credential",
+          :userid                      => "userid",
+          :password                    => "secret1",
+          :ssh_key_data                => "secret2",
+          :ssh_key_unlock              => "secret3",
+          :password_encrypted          => ManageIQ::Password.try_encrypt("secret1"),
+          :auth_key_encrypted          => ManageIQ::Password.try_encrypt("secret2"),
+          :auth_key_password_encrypted => ManageIQ::Password.try_encrypt("secret3")
+        }
+      end
+    end
+  end
 end
