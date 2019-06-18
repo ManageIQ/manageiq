@@ -135,4 +135,56 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
       end
     end
   end
+
+  context "MachineCredential" do
+    it_behaves_like 'an embedded_ansible credential' do
+      let(:credential_class) { embedded_ansible::MachineCredential }
+
+      let(:params) do
+        {
+          :name            => "Machine Credential",
+          :userid          => "userid",
+          :password        => "secret1",
+          :ssh_key_data    => "secret2",
+          :become_method   => "sudo",
+          :become_password => "secret3",
+          :become_username => "admin",
+          :ssh_key_unlock  => "secret4"
+        }
+      end
+      let(:params_to_attributes) do
+        {
+          :name              => "Machine Credential",
+          :userid            => "userid",
+          :password          => "secret1",
+          :auth_key          => "secret2",
+          :become_password   => "secret3",
+          :become_username   => "admin",
+          :auth_key_password => "secret4",
+          :options           => {
+            :become_method => "sudo"
+          }
+        }
+      end
+      let(:expected_values) do
+        {
+          :name                        => "Machine Credential",
+          :userid                      => "userid",
+          :password                    => "secret1",
+          :ssh_key_data                => "secret2",
+          :become_password             => "secret3",
+          :become_username             => "admin",
+          :become_method               => "sudo",
+          :auth_key_password           => "secret4",
+          :password_encrypted          => ManageIQ::Password.try_encrypt("secret1"),
+          :auth_key_encrypted          => ManageIQ::Password.try_encrypt("secret2"),
+          :become_password_encrypted   => ManageIQ::Password.try_encrypt("secret3"),
+          :auth_key_password_encrypted => ManageIQ::Password.try_encrypt("secret4"),
+          :options                     => {
+            :become_method => "sudo"
+          }
+        }
+      end
+    end
+  end
 end
