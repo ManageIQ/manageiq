@@ -151,6 +151,7 @@ class TransformationMapping::VmMigrationValidator
     # Regexp decided after discussion with Bernard Cafarelli
     vm.name =~ /^[[:graph:]\s]+$/
   end
+  # rubocop: enable Naming/UncommunicativeMethodParamName
 
   class VmMigrateStruct < MiqHashStruct
     def initialize(vm_name, vm, status, reason)
