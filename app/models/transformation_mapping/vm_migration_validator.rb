@@ -133,6 +133,7 @@ class TransformationMapping::VmMigrationValidator
     @mapped_lans ||= Lan.where(:id => @mapping.transformation_mapping_items.where(:source_type => 'Lan').select(:source_id))
   end
 
+  # rubocop: disable Naming/UncommunicativeMethodParamName
   def destination_cluster(vm)
     @mapping.transformation_mapping_items.find_by(:source_type => 'EmsCluster', :source_id => vm.ems_cluster.id).destination
   end
