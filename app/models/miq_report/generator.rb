@@ -318,7 +318,7 @@ module MiqReport::Generator
 
     ## add in virtual attributes that can be calculated from sql
     rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.blank?
-    rbac_opts[:use_sql_view] = true if db_options && db_options[:use_sql_view]
+    rbac_opts[:use_sql_view] = db_options.nil? || db_options.fetch(:use_sql_view) { true }
 
     results, attrs = Rbac.search(rbac_opts)
     results = Metric::Helper.remove_duplicate_timestamps(results)
