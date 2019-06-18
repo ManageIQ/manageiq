@@ -1,10 +1,11 @@
-require 'awesome_spawn'
-require "vmdb/plugins"
-
 namespace :evm do
   namespace :ansible_runner do
     desc "Seed galaxy roles for provider playbooks"
     task :seed do
+      require 'awesome_spawn'
+      require "vmdb/plugins"
+      require 'ansible/content'
+
       Vmdb::Plugins.ansible_runner_content.each do |plugin, content_dir|
         content = Ansible::Content.new(content_dir)
 
