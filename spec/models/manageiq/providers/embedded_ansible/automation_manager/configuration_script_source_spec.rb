@@ -1,9 +1,6 @@
 require 'rugged'
 
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource do
-  CLONE_DIR  = File.expand_path(File.join("..", "clone_dir"), described_class::REPO_DIR)
-  LOCAL_REPO = File.join(CLONE_DIR, "hello_world_local")
-
   let(:manager) do
     FactoryBot.create(:provider_embedded_ansible, :default_organization => 1).managers.first
   end
@@ -11,17 +8,19 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
   let(:params) do
     {
       :name    => "hello_world",
-      :scm_url => "file://#{LOCAL_REPO}"
+      :scm_url => "file://#{local_repo}"
     }
   end
 
-  let(:repo_dir) { described_class::REPO_DIR }
-  let(:repos)    { Dir.glob(File.join(repo_dir, "*")) }
+  let(:clone_dir)  { Dir.mktmpdir }
+  let(:local_repo) { File.join(clone_dir, "hello_world_local") }
+  let(:repo_dir)   { described_class::REPO_DIR }
+  let(:repos)      { Dir.glob(File.join(repo_dir, "*")) }
 
-  # Setup local repo used for this spec
-  before(:all) do
-    FileUtils.mkdir_p(LOCAL_REPO)
-    File.write(File.join(LOCAL_REPO, "hello_world.yaml"), <<~PLAYBOOK)
+  before do
+    # START: Setup local repo used for this spec
+    FileUtils.mkdir_p(local_repo)
+    File.write(File.join(local_repo, "hello_world.yaml"), <<~PLAYBOOK)
       - name: Hello World Sample
         hosts: all
         tasks:
@@ -31,10 +30,10 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
 
     PLAYBOOK
 
-    # Init new repo at LOCAL_REPO
+    # Init new repo at local_repo
     #
     #   $ cd /tmp/clone_dir/hello_world_local && git init .
-    repo  = Rugged::Repository.init_at LOCAL_REPO
+    repo  = Rugged::Repository.init_at(local_repo)
     index = repo.index
 
     # Add new files to index
@@ -57,21 +56,16 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
     # Create a new branch (don't checkout)
     #
     #   $ git branch other_branch
-    repo.create_branch "other_branch"
-  end
+    repo.create_branch("other_branch")
+    # END: Setup local repo used for this spec
 
-  # Clean up the local repo we used for this spec
-  after(:all) do
-    FileUtils.rm_rf(CLONE_DIR)
-  end
-
-  before do
     EvmSpecHelper.assign_embedded_ansible_role
   end
 
   # Clean up repo dir after each spec
   after do
     FileUtils.rm_rf(repos)
+    FileUtils.rm_rf(clone_dir)
   end
 
   describe ".create_in_provider" do
