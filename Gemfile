@@ -237,7 +237,6 @@ unless ENV["APPLIANCE"]
     gem "rubocop-performance", "~>1.3",    :require => false
     # ruby_parser is required for i18n string extraction
     gem "ruby_parser",                     :require => false
-    gem "scss_lint",           "~>0.48.0", :require => false
     gem "yard"
   end
 
