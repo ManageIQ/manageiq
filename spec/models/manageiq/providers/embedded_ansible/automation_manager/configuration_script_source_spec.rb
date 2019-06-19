@@ -14,7 +14,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
 
   let(:clone_dir)  { Dir.mktmpdir }
   let(:local_repo) { File.join(clone_dir, "hello_world_local") }
-  let(:repo_dir)   { described_class::REPO_DIR }
+  let(:repo_dir)   { Pathname.new(Dir.mktmpdir) }
   let(:repos)      { Dir.glob(File.join(repo_dir, "*")) }
 
   before do
@@ -58,6 +58,9 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
     #   $ git branch other_branch
     repo.create_branch("other_branch")
     # END: Setup local repo used for this spec
+
+    # Stub REPO_DIR for travis
+    stub_const("#{described_class}::REPO_DIR", repo_dir)
 
     EvmSpecHelper.assign_embedded_ansible_role
   end
