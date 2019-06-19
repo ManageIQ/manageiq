@@ -354,10 +354,7 @@ describe CustomButton do
             end
 
             expect(CustomButtonEvent.count).to eq(3)
-            expect(CustomButtonEvent.first).to have_attributes(
-              :source      => 'UI',
-              :target_id   => vm.id,
-              :target_type => 'VmOrTemplate',
+            expect(CustomButtonEvent.find_by(:target_id => vm.id, :target_type => "VmOrTemplate", :source => 'UI')).to have_attributes(
               :type        => 'CustomButtonEvent',
               :event_type  => 'button.trigger.start',
               :user_id     => user.id,
@@ -373,10 +370,7 @@ describe CustomButton do
             end
 
             expect(CustomButtonEvent.count).to eq(3)
-            expect(CustomButtonEvent.first).to have_attributes(
-              :source      => 'UI',
-              :target_id   => vm.id,
-              :target_type => 'VmOrTemplate',
+            expect(CustomButtonEvent.find_by(:target_id => vm.id, :target_type => "VmOrTemplate", :source => 'UI')).to have_attributes(
               :type        => 'CustomButtonEvent',
               :event_type  => 'button.trigger.start',
               :user_id     => user.id,
