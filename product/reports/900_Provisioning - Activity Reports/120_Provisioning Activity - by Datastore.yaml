@@ -50,7 +50,8 @@ categories:
 time_profile_id:
 rpt_type: Custom
 filename:
-db_options: {}
+db_options:
+  :use_sql_view: false
 
 col_formats:
 -
