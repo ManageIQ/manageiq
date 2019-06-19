@@ -154,11 +154,14 @@ class Chargeback < ActsAsArModel
         data[measure][dimension] = [value, r.showback_unit(ChargeableField::UNITS[r.chargeable_field.metric])]
       end
 
+      # TODO: duration_of_report_step is 30.days for price plans but for consumption history,
+      # it's used for date ranges and needs to be 1.month with rails 5.1
+      duration = @options.interval == "monthly" ? 30.days : @options.duration_of_report_step
       results = plan.calculate_list_of_costs_input(resource_type:  showback_category,
                                                    data:           data,
                                                    start_time:     consumption.instance_variable_get("@start_time"),
                                                    end_time:       consumption.instance_variable_get("@end_time"),
-                                                   cycle_duration: @options.duration_of_report_step)
+                                                   cycle_duration: duration)
 
       results.each do |cost_value, sb_rate|
         r = ChargebackRateDetail.find(sb_rate.concept)

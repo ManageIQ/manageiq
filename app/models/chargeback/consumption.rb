@@ -18,7 +18,7 @@ class Chargeback
     def hours_in_month
       # If the interval is monthly, we have use exact number of days in interval (i.e. 28, 29, 30, or 31)
       # othewise (for weekly and daily intervals) we assume month equals to 30 days
-      monthly? ? hours_in_interval : (1.month / 1.hour)
+      monthly? ? hours_in_interval : (30.days / 1.hour)
     end
 
     def consumption_start
@@ -53,7 +53,7 @@ class Chargeback
 
     def monthly?
       # A heuristic. Is the interval lenght about 30 days?
-      (hours_in_interval * 1.hour - 1.month).abs < 3.days
+      (hours_in_interval * 1.hour - 30.days).abs < 3.days
     end
 
     def born_at
