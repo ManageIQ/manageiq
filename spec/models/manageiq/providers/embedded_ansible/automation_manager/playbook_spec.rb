@@ -1,7 +1,7 @@
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
   let(:manager) { FactoryBot.create(:embedded_automation_manager_ansible) }
-  let(:auth_one) { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '6') }
-  let(:auth_two) { FactoryBot.create(:embedded_ansible_credential, :manager_ref => '8') }
+  let(:auth_one) { FactoryBot.create(:embedded_ansible_credential) }
+  let(:auth_two) { FactoryBot.create(:embedded_ansible_credential) }
   subject { FactoryBot.create(:embedded_playbook, :manager => manager) }
 
   describe '#run' do
@@ -21,8 +21,8 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook do
         :extra_vars       => '{"a":"x"}',
         :playbook         => subject.name,
         :project          => 'mref',
-        :credential       => 6,
-        :vault_credential => 8
+        :credential       => auth_one.id,
+        :vault_credential => auth_two.id
       )
 
       allow(subject).to receive(:configuration_script_source).and_return(double(:manager_ref => 'mref'))
