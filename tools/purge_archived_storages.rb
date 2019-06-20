@@ -7,9 +7,12 @@ opts = Optimist.options do
 end
 
 if opts[:dry_run]
-  puts "\n"
-  puts "* This is a dry run and will not modify the database"
-  puts "* To actually delete archived datastores pass --no-dry-run\n\n"
+  puts "**** This is a dry run and will not modify the database"
+  puts "     To actually purge the storages pass --no-dry-run"
+else
+  puts "**** This will modify your database ****"
+  puts "     Press Enter to Continue: "
+  STDIN.getc
 end
 
 active_storage_ids = HostStorage.pluck(:storage_id).uniq
