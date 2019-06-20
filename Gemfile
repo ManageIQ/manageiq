@@ -233,7 +233,6 @@ end
 unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
-    gem "rubocop",             "~>0.69.0", :require => false
     gem "rubocop-performance", "~>1.3",    :require => false
     # ruby_parser is required for i18n string extraction
     gem "ruby_parser",                     :require => false
