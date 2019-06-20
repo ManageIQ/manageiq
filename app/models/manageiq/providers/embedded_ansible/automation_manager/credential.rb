@@ -6,6 +6,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
   alias_attribute :manager_id, :resource_id
   alias_attribute :manager, :resource
 
+  after_create :set_manager_ref
+
   COMMON_ATTRIBUTES = {}.freeze
   EXTRA_ATTRIBUTES = {}.freeze
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
@@ -22,5 +24,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
 
   def native_ref
     Integer(manager_ref)
+  end
+
+  def set_manager_ref
+    self.manager_ref = self.id
+    save!
   end
 end
