@@ -395,9 +395,6 @@ class MiqRequest < ApplicationRecord
     update_attributes(:request_state => req_state, :status => req_status, :message => display_message(msg))
   end
 
-  def post_create_request_tasks
-  end
-
   def my_zone
     MiqServer.my_zone
   end
@@ -461,7 +458,6 @@ class MiqRequest < ApplicationRecord
         request_task_created += 1
       end
       update_request_status
-      post_create_request_tasks
     rescue
       _log.log_backtrace($ERROR_INFO)
       request_state, status = request_task_created.zero? ? %w(finished Error) : %w(active Warn)
