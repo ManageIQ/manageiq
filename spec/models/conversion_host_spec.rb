@@ -452,8 +452,9 @@ RSpec.describe ConversionHost, :v2v do
     end
 
     it "does make an ssh call if the authentication was both valid and invalid within the last 10 minutes" do
-      authentication = FactoryBot.create(:authentication_ssh_keypair, :last_valid_on => Time.now.utc - 5.minutes)
-      authentication = FactoryBot.create(:authentication_ssh_keypair, :last_invalid_on => Time.now.utc - 7.minutes)
+      authentication = FactoryBot.create(:authentication_ssh_keypair,
+                                         :last_valid_on => Time.now.utc - 5.minutes,
+                                         :last_invalid_on => Time.now.utc - 7.minutes)
       conversion_host_vm.authentications << authentication
       expect(Net::SSH).to receive(:start)
       conversion_host_vm.verify_credentials
