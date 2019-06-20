@@ -79,6 +79,7 @@ class MiqWidgetSet < ApplicationRecord
                          :description => destination_description,
                          :owner_type  => "MiqGroup",
                          :set_type    => source_widget_set.set_type,
+                         :set_data    => source_widget_set.set_data,
                          :owner_id    => assign_to_group.id)
   end
 

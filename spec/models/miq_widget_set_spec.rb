@@ -157,5 +157,12 @@ describe MiqWidgetSet do
       dashboard = MiqWidgetSet.copy_dashboard(@ws_group, name, tab)
       expect(MiqWidgetSet.find_by(:owner_id => group.id, :name => name)).to eq dashboard
     end
+
+    it "keeps the same set of widgets and dashboard's settings" do
+      set_data = {:col1 => [1], :col2 => [2], :col3 => [], :locked => false, :reset_upon_login => false, :last_group_db_updated => Time.now.utc}
+      @ws_group.update(:set_data => set_data)
+      new_dashboard = MiqWidgetSet.copy_dashboard(@ws_group, name, tab)
+      expect(new_dashboard.set_data).to eq set_data
+    end
   end
 end
