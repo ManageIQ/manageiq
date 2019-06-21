@@ -1,4 +1,4 @@
-raise "Ruby versions < 2.3.1 are unsupported!" if RUBY_VERSION < "2.3.1"
+raise "Ruby versions < 2.4.0 are unsupported!" if RUBY_VERSION < "2.4.0"
 raise "Ruby versions >= 2.6 are unsupported!" if RUBY_VERSION >= "2.6.0"
 
 source 'https://rubygems.org'
@@ -31,7 +31,7 @@ gem "activerecord-session_store",     "~>1.1"
 gem "acts_as_tree",                   "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>3.0.7",       :require => false
 gem "bcrypt",                         "~> 3.1.10",     :require => false
-gem "bundler",                        ">=1.15",        :require => false
+gem "bundler",                        ">=1.16",        :require => false
 gem "byebug",                                          :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.6.0",       :require => false
