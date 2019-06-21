@@ -93,8 +93,6 @@ module Vmdb
 
     config.autoload_paths += config.eager_load_paths
 
-    config.active_support.halt_callback_chains_on_return_false = false
-
     # NOTE:  If you are going to make changes to autoload_paths, please make
     # sure they are all strings.  Rails will push these paths into the
     # $LOAD_PATH.
