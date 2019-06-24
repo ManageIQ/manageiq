@@ -49,7 +49,7 @@ module ServiceMixin
   end
 
   def combined_group_delay(action)
-    service_resources.map(&:group_idx).uniq.collect { |idx| max_group_delay(idx, delay_type(action)) }.sum
+    service_resources.collect(&:group_idx).uniq.collect { |idx| max_group_delay(idx, delay_type(action)) }.sum
   end
 
   def delay_type(action)
