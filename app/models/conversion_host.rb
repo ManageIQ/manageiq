@@ -68,11 +68,8 @@ class ConversionHost < ApplicationRecord
         raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
       end
 
-      # Don't connect again if the authentication was valid (and also not invalid)
-      # within the last 10 minutes. This helps reduce unnecessary ssh connections.
-      if auth.last_valid_on && auth.last_valid_on > 10.minutes.ago
-        return true unless auth.last_invalid_on && auth.last_invalid_on > 10.minutes.ago
-      end
+      # Don't connect again if the authentication is still valid
+      return true if authentication_status_ok?(auth_type)
 
       # Options from STI subclasses will override the defaults we've set above.
       ssh_options.merge!(options)

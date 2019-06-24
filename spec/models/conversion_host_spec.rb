@@ -437,24 +437,22 @@ RSpec.describe ConversionHost, :v2v do
       expect(conversion_host_vm.verify_credentials).to be_truthy
     end
 
-    it "makes an ssh call if the authentication was not valid within the last 10 minutes" do
-      authentication = FactoryBot.create(:authentication_ssh_keypair, :last_valid_on => Time.now.utc - 20.minutes)
+    it "makes an ssh call if the authentication is not valid" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair, :status => 'Error', :authtype => 'v2v')
       conversion_host_vm.authentications << authentication
       expect(Net::SSH).to receive(:start)
       conversion_host_vm.verify_credentials
     end
 
-    it "does not make an ssh call if the authentication was valid within the last 10 minutes" do
-      authentication = FactoryBot.create(:authentication_ssh_keypair, :last_valid_on => Time.now.utc - 5.minutes)
+    it "does not make an ssh call if the authentication is valid" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair, :status => 'Valid', :authtype => 'v2v')
       conversion_host_vm.authentications << authentication
       expect(Net::SSH).not_to receive(:start)
       conversion_host_vm.verify_credentials
     end
 
-    it "does make an ssh call if the authentication was both valid and invalid within the last 10 minutes" do
-      authentication = FactoryBot.create(:authentication_ssh_keypair,
-                                         :last_valid_on => Time.now.utc - 5.minutes,
-                                         :last_invalid_on => Time.now.utc - 7.minutes)
+    it "makes an ssh call if the authentication status is not set" do
+      authentication = FactoryBot.create(:authentication_ssh_keypair, :status => nil, :authtype => 'v2v')
       conversion_host_vm.authentications << authentication
       expect(Net::SSH).to receive(:start)
       conversion_host_vm.verify_credentials
