@@ -143,6 +143,20 @@ describe ServiceRetireTask do
         expect(VmRetireTask.count).to eq(1)
         expect(ServiceRetireTask.count).to eq(1)
       end
+
+      context "multiple service retirement" do
+        it "creates multiple retire subtasks" do
+          s1 = FactoryBot.create(:service)
+          s2 = FactoryBot.create(:service)
+          s1.add_resource!(FactoryBot.create(:vm_openstack))
+          s2.add_resource!(FactoryBot.create(:vm_openstack))
+
+          service_retire_task1 = FactoryBot.create(:service_retire_task, :source => s1, :miq_request => miq_request, :options => {:src_ids => [s1.id, s2.id] })
+          service_retire_task1.after_request_task_create
+
+          expect(VmRetireTask.count).to eq(2)
+        end
+      end
     end
 
     context "bundled service retires all children" do
