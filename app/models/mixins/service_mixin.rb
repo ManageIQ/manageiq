@@ -41,9 +41,7 @@ module ServiceMixin
   end
 
   def max_group_delay(grp_idx, delay_type)
-    result = 0
-    each_group_resource(grp_idx) { |r| result = [result, r[delay_type] || self.class::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS].max }
-    result
+    each_group_resource(grp_idx).collect { |r| r[delay_type] || self.class::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS }.max.to_i
   end
 
   def delay_for_action(grp_idx, action)
@@ -60,6 +58,8 @@ module ServiceMixin
   end
 
   def each_group_resource(grp_idx = nil)
+    return enum_for(:each_group_resource) unless block_given?
+
     if children.present? && service_resources.empty?
       children.each do |child|
         child.service_resources.each { |sr| yield(sr) }
