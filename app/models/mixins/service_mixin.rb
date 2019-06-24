@@ -20,9 +20,8 @@ module ServiceMixin
     enforce_single_service_parent(rsc)
 
     sr = service_resources.detect { |r| r.resource_type == rsc.class.base_class.name && r.resource_id == rsc.id }
-    return sr unless sr.nil?
 
-    create_service_resource(rsc, options) if sr.nil?
+    sr || create_service_resource(rsc, options)
   end
 
   def <<(*args)
