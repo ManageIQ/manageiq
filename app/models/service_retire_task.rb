@@ -27,10 +27,11 @@ class ServiceRetireTask < MiqRetireTask
 
   def after_request_task_create
     update_attributes(:description => get_description)
-    parent_svc = Service.find_by(:id => options[:src_ids])
-    if create_subtasks?(parent_svc)
-      _log.info("- creating service subtasks for service task <#{self.class.name}:#{id}>, service <#{parent_svc.id}>")
-      create_retire_subtasks(parent_svc, self)
+    Service.where(:id => options[:src_ids]).each do |parent_svc|
+      if create_subtasks?(parent_svc)
+        _log.info("- creating service subtasks for service task <#{self.class.name}:#{id}>, service <#{parent_svc.id}>")
+        create_retire_subtasks(parent_svc, self)
+      end
     end
   end
 
