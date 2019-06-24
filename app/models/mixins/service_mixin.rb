@@ -84,9 +84,7 @@ module ServiceMixin
   end
 
   def last_group_index
-    last_idx = 0
-    service_resources.each { |sr| last_idx = [last_idx, sr.group_idx].max }
-    last_idx
+    service_resources.collect(&:group_idx).max.to_i
   end
 
   def next_group_index(current_idx, direction = 1)
