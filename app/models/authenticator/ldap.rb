@@ -120,7 +120,7 @@ module Authenticator
       user.first_name = ldap.get_attr(lobj, :givenname)
       user.last_name  = ldap.get_attr(lobj, :sn)
       emails_attr     = ldap.get_attr(lobj, :mail)
-      email           = emails.kind_of?(Array) ? emails.first : emails
+      email           = emails_attr.kind_of?(Array) ? emails_attr.first : emails_attr
       user.email      = email unless email.blank?
       user.name       = ldap.get_attr(lobj, :displayname)
       user.name       = "#{user.first_name} #{user.last_name}" if user.name.blank?
