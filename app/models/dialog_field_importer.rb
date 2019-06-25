@@ -28,7 +28,7 @@ class DialogFieldImporter
       if dialog_field_attributes["type"] == "DialogFieldTagControl"
         set_category_for_tag_control(dialog_field, dialog_field_attributes)
       end
-      dialog_field.save
+      dialog_field.save!
 
       dialog_field
     elsif dialog_field_attributes["type"].nil?

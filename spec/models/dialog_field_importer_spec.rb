@@ -275,6 +275,30 @@ describe DialogFieldImporter do
       end
     end
 
+    context "#visible?" do
+      let(:dialog_field) do
+        {
+          "type"    => "DialogFieldTextBox",
+          "name"    => "Something else"
+        }
+      end
+
+      it "without visible setting defaults to true" do
+        dialog_field_importer.import_field(dialog_field)
+        expect(DialogField.first.visible?).to eq(true)
+      end
+
+      it "false" do
+        dialog_field_importer.import_field(dialog_field.merge("visible" => false))
+        expect(DialogField.first.visible?).to eq(false)
+      end
+
+      it "true" do
+        dialog_field_importer.import_field(dialog_field.merge("visible" => true))
+        expect(DialogField.first.visible?).to eq(true)
+      end
+    end
+
     context "when the type of the dialog field is not included in DIALOG_FIELD_TYPES and not nil" do
       let(:type) { "potato" }
 
