@@ -1,6 +1,6 @@
 describe GitRepository do
   it "no url" do
-    expect { FactoryBot.create(:git_repository) }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { FactoryBot.create(:git_repository, :url => nil) }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "invalid url" do
@@ -12,14 +12,12 @@ describe GitRepository do
   end
 
   it "default dirname" do
-    repo = FactoryBot.create(:git_repository,
-                              :url => "http://www.example.com/repos/manageiq")
+    repo = FactoryBot.create(:git_repository, :url => "http://www.example.com/repos/manageiq")
     expect(repo.directory_name).to eq(File.join(described_class::GIT_REPO_DIRECTORY, 'repos/manageiq'))
   end
 
   context "repo" do
     let(:gwt) { instance_double('GitWorktree') }
-    let(:git_url) { 'http://www.example.com/repo/manageiq' }
     let(:verify_ssl) { OpenSSL::SSL::VERIFY_PEER }
     let(:branch_list) { %w(b1 b2) }
     let(:tag_list) { %w(t1 t2) }
@@ -34,14 +32,14 @@ describe GitRepository do
        't2' => {:time => Time.now.utc + 5, :message => "T2", :commit_sha => "123456"}
       }
     end
-    let(:repo) { FactoryBot.create(:git_repository, :url => git_url, :verify_ssl => verify_ssl) }
+    let(:repo) { FactoryBot.create(:git_repository, :verify_ssl => verify_ssl) }
     let(:userid) { 'user' }
     let(:password) { 'password' }
 
     context "parameter check" do
       let(:args) do
         {
-          :url      => git_url,
+          :url      => repo.url,
           :username => userid,
           :password => password,
           :path     => repo.directory_name,

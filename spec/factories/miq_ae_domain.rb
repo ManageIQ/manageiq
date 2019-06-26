@@ -23,7 +23,7 @@ FactoryBot.define do
 
   factory :miq_ae_git_domain, :parent => :miq_ae_domain do
     source { MiqAeDomain::REMOTE_SOURCE }
-    git_repository { FactoryBot.create(:git_repository, :url => 'https://www.example.com/abc') }
+    git_repository { FactoryBot.create(:git_repository) }
   end
 
   factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
