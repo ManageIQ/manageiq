@@ -20,9 +20,8 @@ module ServiceMixin
     enforce_single_service_parent(rsc)
 
     sr = service_resources.detect { |r| r.resource_type == rsc.class.base_class.name && r.resource_id == rsc.id }
-    return sr unless sr.nil?
 
-    create_service_resource(rsc, options) if sr.nil?
+    sr || create_service_resource(rsc, options)
   end
 
   def <<(*args)
@@ -42,9 +41,7 @@ module ServiceMixin
   end
 
   def max_group_delay(grp_idx, delay_type)
-    result = 0
-    each_group_resource(grp_idx) { |r| result = [result, r[delay_type] || self.class::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS].max }
-    result
+    each_group_resource(grp_idx).collect { |r| r[delay_type] || self.class::DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS }.max.to_i
   end
 
   def delay_for_action(grp_idx, action)
@@ -52,10 +49,7 @@ module ServiceMixin
   end
 
   def combined_group_delay(action)
-    group_idxs = service_resources.map(&:group_idx).uniq
-    [].tap do |results|
-      group_idxs.each { |idx| results << max_group_delay(idx, delay_type(action)) }
-    end.sum
+    service_resources.collect(&:group_idx).uniq.collect { |idx| max_group_delay(idx, delay_type(action)) }.sum
   end
 
   def delay_type(action)
@@ -64,6 +58,8 @@ module ServiceMixin
   end
 
   def each_group_resource(grp_idx = nil)
+    return enum_for(:each_group_resource) unless block_given?
+
     if children.present? && service_resources.empty?
       children.each do |child|
         child.service_resources.each { |sr| yield(sr) }
@@ -85,9 +81,7 @@ module ServiceMixin
   end
 
   def last_group_index
-    last_idx = 0
-    service_resources.each { |sr| last_idx = [last_idx, sr.group_idx].max }
-    last_idx
+    service_resources.collect(&:group_idx).max.to_i
   end
 
   def next_group_index(current_idx, direction = 1)
