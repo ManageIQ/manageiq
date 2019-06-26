@@ -14,12 +14,22 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
 
   FRIENDLY_NAME = "Ansible Automation Inside Credential".freeze
 
-  def self.provider_params(params)
-    super.merge(:organization => ManageIQ::Providers::EmbeddedAnsible::AutomationManager.first.provider.default_organization)
+  include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
+
+  def self.params_to_attributes(_params)
+    raise NotImplementedError, "must be implemented in a subclass"
   end
 
-  def self.notify_on_provider_interaction?
-    true
+  def self.raw_create_in_provider(_manager, params)
+    create!(params_to_attributes(params))
+  end
+
+  def raw_update_in_provider(params)
+    update!(self.class.params_to_attributes(params.except(:task_id, :miq_task_id)))
+  end
+
+  def raw_delete_in_provider
+    destroy!
   end
 
   def native_ref

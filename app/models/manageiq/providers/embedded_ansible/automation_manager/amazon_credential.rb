@@ -30,7 +30,15 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AmazonCredential 
     :attributes => API_ATTRIBUTES
   }.freeze
 
+  alias security_token auth_key
+
   def self.display_name(number = 1)
     n_('Credential (Amazon)', 'Credentials (Amazon)', number)
+  end
+
+  def self.params_to_attributes(params)
+    attrs = params.dup
+    attrs[:auth_key] = attrs.delete(:security_token)
+    attrs
   end
 end

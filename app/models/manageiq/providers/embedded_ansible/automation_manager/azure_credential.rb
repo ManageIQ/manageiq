@@ -47,7 +47,36 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::AzureCredential <
     :attributes => API_ATTRIBUTES
   }.freeze
 
+  alias secret auth_key
+
   def self.display_name(number = 1)
     n_('Credential (Microsoft Azure)', 'Credentials (Microsoft Azure)', number)
+  end
+
+  def self.params_to_attributes(params)
+    attrs            = params.dup
+    attrs[:auth_key] = attrs.delete(:secret)
+
+    if %i[client tenant subscription].any? {|opt| attrs.has_key? opt }
+      attrs[:options] = {
+        :client       => attrs.delete(:client),
+        :tenant       => attrs.delete(:tenant),
+        :subscription => attrs.delete(:subscription)
+      }
+    end
+
+    attrs
+  end
+
+  def client
+    options && options[:client]
+  end
+
+  def tenant
+    options && options[:tenant]
+  end
+
+  def subscription
+    options && options[:subscription]
   end
 end

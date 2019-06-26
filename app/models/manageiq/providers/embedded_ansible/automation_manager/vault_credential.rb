@@ -21,4 +21,12 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::VaultCredential <
   def self.display_name(number = 1)
     n_('Credential (Vault)', 'Credentials (Vault)', number)
   end
+
+  alias vault_password password
+
+  def self.params_to_attributes(params)
+    attrs = params.dup
+    attrs[:password] = attrs.delete(:vault_password)
+    attrs
+  end
 end

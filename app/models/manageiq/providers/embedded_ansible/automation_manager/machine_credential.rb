@@ -57,7 +57,27 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential
     :attributes => API_ATTRIBUTES
   }.freeze
 
+  alias ssh_key_data   auth_key
+  alias ssh_key_unlock auth_key_password
+
   def self.display_name(number = 1)
     n_('Credential (Machine)', 'Credentials (Machine)', number)
+  end
+
+  def self.params_to_attributes(params)
+    attrs = params.dup
+
+    attrs[:auth_key]                = attrs.delete(:ssh_key_data)
+    attrs[:auth_key_password]       = attrs.delete(:ssh_key_unlock)
+
+    if attrs[:become_method]
+      attrs[:options] = { :become_method => attrs.delete(:become_method) }
+    end
+
+    attrs
+  end
+
+  def become_method
+    options && options[:become_method]
   end
 end
