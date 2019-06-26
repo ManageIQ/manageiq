@@ -514,7 +514,7 @@ describe MiqRequest do
 
     it "returns superadmin if user was deleted" do
       request = FactoryBot.create(:miq_provision_request, :requester => user)
-      user.destroy
+      user.delete
       expect(request.get_user).to eq(User.super_admin)
     end
   end

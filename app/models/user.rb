@@ -7,6 +7,8 @@ class User < ApplicationRecord
   include TimezoneMixin
   include CustomActionsMixin
 
+  before_destroy :check_reference, :prepend => true
+
   has_many   :miq_approvals, :as => :approver
   has_many   :miq_approval_stamps,  :class_name => "MiqApproval", :foreign_key => :stamper_id
   has_many   :miq_requests, :foreign_key => :requester_id
@@ -109,6 +111,18 @@ class User < ApplicationRecord
   before_validation :nil_email_field_if_blank
   before_validation :dummy_password_for_external_auth
   before_destroy :destroy_subscribed_widget_sets
+
+  def check_reference
+    present_ref = []
+    %w[miq_requests vms miq_widgets miq_templates].each do |association|
+      present_ref << association.classify unless public_send(association).first.nil?
+    end
+
+    unless present_ref.empty?
+      errors.add(:base, "user '#{userid}' with id [#{id}] has references to other models: #{present_ref.join(" ")}")
+      throw :abort
+    end
+  end
 
   def current_group_by_description=(group_description)
     if group_description
