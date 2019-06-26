@@ -35,7 +35,6 @@ module Rbac
       Host
       HostAggregate
       Lan
-      LoadBalancer
       MiddlewareDatasource
       MiddlewareDeployment
       MiddlewareDomain
