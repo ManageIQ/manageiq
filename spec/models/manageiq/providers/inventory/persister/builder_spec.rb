@@ -3,10 +3,7 @@ require_relative 'test_persister'
 
 describe ManageIQ::Providers::Inventory::Persister::Builder do
   before :each do
-    @zone = FactoryBot.create(:zone)
-    @ems  = FactoryBot.create(:ems_cloud,
-                               :zone            => @zone,
-                               :network_manager => FactoryBot.create(:ems_network, :zone => @zone))
+    @ems = FactoryBot.create(:ems_cloud)
     @persister = create_persister
   end
 

@@ -94,6 +94,23 @@ describe ExtManagementSystem do
     expect(described_class.with_eligible_manager_types(r.class).count).to eq(1)
   end
 
+  it "validates type" do
+    v = FactoryBot.create(:ems_vmware)
+    e = FactoryBot.create(:ext_management_system)
+    s = FactoryBot.create(:ems_storage)
+
+    expect([v.valid?, v.emstype]).to eq([true, 'vmwarews'])
+    expect([e.valid?, e.emstype]).to eq([true, 'vmwarews'])
+    expect([s.valid?, s.emstype]).to eq([true, 'swift'])
+    expect { ManageIQ::Providers::BaseManager.new(:hostname => "abc", :name => "abc").validate! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { ManageIQ::Providers::InfraManager.new(:hostname => "abc", :name => "abc").validate! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { ManageIQ::Providers::CloudManager.new(:hostname => "abc", :name => "abc").validate! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { ManageIQ::Providers::AutomationManager.new(:hostname => "abc", :name => "abc").validate! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect(ManageIQ::Providers::Vmware::InfraManager.new(:hostname => "abc", :name => "abc").validate!).to eq(true)
+    expect(ManageIQ::Providers::Foreman::ConfigurationManager.new(:hostname => "abc", :name => "abc").validate!).to eq(true)
+    expect(ManageIQ::Providers::Foreman::ProvisioningManager.new(:hostname => "abc", :name => "abc").validate!).to eq(true)
+  end
+
   context "#ipaddress / #ipaddress=" do
     it "will delegate to the default endpoint" do
       ems = FactoryBot.build(:ems_vmware, :ipaddress => "1.2.3.4")

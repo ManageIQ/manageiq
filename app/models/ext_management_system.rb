@@ -101,8 +101,8 @@ class ExtManagementSystem < ApplicationRecord
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
   validate :hostname_uniqueness_valid?, :hostname_format_valid?, :if => :hostname_required?
-
   validate :validate_ems_enabled_when_zone_changed?, :validate_zone_not_maintenance_when_ems_enabled?
+  validate :validate_ems_type, :on => :create
 
   scope :with_eligible_manager_types, ->(eligible_types) { where(:type => Array(eligible_types).collect(&:to_s)) }
   scope :assignable, -> { where.not(:type => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager") }
@@ -828,6 +828,10 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   private
+
+  def validate_ems_type
+    errors.add(:base, "emstype #{self.class.name} is not supported for create") unless ExtManagementSystem.supported_types_and_descriptions_hash.key?(emstype)
+  end
 
   def disable!
     _log.info("Disabling EMS [#{name}] id [#{id}].")

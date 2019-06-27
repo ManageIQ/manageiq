@@ -14,10 +14,7 @@ RSpec.describe ManageIQ::Providers::Inventory::Persister do
   ######################################################################################################################
   #
   before do
-    @zone = FactoryBot.create(:zone)
-    @ems  = FactoryBot.create(:ems_cloud,
-                               :zone            => @zone,
-                               :network_manager => FactoryBot.create(:ems_network, :zone => @zone))
+    @ems = FactoryBot.create(:ems_cloud)
   end
 
   before do

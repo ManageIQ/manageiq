@@ -7,7 +7,7 @@ module TargetedRefreshSpecHelper
   end
 
   def expected_ext_management_systems_count
-    2
+    3
   end
 
   def base_inventory_counts
