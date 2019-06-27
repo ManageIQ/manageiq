@@ -110,9 +110,27 @@ describe EmsRefresh::SaveInventoryInfra do
   end
 
   context ".save_hosts_inventory" do
-    before do
-      @zone   = FactoryBot.create(:zone)
-      @ems    = FactoryBot.create(:ems_vmware, :zone => @zone)
+    let(:ems) { FactoryBot.create(:ems_infra) }
+
+    context "with an archived host" do
+      # NOTE: I had to provide a non-127.0.0.1 ip address which is what is default
+      # from the factory because find_host skips these
+      let(:host) { FactoryBot.create(:host_with_ref, :ipaddress => "10.10.10.10") }
+
+      it "should reconnect a disconnected host" do
+        data = {
+          :name      => host.name,
+          :hostname  => host.hostname,
+          :ipaddress => host.ipaddress,
+          :ems_ref   => "new_ems_ref"
+        }
+
+        EmsRefresh.save_hosts_inventory(ems, [data])
+
+        host.reload
+        expect(host.ext_management_system).to eq(ems)
+        expect(host.ems_ref).to eq("new_ems_ref")
+      end
     end
 
     it "should handle >10 hosts with duplicate hostnames" do
@@ -124,10 +142,9 @@ describe EmsRefresh::SaveInventoryInfra do
         }
       end
 
-      EmsRefresh.save_hosts_inventory(@ems, data)
+      EmsRefresh.save_hosts_inventory(ems, data)
 
-      hosts = Host.all
-      expect(hosts.length).to eq(data.length)
+      expect(ems.hosts.length).to eq(data.length)
     end
   end
 end
