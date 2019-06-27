@@ -14,9 +14,6 @@ class TransformationMappingItem < ApplicationRecord
   VALID_SOURCE_CLUSTER_PROVIDERS = %w[vmwarews].freeze
   VALID_DESTINATION_CLUSTER_PROVIDERS = %w[rhevm openstack].freeze
 
-  VALID_SOURCE_DATASTORE_TYPES = %w[Storage].freeze
-  VALID_DESTINATION_DATASTORE_TYPES = %w[Storage CloudVolume].freeze
-
   def source_cluster
     unless VALID_SOURCE_CLUSTER_PROVIDERS.include?(source.ext_management_system.emstype)
       source_types = VALID_SOURCE_CLUSTER_PROVIDERS.join(', ')
