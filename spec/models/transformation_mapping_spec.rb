@@ -119,7 +119,7 @@ RSpec.describe TransformationMapping, :v2v do
       end
 
       it 'returns valid vms' do
-        this_vm = FactoryBot.create(:vm_vmware, :name => 'this_test_vm', :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system))
+        this_vm = FactoryBot.create(:vm_vmware, :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system))
         this_mapping = FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [TransformationMappingItem.new(:source => src, :destination => dst)])
         result = this_mapping.search_vms_and_validate(['name' => this_vm.name])
 
@@ -164,7 +164,7 @@ RSpec.describe TransformationMapping, :v2v do
     end
 
     context 'without VM list' do
-      let!(:this_vm) { FactoryBot.create(:vm_vmware, :name => 'this_test_vm', :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system)) }
+      let!(:this_vm) { FactoryBot.create(:vm_vmware, :ems_cluster => src, :ext_management_system => FactoryBot.create(:ext_management_system)) }
       it 'returns valid vms' do
         this_mapping = FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [TransformationMappingItem.new(:source => src, :destination => dst)])
 

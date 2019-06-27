@@ -195,7 +195,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       end
     end
 
-    describe ':#kill_virtv2v' do
+    describe '#kill_virtv2v' do
       before do
         task.options = {
           :virtv2v_wrapper    => { 'state_file' => '/tmp/v2v.state', 'pid' => '1234' },
@@ -559,7 +559,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         let(:dst_cloud_tenant) { FactoryBot.create(:cloud_tenant, :name => 'fake tenant', :ext_management_system => dst_ems) }
 
         let(:disk) { FactoryBot.create(:disk) }
-        let(:dst_cloud_volume_type) { FactoryBot.create(:cloud_volume_openstack, :attachments => [disk], :cloud_tenant => dst_cloud_tenant) }
+        let(:ds_cloud_volume) { FactoryBot.create(:cloud_volume_openstack, :attachments => [disk], :cloud_tenant => dst_cloud_tenant) }
         let(:dst_cloud_network_1) { FactoryBot.create(:cloud_network, :cloud_tenant => dst_cloud_tenant) }
         let(:dst_cloud_network_2) { FactoryBot.create(:cloud_network, :cloud_tenant => dst_cloud_tenant) }
         let(:dst_flavor) { FactoryBot.create(:flavor) }
@@ -569,7 +569,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         let(:tmi_ops_cluster) { FactoryBot.create(:transformation_mapping_item, :source => src_cluster, :destination => dst_cloud_tenant) }
         let(:mapping) { FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [tmi_ops_cluster]) }
-        let(:tmi_ops_storage) { FactoryBot.create(:transformation_mapping_item, :source => src_storage, :destination => dst_cloud_volume_type, :transformation_mapping_id => mapping.id) }
+        let(:tmi_ops_storage) { FactoryBot.create(:transformation_mapping_item, :source => src_storage, :destination => ds_cloud_volume, :transformation_mapping_id => mapping.id) }
         let(:tmi_ops_lan_1) { FactoryBot.create(:transformation_mapping_item, :source => src_lan_1, :destination => dst_cloud_network_1, :transformation_mapping_id => mapping.id) }
         let(:tmi_ops_lan_2) { FactoryBot.create(:transformation_mapping_item, :source => src_lan_2, :destination => dst_cloud_network_2, :transformation_mapping_id => mapping.id) }
 
@@ -627,7 +627,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               },
               :osp_server_id              => conversion_host_vm.ems_ref,
               :osp_destination_project_id => dst_cloud_tenant.ems_ref,
-              :osp_volume_type_id         => dst_cloud_volume_type.ems_ref,
+              :osp_volume_type_id         => ds_cloud_volume.ems_ref,
               :osp_flavor_id              => dst_flavor.ems_ref,
               :osp_security_groups_ids    => [dst_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
@@ -661,7 +661,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               },
               :osp_server_id              => conversion_host_vm.ems_ref,
               :osp_destination_project_id => dst_cloud_tenant.ems_ref,
-              :osp_volume_type_id         => dst_cloud_volume_type.ems_ref,
+              :osp_volume_type_id         => ds_cloud_volume.ems_ref,
               :osp_flavor_id              => dst_flavor.ems_ref,
               :osp_security_groups_ids    => [dst_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
