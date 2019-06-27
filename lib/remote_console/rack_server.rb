@@ -21,6 +21,7 @@
 # hash has been used to access the corresponding wrappers.
 
 require 'surro-gate'
+require 'websocket/driver'
 
 module RemoteConsole
   class RackServer
