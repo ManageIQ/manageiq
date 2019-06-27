@@ -4,18 +4,18 @@
 #
 # Example:
 #
-# env = FactoryBot.build(:environment_redhat, :num_host => 2, :num_vm => 4)
+# env = FactoryBot.build(:environment_infra_redhat, :num_host => 2, :num_vm => 4)
 #
 # env.ems.hosts
 # env.ems.vms
 #
 # The possible options are:
 #
-# * num_hosts # => default: 1
-# * num_vm    # => default: 1
+# * num_host # => default: 1
+# * num_vm   # => default: 1
 #
 FactoryBot.define do
-  factory :environment_redhat, class: OpenStruct do
+  factory :environment_infra_redhat, class: OpenStruct do
     zone { FactoryBot.build(:zone) }
     ems  { FactoryBot.build(:ems_redhat, :zone => zone, :api_version => '4.2.4') }
 
