@@ -78,7 +78,11 @@ FactoryBot.define do
   factory :ems_network,
           :aliases => ["manageiq/providers/network_manager"],
           :class   => "ManageIQ::Providers::Openstack::NetworkManager",
-          :parent  => :ext_management_system
+          :parent  => :ext_management_system do
+    parent_manager { FactoryBot.create(:ext_management_system) }
+  end
+
+
 
   factory :ems_storage,
           :aliases => ["manageiq/providers/storage_manager"],
