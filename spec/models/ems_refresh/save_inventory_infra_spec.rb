@@ -12,17 +12,20 @@ describe EmsRefresh::SaveInventoryInfra do
 
   context ".find_host" do
     let(:hosts_by_name) { ems.hosts.group_by { |h| h.name.downcase }.except(nil) }
+    let(:hosts_by_hostname) { ems.hosts.group_by { |h| h.hostname.downcase }.except(nil) }
+    let(:hosts_by_ipaddress) { ems.hosts.group_by { |h| h.ipaddress }.except(nil) }
+
     it "with hostname and ipaddress" do
       FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.1", :ext_management_system => ems)
       expected_host = FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.2", :ext_management_system => ems)
 
-      expect(refresher.find_host(expected_host.slice(:hostname, :ipaddress), ems.id, hosts_by_name)).to eq(expected_host)
+      expect(refresher.find_host(expected_host.slice(:hostname, :ipaddress), ems.id, hosts_by_name, hosts_by_hostname, hosts_by_ipaddress)).to eq(expected_host)
     end
 
     it "with name" do
       FactoryBot.create(:host, :ext_management_system => ems)
       expected_host = FactoryBot.create(:host, :ext_management_system => ems)
-      expect(refresher.find_host(expected_host.slice(:name), ems, hosts_by_name))
+      expect(refresher.find_host(expected_host.slice(:name), ems, hosts_by_name, {}, {}))
     end
   end
 
@@ -88,10 +91,6 @@ describe EmsRefresh::SaveInventoryInfra do
 
     it "with fqdn, ipaddress, and ems_ref finds right host without an ems_id (reconnect orphaned host)" do
       expect(refresher.look_up_host(host_no_ems_id.hostname, host_no_ems_id.ipaddress, :ems_ref => host_no_ems_id.ems_ref)).to eq(host_no_ems_id)
-    end
-
-    it "with fqdn, ipaddress, and different ems_ref returns nil" do
-      expect(refresher.look_up_host(host_duplicate_hostname.hostname, host_duplicate_hostname.ipaddress, :ems_ref => "dummy_ref")).to be_nil
     end
 
     it "with ems_ref and ems_id" do

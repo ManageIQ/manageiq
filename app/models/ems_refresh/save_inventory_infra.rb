@@ -144,8 +144,20 @@ module EmsRefresh::SaveInventoryInfra
     extra_keys = [:ems_cluster, :storages, :vms, :power_state, :ems_children]
     remove_keys = child_keys + extra_keys
 
-    hosts_by_ems_ref = ems.hosts.index_by(&:ems_ref).except(nil)
-    hosts_by_name    = ems.hosts.group_by { |h| h.name.downcase }.except(nil)
+    hostnames   = hashes.map { |h| h[:hostname]&.downcase }.compact.uniq
+    ipaddresses = hashes.map { |h| h[:ipaddress] }.compact.uniq
+    hosts = Host.where(
+      "(ems_id = ? OR ems_id IS NULL) AND (lower(hostname) IN (?) OR ipaddress IN (?))",
+      ems.id, hostnames, ipaddresses
+    )
+
+    # These two look hosts up within the current ems only
+    hosts_by_ems_ref   = ems.hosts.index_by(&:ems_ref).except(nil)
+    hosts_by_name      = ems.hosts.group_by { |h| h.name.downcase }.except(nil)
+
+    # Lookup by hostname and ipaddress look for hosts which are in the current ems or archived
+    hosts_by_hostname  = hosts.group_by { |h| h.hostname.downcase }.except(nil)
+    hosts_by_ipaddress = hosts.group_by { |h| h.ipaddress }.except(nil)
 
     invalids_found = false
     hashes.each do |h|
@@ -158,7 +170,7 @@ module EmsRefresh::SaveInventoryInfra
         raise MiqException::MiqIncompleteData if h[:invalid]
 
         found = hosts_by_ems_ref.delete(h[:ems_ref])
-        found ||= find_host(h, ems.id, hosts_by_name)
+        found ||= find_host(h, ems.id, hosts_by_name, hosts_by_hostname, hosts_by_ipaddress)
         if found.nil?
           _log.info("#{log_header} Creating Host [#{h[:name]}] hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
           found = ems.hosts.build(h)
@@ -377,14 +389,19 @@ module EmsRefresh::SaveInventoryInfra
     save_inventory_multi(storage.storage_files, hashes, :use_association, [:name])
   end
 
-  def find_host(h, ems_id, hosts_by_name)
+  def find_host(h, ems_id, hosts_by_name, hosts_by_hostname, hosts_by_ipaddress)
     if h[:hostname].nil? && h[:ipaddress].nil?
       hosts_by_name[h[:name].downcase].shift
     elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
-      # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
-      # allow a deleted EMS to be re-added an pick up old orphaned hosts
-      _log.debug("EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
-      look_up_host(h[:hostname], h[:ipaddress], :ems_id => ems_id)
+      hostname  = h[:hostname]&.downcase
+      ipaddress = h[:ipaddress]
+
+      found = hosts_by_hostname[hostname] & hosts_by_ipaddress[ipaddress] if hostname && ipaddress
+      found ||= hosts_by_hostname[hostname] if hostname
+      found ||= hosts_by_ipaddress[ipaddress] if ipaddress
+      found ||= Host.where("(lower(hostname) LIKE ?) AND (ems_id = ? OR ems_id IS NULL)",
+                           "#{hostname}.%", ems_id)
+      found&.first
     end
   end
 
@@ -394,9 +411,8 @@ module EmsRefresh::SaveInventoryInfra
     h ||= Host.find_by(:ipaddress => ipaddr)                                                 if ipaddr
     h ||= Host.find_by("lower(hostname) LIKE ?", "#{hostname.downcase}.%")                   if hostname
 
-    # If we're given an ems_ref or ems_id then ensure that the host
-    # we looked-up does not have a different ems_ref and is not
-    # owned by another provider, this would cause us to overwrite
+    # If we're given an ems_id then ensure that the host
+    # we looked-up is not owned by another provider, this would cause us to overwrite
     # a different host record
     if (opts[:ems_ref] && h.ems_ref != opts[:ems_ref]) || (opts[:ems_id] && h.ems_id && h.ems_id != opts[:ems_id])
       h = nil
