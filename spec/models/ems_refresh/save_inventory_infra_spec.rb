@@ -1,4 +1,5 @@
 describe EmsRefresh::SaveInventoryInfra do
+  let(:ems) { FactoryBot.create(:ems_infra) }
   let(:refresher) do
     Class.new do
       include EmsRefresh::SaveInventoryInfra
@@ -10,11 +11,18 @@ describe EmsRefresh::SaveInventoryInfra do
   end
 
   context ".find_host" do
+    let(:hosts_by_name) { ems.hosts.group_by { |h| h.name.downcase }.except(nil) }
     it "with hostname and ipaddress" do
-      FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.1")
-      expected_host = FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.2")
+      FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.1", :ext_management_system => ems)
+      expected_host = FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.2", :ext_management_system => ems)
 
-      expect(refresher.find_host(expected_host.slice(:hostname, :ipaddress), nil)).to eq(expected_host)
+      expect(refresher.find_host(expected_host.slice(:hostname, :ipaddress), ems.id, hosts_by_name)).to eq(expected_host)
+    end
+
+    it "with name" do
+      FactoryBot.create(:host, :ext_management_system => ems)
+      expected_host = FactoryBot.create(:host, :ext_management_system => ems)
+      expect(refresher.find_host(expected_host.slice(:name), ems, hosts_by_name))
     end
   end
 
@@ -96,8 +104,6 @@ describe EmsRefresh::SaveInventoryInfra do
   end
 
   context ".save_hosts_inventory" do
-    let(:ems) { FactoryBot.create(:ems_infra) }
-
     context "with an archived host" do
       # NOTE: I had to provide a non-127.0.0.1 ip address which is what is default
       # from the factory because find_host skips these

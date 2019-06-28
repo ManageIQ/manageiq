@@ -145,6 +145,7 @@ module EmsRefresh::SaveInventoryInfra
     remove_keys = child_keys + extra_keys
 
     hosts_by_ems_ref = ems.hosts.index_by(&:ems_ref).except(nil)
+    hosts_by_name    = ems.hosts.group_by { |h| h.name.downcase }.except(nil)
 
     invalids_found = false
     hashes.each do |h|
@@ -157,7 +158,7 @@ module EmsRefresh::SaveInventoryInfra
         raise MiqException::MiqIncompleteData if h[:invalid]
 
         found = hosts_by_ems_ref.delete(h[:ems_ref])
-        found ||= find_host(h, ems.id)
+        found ||= find_host(h, ems.id, hosts_by_name)
         if found.nil?
           _log.info("#{log_header} Creating Host [#{h[:name]}] hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
           found = ems.hosts.build(h)
@@ -376,10 +377,9 @@ module EmsRefresh::SaveInventoryInfra
     save_inventory_multi(storage.storage_files, hashes, :use_association, [:name])
   end
 
-  def find_host(h, ems_id)
+  def find_host(h, ems_id, hosts_by_name)
     if h[:hostname].nil? && h[:ipaddress].nil?
-      _log.debug("EMS ID: #{ems_id} Host database lookup - name [#{h[:name]}]")
-      Host.where(:ems_id => ems_id).detect { |e| e.name.downcase == h[:name].downcase }
+      hosts_by_name[h[:name].downcase].shift
     elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
       # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
       # allow a deleted EMS to be re-added an pick up old orphaned hosts
