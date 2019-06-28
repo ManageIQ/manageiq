@@ -258,12 +258,16 @@ FactoryBot.define do
   factory :ems_azure,
           :aliases => ["manageiq/providers/azure/cloud_manager"],
           :class   => "ManageIQ::Providers::Azure::CloudManager",
-          :parent  => :ems_cloud
+          :parent  => :ems_cloud do
+    provider_region { "eastus" }
+  end
 
   factory :ems_azure_network,
           :aliases => ["manageiq/providers/azure/network_manager"],
           :class   => "ManageIQ::Providers::Azure::NetworkManager",
-          :parent  => :ems_network
+          :parent  => :ems_network do
+    provider_region { "eastus" }
+  end
 
   factory :ems_azure_with_authentication,
           :parent => :ems_azure do
