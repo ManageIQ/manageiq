@@ -10,20 +10,6 @@ describe EmsRefresh::SaveInventoryInfra do
   end
 
   context ".find_host" do
-    it "with ems_ref" do
-      FactoryBot.create(:host, :ems_ref => "some_ems_ref")
-
-      expect(refresher.find_host({:ems_ref => "some_ems_ref"}, nil)).to be_kind_of(Host)
-    end
-
-    it "with ems_ref and ems_id" do
-      FactoryBot.create(:host, :ems_ref => "some_ems_ref")
-      host_with_ems_id = FactoryBot.create(:host, :ems_ref => "some_ems_ref_2", :ems_id => 1)
-
-      expect(refresher.find_host({:ems_ref => "some_ems_ref_2", :name => "name"}, nil)).to be_nil
-      expect(refresher.find_host({:ems_ref => "some_ems_ref_2", :name => "name"}, 1)).to   eq(host_with_ems_id)
-    end
-
     it "with hostname and ipaddress" do
       FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.1")
       expected_host = FactoryBot.create(:host, :ems_ref => "some_ems_ref", :hostname => "my.hostname", :ipaddress => "192.168.1.2")
@@ -32,7 +18,7 @@ describe EmsRefresh::SaveInventoryInfra do
     end
   end
 
-    context ".look_up_host" do
+  context ".look_up_host" do
     let(:host_3_part_hostname)    { FactoryBot.create(:host_vmware, :hostname => "test1.example.com",       :ipaddress => "192.168.1.1") }
     let(:host_4_part_hostname)    { FactoryBot.create(:host_vmware, :hostname => "test2.dummy.example.com", :ipaddress => "192.168.1.2") }
     let(:host_duplicate_hostname) { FactoryBot.create(:host_vmware, :hostname => "test2.example.com",       :ipaddress => "192.168.1.3", :ems_ref => "host-1", :ems_id => 1) }
