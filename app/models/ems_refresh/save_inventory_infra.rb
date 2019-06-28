@@ -389,7 +389,7 @@ module EmsRefresh::SaveInventoryInfra
         # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
         # allow a deleted EMS to be re-added an pick up old orphaned hosts
         _log.debug("EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]")
-        found = look_up_host(h[:hostname], h[:ipaddress], :ems_ref => h[:ems_ref])
+        found = look_up_host(h[:hostname], h[:ipaddress], :ems_id => ems_id)
       end
     end
 
@@ -406,7 +406,7 @@ module EmsRefresh::SaveInventoryInfra
     # we looked-up does not have a different ems_ref and is not
     # owned by another provider, this would cause us to overwrite
     # a different host record
-    if (opts[:ems_ref] && h.ems_ref != opts[:ems_ref]) || (opts[:ems_id] && h.ems_id != opts[:ems_id])
+    if (opts[:ems_ref] && h.ems_ref != opts[:ems_ref]) || (opts[:ems_id] && h.ems_id && h.ems_id != opts[:ems_id])
       h = nil
     end unless h.nil?
 
