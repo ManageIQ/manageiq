@@ -3,7 +3,6 @@ class DialogImportValidator
   class InvalidDialogFieldTypeError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
   class ParsedNonDialogError < StandardError; end
-  class DialogFieldAssociationCircularReferenceError < StandardError; end
 
   def initialize(dialog_field_association_validator = DialogFieldAssociationValidator.new)
     @dialog_field_association_validator = dialog_field_association_validator
@@ -59,8 +58,7 @@ class DialogImportValidator
     associations = {}
     dialog_fields.each { |df| associations.merge!(df["name"] => df["dialog_field_responders"]) if df["dialog_field_responders"].present? }
     unless associations.blank?
-      circular_references = @dialog_field_association_validator.circular_references(associations)
-      raise DialogFieldAssociationCircularReferenceError, circular_references if circular_references
+      associations.each_key { |k|  @dialog_field_association_validator.check_for_circular_references(associations, k) }
     end
   end
 

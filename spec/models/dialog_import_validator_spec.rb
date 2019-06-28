@@ -34,30 +34,19 @@ describe DialogImportValidator do
 
       it "does not raise an error" do
         expect { dialog_import_validator.determine_validity(import_file_upload) }.to_not raise_error
+        expect(dialog_field_association_validator).not_to receive(:check_for_circular_references)
       end
     end
 
-    context "when associations are not blank" do
-      context "when associations are not circular" do
-        let(:uploaded_content) do
-          [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1", "dialog_field_responders" => "foo"}]}]}]}].to_yaml
-        end
-
-        it "does not raise an error" do
-          allow(dialog_field_association_validator).to receive(:circular_references).and_return(false)
-          expect { dialog_import_validator.determine_validity(import_file_upload) }.to_not raise_error
-        end
-      end
-    end
-
-    context "when associations are circular" do
+    context "when associations present" do
       let(:uploaded_content) do
-        [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1", "dialog_field_responders" => "foo"}]}]}]}].to_yaml
+        [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1", "dialog_field_responders" => "foo"}, {"name" => "foo", "dialog_field_responders" => "df1"}]}]}]}].to_yaml
       end
 
-      it "does raise an error" do
-        allow(dialog_field_association_validator).to receive(:circular_references).and_return(%w(df1 df2))
-        expect { dialog_import_validator.determine_validity(import_file_upload) }.to raise_error(DialogImportValidator::DialogFieldAssociationCircularReferenceError)
+      it "calls the circular ref checker" do
+        expect(dialog_field_association_validator).to receive(:check_for_circular_references).at_least(:twice)
+
+        dialog_import_validator.determine_validity(import_file_upload)
       end
     end
 
