@@ -1,7 +1,6 @@
 class DialogImportService
   class ImportNonYamlError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
-  class DialogFieldAssociationCircularReferenceError < StandardError; end
 
   DEFAULT_DIALOG_VERSION = '5.10'.freeze # assumed for dialogs without version info
   CURRENT_DIALOG_VERSION = '5.11'.freeze
@@ -96,7 +95,7 @@ class DialogImportService
 
   def check_field_associations(fields)
     associations = fields.each_with_object({}) { |df, hsh| hsh.merge!(df["name"] => df["dialog_field_responders"]) if df["dialog_field_responders"].present? }
-    raise DialogFieldAssociationCircularReferenceError if @dialog_field_association_validator.circular_references(associations)
+    associations.each_key { |k| @dialog_field_association_validator.check_for_circular_references(associations, k) }
   end
 
   def import(dialog)
