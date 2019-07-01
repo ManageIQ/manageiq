@@ -12,7 +12,7 @@ module Vm::Operations
     supports :vnc_console do
       message = "VNC Console not supported"
       if vendor == 'vmware'
-        unsupported_reason_add(:vnc_console, message) unless ext_management_system.present? && console_supports_type?('VNC')
+        unsupported_reason_add(:vnc_console, message) unless ext_management_system.present? && console_supported?('VNC')
       elsif !console_supported?('VNC')
         unsupported_reason_add(:vnc_console, message)
       end
@@ -22,13 +22,13 @@ module Vm::Operations
       message = "WebMKS Console not supported"
       if vendor != 'vmware'
         unsupported_reason_add(:mks_console, message)
-      elsif console_supported?('WEBMKS') && !console_supports_type?('WebMKS')
+      elsif console_supported?('WEBMKS') && !console_supported?('WebMKS')
         unsupported_reason_add(:mks_console, message)
       end
     end
 
     supports :vmrc_console do
-      unsupported_reason_add(:vmrc_console, "VMRC Console not supported") unless console_supports_type?('VMRC')
+      unsupported_reason_add(:vmrc_console, "VMRC Console not supported") unless console_supported?('VMRC')
     end
 
     supports :spice_console do

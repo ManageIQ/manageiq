@@ -164,8 +164,4 @@ class Vm < VmOrTemplate
       :message => unsupported_reason(:launch_cockpit)
     }
   end
-
-  def console_supports_type?(console_type)
-    Settings.server.remote_console_type.upcase == console_type.upcase ? console_supported?(console_type) : false
-  end
 end

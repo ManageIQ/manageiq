@@ -63,7 +63,7 @@ describe 'VM::Operations' do
   context '#supports_vnc_console?' do
     it 'does not support it for vmware vms if it is not the specified console type in settings' do
       allow(@vm).to receive(:vendor).and_return('vmware')
-      allow(@vm).to receive(:console_supports_type?).with('VNC').and_return(false)
+      allow(@vm).to receive(:console_supported?).with('VNC').and_return(false)
 
       expect(@vm.supports_vnc_console?).to be_falsey
       expect(@vm.unsupported_reason(:vnc_console)).to include('VNC Console not supported')
@@ -80,7 +80,6 @@ describe 'VM::Operations' do
     it 'supports it if all conditions are met' do
       server = double
       allow(Settings).to receive(:server).and_return(server)
-      allow(server).to receive(:remote_console_type).and_return('VNC')
 
       expect(@vm.supports_vnc_console?).to be_truthy
     end
@@ -96,7 +95,7 @@ describe 'VM::Operations' do
 
     it 'supports it if all conditions are met' do
       allow(@vm).to receive(:console_supported?).with('WEBMKS').and_return(true)
-      allow(@vm).to receive(:console_supports_type?).with('WebMKS').and_return(true)
+      allow(@vm).to receive(:console_supported?).with('WebMKS').and_return(true)
 
       expect(@vm.supports_mks_console?).to be_truthy
     end
@@ -173,14 +172,14 @@ describe 'VM::Operations' do
 
   context '#supports_vmrc_console?' do
     it 'returns false if type is not supported' do
-      allow(@vm).to receive(:console_supports_type?).with('VMRC').and_return(false)
+      allow(@vm).to receive(:console_supported?).with('VMRC').and_return(false)
 
       expect(@vm.supports_vmrc_console?).to be_falsey
       expect(@vm.unsupported_reason(:vmrc_console)).to include('VMRC Console not supported')
     end
 
     it 'supports it if all conditions are met' do
-      allow(@vm).to receive(:console_supports_type?).with('VMRC').and_return(true)
+      allow(@vm).to receive(:console_supported?).with('VMRC').and_return(true)
 
       expect(@vm.supports_vmrc_console?).to be_truthy
     end
@@ -188,14 +187,14 @@ describe 'VM::Operations' do
 
   context '#supports_spice_console?' do
     it 'returns false if type is not supported' do
-      allow(@vm).to receive(:console_supports_type?).with('SPICE').and_return(false)
+      allow(@vm).to receive(:console_supported?).with('SPICE').and_return(false)
 
       expect(@vm.supports_spice_console?).to be_falsey
       expect(@vm.unsupported_reason(:spice_console)).to include('Spice Console not supported')
     end
 
     it 'supports it if all conditions are met' do
-      allow(@vm).to receive(:console_supports_type?).with('SPICE').and_return(true)
+      allow(@vm).to receive(:console_supported?).with('SPICE').and_return(true)
 
       expect(@vm.supports_spice_console?).to be_truthy
     end
