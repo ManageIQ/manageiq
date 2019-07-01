@@ -8,6 +8,10 @@ module ActiveRecord
           order_columns = orders.reject(&:blank?).map { |s|
               # Convert Arel node to string
               unless s.is_a?(String)
+                if s.kind_of?(Arel::Nodes::Ordering)
+                  s = s.expr
+                  keep_order = true
+                end
                 if s.respond_to?(:to_sql)
                   s = s.to_sql
                 else # for Arel::Nodes::Attribute
@@ -17,9 +21,14 @@ module ActiveRecord
                   s = collector.value
                 end
               end
+              # If we haven't already removed the order clause,
               # Remove any ASC/DESC modifiers
-              s.gsub(/\s+(?:ASC|DESC)\b/i, "")
-               .gsub(/\s+NULLS\s+(?:FIRST|LAST)\b/i, "")
+              if keep_order
+                s
+              else
+                s.gsub(/\s+(?:ASC|DESC)\b/i, "")
+                 .gsub(/\s+NULLS\s+(?:FIRST|LAST)\b/i, "")
+              end
             }.reject(&:blank?).map.with_index { |column, i| "#{column} AS alias_#{i}" }
 
           (order_columns << super).join(", ")
