@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Unreleased as of Sprint 114 ending 2019-06-24
+
+### Added
+- [V2V] Filter certain options in the ConversionHost#run_conversion method [(#18852)](https://github.com/ManageIQ/manageiq/pull/18852)
+- Seed plugin ansible content [(#18844)](https://github.com/ManageIQ/manageiq/pull/18844)
+- Update a service's lifecycle_state. [(#18803)](https://github.com/ManageIQ/manageiq/pull/18803)
+- Use `ansible-runner` in EmbeddedAnsible [(#18687)](https://github.com/ManageIQ/manageiq/pull/18687)
+- Classification.yml don't use parent_id=0 [(#18418)](https://github.com/ManageIQ/manageiq/pull/18418)
+- Classification parent [(#18301)](https://github.com/ManageIQ/manageiq/pull/18301)
+
+### Fixed
+- Don't create retirement tasks for things that are already retired [(#18895)](https://github.com/ManageIQ/manageiq/pull/18895)
+
 ## Unreleased as of Sprint 113 ending 2019-06-10
 
 ### Added
