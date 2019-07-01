@@ -307,7 +307,7 @@ describe Vm do
   context "#supported_consoles" do
     it 'returns all of the console types' do
       vm = FactoryBot.create(:vm)
-      expect(vm.supported_consoles.keys).to match_array([:spice, :vnc, :vmrc, :webmks, :cockpit])
+      expect(vm.supported_consoles.keys).to match_array([:html5, :vmrc, :cockpit])
     end
   end
 end
