@@ -89,6 +89,11 @@ class ServiceTemplate < ApplicationRecord
   scope :displayed,                                 ->         { where(:display => true) }
   scope :public_service_templates,                  ->         { where(:internal => [false, nil]) }
 
+  def self.with_tenant(tenant_id)
+    tenant = Tenant.find(tenant_id)
+    where(:tenant_id => tenant.ancestor_ids + [tenant_id])
+  end
+
   def self.with_additional_tenants
     includes(:service_template_tenants => :tenant)
   end
