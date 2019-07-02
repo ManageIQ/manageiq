@@ -61,7 +61,6 @@ module Rbac
       CloudNetwork
       CloudSubnet
       FloatingIp
-      LoadBalancer
       NetworkPort
       NetworkRouter
       SecurityGroup
