@@ -33,26 +33,24 @@ describe ServiceTemplate do
 
   describe "#custom_actions" do
     it "returns the custom actions in a hash grouped by buttons and button groups" do
-      FactoryBot.create(:custom_button, :name => "generic_no_group", :applies_to_class => "Service")
-      generic_group = FactoryBot.create(:custom_button, :name => "generic_group", :applies_to_class => "Service")
-      generic_group_set = FactoryBot.create(:custom_button_set, :name => "generic_group_set")
+      generic_no_group = FactoryBot.create(:custom_button, :applies_to_class => "Service")
+      generic_group = FactoryBot.create(:custom_button, :applies_to_class => "Service")
+      generic_group_set = FactoryBot.create(:custom_button_set)
       generic_group_set.set_data = {:button_order => [generic_group.id]}
       generic_group_set.save!
 
       service_template = FactoryBot.create(:service_template)
-      FactoryBot.create(
+      assigned_no_group = FactoryBot.create(
         :custom_button,
-        :name             => "assigned_no_group",
         :applies_to_class => "ServiceTemplate",
         :applies_to_id    => service_template.id
       )
       assigned_group = FactoryBot.create(
         :custom_button,
-        :name             => "assigned_group",
         :applies_to_class => "ServiceTemplate",
         :applies_to_id    => service_template.id
       )
-      assigned_group_set = FactoryBot.create(:custom_button_set, :name => "assigned_group_set")
+      assigned_group_set = FactoryBot.create(:custom_button_set)
       assigned_group_set.set_data = {:button_order => [assigned_group.id]}
       assigned_group_set.save!
 
@@ -60,17 +58,17 @@ describe ServiceTemplate do
 
       expected = {
         :buttons       => a_collection_containing_exactly(
-          a_hash_including("name" => "generic_no_group"),
-          a_hash_including("name" => "assigned_no_group")
+          a_hash_including("name" => generic_no_group.name),
+          a_hash_including("name" => assigned_no_group.name)
         ),
         :button_groups => a_collection_containing_exactly(
           a_hash_including(
-            "name"   => "assigned_group_set",
-            :buttons => [a_hash_including("name" => "assigned_group")]
+            "name"   => assigned_group_set.name,
+            :buttons => [a_hash_including("name" => assigned_group.name)]
           ),
           a_hash_including(
-            "name"   => "generic_group_set",
-            :buttons => [a_hash_including("name" => "generic_group")]
+            "name"   => generic_group_set.name,
+            :buttons => [a_hash_including("name" => generic_group.name)]
           )
         )
       }
@@ -79,36 +77,24 @@ describe ServiceTemplate do
 
     it "does not show hidden buttons" do
       service_template = FactoryBot.create(:service_template)
-      service = FactoryBot.create(:service, :name => "foo", :service_template => service_template)
-      true_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "foo"})
+      service = FactoryBot.create(:service, :service_template => service_template)
+      true_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => service.name})
       false_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "labar"})
-      FactoryBot.create(:custom_button,
-                         :name                  => "visible button",
-                         :applies_to_class      => "Service",
-                         :visibility_expression => true_expression)
-      FactoryBot.create(:custom_button,
-                         :name                  => "hidden button",
-                         :applies_to_class      => "Service",
-                         :visibility_expression => false_expression)
-      FactoryBot.create(:custom_button_set).tap do |group|
-        group.add_member(FactoryBot.create(:custom_button,
-                                            :name                  => "visible button in group",
-                                            :applies_to_class      => "Service",
-                                            :visibility_expression => true_expression))
-        group.add_member(FactoryBot.create(:custom_button,
-                                            :name                  => "hidden button in group",
-                                            :applies_to_class      => "Service",
-                                            :visibility_expression => false_expression))
-      end
+      visible_button_in_group = FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => true_expression)
+      visible_button = FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => true_expression)
+      FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => false_expression)
+      group = FactoryBot.create(:custom_button_set)
+      group.add_member(visible_button_in_group)
+      group.add_member(FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => false_expression))
 
       expected = {
         :buttons       => [
-          a_hash_including("name" => "visible button")
+          a_hash_including("name" => visible_button.name)
         ],
         :button_groups => [
           a_hash_including(
             :buttons => [
-              a_hash_including("name" => "visible button in group")
+              a_hash_including("name" => visible_button_in_group.name)
             ]
           )
         ]
@@ -118,7 +104,7 @@ describe ServiceTemplate do
 
     context "expression evaluation" do
       let(:service_template) { FactoryBot.create(:service_template, :prov_type=> "vmware") }
-      let(:service) { FactoryBot.create(:service, :name => "foo", :service_template => service_template) }
+      let(:service) { FactoryBot.create(:service, :service_template => service_template) }
       let(:true_expression_on_template) do
         MiqExpression.new("=" => {"field" => "ServiceTemplate-prov_type", "value" => "vmware"})
       end
@@ -126,37 +112,21 @@ describe ServiceTemplate do
         MiqExpression.new("=" => {"field" => "ServiceTemplate-prov_type", "value" => "not_vmware"})
       end
       let(:true_expression_on_service) do
-        MiqExpression.new("=" => {"field" => "Service-name", "value" => "foo"})
+        MiqExpression.new("=" => {"field" => "Service-name", "value" => service.name})
       end
       let(:false_expression_on_service) do
         MiqExpression.new("=" => {"field" => "Service-name", "value" => "not_foo"})
       end
 
-      before do
-        FactoryBot.create(:custom_button,
-                           :name                  => "visible button on service",
-                           :applies_to_class      => "Service",
-                           :visibility_expression => true_expression_on_service)
-        FactoryBot.create(:custom_button,
-                           :name                  => "hidden button on service",
-                           :applies_to_class      => "Service",
-                           :visibility_expression => false_expression_on_service)
-        FactoryBot.create(:custom_button,
-                           :name                  => "visible button on template",
-                           :applies_to_class      => "ServiceTemplate",
-                           :applies_to_id         => service_template.id,
-                           :visibility_expression => true_expression_on_template)
-        FactoryBot.create(:custom_button,
-                           :name                  => "hidden visible button on template",
-                           :applies_to_class      => "ServiceTemplate",
-                           :applies_to_id         => service_template.id,
-                           :visibility_expression => false_expression_on_template)
-      end
+      let!(:visible_button_on_service) { FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => true_expression_on_service) }
+      let!(:hidden_button_on_service) { FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => false_expression_on_service) }
+      let!(:visible_button_on_template) { FactoryBot.create(:custom_button, :applies_to_class => "ServiceTemplate", :applies_to_id => service_template.id, :visibility_expression => true_expression_on_template) }
+      let!(:hidden_button_on_template) { FactoryBot.create(:custom_button, :applies_to_class => "ServiceTemplate", :applies_to_id => service_template.id, :visibility_expression => false_expression_on_template) }
 
       it "uses ServiceTemplate object to evaluate expression defined on Service Template if no parameter passed" do
         expected = {
           :buttons       => [
-            a_hash_including("name" => "visible button on template")
+            a_hash_including("name" => visible_button_on_template.name)
           ],
           :button_groups => []
         }
@@ -166,8 +136,8 @@ describe ServiceTemplate do
       it "uses passed object for expression defined on that object and ServiceTemplate for expression on template" do
         expected = {
           :buttons       => a_collection_containing_exactly(
-            a_hash_including("name" => "visible button on service"),
-            a_hash_including("name" => "visible button on template")
+            a_hash_including("name" => visible_button_on_service.name),
+            a_hash_including("name" => visible_button_on_template.name)
           ),
           :button_groups => []
         }
@@ -176,7 +146,7 @@ describe ServiceTemplate do
     end
 
     it "serializes the enablement" do
-      service_template = FactoryBot.create(:service_template, :name => "foo")
+      service_template = FactoryBot.create(:service_template)
       service = FactoryBot.create(:service, :name => "bar", :service_template => service_template)
       true_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "bar"})
       false_expression = MiqExpression.new("=" => {"field" => "Service-name", "value" => "foo"})
@@ -219,8 +189,8 @@ describe ServiceTemplate do
 
   describe "#custom_action_buttons" do
     it "does not show hidden buttons" do
-      service_template = FactoryBot.create(:service_template, :name => "foo")
-      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "foo"})
+      service_template = FactoryBot.create(:service_template)
+      true_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => service_template.name})
       false_expression = MiqExpression.new("=" => {"field" => "ServiceTemplate-name", "value" => "bar"})
       visible_button = FactoryBot.create(:custom_button,
                                           :applies_to_class      => "ServiceTemplate",
@@ -249,7 +219,7 @@ describe ServiceTemplate do
 
   context "#type_display" do
     before do
-      @st1 = FactoryBot.create(:service_template, :name => 'Service Template 1')
+      @st1 = FactoryBot.create(:service_template)
     end
 
     it "with default service_type" do
@@ -300,8 +270,8 @@ describe ServiceTemplate do
   end
 
   context "#template_copy" do
-    let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower, :name => "new_template") }
-    let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration, :name => "new_template2") }
+    let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower) }
+    let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration) }
     let(:custom_button) { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
     let(:custom_button_set) { FactoryBot.create(:custom_button_set, :owner => @st1) }
     before do
@@ -540,7 +510,7 @@ describe ServiceTemplate do
   context "initiator" do
     shared_examples_for 'initiator example' do |initiator, match|
       it 'test initiator' do
-        svc_template = FactoryBot.create(:service_template, :name => 'Svc A')
+        svc_template = FactoryBot.create(:service_template)
         options = {:dialog => {}}
         options[:initiator] = initiator if initiator
         svc_task = instance_double("service_task", :options => options, :get_user => service_user)
@@ -561,11 +531,11 @@ describe ServiceTemplate do
 
   context "with multiple services" do
     before do
-      @svc_a = FactoryBot.create(:service_template, :name => 'Svc A')
-      @svc_b = FactoryBot.create(:service_template, :name => 'Svc B')
-      @svc_c = FactoryBot.create(:service_template, :name => 'Svc C')
-      @svc_d = FactoryBot.create(:service_template, :name => 'Svc D')
-      @svc_e = FactoryBot.create(:service_template, :name => 'Svc E')
+      @svc_a = FactoryBot.create(:service_template)
+      @svc_b = FactoryBot.create(:service_template)
+      @svc_c = FactoryBot.create(:service_template)
+      @svc_d = FactoryBot.create(:service_template)
+      @svc_e = FactoryBot.create(:service_template)
     end
 
     it "should return level 1 sub-services" do
@@ -727,7 +697,7 @@ describe ServiceTemplate do
     before do
       @zone1 = FactoryBot.create(:small_environment)
       allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
-      @st1 = FactoryBot.create(:service_template, :name => 'Service Template 1')
+      @st1 = FactoryBot.create(:service_template)
     end
 
     it "should create a valid service template" do
@@ -738,7 +708,7 @@ describe ServiceTemplate do
 
     it "should not set the owner for the service template" do
       @user         = nil
-      @test_service = FactoryBot.create(:service, :name => 'test service')
+      @test_service = FactoryBot.create(:service)
       expect(@test_service.evm_owner).to be_nil
       @st1.set_ownership(@test_service, @user)
       expect(@test_service.evm_owner).to be_nil
@@ -746,7 +716,7 @@ describe ServiceTemplate do
 
     it "should set the owner and group for the service template" do
       @user         = FactoryBot.create(:user_with_group)
-      @test_service = FactoryBot.create(:service, :name => 'test service')
+      @test_service = FactoryBot.create(:service)
       expect(@test_service.evm_owner).to be_nil
       @st1.set_ownership(@test_service, @user)
       expect(@test_service.evm_owner.name).to eq(@user.name)
@@ -755,7 +725,7 @@ describe ServiceTemplate do
     end
 
     it "should create a composite service template" do
-      st2 = FactoryBot.create(:service_template, :name => 'Service Template 2')
+      st2 = FactoryBot.create(:service_template)
       @st1.add_resource(st2)
       expect(@st1.service_resources.size).to eq(1)
       expect(@st1.composite?).to be_truthy
@@ -797,9 +767,9 @@ describe ServiceTemplate do
 
   context 'validate template' do
     before do
-      @st1 = FactoryBot.create(:service_template, :name => 'Service Template 1')
+      @st1 = FactoryBot.create(:service_template)
 
-      user         = FactoryBot.create(:user, :name => 'Fred Flintstone', :userid => 'fred')
+      user         = FactoryBot.create(:user)
       @vm_template = FactoryBot.create(:template_vmware, :ext_management_system => FactoryBot.create(:ems_vmware_with_authentication))
       @ptr = FactoryBot.create(:miq_provision_request_template, :requester => user, :src_vm_id => @vm_template.id)
     end
@@ -848,7 +818,7 @@ describe ServiceTemplate do
     context 'composite' do
       before do
         @st1.add_resource(@ptr)
-        @st2 = FactoryBot.create(:service_template, :name => 'Service Template 2')
+        @st2 = FactoryBot.create(:service_template)
         @st2.add_resource(@st1)
       end
 
@@ -1160,7 +1130,7 @@ describe ServiceTemplate do
   end
 
   context "#order" do
-    let(:user) { FactoryBot.create(:user, :userid => "barney") }
+    let(:user) { FactoryBot.create(:user) }
     let(:resource_action) { FactoryBot.create(:resource_action, :action => "Provision") }
     let(:service_template) { FactoryBot.create(:service_template, :resource_actions => [resource_action]) }
     let(:resource_action_options) { {:target => service_template, :initiator => 'control', :submit_workflow => true} }
