@@ -118,10 +118,10 @@ describe ServiceTemplate do
         MiqExpression.new("=" => {"field" => "Service-name", "value" => "not_foo"})
       end
 
-      let!(:visible_button_on_service) { FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => true_expression_on_service) }
-      let!(:hidden_button_on_service) { FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => false_expression_on_service) }
+      let!(:visible_button_on_service)  { FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => true_expression_on_service) }
+      let!(:hidden_button_on_service)   { FactoryBot.create(:custom_button, :applies_to_class => "Service", :visibility_expression => false_expression_on_service) }
       let!(:visible_button_on_template) { FactoryBot.create(:custom_button, :applies_to_class => "ServiceTemplate", :applies_to_id => service_template.id, :visibility_expression => true_expression_on_template) }
-      let!(:hidden_button_on_template) { FactoryBot.create(:custom_button, :applies_to_class => "ServiceTemplate", :applies_to_id => service_template.id, :visibility_expression => false_expression_on_template) }
+      let!(:hidden_button_on_template)  { FactoryBot.create(:custom_button, :applies_to_class => "ServiceTemplate", :applies_to_id => service_template.id, :visibility_expression => false_expression_on_template) }
 
       it "uses ServiceTemplate object to evaluate expression defined on Service Template if no parameter passed" do
         expected = {

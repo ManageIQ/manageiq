@@ -161,7 +161,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def destroy
-    unless parent_services.blank?
+    if parent_services.present?
       raise MiqException::MiqServiceError, _("Cannot delete a service that is the child of another service.")
     end
 
