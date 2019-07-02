@@ -1,6 +1,8 @@
 class GenericObject < ApplicationRecord
   acts_as_miq_taggable
 
+  include ExternalUrlMixin
+
   virtual_has_one :custom_actions
   virtual_has_one :custom_action_buttons
 

@@ -6,6 +6,7 @@ class Provider < ApplicationRecord
   include SupportsFeatureMixin
   include TenancyMixin
   include UuidMixin
+  include ExternalUrlMixin
 
   belongs_to :tenant
   belongs_to :zone

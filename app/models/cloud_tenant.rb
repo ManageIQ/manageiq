@@ -4,6 +4,7 @@ class CloudTenant < ApplicationRecord
 
   include NewWithTypeStiMixin
   include CustomActionsMixin
+  include ExternalUrlMixin
   extend ActsAsTree::TreeWalker
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"

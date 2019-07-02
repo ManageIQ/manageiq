@@ -41,6 +41,7 @@ class MiqGroup < ApplicationRecord
   include TimezoneMixin
   include TenancyMixin
   include CustomActionsMixin
+  include ExternalUrlMixin
 
   alias_method :current_tenant, :tenant
 

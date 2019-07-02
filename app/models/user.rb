@@ -6,6 +6,7 @@ class User < ApplicationRecord
   include ActiveVmAggregationMixin
   include TimezoneMixin
   include CustomActionsMixin
+  include ExternalUrlMixin
 
   before_destroy :check_reference, :prepend => true
 

@@ -5,6 +5,7 @@ class Vm < VmOrTemplate
   extend InterRegionApiMethodRelay
   include CustomActionsMixin
   include CiFeatureMixin
+  include ExternalUrlMixin
 
   include_concern 'Operations'
 

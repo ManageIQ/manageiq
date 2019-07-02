@@ -69,6 +69,7 @@ class Service < ApplicationRecord
   include SupportsFeatureMixin
   include CiFeatureMixin
   include Metric::CiMixin
+  include ExternalUrlMixin
 
   extend InterRegionApiMethodRelay
 
