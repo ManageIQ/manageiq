@@ -533,15 +533,11 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def resource_actions_info
-    config_info = {}
-    resource_actions.each do |resource_action|
-      resource_options = resource_action.slice(:dialog_id,
-                                               :configuration_template_type,
-                                               :configuration_template_id).compact
+    resource_actions.each_with_object({}) do |resource_action, config_info|
+      resource_options = resource_action.slice(:dialog_id, :configuration_template_type, :configuration_template_id).compact
       resource_options[:fqname] = resource_action.fqname
       config_info[resource_action.action.downcase.to_sym] = resource_options.symbolize_keys
     end
-    config_info
   end
 
   def generic_custom_buttons
