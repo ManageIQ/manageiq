@@ -15,9 +15,9 @@ describe NotificationType, :type => :model do
 
   describe '#subscribers_ids' do
     let(:user1) { FactoryBot.create(:user) }
-    let(:tenant2) { FactoryBot.create(:tenant) }
-    let!(:user2) { FactoryBot.create(:user_with_group, :tenant => tenant2) }
-    let(:vm) { FactoryBot.create(:vm, :tenant => tenant2) }
+    let(:tenant) { FactoryBot.create(:tenant) }
+    let!(:user2) { FactoryBot.create(:user_with_group, :tenant => tenant) }
+    let(:vm) { FactoryBot.create(:vm, :tenant => tenant) }
     subject { notification.subscriber_ids(vm, user1) }
     context 'global notification type' do
       let(:notification) { FactoryBot.create(:notification_type, :audience => 'global') }
@@ -39,7 +39,7 @@ describe NotificationType, :type => :model do
         is_expected.to match_array([user2.id])
       end
       it "returns single id if user belongs to different group" do
-        user2.miq_groups << FactoryBot.create(:miq_group, :tenant => tenant2)
+        user2.miq_groups << FactoryBot.create(:miq_group, :tenant => tenant)
         is_expected.to match_array([user2.id])
       end
     end
