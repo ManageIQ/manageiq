@@ -279,7 +279,7 @@ FactoryBot.define do
   factory :ems_openstack,
           :aliases => ["manageiq/providers/openstack/cloud_manager"],
           :class   => "ManageIQ::Providers::Openstack::CloudManager",
-          :parent  => :ems_cloud
+          :parent  => :ext_management_system
 
   factory :ems_openstack_with_authentication,
           :parent => :ems_openstack do
