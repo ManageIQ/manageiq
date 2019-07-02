@@ -43,6 +43,17 @@ describe NotificationType, :type => :model do
         expect(type.subscriber_ids(vm, user1)).to match_array([user2.id])
       end
     end
+
+    context "with seeded types" do
+      before { described_class.seed }
+
+      it "returns an array for all types without a subject" do
+        described_class.all.each do |type|
+          ids = type.subscriber_ids(nil, user1)
+          expect(ids).to be_an_instance_of(Array), "expected an array for notification type #{type.name}, got #{ids.inspect}"
+        end
+      end
+    end
   end
 
   describe "#enabled?" do
