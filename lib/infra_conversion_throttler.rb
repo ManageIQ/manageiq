@@ -1,24 +1,42 @@
 class InfraConversionThrottler
   def self.start_conversions
+    $log&.debug("InfraConversionThrottler.start_conversions")
     pending_conversion_jobs.each do |ems, jobs|
+      $log&.debug("- EMS: #{ems.name}")
+      $log&.debug("-- Number of pending jobs: #{jobs.size}")
       running = ems.conversion_hosts.inject(0) { |sum, ch| sum + ch.active_tasks.count }
-      $log&.debug("There are currently #{running} conversion hosts running.")
+      $log&.debug("-- Currently running jobs in EMS: #{running}")
       slots = (ems.miq_custom_get('Max Transformation Runners') || Settings.transformation.limits.max_concurrent_tasks_per_ems).to_i - running
-      $log&.debug("The maximum number of concurrent tasks for the EMS is: #{slots}.")
+      $log&.debug("-- Available slots in EMS: #{slots}")
       jobs.each do |job|
-        eligible_hosts = ems.conversion_hosts.select(&:eligible?).sort_by { |ch| ch.active_tasks.count }
+        vm_name = job.migration_task.source.name
+        $log&.debug("- Looking for a conversion host for task for #{vm_name}")
 
-        if eligible_hosts.size > 0
-          $log&.debug("The following conversion hosts are currently eligible: " + eligible_hosts.map(&:name).join(', '))
+        if slots <= 0
+          $log&.debug("-- No available slot in EMS. Stopping.")
+          break
         end
 
-        break if slots <= 0 || eligible_hosts.empty?
-        job.migration_task.update_attributes!(:conversion_host => eligible_hosts.first)
-        job.queue_signal(:start)
-        _log.info("Pending InfraConversionJob: id=#{job.id} signaled to start")
-        slots -= 1
+        eligible_hosts = ems.conversion_hosts.select(&:eligible?).sort_by { |ch| ch.active_tasks.count }
+        if eligible_hosts.empty?
+          $log&.debug("-- No eligible conversion host for task for '#{vm_name}'")
+          break
+        end
 
-        $log&.debug("The current number of available tasks is: #{slots}.")
+        $log&.debug("-- Eligible conversion hosts:")
+        eligible_hosts.each do |eh|
+          max_tasks = eh.max_concurrent_tasks || Settings.transformation.limits.max_concurrent_tasks_per_host
+          $log&.debug("--- #{eh.name} [#{eh.active_tasks.count}/#{max_tasks}]")
+        end
+
+        eligible_host = eligible_hosts.first
+        $log&.debug("-- Associating  #{eligible_host.name} to the task for '#{vm_name}'.")
+        job.migration_task.update_attributes!(:conversion_host => eligible_hosts.first)
+
+        $log&.debug("-- Queuing :start signal for the job for '#{vm_name}': current state is '#{job.state}'.")
+        job.queue_signal(:start)
+        $log&.info("Pending InfraConversionJob: id=#{job.id} signaled to start")
+        slots -= 1
       end
     end
   end
