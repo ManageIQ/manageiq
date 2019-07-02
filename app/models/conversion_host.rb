@@ -55,7 +55,7 @@ class ConversionHost < ApplicationRecord
 
       auth = authentication_type(auth_type) || authentications.first
 
-      ssh_options = { :timeout => 10, :logger => $log, :verbose => :error, :use_agent => false }
+      ssh_options = { :timeout => 10, :use_agent => false }
 
       case auth
       when AuthUseridPassword
