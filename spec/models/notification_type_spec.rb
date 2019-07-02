@@ -22,29 +22,25 @@ describe NotificationType, :type => :model do
     let(:tenant) { FactoryBot.create(:tenant) }
     let(:vm)     { FactoryBot.create(:vm, :tenant => tenant) }
 
-    context 'global notification type' do
-      let(:notification) { FactoryBot.create(:notification_type, :audience => 'global') }
-      it 'returns all the users' do
-        expect(notification.subscriber_ids(vm, user1)).to match_array(User.pluck(:id))
-      end
+    it 'returns all the users for a global notification type' do
+      type = FactoryBot.create(:notification_type, :audience => 'global')
+      expect(type.subscriber_ids(vm, user1)).to match_array(User.pluck(:id))
     end
 
-    context 'user specific notification type' do
-      let(:notification) { FactoryBot.create(:notification_type, :audience => 'user') }
-      it 'returns just the user, who initiated the task' do
-        expect(notification.subscriber_ids(vm, user1)).to match_array([user1.id])
-      end
+    it 'returns just the user who initiated the task for a user specific notification type' do
+      type = FactoryBot.create(:notification_type, :audience => 'user')
+      expect(type.subscriber_ids(vm, user1)).to match_array([user1.id])
     end
 
     context 'tenant specific notification type' do
-      let(:notification) { FactoryBot.create(:notification_type, :audience => 'tenant') }
+      let(:type) { FactoryBot.create(:notification_type, :audience => 'tenant') }
       it 'returns the users in the tenant same tenant as concerned vm' do
-        expect(notification.subscriber_ids(vm, user1)).to match_array([user2.id])
+        expect(type.subscriber_ids(vm, user1)).to match_array([user2.id])
       end
 
       it "returns single id if user belongs to different group" do
         user2.miq_groups << FactoryBot.create(:miq_group, :tenant => tenant)
-        expect(notification.subscriber_ids(vm, user1)).to match_array([user2.id])
+        expect(type.subscriber_ids(vm, user1)).to match_array([user2.id])
       end
     end
   end
