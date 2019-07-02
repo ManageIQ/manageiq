@@ -17,10 +17,10 @@ describe NotificationType, :type => :model do
   end
 
   describe '#subscribers_ids' do
-    let(:user1) { FactoryBot.create(:user) }
-    let(:tenant) { FactoryBot.create(:tenant) }
+    let(:user1)  { FactoryBot.create(:user) }
     let!(:user2) { FactoryBot.create(:user_with_group, :tenant => tenant) }
-    let(:vm) { FactoryBot.create(:vm, :tenant => tenant) }
+    let(:tenant) { FactoryBot.create(:tenant) }
+    let(:vm)     { FactoryBot.create(:vm, :tenant => tenant) }
 
     context 'global notification type' do
       let(:notification) { FactoryBot.create(:notification_type, :audience => 'global') }
