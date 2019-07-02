@@ -47,12 +47,7 @@ class ServiceTemplate < ApplicationRecord
 
   validates :name, :presence => true
   belongs_to :tenant
-  # # These relationships are used to specify children spawned from a parent service
-  # has_many   :child_services, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
-  # belongs_to :parent_service, :class_name => "ServiceTemplate", :foreign_key => :service_template_id
 
-  # # These relationships are used for resources that are processed as part of the service
-  # has_many   :vms_and_templates, :through => :service_resources, :source => :resource, :source_type => 'VmOrTemplate'
   has_many   :service_templates, :through => :service_resources, :source => :resource, :source_type => 'ServiceTemplate'
   has_many   :services
 
