@@ -2,6 +2,11 @@ class ExtManagementSystem < ApplicationRecord
   include CustomActionsMixin
   include SupportsFeatureMixin
 
+  def self.with_tenant(tenant_id)
+    tenant = Tenant.find(tenant_id)
+    where(:tenant_id => tenant.ancestor_ids + [tenant_id])
+  end
+
   def self.types
     leaf_subclasses.collect(&:ems_type)
   end
