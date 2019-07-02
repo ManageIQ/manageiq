@@ -1811,8 +1811,8 @@ describe Rbac::Filterer do
               FactoryBot.create(network_model.underscore,  :ext_management_system => network_manager_1)
             end
 
-            context "when records match belogns to filter" do
-              it "lists records of #{network_model} manager according to belongsto filter" do
+            context "when records match belongs to filter" do
+              it "lists records of #{network_model} manager according to belongs to filter" do
                 User.with_user(user) do
                   results = described_class.search(:class => network_model).first
                   expect(results).to match_array([network_object])
@@ -1821,7 +1821,7 @@ describe Rbac::Filterer do
               end
             end
 
-            context "when records don't match belogns to filter" do
+            context "when records don't match belongs to filter" do
               before do
                 group.entitlement = Entitlement.new
                 group.entitlement.set_managed_filters([])
