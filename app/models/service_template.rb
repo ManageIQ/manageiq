@@ -545,14 +545,6 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def adjust_service_type
-    svc_type = self.class::SERVICE_TYPE_ATOMIC
-    service_resources.try(:each) do |sr|
-      if sr.resource_type == 'Service' || sr.resource_type == 'ServiceTemplate'
-        svc_type = self.class::SERVICE_TYPE_COMPOSITE
-        break
-      end
-    end
-
-    self.service_type = svc_type
+    self.service_type = service_resources.any? { |st| st.resource_type.in?(['Service', 'ServiceTemplate']) } ? self.class::SERVICE_TYPE_COMPOSITE : self.class::SERVICE_TYPE_ATOMIC
   end
 end
