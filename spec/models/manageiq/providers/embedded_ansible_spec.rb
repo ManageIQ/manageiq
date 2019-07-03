@@ -25,6 +25,7 @@ describe ManageIQ::Providers::EmbeddedAnsible do
     it "creates the default authentication" do
       auth = manager.authentications.find_by(:name => "ManageIQ Default Credential")
       expect(auth).to be_an_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential)
+      expect(auth.manager_ref).to eq(auth.id.to_s)
     end
 
     it "creates the local playbook repo" do
