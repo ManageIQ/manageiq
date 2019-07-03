@@ -14,10 +14,9 @@ module ManageIQ::Providers::EmbeddedAnsible::Seeding
         :zone => MiqServer.my_server.zone # TODO: Do we even need zone?
       )
 
-      manager.authentications.create_with(
-        :type => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential"
-      ).find_or_create_by!(
-        :name => "#{Vmdb::Appliance.PRODUCT_NAME} Default Credential"
+      ManageIQ::Providers::EmbeddedAnsible::AutomationManager::MachineCredential.find_or_create_by!(
+        :name     => "#{Vmdb::Appliance.PRODUCT_NAME} Default Credential",
+        :resource => manager
       )
 
       create_local_playbook_repo
