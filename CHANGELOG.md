@@ -5,7 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-7
+## Hammer-8
+
+### Added
+- Add migration analytics reports [(#18749)](https://github.com/ManageIQ/manageiq/pull/18749)
+- [V2V] Filter certain options in the ConversionHost#run_conversion method [(#18852)](https://github.com/ManageIQ/manageiq/pull/18852)
+
+### Fixed
+- [V2V] Restore auth_user in conversion host context data [(#18819)](https://github.com/ManageIQ/manageiq/pull/18819)
+- [EvmDatabaseOps] Fix .validate_free_space target [(#18745)](https://github.com/ManageIQ/manageiq/pull/18745)
+- [Fix] PID retrieval to kill virt-v2v [(#18853)](https://github.com/ManageIQ/manageiq/pull/188530)
+- Group AND expressions properly to account for nesting [(#18709)](https://github.com/ManageIQ/manageiq/pull/18709)
+- assign value to a variable and return at the end. [(#18867)](https://github.com/ManageIQ/manageiq/pull/18867)
+- [V2V] Modify active_tasks so that it always reloads [(#18860)](https://github.com/ManageIQ/manageiq/pull/18860)
+
+## Hammer-7 - Released 2019-06-10
 
 ### Added
 - [V2V] Have ConversionHost explicitly search authentications for auth type [(#18748)](https://github.com/ManageIQ/manageiq/pull/18748)
