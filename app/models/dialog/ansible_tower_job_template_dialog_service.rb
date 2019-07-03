@@ -1,6 +1,7 @@
 class Dialog
   class AnsibleTowerJobTemplateDialogService
     def self.create_dialog(template, label = nil)
+      template, label = label, template if template.kind_of?(String)
       new.create_dialog(template, label)
     end
 

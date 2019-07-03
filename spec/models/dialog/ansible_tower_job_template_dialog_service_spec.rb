@@ -1,34 +1,48 @@
 describe Dialog::AnsibleTowerJobTemplateDialogService do
   let(:template) { FactoryBot.create(:ansible_configuration_script) }
+  let(:survey) do
+    "{\"spec\":[{\"index\": 0, \"question_name\": \"Param1\", \"min\": 10, \
+   \"default\": \"19\", \"max\": 100, \"question_description\": \"param 1\", \"required\": true, \"variable\": \
+   \"param1\", \"choices\": \"\", \"type\": \"integer\"}, {\"index\": 1, \"question_name\": \"Param2\", \"min\": \
+   2, \"default\": \"as\", \"max\": 5, \"question_description\": \"param 2\", \"required\": true, \"variable\": \
+   \"param2\", \"choices\": \"\", \"type\": \"text\"}, {\"index\": 2, \"question_name\": \"Param3\", \"min\": \
+   \"\", \"default\": \"no\\nhello\", \"max\": \"\", \"question_description\": \"param 3\", \"required\": false, \
+   \"variable\": \"param3\", \"choices\": \"\", \"type\": \"textarea\"}, {\"index\": 3, \"question_name\": \
+   \"Param4\", \"min\": \"\", \"default\": \"mypassword\", \"max\": \"\", \"question_description\": \"param 4\", \
+   \"required\": true, \"variable\": \"param4\", \"choices\": \"\", \"type\": \"password\"}, {\"index\": 4, \
+   \"question_name\": \"Param5\", \"min\": \"\", \"default\": \"Peach\", \"max\": \"\", \"question_description\": \
+   \"param 5\", \"required\": true, \"variable\": \"param5\", \"choices\": \"Apple\\nBanana\\nPeach\", \"type\": \
+   \"multiplechoice\"}, {\"index\": 5, \"question_description\": \"param 6\", \"min\": \"\", \"default\": \
+   \"opt1\\n222\", \"max\": \"\", \"question_name\": \"Param6\", \"required\": true, \"variable\": \"param6\", \
+   \"choices\": \"opt1\\n222\\nopt3\", \"type\": \"multiselect\"}, {\"index\": 6, \"question_name\": \"Param7\", \
+   \"min\": \"\", \"default\": \"14.5\", \"max\": \"\", \"question_description\": \"param 7\", \
+   \"required\": true, \"variable\": \"param7\", \"choices\": \"\", \"type\": \"float\"}],\"name\":\"\", \
+   \"description\":\"\"}"
+  end
 
   describe "#create_dialog" do
-    it "creates a dialog from a job template" do
-      survey =
-        "{\"spec\":[{\"index\": 0, \"question_name\": \"Param1\", \"min\": 10, \
-        \"default\": \"19\", \"max\": 100, \"question_description\": \"param 1\", \"required\": true, \"variable\": \
-        \"param1\", \"choices\": \"\", \"type\": \"integer\"}, {\"index\": 1, \"question_name\": \"Param2\", \"min\": \
-        2, \"default\": \"as\", \"max\": 5, \"question_description\": \"param 2\", \"required\": true, \"variable\": \
-        \"param2\", \"choices\": \"\", \"type\": \"text\"}, {\"index\": 2, \"question_name\": \"Param3\", \"min\": \
-        \"\", \"default\": \"no\\nhello\", \"max\": \"\", \"question_description\": \"param 3\", \"required\": false, \
-        \"variable\": \"param3\", \"choices\": \"\", \"type\": \"textarea\"}, {\"index\": 3, \"question_name\": \
-        \"Param4\", \"min\": \"\", \"default\": \"mypassword\", \"max\": \"\", \"question_description\": \"param 4\", \
-        \"required\": true, \"variable\": \"param4\", \"choices\": \"\", \"type\": \"password\"}, {\"index\": 4, \
-        \"question_name\": \"Param5\", \"min\": \"\", \"default\": \"Peach\", \"max\": \"\", \"question_description\": \
-        \"param 5\", \"required\": true, \"variable\": \"param5\", \"choices\": \"Apple\\nBanana\\nPeach\", \"type\": \
-        \"multiplechoice\"}, {\"index\": 5, \"question_description\": \"param 6\", \"min\": \"\", \"default\": \
-        \"opt1\\n222\", \"max\": \"\", \"question_name\": \"Param6\", \"required\": true, \"variable\": \"param6\", \
-        \"choices\": \"opt1\\n222\\nopt3\", \"type\": \"multiselect\"}, {\"index\": 6, \"question_name\": \"Param7\", \
-        \"min\": \"\", \"default\": \"14.5\", \"max\": \"\", \"question_description\": \"param 7\", \
-        \"required\": true, \"variable\": \"param7\", \"choices\": \"\", \"type\": \"float\"}],\"name\":\"\", \
-        \"description\":\"\"}"
+    before do
       allow(template).to receive(:survey_spec).and_return(JSON.parse(survey))
 
       allow(template).to receive(:variables).and_return('some_extra_var'  => 'blah',
                                                         'other_extra_var' => {'name' => 'some_value'},
                                                         'array_extra_var' => [{'name' => 'some_value'}])
-      dialog = subject.create_dialog(template)
+    end
+
+    it "creates a dialog from a job template" do
+      dialog = Dialog::AnsibleTowerJobTemplateDialogService.create_dialog(template)
 
       expect(dialog).to have_attributes(:label => template.name, :buttons => "submit,cancel")
+
+      tabs = dialog.dialog_tabs
+      expect(tabs.size).to eq(1)
+      assert_main_tab(tabs[0])
+    end
+
+    it "creates a dialog from a job template with reverse arguments" do
+      dialog = Dialog::AnsibleTowerJobTemplateDialogService.create_dialog('some label', template)
+
+      expect(dialog).to have_attributes(:label => 'some label', :buttons => "submit,cancel")
 
       tabs = dialog.dialog_tabs
       expect(tabs.size).to eq(1)
@@ -75,7 +89,7 @@ describe Dialog::AnsibleTowerJobTemplateDialogService do
     assert_field(fields[3], DialogFieldTextBox,      :name => 'param_param4', :data_type => 'string',    :default_value => "mypassword", :options => {:protected => true})
     assert_field(fields[4], DialogFieldDropDownList, :name => "param_param5", :default_value => "Peach", :values => [%w[Apple Apple], %w[Banana Banana], %w[Peach Peach]], :options => {:force_multi_value => false})
     assert_field(fields[5], DialogFieldDropDownList, :name => "param_param6", :default_value => "[\"opt1\", \"222\"]",  :values => [%w[222 222], %w[opt1 opt1], %w[opt3 opt3]], :options => {:force_multi_value => true})
-    assert_field(fields[6], DialogFieldTextBox,      :name => 'param_param7', :data_type => 'string',    :default_value => "14.5")
+    assert_field(fields[6], DialogFieldTextBox,      :name => 'param_param7', :data_type => 'string', :default_value => "14.5")
   end
 
   def assert_variables_group(group)
