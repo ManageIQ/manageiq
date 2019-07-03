@@ -5,7 +5,7 @@ describe TransformationMapping do
   let(:src_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => src_ems) }
   let(:dst_cluster_redhat) { FactoryGirl.create(:ems_cluster, :ext_management_system => dst_ems_redhat) }
   let(:dst_cloud_tenant_openstack) { FactoryGirl.create(:cloud_tenant, :ext_management_system => dst_ems_openstack) }
-  let(:vm)  { FactoryGirl.create(:vm_vmware, :ems_cluster => src_cluster) }
+  let(:vm) { FactoryGirl.create(:vm_vmware, :ems_cluster => src_cluster) }
 
   let(:mapping_redhat) do
     FactoryGirl.create(
