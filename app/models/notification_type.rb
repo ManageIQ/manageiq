@@ -32,7 +32,7 @@ class NotificationType < ApplicationRecord
       User.superadmins.pluck(:id)
     when AUDIENCE_NONE
       []
-    end
+    end || []
   end
 
   # this disables notifications, but allows the notification to still exist
