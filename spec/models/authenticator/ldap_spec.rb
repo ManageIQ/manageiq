@@ -77,7 +77,7 @@ describe Authenticator::Ldap do
       :displayname       => 'Alice Aardvark',
       :givenname         => 'Alice',
       :sn                => 'Aardvark',
-      :mail              => 'alice@example.com',
+      :mail              => ['alice@example.com', 'a.aardvark@example.com'],
       :groups            => %w(wibble bubble),
     }
   end
