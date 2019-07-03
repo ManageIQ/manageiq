@@ -292,6 +292,10 @@ class MiqReport < ApplicationRecord
     [result_set_filtered, result_set_filtered.count]
   end
 
+  def self.default_use_sql_view
+    false
+  end
+
   private
 
   def va_sql_cols
