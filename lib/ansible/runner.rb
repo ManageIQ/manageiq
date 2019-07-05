@@ -74,7 +74,7 @@ module Ansible
                     :tags            => tags,
                     :role            => role_name,
                     :roles_path      => roles_path,
-                    :role_skip_facts => role_skip_facts,)
+                    :role_skip_facts => role_skip_facts)
       end
 
       # Runs "run" method via queue
@@ -207,12 +207,12 @@ module Ansible
         errors << "extra_vars must be a Hash, got: #{hash.class}" unless extra_vars.kind_of?(Hash)
         errors << "tags must be a String, got: #{tags.class}" if tags.present? && !tags.kind_of?(String)
 
-        unless %w(run start).include?(ansible_runner_method.to_s)
+        unless %w[run start].include?(ansible_runner_method.to_s)
           errors << "ansible_runner_method must be 'run' or 'start'"
         end
 
-        unless playbook_or_role_args.keys == %i(playbook) || playbook_or_role_args.keys.sort == %i(role role_skip_facts roles_path)
-          errors << "Unexpected playbook/role args: #{args}"
+        unless playbook_or_role_args.keys == %i[playbook] || playbook_or_role_args.keys.sort == %i[role role_skip_facts roles_path]
+          errors << "Unexpected playbook/role args: #{playbook_or_role_args}"
         end
 
         playbook = playbook_or_role_args[:playbook]

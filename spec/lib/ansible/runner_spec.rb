@@ -226,7 +226,8 @@ describe Ansible::Runner do
     let(:user)      { FactoryBot.create(:user) }
 
     it "queues Ansible::Runner.run in the right zone" do
-      described_class.run_role_queue(env_vars, extra_vars, role_name, user.name, {:zone => zone.name}, :roles_path => role_path)
+      queue_args = {:zone => zone.name}
+      described_class.run_role_queue(env_vars, extra_vars, role_name, user.name, queue_args, :roles_path => role_path)
 
       expect(MiqQueue.count).to eq(1)
       expect(MiqQueue.first.zone).to eq(zone.name)
