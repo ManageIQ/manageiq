@@ -35,7 +35,6 @@ module Rbac
       Host
       HostAggregate
       Lan
-      LoadBalancer
       MiddlewareDatasource
       MiddlewareDeployment
       MiddlewareDomain
@@ -62,7 +61,6 @@ module Rbac
       CloudNetwork
       CloudSubnet
       FloatingIp
-      LoadBalancer
       NetworkPort
       NetworkRouter
       SecurityGroup
