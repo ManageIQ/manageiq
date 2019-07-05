@@ -150,8 +150,12 @@ module Ansible
         validate_params!(env_vars, extra_vars, tags, ansible_runner_method, playbook_or_role_args)
 
         base_dir = Dir.mktmpdir("ansible-runner")
+
         create_hosts_file(base_dir, hosts)
-        params = runner_params(base_dir, ansible_runner_method, extra_vars, tags, playbook_or_role_args)
+        create_extra_vars_file(base_dir, extra_vars)
+        create_cmdline_file(base_dir, tags)
+
+        params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args)
 
         begin
           result = AwesomeSpawn.run("ansible-runner", :env => env_vars, :params => params)
@@ -184,26 +188,15 @@ module Ansible
         ansible_runner_method == "start"
       end
 
-      def runner_params(base_dir, ansible_runner_method, extra_vars, tags, playbook_or_role_args)
+      def runner_params(base_dir, ansible_runner_method, playbook_or_role_args)
         runner_args = playbook_or_role_args.dup
 
         runner_args.delete(:roles_path) if runner_args[:roles_path].nil?
-        skip_facts = runner_args.delete(:role_skip_facts)
-        runner_args[:role_skip_facts] = nil if skip_facts
 
-        cmdline_commands = set_cmdline_commands(extra_vars, tags)
-
-        runner_args[:ident]   = "result"
-        runner_args[:cmdline] = AwesomeSpawn.build_command_line(nil, [cmdline_commands]).lstrip if extra_vars.any?
+        runner_args[:role_skip_facts] = nil if runner_args.delete(:role_skip_facts)
+        runner_args[:ident] = "result"
 
         [ansible_runner_method, base_dir, :json, runner_args]
-      end
-
-      def set_cmdline_commands(extra_vars, tags)
-        commands = {:extra_vars => extra_vars.to_json}
-        commands[:tags] = tags if tags.present?
-
-        commands
       end
 
       # Asserts passed parameters are correct, if not throws an exception.
@@ -236,6 +229,26 @@ module Ansible
 
         FileUtils.mkdir_p(inventory_dir)
         File.write(hosts_file, hosts.join("\n"))
+      end
+
+      def create_extra_vars_file(dir, extra_vars)
+        return if extra_vars.blank?
+
+        extra_vars_file = File.join(env_dir(dir), "extravars")
+        File.write(extra_vars_file, extra_vars.to_json)
+      end
+
+      def create_cmdline_file(dir, tags)
+        return if tags.blank?
+
+        cmd_line_file = File.join(env_dir(dir), "cmdline")
+        cmd_string    = AwesomeSpawn.build_command_line(nil, :tags => tags).lstrip
+
+        File.write(cmd_line_file, cmd_string)
+      end
+
+      def env_dir(base_dir)
+        FileUtils.mkdir_p(File.join(base_dir, "env")).first
       end
     end
   end
