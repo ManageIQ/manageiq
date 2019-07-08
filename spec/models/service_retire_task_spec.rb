@@ -1,7 +1,7 @@
 describe ServiceRetireTask do
   let(:user) { FactoryBot.create(:user_with_group) }
   let(:vm) { FactoryBot.create(:vm) }
-  let(:service) { FactoryBot.create(:service) }
+  let(:service) { FactoryBot.create(:service, :lifecycle_state => 'provisioned') }
   let(:miq_request) { FactoryBot.create(:service_retire_request, :requester => user, :source => service) }
   let(:service_retire_task) { FactoryBot.create(:service_retire_task, :source => service, :miq_request => miq_request, :options => {:src_ids => [service.id] }) }
   let(:reason) { "Why Not?" }
@@ -70,8 +70,16 @@ describe ServiceRetireTask do
         miq_request.approve(approver, reason)
       end
 
-      it "creates service retire subtask" do
+      it "doesn't create service retire subtask for unprov'd service" do
         service.add_resource!(FactoryBot.create(:service_orchestration))
+        service_retire_task.after_request_task_create
+
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
+        expect(ServiceRetireTask.count).to eq(1)
+      end
+
+      it "creates service retire subtask" do
+        service.add_resource!(FactoryBot.create(:service_orchestration, :lifecycle_state => 'provisioned'))
         service_retire_task.after_request_task_create
 
         expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
@@ -109,11 +117,19 @@ describe ServiceRetireTask do
       end
 
       it "creates service retire subtask" do
-        service.add_resource!(FactoryBot.create(:service))
+        service.add_resource!(FactoryBot.create(:service, :lifecycle_state => 'provisioned'))
         service_retire_task.after_request_task_create
 
         expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(ServiceRetireTask.count).to eq(2)
+      end
+
+      it "doesn't create service retire subtask for unprovisioned service" do
+        service.add_resource!(FactoryBot.create(:service))
+        service_retire_task.after_request_task_create
+
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
+        expect(ServiceRetireTask.count).to eq(1)
       end
 
       it "creates stack retire subtask" do
@@ -175,18 +191,20 @@ describe ServiceRetireTask do
       end
     end
 
-    context "bundled service retires all children" do
-      let(:service_c1) { FactoryBot.create(:service) }
+    context "bundled service retires all valid children" do
+      let(:service_c1) { FactoryBot.create(:service, :lifecycle_state => 'provisioned') }
+      let(:service_c2) { FactoryBot.create(:service) }
 
       before do
         service.add_resource!(service_c1)
+        service.add_resource!(service_c2)
         service.add_resource!(FactoryBot.create(:service_template))
         @miq_request = FactoryBot.create(:service_retire_request, :requester => user)
         @miq_request.approve(approver, reason)
         @service_retire_task = FactoryBot.create(:service_retire_task, :source => service, :miq_request => @miq_request, :options => {:src_ids => [service.id] })
       end
 
-      it "creates subtask for services but not templates" do
+      it "creates subtask for provisioned services but not templates" do
         @service_retire_task.after_request_task_create
 
         expect(ServiceRetireTask.count).to eq(2)
