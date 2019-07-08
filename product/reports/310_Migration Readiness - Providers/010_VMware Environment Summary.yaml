@@ -14,7 +14,7 @@ include:
     columns:
     - name
     - api_version
-    - id 
+    - id
 col_order:
 - ext_management_system.name
 - ext_management_system.api_version
