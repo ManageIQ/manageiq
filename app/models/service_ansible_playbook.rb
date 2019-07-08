@@ -21,12 +21,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
         'manageiq_connection' => manageiq_connection_env(evm_owner)
       }
     )
-    hosts = opts.delete(:hosts)
+    opts[:hosts] = hosts_array(opts.delete(:hosts))
 
     _log.info("Launching Ansible Tower job with options:")
     $log.log_hashes(opts)
     new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, decrypt_options(opts))
-    update_job_for_playbook(action, new_job, hosts)
+    update_job_for_playbook(action, new_job, opts[:hosts])
 
     _log.info("Ansible Tower job with ref #{new_job.ems_ref} was created.")
     add_resource!(new_job, :name => action)
@@ -53,17 +53,11 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     service_resources.find_by(:name => action, :resource_type => 'OrchestrationStack').try(:resource)
   end
 
-  def postprocess(action)
-    inventory_raw_id = options.fetch_path(job_option_key(action), :inventory)
-    delete_inventory(action, inventory_raw_id) if inventory_raw_id
-    log_stdout(action)
-  end
-
   def on_error(action)
     _log.info("on_error called for service action: #{action}")
     update_attributes(:retirement_state => 'error') if action == "Retirement"
     job(action).try(:refresh_ems)
-    postprocess(action)
+    log_stdout(action)
   end
 
   def retain_resources_on_retirement?
@@ -102,9 +96,6 @@ class ServiceAnsiblePlaybook < ServiceGeneric
       job_options[cred] = Authentication.find(credential_id).native_ref if credential_id.present?
     end
 
-    hosts = job_options[:hosts]
-    job_options[:inventory] = create_inventory_with_hosts(action, hosts).id unless use_default_inventory?(hosts)
-
     options[job_option_key(action)] = job_options
     save!
   end
@@ -132,42 +123,20 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     params.blank? ? {} : {:extra_vars => params}
   end
 
-  def create_inventory_with_hosts(action, hosts)
-    tower = manager(action)
-    tower.with_provider_connection do |connection|
-      miq_org = tower.provider.default_organization
-      connection.api.inventories.create!(:name => inventory_name(action), :organization => miq_org).tap do |inventory|
-        hosts.split(',').each do |host|
-          connection.api.hosts.create!(:name => host, :inventory => inventory.id)
-        end
-      end
-    end
-  end
-
-  def delete_inventory(action, inventory_raw_id)
-    manager(action).with_provider_connection do |connection|
-      connection.api.inventories.find(inventory_raw_id).destroy!
-    end
-  end
-
-  def manager(action)
-    job_template(action).manager
-  end
-
-  def inventory_name(action)
-    "#{job_template(action).name}_#{id}"
-  end
-
   def use_default_inventory?(hosts)
     hosts.blank? || hosts == 'localhost'
   end
 
+  def hosts_array(hosts_string)
+    return ["localhost"] if use_default_inventory?(hosts_string)
+
+    hosts_string.split(',').map(&:strip).delete_blanks
+  end
+
   # update job attributes only available to playbook provisioning
   def update_job_for_playbook(action, job, hosts)
-    hosts = 'localhost' if use_default_inventory?(hosts)
-    host_array = hosts.split(',')
     playbook_id = options.fetch_path(:config_info, action.downcase.to_sym, :playbook_id)
-    job.update_attributes!(:configuration_script_base_id => playbook_id, :hosts => host_array)
+    job.update!(:configuration_script_base_id => playbook_id, :hosts => hosts)
   end
 
   def decrypt_options(opts)

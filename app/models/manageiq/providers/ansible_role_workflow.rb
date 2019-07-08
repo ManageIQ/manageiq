@@ -1,8 +1,9 @@
 class ManageIQ::Providers::AnsibleRoleWorkflow < ManageIQ::Providers::AnsibleRunnerWorkflow
-  def self.job_options(env_vars, extra_vars, role_options, timeout, poll_interval)
+  def self.job_options(env_vars, extra_vars, role_options, timeout, poll_interval, hosts)
     {
       :env_vars        => env_vars,
       :extra_vars      => extra_vars,
+      :hosts           => hosts,
       :role_name       => role_options[:role_name],
       :roles_path      => role_options[:roles_path],
       :role_skip_facts => role_options[:role_skip_facts],
