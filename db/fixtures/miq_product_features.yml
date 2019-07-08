@@ -1112,52 +1112,6 @@
       :feature_type: admin
       :identifier: ems_infra_change_password
 
-# V2V
-- :name: Migration Overview
-  :description: Migration Overview
-  :feature_type: node
-  :identifier: migration
-  :children:
-  - :name: Conversion Hosts
-    :description: Conversion Hosts
-    :feature_type: node
-    :identifier: conversion_host
-    :children:
-    - :name: View
-      :description: View Conversion Hosts
-      :feature_type: view
-      :identifier: conversion_host_view
-      :children:
-      - :name: List
-        :description: Display Lists of Conversion Hosts
-        :feature_type: view
-        :identifier: conversion_host_show_list
-      - :name: Show
-        :description: Display Individual Conversion Hosts
-        :feature_type: view
-        :identifier: conversion_host_show
-    - :name: Operate
-      :description: Perform Operations on Conversion Hosts
-      :feature_type: control
-      :identifier: conversion_host_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Tags of Conversion Hosts
-        :feature_type: control
-        :identifier: conversion_host_tag
-
-# V2V
-- :name: Infrastructure Mappings
-  :description: Infrastructure Mappings
-  :feature_type: node
-  :identifier: mappings
-
-# V2V
-- :name: Migration Settings
-  :description: Migration Settings
-  :feature_type: node
-  :identifier: migration_settings
-
 # Datacenters
 - :name: Datacenters
   :description: Datacenters
