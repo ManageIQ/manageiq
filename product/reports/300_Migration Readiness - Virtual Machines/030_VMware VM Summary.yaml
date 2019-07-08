@@ -16,6 +16,7 @@ include:
   ext_management_system:
     columns:
     - name
+    - id
   host:
     columns:
     - name
@@ -23,6 +24,7 @@ col_order:
 - name
 - operating_system.product_name
 - ext_management_system.name
+- ext_management_system.id
 - v_owning_datacenter
 - host.name
 - allocated_disk_storage
