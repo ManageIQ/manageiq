@@ -16,7 +16,7 @@ module PhysicalServerProvisionTask::StateMachine
   end
 
   def mark_as_completed
-    update_and_notify_parent(:state => 'provisioned', :message => msg('provisioning completed'))
+    update_and_notify_parent(:state => 'finished', :message => msg('provisioning completed'))
     MiqEvent.raise_evm_event(source, 'generic_task_finish', :message => "Done provisioning PhysicalServer")
     signal :finish
   end
