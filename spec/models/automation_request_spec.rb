@@ -98,6 +98,7 @@ describe AutomationRequest do
     end
 
     it "with requester string overriding userid AND auto_approval" do
+      FactoryBot.create(:user_admin, :userid => 'admin')
       ar = AutomationRequest.create_from_ws(@version, admin,
                                             @uri_parts, @parameters,
                                             "user_name" => @approver.userid.to_s, 'auto_approve' => 'true')
@@ -120,6 +121,7 @@ describe AutomationRequest do
 
   context ".create_from_scheduled_task" do
     let(:admin) { FactoryBot.create(:user_miq_request_approver) }
+    before { FactoryBot.create(:user_admin, :userid => 'admin') }
 
     it "with prescheduled task" do
       ar = described_class.create_from_scheduled_task(admin, @uri_parts, @parameters)
@@ -241,6 +243,7 @@ describe AutomationRequest do
 
   context "validate zone" do
     before do
+      FactoryBot.create(:user_admin, :userid => 'admin')
       allow_any_instance_of(MiqRequest).to receive(:automate_event_failed?).and_return(false)
     end
 
