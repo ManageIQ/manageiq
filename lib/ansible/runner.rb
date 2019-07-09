@@ -9,8 +9,9 @@ module Ansible
       # @param playbook_path [String] Path to the playbook we will want to run
       # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
       #         Ansible::Runner::Response object, when the job is finished.
-      def run_async(env_vars, extra_vars, playbook_path)
-        run_via_cli(env_vars,
+      def run_async(env_vars, extra_vars, playbook_path, hosts: ["localhost"])
+        run_via_cli(hosts,
+                    env_vars,
                     extra_vars,
                     :ansible_runner_method => "start",
                     :playbook              => playbook_path)
@@ -28,8 +29,9 @@ module Ansible
       #        playbook. True by default.
       # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
       #         Ansible::Runner::Response object, when the job is finished.
-      def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true)
-        run_via_cli(env_vars,
+      def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, hosts: ["localhost"])
+        run_via_cli(hosts,
+                    env_vars,
                     extra_vars,
                     :ansible_runner_method => "start",
                     :role                  => role_name,
@@ -45,8 +47,9 @@ module Ansible
       # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @param playbook_path [String] Path to the playbook we will want to run
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run(env_vars, extra_vars, playbook_path, tags: nil)
-        run_via_cli(env_vars,
+      def run(env_vars, extra_vars, playbook_path, tags: nil, hosts: ["localhost"])
+        run_via_cli(hosts,
+                    env_vars,
                     extra_vars,
                     :tags     => tags,
                     :playbook => playbook_path)
@@ -64,13 +67,14 @@ module Ansible
       #        playbook. True by default.
       # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, tags: nil)
-        run_via_cli(env_vars,
+      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, tags: nil, hosts: ["localhost"])
+        run_via_cli(hosts,
+                    env_vars,
                     extra_vars,
                     :tags            => tags,
                     :role            => role_name,
                     :roles_path      => roles_path,
-                    :role_skip_facts => role_skip_facts,)
+                    :role_skip_facts => role_skip_facts)
       end
 
       # Runs "run" method via queue
@@ -138,11 +142,20 @@ module Ansible
       #        "run", which is sync call, or "start" which is async call.  Default is "run"
       # @param playbook_or_role_args [Hash] Hash that includes the :playbook key or :role keys
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_via_cli(env_vars, extra_vars, tags: nil, ansible_runner_method: "run", **playbook_or_role_args)
+      def run_via_cli(hosts, env_vars, extra_vars, tags: nil, ansible_runner_method: "run", **playbook_or_role_args)
+        # If we are running against only localhost and no other value is set for ansible_connection
+        # then assume we don't want to ssh locally
+        extra_vars["ansible_connection"] ||= "local" if hosts == ["localhost"]
+
         validate_params!(env_vars, extra_vars, tags, ansible_runner_method, playbook_or_role_args)
 
         base_dir = Dir.mktmpdir("ansible-runner")
-        params = runner_params(base_dir, ansible_runner_method, extra_vars, tags, playbook_or_role_args)
+
+        create_hosts_file(base_dir, hosts)
+        create_extra_vars_file(base_dir, extra_vars)
+        create_cmdline_file(base_dir, tags)
+
+        params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args)
 
         begin
           result = AwesomeSpawn.run("ansible-runner", :env => env_vars, :params => params)
@@ -175,27 +188,15 @@ module Ansible
         ansible_runner_method == "start"
       end
 
-      def runner_params(base_dir, ansible_runner_method, extra_vars, tags, playbook_or_role_args)
+      def runner_params(base_dir, ansible_runner_method, playbook_or_role_args)
         runner_args = playbook_or_role_args.dup
 
         runner_args.delete(:roles_path) if runner_args[:roles_path].nil?
-        skip_facts = runner_args.delete(:role_skip_facts)
-        runner_args[:role_skip_facts] = nil if skip_facts
 
-        cmdline_commands = set_cmdline_commands(extra_vars, tags)
-
-        runner_args[:ident]   = "result"
-        runner_args[:hosts]   = "localhost"
-        runner_args[:cmdline] = AwesomeSpawn.build_command_line(nil, [cmdline_commands]).lstrip if extra_vars.any?
+        runner_args[:role_skip_facts] = nil if runner_args.delete(:role_skip_facts)
+        runner_args[:ident] = "result"
 
         [ansible_runner_method, base_dir, :json, runner_args]
-      end
-
-      def set_cmdline_commands(extra_vars, tags)
-        commands = {:extra_vars => extra_vars.to_json}
-        commands[:tags] = tags if tags.present?
-
-        commands
       end
 
       # Asserts passed parameters are correct, if not throws an exception.
@@ -206,12 +207,12 @@ module Ansible
         errors << "extra_vars must be a Hash, got: #{hash.class}" unless extra_vars.kind_of?(Hash)
         errors << "tags must be a String, got: #{tags.class}" if tags.present? && !tags.kind_of?(String)
 
-        unless %w(run start).include?(ansible_runner_method.to_s)
+        unless %w[run start].include?(ansible_runner_method.to_s)
           errors << "ansible_runner_method must be 'run' or 'start'"
         end
 
-        unless playbook_or_role_args.keys == %i(playbook) || playbook_or_role_args.keys.sort == %i(role role_skip_facts roles_path)
-          errors << "Unexpected playbook/role args: #{args}"
+        unless playbook_or_role_args.keys == %i[playbook] || playbook_or_role_args.keys.sort == %i[role role_skip_facts roles_path]
+          errors << "Unexpected playbook/role args: #{playbook_or_role_args}"
         end
 
         playbook = playbook_or_role_args[:playbook]
@@ -220,6 +221,34 @@ module Ansible
         errors << "roles path doesn't exist: #{roles_path}" if roles_path && !File.exist?(roles_path)
 
         raise ArgumentError, errors.join("; ") if errors.any?
+      end
+
+      def create_hosts_file(dir, hosts)
+        inventory_dir = File.join(dir, "inventory")
+        hosts_file    = File.join(inventory_dir, "hosts")
+
+        FileUtils.mkdir_p(inventory_dir)
+        File.write(hosts_file, hosts.join("\n"))
+      end
+
+      def create_extra_vars_file(dir, extra_vars)
+        return if extra_vars.blank?
+
+        extra_vars_file = File.join(env_dir(dir), "extravars")
+        File.write(extra_vars_file, extra_vars.to_json)
+      end
+
+      def create_cmdline_file(dir, tags)
+        return if tags.blank?
+
+        cmd_line_file = File.join(env_dir(dir), "cmdline")
+        cmd_string    = AwesomeSpawn.build_command_line(nil, :tags => tags).lstrip
+
+        File.write(cmd_line_file, cmd_string)
+      end
+
+      def env_dir(base_dir)
+        FileUtils.mkdir_p(File.join(base_dir, "env")).first
       end
     end
   end
