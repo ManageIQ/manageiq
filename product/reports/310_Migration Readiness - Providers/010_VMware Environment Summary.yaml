@@ -28,6 +28,7 @@ headers:
 - Provider
 - vSphere Version
 - Hypervisor
+- Hypervisor ID
 - Product
 - Version
 - CPU Sockets
