@@ -68,9 +68,15 @@ module MiqRequestTask::StateMachine
     false
   end
 
-  def requeue_phase
+  # Retry up to 10k times by default which is roughly for 27h if we repeat every 10s
+  def requeue_phase(max_retries: 10**4)
     mark_execution_servers
     save # Save current phase_context
+
+    if max_retries.positive? && (retries = options[:executed_on_servers].size) && retries > max_retries
+      raise MiqException::Error, "max retries exceeded (#{max_retries})"
+    end
+
     MiqQueue.put(
       :class_name     => self.class.name,
       :instance_id    => id,

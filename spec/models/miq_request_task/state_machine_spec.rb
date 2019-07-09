@@ -16,5 +16,27 @@ describe MiqRequestTask do
         expect(task.status).to eq("Error")
       end
     end
+
+    describe "#requeue_phase" do
+      before { allow(MiqServer).to receive(:my_server).and_return(double(:id => 123)) }
+      let(:task) do
+        FactoryBot.create(:miq_request_task).tap do |task|
+          allow(task).to receive(:my_role)
+          allow(task).to receive(:my_zone)
+        end
+      end
+
+      describe 'will honor max_retries' do
+        it 'when exeeds' do
+          task.options = { :executed_on_servers => [1, 1, 1] }
+          expect { task.requeue_phase(:max_retries => 3) }.to raise_error(/max retries exceeded/)
+        end
+
+        it 'when not exeeds' do
+          task.options = { :executed_on_servers => [1, 1] }
+          expect { task.requeue_phase(:max_retries => 3) }.not_to raise_error
+        end
+      end
+    end
   end
 end
