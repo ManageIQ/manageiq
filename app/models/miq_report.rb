@@ -178,11 +178,22 @@ class MiqReport < ApplicationRecord
     sortby ? col_order.index(sortby.first) : 0
   end
 
-  def column_is_hidden?(col)
+  def column_is_hidden?(col, controller = nil)
     return false unless col_options
 
     @hidden_cols ||= col_options.keys.each_with_object([]) do |c, a|
-      a << c if col_options[c][:hidden]
+      if col_options[c][:hidden]
+        a << c
+      else
+        display_method = col_options[c][:display_method]&.to_sym
+        is_display_method_available = defined?(controller.class::DISPLAY_GTL_METHODS) && controller.class::DISPLAY_GTL_METHODS.include?(display_method) && controller.respond_to?(display_method)
+
+        if controller && display_method && is_display_method_available
+          # when this display_method returns true it means that column is displayed
+          is_column_hidden = !controller.try(display_method)
+          a << c if is_column_hidden
+        end
+      end
     end
 
     @hidden_cols.include?(col.to_s)
