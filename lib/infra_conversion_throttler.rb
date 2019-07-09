@@ -8,7 +8,7 @@ class InfraConversionThrottler
       _log.debug("-- Number of pending jobs: #{jobs.size}")
       running = ems.conversion_hosts.inject(0) { |sum, ch| sum + ch.active_tasks.count }
       _log.debug("-- Currently running jobs in EMS: #{running}")
-      slots = (ems.miq_custom_get('Max Transformation Runners') || Settings.transformation.limits.max_concurrent_tasks_per_ems).to_i - running
+      slots = (ems.miq_custom_get('MaxTransformationRunners') || Settings.transformation.limits.max_concurrent_tasks_per_ems).to_i - running
 
       if slots <= 0
         _log.debug("-- No available slot in EMS. Stopping.")
