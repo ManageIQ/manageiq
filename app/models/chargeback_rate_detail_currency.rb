@@ -48,7 +48,7 @@ class ChargebackRateDetailCurrency < ApplicationRecord
           rec.attributes = currency
           if rec.changed?
             _log.info("Updating [#{currency[:code]}] with symbols=[#{currency[:symbol]}]")
-            rec.update_attributes(:created_at => fixture_mtime_currency)
+            rec.update(:created_at => fixture_mtime_currency)
           end
         end
       end
