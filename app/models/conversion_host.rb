@@ -16,7 +16,7 @@ class ConversionHost < ApplicationRecord
 
   validates :name, :presence => true
   validates :resource, :presence => true
-  validates_uniqueness_of :resource_id, :scope => :resource_type
+  validates :resource_id, :uniqueness => { :scope => :resource_type }
 
   validates :address,
     :uniqueness => true,
