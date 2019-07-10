@@ -36,16 +36,20 @@ class ChargebackRateDetailCurrency < ApplicationRecord
   end
 
   def self.seed
+    db_currencies = ChargebackRateDetailCurrency.all.index_by(&:code)
     if File.exist?(currency_file_source)
       fixture_mtime_currency = File.mtime(currency_file_source).utc
       currencies.each do |currency|
-        rec = ChargebackRateDetailCurrency.find_by(:code => currency[:code])
+        rec = db_currencies[currency[:code]]
         if rec.nil?
           _log.info("Creating [#{currency[:code]}] with symbols=[#{currency[:symbol]}]")
           ChargebackRateDetailCurrency.create(currency)
         elsif fixture_mtime_currency > rec.created_at
-          _log.info("Updating [#{currency[:code]}] with symbols=[#{currency[:symbol]}]")
-          rec.update_attributes(currency.merge(:created_at => fixture_mtime_currency))
+          rec.attributes = currency
+          if rec.changed?
+            _log.info("Updating [#{currency[:code]}] with symbols=[#{currency[:symbol]}]")
+            rec.update(:created_at => fixture_mtime_currency)
+          end
         end
       end
     end
