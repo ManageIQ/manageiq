@@ -16,7 +16,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :ConfigurationScriptSource
   require_nested :ConfigurationWorkflow
   require_nested :ConfiguredSystem
-  require_nested :Inventory
   require_nested :Job
   require_nested :Playbook
 
