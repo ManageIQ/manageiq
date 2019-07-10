@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-8
+## Unreleased as of Sprint 115 ending 2019-07-08
+
+### Added
+- [V2V] Don't use the ssh agent when verifying credentials [(#18920)](https://github.com/ManageIQ/manageiq/pull/18920)
+- Add scope to list providers from ancestor tenants [(#18735)](https://github.com/ManageIQ/manageiq/pull/18735)
+- Add scope to list service templates from ancestor tenants [(#18733)](https://github.com/ManageIQ/manageiq/pull/18733)
+
+### Fixed
+- Validate bools with inclusion [(#18914)](https://github.com/ManageIQ/manageiq/pull/18914)
+- Adding data integrity constrains for some associations to User model [(#18472)](https://github.com/ManageIQ/manageiq/pull/18472)
+
+## Hammer-8 - Released 2019-07-02
 
 ### Added
 - Add migration analytics reports [(#18749)](https://github.com/ManageIQ/manageiq/pull/18749)
