@@ -20,26 +20,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     time = Time.zone.now
     update_attributes(:started_on => time)
     miq_task.update_attributes(:started_on => time)
-    if options[:hosts].blank? || options[:hosts] == 'localhost'
-      my_signal(false, :create_job_template)
-    else
-      my_signal(false, :create_inventory)
-    end
-  end
-
-  def create_inventory
-    set_status('creating inventory')
-
-    inventory_name = "#{playbook.name}_#{SecureRandom.uuid}"
-
-    _log.info("Creating inventory #{inventory_name} including hosts (#{options[:hosts]})")
-    options[:inventory] = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Inventory
-                          .raw_create_inventory(playbook.manager, inventory_name, options[:hosts]).id
-    save!
-    my_signal(minimize_indirect, :create_job_template)
-  rescue => err
-    _log.log_backtrace(err)
-    my_signal(minimize_indirect, :post_ansible_run, err.message, 'error')
+    my_signal(false, :create_job_template)
   end
 
   def create_job_template
@@ -58,6 +39,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     set_status('launching tower job')
 
     launch_options = options.slice(:extra_vars, :limit)
+    launch_options[:hosts] = hosts_array(options[:hosts])
     tower_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(temp_configuration_script, launch_options)
     options[:tower_job_id] = tower_job.id
     self.name = "#{name}, Job ID: #{tower_job.id}"
@@ -93,10 +75,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
 
   def post_ansible_run(message, status)
     save_playbook_set_stats
-    inventory_not_deleted = !delete_inventory
     jt_not_deleted = !delete_job_template
 
-    message = "#{message}; Cleanup encountered error" if inventory_not_deleted || jt_not_deleted
+    message = "#{message}; Cleanup encountered error" if jt_not_deleted
     my_signal(true, :finish, message, status)
   end
 
@@ -129,11 +110,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     {
       :initializing                  => {'initialize'       => 'waiting_to_start'},
       :start                         => {'waiting_to_start' => 'running'},
-      :create_inventory              => {'running'          => 'inventory'},
-      :create_job_template           => {'inventory'        => 'job_template', 'running' => 'job_template'},
+      :create_job_template           => {'running' => 'job_template'},
       :launch_ansible_tower_job      => {'job_template'     => 'ansible_job'},
       :poll_ansible_tower_job_status => {'ansible_job'      => 'ansible_job'},
-      :post_ansible_run              => {'inventory'        => 'ansible_done', 'job_template' => 'ansible_done', 'ansible_job' => 'ansible_done'},
+      :post_ansible_run              => {'job_template' => 'ansible_done', 'ansible_job' => 'ansible_done'},
       :finish                        => {'*'                => 'finished'},
       :abort_job                     => {'*'                => 'aborting'},
       :cancel                        => {'*'                => 'canceling'},
@@ -173,17 +153,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     )
   end
 
-  def delete_inventory
-    return true unless options[:inventory]
-    playbook.manager.with_provider_connection do |connection|
-      connection.api.inventories.find(options[:inventory]).destroy!
-    end
-  rescue => err
-    # log the error but do not treat the playbook running as failure
-    _log.log_backtrace(err)
-    false
-  end
-
   def delete_job_template
     return true unless options[:job_template_ref]
     temp_configuration_script.raw_delete_in_provider
@@ -207,5 +176,17 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     # save playbook set_stats data into MiqTask#task_results for future usage
     #
     miq_task.update(:task_results => {'ansible_stats' => ansible_job.raw_stdout('json').dig(-1, 'event_data', 'artifact_data')})
+  end
+
+  # Duplicated from ServiceAnsiblePlaybook
+  # TODO: Deduplicate all of this logic
+  def use_default_inventory?(hosts)
+    hosts.blank? || hosts == 'localhost'
+  end
+
+  def hosts_array(hosts_string)
+    return ["localhost"] if use_default_inventory?(hosts_string)
+
+    hosts_string.split(',').map(&:strip).delete_blanks
   end
 end
