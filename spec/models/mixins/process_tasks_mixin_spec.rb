@@ -26,6 +26,17 @@ describe ProcessTasksMixin do
       end
     end
 
+    context "with multiple ids" do
+      let(:service1) { FactoryBot.create(:service) }
+      let(:service2) { FactoryBot.create(:service) }
+      let(:service3) { FactoryBot.create(:service) }
+      it "creates multiple requests" do
+        User.current_user = FactoryBot.create(:user)
+        Service.process_tasks(:task => "retire_now", :ids => [service1.id, service2.id, service3.id], :userid => User.current_user.userid)
+        expect(MiqRequest.count).to eq(3)
+      end
+    end
+
     it "queues a message for the specified task" do
       EvmSpecHelper.create_guid_miq_server_zone
       test_class.process_tasks(:task => "test_method", :ids => [5], :userid => "admin")
