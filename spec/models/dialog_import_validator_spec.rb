@@ -27,6 +27,16 @@ describe DialogImportValidator do
       end
     end
 
+    context "when the yaml is invalid yaml" do
+      let(:uploaded_content) { "" }
+
+      it "raises a DialogImportValidator::BlankFileError" do
+        expect do
+          dialog_import_validator.determine_validity(import_file_upload)
+        end.to raise_error(DialogImportValidator::BlankFileError)
+      end
+    end
+
     context "when associations are blank" do
       let(:uploaded_content) do
         [{"dialog_tabs" => [{"dialog_groups" => [{"dialog_fields" => [{"name" => "df1"}]}]}]}].to_yaml

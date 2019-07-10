@@ -1,16 +1,19 @@
 class DialogImportValidator
+  class BlankFileError < StandardError; end
   class ImportNonYamlError < StandardError; end
   class InvalidDialogFieldTypeError < StandardError; end
+  class InvalidDialogVersionError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
   class ParsedNonDialogError < StandardError; end
-  class InvalidDialogVersionError < StandardError; end
 
   def initialize(dialog_field_association_validator = DialogFieldAssociationValidator.new)
     @dialog_field_association_validator = dialog_field_association_validator
   end
 
   def determine_validity(import_file_upload)
-    potential_dialogs = YAML.load(import_file_upload.uploaded_content)
+    potential_dialogs = YAML.safe_load(import_file_upload.uploaded_content)
+    raise BlankFileError unless potential_dialogs
+
     check_dialogs_for_validity(potential_dialogs)
   rescue Psych::SyntaxError
     raise ImportNonYamlError
