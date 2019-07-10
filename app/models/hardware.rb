@@ -24,6 +24,8 @@ class Hardware < ApplicationRecord
   has_many    :physical_ports, -> { where("device_type = 'physical_port'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
   has_many    :connected_physical_switches, :through => :guest_devices
 
+  has_many    :management_devices, -> { where("device_type = 'management'") }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
