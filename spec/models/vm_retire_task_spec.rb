@@ -12,7 +12,7 @@ describe VmRetireTask do
   describe "#after_request_task_create" do
     it "should set the task description" do
       vm_retire_task.after_request_task_create
-      expect(vm_retire_task.description).to eq("VM Retire for: #{vm.name} - ")
+      expect(vm_retire_task.description).to eq("VM Retire for: #{vm.name}")
     end
   end
 
