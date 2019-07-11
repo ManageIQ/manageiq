@@ -220,7 +220,7 @@
     userid:
     group_id:
     MiqPolicy:
-    - name: eea4ca5c-68a3-11e7-ab6f-beeffeed0072
+    - name: prevent smartstate analysis from running
       description: Prevent SmartState Analysis from running
       expression:
       towhat: Vm
@@ -249,7 +249,7 @@
           action_type: default
           options: {}
       Condition:
-      - name: 51283fb0-68a4-11e7-ab6f-beeffeed0072
+      - name: tagged as do_not_analyze
         description: Tagged as do_not_analyze
         expression: !ruby/object:MiqExpression
           exp:
@@ -265,7 +265,7 @@
         miq_policy_id:
         notes:
         read_only:
-    - name: ca3dc824-6c56-11e7-8e1f-beeffeed0072
+    - name: run smartstate analysis on new vms
       description: Run SmartState Analysis on new VMs
       expression:
       towhat: Vm
@@ -294,7 +294,7 @@
           action_type: default
           options: {}
       Condition: []
-    - name: 55054b1c-6ad1-11e7-ab6f-beeffeed0072
+    - name: tag a vm if smartstate analysis failed
       description: Tag a VM if SmartState Analysis failed
       expression:
       towhat: Vm
@@ -317,7 +317,7 @@
           default:
           enabled:
         MiqAction:
-          name: 977011b0-6b9b-11e7-abf0-beeffeed0072
+          name: remove evm operations tags
           description: Remove EVM Operations tags
           guid: 977011b0-6b9b-11e7-abf0-beeffeed0072
           action_type: remove_tags
@@ -337,7 +337,7 @@
           default:
           enabled:
         MiqAction:
-          name: 824ab012-6ad1-11e7-ab6f-beeffeed0072
+          name: tag as analysis failed
           description: Tag as Analysis Failed
           guid: 824ab012-6ad1-11e7-ab6f-beeffeed0072
           action_type: tag
@@ -347,7 +347,7 @@
             :tags:
             - "/managed/operations/analysis_failed"
       Condition: []
-    - name: b97cf4da-6b9b-11e7-abf0-beeffeed0072
+    - name: tag a vm if smartstate analysis successful
       description: Tag a VM if SmartState Analysis successful
       expression:
       towhat: Vm
@@ -370,7 +370,7 @@
           default:
           enabled:
         MiqAction:
-          name: 977011b0-6b9b-11e7-abf0-beeffeed0072
+          name: remove evm operations tags
           description: Remove EVM Operations tags
           guid: 977011b0-6b9b-11e7-abf0-beeffeed0072
           action_type: remove_tags
@@ -390,7 +390,7 @@
           default:
           enabled:
         MiqAction:
-          name: 77825142-6b9b-11e7-abf0-beeffeed0072
+          name: tag as analysis successful
           description: Tag as Analysis Successful
           guid: 77825142-6b9b-11e7-abf0-beeffeed0072
           action_type: tag
@@ -400,7 +400,7 @@
             :tags:
             - "/managed/operations/analysis_success"
       Condition: []
-    - name: c274a932-873b-11e7-866d-beeffeed0072
+    - name: trigger compliance check on smartstate completion
       description: Trigger Compliance Check on SmartState Completion
       expression:
       towhat: Vm
