@@ -117,24 +117,20 @@ describe(ServiceAnsiblePlaybook) do
   describe '#preprocess' do
     context 'basic service' do
       it 'prepares job options from service template' do
-        hosts = config_info_options.fetch_path(:config_info, :provision, :hosts)
-        expect(basic_service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 10))
         basic_service.preprocess(action)
         service.reload
-        expect(basic_service.options[:provision_job_options]).to include(:inventory => 10)
+        expect(basic_service.options[:provision_job_options][:hosts]).to eq("default_host1,default_host2")
       end
     end
 
     context 'with dialog overrides' do
       it 'prepares job options combines from service template and dialog' do
-        hosts = dialog_options[:dialog]['dialog_hosts']
-        expect(service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 20))
         service.preprocess(action)
         service.reload
-        expect(service.options[:provision_job_options]).to include(
-          :inventory  => 20,
-          :credential => credential_1.native_ref,
-          :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val}
+        expect(service.options[:provision_job_options][:hosts]).to eq("host1,host2")
+        expect(service.options[:provision_job_options][:credential]).to eq(credential_1.native_ref)
+        expect(service.options[:provision_job_options][:extra_vars]).to eq(
+          'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val
         )
       end
 
@@ -148,13 +144,11 @@ describe(ServiceAnsiblePlaybook) do
         end
 
         it 'ignores dialog options' do
-          hosts = service.options.fetch_path(:config_info, :retirement, :hosts)
-          expect(service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 20))
           service.preprocess(action)
           service.reload
-          expect(service.options[:retirement_job_options]).to include(
-            :inventory  => 20,
-            :extra_vars => {'var1' => 'default_val1', 'var2' => 'default_val2', 'var3' => 'default_val3'}
+          expect(service.options[:retirement_job_options][:hosts]).to eq("default_host1,default_host2")
+          expect(service.options[:retirement_job_options][:extra_vars]).to eq(
+            'var1' => 'default_val1', 'var2' => 'default_val2', 'var3' => 'default_val3'
           )
           expect(service.options[:retirement_job_options]).not_to have_key(:credential)
         end
@@ -163,14 +157,12 @@ describe(ServiceAnsiblePlaybook) do
 
     context 'with runtime overrides' do
       it 'prepares job options combined from service template, dialog, and overrides' do
-        hosts = override_options[:hosts]
-        expect(service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 30))
         service.preprocess(action, override_options)
         service.reload
-        expect(service.options[:provision_job_options]).to include(
-          :inventory  => 30,
-          :credential => credential_2.native_ref,
-          :extra_vars => {'var1' => 'new_val1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val2}
+        expect(service.options[:provision_job_options][:hosts]).to eq("host3")
+        expect(service.options[:provision_job_options][:credential]).to eq(credential_2.native_ref)
+        expect(service.options[:provision_job_options][:extra_vars]).to eq(
+          'var1' => 'new_val1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val2
         )
       end
     end
@@ -243,59 +235,16 @@ describe(ServiceAnsiblePlaybook) do
     it { expect(executed_service.check_refreshed(action)).to eq([true, nil]) }
   end
 
-  describe '#postprocess' do
-    context 'with user selected hosts' do
-      it 'deletes temporary inventory' do
-        expect(executed_service).to receive(:delete_inventory)
-        expect(executed_service).to receive(:log_stdout)
-        executed_service.postprocess(action)
-      end
-    end
-
-    context 'with default localhost' do
-      let(:provision_options) do
-        {
-          :provision_job_options => {
-            :credential => 1,
-            :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'pswd' => encrypted_val}
-          }
-        }
-      end
-
-      it 'needs not to delete the inventory' do
-        expect(executed_service).to receive(:log_stdout)
-        expect(executed_service).not_to receive(:delete_inventory)
-        executed_service.postprocess(action)
-      end
-    end
-
-    context 'require log stdout when job failed' do
-      before do
-        task   = MiqTask.new(:state => MiqTask::STATE_FINISHED, :status => MiqTask::STATUS_ERROR)
-        status = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job::Status.new(task, nil)
-        allow(runner_job).to receive(:raw_status).and_return(status)
-      end
-
-      it 'writes stdout to log' do
-        expect(runner_job).to receive(:raw_stdout).with('txt_download')
-        expect(executed_service).to receive(:delete_inventory)
-        executed_service.postprocess(action)
-      end
-    end
-  end
-
   describe '#on_error' do
     it 'handles retirement error' do
       executed_service.update_attributes(:retirement_state => 'Retiring')
       expect(runner_job).to receive(:refresh_ems)
-      expect(executed_service).to receive(:postprocess)
       executed_service.on_error(ResourceAction::RETIREMENT)
       expect(executed_service.retirement_state).to eq('error')
     end
 
     it 'handles provisioning error' do
       expect(runner_job).to receive(:refresh_ems)
-      expect(executed_service).to receive(:postprocess)
       executed_service.on_error(action)
       expect(executed_service.retirement_state).to be_nil
     end
@@ -310,6 +259,28 @@ describe(ServiceAnsiblePlaybook) do
 
     it 'returns nil for non-existing job' do
       expect(service.job('Retirement')).to be_nil
+    end
+  end
+
+  describe '#hosts_array (private)' do
+    it "is localhost if the hosts list is empty" do
+      hosts = ""
+      expect(basic_service.send(:hosts_array, hosts)).to eq(["localhost"])
+    end
+
+    it "is localhost if the hosts list is nil" do
+      hosts = nil
+      expect(basic_service.send(:hosts_array, hosts)).to eq(["localhost"])
+    end
+
+    it "handles multiple hosts" do
+      hosts = "192.0.2.0,192.0.2.1,192.0.2.2"
+      expect(basic_service.send(:hosts_array, hosts)).to match_array(%w[192.0.2.0 192.0.2.1 192.0.2.2])
+    end
+
+    it "works with weird commas" do
+      hosts = "192.0.2.0, , 192.0.2.1, 192.0.2.2  ,,,"
+      expect(basic_service.send(:hosts_array, hosts)).to match_array(%w[192.0.2.0 192.0.2.1 192.0.2.2])
     end
   end
 end

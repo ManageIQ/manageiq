@@ -33,7 +33,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     extra_vars    = merge_extra_vars(vars[:extra_vars])
     playbook_vars = { :playbook_path => parent.path }
 
-    workflow.create_job({}, extra_vars, playbook_vars).tap do |job|
+    workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts]).tap do |job|
       job.signal(:start)
     end
   end
