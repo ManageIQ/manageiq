@@ -7,6 +7,7 @@ module Ansible
       #        ansible-runner run
       # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
       # @param playbook_path [String] Path to the playbook we will want to run
+      # @param hosts [Array] List of hostnames to target with the playbook
       # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
       #         Ansible::Runner::Response object, when the job is finished.
       def run_async(env_vars, extra_vars, playbook_path, hosts: ["localhost"])
@@ -27,6 +28,7 @@ module Ansible
       # @param roles_path [String] Path to the directory with roles
       # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
       #        playbook. True by default.
+      # @param hosts [Array] List of hostnames to target with the role
       # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
       #         Ansible::Runner::Response object, when the job is finished.
       def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, hosts: ["localhost"])
@@ -44,8 +46,9 @@ module Ansible
       # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the
       #        ansible-runner run
       # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
-      # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @param playbook_path [String] Path to the playbook we will want to run
+      # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
+      # @param hosts [Array] List of hostnames to target with the playbook
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
       def run(env_vars, extra_vars, playbook_path, tags: nil, hosts: ["localhost"])
         run_via_cli(hosts,
@@ -66,6 +69,7 @@ module Ansible
       # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
       #        playbook. True by default.
       # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
+      # @param hosts [Array] List of hostnames to target with the role
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
       def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, tags: nil, hosts: ["localhost"])
         run_via_cli(hosts,
@@ -85,6 +89,7 @@ module Ansible
       # @param playbook_path [String] Path to the playbook we will want to run
       # @param user_id [String] Current user identifier
       # @param queue_opts [Hash] Additional options that will be passed to MiqQueue record creation
+      # @param hosts [Array] List of hostnames to target with the playbook
       # @return [BigInt] ID of MiqTask record wrapping the task
       def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts, hosts: ["localhost"])
         kwargs = {
@@ -104,6 +109,7 @@ module Ansible
       # @param roles_path [String] Path to the directory with roles
       # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
       #        playbook. True by default.
+      # @param hosts [Array] List of hostnames to target with the role
       # @return [BigInt] ID of MiqTask record wrapping the task
       def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true, hosts: ["localhost"])
         kwargs = {
@@ -141,6 +147,7 @@ module Ansible
 
       # Runs a playbook or a role via ansible-runner.
       #
+      # @param hosts [Array] List of hostnames to target
       # @param env_vars [Hash] Hash with key/value pairs that will be passed as environment variables to the
       #        ansible-runner run
       # @param extra_vars [Hash] Hash with key/value pairs that will be passed as extra_vars to the ansible-runner run
