@@ -317,7 +317,7 @@
           default:
           enabled:
         MiqAction:
-          name: remove evm operations tags
+          name: remove_evm_operations_tags
           description: Remove EVM Operations tags
           guid: 977011b0-6b9b-11e7-abf0-beeffeed0072
           action_type: remove_tags
@@ -337,7 +337,7 @@
           default:
           enabled:
         MiqAction:
-          name: tag as analysis failed
+          name: tag_as_analysis_failed
           description: Tag as Analysis Failed
           guid: 824ab012-6ad1-11e7-ab6f-beeffeed0072
           action_type: tag
@@ -370,7 +370,7 @@
           default:
           enabled:
         MiqAction:
-          name: remove evm operations tags
+          name: remove_evm_operations_tags
           description: Remove EVM Operations tags
           guid: 977011b0-6b9b-11e7-abf0-beeffeed0072
           action_type: remove_tags
@@ -390,7 +390,7 @@
           default:
           enabled:
         MiqAction:
-          name: tag as analysis successful
+          name: tag_as_analysis_successful
           description: Tag as Analysis Successful
           guid: 77825142-6b9b-11e7-abf0-beeffeed0072
           action_type: tag
