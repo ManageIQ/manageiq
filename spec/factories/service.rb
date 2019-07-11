@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :service do
     sequence(:name) { |n| "service_#{seq_padded_for_sorting(n)}" }
+    lifecycle_state { 'provisioned' }
   end
 
   factory :service_orchestration, :class => :ServiceOrchestration, :parent => :service
