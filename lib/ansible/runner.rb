@@ -86,8 +86,11 @@ module Ansible
       # @param user_id [String] Current user identifier
       # @param queue_opts [Hash] Additional options that will be passed to MiqQueue record creation
       # @return [BigInt] ID of MiqTask record wrapping the task
-      def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts)
-        run_in_queue("run", user_id, queue_opts, [env_vars, extra_vars, playbook_path])
+      def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts, hosts: ["localhost"])
+        kwargs = {
+          :hosts => hosts
+        }
+        run_in_queue("run", user_id, queue_opts, [env_vars, extra_vars, playbook_path, kwargs])
       end
 
       # Runs "run_role" method via queue
@@ -102,9 +105,13 @@ module Ansible
       # @param role_skip_facts [Boolean] Whether we should skip facts gathering, equals to 'gather_facts: False' in a
       #        playbook. True by default.
       # @return [BigInt] ID of MiqTask record wrapping the task
-      def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true)
-        run_in_queue("run_role", user_id, queue_opts,
-                     [env_vars, extra_vars, role_name, {:roles_path => roles_path, :role_skip_facts => role_skip_facts}])
+      def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true, hosts: ["localhost"])
+        kwargs = {
+          :roles_path      => roles_path,
+          :role_skip_facts => role_skip_facts,
+          :hosts           => hosts
+        }
+        run_in_queue("run_role", user_id, queue_opts, [env_vars, extra_vars, role_name, kwargs])
       end
 
       private
