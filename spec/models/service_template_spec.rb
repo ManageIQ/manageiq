@@ -272,7 +272,8 @@ describe ServiceTemplate do
   context "#template_copy" do
     let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower) }
     let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration) }
-    let(:custom_button) { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
+    let(:custom_button) { FactoryBot.create(:custom_button, :applies_to => @st1) }
+    let(:custom_button_for_service) { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
     let(:custom_button_set) { FactoryBot.create(:custom_button_set, :owner => @st1) }
     before do
       @st1 = FactoryBot.create(:service_template)
@@ -288,15 +289,32 @@ describe ServiceTemplate do
         expect(new_service_template.guid).not_to eq(@st1.guid)
       end
 
-      it "with custom button" do
+      it "with custom button copy only direct_custom_buttons" do
         custom_button
-        expect(@st1.custom_buttons.count).to eq(1)
+        custom_button_for_service
+        expect(@st1.custom_buttons.count).to eq(2)
+        number_of_service_templates = ServiceTemplate.count
         @st1.template_copy("new_template")
-        expect(ServiceTemplate.count).to eq(2)
+        expect(ServiceTemplate.count).to eq(number_of_service_templates + 1)
         new_service_template = ServiceTemplate.find_by(:name => "new_template")
         expect(new_service_template.display).to be(false)
         expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.custom_buttons.count).to eq(2)
+        expect(new_service_template.direct_custom_buttons.count).to eq(@st1.direct_custom_buttons.count)
+      end
+
+      it "with custom button it can copy a copy" do
+        custom_button
+        custom_button_for_service
+        expect(@st1.custom_buttons.count).to eq(2)
+        number_of_service_templates = ServiceTemplate.count
+        @st1.template_copy("new_template")
+        new_service_template = ServiceTemplate.find_by(:name => "new_template")
+        new_service_template.template_copy("Copy of a copy")
+        expect(ServiceTemplate.count).to eq(number_of_service_templates + 2)
+        copy_of_copy = ServiceTemplate.find_by(:name => "Copy of a copy")
+        expect(copy_of_copy.display).to be(false)
+        expect(copy_of_copy.guid).not_to eq(new_service_template.guid)
+        expect(copy_of_copy.direct_custom_buttons.count).to eq(new_service_template.direct_custom_buttons.count)
       end
 
       it "with custom button set" do

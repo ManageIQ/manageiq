@@ -7,7 +7,7 @@ module ServiceTemplate::Copy
         dup.tap do |template|
           template.update_attributes(:name => new_name, :display => false)
           service_resources.each { |service_resource| resource_copy(service_resource, template) }
-          custom_buttons.each { |custom_button| custom_button_copy(custom_button, template) }
+          direct_custom_buttons.each { |custom_button| custom_button_copy(custom_button, template) }
           custom_button_sets.each { |custom_button_set| custom_button_set_copy(custom_button_set, template) }
         end.save!
       end
