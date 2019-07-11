@@ -5,18 +5,14 @@ class MiqRetireTask < MiqRequestTask
 
   def self.get_description(req_obj)
     name = if req_obj.source.nil?
-             if req_obj.options[:src_ids].length == 1
-               m = model_being_retired.find_by(:id => req_obj.options[:src_ids].first)
-               m.nil? ? "" : m.name
-             else
-               "Multiple " + model_being_retired.to_s.pluralize
-             end
+             m = model_being_retired.find_by(:id => req_obj.options[:src_ids].first)
+             m.nil? ? "" : m.name
            else
              req_obj.source.name
            end
 
     new_settings = []
-    "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
+    "#{request_class::TASK_DESCRIPTION} for: #{name}"
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)

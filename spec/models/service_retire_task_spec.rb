@@ -2,7 +2,7 @@ describe ServiceRetireTask do
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:vm) { FactoryGirl.create(:vm) }
   let(:service) { FactoryGirl.create(:service) }
-  let(:miq_request) { FactoryGirl.create(:service_retire_request, :requester => user) }
+  let(:miq_request) { FactoryBot.create(:service_retire_request, :requester => user, :source => service) }
   let(:service_retire_task) { FactoryGirl.create(:service_retire_task, :source => service, :miq_request => miq_request, :options => {:src_ids => [service.id] }) }
   let(:reason) { "Why Not?" }
   let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
@@ -35,7 +35,7 @@ describe ServiceRetireTask do
       ap_service.add_resource!(FactoryBot.create(:vm_vmware))
       ap_service_retire_task.after_request_task_create
 
-      expect(ap_service_retire_task.description).to eq("Service Retire for: #{ap_service.name} - ")
+      expect(ap_service_retire_task.description).to eq("Service Retire for: #{ap_service.name}")
       expect(ServiceRetireTask.count).to eq(1)
       expect(VmRetireTask.count).to eq(0)
     end
@@ -46,7 +46,7 @@ describe ServiceRetireTask do
       ap_service.add_resource!(FactoryBot.create(:vm_vmware))
       ap_service_retire_task.after_request_task_create
 
-      expect(ap_service_retire_task.description).to eq("Service Retire for: #{ap_service.name} - ")
+      expect(ap_service_retire_task.description).to eq("Service Retire for: #{ap_service.name}")
       expect(ServiceRetireTask.count).to eq(1)
       expect(VmRetireTask.count).to eq(1)
     end
@@ -57,7 +57,7 @@ describe ServiceRetireTask do
       it "doesn't create subtask" do
         service_retire_task.after_request_task_create
 
-        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(VmRetireTask.count).to eq(0)
         expect(ServiceRetireTask.count).to eq(1)
       end
@@ -73,7 +73,7 @@ describe ServiceRetireTask do
         service.add_resource!(FactoryBot.create(:service_orchestration))
         service_retire_task.after_request_task_create
 
-        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(ServiceRetireTask.count).to eq(2)
       end
 
@@ -111,7 +111,7 @@ describe ServiceRetireTask do
         service.add_resource!(FactoryBot.create(:service))
         service_retire_task.after_request_task_create
 
-        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(ServiceRetireTask.count).to eq(2)
       end
 
@@ -119,7 +119,7 @@ describe ServiceRetireTask do
         service.add_resource!(FactoryBot.create(:orchestration_stack))
         service_retire_task.after_request_task_create
 
-        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(OrchestrationStackRetireTask.count).to eq(1)
         expect(ServiceRetireTask.count).to eq(1)
       end
@@ -130,7 +130,7 @@ describe ServiceRetireTask do
         service.add_resource!(FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id))
         service_retire_task.after_request_task_create
 
-        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(MiqRetireTask.count).to eq(1)
         expect(ServiceRetireTask.count).to eq(1)
       end
@@ -139,7 +139,7 @@ describe ServiceRetireTask do
         service.add_resource!(FactoryBot.create(:vm_openstack))
         service_retire_task.after_request_task_create
 
-        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(VmRetireTask.count).to eq(1)
         expect(ServiceRetireTask.count).to eq(1)
       end
@@ -156,6 +156,12 @@ describe ServiceRetireTask do
 
           expect(VmRetireTask.count).to eq(2)
         end
+      end
+    end
+
+    describe "#self.get_description" do
+      it "returns a description based upon the source service name" do
+        expect(ServiceRetireTask.get_description(miq_request)).to eq("Service Retire for: #{service.name}")
       end
     end
 

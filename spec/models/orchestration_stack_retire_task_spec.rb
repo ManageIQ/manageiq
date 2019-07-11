@@ -1,7 +1,7 @@
 describe OrchestrationStackRetireTask do
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:orchestration_stack) { FactoryGirl.create(:orchestration_stack) }
-  let(:miq_request) { FactoryGirl.create(:orchestration_stack_retire_request, :requester => user) }
+  let(:miq_request) { FactoryBot.create(:orchestration_stack_retire_request, :requester => user, :source => orchestration_stack) }
   let(:orchestration_stack_retire_task) { FactoryGirl.create(:orchestration_stack_retire_task, :source => orchestration_stack, :miq_request => miq_request, :options => {:src_ids => [orchestration_stack.id] }) }
   let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
 
@@ -22,6 +22,12 @@ describe OrchestrationStackRetireTask do
         :message => 'Automation Starting'
       )
       orchestration_stack_retire_task.deliver_to_automate
+    end
+  end
+
+  describe "#self.get_description" do
+    it "returns a description based upon the source service name" do
+      expect(OrchestrationStackRetireTask.get_description(miq_request)).to eq("OrchestrationStack Retire for: #{orchestration_stack.name}")
     end
   end
 end
