@@ -11,6 +11,7 @@ module MiqRequestMixin
 
   def get_option_decrypted(key, value = nil)
     raise ArgumentError, "#{key} cannot be decrypted" unless option_encrypted?(key)
+
     enc_value = MiqRequestMixin.get_option(password_prefixed_symbol_key(key), value, options)
     MiqPassword.decrypt(enc_value)
   end

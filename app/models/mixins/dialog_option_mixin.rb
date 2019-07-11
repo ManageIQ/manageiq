@@ -11,6 +11,7 @@ module DialogOptionMixin
 
   def get_dialog_option_decrypted(key, value = nil)
     raise ArgumentError, "#{key} cannot be decrypted" unless dialog_option_encrypted?(key)
+
     enc_value = DialogOptionMixin.get_dialog_option(password_prefixed_key(key), value, dialog_options)
     MiqPassword.decrypt(enc_value)
   end
