@@ -287,17 +287,17 @@ describe ServiceTemplateProvisionTask do
       let(:server) { FactoryBot.create(:miq_server) }
       before { allow(MiqServer).to receive(:my_server).and_return(server) }
 
-      it "with new server id" do
+      it "adds server id to the list of servers to log" do
         @task_0.mark_execution_servers
         expect(@task_0.options[:executed_on_servers]).to eq([server.id])
       end
 
-      it "with existing server id" do
+      it "keeps only unique server's ids" do
         @task_0.options[:executed_on_servers] = [server.id]
         @task_0.save!
 
         @task_0.mark_execution_servers
-        expect(@task_0.options[:executed_on_servers]).to eq([server.id, server.id])
+        expect(@task_0.options[:executed_on_servers]).to eq([server.id])
       end
     end
   end
