@@ -177,7 +177,7 @@ namespace :locale do
       end
 
       def files_to_translate
-        Dir.glob("#{@engine.root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,js}")
+        Dir.glob("#{@engine_root}/{app,db,lib,config,locale}/**/*.{rb,erb,haml,slim,rhtml,js}")
       end
 
       def text_domain
