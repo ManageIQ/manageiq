@@ -225,10 +225,10 @@ describe GenericMailer do
   end
 
   it "returns an array of authentication modes" do
-    expect(GenericMailer.authentication_modes).to be_an_instance_of(Array)
+    expect(GenericMailer.authentication_modes).to eq([["login", "login"], ["plain", "plain"], ["none", "none"]])
   end
 
   it "returns an array of openssl verify modes" do
-    expect(GenericMailer.openssl_verify_modes).to be_an_instance_of(Array)
+    expect(GenericMailer.openssl_verify_modes).to eq([["None", "none"], ["Peer", "peer"], ["Client Once", "client_once"], ["Fail If No Peer Cert", "fail_if_no_peer_cert"]])
   end
 end
