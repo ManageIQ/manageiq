@@ -185,6 +185,8 @@ namespace :locale do
       end
     end
 
+    system("mkdir -p #{@engine_root}/locale/en") # create initial locale/en directories if they don't exist
+
     FastGettext.add_text_domain(@domain,
                                 :path           => @engine_root.join('locale').to_s,
                                 :type           => :po,
