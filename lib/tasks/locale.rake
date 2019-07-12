@@ -86,6 +86,8 @@ namespace :locale do
       end
     end
 
+    next if output.empty? # no yaml strings were found
+
     File.open(args[:root].join("config/yaml_strings.rb"), "w+") do |f|
       f.puts "# This is automatically generated file (rake locale:extract_yaml_strings)."
       f.puts "# The file contains strings extracted from various yaml files for gettext to find."
