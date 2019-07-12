@@ -153,6 +153,39 @@ namespace :locale do
     end
   end
 
+  desc "Update all ManageIQ gettext catalogs and merge them into one"
+  task "update_all" do
+    Rake::Task['locale:update'].invoke
+
+    pot_files = []
+    Vmdb::Plugins.each do |plugin|
+      system("rm -vf #{plugin.root.join('/locale')}/*.pot")
+      system("bundle exec rake locale:plugin:find[#{plugin.to_s.sub('::Engine', '')}]")
+      pot_file = Dir.glob("#{plugin.root.join('locale')}/*.pot")[0]
+      pot_files << pot_file if pot_file.present?
+    end
+
+    checkout_branch = ENV['BRANCH'].presence || 'master'
+    extra_pots = [
+      "https://raw.githubusercontent.com/ManageIQ/ui-components/#{checkout_branch}/locale/ui-components.pot",
+      "https://raw.githubusercontent.com/ManageIQ/react-ui-components/#{checkout_branch}/locale/react-ui-components.pot"
+    ]
+
+    tmp_dir = Rails.root.join('locale', 'tmp').to_s
+    Dir.mkdir(tmp_dir, 0o700)
+    extra_pots.each do |url|
+      pot_file = "#{tmp_dir}/#{url.split('/')[-1]}"
+      ManageIQ::Environment.system! "curl -f -o #{pot_file} #{url}"
+      pot_files << pot_file
+    end
+
+    system("rmsgcat -o #{Rails.root.join('locale', 'manageiq-all.pot')} #{Rails.root.join('locale', 'manageiq.pot')} #{pot_files.join(' ')}")
+    system("mv -v #{Rails.root.join('locale', 'manageiq-all.pot')} #{Rails.root.join('locale', 'manageiq.pot')}")
+    system("rmsgmerge -o #{Rails.root.join('locale', 'en', 'manageiq-all.po')} #{Rails.root.join('locale', 'en', 'manageiq.po')} #{Rails.root.join('locale', 'manageiq.pot')}")
+    system("mv -v #{Rails.root.join('locale', 'en', 'manageiq-all.po')} #{Rails.root.join('locale', 'en', 'manageiq.po')}")
+    system("rm -rf #{tmp_dir}")
+  end
+
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
   task "plugin:find", :engine do |_, args|
     unless args[:engine]
