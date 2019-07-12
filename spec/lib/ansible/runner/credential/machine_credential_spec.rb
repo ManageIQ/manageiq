@@ -79,8 +79,8 @@ RSpec.describe Ansible::Runner::MachineCredential do
         cred.write_password_file
 
         expect(password_hash).to eq(
-          "^SSH [pP]assword:$"    => "secret",
-          "^BECOME [pP]assword:$" => "othersecret"
+          "^SSH [pP]assword:"    => "secret",
+          "^BECOME [pP]assword:" => "othersecret"
         )
 
         expect(File.read(key_file)).to eq("key_data")
@@ -98,7 +98,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
 
         cred.write_password_file
 
-        expect(password_hash["^SSH [pP]assword:$"]).to eq(password)
+        expect(password_hash["^SSH [pP]assword:"]).to eq(password)
       end
     end
   end
