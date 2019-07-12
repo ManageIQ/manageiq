@@ -2,6 +2,7 @@ describe EmsCloud do
   it ".types" do
     expected_types = [ManageIQ::Providers::Amazon::CloudManager,
                       ManageIQ::Providers::Azure::CloudManager,
+                      ManageIQ::Providers::AzureStack::CloudManager,
                       ManageIQ::Providers::Openstack::CloudManager,
                       ManageIQ::Providers::Google::CloudManager,
                       ManageIQ::Providers::Vmware::CloudManager].collect(&:ems_type)
@@ -11,6 +12,7 @@ describe EmsCloud do
   it ".supported_subclasses" do
     expected_subclasses = [ManageIQ::Providers::Amazon::CloudManager,
                            ManageIQ::Providers::Azure::CloudManager,
+                           ManageIQ::Providers::AzureStack::CloudManager,
                            ManageIQ::Providers::Openstack::CloudManager,
                            ManageIQ::Providers::Google::CloudManager,
                            ManageIQ::Providers::Vmware::CloudManager]
@@ -20,6 +22,7 @@ describe EmsCloud do
   it ".supported_types" do
     expected_types = [ManageIQ::Providers::Amazon::CloudManager,
                       ManageIQ::Providers::Azure::CloudManager,
+                      ManageIQ::Providers::AzureStack::CloudManager,
                       ManageIQ::Providers::Openstack::CloudManager,
                       ManageIQ::Providers::Google::CloudManager,
                       ManageIQ::Providers::Vmware::CloudManager].collect(&:ems_type)

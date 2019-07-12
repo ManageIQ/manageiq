@@ -103,6 +103,10 @@ group :azure, :manageiq_default do
   manageiq_plugin "manageiq-providers-azure"
 end
 
+group :azure_stack, :manageiq_default do
+  manageiq_plugin "manageiq-providers-azure_stack"
+end
+
 group :foreman, :manageiq_default do
   manageiq_plugin "manageiq-providers-foreman"
   gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"

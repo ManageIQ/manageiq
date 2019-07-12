@@ -25,6 +25,8 @@
 - ems-type:ansible_tower_automation
 - ems-type:azure
 - ems-type:azure_network
+- ems-type:azure_stack
+- ems-type:azure_stack_network
 - ems-type:cinder
 - ems-type:ec2
 - ems-type:ec2_network
