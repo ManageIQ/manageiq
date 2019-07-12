@@ -352,6 +352,13 @@ RSpec.describe ConversionHost, :v2v do
       expect(conversion_host.valid?).to be(false)
       expect(conversion_host.errors[:resource].first).to eql("can't be blank")
     end
+
+    it "is invalid if the resource is already a conversion host" do
+      FactoryBot.create(:conversion_host, :resource => redhat_host)
+      conversion_host = ConversionHost.new(:resource => redhat_host)
+      expect(conversion_host.valid?).to be(false)
+      expect(conversion_host.errors[:resource_id].first).to eql("has already been taken")
+    end
   end
 
   context "name validation" do
