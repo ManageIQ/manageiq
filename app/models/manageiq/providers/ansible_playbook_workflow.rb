@@ -1,6 +1,7 @@
 class ManageIQ::Providers::AnsiblePlaybookWorkflow < ManageIQ::Providers::AnsibleRunnerWorkflow
-  def self.job_options(env_vars, extra_vars, playbook_options, timeout, poll_interval, hosts)
+  def self.job_options(env_vars, extra_vars, playbook_options, timeout, poll_interval, hosts, credentials)
     {
+      :credentials   => credentials,
       :env_vars      => env_vars,
       :extra_vars    => extra_vars,
       :hosts         => hosts,
@@ -16,9 +17,9 @@ class ManageIQ::Providers::AnsiblePlaybookWorkflow < ManageIQ::Providers::Ansibl
   end
 
   def run_playbook
-    env_vars, extra_vars, hosts, playbook_path = options.values_at(:env_vars, :extra_vars, :hosts, :playbook_path)
+    credentials, env_vars, extra_vars, hosts, playbook_path = options.values_at(:credentials, :env_vars, :extra_vars, :hosts, :playbook_path)
 
-    response = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path, :hosts => hosts)
+    response = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path, :hosts => hosts, :credentials => credentials)
     if response.nil?
       queue_signal(:abort, "Failed to run ansible playbook", "error")
     else

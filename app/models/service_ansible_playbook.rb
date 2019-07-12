@@ -83,14 +83,22 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def save_job_options(action, overrides)
-    job_options = options.fetch_path(:config_info, action.downcase.to_sym).slice(:hosts, :extra_vars).with_indifferent_access
+    option_keys = %i[
+      hosts
+      extra_vars
+      credential_id
+      vault_credential_id
+      network_credential_id
+      cloud_credential_id
+    ]
+    job_options = options.fetch_path(:config_info, action.downcase.to_sym).slice(*option_keys).with_indifferent_access
     job_options[:extra_vars].try(:transform_values!) do |val|
       val.kind_of?(String) ? val : val[:default] # TODO: support Hash only
     end
     job_options.deep_merge!(parse_dialog_options) unless action == ResourceAction::RETIREMENT
     job_options.deep_merge!(overrides)
 
-    %i[credential vault_credential].each do |cred|
+    %i[credential vault_credential network_credential cloud_credential].each do |cred|
       cred_sym = "#{cred}_id".to_sym
       credential_id = job_options.delete(cred_sym)
       job_options[cred] = Authentication.find(credential_id).native_ref if credential_id.present?

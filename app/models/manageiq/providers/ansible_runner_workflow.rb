@@ -1,6 +1,6 @@
 class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
-  def self.create_job(env_vars, extra_vars, role_or_playbook_options, hosts = "localhost", timeout: 1.hour, poll_interval: 1.second)
-    super(name, job_options(env_vars, extra_vars, role_or_playbook_options, timeout, poll_interval, hosts))
+  def self.create_job(env_vars, extra_vars, role_or_playbook_options, hosts = ["localhost"], credentials = [], timeout: 1.hour, poll_interval: 1.second)
+    super(name, job_options(env_vars, extra_vars, role_or_playbook_options, timeout, poll_interval, hosts, credentials))
   end
 
   def current_job_timeout(_timeout_adjustment = 1)
