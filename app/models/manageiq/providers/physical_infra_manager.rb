@@ -157,6 +157,10 @@ module ManageIQ::Providers
       raise MiqException::Error, _("Console not supported")
     end
 
+    def self.firmware_update_class
+      self::FirmwareUpdateTask
+    end
+
     def self.display_name(number = 1)
       n_('Physical Infrastructure Manager', 'Physical Infrastructure Managers', number)
     end
