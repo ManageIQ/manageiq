@@ -223,4 +223,12 @@ describe GenericMailer do
       expect(settings[:host]).to eq("localhost")
     end
   end
+
+  it "returns an array of authentication modes" do
+    expect(GenericMailer.authentication_modes).to be_an_instance_of(Array)
+  end
+
+  it "returns an array of openssl verify modes" do
+    expect(GenericMailer.openssl_verify_modes).to be_an_instance_of(Array)
+  end
 end

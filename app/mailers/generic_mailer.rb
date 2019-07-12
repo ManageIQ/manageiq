@@ -149,7 +149,7 @@ class GenericMailer < ActionMailer::Base
   end
 
   def self.authentication_modes
-    [ [_("login"), "login"], [_("plain"), "plain"], [_("none"), "none"] ]
+    [[_("login"), "login"], [_("plain"), "plain"], [_("none"), "none"]]
   end
 
   protected
