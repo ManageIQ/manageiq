@@ -12,10 +12,13 @@ module ServiceTemplate::Copy
 
           direct_custom_buttons.each { |custom_button| custom_button_copy(custom_button, template) }
           custom_button_sets.each { |custom_button_set| custom_button_set_copy(custom_button_set, template) }
-        end.save!
+          template.save!
+        end
       end
     end
   end
+
+  private
 
   def resource_copy(service_resource, template)
     resource = service_resource.resource.respond_to?(:service_template_resource_copy) ? service_resource.resource.service_template_resource_copy : service_resource.resource
