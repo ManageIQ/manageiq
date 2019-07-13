@@ -1,5 +1,5 @@
 describe ServiceTemplate do
-  context "#template_copy" do
+  describe "#template_copy" do
     let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower) }
     let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration) }
     let(:custom_button) { FactoryBot.create(:custom_button, :applies_to => @st1) }
@@ -230,6 +230,35 @@ describe ServiceTemplate do
         expect(new_service_template.display).to be(false)
         expect(new_service_template.service_resources).not_to be(nil)
         expect(@st1.service_resources.first.resource).not_to be(nil)
+      end
+    end
+
+    context "picture" do
+      it "creates a duplicate picture" do
+        @st1.picture = { :content => 'foobar', :extension => 'jpg' }
+        new_template = @st1.template_copy
+
+        expect(@st1.picture.id).to_not eq(new_template.picture.id)
+        expect(@st1.picture.content).to eq(new_template.picture.content)
+      end
+
+      it "leave picture nil when source template is nil" do
+        new_template = @st1.template_copy
+
+        expect(@st1.picture).to be_nil
+        expect(new_template.picture).to be_nil
+      end
+    end
+
+    context "resource_actions" do
+      it "duplicates resource_actions" do
+        @st1.resource_actions << [
+          FactoryBot.create(:resource_action, :action => "Provision"),
+          FactoryBot.create(:resource_action, :action => "Retire")
+        ]
+
+        new_template = @st1.template_copy
+        expect(new_template.resource_actions.pluck(:action)).to match_array(%w[Provision Retire])
       end
     end
   end
