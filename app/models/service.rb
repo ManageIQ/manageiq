@@ -466,7 +466,7 @@ class Service < ApplicationRecord
   PERF_ROLLUP_CHILDREN = :vms
 
   def perf_rollup_parents(interval_name = nil)
-    [].compact unless interval_name == 'realtime'
+    [] unless interval_name == 'realtime'
   end
 
   def add_resource(rsc, options = {})
