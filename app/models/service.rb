@@ -246,11 +246,7 @@ class Service < ApplicationRecord
   end
 
   def group_resource_actions(action_name)
-    [].tap do |sa|
-      each_group_resource do |svc_rsc|
-        sa << svc_rsc
-      end
-    end.map(&action_name).uniq
+    each_group_resource.collect(&action_name).uniq
   end
 
   def map_power_states(action)
