@@ -223,4 +223,12 @@ describe GenericMailer do
       expect(settings[:host]).to eq("localhost")
     end
   end
+
+  it "returns an array of authentication modes" do
+    expect(GenericMailer.authentication_modes).to eq([["login", "login"], ["plain", "plain"], ["none", "none"]])
+  end
+
+  it "returns an array of openssl verify modes" do
+    expect(GenericMailer.openssl_verify_modes).to eq([["None", "none"], ["Peer", "peer"], ["Client Once", "client_once"], ["Fail If No Peer Cert", "fail_if_no_peer_cert"]])
+  end
 end

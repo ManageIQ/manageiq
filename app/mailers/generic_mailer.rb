@@ -140,11 +140,16 @@ class GenericMailer < ActionMailer::Base
   end
 
   def self.openssl_verify_modes
-    %w(none peer client_once fail_if_no_peer_cert)
+    [
+      [_("None"),                 "none"],
+      [_("Peer"),                 "peer"],
+      [_("Client Once"),          "client_once"],
+      [_("Fail If No Peer Cert"), "fail_if_no_peer_cert"]
+    ]
   end
 
   def self.authentication_modes
-    %w(login plain none)
+    [[_("login"), "login"], [_("plain"), "plain"], [_("none"), "none"]]
   end
 
   protected
