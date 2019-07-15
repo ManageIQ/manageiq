@@ -187,6 +187,7 @@ module MiqRequestMixin
 
   def mark_execution_servers
     options[:executed_on_servers] ||= []
+    # remove duplicates and ensure that last element of array is the last server
     (options[:executed_on_servers] -= [MiqServer.my_server.id]) << MiqServer.my_server.id
     update_attributes(:options => options)
   end
