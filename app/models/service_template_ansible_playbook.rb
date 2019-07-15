@@ -224,8 +224,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
 
   def validate_update_config_info(options)
-    opts = super
-    self.class.send(:validate_config_info, opts)
+    self.class.send(:validate_config_info, options || super)
   end
 
   # override
