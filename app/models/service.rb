@@ -23,12 +23,12 @@ class Service < ApplicationRecord
 
   has_ancestry :orphan_strategy => :destroy
 
-  belongs_to :tenant
   belongs_to :service_template # Template this service was cloned from
+  belongs_to :tenant
 
   has_many :dialogs, -> { distinct }, :through => :service_template
-  has_many :metrics, :as => :resource
   has_many :metric_rollups, :as => :resource
+  has_many :metrics, :as => :resource
   has_many :vim_performance_states, :as => :resource
 
   has_one :miq_request_task, :dependent => :nullify, :as => :destination
@@ -36,21 +36,21 @@ class Service < ApplicationRecord
   has_one :picture, :through => :service_template
 
   virtual_belongs_to :parent_service
-  virtual_has_many   :direct_service_children
   virtual_has_many   :all_service_children
-  virtual_has_many   :vms
   virtual_has_many   :all_vms
-  virtual_has_many   :power_states, :uses => :all_vms
-  virtual_has_many   :orchestration_stacks
+  virtual_has_many   :direct_service_children
   virtual_has_many   :generic_objects
+  virtual_has_many   :orchestration_stacks
+  virtual_has_many   :power_states, :uses => :all_vms
+  virtual_has_many   :vms
 
-  virtual_has_one    :custom_actions
-  virtual_has_one    :custom_action_buttons
-  virtual_has_one    :provision_dialog
-  virtual_has_one    :user
   virtual_has_one    :chargeback_report
   virtual_has_one    :configuration_script
+  virtual_has_one    :custom_action_buttons
+  virtual_has_one    :custom_actions
+  virtual_has_one    :provision_dialog
   virtual_has_one    :reconfigure_dialog
+  virtual_has_one    :user
 
   before_validation :set_tenant_from_group
   before_create :update_attributes_from_dialog
@@ -58,25 +58,26 @@ class Service < ApplicationRecord
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
 
-  include CustomActionsMixin
-  include ServiceMixin
-  include OwnershipMixin
-  include CustomAttributeMixin
-  include LifecycleMixin
-  include NewWithTypeStiMixin
-  include ProcessTasksMixin
-  include TenancyMixin
   include SupportsFeatureMixin
+
   include CiFeatureMixin
-  include Metric::CiMixin
+  include CustomActionsMixin
+  include CustomAttributeMixin
   include ExternalUrlMixin
+  include LifecycleMixin
+  include Metric::CiMixin
+  include NewWithTypeStiMixin
+  include OwnershipMixin
+  include ProcessTasksMixin
+  include ServiceMixin
+  include TenancyMixin
 
   extend InterRegionApiMethodRelay
 
-  include_concern 'Operations'
-  include_concern 'RetirementManagement'
   include_concern 'Aggregation'
+  include_concern 'Operations'
   include_concern 'ResourceLinking'
+  include_concern 'RetirementManagement'
 
   virtual_total :v_total_vms, :vms,
                 :arel => aggregate_hardware_arel("v_total_vms", vms_tbl[:id].count, :skip_hardware => true)
@@ -88,9 +89,9 @@ class Service < ApplicationRecord
   validates :name, :presence => true
 
   default_value_for :display, false
-  default_value_for :retired, false
   default_value_for :initiator, 'user'
   default_value_for :lifecycle_state, 'unprovisioned'
+  default_value_for :retired, false
 
   validates :display, :inclusion => { :in => [true, false] }
   validates :retired, :inclusion => { :in => [true, false] }
