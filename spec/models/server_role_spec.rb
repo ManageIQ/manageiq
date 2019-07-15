@@ -39,6 +39,7 @@ describe ServerRole do
         ems_metrics_processor,Capacity & Utilization Data Processor,0,false,zone
         ems_operations,Management System Operations,0,false,zone
         event,Event Monitor,1,false,zone
+        internet_connectivity,Internet Connectivity,0,false,region
         notifier,Alert Processor,1,false,region
         reporting,Reporting,0,false,region
         scheduler,Scheduler,1,false,region
