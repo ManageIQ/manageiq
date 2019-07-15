@@ -138,9 +138,12 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
   def update_catalog_item(options, auth_user = nil)
     config_info = validate_update_config_info(options)
+    unless config_info
+      update!(options)
+      return reload
+    end
     name = options[:name] || self.name
     description = options[:description] || self.description
-
     update_job_templates(name, description, config_info, auth_user)
 
     config_info.deep_merge!(self.class.send(:create_job_templates, name, description, config_info, auth_user, self))
@@ -225,6 +228,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
   def validate_update_config_info(options)
     opts = super
+    return unless options.key?(:config_info)
+
     self.class.send(:validate_config_info, opts)
   end
 
