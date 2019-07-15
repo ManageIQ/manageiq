@@ -119,7 +119,11 @@ describe(ServiceAnsiblePlaybook) do
       it 'prepares job options from service template' do
         basic_service.preprocess(action)
         service.reload
-        expect(basic_service.options[:provision_job_options][:hosts]).to eq("default_host1,default_host2")
+        expect(basic_service.options[:provision_job_options]).to include(
+          :hosts            => "default_host1,default_host2",
+          :credential       => credential_0.native_ref,
+          :vault_credential => credential_3.native_ref
+        )
       end
     end
 
@@ -127,10 +131,16 @@ describe(ServiceAnsiblePlaybook) do
       it 'prepares job options combines from service template and dialog' do
         service.preprocess(action)
         service.reload
-        expect(service.options[:provision_job_options][:hosts]).to eq("host1,host2")
-        expect(service.options[:provision_job_options][:credential]).to eq(credential_1.native_ref)
-        expect(service.options[:provision_job_options][:extra_vars]).to eq(
-          'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3', 'pswd' => encrypted_val
+        expect(service.options[:provision_job_options]).to include(
+          :hosts            => "host1,host2",
+          :credential       => credential_1.native_ref,
+          :vault_credential => credential_3.native_ref,
+          :extra_vars       => {
+            'var1' => 'value1',
+            'var2' => 'value2',
+            'var3' => 'default_val3',
+            'pswd' => encrypted_val
+          }
         )
       end
 
@@ -146,11 +156,16 @@ describe(ServiceAnsiblePlaybook) do
         it 'ignores dialog options' do
           service.preprocess(action)
           service.reload
-          expect(service.options[:retirement_job_options][:hosts]).to eq("default_host1,default_host2")
-          expect(service.options[:retirement_job_options][:extra_vars]).to eq(
-            'var1' => 'default_val1', 'var2' => 'default_val2', 'var3' => 'default_val3'
+          expect(service.options[:retirement_job_options]).to include(
+            :hosts            => "default_host1,default_host2",
+            :credential       => credential_0.native_ref,
+            :vault_credential => credential_3.native_ref,
+            :extra_vars       => {
+              'var1' => 'default_val1',
+              'var2' => 'default_val2',
+              'var3' => 'default_val3'
+            }
           )
-          expect(service.options[:retirement_job_options]).not_to have_key(:credential)
         end
       end
     end

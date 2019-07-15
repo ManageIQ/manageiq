@@ -32,8 +32,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     workflow      = ManageIQ::Providers::AnsiblePlaybookWorkflow
     extra_vars    = merge_extra_vars(vars[:extra_vars])
     playbook_vars = { :playbook_path => parent.path }
+    credentials   = collect_credentials(vars)
 
-    workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts]).tap do |job|
+    workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts], credentials).tap do |job|
       job.signal(:start)
     end
   end
@@ -47,5 +48,14 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     end
 
     extra_vars
+  end
+
+  def collect_credentials(options)
+    options.values_at(
+      :credential,
+      :cloud_credential,
+      :network_credential,
+      :vault_credential
+    ).compact
   end
 end

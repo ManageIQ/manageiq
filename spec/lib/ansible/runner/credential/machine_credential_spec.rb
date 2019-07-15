@@ -32,6 +32,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
     describe "#command_line" do
       it "is correct with all attributes" do
         expected = {
+          :ask_pass      => nil,
           :become        => nil,
           :become_user   => "root",
           :become_method => "su",
@@ -44,6 +45,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
         auth.update!(:userid => nil)
 
         expected = {
+          :ask_pass      => nil,
           :become        => nil,
           :become_user   => "root",
           :become_method => "su"
@@ -53,7 +55,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
 
       it "doesn't send the become keys if :become_user is not set" do
         auth.update!(:become_username => nil)
-        expect(cred.command_line).to eq(:user => "manageiq")
+        expect(cred.command_line).to eq(:ask_pass => nil, :user => "manageiq")
       end
     end
 
@@ -77,8 +79,8 @@ RSpec.describe Ansible::Runner::MachineCredential do
         cred.write_password_file
 
         expect(password_hash).to eq(
-          "^SSH [pP]assword:$"    => "secret",
-          "^BECOME [pP]assword:$" => "othersecret"
+          "^SSH [pP]assword:"    => "secret",
+          "^BECOME [pP]assword:" => "othersecret"
         )
 
         expect(File.read(key_file)).to eq("key_data")
@@ -96,7 +98,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
 
         cred.write_password_file
 
-        expect(password_hash["^SSH [pP]assword:$"]).to eq(password)
+        expect(password_hash["^SSH [pP]assword:"]).to eq(password)
       end
     end
   end

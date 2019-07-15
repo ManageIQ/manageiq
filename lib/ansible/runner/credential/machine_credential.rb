@@ -6,13 +6,16 @@ module Ansible
       end
 
       def command_line
-        {:user => auth.userid}.delete_blanks.merge(become_args)
+        {:user => auth.userid}.delete_blanks.merge(become_args).tap do |args|
+          # Add `--ask-pass` flag to ansible_playbook if we have a password to provide
+          args[:ask_pass] = nil if auth.password.present?
+        end
       end
 
       def write_password_file
         password_hash = {
-          "^SSH [pP]assword:$"    => auth.password,
-          "^BECOME [pP]assword:$" => auth.become_password
+          "^SSH [pP]assword:"    => auth.password,
+          "^BECOME [pP]assword:" => auth.become_password
         }.delete_blanks
 
         File.write(password_file, password_hash.to_yaml) if password_hash.present?
