@@ -492,6 +492,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def validate_update_config_info(options)
+    return unless options.key?(:config_info)
     if options[:service_type] && options[:service_type] != service_type
       raise _('service_type cannot be changed')
     end
