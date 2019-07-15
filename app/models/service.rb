@@ -124,12 +124,12 @@ class Service < ApplicationRecord
 
   def power_state
     if options[:power_status] == "starting"
-      return 'on'  if power_states_match?(:start)
+      'on'  if power_states_match?(:start)
     elsif options[:power_status] == "stopping"
-      return 'off' if power_states_match?(:stop)
+      'off' if power_states_match?(:stop)
     else
-      return 'on'  if power_states_match?(:start)
-      return 'off' if power_states_match?(:stop)
+      return 'on' if power_states_match?(:start)
+      'off' if power_states_match?(:stop)
     end
   end
 
