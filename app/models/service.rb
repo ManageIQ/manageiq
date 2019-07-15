@@ -79,12 +79,11 @@ class Service < ApplicationRecord
   include_concern 'ResourceLinking'
   include_concern 'RetirementManagement'
 
-  virtual_total :v_total_vms, :vms,
-                :arel => aggregate_hardware_arel("v_total_vms", vms_tbl[:id].count, :skip_hardware => true)
+  virtual_total :v_total_vms, :vms, :arel => aggregate_hardware_arel("v_total_vms", vms_tbl[:id].count, :skip_hardware => true)
 
-  virtual_column :has_parent,                               :type => :boolean
-  virtual_column :power_state,                              :type => :string
-  virtual_column :power_status,                             :type => :string
+  virtual_column :has_parent,   :type => :boolean
+  virtual_column :power_state,  :type => :string
+  virtual_column :power_status, :type => :string
 
   validates :name, :presence => true
 
