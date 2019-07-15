@@ -103,6 +103,37 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
         subject.launch_ansible_tower_job
       end
     end
+
+    context 'with credentials' do
+      let(:cloud_credential)   { FactoryBot.create(:embedded_ansible_amazon_credential) }
+      let(:machine_credential) { FactoryBot.create(:embedded_ansible_machine_credential) }
+      let(:network_credential) { FactoryBot.create(:embedded_ansible_network_credential) }
+      let(:vault_credential)   { FactoryBot.create(:embedded_ansible_vault_credential) }
+
+      let(:options) do
+        {
+          :cloud_credential_id   => cloud_credential.id,
+          :credential_id         => machine_credential.id,
+          :network_credential_id => network_credential.id,
+          :vault_credential_id   => vault_credential.id
+        }
+      end
+
+      it 'passes them to the job' do
+        expected_options = {
+          :hosts              => ["localhost"],
+          :cloud_credential   => cloud_credential.native_ref,
+          :credential         => machine_credential.native_ref,
+          :network_credential => network_credential.native_ref,
+          :vault_credential   => vault_credential.native_ref
+        }
+        expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job)
+          .with(an_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript), expected_options)
+          .and_return(double(:id => 'jb1'))
+        expect(subject).to receive(:queue_signal)
+        subject.launch_ansible_tower_job
+      end
+    end
   end
 
   describe '#poll_ansible_tower_job_status' do
