@@ -28,12 +28,14 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
 
     context "CREATE" do
       it ".create_in_provider creates a record" do
-        expect(credential_class).to receive(:create!).with(params_to_attributes).and_call_original
+        create_params = params_to_attributes.merge(:resource => manager)
+        expect(credential_class).to receive(:create!).with(create_params).and_call_original
         expect(Notification).to     receive(:create!).never
 
         record = credential_class.create_in_provider(manager.id, params)
 
         expect(record).to be_a(credential_class)
+        expect(record.manager).to eq(manager)
         expected_values.each do |attr, val|
           expect(record.send(attr)).to eq(val)
         end
@@ -44,6 +46,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
         passed_params   = params.except(*keys_to_remove)
 
         params_to_attributes.delete(:options)
+        params_to_attributes.merge!(:resource => manager)
         expected_values.delete(:options)
         keys_to_remove.each { |key| expected_values[key] = nil }
 
@@ -53,6 +56,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
         record = credential_class.create_in_provider(manager.id, passed_params)
 
         expect(record).to be_a(credential_class)
+        expect(record.manager).to eq(manager)
         expected_values.each do |attr, val|
           expect(record.send(attr)).to eq(val)
         end
@@ -80,7 +84,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
 
     context "UPDATE" do
       let(:update_params) { {:name => "Updated Credential" } }
-      let(:ansible_cred)  { credential_class.raw_create_in_provider(nil, params.merge(:manager => manager)) }
+      let(:ansible_cred)  { credential_class.raw_create_in_provider(manager, params) }
 
       it "#update_in_provider to succeed" do
         expect(Notification).to receive(:create!).never
@@ -111,7 +115,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
     end
 
     context "DELETE" do
-      let(:ansible_cred) { credential_class.raw_create_in_provider(nil, params.merge(:manager => manager)) }
+      let(:ansible_cred) { credential_class.raw_create_in_provider(manager, params) }
 
       it "#delete_in_provider will delete the record" do
         expect(Notification).to receive(:create!).never

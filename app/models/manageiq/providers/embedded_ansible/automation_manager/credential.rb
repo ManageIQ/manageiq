@@ -20,8 +20,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
     raise NotImplementedError, "must be implemented in a subclass"
   end
 
-  def self.raw_create_in_provider(_manager, params)
-    create!(params_to_attributes(params))
+  def self.raw_create_in_provider(manager, params)
+    create_params = params_to_attributes(params)
+    create_params[:resource] = manager
+    create!(create_params)
   end
 
   def raw_update_in_provider(params)
