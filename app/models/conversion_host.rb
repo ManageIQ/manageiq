@@ -66,7 +66,7 @@ class ConversionHost < ApplicationRecord
         ssh_options[:auth_methods] = %w[publickey hostbased]
         ssh_options[:key_data] = auth.auth_key
       else
-        raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
+        raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: %{auth_type}") % {:auth_type => auth.authtype}
       end
 
       # Don't connect again if the authentication is still valid
@@ -336,7 +336,7 @@ class ConversionHost < ApplicationRecord
       end
       command << " --private-key #{ssh_private_key_file.path}"
     else
-      raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: #{auth.authtype}")
+      raise MiqException::MiqInvalidCredentialsError, _("Unknown auth type: %{auth_type}") % {:auth_type => auth.authtype}
     end
 
     command << " --extra-vars '#{extra_vars.to_json}'"
