@@ -38,13 +38,14 @@ gem "dalli",                          "=2.7.6",        :require => false
 gem "default_value_for",              "~>3.1.0"
 gem "docker-api",                     "~>1.33.6",      :require => false
 gem "elif",                           "=0.1.0",        :require => false
-gem "fast_gettext",                   "~>2.0.1"
+gem "fast_gettext",                   "~>1.2.0"
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.3.0"
-gem "hamlit",                         "~>2.8.5"
+gem "erubi",                          "~>1.8"
+gem "hamlit",                         "~>2.9.2"
+gem 'haml', '5.0.0'
 gem "highline",                       "~>1.6.21",      :require => false
 gem "inifile",                        "~>3.0",         :require => false
-gem "inventory_refresh",              "~>0.2.0",       :require => false
 gem "kubeclient",                     "~>4.0",         :require => false # For scaling pods at runtime
 gem "linux_admin",                    "~>1.2.1",       :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
@@ -54,7 +55,6 @@ gem "manageiq-password",              "~>0.3",         :require => false
 gem "manageiq-postgres_ha_admin",     "~>3.1",         :require => false
 gem "memoist",                        "~>0.15.0",      :require => false
 gem "mime-types",                     "~>3.0",         :path => File.expand_path("mime-types-redirector", __dir__)
-gem "more_core_extensions",           "~>3.7"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.16.1",      :require => false
 gem "net-ping",                       "~>1.7.4",       :require => false
@@ -236,7 +236,9 @@ end
 unless ENV["APPLIANCE"]
   group :development do
     gem "foreman"
+    gem "rubocop",             "~>0.69.0", :require => false
     gem "rubocop-performance", "~>1.3",    :require => false
+    gem "haml_lint",        "~>0.22.0", :require => false
     # ruby_parser is required for i18n string extraction
     gem "ruby_parser",                     :require => false
     gem "yard"
@@ -258,3 +260,20 @@ unless ENV["APPLIANCE"]
     gem "rspec-rails", "~>3.8.0"
   end
 end
+
+#HACKS UNTIL OTHER REPOS ARE UPDATED
+gem "activerecord-id_regions", :git => "https://github.com/juliancheal/activerecord-id_regions.git", :branch => "try_rails_5_2"
+gem "manageiq-schema",         :git => "https://github.com/juliancheal/manageiq-schema.git",         :branch => "try_rails_5_2"
+gem "manageiq-ui-classic",     :git => "https://github.com/juliancheal/manageiq-ui-classic.git",     :branch => "try_rails_5_2"
+gem "manageiq-gems-pending",   :git => "https://github.com/juliancheal/manageiq-gems-pending.git",   :branch => "try_rails_5_2"
+gem "inventory_refresh",       :git => "https://github.com/juliancheal/inventory_refresh.git",       :branch => "try_rails_5_2"
+gem "more_core_extensions",    :git => "https://github.com/juliancheal/more_core_extensions.git",    :branch => "try_rails_5_2"
+gem "manageiq-messaging",      :git => "https://github.com/juliancheal/manageiq-messaging.git",      :branch => "try_rails_5_2"
+gem "vmware_web_service",      :git => "https://github.com/juliancheal/vmware_web_service.git",      :branch => "try_rails_5_2"
+gem "manageiq-api-client",     :git => "https://github.com/juliancheal/manageiq-api-client.git",     :branch => "try_rails_5_2"
+gem "ovirt_metrics",           :git => "https://github.com/juliancheal/ovirt_metrics.git",           :branch => "try_rails_5_2"
+gem "manageiq-providers-openstack",     :git => "https://github.com/juliancheal/manageiq-providers-openstack.git",     :branch => "try_rails_5_2"
+
+# Load other additional Gemfiles
+#   Developers can create a file ending in .rb under bundler.d/ to specify additional development dependencies
+Dir.glob(File.join(__dir__, 'bundler.d/*.rb')).each { |f| eval_gemfile(File.expand_path(f, __dir__)) }
