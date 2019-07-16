@@ -9,22 +9,27 @@ describe ServiceTemplate do
       @st1 = FactoryBot.create(:service_template)
     end
 
+    def copy_template(template, name = nil)
+      copy = nil
+      expect do
+        copy = template.public_send(*[:template_copy, name].compact)
+      end.to change { ServiceTemplate.count }.by(1)
+      expect(copy.persisted?).to be(true)
+      expect(copy.guid).not_to eq(template.guid)
+      expect(copy.display).to be(false)
+      copy
+    end
+
     context "with given name" do
       it "without resource " do
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
-        expect(new_service_template.display).to be(false)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
+        copy_template(@st1, "new_template")
       end
 
       it "with custom button copy only direct_custom_buttons" do
         custom_button
         custom_button_for_service
         expect(@st1.custom_buttons.count).to eq(2)
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
-        expect(new_service_template.display).to be(false)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
+        new_service_template = copy_template(@st1, "new_template")
         expect(new_service_template.direct_custom_buttons.count).to eq(@st1.direct_custom_buttons.count)
       end
 
@@ -32,55 +37,39 @@ describe ServiceTemplate do
         custom_button
         custom_button_for_service
         expect(@st1.custom_buttons.count).to eq(2)
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
-        expect { new_service_template.template_copy("Copy of a copy") }.to change { ServiceTemplate.count }.by(1)
-        copy_of_copy = ServiceTemplate.find_by(:name => "Copy of a copy")
-        expect(copy_of_copy.display).to be(false)
-        expect(copy_of_copy.guid).not_to eq(new_service_template.guid)
+        new_service_template = copy_template(@st1, "new_template")
+        copy_of_copy = copy_template(new_service_template)
         expect(copy_of_copy.direct_custom_buttons.count).to eq(new_service_template.direct_custom_buttons.count)
       end
 
       it "with custom button set" do
         custom_button_set.add_member(custom_button)
         expect(@st1.custom_button_sets.count).to eq(1)
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
-        expect(new_service_template.display).to be(false)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
+        new_service_template = copy_template(@st1, "new_template")
         expect(new_service_template.custom_button_sets.count).to eq(1)
       end
 
       it "with non-copyable resource (configuration script base)" do
         @st1.add_resource(FactoryBot.create(:configuration_script_base))
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
+        new_service_template = copy_template(@st1, "new_template")
         expect(@st1.service_resources.first.resource).not_to be(nil)
         expect(new_service_template.service_resources.first.resource).to eq(@st1.service_resources.first.resource)
         expect(ConfigurationScriptBase.count).to eq(1)
-        expect(new_service_template.display).to be(false)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
       end
 
       it "with non-copyable resource (ext management system)" do
         @st1.add_resource(FactoryBot.create(:ext_management_system))
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
+        new_service_template = copy_template(@st1, "new_template")
         expect(new_service_template.service_resources.first.resource_id).to eq(@st1.service_resources.first.resource_id)
         expect(ExtManagementSystem.count).to eq(1)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.display).to be(false)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
 
       it "with non-copyable resource (orchestration template)" do
         @st1.add_resource(FactoryBot.create(:orchestration_template))
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
+        new_service_template = copy_template(@st1, "new_template")
         expect(new_service_template.service_resources.first.resource_id).to eq(@st1.service_resources.first.resource_id)
         expect(OrchestrationTemplate.count).to eq(1)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.display).to be(false)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
 
@@ -89,11 +78,8 @@ describe ServiceTemplate do
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
         ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
+        new_service_template = copy_template(@st1, "new_template")
         expect(MiqProvisionRequestTemplate.count).to eq(2)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.display).to be(false)
         expect(new_service_template.service_resources.count).not_to be(0)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
@@ -105,11 +91,8 @@ describe ServiceTemplate do
         @st1.add_resource(ptr)
         @st1.service_resources.first.update_attributes(:scaling_min => 4)
         expect(@st1.service_resources.first.scaling_min).to eq(4)
-        expect { @st1.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
+        new_service_template = copy_template(@st1, "new_template")
         expect(MiqProvisionRequestTemplate.count).to eq(2)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.display).to be(false)
         expect(new_service_template.service_resources.first.scaling_min).to eq(4)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
@@ -119,11 +102,8 @@ describe ServiceTemplate do
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
         ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
         service_template_ansible_tower.add_resource(ptr)
-        expect { service_template_ansible_tower.template_copy("new_template_copy") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template_copy")
+        new_service_template = copy_template(service_template_ansible_tower)
         expect(MiqProvisionRequestTemplate.count).to eq(2)
-        expect(new_service_template.guid).not_to eq(service_template_ansible_tower.guid)
-        expect(new_service_template.display).to be(false)
         expect(new_service_template.service_resources.count).not_to be(0)
         expect(service_template_ansible_tower.service_resources.first.resource).not_to be(nil)
       end
@@ -133,11 +113,8 @@ describe ServiceTemplate do
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
         ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
         service_template_orchestration.add_resource(ptr)
-        expect { service_template_orchestration.template_copy("new_template") }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by(:name => "new_template")
+        new_service_template = copy_template(service_template_orchestration)
         expect(MiqProvisionRequestTemplate.count).to eq(2)
-        expect(new_service_template.guid).not_to eq(service_template_orchestration.guid)
-        expect(new_service_template.display).to be(false)
         expect(new_service_template.service_resources.count).not_to be(0)
         expect(service_template_orchestration.service_resources.first.resource).not_to be(nil)
       end
@@ -145,44 +122,32 @@ describe ServiceTemplate do
 
     context "without given name" do
       it "without resource" do
-        expect { @st1.template_copy }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by("name ILIKE ?", "Copy of service%")
-        expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.display).to be(false)
+        new_service_template = copy_template(@st1)
         expect(new_service_template.service_resources.count).to eq(0)
         expect(@st1.service_resources.count).to eq(0)
       end
 
       it "with non-copyable resource (configuration_script_base)" do
         @st1.add_resource(FactoryBot.create(:configuration_script_base))
-        expect { @st1.template_copy }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by("name ILIKE ?", "Copy of service%")
+        new_service_template = copy_template(@st1)
         expect(new_service_template.service_resources.first.resource_id).to eq(@st1.service_resources.first.resource_id)
         expect(ConfigurationScriptBase.count).to eq(1)
-        expect(new_service_template.display).to be(false)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
       end
 
       it "with non-copyable resource (ext management system)" do
         @st1.add_resource(FactoryBot.create(:ext_management_system))
-        expect { @st1.template_copy }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by("name ILIKE ?", "Copy of service%")
+        new_service_template = copy_template(@st1)
         expect(ServiceTemplate.where("name ILIKE ?", "Copy of service%").first.service_resources.first.resource_id).to eq(@st1.service_resources.first.resource_id)
         expect(ExtManagementSystem.count).to eq(1)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.display).to be(false)
         expect(new_service_template.service_resources.count).not_to be(0)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
 
       it "with non-copyable resource (orchestration template)" do
         @st1.add_resource(FactoryBot.create(:orchestration_template))
-        expect { @st1.template_copy }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by("name ILIKE ?", "Copy of service%")
-        expect(ServiceTemplate.where("name ILIKE ?", "Copy of service%").first.service_resources.first.resource_id).to eq(@st1.service_resources.first.resource_id)
+        new_service_template = copy_template(@st1)
+        expect(new_service_template.service_resources.first.resource_id).to eq(@st1.service_resources.first.resource_id)
         expect(OrchestrationTemplate.count).to eq(1)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.display).to be(false)
         expect(new_service_template.service_resources.count).not_to be(0)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
@@ -192,11 +157,8 @@ describe ServiceTemplate do
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
         ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
         @st1.add_resource(ptr)
-        expect { @st1.template_copy }.to change { ServiceTemplate.count }.by(1)
-        new_service_template = ServiceTemplate.find_by("name ILIKE ?", "Copy of service%")
+        new_service_template = copy_template(@st1)
         expect(MiqProvisionRequestTemplate.count).to eq(2)
-        expect(new_service_template.guid).not_to eq(@st1.guid)
-        expect(new_service_template.display).to be(false)
         expect(new_service_template.service_resources.count).not_to be(0)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
