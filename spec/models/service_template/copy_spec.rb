@@ -102,7 +102,7 @@ describe ServiceTemplate do
         service_template_ansible_tower.add_resource(ptr)
         new_service_template = copy_template(service_template_ansible_tower)
         expect(MiqProvisionRequestTemplate.count).to eq(2)
-        expect(new_service_template.service_resources.count).not_to be(0)
+        expect(new_service_template.service_resources.count).to eq(1)
         expect(service_template_ansible_tower.service_resources.first.resource).not_to be(nil)
       end
 
@@ -113,7 +113,7 @@ describe ServiceTemplate do
         service_template_orchestration.add_resource(ptr)
         new_service_template = copy_template(service_template_orchestration)
         expect(MiqProvisionRequestTemplate.count).to eq(2)
-        expect(new_service_template.service_resources.count).not_to be(0)
+        expect(new_service_template.service_resources.count).to eq(1)
         expect(service_template_orchestration.service_resources.first.resource).not_to be(nil)
       end
     end
@@ -146,7 +146,7 @@ describe ServiceTemplate do
         new_service_template = copy_template(service_template)
         expect(new_service_template.service_resources.first.resource_id).to eq(service_template.service_resources.first.resource_id)
         expect(OrchestrationTemplate.count).to eq(1)
-        expect(new_service_template.service_resources.count).not_to be(0)
+        expect(new_service_template.service_resources.count).to eq(1)
         expect(service_template.service_resources.first.resource).not_to be(nil)
       end
 
@@ -157,7 +157,7 @@ describe ServiceTemplate do
         service_template.add_resource(ptr)
         new_service_template = copy_template(service_template)
         expect(MiqProvisionRequestTemplate.count).to eq(2)
-        expect(new_service_template.service_resources.count).not_to be(0)
+        expect(new_service_template.service_resources.count).to eq(1)
         expect(service_template.service_resources.first.resource).not_to be(nil)
       end
     end
