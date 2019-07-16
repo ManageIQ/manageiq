@@ -20,9 +20,15 @@ describe CiFeatureMixin do
     end
 
     it "service is retireable" do
-      FactoryBot.create(:service_resource, :service => service, :resource => FactoryBot.create(:service_ansible_tower, :type => ServiceAnsibleTower))
+      FactoryBot.create(:service_resource, :service => service, :resource => FactoryBot.create(:service_ansible_tower, :type => ServiceAnsibleTower, :lifecycle_state => 'provisioned'))
 
       expect(service.service_resources.first.resource.retireable?).to eq(true)
+    end
+
+    it "unprov'd service is not retireable" do
+      FactoryBot.create(:service_resource, :service => service, :resource => FactoryBot.create(:service_ansible_tower, :type => ServiceAnsibleTower))
+
+      expect(service.service_resources.first.resource.retireable?).to eq(false)
     end
   end
 end

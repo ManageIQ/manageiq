@@ -156,6 +156,10 @@ class Service < ApplicationRecord
   end
 
   def retireable?
+    return false unless provisioned?
+
+    # top level services do not have types; this method is used only in creating tasks for child services which always have types
+    # please see https://github.com/ManageIQ/manageiq/pull/17317#discussion_r186528878
     parent.present? ? true : type.present?
   end
 

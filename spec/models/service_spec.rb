@@ -674,13 +674,19 @@ describe Service do
   end
 
   describe "#retireable?" do
-    let(:service_with_type) { FactoryBot.create(:service, :type => "thing") }
+    let(:service_with_type) { FactoryBot.create(:service, :type => "thing", :lifecycle_state => 'provisioned') }
+    let(:unprovd_service_with_type) { FactoryBot.create(:service, :type => "thing") }
     let(:service_without_type) { FactoryBot.create(:service, :type => nil) }
-    let(:service_with_parent) { FactoryBot.create(:service, :service => FactoryBot.create(:service)) }
+    let(:service_with_parent) { FactoryBot.create(:service, :service => FactoryBot.create(:service), :lifecycle_state => 'provisioned') }
+    let(:unprovisioned_service_with_parent) { FactoryBot.create(:service, :service => FactoryBot.create(:service)) }
     context "with no parent" do
       context "with type" do
         it "true" do
           expect(service_with_type.retireable?).to be(true)
+        end
+
+        it "true" do
+          expect(unprovd_service_with_type.retireable?).to be(false)
         end
       end
 
@@ -694,6 +700,7 @@ describe Service do
     context "with parent" do
       it "true" do
         expect(service_with_parent.retireable?).to be(true)
+        expect(unprovisioned_service_with_parent.retireable?).to be(false)
       end
     end
   end
