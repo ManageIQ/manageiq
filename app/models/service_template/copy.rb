@@ -22,10 +22,7 @@ module ServiceTemplate::Copy
   private
 
   def additional_tenant_copy(template)
-    template.additional_tenants << additional_tenants.each do |tenant|
-      tenant.name = "Copy of " + tenant.name + Time.zone.now.to_s
-      tenant.subdomain = "Copy of " + tenant.subdomain + Time.zone.now.to_s
-    end
+    template.additional_tenants << additional_tenants.dup
   end
 
   def custom_button_copy(custom_button, template)

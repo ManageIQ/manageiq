@@ -109,7 +109,7 @@ describe ServiceTemplate do
         expect(MiqProvisionRequestTemplate.count).to eq(2)
         expect(new_service_template.guid).not_to eq(@st1.guid)
         expect(new_service_template.display).to be(false)
-        expect(new_service_template.service_resources).not_to be(nil)
+        expect(new_service_template.service_resources.count).not_to be(0)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
 
@@ -143,7 +143,7 @@ describe ServiceTemplate do
         expect(MiqProvisionRequestTemplate.count).to eq(2)
         expect(new_service_template.guid).not_to eq(service_template_ansible_tower.guid)
         expect(new_service_template.display).to be(false)
-        expect(new_service_template.service_resources).not_to be(nil)
+        expect(new_service_template.service_resources.count).not_to be(0)
         expect(service_template_ansible_tower.service_resources.first.resource).not_to be(nil)
       end
 
@@ -159,7 +159,7 @@ describe ServiceTemplate do
         expect(MiqProvisionRequestTemplate.count).to eq(2)
         expect(new_service_template.guid).not_to eq(service_template_orchestration.guid)
         expect(new_service_template.display).to be(false)
-        expect(new_service_template.service_resources).not_to be(nil)
+        expect(new_service_template.service_resources.count).not_to be(0)
         expect(service_template_orchestration.service_resources.first.resource).not_to be(nil)
       end
     end
@@ -198,7 +198,7 @@ describe ServiceTemplate do
         expect(ExtManagementSystem.count).to eq(1)
         expect(new_service_template.guid).not_to eq(@st1.guid)
         expect(new_service_template.display).to be(false)
-        expect(new_service_template.service_resources).not_to be(nil)
+        expect(new_service_template.service_resources.count).not_to be(0)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
 
@@ -212,7 +212,7 @@ describe ServiceTemplate do
         expect(OrchestrationTemplate.count).to eq(1)
         expect(new_service_template.guid).not_to eq(@st1.guid)
         expect(new_service_template.display).to be(false)
-        expect(new_service_template.service_resources).not_to be(nil)
+        expect(new_service_template.service_resources.count).not_to be(0)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
 
@@ -228,7 +228,7 @@ describe ServiceTemplate do
         expect(MiqProvisionRequestTemplate.count).to eq(2)
         expect(new_service_template.guid).not_to eq(@st1.guid)
         expect(new_service_template.display).to be(false)
-        expect(new_service_template.service_resources).not_to be(nil)
+        expect(new_service_template.service_resources.count).not_to be(0)
         expect(@st1.service_resources.first.resource).not_to be(nil)
       end
     end
@@ -266,7 +266,7 @@ describe ServiceTemplate do
       it "duplicates additional tenants" do
         @st1.additional_tenants << [
           FactoryBot.create(:tenant),
-          FactoryBot.create(:tenant)
+          FactoryBot.create(:tenant, :subdomain => nil)
         ]
         expect(@st1.additional_tenants.count).to eq(2)
         new_template = @st1.template_copy
