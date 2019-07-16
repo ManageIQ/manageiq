@@ -160,8 +160,8 @@ namespace :locale do
 
     pot_files = []
     Vmdb::Plugins.each do |plugin|
-      system("rm -vf #{plugin.root.join('/locale')}/*.pot")
-      system("bundle exec rake locale:plugin:find[#{plugin.to_s.sub('::Engine', '')}]")
+      system('rm', '-vf', "#{plugin.root.join('/locale')}/*.pot")
+      system('bundle', 'exec', 'rake', "locale:plugin:find[#{plugin.to_s.sub('::Engine', '')}]")
       pot_file = Dir.glob("#{plugin.root.join('locale')}/*.pot")[0]
       pot_files << pot_file if pot_file.present?
     end
@@ -176,15 +176,15 @@ namespace :locale do
     Dir.mkdir(tmp_dir, 0o700)
     extra_pots.each do |url|
       pot_file = "#{tmp_dir}/#{url.split('/')[-1]}"
-      ManageIQ::Environment.system! "curl -f -o #{pot_file} #{url}"
+      ManageIQ::Environment.system!('curl', '-f', '-o', pot_file, url)
       pot_files << pot_file
     end
 
-    system("rmsgcat -o #{Rails.root.join('locale', 'manageiq-all.pot')} #{Rails.root.join('locale', 'manageiq.pot')} #{pot_files.join(' ')}")
-    system("mv -v #{Rails.root.join('locale', 'manageiq-all.pot')} #{Rails.root.join('locale', 'manageiq.pot')}")
-    system("rmsgmerge -o #{Rails.root.join('locale', 'en', 'manageiq-all.po')} #{Rails.root.join('locale', 'en', 'manageiq.po')} #{Rails.root.join('locale', 'manageiq.pot')}")
-    system("mv -v #{Rails.root.join('locale', 'en', 'manageiq-all.po')} #{Rails.root.join('locale', 'en', 'manageiq.po')}")
-    system("rm -rf #{tmp_dir}")
+    system('rmsgcat', '-o', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
+    system('mv', '-v', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
+    system('rmsgmerge', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
+    system('mv', '-v', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
+    system('rm', '-rf', tmp_dir)
   end
 
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
@@ -219,7 +219,7 @@ namespace :locale do
       end
     end
 
-    system("mkdir -p #{@engine_root}/locale/en") # create initial locale/en directories if they don't exist
+    system('mkdir', '-p', "#{@engine_root}/locale/en") # create initial locale/en directories if they don't exist
 
     FastGettext.add_text_domain(@domain,
                                 :path           => @engine_root.join('locale').to_s,
@@ -261,7 +261,7 @@ namespace :locale do
           lang_dir = File.join(plugin_dir, lang)
           Dir.mkdir(lang_dir)
           lang_file = "#{lang_dir}/#{url.split('/')[-1]}"
-          ManageIQ::Environment.system! "curl -f -o #{lang_file} #{url}"
+          ManageIQ::Environment.system!("curl -f -o #{lang_file} #{url}")
           po_files[lang] ||= []
           po_files[lang].push(Pathname(lang_file))
         end
