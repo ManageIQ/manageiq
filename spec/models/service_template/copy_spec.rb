@@ -87,7 +87,7 @@ describe ServiceTemplate do
         vm_template = FactoryBot.create(:vm_openstack, :ext_management_system => FactoryBot.create(:ext_management_system))
         ptr = FactoryBot.create(:miq_provision_request_template, :requester => admin, :src_vm_id => vm_template.id)
         service_template.add_resource(ptr)
-        service_template.service_resources.first.update_attributes(:scaling_min => 4)
+        service_template.service_resources.first.update(:scaling_min => 4)
         expect(service_template.service_resources.first.scaling_min).to eq(4)
         new_service_template = copy_template(service_template, "new_template")
         expect(MiqProvisionRequestTemplate.count).to eq(2)
