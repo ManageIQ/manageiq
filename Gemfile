@@ -9,7 +9,6 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 # VMDB specific gems
 #
-
 gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
 
 # Modified gems for gems-pending.  Setting sources here since they are git references
@@ -22,7 +21,7 @@ def manageiq_plugin(plugin_name)
   end
 end
 
-manageiq_plugin "manageiq-schema"
+gem "manageiq-schema",         :git => "https://github.com/jrafanie/manageiq-schema.git",         :branch => "try_rails_5_2"
 
 # Unmodified gems
 gem "activerecord-virtual_attributes", "~>1.5.0"
@@ -48,7 +47,7 @@ gem "inventory_refresh",              "~>0.2.0",       :require => false
 gem "kubeclient",                     "~>4.0",         :require => false # For scaling pods at runtime
 gem "linux_admin",                    "~>2.0",         :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
-gem "manageiq-api-client",            "~>0.3.3",       :require => false
+gem "manageiq-api-client",     :git => "https://github.com/ManageIQ/manageiq-api-client.git",     :branch => "master"
 gem "manageiq-loggers",               "~>0.5.0",       :require => false
 gem "manageiq-messaging",             "~>0.1.4",       :require => false
 gem "manageiq-password",              "~>0.3",         :require => false
