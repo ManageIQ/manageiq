@@ -59,6 +59,17 @@ describe Ansible::Runner do
       described_class.run(env_vars, extra_vars, playbook, :tags => tags)
     end
 
+    it "calls run with the correct verbosity" do
+      expect(AwesomeSpawn).to receive(:run) do |command, options|
+        expect(command).to eq("ansible-runner")
+
+        _method, _dir, _json, args = options[:params]
+        expect(args).to eq(:ident => "result", :playbook => playbook, "-vvvvv" => nil)
+      end.and_return(result)
+
+      described_class.run(env_vars, extra_vars, playbook, :verbosity => 6)
+    end
+
     context "with special characters" do
       let(:env_vars)   { {"ENV1" => "pa$%w0rd!'"} }
       let(:extra_vars) { {"name" => "john's server"} }
