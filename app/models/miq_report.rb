@@ -274,7 +274,7 @@ class MiqReport < ApplicationRecord
       if col_order&.include?(attr)
         attr
       else
-        raise ArgumentError, N_("#{attr} is not a valid attribute for #{name}")
+        raise ArgumentError, N_("%{attribute} is not a valid attribute for %{name}") % {:attribute => attr, :name => name}
       end
     end.compact
   end

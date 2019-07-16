@@ -185,7 +185,7 @@ class Dialog < ApplicationRecord
   def reject_if_has_resource_actions
     if resource_actions.length > 0
       connected_components = resource_actions.collect { |ra| ra.resource_type.constantize.find(ra.resource_id) }
-      errors.add(:base, _("Dialog cannot be deleted because it is connected to other components: #{connected_components.map { |cc| cc.class.name + ":" + cc.id.to_s + " - " + cc.try(:name) }}"))
+      errors.add(:base, _("Dialog cannot be deleted because it is connected to other components: %{components}") % {:components => connected_components.map { |cc| cc.class.name + ":" + cc.id.to_s + " - " + cc.try(:name) }})
       throw :abort
     end
   end
