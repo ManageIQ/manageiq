@@ -9,8 +9,7 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 #
 # VMDB specific gems
 #
-
-gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
+gem "manageiq-gems-pending",   :git => "https://github.com/juliancheal/manageiq-gems-pending.git",   :branch => "try_rails_5_2"
 gem "manageiq-loggers",      ">0", :require => false,                   :git => "https://github.com/ManageIQ/manageiq-loggers",          :branch => "master"
 
 # Modified gems for gems-pending.  Setting sources here since they are git references
@@ -23,11 +22,11 @@ def manageiq_plugin(plugin_name)
   end
 end
 
-manageiq_plugin "manageiq-schema"
+gem "manageiq-schema",         :git => "https://github.com/juliancheal/manageiq-schema.git",         :branch => "try_rails_5_2"
 
 # Unmodified gems
-gem "activerecord-virtual_attributes", "~>1.3.1"
 gem "activerecord-session_store",     "~>1.1"
+gem "activerecord-virtual_attributes", :git => 'https://github.com/juliancheal/activerecord-virtual_attributes.git', :branch => "try_rails_5_2"
 gem "acts_as_tree",                   "~>2.7" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>3.0.7",       :require => false
 gem "bcrypt",                         "~> 3.1.10",     :require => false
@@ -49,7 +48,7 @@ gem "inventory_refresh",              "~>0.2.0",       :require => false
 gem "kubeclient",                     "~>4.0",         :require => false # For scaling pods at runtime
 gem "linux_admin",                    "~>1.2.1",       :require => false
 gem "log_decorator",                  "~>0.1",         :require => false
-gem "manageiq-api-client",            "~>0.3.3",       :require => false
+gem "manageiq-api-client",     :git => "https://github.com/juliancheal/manageiq-api-client.git",     :branch => "try_rails_5_2"
 gem "manageiq-messaging",             "~>0.1.4",       :require => false
 gem "manageiq-password",              "~>0.3",         :require => false
 gem "manageiq-postgres_ha_admin",     "~>3.1",         :require => false
@@ -150,12 +149,12 @@ group :openshift, :manageiq_default do
 end
 
 group :openstack, :manageiq_default do
-  manageiq_plugin "manageiq-providers-openstack"
+  gem "manageiq-providers-openstack",     :git => "https://github.com/juliancheal/manageiq-providers-openstack.git",     :branch => "try_rails_5_2"
 end
 
 group :ovirt, :manageiq_default do
   manageiq_plugin "manageiq-providers-ovirt"
-  gem "ovirt_metrics",                  "~>2.0.0",       :require => false
+  gem "ovirt_metrics",           :git => "https://github.com/juliancheal/ovirt_metrics.git",           :branch => "try_rails_5_2"
 end
 
 group :scvmm, :manageiq_default do
@@ -164,7 +163,7 @@ end
 
 group :vmware, :manageiq_default do
   manageiq_plugin "manageiq-providers-vmware"
-  gem "vmware_web_service",             "~>0.4.0"
+  gem "vmware_web_service",      :git => "https://github.com/juliancheal/vmware_web_service.git",      :branch => "try_rails_5_2"
 end
 
 ### shared dependencies
@@ -209,7 +208,7 @@ end
 
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   manageiq_plugin "manageiq-decorators"
-  manageiq_plugin "manageiq-ui-classic"
+  gem "manageiq-ui-classic",     :git => "https://github.com/juliancheal/manageiq-ui-classic.git",     :branch => "try_rails_5_2"
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
 end
