@@ -5,31 +5,31 @@ namespace :locale do
       "# This is automatically generated file (rake locale:store_dictionary_strings).",
       "# The file contains strings extracted from en.yml for gettext to find."
     ]
-    no_plurals = %w(NFS OS) # strings which we don't want to create automatic plurals for
+    no_plurals = %w[NFS OS] # strings which we don't want to create automatic plurals for
 
     dict = YAML.safe_load(File.open(Rails.root.join("locale/en.yml")))["en"]["dictionary"]
     dict.each_key do |tree|
-      next unless %w(column model table).include?(tree) # subtrees of interest
+      next unless %w[column model table].include?(tree) # subtrees of interest
 
       dict[tree].each_key do |item|
         if dict[tree][item].kind_of?(String) # leaf node
           output_strings.push("# TRANSLATORS: en.yml key: dictionary.#{tree}.#{item}")
           value = dict[tree][item]
-          output_strings.push('_("%s")' % value)
+          output_strings.push('_("%{value}")' % {:value => value})
 
-          if %w(model table).include?(tree) && # create automatic plurals for model and table subtrees
+          if %w[model table].include?(tree) && # create automatic plurals for model and table subtrees
              !no_plurals.include?(value)
             m = /(.+)(\s+\(.+\))/.match(value) # strings like: "Infrastructure Provider (Openstack)"
             value_plural = m ? "#{m[1].pluralize}#{m[2]}" : value.pluralize
             if value != value_plural
               output_strings.push("# TRANSLATORS: en.yml key: dictionary.#{tree}.#{item} (plural form)")
-              output_strings.push('_("%s")' % value_plural)
+              output_strings.push('_("%{plural}")' % {:plural => value_plural})
             end
           end
         elsif dict[tree][item].kind_of?(Hash) # subtree
           dict[tree][item].each_key do |subitem|
             output_strings.push("# TRANSLATORS: en.yml key: dictionary.#{tree}.#{item}.#{subitem}")
-            output_strings.push('_("%s")' % dict[tree][item][subitem])
+            output_strings.push('_("%{item}")' % {:item => dict[tree][item][subitem]})
           end
         end
       end
@@ -45,6 +45,7 @@ namespace :locale do
     def update_output(string, file, output, root)
       file.gsub!(root + '/', "")
       return if string.blank?
+
       if output.key?(string)
         output[string].append(file)
       else
@@ -95,7 +96,7 @@ namespace :locale do
         output[key].sort.uniq.each do |file|
           f.puts "# TRANSLATORS: file: #{file}"
         end
-        f.puts '_("%s")' % key
+        f.puts '_("%{key}")' % {:key => key}
       end
     end
   end
@@ -189,7 +190,7 @@ namespace :locale do
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
   task "plugin:find", :engine do |_, args|
     unless args[:engine]
-      $stderr.puts "You need to specify a plugin name: rake locale:plugin:find[plugin_name]"
+      warn "You need to specify a plugin name: rake locale:plugin:find[plugin_name]"
       exit 1
     end
     @domain = args[:engine].gsub('::', '_')
@@ -270,7 +271,7 @@ namespace :locale do
       }
 
       plugins_dir = File.join(Rails.root, 'locale/plugins')
-      Dir.mkdir(plugins_dir, 0700)
+      Dir.mkdir(plugins_dir, 0o700)
       js_plugins.each do |plugin, content|
         plugin_dir = File.join(plugins_dir, plugin)
         Dir.mkdir(plugin_dir)
@@ -285,11 +286,11 @@ namespace :locale do
       end
 
       combined_dir = File.join(Rails.root, "locale/combined")
-      Dir.mkdir(combined_dir, 0700)
+      Dir.mkdir(combined_dir, 0o700)
       po_files.each_key do |locale|
         dir = File.join(combined_dir, locale)
         po = File.join(dir, 'manageiq.po')
-        Dir.mkdir(dir, 0700)
+        Dir.mkdir(dir, 0o700)
         system "rmsgcat -o #{po} #{po_files[locale].join(' ')}"
       end
 
@@ -305,6 +306,7 @@ namespace :locale do
     Rails.application.eager_load!
     ApplicationRecord.descendants.sort_by(&:display_name).collect do |model|
       next if model.model_name.singular.titleize != model.display_name || model.display_name.start_with?('ManageIQ')
+
       f.puts "n_('#{model.display_name}', '#{model.display_name 2}', n)"
     end
     f.close
