@@ -261,5 +261,17 @@ describe ServiceTemplate do
         expect(new_template.resource_actions.pluck(:action)).to match_array(%w[Provision Retire])
       end
     end
+
+    context "additional tenants" do
+      it "duplicates additional tenants" do
+        @st1.additional_tenants << [
+          FactoryBot.create(:tenant),
+          FactoryBot.create(:tenant)
+        ]
+        expect(@st1.additional_tenants.count).to eq(2)
+        new_template = @st1.template_copy
+        expect(new_template.additional_tenants.count).to eq(2)
+      end
+    end
   end
 end

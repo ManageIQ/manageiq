@@ -8,6 +8,7 @@ module ServiceTemplate::Copy
           template.update_attributes(:name => new_name, :display => false)
           service_resources.each { |service_resource| resource_copy(service_resource, template) }
           resource_action_copy(template)
+          additional_tenant_copy(template)
           picture_copy(template) if picture
 
           direct_custom_buttons.each { |custom_button| custom_button_copy(custom_button, template) }
@@ -20,9 +21,11 @@ module ServiceTemplate::Copy
 
   private
 
-  def resource_copy(service_resource, template)
-    resource = service_resource.resource.respond_to?(:service_template_resource_copy) ? service_resource.resource.service_template_resource_copy : service_resource.resource
-    template.add_resource(resource, service_resource)
+  def additional_tenant_copy(template)
+    template.additional_tenants << additional_tenants.each do |tenant|
+      tenant.name = "Copy of " + tenant.name + Time.zone.now.to_s
+      tenant.subdomain = "Copy of " + tenant.subdomain + Time.zone.now.to_s
+    end
   end
 
   def custom_button_copy(custom_button, template)
@@ -33,11 +36,16 @@ module ServiceTemplate::Copy
     custom_button_set.deep_copy(:owner => template)
   end
 
-  def resource_action_copy(template)
-    template.resource_actions << resource_actions.collect(&:dup)
-  end
-
   def picture_copy(template)
     template.picture = picture.dup
+  end
+
+  def resource_copy(service_resource, template)
+    resource = service_resource.resource.respond_to?(:service_template_resource_copy) ? service_resource.resource.service_template_resource_copy : service_resource.resource
+    template.add_resource(resource, service_resource)
+  end
+
+  def resource_action_copy(template)
+    template.resource_actions << resource_actions.collect(&:dup)
   end
 end
