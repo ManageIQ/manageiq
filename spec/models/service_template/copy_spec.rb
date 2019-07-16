@@ -1,11 +1,11 @@
 describe ServiceTemplate do
   describe "#template_copy" do
-    let(:service_template) { FactoryBot.create(:service_template) }
+    let(:custom_button)                  { FactoryBot.create(:custom_button, :applies_to => service_template) }
+    let(:custom_button_for_service)      { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
+    let(:custom_button_set)              { FactoryBot.create(:custom_button_set, :owner => service_template) }
+    let(:service_template)               { FactoryBot.create(:service_template) }
     let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower) }
     let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration) }
-    let(:custom_button) { FactoryBot.create(:custom_button, :applies_to => service_template) }
-    let(:custom_button_for_service) { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
-    let(:custom_button_set) { FactoryBot.create(:custom_button_set, :owner => service_template) }
 
     def copy_template(template, name = nil)
       copy = nil
