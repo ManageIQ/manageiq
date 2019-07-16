@@ -34,7 +34,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     playbook_vars = { :playbook_path => parent.path }
     credentials   = collect_credentials(vars)
 
-    workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts], credentials).tap do |job|
+    kwargs = {}
+    kwargs[:timeout] = vars[:execution_ttl].to_i.minutes if vars[:execution_ttl].present?
+
+    workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts], credentials, kwargs).tap do |job|
       job.signal(:start)
     end
   end

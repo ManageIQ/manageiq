@@ -89,6 +89,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   CONFIG_OPTIONS_WHITELIST = %i[
     cloud_credential_id
     credential_id
+    execution_ttl
     extra_vars
     hosts
     network_credential_id

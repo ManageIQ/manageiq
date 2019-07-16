@@ -43,6 +43,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
       expect(job.options[:env_vars]).to eq({})
       expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"])
       expect(job.options[:playbook_path]).to eq(playbook.path)
+      expect(job.options[:timeout]).to eq(1.hour)
     end
 
     it "accepts different variables to launch a job template against" do
@@ -53,6 +54,13 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
       expect(job.options[:env_vars]).to eq({})
       expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"], :some_key => :some_value)
       expect(job.options[:playbook_path]).to eq(playbook.path)
+    end
+
+    it "passes execution_ttl to the job as its timeout" do
+      job = manager.configuration_scripts.first.run(:execution_ttl => "5")
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:timeout]).to eq(5.minutes)
     end
   end
 
