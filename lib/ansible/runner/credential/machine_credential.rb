@@ -14,8 +14,9 @@ module Ansible
 
       def write_password_file
         password_hash = {
-          "^SSH [pP]assword:"    => auth.password,
-          "^BECOME [pP]assword:" => auth.become_password
+          "^SSH [pP]assword:"                                     => auth.password,
+          "^BECOME [pP]assword:"                                  => auth.become_password,
+          "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" => auth.ssh_key_unlock
         }.delete_blanks
 
         File.write(password_file, password_hash.to_yaml) if password_hash.present?

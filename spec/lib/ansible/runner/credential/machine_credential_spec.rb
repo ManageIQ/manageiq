@@ -79,15 +79,16 @@ RSpec.describe Ansible::Runner::MachineCredential do
         cred.write_password_file
 
         expect(password_hash).to eq(
-          "^SSH [pP]assword:"    => "secret",
-          "^BECOME [pP]assword:" => "othersecret"
+          "^SSH [pP]assword:"                                     => "secret",
+          "^BECOME [pP]assword:"                                  => "othersecret",
+          "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" => "keypass"
         )
 
         expect(File.read(key_file)).to eq("key_data")
       end
 
       it "doesn't create the password file if there are no passwords" do
-        auth.update!(:password => nil, :become_password => nil)
+        auth.update!(:password => nil, :become_password => nil, :auth_key_password => nil)
         cred.write_password_file
         expect(File.exist?(password_file)).to be_falsey
       end
