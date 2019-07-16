@@ -44,6 +44,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
       expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"])
       expect(job.options[:playbook_path]).to eq(playbook.path)
       expect(job.options[:timeout]).to eq(1.hour)
+      expect(job.options[:verbosity]).to eq(0)
     end
 
     it "accepts different variables to launch a job template against" do
@@ -61,6 +62,13 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
 
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:timeout]).to eq(5.minutes)
+    end
+
+    it "passes verbosity to the job when specified" do
+      job = manager.configuration_scripts.first.run(:verbosity => "5")
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:verbosity]).to eq(5)
     end
   end
 

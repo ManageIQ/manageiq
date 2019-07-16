@@ -94,6 +94,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     hosts
     network_credential_id
     vault_credential_id
+    verbosity
   ].freeze
 
   def config_options(action)

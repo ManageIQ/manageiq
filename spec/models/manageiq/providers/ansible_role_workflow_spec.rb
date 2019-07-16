@@ -1,7 +1,7 @@
 describe ManageIQ::Providers::AnsibleRoleWorkflow do
   let(:job)          { described_class.create_job(*options).tap { |job| job.state = state } }
   let(:role_options) { {:role_name => 'role_name', :roles_path => 'path/role', :role_skip_facts => true } }
-  let(:options)      { [{"ENV" => "VAR"}, %w(arg1 arg2), role_options] }
+  let(:options)      { [{"ENV" => "VAR"}, %w[arg1 arg2], role_options, {:verbosity => 4}] }
   let(:state)        { "waiting_to_start" }
 
   context ".create_job" do
