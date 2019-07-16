@@ -250,25 +250,7 @@ namespace :locale do
         end
       end
 
-      js_plugins = {
-        'ui-components' => {
-          'en'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/en/ui-components.po',
-          'es'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/es/ui-components.po',
-          'fr'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/fr/ui-components.po',
-          'ja'    => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/ja/ui-components.po',
-          'pt_BR' => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/pt_BR/ui-components.po',
-          'zh_CN' => 'https://raw.githubusercontent.com/ManageIQ/ui-components/master/locale/zh_CN/ui-components.po',
-        },
-
-        'react-ui-components' => {
-          'en'    => 'https://raw.githubusercontent.com/ManageIQ/react-ui-components/master/locale/en/react-ui-components.po',
-          'es'    => 'https://raw.githubusercontent.com/ManageIQ/react-ui-components/master/locale/es/react-ui-components.po',
-          'fr'    => 'https://raw.githubusercontent.com/ManageIQ/react-ui-components/master/locale/fr/react-ui-components.po',
-          'ja'    => 'https://raw.githubusercontent.com/ManageIQ/react-ui-components/master/locale/ja/react-ui-components.po',
-          'pt_BR' => 'https://raw.githubusercontent.com/ManageIQ/react-ui-components/master/locale/pt_BR/react-ui-components.po',
-          'zh_CN' => 'https://raw.githubusercontent.com/ManageIQ/react-ui-components/master/locale/zh_CN/react-ui-components.po',
-        }
-      }
+      js_plugins = {} # currently we don't need to download any catalogs from JS/node plugins
 
       plugins_dir = File.join(Rails.root, 'locale/plugins')
       Dir.mkdir(plugins_dir, 0o700)
