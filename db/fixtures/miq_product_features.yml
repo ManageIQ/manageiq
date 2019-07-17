@@ -1711,6 +1711,12 @@
     :feature_type: node
     :identifier: miq_report_export
 
+# Optimization
+- :name: Optimization
+  :description: Everything under Optimization
+  :feature_type: node
+  :identifier: optimization
+
 # Consumption
 - :name: Consumption
   :description: Everything under Consumption
