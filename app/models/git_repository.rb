@@ -4,19 +4,18 @@ class GitRepository < ApplicationRecord
   GIT_REPO_DIRECTORY = Rails.root.join('data/git_repos')
 
   validates :url, :format => URI::regexp(%w(http https)), :allow_nil => false
-  validate  :check_path
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
 
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
-  after_destroy :delete_repo_dir
+  after_destroy :delete_repo_dir # TODO: Need to distribute this to all systems
 
   INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
 
   def refresh
-    ensure_repo
+    update_repo
     transaction do
       refresh_branches
       refresh_tags
@@ -26,37 +25,51 @@ class GitRepository < ApplicationRecord
   end
 
   def branch_info(name)
-    refresh unless repo
+    refresh unless @updated_repo
     branch = git_branches.detect { |item| item.name == name }
     raise "Branch #{name} not found" unless branch
     branch.attributes.slice(*INFO_KEYS)
   end
 
   def tag_info(name)
-    refresh unless repo
+    refresh unless @updated_repo
     tag = git_tags.detect { |item| item.name == name }
     raise "Tag #{name} not found" unless tag
     tag.attributes.slice(*INFO_KEYS)
   end
 
   def directory_name
-    parsed = URI.parse(url)
-    raise "Invalid URL missing path" if parsed.path.blank?
-    File.join(GIT_REPO_DIRECTORY, parsed.path)
+    raise ActiveRecord::RecordNotSaved if new_record?
+
+    File.join(GIT_REPO_DIRECTORY, id.to_s)
   end
 
   def self_signed_cert_cb(_valid, _host)
     true
   end
 
-  private
+  def with_worktree
+    handling_worktree_errors do
+      yield worktree
+    end
+  end
 
-  attr_reader :repo
+  def update_repo
+    with_worktree do |worktree|
+      message = "Updating #{url} in #{directory_name}..."
+      _log.info(message)
+      worktree.send(:fetch_and_merge)
+      _log.info("#{message}...Complete")
+    end
+    @updated_repo = true
+  end
+
+  private
 
   def refresh_branches
     current_branches = git_branches.index_by(&:name)
-    repo.branches(:remote).each do |branch|
-      info = repo.branch_info(branch)
+    worktree.branches(:remote).each do |branch|
+      info = worktree.branch_info(branch)
       attrs = {:name           => branch,
                :commit_sha     => info[:commit_sha],
                :commit_time    => info[:time],
@@ -70,8 +83,8 @@ class GitRepository < ApplicationRecord
 
   def refresh_tags
     current_tags = git_tags.index_by(&:name)
-    repo.tags.each do |tag|
-      info = repo.tag_info(tag)
+    worktree.tags.each do |tag|
+      info = worktree.tag_info(tag)
       attrs = {:name           => tag,
                :commit_sha     => info[:commit_sha],
                :commit_time    => info[:time],
@@ -83,26 +96,28 @@ class GitRepository < ApplicationRecord
     git_tags.delete(current_tags.values)
   end
 
-  def ensure_repo
-    @repo = Dir.exist?(directory_name) ? update_repo : init_repo
-  end
-
-  def init_repo
-    repo_block do
-      params = {:clone => true, :url => url}.merge(repo_params)
-      GitWorktree.new(params)
+  def worktree
+    @worktree ||= begin
+      clone_repo unless Dir.exist?(directory_name)
+      fetch_worktree
     end
   end
 
-  def update_repo
-    repo_block do
-      GitWorktree.new(repo_params).tap do |repo|
-        repo.send(:fetch_and_merge)
-      end
+  def fetch_worktree
+    GitWorktree.new(worktree_params)
+  end
+
+  def clone_repo
+    handling_worktree_errors do
+      message = "Cloning #{url} to #{directory_name}..."
+      _log.info(message)
+      GitWorktree.new(worktree_params.merge(:clone => true, :url => url))
+      @updated_repo = true
+      _log.info("#{message}...Complete")
     end
   end
 
-  def repo_block
+  def handling_worktree_errors
     yield
   rescue ::Rugged::NetworkError => err
     raise MiqException::MiqUnreachableError, err.message
@@ -110,7 +125,7 @@ class GitRepository < ApplicationRecord
     raise MiqException::Error, err.message
   end
 
-  def repo_params
+  def worktree_params
     params = {:path => directory_name}
     params[:certificate_check] = method(:self_signed_cert_cb) if verify_ssl == OpenSSL::SSL::VERIFY_NONE
     if authentications.any?
@@ -122,11 +137,5 @@ class GitRepository < ApplicationRecord
 
   def delete_repo_dir
     FileUtils.rm_rf(directory_name)
-  end
-
-  def check_path
-    return unless url
-    parsed = URI.parse(url)
-    errors.add(:url, "missing path component e.g. https://www.example.com/path") if parsed.path.blank?
   end
 end
