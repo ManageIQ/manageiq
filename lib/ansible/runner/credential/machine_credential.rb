@@ -12,16 +12,9 @@ module Ansible
         end
       end
 
-      def write_password_file
-        password_hash = {
-          "^SSH [pP]assword:"                                     => auth.password,
-          "^BECOME [pP]assword:"                                  => auth.become_password,
-          "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" => auth.ssh_key_unlock
-        }.delete_blanks
-
-        File.write(password_file, password_hash.to_yaml) if password_hash.present?
-
-        write_ssh_key if auth.auth_key.present?
+      def write_config_files
+        write_password_file
+        write_ssh_key_file
       end
 
       private
@@ -36,8 +29,18 @@ module Ansible
         }
       end
 
-      def write_ssh_key
-        File.write(ssh_key_file, auth.auth_key)
+      def write_password_file
+        password_hash = {
+          "^SSH [pP]assword:"                                     => auth.password,
+          "^BECOME [pP]assword:"                                  => auth.become_password,
+          "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" => auth.ssh_key_unlock
+        }.delete_blanks
+
+        File.write(password_file, password_hash.to_yaml) if password_hash.present?
+      end
+
+      def write_ssh_key_file
+        File.write(ssh_key_file, auth.auth_key) if auth.auth_key.present?
       end
     end
   end

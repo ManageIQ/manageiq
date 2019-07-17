@@ -263,7 +263,7 @@ module Ansible
           env_vars.merge!(cred.env_vars)
           extra_vars.merge!(cred.extra_vars)
 
-          cred.write_password_file
+          cred.write_config_files
         end
 
         [command_line, env_vars, extra_vars]
