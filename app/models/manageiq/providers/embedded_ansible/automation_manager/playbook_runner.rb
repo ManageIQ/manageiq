@@ -51,6 +51,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     limit
     network_credential_id
     vault_credential_id
+    verbosity
   ].freeze
 
   def launch_ansible_tower_job

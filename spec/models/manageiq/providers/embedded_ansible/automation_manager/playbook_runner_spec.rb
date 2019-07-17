@@ -83,10 +83,10 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner
     end
 
     context 'with launch options' do
-      let(:options) { {:job_template_ref => 'jt1', :extra_vars => {:thing => "stuff"}} }
+      let(:options) { {:job_template_ref => 'jt1', :extra_vars => {:thing => "stuff"}, :verbosity => "4"} }
       it 'passes them to the job' do
         expect(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job).to receive(:create_job)
-          .with(an_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript), :hosts => ["localhost"], :extra_vars => {:thing => "stuff"})
+          .with(an_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript), :hosts => ["localhost"], :extra_vars => {:thing => "stuff"}, :verbosity => "4")
           .and_return(double(:id => 'jb1'))
         expect(subject).to receive(:queue_signal)
         subject.launch_ansible_tower_job
