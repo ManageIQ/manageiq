@@ -67,7 +67,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
       expect(cred.extra_vars).to eq({})
     end
 
-    describe "#write_password_file" do
+    describe "#write_config_files" do
       let(:password_file) { File.join(@base_dir, "env", "passwords") }
       let(:key_file)      { File.join(@base_dir, "env", "ssh_key") }
 
@@ -76,7 +76,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
       end
 
       it "writes out both the passwords file and the key file" do
-        cred.write_password_file
+        cred.write_config_files
 
         expect(password_hash).to eq(
           "^SSH [pP]assword:"                                     => "secret",
@@ -89,7 +89,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
 
       it "doesn't create the password file if there are no passwords" do
         auth.update!(:password => nil, :become_password => nil, :auth_key_password => nil)
-        cred.write_password_file
+        cred.write_config_files
         expect(File.exist?(password_file)).to be_falsey
       end
 
@@ -97,7 +97,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
         password = '!compli-cat"ed&pass,"wor;d'
         auth.update!(:password => password)
 
-        cred.write_password_file
+        cred.write_config_files
 
         expect(password_hash["^SSH [pP]assword:"]).to eq(password)
       end

@@ -31,7 +31,7 @@ module Ansible
         {}
       end
 
-      def write_password_file
+      def write_config_files
       end
 
       private

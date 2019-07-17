@@ -31,9 +31,9 @@ RSpec.describe Ansible::Runner::GenericCredential do
       expect(cred.extra_vars).to eq({})
     end
 
-    it "#write_password_file does not write a file" do
+    it "#write_config_files does not write a file" do
       password_file = File.join(@base_dir, "env", "passwords")
-      cred.write_password_file
+      cred.write_config_files
       expect(File.exist?(password_file)).to be_falsey
     end
   end
