@@ -237,8 +237,7 @@ class MiqGroup < ApplicationRecord
     tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
 
     create_with(
-      :description         => "Tenant #{tenant_full_name} access",
-      :default_tenant_role => MiqUserRole.default_tenant_role
+      :description => "Tenant #{tenant_full_name} access"
     ).find_or_create_by!(
       :group_type => TENANT_GROUP,
       :tenant_id  => tenant.id,
