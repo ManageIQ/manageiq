@@ -1059,3 +1059,438 @@
   :example_text: VM has been migrated.
   :default: true
   :single_value: "1"
+- :description: Quota - Max VMs
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "6"
+    :read_only: "0"
+    :syntax: string
+    :name: "6"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "7"
+    :read_only: "0"
+    :syntax: string
+    :name: "7"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "8"
+    :read_only: "0"
+    :syntax: string
+    :name: "8"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "9"
+    :read_only: "0"
+    :syntax: string
+    :name: "9"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "10"
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "20"
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "40"
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "50"
+    :read_only: "0"
+    :syntax: string
+    :name: "50"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "100"
+    :read_only: "0"
+    :syntax: string
+    :name: "100"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_max_vms
+  :example_text: Maximum number of VMs allowed by Quota
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
+- :description: Quota - Warn CPUs
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "10"
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "20"
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "40"
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "50"
+    :read_only: "0"
+    :syntax: string
+    :name: "50"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_warn_cpu
+  :example_text: Warning number of CPUs allowed by Quota
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
+- :description: Quota - Warn  Memory
+  :entries:
+  - :description: 1GB
+    :read_only: "0"
+    :syntax: string
+    :name: "1024"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 2GB
+    :read_only: "0"
+    :syntax: string
+    :name: "2048"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 4GB
+    :read_only: "0"
+    :syntax: string
+    :name: "4096"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 8GB
+    :read_only: "0"
+    :syntax: string
+    :name: "8192"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 10GB
+    :read_only: "0"
+    :syntax: string
+    :name: "10240"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 20GB
+    :read_only: "0"
+    :syntax: string
+    :name: "20480"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 40GB
+    :read_only: "0"
+    :syntax: string
+    :name: "40960"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 80GB
+    :read_only: "0"
+    :syntax: string
+    :name: "81920"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_warn_memory
+  :example_text: Warning Memory allowed by Quota (GB)
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
+- :description: Quota - Warn  Storage
+  :entries:
+  - :description: 10GB
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 20GB
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 40GB
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 100GB
+    :read_only: "0"
+    :syntax: string
+    :name: "100"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 200GB
+    :read_only: "0"
+    :syntax: string
+    :name: "200"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 400GB
+    :read_only: "0"
+    :syntax: string
+    :name: "400"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: 1TB
+    :read_only: "0"
+    :syntax: string
+    :name: "1000"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_warn_storage
+  :example_text: Warning Storage allowed by Quota (GB)
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
+- :description: Quota - Warn VMs
+  :entries:
+  - :description: "1"
+    :read_only: "0"
+    :syntax: string
+    :name: "1"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "2"
+    :read_only: "0"
+    :syntax: string
+    :name: "2"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "3"
+    :read_only: "0"
+    :syntax: string
+    :name: "3"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "4"
+    :read_only: "0"
+    :syntax: string
+    :name: "4"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "5"
+    :read_only: "0"
+    :syntax: string
+    :name: "5"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "6"
+    :read_only: "0"
+    :syntax: string
+    :name: "6"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "7"
+    :read_only: "0"
+    :syntax: string
+    :name: "7"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "8"
+    :read_only: "0"
+    :syntax: string
+    :name: "8"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "9"
+    :read_only: "0"
+    :syntax: string
+    :name: "9"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "10"
+    :read_only: "0"
+    :syntax: string
+    :name: "10"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "20"
+    :read_only: "0"
+    :syntax: string
+    :name: "20"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "30"
+    :read_only: "0"
+    :syntax: string
+    :name: "30"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "40"
+    :read_only: "0"
+    :syntax: string
+    :name: "40"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "50"
+    :read_only: "0"
+    :syntax: string
+    :name: "50"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  - :description: "100"
+    :read_only: "0"
+    :syntax: string
+    :name: "100"
+    :example_text:
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: quota_warn_vms
+  :example_text: Warning number of VMs allowed by Quota
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
