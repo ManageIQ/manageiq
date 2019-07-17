@@ -2,12 +2,23 @@
 :item_type: file
 :definition:
   stats:
-  - target: c:/windows/system32/*.scr
-  - target: c:/windows/system32/msi*.*
+  - target: C:/Windows/System32/*.scr
+  - target: C:/Windows/System32/msi*.*
+  - target: C:/Windows/System32/netapi32.dll
+  - target: C:/Program Files/Microsoft SQL Server/110
+  - target: C:/Program Files/Microsoft SQL Server/120
+  - target: C:/Program Files/Microsoft SQL Server/130
+  - target: C:/Program Files/Microsoft SQL Server/140
+  - target: C:/Program Files/IBM/WebSphere/AppServer
   - target: /etc/*.conf
   - target: /etc/hosts
   - target: /etc/redhat-access-insights/machine-id
-  - target: c:/windows/system32/netapi32.dll
+  - target: /etc/group
+  - target: /etc/oraInst.loc
+  - target: /u01/app/oraInventory
+  - target: /opt/mssql/bin/mssql-conf
+  - target: /usr/sap/hostctrl/exe/saphostctrl
+  - target: /etc/.ibm/registry/InstallationManager.dat
 :name: sample_file
 :description: Sample File Scan
 :mode: Vm
