@@ -1171,7 +1171,6 @@
   :show: true
   :name: quota_max_vms
   :example_text: Maximum number of VMs allowed by Quota
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Quota - Warn CPUs
@@ -1251,7 +1250,6 @@
   :show: true
   :name: quota_warn_cpu
   :example_text: Warning number of CPUs allowed by Quota
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Quota - Warn  Memory
@@ -1317,7 +1315,6 @@
   :show: true
   :name: quota_warn_memory
   :example_text: Warning Memory allowed by Quota (GB)
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Quota - Warn  Storage
@@ -1376,7 +1373,6 @@
   :show: true
   :name: quota_warn_storage
   :example_text: Warning Storage allowed by Quota (GB)
-  :parent_id: 0
   :default: true
   :single_value: "1"
 - :description: Quota - Warn VMs
@@ -1491,6 +1487,5 @@
   :show: true
   :name: quota_warn_vms
   :example_text: Warning number of VMs allowed by Quota
-  :parent_id: 0
   :default: true
   :single_value: "1"
