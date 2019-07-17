@@ -112,10 +112,8 @@ class Vm < VmOrTemplate
 
   def supported_consoles
     {
-      :spice   => spice_support,
-      :vnc     => vnc_support,
+      :html5   => html5_support,
       :vmrc    => vmrc_support,
-      :webmks  => webmks_support,
       :cockpit => cockpit_support
     }
   end
@@ -126,35 +124,19 @@ class Vm < VmOrTemplate
 
   private
 
-  def vnc_support
+  def html5_support
     {
-      :visible => supports_vnc_console?,
-      :enabled => supports_launch_vnc_console?,
-      :message => unsupported_reason(:launch_vnc_console)
-    }
-  end
-
-  def webmks_support
-    {
-      :visible => supports_mks_console?,
-      :enabled => supports_launch_mks_console?,
-      :message => unsupported_reason(:launch_mks_console)
+      :visible => supports_html5_console?,
+      :enabled => supports_launch_html5_console?,
+      :message => unsupported_reason(:launch_html5_console)
     }
   end
 
   def vmrc_support
     {
-      :visible => supports_vnc_console?,
+      :visible => supports_vmrc_console?,
       :enabled => supports_launch_vmrc_console?,
       :message => unsupported_reason(:launch_vmrc_console)
-    }
-  end
-
-  def spice_support
-    {
-      :visible => supports_spice_console?,
-      :enabled => supports_launch_spice_console?,
-      :message => unsupported_reason(:launch_spice_console)
     }
   end
 
@@ -164,9 +146,5 @@ class Vm < VmOrTemplate
       :enabled => supports_launch_cockpit?,
       :message => unsupported_reason(:launch_cockpit)
     }
-  end
-
-  def console_supports_type?(console_type)
-    Settings.server.remote_console_type.upcase == console_type.upcase ? console_supported?(console_type) : false
   end
 end

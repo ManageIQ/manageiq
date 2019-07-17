@@ -5413,20 +5413,12 @@
         :description: Restart the Guest OS on VMs
         :feature_type: control
         :identifier: vm_guest_restart
-      - :name: Console using MKS
+      - :name: Console using HTML5
         :description: Open a web-based console for VMs
         :feature_type: control
-        :identifier: vm_console
-      - :name: Console using WebMKS
-        :description: Open a web-based console for VMs
-        :feature_type: control
-        :identifier: vm_webmks_console
-      - :name: Console using VNC
-        :description: Open a web-based VNC console for VMs
-        :feature_type: control
-        :identifier: vm_vnc_console
+        :identifier: vm_html5_console
       - :name: Console using VMRC
-        :description: Open a web-based VMRC console for VMs
+        :description: Open a VMRC console for VMs
         :feature_type: control
         :identifier: vm_vmrc_console
       - :name: Cockpit Console
@@ -6475,7 +6467,7 @@
       - :name: Open Remote Console
         :description: Open Remote Console
         :feature_type: control
-        :identifier: sui_vm_console
+        :identifier: sui_vm_html5_console
       - :name: Open Web Console
         :description: Open Web Console
         :feature_type: control

@@ -159,12 +159,10 @@
   - storage_tag
   - timeline
   - vm_check_compliance
-  - vm_console
-  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
-  - vm_vnc_console
+  - vm_html5_console
   - vm_vmrc_console
   - cockpit_console
   - vm_perf
@@ -177,8 +175,7 @@
   - vm_chargeback
   - sui_services_view
   - sui_vm_details_view
-  - sui_vm_console
-  - sui_vm_web_console
+  - sui_vm_html5_console
   - sui_vm_tags
   - sui_orders_view
   - sui_notifications
@@ -261,13 +258,11 @@
   - vm_view
   - vm_check_compliance
   - vm_compare
-  - vm_console
   - vm_drift
-  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
-  - vm_vnc_console
+  - vm_html5_console
   - vm_vmrc_console
   - cockpit_console
   - vm_perf
@@ -279,8 +274,7 @@
   - vm_chargeback
   - sui_services_view
   - sui_vm_details_view
-  - sui_vm_console
-  - sui_vm_web_console
+  - sui_vm_html5_console
   - sui_vm_tags
   - sui_notifications
 
@@ -321,12 +315,10 @@
   - provider_foreman_explorer
   - vm_clone
   - vm_compare
-  - vm_console
-  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
-  - vm_vnc_console
+  - vm_html5_console
   - vm_vmrc_console
   - cockpit_console
   - vm_drift
@@ -348,8 +340,7 @@
   - vm_chargeback
   - sui_services_view
   - sui_vm_details_view
-  - sui_vm_console
-  - sui_vm_web_console
+  - sui_vm_html5_console
   - sui_vm_start
   - sui_vm_stop
   - sui_vm_suspend
@@ -449,12 +440,10 @@
   - vm_check_compliance
   - vm_collect_running_processes
   - vm_compare
-  - vm_console
-  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
-  - vm_vnc_console
+  - vm_html5_console
   - vm_vmrc_console
   - cockpit_console
   - vm_drift
@@ -476,12 +465,11 @@
   - vm_chargeback
   - sui_services_view
   - sui_vm_details_view
-  - sui_vm_console
-  - sui_vm_web_console
-  - sui_vm_tags
+  - sui_vm_html5_console
   - sui_vm_start
   - sui_vm_stop
   - sui_vm_suspend
+  - sui_vm_tags
   - sui_notifications
 
 - :name: EvmRole-security
@@ -634,12 +622,10 @@
   - timeline
   - vm_check_compliance
   - vm_collect_running_processes
-  - vm_console
-  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
-  - vm_vnc_console
+  - vm_html5_console
   - vm_vmrc_console
   - cockpit_console
   - vm_compare
@@ -654,8 +640,7 @@
   - vm_chargeback
   - sui_services_view
   - sui_vm_details_view
-  - sui_vm_console
-  - sui_vm_web_console
+  - sui_vm_html5_console
   - sui_vm_tags
   - sui_notifications
 
@@ -723,12 +708,10 @@
   - storage_tag
   - timeline
   - vm_check_compliance
-  - vm_console
-  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
-  - vm_vnc_console
+  - vm_html5_console
   - vm_vmrc_console
   - cockpit_console
   - vm_compare
@@ -742,8 +725,7 @@
   - vm_chargeback
   - sui_services_view
   - sui_vm_details_view
-  - sui_vm_console
-  - sui_vm_web_console
+  - sui_vm_html5_console
   - sui_vm_tags
   - sui_orders_view
   - sui_orders_operations
@@ -818,10 +800,9 @@
   - sui_orders_operations
   - sui_orders_view
   - sui_services_view
-  - sui_vm_console
   - sui_vm_details_view
+  - sui_vm_html5_console
   - sui_vm_tags
-  - sui_vm_web_console
   - timeline
   - vm_cloud_explorer
   - vm_explorer
@@ -920,12 +901,8 @@
   - service_retire_now
   - service_view
   - svc_catalog_provision
-  - vm_console
-  - vm_webmks_console
   - vm_clone
   - vm_cloud_explorer
-  - vm_console
-  - vm_webmks_console
   - vm_drift
   - vm_edit
   - vm_guest_restart
@@ -948,7 +925,7 @@
   - vm_timeline
   - vm_chargeback
   - vm_vmrc_console
-  - vm_vnc_console
+  - vm_html5_console
   - cockpit_console
   - sui
 
@@ -980,8 +957,6 @@
   - vm_cloud_explorer
   - vm_collect_running_processes
   - vm_compare
-  - vm_console
-  - vm_webmks_console
   - vm_drift
   - vm_explorer
   - vm_guest_restart
@@ -1005,16 +980,15 @@
   - vm_timeline
   - vm_chargeback
   - vm_vmrc_console
-  - vm_vnc_console
+  - vm_html5_console
   - cockpit_console
   - sui_vm_details_view
-  - sui_vm_console
-  - sui_vm_web_console
-  - sui_vm_tags
+  - sui_vm_html5_console
   - sui_vm_retire
   - sui_vm_start
   - sui_vm_stop
   - sui_vm_suspend
+  - sui_vm_tags
   - sui_orders_view
   - sui_orders_operations
   - sui_notifications

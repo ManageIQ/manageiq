@@ -9,38 +9,17 @@ module Vm::Operations
   include_concern 'Lifecycle'
 
   included do
-    supports :vnc_console do
-      message = "VNC Console not supported"
-      if vendor == 'vmware'
-        unsupported_reason_add(:vnc_console, message) unless ext_management_system.present? && console_supports_type?('VNC')
-      elsif !console_supported?('VNC')
-        unsupported_reason_add(:vnc_console, message)
-      end
-    end
-
-    supports :mks_console do
-      message = "WebMKS Console not supported"
-      if vendor != 'vmware'
-        unsupported_reason_add(:mks_console, message)
-      elsif console_supported?('WEBMKS') && !console_supports_type?('WebMKS')
-        unsupported_reason_add(:mks_console, message)
-      end
+    supports :html5_console do
+      consup = %w[vnc webmks spice].any? { |type| send(:console_supported?, type) }
+      unsupported_reason_add(:html5_console, _("The web-based HTML5 Console is not supported")) unless consup
     end
 
     supports :vmrc_console do
-      unsupported_reason_add(:vmrc_console, "VMRC Console not supported") unless console_supports_type?('VMRC')
+      unsupported_reason_add(:vmrc_console, _("VMRC Console not supported")) unless console_supported?('VMRC')
     end
 
-    supports :spice_console do
-      unsupported_reason_add(:spice_console, "Spice Console not supported") unless console_supports_type?('SPICE')
-    end
-
-    supports :launch_vnc_console do
-      if vendor == 'vmware' && ext_management_system.try(:api_version).to_f >= 6.5
-        unsupported_reason_add(:launch_vnc_console, _('VNC consoles are unsupported on VMware ESXi 6.5 and later.'))
-      elsif power_state != 'on'
-        unsupported_reason_add(:launch_vnc_console, _('The web-based VNC console is not available because the VM is not powered on'))
-      end
+    supports :launch_html5_console do
+      unsupported_reason_add(:launch_html5_console, _("The web-based HTML5 Console is not available because the VM is not powered on")) unless power_state == 'on'
     end
 
     supports :launch_vmrc_console do
@@ -48,20 +27,6 @@ module Vm::Operations
         validate_remote_console_vmrc_support
       rescue => err
         unsupported_reason_add(:launch_vmrc_console, _('VM VMRC Console error: %{error}') % {:error => err})
-      end
-    end
-
-    supports :launch_mks_console do
-      if power_state != 'on'
-        unsupported_reason_add(:launch_mks_console,  _('The web-based WebMKS console is not available because the VM is not powered on'))
-      elsif !Rails.root.join('public', 'webmks').exist?
-        unsupported_reason_add(:launch_mks_console, _("The web-based WebMKS console is not available because the required libraries aren't installed"))
-      end
-    end
-
-    supports :launch_spice_console do
-      if power_state != 'on'
-        unsupported_reason_add(:launch_spice_console, _('The web-based spice console is not available because the VM is not powered on'))
       end
     end
   end
