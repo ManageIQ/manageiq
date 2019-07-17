@@ -53,7 +53,7 @@ module ActsAsTaggable
       taggings = Tagging.arel_table
       where(Tagging.where(taggings[:taggable_id].eq(arel_table[:id])
                                                 .and(taggings[:taggable_type].eq(base_class.name))
-                                                .and(taggings[:tag_id].in(tag_ids))).exists)
+                                                .and(taggings[:tag_id].in(tag_ids))).arel.exists)
     end
 
     def with_all_tags(tag_ids)
