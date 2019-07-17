@@ -107,6 +107,10 @@ FactoryBot.define do
           :parent => :embedded_ansible_credential,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::OpenstackCredential"
 
+  factory :embedded_ansible_rhv_credential,
+          :parent => :embedded_ansible_credential,
+          :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::RhvCredential"
+
   factory :embedded_ansible_scm_credential,
           :parent => :embedded_ansible_credential,
           :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ScmCredential"
