@@ -121,6 +121,7 @@ module Rbac
       'MiqRequest'             => :descendant_ids,
       'MiqRequestTask'         => nil, # tenant only
       'MiqTemplate'            => :ancestor_ids,
+      'OrchestrationStack'     => nil,
       'Provider'               => :ancestor_ids,
       'Service'                => :descendant_ids,
       'ServiceTemplate'        => :ancestor_ids,

@@ -13,6 +13,7 @@ class OrchestrationStack < ApplicationRecord
   include CustomActionsMixin
   include SupportsFeatureMixin
   include CiFeatureMixin
+  include CloudTenancyMixin
 
   acts_as_miq_taggable
 
@@ -20,6 +21,7 @@ class OrchestrationStack < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
   belongs_to :tenant
+  belongs_to :cloud_tenant
 
   has_many   :authentication_orchestration_stacks
   has_many   :authentications, :through => :authentication_orchestration_stacks

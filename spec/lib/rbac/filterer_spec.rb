@@ -2650,6 +2650,7 @@ describe Rbac::Filterer do
     let(:project1_user)         { FactoryBot.create(:user, :miq_groups => [project1_group]) }
     let(:project1_volume)       { FactoryBot.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
     let(:project1_flavor)       { FactoryBot.create(:flavor, :ext_management_system => ems_openstack) }
+    let(:project1_orchestration_stack) { FactoryBot.create(:orchestration_stack, :ext_management_system => ems_openstack, :cloud_tenant => project1_cloud_tenant) }
     let(:project1_c_t_flavor)   { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => project1_cloud_tenant, :flavor => project1_flavor) }
     let(:project2_tenant)       { FactoryBot.create(:tenant, :source_type => 'CloudTenant') }
     let(:project2_cloud_tenant) { FactoryBot.create(:cloud_tenant, :source_tenant => project2_tenant, :ext_management_system => ems_openstack) }
@@ -2657,16 +2658,18 @@ describe Rbac::Filterer do
     let(:project2_user)         { FactoryBot.create(:user, :miq_groups => [project2_group]) }
     let(:project2_volume)       { FactoryBot.create(:cloud_volume, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
     let(:project2_flavor)       { FactoryBot.create(:flavor, :ext_management_system => ems_openstack) }
+    let(:project2_orchestration_stack) { FactoryBot.create(:orchestration_stack, :ext_management_system => ems_openstack, :cloud_tenant => project2_cloud_tenant) }
     let(:project2_c_t_flavor)   { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => project2_cloud_tenant, :flavor => project2_flavor) }
     let(:ems_other)             { FactoryBot.create(:ems_cloud, :name => 'ems_other', :tenant_mapping_enabled => false) }
     let(:volume_other)          { FactoryBot.create(:cloud_volume, :ext_management_system => ems_other) }
     let(:tenant_other)          { FactoryBot.create(:tenant, :source_type => 'CloudTenant') }
     let(:cloud_tenant_other)    { FactoryBot.create(:cloud_tenant, :source_tenant => tenant_other, :ext_management_system => ems_other) }
     let(:flavor_other)          { FactoryBot.create(:flavor, :ext_management_system => ems_other) }
+    let(:orchestration_stack_other) { FactoryBot.create(:orchestration_stack, :ext_management_system => ems_other, :cloud_tenant => cloud_tenant_other) }
     let(:c_t_flavor_other)      { FactoryBot.create(:cloud_tenant_flavor, :cloud_tenant => cloud_tenant_other, :flavor => flavor_other) }
-    let!(:all_objects)          { [project1_volume, project2_volume, volume_other, cloud_tenant_other, project1_c_t_flavor, project2_c_t_flavor, c_t_flavor_other] }
+    let!(:all_objects)          { [project1_volume, project2_volume, volume_other, cloud_tenant_other, project1_c_t_flavor, project2_c_t_flavor, c_t_flavor_other, project1_orchestration_stack, project2_orchestration_stack, orchestration_stack_other] }
 
-    it "lists its own project's objects and other objects where tenant_mapping is not enabled" do
+    it "lists its own project's objects and other objects where tenant_mapping is enabled" do
       ems_openstack.tenant_mapping_enabled = true
       ems_openstack.save!
       results = described_class.search(:class => CloudVolume, :user => project1_user).first
@@ -2695,37 +2698,55 @@ describe Rbac::Filterer do
 
       results = described_class.search(:class => Flavor, :user => other_user).first
       expect(results).to match_array [flavor_other]
+
+      results = described_class.search(:class => OrchestrationStack, :user => project1_user).first
+      expect(results).to match_array [project1_orchestration_stack, orchestration_stack_other]
+
+      results = described_class.search(:class => OrchestrationStack, :user => project2_user).first
+      expect(results).to match_array [project2_orchestration_stack, orchestration_stack_other]
+
+      results = described_class.search(:class => OrchestrationStack, :user => other_user).first
+      expect(results).to match_array [orchestration_stack_other]
     end
 
     it "all objects are visible to all users when tenant_mapping is not enabled" do
       ems_openstack.tenant_mapping_enabled = false
       ems_openstack.save!
       results = described_class.search(:class => CloudVolume, :user => project1_user).first
-      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+      expect(results).to match_array CloudVolume.all
 
       results = described_class.search(:class => CloudVolume, :user => project2_user).first
-      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+      expect(results).to match_array CloudVolume.all
 
       results = described_class.search(:class => CloudVolume, :user => owner_user).first
-      expect(results).to match_array [project1_volume, project2_volume, volume_other]
+      expect(results).to match_array CloudVolume.all
 
       results = described_class.search(:class => CloudTenant, :user => project1_user).first
-      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+      expect(results).to match_array CloudTenant.all
 
       results = described_class.search(:class => CloudTenant, :user => project2_user).first
-      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+      expect(results).to match_array CloudTenant.all
 
       results = described_class.search(:class => CloudTenant, :user => other_user).first
-      expect(results).to match_array [project1_cloud_tenant, project2_cloud_tenant, cloud_tenant_other]
+      expect(results).to match_array CloudTenant.all
 
       results = described_class.search(:class => Flavor, :user => project1_user).first
-      expect(results).to match_array [project1_flavor, project2_flavor, flavor_other]
+      expect(results).to match_array Flavor.all
 
       results = described_class.search(:class => Flavor, :user => project2_user).first
-      expect(results).to match_array [project1_flavor, project2_flavor, flavor_other]
+      expect(results).to match_array Flavor.all
 
       results = described_class.search(:class => Flavor, :user => other_user).first
-      expect(results).to match_array [project1_flavor, project2_flavor, flavor_other]
+      expect(results).to match_array Flavor.all
+
+      results = described_class.search(:class => OrchestrationStack, :user => project1_user).first
+      expect(results).to match_array OrchestrationStack.all
+
+      results = described_class.search(:class => OrchestrationStack, :user => project2_user).first
+      expect(results).to match_array OrchestrationStack.all
+
+      results = described_class.search(:class => OrchestrationStack, :user => other_user).first
+      expect(results).to match_array OrchestrationStack.all
     end
   end
 
