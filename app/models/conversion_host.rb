@@ -192,6 +192,17 @@ class ConversionHost < ApplicationRecord
   #
   def get_conversion_state(path)
     json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
+
+    # For some reason Net::SFTP#download! will return a blank string in rare circumstances.
+    if json_state.blank?
+      sleep 1
+      json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
+    end
+
+    if json_state.blank?
+      raise "Failed to retrieve conversion state data properly from file '#{path}': blank data"
+    end
+
     JSON.parse(json_state)
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and retrieve conversion state data from file '#{path}' with [#{err.class}: #{err}"
