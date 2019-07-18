@@ -26,6 +26,18 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
     create!(create_params)
   end
 
+  def self.password_attribute_keys
+    self::API_ATTRIBUTES.map do |k, v|
+      k if v[:type] == :password
+    end.compact
+  end
+
+  def self.encrypt_queue_params(params)
+    encrypted_params = params.slice(*password_attribute_keys)
+    encrypted_params.transform_values! { |v| ManageIQ::Password.try_encrypt(v) }
+    params.merge(encrypted_params)
+  end
+
   def raw_update_in_provider(params)
     update!(self.class.params_to_attributes(params.except(:task_id, :miq_task_id)))
   end

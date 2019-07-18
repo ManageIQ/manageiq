@@ -45,11 +45,15 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
       end
     end
 
+    def encrypt_queue_params(params)
+      params
+    end
+
     def create_in_provider_queue(manager_id, params, auth_user = nil)
       manager = parent.find(manager_id)
       action = "Creating #{self::FRIENDLY_NAME}"
       action << " (name=#{params[:name]})" if params[:name]
-      queue(manager.my_zone, nil, "create_in_provider", [manager_id, params], action, auth_user)
+      queue(manager.my_zone, nil, "create_in_provider", [manager_id, encrypt_queue_params(params)], action, auth_user)
     end
 
     private
@@ -84,8 +88,12 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
     self
   end
 
+  def encrypt_queue_params(params)
+    self.class.encrypt_queue_params(params)
+  end
+
   def update_in_provider_queue(params, auth_user = nil)
-    queue("update_in_provider", [params], "Updating", auth_user)
+    queue("update_in_provider", [encrypt_queue_params(params)], "Updating", auth_user)
   end
 
   def raw_delete_in_provider
