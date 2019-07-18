@@ -35,11 +35,30 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     my_signal(minimize_indirect, :post_ansible_run, err.message, 'error')
   end
 
+  def translate_credentials!(launch_options)
+    %i[credential vault_credential cloud_credential network_credential].each do |cred_type|
+      credential_id = launch_options.delete("#{cred_type}_id".to_sym)
+      next if credential_id.blank?
+
+      launch_options[cred_type] = Authentication.find(credential_id).native_ref
+    end
+  end
+
+  LAUNCH_OPTIONS_KEYS = %i[
+    cloud_credential_id
+    credential_id
+    extra_vars
+    limit
+    network_credential_id
+    vault_credential_id
+  ].freeze
+
   def launch_ansible_tower_job
     set_status('launching tower job')
 
-    launch_options = options.slice(:extra_vars, :limit)
+    launch_options = options.slice(*LAUNCH_OPTIONS_KEYS)
     launch_options[:hosts] = hosts_array(options[:hosts])
+    translate_credentials!(launch_options)
     tower_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(temp_configuration_script, launch_options)
     options[:tower_job_id] = tower_job.id
     self.name = "#{name}, Job ID: #{tower_job.id}"
