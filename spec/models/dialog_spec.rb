@@ -520,16 +520,16 @@ describe Dialog do
       let(:dialog_group) { DialogGroup.new(:dialog_fields => [dialog_field1, dialog_field2]) }
       let(:dialog_field2) { DialogField.new(:value => "321", :name => "field2") }
 
-      context "when overwrite is true" do
-        it "sets nil values" do
+      context "when ignore_nils is true" do
+        it "accepts nil values as a value" do
           vars = {:field1 => "10.8.99.248"}
           dialog.load_values_into_fields(vars)
           expect(dialog_field2.value).to eq(nil)
         end
       end
 
-      context "when overwrite is false" do
-        it "does not set nil values" do
+      context "when ignore_nils is false" do
+        it "does not set values to nil" do
           vars = {:field1 => "10.8.99.248"}
           dialog.load_values_into_fields(vars, false)
           expect(dialog_field2.value).to eq("321")

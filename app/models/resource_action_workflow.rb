@@ -147,7 +147,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
       dialog.load_values_into_fields(values)
     elsif options[:refresh]
       dialog.initialize_static_values
-      dialog.load_values_into_fields(values)
+      dialog.load_values_into_fields(values, false)
     elsif options[:reconfigure]
       dialog.initialize_with_given_values(values)
     else
