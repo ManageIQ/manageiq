@@ -241,6 +241,11 @@ describe ResourceActionWorkflow do
     context "when the options are set to a refresh request" do
       let(:options) { {:refresh => true} }
 
+      it "initializes the static values" do
+        expect(dialog).to receive(:initialize_static_values)
+        ResourceActionWorkflow.new(values, nil, resource_action, options)
+      end
+
       it "loads the values into fields" do
         expect(dialog).to receive(:load_values_into_fields).with(values)
         ResourceActionWorkflow.new(values, nil, resource_action, options)

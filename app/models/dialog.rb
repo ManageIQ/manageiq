@@ -118,6 +118,14 @@ class Dialog < ApplicationRecord
     dialog_field_hash.each_value(&:initialize_value_context)
   end
 
+  def initialize_static_values
+    dialog_field_hash.each_value do |field|
+      field.dialog = self
+    end
+
+    dialog_field_hash.each_value(&:initialize_static_values)
+  end
+
   def init_fields_with_values_for_request(values)
     values = values.with_indifferent_access
 

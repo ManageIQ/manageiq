@@ -59,6 +59,30 @@ describe Dialog do
     end
   end
 
+  describe "#initialize_static_values" do
+    let(:dialog) { described_class.new }
+    let(:field1) { DialogField.new(:name => "name1") }
+    let(:field2) { DialogField.new(:name => "name2") }
+
+    before do
+      allow(dialog).to receive(:dialog_fields).and_return([field1, field2])
+      allow(field1).to receive(:initialize_static_values)
+      allow(field2).to receive(:initialize_static_values)
+    end
+
+    it "sets the current dialog to each field" do
+      dialog.initialize_static_values
+      expect(field1.dialog).to eq(dialog)
+      expect(field2.dialog).to eq(dialog)
+    end
+
+    it "calls initialize_static_values on each field" do
+      expect(field1).to receive(:initialize_static_values)
+      expect(field2).to receive(:initialize_static_values)
+      dialog.initialize_static_values
+    end
+  end
+
   describe "#content" do
     it "returns the serialized content" do
       dialog = FactoryBot.create(:dialog, :description => "foo", :label => "bar")

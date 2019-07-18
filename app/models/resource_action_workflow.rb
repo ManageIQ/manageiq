@@ -107,7 +107,10 @@ class ResourceActionWorkflow < MiqRequestWorkflow
       elsif options[:provision_workflow] || options[:init_defaults]
         dialog.initialize_value_context(values)
         dialog.load_values_into_fields(values, false)
-      elsif options[:refresh] || options[:submit_workflow]
+      elsif options[:submit_workflow]
+        dialog.load_values_into_fields(values)
+      elsif options[:refresh]
+        dialog.initialize_static_values
         dialog.load_values_into_fields(values)
       elsif options[:reconfigure]
         dialog.initialize_with_given_values(values)
