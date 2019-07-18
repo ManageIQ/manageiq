@@ -401,7 +401,7 @@ class ServiceTemplate < ApplicationRecord
 
   def picture=(value)
     if value.kind_of?(Hash)
-      super(create_picture(value))
+      super(Picture.new(value))
     else
       super
     end
