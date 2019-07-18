@@ -168,24 +168,11 @@ describe DialogField do
 
     context "when the field is dynamic" do
       let(:dynamic) { true }
+      let(:value) { "value" }
 
-      context "when the value is blank" do
-        let(:value) { "" }
-        let(:automate_value) { "some value from automate" }
-
-        it "does not set the value to the automate value" do
-          field.initialize_static_values
-          expect(field.instance_variable_get(:@value)).to eq("")
-        end
-      end
-
-      context "when the value is not blank" do
-        let(:value) { "not blank" }
-
-        it "does not set the value to the automate value" do
-          field.initialize_static_values
-          expect(field.instance_variable_get(:@value)).to eq("not blank")
-        end
+      it "does not change the value" do
+        field.initialize_static_values
+        expect(field.instance_variable_get(:@value)).to eq("value")
       end
     end
 
