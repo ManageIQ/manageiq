@@ -67,7 +67,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
         expected_name = "Creating #{described_class::FRIENDLY_NAME} (name=#{params[:name]})"
         expect(MiqTask.find(task_id)).to have_attributes(:name => expected_name)
         expect(MiqQueue.first).to have_attributes(
-          :args        => [manager.id, params],
+          :args        => [manager.id, queue_create_params],
           :class_name  => credential_class.name,
           :method_name => "create_in_provider",
           :priority    => MiqQueue::HIGH_PRIORITY,
@@ -83,8 +83,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
     end
 
     context "UPDATE" do
-      let(:update_params) { {:name => "Updated Credential" } }
-      let(:ansible_cred)  { credential_class.raw_create_in_provider(manager, params) }
+      let(:ansible_cred) { credential_class.raw_create_in_provider(manager, params) }
 
       it "#update_in_provider to succeed" do
         expect(Notification).to receive(:create!).never
@@ -99,12 +98,12 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
         task_id   = ansible_cred.update_in_provider_queue(update_params)
         task_name = "Updating #{described_class::FRIENDLY_NAME} (name=#{ansible_cred.name})"
 
-        update_params[:task_id] = task_id
+        update_queue_params[:task_id] = task_id
 
         expect(MiqTask.find(task_id)).to have_attributes(:name => task_name)
         expect(MiqQueue.first).to have_attributes(
           :instance_id => ansible_cred.id,
-          :args        => [update_params],
+          :args        => [update_queue_params],
           :class_name  => credential_class.name,
           :method_name => "update_in_provider",
           :priority    => MiqQueue::HIGH_PRIORITY,
@@ -156,6 +155,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :ssh_key_unlock  => "secret4"
         }
       end
+      let(:queue_create_params) do
+        {
+          :name            => "Machine Credential",
+          :userid          => "userid",
+          :password        => ManageIQ::Password.encrypt("secret1"),
+          :ssh_key_data    => ManageIQ::Password.encrypt("secret2"),
+          :become_method   => "sudo",
+          :become_password => ManageIQ::Password.encrypt("secret3"),
+          :become_username => "admin",
+          :ssh_key_unlock  => ManageIQ::Password.encrypt("secret4")
+        }
+      end
       let(:params_to_attributes) do
         {
           :name              => "Machine Credential",
@@ -189,6 +200,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           }
         }
       end
+      let(:update_params) do
+        {
+          :name     => "Updated Credential",
+          :password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name     => "Updated Credential",
+          :password => ManageIQ::Password.encrypt("supersecret")
+        }
+      end
     end
   end
 
@@ -205,6 +228,17 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :ssh_key_data       => "secret2",
           :authorize_password => "secret3",
           :ssh_key_unlock     => "secret4"
+        }
+      end
+      let(:queue_create_params) do
+        {
+          :name               => "Network Credential",
+          :userid             => "userid",
+          :password           => ManageIQ::Password.encrypt("secret1"),
+          :authorize          => "true",
+          :ssh_key_data       => ManageIQ::Password.encrypt("secret2"),
+          :authorize_password => ManageIQ::Password.encrypt("secret3"),
+          :ssh_key_unlock     => ManageIQ::Password.encrypt("secret4")
         }
       end
       let(:params_to_attributes) do
@@ -238,6 +272,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           }
         }
       end
+      let(:update_params) do
+        {
+          :name     => "Updated Credential",
+          :password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name     => "Updated Credential",
+          :password => ManageIQ::Password.encrypt("supersecret")
+        }
+      end
     end
   end
 
@@ -252,6 +298,15 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :password       => "secret1",
           :ssh_key_data   => "secret2",
           :ssh_key_unlock => "secret3"
+        }
+      end
+      let(:queue_create_params) do
+        {
+          :name           => "Scm Credential",
+          :userid         => "userid",
+          :password       => ManageIQ::Password.encrypt("secret1"),
+          :ssh_key_data   => ManageIQ::Password.encrypt("secret2"),
+          :ssh_key_unlock => ManageIQ::Password.encrypt("secret3")
         }
       end
       let(:params_to_attributes) do
@@ -275,6 +330,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :auth_key_password_encrypted => ManageIQ::Password.try_encrypt("secret3")
         }
       end
+      let(:update_params) do
+        {
+          :name     => "Updated Credential",
+          :password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name     => "Updated Credential",
+          :password => ManageIQ::Password.encrypt("supersecret")
+        }
+      end
     end
   end
 
@@ -289,11 +356,29 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :vault_password => "secret1"
         }
       end
+      let(:queue_create_params) do
+        {
+          :name           => "Vault Credential",
+          :vault_password => ManageIQ::Password.encrypt("secret1")
+        }
+      end
       let(:expected_values) do
         {
           :name               => "Vault Credential",
           :vault_password     => "secret1",
           :password_encrypted => ManageIQ::Password.try_encrypt("secret1")
+        }
+      end
+      let(:update_params) do
+        {
+          :name           => "Updated Credential",
+          :vault_password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name           => "Updated Credential",
+          :vault_password => ManageIQ::Password.encrypt("supersecret")
         }
       end
     end
@@ -312,6 +397,14 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :security_token => "secret2",
         }
       end
+      let(:queue_create_params) do
+        {
+          :name           => "Amazon Credential",
+          :userid         => "userid",
+          :password       => ManageIQ::Password.encrypt("secret1"),
+          :security_token => ManageIQ::Password.encrypt("secret2")
+        }
+      end
       let(:expected_values) do
         {
           :name               => "Amazon Credential",
@@ -320,6 +413,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :security_token     => "secret2",
           :password_encrypted => ManageIQ::Password.try_encrypt("secret1"),
           :auth_key_encrypted => ManageIQ::Password.try_encrypt("secret2")
+        }
+      end
+      let(:update_params) do
+        {
+          :name     => "Updated Credential",
+          :password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name     => "Updated Credential",
+          :password => ManageIQ::Password.encrypt("supersecret")
         }
       end
     end
@@ -335,6 +440,17 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :userid       => "userid",
           :password     => "secret1",
           :secret       => "secret2",
+          :client       => "client",
+          :tenant       => "tenant",
+          :subscription => "subscription"
+        }
+      end
+      let(:queue_create_params) do
+        {
+          :name         => "Azure Credential",
+          :userid       => "userid",
+          :password     => ManageIQ::Password.encrypt("secret1"),
+          :secret       => ManageIQ::Password.encrypt("secret2"),
           :client       => "client",
           :tenant       => "tenant",
           :subscription => "subscription"
@@ -371,6 +487,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           }
         }
       end
+      let(:update_params) do
+        {
+          :name     => "Updated Credential",
+          :password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name     => "Updated Credential",
+          :password => ManageIQ::Password.encrypt("supersecret")
+        }
+      end
     end
   end
 
@@ -383,6 +511,14 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :name         => "Google Credential",
           :userid       => "userid",
           :ssh_key_data => "secret1",
+          :project      => "project"
+        }
+      end
+      let(:queue_create_params) do
+        {
+          :name         => "Google Credential",
+          :userid       => "userid",
+          :ssh_key_data => ManageIQ::Password.encrypt("secret1"),
           :project      => "project"
         }
       end
@@ -408,6 +544,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           }
         }
       end
+      let(:update_params) do
+        {
+          :name         => "Updated Credential",
+          :ssh_key_data => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name         => "Updated Credential",
+          :ssh_key_data => ManageIQ::Password.encrypt("supersecret")
+        }
+      end
     end
   end
 
@@ -420,6 +568,16 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :name     => "OpenstackCredential Credential",
           :userid   => "userid",
           :password => "secret1",
+          :host     => "host",
+          :domain   => "domain",
+          :project  => "project"
+        }
+      end
+      let(:queue_create_params) do
+        {
+          :name     => "OpenstackCredential Credential",
+          :userid   => "userid",
+          :password => ManageIQ::Password.encrypt("secret1"),
           :host     => "host",
           :domain   => "domain",
           :project  => "project"
@@ -453,6 +611,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           }
         }
       end
+      let(:update_params) do
+        {
+          :name     => "Updated Credential",
+          :password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name     => "Updated Credential",
+          :password => ManageIQ::Password.encrypt("supersecret")
+        }
+      end
     end
   end
 
@@ -465,6 +635,14 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :name     => "Rhv Credential",
           :userid   => "userid",
           :password => "secret1",
+          :host     => "host"
+        }
+      end
+      let(:queue_create_params) do
+        {
+          :name     => "Rhv Credential",
+          :userid   => "userid",
+          :password => ManageIQ::Password.encrypt("secret1"),
           :host     => "host"
         }
       end
@@ -490,6 +668,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           }
         }
       end
+      let(:update_params) do
+        {
+          :name     => "Updated Credential",
+          :password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name     => "Updated Credential",
+          :password => ManageIQ::Password.encrypt("supersecret")
+        }
+      end
     end
   end
 
@@ -502,6 +692,14 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :name     => "VMware Credential",
           :userid   => "userid",
           :password => "secret1",
+          :host     => "host"
+        }
+      end
+      let(:queue_create_params) do
+        {
+          :name     => "VMware Credential",
+          :userid   => "userid",
+          :password => ManageIQ::Password.encrypt("secret1"),
           :host     => "host"
         }
       end
@@ -525,6 +723,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :options            => {
             :host => "host"
           }
+        }
+      end
+      let(:update_params) do
+        {
+          :name     => "Updated Credential",
+          :password => "supersecret"
+        }
+      end
+      let(:update_queue_params) do
+        {
+          :name     => "Updated Credential",
+          :password => ManageIQ::Password.encrypt("supersecret")
         }
       end
     end
