@@ -5,7 +5,7 @@ class ManageIQ::Providers::InfraManager::VmOrTemplate < ActsAsArScope
   end
 
   def self.aar_scope
-    ::VmOrTemplate.where(:type => vm_descendants)
+    ::VmOrTemplate.where(:type => vm_descendants.collect(&:to_s))
   end
 
   def self.vm_descendants
