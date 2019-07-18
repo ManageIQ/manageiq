@@ -215,6 +215,7 @@ describe ResourceActionWorkflow do
       allow(ResourceAction).to receive(:find).and_return(resource_action)
       allow(dialog).to receive(:load_values_into_fields).with(values)
       allow(dialog).to receive(:initialize_value_context).with(values)
+      allow(dialog).to receive(:initialize_static_values)
       allow(dialog).to receive(:init_fields_with_values_for_request).with(values)
       allow(dialog).to receive(:target_resource=)
     end
