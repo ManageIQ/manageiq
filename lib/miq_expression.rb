@@ -1399,12 +1399,8 @@ class MiqExpression
         ids = tag.model.find_tagged_with(:any => parsed_value, :ns => tag.namespace).pluck(:id)
         tag.model.arel_attribute(:id).in(ids)
       else
-        raise unless field.associations.one?
-        reflection = field.reflections.first
-        arel = arel_attribute.eq(parsed_value)
-        arel = arel.and(Arel::Nodes::SqlLiteral.new(extract_where_values(reflection.klass, reflection.scope))) if reflection.scope
         field.model.arel_attribute(:id).in(
-          field.arel_table.where(arel).project(field.arel_table[reflection.foreign_key]).distinct
+          subquery_for_contains(field, arel_attribute.eq(parsed_value))
         )
       end
     when "is"
@@ -1427,24 +1423,42 @@ class MiqExpression
     end
   end
 
-  def extract_where_values(klass, scope)
-    relation = ActiveRecord::Relation.new(klass, klass.arel_table, klass.predicate_builder)
-    relation = relation.instance_eval(&scope)
+  def subquery_for_contains(field, subquery_limiter)
+    # base_class removes the default scopes. They are already in the main query and not needed in this subquery
+    main_model = field.model.base_class
 
-    begin
-      # This is basically ActiveRecord::Relation#to_sql, only using our
-      # custom visitor instance
+    # algorithm:
+    # 1. generate subquery as part of our main table since it has all the concepts we need.
+    # 2. remove main_table from this sub query.
+    # 3. move the secondary_table from the JOIN to the FROM clause
+    # 4. add miq_expression filter to sub query.
+    # 5. if the join on clause has an AND, add the second part back to the query
+    # 6. replace SELECT 1 place holder with secondary_table id
 
-      connection = klass.connection
-      visitor    = WhereExtractionVisitor.new(connection)
+    # 1. SELECT 1 FROM main_table JOIN secondary_table ON ...
+    includes_associations = field.reflections.inject({}) { |i, k| { k.name => i } }
+    query_relation = main_model.joins(includes_associations).select(1).distinct
+    query = query_relation.arel
 
-      arel  = relation.arel
-      binds = relation.bound_attributes
-      binds = binds.collect(&:value_for_database)
-      binds.map! { |value| connection.quote(value) }
-      collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
-      collect.substitute_binds(binds).join
+    # 2. SELECT 1 FROM main_table [ ]
+    join = query.source.right.shift
+    # 3. SELECT 1 FROM [secondary_table]
+    query.source.left = join.left
+    # 4. SELECT 1 FROM secondary_table [WHERE name = 'foo']
+    query.where(subquery_limiter)
+
+    # 5. SELECT 1 FROM secondary_table WHERE name = 'foo' [AND type = 'type']
+    join_on_clause = join.right.expr
+    if join_on_clause.respond_to?(:right)
+      query.where(join_on_clause.right)
+      join_on_clause = join_on_clause.left
     end
+
+    # 6. SELECT [secondary_table_id] FROM secondary_table WHERE name = 'foo' AND type = 'type'
+    query.projections.shift
+    query.project(join_on_clause.left)
+
+    arel_to_sql(main_model.connection, query)
   end
 
   def self.determine_relat_path(ref)
@@ -1474,4 +1488,16 @@ class MiqExpression
       yield(component[operator])
     end
   end
+
+  # convert bind variables from ? to actual values. otherwise, sql is incomplete
+  def arel_to_sql(conn, query)
+    Arel::Nodes::SqlLiteral.new(
+      if ActiveRecord.version.to_s >= "5.2"
+        conn.unprepared_statement { conn.to_sql(query) }
+      else
+        conn.unprepared_statement { conn.to_sql(query, relation_query.bound_attributes) }
+      end
+    )
+  end
+
 end # class MiqExpression
