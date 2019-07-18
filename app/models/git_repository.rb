@@ -25,17 +25,25 @@ class GitRepository < ApplicationRecord
   end
 
   def branch_info(name)
-    refresh unless @updated_repo
+    ensure_refreshed
     branch = git_branches.detect { |item| item.name == name }
     raise "Branch #{name} not found" unless branch
     branch.attributes.slice(*INFO_KEYS)
   end
 
   def tag_info(name)
-    refresh unless @updated_repo
+    ensure_refreshed
     tag = git_tags.detect { |item| item.name == name }
     raise "Tag #{name} not found" unless tag
     tag.attributes.slice(*INFO_KEYS)
+  end
+
+  def entries(path)
+    ensure_refreshed
+    with_worktree do |worktree|
+      worktree.branch = "origin/master" # TODO don't hardcode
+      worktree.entries(path)
+    end
   end
 
   def directory_name
@@ -66,34 +74,42 @@ class GitRepository < ApplicationRecord
 
   private
 
-  def refresh_branches
-    current_branches = git_branches.index_by(&:name)
-    worktree.branches(:remote).each do |branch|
-      info = worktree.branch_info(branch)
-      attrs = {:name           => branch,
-               :commit_sha     => info[:commit_sha],
-               :commit_time    => info[:time],
-               :commit_message => info[:message]}
+  def ensure_refreshed
+    refresh unless @updated_repo
+  end
 
-      stored_branch = current_branches.delete(branch)
-      stored_branch ? stored_branch.update_attributes!(attrs) : git_branches.create!(attrs)
+  def refresh_branches
+    with_worktree do |worktree|
+      current_branches = git_branches.index_by(&:name)
+      worktree.branches(:remote).each do |branch|
+        info = worktree.branch_info(branch)
+        attrs = {:name           => branch,
+                 :commit_sha     => info[:commit_sha],
+                 :commit_time    => info[:time],
+                 :commit_message => info[:message]}
+
+        stored_branch = current_branches.delete(branch)
+        stored_branch ? stored_branch.update_attributes!(attrs) : git_branches.create!(attrs)
+      end
+      git_branches.delete(current_branches.values)
     end
-    git_branches.delete(current_branches.values)
   end
 
   def refresh_tags
-    current_tags = git_tags.index_by(&:name)
-    worktree.tags.each do |tag|
-      info = worktree.tag_info(tag)
-      attrs = {:name           => tag,
-               :commit_sha     => info[:commit_sha],
-               :commit_time    => info[:time],
-               :commit_message => info[:message]}
+    with_worktree do
+      current_tags = git_tags.index_by(&:name)
+      worktree.tags.each do |tag|
+        info = worktree.tag_info(tag)
+        attrs = {:name           => tag,
+                 :commit_sha     => info[:commit_sha],
+                 :commit_time    => info[:time],
+                 :commit_message => info[:message]}
 
-      stored_tag = current_tags.delete(tag)
-      stored_tag ? stored_tag.update_attributes(attrs) : git_tags.create!(attrs)
+        stored_tag = current_tags.delete(tag)
+        stored_tag ? stored_tag.update_attributes(attrs) : git_tags.create!(attrs)
+      end
+      git_tags.delete(current_tags.values)
     end
-    git_tags.delete(current_tags.values)
   end
 
   def worktree
