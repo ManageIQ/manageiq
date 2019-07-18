@@ -195,6 +195,7 @@ class ConversionHost < ApplicationRecord
 
     # For some reason Net::SFTP#download! will return a blank string in rare circumstances.
     if json_state.blank?
+      $log.warn("Conversion state data from file '#{path}' was blank, retrying.")
       sleep 1
       json_state = connect_ssh { |ssu| ssu.get_file(path, nil) }
     end
