@@ -53,11 +53,15 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     service_resources.find_by(:name => action, :resource_type => 'OrchestrationStack').try(:resource)
   end
 
+  def postprocess(action)
+    log_stdout(action)
+  end
+
   def on_error(action)
     _log.info("on_error called for service action: #{action}")
     update_attributes(:retirement_state => 'error') if action == "Retirement"
     job(action).try(:refresh_ems)
-    log_stdout(action)
+    postprocess(action)
   end
 
   def retain_resources_on_retirement?
