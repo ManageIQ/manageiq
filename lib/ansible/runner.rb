@@ -9,15 +9,17 @@ module Ansible
       # @param playbook_path [String] Path to the playbook we will want to run
       # @param hosts [Array] List of hostnames to target with the playbook
       # @param credentials [Array] List of Authentication object ids to provide to the playbook run
+      # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
       #         Ansible::Runner::Response object, when the job is finished.
-      def run_async(env_vars, extra_vars, playbook_path, hosts: ["localhost"], credentials: [])
+      def run_async(env_vars, extra_vars, playbook_path, hosts: ["localhost"], credentials: [], verbosity: 0)
         run_via_cli(hosts,
                     credentials,
                     env_vars,
                     extra_vars,
                     :ansible_runner_method => "start",
-                    :playbook              => playbook_path)
+                    :playbook              => playbook_path,
+                    :verbosity             => verbosity)
       end
 
       # Runs a role directly via ansible-runner, a simple playbook is then automatically created,
@@ -32,9 +34,10 @@ module Ansible
       #        playbook. True by default.
       # @param hosts [Array] List of hostnames to target with the role
       # @param credentials [Array] List of Authentication object ids to provide to the role run
+      # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [Ansible::Runner::ResponseAsync] Response object that we can query for .running?, providing us the
       #         Ansible::Runner::Response object, when the job is finished.
-      def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, hosts: ["localhost"], credentials: [])
+      def run_role_async(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, hosts: ["localhost"], credentials: [], verbosity: 0)
         run_via_cli(hosts,
                     credentials,
                     env_vars,
@@ -42,7 +45,8 @@ module Ansible
                     :ansible_runner_method => "start",
                     :role                  => role_name,
                     :roles_path            => roles_path,
-                    :role_skip_facts       => role_skip_facts)
+                    :role_skip_facts       => role_skip_facts,
+                    :verbosity             => verbosity)
       end
 
       # Runs a playbook via ansible-runner, see: https://ansible-runner.readthedocs.io/en/latest/standalone.html#running-playbooks
@@ -54,14 +58,16 @@ module Ansible
       # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @param hosts [Array] List of hostnames to target with the playbook
       # @param credentials [Array] List of Authentication object ids to provide to the playbook run
+      # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run(env_vars, extra_vars, playbook_path, tags: nil, hosts: ["localhost"], credentials: [])
+      def run(env_vars, extra_vars, playbook_path, tags: nil, hosts: ["localhost"], credentials: [], verbosity: 0)
         run_via_cli(hosts,
                     credentials,
                     env_vars,
                     extra_vars,
-                    :tags     => tags,
-                    :playbook => playbook_path)
+                    :tags      => tags,
+                    :playbook  => playbook_path,
+                    :verbosity => verbosity)
       end
 
       # Runs a role directly via ansible-runner, a simple playbook is then automatically created,
@@ -77,8 +83,9 @@ module Ansible
       # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @param hosts [Array] List of hostnames to target with the role
       # @param credentials [Array] List of Authentication object ids to provide to the role run
+      # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, tags: nil, hosts: ["localhost"], credentials: [])
+      def run_role(env_vars, extra_vars, role_name, roles_path:, role_skip_facts: true, tags: nil, hosts: ["localhost"], credentials: [], verbosity: 0)
         run_via_cli(hosts,
                     credentials,
                     env_vars,
@@ -86,7 +93,8 @@ module Ansible
                     :tags            => tags,
                     :role            => role_name,
                     :roles_path      => roles_path,
-                    :role_skip_facts => role_skip_facts)
+                    :role_skip_facts => role_skip_facts,
+                    :verbosity       => verbosity)
       end
 
       # Runs "run" method via queue
@@ -99,11 +107,13 @@ module Ansible
       # @param queue_opts [Hash] Additional options that will be passed to MiqQueue record creation
       # @param hosts [Array] List of hostnames to target with the playbook
       # @param credentials [Array] List of Authentication object ids to provide to the playbook run
+      # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [BigInt] ID of MiqTask record wrapping the task
-      def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts, hosts: ["localhost"], credentials: [])
+      def run_queue(env_vars, extra_vars, playbook_path, user_id, queue_opts, hosts: ["localhost"], credentials: [], verbosity: 0)
         kwargs = {
           :hosts       => hosts,
-          :credentials => credentials
+          :credentials => credentials,
+          :verbosity   => verbosity
         }
         run_in_queue("run", user_id, queue_opts, [env_vars, extra_vars, playbook_path, kwargs])
       end
@@ -121,13 +131,15 @@ module Ansible
       #        playbook. True by default.
       # @param hosts [Array] List of hostnames to target with the role
       # @param credentials [Array] List of Authentication object ids to provide to the role run
+      # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @return [BigInt] ID of MiqTask record wrapping the task
-      def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true, hosts: ["localhost"], credentials: [])
+      def run_role_queue(env_vars, extra_vars, role_name, user_id, queue_opts, roles_path:, role_skip_facts: true, hosts: ["localhost"], credentials: [], verbosity: 0)
         kwargs = {
           :roles_path      => roles_path,
           :role_skip_facts => role_skip_facts,
           :hosts           => hosts,
-          :credentials     => credentials
+          :credentials     => credentials,
+          :verbosity       => verbosity
         }
         run_in_queue("run_role", user_id, queue_opts, [env_vars, extra_vars, role_name, kwargs])
       end
@@ -167,9 +179,10 @@ module Ansible
       # @param tags [Hash] Hash with key/values pairs that will be passed as tags to the ansible-runner run
       # @param ansible_runner_method [String] Optional method we will use to run the ansible-runner. It can be either
       #        "run", which is sync call, or "start" which is async call.  Default is "run"
+      # @param verbosity [Integer] ansible-runner verbosity level 0-5
       # @param playbook_or_role_args [Hash] Hash that includes the :playbook key or :role keys
       # @return [Ansible::Runner::Response] Response object with all details about the ansible run
-      def run_via_cli(hosts, credentials, env_vars, extra_vars, tags: nil, ansible_runner_method: "run", **playbook_or_role_args)
+      def run_via_cli(hosts, credentials, env_vars, extra_vars, tags: nil, ansible_runner_method: "run", verbosity: 0, **playbook_or_role_args)
         # If we are running against only localhost and no other value is set for ansible_connection
         # then assume we don't want to ssh locally
         extra_vars["ansible_connection"] ||= "local" if hosts == ["localhost"]
@@ -184,7 +197,7 @@ module Ansible
         create_extra_vars_file(base_dir, extra_vars.merge(cred_extra_vars))
         create_cmdline_file(base_dir, {:tags => tags}.delete_blanks.merge(cred_command_line))
 
-        params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args)
+        params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity)
 
         begin
           result = AwesomeSpawn.run("ansible-runner", :env => env_vars.merge(cred_env_vars), :params => params)
@@ -217,13 +230,18 @@ module Ansible
         ansible_runner_method == "start"
       end
 
-      def runner_params(base_dir, ansible_runner_method, playbook_or_role_args)
+      def runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity)
         runner_args = playbook_or_role_args.dup
 
         runner_args.delete(:roles_path) if runner_args[:roles_path].nil?
 
         runner_args[:role_skip_facts] = nil if runner_args.delete(:role_skip_facts)
         runner_args[:ident] = "result"
+
+        if verbosity.to_i > 0
+          v_flag = "-#{"v" * verbosity.to_i.clamp(1, 5)}"
+          runner_args[v_flag] = nil
+        end
 
         [ansible_runner_method, base_dir, :json, runner_args]
       end

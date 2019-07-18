@@ -1,5 +1,5 @@
 class ManageIQ::Providers::AnsiblePlaybookWorkflow < ManageIQ::Providers::AnsibleRunnerWorkflow
-  def self.job_options(env_vars, extra_vars, playbook_options, timeout, poll_interval, hosts, credentials)
+  def self.job_options(env_vars, extra_vars, playbook_options, timeout, poll_interval, hosts, credentials, verbosity)
     {
       :credentials   => credentials,
       :env_vars      => env_vars,
@@ -8,6 +8,7 @@ class ManageIQ::Providers::AnsiblePlaybookWorkflow < ManageIQ::Providers::Ansibl
       :playbook_path => playbook_options[:playbook_path],
       :timeout       => timeout,
       :poll_interval => poll_interval,
+      :verbosity     => verbosity
     }
   end
 
@@ -17,9 +18,9 @@ class ManageIQ::Providers::AnsiblePlaybookWorkflow < ManageIQ::Providers::Ansibl
   end
 
   def run_playbook
-    credentials, env_vars, extra_vars, hosts, playbook_path = options.values_at(:credentials, :env_vars, :extra_vars, :hosts, :playbook_path)
+    credentials, env_vars, extra_vars, hosts, playbook_path, verbosity = options.values_at(:credentials, :env_vars, :extra_vars, :hosts, :playbook_path, :verbosity)
 
-    response = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path, :hosts => hosts, :credentials => credentials)
+    response = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path, :hosts => hosts, :credentials => credentials, :verbosity => verbosity)
     if response.nil?
       queue_signal(:abort, "Failed to run ansible playbook", "error")
     else

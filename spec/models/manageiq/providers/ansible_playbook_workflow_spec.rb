@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
   let(:job)     { described_class.create_job(*options).tap { |job| job.state = state } }
-  let(:options) { [{"ENV" => "VAR"}, %w[arg1 arg2], {:playbook_path => "/path/to/playbook"}, %w[192.0.2.0 192.0.2.1]] }
+  let(:options) { [{"ENV" => "VAR"}, %w[arg1 arg2], {:playbook_path => "/path/to/playbook"}, %w[192.0.2.0 192.0.2.1], {:verbosity => 3}] }
   let(:state)   { "waiting_to_start" }
 
   context ".create_job" do
@@ -90,8 +90,18 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
 
     it "ansible-runner succeeds" do
       response_async = Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results")
+      runner_options = [
+        {"ENV" => "VAR"},
+        %w[arg1 arg2],
+        "/path/to/playbook",
+        {
+          :hosts       => %w[192.0.2.0 192.0.2.1],
+          :credentials => [],
+          :verbosity   => 3
+        }
+      ]
 
-      expect(Ansible::Runner).to receive(:run_async).and_return(response_async)
+      expect(Ansible::Runner).to receive(:run_async).with(*runner_options).and_return(response_async)
       expect(job).to receive(:queue_signal).with(:poll_runner)
 
       job.signal(:run_playbook)

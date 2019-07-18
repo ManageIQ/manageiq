@@ -87,12 +87,14 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   CONFIG_OPTIONS_WHITELIST = %i[
-    hosts
-    extra_vars
-    credential_id
-    vault_credential_id
-    network_credential_id
     cloud_credential_id
+    credential_id
+    execution_ttl
+    extra_vars
+    hosts
+    network_credential_id
+    vault_credential_id
+    verbosity
   ].freeze
 
   def config_options(action)

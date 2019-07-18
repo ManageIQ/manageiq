@@ -48,6 +48,8 @@ describe(ServiceAnsiblePlaybook) do
           :credential_id       => credential_0.id,
           :vault_credential_id => credential_3.id,
           :playbook_id         => 10,
+          :execution_ttl       => "5",
+          :verbosity           => "3",
           :extra_vars          => {
             "var1" => {:default => "default_val1"},
             :var2  => {:default => "default_val2"},
@@ -122,7 +124,9 @@ describe(ServiceAnsiblePlaybook) do
         expect(basic_service.options[:provision_job_options]).to include(
           :hosts            => "default_host1,default_host2",
           :credential       => credential_0.native_ref,
-          :vault_credential => credential_3.native_ref
+          :vault_credential => credential_3.native_ref,
+          :execution_ttl    => "5",
+          :verbosity        => "3"
         )
       end
     end
@@ -135,6 +139,8 @@ describe(ServiceAnsiblePlaybook) do
           :hosts            => "host1,host2",
           :credential       => credential_1.native_ref,
           :vault_credential => credential_3.native_ref,
+          :execution_ttl    => "5",
+          :verbosity        => "3",
           :extra_vars       => {
             'var1' => 'value1',
             'var2' => 'value2',
@@ -160,6 +166,8 @@ describe(ServiceAnsiblePlaybook) do
             :hosts            => "default_host1,default_host2",
             :credential       => credential_0.native_ref,
             :vault_credential => credential_3.native_ref,
+            :execution_ttl    => "5",
+            :verbosity        => "3",
             :extra_vars       => {
               'var1' => 'default_val1',
               'var2' => 'default_val2',
