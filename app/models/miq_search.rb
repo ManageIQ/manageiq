@@ -1,6 +1,8 @@
 class MiqSearch < ApplicationRecord
   serialize :options
   serialize :filter
+  include_concern 'ImportExport'
+  include YAMLImportExportMixin
 
   validates_uniqueness_of :name, :scope => "db"
 

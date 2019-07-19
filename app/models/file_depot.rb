@@ -1,6 +1,9 @@
 class FileDepot < ApplicationRecord
   include NewWithTypeStiMixin
   include AuthenticationMixin
+  include_concern 'ImportExport'
+  include YAMLImportExportMixin
+
   has_many              :miq_schedules, :dependent => :nullify
   has_many              :miq_servers,   :dependent => :nullify, :foreign_key => :log_file_depot_id
   has_many              :log_files
