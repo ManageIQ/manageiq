@@ -4,7 +4,6 @@ describe "MiqWorker Monitor" do
       allow(MiqWorker).to receive(:nice_increment).and_return("+10")
       allow_any_instance_of(MiqServer).to receive(:get_time_threshold).and_return(120)
       allow_any_instance_of(MiqServer).to receive(:get_memory_threshold).and_return(100.megabytes)
-      allow_any_instance_of(MiqServer).to receive(:get_restart_interval).and_return(0)
 
       @miq_server = EvmSpecHelper.local_miq_server
     end
@@ -207,7 +206,6 @@ describe "MiqWorker Monitor" do
           @worker1 = FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id, :pid => 42, :type => 'MiqGenericWorker')
           allow_any_instance_of(MiqServer).to receive(:get_time_threshold).and_return(2.minutes)
           allow_any_instance_of(MiqServer).to receive(:get_memory_threshold).and_return(500.megabytes)
-          allow_any_instance_of(MiqServer).to receive(:get_restart_interval).and_return(0.hours)
           @miq_server.setup_drb_variables
           @miq_server.worker_add(@worker1.pid)
         end
@@ -329,7 +327,6 @@ describe "MiqWorker Monitor" do
         before do
           allow(server).to receive(:get_time_threshold).and_return(2.minutes)
           allow(server).to receive(:get_memory_threshold).and_return(500.megabytes)
-          allow(server).to receive(:get_restart_interval).and_return(0.hours)
           server.setup_drb_variables
         end
 

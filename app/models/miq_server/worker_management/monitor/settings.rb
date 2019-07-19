@@ -43,10 +43,6 @@ module MiqServer::WorkerManagement::Monitor::Settings
     heartbeat_timeout
   end
 
-  def get_restart_interval(worker)
-    @child_worker_settings[worker.class.settings_name][:restart_interval]
-  end
-
   def get_memory_threshold(worker)
     @child_worker_settings[worker.class.settings_name][:memory_threshold]
   end
