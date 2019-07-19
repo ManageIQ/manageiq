@@ -87,6 +87,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   CONFIG_OPTIONS_WHITELIST = %i[
+    become_enabled
     cloud_credential_id
     credential_id
     execution_ttl

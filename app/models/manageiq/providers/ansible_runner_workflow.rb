@@ -1,9 +1,9 @@
 class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   def self.create_job(env_vars, extra_vars, role_or_playbook_options,
                       hosts = ["localhost"], credentials = [],
-                      timeout: 1.hour, poll_interval: 1.second, verbosity: 0)
+                      timeout: 1.hour, poll_interval: 1.second, verbosity: 0, become_enabled: false)
     options = job_options(env_vars, extra_vars, role_or_playbook_options, timeout,
-                          poll_interval, hosts, credentials, verbosity)
+                          poll_interval, hosts, credentials, verbosity, become_enabled)
     super(name, options)
   end
 
