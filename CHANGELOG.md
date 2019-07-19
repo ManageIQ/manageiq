@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-8
+## Hammer-9
+
+### Added
+- [V2V] Enhance throttler logging [(#18929)](https://github.com/ManageIQ/manageiq/pull/18929) 
+
+### Fixed
+- Correctly recurse over nested field associations [(#18890)](https://github.com/ManageIQ/manageiq/pull/18890)
+- Add a tool to purge archived storages [(#18902)](https://github.com/ManageIQ/manageiq/pull/18902)
+- [V2V] Don't use the ssh agent when verifying credentials [(#18920)](https://github.com/ManageIQ/manageiq/pull/18920)
+- Create retire subtasks for multiple services [(#18908)](https://github.com/ManageIQ/manageiq/pull/18908)
+
+## Hammer-8 - Released 2019-07-02
 
 ### Added
 - Add migration analytics reports [(#18749)](https://github.com/ManageIQ/manageiq/pull/18749)
