@@ -162,6 +162,45 @@ describe DialogField do
     end
   end
 
+  describe "#initialize_static_values" do
+    let(:field) { described_class.new(:dynamic => dynamic, :value => value) }
+    let(:field_with_default) { described_class.new(:dynamic => dynamic, :value => value, :default_value => "test") }
+
+    context "when the field is dynamic" do
+      let(:dynamic) { true }
+      let(:value) { "value" }
+
+      it "does not change the value" do
+        field.initialize_static_values
+        expect(field.instance_variable_get(:@value)).to eq("value")
+      end
+    end
+
+    context "when the field is not dynamic" do
+      let(:dynamic) { false }
+
+      context "with a user-adjusted value" do
+        let(:value) { "not dynamic" }
+
+        it "does not adjust the value" do
+          field.initialize_static_values
+          expect(field.instance_variable_get(:@value)).to eq("not dynamic")
+        end
+      end
+
+      context "without a user-adjusted value" do
+        context "with a default value" do
+          let(:value) { nil }
+
+          it "does adjust the value" do
+            field_with_default.initialize_static_values
+            expect(field_with_default.instance_variable_get(:@value)).to eq("test")
+          end
+        end
+      end
+    end
+  end
+
   describe "#initialize_with_given_value" do
     let(:field) { described_class.new(:default_value => "not the given value") }
 

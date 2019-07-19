@@ -103,6 +103,12 @@ class DialogField < ApplicationRecord
     end
   end
 
+  def initialize_static_values
+    if @value.blank? && !dynamic
+      @value = default_value
+    end
+  end
+
   def initialize_with_given_value(given_value)
     self.default_value = given_value
   end

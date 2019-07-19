@@ -93,31 +93,6 @@ class ResourceActionWorkflow < MiqRequestWorkflow
     }
   end
 
-  def load_dialog(resource_action, values, options)
-    if resource_action.nil?
-      resource_action = load_resource_action(values)
-      @settings[:resource_action_id] = resource_action.id if resource_action
-    end
-
-    dialog = resource_action.dialog if resource_action
-    if dialog
-      dialog.target_resource = @target
-      if options[:display_view_only]
-        dialog.init_fields_with_values_for_request(values)
-      elsif options[:provision_workflow] || options[:init_defaults]
-        dialog.initialize_value_context(values)
-        dialog.load_values_into_fields(values, false)
-      elsif options[:refresh] || options[:submit_workflow]
-        dialog.load_values_into_fields(values)
-      elsif options[:reconfigure]
-        dialog.initialize_with_given_values(values)
-      else
-        dialog.initialize_value_context(values)
-      end
-    end
-    dialog
-  end
-
   def init_field_hash
     @dialog.dialog_fields.each_with_object({}) { |df, result| result[df.name] = df }
   end
@@ -147,6 +122,38 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   private
+
+  def load_dialog(resource_action, values, options)
+    if resource_action.nil?
+      resource_action = load_resource_action(values)
+      @settings[:resource_action_id] = resource_action.id if resource_action
+    end
+
+    dialog = resource_action.dialog if resource_action
+    load_proper_dialog_values(dialog, options, values) if dialog
+
+    dialog
+  end
+
+  def load_proper_dialog_values(dialog, options, values)
+    dialog.target_resource = @target
+
+    if options[:display_view_only]
+      dialog.init_fields_with_values_for_request(values)
+    elsif options[:provision_workflow] || options[:init_defaults]
+      dialog.initialize_value_context(values)
+      dialog.load_values_into_fields(values, false)
+    elsif options[:submit_workflow]
+      dialog.load_values_into_fields(values)
+    elsif options[:refresh]
+      dialog.initialize_static_values
+      dialog.load_values_into_fields(values, false)
+    elsif options[:reconfigure]
+      dialog.initialize_with_given_values(values)
+    else
+      dialog.initialize_value_context(values)
+    end
+  end
 
   def create_request?(values)
     ra = load_resource_action(values)
