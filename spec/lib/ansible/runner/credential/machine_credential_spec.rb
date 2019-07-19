@@ -101,6 +101,40 @@ RSpec.describe Ansible::Runner::MachineCredential do
 
         expect(password_hash["^SSH [pP]assword:"]).to eq(password)
       end
+
+      context "with an existing password_file" do
+        let(:ssh_unlock_key) { "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" }
+        def existing_env_password_file(data)
+          cred # initialize the dir
+          File.write(password_file, data.to_yaml)
+        end
+
+        it "clobbers existing ssh key unlock keys" do
+          existing_data = { ssh_unlock_key => "hunter2" }
+          expected_data = {
+            "^SSH [pP]assword:"    => "secret",
+            "^BECOME [pP]assword:" => "othersecret",
+            ssh_unlock_key         => "keypass"
+          }
+          existing_env_password_file(existing_data)
+          cred.write_config_files
+
+          expect(password_hash).to eq(expected_data)
+        end
+
+        it "appends data if not setting ssh_unlock_key" do
+          auth.update!(:auth_key_password => nil)
+          existing_data = { ssh_unlock_key => "hunter2" }
+          added_data    = {
+            "^SSH [pP]assword:"    => "secret",
+            "^BECOME [pP]assword:" => "othersecret"
+          }
+          existing_env_password_file(existing_data)
+          cred.write_config_files
+
+          expect(password_hash).to eq(existing_data.merge(added_data))
+        end
+      end
     end
   end
 end

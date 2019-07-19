@@ -29,12 +29,14 @@ module Ansible
         }
       end
 
+      SSH_KEY        = "^SSH [pP]assword:".freeze
+      BECOME_KEY     = "^BECOME [pP]assword:".freeze
+      SSH_UNLOCK_KEY = "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:".freeze
       def write_password_file
-        password_hash = {
-          "^SSH [pP]assword:"                                     => auth.password,
-          "^BECOME [pP]assword:"                                  => auth.become_password,
-          "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" => auth.ssh_key_unlock
-        }.delete_blanks
+        password_hash                 = initialize_password_data
+        password_hash[SSH_KEY]        = auth.password        if auth.password
+        password_hash[BECOME_KEY]     = auth.become_password if auth.become_password
+        password_hash[SSH_UNLOCK_KEY] = auth.ssh_key_unlock  if auth.ssh_key_unlock
 
         File.write(password_file, password_hash.to_yaml) if password_hash.present?
       end

@@ -16,7 +16,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential
   # rubocop:disable Layout/AlignHash
   #
   # looks better to align the nested keys to the same distance, instead of
-  # scope just for the hash in question (which is what rubocop does.
+  # scope just for the hash in question (which is what rubocop does).
   EXTRA_ATTRIBUTES = {
     :authorize      => {
       :type         => :boolean,
@@ -62,9 +62,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::NetworkCredential
   def self.params_to_attributes(params)
     attrs = params.dup
 
-    attrs[:auth_key]            = attrs.delete(:ssh_key_data)
-    attrs[:auth_key_password]   = attrs.delete(:ssh_key_unlock)
-    attrs[:become_password]     = attrs.delete(:authorize_password)
+    attrs[:auth_key]          = attrs.delete(:ssh_key_data)
+    attrs[:auth_key_password] = attrs.delete(:ssh_key_unlock)
+    attrs[:become_password]   = attrs.delete(:authorize_password)
 
     if attrs[:authorize]
       attrs[:options] = { :authorize => attrs.delete(:authorize) }

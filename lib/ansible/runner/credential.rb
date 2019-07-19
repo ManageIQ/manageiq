@@ -36,6 +36,10 @@ module Ansible
 
       private
 
+      def initialize_password_data
+        File.exist?(password_file) ? YAML.load_file(password_file) : {}
+      end
+
       def password_file
         File.join(env_dir, "passwords")
       end
