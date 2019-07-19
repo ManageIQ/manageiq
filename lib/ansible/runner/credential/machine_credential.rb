@@ -20,17 +20,14 @@ module Ansible
       private
 
       def become_args
-        return {} if auth.become_username.blank?
-
         {
-          :become        => nil,
           :become_user   => auth.become_username,
           :become_method => auth.options.try(:[], :become_method) || "sudo"
-        }
+        }.delete_blanks
       end
 
-      SSH_KEY        = "^SSH [pP]assword:".freeze
-      BECOME_KEY     = "^BECOME [pP]assword:".freeze
+      SSH_KEY        = "^SSH [pP]assword".freeze
+      BECOME_KEY     = "^BECOME [pP]assword".freeze
       SSH_UNLOCK_KEY = "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:".freeze
       def write_password_file
         password_hash                 = initialize_password_data

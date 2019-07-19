@@ -33,7 +33,6 @@ RSpec.describe Ansible::Runner::MachineCredential do
       it "is correct with all attributes" do
         expected = {
           :ask_pass      => nil,
-          :become        => nil,
           :become_user   => "root",
           :become_method => "su",
           :user          => "manageiq"
@@ -46,16 +45,10 @@ RSpec.describe Ansible::Runner::MachineCredential do
 
         expected = {
           :ask_pass      => nil,
-          :become        => nil,
           :become_user   => "root",
           :become_method => "su"
         }
         expect(cred.command_line).to eq(expected)
-      end
-
-      it "doesn't send the become keys if :become_user is not set" do
-        auth.update!(:become_username => nil)
-        expect(cred.command_line).to eq(:ask_pass => nil, :user => "manageiq")
       end
     end
 
@@ -79,8 +72,8 @@ RSpec.describe Ansible::Runner::MachineCredential do
         cred.write_config_files
 
         expect(password_hash).to eq(
-          "^SSH [pP]assword:"                                     => "secret",
-          "^BECOME [pP]assword:"                                  => "othersecret",
+          "^SSH [pP]assword"                                      => "secret",
+          "^BECOME [pP]assword"                                   => "othersecret",
           "^Enter passphrase for [a-zA-Z0-9\-\/]+\/ssh_key_data:" => "keypass"
         )
 
@@ -99,7 +92,7 @@ RSpec.describe Ansible::Runner::MachineCredential do
 
         cred.write_config_files
 
-        expect(password_hash["^SSH [pP]assword:"]).to eq(password)
+        expect(password_hash["^SSH [pP]assword"]).to eq(password)
       end
 
       context "with an existing password_file" do
@@ -112,8 +105,8 @@ RSpec.describe Ansible::Runner::MachineCredential do
         it "clobbers existing ssh key unlock keys" do
           existing_data = { ssh_unlock_key => "hunter2" }
           expected_data = {
-            "^SSH [pP]assword:"    => "secret",
-            "^BECOME [pP]assword:" => "othersecret",
+            "^SSH [pP]assword"    => "secret",
+            "^BECOME [pP]assword" => "othersecret",
             ssh_unlock_key         => "keypass"
           }
           existing_env_password_file(existing_data)
@@ -126,8 +119,8 @@ RSpec.describe Ansible::Runner::MachineCredential do
           auth.update!(:auth_key_password => nil)
           existing_data = { ssh_unlock_key => "hunter2" }
           added_data    = {
-            "^SSH [pP]assword:"    => "secret",
-            "^BECOME [pP]assword:" => "othersecret"
+            "^SSH [pP]assword"    => "secret",
+            "^BECOME [pP]assword" => "othersecret"
           }
           existing_env_password_file(existing_data)
           cred.write_config_files
