@@ -1,6 +1,5 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource < ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource
   FRIENDLY_NAME = "Ansible Automation Inside Project".freeze
-  REPO_DIR      = Rails.root.join("tmp", "git_repos")
 
   validates :name,       :presence => true # TODO: unique within region?
   validates :scm_type,   :presence => true, :inclusion => { :in => %w[git] }
@@ -68,17 +67,13 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     queue("sync", [], "Synchronizing", auth_user)
   end
 
-  def path_to_playbook(playbook_name)
-    repo_dir.join(playbook_name)
-  end
-
-  private
-
   def playbooks_in_git_repository
-    git_repository.entries("").grep(/\.ya?ml$/)
+    git_repository.update_repo
+    git_repository.entries(scm_branch, "").grep(/\.ya?ml$/)
   end
 
-  def repo_dir
-    @repo_dir ||= REPO_DIR.join(id.to_s)
+  def checkout_git_repository(target_directory)
+    git_repository.update_repo
+    git_repository.checkout(scm_branch, target_directory)
   end
 end

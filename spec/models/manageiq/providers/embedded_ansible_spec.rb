@@ -4,7 +4,7 @@ describe ManageIQ::Providers::EmbeddedAnsible do
     let(:manager)  { provider.automation_manager }
 
     let(:consolidated_repo_path) { Ansible::Content::PLUGIN_CONTENT_DIR }
-    let(:manager_repo_path)      { ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource::REPO_DIR }
+    let(:manager_repo_path)      { GitRepository::GIT_REPO_DIRECTORY }
 
     before do
       EvmSpecHelper.local_miq_server

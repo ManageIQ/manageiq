@@ -43,7 +43,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
     index.write
 
     # Create initial commit
-    # 
+    #
     #   $ git commit -m "Initial Commit"
     Rugged::Commit.create(
       repo,
@@ -59,16 +59,21 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
     repo.create_branch("other_branch")
     # END: Setup local repo used for this spec
 
-    # Stub REPO_DIR for travis
-    stub_const("#{described_class}::REPO_DIR", repo_dir)
+    GitRepository
+    stub_const("GitRepository::GIT_REPO_DIRECTORY", repo_dir)
 
     EvmSpecHelper.assign_embedded_ansible_role
   end
 
   # Clean up repo dir after each spec
   after do
-    FileUtils.rm_rf(repos)
+    FileUtils.rm_rf(repo_dir)
     FileUtils.rm_rf(clone_dir)
+  end
+
+  def files_in_repository(git_repo_dir)
+    repo = Rugged::Repository.new(git_repo_dir.to_s)
+    repo.ref("HEAD").target.target.tree.find_all.map { |f| f[:name] }
   end
 
   describe ".create_in_provider" do
@@ -83,8 +88,9 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect(result).to be_an(described_class)
         expect(result.scm_type).to eq("git")
         expect(result.scm_branch).to eq("master")
-        expect(File).to exist(File.join(result.send(:repo_dir), ".git"))
-        expect(File).to exist(File.join(result.send(:repo_dir), "hello_world.yaml"))
+
+        git_repo_dir = repo_dir.join(result.git_repository.id.to_s)
+        expect(files_in_repository(git_repo_dir)).to eq ["hello_world.yaml"]
       end
     end
 
@@ -127,8 +133,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
 
     context "with valid params" do
       it "updates the record and initializes a git repo" do
-        record   = build_record
-        repo_dir = record.send(:repo_dir)
+        record = build_record
 
         expect(Notification).to receive(:create!).with(notify_update_args)
 
@@ -136,8 +141,9 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
 
         expect(result).to be_an(described_class)
         expect(result.scm_branch).to eq("other_branch")
-        expect(File).to exist(File.join(repo_dir, ".git"))
-        expect(File).to exist(File.join(result.send(:repo_dir), "hello_world.yaml"))
+
+        git_repo_dir = repo_dir.join(result.git_repository.id.to_s)
+        expect(files_in_repository(git_repo_dir)).to eq ["hello_world.yaml"]
       end
     end
 
@@ -178,14 +184,15 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
 
   describe "#delete_in_provider" do
     it "deletes the record and removes the git dir" do
-      record   = build_record
-      repo_dir = record.send(:repo_dir)
+      record = build_record
+      git_repo_dir = repo_dir.join(record.git_repository.id.to_s)
 
       expect(Notification).to receive(:create!).with(notification_args('deletion', {}))
       record.delete_in_provider
 
       expect { record.reload }.to raise_error ActiveRecord::RecordNotFound
-      expect(File).to_not exist(repo_dir)
+
+      expect(git_repo_dir).to_not exist
     end
   end
 

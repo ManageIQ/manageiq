@@ -9,6 +9,8 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
   context "when embedded_ansible role is enabled" do
     before do
       EvmSpecHelper.assign_embedded_ansible_role
+
+      allow_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to receive(:checkout_git_repository)
     end
 
     let(:ansible_script_source) { FactoryBot.create(:embedded_ansible_configuration_script_source, :manager => manager) }

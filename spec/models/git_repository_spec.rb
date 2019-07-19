@@ -7,13 +7,9 @@ describe GitRepository do
     expect { FactoryBot.create(:git_repository, :url => "abc") }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
-  it "invalid url, no path" do
-    expect { FactoryBot.create(:git_repository, :url => "http://example.com") }.to raise_error(ActiveRecord::RecordInvalid)
-  end
-
   it "default dirname" do
     repo = FactoryBot.create(:git_repository, :url => "http://www.example.com/repos/manageiq")
-    expect(repo.directory_name).to eq(File.join(described_class::GIT_REPO_DIRECTORY, 'repos/manageiq'))
+    expect(repo.directory_name).to eq(File.join(described_class::GIT_REPO_DIRECTORY, repo.id.to_s))
   end
 
   context "repo" do
@@ -39,12 +35,17 @@ describe GitRepository do
     context "parameter check" do
       let(:args) do
         {
-          :url      => repo.url,
           :username => userid,
           :password => password,
           :path     => repo.directory_name,
-          :clone    => true
         }
+      end
+
+      let(:clone_args) do
+        args.merge(
+          :url   => repo.url,
+          :clone => true
+        )
       end
 
       before do
@@ -61,7 +62,9 @@ describe GitRepository do
 
       it "userid and password is set" do
         repo.update_authentication(:default => {:userid => userid, :password => password})
+        expect(GitWorktree).to receive(:new).with(clone_args).and_return(gwt)
         expect(GitWorktree).to receive(:new).with(args).and_return(gwt)
+        expect(gwt).to receive(:fetch_and_merge).with(no_args)
 
         repo.refresh
         expect(repo.default_authentication.userid).to eq(userid)
@@ -74,7 +77,10 @@ describe GitRepository do
         it "certificate_check is set" do
           repo.update_authentication(:default => {:userid => userid, :password => password})
           args[:certificate_check] = repo.method(:self_signed_cert_cb)
+          expect(GitWorktree).to receive(:new).with(clone_args).and_return(gwt)
           expect(GitWorktree).to receive(:new).with(args).and_return(gwt)
+          expect(gwt).to receive(:fetch_and_merge).with(no_args)
+
           repo.refresh
         end
       end
@@ -91,7 +97,9 @@ describe GitRepository do
         tag_info_hash[name]
       end
 
-      expect(repo).to receive(:init_repo).with(no_args).and_call_original
+      expect(repo).to receive(:clone_repo).once.with(no_args).and_call_original
+      expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
+      expect(gwt).to receive(:fetch_and_merge).with(no_args)
 
       repo.refresh
       expect(repo.git_branches.collect(&:name)).to match_array(branch_list)
@@ -99,9 +107,11 @@ describe GitRepository do
     end
 
     it "#branch_info" do
-      expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
+      expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
+      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+
       allow(gwt).to receive(:branch_info) do |name|
         branch_info_hash[name]
       end
@@ -114,9 +124,11 @@ describe GitRepository do
     end
 
     it "#tag_info" do
-      expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
+      expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
+      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+
       allow(gwt).to receive(:branch_info) do |name|
         branch_info_hash[name]
       end
@@ -129,9 +141,11 @@ describe GitRepository do
     end
 
     it "#tag_info missing tag" do
-      expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
+      expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
+      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+
       allow(gwt).to receive(:branch_info) do |name|
         branch_info_hash[name]
       end
@@ -143,9 +157,11 @@ describe GitRepository do
     end
 
     it "#branch_info missing branch" do
-      expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
+      expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
+      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+
       allow(gwt).to receive(:branch_info) do |name|
         branch_info_hash[name]
       end
@@ -158,6 +174,7 @@ describe GitRepository do
 
     it "#refresh branches deleted" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:fetch_and_merge).twice.with(no_args)
       expect(gwt).to receive(:branches).twice.with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).twice.with(no_args).and_return(tag_list)
 
@@ -177,6 +194,7 @@ describe GitRepository do
 
     it "#refresh tags deleted" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
+      expect(gwt).to receive(:fetch_and_merge).twice.with(no_args)
       expect(gwt).to receive(:branches).twice.with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).twice.with(no_args).and_return(tag_list)
 

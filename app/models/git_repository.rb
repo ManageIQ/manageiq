@@ -1,9 +1,11 @@
+require "rugged"
+
 class GitRepository < ApplicationRecord
   include AuthenticationMixin
 
   GIT_REPO_DIRECTORY = Rails.root.join('data/git_repos')
 
-  validates :url, :format => URI::regexp(%w(http https)), :allow_nil => false
+  validates :url, :format => URI::regexp(%w(http https file)), :allow_nil => false
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
@@ -38,12 +40,24 @@ class GitRepository < ApplicationRecord
     tag.attributes.slice(*INFO_KEYS)
   end
 
-  def entries(path)
+  def entries(ref, path)
     ensure_refreshed
     with_worktree do |worktree|
-      worktree.branch = "origin/master" # TODO don't hardcode
+      worktree.ref = ref
       worktree.entries(path)
     end
+  end
+
+  def checkout(ref, path)
+    ensure_refreshed
+    with_worktree do |worktree|
+      message = "Checking out #{url}@#{ref} to #{path}..."
+      _log.info(message)
+      worktree.ref = ref
+      worktree.checkout(path)
+      _log.info("#{message}...Complete")
+    end
+    path
   end
 
   def directory_name
