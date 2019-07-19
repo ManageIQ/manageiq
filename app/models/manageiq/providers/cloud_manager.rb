@@ -159,6 +159,8 @@ module ManageIQ::Providers
 
     def destroy_mapped_tenants
       if source_tenant
+        # We just destroyed ourself, reload the source_tenant association
+        source_tenant.reload
         source_tenant.all_subtenants.destroy_all
         source_tenant.all_subprojects.destroy_all
         source_tenant.destroy
