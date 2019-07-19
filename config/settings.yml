@@ -1142,7 +1142,6 @@
       :poll: 3.seconds
       :poll_escalate_max: 30.seconds
       :poll_method: :normal
-      :restart_interval: 0.hours
       :starting_timeout: 10.minutes
       :stopping_timeout: 10.minutes
     :embedded_ansible_worker:
@@ -1206,7 +1205,6 @@
           :poll: 10.seconds
           :poll_method: :normal
           :queue_timeout: 120.minutes
-          :restart_interval: 2.hours
           :dequeue_method: :sql
         :ems_refresh_worker_ansible_tower_automation: {}
         :ems_refresh_worker_embedded_ansible_automation: {}
@@ -1235,7 +1233,6 @@
         :count: 2
         :memory_threshold: 2.gigabytes
         :queue_timeout: 20.minutes
-        :restart_interval: 6.hours
         :heartbeat_thread_shutdown_timeout: 10.seconds
     :schedule_worker:
       :container_entities_purge_interval: 1.day

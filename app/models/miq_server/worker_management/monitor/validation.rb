@@ -3,7 +3,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
 
   def validate_worker(w)
     time_threshold   = get_time_threshold(w)
-    restart_interval = get_restart_interval(w)
     memory_threshold = get_memory_threshold(w)
 
     w.validate_active_messages
@@ -38,14 +37,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
       return false
     end
 
-    if time_interval_reached?(w.started_on, restart_interval)
-      msg = "#{w.format_full_log_msg} uptime has reached the interval of #{restart_interval} seconds, requesting worker to exit"
-      _log.info(msg)
-      MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_uptime_exceeded", :event_details => msg, :type => w.class.name)
-      restart_worker(w)
-      return false
-    end
-
     true
   end
 
@@ -66,13 +57,6 @@ module MiqServer::WorkerManagement::Monitor::Validation
   end
 
   private
-
-  def time_interval_reached?(started_on, interval)
-    return false if started_on.nil?
-    return false unless interval.kind_of?(Numeric)
-    return false unless interval > 0
-    interval.seconds.ago.utc > started_on
-  end
 
   def usage_exceeds_threshold?(usage, threshold)
     return false unless usage.kind_of?(Numeric)
