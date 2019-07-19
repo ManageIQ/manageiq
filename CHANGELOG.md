@@ -5,10 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Hammer-9
+
+### Added
+- [V2V] Enhance throttler logging [(#18929)](https://github.com/ManageIQ/manageiq/pull/18929) 
+
+### Fixed
+- Correctly recurse over nested field associations [(#18890)](https://github.com/ManageIQ/manageiq/pull/18890)
+- Add a tool to purge archived storages [(#18902)](https://github.com/ManageIQ/manageiq/pull/18902)
+- [V2V] Don't use the ssh agent when verifying credentials [(#18920)](https://github.com/ManageIQ/manageiq/pull/18920)
+- Create retire subtasks for multiple services [(#18908)](https://github.com/ManageIQ/manageiq/pull/18908)
+
 ## Unreleased as of Sprint 115 ending 2019-07-08
 
 ### Added
-- [V2V] Don't use the ssh agent when verifying credentials [(#18920)](https://github.com/ManageIQ/manageiq/pull/18920)
 - Add scope to list providers from ancestor tenants [(#18735)](https://github.com/ManageIQ/manageiq/pull/18735)
 - Add scope to list service templates from ancestor tenants [(#18733)](https://github.com/ManageIQ/manageiq/pull/18733)
 
