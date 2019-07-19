@@ -1,14 +1,15 @@
 class ManageIQ::Providers::AnsiblePlaybookWorkflow < ManageIQ::Providers::AnsibleRunnerWorkflow
-  def self.job_options(env_vars, extra_vars, playbook_options, timeout, poll_interval, hosts, credentials, verbosity)
+  def self.job_options(env_vars, extra_vars, playbook_options, timeout, poll_interval, hosts, credentials, verbosity, become_enabled)
     {
-      :credentials   => credentials,
-      :env_vars      => env_vars,
-      :extra_vars    => extra_vars,
-      :hosts         => hosts,
-      :playbook_path => playbook_options[:playbook_path],
-      :timeout       => timeout,
-      :poll_interval => poll_interval,
-      :verbosity     => verbosity
+      :become_enabled => become_enabled,
+      :credentials    => credentials,
+      :env_vars       => env_vars,
+      :extra_vars     => extra_vars,
+      :hosts          => hosts,
+      :playbook_path  => playbook_options[:playbook_path],
+      :timeout        => timeout,
+      :poll_interval  => poll_interval,
+      :verbosity      => verbosity
     }
   end
 
@@ -18,9 +19,10 @@ class ManageIQ::Providers::AnsiblePlaybookWorkflow < ManageIQ::Providers::Ansibl
   end
 
   def run_playbook
-    credentials, env_vars, extra_vars, hosts, playbook_path, verbosity = options.values_at(:credentials, :env_vars, :extra_vars, :hosts, :playbook_path, :verbosity)
+    env_vars, extra_vars, playbook_path = options.values_at(:env_vars, :extra_vars, :playbook_path)
+    kwargs = options.slice(:credentials, :hosts, :verbosity, :become_enabled)
 
-    response = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path, :hosts => hosts, :credentials => credentials, :verbosity => verbosity)
+    response = Ansible::Runner.run_async(env_vars, extra_vars, playbook_path, kwargs)
     if response.nil?
       queue_signal(:abort, "Failed to run ansible playbook", "error")
     else

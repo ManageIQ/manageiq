@@ -45,6 +45,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
   end
 
   LAUNCH_OPTIONS_KEYS = %i[
+    become_enabled
     cloud_credential_id
     credential_id
     extra_vars

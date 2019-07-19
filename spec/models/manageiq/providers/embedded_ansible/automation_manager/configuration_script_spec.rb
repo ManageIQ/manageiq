@@ -70,6 +70,13 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:verbosity]).to eq(5)
     end
+
+    it "passes become_enabled to the job when specified" do
+      job = manager.configuration_scripts.first.run(:become_enabled => true)
+
+      expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
+      expect(job.options[:become_enabled]).to eq(true)
+    end
   end
 
   context "#merge_extra_vars" do

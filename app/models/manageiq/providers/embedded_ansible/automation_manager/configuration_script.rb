@@ -34,7 +34,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     playbook_vars = { :playbook_path => parent.path }
     credentials   = collect_credentials(vars)
 
-    kwargs = {}
+    kwargs = {:become_enabled => vars[:become_enabled]}
     kwargs[:timeout]   = vars[:execution_ttl].to_i.minutes if vars[:execution_ttl].present?
     kwargs[:verbosity] = vars[:verbosity].to_i             if vars[:verbosity].present?
 

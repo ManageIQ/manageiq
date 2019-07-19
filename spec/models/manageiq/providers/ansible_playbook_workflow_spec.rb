@@ -95,9 +95,10 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
         %w[arg1 arg2],
         "/path/to/playbook",
         {
-          :hosts       => %w[192.0.2.0 192.0.2.1],
-          :credentials => [],
-          :verbosity   => 3
+          :become_enabled => false,
+          :hosts          => %w[192.0.2.0 192.0.2.1],
+          :credentials    => [],
+          :verbosity      => 3
         }
       ]
 
