@@ -389,17 +389,13 @@ module Rbac
       return scope unless includes
       includes = Array(includes) unless includes.kind_of?(Enumerable)
       includes.each do |association, value|
-        if table_include?(klass, association)
+        reflection = klass.reflect_on_association(association)
+        if reflection && !reflection.polymorphic?
           scope = value ? scope.left_outer_joins(association => value) : scope.left_outer_joins(association)
+          scope = scope.distinct if reflection.try(:collection?)
         end
       end
       scope
-    end
-
-    # this is a reference to a non polymorphic table
-    def table_include?(target_klass, association)
-      reflection = target_klass.reflect_on_association(association)
-      reflection && !reflection.polymorphic?
     end
 
     def polymorphic_include?(target_klass, includes)

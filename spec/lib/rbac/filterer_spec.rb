@@ -2303,6 +2303,28 @@ describe Rbac::Filterer do
         expect(attrs[:auth_count]).to eq(3)
         expect(recs.map(&:id)).to eq(expected_order.reverse.map(&:id))
       end
+
+      it "remembers distinct" do
+        # create vms with many disks. so a missing distinct would return 3*3 => 9
+        vms = FactoryBot.create_list(:vm_infra, 3, :miq_group => tagged_group)
+        vms.each do |vm|
+          # used by rbac filter
+          vm.tag_with("/managed/environment/prod", :ns => "*")
+          hw = FactoryBot.create(:hardware, :cpu_sockets => 4, :memory_mb => 3.megabytes, :vm => vm)
+          FactoryBot.create_list(:disk, 3, :device_type => "disk", :size => 10_000, :hardware_id => hw.id)
+        end
+
+        recs, attrs = Rbac.search(:targets          => Vm,
+                                  :include_for_find => {:ext_management_system => {}, :hardware => {:disks => {}}, :tags => {}},
+                                  :extra_cols       => %w[ram_size_in_bytes],
+                                  :use_sql_view     => true,
+                                  :limit            => 20,
+                                  :user             => User.super_admin,
+                                  :order            => :updated_on)
+
+        expect(attrs[:auth_count]).to eq(3)
+        expect(recs.map(&:id)).to eq(vms.map(&:id))
+      end
     end
   end
 
