@@ -62,8 +62,7 @@ class MiqWidgetSet < ApplicationRecord
     if ws
       if ws.updated_on.utc < File.mtime(filename).utc
         $log.info("Widget Set: [#{ws.description}] file has been updated on disk, synchronizing with model")
-        ws.update_attributes(attrs)
-        ws.save
+        widget.update!(attrs)
         ws.replace_children(members)
       end
     else
