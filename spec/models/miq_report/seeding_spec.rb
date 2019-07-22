@@ -2,7 +2,9 @@ require 'fileutils'
 
 describe MiqReport do
   describe "::Seeding" do
-    include_examples(".seed called multiple times", 146)
+    include_examples(".seed called multiple times", begin
+      (Dir.glob(MiqReport::REPORT_DIR.join("**/*.yaml")) + Dir.glob(MiqReport::COMPARE_DIR.join("**/*.yaml"))).count
+    end)
 
     describe ".seed" do
       let(:tmpdir)      { Pathname.new(Dir.mktmpdir) }
