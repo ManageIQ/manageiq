@@ -37,14 +37,20 @@ class GitWorktree
     where.nil? ? @repo.branches.each_name.sort : @repo.branches.each_name(where).sort
   end
 
+  private def find_branch(name)
+    @repo.branches.each.detect do |b|
+      b.name.casecmp(name) == 0 || b.name.casecmp("#{@remote_name}/#{name}") == 0
+    end
+  end
+
   def branch=(name)
-    branch = @repo.branches.each.detect { |b| b.name.casecmp(name) == 0 }
+    branch = find_branch(name)
     raise GitWorktreeException::BranchMissing, name unless branch
     @commit_sha = branch.target.oid
   end
 
   def branch_info(name)
-    branch = @repo.branches.each.detect { |b| b.name.casecmp(name) == 0 }
+    branch = find_branch(name)
     raise GitWorktreeException::BranchMissing, name unless branch
     {:time => branch.target.time, :message => branch.target.message, :commit_sha => branch.target.oid}
   end
@@ -53,16 +59,38 @@ class GitWorktree
     @repo.tags.each.collect(&:name)
   end
 
+  private def find_tag(name)
+    @repo.tags.each.detect { |t| t.name.casecmp(name) == 0 }
+  end
+
   def tag=(name)
-    tag = @repo.tags.each.detect { |t| t.name.casecmp(name) == 0 }
+    tag = find_tag(name)
     raise GitWorktreeException::TagMissing, name unless tag
     @commit_sha = tag.target.oid
   end
 
   def tag_info(name)
-    tag = @repo.tags.each.detect { |t| t.name.casecmp(name) == 0 }
+    tag = find_tag(name)
     raise GitWorktreeException::TagMissing, name unless tag
     {:time => tag.target.time, :message => tag.target.message, :commit_sha => tag.target.oid}
+  end
+
+  private def find_ref(ref)
+    @repo.lookup(ref)
+  rescue Rugged::InvalidError, Rugged::OdbError
+    nil
+  end
+
+  def ref=(ref)
+    if find_branch(ref)
+      self.branch = ref
+    elsif find_tag(ref)
+      self.tag = ref
+    elsif find_ref(ref)
+      @commit_sha = @repo.lookup(ref).oid
+    else
+      raise GitWorktreeException::RefMissing, ref
+    end
   end
 
   def add(path, data, default_entry_keys = {})
@@ -166,6 +194,11 @@ class GitWorktree
       current_index.add(entry)
     end
     current_index.remove_dir(old_dir)
+  end
+
+  def checkout(target_directory)
+    tree = lookup_commit_tree
+    @repo.checkout_tree(tree, :target_directory => target_directory, :strategy => :force)
   end
 
   def credentials_cb(url, _username, _types)

@@ -27,7 +27,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
   # Below are `let` calls from there was well.
   #
 
-  let(:manager)      { manager_with_configuration_scripts }
+  let(:manager) { manager_with_configuration_scripts }
 
   it "belongs_to the manager" do
     expect(manager.configuration_scripts.size).to eq 1
@@ -36,43 +36,47 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
   end
 
   context "#run" do
+    let(:cs) { manager.configuration_scripts.first }
+
+    before do
+      expect(cs.parent.configuration_script_source).to receive(:checkout_git_repository)
+    end
+
     it "launches the referenced ansible job template" do
-      job = manager.configuration_scripts.first.run
+      job = cs.run
 
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:env_vars]).to eq({})
       expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"])
-      expect(job.options[:playbook_path]).to eq(playbook.path)
+      expect(File.basename(job.options[:playbook_path])).to eq(playbook.name)
       expect(job.options[:timeout]).to eq(1.hour)
       expect(job.options[:verbosity]).to eq(0)
     end
 
     it "accepts different variables to launch a job template against" do
-      added_extras = {:extra_vars => {:some_key => :some_value}}
-      job          = manager.configuration_scripts.first.run(added_extras)
+      job = cs.run(:extra_vars => {:some_key => :some_value})
 
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:env_vars]).to eq({})
       expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"], :some_key => :some_value)
-      expect(job.options[:playbook_path]).to eq(playbook.path)
     end
 
     it "passes execution_ttl to the job as its timeout" do
-      job = manager.configuration_scripts.first.run(:execution_ttl => "5")
+      job = cs.run(:execution_ttl => "5")
 
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:timeout]).to eq(5.minutes)
     end
 
     it "passes verbosity to the job when specified" do
-      job = manager.configuration_scripts.first.run(:verbosity => "5")
+      job = cs.run(:verbosity => "5")
 
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:verbosity]).to eq(5)
     end
 
     it "passes become_enabled to the job when specified" do
-      job = manager.configuration_scripts.first.run(:become_enabled => true)
+      job = cs.run(:become_enabled => true)
 
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:become_enabled]).to eq(true)

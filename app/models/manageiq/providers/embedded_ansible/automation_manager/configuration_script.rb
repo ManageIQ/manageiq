@@ -29,10 +29,14 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def run(vars = {})
-    workflow      = ManageIQ::Providers::AnsiblePlaybookWorkflow
-    extra_vars    = merge_extra_vars(vars[:extra_vars])
-    playbook_vars = { :playbook_path => parent.path }
-    credentials   = collect_credentials(vars)
+    workflow = ManageIQ::Providers::AnsiblePlaybookWorkflow
+
+    extra_vars = merge_extra_vars(vars[:extra_vars])
+
+    checkout_dir  = checkout_git_repository # TODO: what will cleanup this dir?
+    playbook_vars = { :playbook_path => File.join(checkout_dir, parent.name) }
+
+    credentials = collect_credentials(vars)
 
     kwargs = {:become_enabled => vars[:become_enabled]}
     kwargs[:timeout]   = vars[:execution_ttl].to_i.minutes if vars[:execution_ttl].present?
@@ -61,5 +65,11 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
       :network_credential,
       :vault_credential
     ).compact
+  end
+
+  def checkout_git_repository
+    Dir.mktmpdir("ansible-playbook-repo").tap do |dir|
+      parent.configuration_script_source.checkout_git_repository(dir)
+    end
   end
 end
