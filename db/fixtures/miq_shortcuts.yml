@@ -9,6 +9,11 @@
   :url: /report/explorer
   :rbac_feature_name: miq_report
   :startup: true
+- :name: miq_capacity_utilization
+  :description: Cloud Intel / Utilization
+  :url: /utilization
+  :rbac_feature_name: utilization
+  :startup: true
 - :name: chargeback
   :description: Overview / Chargeback
   :url: /chargeback/explorer
