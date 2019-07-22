@@ -272,6 +272,9 @@ module Rbac
       if inline_view?(options, scope)
         inner_scope = scope.except(:select, :includes, :references)
         scope.includes_values.each { |hash| inner_scope = add_joins(klass, inner_scope, hash) }
+        if inner_scope.order_values.present?
+          inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
+        end
         scope = scope.from(Arel.sql("(#{inner_scope.to_sql})").as(scope.table_name))
                      .except(:offset, :limit, :where)
 
@@ -324,6 +327,35 @@ module Rbac
         (scope.limit_value || scope.where_values_hash.present?) &&
         !scope.table_name&.include?(".") &&
         scope.respond_to?(:includes_values)
+    end
+
+    # Convert an order by column to the select columns
+    #
+    # We assume that all traditional columns are already in the select
+    # So this just adds the non columns in the order (i.e.: functions and subqueries)
+    #
+    # @param [Array] columns the order by clause
+    # @return [Array] columns useable in the select clause
+    #
+    # this method is similar to Connection#columns_for_distinct, but more aggressive
+    #
+    # For a query with a DISTINCT, all columns in the ORDER BY clause
+    # need to be in the SELECT clause. This method gives us the columns for the SELECT.
+    # We currently assume that all regular columns are already in the SELECT.
+    # So this is just returning the functions (e.g. LOWER(name))
+    def select_from_order_columns(columns)
+      columns.compact.map do |column|
+        if column.kind_of?(Arel::Nodes::Ordering)
+          column.expr
+        else
+          column = column.to_sql if column.respond_to?(:to_sql)
+          column.kind_of?(String) ? column.gsub(/ (DESC|ASC)/i, '') : column
+        end
+      end.reject do |column|
+        column.kind_of?(Arel::Attributes::Attribute) ||
+          column.kind_of?(Symbol) ||
+          (column.kind_of?(String) && column =~ /^("?[a-z_0-9]+"?[.])?"?[a-z_0-9]+"?$/i)
+      end
     end
 
     # This is a very primitive way of determining whether we want to skip
@@ -738,6 +770,8 @@ module Rbac
     end
 
     def apply_select(klass, scope, extra_cols)
+      return scope if extra_cols.blank?
+
       (scope.select_values.blank? ? scope.select(klass.arel_table[Arel.star]) : scope).select(extra_cols)
     end
 

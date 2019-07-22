@@ -2934,6 +2934,54 @@ describe Rbac::Filterer do
     end
   end
 
+  # private method
+  describe ".select_from_order_columns" do
+    subject { described_class.new }
+    it "removes empty" do
+      expect(subject.select_from_order_columns([])).to eq([])
+      expect(subject.select_from_order_columns([nil])).to eq([])
+    end
+
+    it "removes string columns" do
+      expect(subject.select_from_order_columns(["name", "id", "vms.name", '"vms"."name"'])).to eq([])
+    end
+
+    it "removes ascending string columns" do
+      expect(subject.select_from_order_columns(ascenders(["name", "id", "vms.name", '"vms"."name"']))).to eq([])
+    end
+
+    # services.name desc (spec)
+    it "removes strings with sorting" do
+      expect(subject.select_from_order_columns(["name asc", "\"vms\".\"id\" desc", "id asc"])).to eq([])
+    end
+
+    it "removes ordered nodes" do
+      attribute_id = Vm.arel_table["id"] # <Attribute<id>>
+      expect(subject.select_from_order_columns(ascenders([attribute_id]))).to eq([])
+    end
+
+    it "removes nodes" do
+      attribute_id = Vm.arel_table["id"] # <Attribute<id>>
+      expect(subject.select_from_order_columns([attribute_id])).to eq([])
+    end
+
+    it "keeps sorting in subselects" do
+      expect(subject.select_from_order_columns(ascenders(["(select a from x desc)"]))).to eq(["(select a from x desc)"])
+    end
+
+    it "keeps function in ascending node" do
+      expect(subject.select_from_order_columns(ascenders(["lower(name)"]))).to eq(["lower(name)"])
+    end
+
+    it "keeps functions as ordered strings" do
+      expect(subject.select_from_order_columns(["lower(name) asc"])).to eq(["lower(name)"])
+    end
+
+    def ascenders(cols)
+      cols.map { |c| Arel::Nodes::Ascending.new(c) }
+    end
+  end
+
   private
 
   # separate them to match easier for failures
