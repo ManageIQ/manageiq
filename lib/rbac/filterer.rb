@@ -274,7 +274,7 @@ module Rbac
           inner_scope = apply_select(klass, inner_scope, select_from_order_columns(inner_scope.order_values))
         end
         scope = scope.from(Arel.sql("(#{inner_scope.to_sql})").as(scope.table_name))
-                     .except(:offset, :limit, :order, :where)
+                     .except(:offset, :limit, :where)
 
         # the auth_count needs to come from the inner query (the query with the limit)
         if !options[:skip_counts] && (attrs[:apply_limit_in_sql] && limit)
