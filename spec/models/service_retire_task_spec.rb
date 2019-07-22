@@ -168,7 +168,7 @@ describe ServiceRetireTask do
         service.add_resource!(FactoryBot.create(:vm_openstack, :retired => true))
         service_retire_task.after_request_task_create
 
-        expect(service_retire_task.description).to eq("Service Retire for: #{service.name} - ")
+        expect(service_retire_task.description).to eq("Service Retire for: #{service.name}")
         expect(VmRetireTask.count).to eq(0)
         expect(ServiceRetireTask.count).to eq(1)
       end
