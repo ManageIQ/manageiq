@@ -37,10 +37,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Playbook < Manage
       :playbook                 => name,
       :become_enabled           => options[:become_enabled].present?,
       :verbosity                => options[:verbosity].presence || 0,
-      :ask_variables_on_launch  => true,
-      :ask_limit_on_launch      => true,
-      :ask_inventory_on_launch  => true,
-      :ask_credential_on_launch => true,
       :limit                    => options[:limit],
       :inventory                => options[:inventory] || manager.provider.default_inventory,
       :extra_vars               => options[:extra_vars].try(:to_json)
