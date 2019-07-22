@@ -45,6 +45,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     sync_playbooks
   end
 
+  def sync_queue(auth_user = nil)
+    queue("sync", [], "Synchronizing", auth_user)
+  end
+
   def path_to_playbook(playbook_name)
     repo_dir.join(playbook_name)
   end
@@ -103,10 +107,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
       configuration_script_payloads.reload
     end
     true
-  end
-
-  def sync_queue(auth_user = nil)
-    queue("sync", [], "Synchronizing", auth_user)
   end
 
   def playbooks_in_repo_dir
