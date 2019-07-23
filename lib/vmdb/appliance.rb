@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "Ivanchuk".freeze
+      "J-release".freeze
     end
 
     def self.RELEASE
