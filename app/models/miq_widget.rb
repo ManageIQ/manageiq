@@ -481,9 +481,7 @@ class MiqWidget < ApplicationRecord
       if filename
         $log.info("Widget: [#{widget.description}] file has been updated on disk, synchronizing with model")
         ["enabled", "visibility"].each { |a| attrs.delete(a) } # Don't updates these because they may have been modofoed by the end user.
-        widget.updated_at = Time.now.utc
-        widget.update_attributes(attrs)
-        widget.save!
+        widget.update!(attrs)
       end
     else
       $log.info("Widget: [#{attrs["description"]}] file has been added to disk, adding to model")
