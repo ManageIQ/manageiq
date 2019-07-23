@@ -38,8 +38,7 @@ class ScanItem < ApplicationRecord
     if rec
       if rec.filename && (rec.file_mtime.nil? || rec.file_mtime.utc < item[:file_mtime])
         $log.info("Scan Item: [#{rec.name}] file has been updated on disk, synchronizing with model")
-        rec.update_attributes(item)
-        rec.save
+        rec.update!(item)
       end
     else
       $log.info("Scan Item: [#{item[:name]}] file has been added to disk, adding to model")
