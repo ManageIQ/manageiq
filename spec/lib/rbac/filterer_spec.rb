@@ -2275,6 +2275,34 @@ describe Rbac::Filterer do
         expect(results.first).to eq(services1[0..2])
         expect(results.last[:auth_count]).to eq(4)
       end
+
+      it "respects order" do
+        # for some reason, while all models respect the order,
+        # MiqRequest sometimes did not. (before we put order in both inner and outer sql)
+        reqs = FactoryBot.create_list(:automation_requests, 3, :requester => user)
+        # move last created record to more recent
+        reqs.first.update(:description => "something")
+        expected_order = [reqs.second, reqs.last, reqs.first]
+
+        recs, attrs = Rbac.search(:targets      => MiqRequest,
+                                  :extra_cols   => %w[id],
+                                  :use_sql_view => true,
+                                  :limit        => 3,
+                                  :user         => user,
+                                  :order        => :updated_on)
+
+        expect(attrs[:auth_count]).to eq(3)
+        expect(recs.map(&:id)).to eq(expected_order.map(&:id))
+
+        recs, attrs = Rbac.search(:targets      => MiqRequest,
+                                  :extra_cols   => %w[],
+                                  :use_sql_view => true,
+                                  :limit        => 3,
+                                  :user         => user,
+                                  :order        => {:updated_on => :desc})
+        expect(attrs[:auth_count]).to eq(3)
+        expect(recs.map(&:id)).to eq(expected_order.reverse.map(&:id))
+      end
     end
   end
 
