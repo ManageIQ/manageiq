@@ -151,7 +151,7 @@ class MiqCockpitWsWorker::Runner < MiqWorker::Runner
     stdin, stdout, stderr, wait_thr = Open3.popen3(env, *cockpit_ws.command(BINDING_ADDRESS))
     stdin.close
 
-    _log.info("#{log_prefix} cockpit-ws process started - pid=#{pid}")
+    _log.info("#{log_prefix} cockpit-ws process started - pid=#{@pid}")
     return wait_thr.pid, stdout, stderr
   end
 
