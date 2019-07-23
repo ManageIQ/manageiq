@@ -885,13 +885,13 @@ describe Tenant do
   end
 
   context "using more regions with factory" do
-    let!(:other_region) { FactoryGirl.create(:miq_region) }
+    let!(:other_region) { FactoryBot.create(:miq_region) }
 
     context "without MiqRegion.seed" do
       it "uses other region" do
         expect(MiqRegion.count).to eq(1)
         exception_message = "You need to seed default MiqRegion with MiqRegion.seed"
-        expect { FactoryGirl.create(:tenant, :in_other_region,  :other_region => other_region) }.to raise_error(exception_message)
+        expect { FactoryBot.create(:tenant, :in_other_region,  :other_region => other_region) }.to raise_error(exception_message)
       end
     end
 
@@ -900,7 +900,7 @@ describe Tenant do
         MiqRegion.seed
       end
 
-      let!(:tenant) { FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region) }
+      let!(:tenant) { FactoryBot.create(:tenant, :in_other_region, :other_region => other_region) }
 
       it "uses other region" do
         expect(MiqRegion.count).to eq(2)
@@ -910,12 +910,12 @@ describe Tenant do
 
       it "raises error when region is not passed" do
         exception_message = "You need to pass specific region  with :other_region: \n"\
-                            "FactoryGirl.create(:tenant, :in_other_region, :other_region => <region>) "
-        expect { FactoryGirl.create(:tenant, :in_other_region) }.to raise_error(exception_message)
+                            "FactoryBot.create(:tenant, :in_other_region, :other_region => <region>) "
+        expect { FactoryBot.create(:tenant, :in_other_region) }.to raise_error(exception_message)
       end
 
       let!(:root_tenant_other_region) do
-        tenant_other_region = FactoryGirl.create(:tenant, :in_other_region, :other_region => other_region)
+        tenant_other_region = FactoryBot.create(:tenant, :in_other_region, :other_region => other_region)
         tenant_other_region.update_attribute(:parent, nil) # rubocop:disable Rails/SkipsModelValidations
         tenant_other_region
       end
