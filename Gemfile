@@ -10,7 +10,7 @@ require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundle
 # VMDB specific gems
 #
 
-gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
+gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "ivanchuk"
 gem "manageiq-loggers",      ">0", :require => false,                   :git => "https://github.com/ManageIQ/manageiq-loggers",          :branch => "master"
 
 # Modified gems for gems-pending.  Setting sources here since they are git references
@@ -19,7 +19,7 @@ gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/Manage
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 def manageiq_plugin(plugin_name)
   unless dependencies.detect { |d| d.name == plugin_name }
-    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "master"
+    gem plugin_name, :git => "https://github.com/ManageIQ/#{plugin_name}", :branch => "ivanchuk"
   end
 end
 

@@ -1,6 +1,6 @@
 # ManageIQ Docker Appliance
 
-This image provides ManageIQ using the [podified frontend image](https://github.com/ManageIQ/manageiq-pods/tree/master/images/miq-app-frontend) as a base along with PostgreSQL.
+This image provides ManageIQ using the [podified frontend image](https://github.com/ManageIQ/manageiq-pods/tree/ivanchuk/images/miq-app-frontend) as a base along with PostgreSQL.
 
 ## Build
 

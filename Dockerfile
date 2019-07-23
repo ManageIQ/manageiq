@@ -1,4 +1,4 @@
-FROM manageiq/manageiq-pods:frontend-latest
+FROM manageiq/manageiq-pods:frontend-ivanchuk-latest
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
 ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
@@ -41,7 +41,7 @@ EXPOSE 443 22
 # NAME is set via -n flag to ALL atomic commands (install,run,stop,uninstall)
 LABEL name="manageiq" \
       vendor="ManageIQ" \
-      version="Master" \
+      version="Ivanchuk" \
       release=${REF} \
       architecture="x86_64" \
       url="http://manageiq.org/" \
