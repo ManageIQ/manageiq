@@ -1,7 +1,9 @@
 describe MiqWidget do
   describe '.seed' do
     before { [MiqReport].each(&:seed) }
-    include_examples(".seed called multiple times", 24)
+    include_examples(".seed called multiple times", begin
+      Dir.glob(Rails.root.join(MiqWidget::WIDGET_DIR, "**", "*.yaml")).count
+    end)
   end
 
   before do
