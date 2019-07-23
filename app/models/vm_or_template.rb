@@ -840,6 +840,7 @@ class VmOrTemplate < ApplicationRecord
       if src_vm.nil? && e.vm_ems_ref == ems_ref
         src_vm = self
         e.vm_or_template_id = src_vm.id
+        e.vm_name = src_vm.name
         do_save = true
       end
 
