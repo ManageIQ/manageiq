@@ -86,14 +86,14 @@ class MiqUserRole < ApplicationRecord
   end
 
   def self.seed_from_array(roles, array, merge_features = false)
+    features = MiqProductFeature.all
     array.each do |hash|
       feature_ids = hash.delete(:miq_product_feature_identifiers)
-
-      hash[:miq_product_features] = MiqProductFeature.where(:identifier => feature_ids).to_a
+      hash[:miq_product_features] = features.select { |f| feature_ids.include?(f.identifier) }
       role = roles[hash[:name]] ||= new(hash.except(:id))
       new_role = role.new_record?
       hash[:miq_product_features] &&= role.miq_product_features if !new_role && merge_features
-      unless role.settings.nil? # Makse sure existing settings are merged in with the new ones.
+      unless role.settings.nil? # Make sure existing settings are merged in with the new ones.
         new_settings = hash.delete(:settings) || {}
         role.settings.merge!(new_settings)
       end
