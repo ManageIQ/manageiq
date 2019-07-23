@@ -492,6 +492,10 @@ class MiqWidget < ApplicationRecord
     widget
   end
 
+  def filter_for_schedule
+    "\"=\" => {\"field\" => \"MiqWidget-id\", \"value\" => #{id}}"
+  end
+
   def sync_schedule(schedule_info)
     return if schedule_info.nil?
 
@@ -511,11 +515,12 @@ class MiqWidget < ApplicationRecord
       raise _("Unsupported interval '%{interval}'") % {:interval => interval}
     end
 
-    sched = MiqSchedule.create!(
+    sched = existing_scheduler
+    sched ||= MiqSchedule.create!(
       :name          => description,
       :description   => description,
       :sched_action  => {:method => "generate_widget"},
-      :filter        => MiqExpression.new("=" => {"field" => "MiqWidget-id", "value" => id}),
+      :filter        => MiqExpression.new(filter_for_schedule),
       :resource_type => self.class.name,
       :run_at        => {
         :interval   => {:value => value, :unit  => unit},
@@ -530,6 +535,23 @@ class MiqWidget < ApplicationRecord
     _log.debug("Widget: [#{title}] created schedule: [#{sched.inspect}]")
 
     sched
+  end
+
+  def existing_scheduler
+    return nil if (sched = MiqSchedule.find_by(:name => description)).nil?
+
+    # return existing sheduler if filter referr to the same widget
+    return sched if sched.filter == filter_for_schedule
+
+    # change name of existed schedule in case it is in use
+
+    suff = Time.new.utc.to_s
+    _log.warn("Schedule #{sched.name} already exists, renaming it to `#{sched.name} #{suff}`")
+    sched.name = "#{sched.name} #{suff}"
+    sched.description = "#{sched.description} #{suff}"
+    sched.save
+
+    nil
   end
 
   def self.seed
