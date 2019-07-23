@@ -47,14 +47,9 @@ class NotificationType < ApplicationRecord
 
   def self.seed
     seed_data.each do |t|
-      rec = find_by(:name => t[:name])
       t[:expires_in] = t[:expires_in].to_i_with_method
-      if rec.nil?
-        create(t)
-      else
-        rec.update_attributes(t)
-        rec.save!
-      end
+      rec = find_by(:name => t[:name]) || new
+      rec.update!(t)
     end
   end
 
