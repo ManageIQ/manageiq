@@ -1,0 +1,95 @@
+---
+title: CPU Right Sizing Recommendations
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: Vm
+cols:
+- name
+- aggressive_vcpus_recommended_change_pct
+- aggressive_vcpus_recommended_change
+- aggressive_recommended_vcpus
+- moderate_vcpus_recommended_change_pct
+- moderate_vcpus_recommended_change
+- moderate_recommended_vcpus
+- cpu_total_cores
+- num_cpu
+include:
+  ext_management_system:
+    columns:
+    - name
+col_order:
+- name
+- ext_management_system.name
+- aggressive_vcpus_recommended_change_pct
+- aggressive_vcpus_recommended_change
+- aggressive_recommended_vcpus
+- moderate_vcpus_recommended_change_pct
+- moderate_vcpus_recommended_change
+- moderate_recommended_vcpus
+- cpu_total_cores
+- num_cpu
+headers:
+- Name
+- Provider Name
+- CPU - Aggressive Savings (%)
+- CPU - Aggressive Savings
+- 'CPU - Aggressive '
+- CPU - Moderate Savings (%)
+- CPU - Moderate Savings
+- 'CPU - Moderate '
+- CPU Cores
+- CPU Sockets
+conditions: !ruby/object:MiqExpression
+  exp:
+    "=":
+      field: Vm-active
+      value: 'true'
+  context_type:
+order: Descending
+sortby:
+- moderate_vcpus_recommended_change_pct
+group:
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options:
+  moderate_vcpus_recommended_change_pct:
+    :style:
+    - :class: :miq_rpt_yellow_bg
+      :operator: ">="
+      :value: '50'
+  aggressive_vcpus_recommended_change_pct:
+    :style:
+    - :class: :miq_rpt_red_bg
+      :operator: ">="
+      :value: '75'
+rpt_options:
+  :pdf:
+    :page_size: US-Letter
+  :queue_timeout:
+menu_name: CPU Right Sizing Recommendations
+userid: admin
+group_description: EvmGroup-super_administrator
