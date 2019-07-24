@@ -46,12 +46,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     )
     opts[:hosts] = hosts_array(opts.delete(:hosts))
 
-    _log.info("Launching Ansible Tower job with options:")
+    _log.info("Launching Ansible job with options:")
     $log.log_hashes(opts)
     new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, decrypt_options(opts))
     update_job_for_playbook(action, new_job, opts[:hosts])
 
-    _log.info("Ansible Tower job with ref #{new_job.ems_ref} was created.")
+    _log.info("Ansible job with ref #{new_job.ems_ref} was created.")
     add_resource!(new_job, :name => action)
   end
 
