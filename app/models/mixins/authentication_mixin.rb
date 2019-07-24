@@ -163,7 +163,7 @@ module AuthenticationMixin
       cred = authentication_type(type)
       current = {:new => nil, :old => nil}
 
-      unless value.key?(:userid) && value[:userid].blank?
+      if value[:userid].present?
         current[:new] = {
           :user            => value[:userid],
           :password        => value[:password],
