@@ -36,7 +36,7 @@ class ChargebackRateDetailMeasure < ApplicationRecord
           fixture_mtime = File.mtime(fixture_file_measure).utc
           if fixture_mtime > rec.created_at
             _log.info("Updating [#{cbr[:name]}] with units=[#{cbr[:units]}]")
-            rec.update!(cbr, :created_at => fixture_mtime)
+            rec.update!(cbr.merge(:created_at => fixture_mtime))
           end
         end
       end
