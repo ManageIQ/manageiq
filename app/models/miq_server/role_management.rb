@@ -1,7 +1,7 @@
 module MiqServer::RoleManagement
   extend ActiveSupport::Concern
 
-  ROLES_NEEDING_APACHE = %w(user_interface web_services remote_console embedded_ansible cockpit_ws).freeze
+  ROLES_NEEDING_APACHE = %w(user_interface web_services remote_console cockpit_ws).freeze
 
   included do
     has_many :assigned_server_roles, :dependent => :destroy
