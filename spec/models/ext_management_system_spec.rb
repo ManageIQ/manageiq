@@ -97,14 +97,7 @@ describe ExtManagementSystem do
 
     it "with removed permissions" do
       stub_vmdb_permission_store_with_types(["ems-type:vmwarews"]) do
-        expect(described_class.supported_types_and_descriptions_hash).to eq("vmwarews" => "VMware vCenter")
-      end
-    end
-
-    it "permissions.tmpl.yml should contain all EMS types" do
-      types = YAML.load_file(Rails.root.join("config/permissions.tmpl.yml"))
-      stub_vmdb_permission_store_with_types(types) do
-        expect(described_class.supported_types_and_descriptions_hash).to eq(all_types_and_descriptions)
+        expect(described_class.supported_types_and_descriptions_hash).to_not include("vmwarews")
       end
     end
   end
