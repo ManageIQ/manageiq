@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-23 13:28+0200\n"
-"PO-Revision-Date: 2019-07-15 14:59+0000\n"
+"POT-Creation-Date: 2019-07-24 14:08+0200\n"
+"PO-Revision-Date: 2019-07-24 11:01+0000\n"
 "Last-Translator: Milan Zázrivec <mzazrivec@redhat.com>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/manageiq/teams/35937/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -110,7 +110,7 @@ msgstr "# ポッド (準備完了ステータス別)"
 msgid "% Disk Used"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1841
+#: ../app/models/vm_or_template.rb:1842
 msgid "%{action} cannot be performed on orphaned VM."
 msgstr "%{action} は孤立した仮想マシンでは実行できません。"
 
@@ -304,11 +304,11 @@ msgstr "'%{name}'、計算はサポートされていません"
 msgid ". %{details}"
 msgstr ". %{details}"
 
-#: ../app/models/vm_or_template.rb:1498
+#: ../app/models/vm_or_template.rb:1499
 msgid ":attr required"
 msgstr ":属性が必要です"
 
-#: ../app/models/vm_or_template.rb:1477
+#: ../app/models/vm_or_template.rb:1478
 msgid ":hdw_attr required"
 msgstr ":hdw_attr が必要です"
 
@@ -7046,7 +7046,7 @@ msgstr "接続設定の検証はエラーを出して失敗しました: %{error
 msgid "Console Memory"
 msgstr "コンソールメモリー"
 
-#: ../app/models/vm_or_template.rb:1803
+#: ../app/models/vm_or_template.rb:1804
 #: ../app/models/manageiq/providers/physical_infra_manager.rb:148
 #: ../app/models/manageiq/providers/physical_infra_manager.rb:157
 msgid "Console not supported"
@@ -21003,9 +21003,9 @@ msgstr "プロバイダーアコーディオン別インスタンス"
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:41
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:33
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:88
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:42
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:43
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:38
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:81
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:78
 msgid "Integer"
 msgstr "整数"
 
@@ -21215,7 +21215,7 @@ msgid_plural "Kernel Drivers"
 msgstr[0] ""
 
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:53
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:64
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:65
 msgid "Key"
 msgstr "キー"
 
@@ -29556,16 +29556,16 @@ msgstr ""
 msgid "No Policy to Import"
 msgstr "インポートするポリシーがありません"
 
-#: ../app/models/physical_server.rb:100 ../app/models/vm_or_template.rb:1081
-#: ../app/models/vm_or_template.rb:1100 ../app/models/physical_storage.rb:32
+#: ../app/models/physical_server.rb:100 ../app/models/vm_or_template.rb:1082
+#: ../app/models/vm_or_template.rb:1101 ../app/models/physical_storage.rb:32
 #: ../app/models/host.rb:590 ../app/models/physical_switch.rb:34
 #: ../app/models/physical_rack.rb:24 ../app/models/orchestration_stack.rb:178
 #: ../app/models/physical_chassis.rb:44
 msgid "No Provider credentials defined"
 msgstr "プロバイダーの認証情報が定義されていません"
 
-#: ../app/models/physical_server.rb:97 ../app/models/vm_or_template.rb:1078
-#: ../app/models/vm_or_template.rb:1097 ../app/models/physical_storage.rb:29
+#: ../app/models/physical_server.rb:97 ../app/models/vm_or_template.rb:1079
+#: ../app/models/vm_or_template.rb:1098 ../app/models/physical_storage.rb:29
 #: ../app/models/physical_switch.rb:31 ../app/models/physical_rack.rb:21
 #: ../app/models/orchestration_stack.rb:175
 #: ../app/models/physical_chassis.rb:41
@@ -29698,14 +29698,14 @@ msgid "Non-VM Files Percent of Used"
 msgstr "仮想マシン以外のファイルの使用率"
 
 #: ./src/dialog-editor/components/field/field.html:49
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:197
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:176
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:28
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:47
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:141
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:120
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:27
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:39
 #: ./src/dialog-editor/components/modal-field-template/tag-control.html:29
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:49
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:50
 msgid "None"
 msgstr "なし"
 
@@ -33491,7 +33491,7 @@ msgstr "プロバイダーは vm_destroy をサポートしません"
 
 #: ../app/models/ext_management_system.rb:528
 #: ../app/models/physical_server.rb:103 ../app/models/provider.rb:72
-#: ../app/models/vm_or_template.rb:1084 ../app/models/vm_or_template.rb:1103
+#: ../app/models/vm_or_template.rb:1085 ../app/models/vm_or_template.rb:1104
 #: ../app/models/physical_storage.rb:35 ../app/models/host.rb:593
 #: ../app/models/physical_switch.rb:37 ../app/models/physical_rack.rb:27
 #: ../app/models/orchestration_stack.rb:181
@@ -38831,9 +38831,9 @@ msgstr "ストアタイプ"
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:42
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:34
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:89
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:43
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:44
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:39
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:82
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:79
 msgid "String"
 msgstr "文字列"
 
@@ -40758,11 +40758,11 @@ msgstr "空き領域が < 35% の非登録仮想マシン"
 msgid "Unsupported Mode (%{mode}) for %{class} %{type} options"
 msgstr "%{class} %{type}オプションに対してサポートされないモード (%{mode})"
 
-#: ../app/models/miq_widget.rb:513
+#: ../app/models/miq_widget.rb:511
 msgid "Unsupported interval '%{interval}'"
 msgstr "サポートされない間隔 '%{interval}'"
 
-#: ../app/models/vm_or_template.rb:1694 ../app/models/vm_or_template.rb:1713
+#: ../app/models/vm_or_template.rb:1695 ../app/models/vm_or_template.rb:1714
 msgid "Unsupported property type [%{property}]"
 msgstr "サポートされないプロパティータイプ [%{property}]"
 
@@ -42076,7 +42076,7 @@ msgid "VM operations"
 msgstr "仮想マシンの操作"
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1816 ../config/dictionary_strings.rb:2296
+#: ../app/models/vm_or_template.rb:1817 ../config/dictionary_strings.rb:2296
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] "仮想マシンまたはテンプレート"
@@ -45143,7 +45143,7 @@ msgid "Whether to use the authorize mechanism"
 msgstr "認証メカニズムを使用するかどうか"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
-#: ../app/models/miq_widget.rb:573 ../config/dictionary_strings.rb:2128
+#: ../app/models/miq_widget.rb:571 ../config/dictionary_strings.rb:2128
 msgid "Widget"
 msgid_plural "Widgets"
 msgstr[0] "ウィジェット"
@@ -45820,7 +45820,7 @@ msgstr "オブジェクト %{name} は %{items} の 1 つではありません�
 msgid "operator '%{operator_name}' is not supported"
 msgstr "オペレーター '%{operator_name}' はサポートされていません"
 
-#: ../app/models/vm_or_template.rb:1514
+#: ../app/models/vm_or_template.rb:1515
 msgid "operator '%{operator}' is not supported"
 msgstr "オペレーター '%{operator}' はサポートされていません"
 
@@ -45828,11 +45828,11 @@ msgstr "オペレーター '%{operator}' はサポートされていません"
 msgid "option :cat_model must have a value"
 msgstr "オプション :cat_model に値を指定する必要があります"
 
-#: ../app/models/vm_or_template.rb:1465
+#: ../app/models/vm_or_template.rb:1466
 msgid "option :event_types is required"
 msgstr "オプション :event_types が必要です"
 
-#: ../app/models/vm_or_template.rb:1467
+#: ../app/models/vm_or_template.rb:1468
 msgid "option :freq_threshold is required"
 msgstr "オプション :freq_threshold が必要です"
 
@@ -45849,7 +45849,7 @@ msgstr "オプション :message_filter_type: %{options}、無効、%{type}の�
 msgid "option :message_filter_value is required"
 msgstr "オプション :message_filter_value が必要です"
 
-#: ../app/models/vm_or_template.rb:1466
+#: ../app/models/vm_or_template.rb:1467
 msgid "option :time_threshold is required"
 msgstr "オプション :time_threshold が必要です"
 
@@ -45906,7 +45906,7 @@ msgstr "poll_native_task はサブクラスで実装されている必要があ�
 msgid "prov_type cannot be changed"
 msgstr "prov_type は変更できません"
 
-#: ../app/models/vm_or_template.rb:1213
+#: ../app/models/vm_or_template.rb:1214
 msgid "raise_created_event must be implemented in a subclass"
 msgstr "raise_created_event はサブクラスで実装する必要があります"
 
@@ -51455,11 +51455,11 @@ msgid ""
 "Are you sure you want to reset this Dashboard's Widgets to the defaults?"
 msgstr "このダッシュボードのウィジェットをデフォルト設定にリセットしてもよいですか?"
 
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:204
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:183
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:54
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:148
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:127
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:46
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:57
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:58
 msgid "Ascending"
 msgstr "昇順"
 
@@ -53703,7 +53703,7 @@ msgstr "この仮想マシンのクローン作成"
 msgid "Clone this item"
 msgstr "この項目のクローン作成"
 
-#: ./src/dialog-user/components/dialog-user/dialogField.html:148
+#: ./src/dialog-user/components/dialog-user/dialogField.html:144
 #: ./src/dialog-user/components/dialog-user/dialogField.html:168
 #: ./src/fonticon-picker/components/fonticon-picker/fonticon-modal.html:19
 msgid "Close"
@@ -55998,9 +55998,9 @@ msgstr "デフォルトのレポートは編集できません。"
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:24
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:32
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:24
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:111
 #: ./src/dialog-editor/components/modal-field-template/text-area-box.html:3
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:136
+#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:84
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:109
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:3
 msgid "Default value"
 msgstr "デフォルト値"
@@ -56515,11 +56515,11 @@ msgstr "デポタイプが必要です"
 msgid "Deprecated"
 msgstr "非推奨"
 
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:205
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:184
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:55
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:149
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:128
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:47
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:58
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:59
 msgid "Descending"
 msgstr "降順"
 
@@ -58857,11 +58857,11 @@ msgid "Entity:"
 msgstr "エンティティー:"
 
 #: ./src/dialog-editor/components/modal-field-template/check-box.html:40
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:32
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:39
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:117
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:68
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:42
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:54
+#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:39
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:51
 msgid "Entry Point"
 msgstr "エントリーポイント"
 
@@ -78426,7 +78426,7 @@ msgstr ""
 msgid "migrated"
 msgstr "移行済み"
 
-#: ./src/dialog-editor/components/box/box.html:54
+#: ./src/dialog-editor/components/box/box.html:55
 msgid "Add Section"
 msgstr ""
 
@@ -78509,12 +78509,12 @@ msgid "Edit Tab Details"
 msgstr ""
 
 #: ./dist/js/ui-components.js:1
-msgid "Entered text does not match required format."
+msgid "Entered text should match the format:"
 msgstr ""
 
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:65
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:50
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:61
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:62
 msgid "Entries"
 msgstr ""
 
@@ -78534,12 +78534,7 @@ msgstr ""
 msgid "Fields to refresh"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/check-box.html:78
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:74
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:168
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:112
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:84
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:109
+#: ./src/dialog-editor/components/tree-selector/tree-selector.html:21
 msgid "Include domain prefix in the path:"
 msgstr ""
 
@@ -78574,32 +78569,32 @@ msgstr ""
 msgid "Overridable Options"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:72
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:69
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:8
 msgid "Protected"
 msgstr ""
 
 #: ./src/dialog-editor/components/modal-field-template/check-box.html:18
-#: ./src/dialog-editor/components/modal-field-template/check-box.html:91
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:3
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:86
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:181
+#: ./src/dialog-editor/components/modal-field-template/check-box.html:70
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:10
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:81
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:160
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:3
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:125
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:104
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:3
 #: ./src/dialog-editor/components/modal-field-template/tag-control.html:10
 #: ./src/dialog-editor/components/modal-field-template/text-area-box.html:16
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:97
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:122
+#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:70
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:22
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:95
 msgid "Read only"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field/field.html:162
+#: ./src/dialog-editor/components/modal-field/field.html:128
 msgid "Reconfigurable"
 msgstr ""
 
-#: ./src/dialog-user/components/dialog-user/dialogField.html:187
+#: ./src/dialog-user/components/dialog-user/dialogField.html:192
 msgid "Refresh field"
 msgstr ""
 
@@ -78615,37 +78610,37 @@ msgstr ""
 msgid "Select an icon"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:17
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:47
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:24
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:54
 msgid "Show Past Dates"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:40
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:47
 #: ./src/dialog-editor/components/modal-field-template/dynamic-values.html:1
 msgid "Show Refresh Button"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:32
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:33
 msgid "Single value"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:195
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:174
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:45
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:139
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:118
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:37
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:46
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:47
 msgid "Sort by"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:202
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:181
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:52
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:146
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:125
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:44
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:54
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:55
 msgid "Sort order"
 msgstr ""
 
-#: ./src/dialog-editor/components/box/box.html:50
+#: ./src/dialog-editor/components/box/box.html:51
 msgid "Start with adding a section"
 msgstr ""
 
@@ -78669,35 +78664,40 @@ msgstr ""
 msgid "Two"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:30
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:60
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:42
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:85
+#: ./src/dialog-editor/components/validation/validation.html:1
 msgid "Validation"
+msgstr ""
+
+#: ./src/dialog-editor/components/validation/validation.html:11
+msgid "Validator"
 msgstr ""
 
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:135
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:39
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:31
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:86
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:39
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:40
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:36
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:79
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:76
 msgid "Value type"
 msgstr ""
 
+#: ./dist/js/ui-components.js:1
+msgid "Value type is set as Integer, but the value entered is not a number"
+msgstr ""
+
 #: ./src/dialog-editor/components/modal-field-template/check-box.html:25
-#: ./src/dialog-editor/components/modal-field-template/check-box.html:98
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:10
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:93
+#: ./src/dialog-editor/components/modal-field-template/check-box.html:77
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:17
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:88
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:10
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:188
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:167
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:10
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:132
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:111
 #: ./src/dialog-editor/components/modal-field-template/tag-control.html:17
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:104
 #: ./src/dialog-editor/components/modal-field-template/text-area-box.html:23
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:129
+#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:77
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:102
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:29
 msgid "Visible"
 msgstr ""

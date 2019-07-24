@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-23 13:28+0200\n"
-"PO-Revision-Date: 2019-07-15 14:59+0000\n"
+"POT-Creation-Date: 2019-07-24 14:08+0200\n"
+"PO-Revision-Date: 2019-07-24 11:01+0000\n"
 "Last-Translator: Milan Zázrivec <mzazrivec@redhat.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/manageiq/teams/35937/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -110,7 +110,7 @@ msgstr "# 每个就绪状态 Pod 数"
 msgid "% Disk Used"
 msgstr ""
 
-#: ../app/models/vm_or_template.rb:1841
+#: ../app/models/vm_or_template.rb:1842
 msgid "%{action} cannot be performed on orphaned VM."
 msgstr "%{action} 无法在孤立的虚拟机上执行。"
 
@@ -300,11 +300,11 @@ msgstr "'%{name}' 计算不被支持"
 msgid ". %{details}"
 msgstr ". %{details}"
 
-#: ../app/models/vm_or_template.rb:1498
+#: ../app/models/vm_or_template.rb:1499
 msgid ":attr required"
 msgstr ":要求的属性"
 
-#: ../app/models/vm_or_template.rb:1477
+#: ../app/models/vm_or_template.rb:1478
 msgid ":hdw_attr required"
 msgstr ":要求的 hdw_attr"
 
@@ -7040,7 +7040,7 @@ msgstr "连接设置验证失败，错误为: %{error}"
 msgid "Console Memory"
 msgstr "控制台内存"
 
-#: ../app/models/vm_or_template.rb:1803
+#: ../app/models/vm_or_template.rb:1804
 #: ../app/models/manageiq/providers/physical_infra_manager.rb:148
 #: ../app/models/manageiq/providers/physical_infra_manager.rb:157
 msgid "Console not supported"
@@ -20994,9 +20994,9 @@ msgstr "依据供应商折叠菜单的实例"
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:41
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:33
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:88
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:42
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:43
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:38
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:81
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:78
 msgid "Integer"
 msgstr "整数"
 
@@ -21206,7 +21206,7 @@ msgid_plural "Kernel Drivers"
 msgstr[0] ""
 
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:53
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:64
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:65
 msgid "Key"
 msgstr "密钥"
 
@@ -29546,16 +29546,16 @@ msgstr ""
 msgid "No Policy to Import"
 msgstr "没有要导入的策略"
 
-#: ../app/models/physical_server.rb:100 ../app/models/vm_or_template.rb:1081
-#: ../app/models/vm_or_template.rb:1100 ../app/models/physical_storage.rb:32
+#: ../app/models/physical_server.rb:100 ../app/models/vm_or_template.rb:1082
+#: ../app/models/vm_or_template.rb:1101 ../app/models/physical_storage.rb:32
 #: ../app/models/host.rb:590 ../app/models/physical_switch.rb:34
 #: ../app/models/physical_rack.rb:24 ../app/models/orchestration_stack.rb:178
 #: ../app/models/physical_chassis.rb:44
 msgid "No Provider credentials defined"
 msgstr "没有定义供应商凭证"
 
-#: ../app/models/physical_server.rb:97 ../app/models/vm_or_template.rb:1078
-#: ../app/models/vm_or_template.rb:1097 ../app/models/physical_storage.rb:29
+#: ../app/models/physical_server.rb:97 ../app/models/vm_or_template.rb:1079
+#: ../app/models/vm_or_template.rb:1098 ../app/models/physical_storage.rb:29
 #: ../app/models/physical_switch.rb:31 ../app/models/physical_rack.rb:21
 #: ../app/models/orchestration_stack.rb:175
 #: ../app/models/physical_chassis.rb:41
@@ -29688,14 +29688,14 @@ msgid "Non-VM Files Percent of Used"
 msgstr "已使用的非虚拟机文件比例"
 
 #: ./src/dialog-editor/components/field/field.html:49
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:197
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:176
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:28
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:47
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:141
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:120
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:27
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:39
 #: ./src/dialog-editor/components/modal-field-template/tag-control.html:29
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:49
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:50
 msgid "None"
 msgstr "无"
 
@@ -33481,7 +33481,7 @@ msgstr "供应商不支持 vm_destroy"
 
 #: ../app/models/ext_management_system.rb:528
 #: ../app/models/physical_server.rb:103 ../app/models/provider.rb:72
-#: ../app/models/vm_or_template.rb:1084 ../app/models/vm_or_template.rb:1103
+#: ../app/models/vm_or_template.rb:1085 ../app/models/vm_or_template.rb:1104
 #: ../app/models/physical_storage.rb:35 ../app/models/host.rb:593
 #: ../app/models/physical_switch.rb:37 ../app/models/physical_rack.rb:27
 #: ../app/models/orchestration_stack.rb:181
@@ -38820,9 +38820,9 @@ msgstr "存储类型"
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:42
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:34
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:89
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:43
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:44
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:39
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:82
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:79
 msgid "String"
 msgstr "字符串"
 
@@ -40744,11 +40744,11 @@ msgstr "可用空间不足 35% 的未注册虚拟机"
 msgid "Unsupported Mode (%{mode}) for %{class} %{type} options"
 msgstr "%{class} %{type} 选项不支持的模式 (%{mode})"
 
-#: ../app/models/miq_widget.rb:513
+#: ../app/models/miq_widget.rb:511
 msgid "Unsupported interval '%{interval}'"
 msgstr "不支持的间隔 '%{interval}'"
 
-#: ../app/models/vm_or_template.rb:1694 ../app/models/vm_or_template.rb:1713
+#: ../app/models/vm_or_template.rb:1695 ../app/models/vm_or_template.rb:1714
 msgid "Unsupported property type [%{property}]"
 msgstr "不支持的属性类型 [%{property}]"
 
@@ -42062,7 +42062,7 @@ msgid "VM operations"
 msgstr "虚拟机操作"
 
 #. TRANSLATORS: en.yml key: dictionary.model.VmOrTemplate
-#: ../app/models/vm_or_template.rb:1816 ../config/dictionary_strings.rb:2296
+#: ../app/models/vm_or_template.rb:1817 ../config/dictionary_strings.rb:2296
 msgid "VM or Template"
 msgid_plural "VMs or Templates"
 msgstr[0] "虚拟机或模板"
@@ -45129,7 +45129,7 @@ msgid "Whether to use the authorize mechanism"
 msgstr "是否使用授权机制"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqWidget
-#: ../app/models/miq_widget.rb:573 ../config/dictionary_strings.rb:2128
+#: ../app/models/miq_widget.rb:571 ../config/dictionary_strings.rb:2128
 msgid "Widget"
 msgid_plural "Widgets"
 msgstr[0] "Widget"
@@ -45806,7 +45806,7 @@ msgstr "对象 %{name} 不是 %{items} 其中之一"
 msgid "operator '%{operator_name}' is not supported"
 msgstr "操作符 '%{operator_name}' 不被支持"
 
-#: ../app/models/vm_or_template.rb:1514
+#: ../app/models/vm_or_template.rb:1515
 msgid "operator '%{operator}' is not supported"
 msgstr "操作符 '%{operator}' 不被支持"
 
@@ -45814,11 +45814,11 @@ msgstr "操作符 '%{operator}' 不被支持"
 msgid "option :cat_model must have a value"
 msgstr "选项 :cat_model 必须有一个值"
 
-#: ../app/models/vm_or_template.rb:1465
+#: ../app/models/vm_or_template.rb:1466
 msgid "option :event_types is required"
 msgstr "选项 :event_types 是必需的"
 
-#: ../app/models/vm_or_template.rb:1467
+#: ../app/models/vm_or_template.rb:1468
 msgid "option :freq_threshold is required"
 msgstr "选项 :freq_threshold 是必需的"
 
@@ -45835,7 +45835,7 @@ msgstr "选项 :message_filter_type: %{options}, 无效, 需要是 %{type} 之�
 msgid "option :message_filter_value is required"
 msgstr "选项 :message_filter_value 是必需的"
 
-#: ../app/models/vm_or_template.rb:1466
+#: ../app/models/vm_or_template.rb:1467
 msgid "option :time_threshold is required"
 msgstr "选项 :time_threshold 是必需的"
 
@@ -45892,7 +45892,7 @@ msgstr "子类必须实现 poll_native_task"
 msgid "prov_type cannot be changed"
 msgstr "prov_type 不可更改"
 
-#: ../app/models/vm_or_template.rb:1213
+#: ../app/models/vm_or_template.rb:1214
 msgid "raise_created_event must be implemented in a subclass"
 msgstr "必须在子类中使用 raise_created_event"
 
@@ -51451,11 +51451,11 @@ msgid ""
 "Are you sure you want to reset this Dashboard's Widgets to the defaults?"
 msgstr "您确定要重置这个仪表板的 Wdiget 为默认值吗？"
 
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:204
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:183
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:54
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:148
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:127
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:46
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:57
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:58
 msgid "Ascending"
 msgstr "升序的"
 
@@ -53696,7 +53696,7 @@ msgstr "克隆这个虚拟机"
 msgid "Clone this item"
 msgstr "克隆这个项"
 
-#: ./src/dialog-user/components/dialog-user/dialogField.html:148
+#: ./src/dialog-user/components/dialog-user/dialogField.html:144
 #: ./src/dialog-user/components/dialog-user/dialogField.html:168
 #: ./src/fonticon-picker/components/fonticon-picker/fonticon-modal.html:19
 msgid "Close"
@@ -55990,9 +55990,9 @@ msgstr "无法编辑默认报告"
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:24
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:32
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:24
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:111
 #: ./src/dialog-editor/components/modal-field-template/text-area-box.html:3
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:136
+#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:84
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:109
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:3
 msgid "Default value"
 msgstr "默认值"
@@ -56506,11 +56506,11 @@ msgstr "Depot 类型是必需的"
 msgid "Deprecated"
 msgstr "已弃用"
 
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:205
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:184
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:55
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:149
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:128
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:47
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:58
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:59
 msgid "Descending"
 msgstr "降序的"
 
@@ -58845,11 +58845,11 @@ msgid "Entity:"
 msgstr "实体："
 
 #: ./src/dialog-editor/components/modal-field-template/check-box.html:40
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:32
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:39
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:117
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:68
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:42
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:54
+#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:39
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:51
 msgid "Entry Point"
 msgstr "入口点"
 
@@ -78393,7 +78393,7 @@ msgstr ""
 msgid "migrated"
 msgstr "已迁移"
 
-#: ./src/dialog-editor/components/box/box.html:54
+#: ./src/dialog-editor/components/box/box.html:55
 msgid "Add Section"
 msgstr ""
 
@@ -78476,12 +78476,12 @@ msgid "Edit Tab Details"
 msgstr ""
 
 #: ./dist/js/ui-components.js:1
-msgid "Entered text does not match required format."
+msgid "Entered text should match the format:"
 msgstr ""
 
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:65
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:50
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:61
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:62
 msgid "Entries"
 msgstr ""
 
@@ -78501,12 +78501,7 @@ msgstr ""
 msgid "Fields to refresh"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/check-box.html:78
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:74
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:168
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:112
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:84
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:109
+#: ./src/dialog-editor/components/tree-selector/tree-selector.html:21
 msgid "Include domain prefix in the path:"
 msgstr ""
 
@@ -78541,32 +78536,32 @@ msgstr ""
 msgid "Overridable Options"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:72
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:69
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:8
 msgid "Protected"
 msgstr ""
 
 #: ./src/dialog-editor/components/modal-field-template/check-box.html:18
-#: ./src/dialog-editor/components/modal-field-template/check-box.html:91
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:3
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:86
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:181
+#: ./src/dialog-editor/components/modal-field-template/check-box.html:70
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:10
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:81
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:160
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:3
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:125
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:104
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:3
 #: ./src/dialog-editor/components/modal-field-template/tag-control.html:10
 #: ./src/dialog-editor/components/modal-field-template/text-area-box.html:16
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:97
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:122
+#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:70
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:22
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:95
 msgid "Read only"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field/field.html:162
+#: ./src/dialog-editor/components/modal-field/field.html:128
 msgid "Reconfigurable"
 msgstr ""
 
-#: ./src/dialog-user/components/dialog-user/dialogField.html:187
+#: ./src/dialog-user/components/dialog-user/dialogField.html:192
 msgid "Refresh field"
 msgstr ""
 
@@ -78582,37 +78577,37 @@ msgstr ""
 msgid "Select an icon"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:17
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:47
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:24
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:54
 msgid "Show Past Dates"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:40
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:47
 #: ./src/dialog-editor/components/modal-field-template/dynamic-values.html:1
 msgid "Show Refresh Button"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:32
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:33
 msgid "Single value"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:195
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:174
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:45
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:139
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:118
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:37
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:46
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:47
 msgid "Sort by"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:202
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:181
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:52
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:146
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:125
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:44
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:54
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:55
 msgid "Sort order"
 msgstr ""
 
-#: ./src/dialog-editor/components/box/box.html:50
+#: ./src/dialog-editor/components/box/box.html:51
 msgid "Start with adding a section"
 msgstr ""
 
@@ -78636,35 +78631,40 @@ msgstr ""
 msgid "Two"
 msgstr ""
 
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:30
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:60
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:42
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:85
+#: ./src/dialog-editor/components/validation/validation.html:1
 msgid "Validation"
+msgstr ""
+
+#: ./src/dialog-editor/components/validation/validation.html:11
+msgid "Validator"
 msgstr ""
 
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:135
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:39
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:31
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:86
-#: ./src/dialog-editor/components/modal-field-template/tag-control.html:39
+#: ./src/dialog-editor/components/modal-field-template/tag-control.html:40
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:36
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:79
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:76
 msgid "Value type"
 msgstr ""
 
+#: ./dist/js/ui-components.js:1
+msgid "Value type is set as Integer, but the value entered is not a number"
+msgstr ""
+
 #: ./src/dialog-editor/components/modal-field-template/check-box.html:25
-#: ./src/dialog-editor/components/modal-field-template/check-box.html:98
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:10
-#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:93
+#: ./src/dialog-editor/components/modal-field-template/check-box.html:77
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:17
+#: ./src/dialog-editor/components/modal-field-template/date-time-control.html:88
 #: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:10
-#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:188
+#: ./src/dialog-editor/components/modal-field-template/drop-down-list.html:167
 #: ./src/dialog-editor/components/modal-field-template/radio-button.html:10
-#: ./src/dialog-editor/components/modal-field-template/radio-button.html:132
+#: ./src/dialog-editor/components/modal-field-template/radio-button.html:111
 #: ./src/dialog-editor/components/modal-field-template/tag-control.html:17
-#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:104
 #: ./src/dialog-editor/components/modal-field-template/text-area-box.html:23
-#: ./src/dialog-editor/components/modal-field-template/text-box.html:129
+#: ./src/dialog-editor/components/modal-field-template/text-area-box.html:77
+#: ./src/dialog-editor/components/modal-field-template/text-box.html:102
 #: ./src/dialog-editor/components/modal-field-template/text-box.html:29
 msgid "Visible"
 msgstr ""
