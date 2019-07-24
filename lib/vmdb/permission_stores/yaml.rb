@@ -8,11 +8,11 @@ module Vmdb
 
     class YAML
       def initialize(file)
-        @permissions = Psych.load_file(file)
+        @blacklist = Psych.load_file(file)
       end
 
       def can?(permission)
-        @permissions.include?(permission)
+        !@blacklist.include?(permission)
       end
 
       def supported_ems_type?(type)

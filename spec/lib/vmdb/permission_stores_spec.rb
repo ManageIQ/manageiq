@@ -49,7 +49,7 @@ describe Vmdb::PermissionStores do
 
   describe '::YAML' do
     it '#can?' do
-      stub_vmdb_permission_store_with_types(["foo"]) do
+      stub_vmdb_permission_store_with_types(["bar"]) do
         instance = Vmdb::PermissionStores.instance
         expect(instance.can?('foo')).to be_truthy
         expect(instance.can?('bar')).to be_falsey
@@ -57,7 +57,7 @@ describe Vmdb::PermissionStores do
     end
 
     it '#supported_ems_type?' do
-      stub_vmdb_permission_store_with_types(["ems-type:foo"]) do
+      stub_vmdb_permission_store_with_types(["ems-type:bar"]) do
         instance = Vmdb::PermissionStores.instance
         expect(instance.supported_ems_type?('foo')).to be_truthy
         expect(instance.supported_ems_type?('bar')).to be_falsey
