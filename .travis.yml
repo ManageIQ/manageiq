@@ -1,7 +1,6 @@
 dist: xenial
 language: ruby
 rvm:
-- 2.4.6
 - 2.5.3
 sudo: false
 cache:
