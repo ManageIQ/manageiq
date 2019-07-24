@@ -195,7 +195,7 @@ describe(ServiceAnsiblePlaybook) do
     end
   end
 
-  describe '#execute' do
+  describe '#launch_ansible_job' do
     let(:control_extras) { {'a' => 'A', 'b' => 'B', 'c' => 'C'} }
     before do
       FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
@@ -219,7 +219,7 @@ describe(ServiceAnsiblePlaybook) do
         expect(opts).to include(expected_opts)
         runner_job
       end
-      loaded_service.execute(action)
+      loaded_service.launch_ansible_job(action)
       expected_job_attributes = {
         :id                           => runner_job.id,
         :hosts                        => config_info_options.fetch_path(:config_info, :provision, :hosts).split(','),

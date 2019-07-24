@@ -14,6 +14,29 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def execute(action)
+    launch_ansible_job_queue(action)
+  end
+
+  def launch_ansible_job_queue(action)
+    task_opts = {
+      :action => "Launching Ansible Job",
+      :userid => "system"
+    }
+
+    queue_opts = {
+      :args        => [action],
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "launch_ansible_job",
+      :role        => "embedded_ansible"
+    }
+
+    task_id = MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    task = MiqTask.wait_for_taskid(task_id)
+    raise task.message unless task.status_ok?
+  end
+
+  def launch_ansible_job(action)
     jt = job_template(action)
     opts = get_job_options(action).deep_merge(
       :extra_vars => {
