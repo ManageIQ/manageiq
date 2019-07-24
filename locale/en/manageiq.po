@@ -31460,9 +31460,8 @@ msgid "%{type}: %{name}"
 msgstr ""
 
 #: ../app/presenters/tree_node/configured_system.rb:4
-#, fuzzy
 msgid "Configured System: %{hostname}"
-msgstr "Host Name"
+msgstr ""
 
 #: ../app/presenters/tree_node/custom_button.rb:3
 msgid "Button: %{button_description}"
@@ -46889,7 +46888,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:607
 msgid "ConfiguredSystem|Hostname"
-msgstr "Host Name"
+msgstr ""
 
 #: ../config/model_attributes.rb:608
 msgid "ConfiguredSystem|Href slug"
@@ -46897,7 +46896,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:609
 msgid "ConfiguredSystem|Ipaddress"
-msgstr "IP Address"
+msgstr ""
 
 #: ../config/model_attributes.rb:610
 msgid "ConfiguredSystem|Ipmi present"
@@ -47575,7 +47574,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:779
 msgid "ContainerGroup|Ipaddress"
-msgstr "IP Address"
+msgstr ""
 
 #: ../config/model_attributes.rb:780
 msgid "ContainerGroup|Last compliance status"
@@ -48839,7 +48838,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:1084
 msgid "ContainerRoute|Host name"
-msgstr "Host Name"
+msgstr ""
 
 #: ../config/model_attributes.rb:1085
 msgid "ContainerRoute|Href slug"
@@ -50991,7 +50990,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:1618
 msgid "ExtManagementSystem|Hostname"
-msgstr "Host Name"
+msgstr ""
 
 #: ../config/model_attributes.rb:1619
 msgid "ExtManagementSystem|Href slug"
@@ -50999,7 +50998,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:1620
 msgid "ExtManagementSystem|Ipaddress"
-msgstr "IP Address"
+msgstr ""
 
 #: ../config/model_attributes.rb:1621
 msgid "ExtManagementSystem|Last compliance status"
@@ -51027,7 +51026,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:1627
 msgid "ExtManagementSystem|Last refresh date"
-msgstr "Host Name"
+msgstr ""
 
 #: ../config/model_attributes.rb:1628
 msgid "ExtManagementSystem|Last refresh error"
@@ -51127,7 +51126,7 @@ msgstr ""
 
 #: ../config/model_attributes.rb:1649
 msgid "ExtManagementSystem|Provider region"
-msgstr "Region"
+msgstr ""
 
 #: ../config/model_attributes.rb:1650
 msgid "ExtManagementSystem|Realm"
@@ -67316,9 +67315,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_AutomationManager_ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
 #: ../config/yaml_strings.rb:1054
-#, fuzzy
 msgid "ConfiguredSystems"
-msgstr "Host Name"
+msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1055
