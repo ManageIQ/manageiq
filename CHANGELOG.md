@@ -5,7 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-9
+## Unreleased as of Sprint 116 ending 2019-07-22
+
+### Added
+- Use escalate privilege setting in ansible services and automate methods [(#19012)](https://github.com/ManageIQ/manageiq/pull/19012)
+- [ansible_runner] Add NetworkCredential for Ansible::Runner lib [(#19007)](https://github.com/ManageIQ/manageiq/pull/19007)
+- [ansible_runner] Add VaultCredential [(#19002)](https://github.com/ManageIQ/manageiq/pull/19002)
+- Adds cloud credentials to AnsibleRunner (for EmbeddedAnsible) [(#18991)](https://github.com/ManageIQ/manageiq/pull/18991)
+- Adding tenant stuff to service template copy [(#18990)](https://github.com/ManageIQ/manageiq/pull/18990)
+- Make embedded ansible verbosity and execution_ttl work [(#18989)](https://github.com/ManageIQ/manageiq/pull/18989)
+- Pass credentials from ansible playbook automate methods to runner [(#18983)](https://github.com/ManageIQ/manageiq/pull/18983)
+- Include resource_actions and picture in service_template copy [(#18973)](https://github.com/ManageIQ/manageiq/pull/18973)
+- Pass credentials to ansible runner from services [(#18969)](https://github.com/ManageIQ/manageiq/pull/18969)
+- Add credential handling to Ansible::Runner [(#18968)](https://github.com/ManageIQ/manageiq/pull/18968)
+- Log only unique servers id used to process miq_request [(#18962)](https://github.com/ManageIQ/manageiq/pull/18962)
+- Unify the HTML5 canvas-based remote consoles under a single endpoint [(#18927)](https://github.com/ManageIQ/manageiq/pull/18927)
+- [V2V] Use authentication_check instead of verify credentials [(#18880)](https://github.com/ManageIQ/manageiq/pull/18880)
+- Introduce Request and Task for firmware update [(#18801)](https://github.com/ManageIQ/manageiq/pull/18801)
+- Add missing quota tags [(#18656)](https://github.com/ManageIQ/manageiq/pull/18656)
+
+### Fixed
+- set vm name on reconnect [(#19031)](https://github.com/ManageIQ/manageiq/pull/19031)
+- Fix Embedded Ansible Respository refresh [(#19024)](https://github.com/ManageIQ/manageiq/pull/19024)
+- Allow modification of "Create new Picture" product feature on a role. [(#18982)](https://github.com/ManageIQ/manageiq/pull/18982)
+- When copying ServiceTemplate copy only direct_custom_buttons [(#18960)](https://github.com/ManageIQ/manageiq/pull/18960)
+
+## Hammer-9 - Released 2019-07-23
 
 ### Added
 - [V2V] Enhance throttler logging [(#18929)](https://github.com/ManageIQ/manageiq/pull/18929) 
