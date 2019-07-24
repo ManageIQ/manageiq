@@ -182,7 +182,7 @@ namespace :locale do
 
     system('rmsgcat', '-o', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s, *pot_files)
     system('mv', '-v', Rails.root.join('locale', 'manageiq-all.pot').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
-    system('rmsgmerge', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
+    system('rmsgmerge', '--no-fuzzy-matching', '-o', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s, Rails.root.join('locale', 'manageiq.pot').to_s)
     system('mv', '-v', Rails.root.join('locale', 'en', 'manageiq-all.po').to_s, Rails.root.join('locale', 'en', 'manageiq.po').to_s)
     system('rm', '-rf', tmp_dir)
   end
