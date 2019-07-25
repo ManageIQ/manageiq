@@ -253,7 +253,7 @@ unless ENV["APPLIANCE"]
     gem "faker",            "~>1.8",    :require => false
     gem "timecop",          "~>0.7.3",  :require => false
     gem "vcr",              "~>3.0.2",  :require => false
-    gem "webmock",          "~>3.6.0",  :require => false
+    gem "webmock",          "~>3.7.0",  :require => false
   end
 
   group :development, :test do
