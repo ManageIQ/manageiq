@@ -200,7 +200,7 @@ class MiqRequest < ApplicationRecord
       :method_name => "call_automate_event",
       :args        => [event_name],
       :zone        => options.fetch(:miq_zone, my_zone),
-      :msg_timeout => 3600
+      :msg_timeout => options[:msg_timeout].presence || 3600,
     )
   end
 

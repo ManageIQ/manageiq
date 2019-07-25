@@ -357,6 +357,11 @@
           :display: :edit
           :default: immediately
           :data_type: :string
+        :msg_timeout:
+          :description: Task timeout
+          :required: false
+          :display: :edit
+          :data_type: :integer
         :vm_auto_start:
           :values:
             false: 0
