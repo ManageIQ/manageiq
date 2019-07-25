@@ -183,8 +183,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         :class_name  => described_class.name,
         :method_name => "create_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :role        => "embedded_ansible",
-        :zone        => manager.zone.name
+        :role        => "embedded_ansible"
       )
     end
 
@@ -200,8 +199,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         :class_name  => described_class.name,
         :method_name => "update_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :role        => "embedded_ansible",
-        :zone        => manager.my_zone
+        :role        => "embedded_ansible"
       )
     end
   end

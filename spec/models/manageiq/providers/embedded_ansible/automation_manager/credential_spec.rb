@@ -71,8 +71,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :class_name  => credential_class.name,
           :method_name => "create_in_provider",
           :priority    => MiqQueue::HIGH_PRIORITY,
-          :role        => "embedded_ansible",
-          :zone        => manager.my_zone
+          :role        => "embedded_ansible"
         )
       end
 
@@ -107,8 +106,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :class_name  => credential_class.name,
           :method_name => "update_in_provider",
           :priority    => MiqQueue::HIGH_PRIORITY,
-          :role        => "embedded_ansible",
-          :zone        => manager.my_zone
+          :role        => "embedded_ansible"
         )
       end
     end
@@ -132,8 +130,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential do
           :class_name  => credential_class.name,
           :method_name => "delete_in_provider",
           :priority    => MiqQueue::HIGH_PRIORITY,
-          :role        => "embedded_ansible",
-          :zone        => manager.my_zone
+          :role        => "embedded_ansible"
         )
       end
     end
