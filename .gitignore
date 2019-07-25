@@ -95,3 +95,4 @@ bundler.d/*
 # yardoc
 /doc/
 .yardoc
+.DS*
