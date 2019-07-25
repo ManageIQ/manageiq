@@ -28,14 +28,8 @@ describe ManageIQ::Providers::EmbeddedAnsible do
       expect(auth.manager_ref).to eq(auth.id.to_s)
     end
 
-    it "creates the local playbook repo" do
-      repo = manager.configuration_script_sources.find_by(:name => "ManageIQ Default Project")
-
-      expect(repo.scm_type).to eq("git")
-      expect(repo.scm_url).to eq("file://#{consolidated_repo_path}")
-      expect(repo.scm_update_on_launch).to be_falsey
-
-      expect(Dir.exist?(File.join(consolidated_repo_path, ".git"))).to be_truthy
+    it "consolidates the embedded ansible content" do
+      expect(Dir.exist?(File.join(consolidated_repo_path))).to be_truthy
     end
   end
 end
