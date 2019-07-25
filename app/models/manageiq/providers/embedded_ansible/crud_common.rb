@@ -2,7 +2,7 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def queue(zone, instance_id, method_name, args, action, auth_user)
+    def queue(instance_id, method_name, args, action, auth_user)
       task_opts = {
         :action => action,
         :userid => auth_user || "system"
@@ -13,8 +13,7 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
         :priority    => MiqQueue::HIGH_PRIORITY,
         :class_name  => name,
         :method_name => method_name,
-        :role        => "embedded_ansible",
-        :zone        => zone
+        :role        => "embedded_ansible"
       }
       queue_opts[:instance_id] = instance_id if instance_id
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
@@ -53,7 +52,7 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
       manager = parent.find(manager_id)
       action = "Creating #{self::FRIENDLY_NAME}"
       action << " (name=#{params[:name]})" if params[:name]
-      queue(manager.my_zone, nil, "create_in_provider", [manager_id, encrypt_queue_params(params)], action, auth_user)
+      queue(nil, "create_in_provider", [manager_id, encrypt_queue_params(params)], action, auth_user)
     end
 
     private
@@ -116,7 +115,7 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
   def queue(method_name, args, action_prefix, auth_user)
     action = "#{action_prefix} #{self.class::FRIENDLY_NAME}"
     action << " (name=#{name})" if respond_to?(:name)
-    self.class.queue(manager.my_zone, id, method_name, args, action, auth_user)
+    self.class.queue(id, method_name, args, action, auth_user)
   end
 
   def notify(op_type, params = {}, &block)
