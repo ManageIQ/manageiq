@@ -14,6 +14,29 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def execute(action)
+    launch_ansible_job_queue(action)
+  end
+
+  def launch_ansible_job_queue(action)
+    task_opts = {
+      :action => "Launching Ansible Job",
+      :userid => "system"
+    }
+
+    queue_opts = {
+      :args        => [action],
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => "launch_ansible_job",
+      :role        => "embedded_ansible"
+    }
+
+    task_id = MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    task = MiqTask.wait_for_taskid(task_id)
+    raise task.message unless task.status_ok?
+  end
+
+  def launch_ansible_job(action)
     jt = job_template(action)
     opts = get_job_options(action).deep_merge(
       :extra_vars => {
@@ -23,12 +46,12 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     )
     opts[:hosts] = hosts_array(opts.delete(:hosts))
 
-    _log.info("Launching Ansible Tower job with options:")
+    _log.info("Launching Ansible job with options:")
     $log.log_hashes(opts)
     new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, decrypt_options(opts))
     update_job_for_playbook(action, new_job, opts[:hosts])
 
-    _log.info("Ansible Tower job with ref #{new_job.ems_ref} was created.")
+    _log.info("Ansible job with ref #{new_job.ems_ref} was created.")
     add_resource!(new_job, :name => action)
   end
 
