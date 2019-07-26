@@ -24,7 +24,15 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     params.delete(:scm_type)   if params[:scm_type].blank?
     params.delete(:scm_branch) if params[:scm_branch].blank?
 
-    transaction { create!(params.merge(:manager => manager)).tap(&:sync) }
+    transaction { create!(params.merge(:manager => manager, :status => "new")) }
+  end
+
+  def self.create_in_provider(manager_id, params)
+    super.tap do |repo|
+      notify("syncing", manager_id, {}) do
+        repo.sync
+      end
+    end
   end
 
   def raw_update_in_provider(params)
@@ -48,6 +56,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def sync
+    update_attributes!(:status => "running")
     transaction do
       current = configuration_script_payloads.index_by(&:name)
 
