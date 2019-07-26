@@ -90,6 +90,8 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect(result.scm_type).to eq("git")
         expect(result.scm_branch).to eq("master")
         expect(result.status).to eq("successful")
+        expect(result.last_updated_on).to be_an(Time)
+        expect(result.last_update_error).to be_nil
 
         git_repo_dir = repo_dir.join(result.git_repository.id.to_s)
         expect(files_in_repository(git_repo_dir)).to eq ["hello_world.yaml"]
@@ -107,6 +109,8 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect(result.scm_type).to eq("git")
         expect(result.scm_branch).to eq("master")
         expect(result.status).to eq("new")
+        expect(result.last_updated_on).to be_nil
+        expect(result.last_update_error).to be_nil
 
         expect(repos).to be_empty
       end
@@ -129,7 +133,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
     end
 
     context "when there is a network error fetching the repo" do
-      it "sets the status to 'error' if syncing has a network error" do
+      before do
         sync_notification_args        = notification_args("syncing", {})
         sync_notification_args[:type] = :tower_op_failure
 
@@ -140,15 +144,34 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect do
           described_class.create_in_provider(manager.id, params)
         end.to raise_error(::Rugged::NetworkError)
+      end
 
+      it "sets the status to 'error' if syncing has a network error" do
         result = described_class.last
 
         expect(result).to be_an(described_class)
         expect(result.scm_type).to eq("git")
         expect(result.scm_branch).to eq("master")
         expect(result.status).to eq("error")
+        expect(result.last_updated_on).to be_an(Time)
+        expect(result.last_update_error).to start_with("Rugged::NetworkError")
 
         expect(repos).to be_empty
+      end
+
+      it "clears last_update_error on re-sync" do
+        result = described_class.last
+
+        expect(result.status).to eq("error")
+        expect(result.last_updated_on).to be_an(Time)
+        expect(result.last_update_error).to start_with("Rugged::NetworkError")
+
+        expect(GitRepository).to receive(:create!).and_call_original
+
+        result.sync
+
+        expect(result.status).to eq("successful")
+        expect(result.last_update_error).to be_nil
       end
     end
   end

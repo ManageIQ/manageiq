@@ -69,9 +69,13 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
       configuration_script_payloads.reload
     end
-    update_attributes!(:status => "successful")
+    update_attributes!(:status            => "successful",
+                       :last_updated_on   => Time.zone.now,
+                       :last_update_error => nil)
   rescue => error
-    update_attributes!(:status => "error")
+    update_attributes!(:status            => "error",
+                       :last_updated_on   => Time.zone.now,
+                       :last_update_error => format_sync_error(error))
     raise error
   end
 
@@ -87,5 +91,13 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   def checkout_git_repository(target_directory)
     git_repository.update_repo
     git_repository.checkout(scm_branch, target_directory)
+  end
+
+  ERROR_MAX_SIZE = 50.kilobytes
+  def format_sync_error(error)
+    result = error.message.dup
+    result << "\n\n"
+    result << error.backtrace.join("\n")
+    result.mb_chars.limit(ERROR_MAX_SIZE)
   end
 end
