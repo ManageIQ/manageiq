@@ -13,7 +13,8 @@ module ManageIQ::Providers::EmbeddedAnsible::CrudCommon
         :priority    => MiqQueue::HIGH_PRIORITY,
         :class_name  => name,
         :method_name => method_name,
-        :role        => "embedded_ansible"
+        :role        => "embedded_ansible",
+        :zone        => nil
       }
       queue_opts[:instance_id] = instance_id if instance_id
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
