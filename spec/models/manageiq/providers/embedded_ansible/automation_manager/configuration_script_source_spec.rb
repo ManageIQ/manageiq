@@ -88,6 +88,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect(result).to be_an(described_class)
         expect(result.scm_type).to eq("git")
         expect(result.scm_branch).to eq("master")
+        expect(result.status).to eq("successful")
 
         git_repo_dir = repo_dir.join(result.git_repository.id.to_s)
         expect(files_in_repository(git_repo_dir)).to eq ["hello_world.yaml"]

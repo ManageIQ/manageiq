@@ -60,7 +60,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
       configuration_script_payloads.reload
     end
-    true
+    update_attributes!(:status => "successful")
   end
 
   def sync_queue(auth_user = nil)
