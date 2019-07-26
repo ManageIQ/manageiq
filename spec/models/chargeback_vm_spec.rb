@@ -502,6 +502,24 @@ describe ChargebackVm do
         add_metric_rollups_for([vm_1_5, vm_2_5], month_beginning...month_end, 8.hours, metric_rollup_params.merge!(:derived_vm_numvcpus => derived_vm_numvcpus_tenant_5, :cpu_usagemhz_rate_average => cpu_usagemhz_rate_average_tenant_5))
       end
 
+      context "Budget" do
+        let(:options) do
+          {
+            :interval                     => "daily",
+            :interval_size                => 12,
+            :end_interval_offset          => 1,
+            :tenant_id                    => tenant_1.id,
+            :method_for_allocated_metrics => :max,
+            :include_metrics              => true,
+            :groupby                      => "tenant",
+          }
+        end
+
+        it "" do
+          subject
+        end
+      end
+
       it 'reports each tenants' do
         expect(subject.map(&:tenant_name)).to match_array([tenant_1, tenant_2, tenant_3, tenant_4, tenant_5].map(&:name))
       end

@@ -77,6 +77,10 @@ class ChargeableField < ApplicationRecord
     fixed? ? metric_key.gsub(/\_1|\_2/, '') : metric_key
   end
 
+  def cost_key
+    "#{rate_name}_cost"
+  end
+
   def cost_keys(sub_metric = nil)
     keys = ["#{rate_name}_#{sub_metric ? sub_metric + '_' : ''}cost", # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
             'total_cost']

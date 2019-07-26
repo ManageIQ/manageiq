@@ -39,7 +39,7 @@ class MiqSchedule < ApplicationRecord
 
   SYSTEM_SCHEDULE_CLASSES = %w(MiqReport MiqAlert MiqWidget).freeze
   VALID_INTERVAL_UNITS = %w(minutely hourly daily weekly monthly once).freeze
-  ALLOWED_CLASS_METHOD_ACTIONS = %w(db_backup db_gc automation_request).freeze
+  ALLOWED_CLASS_METHOD_ACTIONS = %w(db_backup db_gc automation_request check_budgets).freeze
   IMPORT_CLASS_NAMES = %w[MiqSchedule].freeze
 
   default_value_for :userid,  "system"
@@ -137,7 +137,7 @@ class MiqSchedule < ApplicationRecord
       _log.warn("[#{name}] Filter is empty")
       return []
     end
-
+    my_filter = nil if resource_type == 'Budget'
     Rbac.filtered(resource_type, :filter => my_filter)
   end
 
@@ -187,6 +187,10 @@ class MiqSchedule < ApplicationRecord
                   :start_time => start_time}
       end
     end
+  end
+
+  def action_check_budgets(_obj, _at)
+    Budget.check_all
   end
 
   def action_test(obj, _at)

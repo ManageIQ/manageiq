@@ -345,3 +345,13 @@
   :expires_in: 7.days
   :level: success
   :audience: user
+- :name: budget_reached
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: error
+  :audience: user
+- :name: budget_available
+  :message: '%{message}'
+  :expires_in: 7.days
+  :level: success
+  :audience: user
