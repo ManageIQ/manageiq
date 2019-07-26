@@ -127,6 +127,30 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect(repos).to be_empty
       end
     end
+
+    context "when there is a network error fetching the repo" do
+      it "sets the status to 'error' if syncing has a network error" do
+        sync_notification_args        = notification_args("syncing", {})
+        sync_notification_args[:type] = :tower_op_failure
+
+        expect(Notification).to receive(:create!).with(notify_creation_args)
+        expect(Notification).to receive(:create!).with(sync_notification_args)
+        expect(GitRepository).to receive(:create!).and_raise(::Rugged::NetworkError)
+
+        expect do
+          described_class.create_in_provider(manager.id, params)
+        end.to raise_error(::Rugged::NetworkError)
+
+        result = described_class.last
+
+        expect(result).to be_an(described_class)
+        expect(result.scm_type).to eq("git")
+        expect(result.scm_branch).to eq("master")
+        expect(result.status).to eq("error")
+
+        expect(repos).to be_empty
+      end
+    end
   end
 
   describe ".create_in_provider_queue" do
