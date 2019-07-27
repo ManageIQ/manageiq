@@ -201,6 +201,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         record = build_record
 
         expect(Notification).to receive(:create!).with(notify_update_args)
+        expect(Notification).to receive(:create!).with(notification_args("syncing", {}))
 
         result = record.update_in_provider update_params
 
@@ -224,6 +225,50 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect do
           record.update_in_provider update_params
         end.to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    context "when there is a network error fetching the repo" do
+      before do
+        record = build_record
+
+        sync_notification_args        = notification_args("syncing", {})
+        sync_notification_args[:type] = :tower_op_failure
+
+        expect(Notification).to receive(:create!).with(notify_update_args)
+        expect(Notification).to receive(:create!).with(sync_notification_args)
+        expect(record.git_repository).to receive(:update_repo).and_raise(::Rugged::NetworkError)
+
+        expect do
+          # described_class.last.update_in_provider update_params
+          record.update_in_provider update_params
+        end.to raise_error(::Rugged::NetworkError)
+      end
+
+      it "sets the status to 'error' if syncing has a network error" do
+        result = described_class.last
+
+        expect(result).to be_an(described_class)
+        expect(result.scm_type).to eq("git")
+        expect(result.scm_branch).to eq("other_branch")
+        expect(result.status).to eq("error")
+        expect(result.last_updated_on).to be_an(Time)
+        expect(result.last_update_error).to start_with("Rugged::NetworkError")
+      end
+
+      it "clears last_update_error on re-sync" do
+        result = described_class.last
+
+        expect(result.status).to eq("error")
+        expect(result.last_updated_on).to be_an(Time)
+        expect(result.last_update_error).to start_with("Rugged::NetworkError")
+
+        expect(result.git_repository).to receive(:update_repo).and_call_original
+
+        result.sync
+
+        expect(result.status).to eq("successful")
+        expect(result.last_update_error).to be_nil
       end
     end
   end

@@ -28,18 +28,17 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def self.create_in_provider(manager_id, params)
-    super.tap do |repo|
-      notify("syncing", manager_id, {}) do
-        repo.sync
-      end
-    end
+    super.tap(&:sync_and_notify)
   end
 
   def raw_update_in_provider(params)
     transaction do
       update_attributes!(params.except(:task_id, :miq_task_id))
-      sync
     end
+  end
+
+  def update_in_provider(params)
+    super.tap(&:sync_and_notify)
   end
 
   def raw_delete_in_provider
@@ -77,6 +76,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
                        :last_updated_on   => Time.zone.now,
                        :last_update_error => format_sync_error(error))
     raise error
+  end
+
+  def sync_and_notify
+    notify("syncing") { sync }
   end
 
   def sync_queue(auth_user = nil)
