@@ -10,9 +10,9 @@ module RetirementMixin
   end
 
   module ClassMethods
-    def make_retire_request(*src_ids, requester)
+    def make_retire_request(*src_ids, requester, initiated_by: 'user')
       klass = (name.demodulize + "RetireRequest").constantize
-      options = {:src_ids => src_ids.presence, :__request_type__ => klass.request_types.first}
+      options = {:src_ids => src_ids.presence, :__initiated_by__ => initiated_by, :__request_type__ => klass.request_types.first}
       set_retirement_requester(options[:src_ids], requester)
       klass.make_request(nil, options, requester)
     end
@@ -135,7 +135,7 @@ module RetirementMixin
       end
     end
 
-    self.class.make_retire_request(id, requester) if retirement_due?
+    self.class.make_retire_request(id, requester, :initiated_by => 'system') if retirement_due?
   end
 
   def retire_now(requester = nil)

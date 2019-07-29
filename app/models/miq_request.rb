@@ -31,6 +31,7 @@ class MiqRequest < ApplicationRecord
   validates_inclusion_of :approval_state, :in => %w(pending_approval approved denied), :message => "should be 'pending_approval', 'approved' or 'denied'"
   validates_inclusion_of :status,         :in => %w(Ok Warn Error Timeout Denied)
 
+  validates :initiated_by, :inclusion => { :in => %w[user system] }, :allow_blank => true
   validates :cancelation_status, :inclusion => { :in        => CANCEL_STATUS,
                                                  :allow_nil => true,
                                                  :message   => "should be one of #{CANCEL_STATUS.join(", ")}" }
@@ -503,7 +504,8 @@ class MiqRequest < ApplicationRecord
   def self.create_request(values, requester, auto_approve = false)
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
     request_type = values.delete(:__request_type__) || request_types.first
-    request = create!(:options => values, :requester => requester, :request_type => request_type)
+    initiator = values.delete(:__initiated_by__) || 'user'
+    request = create!(:options => values, :requester => requester, :request_type => request_type, :initiated_by => initiator)
 
     request.post_create(auto_approve)
   end
