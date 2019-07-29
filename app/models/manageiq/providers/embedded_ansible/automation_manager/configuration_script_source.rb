@@ -24,14 +24,21 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     params.delete(:scm_type)   if params[:scm_type].blank?
     params.delete(:scm_branch) if params[:scm_branch].blank?
 
-    transaction { create!(params.merge(:manager => manager)).tap(&:sync) }
+    transaction { create!(params.merge(:manager => manager, :status => "new")) }
+  end
+
+  def self.create_in_provider(manager_id, params)
+    super.tap(&:sync_and_notify)
   end
 
   def raw_update_in_provider(params)
     transaction do
       update_attributes!(params.except(:task_id, :miq_task_id))
-      sync
     end
+  end
+
+  def update_in_provider(params)
+    super.tap(&:sync_and_notify)
   end
 
   def raw_delete_in_provider
@@ -48,6 +55,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def sync
+    update_attributes!(:status => "running")
     transaction do
       current = configuration_script_payloads.index_by(&:name)
 
@@ -60,7 +68,18 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
       configuration_script_payloads.reload
     end
-    true
+    update_attributes!(:status            => "successful",
+                       :last_updated_on   => Time.zone.now,
+                       :last_update_error => nil)
+  rescue => error
+    update_attributes!(:status            => "error",
+                       :last_updated_on   => Time.zone.now,
+                       :last_update_error => format_sync_error(error))
+    raise error
+  end
+
+  def sync_and_notify
+    notify("syncing") { sync }
   end
 
   def sync_queue(auth_user = nil)
@@ -75,5 +94,13 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   def checkout_git_repository(target_directory)
     git_repository.update_repo
     git_repository.checkout(scm_branch, target_directory)
+  end
+
+  ERROR_MAX_SIZE = 50.kilobytes
+  def format_sync_error(error)
+    result = error.message.dup
+    result << "\n\n"
+    result << error.backtrace.join("\n")
+    result.mb_chars.limit(ERROR_MAX_SIZE)
   end
 end
