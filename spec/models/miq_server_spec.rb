@@ -26,13 +26,15 @@ describe MiqServer do
     end
 
     it "should generate a new GUID and write it out when there is no GUID file" do
-      MiqServer.my_guid_cache = nil
       test_guid = SecureRandom.uuid
       expect(SecureRandom).to receive(:uuid).and_return(test_guid)
-      expect(File).to receive(:exist?).with(guid_file).and_return(false)
-      expect(File).to receive(:write).with(guid_file, test_guid)
-      expect(File).to receive(:read).with(guid_file).and_return(test_guid)
-      expect(MiqServer.my_guid).to eq(test_guid)
+
+      Tempfile.create do |tempfile|
+        stub_const("MiqServer::GUID_FILE", tempfile.path)
+        MiqServer.my_guid_cache = nil
+        expect(MiqServer.my_guid).to eq(test_guid)
+        expect(File.read(tempfile)).to eq(test_guid)
+      end
     end
 
     it "should not generate a new GUID file if new_guid blows up" do # Test for case 10942
