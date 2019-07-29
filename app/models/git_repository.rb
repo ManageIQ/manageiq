@@ -110,7 +110,7 @@ class GitRepository < ApplicationRecord
   end
 
   def refresh_tags
-    with_worktree do
+    with_worktree do |worktree|
       current_tags = git_tags.index_by(&:name)
       worktree.tags.each do |tag|
         info = worktree.tag_info(tag)
