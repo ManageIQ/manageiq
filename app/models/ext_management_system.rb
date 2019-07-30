@@ -458,9 +458,10 @@ class ExtManagementSystem < ApplicationRecord
     @ems_physical_infra_discovery_types ||= %w(lenovo_ph_infra)
   end
 
-  def disable!
+  def disable!(validate: true)
     _log.info("Disabling EMS [#{name}] id [#{id}].")
-    update!(:enabled => false)
+    self.enabled = false
+    save(:validate => validate)
   end
 
   def enable!
@@ -488,7 +489,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def destroy(task_id = nil)
-    disable! if enabled?
+    disable!(:validate => false) if enabled?
 
     _log.info("Destroying #{child_managers.count} child_managers")
     child_managers.destroy_all
