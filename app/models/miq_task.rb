@@ -105,6 +105,18 @@ class MiqTask < ApplicationRecord
     task.update_status(state, status, message) unless task.nil?
   end
 
+  def status_ok?
+    self.class.status_ok?(status)
+  end
+
+  def status_error?
+    self.class.status_error?(status)
+  end
+
+  def status_timeout?
+    self.class.status_timeout?(status)
+  end
+
   def check_associations
     if job && job.is_active?
       _log.warn("Delete not allowed: Task [#{id}] has active job - id: [#{job.id}], guid: [#{job.guid}],")
