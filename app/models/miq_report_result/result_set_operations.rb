@@ -10,6 +10,7 @@ module MiqReportResult::ResultSetOperations
       report = report_result.report_or_miq_report
       sorting_columns = report.validate_sorting_columns(options[:sort_by])
       result_set = report_result.result_set
+
       count_of_full_result_set = result_set.count
       if result_set.present? && report
         if options.key?(:filter_column) && options.key?(:filter_string)
@@ -22,7 +23,7 @@ module MiqReportResult::ResultSetOperations
         result_set = apply_limit_and_offset(result_set, options)
       end
 
-      {:result_set => report.format_result_set(result_set, allowed_columns_to_format), :count_of_full_result_set => count_of_full_result_set}
+      {:result_set => report.format_result_set(result_set, allowed_columns_to_format, options[:expand_value_format]), :count_of_full_result_set => count_of_full_result_set}
     end
   end
 end
