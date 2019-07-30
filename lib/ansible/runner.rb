@@ -254,6 +254,12 @@ module Ansible
         runner_args[:role_skip_facts] = nil if runner_args.delete(:role_skip_facts)
         runner_args[:ident] = "result"
 
+        playbook = runner_args.delete(:playbook)
+        if playbook
+          runner_args[:playbook]    = File.basename(playbook)
+          runner_args[:project_dir] = File.dirname(playbook)
+        end
+
         if verbosity.to_i > 0
           v_flag = "-#{"v" * verbosity.to_i.clamp(1, 5)}"
           runner_args[v_flag] = nil

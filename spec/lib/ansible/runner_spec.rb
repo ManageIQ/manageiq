@@ -21,7 +21,7 @@ describe Ansible::Runner do
 
         expect(method).to eq("run")
         expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => playbook)
+        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
 
         hosts = File.read(File.join(dir, "inventory", "hosts"))
         expect(hosts).to eq("localhost")
@@ -44,7 +44,7 @@ describe Ansible::Runner do
 
         expect(method).to eq("run")
         expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => playbook)
+        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
 
         hosts = File.read(File.join(dir, "inventory", "hosts"))
         expect(hosts).to eq("localhost")
@@ -64,7 +64,7 @@ describe Ansible::Runner do
         expect(command).to eq("ansible-runner")
 
         _method, _dir, _json, args = options[:params]
-        expect(args).to eq(:ident => "result", :playbook => playbook, "-vvvvv" => nil)
+        expect(args).to eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my", "-vvvvv" => nil)
       end.and_return(result)
 
       described_class.run(env_vars, extra_vars, playbook, :verbosity => 6)
@@ -96,7 +96,7 @@ describe Ansible::Runner do
 
           expect(method).to eq("run")
           expect(json).to   eq(:json)
-          expect(args).to   eq(:ident => "result", :playbook => playbook)
+          expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
 
           hosts = File.read(File.join(dir, "inventory", "hosts"))
           expect(hosts).to eq("localhost")
@@ -126,7 +126,7 @@ describe Ansible::Runner do
 
         expect(method).to eq("start")
         expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => playbook)
+        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
 
         hosts = File.read(File.join(dir, "inventory", "hosts"))
         expect(hosts).to eq("localhost")
