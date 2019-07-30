@@ -493,7 +493,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def filter_for_schedule
-    "\"=\" => {\"field\" => \"MiqWidget-id\", \"value\" => #{id}}"
+    %["=" => {"field" => "MiqWidget-id", "value" => #{id}}]
   end
 
   def sync_schedule(schedule_info)
