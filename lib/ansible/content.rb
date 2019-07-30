@@ -5,7 +5,7 @@ module Ansible
     attr_accessor :path
 
     def initialize(path)
-      @path = path
+      @path = Pathname.new(path)
     end
 
     def fetch_galaxy_roles

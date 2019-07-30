@@ -56,5 +56,18 @@ RSpec.describe Ansible::Content do
 
       subject.fetch_galaxy_roles
     end
+
+    it "works with a string path" do
+      FileUtils.touch(local_requirements)
+
+      expected_params = [
+        "install",
+        :roles_path= => roles_dir,
+        :role_file=  => local_requirements
+      ]
+      expect(AwesomeSpawn).to receive(:run!).with("ansible-galaxy", :params => expected_params)
+
+      described_class.new(content_dir.to_s).fetch_galaxy_roles
+    end
   end
 end
