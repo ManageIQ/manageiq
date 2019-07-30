@@ -51,6 +51,7 @@ RSpec.describe InfraConversionThrottler, :v2v do
       expect(job_waiting).to receive(:queue_signal).with(:start)
       described_class.start_conversions
       expect(task_waiting.conversion_host.id).to eq(conversion_host2.id)
+      expect(task_waiting.options[:conversion_host_name]).to eq(conversion_host2.name)
     end
   end
 

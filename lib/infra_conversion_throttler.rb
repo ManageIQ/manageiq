@@ -34,7 +34,8 @@ class InfraConversionThrottler
 
         eligible_host = eligible_hosts.first
         _log.debug("-- Associating  #{eligible_host.name} to the task for '#{vm_name}'.")
-        job.migration_task.update_attributes!(:conversion_host => eligible_hosts.first)
+        job.migration_task.update!(:conversion_host => eligible_host)
+        job.migration_task.update_options(:conversion_host_name => eligible_host.name)
 
         _log.debug("-- Queuing :start signal for the job for '#{vm_name}': current state is '#{job.state}'.")
         job.queue_signal(:start)
