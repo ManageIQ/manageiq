@@ -558,7 +558,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def destroy(task_id = nil)
-    disable! if enabled?
+    disable!(:validate => false) if enabled?
 
     _log.info("Destroying #{child_managers.count} child_managers")
     child_managers.destroy_all
@@ -838,9 +838,10 @@ class ExtManagementSystem < ApplicationRecord
     errors.add(:base, "emstype #{self.class.name} is not supported for create") unless ExtManagementSystem.supported_types_and_descriptions_hash.key?(emstype)
   end
 
-  def disable!
+  def disable!(validate: true)
     _log.info("Disabling EMS [#{name}] id [#{id}].")
-    update!(:enabled => false)
+    self.enabled = false
+    save(:validate => validate)
     _log.info("Disabling EMS [#{name}] id [#{id}] successful.")
   end
 
