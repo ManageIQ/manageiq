@@ -19,23 +19,21 @@ RSpec.describe TransformationMapping, :v2v do
 
   let(:mapping_redhat) do
     FactoryBot.create(:transformation_mapping).tap do |tm|
-      tm.transformation_mapping_items = [
-        FactoryBot.create(:transformation_mapping_item,
-          :source                 => src_cluster_vmware,
-          :destination            => dst_cluster_redhat,
-          :transformation_mapping => tm
-        ),
-        FactoryBot.create(:transformation_mapping_item,
-          :source                 => src_storages_vmware.first,
-          :destination            => dst_storages_redhat.first,
-          :transformation_mapping => tm
-        ),
-        FactoryBot.create(:transformation_mapping_item,
-          :source                 => src_lan_vmware,
-          :destination            => dst_lan_redhat,
-          :transformation_mapping => tm
-        )
-      ]
+      FactoryBot.create(:transformation_mapping_item,
+        :source                 => src_cluster_vmware,
+        :destination            => dst_cluster_redhat,
+        :transformation_mapping => tm
+      )
+      FactoryBot.create(:transformation_mapping_item,
+        :source                 => src_storages_vmware.first,
+        :destination            => dst_storages_redhat.first,
+        :transformation_mapping => tm
+      )
+      FactoryBot.create(:transformation_mapping_item,
+        :source                 => src_lan_vmware,
+        :destination            => dst_lan_redhat,
+        :transformation_mapping => tm
+      )
     end
   end
 
