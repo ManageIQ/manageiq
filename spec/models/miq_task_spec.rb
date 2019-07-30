@@ -204,6 +204,27 @@ describe MiqTask do
       expect(message.zone).to eq(zone.name)
       expect(message.miq_task_id).to eq(tid)
     end
+
+    describe "#status_ok?" do
+      it "returns true for STATUS_OK" do
+        miq_task.update_status(MiqTask::STATE_QUEUED, MiqTask::STATUS_OK, "")
+        expect(miq_task.status_ok?).to be_truthy
+      end
+    end
+
+    describe "#status_error?" do
+      it "returns true for STATUS_ERROR" do
+        miq_task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "")
+        expect(miq_task.status_error?).to be_truthy
+      end
+    end
+
+    describe "#status_timeout?" do
+      it "returns true for STATUS_TIMEOUT" do
+        miq_task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_TIMEOUT, "")
+        expect(miq_task.status_timeout?).to be_truthy
+      end
+    end
   end
 
   context "when there are multiple MiqTasks" do
