@@ -154,8 +154,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
   virtual_column :memory_exceeds_current_host_headroom, :type => :string,     :uses => [:mem_cpu, {:host => [:hardware, :ext_management_system]}]
-  virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
-  virtual_column :num_disks,                            :type => :integer,    :uses => {:hardware => :disks}
   virtual_column :num_cpu,                              :type => :integer,    :uses => :hardware
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
@@ -1544,6 +1542,8 @@ class VmOrTemplate < ApplicationRecord
                    :to => :hardware, :allow_nil => true, :uses => {:hardware => :disks}, :type => :integer
 
   virtual_delegate :provisioned_storage, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer
+  virtual_delegate :num_disks, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer, :uses => {:hardware => :disks}
+  virtual_delegate :num_hard_disks, :to => :hardware, :allow_nil => true, :default => 0, :type => :integer, :uses => {:hardware => :hard_disks}
 
   def used_storage
     used_disk_storage.to_i + ram_size_in_bytes
@@ -1571,14 +1571,6 @@ class VmOrTemplate < ApplicationRecord
 
   def num_cpu
     hardware.try(:cpu_sockets) || 0
-  end
-
-  def num_disks
-    hardware.nil? ? 0 : hardware.disks.size
-  end
-
-  def num_hard_disks
-    hardware.nil? ? 0 : hardware.hard_disks.size
   end
 
   def has_rdm_disk
