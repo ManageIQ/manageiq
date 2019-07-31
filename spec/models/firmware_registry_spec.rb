@@ -61,4 +61,14 @@ describe FirmwareRegistry do
       end
     end
   end
+
+  describe '.create_firmware_registry' do
+    let(:registry) { double('registry') }
+    it 'creates registry and triggers refresh' do
+      expect(FirmwareRegistry::RestApiDepot).to receive(:validate_options) { |options| options }
+      expect(FirmwareRegistry::RestApiDepot).to receive(:do_create_firmware_registry).with(:a => 'A').and_return(registry)
+      expect(registry).to receive(:sync_fw_binaries_queue)
+      described_class.create_firmware_registry(:type => 'FirmwareRegistry::RestApiDepot', :a => 'A')
+    end
+  end
 end

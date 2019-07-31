@@ -31,6 +31,27 @@ class FirmwareRegistry::RestApiDepot < FirmwareRegistry
     end
   end
 
+  def self.do_create_firmware_registry(options)
+    transaction do
+      create!(:name => options[:name]).tap do |registry|
+        registry.authentication = Authentication.create!(
+          :userid   => options[:userid],
+          :password => ManageIQ::Password.try_decrypt(options[:password])
+        )
+        registry.endpoint = Endpoint.create!(:url => options[:url])
+      end
+    end
+  end
+
+  def self.validate_options(options)
+    %i[name userid password url].each do |opt|
+      raise MiqException::Error, "#{opt} is required" if options[opt].blank?
+    end
+    options
+  end
+
+  private
+
   def remote_binaries
     self.class.fetch_from_remote(
       endpoint.url,

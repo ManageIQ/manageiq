@@ -168,6 +168,52 @@ describe FirmwareRegistry::RestApiDepot do
     end
   end
 
+  describe '.do_create_firmware_registry' do
+    let(:options) do
+      {
+        :name     => 'name',
+        :url      => 'http://my-registry.com:1234/images',
+        :userid   => 'username',
+        :password => 'password'
+      }
+    end
+
+    context 'when options are valid' do
+      it 'creates new firmware registry' do
+        registry = described_class.do_create_firmware_registry(options)
+        expect(registry.name).to eq('name')
+        expect(registry.authentication).to have_attributes(:userid => 'username', :password => 'password')
+        expect(registry.endpoint).to have_attributes(:url => 'http://my-registry.com:1234/images')
+      end
+    end
+  end
+
+  describe '.validate_options' do
+    let(:options) do
+      {
+        :name     => 'name',
+        :url      => 'http://my-registry.com:1234/images',
+        :userid   => 'username',
+        :password => 'password'
+      }
+    end
+
+    it 'when options are valid' do
+      expect { described_class.validate_options(options) }.not_to raise_error
+    end
+
+    context 'when options are invalid' do
+      %i[name userid password url].each do |key|
+        context "(#{key} is missing)" do
+          before { options.delete(key) }
+          it 'error is raised' do
+            expect { described_class.validate_options(options) }.to raise_error(MiqException::Error)
+          end
+        end
+      end
+    end
+  end
+
   def with_vcr(suffix)
     path = "#{described_class.name.underscore}_#{suffix}"
     VCR.use_cassette(path, :match_requests_on => [:method, :path]) { yield }
