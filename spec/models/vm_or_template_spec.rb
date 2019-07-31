@@ -798,6 +798,44 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".num_cpu" do
+    context "with no hardware record" do
+      it "calculates" do
+        vm = FactoryBot.create(:vm_vmware)
+        expect(vm.num_cpu).to eq(0)
+      end
+    end
+
+    context "with empty hardware" do
+      let!(:vm) { FactoryBot.create(:vm_vmware, :hardware => hardware) }
+      let(:hardware) { FactoryBot.create(:hardware, :cpu_sockets => nil) }
+
+      it "bails ruby calculation" do
+        expect(vm.num_cpu).to eq(0)
+      end
+
+      it "bails database calculation" do
+        loaded_vm = VmOrTemplate.select(:id, :num_cpu).find(vm.id)
+        expect(loaded_vm.num_cpu).to eq(0)
+
+        expect(virtual_column_sql_value(VmOrTemplate, "num_cpu")).to be_nil # darn, wanted 0
+      end
+    end
+
+    context "with values" do
+      let!(:vm) { FactoryBot.create(:vm_vmware, :hardware => hardware) }
+      let(:hardware) { FactoryBot.create(:hardware, :cpu_sockets => 4) }
+
+      it "calculates in ruby" do
+        expect(vm.num_cpu).to eq(4)
+      end
+
+      it "calculates in the database" do
+        expect(virtual_column_sql_value(VmOrTemplate, "num_cpu")).to eq(4)
+      end
+    end
+  end
+
   describe ".num_disks", ".num_hard_disks" do
     let(:vm) { FactoryBot.create(:vm_vmware, :hardware => hardware) }
     let(:hardware) { FactoryBot.create(:hardware, :memory_mb => 10) }
