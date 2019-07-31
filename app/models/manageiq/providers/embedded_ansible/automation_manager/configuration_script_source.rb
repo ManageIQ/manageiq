@@ -94,7 +94,6 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   def checkout_git_repository(target_directory)
     git_repository.update_repo
     git_repository.checkout(scm_branch, target_directory)
-    Ansible::Content.new(target_directory).fetch_galaxy_roles
   end
 
   ERROR_MAX_SIZE = 50.kilobytes
