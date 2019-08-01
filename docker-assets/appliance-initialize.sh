@@ -14,7 +14,7 @@ function create_v2_key() {
 
 echo "== Checking MIQ database status =="
 
-[[ -d /var/opt/rh/rh-postgresql95/lib/pgsql/data/base ]]
+[[ -d /var/lib/pgsql/data/base ]]
 if [ $? -eq 0 ]; then
   echo "** DB already initialized"
   exit 0
