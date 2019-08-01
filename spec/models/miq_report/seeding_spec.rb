@@ -108,6 +108,20 @@ describe MiqReport do
         expect(described_class.where(:name => custom_compare.name).count).to eq(1)
         expect(custom_compare.reload.rpt_type).to eq("Custom")
       end
+
+      it "updates attributes of existing record if yaml renamed" do
+        old_yaml_file = "520_Events - Policy/110_Policy Events.yaml"
+        new_yaml_file = "520_Events - Policy/some_new_name.yaml"
+        described_class.seed
+        report = MiqReport.find_by(:name => "Policy Events for Last Week")
+        expect(report.filename).to eq(old_yaml_file)
+
+        FileUtils.mv(reports_dir.join(old_yaml_file), reports_dir.join(new_yaml_file))
+        described_class.seed
+
+        report = MiqReport.find_by(:name => "Policy Events for Last Week")
+        expect(report.filename).to eq(new_yaml_file)
+      end
     end
   end
 end
