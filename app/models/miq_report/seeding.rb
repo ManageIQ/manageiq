@@ -7,9 +7,12 @@ module MiqReport::Seeding
   module ClassMethods
     def seed
       transaction do
+        reports = where(:rpt_type => 'Default').where.not(:filename => nil).index_by do |f|
+          seed_filename(f.filename)
+        end
         # seeding from files, :filename attribute of existing record may be changed in this process
         seed_files.each do |f|
-          seed_record(f, MiqReport.find_by(:filename => seed_filename(f)))
+          seed_record(f, reports[seed_filename(f)])
         end
 
         # now remove Default reports which are not suplied as yaml anymore
