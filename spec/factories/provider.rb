@@ -5,7 +5,7 @@ FactoryBot.define do
   end
 
   factory :provider_foreman, :class => "ManageIQ::Providers::Foreman::Provider", :parent => :provider do
-    url { "example.com" }
+    sequence(:url) { |n| "example_#{seq_padded_for_sorting(n)}.com" }
 
     after(:build) do |provider|
       provider.authentications << FactoryBot.build(:authentication,
