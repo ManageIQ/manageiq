@@ -75,7 +75,7 @@ module MiqReport::Seeding
           if duplicate&.rpt_type == "Custom"
             _log.warn("A custom report already exists with the name #{duplicate.name.inspect}.  Skipping...")
           elsif duplicate
-            _log.warn("A standard report named '#{duplicate.name.inspect}' loaded from '#{duplicate.filename}' already exists. Updating attributes of existing report...")
+            _log.warn("A default report named '#{duplicate.name.inspect}' loaded from '#{duplicate.filename}' already exists. Updating attributes of existing report...")
             duplicate.update!(attrs)
           else
             raise
