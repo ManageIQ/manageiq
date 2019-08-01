@@ -21,7 +21,7 @@ describe Ansible::Runner do
 
         expect(method).to eq("run")
         expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => playbook)
+        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
 
         hosts = File.read(File.join(dir, "inventory", "hosts"))
         expect(hosts).to eq("localhost")
@@ -31,6 +31,8 @@ describe Ansible::Runner do
 
         expect(File.exist?(File.join(dir, "env", "cmdline"))).to be_falsey
       end.and_return(result)
+
+      expect_galaxy_roles_fetched
 
       described_class.run(env_vars, extra_vars, playbook)
     end
@@ -44,7 +46,7 @@ describe Ansible::Runner do
 
         expect(method).to eq("run")
         expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => playbook)
+        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
 
         hosts = File.read(File.join(dir, "inventory", "hosts"))
         expect(hosts).to eq("localhost")
@@ -56,6 +58,8 @@ describe Ansible::Runner do
         expect(cmdline).to eq("--tags #{tags}")
       end.and_return(result)
 
+      expect_galaxy_roles_fetched
+
       described_class.run(env_vars, extra_vars, playbook, :tags => tags)
     end
 
@@ -64,7 +68,7 @@ describe Ansible::Runner do
         expect(command).to eq("ansible-runner")
 
         _method, _dir, _json, args = options[:params]
-        expect(args).to eq(:ident => "result", :playbook => playbook, "-vvvvv" => nil)
+        expect(args).to eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my", "-vvvvv" => nil)
       end.and_return(result)
 
       described_class.run(env_vars, extra_vars, playbook, :verbosity => 6)
@@ -96,7 +100,7 @@ describe Ansible::Runner do
 
           expect(method).to eq("run")
           expect(json).to   eq(:json)
-          expect(args).to   eq(:ident => "result", :playbook => playbook)
+          expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
 
           hosts = File.read(File.join(dir, "inventory", "hosts"))
           expect(hosts).to eq("localhost")
@@ -104,6 +108,8 @@ describe Ansible::Runner do
           extravars = JSON.parse(File.read(File.join(dir, "env", "extravars")))
           expect(extravars).to eq("name" => "john's server", "ansible_connection" => "local")
         end.and_return(result)
+
+        expect_galaxy_roles_fetched
 
         described_class.run(env_vars, extra_vars, playbook)
       end
@@ -126,7 +132,7 @@ describe Ansible::Runner do
 
         expect(method).to eq("start")
         expect(json).to   eq(:json)
-        expect(args).to   eq(:ident => "result", :playbook => playbook)
+        expect(args).to   eq(:ident => "result", :playbook => "playbook", :project_dir => "/path/to/my")
 
         hosts = File.read(File.join(dir, "inventory", "hosts"))
         expect(hosts).to eq("localhost")
@@ -136,6 +142,8 @@ describe Ansible::Runner do
 
         expect(File.exist?(File.join(dir, "env", "cmdline"))).to be_falsey
       end.and_return(result)
+
+      expect_galaxy_roles_fetched
 
       runner_result = described_class.run_async(env_vars, extra_vars, playbook)
       expect(runner_result).kind_of?(Ansible::Runner::ResponseAsync)
@@ -256,5 +264,11 @@ describe Ansible::Runner do
       expect(MiqQueue.count).to eq(1)
       expect(MiqQueue.first.zone).to eq(zone.name)
     end
+  end
+
+  def expect_galaxy_roles_fetched
+    content_double = instance_double(Ansible::Content)
+    expect(Ansible::Content).to receive(:new).with("/path/to/my").and_return(content_double)
+    expect(content_double).to receive(:fetch_galaxy_roles)
   end
 end
