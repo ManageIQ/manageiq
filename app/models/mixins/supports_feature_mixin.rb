@@ -144,7 +144,8 @@ module SupportsFeatureMixin
     :volume_multiattachment              => 'Volume Multiattachment',
     :volume_resizing                     => 'Volume Resizing',
     :change_password                     => 'Change Password',
-    :volume_availability_zones           => 'Volume Availability Zones'
+    :volume_availability_zones           => 'Volume Availability Zones',
+    :assume_role                         => 'Assume Role',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
