@@ -115,6 +115,7 @@ class ExtManagementSystem < ApplicationRecord
   serialize :options
 
   supports :refresh_ems
+  supports_not :assume_role
 
   def hostname_uniqueness_valid?
     return unless hostname_required?
