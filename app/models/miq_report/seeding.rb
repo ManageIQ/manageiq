@@ -15,7 +15,7 @@ module MiqReport::Seeding
           seed_record(f, reports[seed_filename(f)])
         end
 
-        # now remove Default reports which are not suplied as yaml anymore
+        # now remove Default reports which are not supplied as yaml anymore
         reports = where(:rpt_type => 'Default').where.not(:filename => nil).index_by do |f|
           seed_filename(f.filename)
         end
