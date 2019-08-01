@@ -190,6 +190,25 @@ describe MiqReportResult do
     end
   end
 
+  describe '#report_results_blank?' do
+    let(:report_result) { FactoryBot.create(:miq_report_result) }
+    subject { report_result.report_results_blank? }
+
+    context 'report has a binary blob' do
+      let(:binary_blob) { FactoryBot.create(:binary_blob) }
+      before { report_result.binary_blob = binary_blob }
+
+      context 'binary blob is empty' do
+        it { is_expected.to be_truthy }
+      end
+
+      context 'binary blob has parts' do
+        before { binary_blob.binary = "foo" }
+        it { is_expected.to be_falsey }
+      end
+    end
+  end
+
   describe "serializing and deserializing report results" do
     it "can serialize and deserialize an MiqReport" do
       report = FactoryBot.build(:miq_report)
