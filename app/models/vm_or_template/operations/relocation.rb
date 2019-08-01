@@ -106,8 +106,25 @@ module VmOrTemplate::Operations::Relocation
     run_command_via_parent(:vm_move_into_folder, :folder => folder)
   end
 
-  def move_into_folder(folder)
+  def move_into_folder(folder_or_id)
+    folder = folder_or_id.kind_of?(Integer) ? EmsFolder.find(folder_or_id) : folder_or_id
     raw_move_into_folder(folder)
+  end
+
+  def move_into_folder_queue(userid, folder)
+    task_opts = {
+      :action => "moving Vm to Folder #{folder.name} for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'move_into_folder',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [folder.id]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def migrate_via_ids(host_id, pool_id = nil, priority = "defaultPriority", state = nil)
