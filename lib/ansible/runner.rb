@@ -216,6 +216,7 @@ module Ansible
         params = runner_params(base_dir, ansible_runner_method, playbook_or_role_args, verbosity)
 
         begin
+          fetch_galaxy_roles(playbook_or_role_args)
           result = AwesomeSpawn.run("ansible-runner", :env => env_vars_hash, :params => params)
           res = response(base_dir, ansible_runner_method, result)
         ensure
@@ -254,6 +255,12 @@ module Ansible
         runner_args[:role_skip_facts] = nil if runner_args.delete(:role_skip_facts)
         runner_args[:ident] = "result"
 
+        playbook = runner_args.delete(:playbook)
+        if playbook
+          runner_args[:playbook]    = File.basename(playbook)
+          runner_args[:project_dir] = File.dirname(playbook)
+        end
+
         if verbosity.to_i > 0
           v_flag = "-#{"v" * verbosity.to_i.clamp(1, 5)}"
           runner_args[v_flag] = nil
@@ -284,6 +291,13 @@ module Ansible
         errors << "roles path doesn't exist: #{roles_path}" if roles_path && !File.exist?(roles_path)
 
         raise ArgumentError, errors.join("; ") if errors.any?
+      end
+
+      def fetch_galaxy_roles(playbook_or_role_args)
+        return unless playbook_or_role_args[:playbook]
+
+        playbook_dir = File.dirname(playbook_or_role_args[:playbook])
+        Ansible::Content.new(playbook_dir).fetch_galaxy_roles
       end
 
       def credentials_info(credentials, base_dir)
