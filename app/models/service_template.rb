@@ -90,7 +90,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def self.with_additional_tenants
-    includes(:service_template_tenants => :tenant)
+    references(table_name.to_sym, :tenants).includes(:service_template_tenants => :tenant)
   end
 
   def self.catalog_item_types
