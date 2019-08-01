@@ -59,7 +59,16 @@ class MiqReportResult < ApplicationRecord
     if miq_task
       miq_task.human_status
     else
-      report_results.blank? ? "Error" : "Complete"
+      report_results_blank? ? "Error" : "Complete"
+    end
+  end
+
+  # This method doesn't run through all binary blob parts to determine if it has any
+  def report_results_blank?
+    if binary_blob
+      binary_blob.parts.zero?
+    elsif report.kind_of?(MiqReport)
+      report.blank?
     end
   end
 
