@@ -10,7 +10,7 @@
   :rbac_feature_name: miq_report
   :startup: true
 - :name: miq_capacity_utilization
-  :description: Cloud Intel / Utilization
+  :description: Overview / Utilization
   :url: /utilization
   :rbac_feature_name: utilization
   :startup: true
