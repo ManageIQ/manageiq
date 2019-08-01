@@ -6,8 +6,8 @@ FactoryBot.define do
 
     trait :with_endpoints do
       after(:create) do |binary|
-        binary.endpoints << FactoryBot.create(:endpoint, :url => 'http://test.binary.1', :resource => binary)
-        binary.endpoints << FactoryBot.create(:endpoint, :url => 'http://test.binary.2', :resource => binary)
+        binary.endpoints << FactoryBot.create(:endpoint, :resource => binary)
+        binary.endpoints << FactoryBot.create(:endpoint, :resource => binary)
       end
     end
   end
