@@ -12,7 +12,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Credential < Mana
   EXTRA_ATTRIBUTES = {}.freeze
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
 
-  FRIENDLY_NAME = "Ansible Automation Inside Credential".freeze
+  FRIENDLY_NAME = "Embedded Ansible Credential".freeze
 
   include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
 
