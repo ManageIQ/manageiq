@@ -6,6 +6,7 @@ class MiqWorker
       def supports_systemd?
         return unless worker_settings[:systemd_enabled]
         require "dbus/systemd"
+        true
       rescue LoadError
         false
       end
