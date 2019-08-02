@@ -33,7 +33,7 @@ describe Storage do
     allow(Storage).to receive_messages(:scan_watchdog_interval => scan_watchdog_interval)
     start = Time.parse("Sun March 10 01:00:00 UTC 2010")
     Timecop.travel(start) do
-      expect(Storage.scan_watchdog_deliver_on - (start + scan_watchdog_interval)).to be_within(0.001).of(0.0)
+      expect(Storage.scan_watchdog_deliver_on - (start + scan_watchdog_interval)).to be_within(1).of(0.0)
     end
   end
 
