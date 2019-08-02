@@ -5,16 +5,15 @@ ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=
 
 RUN yum -y install --setopt=tsflags=nodocs \
                    memcached               \
-                   rh-postgresql95-postgresql-server \
-                   rh-postgresql95-postgresql-pglogical \
-                   rh-postgresql95-repmgr  \
+                   postgresql-server       \
+                   repmgr10                \
                    mod_ssl                 \
                    openssh-clients         \
                    openssh-server          \
                    &&                      \
     yum clean all
 
-VOLUME [ "/var/opt/rh/rh-postgresql95/lib/pgsql/data" ]
+VOLUME [ "/var/lib/pgsql/data" ]
 
 # Initialize SSH
 RUN ssh-keygen -q -t dsa -N '' -f /etc/ssh/ssh_host_dsa_key && \
