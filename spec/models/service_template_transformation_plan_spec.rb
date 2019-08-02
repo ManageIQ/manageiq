@@ -9,13 +9,6 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
     it { expect(subject.request_type).to eq("transformation_plan") }
   end
 
-  describe '#validate_order' do
-    it 'always allows a plan to be ordered' do
-      expect(subject.validate_order).to be_truthy
-      expect(subject.orderable?).to be_truthy # alias
-    end
-  end
-
   let(:transformation_mapping) { FactoryBot.create(:transformation_mapping) }
   let(:transformation_mapping2) { FactoryBot.create(:transformation_mapping) }
   let(:apst) { FactoryBot.create(:service_template_ansible_playbook) }
@@ -109,6 +102,22 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
 
   let(:miq_requests) { [FactoryBot.create(:service_template_transformation_plan_request, :request_state => "finished")] }
   let(:miq_requests_with_in_progress_request) { [FactoryBot.create(:service_template_transformation_plan_request, :request_state => "active")] }
+
+  describe '#validate_order' do
+    let(:service_template) { described_class.create_catalog_item(catalog_item_options) }
+
+    it 'allows a plan to be ordered if all VMs have not been migrated' do
+      expect(service_template.validate_order).to be_truthy
+      expect(service_template.orderable?).to be_truthy # alias
+    end
+
+    it 'denies a plan from bring ordered if all VMs have been migrated' do
+      vm1.tag_add('transformation_status/migrated', :ns => '/managed')
+      vm2.tag_add('transformation_status/migrated', :ns => '/managed')
+      expect(service_template.validate_order).to be_falsey
+      expect(service_template.orderable?).to be_falsey # alias
+    end
+  end
 
   describe '.public_service_templates' do
     it 'display public service templates' do
