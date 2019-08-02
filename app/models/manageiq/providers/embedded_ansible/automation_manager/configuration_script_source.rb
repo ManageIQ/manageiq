@@ -8,7 +8,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   default_value_for :scm_type,   "git"
   default_value_for :scm_branch, "master"
 
-  belongs_to :git_repository, :dependent => :destroy
+  belongs_to :git_repository, :autosave => true, :dependent => :destroy
+  before_validation :sync_git_repository
 
   include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
 
@@ -46,12 +47,35 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def git_repository
-    super || begin
-      transaction do
-        update!(:git_repository => GitRepository.create!(:url => scm_url))
+    (super || (ensure_git_repository && super)).tap { |r| sync_git_repository(r) }
+  end
+
+  private def ensure_git_repository
+    transaction do
+      repo = GitRepository.create!(attrs_for_sync_git_repository)
+      if new_record?
+        self.git_repository_id = repo.id
+      elsif !update_columns(:git_repository_id => repo.id) # rubocop:disable Rails/SkipsModelValidations
+        raise ActiveRecord::RecordInvalid, "git_repository_id could not be set"
       end
-      super
     end
+    true
+  end
+
+  private def sync_git_repository(git_repository = nil)
+    return unless name_changed? || scm_url_changed? || authentication_id_changed?
+
+    git_repository ||= self.git_repository
+    git_repository.attributes = attrs_for_sync_git_repository
+  end
+
+  private def attrs_for_sync_git_repository
+    {
+      :name              => name,
+      :url               => scm_url,
+      :authentication_id => authentication_id,
+      :verify_ssl        => OpenSSL::SSL::VERIFY_NONE
+    }
   end
 
   def sync
