@@ -1,7 +1,7 @@
 describe PxeServer do
   before do
     EvmSpecHelper.local_miq_server
-    @pxe_server = FactoryBot.create(:pxe_server, :uri_prefix => "nfs", :uri => "nfs:///#{@mnt_point}")
+    @pxe_server = FactoryBot.create(:pxe_server)
   end
 
   context "#sync_images_queue" do
@@ -86,9 +86,9 @@ describe PxeServer do
 
       it "with existing data" do
         @pxe_server.pxe_images = [
-          FactoryBot.create(:pxe_image_pxelinux, :path => "XXX",     :name => "XXX"),
-          FactoryBot.create(:pxe_image_pxelinux, :path => "default", :name => "XXX"),
-          FactoryBot.create(:pxe_image_pxelinux, :path => "default", :name => "iPXE", :kernel => "XXX"),
+          FactoryBot.create(:pxe_image_pxelinux),
+          FactoryBot.create(:pxe_image_pxelinux),
+          FactoryBot.create(:pxe_image_pxelinux),
         ]
 
         @pxe_server.sync_images
@@ -218,9 +218,9 @@ PXE
 
       it "with existing images" do
         @pxe_server.pxe_images = [
-          FactoryBot.create(:pxe_image_ipxe, :path => "XXX",               :name => "XXX"),
-          FactoryBot.create(:pxe_image_ipxe, :path => "00-50-56-91-79-d5", :name => "XXX"),
-          FactoryBot.create(:pxe_image_ipxe, :path => "00-50-56-91-79-d5", :name => "00-50-56-91-79-d5", :kernel => "XXX")
+          FactoryBot.create(:pxe_image_ipxe),
+          FactoryBot.create(:pxe_image_ipxe, :path => "00-50-56-91-79-d5"),
+          FactoryBot.create(:pxe_image_ipxe, :path => "00-50-56-91-79-d5")
         ]
 
         @pxe_server.sync_images
