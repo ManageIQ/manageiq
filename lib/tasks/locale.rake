@@ -187,6 +187,23 @@ namespace :locale do
     system('rm', '-rf', tmp_dir)
   end
 
+  desc "Show changes in gettext strings since last catalog update"
+  task "report_changes", [:verbose] do |_t, args|
+    require 'poparser'
+
+    old_pot = PoParser.parse(File.read(Rails.root.join('locale', 'manageiq.pot'))).to_h.collect { |item| item[:msgid] }.sort
+    Rake::Task['locale:update_all'].invoke
+    new_pot = PoParser.parse(File.read(Rails.root.join('locale', 'manageiq.pot'))).to_h.collect { |item| item[:msgid] }.sort
+    diff = new_pot - old_pot
+    puts "--------------------------------------------------"
+    puts "Current string / word count: %{str} / %{word}" % {:str => old_pot.length, :word => old_pot.join(' ').split.size}
+    puts "Updated string / word count: %s{str} / %{word}" % {:str => new_pot.length, :word => new_pot.join(' ').split.size}
+    puts
+    puts "New string / word count: %{str} / %{word}" % {:str => diff.length, :word => diff.join(' ').split.size}
+    puts "--------------------------------------------------"
+    puts "New strings: ", diff if args.verbose == 'verbose'
+  end
+
   desc "Extract plugin strings - execute as: rake locale:plugin:find[plugin_name]"
   task "plugin:find", :engine do |_, args|
     unless args[:engine]
