@@ -854,8 +854,8 @@ describe Tenant do
     end
 
     context 'dynamic product features' do
-      let!(:miq_product_feature_1) { FactoryBot.create(:miq_product_feature, :name => "Edit1", :description => "XXX1", :identifier => 'dialog_edit_editor') }
-      let!(:miq_product_feature_2) { FactoryBot.create(:miq_product_feature, :name => "Edit2", :description => "XXX2", :identifier => 'dialog_new_editor') }
+      let!(:miq_product_feature_1) { FactoryBot.create(:miq_product_feature, :identifier => 'dialog_edit_editor') }
+      let!(:miq_product_feature_2) { FactoryBot.create(:miq_product_feature, :identifier => 'dialog_new_editor') }
 
       let(:tenant_product_feature) { FactoryBot.create(:tenant) }
 
