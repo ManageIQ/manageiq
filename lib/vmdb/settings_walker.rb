@@ -50,6 +50,13 @@ module Vmdb
         walk_passwords(settings) { |k, _v, h| h[k] = "********" }
       end
 
+      # Filter out any password attributes from the settings
+      #
+      # @param settings (see .walk)
+      def filter_passwords!(settings)
+        walk_passwords(settings) { |k, _v, h| h.respond_to?(:delete_field) ? h.delete_field(k) : h.delete(k) }
+      end
+
       # Walks the settings and decrypts passwords it finds
       #
       # @param settings (see .walk)
