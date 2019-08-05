@@ -15,23 +15,12 @@ class ManageIQ::Providers::Inventory::Persister
 
     @collections = {}
 
-    # call every collection method at least once in order to be initialized
-    # otherwise, if the method was not called during parsing it will not be set
-    self.class.supported_collections.each do |name|
-      public_send(name)
-    end
-
     initialize_inventory_collections
   end
 
   # Persists InventoryCollection objects into the DB
   def persist!
     InventoryRefresh::SaveInventory.save_inventory(manager, inventory_collections)
-  end
-
-  # @return [Array<Symbol>] array of InventoryCollection object names
-  def self.supported_collections
-    @supported_collections ||= Concurrent::Array.new
   end
 
   # Returns Persister object loaded from a passed JSON
