@@ -470,15 +470,28 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:host_redhat, :ext_management_system => dst_ems)) }
 
         let(:mapping) do
-          FactoryBot.create(
-            :transformation_mapping,
-            :transformation_mapping_items => [
-              TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster),
-              TransformationMappingItem.new(:source => src_storage, :destination => dst_storage),
-              TransformationMappingItem.new(:source => src_lan_1, :destination => dst_lan_1),
-              TransformationMappingItem.new(:source => src_lan_2, :destination => dst_lan_2)
-            ]
-          )
+          FactoryBot.create(:transformation_mapping).tap do |tm|
+            FactoryBot.create(:transformation_mapping_item,
+              :source                 => src_cluster,
+              :destination            => dst_cluster,
+              :transformation_mapping => tm
+            )
+            FactoryBot.create(:transformation_mapping_item,
+              :source                 => src_storage,
+              :destination            => dst_storage,
+              :transformation_mapping => tm
+            )
+            FactoryBot.create(:transformation_mapping_item,
+              :source                 => src_lan_1,
+              :destination            => dst_lan_1,
+              :transformation_mapping => tm
+            )
+            FactoryBot.create(:transformation_mapping_item,
+              :source                 => src_lan_2,
+              :destination            => dst_lan_2,
+              :transformation_mapping => tm
+            )
+          end
         end
 
         before do
