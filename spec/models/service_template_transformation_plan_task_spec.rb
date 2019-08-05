@@ -330,8 +330,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
     context 'source is vmwarews' do
       let(:src_ems) { FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone)) }
-      let(:src_host) { FactoryBot.create(:host_vmware_esx, :ext_management_system => src_ems, :ipaddress => '10.0.0.1') }
-      let(:src_storage) { FactoryBot.create(:storage, :ext_management_system => src_ems, :name => 'stockage récent') }
+      let(:src_host) { FactoryBot.create(:host_vmware_esx, :ems_cluster => src_cluster, :ipaddress => '10.0.0.1') }
+      let(:src_storage) { FactoryBot.create(:storage, :hosts => [src_host], :name => 'stockage récent') }
 
       let(:src_lan_1) { FactoryBot.create(:lan) }
       let(:src_lan_2) { FactoryBot.create(:lan) }
