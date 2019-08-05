@@ -26,10 +26,13 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     let(:conversion_host) { FactoryBot.create(:conversion_host, :skip_validate, :resource => host) }
 
     let(:mapping) do
-      FactoryBot.create(
-        :transformation_mapping,
-        :transformation_mapping_items => [TransformationMappingItem.new(:source => src, :destination => dst)]
-      )
+      FactoryBot.create(:transformation_mapping).tap do |tm|
+        FactoryBot.create(:transformation_mapping_item,
+          :source                 => src,
+          :destination            => dst,
+          :transformation_mapping => tm
+        )
+      end
     end
 
     let(:catalog_item_options) do
@@ -256,10 +259,13 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     let(:dst_security_group) { FactoryBot.create(:security_group) }
 
     let(:mapping) do
-      FactoryBot.create(
-        :transformation_mapping,
-        :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
-      )
+      FactoryBot.create(:transformation_mapping).tap do |tm|
+        FactoryBot.create(:transformation_mapping_item,
+          :source                 => src_cluster,
+          :destination            => dst_cluster,
+          :transformation_mapping => tm
+        )
+      end
     end
 
     let(:catalog_item_options) do
