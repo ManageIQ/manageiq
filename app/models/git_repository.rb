@@ -2,6 +2,7 @@ require "rugged"
 
 class GitRepository < ApplicationRecord
   include AuthenticationMixin
+  belongs_to :authentication
 
   GIT_REPO_DIRECTORY = Rails.root.join('data/git_repos')
 
@@ -158,9 +159,9 @@ class GitRepository < ApplicationRecord
   def worktree_params
     params = {:path => directory_name}
     params[:certificate_check] = method(:self_signed_cert_cb) if verify_ssl == OpenSSL::SSL::VERIFY_NONE
-    if authentications.any?
-      params[:username] = default_authentication.userid
-      params[:password] = default_authentication.password
+    if (auth = authentication || default_authentication)
+      params[:username] = auth.userid
+      params[:password] = auth.password
     end
     params
   end

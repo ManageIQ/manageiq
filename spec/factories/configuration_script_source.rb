@@ -9,5 +9,7 @@ FactoryBot.define do
 
   factory :embedded_ansible_configuration_script_source,
           :parent => :configuration_script_source,
-          :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource"
+          :class  => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource" do
+    scm_url { "https://example.com/foo.git" }
+  end
 end
