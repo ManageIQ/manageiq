@@ -304,7 +304,7 @@ class MiqReport < ApplicationRecord
   end
 
   def self.default_use_sql_view
-    false
+    ::Settings.reporting.use_sql_view
   end
 
   private
