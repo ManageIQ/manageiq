@@ -473,8 +473,9 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
         let(:dst_hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => dst_cluster) }
         let(:dst_storages) { FactoryBot.create_list(:storage, 1, :hosts => dst_hosts) }
-        let(:dst_lan_1) { FactoryBot.create(:lan) }
-        let(:dst_lan_2) { FactoryBot.create(:lan) }
+        let(:dst_switch) { FactoryBot.create(:switch, :host => dst_hosts.first) }
+        let(:dst_lan_1) { FactoryBot.create(:lan, :switch => dst_switch) }
+        let(:dst_lan_2) { FactoryBot.create(:lan, :switch => dst_switch) }
         let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:host_redhat, :ext_management_system => dst_ems)) }
 
         let(:mapping) do
