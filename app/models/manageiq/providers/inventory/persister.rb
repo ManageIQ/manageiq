@@ -52,6 +52,27 @@ class ManageIQ::Providers::Inventory::Persister
     collections.keys
   end
 
+  def strategy
+    nil
+  end
+
+  def saver_strategy
+    :default
+  end
+
+  # Persisters for targeted refresh can override to true
+  def targeted?
+    false
+  end
+
+  def parent
+    manager.presence
+  end
+
+  def assert_graph_integrity?
+    !Rails.env.production?
+  end
+
   # @return [InventoryRefresh::InventoryCollection] returns a defined InventoryCollection or undefined method
   def method_missing(method_name, *arguments, &block)
     if inventory_collections_names.include?(method_name)

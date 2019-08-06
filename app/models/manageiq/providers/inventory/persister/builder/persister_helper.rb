@@ -89,27 +89,6 @@ module ManageIQ::Providers::Inventory::Persister::Builder::PersisterHelper
     opts.merge(extra_settings)
   end
 
-  def strategy
-    nil
-  end
-
-  def saver_strategy
-    :default
-  end
-
-  # Persisters for targeted refresh can override to true
-  def targeted?
-    false
-  end
-
-  def parent
-    manager.presence
-  end
-
-  def assert_graph_integrity?
-    !Rails.env.production?
-  end
-
   # @return [Hash] kwargs shared for all InventoryCollection objects
   def shared_options
     {
