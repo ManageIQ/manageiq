@@ -49,8 +49,8 @@ describe MiqScheduleWorker::Scheduler do
     end
 
     context "with different parmeters" do
-      it "catches an error on nil first arg" do
-        expect(logger).to receive(:error).once.with(/scheduler_spec.rb/)
+      it "interprets first arg nil as trigger to skip scheduling" do
+        expect(logger).to receive(:warn).once.with(/Duration is empty, scheduling ingnored/)
         scheduler.schedule_every(nil) {}
       end
 
