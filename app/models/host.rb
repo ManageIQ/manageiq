@@ -24,16 +24,6 @@ class Host < ApplicationRecord
     nil               => "Unknown",
   }.freeze
 
-  HOST_DISCOVERY_TYPES = {
-    'vmware' => 'esx',
-    'ipmi'   => 'ipmi'
-  }.freeze
-
-  HOST_CREATE_OS_TYPES = {
-    'VMware ESX' => 'linux_generic',
-    # 'Microsoft Hyper-V' => 'windows_generic'
-  }.freeze
-
   validates_presence_of     :name
   validates_inclusion_of    :user_assigned_os, :in => ["linux_generic", "windows_generic", nil]
   validates_inclusion_of    :vmm_vendor, :in => VENDOR_TYPES.keys
@@ -1701,12 +1691,18 @@ class Host < ApplicationRecord
   # Host Discovery Types and Platforms
 
   def self.host_discovery_types
-    HOST_DISCOVERY_TYPES.values
+    # TODO: This feature has been removed, once the UI no longer calls this
+    # method we can delete it
+    []
   end
+  Vmdb::Deprecation.deprecate_methods(self, :host_discovery_types)
 
   def self.host_create_os_types
-    HOST_CREATE_OS_TYPES
+    # TODO: This feature has been removed, once the UI no longer calls this
+    # method we can delete it
+    []
   end
+  Vmdb::Deprecation.deprecate_methods(self, :host_create_os_types)
 
   def has_compliance_policies?
     _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "host_compliance_check")

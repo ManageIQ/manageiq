@@ -189,14 +189,6 @@ describe Host do
     it("nil vendor")   { expect(FactoryBot.build(:host, :vmm_vendor => nil).vmm_vendor_display).to eq("Unknown") }
   end
 
-  it ".host_discovery_types" do
-    expect(Host.host_discovery_types).to match_array ["esx", "ipmi"]
-  end
-
-  it ".host_create_os_types" do
-    expect(Host.host_create_os_types).to eq("VMware ESX" => "linux_generic")
-  end
-
   context "host validation" do
     before do
       EvmSpecHelper.local_miq_server
