@@ -470,7 +470,9 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
       context 'destination is rhevm' do
         let(:dst_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
-        let(:dst_storage) { FactoryBot.create(:storage) }
+        let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
+        let(:dst_hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => dst_cluster) }
+        let(:dst_storages) { FactoryBot.create_list(:storage, 1, :hosts => dst_hosts) }
         let(:dst_lan_1) { FactoryBot.create(:lan) }
         let(:dst_lan_2) { FactoryBot.create(:lan) }
         let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:host_redhat, :ext_management_system => dst_ems)) }
@@ -484,7 +486,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             )
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_storage,
-              :destination            => dst_storage,
+              :destination            => dst_storages.first,
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
@@ -538,7 +540,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vmware_password     => 'esx_passwd',
               :rhv_url             => "https://#{dst_ems.hostname}/ovirt-engine/api",
               :rhv_cluster         => dst_cluster.name,
-              :rhv_storage         => dst_storage.name,
+              :rhv_storage         => dst_storages.first.name,
               :rhv_password        => dst_ems.authentication_password,
               :source_disks        => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings    => task_1.network_mappings,
@@ -562,7 +564,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :transport_method    => 'ssh',
               :rhv_url             => "https://#{dst_ems.hostname}/ovirt-engine/api",
               :rhv_cluster         => dst_cluster.name,
-              :rhv_storage         => dst_storage.name,
+              :rhv_storage         => dst_storages.first.name,
               :rhv_password        => dst_ems.authentication_password,
               :source_disks        => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings    => task_1.network_mappings,

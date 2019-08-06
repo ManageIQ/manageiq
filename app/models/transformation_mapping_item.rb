@@ -8,8 +8,8 @@ class TransformationMappingItem < ApplicationRecord
   validate :source_cluster,      :if => -> { source.kind_of?(EmsCluster) }
   validate :destination_cluster, :if => -> { destination.kind_of?(EmsCluster) || destination.kind_of?(CloudTenant) }
 
-  #validate :source_datastore,      :if => -> { source.kind_of?(Storage) }
-  #validate :destination_datastore, :if => -> { destination.kind_of?(Storage) || destination.kind_of?(CloudVolume) }
+  validate :source_datastore,      :if => -> { source.kind_of?(Storage) }
+  validate :destination_datastore, :if => -> { destination.kind_of?(Storage) || destination.kind_of?(CloudVolume) }
 
   def destination_datastore
     if destination.kind_of?(Storage) # Redhat
