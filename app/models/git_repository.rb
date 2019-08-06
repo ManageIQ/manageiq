@@ -4,6 +4,9 @@ class GitRepository < ApplicationRecord
   include AuthenticationMixin
 
   GIT_REPO_DIRECTORY = Rails.root.join('data/git_repos')
+  LOCKFILE_DIR       = GIT_REPO_DIRECTORY.join("locks")
+
+  attr_reader :git_lock
 
   validates :url, :format => URI::regexp(%w(http https file)), :allow_nil => false
 
@@ -86,6 +89,31 @@ class GitRepository < ApplicationRecord
     @updated_repo = true
   end
 
+  # Configures a file lock in LOCKFILE_DIR so that only a single process has
+  # access to make changes to the `GitWorktree` at a time.  Assumes the record
+  # has been saved, since there is no way store (clone, fetch, pull, etc.) the
+  # git data to disk if there isn't a `id`.
+  #
+  # Only a single `@git_lock` can be aquired per-process, and do avoid
+  # deadlocks, his method is just a passthrough if `@git_lock` has already been
+  # defined (another method has already started a `git_transaction`.
+  #
+  # This means that you can surround a couple of actions with this method, and
+  # the lock will only be enforced on the top level.
+  #
+  # NOTE: However, it is worth noting that if two threads in the same process
+  # try to share the same instance while using `git_transation` is not thread
+  # safe, so avoid sharing `GitRepository` objects across multiple threads
+  # (chances are you won't run into this scenario, but commenting just in case)
+  #
+  # Return value is the result of the yielded block
+  def git_transaction
+    should_unlock = acquire_git_lock
+    yield
+  ensure
+    release_git_lock if should_unlock
+  end
+
   private
 
   def ensure_refreshed
@@ -110,7 +138,7 @@ class GitRepository < ApplicationRecord
   end
 
   def refresh_tags
-    with_worktree do
+    with_worktree do |worktree|
       current_tags = git_tags.index_by(&:name)
       worktree.tags.each do |tag|
         info = worktree.tag_info(tag)
@@ -128,7 +156,7 @@ class GitRepository < ApplicationRecord
 
   def worktree
     @worktree ||= begin
-      clone_repo unless Dir.exist?(directory_name)
+      clone_repo_if_missing
       fetch_worktree
     end
   end
@@ -137,13 +165,17 @@ class GitRepository < ApplicationRecord
     GitWorktree.new(worktree_params)
   end
 
-  def clone_repo
-    handling_worktree_errors do
-      message = "Cloning #{url} to #{directory_name}..."
-      _log.info(message)
-      GitWorktree.new(worktree_params.merge(:clone => true, :url => url))
-      @updated_repo = true
-      _log.info("#{message}...Complete")
+  def clone_repo_if_missing
+    git_transaction do
+      unless Dir.exist?(directory_name)
+        handling_worktree_errors do
+          message = "Cloning #{url} to #{directory_name}..."
+          _log.info(message)
+          GitWorktree.new(worktree_params.merge(:clone => true, :url => url))
+          @updated_repo = true
+          _log.info("#{message}...Complete")
+        end
+      end
     end
   end
 
@@ -153,6 +185,32 @@ class GitRepository < ApplicationRecord
     raise MiqException::MiqUnreachableError, err.message
   rescue => err
     raise MiqException::Error, err.message
+  end
+
+  def git_lock_filename
+    @git_lock_filename ||= LOCKFILE_DIR.join(id.to_s)
+  end
+
+  def acquire_git_lock
+    return false if git_lock
+
+    FileUtils.mkdir_p(LOCKFILE_DIR)
+
+    @git_lock = File.open(git_lock_filename, File::RDWR | File::CREAT, 0o644)
+    @git_lock.flock(File::LOCK_EX)                         # block waiting for lock
+    @git_lock.write("#{Process.pid} - #{Time.zone.now}\n") # for debugging
+    @git_lock.flush                                        # write current data
+    @git_lock.truncate(@git_lock.pos)                      # clean up remaining chars
+
+    true
+  end
+
+  def release_git_lock
+    return if git_lock.nil?
+
+    @git_lock.flock(File::LOCK_UN)
+    @git_lock.close
+    @git_lock = nil
   end
 
   def worktree_params
