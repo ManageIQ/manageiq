@@ -14,7 +14,11 @@ class MiqScheduleWorker
     end
 
     def schedule_every(duration = nil, callable = nil, opts = {}, &block)
-      raise ArgumentError if duration.nil?
+      if duration.blank?
+        logger.warn("Duration is empty, scheduling ingnored. Called from: #{block}.")
+        return
+      end
+
       role_schedule << rufus_scheduler.schedule_every(duration, callable, opts, &block)
     rescue ArgumentError => err
       logger.error("#{err.class} for schedule_every with [#{duration}, #{opts.inspect}].  Called from: #{caller[1]}.")
