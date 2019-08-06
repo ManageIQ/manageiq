@@ -338,11 +338,11 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       let(:src_ems) { FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone)) }
       let(:src_host) { FactoryBot.create(:host_vmware_esx, :ems_cluster => src_cluster, :ipaddress => '10.0.0.1') }
       let(:src_storage) { FactoryBot.create(:storage, :hosts => [src_host], :name => 'stockage récent') }
+      let(:src_switch) { FactoryBot.create(:switch, :host => src_host) }
+      let(:src_lans) { FactoryBot.create_list(:lan, 2, :switch => src_switch) }
 
-      let(:src_lan_1) { FactoryBot.create(:lan) }
-      let(:src_lan_2) { FactoryBot.create(:lan) }
-      let(:src_nic_1) { FactoryBot.create(:guest_device_nic, :lan => src_lan_1) }
-      let(:src_nic_2) { FactoryBot.create(:guest_device_nic, :lan => src_lan_2) }
+      let(:src_nic_1) { FactoryBot.create(:guest_device_nic, :lan => src_lans.first) }
+      let(:src_nic_2) { FactoryBot.create(:guest_device_nic, :lan => src_lans.last) }
 
       let(:src_disk_1) { instance_double("disk", :device_name => "Hard disk 1", :device_type => "disk", :filename => "[datastore12] test_vm/test_vm.vmdk", :size => 17_179_869_184) }
       let(:src_disk_2) { instance_double("disk", :device_name => "Hard disk 2", :device_type => "disk", :filename => "[datastore12] test_vm/test_vm-2.vmdk", :size => 17_179_869_184) }
@@ -490,12 +490,12 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_lan_1,
+              :source                 => src_lans.first,
               :destination            => dst_lan_1,
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_lan_2,
+              :source                 => src_lans.last,
               :destination            => dst_lan_2,
               :transformation_mapping => tm
             )
@@ -514,8 +514,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates network_mappings hash" do
             expect(task_1.network_mappings).to eq(
               [
-                { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address }
+                { :source => src_lans.first.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
+                { :source => src_lans.last.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address }
               ]
             )
           end
@@ -599,12 +599,12 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_lan_1,
+              :source                 => src_lans.first,
               :destination            => dst_cloud_network_1,
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_lan_2,
+              :source                 => src_lans.last,
               :destination            => dst_cloud_network_2,
               :transformation_mapping => tm
             )
@@ -623,8 +623,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates network_mappings hash" do
             expect(task_1.network_mappings).to eq(
               [
-                { :source => src_lan_1.name, :destination => dst_cloud_network_1.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lan_2.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address }
+                { :source => src_lans.first.name, :destination => dst_cloud_network_1.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
+                { :source => src_lans.last.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address }
               ]
             )
           end
