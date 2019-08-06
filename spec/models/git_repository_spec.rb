@@ -97,7 +97,7 @@ describe GitRepository do
         tag_info_hash[name]
       end
 
-      expect(repo).to receive(:clone_repo).once.with(no_args).and_call_original
+      expect(repo).to receive(:clone_repo_if_missing).once.with(no_args).and_call_original
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
       expect(gwt).to receive(:fetch_and_merge).with(no_args)
 

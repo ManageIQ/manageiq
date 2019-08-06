@@ -156,7 +156,7 @@ class GitRepository < ApplicationRecord
 
   def worktree
     @worktree ||= begin
-      clone_repo unless Dir.exist?(directory_name)
+      clone_repo_if_missing
       fetch_worktree
     end
   end
@@ -165,13 +165,17 @@ class GitRepository < ApplicationRecord
     GitWorktree.new(worktree_params)
   end
 
-  def clone_repo
-    handling_worktree_errors do
-      message = "Cloning #{url} to #{directory_name}..."
-      _log.info(message)
-      GitWorktree.new(worktree_params.merge(:clone => true, :url => url))
-      @updated_repo = true
-      _log.info("#{message}...Complete")
+  def clone_repo_if_missing
+    git_transaction do
+      unless Dir.exist?(directory_name)
+        handling_worktree_errors do
+          message = "Cloning #{url} to #{directory_name}..."
+          _log.info(message)
+          GitWorktree.new(worktree_params.merge(:clone => true, :url => url))
+          @updated_repo = true
+          _log.info("#{message}...Complete")
+        end
+      end
     end
   end
 
