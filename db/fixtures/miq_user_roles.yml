@@ -396,9 +396,7 @@
   - physical_server_view
   - physical_storage_view
   - physical_infra_topology_view
-  - host_new
   - host_compare
-  - host_discover
   - host_drift
   - host_edit
   - host_refresh
