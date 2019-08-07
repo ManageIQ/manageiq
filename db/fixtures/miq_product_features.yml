@@ -1246,9 +1246,6 @@
       :description: Check Compliance of Last Known Configuration for Hosts / Nodes
       :feature_type: control
       :identifier: host_check_compliance
-    - :name: Discover
-      :feature_type: control
-      :identifier: host_discover
     - :name: Manage Policies
       :description: Manage Policies for Hosts / Nodes
       :feature_type: control
@@ -1306,10 +1303,6 @@
     :feature_type: admin
     :identifier: host_admin
     :children:
-    - :name: Add
-      :description: Add a Host / Node
-      :feature_type: admin
-      :identifier: host_new
     - :name: Remove
       :description: Remove Hosts / Nodes
       :feature_type: admin
