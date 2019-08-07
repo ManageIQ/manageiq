@@ -118,6 +118,11 @@ class EmsFolder < ApplicationRecord
     detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
   end
 
+  # Indicates if the folder is able to have child VMs
+  def vm_folder?
+    path.any? { |folder| folder.name == "vm" && folder.hidden? }
+  end
+
   # TODO: refactor by vendor/hypervisor (currently, this assumes VMware)
   def register_host(host)
     host = Host.extract_objects(host)
