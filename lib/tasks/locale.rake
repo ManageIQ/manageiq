@@ -197,7 +197,7 @@ namespace :locale do
     diff = new_pot - old_pot
     puts "--------------------------------------------------"
     puts "Current string / word count: %{str} / %{word}" % {:str => old_pot.length, :word => old_pot.join(' ').split.size}
-    puts "Updated string / word count: %s{str} / %{word}" % {:str => new_pot.length, :word => new_pot.join(' ').split.size}
+    puts "Updated string / word count: %{str} / %{word}" % {:str => new_pot.length, :word => new_pot.join(' ').split.size}
     puts
     puts "New string / word count: %{str} / %{word}" % {:str => diff.length, :word => diff.join(' ').split.size}
     puts "--------------------------------------------------"
