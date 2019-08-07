@@ -176,6 +176,7 @@
   - sui_services_view
   - sui_vm_details_view
   - sui_vm_html5_console
+  - sui_vm_vmrc_console
   - sui_vm_tags
   - sui_orders_view
   - sui_notifications
@@ -275,6 +276,7 @@
   - sui_services_view
   - sui_vm_details_view
   - sui_vm_html5_console
+  - sui_vm_vmrc_console
   - sui_vm_tags
   - sui_notifications
 
@@ -341,6 +343,7 @@
   - sui_services_view
   - sui_vm_details_view
   - sui_vm_html5_console
+  - sui_vm_vmrc_console
   - sui_vm_start
   - sui_vm_stop
   - sui_vm_suspend
@@ -466,6 +469,7 @@
   - sui_services_view
   - sui_vm_details_view
   - sui_vm_html5_console
+  - sui_vm_vmrc_console
   - sui_vm_start
   - sui_vm_stop
   - sui_vm_suspend
@@ -641,6 +645,7 @@
   - sui_services_view
   - sui_vm_details_view
   - sui_vm_html5_console
+  - sui_vm_vmrc_console
   - sui_vm_tags
   - sui_notifications
 
@@ -726,6 +731,7 @@
   - sui_services_view
   - sui_vm_details_view
   - sui_vm_html5_console
+  - sui_vm_vmrc_console
   - sui_vm_tags
   - sui_orders_view
   - sui_orders_operations
@@ -802,6 +808,7 @@
   - sui_services_view
   - sui_vm_details_view
   - sui_vm_html5_console
+  - sui_vm_vmrc_console
   - sui_vm_tags
   - timeline
   - vm_cloud_explorer
@@ -984,6 +991,7 @@
   - cockpit_console
   - sui_vm_details_view
   - sui_vm_html5_console
+  - sui_vm_vmrc_console
   - sui_vm_retire
   - sui_vm_start
   - sui_vm_stop

@@ -6474,6 +6474,10 @@
         :description: Open Remote Console
         :feature_type: control
         :identifier: sui_vm_html5_console
+      - :name: Open VMware VMRC Console
+        :description: Open Remote Console
+        :feature_type: control
+        :identifier: sui_vm_vmrc_console
       - :name: Open Web Console
         :description: Open Web Console
         :feature_type: control
