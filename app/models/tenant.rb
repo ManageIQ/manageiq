@@ -97,6 +97,18 @@ class Tenant < ApplicationRecord
     self.class.regional_tenants(self)
   end
 
+  def nested_service_templates
+    ServiceTemplate.with_tenant(id)
+  end
+
+  def nested_providers
+    ExtManagementSystem.with_tenant(id)
+  end
+
+  def nested_ae_namespaces
+    MiqAeDomain.with_tenant(id)
+  end
+
   def self.regional_tenants(tenant)
     where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:name)]).eq(tenant.name.downcase)))
   end
