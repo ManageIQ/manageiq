@@ -8,7 +8,7 @@ class CustomButtonSet < ApplicationRecord
     return if set_data.try(:[], :button_order).nil?
 
     children = Rbac.filtered(CustomButton.where(:id => set_data[:button_order]))
-    throw(:abort) if children.pluck(:id).sort != set_data[:button_order].sort
+    throw(:abort) if children.pluck(:id).sort != set_data[:button_order].map(&:to_i).sort
   end
 
   def update_children
