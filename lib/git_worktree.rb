@@ -10,6 +10,7 @@ class GitWorktree
     require 'rugged'
 
     raise ArgumentError, "Must specify path" unless options.key?(:path)
+
     @path                 = options[:path]
     @email                = options[:email]
     @username             = options[:username]
@@ -18,6 +19,7 @@ class GitWorktree
     @password             = options[:password]
     @ssh_private_key      = options[:ssh_private_key]
     @fast_forward_merge   = options[:ff] || true
+    @proxy_url            = options[:proxy_url]
     @certificate_check_cb = options[:certificate_check]
 
     @remote_name = 'origin'
@@ -215,14 +217,14 @@ class GitWorktree
     @repo.checkout_tree(tree, :target_directory => target_directory, :strategy => :force)
   end
 
-  def with_credential_options
+  def with_remote_options
     if @ssh_private_key
       @ssh_private_key_file = Tempfile.new
       @ssh_private_key_file.write(@ssh_private_key)
       @ssh_private_key_file.close
     end
 
-    options = {:credentials => method(:credentials_cb)}
+    options = {:credentials => method(:credentials_cb), :proxy_url => @proxy_url}
     options[:certificate_check] = @certificate_check_cb if @certificate_check_cb
 
     yield options
@@ -275,8 +277,8 @@ class GitWorktree
   end
 
   def fetch
-    with_credential_options do |cred_options|
-      @repo.fetch(@remote_name, cred_options)
+    with_remote_options do |remote_options|
+      @repo.fetch(@remote_name, remote_options)
     end
   end
 
@@ -290,8 +292,8 @@ class GitWorktree
       @saved_cid = @repo.ref(local_ref).target.oid
       merge(commit, rebase)
       rebase = true
-      with_credential_options do |cred_options|
-        @repo.push(@remote_name, [local_ref], cred_options)
+      with_remote_options do |remote_options|
+        @repo.push(@remote_name, [local_ref], remote_options)
       end
     end
   end
@@ -345,8 +347,8 @@ class GitWorktree
   end
 
   def clone(url)
-    @repo = with_credential_options do |cred_options|
-      options = cred_options.merge(:bare => true, :remote => @remote_name)
+    @repo = with_remote_options do |remote_options|
+      options = remote_options.merge(:bare => true, :remote => @remote_name)
       Rugged::Repository.clone_at(url, @path, options)
     end
   end
