@@ -56,11 +56,18 @@ describe MiqWidget do
       '))
     end
 
+    describe "#filter_for_schedule" do
+      it "returns Hash object representing valid MiqExpression" do
+        exp = MiqExpression.new(@widget_chart_vendor_and_guest_os.filter_for_schedule)
+        expect(exp.valid?).to be_truthy
+      end
+    end
+
     describe "#sync_schedule" do
       let(:schedule) do
         filter = @widget_chart_vendor_and_guest_os.filter_for_schedule
-        FactoryBot.create(:miq_schedule, :filter => filter,
-                                           :resource_type => "MiqWidget", :name => @widget_chart_vendor_and_guest_os.name)
+        FactoryBot.create(:miq_schedule, :filter => MiqExpression.new(filter), :resource_type => "MiqWidget",
+                          :name => @widget_chart_vendor_and_guest_os.name)
       end
 
       it "uses existing schedule if link between widget and schedule broken" do
@@ -71,8 +78,8 @@ describe MiqWidget do
         expect(@widget_chart_vendor_and_guest_os.miq_schedule.id).to eq(schedule.id)
       end
 
-      it "rename existing scheduler by adding timestamp go name if existing scheduler use different filter" do
-        schedule.update(:filter => "\"=\" => {\"field\" => \"MiqWidget-id\", \"value\" => 9999}")
+      it "rename existing scheduler by adding timestamp to name if existing scheduler use different filter" do
+        schedule.update(:filter => MiqExpression.new("=" => {"field" => "MiqWidget-id", "value" => 9999}))
 
         time_now = Time.now.utc
         Timecop.freeze(time_now) { @widget_chart_vendor_and_guest_os.sync_schedule(:run_at => schedule.run_at) }
