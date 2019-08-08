@@ -254,6 +254,27 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
           expect(playbooks_for(record)).to eq(%w[hello_world.yml])
         end
       end
+
+      context "with hidden files" do
+        let(:hide_and_seek_repo) { File.join(clone_dir, "hello_world_is_hiding") }
+
+        let(:hide_and_seek_repo_structure) do
+          %w[
+            .ansible.d/hello_world.yml
+            .travis.yml
+            hello_world.yml
+          ]
+        end
+
+        it "finds only playbooks" do
+          Spec::Support::FakeAnsibleRepo.generate(hide_and_seek_repo, hide_and_seek_repo_structure)
+
+          params[:scm_url] = "file://#{hide_and_seek_repo}"
+          record           = build_record
+
+          expect(playbooks_for(record)).to eq(%w[hello_world.yml])
+        end
+      end
     end
 
     describe "#update_in_provider" do
