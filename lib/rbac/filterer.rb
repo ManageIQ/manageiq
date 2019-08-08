@@ -171,7 +171,7 @@ module Rbac
     # @option options :conditions    [Hash|String|Array<String>]
     # @option options :where_clause  []
     # @option options :sub_filter
-    # @option options :include_for_find [Array<Symbol>]
+    # @option options :include_for_find [Array<Symbol>, Hash{Symbol => Symbol,Hash,Array}] models included but not in query
     # @option options :filter       [MiqExpression] (optional)
 
     # @option options :user         [User]     (default: current_user)
@@ -358,6 +358,23 @@ module Rbac
       end
     end
 
+    # given a nested hash of associations (used by includes)
+    #   convert into an array of table names (used by references)
+    def self.includes_to_references(klass, inc)
+      return [] unless inc
+      inc = Array(inc) unless inc.kind_of?(Hash)
+      inc.flat_map do |n, v|
+        if ref = klass.reflect_on_association(n.to_sym)
+          n_table = ref.table_name
+          v_tables = v ? includes_to_references(ref.klass, v) : []
+          [n_table] + v_tables
+        else
+          []
+        end
+      end
+    end
+    delegate :includes_to_references, :to => self
+
     # This is a very primitive way of determining whether we want to skip
     # adding references to the query.
     #
@@ -411,7 +428,7 @@ module Rbac
 
       ref_includes = Hash(include_for_find).merge(Hash(exp_includes))
       unless polymorphic_include?(klass, ref_includes)
-        scope = scope.references(include_for_find).references(exp_includes)
+        scope = scope.references(includes_to_references(klass, include_for_find)).references(includes_to_references(klass, exp_includes))
       end
       scope
     end

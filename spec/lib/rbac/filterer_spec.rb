@@ -584,11 +584,7 @@ describe Rbac::Filterer do
       end
 
       it "does not add references without includes" do
-        # empty string here is basically passing `.references(nil)`, and the
-        # extra empty hash here is from the MiqExpression (which will result in
-        # the same), both of which will no-op to when determining if there are
-        # joins in ActiveRecord, and will not create a JoinDependency query
-        expect(results.references_values).to match_array ["", "{}"]
+        expect(results.references_values).to eq []
       end
 
       context "with :include_for_find" do
@@ -601,7 +597,7 @@ describe Rbac::Filterer do
         end
 
         it "adds references" do
-          expect(results.references_values).to match_array ["{:evm_owner=>{}}", "{}"]
+          expect(results.references_values).to match_array %w[users]
         end
       end
     end
@@ -618,11 +614,7 @@ describe Rbac::Filterer do
       end
 
       it "does not add references with no includes" do
-        # The single empty string is the result of a nil from both the lack of
-        # a MiqExpression filter and the user filter, which is deduped in
-        # ActiveRecord's internals and results in a `.references(nil)`
-        # effectively
-        expect(results.references_values).to match_array [""]
+        expect(results.references_values).to eq []
       end
 
       context "with :include_for_find" do
@@ -634,7 +626,7 @@ describe Rbac::Filterer do
         end
 
         it "adds references" do
-          expect(results.references_values).to match_array ["", "{:evm_owner=>{}}"]
+          expect(results.references_values).to match_array %w[users]
         end
       end
     end
@@ -2424,21 +2416,21 @@ describe Rbac::Filterer do
       method_args      = [scope, klass, include_for_find, nil, skip]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", ""])
+      expect(resulting_scope.references_values).to eq(%w(miq_servers))
     end
 
     it "adds exp_includes .references to the scope" do
       method_args      = [scope, klass, nil, exp_includes, skip]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.references_values).to eq(["", "{:host=>{}}"])
+      expect(resulting_scope.references_values).to eq(%w(hosts))
     end
 
     it "adds include_for_find and exp_includes .references to the scope" do
       method_args      = [scope, klass, include_for_find, exp_includes, skip]
       resulting_scope  = subject.send(:include_references, *method_args)
 
-      expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", "{:host=>{}}"])
+      expect(resulting_scope.references_values).to eq(%w(miq_servers hosts))
     end
 
     context "if the include is polymorphic" do
@@ -2479,7 +2471,7 @@ describe Rbac::Filterer do
 
         it "adds .references to the scope" do
           allow(subject).to receive(:warn)
-          expect(resulting_scope.references_values).to eq(["{:miq_server=>{}}", "{:host=>{}}"])
+          expect(resulting_scope.references_values).to eq(%w(miq_servers hosts))
         end
 
         it "warns that there was an issue in test mode" do
@@ -2689,6 +2681,25 @@ describe Rbac::Filterer do
         user, = filter.send(:lookup_user_group, nil, user1.userid, nil, nil)
         expect(user).to eq(user1)
       end
+    end
+  end
+
+  # private
+  describe ".includes_to_references" do
+    it "supports none" do
+      expect(described_class.includes_to_references(Vm, nil)).to eq([])
+      expect(described_class.includes_to_references(Vm, [])).to eq([])
+    end
+
+    it "supports arrays" do
+      expect(described_class.includes_to_references(Vm, %w(host operating_system))).to eq(%w(hosts operating_systems))
+      expect(described_class.includes_to_references(Vm, %i(host))).to eq(%w(hosts))
+    end
+
+    it "supports hashes" do
+      expect(described_class.includes_to_references(Hardware, {:vm => {}})).to eq(%w(vms))
+      expect(described_class.includes_to_references(Hardware, {:vm => :ext_management_system})).to eq(%w(vms ext_management_systems))
+      expect(described_class.includes_to_references(Hardware, {:vm => {:ext_management_system => {}}})).to eq(%w(vms ext_management_systems))
     end
   end
 
