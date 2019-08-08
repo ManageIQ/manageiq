@@ -6,7 +6,7 @@ class GitRepository < ApplicationRecord
 
   GIT_REPO_DIRECTORY = Rails.root.join('data/git_repos')
 
-  validates :url, :format => URI::regexp(%w(http https file)), :allow_nil => false
+  validates :url, :format => URI.regexp(%w[http https file ssh]), :allow_nil => false
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
@@ -81,7 +81,7 @@ class GitRepository < ApplicationRecord
     with_worktree do |worktree|
       message = "Updating #{url} in #{directory_name}..."
       _log.info(message)
-      worktree.send(:fetch_and_merge)
+      worktree.send(:pull)
       _log.info("#{message}...Complete")
     end
     @updated_repo = true
@@ -161,7 +161,12 @@ class GitRepository < ApplicationRecord
     params[:certificate_check] = method(:self_signed_cert_cb) if verify_ssl == OpenSSL::SSL::VERIFY_NONE
     if (auth = authentication || default_authentication)
       params[:username] = auth.userid
-      params[:password] = auth.password
+      if auth.auth_key
+        params[:ssh_private_key] = auth.auth_key
+        params[:password] = auth.auth_key_password.presence
+      else
+        params[:password] = auth.password
+      end
     end
     params
   end
