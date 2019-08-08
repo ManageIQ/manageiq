@@ -445,7 +445,9 @@ class MiqLdap
   end
 
   def self.using_ldap?
-    ::Settings.authentication.mode.include?('ldap')
+    ::Settings.authentication.mode.include?('ldap').tap do |should_warn|
+      $audit_log.warn("MiqLdap is a deprecated feature. Please convert to using external authentication.") if should_warn
+    end
   end
 
   def self.sid_to_s(data)
