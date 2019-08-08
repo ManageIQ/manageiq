@@ -324,27 +324,92 @@ describe GitWorktree do
     end
   end
 
-  shared_examples_for '#credentials_cb' do |error_regex|
+  describe "#new" do
     let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
-    let(:test_repo) { GitWorktree.new(:path => git_repo_path.to_s, :username => username, :password => password) }
 
-    it "call the credentials callback" do
-      expect(test_repo.credentials_cb("url", nil, nil).class).to eq(Rugged::Credentials::UserPassword)
-      expect { test_repo.credentials_cb("url", nil, nil) }.to raise_error(GitWorktreeException::InvalidCredentials, error_regex)
+    it "raises an exception if SSH requested, but rugged is not compiled with SSH support" do
+      require "rugged"
+      expect(Rugged).to receive(:features).and_return([:threads, :https])
+
+      expect {
+        GitWorktree.new(:path => git_repo_path, :ssh_private_key => "fake key\nfile content")
+      }.to raise_error(GitWorktreeException::InvalidCredentialType)
     end
   end
 
-  context "no username and password set" do
-    let(:username) { nil }
-    let(:password) { nil }
+  describe "#with_credential_options" do
+    let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
 
-    it_behaves_like '#credentials_cb', /provide username and password/
-  end
+    subject do
+      repo.with_credential_options do |cred_options|
+        cred_options[:credentials].call("url", nil, [])
+      end
+    end
 
-  context "bad username or password" do
-    let(:username) { 'fred' }
-    let(:password) { 'incorrect' }
+    describe "via plaintext" do
+      let(:repo) { described_class.new(:path => git_repo_path.to_s, :username => username, :password => password) }
+      let(:username) { "fred" }
+      let(:password) { "pa$$w0rd" }
 
-    it_behaves_like '#credentials_cb', /Invalid credentials/
+      it "with both username and password" do
+        expect(subject).to be_a Rugged::Credentials::UserPassword
+      end
+
+      context "with no username" do
+        let(:username) { nil }
+
+        it "raises an exception" do
+          expect { subject }.to raise_error(GitWorktreeException::InvalidCredentials, /provide username and password for/)
+        end
+      end
+
+      context "with no password" do
+        let(:password) { nil }
+
+        it "raises an exception" do
+          expect { subject }.to raise_error(GitWorktreeException::InvalidCredentials, /provide username and password for/)
+        end
+      end
+    end
+
+    describe "via SSH" do
+      let(:repo) { described_class.new(:path => git_repo_path.to_s, :username => username, :ssh_private_key => ssh_private_key, :password => password) }
+      let(:username) { "git" }
+      let(:ssh_private_key) { "fake key\nfile content" }
+      let(:password) { "pa$$w0rd" }
+
+      before do
+        require "rugged"
+        allow(Rugged).to receive(:features).and_return([:threads, :https, :ssh])
+      end
+
+      it "with username, ssh_private_key, and password" do
+        expect(subject).to be_a Rugged::Credentials::SshKey
+      end
+
+      context "with no username" do
+        let(:username) { nil }
+
+        it "raises an exception" do
+          expect { subject }.to raise_error(GitWorktreeException::InvalidCredentials, /provide username for/)
+        end
+      end
+
+      context "with no password" do
+        let(:password) { nil }
+
+        it "creates a password-less ssh key cred" do
+          expect(subject).to be_a Rugged::Credentials::SshKey
+        end
+      end
+
+      context "with no ssh_private_key" do
+        let(:ssh_private_key) { nil }
+
+        it "treats it like a user/pass" do
+          expect(subject).to be_a Rugged::Credentials::UserPassword
+        end
+      end
+    end
   end
 end
