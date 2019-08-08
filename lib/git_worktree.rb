@@ -167,6 +167,16 @@ class GitWorktree
     tree.walk(:preorder).collect { |root, entry| "#{root}#{entry[:name]}" }
   end
 
+  # Like "file_list", but doesn't return directories
+  def blob_list
+    tree = lookup_commit_tree
+    return [] unless tree
+
+    [].tap do |blobs|
+      tree.walk_blobs(:preorder) { |root, entry| blobs << "#{root}#{entry[:name]}" }
+    end
+  end
+
   def find_entry(path)
     get_tree_entry(path)
   end
