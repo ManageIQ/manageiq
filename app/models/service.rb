@@ -390,8 +390,8 @@ class Service < ApplicationRecord
   end
 
   def self.queue_chargeback_reports(options = {})
-    Service.all.each do |s|
-      s.queue_chargeback_report_generation(options) unless s.vms.empty?
+    Service.in_my_region.each do |s|
+      s.queue_chargeback_report_generation(options) unless s.vms.empty? || s.retired
     end
   end
 

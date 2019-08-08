@@ -429,13 +429,28 @@ describe Service do
     end
 
     describe ".queue_chargeback_reports" do
-      it "queue request to generate chargeback report for each service" do
+      before do
         @service_c1 = FactoryGirl.create(:service, :service => @service)
         @service_c1.name = "Test_Service_2"
         @service_c1 << @vm1
         @service_c1.save
+      end
 
+      it "queue request to generate chargeback report for each service" do
         expect(MiqQueue).to receive(:put).twice
+        described_class.queue_chargeback_reports
+      end
+
+      it "queue request to generate chargeback report only in service's region" do
+        allow(Service).to receive(:in_my_region).and_return([@service_c1])
+        expect(MiqQueue).to receive(:put).once
+        described_class.queue_chargeback_reports
+      end
+
+      it "does not queue request to generate chargeback report if service retired" do
+        @service_c1.update(:retired => true)
+        allow(Service).to receive(:in_my_region).and_return([@service_c1])
+        expect(MiqQueue).not_to receive(:put)
         described_class.queue_chargeback_reports
       end
     end
