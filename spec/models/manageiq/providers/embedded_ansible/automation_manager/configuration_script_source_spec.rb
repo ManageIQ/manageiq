@@ -159,6 +159,37 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
       end
     end
 
+    describe "#playbooks_in_git_repository" do
+      def playbooks_for(repo)
+        repo.configuration_script_payloads.pluck(:name)
+      end
+
+      it "finds top level playbooks" do
+        record = build_record
+
+        expect(playbooks_for(record)).to eq(%w[hello_world.yaml])
+      end
+
+      context "with a nested playbooks dir" do
+        let(:nested_repo) { File.join(clone_dir, "hello_world_nested") }
+
+        let(:nested_repo_structure) do
+          %w[
+            ansible_project/hello_world.yml
+          ]
+        end
+
+        it "finds all playbooks" do
+          Spec::Support::FakeAnsibleRepo.generate(nested_repo, nested_repo_structure)
+
+          params[:scm_url] = "file://#{nested_repo}"
+          record           = build_record
+
+          expect(playbooks_for(record)).to eq(%w[ansible_project/hello_world.yml])
+        end
+      end
+    end
+
     describe "#update_in_provider" do
       let(:update_params)      { { :scm_branch => "other_branch" } }
       let(:notify_update_args) { notification_args('update', update_params) }

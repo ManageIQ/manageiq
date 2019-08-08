@@ -112,7 +112,10 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
   def playbooks_in_git_repository
     git_repository.update_repo
-    git_repository.entries(scm_branch, "").grep(/\.ya?ml$/)
+    git_repository.with_worktree do |worktree|
+      worktree.ref = scm_branch
+      worktree.blob_list.grep(/\.ya?ml$/)
+    end
   end
 
   def checkout_git_repository(target_directory)
