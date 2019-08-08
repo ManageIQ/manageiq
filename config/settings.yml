@@ -979,6 +979,7 @@
     :keep_reports: 6.months
     :purge_window_size: 100
   :queue_timeout: 1.hour
+  :use_sql_view: false
 :repository_scanning:
   :defaultsmartproxy:
 :server:
