@@ -5,19 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Unreleased as of Sprint 117 ending 2019-08-05
+## Ivanchuk-Beta2
 
 ### Added
-- Update to PG10 package name/path for Docker image [(#19096)](https://github.com/ManageIQ/manageiq/pull/19096)
-- Pull roles from ansible galaxy before running a playbook [(#19079)](https://github.com/ManageIQ/manageiq/pull/19079)
 - [EmbeddedAnsible] Better handle ConfigurationScriptSource status/last_updated_on/last_update_error [(#19061)](https://github.com/ManageIQ/manageiq/pull/19061)
+- Pull roles from ansible galaxy before running a playbook [(#19079)](https://github.com/ManageIQ/manageiq/pull/19079)
+- Update to PG10 package name/path for Docker image [(#19096)](https://github.com/ManageIQ/manageiq/pull/19096)
 - Don't create the embedded ansible default project [(#19056)](https://github.com/ManageIQ/manageiq/pull/19056)
 
 ### Fixed
-- Don't load BinaryBlobParts when determining if MiqReportResult is blank [(#19082)](https://github.com/ManageIQ/manageiq/pull/19082)
+- Queue ServiceAnsiblePlaybook#execute for the embedded_ansible role [(#19055)](https://github.com/ManageIQ/manageiq/pull/19055)
 - Fixed seeding failure if yaml file containing report was renamed [(#19080)](https://github.com/ManageIQ/manageiq/pull/19080)
 - Refactor Overview Utilization menu text [(#19062)](https://github.com/ManageIQ/manageiq/pull/19062)
-- Queue ServiceAnsiblePlaybook#execute for the embedded_ansible role [(#19055)](https://github.com/ManageIQ/manageiq/pull/19055) 
+- Don't load BinaryBlobParts when determining if MiqReportResult is blank [(#19082)](https://github.com/ManageIQ/manageiq/pull/19082)
 
 ## Ivanchuk Beta1 - Released 2019-07-29
 
