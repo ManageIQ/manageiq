@@ -2269,6 +2269,10 @@
     :hidden: true
     :identifier: miq_ae_namespace
     :children:
+    - :name: View
+      :description: View
+      :feature_type: view
+      :identifier: miq_ae_namespace_view
     - :name: Modify
       :description: Modify Namespace
       :feature_type: admin
