@@ -84,7 +84,7 @@ class GitRepository < ApplicationRecord
     with_worktree do |worktree|
       message = "Updating #{url} in #{directory_name}..."
       _log.info(message)
-      worktree.send(:fetch_and_merge)
+      worktree.send(:pull)
       _log.info("#{message}...Complete")
     end
     @updated_repo = true

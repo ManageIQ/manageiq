@@ -64,7 +64,7 @@ describe GitRepository do
         repo.update_authentication(:default => {:userid => userid, :password => password})
         expect(GitWorktree).to receive(:new).with(clone_args).and_return(gwt)
         expect(GitWorktree).to receive(:new).with(args).and_return(gwt)
-        expect(gwt).to receive(:fetch_and_merge).with(no_args)
+        expect(gwt).to receive(:pull).with(no_args)
 
         repo.refresh
         expect(repo.default_authentication.userid).to eq(userid)
@@ -79,7 +79,7 @@ describe GitRepository do
           args[:certificate_check] = repo.method(:self_signed_cert_cb)
           expect(GitWorktree).to receive(:new).with(clone_args).and_return(gwt)
           expect(GitWorktree).to receive(:new).with(args).and_return(gwt)
-          expect(gwt).to receive(:fetch_and_merge).with(no_args)
+          expect(gwt).to receive(:pull).with(no_args)
 
           repo.refresh
         end
@@ -99,7 +99,7 @@ describe GitRepository do
 
       expect(repo).to receive(:clone_repo_if_missing).once.with(no_args).and_call_original
       expect(GitWorktree).to receive(:new).with(anything).and_return(gwt)
-      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+      expect(gwt).to receive(:pull).with(no_args)
 
       repo.refresh
       expect(repo.git_branches.collect(&:name)).to match_array(branch_list)
@@ -110,7 +110,7 @@ describe GitRepository do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
-      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+      expect(gwt).to receive(:pull).with(no_args)
 
       allow(gwt).to receive(:branch_info) do |name|
         branch_info_hash[name]
@@ -127,7 +127,7 @@ describe GitRepository do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
-      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+      expect(gwt).to receive(:pull).with(no_args)
 
       allow(gwt).to receive(:branch_info) do |name|
         branch_info_hash[name]
@@ -144,7 +144,7 @@ describe GitRepository do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
-      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+      expect(gwt).to receive(:pull).with(no_args)
 
       allow(gwt).to receive(:branch_info) do |name|
         branch_info_hash[name]
@@ -160,7 +160,7 @@ describe GitRepository do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
       expect(gwt).to receive(:branches).with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).with(no_args).and_return(tag_list)
-      expect(gwt).to receive(:fetch_and_merge).with(no_args)
+      expect(gwt).to receive(:pull).with(no_args)
 
       allow(gwt).to receive(:branch_info) do |name|
         branch_info_hash[name]
@@ -174,7 +174,7 @@ describe GitRepository do
 
     it "#refresh branches deleted" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
-      expect(gwt).to receive(:fetch_and_merge).twice.with(no_args)
+      expect(gwt).to receive(:pull).twice.with(no_args)
       expect(gwt).to receive(:branches).twice.with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).twice.with(no_args).and_return(tag_list)
 
@@ -194,7 +194,7 @@ describe GitRepository do
 
     it "#refresh tags deleted" do
       expect(GitWorktree).to receive(:new).twice.with(anything).and_return(gwt)
-      expect(gwt).to receive(:fetch_and_merge).twice.with(no_args)
+      expect(gwt).to receive(:pull).twice.with(no_args)
       expect(gwt).to receive(:branches).twice.with(anything).and_return(branch_list)
       expect(gwt).to receive(:tags).twice.with(no_args).and_return(tag_list)
 
