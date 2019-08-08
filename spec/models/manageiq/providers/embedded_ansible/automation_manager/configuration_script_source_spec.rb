@@ -1,4 +1,4 @@
-require 'rugged'
+require 'support/fake_ansible_repo'
 
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource do
   context "with a local repo" do
@@ -13,52 +13,18 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
       }
     end
 
-    let(:clone_dir)  { Dir.mktmpdir }
-    let(:local_repo) { File.join(clone_dir, "hello_world_local") }
-    let(:repo_dir)   { Pathname.new(Dir.mktmpdir) }
-    let(:repos)      { Dir.glob(File.join(repo_dir, "*")) }
+    let(:clone_dir)          { Dir.mktmpdir }
+    let(:local_repo)         { File.join(clone_dir, "hello_world_local") }
+    let(:repo_dir)           { Pathname.new(Dir.mktmpdir) }
+    let(:repos)              { Dir.glob(File.join(repo_dir, "*")) }
+    let(:repo_dir_structure) { %w[hello_world.yaml] }
 
     before do
-      # START: Setup local repo used for this spec
       FileUtils.mkdir_p(local_repo)
-      File.write(File.join(local_repo, "hello_world.yaml"), <<~PLAYBOOK)
-        - name: Hello World Sample
-          hosts: all
-          tasks:
-            - name: Hello Message
-              debug:
-                msg: "Hello World!"
 
-      PLAYBOOK
-
-      # Init new repo at local_repo
-      #
-      #   $ cd /tmp/clone_dir/hello_world_local && git init .
-      repo  = Rugged::Repository.init_at(local_repo)
-      index = repo.index
-
-      # Add new files to index
-      #
-      #   $ git add .
-      index.add_all
-      index.write
-
-      # Create initial commit
-      #
-      #   $ git commit -m "Initial Commit"
-      Rugged::Commit.create(
-        repo,
-        :message    => "Initial Commit",
-        :parents    => [],
-        :tree       => index.write_tree(repo),
-        :update_ref => "HEAD"
-      )
-
-      # Create a new branch (don't checkout)
-      #
-      #   $ git branch other_branch
-      repo.create_branch("other_branch")
-      # END: Setup local repo used for this spec
+      repo = Spec::Support::FakeAnsibleRepo.new(local_repo, repo_dir_structure)
+      repo.generate
+      repo.git_branch_create("other_branch")
 
       GitRepository
       stub_const("GitRepository::GIT_REPO_DIRECTORY", repo_dir)
@@ -190,6 +156,124 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
           :role        => "embedded_ansible",
           :zone        => nil
         )
+      end
+    end
+
+    describe "#playbooks_in_git_repository" do
+      def playbooks_for(repo)
+        repo.configuration_script_payloads.pluck(:name)
+      end
+
+      it "finds top level playbooks" do
+        record = build_record
+
+        expect(playbooks_for(record)).to eq(%w[hello_world.yaml])
+      end
+
+      context "with a nested playbooks dir" do
+        let(:nested_repo) { File.join(clone_dir, "hello_world_nested") }
+
+        let(:nested_repo_structure) do
+          %w[
+            ansible_project/hello_world.yml
+          ]
+        end
+
+        it "finds all playbooks" do
+          Spec::Support::FakeAnsibleRepo.generate(nested_repo, nested_repo_structure)
+
+          params[:scm_url] = "file://#{nested_repo}"
+          record           = build_record
+
+          expect(playbooks_for(record)).to eq(%w[ansible_project/hello_world.yml])
+        end
+      end
+
+      context "with a requirements.yml" do
+        let(:requirements_repo) { File.join(clone_dir, "hello_requirements") }
+
+        let(:requirements_repo_structure) do
+          %w[
+            hello_world.yml
+            requirements.yml
+          ]
+        end
+
+        it "finds only playbooks" do
+          Spec::Support::FakeAnsibleRepo.generate(requirements_repo, requirements_repo_structure)
+
+          params[:scm_url] = "file://#{requirements_repo}"
+          record           = build_record
+
+          expect(playbooks_for(record)).to eq(%w[hello_world.yml])
+        end
+      end
+
+      context "with a encrypted playbooks" do
+        let(:encrypted_repo) { File.join(clone_dir, "hello_world_encrypted") }
+
+        let(:encrypted_repo_structure) do
+          %w[
+            hello_world.yml
+            hello_world.encrypted.yml
+          ]
+        end
+
+        it "finds all playbooks" do
+          Spec::Support::FakeAnsibleRepo.generate(encrypted_repo, encrypted_repo_structure)
+
+          params[:scm_url] = "file://#{encrypted_repo}"
+          record           = build_record
+
+          expect(playbooks_for(record)).to match_array(%w[hello_world.yml hello_world.encrypted.yml])
+        end
+      end
+
+      context "with 'ignorable dirs'" do
+        let(:roles_repo) { File.join(clone_dir, "hello_roles_and_things") }
+
+        let(:roles_repo_structure) do
+          %w[
+            roles/defaults/main.yml
+            roles/meta/main.yml
+            roles/tasks/main.yml
+            tasks/task_1.yml
+            tasks/task_2.yml
+            group_vars/vars.yml
+            host_vars/vars.yml
+            hello_world.yml
+          ]
+        end
+
+        it "finds only playbooks" do
+          Spec::Support::FakeAnsibleRepo.generate(roles_repo, roles_repo_structure)
+
+          params[:scm_url] = "file://#{roles_repo}"
+          record           = build_record
+
+          expect(playbooks_for(record)).to eq(%w[hello_world.yml])
+        end
+      end
+
+      context "with hidden files" do
+        let(:hide_and_seek_repo) { File.join(clone_dir, "hello_world_is_hiding") }
+
+        let(:hide_and_seek_repo_structure) do
+          %w[
+            .ansible.d/hello_world.yml
+            .travis.yml
+            hello_world.yml
+          ]
+        end
+
+        it "finds only playbooks" do
+          Spec::Support::FakeAnsibleRepo.generate(hide_and_seek_repo, hide_and_seek_repo_structure)
+
+          params[:scm_url] = "file://#{hide_and_seek_repo}"
+          record           = build_record
+
+          expect(playbooks_for(record)).to eq(%w[hello_world.yml])
+        end
       end
     end
 
