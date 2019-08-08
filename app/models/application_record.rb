@@ -13,6 +13,7 @@ class ApplicationRecord < ActiveRecord::Base
   include ToModelHash
 
   extend ArTableLock
+  extend ArReferences
 
   # FIXME: UI code - decorator support
   if defined?(ManageIQ::Decorators::Engine)

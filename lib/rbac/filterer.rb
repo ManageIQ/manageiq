@@ -173,7 +173,7 @@ module Rbac
     # @option options :conditions    [Hash|String|Array<String>]
     # @option options :where_clause  []
     # @option options :sub_filter
-    # @option options :include_for_find [Array<Symbol>]
+    # @option options :include_for_find [Array<Symbol>, Hash{Symbol => Symbol,Hash,Array}] models included but not in query
     # @option options :filter       [MiqExpression] (optional)
 
     # @option options :user         [User]     (default: current_user)
@@ -413,7 +413,7 @@ module Rbac
 
       ref_includes = Hash(include_for_find).merge(Hash(exp_includes))
       unless polymorphic_include?(klass, ref_includes)
-        scope = scope.references(include_for_find).references(exp_includes)
+        scope = scope.references(klass.includes_to_references(include_for_find)).references(klass.includes_to_references(exp_includes))
       end
       scope
     end
