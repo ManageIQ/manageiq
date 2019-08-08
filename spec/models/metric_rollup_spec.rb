@@ -34,7 +34,7 @@ describe MetricRollup do
       # TODO: that causes the error "ActiveRecord::ConfigurationError: nil"
       # TODO: instead of the expected "ActiveRecord::EagerLoadPolymorphicError" error.
       expect do
-        Tagging.includes(:taggable => {}).where('bogus_table.column = 1').references(:bogus_table => {}).to_a
+        Tagging.includes(:taggable => {}).where('bogus_table.column = 1').references(:bogus_table).to_a
       end.to raise_error ActiveRecord::EagerLoadPolymorphicError
     end
   end

@@ -19,7 +19,7 @@ module CloudTenancyMixin
 
     def tenant_joins_clause(scope)
       scope.includes(QUERY_REFERENCES)
-           .references(QUERY_REFERENCES) # needed for the where to work
+           .references(:cloud_tenant, :tenants, :ext_management_systems) # needed for the where to work
     end
   end
 end
