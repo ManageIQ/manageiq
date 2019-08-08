@@ -114,7 +114,9 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     git_repository.update_repo
     git_repository.with_worktree do |worktree|
       worktree.ref = scm_branch
-      worktree.blob_list.grep(/\.ya?ml$/)
+      worktree.blob_list.select do |filename|
+        playbook?(filename, worktree)
+      end
     end
   end
 
@@ -129,5 +131,24 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     result << "\n\n"
     result << error.backtrace.join("\n")
     result.mb_chars.limit(ERROR_MAX_SIZE)
+  end
+
+  private
+
+  VALID_PLAYBOOK_CHECK = /^\s*?-?\s*?(?:hosts|include|import_playbook):\s*?.*?$/.freeze
+
+  # Confirms two things:
+  #
+  #   - The file extension is a yaml extension
+  #   - The content of the file has one line that matches VALID_PLAYBOOK_CHECK
+  #
+  def playbook?(filename, worktree)
+    return false unless filename.match?(/\.ya?ml$/)
+
+    worktree.read_file(filename).each_line do |line|
+      return true if line.match?(VALID_PLAYBOOK_CHECK)
+    end
+
+    false
   end
 end
