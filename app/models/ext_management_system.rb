@@ -46,6 +46,12 @@ class ExtManagementSystem < ApplicationRecord
     !reflections.include?("parent_manager")
   end
 
+  def self.provider_create_params
+    supported_types_for_create.each_with_object({}) do |ems_type, create_params|
+      create_params[ems_type.name] = ems_type.params_for_create if ems_type.respond_to?(:params_for_create)
+    end
+  end
+
   belongs_to :provider
   has_many :child_managers, :class_name => 'ExtManagementSystem', :foreign_key => 'parent_ems_id'
 
