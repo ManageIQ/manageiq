@@ -140,12 +140,20 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   # Confirms two things:
   #
   #   - The file extension is a yaml extension
-  #   - The content of the file has one line that matches VALID_PLAYBOOK_CHECK
+  #   - The content of the file is "a playbook"
+  #
+  # A file is considered a playbook if it has one line that matches
+  # VALID_PLAYBOOK_CHECK, or it starts with $ANSIBLE_VAULT, which in that case
+  # it is an encrypted file which it isn't possible to decern if it is a
+  # playbook or a different type of yaml file.
   #
   def playbook?(filename, worktree)
     return false unless filename.match?(/\.ya?ml$/)
 
-    worktree.read_file(filename).each_line do |line|
+    content = worktree.read_file(filename)
+    return true if content.start_with?("$ANSIBLE_VAULT")
+
+    content.each_line do |line|
       return true if line.match?(VALID_PLAYBOOK_CHECK)
     end
 

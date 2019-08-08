@@ -208,6 +208,26 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
           expect(playbooks_for(record)).to eq(%w[hello_world.yml])
         end
       end
+
+      context "with a encrypted playbooks" do
+        let(:encrypted_repo) { File.join(clone_dir, "hello_world_encrypted") }
+
+        let(:encrypted_repo_structure) do
+          %w[
+            hello_world.yml
+            hello_world.encrypted.yml
+          ]
+        end
+
+        it "finds all playbooks" do
+          Spec::Support::FakeAnsibleRepo.generate(encrypted_repo, encrypted_repo_structure)
+
+          params[:scm_url] = "file://#{encrypted_repo}"
+          record           = build_record
+
+          expect(playbooks_for(record)).to match_array(%w[hello_world.yml hello_world.encrypted.yml])
+        end
+      end
     end
 
     describe "#update_in_provider" do

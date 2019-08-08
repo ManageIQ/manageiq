@@ -263,8 +263,21 @@ module Spec
         )
       end
 
+      # Generates dummy playbook file content
+      #
+      # If the filename ends with ".encrypted.yml", then it will be
+      # "encrypted", in which the content is made to look like it was.
+      #
+      # Since copying the encryption scheme of ansible-vault is outside the
+      # scope of this class, it simply does enough to emulate what a encrypted
+      # file looks like, which is:
+      #
+      #   - Adding the header ("$ANSIBLE_VAULT;1.1;AES256")
+      #   - "Encrypting" the data (just double converting it to hex)
+      #   - Taking the encrypted data and converting it to 80 chars
+      #
       def dummy_playbook_data_for(filename)
-        <<~PLAYBOOK_DATA
+        data = <<~PLAYBOOK_DATA
           - name: #{filename}
             hosts: all
             tasks:
@@ -272,6 +285,17 @@ module Spec
                 debug:
                   msg: "Hello World! (from #{filename})"
         PLAYBOOK_DATA
+
+        if filename.basename.fnmatch?("*.encrypted.{yml,yaml}", File::FNM_EXTGLOB)
+          to_hex = data.unpack1("H*").unpack1("H*")
+          data   = (0...to_hex.length).step(80).to_a
+                                      .map! { |start| to_hex[start, 80] }
+                                      .prepend("$ANSIBLE_VAULT;1.1;AES256")
+                                      .append("")
+                                      .join("\n")
+        end
+
+        data
       end
     end
   end
