@@ -14,4 +14,5 @@ module GitWorktreeException
   class TagMissing < RuntimeError; end
   class RefMissing < RuntimeError; end
   class InvalidCredentials < RuntimeError; end
+  class InvalidCredentialType < RuntimeError; end
 end

@@ -10,19 +10,23 @@ class GitWorktree
     require 'rugged'
 
     raise ArgumentError, "Must specify path" unless options.key?(:path)
-    @path          = options[:path]
-    @email         = options[:email]
-    @username      = options[:username] || ""
-    @bare          = options[:bare]
-    @commit_sha    = options[:commit_sha]
-    @password      = options[:password] || ""
-    @fast_forward_merge = options[:ff] || true
-    @remote_name   = 'origin'
-    @cred          = Rugged::Credentials::UserPassword.new(:username => @username,
-                                                           :password => @password)
-    @credentials_set = false
-    @base_name = File.basename(@path)
+    @path                 = options[:path]
+    @email                = options[:email]
+    @username             = options[:username]
+    @bare                 = options[:bare]
+    @commit_sha           = options[:commit_sha]
+    @password             = options[:password]
+    @ssh_private_key      = options[:ssh_private_key]
+    @fast_forward_merge   = options[:ff] || true
     @certificate_check_cb = options[:certificate_check]
+
+    @remote_name = 'origin'
+    @base_name   = File.basename(@path)
+
+    if @ssh_private_key && !Rugged.features.include?(:ssh)
+      raise GitWorktreeException::InvalidCredentialType, "ssh credentials are not enabled for use. Recompile the rugged/libgit2 gem with ssh support to enable it."
+    end
+
     process_repo(options)
   end
 
@@ -211,16 +215,46 @@ class GitWorktree
     @repo.checkout_tree(tree, :target_directory => target_directory, :strategy => :force)
   end
 
-  def credentials_cb(url, _username, _types)
-    if @credentials_set
-      raise GitWorktreeException::InvalidCredentials, "Please provide username and password for URL #{url}" if @username.blank? || @password.blank?
-      raise GitWorktreeException::InvalidCredentials, "Invalid credentials for URL #{url}"
+  def with_credential_options
+    if @ssh_private_key
+      @ssh_private_key_file = Tempfile.new
+      @ssh_private_key_file.write(@ssh_private_key)
+      @ssh_private_key_file.close
     end
-    @credentials_set = true
-    @cred
+
+    options = {:credentials => method(:credentials_cb)}
+    options[:certificate_check] = @certificate_check_cb if @certificate_check_cb
+
+    yield options
+  ensure
+    if @ssh_private_key_file
+      @ssh_private_key_file.unlink
+      @ssh_private_key_file = nil
+    end
   end
 
   private
+
+  def credentials_cb(url, username_from_url, _allowed_types)
+    username = @username || username_from_url
+
+    if @ssh_private_key_file
+      raise GitWorktreeException::InvalidCredentials, "Please provide username for URL #{url}" if username.blank?
+
+      Rugged::Credentials::SshKey.new(
+        :username   => username,
+        :privatekey => @ssh_private_key_file.path,
+        :passphrase => @password.presence
+      )
+    else
+      raise GitWorktreeException::InvalidCredentials, "Please provide username and password for URL #{url}" if @username.blank? || @password.blank?
+
+      Rugged::Credentials::UserPassword.new(
+        :username => @username,
+        :password => @password
+      )
+    end
+  end
 
   def current_branch
     @repo.head_unborn? ? 'master' : @repo.head.name.sub(/^refs\/heads\//, '')
@@ -241,9 +275,9 @@ class GitWorktree
   end
 
   def fetch
-    @credentials_set = false
-    options = {:credentials => method(:credentials_cb), :certificate_check => @certificate_check_cb}
-    @repo.fetch(@remote_name, options)
+    with_credential_options do |cred_options|
+      @repo.fetch(@remote_name, cred_options)
+    end
   end
 
   def pull
@@ -256,8 +290,9 @@ class GitWorktree
       @saved_cid = @repo.ref(local_ref).target.oid
       merge(commit, rebase)
       rebase = true
-      @credentials_set = false
-      @repo.push(@remote_name, [local_ref], :credentials => method(:credentials_cb))
+      with_credential_options do |cred_options|
+        @repo.push(@remote_name, [local_ref], cred_options)
+      end
     end
   end
 
@@ -310,9 +345,10 @@ class GitWorktree
   end
 
   def clone(url)
-    @credentials_set = false
-    options = {:credentials => method(:credentials_cb), :bare => true, :remote => @remote_name, :certificate_check => @certificate_check_cb}
-    @repo = Rugged::Repository.clone_at(url, @path, options)
+    @repo = with_credential_options do |cred_options|
+      options = cred_options.merge(:bare => true, :remote => @remote_name)
+      Rugged::Repository.clone_at(url, @path, options)
+    end
   end
 
   def fetch_entry(path)
@@ -366,7 +402,7 @@ class GitWorktree
   end
 
   def create_commit(message, tree, parents)
-    author = {:email => @email, :name => @username, :time => Time.now}
+    author = {:email => @email, :name => @username || @email, :time => Time.now}
     # Create the actual commit but dont update the reference
     Rugged::Commit.create(@repo, :author  => author,  :committer  => author,
                                  :message => message, :parents    => parents,
