@@ -64,7 +64,6 @@ module MiqSchedule::ImportExport
         miq_schedule['userid'] = User.find_by(:id => report["userid"])
       end
 
-      miq_schedule["name"] = miq_schedule["name"] + "EUEUE"
       new_or_existing_schedule = MiqSchedule.where(:name => miq_schedule["name"], :resource_type => miq_schedule["resource_type"]).first_or_initialize
 
       filter_resource_name = miq_schedule.delete("filter_resource_name")
