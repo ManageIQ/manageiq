@@ -1,10 +1,32 @@
 describe GitRepository do
-  it "no url" do
-    expect { FactoryBot.create(:git_repository, :url => nil) }.to raise_error(ActiveRecord::RecordInvalid)
-  end
+  describe "#url" do
+    it "missing" do
+      expect(FactoryBot.build(:git_repository, :url => nil)).to_not be_valid
+    end
 
-  it "invalid url" do
-    expect { FactoryBot.create(:git_repository, :url => "abc") }.to raise_error(ActiveRecord::RecordInvalid)
+    it "invalid" do
+      expect(FactoryBot.build(:git_repository, :url => "abc")).to_not be_valid
+    end
+
+    it "http" do
+      expect(FactoryBot.build(:git_repository, :url => "http://example.com/ManageIQ/manageiq.git")).to be_valid
+    end
+
+    it "https" do
+      expect(FactoryBot.build(:git_repository, :url => "https://example.com/ManageIQ/manageiq.git")).to be_valid
+    end
+
+    it "file" do
+      expect(FactoryBot.build(:git_repository, :url => "file:///home/foo/ManageIQ/manageiq")).to be_valid
+    end
+
+    it "ssh" do
+      expect(FactoryBot.build(:git_repository, :url => "ssh://example.com/ManageIQ/manageiq.git")).to be_valid
+    end
+
+    it "ssh user@host:path" do
+      expect(FactoryBot.build(:git_repository, :url => "git@example.com:ManageIQ/manageiq.git")).to be_valid
+    end
   end
 
   it "default dirname" do
