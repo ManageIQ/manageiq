@@ -206,7 +206,7 @@ module Ansible
         end
         command_line_hash.merge!(cred_command_line)
 
-        env_vars_hash   = env_vars.merge(cred_env_vars)
+        env_vars_hash   = env_vars.merge(cred_env_vars).merge(python_env)
         extra_vars_hash = extra_vars.merge(cred_extra_vars)
 
         create_hosts_file(base_dir, hosts)
@@ -298,6 +298,19 @@ module Ansible
 
         playbook_dir = File.dirname(playbook_or_role_args[:playbook])
         Ansible::Content.new(playbook_dir).fetch_galaxy_roles
+      end
+
+      def python_env
+        python3_modules_path = "/var/lib/awx/venv/ansible/lib/python3.6/site-packages/"
+        python2_modules_path = "/var/lib/manageiq/venv/lib/python2.7/site-packages/"
+
+        if File.exist?(python3_modules_path)
+          { "PYTHONPATH" => python3_modules_path }
+        elsif File.exist?(python2_modules_path)
+          { "PYTHONPATH" => python2_modules_path }
+        else
+          {}
+        end
       end
 
       def credentials_info(credentials, base_dir)

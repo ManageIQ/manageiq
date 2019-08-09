@@ -87,6 +87,38 @@ describe Ansible::Runner do
       described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
     end
 
+    it "sets PYTHONPATH correctly with python3 modules installed " do
+      python2_modules_path = "/var/lib/manageiq/venv/lib/python2.7/site-packages/"
+      python3_modules_path = "/var/lib/awx/venv/ansible/lib/python3.6/site-packages/"
+
+      allow(File).to receive(:exist?).with(python2_modules_path).and_return(false)
+      allow(File).to receive(:exist?).with(python3_modules_path).and_return(true)
+
+      expect(AwesomeSpawn).to receive(:run) do |command, options|
+        expect(command).to eq("ansible-runner")
+
+        expect(options[:env]["PYTHONPATH"]).to eq(python3_modules_path)
+      end.and_return(result)
+
+      described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
+    end
+
+    it "sets PYTHONPATH correctly with python2 modules installed " do
+      python2_modules_path = "/var/lib/manageiq/venv/lib/python2.7/site-packages/"
+      python3_modules_path = "/var/lib/awx/venv/ansible/lib/python3.6/site-packages/"
+
+      allow(File).to receive(:exist?).with(python2_modules_path).and_return(true)
+      allow(File).to receive(:exist?).with(python3_modules_path).and_return(false)
+
+      expect(AwesomeSpawn).to receive(:run) do |command, options|
+        expect(command).to eq("ansible-runner")
+
+        expect(options[:env]["PYTHONPATH"]).to eq(python2_modules_path)
+      end.and_return(result)
+
+      described_class.run(env_vars, extra_vars, playbook, :become_enabled => true)
+    end
+
     context "with special characters" do
       let(:env_vars)   { {"ENV1" => "pa$%w0rd!'"} }
       let(:extra_vars) { {"name" => "john's server"} }
