@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Hammer-10
+
+### Fixed
+- Don't create retirement tasks for things that are already retired [(#18895)](https://github.com/ManageIQ/manageiq/pull/18895)
+- Allow modification of "Create new Picture" product feature on a role. [(#18982)](https://github.com/ManageIQ/manageiq/pull/18982)
+- set vm name on reconnect [(#19031)](https://github.com/ManageIQ/manageiq/pull/19031)
+
 ## Ivanchuk-Beta2
 
 ### Added
@@ -81,13 +88,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Rename WebSocketWorker to RemoteConsoleWorker [(#18337)](https://github.com/ManageIQ/manageiq/pull/18337)
 
 ### Fixed
-- set vm name on reconnect [(#19031)](https://github.com/ManageIQ/manageiq/pull/19031)
 - Fix Embedded Ansible Respository refresh [(#19024)](https://github.com/ManageIQ/manageiq/pull/19024)
-- Allow modification of "Create new Picture" product feature on a role. [(#18982)](https://github.com/ManageIQ/manageiq/pull/18982)
 - When copying ServiceTemplate copy only direct_custom_buttons [(#18960)](https://github.com/ManageIQ/manageiq/pull/18960)
 - Validate bools with inclusion [(#18914)](https://github.com/ManageIQ/manageiq/pull/18914)
 - Adding data integrity constrains for some associations to User model [(#18472)](https://github.com/ManageIQ/manageiq/pull/18472)
-- Don't create retirement tasks for things that are already retired [(#18895)](https://github.com/ManageIQ/manageiq/pull/18895)
 - Updated MiqShortcuts for MySettings Start At Login dropdown [(#18416)](https://github.com/ManageIQ/manageiq/pull/18416)
 - honor storage_file_collection_time_utc setting [(#18585)](https://github.com/ManageIQ/manageiq/pull/18585)
 - Rename Configuration feature to Main Configuration [(#18707)](https://github.com/ManageIQ/manageiq/pull/18707)
