@@ -1,4 +1,4 @@
-FROM manageiq/manageiq-pods:frontend-ivanchuk-latest
+FROM manageiq/manageiq-pods:frontend-latest-ivanchuk
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
 
 ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
