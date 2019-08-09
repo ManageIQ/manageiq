@@ -6,7 +6,7 @@ class GitRepository < ApplicationRecord
 
   GIT_REPO_DIRECTORY = Rails.root.join('data/git_repos')
 
-  validates :url, :format => URI.regexp(%w[http https file ssh]), :allow_nil => false
+  validates :url, :format => Regexp.union(URI.regexp(%w[http https file ssh]), /\A[-\w:.]+@.*:/), :allow_nil => false
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
