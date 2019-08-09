@@ -1,5 +1,3 @@
-require 'support/fake_ansible_repo'
-
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource do
   context "with a local repo" do
     let(:manager) do
