@@ -93,6 +93,22 @@ describe GitRepository do
         expect(repo.default_authentication.password).to eq(password)
       end
 
+      it "sends the proxy settings to the worktree instance" do
+        proxy_settings = {
+          :git_repository_proxy => {
+            :host   => "example.com",
+            :port   => "80",
+            :scheme => "http",
+            :path   => "/proxy"
+          }
+        }
+        stub_settings(proxy_settings)
+        expect(GitWorktree).to receive(:new).with(hash_including(:proxy_url => "http://example.com:80/proxy")).twice.times.and_return(gwt)
+        expect(gwt).to receive(:pull).with(no_args)
+
+        repo.refresh
+      end
+
       context "self signed certifcate" do
         let(:verify_ssl) { OpenSSL::SSL::VERIFY_NONE }
 

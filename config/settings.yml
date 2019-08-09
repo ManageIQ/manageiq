@@ -840,6 +840,7 @@
   :port:
   :user:
   :scheme:
+  :path:
 :help_menu:
   :documentation:
     :type: default

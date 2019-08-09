@@ -231,7 +231,18 @@ class GitRepository < ApplicationRecord
         params[:password] = auth.password
       end
     end
+    params[:proxy_url] = proxy_url if proxy_url?
     params
+  end
+
+  def proxy_url?
+    !!Settings.git_repository_proxy.host
+  end
+
+  def proxy_url
+    uri_opts = Settings.git_repository_proxy.to_h.slice(:host, :port, :scheme, :path)
+    uri_opts[:path] ||= "/"
+    URI::Generic.build(uri_opts).to_s
   end
 
   def broadcast_repo_dir_delete
