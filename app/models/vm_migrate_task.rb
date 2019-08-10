@@ -2,6 +2,7 @@ class VmMigrateTask < MiqRequestTask
   alias_attribute :vm, :source
 
   validate :validate_request_type, :validate_state
+  default_value_for :request_type, "vm_migrate"
 
   AUTOMATE_DRIVES = true
 
