@@ -153,6 +153,25 @@ class MiqQueue < ApplicationRecord
     msg
   end
 
+  # Execute a job on all servers.
+  #
+  # Raises an ArgumentError if zone or role keys are specified, and those keys
+  # will be nil'd out so `MiqQueue.get` "ignores" those fields.
+  #
+  def self.broadcast(options)
+    # Currently not filterable by these keys (:zone, :role)
+    #
+    # If this feature is ever needed, ensure you are not just passing the
+    # values from :zone and :role, but ALSO filtering the server list down by
+    # those same values to ensure orphan jobs are not being created.
+    raise ArgumentError, "invalid key :zone" if options.key?(:zone)
+    raise ArgumentError, "invalid key :role" if options.key?(:role)
+
+    MiqServer.active_miq_servers.select(:id, :guid).each do |server|
+      put(options.merge(:server_guid => server.guid, :zone => nil, :role => nil))
+    end
+  end
+
   # Trigger a background job
   #
   # target_worker:
