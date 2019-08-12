@@ -48,12 +48,20 @@ describe AutomationRequest do
       expect(ar.options[:attrs].keys).to include("VmOrTemplate::vm")
     end
 
-    it "creates request with schedule" do
-      @parameters['schedule_time'] = "10"
-      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
+    context "with schedule" do
+      it "with schedule_time param" do
+        @parameters['schedule_time'] = "2019-08-14 17:41:06 UTC"
+        ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
 
-      expect(ar.options[:schedule_type]).to eq("schedule")
-      expect(ar.options[:schedule_time]).to be_within(1.second).of 10.days.from_now
+        expect(ar.options[:schedule_type]).to eq("schedule")
+        expect(ar.options[:schedule_time]).to be_within(1.second).of Time.zone.parse("2019-08-14 17:41:06 UTC")
+      end
+
+      it "immediately" do
+        ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
+
+        expect(ar.options[:schedule_type]).to eq("immediately")
+      end
     end
 
     it 'does not downcase and stringify objects in the parameters hash' do
