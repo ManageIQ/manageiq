@@ -756,6 +756,86 @@ describe MiqQueue do
     end
   end
 
+  describe ".broadcast" do
+    let(:queue_params) do
+      {
+        :class_name  => 'MyClass',
+        :method_name => 'method1',
+        :args        => [1, 2]
+      }
+    end
+
+    def queue_items
+      MiqQueue.where(queue_params.slice(:class_name, :method_name))
+    end
+
+    context "with no servers" do
+      it "nothing is created" do
+        MiqQueue.broadcast(queue_params)
+
+        expect(queue_items.count).to eq(0)
+      end
+    end
+
+    context "with a single server" do
+      it "creates a queue item for the server" do
+        EvmSpecHelper.create_guid_miq_server_zone
+        MiqQueue.broadcast(queue_params)
+
+        expect(queue_items.count).to eq(1)
+        expect(MiqQueue.get).to have_attributes(queue_params)
+      end
+    end
+
+    context "with servers in two different zones" do
+      let(:other_role) { FactoryBot.create(:server_role, :name => "other_role") }
+      let(:other_zone) { FactoryBot.create(:zone) }
+
+      # NOTE: `.create_list` doesn't work with `:guid`
+      let(:other_servers) do
+        [
+          FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => other_zone),
+          FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => other_zone)
+        ]
+      end
+
+      before do
+        EvmSpecHelper.create_guid_miq_server_zone
+        other_servers.last.role = other_role.name
+      end
+
+      it "creates a queue item for the server" do
+        MiqQueue.broadcast(queue_params)
+
+        expect(queue_items.count).to eq(3)
+
+        (other_servers + [MiqServer.my_server]).each do |server|
+          EvmSpecHelper.stub_as_local_server(server)
+
+          expect(MiqQueue.get).to have_attributes(queue_params)
+        end
+      end
+
+      it ":zone and :role are cleared" do
+        MiqQueue.broadcast(queue_params)
+
+        expect(queue_items.count).to eq(3)
+        expect(queue_items.map(&:zone).all?(&:nil?)).to be_truthy
+        expect(queue_items.map(&:role).all?(&:nil?)).to be_truthy
+      end
+
+      it "raises an error if :zone is passed" do
+        queue_params[:zone] = other_zone
+        expect { MiqQueue.broadcast(queue_params) }.to raise_error(ArgumentError)
+      end
+
+      it "raises an error if :role is passed" do
+        queue_params[:role] = other_zone
+        expect { MiqQueue.broadcast(queue_params) }.to raise_error(ArgumentError)
+      end
+    end
+  end
+
   describe ".unqueue" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
