@@ -383,6 +383,9 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
         expect(Notification).to receive(:create!).with(notification_args('deletion', {}))
         record.delete_in_provider
 
+        # Run most recent queue item (`GitRepository#broadcast_repo_dir_delete`)
+        MiqQueue.get.deliver
+
         expect { record.reload }.to raise_error ActiveRecord::RecordNotFound
 
         expect(git_repo_dir).to_not exist
