@@ -11,6 +11,32 @@ class TransformationMappingItem < ApplicationRecord
   validate :source_datastore,      :if => -> { source.kind_of?(Storage) }
   validate :destination_datastore, :if => -> { destination.kind_of?(Storage) || destination.kind_of?(CloudVolume) }
 
+  #validate :source_network,    :if => -> { source.kind_of?(Lan) }
+  #validate :destination_network, :if => -> { destination.kind_of?(Lan) || destination.kind_of?(CloudNetwork) }
+
+  def source_network
+    mappings = transformation_mapping.transformation_mapping_items.where(:source_type => "EmsCluster")
+    src_cluster_lans = mappings.collect(&:source).collect(&:lans).flatten
+
+    unless src_cluster_lans.include?(source)
+      errors.add(:source, "cluster lans must include source lan: #{source}")
+    end
+  end
+
+  def destination_network
+    if destination.kind_of?(Lan) # Redhat
+      mappings         = transformation_mapping.transformation_mapping_items.where(:destination_type=> "EmsCluster")
+      dst_cluster_lans = mappings.collect(&:destination).collect(&:lans).flatten
+    elsif destination.kind_of?(CloudNetwork) # Openstack
+      mappings         = transformation_mapping.transformation_mapping_items.where(:destination_type => "CloudTenant")
+      dst_cluster_lans = mappings.collect(&:destination).collect(&:cloud_networks).flatten
+    end
+
+     unless dst_cluster_lans.include?(destination)
+      errors.add(:destination, "cluster lans must include destination lan: #{destination}")
+    end
+  end
+
   def destination_datastore
     if destination.kind_of?(Storage) # Redhat
       mapping_items = transformation_mapping.transformation_mapping_items.where(:destination_type=> "EmsCluster")
