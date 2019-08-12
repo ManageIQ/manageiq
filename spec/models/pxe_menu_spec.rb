@@ -162,4 +162,16 @@ PXEMENU
       expect(new_pxe_menu.pxe_images.length).to eq(3)
     end
   end
+
+  describe 'destroy' do
+    let!(:pxe_image) { FactoryBot.create(:pxe_image, :pxe_menu => subject) }
+
+    it 'removes related pxe images as well' do
+      expect(PxeMenu.count).to eq(1)
+      expect(PxeImage.count).to eq(1)
+      subject.destroy
+      expect(PxeMenu.count).to eq(0)
+      expect(PxeImage.count).to eq(0)
+    end
+  end
 end

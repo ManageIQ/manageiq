@@ -1,5 +1,8 @@
 class PxeMenu < ApplicationRecord
+  include NewWithTypeStiMixin
+
   belongs_to :pxe_server
+  has_many :pxe_images, :dependent => :destroy
 
   def self.class_from_contents(contents)
     line = contents.to_s.each_line { |l| break l }
