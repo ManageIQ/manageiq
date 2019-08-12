@@ -1,5 +1,9 @@
-FROM manageiq/manageiq-pods:frontend-latest-ivanchuk
+ARG IMAGE_REF=latest-ivanchuk
+FROM manageiq/manageiq-pods:frontend-${IMAGE_REF}
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq
+
+## Set build ARG
+ARG REF=ivanchuk
 
 ENV DATABASE_URL=postgresql://root@localhost/vmdb_production?encoding=utf8&pool=5&wait_timeout=5
 
