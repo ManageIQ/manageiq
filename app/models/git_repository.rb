@@ -13,9 +13,14 @@ class GitRepository < ApplicationRecord
 
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
-  after_destroy :delete_repo_dir # TODO: Need to distribute this to all systems
+  after_destroy :broadcast_repo_dir_delete
 
   INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
+
+  def self.delete_repo_dir(id, directory_name)
+    _log.info("Deleting GitRepository[#{id}] in #{directory_name} for MiqServer[#{MiqServer.my_server.id}]...")
+    FileUtils.rm_rf(directory_name)
+  end
 
   def refresh
     update_repo
@@ -171,7 +176,11 @@ class GitRepository < ApplicationRecord
     params
   end
 
-  def delete_repo_dir
-    FileUtils.rm_rf(directory_name)
+  def broadcast_repo_dir_delete
+    MiqQueue.broadcast(
+      :class_name  => self.class.name,
+      :method_name => "delete_repo_dir",
+      :args        => [id, directory_name]
+    )
   end
 end
