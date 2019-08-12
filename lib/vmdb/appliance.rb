@@ -11,7 +11,7 @@ module Vmdb
     end
 
     def self.CODENAME
-      "J-release".freeze
+      "Jansa".freeze
     end
 
     def self.RELEASE
