@@ -106,13 +106,22 @@ describe "VM Retirement Management" do
 
   describe "retire request" do
     it "with one src_id" do
-      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id], :__request_type__ => "vm_retire"}, user)
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id], :__initiated_by__ => 'user', :__request_type__ => "vm_retire"}, user)
       Vm.make_retire_request(@vm.id, user)
     end
 
     it "with many src_ids" do
-      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id, vm2.id], :__request_type__ => "vm_retire"}, user)
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id, vm2.id], :__initiated_by__ => 'user', :__request_type__ => "vm_retire"}, user)
       Vm.make_retire_request(@vm.id, vm2.id, user)
+    end
+
+    it "initiated by system" do
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id, vm2.id], :__initiated_by__ => 'system', :__request_type__ => "vm_retire"}, user)
+      Vm.make_retire_request(@vm.id, vm2.id, user, :initiated_by => 'system')
+    end
+
+    it "with user as initiated_by" do
+      expect { Vm.make_retire_request(@vm.id, vm2.id, user, :initiated_by => user) }.to raise_error(/Initiated by is not included in the list/)
     end
   end
 
