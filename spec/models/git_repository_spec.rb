@@ -238,16 +238,50 @@ describe GitRepository do
       let(:dir_name) { repo.directory_name }
 
       context "when repo deletion has no errors" do
+        before do
+          EvmSpecHelper.create_guid_miq_server_zone
+        end
+
         it "deletes the repo and the directory" do
           expect(FileUtils).to receive(:rm_rf).with(dir_name)
 
           repo.destroy
+          delete_job = MiqQueue.get
+          delete_job.deliver
+        end
+      end
+
+      context "with multiple MiqServers" do
+        let(:other_zone) { FactoryBot.create(:zone) }
+
+        let(:other_servers) do
+          [
+            FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => other_zone),
+            FactoryBot.create(:miq_server, :guid => SecureRandom.uuid, :zone => other_zone)
+          ]
+        end
+
+        before do
+          EvmSpecHelper.create_guid_miq_server_zone
+          other_servers
+        end
+
+        it "broadcasts the deletes to all servers" do
+          expect(FileUtils).to receive(:rm_rf).with(dir_name).exactly(3).times
+
+          repo.destroy
+          (other_servers + [MiqServer.my_server]).each do |server|
+            EvmSpecHelper.stub_as_local_server(server)
+
+            delete_job = MiqQueue.get
+            delete_job.deliver
+          end
         end
       end
 
       context "when repo deletion has errors" do
         before do
-          allow(repo).to receive(:delete_repo_dir).and_raise(MiqException::Error, "wham")
+          allow(repo).to receive(:broadcast_repo_dir_delete).and_raise(MiqException::Error, "wham")
         end
 
         it "does not delete the repo and the directory" do
