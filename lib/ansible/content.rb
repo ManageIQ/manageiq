@@ -31,12 +31,7 @@ module Ansible
     end
 
     def requirements_file
-      @requirements_file ||= begin
-        local_file     = path.join('requirements.yml')
-        roles_dir_file = roles_dir.join('requirements.yml')
-
-        roles_dir_file.exist? ? roles_dir_file : local_file
-      end
+      @requirements_file ||= roles_dir.join('requirements.yml')
     end
   end
 end
