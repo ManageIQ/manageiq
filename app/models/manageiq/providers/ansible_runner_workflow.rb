@@ -2,17 +2,49 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   def self.create_job(env_vars, extra_vars, role_or_playbook_options,
                       hosts = ["localhost"], credentials = [],
                       timeout: 1.hour, poll_interval: 1.second, verbosity: 0, become_enabled: false)
-    options = job_options(env_vars, extra_vars, role_or_playbook_options, timeout,
-                          poll_interval, hosts, credentials, verbosity, become_enabled)
-    super(name, options)
+    super(name, role_or_playbook_options.merge(
+      :become_enabled => become_enabled,
+      :credentials    => credentials,
+      :env_vars       => env_vars,
+      :extra_vars     => extra_vars,
+      :hosts          => hosts,
+      :timeout        => timeout,
+      :poll_interval  => poll_interval,
+      :verbosity      => verbosity
+    ))
   end
 
   def current_job_timeout(_timeout_adjustment = 1)
     options[:timeout] || super
   end
 
-  def job_options(options)
-    raise(NotImplementedError, 'abstract')
+  def execution_type
+    raise NotImplementedError, "must be implemented in a subclass"
+  end
+
+  def pre_execute
+    # A step before running the playbook/role for any optional setup tasks
+    queue_signal(:execute)
+  end
+
+  def launch_runner
+    raise NotImplementedError, "must be implemented in a subclass"
+  end
+
+  def execute
+    response = launch_runner
+
+    if response.nil?
+      queue_signal(:abort, "Failed to run ansible #{execution_type}", "error")
+    else
+      context[:ansible_runner_response] = response.dump
+
+      started_on = Time.now.utc
+      update!(:context => context, :started_on => started_on)
+      miq_task.update!(:started_on => started_on)
+
+      queue_signal(:poll_runner)
+    end
   end
 
   def poll_runner
@@ -21,7 +53,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       if started_on + options[:timeout] < Time.now.utc
         response.stop
 
-        queue_signal(:abort, "Playbook has been running longer than timeout", "error")
+        queue_signal(:abort, "ansible #{execution_type} has been running longer than timeout", "error")
       else
         queue_signal(:poll_runner, :deliver_on => deliver_on)
       end
@@ -32,26 +64,26 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       context[:ansible_runner_stdout]      = result.parsed_stdout
 
       if result.return_code != 0
-        set_status("Playbook failed", "error")
-        _log.warn("Playbook failed:\n#{result.parsed_stdout.join("\n")}")
+        set_status("ansible #{execution_type} failed", "error")
+        _log.warn("ansible #{execution_type} failed:\n#{result.parsed_stdout.join("\n")}")
       else
-        set_status("Playbook completed with no errors", "ok")
+        set_status("ansible #{execution_type} completed with no errors", "ok")
       end
-      queue_signal(:post_playbook)
+      queue_signal(:post_execute)
     end
   end
 
-  def post_playbook
-    # A step after running the playbook for any optional cleanup tasks
+  def post_execute
+    # A step after running the playbook/role for any optional cleanup tasks
     queue_signal(:finish, message, status)
   end
 
-  def fail_unimplamented
-    raise(NotImplementedError, "this is an abstract class, use a subclass that implaments a 'start' method")
+  def start
+    # Cannot use alias otherwise subclasses can't override
+    pre_execute
   end
 
   alias initializing dispatch_start
-  alias start        fail_unimplamented
   alias finish       process_finished
   alias abort_job    process_abort
   alias cancel       process_cancel
@@ -73,7 +105,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       :task_id     => guid,
       :args        => args,
       :deliver_on  => deliver_on,
-      :server_guid => MiqServer.my_server.guid,
+      :server_guid => MiqServer.my_server.guid
     )
   end
 
@@ -85,13 +117,15 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
     self.state ||= 'initialize'
 
     {
-      :initializing  => {'initialize'       => 'waiting_to_start'},
-      :poll_runner   => {'running'          => 'running'},
-      :post_playbook => {'running'          => 'post_playbook'},
-      :finish        => {'*'                => 'finished'},
-      :abort_job     => {'*'                => 'aborting'},
-      :cancel        => {'*'                => 'canceling'},
-      :error         => {'*'                => '*'}
+      :initializing => {'initialize'       => 'waiting_to_start'},
+      :start        => {'waiting_to_start' => 'pre_execute'},
+      :execute      => {'pre_execute'      => 'running'},
+      :poll_runner  => {'running'          => 'running'},
+      :post_execute => {'running'          => 'post_execute'},
+      :finish       => {'*'                => 'finished'},
+      :abort_job    => {'*'                => 'aborting'},
+      :cancel       => {'*'                => 'canceling'},
+      :error        => {'*'                => '*'}
     }
   end
 end
