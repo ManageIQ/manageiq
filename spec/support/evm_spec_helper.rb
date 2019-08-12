@@ -61,11 +61,13 @@ module EvmSpecHelper
     instance.instance_variable_set(ivar, nil)
   end
 
+  def self.stub_as_local_server(server)
+    allow(MiqServer).to receive(:my_guid).and_return(server.guid)
+    MiqServer.my_server_clear_cache
+  end
+
   def self.local_miq_server(attrs = {})
-    remote_miq_server(attrs).tap do |server|
-      allow(MiqServer).to receive(:my_guid).and_return(server.guid)
-      MiqServer.my_server_clear_cache
-    end
+    remote_miq_server(attrs).tap { |server| stub_as_local_server(server) }
   end
 
   def self.local_guid_miq_server_zone
