@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-9
+## Hammer-10
+
+### Fixed
+- Don't create retirement tasks for things that are already retired [(#18895)](https://github.com/ManageIQ/manageiq/pull/18895)
+- Allow modification of "Create new Picture" product feature on a role. [(#18982)](https://github.com/ManageIQ/manageiq/pull/18982)
+- set vm name on reconnect [(#19031)](https://github.com/ManageIQ/manageiq/pull/19031)
+
+## Hammer-9 - Released 2019-07-23
 
 ### Added
 - [V2V] Enhance throttler logging [(#18929)](https://github.com/ManageIQ/manageiq/pull/18929) 
