@@ -29,20 +29,42 @@ class InfraConversionJob < Job
   alias_method :cancel,       :process_cancel
   alias_method :error,        :process_error
 
+  # This is essentially an interface method called by the
+  # Job::StateMachine#transitions method.
+  #
   def load_transitions
     self.state ||= 'initialize'
 
     {
-      :initializing     => {'initialize'       => 'waiting_to_start'},
-      :start            => {'waiting_to_start' => 'running'},
-      :poll_conversion  => {'running'          => 'running'},
-      :start_post_stage => {'running'          => 'post_conversion'},
-      :poll_post_stage  => {'post_conversion'  => 'post_conversion'},
-      :finish           => {'*'                => 'finished'},
-      :abort_job        => {'*'                => 'aborting'},
-      :cancel           => {'*'                => 'canceling'},
-      :error            => {'*'                => '*'}
+      :initializing       => {'initialize'       => 'waiting_to_start'},
+      :start              => {'waiting_to_start' => 'running'},
+      :collapse_snapshots => {'waiting_to_start' => 'collapsing_snapshots'},
+      :poll_conversion    => {'running'          => 'running'},
+      :start_post_stage   => {'running'          => 'post_conversion'},
+      :poll_post_stage    => {'post_conversion'  => 'post_conversion'},
+      :finish             => {'*'                => 'finished'},
+      :abort_job          => {'*'                => 'aborting'},
+      :cancel             => {'*'                => 'canceling'},
+      :error              => {'*'                => '*'}
     }
+  end
+
+  # Collapse (delete) the snapshots of the virtual machine, because disk-sync
+  # doesn't work if the VM has snapshots. This is a limitation of CBT.
+  #
+  def collapse_snapshots
+    if vm.supports_feature?(:remove_all_snapshots)
+      _log.info(prep_message('Collapsing snapshots'))
+      vm.remove_all_snapshots
+    end
+
+    if warm_migration?
+      signal = :warm_migration_sync
+    else
+      signal = :run_pre_migration_playbook
+    end
+
+    queue_signal(signal)
   end
 
   def migration_task
