@@ -60,7 +60,8 @@ module Ansible
           # https://github.com/ansible/ansible-runner/issues/89#issuecomment-404236832 , so it fails early if there is
           # a non json line
           begin
-            parsed_stdout << JSON.parse(line)
+            data = JSON.parse(line)
+            parsed_stdout << data if data.kind_of?(Hash)
           rescue => e
             _log.warn("Couldn't parse JSON from: #{e}")
           end
