@@ -516,6 +516,14 @@ describe Vmdb::Settings do
     include_examples "password handling"
   end
 
+  describe ".filter_passwords!" do
+    it "removes the field from the settings" do
+      stub_settings(:password => "abcd")
+      filtered = described_class.filter_passwords!(Settings.to_h)
+      expect(filtered.keys).to_not include(:password)
+    end
+  end
+
   describe ".for_resource" do
     let(:server) { FactoryBot.create(:miq_server) }
 
