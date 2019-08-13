@@ -1,5 +1,4 @@
 RSpec.describe InfraConversionJob, :v2v do
-  #let(:vm)      { FactoryBot.create(:vm_or_template) }
   let(:vm)      { FactoryBot.create(:vm_vmware) }
   let(:request) { FactoryBot.create(:service_template_transformation_plan_request) }
   let(:task)    { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm) }
@@ -100,6 +99,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it 'to collapse snapshots when signaled :collapse_snapshots if warm migration' do
         allow(job).to receive(:warm_migration?).and_return(true)
         job.state = 'waiting_to_start'
+
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:queue_signal).with(:warm_migration_sync)
           job.signal(:collapse_snapshots)
@@ -111,6 +111,26 @@ RSpec.describe InfraConversionJob, :v2v do
         job.state = 'waiting_to_start'
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:queue_signal).with(:run_pre_migration_playbook)
+          job.signal(:collapse_snapshots)
+        end
+      end
+
+      it 'calls remove_all_snapshots if supported' do
+        allow(vm).to receive(:supports_remove_all_snapshots?).and_return(true)
+
+        job.state = 'waiting_to_start'
+
+        Timecop.freeze(2019, 2, 6) do
+          expect(vm).to receive(:remove_all_snapshots)
+          job.signal(:collapse_snapshots)
+        end
+      end
+
+      it 'does not call remove_all_snapshots if not supported' do
+        job.state = 'waiting_to_start'
+
+        Timecop.freeze(2019, 2, 6) do
+          expect(vm).to_not receive(:remove_all_snapshots)
           job.signal(:collapse_snapshots)
         end
       end
