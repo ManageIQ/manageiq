@@ -22,8 +22,13 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
     raise NotImplementedError, "must be implemented in a subclass"
   end
 
+  def start
+    queue_signal(:pre_execute)
+  end
+
   def pre_execute
-    # A step before running the playbook/role for any optional setup tasks
+    verify_options
+    prepare_repository
     queue_signal(:execute)
   end
 
@@ -74,13 +79,8 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   end
 
   def post_execute
-    # A step after running the playbook/role for any optional cleanup tasks
+    cleanup_git_repository
     queue_signal(:finish, message, status)
-  end
-
-  def start
-    # Cannot use alias otherwise subclasses can't override
-    pre_execute
   end
 
   alias initializing dispatch_start
@@ -119,7 +119,8 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
     {
       :initializing => {'initialize'       => 'waiting_to_start'},
       :start        => {'waiting_to_start' => 'pre_execute'},
-      :execute      => {'pre_execute'      => 'running'},
+      :pre_execute  => {'pre_execute'      => 'execute'},
+      :execute      => {'execute'          => 'running'},
       :poll_runner  => {'running'          => 'running'},
       :post_execute => {'running'          => 'post_execute'},
       :finish       => {'*'                => 'finished'},
@@ -127,5 +128,37 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
       :cancel       => {'*'                => 'canceling'},
       :error        => {'*'                => '*'}
     }
+  end
+
+  private
+
+  def verify_options
+    raise NotImplementedError, "must be implemented in a subclass"
+  end
+
+  def prepare_repository
+    return unless options[:configuration_script_source_id]
+
+    checkout_git_repository
+    adjust_options_for_git_checkout_tempdir!
+  end
+
+  def adjust_options_for_git_checkout_tempdir!
+    raise NotImplementedError, "must be implemented in a subclass"
+  end
+
+  def checkout_git_repository
+    css = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource.find(options[:configuration_script_source_id])
+    options[:git_checkout_tempdir] = Dir.mktmpdir("ansible-runner-git")
+    save!
+    _log.info("Checking out git repository to #{options[:git_checkout_tempdir].inspect}...")
+    css.checkout_git_repository(options[:git_checkout_tempdir])
+  end
+
+  def cleanup_git_repository
+    return unless options[:git_checkout_tempdir]
+
+    _log.info("Cleaning up git repository checkout at #{options[:git_checkout_tempdir].inspect}...")
+    FileUtils.rm_rf(options[:git_checkout_tempdir])
   end
 end

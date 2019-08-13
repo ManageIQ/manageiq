@@ -9,7 +9,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
   end
 
-  context ".signal" do
+  context "#signal" do
     %w[start pre_execute execute poll_runner post_execute finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
@@ -36,6 +36,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       it_behaves_like "allows cancel signal"
       it_behaves_like "allows error signal"
 
+      it_behaves_like "doesn't allow pre_execute signal"
       it_behaves_like "doesn't allow execute signal"
       it_behaves_like "doesn't allow poll_runner signal"
       it_behaves_like "doesn't allow post_execute signal"
@@ -44,6 +45,21 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     context "pre_execute" do
       let(:state) { "pre_execute" }
 
+      it_behaves_like "allows pre_execute signal"
+      it_behaves_like "allows finish signal"
+      it_behaves_like "allows abort_job signal"
+      it_behaves_like "allows cancel signal"
+      it_behaves_like "allows error signal"
+
+      it_behaves_like "doesn't allow start signal"
+      it_behaves_like "doesn't allow execute signal"
+      it_behaves_like "doesn't allow poll_runner signal"
+      it_behaves_like "doesn't allow post_execute signal"
+    end
+
+    context "execute" do
+      let(:state) { "execute" }
+
       it_behaves_like "allows execute signal"
       it_behaves_like "allows finish signal"
       it_behaves_like "allows abort_job signal"
@@ -51,6 +67,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       it_behaves_like "allows error signal"
 
       it_behaves_like "doesn't allow start signal"
+      it_behaves_like "doesn't allow pre_execute signal"
       it_behaves_like "doesn't allow poll_runner signal"
       it_behaves_like "doesn't allow post_execute signal"
     end
@@ -84,8 +101,69 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
   end
 
-  context ".execute" do
+  context "#pre_execute" do
     let(:state) { "pre_execute" }
+    let(:css)   { FactoryGirl.create(:embedded_ansible_configuration_script_source) }
+    let(:playbook_relative_path) { "path/to/playbook" }
+
+    context "with playbook_path" do
+      it "succeeds" do
+        expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to_not receive(:checkout_git_repository)
+        expect(job).to receive(:queue_signal).with(:execute)
+
+        job.signal(:pre_execute)
+
+        expect(job.options[:playbook_path]).to eq "/path/to/playbook"
+      end
+    end
+
+    context "with configuration_script_source_id + playbook_relative_path" do
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:configuration_script_source_id => css.id, :playbook_relative_path => playbook_relative_path}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+
+      it "will checkout the git repository to a temp dir before proceeding" do
+        expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to receive(:checkout_git_repository)
+        expect(job).to receive(:queue_signal).with(:execute)
+
+        job.signal(:pre_execute)
+
+        expect(job.options[:playbook_path]).to start_with File.join(Dir.tmpdir, "ansible-runner-git")
+        expect(job.options[:playbook_path]).to end_with playbook_relative_path
+      end
+    end
+
+    context "with neither playbook_path nor a configuration_script_source_id, playbook_relative_path pair" do
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+
+      it "fails" do
+        expect(job).to_not receive(:queue_signal).with(:execute)
+
+        expect { job.signal(:pre_execute) }.to raise_error(ArgumentError)
+      end
+    end
+
+    context "with only configuration_script_source_id" do
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:configuration_script_source_id => css.id}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+
+      it "fails" do
+        expect(job).to_not receive(:queue_signal).with(:execute)
+
+        expect { job.signal(:pre_execute) }.to raise_error(ArgumentError)
+      end
+    end
+
+    context "with only playbook_relative_path" do
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:playbook_relative_path => playbook_relative_path}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+
+      it "fails" do
+        expect(job).to_not receive(:queue_signal).with(:execute)
+
+        expect { job.signal(:pre_execute) }.to raise_error(ArgumentError)
+      end
+    end
+  end
+
+  context "#execute" do
+    let(:state) { "execute" }
     let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
     it "ansible-runner succeeds" do
@@ -118,7 +196,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
     end
   end
 
-  context ".poll_runner" do
+  context "#poll_runner" do
     let(:state)          { "running" }
     let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
@@ -161,7 +239,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       end
     end
 
-    context ".deliver_on" do
+    context "deliver_on" do
       let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:playbook_path => "/path/to/playbook"}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
 
       it "uses the option to queue poll_runner" do

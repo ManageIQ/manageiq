@@ -9,4 +9,17 @@ class ManageIQ::Providers::AnsiblePlaybookWorkflow < ManageIQ::Providers::Ansibl
 
     Ansible::Runner.run_async(env_vars, extra_vars, playbook_path, kwargs)
   end
+
+  private
+
+  def verify_options
+    if !options[:playbook_path] && !(options[:configuration_script_source_id] && options[:playbook_relative_path])
+      raise ArgumentError, "must pass :playbook_path or a :configuration_script_source_id, :playbook_relative_path pair"
+    end
+  end
+
+  def adjust_options_for_git_checkout_tempdir!
+    options[:playbook_path] = File.join(options[:git_checkout_tempdir], options[:playbook_relative_path])
+    save!
+  end
 end

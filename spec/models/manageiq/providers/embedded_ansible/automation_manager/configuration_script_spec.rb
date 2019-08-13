@@ -38,17 +38,14 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
   context "#run" do
     let(:cs) { manager.configuration_scripts.first }
 
-    before do
-      expect(cs.parent.configuration_script_source).to receive(:checkout_git_repository)
-    end
-
     it "launches the referenced ansible job template" do
       job = cs.run
 
       expect(job).to be_a ManageIQ::Providers::AnsiblePlaybookWorkflow
       expect(job.options[:env_vars]).to eq({})
       expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"])
-      expect(File.basename(job.options[:playbook_path])).to eq(playbook.name)
+      expect(job.options[:configuration_script_source_id]).to eq(ansible_script_source.id)
+      expect(job.options[:playbook_relative_path]).to eq(playbook.name)
       expect(job.options[:timeout]).to eq(1.hour)
       expect(job.options[:verbosity]).to eq(0)
     end
