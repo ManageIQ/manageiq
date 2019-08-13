@@ -860,6 +860,10 @@
       :description: Edit Tags of Key Pairs
       :feature_type: control
       :identifier: auth_key_pair_cloud_tag
+    - :name: Set Ownership
+      :description: Set Ownership of Keys Pairs
+      :feature_type: control
+      :identifier: auth_key_pair_ownership
   - :name: Modify
     :description: Modify Key Pairs
     :feature_type: admin
