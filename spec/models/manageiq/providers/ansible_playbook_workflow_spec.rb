@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
   let(:job)     { described_class.create_job(*options).tap { |job| job.state = state } }
-  let(:options) { [{"ENV" => "VAR"}, %w[arg1 arg2], {:playbook_path => "/path/to/playbook"}, %w[192.0.2.0 192.0.2.1], {:verbosity => 3}] }
+  let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:playbook_path => "/path/to/playbook"}, %w[192.0.2.0 192.0.2.1], {:verbosity => 3}] }
   let(:state)   { "waiting_to_start" }
 
   context ".create_job" do
@@ -10,7 +10,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
   end
 
   context ".signal" do
-    %w(start pre_playbook run_playbook poll_runner post_playbook finish abort_job cancel error).each do |signal|
+    %w[start pre_execute execute poll_runner post_execute finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -19,7 +19,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       end
     end
 
-    %w(start pre_playbook run_playbook poll_runner post_playbook).each do |signal|
+    %w[start pre_execute execute poll_runner post_execute].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -36,15 +36,15 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       it_behaves_like "allows cancel signal"
       it_behaves_like "allows error signal"
 
-      it_behaves_like "doesn't allow run_playbook signal"
+      it_behaves_like "doesn't allow execute signal"
       it_behaves_like "doesn't allow poll_runner signal"
-      it_behaves_like "doesn't allow post_playbook signal"
+      it_behaves_like "doesn't allow post_execute signal"
     end
 
-    context "pre_playbook" do
-      let(:state) { "pre_playbook" }
+    context "pre_execute" do
+      let(:state) { "pre_execute" }
 
-      it_behaves_like "allows run_playbook signal"
+      it_behaves_like "allows execute signal"
       it_behaves_like "allows finish signal"
       it_behaves_like "allows abort_job signal"
       it_behaves_like "allows cancel signal"
@@ -52,7 +52,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
 
       it_behaves_like "doesn't allow start signal"
       it_behaves_like "doesn't allow poll_runner signal"
-      it_behaves_like "doesn't allow post_playbook signal"
+      it_behaves_like "doesn't allow post_execute signal"
     end
 
     context "running" do
@@ -65,11 +65,11 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       it_behaves_like "allows error signal"
 
       it_behaves_like "doesn't allow start signal"
-      it_behaves_like "doesn't allow pre_playbook signal"
+      it_behaves_like "doesn't allow pre_execute signal"
     end
 
-    context "post_playbook" do
-      let(:state) { "post_playbook" }
+    context "post_execute" do
+      let(:state) { "post_execute" }
 
       it_behaves_like "allows finish signal"
       it_behaves_like "allows abort_job signal"
@@ -77,22 +77,22 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       it_behaves_like "allows error signal"
 
       it_behaves_like "doesn't allow start signal"
-      it_behaves_like "doesn't allow pre_playbook signal"
-      it_behaves_like "doesn't allow run_playbook signal"
+      it_behaves_like "doesn't allow pre_execute signal"
+      it_behaves_like "doesn't allow execute signal"
       it_behaves_like "doesn't allow poll_runner signal"
-      it_behaves_like "doesn't allow post_playbook signal"
+      it_behaves_like "doesn't allow post_execute signal"
     end
   end
 
-  context ".run_playbook" do
-    let(:state) { "pre_playbook" }
+  context ".execute" do
+    let(:state) { "pre_execute" }
     let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
     it "ansible-runner succeeds" do
       response_async = Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results")
       runner_options = [
         {"ENV" => "VAR"},
-        %w[arg1 arg2],
+        {"arg1" => "val1"},
         "/path/to/playbook",
         {
           :become_enabled => false,
@@ -105,7 +105,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       expect(Ansible::Runner).to receive(:run_async).with(*runner_options).and_return(response_async)
       expect(job).to receive(:queue_signal).with(:poll_runner)
 
-      job.signal(:run_playbook)
+      job.signal(:execute)
 
       expect(job.context[:ansible_runner_response]).to eq(response_async.dump)
     end
@@ -114,7 +114,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       expect(Ansible::Runner).to receive(:run_async).and_return(nil)
       expect(job).to receive(:queue_signal).with(:abort, "Failed to run ansible playbook", "error")
 
-      job.signal(:run_playbook)
+      job.signal(:execute)
     end
   end
 
@@ -135,7 +135,7 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
 
       response = Ansible::Runner::Response.new(response_async.dump.merge(:return_code => 0))
       expect(response_async).to receive(:response).and_return(response)
-      expect(job).to receive(:queue_signal).with(:post_playbook)
+      expect(job).to receive(:queue_signal).with(:post_execute)
 
       job.signal(:poll_runner)
     end
@@ -155,14 +155,14 @@ describe ManageIQ::Providers::AnsiblePlaybookWorkflow do
       Timecop.travel(time) do
         expect(response_async).to receive(:running?).and_return(true)
         expect(response_async).to receive(:stop)
-        expect(job).to receive(:queue_signal).with(:abort, "Playbook has been running longer than timeout", "error")
+        expect(job).to receive(:queue_signal).with(:abort, "ansible playbook has been running longer than timeout", "error")
 
         job.signal(:poll_runner)
       end
     end
 
     context ".deliver_on" do
-      let(:options) { [{"ENV" => "VAR"}, %w[arg1 arg2], {:playbook_path => "/path/to/playbook"}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:playbook_path => "/path/to/playbook"}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
 
       it "uses the option to queue poll_runner" do
         now = Time.now.utc
