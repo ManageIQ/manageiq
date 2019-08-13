@@ -518,7 +518,7 @@ describe Vmdb::Settings do
 
   describe ".filter_passwords!" do
     it "removes the field from the settings" do
-      stub_settings(:password => "abcd")
+      stub_settings(:password => nil)
       filtered = described_class.filter_passwords!(Settings.to_h)
       expect(filtered.keys).to_not include(:password)
     end

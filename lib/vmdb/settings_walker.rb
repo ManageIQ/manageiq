@@ -39,7 +39,7 @@ module Vmdb
       # @param settings (see .walk)
       def walk_passwords(settings)
         walk(settings) do |key, value, _path, owner|
-          yield(key, value, owner) if value.present? && PASSWORD_FIELDS.include?(key.to_sym)
+          yield(key, value, owner) if PASSWORD_FIELDS.include?(key.to_sym)
         end
       end
 
@@ -47,7 +47,7 @@ module Vmdb
       #
       # @param settings (see .walk)
       def mask_passwords!(settings)
-        walk_passwords(settings) { |k, _v, h| h[k] = "********" }
+        walk_passwords(settings) { |k, v, h| h[k] = "********" if v.present? }
       end
 
       # Filter out any password attributes from the settings
@@ -61,14 +61,14 @@ module Vmdb
       #
       # @param settings (see .walk)
       def decrypt_passwords!(settings)
-        walk_passwords(settings) { |k, v, h| h[k] = ManageIQ::Password.try_decrypt(v) }
+        walk_passwords(settings) { |k, v, h| h[k] = ManageIQ::Password.try_decrypt(v) if v.present? }
       end
 
       # Walks the settings and encrypts passwords it finds
       #
       # @param settings (see .walk)
       def encrypt_passwords!(settings)
-        walk_passwords(settings) { |k, v, h| h[k] = ManageIQ::Password.try_encrypt(v) }
+        walk_passwords(settings) { |k, v, h| h[k] = ManageIQ::Password.try_encrypt(v) if v.present? }
       end
     end
 
