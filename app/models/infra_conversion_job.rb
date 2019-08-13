@@ -58,11 +58,7 @@ class InfraConversionJob < Job
       vm.remove_all_snapshots
     end
 
-    if warm_migration?
-      signal = :warm_migration_sync
-    else
-      signal = :run_pre_migration_playbook
-    end
+    signal = warm_migration? ? :warm_migration_sync : :run_pre_migration_playbook
 
     queue_signal(signal)
   end
