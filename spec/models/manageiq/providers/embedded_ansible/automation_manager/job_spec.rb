@@ -136,7 +136,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
       context "#raw_status and #raw_exists" do
         it "gets the stack status" do
           rstatus = subject.raw_status
-          expect(rstatus).to have_attributes(:status => "Pre_playbook", :reason => nil)
+          expect(rstatus).to have_attributes(:status => "Pre_execute", :reason => nil)
 
           expect(subject.raw_exists?).to be_truthy
         end
