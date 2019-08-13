@@ -47,7 +47,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     opts[:hosts] = hosts_array(opts.delete(:hosts))
 
     _log.info("Launching Ansible job with options:")
-    $log.log_hashes(opts)
+    $log.log_hashes(opts, :filter => ["api_token", "token"])
     new_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(jt, decrypt_options(opts))
     update_job_for_playbook(action, new_job, opts[:hosts])
 

@@ -17,7 +17,7 @@ class ServiceAnsibleTower < Service
       }
     )
     _log.info("Launching Ansible Tower job with options:")
-    $log.log_hashes(options)
+    $log.log_hashes(options, :filter => ["api_token", "token"])
     @job = job_class.create_job(job_template, options)
     add_resource(@job)
     @job
