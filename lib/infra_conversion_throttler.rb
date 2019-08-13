@@ -17,6 +17,12 @@ class InfraConversionThrottler
       _log.debug("-- Available slots in EMS: #{slots}")
 
       jobs.each do |job|
+        preflight_check = job.migration_task.preflight_check
+        if preflight_check[:status] == 'Error'
+          job.abort_conversion(preflight_check[:message], 'error')
+          next
+        end
+
         vm_name = job.migration_task.source.name
         _log.debug("- Looking for a conversion host for task for #{vm_name}")
 

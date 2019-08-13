@@ -51,18 +51,9 @@ class InfraConversionJob < Job
   end
 
   def start
-    # TransformationCleanup 3 things:
-    #  - kill v2v: ignored because no converion_host is there yet in the original automate-based logic
-    #  - power_on: ignored
-    #  - check_power_on: ignore
-
-    migration_task.preflight_check
-    _log.info(prep_message("Preflight check passed, task.state=#{migration_task.state}. continue ..."))
+    message = "Preflight check is ok. A conversion host has been assigned."
+    _log.info(prep_message(message))
     queue_signal(:poll_conversion)
-  rescue => error
-    message = prep_message("Preflight check has failed: #{error}")
-    _log.info(message)
-    abort_conversion(message, 'error')
   end
 
   def abort_conversion(message, status)
