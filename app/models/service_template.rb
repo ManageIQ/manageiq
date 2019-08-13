@@ -47,7 +47,7 @@ class ServiceTemplate < ApplicationRecord
   include_concern 'Filter'
   include_concern 'Copy'
 
-  validates :name, :presence => true
+  validates :name, :presence => true, :uniqueness => true
   belongs_to :tenant
 
   has_many   :service_templates, :through => :service_resources, :source => :resource, :source_type => 'ServiceTemplate'
