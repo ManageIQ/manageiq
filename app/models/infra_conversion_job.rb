@@ -53,7 +53,7 @@ class InfraConversionJob < Job
   # doesn't work if the VM has snapshots. This is a limitation of CBT.
   #
   def collapse_snapshots
-    if vm.supports_feature?(:remove_all_snapshots)
+    if vm.supports_remove_all_snapshots?
       _log.info(prep_message('Collapsing snapshots'))
       vm.remove_all_snapshots
     end
