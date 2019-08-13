@@ -12,8 +12,53 @@ describe Ansible::Runner::Response do
     end
   end
 
+  let(:good_stdout) do
+    <<~LINES
+      {"uuid": "d737fa4a", "counter": 1, "stdout": "", "start_line": 0, "end_line": 0}
+      {"uuid": "080027c4", "counter": 2, "stdout": "\\r\\nPLAY [List Variables] **********************************************************", "start_line": 0, "end_line": 2}
+      {"uuid": "080027c4", "counter": 3, "stdout": "\\r\\nTASK [Gathering Facts] *********************************************************", "start_line": 2, "end_line": 4}
+      {"uuid": "7f4409f5", "counter": 4, "stdout": "", "start_line": 4, "end_line": 4}
+    LINES
+  end
+
+  let(:bad_mixed_stdout) do
+    <<~LINES
+      {"uuid": "d737fa4a", "counter": 1, "stdout": "", "start_line": 0, "end_line": 0}
+      {"uuid": "080027c4", "counter": 2, "stdout": "\\r\\nPLAY [List Variables] **********************************************************", "start_line": 0, "end_line": 2}
+      PLAY [List Variables] **********************************************************
+      {"uuid": "080027c4", "counter": 3, "stdout": "\\r\\nTASK [Gathering Facts] *********************************************************", "start_line": 2, "end_line": 4}
+      TASK [Gathering Facts] *********************************************************
+      {"uuid": "7f4409f5", "counter": 4, "stdout": "", "start_line": 4, "end_line": 4}
+    LINES
+  end
+
   after do
     FileUtils.rm_rf(runner_dir) if Dir.exist?(runner_dir)
+  end
+
+  describe "#stdout" do
+    context "with no stdout file" do
+      it "returns an empty string" do
+        FileUtils.rm_rf(stdout_file.path)
+        expect(subject.stdout).to eq("")
+      end
+    end
+
+    context "with valid stdout (1 JSON object per line)" do
+      let(:stdout_lines) { good_stdout }
+
+      it "returns all the content" do
+        expect(subject.stdout).to eq(good_stdout)
+      end
+    end
+
+    context "with invalid stdout (mixed JSON and non-JSON lines)" do
+      let(:stdout_lines) { bad_mixed_stdout }
+
+      it "returns the valid content" do
+        expect(subject.stdout).to eq(good_stdout)
+      end
+    end
   end
 
   describe "#parsed_stdout" do
@@ -25,14 +70,7 @@ describe Ansible::Runner::Response do
     end
 
     context "with valid stdout (1 JSON object per line)" do
-      let(:stdout_lines) do
-        <<~LINES
-          {"uuid": "d737fa4a", "counter": 1, "stdout": "", "start_line": 0, "end_line": 0}
-          {"uuid": "080027c4", "counter": 2, "stdout": "\\r\\nPLAY [List Variables] **********************************************************", "start_line": 0, "end_line": 2}
-          {"uuid": "080027c4", "counter": 3, "stdout": "\\r\\nTASK [Gathering Facts] *********************************************************", "start_line": 2, "end_line": 4}
-          {"uuid": "7f4409f5", "counter": 4, "stdout": "", "start_line": 4, "end_line": 4}
-        LINES
-      end
+      let(:stdout_lines) { good_stdout }
 
       it "returns an array of only hashes" do
         expect(subject.parsed_stdout.all? { |line| line.kind_of?(Hash) }).to be_truthy
@@ -47,16 +85,7 @@ describe Ansible::Runner::Response do
     end
 
     context "with invalid stdout (mixed JSON and non-JSON lines)" do
-      let(:stdout_lines) do
-        <<~LINES
-          {"uuid": "d737fa4a", "counter": 1, "stdout": "", "start_line": 0, "end_line": 0}
-          {"uuid": "080027c4", "counter": 2, "stdout": "\\r\\nPLAY [List Variables] **********************************************************", "start_line": 0, "end_line": 2}
-          PLAY [List Variables] **********************************************************
-          {"uuid": "080027c4", "counter": 3, "stdout": "\\r\\nTASK [Gathering Facts] *********************************************************", "start_line": 2, "end_line": 4}
-          TASK [Gathering Facts] *********************************************************
-          {"uuid": "7f4409f5", "counter": 4, "stdout": "", "start_line": 4, "end_line": 4}
-        LINES
-      end
+      let(:stdout_lines) { bad_mixed_stdout }
 
       it "returns an array of only hashes" do
         expect(subject.parsed_stdout.all? { |line| line.kind_of?(Hash) }).to be_truthy

@@ -80,9 +80,25 @@ module Ansible
         1
       end
 
+      # Match a full json object that starts "somewhere" on the line, and ends
+      # at the end.
+      RUNNER_STDOUT_LINE_MATCH = /^[^\{]*(\{.*\})$/
+
       # @return [String] Stdout that is text, where each line should be JSON encoded object
       def load_stdout
-        File.read(File.join(base_dir, "artifacts", ident, "stdout"))
+        "".tap do |stdout|
+          # Read the stdout file line by line, and filter out lines that don't
+          # include a full JSON object that ends at the end of the line.
+          #
+          # FIXME:  This isn't terribly fool proof, and most likely error
+          # prone.
+          File.foreach(File.join(base_dir, "artifacts", ident, "stdout")) do |line|
+            if match = line.match(RUNNER_STDOUT_LINE_MATCH)
+              stdout << match[1]
+              stdout << "\n" unless stdout[-1] == "\n"
+            end
+          end
+        end
       rescue
         _log.warn("Couldn't find ansible-runner stdout in #{base_dir}")
         ""
