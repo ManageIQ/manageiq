@@ -113,4 +113,48 @@ describe MiqSearch do
       expect(search.errors[:base][0]).to eq("Search is referenced in a schedule and cannot be deleted")
     end
   end
+
+  # This test is intentionally long winded instead of breaking it up into
+  # multiple tests per concern because of how long a full seed may take.
+  describe ".seed" do
+    let(:tmpdir)        { Pathname.new(Dir.mktmpdir) }
+    let(:fixture_dir)   { tmpdir.join("db/fixtures") }
+    let(:search_yml)    { fixture_dir.join("miq_searches.yml") }
+
+    before do
+      FileUtils.mkdir_p(fixture_dir)
+      FileUtils.cp_r(Rails.root.join('db', 'fixtures', 'miq_searches.yml'), search_yml)
+      stub_const("MiqSearch::FIXTURE_DIR", fixture_dir)
+      described_class.seed
+    end
+
+    after do
+      FileUtils.rm_rf(tmpdir)
+    end
+
+    it "seeds miq_search table from db/fixtures/miq_search.yml and keeps custom searches" do
+      yml = YAML.load_file(search_yml)
+
+      # check if all supplied default searches were loaded
+      expect(MiqSearch.count).to eq(yml.size)
+
+      # check if custom searches were not removed
+      custom_search = "some search"
+      FactoryBot.create(:miq_search, :name => custom_search)
+      described_class.seed
+      expect(MiqSearch.count).to eq(yml.size + 1)
+      expect(MiqSearch.where(:name => custom_search)).to exist
+
+      # check that default search removed from DB if name-db of that search was not present in miq_search_yml
+      old_name = yml[0]["attributes"]["name"]
+      db = yml[0]["attributes"]["db"]
+      new_name = "default_Absolutely New Name"
+      yml[0]["attributes"]["name"] = new_name
+      File.write(search_yml, yml.to_yaml)
+      described_class.seed
+      expect(MiqSearch.count).to eq(yml.size + 1)
+      expect(MiqSearch.where(:name => new_name, :db => db)).to exist
+      expect(MiqSearch.where(:name => old_name, :db => db)).to be_empty
+    end
+  end
 end
