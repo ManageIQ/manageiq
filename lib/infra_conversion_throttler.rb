@@ -17,13 +17,15 @@ class InfraConversionThrottler
       _log.debug("-- Available slots in EMS: #{slots}")
 
       jobs.each do |job|
+        vm_name = job.migration_task.source.name
+
         preflight_check = job.migration_task.preflight_check
         if preflight_check[:status] == 'Error'
+          _log.info("Preflight check for #{vm_name} has failed. Discarding...")
           job.abort_conversion(preflight_check[:message], 'error')
           next
         end
 
-        vm_name = job.migration_task.source.name
         _log.debug("- Looking for a conversion host for task for #{vm_name}")
 
         eligible_hosts = ems.conversion_hosts.select(&:eligible?).sort_by { |ch| ch.active_tasks.count }
@@ -40,7 +42,7 @@ class InfraConversionThrottler
 
         eligible_host = eligible_hosts.first
         _log.debug("-- Associating  #{eligible_host.name} to the task for '#{vm_name}'.")
-        job.migration_task.update!(:conversion_host => eligible_host)
+        job.migration_task.update!(:conversion_host => eligible_host, :state => 'migrate')
         job.migration_task.update_options(:conversion_host_name => eligible_host.name)
 
         _log.debug("-- Queuing :start signal for the job for '#{vm_name}': current state is '#{job.state}'.")
