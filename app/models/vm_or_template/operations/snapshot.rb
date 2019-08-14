@@ -150,6 +150,18 @@ module VmOrTemplate::Operations::Snapshot
     raw_remove_all_snapshots
   end
 
+  def remove_all_snapshots_queue(task_id = nil)
+    MiqQueue.put_unless_exists(
+      :class_name  => self.class.name,
+      :instance_id => id,
+      :method_name => 'remove_all_snapshots',
+      :args        => [],
+      :role        => "ems_operations",
+      :zone        => my_zone,
+      :task_id     => task_id
+    )
+  end
+
   def raw_revert_to_snapshot(snapshot_id)
     raise MiqException::MiqVmError, unsupported_reason(:revert_to_snapshot) unless supports_revert_to_snapshot?
     snapshot = snapshots.find_by(:id => snapshot_id)
