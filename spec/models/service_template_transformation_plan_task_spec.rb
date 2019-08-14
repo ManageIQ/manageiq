@@ -502,7 +502,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "passes preflight check regardless of power_state" do
           src_vm_1.send(:power_state=, 'anything')
-          expect { task_1.preflight_check }.not_to raise_error
+          expect(task_1.preflight_check).to eq(:status => 'Ok', :message => 'Preflight check is successful')
         end
 
         context "transport method is vddk" do
@@ -598,7 +598,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         it "fails preflight check if src is power off" do
           src_vm_1.send(:power_state=, 'off')
-          expect { task_1.preflight_check }.to raise_error('OSP destination and source power_state is off')
+          expect(task_1.preflight_check).to eq(:status => 'Error', :message => 'OSP destination and source power_state is off')
         end
 
         context "transport method is vddk" do

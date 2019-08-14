@@ -87,15 +87,9 @@ RSpec.describe InfraConversionJob, :v2v do
 
     context '#start' do
       it 'to poll_conversion when preflight_check passes' do
-        expect(task).to receive(:preflight_check)
         expect(job).to receive(:queue_signal).with(:poll_conversion)
         job.signal(:start)
-      end
-
-      it 'to abort_conversion when preflight_check failed' do
-        expect(task).to receive(:preflight_check).and_raise
-        expect(job).to receive(:abort_conversion)
-        job.signal(:start)
+        expect(task.state).to eq('migrate')
       end
     end
 

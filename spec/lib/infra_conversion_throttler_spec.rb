@@ -20,6 +20,7 @@ RSpec.describe InfraConversionThrottler, :v2v do
 
     before do
       allow(task_waiting).to receive(:destination_ems).and_return(ems)
+      allow(task_waiting).to receive(:preflight_check).and_return(:status => 'Ok', :message => 'Preflight check is successful')
       allow(job_waiting).to receive(:migration_task).and_return(task_waiting)
       allow(described_class).to receive(:pending_conversion_jobs).and_return(ems => [job_waiting])
       allow(ems).to receive(:conversion_hosts).and_return([conversion_host1, conversion_host2])
@@ -27,6 +28,12 @@ RSpec.describe InfraConversionThrottler, :v2v do
       allow(conversion_host2).to receive(:check_ssh_connection).and_return(true)
       allow(conversion_host1).to receive(:authentication_check).and_return([true, 'passed'])
       allow(conversion_host2).to receive(:authentication_check).and_return([true, 'passed'])
+    end
+
+    it 'will abort conversion job if task fails preflight check' do
+      allow(task_waiting).to receive(:preflight_check).and_return(:status => 'Error', :message => 'Fake error message')
+      expect(job_waiting).to receive(:abort_conversion).with('Fake error message', 'error')
+      described_class.start_conversions
     end
 
     it 'will not start a job when ems limit hit' do
