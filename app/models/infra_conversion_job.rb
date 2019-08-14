@@ -56,14 +56,14 @@ class InfraConversionJob < Job
     message = 'Collapsing Snapshots'
 
     if migration_task.source.supports_remove_all_snapshots?
-      update_attributes(:message => message)
+      update(:message => message)
       _log.info(prep_message(message))
       migration_task.source.remove_all_snapshots
     end
 
     signal = warm_migration? ? :warm_migration_sync : :run_pre_migration_playbook
 
-    update_attributes(:message => message, :status => status)
+    update(:message => message, :status => status)
     queue_signal(signal)
   end
 
