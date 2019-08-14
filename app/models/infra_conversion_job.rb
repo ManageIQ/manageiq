@@ -51,8 +51,6 @@ class InfraConversionJob < Job
   end
 
   def start
-    message = "Preflight check is ok. A conversion host has been assigned. Starting."
-    _log.info(prep_message(message))
     migration_task.update!(:state => 'migrate')
     queue_signal(:poll_conversion)
   end

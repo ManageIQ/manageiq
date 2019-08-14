@@ -15,7 +15,7 @@ class InfraConversionThrottler
 
         preflight_check = job.migration_task.preflight_check
         if preflight_check[:status] == 'Error'
-          _log.info("Preflight check for #{vm_name} has failed. Discarding.")
+          _log.error("Preflight check for #{vm_name} has failed. Discarding.")
           job.abort_conversion(preflight_check[:message], 'error')
           next
         end
