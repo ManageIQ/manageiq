@@ -231,7 +231,27 @@ class GitRepository < ApplicationRecord
         params[:password] = auth.password
       end
     end
+    params[:proxy_url] = proxy_url if proxy_url?
     params
+  end
+
+  def proxy_url?
+    return false unless !!Settings.git_repository_proxy.host
+    return false unless %w[http https].include?(Settings.git_repository_proxy.scheme)
+
+    repo_url_scheme = begin
+                        URI.parse(url).scheme
+                      rescue URI::InvalidURIError
+                        # url is not a parsable URI, such as git@github.com:ManageIQ/manageiq.git
+                        nil
+                      end
+    %w[http https].include?(repo_url_scheme)
+  end
+
+  def proxy_url
+    uri_opts = Settings.git_repository_proxy.to_h.slice(:host, :port, :scheme, :path)
+    uri_opts[:path] ||= "/"
+    URI::Generic.build(uri_opts).to_s
   end
 
   def broadcast_repo_dir_delete
