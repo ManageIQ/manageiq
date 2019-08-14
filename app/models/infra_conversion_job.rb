@@ -36,16 +36,16 @@ class InfraConversionJob < Job
     self.state ||= 'initialize'
 
     {
-      :initializing       => {'initialize'       => 'waiting_to_start'},
-      :start              => {'waiting_to_start' => 'ready'},
-      :collapse_snapshots => {'ready'            => 'collapsing_snapshots'},
-      :poll_conversion    => {'running'          => 'running'},
-      :start_post_stage   => {'running'          => 'post_conversion'},
-      :poll_post_stage    => {'post_conversion'  => 'post_conversion'},
-      :finish             => {'*'                => 'finished'},
-      :abort_job          => {'*'                => 'aborting'},
-      :cancel             => {'*'                => 'canceling'},
-      :error              => {'*'                => '*'}
+      :initializing       => {'initialize'           => 'waiting_to_start'},
+      :start              => {'waiting_to_start'     => 'ready'},
+      :collapse_snapshots => {'ready'                => 'collapsing_snapshots'},
+      :poll_conversion    => {'collapsing_snapshots' =>'running', 'running' => 'running' },
+      :start_post_stage   => {'running'              => 'post_conversion'},
+      :poll_post_stage    => {'post_conversion'      => 'post_conversion'},
+      :finish             => {'*'                    => 'finished'},
+      :abort_job          => {'*'                    => 'aborting'},
+      :cancel             => {'*'                    => 'canceling'},
+      :error              => {'*'                    => '*'}
     }
   end
 
@@ -54,16 +54,14 @@ class InfraConversionJob < Job
   #
   def collapse_snapshots
     message = 'Collapse Snapshots'
+    update(:message => message)
 
     if migration_task.source.supports_remove_all_snapshots?
       _log.info(prep_message(message))
       migration_task.source.remove_all_snapshots
     end
 
-    signal = warm_migration? ? :warm_migration_sync : :run_pre_migration_playbook
-
-    update(:message => message)
-    queue_signal(signal)
+    queue_signal(:poll_conversion)
   end
 
   def migration_task
