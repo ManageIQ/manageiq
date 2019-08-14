@@ -236,7 +236,7 @@ class GitRepository < ApplicationRecord
   end
 
   def proxy_url?
-    !!Settings.git_repository_proxy.host
+    !!Settings.git_repository_proxy.host && %w[http https].include?(Settings.git_repository_proxy.scheme)
   end
 
   def proxy_url

@@ -109,6 +109,24 @@ describe GitRepository do
         repo.refresh
       end
 
+      it "doesn't send the proxy settings if the scheme is not http or https" do
+        proxy_settings = {
+          :git_repository_proxy => {
+            :host   => "example.com",
+            :port   => "12345",
+            :scheme => "socks5"
+          }
+        }
+        stub_settings(proxy_settings)
+        expect(GitWorktree).to receive(:new) do |options|
+          expect(options[:proxy_url]).to be_nil
+        end.twice.and_return(gwt)
+
+        expect(gwt).to receive(:pull).with(no_args)
+
+        repo.refresh
+      end
+
       context "self signed certifcate" do
         let(:verify_ssl) { OpenSSL::SSL::VERIFY_NONE }
 
