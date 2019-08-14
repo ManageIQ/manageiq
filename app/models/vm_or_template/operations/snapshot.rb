@@ -150,6 +150,24 @@ module VmOrTemplate::Operations::Snapshot
     raw_remove_all_snapshots
   end
 
+  def remove_all_snapshots_queue(userid)
+    task_opts = {
+      :name   => "Removing all snapshots for #{name}",
+      :userid => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'remove_all_snapshots',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def raw_revert_to_snapshot(snapshot_id)
     raise MiqException::MiqVmError, unsupported_reason(:revert_to_snapshot) unless supports_revert_to_snapshot?
     snapshot = snapshots.find_by(:id => snapshot_id)
