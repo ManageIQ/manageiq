@@ -38,7 +38,7 @@ class InfraConversionJob < Job
     {
       :initializing       => {'initialize'           => 'waiting_to_start'},
       :start              => {'waiting_to_start'     => 'ready'},
-      :collapse_snapshots => {'ready'                => 'collapsing_snapshots'},
+      :collapse_snapshots => {'ready'                => 'collapsing_snapshots', 'collapsing_snapshots' => 'collapsing_snapshots'},
       :poll_conversion    => {'collapsing_snapshots' => 'running', 'running' => 'running' },
       :start_post_stage   => {'running'              => 'post_conversion'},
       :poll_post_stage    => {'post_conversion'      => 'post_conversion'},
@@ -58,10 +58,10 @@ class InfraConversionJob < Job
 
     if migration_task.source.supports_remove_all_snapshots?
       _log.info(prep_message(message))
-      migration_task.source.remove_all_snapshots
+      migration_task.source.remove_all_snapshots_queue(migration_task.userid)
     end
 
-    # handover_to_automate # Depends on Fabien's PR
+    # handover_to_automate # Depends on Fabien's PR https://github.com/ManageIQ/manageiq/pull/19149
     queue_signal(:poll_conversion)
   end
 
