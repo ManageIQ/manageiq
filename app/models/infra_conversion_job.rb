@@ -39,7 +39,7 @@ class InfraConversionJob < Job
       :initializing       => {'initialize'           => 'waiting_to_start'},
       :start              => {'waiting_to_start'     => 'ready'},
       :collapse_snapshots => {'ready'                => 'collapsing_snapshots'},
-      :poll_conversion    => {'collapsing_snapshots' =>'running', 'running' => 'running' },
+      :poll_conversion    => {'collapsing_snapshots' => 'running', 'running' => 'running' },
       :start_post_stage   => {'running'              => 'post_conversion'},
       :poll_post_stage    => {'post_conversion'      => 'post_conversion'},
       :finish             => {'*'                    => 'finished'},
@@ -61,6 +61,7 @@ class InfraConversionJob < Job
       migration_task.source.remove_all_snapshots
     end
 
+    # handover_to_automate # Depends on Fabien's PR
     queue_signal(:poll_conversion)
   end
 
