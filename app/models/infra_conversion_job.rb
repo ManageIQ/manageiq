@@ -78,7 +78,7 @@ class InfraConversionJob < Job
 
   def on_entry(state_hash, _)
     state_hash ||= { :state => 'active', :status => 'Ok', :message => states[state.to_sym].description }
-    if context[:retries][state.to_sym].to_i.zero?
+    if context["retries_#{state}".to_sym].to_i.zero?
       state_hash[:started_on] = Time.now.utc
       state_hash[:percent] = 0.0
     end
@@ -87,7 +87,7 @@ class InfraConversionJob < Job
 
   def on_retry(state_hash, state_progress = nil)
     if state_progress.nil?
-      state_hash[:percent] = context[:retries][state.to_sym].to_f / states[state.to_sym][:max_retries].to_f * 100.0
+      state_hash[:percent] = context["retries#{state}".to_sym].to_f / states[state.to_sym][:max_retries].to_f * 100.0
     else
       state_hash.merge!(state_progress)
     end
