@@ -152,7 +152,7 @@ module VmOrTemplate::Operations::Snapshot
 
   def remove_all_snapshots_queue(userid)
     task_opts = {
-      :name => "Removing all snapshots for #{name}",
+      :name   => "Removing all snapshots for #{name}",
       :userid => userid
     }
 
