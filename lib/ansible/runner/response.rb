@@ -80,23 +80,37 @@ module Ansible
         1
       end
 
-      # Match a full json object that starts "somewhere" on the line, and ends
-      # at the end.
-      RUNNER_STDOUT_LINE_MATCH = /^[^\{]*(\{.*\})$/
-
       # @return [String] Stdout that is text, where each line should be JSON encoded object
       def load_stdout
         "".tap do |stdout|
-          # Read the stdout file line by line, and filter out lines that don't
-          # include a full JSON object that ends at the end of the line.
+          # Dir.glob for all `job_events`, and sort them by the "counter"
+          # integer in the file name, which is the first digit(s) prior to a
+          # '-' in the file.
           #
-          # FIXME:  This isn't terribly fool proof, and most likely error
-          # prone.
-          File.foreach(File.join(base_dir, "artifacts", ident, "stdout")) do |line|
-            if match = line.match(RUNNER_STDOUT_LINE_MATCH)
-              stdout << match[1]
-              stdout << "\n" unless stdout[-1] == "\n"
-            end
+          #   job_events/1-2f97771f-c3d1-4123-8648-d035d48be4e8.json
+          #   job_events/10-6f5dc948-c42f-4f3d-a357-151ec3e0b42e.json
+          #   job_events/11-c0c9fdbe-8a69-4ac8-817b-19b567b514ac.json
+          #   job_events/12-66c5f878-8fdc-4d76-9faf-2b42495a2636.json
+          #   job_events/2-080027c4-9455-90b8-e116-000000000006.json
+          #   job_events/3-080027c4-9455-90b8-e116-00000000000d.json
+          #   ...
+          #
+          # And since `Dir.glob`'s sort order is operating system dependent, we
+          # sort manually by the basename to ensure the proper order, and the
+          # `File.basename` calls are done in a `.sort_by!` up front so they
+          # aren't triggered for each block call in a traditional `.sort!`.
+          #
+          job_event_files = Dir.glob(File.join(base_dir, "artifacts", "result", "job_events", "*.json"))
+                               .sort_by! { |fname| fname.match(%r{job_events/(\d+)})[1].to_i }
+
+          # Read each file and added it to the `stdout` string.
+          #
+          # Also add a newline after each File read if one doesn't already
+          # exist (`ansible-runner` is inconsistent with it's use of new-lines
+          # at the end of files).
+          job_event_files.each do |filename|
+            stdout << File.read(filename)
+            stdout << "\n" unless stdout[-1] == "\n"
           end
         end
       rescue
