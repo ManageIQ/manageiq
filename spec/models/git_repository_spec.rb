@@ -109,7 +109,7 @@ describe GitRepository do
         repo.refresh
       end
 
-      it "doesn't send the proxy settings if the scheme is not http or https" do
+      it "doesn't send the proxy settings if the proxy scheme is not http or https" do
         proxy_settings = {
           :git_repository_proxy => {
             :host   => "example.com",
@@ -124,6 +124,25 @@ describe GitRepository do
 
         expect(gwt).to receive(:pull).with(no_args)
 
+        repo.refresh
+      end
+
+      it "doesn't send the proxy settings if the repo scheme is not http or https" do
+        proxy_settings = {
+          :git_repository_proxy => {
+            :host   => "example.com",
+            :port   => "3128",
+            :scheme => "http"
+          }
+        }
+        stub_settings(proxy_settings)
+        expect(GitWorktree).to receive(:new) do |options|
+          expect(options[:proxy_url]).to be_nil
+        end.twice.and_return(gwt)
+
+        expect(gwt).to receive(:pull).with(no_args)
+
+        repo.update!(:url => "git@example.com:ManageIQ/manageiq.git")
         repo.refresh
       end
 
