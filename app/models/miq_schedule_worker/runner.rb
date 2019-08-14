@@ -136,7 +136,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     # Schedule - Check for retired items and start retirement
     # TODO: remove redundant settings in follow-up pr
-    every = [worker_settings[:service_retired_interval], worker_settings[:vm_retired_interval], worker_settings[:orchestration_stack_retired_interval], worker_settings[:load_balancer_retired_interval]].min
+    every = [worker_settings[:service_retired_interval], worker_settings[:vm_retired_interval], worker_settings[:orchestration_stack_retired_interval]].min
     scheduler.schedule_every(every, :first_in => every) do
       enqueue(:retirement_check)
     end

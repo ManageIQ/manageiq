@@ -1224,7 +1224,6 @@
       :job_proxy_dispatcher_stale_message_check_interval: 60.seconds
       :job_proxy_dispatcher_stale_message_timeout: 2.minutes
       :job_timeout_interval: 60.seconds
-      :load_balancer_retired_interval: 10.minutes
       :log_active_configuration_interval: 1.days
       :log_database_statistics_interval: 1.days
       :memory_threshold: 500.megabytes
