@@ -50,6 +50,8 @@ class InfraConversionJob < Job
     # valid states: %w(migrated pending finished active queued)
   end
 
+  # Temporary method to allow switching from InfraConversionJob to Automate.
+  # In Automate, another method waits for workflow_runner to be 'automate'.
   def handover_to_automate
     migration_task.update_options(:workflow_runner => 'automate')
   end
