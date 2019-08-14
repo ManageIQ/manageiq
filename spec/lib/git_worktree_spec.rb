@@ -29,15 +29,17 @@ describe GitWorktree do
       @ae_db.instance_variable_get('@repo').head.target.oid
     end
 
-    def clone(url)
+    def clone(url, add_options = {})
       dir = Dir.mktmpdir
-      options = {:path          => dir,
-                 :url           => url,
-                 :username      => "user1",
-                 :email         => "user1@example.com",
-                 :ssl_no_verify => true,
-                 :bare          => true,
-                 :clone         => true}
+      options = {
+        :path          => dir,
+        :url           => url,
+        :username      => "user1",
+        :email         => "user1@example.com",
+        :ssl_no_verify => true,
+        :bare          => true,
+        :clone         => true
+      }.merge(add_options)
       return dir, GitWorktree.new(options)
     end
 
@@ -234,6 +236,28 @@ describe GitWorktree do
       expect(c_repo.file_list).to match_array(@ae_db.file_list)
       FileUtils.rm_rf(dirname) if Dir.exist?(dirname)
     end
+
+    context "with proxy options" do
+      let(:proxy_url) { "http://example.com/my_proxy" }
+
+      describe ".new" do
+        it "clones the repo using the proxy url" do
+          expect(Rugged::Repository).to receive(:clone_at).with(@master_url, anything, hash_including(:proxy_url => proxy_url))
+          clone(@master_url, :proxy_url => proxy_url)
+        end
+      end
+
+      describe "#pull (private)" do
+        it "fetches the repo with proxy options" do
+          _dir, worktree = clone(@master_url)
+          expect(worktree.instance_variable_get(:@repo)).to receive(:fetch).with("origin", hash_including(:proxy_url => proxy_url))
+
+          worktree.instance_variable_set(:@proxy_url, proxy_url)
+
+          worktree.send(:pull)
+        end
+      end
+    end
   end
 
   describe "git branches" do
@@ -337,11 +361,11 @@ describe GitWorktree do
     end
   end
 
-  describe "#with_credential_options" do
+  describe "#with_remote_options" do
     let(:git_repo_path) { Rails.root.join("spec", "fixtures", "git_repos", "branch_and_tag.git") }
 
     subject do
-      repo.with_credential_options do |cred_options|
+      repo.with_remote_options do |cred_options|
         cred_options[:credentials].call("url", nil, [])
       end
     end

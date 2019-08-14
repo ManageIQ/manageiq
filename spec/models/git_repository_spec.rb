@@ -93,6 +93,59 @@ describe GitRepository do
         expect(repo.default_authentication.password).to eq(password)
       end
 
+      it "sends the proxy settings to the worktree instance" do
+        proxy_settings = {
+          :git_repository_proxy => {
+            :host   => "example.com",
+            :port   => "80",
+            :scheme => "http",
+            :path   => "/proxy"
+          }
+        }
+        stub_settings(proxy_settings)
+        expect(GitWorktree).to receive(:new).with(hash_including(:proxy_url => "http://example.com:80/proxy")).twice.times.and_return(gwt)
+        expect(gwt).to receive(:pull).with(no_args)
+
+        repo.refresh
+      end
+
+      it "doesn't send the proxy settings if the proxy scheme is not http or https" do
+        proxy_settings = {
+          :git_repository_proxy => {
+            :host   => "example.com",
+            :port   => "12345",
+            :scheme => "socks5"
+          }
+        }
+        stub_settings(proxy_settings)
+        expect(GitWorktree).to receive(:new) do |options|
+          expect(options[:proxy_url]).to be_nil
+        end.twice.and_return(gwt)
+
+        expect(gwt).to receive(:pull).with(no_args)
+
+        repo.refresh
+      end
+
+      it "doesn't send the proxy settings if the repo scheme is not http or https" do
+        proxy_settings = {
+          :git_repository_proxy => {
+            :host   => "example.com",
+            :port   => "3128",
+            :scheme => "http"
+          }
+        }
+        stub_settings(proxy_settings)
+        expect(GitWorktree).to receive(:new) do |options|
+          expect(options[:proxy_url]).to be_nil
+        end.twice.and_return(gwt)
+
+        expect(gwt).to receive(:pull).with(no_args)
+
+        repo.update!(:url => "git@example.com:ManageIQ/manageiq.git")
+        repo.refresh
+      end
+
       context "self signed certifcate" do
         let(:verify_ssl) { OpenSSL::SSL::VERIFY_NONE }
 

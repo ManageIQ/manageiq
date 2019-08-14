@@ -71,13 +71,13 @@ gem "rest-client",                    "~>2.0.0",       :require => false
 gem "ripper_ruby_parser",             "~>1.5.1",       :require => false
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
 gem "rubyzip",                        "~>1.2.2",       :require => false
-gem "rugged",                         "~>0.27.0",      :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
 gem "sqlite3",                        "~>1.3.0",       :require => false
 gem "sys-filesystem",                 "~>1.2.0"
 gem "terminal",                                        :require => false
 
 # Modified gems (forked on Github)
+gem "rugged",                         "=0.28.2", :require => false,   :git => "https://github.com/ManageIQ/rugged.git", :tag => "v0.28.2-1", :submodules => true
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
