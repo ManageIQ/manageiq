@@ -117,9 +117,13 @@ class DialogFieldSortedItem < DialogField
     @raw_values ||= dynamic ? values_from_automate : static_raw_values
     reject_extraneous_nil_values unless dynamic?
     @raw_values = sort_data(@raw_values)
-    add_nil_option unless dynamic?
+    add_nil_option unless dynamic? || multiselect?
     determine_selected_value
     @raw_values
+  end
+
+  def multiselect?
+    false
   end
 
   def reject_extraneous_nil_values
