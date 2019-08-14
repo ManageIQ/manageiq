@@ -56,7 +56,6 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     destination_cluster
     virtv2v_disks
     network_mappings
-    update_attributes(:state => 'migrate')
     { :status => 'Ok', :message => 'Preflight check is successful' }
   rescue StandardError => error
     { :status => 'Error', :message => error.message }
