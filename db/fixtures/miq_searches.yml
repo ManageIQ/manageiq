@@ -159,57 +159,6 @@
     search_type: default
     db: Vm
 - attributes:
-    name: default_Platform / ESX 3.5
-    description: Platform / ESX 3.5
-    filter: !ruby/object:MiqExpression
-      exp:
-        and:
-        - "=":
-            field: Host-vmm_vendor
-            value: vmware
-        - INCLUDES:
-            field: Host-vmm_product
-            value: ESX
-        - "=":
-            field: Host-vmm_version
-            value: 3.5.0
-    search_type: default
-    db: Host
-- attributes:
-    name: default_Platform / ESX 4.0
-    description: Platform / ESX 4.0
-    filter: !ruby/object:MiqExpression
-      exp:
-        and:
-        - "=":
-            field: Host-vmm_vendor
-            value: vmware
-        - INCLUDES:
-            field: Host-vmm_product
-            value: ESX
-        - "=":
-            field: Host-vmm_version
-            value: 4.0.0
-    search_type: default
-    db: Host
-- attributes:
-    name: default_Platform / ESX 4.1
-    description: Platform / ESX 4.1
-    filter: !ruby/object:MiqExpression
-      exp:
-        and:
-        - "=":
-            field: Host-vmm_vendor
-            value: vmware
-        - INCLUDES:
-            field: Host-vmm_product
-            value: ESX
-        - "=":
-            field: Host-vmm_version
-            value: 4.1.0
-    search_type: default
-    db: Host
-- attributes:
     name: default_Platform / ESX 5.0
     description: Platform / ESX 5.0
     filter: !ruby/object:MiqExpression
