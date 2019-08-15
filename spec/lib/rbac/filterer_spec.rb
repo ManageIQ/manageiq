@@ -2259,6 +2259,56 @@ describe Rbac::Filterer do
         expect(results.first).to eq(services1[0..2])
         expect(results.last[:auth_count]).to eq(4)
       end
+
+      it "respects order" do
+        # for some reason, while all models respect the order,
+        # MiqRequest sometimes did not. (before we put order in both inner and outer sql)
+        reqs = FactoryBot.create_list(:automation_requests, 3, :requester => user)
+        # move last created record to more recent
+        reqs.first.update(:description => "something")
+        expected_order = [reqs.second, reqs.last, reqs.first]
+
+        recs, attrs = Rbac.search(:targets      => MiqRequest,
+                                  :extra_cols   => %w[id],
+                                  :use_sql_view => true,
+                                  :limit        => 3,
+                                  :user         => user,
+                                  :order        => :updated_on)
+
+        expect(attrs[:auth_count]).to eq(3)
+        expect(recs.map(&:id)).to eq(expected_order.map(&:id))
+
+        recs, attrs = Rbac.search(:targets      => MiqRequest,
+                                  :extra_cols   => %w[],
+                                  :use_sql_view => true,
+                                  :limit        => 3,
+                                  :user         => user,
+                                  :order        => {:updated_on => :desc})
+        expect(attrs[:auth_count]).to eq(3)
+        expect(recs.map(&:id)).to eq(expected_order.reverse.map(&:id))
+      end
+
+      it "remembers distinct" do
+        # create vms with many disks. so a missing distinct would return 3*3 => 9
+        vms = FactoryBot.create_list(:vm_infra, 3, :miq_group => tagged_group)
+        vms.each do |vm|
+          # used by rbac filter
+          vm.tag_with("/managed/environment/prod", :ns => "*")
+          hw = FactoryBot.create(:hardware, :cpu_sockets => 4, :memory_mb => 3.megabytes, :vm => vm)
+          FactoryBot.create_list(:disk, 3, :device_type => "disk", :size => 10_000, :hardware_id => hw.id)
+        end
+
+        recs, attrs = Rbac.search(:targets          => Vm,
+                                  :include_for_find => {:ext_management_system => {}, :hardware => {:disks => {}}, :tags => {}},
+                                  :extra_cols       => %w[ram_size_in_bytes],
+                                  :use_sql_view     => true,
+                                  :limit            => 20,
+                                  :user             => User.super_admin,
+                                  :order            => :updated_on)
+
+        expect(attrs[:auth_count]).to eq(3)
+        expect(recs.map(&:id)).to eq(vms.sort_by(&:updated_on).reverse.map(&:id))
+      end
     end
   end
 
@@ -2765,6 +2815,54 @@ describe Rbac::Filterer do
 
       result = described_class.filtered(Vm, :user => user_t2)
       expect(result).to eq([vm_other_region])
+    end
+  end
+
+  # private method
+  describe ".select_from_order_columns" do
+    subject { described_class.new }
+    it "removes empty" do
+      expect(subject.select_from_order_columns([])).to eq([])
+      expect(subject.select_from_order_columns([nil])).to eq([])
+    end
+
+    it "removes string columns" do
+      expect(subject.select_from_order_columns(["name", "id", "vms.name", '"vms"."name"'])).to eq([])
+    end
+
+    it "removes ascending string columns" do
+      expect(subject.select_from_order_columns(ascenders(["name", "id", "vms.name", '"vms"."name"']))).to eq([])
+    end
+
+    # services.name desc (spec)
+    it "removes strings with sorting" do
+      expect(subject.select_from_order_columns(["name asc", "\"vms\".\"id\" desc", "id asc"])).to eq([])
+    end
+
+    it "removes ordered nodes" do
+      attribute_id = Vm.arel_table["id"] # <Attribute<id>>
+      expect(subject.select_from_order_columns(ascenders([attribute_id]))).to eq([])
+    end
+
+    it "removes nodes" do
+      attribute_id = Vm.arel_table["id"] # <Attribute<id>>
+      expect(subject.select_from_order_columns([attribute_id])).to eq([])
+    end
+
+    it "keeps sorting in subselects" do
+      expect(subject.select_from_order_columns(ascenders(["(select a from x desc)"]))).to eq(["(select a from x desc)"])
+    end
+
+    it "keeps function in ascending node" do
+      expect(subject.select_from_order_columns(ascenders(["lower(name)"]))).to eq(["lower(name)"])
+    end
+
+    it "keeps functions as ordered strings" do
+      expect(subject.select_from_order_columns(["lower(name) asc"])).to eq(["lower(name)"])
+    end
+
+    def ascenders(cols)
+      cols.map { |c| Arel::Nodes::Ascending.new(c) }
     end
   end
 

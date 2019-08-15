@@ -252,6 +252,10 @@ class MiqReport < ApplicationRecord
     # which does not exist in the MiqReport class
   end
 
+  def self.default_use_sql_view
+    ::Settings.reporting.use_sql_view
+  end
+
   private
 
   def va_sql_cols
