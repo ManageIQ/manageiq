@@ -1,6 +1,7 @@
 class ExtManagementSystem < ApplicationRecord
   include CustomActionsMixin
   include SupportsFeatureMixin
+  include ExternalUrlMixin
 
   def self.with_tenant(tenant_id)
     tenant = Tenant.find(tenant_id)
