@@ -77,9 +77,6 @@ gem "sqlite3",                        "~>1.3.0",       :require => false
 gem "sys-filesystem",                 "~>1.2.0"
 gem "terminal",                                        :require => false
 
-# temporary inclusion till we can get ConvertTimeToEoTime patch into upstream
-gem "et-orbi"
-
 # Modified gems (forked on Github)
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
@@ -194,9 +191,11 @@ group :graphql_api, :manageiq_default do
 end
 
 group :scheduler, :manageiq_default do
-  # Modified gems (forked on Github)
-  gem "rufus-scheduler", "=3.1.10.2", :git => "https://github.com/ManageIQ/rufus-scheduler.git", :require => false, :tag => "v3.1.10-2"
+  gem "rufus-scheduler"
 end
+# rufus has et-orbi dependency
+# this is temporary inclusion till we can get ConvertTimeToEoTime patch into upstream:
+gem "et-orbi"
 
 group :seed, :manageiq_default do
   manageiq_plugin "manageiq-content"
