@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::AnsibleRoleWorkflow do
   let(:job)          { described_class.create_job(*options).tap { |job| job.state = state } }
-  let(:role_options) { {:role_name => 'role_name', :roles_path => 'path/role', :role_skip_facts => true } }
+  let(:role_options) { {:role_name => 'role_name', :roles_path => '/path/to/role', :role_skip_facts => true } }
   let(:options)      { [{"ENV" => "VAR"}, {"arg1" => "val1"}, role_options, {:verbosity => 4}] }
   let(:state)        { "waiting_to_start" }
 
@@ -10,7 +10,7 @@ describe ManageIQ::Providers::AnsibleRoleWorkflow do
     end
   end
 
-  context ".signal" do
+  context "#signal" do
     %w[start pre_execute execute poll_runner post_execute finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
@@ -42,8 +42,23 @@ describe ManageIQ::Providers::AnsibleRoleWorkflow do
       it_behaves_like "doesn't allow post_execute signal"
     end
 
-    context "per_role" do
+    context "pre_execute" do
       let(:state) { "pre_execute" }
+
+      it_behaves_like "allows pre_execute signal"
+      it_behaves_like "allows finish signal"
+      it_behaves_like "allows abort_job signal"
+      it_behaves_like "allows cancel signal"
+      it_behaves_like "allows error signal"
+
+      it_behaves_like "doesn't allow start signal"
+      it_behaves_like "doesn't allow execute signal"
+      it_behaves_like "doesn't allow poll_runner signal"
+      it_behaves_like "doesn't allow post_execute signal"
+    end
+
+    context "execute" do
+      let(:state) { "execute" }
 
       it_behaves_like "allows execute signal"
       it_behaves_like "allows finish signal"
@@ -52,6 +67,7 @@ describe ManageIQ::Providers::AnsibleRoleWorkflow do
       it_behaves_like "allows error signal"
 
       it_behaves_like "doesn't allow start signal"
+      it_behaves_like "doesn't allow pre_execute signal"
       it_behaves_like "doesn't allow poll_runner signal"
       it_behaves_like "doesn't allow post_execute signal"
     end
@@ -85,8 +101,69 @@ describe ManageIQ::Providers::AnsibleRoleWorkflow do
     end
   end
 
-  context ".execute" do
+  context "#pre_execute" do
     let(:state) { "pre_execute" }
+    let(:css)   { FactoryGirl.create(:embedded_ansible_configuration_script_source) }
+    let(:roles_relative_path) { "path/to/role" }
+
+    context "with roles_path" do
+      it "succeeds" do
+        expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to_not receive(:checkout_git_repository)
+        expect(job).to receive(:queue_signal).with(:execute)
+
+        job.signal(:pre_execute)
+
+        expect(job.options[:roles_path]).to eq "/path/to/role"
+      end
+    end
+
+    context "with configuration_script_source_id + roles_relative_path" do
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:role_name => 'role_name', :configuration_script_source_id => css.id, :roles_relative_path => roles_relative_path}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+
+      it "will checkout the git repository to a temp dir before proceeding" do
+        expect_any_instance_of(ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScriptSource).to receive(:checkout_git_repository)
+        expect(job).to receive(:queue_signal).with(:execute)
+
+        job.signal(:pre_execute)
+
+        expect(job.options[:roles_path]).to start_with File.join(Dir.tmpdir, "ansible-runner-git")
+        expect(job.options[:roles_path]).to end_with roles_relative_path
+      end
+    end
+
+    context "without role_name" do
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+
+      it "fails" do
+        expect(job).to_not receive(:queue_signal).with(:execute)
+
+        expect { job.signal(:pre_execute) }.to raise_error(ArgumentError)
+      end
+    end
+
+    context "with only configuration_script_source_id" do
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:role_name => 'role_name', :configuration_script_source_id => css.id}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+
+      it "fails" do
+        expect(job).to_not receive(:queue_signal).with(:execute)
+
+        expect { job.signal(:pre_execute) }.to raise_error(ArgumentError)
+      end
+    end
+
+    context "with only roles_relative_path" do
+      let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:role_name => 'role_name', :roles_relative_path => roles_relative_path}, %w[192.0.2.0 192.0.2.1], :poll_interval => 5.minutes] }
+
+      it "fails" do
+        expect(job).to_not receive(:queue_signal).with(:execute)
+
+        expect { job.signal(:pre_execute) }.to raise_error(ArgumentError)
+      end
+    end
+  end
+
+  context "#execute" do
+    let(:state) { "execute" }
     let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
     it "ansible-runner succeeds" do
@@ -96,7 +173,7 @@ describe ManageIQ::Providers::AnsibleRoleWorkflow do
         {"arg1" => "val1"},
         "role_name",
         {
-          :roles_path      => "path/role",
+          :roles_path      => "/path/to/role",
           :role_skip_facts => true
         }
       ]
@@ -123,7 +200,7 @@ describe ManageIQ::Providers::AnsibleRoleWorkflow do
     end
   end
 
-  context ".poll_runner" do
+  context "#poll_runner" do
     let(:state)          { "running" }
     let(:response_async) { Ansible::Runner::ResponseAsync.new(:base_dir => "/path/to/results") }
 
@@ -166,7 +243,7 @@ describe ManageIQ::Providers::AnsibleRoleWorkflow do
       end
     end
 
-    context ".deliver_on" do
+    context "deliver_on" do
       let(:options) { [{"ENV" => "VAR"}, {"arg1" => "val1"}, {:roles_path => "/path/to/role"}, :poll_interval => 5.minutes] }
 
       it "uses the option to queue poll_runner" do
