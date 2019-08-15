@@ -346,8 +346,8 @@
     search_type: default
     db: Host
 - attributes:
-    name: default_Status / Orhaned
-    description: Status / Orhaned
+    name: default_Status / Orphaned
+    description: Status / Orphaned
     filter: !ruby/object:MiqExpression
       exp:
         "=":

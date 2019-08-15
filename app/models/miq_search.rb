@@ -93,10 +93,10 @@ class MiqSearch < ApplicationRecord
       name  = attrs['name']
       db    = attrs['db']
 
-      rec = searches["#{name}-#{db}"]
+      rec = searches.delete("#{name}-#{db}")
       if rec.nil?
         _log.info("Creating [#{name}]")
-        searches["#{name}-#{db}"] = create!(attrs)
+        create!(attrs)
       else
         # Avoid undoing user changes made to enable/disable default searches which is held in the search_key column
         attrs.delete('search_key')
@@ -108,6 +108,10 @@ class MiqSearch < ApplicationRecord
 
         rec.save! if rec.changed?
       end
+    end
+    if searches.any?
+      _log.warn("Deleting the following MiqSearch(es) as they no longer exist: #{searches.keys.sort.collect(&:inspect).join(", ")}")
+      MiqSearch.destroy(searches.values.map(&:id))
     end
   end
 
