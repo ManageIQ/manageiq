@@ -90,6 +90,7 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(job).to receive(:queue_signal).with(:poll_conversion)
         job.signal(:start)
         expect(task.state).to eq('migrate')
+        expect(task.options[:workflow_runner]).to eq('automate')
       end
     end
 
