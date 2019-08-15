@@ -39,11 +39,26 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
-      it_behaves_like 'allows collapse_snapshots signal'
 
       it_behaves_like 'doesn\'t allow poll_conversion signal'
       it_behaves_like 'doesn\'t allow start_post_stage signal'
       it_behaves_like 'doesn\'t allow poll_post_stage signal'
+    end
+
+    context 'ready' do
+      before do
+        job.state = 'ready'
+      end
+
+      it_behaves_like 'allows collapse_snapshots signal'
+    end
+
+    context 'collapsing_snapshots' do
+      before do
+        job.state = 'ready'
+      end
+
+      it_behaves_like 'allows collapse_snapshots signal'
     end
 
     context 'running' do
@@ -96,41 +111,22 @@ RSpec.describe InfraConversionJob, :v2v do
     end
 
     context "#collapse_snapshots" do
-      it 'to collapse snapshots when signaled :collapse_snapshots if warm migration' do
-        allow(job).to receive(:warm_migration?).and_return(true)
-        job.state = 'waiting_to_start'
-
-        Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:warm_migration_sync)
-          job.signal(:collapse_snapshots)
-        end
-      end
-
-      it 'to collapse snapshots when signaled :collapse_snapshots if not a warm migration' do
-        allow(job).to receive(:warm_migration?).and_return(false)
-        job.state = 'waiting_to_start'
-        Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:run_pre_migration_playbook)
-          job.signal(:collapse_snapshots)
-        end
-      end
-
       it 'calls remove_all_snapshots if supported' do
         allow(vm).to receive(:supports_remove_all_snapshots?).and_return(true)
 
-        job.state = 'waiting_to_start'
+        job.state = 'ready'
 
         Timecop.freeze(2019, 2, 6) do
-          expect(vm).to receive(:remove_all_snapshots)
+          expect(vm).to receive(:remove_all_snapshots_queue)
           job.signal(:collapse_snapshots)
         end
       end
 
       it 'does not call remove_all_snapshots if not supported' do
-        job.state = 'waiting_to_start'
+        job.state = 'ready'
 
         Timecop.freeze(2019, 2, 6) do
-          expect(vm).to_not receive(:remove_all_snapshots)
+          expect(vm).to_not receive(:remove_all_snapshots_queue)
           job.signal(:collapse_snapshots)
         end
       end
