@@ -108,7 +108,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   end
 
   def raw_stdout_json
-    miq_task.context_data[:ansible_runner_stdout]
+    miq_task.try(&:context_data).try(:[], :ansible_runner_stdout) || []
   end
 
   def raw_stdout_txt
@@ -116,6 +116,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   end
 
   def raw_stdout_html
-    TerminalToHtml.render(raw_stdout_txt)
+    text = raw_stdout_txt
+    text = _("No output available") if text.blank?
+    TerminalToHtml.render(text)
   end
 end
