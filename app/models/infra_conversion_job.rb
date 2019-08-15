@@ -22,6 +22,7 @@ class InfraConversionJob < Job
   #                                                    :finish             v
   #                                                                    finished
   #
+  # TODO: Update this diagram after we've settled on the updated state transitions.
 
   alias_method :initializing, :dispatch_start
   alias_method :finish,       :process_finished
