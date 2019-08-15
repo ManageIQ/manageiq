@@ -37,7 +37,7 @@ class EvmDatabaseOps
     else
       msg = "Destination location: [#{database_opts[:local_file]}], does not have enough free disk space: [#{free_space} bytes] for database of size: [#{db_size} bytes]"
       _log.warn(msg)
-      MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
+      defined?(::MiqEvent) && MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
       raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
     end
   end
