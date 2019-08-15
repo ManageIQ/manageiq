@@ -77,6 +77,9 @@ gem "sqlite3",                        "~>1.3.0",       :require => false
 gem "sys-filesystem",                 "~>1.2.0"
 gem "terminal",                                        :require => false
 
+# temporary inclusion till we can get ConvertTimeToEoTime patch into upstream
+gem "et-orbi"
+
 # Modified gems (forked on Github)
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
