@@ -55,7 +55,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
     context 'collapsing_snapshots' do
       before do
-        job.state = 'ready'
+        job.state = 'collapsing_snapshots'
       end
 
       it_behaves_like 'allows collapse_snapshots signal'
