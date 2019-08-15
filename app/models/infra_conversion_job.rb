@@ -61,7 +61,7 @@ class InfraConversionJob < Job
       migration_task.source.remove_all_snapshots_queue(migration_task.userid)
     end
 
-    # handover_to_automate # Depends on Fabien's PR https://github.com/ManageIQ/manageiq/pull/19149
+    handover_to_automate
     queue_signal(:poll_conversion)
   end
 
