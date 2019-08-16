@@ -29,7 +29,7 @@ describe MiqScheduleWorker::Jobs do
         schedule_id = 123
         scheduler = Rufus::Scheduler.new
         block = -> { "some work" }
-        rufus_job = Rufus::Scheduler::EveryJob.new(scheduler, 1.hour, {}, block)
+        rufus_job = Rufus::Scheduler::EveryJob.new(scheduler, 1.hour.to_i, {}, block)
 
         expect(MiqSchedule).to receive(:queue_scheduled_work).with(schedule_id, rufus_job.job_id, 1.hour.from_now.to_i, {})
 
