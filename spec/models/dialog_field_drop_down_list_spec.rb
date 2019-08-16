@@ -386,7 +386,7 @@ describe DialogFieldDropDownList do
           end
 
           it "returns the raw values without a nil option" do
-            expect(dialog_field.values).to eq([%w(potato potato)])
+            expect(dialog_field.values).to eq([%w[potato potato]])
           end
         end
 
@@ -396,7 +396,7 @@ describe DialogFieldDropDownList do
           end
 
           it "returns the raw values with a nil option" do
-            expect(dialog_field.values).to eq([[nil, "<None>"], %w(potato potato)])
+            expect(dialog_field.values).to eq([[nil, "<None>"], %w[potato potato]])
           end
         end
       end
@@ -454,7 +454,7 @@ describe DialogFieldDropDownList do
           end
 
           it "returns the values" do
-            expect(dialog_field.values).to eq([%w(original values)])
+            expect(dialog_field.values).to eq([%w[original values]])
           end
         end
 
@@ -464,7 +464,7 @@ describe DialogFieldDropDownList do
           end
 
           it "returns the values including nil" do
-            expect(dialog_field.values).to eq([[nil, "<None>"], %w(original values)])
+            expect(dialog_field.values).to eq([[nil, "<None>"], %w[original values]])
           end
         end
       end
