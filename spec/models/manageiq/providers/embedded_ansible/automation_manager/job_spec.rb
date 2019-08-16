@@ -22,14 +22,6 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
     let(:network_credential)    { FactoryBot.create(:ansible_network_credential, :manager_ref => "3", :resource => manager) }
     let(:vault_credential)      { FactoryBot.create(:ansible_vault_credential,   :manager_ref => "4", :resource => manager) }
 
-    let(:raw_stdout_json) do
-      [
-        {"stdout" => "A stdout from the job"},
-        {"stdout" => "Errmahgerd... ANSIBLER"},
-        {"stdout" => "And another one"}
-      ]
-    end
-
     let(:template) { FactoryBot.create(:embedded_ansible_configuration_script, :manager => manager, :parent => playbook) }
 
     describe "job operations" do
@@ -203,6 +195,84 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
           :status  => "Error"
         )
       end
+    end
+  end
+
+  describe "#raw_stdout" do
+    let(:ansible_runner_stdout) do
+      [
+        {"stdout" => "Line 1"},              # no color
+        {"stdout" => "\e[0;32mLine 2\e[0m"}, # green
+        {"stdout" => "\e[0;31mLine 3\e[0m"}, # red
+      ]
+    end
+
+    context "when miq_task present" do
+      before do
+        job.miq_task = FactoryGirl.create(:miq_task, :context_data => {:ansible_runner_stdout => ansible_runner_stdout})
+      end
+
+      it "json" do
+        expect(job.raw_stdout("json")).to eq ansible_runner_stdout
+      end
+
+      it "txt" do
+        expect(job.raw_stdout("txt")).to eq "Line 1\n\e[0;32mLine 2\e[0m\n\e[0;31mLine 3\e[0m"
+      end
+
+      it "html" do
+        expect(job.raw_stdout("html")).to include <<~EOHTML
+          <div class='term-container'>
+          Line 1
+          <span class='term-fg32'>Line 2</span>
+          <span class='term-fg31'>Line 3</span>
+          </div>
+        EOHTML
+      end
+
+      it "nil" do
+        expect(job.raw_stdout).to eq "Line 1\n\e[0;32mLine 2\e[0m\n\e[0;31mLine 3\e[0m"
+      end
+    end
+
+    shared_examples_for "ansible runner stdout not valid in miq_task" do
+      it "json" do
+        expect(job.raw_stdout("json")).to eq([])
+      end
+
+      it "txt" do
+        expect(job.raw_stdout("txt")).to eq ""
+      end
+
+      it "html" do
+        expect(job.raw_stdout("html")).to include <<~EOHTML
+          <div class='term-container'>
+          No output available
+          </div>
+        EOHTML
+      end
+
+      it "nil" do
+        expect(job.raw_stdout).to eq ""
+      end
+    end
+
+    context "when miq_task is missing" do
+      before { job.miq_task = nil }
+
+      it_behaves_like "ansible runner stdout not valid in miq_task"
+    end
+
+    context "when miq_task present, but without context data" do
+      before { job.miq_task = FactoryGirl.create(:miq_task) }
+
+      it_behaves_like "ansible runner stdout not valid in miq_task"
+    end
+
+    context "when miq_task present with context_data, but missing ansible_runner_stdout" do
+      before { job.miq_task = FactoryGirl.create(:miq_task, :context_data => {}) }
+
+      it_behaves_like "ansible runner stdout not valid in miq_task"
     end
   end
 end
