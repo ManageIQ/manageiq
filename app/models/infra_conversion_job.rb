@@ -59,7 +59,9 @@ class InfraConversionJob < Job
 
     if migration_task.source.supports_remove_all_snapshots?
       _log.info(prep_message(message))
-      migration_task.source.remove_all_snapshots_queue(migration_task.userid)
+      task_id = migration_task.source.remove_all_snapshots_queue(migration_task.userid)
+      queue_signal(:collapsing_snapshots)
+      MiqTask.wait_for_taskid(task_id)
     end
 
     handover_to_automate
