@@ -72,7 +72,7 @@ describe MiqScheduleWorker::Scheduler do
       scheduler.schedule_cron("0 0 * * *", :tags => [:a, :b], &work)
       job = rufus_scheduler.jobs.first
 
-      expect(job.frequency).to eq(1.day)
+      expect(job.rough_frequency).to eq(1.day.to_i)
       expect(job.tags).to match_array(%w(a b))
       expect(job.callable).to eq(work)
     end
