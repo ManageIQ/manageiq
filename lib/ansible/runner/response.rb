@@ -100,7 +100,7 @@ module Ansible
           # `File.basename` calls are done in a `.sort_by!` up front so they
           # aren't triggered for each block call in a traditional `.sort!`.
           #
-          job_event_files = Dir.glob(File.join(base_dir, "artifacts", "result", "job_events", "*.json"))
+          job_event_files = Dir.glob(File.join(base_dir, "artifacts", ident, "job_events", "*.json"))
                                .sort_by! { |fname| fname.match(%r{job_events/(\d+)})[1].to_i }
 
           # Read each file and added it to the `stdout` string.

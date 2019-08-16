@@ -1,6 +1,7 @@
 describe Ansible::Runner::Response do
-  subject { described_class.new(:base_dir => base_dir) }
+  subject { described_class.new(:base_dir => base_dir, :ident => ident) }
 
+  let(:ident)        { described_class.new(:base_dir => '').ident }
   let(:base_dir)     { File.expand_path("../../../..", job_events.first.path) } # triggers job_events
   let(:runner_dir)   { Dir.mktmpdir("runner_run") } # same as base_dir
   let(:stdout_lines) { "\n" }
@@ -16,7 +17,7 @@ describe Ansible::Runner::Response do
   end
 
   let(:job_events_dir) do
-    File.join(runner_dir, "artifacts", "result", "job_events").tap do |dir|
+    File.join(runner_dir, "artifacts", ident, "job_events").tap do |dir|
       FileUtils.mkdir_p(dir)
     end
   end
@@ -64,6 +65,22 @@ describe Ansible::Runner::Response do
     end
 
     context "with valid stdout (1 JSON object per line)" do
+      let(:stdout_lines) { good_stdout }
+
+      it "returns an array of only hashes" do
+        expect(subject.parsed_stdout.all? { |line| line.kind_of?(Hash) }).to be_truthy
+      end
+
+      it "includes the expected 'stdout' keys" do
+        expect(subject.parsed_stdout[0]['stdout']).to eq("")
+        expect(subject.parsed_stdout[1]['stdout']).to eq("\r\nPLAY [List Variables] **********************************************************")
+        expect(subject.parsed_stdout[2]['stdout']).to eq("\r\nTASK [Gathering Facts] *********************************************************")
+        expect(subject.parsed_stdout[3]['stdout']).to eq("")
+      end
+    end
+
+    context "with a different :ident provided" do
+      let(:ident)        { 'my_result' }
       let(:stdout_lines) { good_stdout }
 
       it "returns an array of only hashes" do
