@@ -336,8 +336,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       let(:src_host) { FactoryBot.create(:host_vmware_esx, :ems_cluster => src_cluster, :ipaddress => '10.0.0.1') }
       let(:src_storage) { FactoryBot.create(:storage, :hosts => [src_host], :name => 'stockage récent') }
       let(:src_switch) { FactoryBot.create(:switch, :ems_id => src_ems.id) }
-      let(:src_host_switch) { FactoryBot.create(:host_switch, :host => src_host, :switch => src_switch) }
       let(:src_lans) { FactoryBot.create_list(:lan, 2, :switch => src_switch) }
+      let!(:src_host_switch) { FactoryBot.create(:host_switch, :host => src_host, :switch => src_switch) }
 
       let(:src_nic_1) { FactoryBot.create(:guest_device_nic, :lan => src_lans.first) }
       let(:src_nic_2) { FactoryBot.create(:guest_device_nic, :lan => src_lans.last) }
