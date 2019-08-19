@@ -7,7 +7,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
   let(:redhat_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => redhat_ems) }
   let(:redhat_hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => redhat_cluster) }
   let(:redhat_storages) { FactoryBot.create_list(:storage, 1, :hosts => redhat_hosts) }
-  let(:redhat_switch) { FactoryBot.create(:switch, :host => redhat_hosts.first) }
+  let(:redhat_switch) { FactoryBot.create(:switch, :ems_id => redhat_ems.id) }
   let(:redhat_lans) { FactoryBot.create_list(:lan, 2, :switch => redhat_switch) }
   let!(:redhat_host_switch) { FactoryBot.create(:host_switch, :host => redhat_hosts.first, :switch => redhat_switch) }
 
