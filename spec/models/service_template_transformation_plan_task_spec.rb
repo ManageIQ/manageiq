@@ -584,8 +584,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         let(:openstack_ems) { FactoryBot.create(:ems_openstack, :api_version => 'v3', :zone => FactoryBot.create(:zone)) }
         let(:openstack_cloud_tenant) { FactoryBot.create(:cloud_tenant, :name => 'fake tenant', :ext_management_system => openstack_ems) }
         let(:openstack_cloud_volume_type) { FactoryBot.create(:cloud_volume_type) }
-        let(:openstack_cloud_network_1) { FactoryBot.create(:cloud_network) }
-        let(:openstack_cloud_network_2) { FactoryBot.create(:cloud_network) }
+        let(:openstack_cloud_networks) { FactoryBot.create_list(:cloud_network, 2, :cloud_tenant => openstack_cloud_tenant) }
         let(:openstack_flavor) { FactoryBot.create(:flavor) }
         let(:openstack_security_group) { FactoryBot.create(:security_group) }
         let(:openstack_conversion_host_vm) { FactoryBot.create(:vm_openstack, :ext_management_system => openstack_ems, :cloud_tenant => openstack_cloud_tenant) }
@@ -605,12 +604,12 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             )
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_lans.first,
-              :destination            => openstack_cloud_network_1,
+              :destination            => openstack_cloud_networks.first,
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_lans.last,
-              :destination            => openstack_cloud_network_2,
+              :destination            => openstack_cloud_networks.last,
               :transformation_mapping => tm
             )
           end
@@ -628,8 +627,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates network_mappings hash" do
             expect(task_1.network_mappings).to eq(
               [
-                { :source => src_lans.first.name, :destination => openstack_cloud_network_1.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lans.last.name, :destination => openstack_cloud_network_2.ems_ref, :mac_address => src_nic_2.address }
+                { :source => src_lans.first.name, :destination => openstack_cloud_networks.first.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
+                { :source => src_lans.last.name, :destination => openstack_cloud_networks.last.ems_ref, :mac_address => src_nic_2.address }
               ]
             )
           end
