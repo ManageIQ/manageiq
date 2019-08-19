@@ -1090,14 +1090,13 @@
     :keep_tasks: 1.week
     :purge_window_size: 1000
 :transformation:
+  :job:
+    :retry_interval: 15 # in seconds
   :limits:
     :max_concurrent_tasks_per_ems: 10
     :max_concurrent_tasks_per_host: 10
     :cpu_limit_per_host: unlimited
     :network_limit_per_host: unlimited
-    :conversion_polling_interval: 15 # in seconds
-    :poll_conversion_max: 86400 # i.e. default 24 hours (15s per-interval)
-    :poll_post_stage_max: 25200 # i.e. default 7 hours (15s per-interval)
 :ui:
   :mark_translated_strings: false
   :display_ops_database: false
