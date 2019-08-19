@@ -60,7 +60,7 @@ RSpec.describe InfraConversionJob, :v2v do
             :percent    => 25.0,
             :updated_on => Time.now.utc
           }
-          expect(job.on_retry(state_hash, {:percent => 25.0})).to eq(state_hash.merge(state_hash_diff))
+          expect(job.on_retry(state_hash, :percent => 25.0)).to eq(state_hash.merge(state_hash_diff))
         end
       end
     end
@@ -173,7 +173,7 @@ RSpec.describe InfraConversionJob, :v2v do
             }
           }
           task.update_options(:progress => progress)
-          job.update_migration_task_progress(:on_retry, { :percent => 30 })
+          job.update_migration_task_progress(:on_retry, :percent => 30)
           expect(task.reload.options[:progress]).to eq(
             :current_state => 'running_in_automate',
             :percent       => 10.0,
@@ -189,7 +189,7 @@ RSpec.describe InfraConversionJob, :v2v do
           )
         end
       end
- 
+
       it 'updates the task progress hash on exit' do
         job.context[:retries_running_in_automate] = 1728
         Timecop.freeze(2019, 2, 6) do
@@ -223,7 +223,7 @@ RSpec.describe InfraConversionJob, :v2v do
           )
         end
       end
- 
+
       it 'updates the task progress hash on error' do
         job.context[:retries_running_in_automate] = 1728
         Timecop.freeze(2019, 2, 6) do
