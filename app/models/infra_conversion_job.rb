@@ -56,16 +56,12 @@ class InfraConversionJob < Job
   #     :weight      => 30,
   #     :max_retries => 960
   #   }
-  def load_states
-    {
+  def state_settings
+    @state_settings ||= {
       :running_in_automate => {
         :max_retries => 8640 # 36 hours with a retry interval of 15 seconds
-      },
+      }
     }
-  end
-
-  def states
-    @states ||= load_states
   end
 
   def migration_task
@@ -74,10 +70,10 @@ class InfraConversionJob < Job
   end
 
   def on_entry(state_hash, _)
-    state_hash ||= {
+    state_hash || {
       :state       => 'active',
       :status      => 'Ok',
-      :description => states[state.to_sym][:description],
+      :description => state_settings[state.to_sym][:description],
       :started_on  => Time.now.utc,
       :percent     => 0.0
     }.compact
@@ -85,7 +81,7 @@ class InfraConversionJob < Job
 
   def on_retry(state_hash, state_progress = nil)
     if state_progress.nil?
-      state_hash[:percent] = context["retries_#{state}".to_sym].to_f / states[state.to_sym][:max_retries].to_f * 100.0
+      state_hash[:percent] = context["retries_#{state}".to_sym].to_f / state_settings[state.to_sym][:max_retries].to_f * 100.0
     else
       state_hash.merge!(state_progress)
     end
@@ -111,8 +107,8 @@ class InfraConversionJob < Job
     progress = migration_task.options[:progress] || { :current_state => state, :percent => 0.0, :states => {} }
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
     progress[:states][state.to_sym] = state_hash
-    progress[:current_description] = states[state.to_sym][:description] if state_phase == :on_entry && states[state.to_sym][:description].present?
-    progress[:percent] += state_hash[:percent] * states[state.to_sym][:weight] / 100.0 if states[state.to_sym][:weight].present?
+    progress[:current_description] = state_settings[state.to_sym][:description] if state_phase == :on_entry && state_settings[state.to_sym][:description].present?
+    progress[:percent] += state_hash[:percent] * state_settings[state.to_sym][:weight] / 100.0 if state_settings[state.to_sym][:weight].present?
     migration_task.update_transformation_progress(progress)
   end
 

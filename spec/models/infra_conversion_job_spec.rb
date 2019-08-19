@@ -122,18 +122,19 @@ RSpec.describe InfraConversionJob, :v2v do
         job.context[:retries_running_in_automate] = 1728
         Timecop.freeze(2019, 2, 6) do
           task.update_options(:progress => {
-            :current_state => 'running_in_automate',
-            :percent       => 10.0,
-            :states        => {
-              :running_in_automate => {
-                :state      => 'active',
-                :status     => 'Ok',
-                :started_on => Time.now.utc - 1.minute,
-                :percent    => 10.0,
-                :updated_on => Time.now.utc - 30.seconds
-              }
-            }
-          })
+                                :current_state => 'running_in_automate',
+                                :percent       => 10.0,
+                                :states        => {
+                                  :running_in_automate => {
+                                    :state      => 'active',
+                                    :status     => 'Ok',
+                                    :started_on => Time.now.utc - 1.minute,
+                                    :percent    => 10.0,
+                                    :updated_on => Time.now.utc - 30.seconds
+                                  }
+                                }
+                              }
+          )
           job.update_migration_task_progress(:on_retry, nil)
           expect(task.reload.options[:progress]).to eq(
             :current_state => 'running_in_automate',
