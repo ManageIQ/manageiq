@@ -472,8 +472,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         let(:redhat_hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => redhat_cluster) }
         let(:redhat_storages) { FactoryBot.create_list(:storage, 1, :hosts => redhat_hosts) }
         let(:redhat_switch) { FactoryBot.create(:switch, :host => redhat_hosts.first) }
-        let(:redhat_lan_1) { FactoryBot.create(:lan, :switch => redhat_switch) }
-        let(:redhat_lan_2) { FactoryBot.create(:lan, :switch => redhat_switch) }
+        let(:redhat_lans) { FactoryBot.create_list(:lan, 2, :switch => redhat_switch) }
 
         let(:conversion_host) {
           FactoryBot.create(
@@ -496,12 +495,12 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             )
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_lans.first,
-              :destination            => redhat_lan_1,
+              :destination            => redhat_lans.first,
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_lans.last,
-              :destination            => redhat_lan_2,
+              :destination            => redhat_lans.last,
               :transformation_mapping => tm
             )
           end
@@ -519,8 +518,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates network_mappings hash" do
             expect(task_1.network_mappings).to eq(
               [
-                { :source => src_lans.first.name, :destination => redhat_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lans.last.name, :destination => redhat_lan_2.name, :mac_address => src_nic_2.address }
+                { :source => src_lans.first.name, :destination => redhat_lans.first.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
+                { :source => src_lans.last.name, :destination => redhat_lans.last.name, :mac_address => src_nic_2.address }
               ]
             )
           end
