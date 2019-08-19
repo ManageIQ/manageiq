@@ -300,6 +300,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     :vm_tags
   end
 
+  VM_OR_TEMPLATE_EXTRA_COLS = %i[mem_cpu cpu_total_cores v_total_snapshots allocated_disk_storage].freeze
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
@@ -338,23 +339,21 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       end
     end
 
-    allowed_templates_list = source_vm_rbac_filter(vms, condition).to_a
+    # Only select the colums we need
+    vms = vms.select(:id, :name, :guid, :uid_ems, :ems_id, :cloud_tenant_id)
+
+    allowed_templates_list = source_vm_rbac_filter(vms, condition, VM_OR_TEMPLATE_EXTRA_COLS).to_a
     @allowed_templates_filter = filter_id
     @allowed_templates_tag_filters = @values[:vm_tags]
     rails_logger('allowed_templates', 1)
-    if allowed_templates_list.blank?
-      _log.warn("Allowed Templates is returning an empty list")
-    else
-      _log.warn("Allowed Templates is returning <#{allowed_templates_list.length}> template(s)")
-      allowed_templates_list.each do |vm|
-        _log.debug("Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>")
-      end
-    end
+    log_allowed_template_list(allowed_templates_list)
 
-    MiqPreloader.preload(allowed_templates_list, [:snapshots, :operating_system, :ext_management_system, {:hardware => :disks}])
+    MiqPreloader.preload(allowed_templates_list, [:operating_system])
+    @_ems_allowed_templates_cache = {}
     @allowed_templates_cache = allowed_templates_list.collect do |template|
       create_hash_struct_from_vm_or_template(template, options)
     end
+    @_ems_allowed_templates_cache = nil
 
     @allowed_templates_cache
   end
@@ -365,9 +364,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ["vms.template = ? AND vms.ems_id in (?)", true, self.class.provider_model.pluck(:id)]
   end
 
-  def source_vm_rbac_filter(vms, condition = nil)
-    MiqSearch.filtered(get_value(@values[:vm_filter]).to_i, VmOrTemplate, vms,
-                       :user => @requester, :conditions => condition)
+  def source_vm_rbac_filter(vms, condition = nil, *extra_cols)
+    opts = { :user => @requester, :conditions => condition }
+    opts[:extra_cols] = extra_cols unless extra_cols.empty?
+    MiqSearch.filtered(get_value(@values[:vm_filter]).to_i, VmOrTemplate, vms, opts)
   end
 
   def allowed_provision_types(_options = {})
@@ -1046,19 +1046,38 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
                  :allocated_disk_storage => vm_or_template.allocated_disk_storage,
                  :v_total_snapshots      => vm_or_template.v_total_snapshots,
                  :evm_object_class       => :Vm}
-    data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.respond_to?(:cloud_tenant)
-    hash_struct = MiqHashStruct.new(data_hash)
-    hash_struct.operating_system = MiqHashStruct.new(
-      :product_name => vm_or_template.operating_system.product_name
-    ) if vm_or_template.operating_system
-    hash_struct.ext_management_system = MiqHashStruct.new(
-      :name => vm_or_template.ext_management_system.name
-    ) if vm_or_template.ext_management_system
-    if options[:include_datacenter] == true
-      hash_struct.datacenter_name = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
+    data_hash[:cloud_tenant] = vm_or_template.cloud_tenant if vm_or_template.cloud_tenant_id
+    if vm_or_template.operating_system
+      data_hash[:operating_system] = MiqHashStruct.new(:product_name => vm_or_template.operating_system.product_name)
     end
+    if options[:include_datacenter] == true
+      data_hash[:datacenter_name] = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
+    end
+    assign_ems_data_to_data_hash(data_hash, vm_or_template)
 
-    hash_struct
+    MiqHashStruct.new(data_hash)
+  end
+
+  def assign_ems_data_to_data_hash(data_hash, vm_or_template)
+    # Handle EMS data, either with a cache, or with the relation (assumes it is
+    # preloaded usually)
+    if @_ems_allowed_templates_cache
+      # don't have a key, so don't attempt to add to the data_hash
+      if vm_or_template.ems_id
+        ems_id = vm_or_template.ems_id
+
+        # only fetch the ems if not fetched previously
+        unless @_ems_allowed_templates_cache.key?(vm_or_template.ems_id)
+          @_ems_allowed_templates_cache[ems_id] = ExtManagementSystem.find(ems_id).try(:name)
+        end
+
+        if @_ems_allowed_templates_cache[ems_id]
+          data_hash[:ext_management_system] = MiqHashStruct.new(:name => @_ems_allowed_templates_cache[ems_id])
+        end
+      end
+    elsif vm_or_template.ems_id
+      data_hash[:ext_management_system] = MiqHashStruct.new(:name => vm_or_template.ext_management_system.name)
+    end
   end
 
   def exit_pre_dialog
@@ -1093,5 +1112,18 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def selected_host(src)
     raise _("Unable to find Host with Id: [%{id}]") % {:id => src[:host_id]} if src[:host].nil?
     [load_ar_obj(src[:host])]
+  end
+
+  def log_allowed_template_list(template_list)
+    if template_list.blank?
+      _log.warn("Allowed Templates is returning an empty list")
+    else
+      _log.warn("Allowed Templates is returning <#{template_list.length}> template(s)")
+      if _log.level == Logger::DEBUG # skip .each if not in DEBUG
+        template_list.each do |vm|
+          _log.debug("Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>")
+        end
+      end
+    end
   end
 end
