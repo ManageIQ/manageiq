@@ -235,6 +235,11 @@ class ExtManagementSystem < ApplicationRecord
   # @param orig_zone [Integer] because of zone of child manager can be changed by parent manager's ensure_managers() callback
   #                            we need to specify original zone for children explicitly
   def pause!(orig_zone = nil)
+    if (orig_zone || zone) == Zone.maintenance_zone
+      _log.warn("Trying to pause paused EMS [#{name}] id [#{id}]. Skipping.")
+      return
+    end
+
     _log.info("Pausing EMS [#{name}] id [#{id}].")
     update!(
       :zone_before_pause => orig_zone || zone,

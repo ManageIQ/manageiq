@@ -457,16 +457,18 @@ describe ExtManagementSystem do
       child = FactoryGirl.create(:ext_management_system, :zone => zone)
       ems.child_managers << child
 
-      ems.pause!
+      2.times do
+        ems.pause!
 
-      expect(ems.enabled).to eq(false)
-      expect(ems.zone).to eq(Zone.maintenance_zone)
-      expect(ems.zone_before_pause).to eq(zone)
+        expect(ems.enabled).to eq(false)
+        expect(ems.zone).to eq(Zone.maintenance_zone)
+        expect(ems.zone_before_pause).to eq(zone)
 
-      child.reload
-      expect(child.enabled).to eq(false)
-      expect(child.zone).to eq(Zone.maintenance_zone)
-      expect(child.zone_before_pause).to eq(zone)
+        child.reload
+        expect(child.enabled).to eq(false)
+        expect(child.zone).to eq(Zone.maintenance_zone)
+        expect(child.zone_before_pause).to eq(zone)
+      end
     end
 
     it 'disables an ems and moves child managers created by ensure_managers() to maintenance zone' do
@@ -480,21 +482,23 @@ describe ExtManagementSystem do
         :vmware_cloud    => FactoryGirl.create(:ems_vmware_cloud,    :zone => zone),
       }
 
-      # managers with child managers created with ensure_managers() callback has own callback to change zone
-      # so it should be tested separately
-      emses.each_value do |manager|
-        manager.pause!
+      2.times do
+        # managers with child managers created with ensure_managers() callback has own callback to change zone
+        # so it should be tested separately
+        emses.each_value do |manager|
+          manager.pause!
 
-        manager.reload
-        expect(manager.network_manager.zone_before_pause).to eq(zone)
-        expect(manager.network_manager.zone).to eq(Zone.maintenance_zone)
-      end
+          manager.reload
+          expect(manager.network_manager.zone_before_pause).to eq(zone)
+          expect(manager.network_manager.zone).to eq(Zone.maintenance_zone)
+        end
 
-      # The same for storage managers, i.e. amazon
-      %i(amazon_cloud openstack_cloud).each do |manager_type|
-        emses[manager_type].storage_managers.each do |storage_manager|
-          expect(storage_manager.zone_before_pause).to eq(zone)
-          expect(storage_manager.zone).to eq(Zone.maintenance_zone)
+        # The same for storage managers, i.e. amazon
+        %i[amazon_cloud openstack_cloud].each do |manager_type|
+          emses[manager_type].storage_managers.each do |storage_manager|
+            expect(storage_manager.zone_before_pause).to eq(zone)
+            expect(storage_manager.zone).to eq(Zone.maintenance_zone)
+          end
         end
       end
     end
