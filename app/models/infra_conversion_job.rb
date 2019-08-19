@@ -42,14 +42,6 @@ class InfraConversionJob < Job
     }
   end
 
-  def state_settings
-    @state_settings ||= {
-      :running_in_automate => {
-        :max_retries => 8640 # 36 hours with a retry interval of 15 seconds
-      }
-    }
-  end
-
   # Example state:
   #   :state_name => {
   #     :description => 'State description',
