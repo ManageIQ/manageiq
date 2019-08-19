@@ -12,7 +12,7 @@ class TransformationMappingItem < ApplicationRecord
   validate :destination_datastore, :if => -> { destination.kind_of?(Storage) || destination.kind_of?(CloudVolume) }
 
   validate :source_network,    :if => -> { source.kind_of?(Lan) }
-  #validate :destination_network, :if => -> { destination.kind_of?(Lan) || destination.kind_of?(CloudNetwork) }
+  validate :destination_network, :if => -> { destination.kind_of?(Lan) || destination.kind_of?(CloudNetwork) }
 
   def source_network
     mappings = transformation_mapping.transformation_mapping_items.where(:source_type => "EmsCluster")
@@ -32,7 +32,7 @@ class TransformationMappingItem < ApplicationRecord
       dst_cluster_lans = mappings.collect(&:destination).collect(&:cloud_networks).flatten
     end
 
-     unless dst_cluster_lans.include?(destination)
+    unless dst_cluster_lans.include?(destination)
       errors.add(:destination, "cluster lans must include destination lan: #{destination}")
     end
   end
