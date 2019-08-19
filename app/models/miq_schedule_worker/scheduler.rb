@@ -15,7 +15,7 @@ class MiqScheduleWorker
 
     def schedule_every(duration = nil, callable = nil, opts = {}, &block)
       if duration.blank?
-        logger.warn("Duration is empty, scheduling ingnored. Called from: #{block}.")
+        logger.warn("Duration is empty, scheduling ignored. Called from: #{block}.")
         return
       end
 

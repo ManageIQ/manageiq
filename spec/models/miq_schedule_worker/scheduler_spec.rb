@@ -50,7 +50,7 @@ describe MiqScheduleWorker::Scheduler do
 
     context "with different parmeters" do
       it "interprets first arg nil as trigger to skip scheduling" do
-        expect(logger).to receive(:warn).once.with(/Duration is empty, scheduling ingnored/)
+        expect(logger).to receive(:warn).once.with(/Duration is empty, scheduling ignored/)
         scheduler.schedule_every(nil) {}
       end
 
