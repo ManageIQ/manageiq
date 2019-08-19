@@ -58,12 +58,9 @@ class InfraConversionJob < Job
   #   }
   def load_states
     {
-      :running => {
-        :max_retries => 5760 # 24 hours with a retry interval of 15 seconds
+      :running_in_automate => {
+        :max_retries => 8640 # 36 hours with a retry interval of 15 seconds
       },
-      :post_conversion => {
-        :max_retries => 1680 # 7 hours with a retry interval of 15 seconds
-      }
     }
   end
 
@@ -77,17 +74,18 @@ class InfraConversionJob < Job
   end
 
   def on_entry(state_hash, _)
-    state_hash ||= { :state => 'active', :status => 'Ok', :message => states[state.to_sym].description }
-    if context["retries_#{state}".to_sym].to_i.zero?
-      state_hash[:started_on] = Time.now.utc
-      state_hash[:percent] = 0.0
-    end
-    state_hash
+    state_hash ||= {
+      :state       => 'active',
+      :status      => 'Ok',
+      :description => states[state.to_sym][:description],
+      :started_on  => Time.now.utc,
+      :percent     => 0.0
+    }.compact
   end
 
   def on_retry(state_hash, state_progress = nil)
     if state_progress.nil?
-      state_hash[:percent] = context["retries#{state}".to_sym].to_f / states[state.to_sym][:max_retries].to_f * 100.0
+      state_hash[:percent] = context["retries_#{state}".to_sym].to_f / states[state.to_sym][:max_retries].to_f * 100.0
     else
       state_hash.merge!(state_progress)
     end
@@ -96,7 +94,7 @@ class InfraConversionJob < Job
   end
 
   def on_exit(state_hash, _)
-    state_hash[:state] = finished
+    state_hash[:state] = 'finished'
     state_hash[:percent] = 100.0
     state_hash[:updated_on] = Time.now.utc
     state_hash
@@ -110,8 +108,9 @@ class InfraConversionJob < Job
   end
 
   def update_migration_task_progress(state_phase, state_progress = nil)
-    progress = migration_task.options[:progress] || { :current_state => '', :current_description => '', :percent => 0.0, :states => {} }
+    progress = migration_task.options[:progress] || { :current_state => state, :percent => 0.0, :states => {} }
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
+    progress[:states][state.to_sym] = state_hash
     progress[:current_description] = states[state.to_sym][:description] if state_phase == :on_entry && states[state.to_sym][:description].present?
     progress[:percent] += state_hash[:percent] * states[state.to_sym][:weight] / 100.0 if states[state.to_sym][:weight].present?
     migration_task.update_transformation_progress(progress)
@@ -156,6 +155,8 @@ class InfraConversionJob < Job
 
   # --- Methods that implement the state machine transitions --- #
 
+  # This transition simply allows to officially mark the task as migrating.
+  # Temporarily, it also hands over to Automate.
   def start
     migration_task.update!(:state => 'migrate')
     handover_to_automate
