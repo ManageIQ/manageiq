@@ -42,10 +42,6 @@ class InfraConversionJob < Job
     }
   end
 
-  def load_states
-    {}
-  end
-
   def state_settings
     @state_settings ||= {
       :running_in_automate => {
