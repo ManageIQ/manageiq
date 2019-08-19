@@ -1,9 +1,5 @@
 class InfraConversionJob < Job
   def self.create_job(options)
-    # TODO: from settings/user plan settings
-    options[:conversion_polling_interval] ||= Settings.transformation.limits.conversion_polling_interval # in seconds
-    options[:poll_conversion_max] ||= Settings.transformation.limits.poll_conversion_max
-    options[:poll_post_stage_max] ||= Settings.transformation.limits.poll_post_stage_max
     super(name, options)
   end
 
@@ -33,16 +29,29 @@ class InfraConversionJob < Job
     self.state ||= 'initialize'
 
     {
-      :initializing     => {'initialize'       => 'waiting_to_start'},
-      :start            => {'waiting_to_start' => 'running'},
-      :poll_conversion  => {'running'          => 'running'},
-      :start_post_stage => {'running'          => 'post_conversion'},
-      :poll_post_stage  => {'post_conversion'  => 'post_conversion'},
-      :finish           => {'*'                => 'finished'},
-      :abort_job        => {'*'                => 'aborting'},
-      :cancel           => {'*'                => 'canceling'},
-      :error            => {'*'                => '*'}
+      :initializing                => {'initialize'       => 'waiting_to_start'},
+      :start                       => {'waiting_to_start' => 'started'},
+      :poll_automate_state_machine => {
+        'started'             => 'running_in_automate',
+        'running_in_automate' => 'running_in_automate'
+      },
+      :finish                      => {'*'                => 'finished'},
+      :abort_job                   => {'*'                => 'aborting'},
+      :cancel                      => {'*'                => 'canceling'},
+      :error                       => {'*'                => '*'}
     }
+  end
+
+  def load_states
+    {
+      :running_in_automate => {
+        :max_retries => 8640 # 36 hours with a retry interval of 15 seconds
+      }
+    }
+  end
+
+  def states
+    @states ||= load_states
   end
 
   def migration_task
@@ -56,85 +65,17 @@ class InfraConversionJob < Job
     migration_task.update_options(:workflow_runner => 'automate')
   end
 
-  def start
-    migration_task.update!(:state => 'migrate')
-    handover_to_automate
-    queue_signal(:poll_conversion)
-  end
-
   def abort_conversion(message, status)
     migration_task.cancel
     queue_signal(:abort_job, message, status)
   end
 
-  def polling_timeout(poll_type)
-    count = "#{poll_type}_count".to_sym
-    max = "#{poll_type}_max".to_sym
-    context[count] = (context[count] || 0) + 1
-    context[count] > options[max]
-  end
-
-  def poll_conversion
-    return abort_conversion("Polling times out", 'error') if polling_timeout(:poll_conversion)
-
-    message = "Getting conversion state"
-    _log.info(prep_message(message))
-
-    unless migration_task.options.fetch_path(:virtv2v_wrapper, 'state_file')
-      message = "Virt v2v state file not available, continuing poll_conversion"
-      _log.info(prep_message(message))
-      update_attributes(:message => message)
-      return queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
-    end
-
-    begin
-      migration_task.get_conversion_state # migration_task.options will be updated
-    rescue => exception
-      _log.log_backtrace(exception)
-      return abort_conversion("Conversion error: #{exception}", 'error')
-    end
-
-    v2v_status = migration_task.options[:virtv2v_status]
-    message = "virtv2v_status=#{v2v_status}"
-    _log.info(prep_message(message))
-    update_attributes(:message => message)
-
-    case v2v_status
-    when 'active'
-      queue_signal(:poll_conversion, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
-    when 'failed'
-      message = "disk conversion failed"
-      abort_conversion(prep_message(message), 'error')
-    when 'succeeded'
-      message = "disk conversion succeeded"
-      _log.info(prep_message(message))
-      queue_signal(:start_post_stage)
-    else
-      message = prep_message("Unknown converstion status: #{v2v_status}")
-      abort_conversion(message, 'error')
-    end
-  end
-
-  def start_post_stage
-    # once we refactor Automate's PostTransformation into a job, we kick start it here
-    message = "To wait for Post-Transformation progress"
-    _log.info(prep_message(message))
-    update_attributes(:message => message)
-    queue_signal(:poll_post_stage, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
-  end
-
-  def poll_post_stage
-    return abort_conversion("Polling times out", 'error') if polling_timeout(:poll_post_stage)
-
-    message = "PostTransformation state=#{migration_task.state}, status=#{migration_task.status}"
-    _log.info(prep_message(message))
-    update_attributes(:message => message)
-    if migration_task.state == 'finished'
-      self.status = migration_task.status
-      queue_signal(:finish)
-    else
-      queue_signal(:poll_post_stage, :deliver_on => Time.now.utc + options[:conversion_polling_interval])
-    end
+  def polling_timeout
+    options[:retry_interval] ||= Settings.transformation.job.retry_interval # in seconds
+    return false if states[state.to_sym][:max_retries].nil?
+    retries = "retries_#{state}".to_sym
+    context[retries] = (context[retries] || 0) + 1
+    context[retries] > states[state.to_sym][:max_retries]
   end
 
   def queue_signal(*args, deliver_on: nil)
@@ -152,5 +93,27 @@ class InfraConversionJob < Job
 
   def prep_message(contents)
     "MiqRequestTask id=#{migration_task.id}, InfraConversionJob id=#{id}. #{contents}"
+  end
+
+  # --- Methods that implement the state machine transitions --- #
+
+  def start
+    migration_task.update!(:state => 'migrate')
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
+  end
+
+  def poll_automate_state_machine
+    return abort_conversion('Polling timed out', 'error') if polling_timeout
+
+    message = "Migration Task vm=#{migration_task.source.name}, state=#{migration_task.state}, status=#{migration_task.status}"
+    _log.info(prep_message(message))
+    update_attributes(:message => message)
+    if migration_task.state == 'finished'
+      self.status = migration_task.status
+      queue_signal(:finish)
+    else
+      queue_signal(:poll_automate_state_machine, :deliver_on => Time.now.utc + options[:retry_interval])
+    end
   end
 end

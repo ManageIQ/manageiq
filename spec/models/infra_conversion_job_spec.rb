@@ -13,7 +13,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w(start poll_conversion start_post_stage poll_post_stage finish abort_job cancel error).each do |signal|
+    %w(start poll_automate_state_machine finish abort_job cancel error).each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -22,7 +22,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w(start poll_conversion start_post_stage poll_post_stage).each do |signal|
+    %w(start poll_automate_state_machine).each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -34,170 +34,83 @@ RSpec.describe InfraConversionJob, :v2v do
       before do
         job.state = 'waiting_to_start'
       end
+
       it_behaves_like 'allows start signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
 
-      it_behaves_like 'doesn\'t allow poll_conversion signal'
-      it_behaves_like 'doesn\'t allow start_post_stage signal'
-      it_behaves_like 'doesn\'t allow poll_post_stage signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
-    context 'running' do
+    context 'started' do
       before do
-        job.state = 'running'
+        job.state = 'started'
       end
 
-      it_behaves_like 'allows poll_conversion signal'
-      it_behaves_like 'allows start_post_stage signal'
+      it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
-      it_behaves_like 'doesn\'t allow poll_post_stage signal'
     end
 
-    context 'post_conversion' do
+    context 'running_in_automate' do
       before do
-        job.state = 'post_conversion'
+        job.state = 'running_in_automate'
       end
 
-      it_behaves_like 'allows poll_post_stage signal'
+      it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
-      it_behaves_like 'doesn\'t allow poll_conversion signal'
-      it_behaves_like 'doesn\'t allow start_post_stage signal'
     end
   end
 
   context 'operations' do
-    let(:poll_interval) { Settings.transformation.limits.conversion_polling_interval }
-
-    before do
-      allow(job).to receive(:migration_task).and_return(task)
-    end
+    let(:poll_interval) { Settings.transformation.job.retry_interval }
 
     context '#start' do
-      it 'to poll_conversion when preflight_check passes' do
-        expect(job).to receive(:queue_signal).with(:poll_conversion)
+      it 'to poll_automate_state_machine when preflight_check passes' do
+        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
         job.signal(:start)
-        expect(task.state).to eq('migrate')
+        expect(task.reload.state).to eq('migrate')
         expect(task.options[:workflow_runner]).to eq('automate')
       end
     end
 
-    context '#poll_conversion' do
+    context '#poll_automate_state_machine' do
       before do
-        job.state = 'running'
-        task.options[:virtv2v_wrapper] = {'state_file' => 'something'}
+        job.state = 'running_in_automate'
       end
 
-      it 'to poll_conversion when migration_task.options[:virtv2v_wrapper] is nil' do
-        task.options[:virtv2v_wrapper] = nil
+      it 'to poll_automate_state_machine when migration_task.state is not finished' do
+        task.update!(:state => 'active')
         Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + poll_interval)
-          job.signal(:poll_conversion)
-        end
-      end
-
-      it 'to poll_conversion when migration_task.options[:virtv2v_wrapper][:state_file] is nil' do
-        task.options[:virtv2v_wrapper] = {'state_file' => nil}
-        Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + poll_interval)
-          job.signal(:poll_conversion)
-        end
-      end
-
-      it 'abort_conversion when get_conversion_state fails' do
-        expect(task).to receive(:get_conversion_state).and_raise
-        expect(job).to receive(:abort_conversion)
-        job.signal(:poll_conversion)
-      end
-
-      it 'to poll_conversion when migration_task.options[:virtv2v_status] is active' do
-        task.options[:virtv2v_status] = 'active'
-        Timecop.freeze(2019, 2, 6) do
-          expect(task).to receive(:get_conversion_state)
-          expect(job).to receive(:queue_signal).with(:poll_conversion, :deliver_on => Time.now.utc + poll_interval)
-          job.signal(:poll_conversion)
-        end
-      end
-
-      it 'abort_conversion when migration_task.options[:virtv2v_status] is failed' do
-        task.options[:virtv2v_status] = 'failed'
-        expect(task).to receive(:get_conversion_state)
-        expect(job).to receive(:abort_conversion)
-        job.signal(:poll_conversion)
-      end
-
-      it 'to start_post_stage when migration_task.options[:virtv2v_status] is succeeded' do
-        task.options[:virtv2v_status] = 'succeeded'
-        expect(task).to receive(:get_conversion_state)
-        expect(job).to receive(:queue_signal).with(:start_post_stage)
-        job.signal(:poll_conversion)
-      end
-
-      it 'abort_conversion when migration_task.options[:virtv2v_status] is unknown' do
-        task.options[:virtv2v_status] = '_'
-        expect(task).to receive(:get_conversion_state)
-        expect(job).to receive(:abort_conversion)
-        job.signal(:poll_conversion)
-      end
-
-      it 'abort_conversion when poll_conversion times out' do
-        job.options[:poll_conversion_max] = 24 * 60
-        job.context[:poll_conversion_count] = 24 * 60
-        expect(job).to receive(:abort_conversion)
-        job.signal(:poll_conversion)
-      end
-    end
-
-    context '#start_post_stage' do
-      it 'to poll_post_stage when signaled :start_post_stage' do
-        job.state = 'running'
-        Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_post_stage, :deliver_on => Time.now.utc + poll_interval)
-          job.signal(:start_post_stage)
-        end
-      end
-    end
-
-    context '#poll_post_stage' do
-      before do
-        job.state = 'post_conversion'
-      end
-
-      it 'to poll_post_stage when migration_task.state is not finished' do
-        task.state = 'not-finished'
-        Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_post_stage, :deliver_on => Time.now.utc + poll_interval)
-          job.signal(:poll_post_stage)
+          expect(job).to receive(:queue_signal).with(:poll_automate_state_machine, :deliver_on => Time.now.utc + poll_interval)
+          job.signal(:poll_automate_state_machine)
         end
       end
 
       it 'to finish when migration_task.state is finished' do
-        task.state = 'finished'
-        task.status = 'whatever'
+        task.update!(:state => 'finished', :status => 'Ok')
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:queue_signal).with(:finish)
-          job.signal(:poll_post_stage)
+          job.signal(:poll_automate_state_machine)
           expect(job.status).to eq(task.status)
         end
       end
 
-      it 'abort_conversion when poll_post_stage times out' do
-        job.options[:poll_post_stage_max] = 30
-        job.context[:poll_post_stage_count] = 30
-        expect(job).to receive(:abort_conversion)
-        job.signal(:poll_post_stage)
+      it 'abort_conversion when poll_automate_state_machine times out' do
+        job.context[:retries_running_in_automate] = 8640
+        expect(job).to receive(:abort_conversion).with('Polling timed out', 'error')
+        job.signal(:poll_automate_state_machine)
       end
     end
   end
