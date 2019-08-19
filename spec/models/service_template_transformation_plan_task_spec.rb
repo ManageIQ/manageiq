@@ -473,6 +473,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         let(:redhat_storages) { FactoryBot.create_list(:storage, 1, :hosts => redhat_hosts) }
         let(:redhat_switch) { FactoryBot.create(:switch, :host => redhat_hosts.first) }
         let(:redhat_lans) { FactoryBot.create_list(:lan, 2, :switch => redhat_switch) }
+        let!(:redhat_host_switch) { FactoryBot.create(:host_switch, :host => redhat_hosts.first, :switch => redhat_switch) }
 
         let(:conversion_host) {
           FactoryBot.create(
