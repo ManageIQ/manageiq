@@ -1088,8 +1088,6 @@
 :transformation:
   :job:
     :retry_interval: 15 # in seconds
-    :states_max_retries:
-      :running_in_automate: 8640 # 36 hours with a retry interval of 15 seconds
   :limits:
     :max_concurrent_tasks_per_ems: 10
     :max_concurrent_tasks_per_host: 10

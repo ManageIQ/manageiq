@@ -46,8 +46,12 @@ class InfraConversionJob < Job
     {}
   end
 
-  def states
-    @states ||= load_states
+  def state_settings
+    @state_settings ||= {
+      :running_in_automate => {
+        :max_retries => 8640 # 36 hours with a retry interval of 15 seconds
+      }
+    }
   end
 
   def migration_task
@@ -68,12 +72,11 @@ class InfraConversionJob < Job
 
   def polling_timeout
     options[:retry_interval] ||= Settings.transformation.job.retry_interval # in seconds
-    max_retries = Settings.transformation.job.states_max_retries[state.to_sym]
-    return false if max_retries.nil?
+    return false if state_settings[state.to_sym][:max_retries].nil?
 
     retries = "retries_#{state}".to_sym
     context[retries] = (context[retries] || 0) + 1
-    context[retries] > max_retries
+    context[retries] > state_settings[state.to_sym][:max_retries]
   end
 
   def queue_signal(*args, deliver_on: nil)
