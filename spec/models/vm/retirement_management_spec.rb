@@ -1,6 +1,6 @@
 describe "VM Retirement Management" do
   let(:user) { FactoryBot.create(:user_miq_request_approver) }
-  let(:vm_with_owner) { FactoryBot.create(:vm, :evm_owner => user) }
+  let(:vm_with_owner) { FactoryBot.create(:vm, :evm_owner => user, :host => FactoryBot.create(:host)) }
   let(:region) { FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number) }
   let(:vm2) { FactoryBot.create(:vm) }
 
@@ -11,12 +11,23 @@ describe "VM Retirement Management" do
   end
 
   describe "#retirement_check" do
+    before do
+      FactoryBot.create(:miq_event_definition, :name => :request_vm_retire)
+      # admin user is needed to process Events
+      # system_context_retirement relies on the presence of a user with this userid
+      FactoryBot.create(:user_with_group, :userid => "admin")
+    end
+
     context "with user" do
       it "uses user as requester" do
-        expect(MiqEvent).to receive(:raise_evm_event)
         vm_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
         expect(vm_with_owner.retirement_last_warn).to be_nil
+
+        allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', MiqAeEngine::MiqAeWorkspaceRuntime.new])
         vm_with_owner.retirement_check
+        status, message, result = MiqQueue.first.deliver
+        MiqQueue.first.delivered(status, message, result)
+
         vm_with_owner.reload
         expect(vm_with_owner.retirement_last_warn).not_to be_nil
         expect(vm_with_owner.retirement_requester).to eq(user.userid)
@@ -25,17 +36,19 @@ describe "VM Retirement Management" do
 
     context "without user" do
       before do
-        # system_context_retirement relies on the presence of a user with this userid
-        FactoryBot.create(:user, :userid => 'admin', :role => 'super_administrator')
         user.destroy
         vm_with_owner.reload
       end
 
       it "uses admin as requester" do
-        expect(MiqEvent).to receive(:raise_evm_event)
         vm_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
         expect(vm_with_owner.retirement_last_warn).to be_nil
+
+        allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', MiqAeEngine::MiqAeWorkspaceRuntime.new])
         vm_with_owner.retirement_check
+        status, message, result = MiqQueue.first.deliver
+        MiqQueue.first.delivered(status, message, result)
+
         vm_with_owner.reload
         expect(vm_with_owner.retirement_last_warn).not_to be_nil
         expect(vm_with_owner.retirement_requester).to eq('admin')
@@ -105,23 +118,57 @@ describe "VM Retirement Management" do
   end
 
   describe "retire request" do
+    let(:ws) { MiqAeEngine::MiqAeWorkspaceRuntime.new }
+    before do
+      FactoryBot.create(:miq_event_definition, :name => :request_vm_retire)
+      # admin user is needed to process Events
+      FactoryBot.create(:user_with_group, :userid => "admin")
+    end
+
     it "with one src_id" do
-      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id], :__initiated_by__ => 'user', :__request_type__ => "vm_retire"}, user)
+      allow(Vm).to receive(:where).with(:id => [@vm.id]).and_return([@vm])
+      expect(@vm).to receive(:check_policy_prevent).once
       Vm.make_retire_request(@vm.id, user)
     end
 
     it "with many src_ids" do
-      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id, vm2.id], :__initiated_by__ => 'user', :__request_type__ => "vm_retire"}, user)
+      allow(Vm).to receive(:where).with(:id => [@vm.id, vm2.id]).and_return([@vm, vm2])
+      expect(@vm).to receive(:check_policy_prevent).once
+      expect(vm2).to receive(:check_policy_prevent).once
       Vm.make_retire_request(@vm.id, vm2.id, user)
     end
 
     it "initiated by system" do
-      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id, vm2.id], :__initiated_by__ => 'system', :__request_type__ => "vm_retire"}, user)
-      Vm.make_retire_request(@vm.id, vm2.id, user, :initiated_by => 'system')
+      expect(VmRetireRequest).to receive(:make_request).with(nil, {:src_ids => [@vm.id], :__initiated_by__ => 'system', :__request_type__ => "vm_retire"}, user)
+
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', ws])
+      Vm.make_retire_request(@vm.id, user, :initiated_by => 'system')
+      status, message, result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, result)
     end
 
     it "with user as initiated_by" do
-      expect { Vm.make_retire_request(@vm.id, vm2.id, user, :initiated_by => user) }.to raise_error(/Initiated by is not included in the list/)
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', ws])
+      Vm.make_retire_request(@vm.id, user, :initiated_by => user)
+      q = MiqQueue.first
+      status, message, result = q.deliver
+      log_stub = instance_double("_log")
+      expect(q).to receive(:_log).and_return(log_stub).at_least(:once)
+      expect(log_stub).to receive(:info).at_least(:once)
+      expect(log_stub).to receive(:error).with(/Validation failed: VmRetireRequest: Initiated by is not included in the list/)
+      expect(log_stub).to receive(:log_backtrace)
+      q.delivered(status, message, result)
+    end
+
+    it "policy prevents" do
+      expect(VmRetireRequest).not_to receive(:make_request)
+
+      event = {:attributes => {"full_data" => {:policy => {:prevented => true}}}}
+      allow(ws).to receive(:get_obj_from_path).with("/").and_return(:event_stream => event)
+      allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', ws])
+      Vm.make_retire_request(@vm.id, user)
+      status, message, _result = MiqQueue.first.deliver
+      MiqQueue.first.delivered(status, message, ws)
     end
   end
 
