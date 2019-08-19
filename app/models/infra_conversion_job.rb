@@ -73,6 +73,7 @@ class InfraConversionJob < Job
   def polling_timeout
     options[:retry_interval] ||= Settings.transformation.job.retry_interval # in seconds
     return false if states[state.to_sym][:max_retries].nil?
+
     retries = "retries_#{state}".to_sym
     context[retries] = (context[retries] || 0) + 1
     context[retries] > states[state.to_sym][:max_retries]
@@ -108,7 +109,7 @@ class InfraConversionJob < Job
 
     message = "Migration Task vm=#{migration_task.source.name}, state=#{migration_task.state}, status=#{migration_task.status}"
     _log.info(prep_message(message))
-    update_attributes(:message => message)
+    update(:message => message)
     if migration_task.state == 'finished'
       self.status = migration_task.status
       queue_signal(:finish)

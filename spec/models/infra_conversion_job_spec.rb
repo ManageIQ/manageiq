@@ -13,7 +13,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w(start poll_automate_state_machine finish abort_job cancel error).each do |signal|
+    %w[start poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -22,7 +22,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w(start poll_automate_state_machine).each do |signal|
+    %w[start poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -91,7 +91,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it 'to poll_automate_state_machine when migration_task.state is not finished' do
-        task.update!(:state => 'active')
+        task.update!(:state => 'migrate')
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:queue_signal).with(:poll_automate_state_machine, :deliver_on => Time.now.utc + poll_interval)
           job.signal(:poll_automate_state_machine)
