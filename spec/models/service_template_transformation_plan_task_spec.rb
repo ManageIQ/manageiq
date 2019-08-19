@@ -467,35 +467,41 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       end
 
       context 'destination is rhevm' do
-        let(:dst_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
-        let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
-        let(:dst_hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => dst_cluster) }
-        let(:dst_storages) { FactoryBot.create_list(:storage, 1, :hosts => dst_hosts) }
-        let(:dst_switch) { FactoryBot.create(:switch, :host => dst_hosts.first) }
-        let(:dst_lan_1) { FactoryBot.create(:lan, :switch => dst_switch) }
-        let(:dst_lan_2) { FactoryBot.create(:lan, :switch => dst_switch) }
-        let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:host_redhat, :ext_management_system => dst_ems)) }
+        let(:redhat_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+        let(:redhat_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => redhat_ems) }
+        let(:redhat_hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => redhat_cluster) }
+        let(:redhat_storages) { FactoryBot.create_list(:storage, 1, :hosts => redhat_hosts) }
+        let(:redhat_switch) { FactoryBot.create(:switch, :host => redhat_hosts.first) }
+        let(:redhat_lan_1) { FactoryBot.create(:lan, :switch => redhat_switch) }
+        let(:redhat_lan_2) { FactoryBot.create(:lan, :switch => redhat_switch) }
+
+        let(:conversion_host) {
+          FactoryBot.create(
+            :conversion_host,
+            :resource => FactoryBot.create(:host_redhat, :ext_management_system => redhat_ems)
+          )
+        }
 
         let(:mapping) do
           FactoryBot.create(:transformation_mapping).tap do |tm|
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_cluster,
-              :destination            => dst_cluster,
+              :destination            => redhat_cluster,
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_storage,
-              :destination            => dst_storages.first,
+              :destination            => redhat_storages.first,
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_lans.first,
-              :destination            => dst_lan_1,
+              :destination            => redhat_lan_1,
               :transformation_mapping => tm
             )
             FactoryBot.create(:transformation_mapping_item,
               :source                 => src_lans.last,
-              :destination            => dst_lan_2,
+              :destination            => redhat_lan_2,
               :transformation_mapping => tm
             )
           end
@@ -505,7 +511,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           task_1.conversion_host = conversion_host
         end
 
-        it { expect(task_1.destination_cluster).to eq(dst_cluster) }
+        it { expect(task_1.destination_cluster).to eq(redhat_cluster) }
 
         it_behaves_like "#virtv2v_disks"
 
@@ -513,8 +519,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates network_mappings hash" do
             expect(task_1.network_mappings).to eq(
               [
-                { :source => src_lans.first.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lans.last.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address }
+                { :source => src_lans.first.name, :destination => redhat_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
+                { :source => src_lans.last.name, :destination => redhat_lan_2.name, :mac_address => src_nic_2.address }
               ]
             )
           end
@@ -537,10 +543,10 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vmware_fingerprint  => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri          => "esx://esx_user@10.0.0.1/?no_verify=1",
               :vmware_password     => 'esx_passwd',
-              :rhv_url             => "https://#{dst_ems.hostname}/ovirt-engine/api",
-              :rhv_cluster         => dst_cluster.name,
-              :rhv_storage         => dst_storages.first.name,
-              :rhv_password        => dst_ems.authentication_password,
+              :rhv_url             => "https://#{redhat_ems.hostname}/ovirt-engine/api",
+              :rhv_cluster         => redhat_cluster.name,
+              :rhv_storage         => redhat_storages.first.name,
+              :rhv_password        => redhat_ems.authentication_password,
               :source_disks        => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings    => task_1.network_mappings,
               :install_drivers     => true,
@@ -561,10 +567,10 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             expect(task_1.conversion_options).to eq(
               :vm_name             => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :transport_method    => 'ssh',
-              :rhv_url             => "https://#{dst_ems.hostname}/ovirt-engine/api",
-              :rhv_cluster         => dst_cluster.name,
-              :rhv_storage         => dst_storages.first.name,
-              :rhv_password        => dst_ems.authentication_password,
+              :rhv_url             => "https://#{redhat_ems.hostname}/ovirt-engine/api",
+              :rhv_cluster         => redhat_cluster.name,
+              :rhv_storage         => redhat_storages.first.name,
+              :rhv_password        => redhat_ems.authentication_password,
               :source_disks        => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings    => task_1.network_mappings,
               :install_drivers     => true,
