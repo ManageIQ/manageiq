@@ -4,6 +4,13 @@ class CustomButtonSet < ApplicationRecord
   before_save :validate_children
   after_save :update_children
 
+  def add_member(member)
+    super
+    set_data = {:button_order => [], :applies_to_class => member.applies_to_class } if set_data.try(:[], :button_order).nil?
+    set_data[:button_order] << member.id unless set_data[:button_order].include?(member.id)
+    update!(:set_data => set_data)
+  end
+
   def validate_children
     return if set_data.try(:[], :button_order).nil?
 
@@ -94,12 +101,7 @@ class CustomButtonSet < ApplicationRecord
       cbs.name = "#{name}-#{cbs.guid}"
       cbs.set_data[:button_order] = []
       cbs.save!
-      custom_buttons.each do |cb|
-        cb_copy = cb.copy(:applies_to => options[:owner])
-        cbs.add_member(cb_copy)
-        cbs.set_data[:button_order] << cb_copy.id
-        cbs.save!
-      end
+      custom_buttons.each { |cb| cbs.add_member(cb.copy(:applies_to => options[:owner])) }
     end
   end
 
