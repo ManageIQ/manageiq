@@ -12,7 +12,7 @@ begin
   Rails.application.config.gettext_i18n_rails.msgmerge = gettext_options + ["--no-fuzzy-matching"]
   Rails.application.config.gettext_i18n_rails.xgettext = gettext_options + ["--add-comments=TRANSLATORS"]
 
-  if !Rails.env.test? && Settings.ui.mark_translated_strings
+  if !Rails.env.test? && !Rails.env.production? && Settings.ui.mark_translated_strings
     include Vmdb::Gettext::Debug
   end
 ensure
