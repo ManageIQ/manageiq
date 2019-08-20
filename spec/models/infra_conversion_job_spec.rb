@@ -1,3 +1,4 @@
+require 'byebug'
 RSpec.describe InfraConversionJob, :v2v do
   let(:user)       { FactoryBot.create(:user) }
   let(:zone)       { FactoryBot.create(:zone) }
@@ -391,6 +392,7 @@ RSpec.describe InfraConversionJob, :v2v do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
           expect(job).to receive(:queue_signal).with(:collapse_snapshots, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:collapse_snapshots)
+          byebug
           expect(job.context[:async_task_id_collapsing_snapshots]).to eq(async_task.id)
         end
       end
@@ -409,7 +411,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it 'exits if async task exists, is finished and its status is Ok' do
         job.context[:async_task_id_collapsing_snapshots] = async_task.id
-        async_task.update!(:state => 'finished', :status => 'Ok')
+        async_task.update!(:state => MiqTask::STATE_FINISHED, :status => MiqTask::STATUS_OK)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(MiqTask).to receive(:find).with(async_task.id)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
@@ -419,7 +421,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it 'fails if async task exists, is finished and its status is Error' do
         job.context[:async_task_id_collapsing_snapshots] = async_task.id
-        async_task.update!(:state => 'finished', :status => 'Error', :message => 'Fake error message')
+        async_task.update!(:state => MiqTask::STATE_FINISHED, :status => MiqTask::STATUS_ERROR, :message => 'Fake error message')
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(MiqTask).to receive(:find).with(async_task.id)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)

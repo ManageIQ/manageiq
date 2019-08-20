@@ -179,8 +179,8 @@ class InfraConversionJob < Job
 
     async_task = MiqTask.find(context[:async_task_id_collapsing_snapshots])
 
-    if async_task.state == 'finished'
-      if async_task.status == 'Ok'
+    if async_task.state == MiqTask::STATE_FINISHED
+      if async_task.status == MiqTask::STATUS_OK
         update_migration_task_progress(:on_exit)
         return queue_signal(:poll_automate_state_machine)
       end
