@@ -22,6 +22,10 @@ class DialogFieldDropDownList < DialogFieldSortedItem
     [[nil, N_("<None>")]]
   end
 
+  def multiselect?
+    force_multi_value
+  end
+
   def refresh_json_value(checked_value)
     self.default_value = nil
     @raw_values = nil
