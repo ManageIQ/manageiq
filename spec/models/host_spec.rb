@@ -646,6 +646,37 @@ describe Host do
     end
   end
 
+  describe "#scan_queue" do
+    let(:ems) { double("ExtManagementSystem") }
+    before do
+      MiqRegion.seed
+      Zone.seed
+
+      @host = FactoryBot.create(:host_vmware)
+      allow(@host).to receive(:ext_management_system).and_return(ems)
+    end
+
+    it 'creates task with Error status when EMS paused' do
+      allow(ems).to receive_messages(:name => 'My provider',
+                                     :zone => Zone.maintenance_zone)
+      @host.scan_queue
+      task = MiqTask.first
+      expect(task.status_error?).to eq(true)
+      expect(task.message).to eq("#{ems.name} is paused")
+    end
+
+    it 'creates task with valid status EMS active' do
+      allow(ems).to receive_messages(:my_zone => Zone.default_zone,
+                                     :name    => 'My provider',
+                                     :zone    => Zone.default_zone)
+      allow(MiqQueue).to receive(:put).and_return(double)
+
+      @host.scan_queue
+      task = MiqTask.first
+      expect(task.status_ok?).to eq(true)
+    end
+  end
+
   context "#refresh_linux_packages" do
     it "with utf-8 characters (like trademark)" do
       rpm_list = "iwl3945-firmware|15.32.2.9|noarch|System Environment/Kernel|43.el7|Firmware for Intel® PRO/Wireless 3945 A/B/G network adaptors"
