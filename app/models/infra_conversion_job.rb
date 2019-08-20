@@ -165,22 +165,19 @@ class InfraConversionJob < Job
   end
 
   def collapse_snapshots
-    require 'byebug'
     update_migration_task_progress(:on_entry)
     raise 'Collapsing snapshots timed out' if polling_timeout
     
-    if context[:async_task_id_collapsing_snapshots]
-      async_task = MiqTask.find(context[:async_task_id_collapsing_snapshots])
-    else
-      byebug
+    if context[:async_task_id_collapsing_snapshots].nil?
       if migration_task.source.supports_remove_all_snapshots?
-        async_task = migration_task.source.remove_all_snapshots_queue(migration_task.userid, true)
-        context[:async_task_id_collapsing_snapshots] = async_task.id
+        context[:async_task_id_collapsing_snapshots] = migration_task.source.remove_all_snapshots_queue(migration_task.userid.to_i)
       else
         update_migration_task_progress(:on_exit)
         return queue_signal(:poll_automate_state_machine)
       end
     end
+
+    async_task = MiqTask.find(context[:async_task_id_collapsing_snapshots])
 
     if async_task.state == 'finished'
       if async_task.status == 'Ok'

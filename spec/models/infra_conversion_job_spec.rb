@@ -1,9 +1,10 @@
-require 'byebug'
 RSpec.describe InfraConversionJob, :v2v do
   let(:user)       { FactoryBot.create(:user) }
   let(:zone)       { FactoryBot.create(:zone) }
   let(:ems_vmware) { FactoryBot.create(:ems_vmware, :zone => zone) }
-  let(:vm_vmware)  { FactoryBot.create(:vm_vmware, :ext_management_system => ems_vmware, :evm_owner => user) }
+  let(:ems_cluster_vmware) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
+  let(:host_vmware) { FactoryBot.create(:host, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware) }
+  let(:vm_vmware)  { FactoryBot.create(:vm_vmware, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware, :host => host_vmware, :evm_owner => user) }
   let(:request)    { FactoryBot.create(:service_template_transformation_plan_request) }
   let(:task)       { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.id) }
   let(:options)    { {:target_class => task.class.name, :target_id => task.id} }
@@ -362,8 +363,9 @@ RSpec.describe InfraConversionJob, :v2v do
 
       before do
         job.state = 'collapsing_snapshots'
-        allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
-        allow(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id, true).and_return(async_task)
+        allow(MiqTask).to receive(:find).and_return(async_task)
+#        allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
+        allow(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id).and_return(async_task.id)
       end
 
       it 'abort_conversion when collapse_snapshots times out' do
@@ -381,16 +383,13 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it 'queues an async task and retries if async task does not exist and vm supports remove_all_snapshots' do
-#        allow(vm_vmware).to receive(:supports_remove_all_snapshots?).and_return(true)
-#        allow(vm_vmware).to receive(:supports_control?).and_return(true)
         allow(vm_vmware).to receive(:snapshots).and_return([snapshot])
         async_task.update!(:state => 'queued')
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id, true)
+          expect(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
           expect(job).to receive(:queue_signal).with(:collapse_snapshots, :deliver_on => Time.now.utc + job.state_retry_interval)
-          byebug
           job.signal(:collapse_snapshots)
           expect(job.context[:async_task_id_collapsing_snapshots]).to eq(async_task.id)
         end
