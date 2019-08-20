@@ -10,10 +10,17 @@ describe RetirementManager do
       FactoryGirl.create(:orchestration_stack, :retired => true)
       vm = FactoryGirl.create(:vm, :retires_on => Time.zone.today + 1.day, :ems_id => ems.id)
       FactoryGirl.create(:vm, :retired => true)
-      service = FactoryGirl.create(:service, :retires_on => Time.zone.today + 1.day)
-      FactoryGirl.create(:service, :retired => true)
 
-      expect(RetirementManager.check).to match_array([load_balancer, orchestration_stack, vm, service])
+      expect(RetirementManager.check).to match_array([load_balancer, orchestration_stack, vm])
+    end
+  end
+
+  describe "#check_per_region" do
+    it "with retirement date, runs retirement checks" do
+      service = FactoryBot.create(:service, :retires_on => Time.zone.today + 1.day)
+      FactoryBot.create(:service, :retired => true)
+
+      expect(RetirementManager.check_per_region).to match_array([service])
     end
   end
 end
