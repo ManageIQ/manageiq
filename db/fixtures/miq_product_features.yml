@@ -1649,6 +1649,7 @@
         :description: Copy a Dashboard
         :feature_type: admin
         :identifier: db_copy
+        :hidden: true
       - :name: Delete
         :description: Delete a Dashboard
         :feature_type: admin
