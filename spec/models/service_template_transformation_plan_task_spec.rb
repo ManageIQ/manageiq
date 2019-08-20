@@ -36,10 +36,9 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     let(:mapping) do
       FactoryBot.create(:transformation_mapping).tap do |tm|
         FactoryBot.create(:transformation_mapping_item,
-          :source                 => src_cluster,
-          :destination            => dst_cluster,
-          :transformation_mapping => tm
-        )
+                          :source                 => src_cluster,
+                          :destination            => dst_cluster,
+                          :transformation_mapping => tm)
       end
     end
 
@@ -267,10 +266,9 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     let(:mapping) do
       FactoryBot.create(:transformation_mapping).tap do |tm|
         FactoryBot.create(:transformation_mapping_item,
-          :source                 => src_cluster,
-          :destination            => dst_cluster,
-          :transformation_mapping => tm
-        )
+                          :source                 => src_cluster,
+                          :destination            => dst_cluster,
+                          :transformation_mapping => tm)
       end
     end
 
@@ -475,35 +473,31 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       end
 
       context 'destination is rhevm' do
-        let(:conversion_host) {
+        let(:conversion_host) do
           FactoryBot.create(
             :conversion_host,
             :resource => FactoryBot.create(:host_redhat, :ext_management_system => redhat_ems)
           )
-        }
+        end
 
         let(:mapping) do
           FactoryBot.create(:transformation_mapping).tap do |tm|
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_cluster,
-              :destination            => redhat_cluster,
-              :transformation_mapping => tm
-            )
+                              :source                 => src_cluster,
+                              :destination            => redhat_cluster,
+                              :transformation_mapping => tm)
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_storage,
-              :destination            => redhat_storages.first,
-              :transformation_mapping => tm
-            )
+                              :source                 => src_storage,
+                              :destination            => redhat_storages.first,
+                              :transformation_mapping => tm)
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_lans.first,
-              :destination            => redhat_lans.first,
-              :transformation_mapping => tm
-            )
+                              :source                 => src_lans.first,
+                              :destination            => redhat_lans.first,
+                              :transformation_mapping => tm)
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_lans.last,
-              :destination            => redhat_lans.last,
-              :transformation_mapping => tm
-            )
+                              :source                 => src_lans.last,
+                              :destination            => redhat_lans.last,
+                              :transformation_mapping => tm)
           end
         end
 
@@ -593,25 +587,21 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
         let(:mapping) do
           FactoryBot.create(:transformation_mapping).tap do |tm|
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_cluster,
-              :destination            => openstack_cloud_tenant,
-              :transformation_mapping => tm
-            )
+                              :source                 => src_cluster,
+                              :destination            => openstack_cloud_tenant,
+                              :transformation_mapping => tm)
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_storage,
-              :destination            => openstack_cloud_volume_type,
-              :transformation_mapping => tm
-            )
+                              :source                 => src_storage,
+                              :destination            => openstack_cloud_volume_type,
+                              :transformation_mapping => tm)
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_lans.first,
-              :destination            => openstack_cloud_networks.first,
-              :transformation_mapping => tm
-            )
+                              :source                 => src_lans.first,
+                              :destination            => openstack_cloud_networks.first,
+                              :transformation_mapping => tm)
             FactoryBot.create(:transformation_mapping_item,
-              :source                 => src_lans.last,
-              :destination            => openstack_cloud_networks.last,
-              :transformation_mapping => tm
-            )
+                              :source                 => src_lans.last,
+                              :destination            => openstack_cloud_networks.last,
+                              :transformation_mapping => tm)
           end
         end
 
