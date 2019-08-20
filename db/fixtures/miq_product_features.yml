@@ -2864,6 +2864,11 @@
       :hidden: true
       :identifier: schedule
       :children:
+      - :name: Run Now
+        :description: Queue up Schedules to run now
+        :feature_type: control
+        :hidden: true
+        :identifier: schedule_run_now
       - :name: Modify
         :description: Modify Schedules
         :feature_type: admin
