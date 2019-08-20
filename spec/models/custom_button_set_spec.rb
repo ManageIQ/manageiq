@@ -71,7 +71,8 @@ describe CustomButtonSet do
     service_template1 = FactoryBot.create(:service_template)
     service_template2 = FactoryBot.create(:service_template)
     custom_button     = FactoryBot.create(:custom_button, :applies_to => service_template1)
-    custom_button_set = FactoryBot.create(:custom_button_set)
+    set_data          = {:applies_to_class => "ServiceTemplate", :button_order => [custom_button.id]}
+    custom_button_set = FactoryBot.create(:custom_button_set, :set_data => set_data)
 
     custom_button_set.add_member(custom_button)
     custom_button_set.deep_copy(:owner => service_template2)

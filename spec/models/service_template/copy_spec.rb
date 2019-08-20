@@ -2,10 +2,11 @@ describe ServiceTemplate do
   describe "#template_copy" do
     let(:custom_button)                  { FactoryBot.create(:custom_button, :applies_to => service_template) }
     let(:custom_button_for_service)      { FactoryBot.create(:custom_button, :applies_to_class => "Service") }
-    let(:custom_button_set)              { FactoryBot.create(:custom_button_set, :owner => service_template) }
+    let(:custom_button_set)              { FactoryBot.create(:custom_button_set, :owner => service_template, :set_data => set_data) }
     let(:service_template)               { FactoryBot.create(:service_template) }
     let(:service_template_ansible_tower) { FactoryBot.create(:service_template_ansible_tower) }
     let(:service_template_orchestration) { FactoryBot.create(:service_template_orchestration) }
+    let(:set_data)                       { {:applies_to_class => "Service", :button_order => [custom_button.id]} }
 
     def copy_template(template, name = nil)
       copy = nil
@@ -43,8 +44,15 @@ describe ServiceTemplate do
       it "with custom button set" do
         custom_button_set.add_member(custom_button)
         expect(service_template.custom_button_sets.count).to eq(1)
+        expect(service_template.custom_button_sets.first.custom_buttons.count).to eq(1)
+        expect(service_template.custom_button_sets.first.set_data).to eq(set_data)
+        expect(service_template.custom_button_sets.first.children).to eq([custom_button])
         new_service_template = copy_template(service_template, "new_template")
         expect(new_service_template.custom_button_sets.count).to eq(1)
+        expect(new_service_template.custom_button_sets.first.set_data).not_to eq(set_data)
+        expect(new_service_template.custom_button_sets.first.custom_buttons.count).to eq(1)
+        expect(new_service_template.custom_button_sets.first.children).not_to eq([custom_button])
+        expect(new_service_template.custom_button_sets.first.children).to eq(new_service_template.custom_button_sets.first.custom_buttons)
       end
 
       it "with non-copyable resource (configuration script base)" do
