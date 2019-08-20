@@ -285,7 +285,7 @@ class MiqExpression
 
   def to_sql(tz = nil)
     tz ||= "UTC"
-    @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
+    @pexp, attrs = preprocess_for_sql(@exp.deep_clone.except!(:token))
     sql = to_arel(@pexp, tz).to_sql if @pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
