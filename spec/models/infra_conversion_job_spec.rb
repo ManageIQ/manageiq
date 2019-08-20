@@ -1,4 +1,3 @@
-require 'byebug'
 RSpec.describe InfraConversionJob, :v2v do
   let(:user)       { FactoryBot.create(:user) }
   let(:zone)       { FactoryBot.create(:zone) }
@@ -365,7 +364,7 @@ RSpec.describe InfraConversionJob, :v2v do
       before do
         job.state = 'collapsing_snapshots'
         allow(MiqTask).to receive(:find).and_return(async_task)
-#        allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
+        # allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
         allow(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id).and_return(async_task.id)
       end
 
@@ -392,7 +391,6 @@ RSpec.describe InfraConversionJob, :v2v do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
           expect(job).to receive(:queue_signal).with(:collapse_snapshots, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:collapse_snapshots)
-          byebug
           expect(job.context[:async_task_id_collapsing_snapshots]).to eq(async_task.id)
         end
       end
