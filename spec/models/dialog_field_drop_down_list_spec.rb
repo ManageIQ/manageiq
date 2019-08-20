@@ -380,8 +380,24 @@ describe DialogFieldDropDownList do
           dialog_field.instance_variable_set(:@raw_values, [%w(potato potato)])
         end
 
-        it "returns the raw values with a nil option" do
-          expect(dialog_field.values).to eq([[nil, "<None>"], %w(potato potato)])
+        context 'and this is a multiselect' do
+          before do
+            dialog_field.force_multi_value = true
+          end
+
+          it "returns the raw values without a nil option" do
+            expect(dialog_field.values).to eq([%w[potato potato]])
+          end
+        end
+
+        context 'and this is a single select' do
+          before do
+            dialog_field.force_multi_value = false
+          end
+
+          it "returns the raw values with a nil option" do
+            expect(dialog_field.values).to eq([[nil, "<None>"], %w[potato potato]])
+          end
         end
       end
 
@@ -432,8 +448,24 @@ describe DialogFieldDropDownList do
           dialog_field.values = [%w(original values)]
         end
 
-        it "returns the values" do
-          expect(dialog_field.values).to eq([[nil, "<None>"], %w(original values)])
+        context 'and this is a multiselect' do
+          before do
+            dialog_field.force_multi_value = true
+          end
+
+          it "returns the values" do
+            expect(dialog_field.values).to eq([%w[original values]])
+          end
+        end
+
+        context 'and this is a single select' do
+          before do
+            dialog_field.force_multi_value = false
+          end
+
+          it "returns the values including nil" do
+            expect(dialog_field.values).to eq([[nil, "<None>"], %w[original values]])
+          end
         end
       end
     end
