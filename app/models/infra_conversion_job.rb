@@ -18,6 +18,7 @@ class InfraConversionJob < Job
   #                                                    :finish             v
   #                                                                    finished
   #
+  # TODO: Update this diagram after we've settled on the updated state transitions.
 
   alias_method :initializing, :dispatch_start
   alias_method :finish,       :process_finished
@@ -31,8 +32,12 @@ class InfraConversionJob < Job
     {
       :initializing                => {'initialize'       => 'waiting_to_start'},
       :start                       => {'waiting_to_start' => 'started'},
+      :collapse_snapshots          => {
+        'started'              => 'collapsing_snapshots',
+        'collapsing_snapshots' => 'collapsing_snapshots'
+      },
       :poll_automate_state_machine => {
-        'started'             => 'running_in_automate',
+        'collapsing_snapshots'             => 'running_in_automate',
         'running_in_automate' => 'running_in_automate'
       },
       :finish                      => {'*'                => 'finished'},
@@ -50,10 +55,19 @@ class InfraConversionJob < Job
   #   }
   def state_settings
     @state_settings ||= {
+      :collapsing_snapshots => {
+        :description => 'Collapse snapshosts',
+        :weight      => 5,
+        :max_retries => 4.hours / state_retry_interval
+      },
       :running_in_automate => {
-        :max_retries => 8640 # 36 hours with a retry interval of 15 seconds
+        :max_retries => 36.hours / state_retry_interval
       }
     }
+  end
+
+  def state_retry_interval
+    @state_retry_interval ||= Settings.transformation.job.retry_interval || 15.seconds
   end
 
   def migration_task
@@ -116,7 +130,6 @@ class InfraConversionJob < Job
   end
 
   def polling_timeout
-    options[:retry_interval] ||= Settings.transformation.job.retry_interval # in seconds
     return false if state_settings[state.to_sym][:max_retries].nil?
 
     retries = "retries_#{state}".to_sym
@@ -151,6 +164,39 @@ class InfraConversionJob < Job
     queue_signal(:poll_automate_state_machine)
   end
 
+  def collapse_snapshots
+    require 'byebug'
+    update_migration_task_progress(:on_entry)
+    raise 'Collapsing snapshots timed out' if polling_timeout
+    
+    if context[:async_task_id_collapsing_snapshots]
+      async_task = MiqTask.find(context[:async_task_id_collapsing_snapshots])
+    else
+      byebug
+      if migration_task.source.supports_remove_all_snapshots?
+        async_task = migration_task.source.remove_all_snapshots_queue(migration_task.userid, true)
+        context[:async_task_id_collapsing_snapshots] = async_task.id
+      else
+        update_migration_task_progress(:on_exit)
+        return queue_signal(:poll_automate_state_machine)
+      end
+    end
+
+    if async_task.state == 'finished'
+      if async_task.status == 'Ok'
+        update_migration_task_progress(:on_exit)
+        return queue_signal(:poll_automate_state_machine)
+      end
+      raise async_task.message
+    end
+
+    update_migration_task_progress(:on_retry)
+    queue_signal(:collapse_snapshots, :deliver_on => Time.now.utc + state_retry_interval)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
   def poll_automate_state_machine
     return abort_conversion('Polling timed out', 'error') if polling_timeout
 
@@ -161,7 +207,7 @@ class InfraConversionJob < Job
       self.status = migration_task.status
       queue_signal(:finish)
     else
-      queue_signal(:poll_automate_state_machine, :deliver_on => Time.now.utc + options[:retry_interval])
+      queue_signal(:poll_automate_state_machine, :deliver_on => Time.now.utc + state_retry_interval)
     end
   end
 end

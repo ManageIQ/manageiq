@@ -1,9 +1,17 @@
+require 'byebug'
 RSpec.describe InfraConversionJob, :v2v do
-  let(:vm)      { FactoryBot.create(:vm_or_template) }
-  let(:request) { FactoryBot.create(:service_template_transformation_plan_request) }
-  let(:task)    { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm) }
-  let(:options) { {:target_class => task.class.name, :target_id => task.id} }
-  let(:job)     { described_class.create_job(options) }
+  let(:user)       { FactoryBot.create(:user) }
+  let(:zone)       { FactoryBot.create(:zone) }
+  let(:ems_vmware) { FactoryBot.create(:ems_vmware, :zone => zone) }
+  let(:vm_vmware)  { FactoryBot.create(:vm_vmware, :ext_management_system => ems_vmware, :evm_owner => user) }
+  let(:request)    { FactoryBot.create(:service_template_transformation_plan_request) }
+  let(:task)       { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.id) }
+  let(:options)    { {:target_class => task.class.name, :target_id => task.id} }
+  let(:job)        { described_class.create_job(options) }
+
+  before do
+    allow(MiqServer). to receive(:my_zone).and_return(zone.name)
+  end
 
   context '.create_job' do
     it 'leaves job waiting to start' do
@@ -106,7 +114,7 @@ RSpec.describe InfraConversionJob, :v2v do
     context '.update_migration_task_progress' do
       it 'initializes the progress hash on entry if it does not exist' do
         Timecop.freeze(2019, 2, 6) do
-          job.update_migration_task_progress(:on_entry, nil)
+          job.update_migration_task_progress(:on_entry)
           expect(task.reload.options[:progress]).to eq(
             :current_state => 'running_in_automate',
             :percent       => 0.0,
@@ -139,7 +147,7 @@ RSpec.describe InfraConversionJob, :v2v do
             }
           }
           task.update_options(:progress => progress)
-          job.update_migration_task_progress(:on_retry, nil)
+          job.update_migration_task_progress(:on_retry)
           expect(task.reload.options[:progress]).to eq(
             :current_state => 'running_in_automate',
             :percent       => 10.0,
@@ -207,7 +215,7 @@ RSpec.describe InfraConversionJob, :v2v do
             }
           }
           task.update_options(:progress => progress)
-          job.update_migration_task_progress(:on_exit, nil)
+          job.update_migration_task_progress(:on_exit)
           expect(task.reload.options[:progress]).to eq(
             :current_state => 'running_in_automate',
             :percent       => 10.0,
@@ -241,7 +249,7 @@ RSpec.describe InfraConversionJob, :v2v do
             }
           }
           task.update_options(:progress => progress)
-          job.update_migration_task_progress(:on_error, nil)
+          job.update_migration_task_progress(:on_error)
           expect(task.reload.options[:progress]).to eq(
             :current_state => 'running_in_automate',
             :percent       => 10.0,
@@ -261,7 +269,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w[start poll_automate_state_machine finish abort_job cancel error].each do |signal|
+    %w[start collapse_snapshots poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -270,7 +278,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w[start poll_automate_state_machine].each do |signal|
+    %w[start collapse_snapshots poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -297,6 +305,22 @@ RSpec.describe InfraConversionJob, :v2v do
         job.state = 'started'
       end
 
+      it_behaves_like 'allows collapse_snapshots signal'
+      it_behaves_like 'allows finish signal'
+      it_behaves_like 'allows abort_job signal'
+      it_behaves_like 'allows cancel signal'
+      it_behaves_like 'allows error signal'
+
+      it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
+    end
+
+    context 'collapsing_snapshots' do
+      before do
+        job.state = 'collapsing_snapshots'
+      end
+
+      it_behaves_like 'allows collapse_snapshots signal'
       it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
@@ -318,12 +342,11 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow collapse_snapshots signal'
     end
   end
 
   context 'transition methods' do
-    let(:poll_interval) { Settings.transformation.job.retry_interval }
-
     context '#start' do
       it 'to poll_automate_state_machine when preflight_check passes' do
         expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
@@ -333,15 +356,94 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
+    context '#collapse_snapshots' do
+      let(:async_task) { FactoryBot.create(:miq_task, :userid => user.id) }
+      let(:snapshot) { FactoryBot.create(:snapshot, :vm_or_template => vm_vmware) }
+
+      before do
+        job.state = 'collapsing_snapshots'
+        allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
+        allow(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id, true).and_return(async_task)
+      end
+
+      it 'abort_conversion when collapse_snapshots times out' do
+        job.context[:retries_collapsing_snapshots] = 960
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
+        expect(job).to receive(:abort_conversion).with('Collapsing snapshots timed out', 'error')
+        job.signal(:collapse_snapshots)
+      end
+
+      it 'exits if async task does not exist and vm does not support remove_all_snapshots' do
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+        job.signal(:collapse_snapshots)
+      end
+
+      it 'queues an async task and retries if async task does not exist and vm supports remove_all_snapshots' do
+#        allow(vm_vmware).to receive(:supports_remove_all_snapshots?).and_return(true)
+#        allow(vm_vmware).to receive(:supports_control?).and_return(true)
+        allow(vm_vmware).to receive(:snapshots).and_return([snapshot])
+        async_task.update!(:state => 'queued')
+        Timecop.freeze(2019, 2, 6) do
+          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+          expect(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id, true)
+          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
+          expect(job).to receive(:queue_signal).with(:collapse_snapshots, :deliver_on => Time.now.utc + job.state_retry_interval)
+          byebug
+          job.signal(:collapse_snapshots)
+          expect(job.context[:async_task_id_collapsing_snapshots]).to eq(async_task.id)
+        end
+      end
+
+      it 'retries if async task exists and is not finished' do
+        job.context[:async_task_id_collapsing_snapshots] = async_task.id
+        async_task.update!(:state => 'active')
+        Timecop.freeze(2019, 2, 6) do
+          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+          expect(MiqTask).to receive(:find).with(async_task.id)
+          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
+          expect(job).to receive(:queue_signal).with(:collapse_snapshots, :deliver_on => Time.now.utc + job.state_retry_interval)
+          job.signal(:collapse_snapshots)
+        end
+      end
+
+      it 'exits if async task exists, is finished and its status is Ok' do
+        job.context[:async_task_id_collapsing_snapshots] = async_task.id
+        async_task.update!(:state => 'finished', :status => 'Ok')
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(MiqTask).to receive(:find).with(async_task.id)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+        job.signal(:collapse_snapshots)
+      end
+
+      it 'fails if async task exists, is finished and its status is Error' do
+        job.context[:async_task_id_collapsing_snapshots] = async_task.id
+        async_task.update!(:state => 'finished', :status => 'Error', :message => 'Fake error message')
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(MiqTask).to receive(:find).with(async_task.id)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
+        expect(job).to receive(:abort_conversion).with('Fake error message', 'error')
+        job.signal(:collapse_snapshots)
+      end
+    end
+
     context '#poll_automate_state_machine' do
       before do
         job.state = 'running_in_automate'
       end
 
+      it 'abort_conversion when poll_automate_state_machine times out' do
+        job.context[:retries_running_in_automate] = 8640
+        expect(job).to receive(:abort_conversion).with('Polling timed out', 'error')
+        job.signal(:poll_automate_state_machine)
+      end
+
       it 'to poll_automate_state_machine when migration_task.state is not finished' do
         task.update!(:state => 'migrate')
         Timecop.freeze(2019, 2, 6) do
-          expect(job).to receive(:queue_signal).with(:poll_automate_state_machine, :deliver_on => Time.now.utc + poll_interval)
+          expect(job).to receive(:queue_signal).with(:poll_automate_state_machine, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:poll_automate_state_machine)
         end
       end
@@ -353,12 +455,6 @@ RSpec.describe InfraConversionJob, :v2v do
           job.signal(:poll_automate_state_machine)
           expect(job.status).to eq(task.status)
         end
-      end
-
-      it 'abort_conversion when poll_automate_state_machine times out' do
-        job.context[:retries_running_in_automate] = 8640
-        expect(job).to receive(:abort_conversion).with('Polling timed out', 'error')
-        job.signal(:poll_automate_state_machine)
       end
     end
   end
