@@ -160,7 +160,6 @@ class InfraConversionJob < Job
   # Temporarily, it also hands over to Automate.
   def start
     migration_task.update!(:state => 'migrate')
-    handover_to_automate
     queue_signal(:poll_automate_state_machine)
   end
 
@@ -182,6 +181,7 @@ class InfraConversionJob < Job
     if async_task.state == MiqTask::STATE_FINISHED
       if async_task.status == MiqTask::STATUS_OK
         update_migration_task_progress(:on_exit)
+        handover_to_automate
         return queue_signal(:poll_automate_state_machine)
       end
       raise async_task.message

@@ -353,7 +353,6 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
         job.signal(:start)
         expect(task.reload.state).to eq('migrate')
-        expect(task.options[:workflow_runner]).to eq('automate')
       end
     end
 
@@ -415,6 +414,7 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
         expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
         job.signal(:collapse_snapshots)
+        expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
 
       it 'fails if async task exists, is finished and its status is Error' do
