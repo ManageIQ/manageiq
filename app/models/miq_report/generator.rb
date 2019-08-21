@@ -81,7 +81,11 @@ module MiqReport::Generator
   end
 
   def get_include_for_find
-    include_as_hash(include.presence || invent_report_includes).deep_merge(include_for_find || {}).presence
+    get_include.deep_merge(include_for_find || {}).presence
+  end
+
+  def get_include
+    include_as_hash(include.presence || invent_report_includes)
   end
 
   def invent_includes
