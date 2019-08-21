@@ -95,3 +95,6 @@ bundler.d/*
 # yardoc
 /doc/
 .yardoc
+.DS*
+.DS_Store
+DS_Store
