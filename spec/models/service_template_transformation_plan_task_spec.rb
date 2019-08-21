@@ -1,5 +1,15 @@
 RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
   let(:infra_conversion_job) { FactoryBot.create(:infra_conversion_job) }
+  let(:src_ems) { FactoryBot.create(:ems_vmware) }
+  let(:src_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
+
+  let(:redhat_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
+  let(:redhat_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => redhat_ems) }
+  let(:redhat_hosts) { FactoryBot.create_list(:host, 1, :ems_cluster => redhat_cluster) }
+  let(:redhat_storages) { FactoryBot.create_list(:storage, 1, :hosts => redhat_hosts) }
+  let(:redhat_switch) { FactoryBot.create(:switch, :ems_id => redhat_ems.id) }
+  let(:redhat_lans) { FactoryBot.create_list(:lan, 2, :switch => redhat_switch) }
+  let!(:redhat_host_switch) { FactoryBot.create(:host_switch, :host => redhat_hosts.first, :switch => redhat_switch) }
 
   describe '.base_model' do
     it { expect(described_class.base_model).to eq(ServiceTemplateTransformationPlanTask) }
@@ -15,10 +25,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
   end
 
   context 'independent of provider' do
-    let(:src_ems) { FactoryBot.create(:ems_vmware) }
     let(:dst_ems) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
-    let(:src) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
-    let(:dst) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => dst_ems) }
+    let(:dst_cluster) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => dst_ems) }
     let(:host) { FactoryBot.create(:host, :ext_management_system => FactoryBot.create(:ext_management_system, :zone => FactoryBot.create(:zone))) }
     let(:vm) { FactoryBot.create(:vm_or_template) }
     let(:vm2)  { FactoryBot.create(:vm_or_template) }
@@ -26,10 +34,12 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     let(:conversion_host) { FactoryBot.create(:conversion_host, :skip_validate, :resource => host) }
 
     let(:mapping) do
-      FactoryBot.create(
-        :transformation_mapping,
-        :transformation_mapping_items => [TransformationMappingItem.new(:source => src, :destination => dst)]
-      )
+      FactoryBot.create(:transformation_mapping).tap do |tm|
+        FactoryBot.create(:transformation_mapping_item,
+                          :source                 => src_cluster,
+                          :destination            => dst_cluster,
+                          :transformation_mapping => tm)
+      end
     end
 
     let(:catalog_item_options) do
@@ -64,7 +74,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     end
 
     describe '#transformation_destination' do
-      it { expect(task.transformation_destination(src)).to eq(dst) }
+      it { expect(task.transformation_destination(src_cluster)).to eq(dst_cluster) }
     end
 
     describe '#pre_ansible_playbook_service_template' do
@@ -243,8 +253,6 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
   end
 
   context 'populated request and task' do
-    let(:src_ems) { FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone)) }
-    let(:src_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => src_ems) }
     let(:dst_ems) { FactoryBot.create(:ems_openstack, :zone => FactoryBot.create(:zone)) }
     let(:dst_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => dst_ems) }
 
@@ -256,10 +264,12 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     let(:dst_security_group) { FactoryBot.create(:security_group) }
 
     let(:mapping) do
-      FactoryBot.create(
-        :transformation_mapping,
-        :transformation_mapping_items => [TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster)]
-      )
+      FactoryBot.create(:transformation_mapping).tap do |tm|
+        FactoryBot.create(:transformation_mapping_item,
+                          :source                 => src_cluster,
+                          :destination            => dst_cluster,
+                          :transformation_mapping => tm)
+      end
     end
 
     let(:catalog_item_options) do
@@ -329,14 +339,14 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     end
 
     context 'source is vmwarews' do
-      let(:src_ems) { FactoryBot.create(:ems_vmware, :zone => FactoryBot.create(:zone)) }
-      let(:src_host) { FactoryBot.create(:host_vmware_esx, :ext_management_system => src_ems, :ipaddress => '10.0.0.1') }
-      let(:src_storage) { FactoryBot.create(:storage, :ext_management_system => src_ems, :name => 'stockage récent') }
+      let(:src_host) { FactoryBot.create(:host_vmware_esx, :ems_cluster => src_cluster, :ipaddress => '10.0.0.1') }
+      let(:src_storage) { FactoryBot.create(:storage, :hosts => [src_host], :name => 'stockage récent') }
+      let(:src_switch) { FactoryBot.create(:switch, :ems_id => src_ems.id) }
+      let(:src_lans) { FactoryBot.create_list(:lan, 2, :switch => src_switch) }
+      let!(:src_host_switch) { FactoryBot.create(:host_switch, :host => src_host, :switch => src_switch) }
 
-      let(:src_lan_1) { FactoryBot.create(:lan) }
-      let(:src_lan_2) { FactoryBot.create(:lan) }
-      let(:src_nic_1) { FactoryBot.create(:guest_device_nic, :lan => src_lan_1) }
-      let(:src_nic_2) { FactoryBot.create(:guest_device_nic, :lan => src_lan_2) }
+      let(:src_nic_1) { FactoryBot.create(:guest_device_nic, :lan => src_lans.first) }
+      let(:src_nic_2) { FactoryBot.create(:guest_device_nic, :lan => src_lans.last) }
 
       let(:src_disk_1) { instance_double("disk", :device_name => "Hard disk 1", :device_type => "disk", :filename => "[datastore12] test_vm/test_vm.vmdk", :size => 17_179_869_184) }
       let(:src_disk_2) { instance_double("disk", :device_name => "Hard disk 2", :device_type => "disk", :filename => "[datastore12] test_vm/test_vm-2.vmdk", :size => 17_179_869_184) }
@@ -463,29 +473,39 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       end
 
       context 'destination is rhevm' do
-        let(:dst_ems) { FactoryBot.create(:ems_redhat, :zone => FactoryBot.create(:zone), :api_version => '4.2.4') }
-        let(:dst_storage) { FactoryBot.create(:storage) }
-        let(:dst_lan_1) { FactoryBot.create(:lan) }
-        let(:dst_lan_2) { FactoryBot.create(:lan) }
-        let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => FactoryBot.create(:host_redhat, :ext_management_system => dst_ems)) }
+        let(:conversion_host) do
+          FactoryBot.create(
+            :conversion_host,
+            :resource => FactoryBot.create(:host_redhat, :ext_management_system => redhat_ems)
+          )
+        end
 
         let(:mapping) do
-          FactoryBot.create(
-            :transformation_mapping,
-            :transformation_mapping_items => [
-              TransformationMappingItem.new(:source => src_cluster, :destination => dst_cluster),
-              TransformationMappingItem.new(:source => src_storage, :destination => dst_storage),
-              TransformationMappingItem.new(:source => src_lan_1, :destination => dst_lan_1),
-              TransformationMappingItem.new(:source => src_lan_2, :destination => dst_lan_2)
-            ]
-          )
+          FactoryBot.create(:transformation_mapping).tap do |tm|
+            FactoryBot.create(:transformation_mapping_item,
+                              :source                 => src_cluster,
+                              :destination            => redhat_cluster,
+                              :transformation_mapping => tm)
+            FactoryBot.create(:transformation_mapping_item,
+                              :source                 => src_storage,
+                              :destination            => redhat_storages.first,
+                              :transformation_mapping => tm)
+            FactoryBot.create(:transformation_mapping_item,
+                              :source                 => src_lans.first,
+                              :destination            => redhat_lans.first,
+                              :transformation_mapping => tm)
+            FactoryBot.create(:transformation_mapping_item,
+                              :source                 => src_lans.last,
+                              :destination            => redhat_lans.last,
+                              :transformation_mapping => tm)
+          end
         end
 
         before do
           task_1.conversion_host = conversion_host
         end
 
-        it { expect(task_1.destination_cluster).to eq(dst_cluster) }
+        it { expect(task_1.destination_cluster).to eq(redhat_cluster) }
 
         it_behaves_like "#virtv2v_disks"
 
@@ -493,8 +513,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates network_mappings hash" do
             expect(task_1.network_mappings).to eq(
               [
-                { :source => src_lan_1.name, :destination => dst_lan_1.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lan_2.name, :destination => dst_lan_2.name, :mac_address => src_nic_2.address }
+                { :source => src_lans.first.name, :destination => redhat_lans.first.name, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
+                { :source => src_lans.last.name, :destination => redhat_lans.last.name, :mac_address => src_nic_2.address }
               ]
             )
           end
@@ -517,10 +537,10 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vmware_fingerprint  => '01:23:45:67:89:ab:cd:ef:01:23:45:67:89:ab:cd:ef:01:23:45:67',
               :vmware_uri          => "esx://esx_user@10.0.0.1/?no_verify=1",
               :vmware_password     => 'esx_passwd',
-              :rhv_url             => "https://#{dst_ems.hostname}/ovirt-engine/api",
-              :rhv_cluster         => dst_cluster.name,
-              :rhv_storage         => dst_storage.name,
-              :rhv_password        => dst_ems.authentication_password,
+              :rhv_url             => "https://#{redhat_ems.hostname}/ovirt-engine/api",
+              :rhv_cluster         => redhat_cluster.name,
+              :rhv_storage         => redhat_storages.first.name,
+              :rhv_password        => redhat_ems.authentication_password,
               :source_disks        => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings    => task_1.network_mappings,
               :install_drivers     => true,
@@ -541,10 +561,10 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
             expect(task_1.conversion_options).to eq(
               :vm_name             => "ssh://root@10.0.0.1/vmfs/volumes/stockage%20r%C3%A9cent/#{src_vm_1.location}",
               :transport_method    => 'ssh',
-              :rhv_url             => "https://#{dst_ems.hostname}/ovirt-engine/api",
-              :rhv_cluster         => dst_cluster.name,
-              :rhv_storage         => dst_storage.name,
-              :rhv_password        => dst_ems.authentication_password,
+              :rhv_url             => "https://#{redhat_ems.hostname}/ovirt-engine/api",
+              :rhv_cluster         => redhat_cluster.name,
+              :rhv_storage         => redhat_storages.first.name,
+              :rhv_password        => redhat_ems.authentication_password,
               :source_disks        => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings    => task_1.network_mappings,
               :install_drivers     => true,
@@ -555,33 +575,41 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
       end
 
       context 'destination is openstack' do
-        let(:dst_ems) { FactoryBot.create(:ems_openstack, :api_version => 'v3', :zone => FactoryBot.create(:zone)) }
-        let(:dst_cloud_tenant) { FactoryBot.create(:cloud_tenant, :name => 'fake tenant', :ext_management_system => dst_ems) }
-        let(:dst_cloud_volume_type) { FactoryBot.create(:cloud_volume_type) }
-        let(:dst_cloud_network_1) { FactoryBot.create(:cloud_network) }
-        let(:dst_cloud_network_2) { FactoryBot.create(:cloud_network) }
-        let(:dst_flavor) { FactoryBot.create(:flavor) }
-        let(:dst_security_group) { FactoryBot.create(:security_group) }
-        let(:conversion_host_vm) { FactoryBot.create(:vm_openstack, :ext_management_system => dst_ems, :cloud_tenant => dst_cloud_tenant) }
-        let(:conversion_host) { FactoryBot.create(:conversion_host, :resource => conversion_host_vm) }
+        let(:openstack_ems) { FactoryBot.create(:ems_openstack, :api_version => 'v3', :zone => FactoryBot.create(:zone)) }
+        let(:openstack_cloud_tenant) { FactoryBot.create(:cloud_tenant, :name => 'fake tenant', :ext_management_system => openstack_ems) }
+        let(:openstack_cloud_volume_type) { FactoryBot.create(:cloud_volume_type) }
+        let(:openstack_cloud_networks) { FactoryBot.create_list(:cloud_network, 2, :cloud_tenant => openstack_cloud_tenant) }
+        let(:openstack_flavor) { FactoryBot.create(:flavor) }
+        let(:openstack_security_group) { FactoryBot.create(:security_group) }
+        let(:openstack_conversion_host_vm) { FactoryBot.create(:vm_openstack, :ext_management_system => openstack_ems, :cloud_tenant => openstack_cloud_tenant) }
+        let(:openstack_conversion_host) { FactoryBot.create(:conversion_host, :resource => openstack_conversion_host_vm) }
 
         let(:mapping) do
-          FactoryBot.create(
-            :transformation_mapping,
-            :transformation_mapping_items => [
-              TransformationMappingItem.new(:source => src_cluster, :destination => dst_cloud_tenant),
-              TransformationMappingItem.new(:source => src_storage, :destination => dst_cloud_volume_type),
-              TransformationMappingItem.new(:source => src_lan_1, :destination => dst_cloud_network_1),
-              TransformationMappingItem.new(:source => src_lan_2, :destination => dst_cloud_network_2)
-            ]
-          )
+          FactoryBot.create(:transformation_mapping).tap do |tm|
+            FactoryBot.create(:transformation_mapping_item,
+                              :source                 => src_cluster,
+                              :destination            => openstack_cloud_tenant,
+                              :transformation_mapping => tm)
+            FactoryBot.create(:transformation_mapping_item,
+                              :source                 => src_storage,
+                              :destination            => openstack_cloud_volume_type,
+                              :transformation_mapping => tm)
+            FactoryBot.create(:transformation_mapping_item,
+                              :source                 => src_lans.first,
+                              :destination            => openstack_cloud_networks.first,
+                              :transformation_mapping => tm)
+            FactoryBot.create(:transformation_mapping_item,
+                              :source                 => src_lans.last,
+                              :destination            => openstack_cloud_networks.last,
+                              :transformation_mapping => tm)
+          end
         end
 
         before do
-          task_1.conversion_host = conversion_host
+          task_1.conversion_host = openstack_conversion_host
         end
 
-        it { expect(task_1.destination_cluster).to eq(dst_cloud_tenant) }
+        it { expect(task_1.destination_cluster).to eq(openstack_cloud_tenant) }
 
         it_behaves_like "#virtv2v_disks"
 
@@ -589,8 +617,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
           it "generates network_mappings hash" do
             expect(task_1.network_mappings).to eq(
               [
-                { :source => src_lan_1.name, :destination => dst_cloud_network_1.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
-                { :source => src_lan_2.name, :destination => dst_cloud_network_2.ems_ref, :mac_address => src_nic_2.address }
+                { :source => src_lans.first.name, :destination => openstack_cloud_networks.first.ems_ref, :mac_address => src_nic_1.address, :ip_address => '10.0.1.1' },
+                { :source => src_lans.last.name, :destination => openstack_cloud_networks.last.ems_ref, :mac_address => src_nic_2.address }
               ]
             )
           end
@@ -603,7 +631,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         context "transport method is vddk" do
           before do
-            conversion_host.vddk_transport_supported = true
+            openstack_conversion_host.vddk_transport_supported = true
           end
 
           it "generates conversion options hash" do
@@ -615,22 +643,22 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :vmware_password            => 'esx_passwd',
               :osp_environment            => {
                 :os_auth_url             => URI::Generic.build(
-                  :scheme => dst_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
-                  :host   => dst_ems.hostname,
-                  :port   => dst_ems.port,
+                  :scheme => openstack_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
+                  :host   => openstack_ems.hostname,
+                  :port   => openstack_ems.port,
                   :path   => '/v3'
                 ).to_s,
                 :os_identity_api_version => '3',
-                :os_user_domain_name     => dst_ems.uid_ems,
-                :os_username             => dst_ems.authentication_userid,
-                :os_password             => dst_ems.authentication_password,
-                :os_project_name         => dst_cloud_tenant.name
+                :os_user_domain_name     => openstack_ems.uid_ems,
+                :os_username             => openstack_ems.authentication_userid,
+                :os_password             => openstack_ems.authentication_password,
+                :os_project_name         => openstack_cloud_tenant.name
               },
-              :osp_server_id              => conversion_host_vm.ems_ref,
-              :osp_destination_project_id => dst_cloud_tenant.ems_ref,
-              :osp_volume_type_id         => dst_cloud_volume_type.ems_ref,
-              :osp_flavor_id              => dst_flavor.ems_ref,
-              :osp_security_groups_ids    => [dst_security_group.ems_ref],
+              :osp_server_id              => openstack_conversion_host_vm.ems_ref,
+              :osp_destination_project_id => openstack_cloud_tenant.ems_ref,
+              :osp_volume_type_id         => openstack_cloud_volume_type.ems_ref,
+              :osp_flavor_id              => openstack_flavor.ems_ref,
+              :osp_security_groups_ids    => [openstack_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings           => task_1.network_mappings
             )
@@ -639,8 +667,8 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
 
         context "transport method is ssh" do
           before do
-            conversion_host.vddk_transport_supported = false
-            conversion_host.ssh_transport_supported = true
+            openstack_conversion_host.vddk_transport_supported = false
+            openstack_conversion_host.ssh_transport_supported = true
           end
 
           it "generates conversion options hash" do
@@ -649,22 +677,22 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
               :transport_method           => 'ssh',
               :osp_environment            => {
                 :os_auth_url             => URI::Generic.build(
-                  :scheme => dst_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
-                  :host   => dst_ems.hostname,
-                  :port   => dst_ems.port,
+                  :scheme => openstack_ems.security_protocol == 'non-ssl' ? 'http' : 'https',
+                  :host   => openstack_ems.hostname,
+                  :port   => openstack_ems.port,
                   :path   => '/v3'
                 ).to_s,
                 :os_identity_api_version => '3',
-                :os_user_domain_name     => dst_ems.uid_ems,
-                :os_username             => dst_ems.authentication_userid,
-                :os_password             => dst_ems.authentication_password,
-                :os_project_name         => dst_cloud_tenant.name
+                :os_user_domain_name     => openstack_ems.uid_ems,
+                :os_username             => openstack_ems.authentication_userid,
+                :os_password             => openstack_ems.authentication_password,
+                :os_project_name         => openstack_cloud_tenant.name
               },
-              :osp_server_id              => conversion_host_vm.ems_ref,
-              :osp_destination_project_id => dst_cloud_tenant.ems_ref,
-              :osp_volume_type_id         => dst_cloud_volume_type.ems_ref,
-              :osp_flavor_id              => dst_flavor.ems_ref,
-              :osp_security_groups_ids    => [dst_security_group.ems_ref],
+              :osp_server_id              => openstack_conversion_host_vm.ems_ref,
+              :osp_destination_project_id => openstack_cloud_tenant.ems_ref,
+              :osp_volume_type_id         => openstack_cloud_volume_type.ems_ref,
+              :osp_flavor_id              => openstack_flavor.ems_ref,
+              :osp_security_groups_ids    => [openstack_security_group.ems_ref],
               :source_disks               => [src_disk_1.filename, src_disk_2.filename],
               :network_mappings           => task_1.network_mappings
             )
