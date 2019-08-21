@@ -193,8 +193,9 @@ end
 group :scheduler, :manageiq_default do
   gem "rufus-scheduler"
 end
-# rufus has et-orbi dependency, v1.2.2 has patch for ConvertTimeToEoTime that we need
-gem "et-orbi",                          ">= 1.2.2"
+# rufus has et-orbi dependency
+# this is temporary inclusion till we can get ConvertTimeToEoTime patch into upstream:
+gem "et-orbi"
 
 group :seed, :manageiq_default do
   manageiq_plugin "manageiq-content"
