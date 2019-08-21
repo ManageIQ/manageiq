@@ -750,6 +750,7 @@ en:
       LdapRegion:               LDAP Region
       LdapServer:               LDAP Server
       LoadBalancer:             Load Balancer
+      ManageIQ::Providers::AutomationManager:                                        Automation Manager
       ManageIQ::Providers::BaseManager:                                     Provider
       ManageIQ::Providers::EmbeddedAutomationManager::Authentication:                Credential
       ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScriptSource:     Repository
