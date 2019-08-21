@@ -26,7 +26,7 @@ describe MiqWidget, "::ReportContent" do
     EvmSpecHelper.create_guid_miq_server_zone
     @admin       = FactoryBot.create(:user_admin)
     @admin_group = @admin.current_group
-    vm_count.times { FactoryBot.create(:vm_vmware) }
+    FactoryBot.create_list(:vm_vmware, vm_count)
   end
 
   it "#generate_one_content_for_user" do

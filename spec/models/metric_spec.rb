@@ -33,15 +33,9 @@ describe Metric do
 
     context "with enabled and disabled targets" do
       before do
-        storages = []
-        2.times { storages << FactoryBot.create(:storage_target_vmware) }
-
-        @vmware_clusters = []
-        2.times do
-          cluster = FactoryBot.create(:cluster_target)
-          @vmware_clusters << cluster
-          @ems_vmware.ems_clusters << cluster
-        end
+        storages = FactoryBot.create_list(:storage_target_vmware, 2)
+        @vmware_clusters = FactoryBot.create_list(:cluster_target, 2)
+        @ems_vmware.ems_clusters = @vmware_clusters
 
         6.times do |n|
           host = FactoryBot.create(:host_target_vmware, :ext_management_system => @ems_vmware)
@@ -1028,13 +1022,10 @@ describe Metric do
       before do
         @availability_zone = FactoryBot.create(:availability_zone_target)
         @ems_openstack.availability_zones << @availability_zone
-        @vms_in_az = []
-        2.times { @vms_in_az << FactoryBot.create(:vm_openstack, :ems_id => @ems_openstack.id) }
+        @vms_in_az = FactoryBot.create_list(:vm_openstack, 2, :ems_id => @ems_openstack.id)
         @availability_zone.vms = @vms_in_az
         @availability_zone.vms.push(FactoryBot.create(:vm_openstack, :ems_id => nil))
-
-        @vms_not_in_az = []
-        3.times { @vms_not_in_az << FactoryBot.create(:vm_openstack, :ems_id => @ems_openstack.id) }
+        @vms_not_in_az = FactoryBot.create_list(:vm_openstack, 3, :ems_id => @ems_openstack.id)
 
         MiqQueue.delete_all
       end

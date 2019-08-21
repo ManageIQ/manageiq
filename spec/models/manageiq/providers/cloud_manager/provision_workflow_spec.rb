@@ -123,22 +123,17 @@ RSpec.describe ManageIQ::Providers::CloudManager::ProvisionWorkflow do
       FactoryBot.create(:classification_cost_center_with_tags)
       admin.current_group.entitlement = Entitlement.create!(:filters => {'managed'   => [['/managed/cc/001']],
                                                                          'belongsto' => []})
-      2.times do |i|
-        kp = ManageIQ::Providers::CloudManager::AuthKeyPair.create(:name => "auth_#{i}")
-        ems.key_pairs << kp
-      end
-      2.times { FactoryBot.create(:availability_zone, :ems_id => ems.id) }
-      2.times do
-        FactoryBot.create(:security_group, :name                  => "sgb_1",
-                                            :ext_management_system => ems.network_manager)
-      end
-      ems.flavors << FactoryBot.create(:flavor, :name => "t1.micro", :supports_32_bit => true,
-                                        :supports_64_bit => true)
-      ems.flavors << FactoryBot.create(:flavor, :name => "m1.large", :supports_32_bit => false,
-                                        :supports_64_bit => true)
+      FactoryBot.create_list(:availability_zone, 2, :ems_id => ems.id)
+      FactoryBot.create_list(:security_group, 2, :name => "sgb_1", :ext_management_system => ems.network_manager)
+
+      ems.key_pairs = FactoryBot.create_list(:auth_key_pair_cloud, 2)
+      ems.flavors << FactoryBot.create(:flavor, :name => "t1.micro", :supports_32_bit => true, :supports_64_bit => true)
+      ems.flavors << FactoryBot.create(:flavor, :name => "m1.large", :supports_32_bit => false, :supports_64_bit => true)
+
       tagged_key_pair = ems.key_pairs.first
       tagged_zone = ems.availability_zones.first
       tagged_flavor = ems.flavors.first
+
       Classification.classify(tagged_zone, 'cc', '001')
       Classification.classify(tagged_flavor, 'cc', '001')
       Classification.classify(tagged_key_pair, 'cc', '001')

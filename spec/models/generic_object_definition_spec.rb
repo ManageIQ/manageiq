@@ -280,14 +280,12 @@ describe GenericObjectDefinition do
     end
 
     it 'finds by associations' do
-      vm = []
-      3.times { vm << FactoryBot.create(:vm_vmware) }
-
+      vms = FactoryBot.create_list(:vm_vmware, 3)
       definition.add_property_association(:vms, 'vm')
-      @g1.vms = [vm[0], vm[1], vm[2]]
+      @g1.vms = vms
       @g1.save!
 
-      @options = {:vms => [vm[0].id, vm[1].id]}
+      @options = {:vms => [vms[0].id, vms[1].id]}
       expect(subject.size).to eq(1)
       expect(subject.first).to eq(@g1)
     end
