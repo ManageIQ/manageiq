@@ -24,8 +24,9 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   end
 
   def validate_order
-    # Service template should not be orderable if all VMs have already been migrated
-    vm_resources.reject { |res| res.resource.is_tagged_with?('transformation_status/migrated', :ns => '/managed') }.present?
+    errors = []
+    errors << 'All VMs of the migration plan have already been successfully migrated' if vm_resources.reject { |res| res.resource.is_tagged_with?('transformation_status/migrated', :ns => '/managed') }.blank?
+    errors
   end
   alias orderable? validate_order
 

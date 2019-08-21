@@ -353,7 +353,10 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def validate_order
-    service_template_catalog && display
+    errors = []
+    errors << 'Service template does not belong to a service catalog' unless service_template_catalog
+    errors << 'Service template is not configured to be displayed' unless display
+    errors
   end
   alias orderable? validate_order
 
@@ -427,7 +430,8 @@ class ServiceTemplate < ApplicationRecord
       require 'time'
       time = Time.parse(schedule_time).utc
 
-      errors = workflow.validate_dialog
+      errors = validate_order
+      errors += workflow.validate_dialog
       return {:errors => errors} unless errors.blank?
 
       schedule = MiqSchedule.create!(

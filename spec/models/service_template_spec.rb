@@ -915,7 +915,8 @@ describe ServiceTemplate do
   context "#order" do
     let(:user) { FactoryBot.create(:user) }
     let(:resource_action) { FactoryBot.create(:resource_action, :action => "Provision") }
-    let(:service_template) { FactoryBot.create(:service_template, :resource_actions => [resource_action]) }
+    let(:service_template_catalog) { FactoryBot.create(:service_template_catalog) }
+    let(:service_template) { FactoryBot.create(:service_template, :resource_actions => [resource_action], :service_template_catalog => service_template_catalog, :display => true) }
     let(:resource_action_options) { {:target => service_template, :initiator => 'control', :submit_workflow => true} }
     let(:miq_request) { FactoryBot.create(:service_template_provision_request) }
     let!(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action, resource_action_options) }
