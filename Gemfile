@@ -191,11 +191,9 @@ group :graphql_api, :manageiq_default do
 end
 
 group :scheduler, :manageiq_default do
-  gem "rufus-scheduler"
+  # Modified gems (forked on Github)
+  gem "rufus-scheduler", "=3.1.10.2", :git => "https://github.com/ManageIQ/rufus-scheduler.git", :require => false, :tag => "v3.1.10-2"
 end
-# rufus has et-orbi dependency
-# this is temporary inclusion till we can get ConvertTimeToEoTime patch into upstream:
-gem "et-orbi"
 
 group :seed, :manageiq_default do
   manageiq_plugin "manageiq-content"

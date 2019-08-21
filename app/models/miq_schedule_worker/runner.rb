@@ -77,19 +77,15 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Log current system configuration
     every = worker_settings[:log_active_configuration_interval]
 
-    scheduler.schedule_every(
-      every,
-      :first_in => every,
-      :tags     => [:vmdb_appliance_log_config, schedule_category]
-    ) { enqueue(:vmdb_appliance_log_config) }
+    scheduler.schedule_every(every, :tags => [:vmdb_appliance_log_config, schedule_category]) do
+      enqueue(:vmdb_appliance_log_config)
+    end
 
     # Schedule - Log current database statistics and bloat
     every = worker_settings[:log_database_statistics_interval]
-    scheduler.schedule_every(
-      every,
-      :first_in => every,
-      :tags     => [:log_all_database_statistics, schedule_category]
-    ) { enqueue(:vmdb_database_log_all_database_statistics) }
+    scheduler.schedule_every(every, :tags => [:log_all_database_statistics, schedule_category]) do
+      enqueue(:vmdb_database_log_all_database_statistics)
+    end
 
     # Schedule - Update Server Statistics
     every = worker_settings[:server_stats_interval]
