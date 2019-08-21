@@ -174,6 +174,7 @@ module Rbac
     # @option options :where_clause  []
     # @option options :sub_filter
     # @option options :include_for_find [Array<Symbol>, Hash{Symbol => Symbol,Hash,Array}] models included but not in query
+    # @option options :references   [Array<Symbol>], models used by select and where. If not passed, uses include_for_find instead
     # @option options :filter       [MiqExpression] (optional)
 
     # @option options :user         [User]     (default: current_user)
@@ -209,6 +210,7 @@ module Rbac
       where_clause      = options[:where_clause]
       sub_filter        = options[:sub_filter]
       include_for_find  = options[:include_for_find]
+      references        = options.fetch(:references) { include_for_find }
       search_filter     = options[:filter]
 
       limit             = options[:limit]  || targets.try(:limit_value)
@@ -268,7 +270,7 @@ module Rbac
               .includes(include_for_find).includes(exp_includes)
               .order(order)
 
-      scope = include_references(scope, klass, include_for_find, exp_includes, skip_references)
+      scope = include_references(scope, klass, references, exp_includes, skip_references)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
 
       if inline_view?(options, scope)
@@ -380,6 +382,7 @@ module Rbac
       return false if scope.singleton_class.included_modules.include?(ActiveRecord::NullRelation)
       options[:skip_references] ||
       (options[:extra_cols].blank? &&
+        !options.key?(:references) &&
         (!attrs[:apply_limit_in_sql] && (exp_sql.nil? || exp_includes.nil?)))
     end
 

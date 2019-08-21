@@ -93,6 +93,7 @@ module MiqReport::Search
     search_options = options.merge(:class            => db,
                                    :conditions       => conditions,
                                    :include_for_find => includes,
+                                   :references       => get_include,
                                    :skip_references  => skip_references
                                   )
     search_options.merge!(:limit => limit, :offset => offset, :order => order) if order

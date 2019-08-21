@@ -66,6 +66,7 @@ module VimPerformanceAnalysis
         search_options = {
           :class            => topts[:compute_type].to_s,
           :include_for_find => includes,
+          :references       => includes,
           :userid           => @options[:userid],
           :miq_group_id     => @options[:miq_group_id],
         }

@@ -255,14 +255,12 @@ module MiqReport::Generator
     end
 
     time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
-    # TODO: add .select(only_cols)
-    db_includes = get_include_for_find
     results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, db_klass)
                             .where(where_clause).where(exp_sql)
                             .where(options[:where_clause])
                             .where(:timestamp => time_range)
-                            .includes(db_includes)
-                            .references(db_klass.includes_to_references(db_includes))
+                            .includes(get_include_for_find)
+                            .references(db_klass.includes_to_references(get_include))
                             .includes(exp_includes || [])
                             .limit(options[:limit])
     results = Rbac.filtered(results, :class        => db,
@@ -284,6 +282,7 @@ module MiqReport::Generator
                       .where(options[:where_clause])
                       .where(exp_sql)
                       .includes(get_include_for_find)
+                      .references(db_klass.includes_to_references(get_include))
                       .includes(exp_includes || [])
                       .limit(options[:limit])
 
@@ -316,6 +315,7 @@ module MiqReport::Generator
       :targets          => targets,
       :filter           => conditions,
       :include_for_find => get_include_for_find,
+      :references       => get_include,
       :where_clause     => where_clause,
       :skip_counts      => true
     )
