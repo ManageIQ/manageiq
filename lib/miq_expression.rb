@@ -292,6 +292,7 @@ class MiqExpression
   end
 
   def preprocess_for_sql(exp, attrs = nil)
+    exp.delete(:token)
     attrs ||= {:supported_by_sql => true}
     operator = exp.keys.first
     case operator.downcase

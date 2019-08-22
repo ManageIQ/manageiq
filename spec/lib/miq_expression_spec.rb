@@ -242,6 +242,21 @@ describe MiqExpression do
   end
 
   describe "#to_sql" do
+    it "returns nil if SQL generation for that expression is not supported" do
+      sql, * = MiqExpression.new("=" => {"field" => "Service-custom_1", "value" => ""}).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "does not raise error and returns nil if SQL generation for expression is not supported and 'token' key present in expression's Hash" do
+      sql, * = MiqExpression.new("=" => {"field" => "Service-custom_1", "value" => ""}, :token => 1).to_sql
+      expect(sql).to be_nil
+    end
+
+    it "generates the SQL for an = expression if SQL generation for expression supported and 'token' key present in expression's Hash" do
+      sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "foo"}, :token => 1).to_sql
+      expect(sql).to eq("\"vms\".\"name\" = 'foo'")
+    end
+
     it "generates the SQL for an EQUAL expression" do
       sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
       expect(sql).to eq("\"vms\".\"name\" = 'foo'")
