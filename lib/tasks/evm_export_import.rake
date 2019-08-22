@@ -123,6 +123,14 @@ namespace :evm do
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
+
+    desc 'Exports all schedules to individual YAML files'
+    task :schedules => :environment do
+      options = TaskHelpers::Exports.parse_options
+      TaskHelpers::Exports::Schedules.new.export(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
   end
 
   namespace :import do
@@ -232,6 +240,14 @@ namespace :evm do
     task :generic_object_definitions => :environment do
       options = TaskHelpers::Imports.parse_options
       TaskHelpers::Imports::GenericObjectDefinitions.new.import(options)
+
+      exit # exit so that parameters to the first rake task are not run as rake tasks
+    end
+
+    desc 'Import all schedule definitions from individual YAML files'
+    task :schedules => :environment do
+      options = TaskHelpers::Imports.parse_options
+      TaskHelpers::Imports::Schedules.new.import(options)
 
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
