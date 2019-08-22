@@ -619,12 +619,15 @@ describe VmOrTemplate do
   end
 
   it "with ems_events" do
-    ems       = FactoryBot.create(:ems_vmware_with_authentication)
-    vm        = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
-    ems_event = FactoryBot.create(:ems_event)
-    vm.ems_events << ems_event
-    expect(vm.ems_events.first).to be_kind_of(EmsEvent)
-    expect(vm.ems_events.first.id).to eq(ems_event.id)
+    ems           = FactoryBot.create(:ems_vmware_with_authentication)
+    vm            = FactoryBot.create(:vm_vmware, :ext_management_system => ems)
+    ems_event_src = FactoryBot.create(:ems_event, :vm_or_template => vm)
+    ems_event_dest = FactoryBot.create(:ems_event, :dest_vm_or_template => vm)
+
+    expect(vm.ems_events.count).to eq(2)
+    expect(vm.ems_events_src.first).to be_kind_of(EmsEvent)
+    expect(vm.ems_events_src.first.id).to eq(ems_event_src.id)
+    expect(vm.ems_events_dest.first.id).to eq(ems_event_dest.id)
   end
 
   it "#miq_provision_vms" do
