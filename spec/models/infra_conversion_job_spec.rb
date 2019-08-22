@@ -358,13 +358,12 @@ RSpec.describe InfraConversionJob, :v2v do
 
     context '#collapse_snapshots' do
       let(:async_task) { FactoryBot.create(:miq_task, :userid => user.id) }
-      let(:snapshot) { FactoryBot.create(:snapshot, :vm_or_template => vm_vmware) }
+      let(:snapshots) { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm_vmware) }
 
       before do
         job.state = 'collapsing_snapshots'
-        allow(MiqTask).to receive(:find).and_return(async_task)
-        # allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
-        allow(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id).and_return(async_task.id)
+        allow(MiqTask).to receive(:find).with(instance_of(Integer)).and_return(async_task)
+        allow(vm_vmware).to receive(:remove_all_snapshots_queue).and_return(async_task.id)
       end
 
       it 'abort_conversion when collapse_snapshots times out' do
@@ -382,21 +381,21 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it 'queues an async task and retries if async task does not exist and vm supports remove_all_snapshots' do
-        allow(vm_vmware).to receive(:snapshots).and_return([snapshot])
-        async_task.update!(:state => 'queued')
+        allow(vm_vmware).to receive(:snapshots).and_return(snapshots)
+        async_task.update!(:state => MiqTask::STATE_QUEUED)
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id)
+          expect(MiqTask).to receive(:find).with(instance_of(Integer))
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
           expect(job).to receive(:queue_signal).with(:collapse_snapshots, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:collapse_snapshots)
-          expect(job.context[:async_task_id_collapsing_snapshots]).to eq(async_task.id)
+          expect(job.context[:async_task_id_collapsing_snapshots]).to be_instance_of(Integer)
         end
       end
 
       it 'retries if async task exists and is not finished' do
         job.context[:async_task_id_collapsing_snapshots] = async_task.id
-        async_task.update!(:state => 'active')
+        async_task.update!(:state => MiqTask::STATE_ACTIVE)
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(MiqTask).to receive(:find).with(async_task.id)
