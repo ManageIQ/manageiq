@@ -2865,6 +2865,16 @@
       :hidden: true
       :identifier: schedule
       :children:
+      - :name: List
+        :description: Display Lists of Schedules
+        :feature_type: view
+        :hidden: true
+        :identifier: schedule_show_list
+      - :name: Show
+        :description: View Schedules
+        :feature_type: view
+        :hidden: true
+        :identifier: schedule_show
       - :name: Run Now
         :description: Queue up Schedules to run now
         :feature_type: control
