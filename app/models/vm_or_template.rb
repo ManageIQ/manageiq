@@ -120,8 +120,8 @@ class VmOrTemplate < ApplicationRecord
   has_one                   :openscap_result, :as => :resource, :dependent => :destroy
 
   # EMS Events
-  has_many                  :ems_events, ->(vmt) { unscope(where: :vm_or_template_id).where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
-                            :class_name => "EmsEvent"
+  has_many                  :ems_events, ->(vmt) { unscope(:where => :vm_or_template_id).where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
+                            :class_name => "EmsEvent", :inverse_of => :vm_or_template
 
   has_many                  :ems_events_src,  :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_vm_or_template_id
