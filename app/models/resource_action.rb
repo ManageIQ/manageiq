@@ -28,13 +28,17 @@ class ResourceAction < ApplicationRecord
     else
       override_values = {:object_type => target.class.base_class.name, :object_id => target.id}
     end
+
+    attrs = (ae_attributes || {}).merge(override_attrs || {})
+    attrs["result_format"] = 'ignore' if resource&.options&.dig(:open_url)
+
     {
       :namespace        => ae_namespace,
       :class_name       => ae_class,
       :instance_name    => ae_instance,
       :automate_message => ae_message,
       :open_url_task_id => open_url_task_id,
-      :attrs            => (ae_attributes || {}).merge(override_attrs || {}),
+      :attrs            => attrs,
     }.merge(override_values).tap do |args|
       args[:user_id] ||= user.id
       args[:miq_group_id] ||= user.current_group.id
