@@ -566,6 +566,7 @@ describe MiqSchedule do
 
     context "valid action_automation_request" do
       let(:admin) { FactoryBot.create(:user_miq_request_approver) }
+      let(:ems)   { FactoryBot.create(:ext_management_system) }
       let(:automate_sched) do
         MiqSchedule.create(:name          => "test_method", :resource_type => "AutomationRequest",
                            :userid        => admin.userid, :enabled => true,
@@ -575,7 +576,8 @@ describe MiqSchedule do
                            :filter        => {:uri_parts  => {:namespace => 'ss',
                                                               :instance  => 'vv',
                                                               :message   => 'mm'},
-                                              :parameters => {"param" => "8"}})
+                                              :parameters => {"param"                                      => "8",
+                                                              "ExtManagementSystem::ext_management_system" => ems.id}})
       end
 
       it "should create a request from a scheduled task" do
@@ -587,6 +589,7 @@ describe MiqSchedule do
         FactoryBot.create(:user_admin, :userid => 'admin')
         automate_sched.action_automation_request(AutomationRequest, '')
         expect(AutomationRequest.where(:description => "Automation Task", :userid => admin.userid).count).to eq(1)
+        expect(automate_sched.filter[:parameters].keys).to include("ExtManagementSystem::ext_management_system")
       end
     end
 
