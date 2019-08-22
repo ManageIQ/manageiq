@@ -1193,7 +1193,7 @@ class VmOrTemplate < ApplicationRecord
     #   already have a VM create event
     vms_to_update = vms_to_update.reject do |v|
       # TODO: Vmware specific (fix with event rework?)
-      event = v.ems_events.detect { |e| e.event_type == 'VmCreatedEvent' }
+      event = v.ems_events.find_by(:event_type => ["VmCreatedEvent", "VmDeployedEvent"])
       v.update_attribute(:ems_created_on, event.timestamp) if event && v.ems_created_on != event.timestamp
       event
     end
