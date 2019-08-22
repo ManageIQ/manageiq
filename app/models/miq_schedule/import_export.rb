@@ -79,7 +79,7 @@ module MiqSchedule::ImportExport
         filter =
           if miq_schedule["resource_type"] == "MiqReport" || miq_schedule["resource_type"] == "MiqWidget"
             resource = miq_schedule["resource_type"].safe_constantize.find_by(:name => filter_resource_name)
-            raise "Unable to find  #{filter_resource_name}" unless resource
+            raise "Unable to find resource used in filter #{filter_resource_name}. Please add/update :filter_resource_name attribute in yaml of #{miq_schedule["resource_type"]}" unless resource
 
             MiqExpression.new("=" => {"field" => "#{miq_schedule["resource_type"]}-id", "value" => resource.id})
           else
