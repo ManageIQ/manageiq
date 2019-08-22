@@ -20,18 +20,6 @@ describe AutomationRequest do
     expect(AutomationRequest.request_task_class).to eq(AutomationTask)
   end
 
-  context ".parse_out_objects" do
-    it "isolates objects including the '::' class separator" do
-      object_parameters = {'VmOrTemplate::vm' => 10, 'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s}
-      non_object_parameters = {'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s}
-      object_hash = AutomationRequest.parse_out_objects(object_parameters)
-      non_object_hash = AutomationRequest.parse_out_objects(non_object_parameters)
-      expect(object_hash).to eq 'VmOrTemplate::vm' => 10
-      expect(non_object_hash).to be_a Hash
-      expect(non_object_hash).to be_empty
-    end
-  end
-
   context ".create_from_ws" do
     it "with empty requester string" do
       ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
@@ -51,6 +39,13 @@ describe AutomationRequest do
       expect(ar.options[:attrs][:userid]).to eq(admin.userid)
       expect(ar.options[:schedule_type]).to eq("immediately")
       expect(ar.options[:schedule_time]).to eq(nil)
+      expect(ar.options[:attrs].keys).to eq([:var1, :var2, :var3, :userid])
+    end
+
+    it "with object in parameters" do
+      parameters = {'var1' => @ae_var1.to_s, 'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s, 'VmOrTemplate::vm' => 10}
+      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, parameters, {})
+      expect(ar.options[:attrs].keys).to include("VmOrTemplate::vm")
     end
 
     it "creates request with schedule" do
@@ -65,6 +60,7 @@ describe AutomationRequest do
       @object_parameters = {'VmOrTemplate::vm' => 10, 'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s}
       ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @object_parameters, {})
       expect(ar.options[:attrs]).to include("VmOrTemplate::vm" => 10, :var2 => @ae_var2.to_s)
+      expect(@object_parameters).to include("VmOrTemplate::vm" => 10)
     end
 
     it "does not allow overriding userid who is NOT in the database" do
