@@ -34,6 +34,19 @@ describe MiqSchedule do
         expect(miq_schedule_array['sched_action'][:options]).to eq(options.merge(:miq_group_description => miq_group.description))
         expect(miq_schedule_array['filter_resource_name']).to eq(miq_report.name)
       end
+
+      context "filter resource doesn't exists" do
+        let(:miq_expression) { MiqExpression.new("=" => {"field" => "MiqReport-id", "value" => 999_999_999}) }
+
+        it "exports to array" do
+          expect do
+            miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+            expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
+            expect(miq_schedule_array['sched_action'][:options]).to eq(options.merge(:miq_group_description => miq_group.description))
+            expect(miq_schedule_array['filter_resource_name']).to be_nil
+          end.not_to raise_error
+        end
+      end
     end
 
     context "SmartState" do
