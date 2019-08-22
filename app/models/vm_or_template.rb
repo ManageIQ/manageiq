@@ -1180,6 +1180,7 @@ class VmOrTemplate < ApplicationRecord
     MiqQueue.submit_job(
       :class_name  => name,
       :method_name => 'assign_ems_created_on',
+      :role        => 'ems_operations',
       :args        => [vm_ids],
       :priority    => MiqQueue::MIN_PRIORITY
     )
