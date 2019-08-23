@@ -102,8 +102,7 @@ describe EmsCloud do
 
         ems_cloud.reload
 
-        ems_cloud.source_tenant.update_attributes(:name => "XXX", :description => "XXX")
-        ems_cloud.save
+        ems_cloud.source_tenant.update!(:name => "XXX", :description => "XXX")
 
         ems_cloud.sync_cloud_tenants_with_tenants
 
@@ -310,8 +309,8 @@ describe EmsCloud do
         end
 
         before do
-          vm_1.cloud_tenant.update_attributes!(:parent => ct_3, :ext_management_system => ems_cloud, :name => ct_name_1)
-          vm_2.cloud_tenant.update_attributes!(:ext_management_system => ems_cloud, :name => ct_name_2)
+          vm_1.cloud_tenant.update!(:parent => ct_3, :ext_management_system => ems_cloud, :name => ct_name_1)
+          vm_2.cloud_tenant.update!(:ext_management_system => ems_cloud, :name => ct_name_2)
         end
 
         ######
@@ -402,9 +401,9 @@ describe EmsCloud do
 
             # destroy old cloud tenants and replace them with new
             vm_1.cloud_tenant.destroy
-            vm_1.update_attributes!(:cloud_tenant => ct_1_new)
+            vm_1.update!(:cloud_tenant => ct_1_new)
             vm_2.cloud_tenant.destroy
-            vm_2.update_attributes!(:cloud_tenant => ct_2_new)
+            vm_2.update!(:cloud_tenant => ct_2_new)
             ct_3.destroy
 
             expect(CloudTenant.count).to eq(3)
@@ -489,9 +488,9 @@ describe EmsCloud do
 
             # destroy old cloud tenants and replace them with new
             vm_1.cloud_tenant.destroy
-            vm_1.update_attributes!(:cloud_tenant => ct_1_new)
+            vm_1.update!(:cloud_tenant => ct_1_new)
             vm_2.cloud_tenant.destroy
-            vm_2.update_attributes!(:cloud_tenant => ct_2_new)
+            vm_2.update!(:cloud_tenant => ct_2_new)
             ct_3.destroy
 
             expect(CloudTenant.count).to eq(3)
@@ -591,7 +590,7 @@ describe EmsCloud do
 
             # destroy old cloud tenants and replace them with new
             vm_1.cloud_tenant.destroy
-            vm_1.update_attributes!(:cloud_tenant => ct_1_new)
+            vm_1.update!(:cloud_tenant => ct_1_new)
             vm_2.cloud_tenant.destroy
             vm_2.destroy
             ct_3.destroy
@@ -664,7 +663,7 @@ describe EmsCloud do
           let(:ct_name_4) { "ct_name_4" }
           let(:vm_4) do
             vm = FactoryBot.create(:vm_openstack)
-            vm.cloud_tenant.update_attributes!(:parent => ct_1_new, :ext_management_system => ems_cloud, :name => ct_name_4)
+            vm.cloud_tenant.update!(:parent => ct_1_new, :ext_management_system => ems_cloud, :name => ct_name_4)
             vm
           end
 
@@ -677,10 +676,10 @@ describe EmsCloud do
 
             # destroy old cloud tenants and replace them with new
             vm_1.cloud_tenant.destroy
-            vm_1.update_attributes!(:cloud_tenant => ct_1_new)
+            vm_1.update!(:cloud_tenant => ct_1_new)
             vm_2.cloud_tenant.destroy
             vm_2.cloud_tenant.destroy
-            vm_2.update_attributes!(:cloud_tenant => ct_2_new)
+            vm_2.update!(:cloud_tenant => ct_2_new)
             ct_3.destroy
             ct_2_new
             vm_4
