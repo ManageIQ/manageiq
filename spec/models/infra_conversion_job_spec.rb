@@ -362,9 +362,8 @@ RSpec.describe InfraConversionJob, :v2v do
 
       before do
         job.state = 'collapsing_snapshots'
-        allow(MiqTask).to receive(:find).and_return(async_task)
-        # allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
-        allow(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id).and_return(async_task.id)
+        allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
+        allow_any_instance_of(Vm).to receive(:remove_all_snapshots_queue).with(user.id).and_return(async_task.id)
       end
 
       it 'abort_conversion when collapse_snapshots times out' do
@@ -386,7 +385,6 @@ RSpec.describe InfraConversionJob, :v2v do
         async_task.update!(:state => 'queued')
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(vm_vmware).to receive(:remove_all_snapshots_queue).with(user.id)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
           expect(job).to receive(:queue_signal).with(:collapse_snapshots, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:collapse_snapshots)
