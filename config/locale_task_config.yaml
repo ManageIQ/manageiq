@@ -11,6 +11,10 @@ yaml_strings_to_extract:
   - title
   product/charts/layouts/*/*.yaml:
   - title
+  product/charts/miq_reports/vmdb_database.yaml:
+  - headers
+  - title
+  - name
   product/compare/*.yaml:
   - headers
   - group
