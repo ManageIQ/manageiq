@@ -28,7 +28,6 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     errors << 'All VMs of the migration plan have already been successfully migrated' if vm_resources.reject { |res| res.resource.is_tagged_with?('transformation_status/migrated', :ns => '/managed') }.blank?
     errors
   end
-  alias orderable? validate_order
 
   def self.default_provisioning_entry_point(_service_type)
     '/Transformation/StateMachines/VMTransformation/Transformation'

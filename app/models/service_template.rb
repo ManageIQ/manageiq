@@ -358,7 +358,10 @@ class ServiceTemplate < ApplicationRecord
     errors << 'Service template is not configured to be displayed' unless display
     errors
   end
-  alias orderable? validate_order
+
+  def orderable?
+    validate_order.blank?
+  end
 
   def provision_action
     resource_actions.find_by(:action => "Provision")
