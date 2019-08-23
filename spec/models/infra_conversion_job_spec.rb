@@ -358,7 +358,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
     context '#collapse_snapshots' do
       let(:async_task) { FactoryBot.create(:miq_task, :userid => user.id) }
-      let(:snapshot) { FactoryBot.create(:snapshot, :vm_or_template => vm_vmware) }
+      let(:snapshots) { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm_vmware) }
 
       before do
         job.state = 'collapsing_snapshots'
@@ -381,8 +381,8 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it 'queues an async task and retries if async task does not exist and vm supports remove_all_snapshots' do
-        allow(vm_vmware).to receive(:snapshots).and_return([snapshot])
-        async_task.update!(:state => 'queued')
+        allow(vm_vmware).to receive(:snapshots).and_return(snapshots)
+        async_task.update!(:state => MiqTask::STATE_QUEUED)
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
@@ -394,7 +394,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it 'retries if async task exists and is not finished' do
         job.context[:async_task_id_collapsing_snapshots] = async_task.id
-        async_task.update!(:state => 'active')
+        async_task.update!(:state => MiqTask::STATE_ACTIVE)
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(MiqTask).to receive(:find).with(async_task.id)
