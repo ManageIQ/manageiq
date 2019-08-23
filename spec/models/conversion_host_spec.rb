@@ -500,7 +500,7 @@ RSpec.describe ConversionHost, :v2v do
 
     it "works as expected if the connection is successful but the JSON is invalid" do
       allow(conversion_host).to receive(:connect_ssh).and_return('bogus')
-      expected_message = "Could not parse result data after running virt-v2v-wrapper.py using "\
+      expected_message = "Could not parse result data after running virt-v2v-wrapper using "\
         "options: #{filtered_options}. Result was: bogus."
       expect { conversion_host.run_conversion(conversion_options) }.to raise_error(expected_message)
     end

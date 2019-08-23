@@ -158,7 +158,7 @@ class ConversionHost < ApplicationRecord
     raise "Could not apply the limits in '#{path}' on '#{resource.name}' with [#{err.class}: #{err}]"
   end
 
-  # Run the virt-v2v-wrapper.py script on the remote host and return a hash
+  # Run the virt-v2v-wrapper script on the remote host and return a hash
   # result from the parsed JSON output.
   #
   # Certain sensitive fields are filtered in the error messages to prevent
@@ -167,12 +167,12 @@ class ConversionHost < ApplicationRecord
   def run_conversion(conversion_options)
     ignore = %w[password fingerprint key]
     filtered_options = conversion_options.clone.tap { |h| h.each { |k, _v| h[k] = "__FILTERED__" if ignore.any? { |i| k.to_s.end_with?(i) } } }
-    result = connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper.py', nil, nil, conversion_options.to_json) }
+    result = connect_ssh { |ssu| ssu.shell_exec('/usr/bin/virt-v2v-wrapper', nil, nil, conversion_options.to_json) }
     JSON.parse(result)
   rescue MiqException::MiqInvalidCredentialsError, MiqException::MiqSshUtilHostKeyMismatch => err
     raise "Failed to connect and run conversion using options #{filtered_options} with [#{err.class}: #{err}]"
   rescue JSON::ParserError
-    raise "Could not parse result data after running virt-v2v-wrapper.py using options: #{filtered_options}. Result was: #{result}."
+    raise "Could not parse result data after running virt-v2v-wrapper using options: #{filtered_options}. Result was: #{result}."
   rescue StandardError => err
     raise "Starting conversion failed on '#{resource.name}' with [#{err.class}: #{err}]"
   end
