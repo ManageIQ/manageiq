@@ -354,7 +354,6 @@ class ServiceTemplate < ApplicationRecord
 
   def validate_order(with_errors = false)
     errors = []
-    errors << 'Service ordering via API is not allowed' unless Settings.product.allow_api_service_ordering
     errors << 'Service template does not belong to a service catalog' unless service_template_catalog
     errors << 'Service template is not configured to be displayed' unless display
     with_errors ? errors : errors.blank?
