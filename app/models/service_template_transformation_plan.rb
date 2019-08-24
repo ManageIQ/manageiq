@@ -26,8 +26,6 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   def validate_order(with_errors = false)
     errors = []
     errors << 'All VMs of the migration plan have already been successfully migrated' if vm_resources.reject { |res| res.resource.is_tagged_with?('transformation_status/migrated', :ns => '/managed') }.blank?
-    errors
-
     with_errors ? errors : errors.blank?
   end
   alias orderable? validate_order
