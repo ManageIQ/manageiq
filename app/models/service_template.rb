@@ -352,16 +352,16 @@ class ServiceTemplate < ApplicationRecord
     end.try(:resource).try(:validate_template) || {:valid => true, :message => nil}
   end
 
-  def validate_order
+  def validate_order(with_errors = false)
     errors = []
+    errors << 'Service ordering via API is not allowed' unless Settings.product.allow_api_service_ordering
     errors << 'Service template does not belong to a service catalog' unless service_template_catalog
     errors << 'Service template is not configured to be displayed' unless display
     errors
-  end
 
-  def orderable?
-    validate_order.blank?
+    with_errors ? errors : errors.blank?
   end
+  alias orderable? validate_order
 
   def provision_action
     resource_actions.find_by(:action => "Provision")
@@ -433,7 +433,7 @@ class ServiceTemplate < ApplicationRecord
       require 'time'
       time = Time.parse(schedule_time).utc
 
-      errors = validate_order
+      errors = validate_order(true)
       errors += workflow.validate_dialog
       return {:errors => errors} unless errors.blank?
 

@@ -23,11 +23,14 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     service_resources.where(:resource_type => 'TransformationMapping')
   end
 
-  def validate_order
+  def validate_order(with_errors = false)
     errors = []
     errors << 'All VMs of the migration plan have already been successfully migrated' if vm_resources.reject { |res| res.resource.is_tagged_with?('transformation_status/migrated', :ns => '/managed') }.blank?
     errors
+
+    with_errors ? errors : errors.blank?
   end
+  alias orderable? validate_order
 
   def self.default_provisioning_entry_point(_service_type)
     '/Transformation/StateMachines/VMTransformation/Transformation'
