@@ -361,30 +361,35 @@ RSpec.describe InfraConversionJob, :v2v do
     end
 
     context '#remove_snapshots' do
-      let(:async_task) { FactoryBot.create(:miq_task, :userid => user.id) }
-      let(:snapshots) { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm_vmware) }
+      before { job.state = 'started' }
 
-      before do
-        job.state = 'started'
-        allow_any_instance_of(Vm).to receive(:remove_all_snapshots_queue).with(user.id).and_return(async_task.id)
-      end
-
-      it 'exits if vm does not support remove_all_snapshots' do
-        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
-        job.signal(:remove_snapshots)
-      end
-
-      it 'queues an async task if VM supports remove_all_snapshots' do
-        allow(vm_vmware).to receive(:snapshots).and_return(snapshots)
-        async_task.update!(:state => MiqTask::STATE_QUEUED)
-        Timecop.freeze(2019, 2, 6) do
+      context 'without any snapshots' do
+        it 'does not queue the task' do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+          expect(vm_vmware).not_to receive(:remove_all_snapshots)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-          expect(job).to receive(:queue_signal).with(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
+          expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
           job.signal(:remove_snapshots)
-          expect(job.context[:async_task_id_removing_snapshots]).to eq(async_task.id)
+        end
+      end
+
+      context 'with snapshots' do
+        before { FactoryBot.create(:snapshot, :vm_or_template => vm_vmware) }
+
+        it 'queues the remove_all_snapshots task' do
+          Timecop.freeze(2019, 2, 6) do
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+            expect(job).to receive(:queue_signal).with(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
+            job.signal(:remove_snapshots)
+            task = MiqTask.find(job.context[:async_task_id_removing_snapshots])
+            expect(task).to have_attributes(
+              :name  => "Removing all snapshots for #{vm_vmware.name}",
+              :state  => MiqTask::STATE_QUEUED,
+              :status => MiqTask::STATUS_OK,
+              :userid => user.id.to_s
+            )
+          end
         end
       end
     end
