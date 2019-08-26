@@ -99,6 +99,7 @@ module SupportsFeatureMixin
     :migrate                             => 'Migration',
     :capture                             => 'Capture of Capacity & Utilization Metrics',
     :openscap_scan                       => 'OpenSCAP security scan',
+    :order                               => 'Service Order',
     :provisioning                        => 'Provisioning',
     :publish                             => 'Publishing',
     :quick_stats                         => 'Quick Stats',
