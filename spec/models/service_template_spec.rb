@@ -1113,6 +1113,13 @@ describe ServiceTemplate do
       end
     end
   end
+
+  context "#supports_order?" do
+    it "returns the expected boolean value" do
+      st = FactoryBot.create(:service_template)
+      expect(st.supports_order?).to eql(true)
+    end
+  end
 end
 
 def add_and_save_service(p, c)
