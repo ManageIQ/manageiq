@@ -18,6 +18,7 @@ class InfraConversionJob < Job
   #                                                    :finish             v
   #                                                                    finished
   #
+  # TODO: Update this diagram after we've settled on the updated state transitions.
 
   alias_method :initializing, :dispatch_start
   alias_method :finish,       :process_finished
@@ -29,16 +30,18 @@ class InfraConversionJob < Job
     self.state ||= 'initialize'
 
     {
-      :initializing                => {'initialize'       => 'waiting_to_start'},
-      :start                       => {'waiting_to_start' => 'started'},
-      :poll_automate_state_machine => {
-        'started'             => 'running_in_automate',
+      :initializing                   => { 'initialize'         => 'waiting_to_start' },
+      :start                          => { 'waiting_to_start'   => 'started' },
+      :remove_snapshots               => { 'started'            => 'removing_snapshots' },
+      :poll_remove_snapshots_complete => { 'removing_snapshots' => 'removing_snapshots' },
+      :poll_automate_state_machine    => {
+        'removing_snapshots'  => 'running_in_automate',
         'running_in_automate' => 'running_in_automate'
       },
-      :finish                      => {'*'                => 'finished'},
-      :abort_job                   => {'*'                => 'aborting'},
-      :cancel                      => {'*'                => 'canceling'},
-      :error                       => {'*'                => '*'}
+      :finish                         => {'*'                   => 'finished'},
+      :abort_job                      => {'*'                   => 'aborting'},
+      :cancel                         => {'*'                   => 'canceling'},
+      :error                          => {'*'                   => '*'}
     }
   end
 
@@ -50,10 +53,19 @@ class InfraConversionJob < Job
   #   }
   def state_settings
     @state_settings ||= {
+      :removing_snapshots  => {
+        :description => 'Remove snapshosts',
+        :weight      => 5,
+        :max_retries => 4.hours / state_retry_interval
+      },
       :running_in_automate => {
-        :max_retries => 8640 # 36 hours with a retry interval of 15 seconds
+        :max_retries => 36.hours / state_retry_interval
       }
     }
+  end
+
+  def state_retry_interval
+    @state_retry_interval ||= Settings.transformation.job.retry_interval || 15.seconds
   end
 
   def migration_task
@@ -116,7 +128,6 @@ class InfraConversionJob < Job
   end
 
   def polling_timeout
-    options[:retry_interval] ||= Settings.transformation.job.retry_interval # in seconds
     return false if state_settings[state.to_sym][:max_retries].nil?
 
     retries = "retries_#{state}".to_sym
@@ -147,8 +158,45 @@ class InfraConversionJob < Job
   # Temporarily, it also hands over to Automate.
   def start
     migration_task.update!(:state => 'migrate')
-    handover_to_automate
+    queue_signal(:remove_snapshots)
+  end
+
+  def remove_snapshots
+    update_migration_task_progress(:on_entry)
+    if migration_task.source.supports_remove_all_snapshots?
+      context[:async_task_id_removing_snapshots] = migration_task.source.remove_all_snapshots_queue(migration_task.userid.to_i)
+      update_migration_task_progress(:on_exit)
+      handover_to_automate
+      return queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
+    end
+
+    update_migration_task_progress(:on_exit)
     queue_signal(:poll_automate_state_machine)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
+  def poll_remove_snapshots_complete
+    update_migration_task_progress(:on_entry)
+    raise 'Collapsing snapshots timed out' if polling_timeout
+
+    async_task = MiqTask.find(context[:async_task_id_removing_snapshots])
+
+    if async_task.state == MiqTask::STATE_FINISHED
+      if async_task.status == MiqTask::STATUS_OK
+        update_migration_task_progress(:on_exit)
+        handover_to_automate
+        return queue_signal(:poll_automate_state_machine)
+      end
+      raise async_task.message
+    end
+
+    update_migration_task_progress(:on_retry)
+    queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
   end
 
   def poll_automate_state_machine
@@ -161,7 +209,7 @@ class InfraConversionJob < Job
       self.status = migration_task.status
       queue_signal(:finish)
     else
-      queue_signal(:poll_automate_state_machine, :deliver_on => Time.now.utc + options[:retry_interval])
+      queue_signal(:poll_automate_state_machine, :deliver_on => Time.now.utc + state_retry_interval)
     end
   end
 end
