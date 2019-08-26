@@ -299,6 +299,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
+      it_behaves_like 'doesn\'t allow collapse_snapshots signal'
     end
 
     context 'started' do
@@ -350,7 +351,7 @@ RSpec.describe InfraConversionJob, :v2v do
   context 'transition methods' do
     context '#start' do
       it 'to poll_automate_state_machine when preflight_check passes' do
-        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+        expect(job).to receive(:queue_signal).with(:collapse_snapshots)
         job.signal(:start)
         expect(task.reload.state).to eq('migrate')
       end

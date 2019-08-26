@@ -160,7 +160,7 @@ class InfraConversionJob < Job
   # Temporarily, it also hands over to Automate.
   def start
     migration_task.update!(:state => 'migrate')
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:collapse_snapshots)
   end
 
   def collapse_snapshots
