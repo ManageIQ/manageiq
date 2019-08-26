@@ -30,18 +30,18 @@ class InfraConversionJob < Job
     self.state ||= 'initialize'
 
     {
-      :initializing                     => { 'initialize'       => 'waiting_to_start' },
-      :start                            => { 'waiting_to_start' => 'started' },
-      :remove_snapshots                 => { 'started'          => 'removing_snapshots' },
-      :poll_remove_snapshots_complete   => { 'removing_snapshots' => 'removing_snapshots' },
-      :poll_automate_state_machine      => {
+      :initializing                   => { 'initialize'         => 'waiting_to_start' },
+      :start                          => { 'waiting_to_start'   => 'started' },
+      :remove_snapshots               => { 'started'            => 'removing_snapshots' },
+      :poll_remove_snapshots_complete => { 'removing_snapshots' => 'removing_snapshots' },
+      :poll_automate_state_machine    => {
         'removing_snapshots'  => 'running_in_automate',
         'running_in_automate' => 'running_in_automate'
       },
-      :finish                           => {'*'                => 'finished'},
-      :abort_job                        => {'*'                => 'aborting'},
-      :cancel                           => {'*'                => 'canceling'},
-      :error                            => {'*'                => '*'}
+      :finish                         => {'*'                   => 'finished'},
+      :abort_job                      => {'*'                   => 'aborting'},
+      :cancel                         => {'*'                   => 'canceling'},
+      :error                          => {'*'                   => '*'}
     }
   end
 
@@ -164,10 +164,10 @@ class InfraConversionJob < Job
   def remove_snapshots
     update_migration_task_progress(:on_entry)
     if migration_task.source.supports_remove_all_snapshots?
-        context[:async_task_id_removing_snapshots] = migration_task.source.remove_all_snapshots_queue(migration_task.userid.to_i)
-        update_migration_task_progress(:on_exit)
-        handover_to_automate
-        return queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
+      context[:async_task_id_removing_snapshots] = migration_task.source.remove_all_snapshots_queue(migration_task.userid.to_i)
+      update_migration_task_progress(:on_exit)
+      handover_to_automate
+      return queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
     end
 
     update_migration_task_progress(:on_exit)
