@@ -384,7 +384,7 @@ RSpec.describe InfraConversionJob, :v2v do
             job.signal(:remove_snapshots)
             task = MiqTask.find(job.context[:async_task_id_removing_snapshots])
             expect(task).to have_attributes(
-              :name  => "Removing all snapshots for #{vm_vmware.name}",
+              :name   => "Removing all snapshots for #{vm_vmware.name}",
               :state  => MiqTask::STATE_QUEUED,
               :status => MiqTask::STATUS_OK,
               :userid => user.id.to_s

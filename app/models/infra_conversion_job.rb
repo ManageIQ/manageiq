@@ -53,7 +53,7 @@ class InfraConversionJob < Job
   #   }
   def state_settings
     @state_settings ||= {
-      :removing_snapshots => {
+      :removing_snapshots  => {
         :description => 'Remove snapshosts',
         :weight      => 5,
         :max_retries => 4.hours / state_retry_interval
