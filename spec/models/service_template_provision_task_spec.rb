@@ -268,17 +268,15 @@ describe ServiceTemplateProvisionTask do
 
       it 'set service lifecycle_state to provisioned' do
         expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_provisioned)
-        @task_0.destination = @service
-        @request.miq_request_tasks.except(@task_0).each { |t| t.update(:state => "finished") }
-        @task_0.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
+        @task_3.update(:destination => @service, :source_type => "ServiceTemplate", :state => "finished", :status => "Ok")
+        @task_3.task_finished
         expect(@service.provisioned?).to be true
       end
 
       it 'set service lifecycle_state to error_provisioned' do
         expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_provisioned)
-        @task_0.destination = @service
-        @request.miq_request_tasks.except(@task_0).each { |t| t.update(:state => "finished") }
-        @task_0.update_and_notify_parent(:state => "finished", :status => "Error", :message => "Test Message")
+        @task_3.update(:destination => @service, :source_type => "ServiceTemplate", :state => "finished", :status => "Error")
+        @task_3.task_finished
         expect(@service.provision_failed?).to be true
       end
     end
