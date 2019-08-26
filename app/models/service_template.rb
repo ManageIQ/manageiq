@@ -1,4 +1,6 @@
 class ServiceTemplate < ApplicationRecord
+  include SupportsFeatureMixin
+
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
 
   GENERIC_ITEM_SUBTYPES = {
@@ -83,6 +85,8 @@ class ServiceTemplate < ApplicationRecord
   scope :with_existent_service_template_catalog_id, ->         { where.not(:service_template_catalog_id => nil) }
   scope :displayed,                                 ->         { where(:display => true) }
   scope :public_service_templates,                  ->         { where(:internal => [false, nil]) }
+
+  supports :order
 
   def self.with_tenant(tenant_id)
     tenant = Tenant.find(tenant_id)
