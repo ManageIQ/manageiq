@@ -32,11 +32,11 @@ class InfraConversionJob < Job
     {
       :initializing                     => { 'initialize'       => 'waiting_to_start' },
       :start                            => { 'waiting_to_start' => 'started' },
-      :collapse_snapshots               => { 'started'          => 'collapsing_snapshots' },
-      :poll_collapse_snapshots_complete => { 'collapsing_snapshots' => 'collapsing_snapshots' },
+      :remove_snapshots                 => { 'started'          => 'removing_snapshots' },
+      :poll_remove_snapshots_complete   => { 'removing_snapshots' => 'removing_snapshots' },
       :poll_automate_state_machine      => {
-        'collapsing_snapshots' => 'running_in_automate',
-        'running_in_automate'  => 'running_in_automate'
+        'removing_snapshots'  => 'running_in_automate',
+        'running_in_automate' => 'running_in_automate'
       },
       :finish                           => {'*'                => 'finished'},
       :abort_job                        => {'*'                => 'aborting'},
@@ -53,8 +53,8 @@ class InfraConversionJob < Job
   #   }
   def state_settings
     @state_settings ||= {
-      :collapsing_snapshots => {
-        :description => 'Collapse snapshosts',
+      :removing_snapshots => {
+        :description => 'Remove snapshosts',
         :weight      => 5,
         :max_retries => 4.hours / state_retry_interval
       },
@@ -158,16 +158,16 @@ class InfraConversionJob < Job
   # Temporarily, it also hands over to Automate.
   def start
     migration_task.update!(:state => 'migrate')
-    queue_signal(:collapse_snapshots)
+    queue_signal(:remove_snapshots)
   end
 
-  def collapse_snapshots
+  def remove_snapshots
     update_migration_task_progress(:on_entry)
     if migration_task.source.supports_remove_all_snapshots?
-        context[:async_task_id_collapsing_snapshots] = migration_task.source.remove_all_snapshots_queue(migration_task.userid.to_i)
+        context[:async_task_id_removing_snapshots] = migration_task.source.remove_all_snapshots_queue(migration_task.userid.to_i)
         update_migration_task_progress(:on_exit)
         handover_to_automate
-        return queue_signal(:poll_collapse_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
+        return queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
     end
 
     update_migration_task_progress(:on_exit)
@@ -177,11 +177,11 @@ class InfraConversionJob < Job
     abort_conversion(error.message, 'error')
   end
 
-  def poll_collapse_snapshots_complete
+  def poll_remove_snapshots_complete
     update_migration_task_progress(:on_entry)
     raise 'Collapsing snapshots timed out' if polling_timeout
 
-    async_task = MiqTask.find(context[:async_task_id_collapsing_snapshots])
+    async_task = MiqTask.find(context[:async_task_id_removing_snapshots])
 
     if async_task.state == MiqTask::STATE_FINISHED
       if async_task.status == MiqTask::STATUS_OK
@@ -193,7 +193,7 @@ class InfraConversionJob < Job
     end
 
     update_migration_task_progress(:on_retry)
-    queue_signal(:poll_collapse_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
+    queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')

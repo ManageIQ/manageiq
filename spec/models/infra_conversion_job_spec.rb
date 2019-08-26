@@ -270,7 +270,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w[start collapse_snapshots poll_collapse_snapshots_complete poll_automate_state_machine finish abort_job cancel error].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -279,7 +279,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w[start collapse_snapshots poll_collapse_snapshots_complete poll_automate_state_machine].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -299,7 +299,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
-      it_behaves_like 'doesn\'t allow collapse_snapshots signal'
+      it_behaves_like 'doesn\'t allow remove_snapshots signal'
     end
 
     context 'started' do
@@ -307,23 +307,23 @@ RSpec.describe InfraConversionJob, :v2v do
         job.state = 'started'
       end
 
-      it_behaves_like 'allows collapse_snapshots signal'
+      it_behaves_like 'allows remove_snapshots signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
-      it_behaves_like 'doesn\'t allow poll_collapse_snapshots_complete signal'
+      it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
-    context 'collapsing_snapshots' do
+    context 'removing_snapshots' do
       before do
-        job.state = 'collapsing_snapshots'
+        job.state = 'removing_snapshots'
       end
 
-      it_behaves_like 'allows poll_collapse_snapshots_complete signal'
+      it_behaves_like 'allows poll_remove_snapshots_complete signal'
       it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
@@ -331,7 +331,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
-      it_behaves_like 'doesn\'t allow collapse_snapshots signal'
+      it_behaves_like 'doesn\'t allow remove_snapshots signal'
     end
 
     context 'running_in_automate' do
@@ -346,21 +346,21 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
-      it_behaves_like 'doesn\'t allow collapse_snapshots signal'
-      it_behaves_like 'doesn\'t allow poll_collapse_snapshots_complete signal'
+      it_behaves_like 'doesn\'t allow remove_snapshots signal'
+      it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
     end
   end
 
   context 'transition methods' do
     context '#start' do
       it 'to poll_automate_state_machine when preflight_check passes' do
-        expect(job).to receive(:queue_signal).with(:collapse_snapshots)
+        expect(job).to receive(:queue_signal).with(:remove_snapshots)
         job.signal(:start)
         expect(task.reload.state).to eq('migrate')
       end
     end
 
-    context '#collapse_snapshots' do
+    context '#remove_snapshots' do
       let(:async_task) { FactoryBot.create(:miq_task, :userid => user.id) }
       let(:snapshots) { FactoryBot.create_list(:snapshot, 2, :vm_or_template => vm_vmware) }
 
@@ -373,7 +373,7 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
         expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
-        job.signal(:collapse_snapshots)
+        job.signal(:remove_snapshots)
       end
 
       it 'queues an async task if VM supports remove_all_snapshots' do
@@ -382,28 +382,28 @@ RSpec.describe InfraConversionJob, :v2v do
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-          expect(job).to receive(:queue_signal).with(:poll_collapse_snapshots_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
-          job.signal(:collapse_snapshots)
-          expect(job.context[:async_task_id_collapsing_snapshots]).to eq(async_task.id)
+          expect(job).to receive(:queue_signal).with(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
+          job.signal(:remove_snapshots)
+          expect(job.context[:async_task_id_removing_snapshots]).to eq(async_task.id)
         end
       end
     end
 
-    context '#poll_collapse_snapshots_complete' do
+    context '#poll_remove_snapshots_complete' do
       let(:async_task) { FactoryBot.create(:miq_task, :userid => user.id) }
 
       before do
-        job.state = 'collapsing_snapshots'
-        job.context[:async_task_id_collapsing_snapshots] = async_task.id
+        job.state = 'removing_snapshots'
+        job.context[:async_task_id_removing_snapshots] = async_task.id
         allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
       end
 
-      it 'abort_conversion when collapse_snapshots times out' do
-        job.context[:retries_collapsing_snapshots] = 960
+      it 'abort_conversion when remove_snapshots times out' do
+        job.context[:retries_removing_snapshots] = 960
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
         expect(job).to receive(:abort_conversion).with('Collapsing snapshots timed out', 'error')
-        job.signal(:poll_collapse_snapshots_complete)
+        job.signal(:poll_remove_snapshots_complete)
       end
 
       it 'retries if async task is not finished' do
@@ -412,8 +412,8 @@ RSpec.describe InfraConversionJob, :v2v do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(MiqTask).to receive(:find).with(async_task.id)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
-          expect(job).to receive(:queue_signal).with(:poll_collapse_snapshots_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
-          job.signal(:poll_collapse_snapshots_complete)
+          expect(job).to receive(:queue_signal).with(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
+          job.signal(:poll_remove_snapshots_complete)
         end
       end
 
@@ -423,7 +423,7 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(MiqTask).to receive(:find).with(async_task.id)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
         expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
-        job.signal(:poll_collapse_snapshots_complete)
+        job.signal(:poll_remove_snapshots_complete)
         expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
 
@@ -433,7 +433,7 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(MiqTask).to receive(:find).with(async_task.id)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
         expect(job).to receive(:abort_conversion).with('Fake error message', 'error')
-        job.signal(:poll_collapse_snapshots_complete)
+        job.signal(:poll_remove_snapshots_complete)
       end
     end
 
