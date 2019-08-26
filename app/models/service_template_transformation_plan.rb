@@ -1,6 +1,12 @@
 class ServiceTemplateTransformationPlan < ServiceTemplate
   include_concern 'ValidateConfigInfo'
   virtual_has_one :transformation_mapping
+
+  supports :order do
+    unmigrated_vms = vm_resources.reject { |res| res.resource.is_tagged_with?('transformation_status/migrated', :ns => '/managed') }
+    unsupported_reason_add(:order, 'All VMs of the migration plan have already been successfully migrated') if unmigrated_vms.blank?
+  end
+
   def request_class
     ServiceTemplateTransformationPlanRequest
   end
@@ -22,13 +28,6 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   def transformation_mapping_resource
     service_resources.where(:resource_type => 'TransformationMapping')
   end
-
-  def validate_order(with_errors = false)
-    errors = []
-    errors << 'All VMs of the migration plan have already been successfully migrated' if vm_resources.reject { |res| res.resource.is_tagged_with?('transformation_status/migrated', :ns => '/managed') }.blank?
-    with_errors ? errors : errors.blank?
-  end
-  alias orderable? validate_order
 
   def self.default_provisioning_entry_point(_service_type)
     '/Transformation/StateMachines/VMTransformation/Transformation'

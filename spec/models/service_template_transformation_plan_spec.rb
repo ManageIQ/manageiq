@@ -107,15 +107,16 @@ RSpec.describe ServiceTemplateTransformationPlan, :v2v do
     let(:service_template) { described_class.create_catalog_item(catalog_item_options) }
 
     it 'allows a plan to be ordered if all VMs have not been migrated' do
-      expect(service_template.validate_order(true)).to eq([]) # with errors array
-      expect(service_template.orderable?).to be_truthy # alias with boolean
+      expect(service_template.validate_order).to eql(true)
+      expect(service_template.orderable?).to eql(true) # alias
     end
 
     it 'denies a plan from bring ordered if all VMs have been migrated' do
       vm1.tag_add('transformation_status/migrated', :ns => '/managed')
       vm2.tag_add('transformation_status/migrated', :ns => '/managed')
-      expect(service_template.validate_order(true)).to eq(['All VMs of the migration plan have already been successfully migrated']) # with errors array
-      expect(service_template.orderable?).to be_falsey # alias with boolean
+      expect(service_template.validate_order).to eql(false)
+      expect(service_template.orderable?).to eql(false) # alias
+      expect(service_template.unsupported_reason(:order)).to eq('All VMs of the migration plan have already been successfully migrated')
     end
   end
 

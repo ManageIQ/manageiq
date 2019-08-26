@@ -1116,9 +1116,19 @@ describe ServiceTemplate do
   end
 
   context "#supports_order?" do
-    it "returns the expected boolean value" do
-      st = FactoryBot.create(:service_template)
-      expect(st.supports_order?).to eql(true)
+    context 'when service_template cannot be displayed' do
+      it "returns the expected boolean value" do
+        st = FactoryBot.create(:service_template, :service_template_catalog => FactoryBot.create(:service_template_catalog), :display => false)
+        expect(st.supports_order?).to eql(false)
+        expect(st.unsupported_reason(:order)).to eq('Service template is not configured to be displayed')
+      end
+    end
+
+    context 'when service_template can be displayed' do
+      it "returns the expected boolean value" do
+        st = FactoryBot.create(:service_template, :service_template_catalog => FactoryBot.create(:service_template_catalog), :display => true)
+        expect(st.supports_order?).to eql(true)
+      end
     end
   end
 end

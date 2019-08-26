@@ -86,7 +86,10 @@ class ServiceTemplate < ApplicationRecord
   scope :displayed,                                 ->         { where(:display => true) }
   scope :public_service_templates,                  ->         { where(:internal => [false, nil]) }
 
-  supports :order
+  supports :order do
+    unsupported_reason_add(:order, 'Service template does not belong to a service catalog') unless service_template_catalog
+    unsupported_reason_add(:order, 'Service template is not configured to be displayed') unless display
+  end
 
   def self.with_tenant(tenant_id)
     tenant = Tenant.find(tenant_id)
@@ -352,11 +355,8 @@ class ServiceTemplate < ApplicationRecord
     end.try(:resource).try(:validate_template) || {:valid => true, :message => nil}
   end
 
-  def validate_order(with_errors = false)
-    errors = []
-    errors << 'Service template does not belong to a service catalog' unless service_template_catalog
-    errors << 'Service template is not configured to be displayed' unless display
-    with_errors ? errors : errors.blank?
+  def validate_order
+    supports_order?
   end
   alias orderable? validate_order
 
@@ -430,9 +430,9 @@ class ServiceTemplate < ApplicationRecord
       require 'time'
       time = Time.parse(schedule_time).utc
 
-      errors = validate_order(true)
-      errors += workflow.validate_dialog
-      return {:errors => errors} unless errors.blank?
+      errors = workflow.validate_dialog
+      errors << unsupported_reason(:order)
+      return {:errors => errors} unless errors.compact.blank?
 
       schedule = MiqSchedule.create!(
         :name         => "Order #{self.class.name} #{id} at #{time}",
