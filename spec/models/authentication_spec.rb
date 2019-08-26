@@ -1,4 +1,17 @@
 describe Authentication do
+  describe ".set_ownership" do
+    let!(:authentication) { FactoryBot.create(:authentication) }
+    let(:tenant) { FactoryBot.create(:tenant) }
+    let!(:group) { FactoryBot.create(:miq_group, :tenant => tenant) }
+
+    it "sets tenant from group" do
+      expect(authentication.tenant).to be_nil
+      authentication.class.set_ownership([authentication.id], :group => group)
+
+      expect(authentication.reload.tenant.id).to eq(tenant.id)
+    end
+  end
+
   describe ".encrypted_columns" do
     it "returns the encrypted columns" do
       expected = %w(password password_encrypted auth_key auth_key_encrypted service_account service_account_encrypted)
