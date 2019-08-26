@@ -400,7 +400,6 @@ RSpec.describe InfraConversionJob, :v2v do
       before do
         job.state = 'removing_snapshots'
         job.context[:async_task_id_removing_snapshots] = async_task.id
-        allow(MiqTask).to receive(:find).with(async_task.id).and_return(async_task)
       end
 
       it 'abort_conversion when remove_snapshots times out' do
@@ -415,7 +414,6 @@ RSpec.describe InfraConversionJob, :v2v do
         async_task.update!(:state => MiqTask::STATE_ACTIVE)
         Timecop.freeze(2019, 2, 6) do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(MiqTask).to receive(:find).with(async_task.id)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
           expect(job).to receive(:queue_signal).with(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
           job.signal(:poll_remove_snapshots_complete)
@@ -425,7 +423,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it 'exits if async task is finished and its status is Ok' do
         async_task.update!(:state => MiqTask::STATE_FINISHED, :status => MiqTask::STATUS_OK)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-        expect(MiqTask).to receive(:find).with(async_task.id)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
         expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
         job.signal(:poll_remove_snapshots_complete)
@@ -435,7 +432,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it 'fails if async task is finished and its status is Error' do
         async_task.update!(:state => MiqTask::STATE_FINISHED, :status => MiqTask::STATUS_ERROR, :message => 'Fake error message')
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-        expect(MiqTask).to receive(:find).with(async_task.id)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
         expect(job).to receive(:abort_conversion).with('Fake error message', 'error')
         job.signal(:poll_remove_snapshots_complete)
