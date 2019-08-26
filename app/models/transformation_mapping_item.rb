@@ -36,7 +36,7 @@ class TransformationMappingItem < ApplicationRecord
 
     unless src_cluster_storages.include?(source_storage)
       errors.add(:source, "Source cluster storages must include source storage: #{source_storage}")
-      cleanup(tm)
+      tm.destroy
     end
   end
 
@@ -54,14 +54,7 @@ class TransformationMappingItem < ApplicationRecord
 
     unless dst_cluster_storages.include?(destination_storage)
       errors.add(:destination, "Destination cluster storages must include destination storage: #{destination_storage}")
-      cleanup(tm)
+      tm.destroy
     end
-  end
-
-  # cleanup if transformation mapping or any of its items are invalid
-  def cleanup (tm)
-    tmis = TransformationMappingItem.where(:tranformation_mapping_id => tm.id)
-    tm.delete
-    tmis.collect { |item| item.delete }
   end
 end
