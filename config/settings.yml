@@ -1095,6 +1095,7 @@
     :network_limit_per_host: unlimited
 :ui:
   :mark_translated_strings: false
+  :display_ops_database: false
   :url:
 :vim_performance_states:
   :history:
