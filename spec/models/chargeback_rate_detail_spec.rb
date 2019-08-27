@@ -275,10 +275,10 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     cbc = FactoryBot.create(:chargeback_rate_detail_currency, :code => "EUR")
 
     cbd = FactoryBot.build(:chargeback_rate_detail_fixed_compute_cost, :detail_currency => cbc)
-    expect(cbd.show_rates).to eq("EUR / Day")
+    expect(cbd.show_rates).to eq("€ [Euro] / Day")
 
     cbd = FactoryBot.build(:chargeback_rate_detail_memory_allocated, :detail_currency => cbc)
-    expect(cbd.show_rates).to eq("EUR / Day / MB")
+    expect(cbd.show_rates).to eq("€ [Euro] / Day / MB")
   end
 
   context "tier set correctness" do

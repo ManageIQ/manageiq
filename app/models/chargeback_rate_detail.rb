@@ -191,7 +191,7 @@ class ChargebackRateDetail < ApplicationRecord
   # New method created in order to show the rates in a easier to understand way
   def show_rates
     hr = ChargebackRateDetail::PER_TIME_MAP[per_time.to_sym]
-    rate_display = "#{detail_currency.code} / #{hr}"
+    rate_display = "#{detail_currency.symbol} [#{detail_currency.full_name}] / #{hr}"
     rate_display_unit = "#{rate_display} / #{per_unit_display}"
     per_unit.nil? ? rate_display : rate_display_unit
   end
