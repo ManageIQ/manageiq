@@ -30,30 +30,24 @@ class InfraConversionJob < Job
     self.state ||= 'initialize'
 
     {
-      :initializing                   => { 'initialize'         => 'waiting_to_start' },
-      :start                          => { 'waiting_to_start'   => 'started' },
-      :remove_snapshots               => { 'started'            => 'removing_snapshots' },
-      :poll_remove_snapshots_complete => { 'removing_snapshots' => 'removing_snapshots' },
-      :poll_automate_state_machine    => {
-        'removing_snapshots'  => 'running_in_automate',
-        'running_in_automate' => 'running_in_automate'
-      },
-      :wait_for_ip_address            => {
+      :initializing                         => { 'initialize'         => 'waiting_to_start' },
+      :start                                => { 'waiting_to_start'   => 'started' },
+      :remove_snapshots                     => { 'started'            => 'removing_snapshots' },
+      :poll_remove_snapshots_complete       => { 'removing_snapshots' => 'removing_snapshots' },
+      :wait_for_ip_address                  => {
         'removing_snapshots'     => 'waiting_for_ip_address',
         'waiting_for_ip_address' => 'waiting_for_ip_address'
       },
-      :run_migration_playbook         => {
-        'waiting_for_ip_address'     => 'running_migration_playbook',
-        'running_migration_playbook' => 'running_migration_playbook'
-      },
-      :poll_automate_state_machine    => {
+      :run_migration_playbook               => { 'waiting_for_ip_address' => 'running_migration_playbook' },
+      :poll_run_migration_playbook_complete => { 'running_migration_playbook' => 'running_migration_playbook' },
+      :poll_automate_state_machine          => {
         'running_migration_playbook' => 'running_in_automate',
         'running_in_automate'        => 'running_in_automate'
       },
-      :finish                         => {'*'                => 'finished'},
-      :abort_job                      => {'*'                => 'aborting'},
-      :cancel                         => {'*'                => 'canceling'},
-      :error                          => {'*'                => '*'}
+      :finish                               => {'*'                => 'finished'},
+      :abort_job                            => {'*'                => 'aborting'},
+      :cancel                               => {'*'                => 'canceling'},
+      :error                                => {'*'                => '*'}
     }
   end
 
@@ -70,7 +64,7 @@ class InfraConversionJob < Job
         :weight      => 5,
         :max_retries => 4.hours / state_retry_interval
       },
-      :waiting_for_ip_address => {
+      :waiting_for_ip_address   => {
         :description => 'Waiting for VM IP address',
         :weight      => 1,
         :max_retries => 1.hour / state_retry_interval
@@ -80,7 +74,7 @@ class InfraConversionJob < Job
         :weight      => 10,
         :max_retries => 6.hours / state_retry_interval
       },
-      :running_in_automate   => {
+      :running_in_automate      => {
         :max_retries => 36.hours / state_retry_interval
       }
     }
@@ -105,14 +99,15 @@ class InfraConversionJob < Job
 
   def destination_vm
     return nil if migration_task.options[:destination_vm_id].nil?
+
     @destination_vm ||= Vm.find(migration_task.options[:destination_vm_id]).tap do |vm|
       raise "No Vm in VMDB with id #{migration_task.options[:destination_vm_id]}" if vm.nil?
     end
   end
 
   def target_vm
-    @target_vm = source_vm if migration_phase == 'pre'
-    @target_vm = destination_vm if migration_phase == 'post'
+    return @target_vm = source_vm if migration_phase == 'pre'
+    return @target_vm = destination_vm if migration_phase == 'post'
   end
 
   def on_entry(state_hash, _)
@@ -211,7 +206,7 @@ class InfraConversionJob < Job
   # Temporarily, it also hands over to Automate.
   def start
     migration_task.update!(:state => 'migrate')
-    migration_task.update_options(:migration_phase, 'pre')
+    migration_task.update_options(:migration_phase => 'pre')
     queue_signal(:remove_snapshots)
   end
 
@@ -220,12 +215,11 @@ class InfraConversionJob < Job
     if migration_task.source.supports_remove_all_snapshots?
       context[:async_task_id_removing_snapshots] = migration_task.source.remove_all_snapshots_queue(migration_task.userid.to_i)
       update_migration_task_progress(:on_exit)
-      handover_to_automate
       return queue_signal(:poll_remove_snapshots_complete, :deliver_on => Time.now.utc + state_retry_interval)
     end
 
     update_migration_task_progress(:on_exit)
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:wait_for_ip_address)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
@@ -238,11 +232,10 @@ class InfraConversionJob < Job
     async_task = MiqTask.find(context[:async_task_id_removing_snapshots])
 
     if async_task.state == MiqTask::STATE_FINISHED
-      if async_task.status == MiqTask::STATUS_OK
-        update_migration_task_progress(:on_exit)
-        return queue_signal(:wait_for_ip_address)
-      end
-      raise async_task.message
+      raise async_task.message unless async_task.status == MiqTask::STATUS_OK
+
+      update_migration_task_progress(:on_exit)
+      return queue_signal(:wait_for_ip_address)
     end
 
     update_migration_task_progress(:on_retry)
@@ -274,32 +267,46 @@ class InfraConversionJob < Job
 
   def run_migration_playbook
     update_migration_task_progress(:on_entry)
-    return abort_conversion('Running migration playbook timed out', 'error') if polling_timeout
-
-    if context["#{migration_phase}_migration_playbook_service_request_id"].nil?
-      service_request = order_ansible_playbook_service
-      context["#{migration_phase}_migration_playbook_service_request_id"] = service_request.id
-    else
-      service_request = ServiceTemplateProvisionRequest.find(context["#{migration_phase}_migration_playbook_service_request_id"])
+    service_template = migration_task.send("#{migration_phase}_ansible_playbook_service_template")
+    unless service_template.nil?
+      service_dialog_options = {
+        :credentials => service_template.config_info[:provision][:credential_id],
+        :hosts       => target_vm.ipaddresses.first || service_template.config_info[:provision][:hosts]
+      }
+      context["#{migration_phase}_migration_playbook_service_request_id"] = service_template.provision_request(migration_task.userid.to_i, service_dialog_options).id
+      return queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
     end
 
+    update_migration_task_progress(:on_exit)
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
+  def poll_run_migration_playbook_complete
+    update_migration_task_progress(:on_entry)
+    return abort_conversion('Running migration playbook timed out', 'error') if polling_timeout
+
+    service_request = ServiceTemplateProvisionRequest.find(context["#{migration_phase}_migration_playbook_service_request_id"])
     playbooks_status = task.get_option(:playbooks) || {}
     playbooks_status[migration_phase] = { :job_state => service_request.request_state }
+    migration_task.update_options(:playbooks, playbooks_status)
 
     if service_request.request_state == 'finished'
       playbooks_status[transformation_hook][:job_status] = service_request.status
       playbooks_status[transformation_hook][:job_id] = service_request.miq_request_tasks.first.destination.service_resources.first.resource.id
       migration_task.update_options(:playbooks, playbooks_status)
-      if service_request.status == 'Error' && migration_phase == 'pre'
-        raise "Ansible playbook has failed (hook=#{transformation_hook})"
-      end
+      raise "Ansible playbook has failed (hook=#{transformation_hook})" if service_request.status == 'Error' && migration_phase == 'pre'
+
       update_migration_task_progress(:on_exit)
       handover_to_automate
-      return queue_signal(:poll_automate_state_machine)
+      queue_signal(:poll_automate_state_machine)
     end
 
     update_migration_task_progress(:on_retry)
-    queue_signal(:run_migration_playbook)
+    queue_signal(:poll_run_migration_playbook_complete)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')

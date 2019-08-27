@@ -1,10 +1,14 @@
 RSpec.describe InfraConversionJob, :v2v do
-  let(:user)       { FactoryBot.create(:user) }
-  let(:zone)       { FactoryBot.create(:zone) }
-  let(:ems_vmware) { FactoryBot.create(:ems_vmware, :zone => zone) }
+  let(:user)               { FactoryBot.create(:user) }
+  let(:zone)               { FactoryBot.create(:zone) }
+  let(:ems_vmware)         { FactoryBot.create(:ems_vmware, :zone => zone) }
   let(:ems_cluster_vmware) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
-  let(:host_vmware) { FactoryBot.create(:host, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware) }
-  let(:vm_vmware)  { FactoryBot.create(:vm_vmware, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware, :host => host_vmware, :evm_owner => user) }
+  let(:host_vmware)        { FactoryBot.create(:host, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware) }
+  let(:vm_vmware)          { FactoryBot.create(:vm_vmware, :ext_management_system => ems_vmware, :ems_cluster => ems_cluster_vmware, :host => host_vmware, :evm_owner => user) }
+  let(:ems_redhat)         { FactoryBot.create(:ems_redhat, :zone => zone) }
+  let(:ems_cluster_redhat) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_redhat) }
+  let(:host_redhat)        { FactoryBot.create(:host, :ext_management_system => ems_redhat, :ems_cluster => ems_cluster_redhat) }
+  let(:vm_redhat)  { FactoryBot.create(:vm_vmware, :ext_management_system => ems_redhat, :ems_cluster => ems_cluster_redhat, :host => host_redhat, :evm_owner => user) }
   let(:request)    { FactoryBot.create(:service_template_transformation_plan_request) }
   let(:task)       { FactoryBot.create(:service_template_transformation_plan_task, :miq_request => request, :source => vm_vmware, :userid => user.id) }
   let(:options)    { {:target_class => task.class.name, :target_id => task.id} }
@@ -18,6 +22,24 @@ RSpec.describe InfraConversionJob, :v2v do
     it 'leaves job waiting to start' do
       job = described_class.create_job(options)
       expect(job.state).to eq('waiting_to_start')
+    end
+  end
+
+  context '.target_vm' do
+    it 'returns nil if no phase is set' do
+      expect(job.target_vm).to be_nil
+    end
+
+    it 'returns migration_task.source if migration phase is "pre"' do
+      task.update_options(:migration_phase => 'pre')
+      task.reload
+      expect(job.target_vm.id).to eq(vm_vmware.id)
+    end
+
+    it 'returns vm_redhat if migration phase is "post"' do
+      task.update_options(:migration_phase => 'post', :destination_vm_id => vm_redhat.id)
+      task.reload
+      expect(job.target_vm.id).to eq(vm_redhat.id)
     end
   end
 
@@ -270,7 +292,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_automate_state_machine finish abort_job cancel error].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -279,7 +301,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_automate_state_machine].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -298,8 +320,12 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows cancel signal'
       it_behaves_like 'allows error signal'
 
-      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
       it_behaves_like 'doesn\'t allow remove_snapshots signal'
+      it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
+      it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
+      it_behaves_like 'doesn\'t allow run_migration_playbook signal'
+      it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
     context 'started' do
@@ -315,6 +341,9 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it_behaves_like 'doesn\'t allow start signal'
       it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
+      it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
+      it_behaves_like 'doesn\'t allow run_migration_playbook signal'
+      it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -324,7 +353,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it_behaves_like 'allows poll_remove_snapshots_complete signal'
-      it_behaves_like 'allows poll_automate_state_machine signal'
+      it_behaves_like 'allows wait_for_ip_address signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
       it_behaves_like 'allows cancel signal'
@@ -332,6 +361,9 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it_behaves_like 'doesn\'t allow start signal'
       it_behaves_like 'doesn\'t allow remove_snapshots signal'
+      it_behaves_like 'doesn\'t allow run_migration_playbook signal'
+      it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
     context 'waiting_for_ip_address' do
@@ -347,6 +379,46 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow remove_snapshots signal'
+      it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
+      it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
+    end
+
+    context 'running_migration_playbook' do
+      before do
+        job.state = 'running_migration_playbook'
+      end
+
+      it_behaves_like 'allows poll_run_migration_playbook_complete signal'
+      it_behaves_like 'allows poll_automate_state_machine signal'
+      it_behaves_like 'allows finish signal'
+      it_behaves_like 'allows abort_job signal'
+      it_behaves_like 'allows cancel signal'
+      it_behaves_like 'allows error signal'
+
+      it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow remove_snapshots signal'
+      it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
+      it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
+      it_behaves_like 'doesn\'t allow run_migration_playbook signal'
+    end
+
+    context 'waiting_for_ip_address' do
+      before do
+        job.state = 'waiting_for_ip_address'
+      end
+
+      it_behaves_like 'allows wait_for_ip_address signal'
+      it_behaves_like 'allows run_migration_playbook signal'
+      it_behaves_like 'allows finish signal'
+      it_behaves_like 'allows abort_job signal'
+      it_behaves_like 'allows cancel signal'
+      it_behaves_like 'allows error signal'
+
+      it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow collapse_snapshots signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
     context 'running_migration_playbook' do
@@ -362,6 +434,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'allows error signal'
 
       it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow collapse_snapshots signal'
+      it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
     end
 
     context 'running_in_automate' do
@@ -398,7 +472,7 @@ RSpec.describe InfraConversionJob, :v2v do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
           expect(vm_vmware).not_to receive(:remove_all_snapshots)
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-          expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+          expect(job).to receive(:queue_signal).with(:wait_for_ip_address)
           job.signal(:remove_snapshots)
         end
       end
@@ -454,7 +528,7 @@ RSpec.describe InfraConversionJob, :v2v do
         async_task.update!(:state => MiqTask::STATE_FINISHED, :status => MiqTask::STATUS_OK)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+        expect(job).to receive(:queue_signal).with(:wait_for_ip_address)
         job.signal(:poll_remove_snapshots_complete)
         expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
@@ -473,12 +547,11 @@ RSpec.describe InfraConversionJob, :v2v do
         job.state = 'waiting_for_ip_address'
       end
 
-      it 'abort_conversion when poll_automate_state_machine times out' do
-        job.context[:retries_running_in_automate] = 240
+      it 'abort_conversion when waiting_on_ip_address times out' do
+        job.context[:retries_waiting_on_ipaddress] = 240
         expect(job).to receive(:abort_conversion).with('Waiting for IP address timed out', 'error')
         job.signal(:wait_for_ip_address)
       end
-
     end
 
     context '#run_migration_playbook' do
@@ -486,12 +559,11 @@ RSpec.describe InfraConversionJob, :v2v do
         job.state = 'running_migration_playbook'
       end
 
-      it 'abort_conversion when poll_automate_state_machine times out' do
-        job.context[:retries_running_in_automate] = 1440
+      it 'abort_conversion when running_migration_playbook times out' do
+        job.context[:retries_running_migration_playbook] = 1440
         expect(job).to receive(:abort_conversion).with('Running migration playbook timed out', 'error')
         job.signal(:run_migration_playbook)
       end
-
     end
 
     context '#poll_automate_state_machine' do
@@ -499,7 +571,7 @@ RSpec.describe InfraConversionJob, :v2v do
         job.state = 'running_in_automate'
       end
 
-      it 'abort_conversion when poll_automate_state_machine times out' do
+      it 'abort_conversion when running_in_automate times out' do
         job.context[:retries_running_in_automate] = 8640
         expect(job).to receive(:abort_conversion).with('Polling Automate state machine timed out', 'error')
         job.signal(:poll_automate_state_machine)
