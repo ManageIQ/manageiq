@@ -6,6 +6,8 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     unmigrated_vms = vm_resources.reject { |res| res.resource.is_tagged_with?('transformation_status/migrated', :ns => '/managed') }
     unsupported_reason_add(:order, 'All VMs of the migration plan have already been successfully migrated') if unmigrated_vms.blank?
   end
+  alias orderable?     supports_order?
+  alias validate_order supports_order?
 
   def request_class
     ServiceTemplateTransformationPlanRequest
