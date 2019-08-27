@@ -20,7 +20,6 @@ class ServiceTemplate < ApplicationRecord
     "generic_ansible_playbook"   => N_("Ansible Playbook"),
     "generic_ansible_tower"      => N_("Ansible Tower"),
     "generic_container_template" => N_("OpenShift Template"),
-    "google"                     => N_("Google"),
     "microsoft"                  => N_("SCVMM"),
     "openstack"                  => N_("OpenStack"),
     "redhat"                     => N_("Red Hat Virtualization"),
