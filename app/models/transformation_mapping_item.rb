@@ -5,23 +5,23 @@ class TransformationMappingItem < ApplicationRecord
 
   validates :source_id, :uniqueness => {:scope => [:transformation_mapping_id, :source_type, :destination_type]}
 
-  validate :source_cluster,      :if => -> { source.kind_of?(EmsCluster) }
-  validate :destination_cluster, :if => -> { destination.kind_of?(EmsCluster) || destination.kind_of?(CloudTenant) }
+  validate :validate_source_cluster,      :if => -> { source.kind_of?(EmsCluster) }
+  validate :validate_destination_cluster, :if => -> { destination.kind_of?(EmsCluster) || destination.kind_of?(CloudTenant) }
 
-  after_create :validate_source_datastore,    :if => -> { source.kind_of?(Storage) }
-  after_create :validate_destination_datastore, :if => -> { destination.kind_of?(Storage) || destination.kind_of?(CloudVolume) }
+  validate :validate_source_datastore,      :if => -> { source.kind_of?(Storage) }
+  validate :validate_destination_datastore, :if => -> { destination.kind_of?(Storage) || destination.kind_of?(CloudVolume) }
 
   VALID_SOURCE_CLUSTER_PROVIDERS = %w[vmwarews].freeze
   VALID_DESTINATION_CLUSTER_PROVIDERS = %w[rhevm openstack].freeze
 
-  def source_cluster
+  def validate_source_cluster
     unless VALID_SOURCE_CLUSTER_PROVIDERS.include?(source.ext_management_system.emstype)
       source_types = VALID_SOURCE_CLUSTER_PROVIDERS.join(', ')
       errors.add(:source, "EMS type of source cluster must be in: #{source_types}")
     end
   end
 
-  def destination_cluster
+  def validate_destination_cluster
     unless VALID_DESTINATION_CLUSTER_PROVIDERS.include?(destination.ext_management_system.emstype)
       destination_types = VALID_DESTINATION_CLUSTER_PROVIDERS.join(', ')
       errors.add(:destination, "EMS type of destination cluster or cloud tenant must be in: #{destination_types}")
@@ -36,7 +36,6 @@ class TransformationMappingItem < ApplicationRecord
 
     unless src_cluster_storages.include?(source_storage)
       errors.add(:source, "Source cluster storages must include source storage: #{source_storage}")
-      tm.destroy
     end
   end
 
@@ -54,7 +53,6 @@ class TransformationMappingItem < ApplicationRecord
 
     unless dst_cluster_storages.include?(destination_storage)
       errors.add(:destination, "Destination cluster storages must include destination storage: #{destination_storage}")
-      tm.destroy
     end
   end
 end
