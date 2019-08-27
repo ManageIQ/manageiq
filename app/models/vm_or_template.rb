@@ -120,8 +120,8 @@ class VmOrTemplate < ApplicationRecord
   has_one                   :openscap_result, :as => :resource, :dependent => :destroy
 
   # EMS Events
-  has_many                  :ems_events, ->(vmt) { where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
-                            :class_name => "EmsEvent"
+  has_many                  :ems_events, ->(vmt) { unscope(:where => :vm_or_template_id).where(["vm_or_template_id = ? OR dest_vm_or_template_id = ?", vmt.id, vmt.id]).order(:timestamp) },
+                            :class_name => "EmsEvent", :inverse_of => :vm_or_template
 
   has_many                  :ems_events_src,  :class_name => "EmsEvent"
   has_many                  :ems_events_dest, :class_name => "EmsEvent", :foreign_key => :dest_vm_or_template_id
@@ -1180,6 +1180,7 @@ class VmOrTemplate < ApplicationRecord
     MiqQueue.submit_job(
       :class_name  => name,
       :method_name => 'assign_ems_created_on',
+      :role        => 'ems_operations',
       :args        => [vm_ids],
       :priority    => MiqQueue::MIN_PRIORITY
     )
@@ -1191,9 +1192,9 @@ class VmOrTemplate < ApplicationRecord
 
     # Of the VMs without a VM create time, filter out the ones for which we
     #   already have a VM create event
-    vms_to_update.reject! do |v|
+    vms_to_update = vms_to_update.reject do |v|
       # TODO: Vmware specific (fix with event rework?)
-      event = v.ems_events.detect { |e| e.event_type == 'VmCreatedEvent' }
+      event = v.ems_events.find_by(:event_type => ["VmCreatedEvent", "VmDeployedEvent"])
       v.update_attribute(:ems_created_on, event.timestamp) if event && v.ems_created_on != event.timestamp
       event
     end
