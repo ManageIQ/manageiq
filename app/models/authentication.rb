@@ -33,6 +33,10 @@ class Authentication < ApplicationRecord
 
   has_many :configuration_script_sources
 
+  after_initialize do
+    @auth_changed = false
+  end
+
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
 
