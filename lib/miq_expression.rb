@@ -645,7 +645,9 @@ class MiqExpression
       target = parse_field_or_tag(val)
       value = target.tag_path_with
       col_type = target.try(:column_type) || "string"
-      return target ? "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{value}</value>" : "<value type=#{col_type}>#{value}</value>"
+
+      reference_attribute = target ? "ref=#{target.model.to_s.downcase}, " : " "
+      return "<value #{reference_attribute}type=#{col_type}>#{value}</value>"
     end
     case typ.to_s
     when "string", "text", "boolean", nil
