@@ -915,7 +915,8 @@ describe ServiceTemplate do
   context "#order" do
     let(:user) { FactoryBot.create(:user) }
     let(:resource_action) { FactoryBot.create(:resource_action, :action => "Provision") }
-    let(:service_template) { FactoryBot.create(:service_template, :resource_actions => [resource_action]) }
+    let(:service_template_catalog) { FactoryBot.create(:service_template_catalog) }
+    let(:service_template) { FactoryBot.create(:service_template, :resource_actions => [resource_action], :service_template_catalog => service_template_catalog, :display => true) }
     let(:resource_action_options) { {:target => service_template, :initiator => 'control', :submit_workflow => true} }
     let(:miq_request) { FactoryBot.create(:service_template_provision_request) }
     let!(:resource_action_workflow) { ResourceActionWorkflow.new({}, user, resource_action, resource_action_options) }
@@ -1115,9 +1116,19 @@ describe ServiceTemplate do
   end
 
   context "#supports_order?" do
-    it "returns the expected boolean value" do
-      st = FactoryBot.create(:service_template)
-      expect(st.supports_order?).to eql(true)
+    context 'when service_template cannot be displayed' do
+      it "returns the expected boolean value" do
+        st = FactoryBot.create(:service_template, :service_template_catalog => FactoryBot.create(:service_template_catalog), :display => false)
+        expect(st.supports_order?).to eql(false)
+        expect(st.unsupported_reason(:order)).to eq('Service template is not configured to be displayed')
+      end
+    end
+
+    context 'when service_template can be displayed' do
+      it "returns the expected boolean value" do
+        st = FactoryBot.create(:service_template, :service_template_catalog => FactoryBot.create(:service_template_catalog), :display => true)
+        expect(st.supports_order?).to eql(true)
+      end
     end
   end
 end
