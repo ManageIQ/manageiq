@@ -42,8 +42,10 @@ class InfraConversionJob < Job
       :poll_run_migration_playbook_complete => {'running_migration_playbook' => 'running_migration_playbook'},
       :shutdown_vm                          => {'running_migration_playbook' => 'shutting_down_vm' },
       :poll_shutdown_vm_complete            => {'shutting_down_vm' => 'shutting_down_vm'},
+      :transform_vm                         => {'shutting_down_vm' => 'transforming_vm'},
+      :poll_transform_vm_complete           => {'transforming_vm' => 'transforming_vm'},
       :poll_automate_state_machine          => {
-        'shutting_down_vm'    => 'running_in_automate',
+        'transforming_vm'     => 'running_in_automate',
         'running_in_automate' => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
@@ -80,6 +82,11 @@ class InfraConversionJob < Job
         :description => "Shutting down virtual machine",
         :weight      => 1,
         :max_retries => 15.minutes / state_retry_interval
+      },
+      :transforming_vm            => {
+        :description => "Converting disks",
+        :weight      => 60,
+        :max_retries => 1.day / state_retry_interval
       },
       :running_in_automate        => {
         :max_retries => 36.hours / state_retry_interval
@@ -127,8 +134,8 @@ class InfraConversionJob < Job
     }.compact
   end
 
-  def on_retry(state_hash, state_progress = nil)
-    if state_progress.nil?
+  def on_retry(state_hash, state_progress = {})
+    if state_progress.empty?
       state_hash[:percent] = context["retries_#{state}".to_sym].to_f / state_settings[state.to_sym][:max_retries].to_f * 100.0
     else
       state_hash.merge!(state_progress)
@@ -151,7 +158,7 @@ class InfraConversionJob < Job
     state_hash
   end
 
-  def update_migration_task_progress(state_phase, state_progress = nil)
+  def update_migration_task_progress(state_phase, state_progress = {})
     progress = migration_task.options[:progress] || { :current_state => state, :percent => 0.0, :states => {} }
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
     progress[:states][state.to_sym] = state_hash
@@ -332,7 +339,7 @@ class InfraConversionJob < Job
 
     update_migration_task_progress(:on_exit)
     handover_to_automate
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:transform_vm)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
@@ -344,12 +351,52 @@ class InfraConversionJob < Job
 
     if target_vm.power_state == 'off'
       update_migration_task_progress(:on_exit)
-      handover_to_automate
-      return queue_signal(:poll_automate_state_machine)
+      return queue_signal(:transform_vm)
     end
 
     update_migration_task_progress(:on_retry)
     queue_signal(:poll_shutdown_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
+  def transform_vm
+    update_migration_task_progress(:on_entry)
+    migration_task.run_conversion
+    update_migration_task_progress(:on_exit)
+    queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
+  def poll_transform_vm_complete
+    update_migration_task_progress(:on_entry)
+    return abort_conversion('Converting disks timed out', 'error') if polling_timeout
+
+    migration_task.get_conversion_state
+    case migration_task.options[:virtv2v_status]
+    when 'active'
+      virtv2v_disks = migration_task.options[:virtv2v_disks]
+      converted_disks = virtv2v_disks.reject { |disk| disk[:percent].zero? }
+      if converted_disks.empty?
+        message = 'Disk transformation is initializing.'
+        percent = 1
+      else
+        percent = 0
+        converted_disks.each { |disk| percent += (disk[:percent].to_f * disk[:weight].to_f / 100.0) }
+        message = "Converting disks #{converted_disks.length} / #{virtv2v_disks.length} [#{percent.round(2)}%]."
+      end
+      update_migration_task_progress(:on_retry, :message => message, :percent => percent)
+      queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
+    when 'failed'
+      raise migration_task.options[:virtv2v_message]
+    when 'succeeded'
+      update_migration_task_progress(:on_exit)
+      handover_to_automate
+      queue_signal(:poll_automate_state_machine)
+    end
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
