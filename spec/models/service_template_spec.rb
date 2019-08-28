@@ -357,6 +357,8 @@ describe ServiceTemplate do
     end
 
     describe "#create_service" do
+      let(:sub_svc) { instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user) }
+      let(:parent_svc) { instance_double("service_task", :options => {:dialog => {}}, :service_resources => instance_double('service_resource')) }
       let(:service_task) do
         FactoryBot.create(:service_template_provision_task,
                            :miq_request => service_template_request,
@@ -377,16 +379,43 @@ describe ServiceTemplate do
         expect(parent_service.service_resources.first.resource).to eq(parent_service.children.first)
       end
 
+      context "tagging" do
+        let(:template) { FactoryBot.create(:service_template, :with_provision_resource_action_and_dialog) }
+        let(:dialog) { FactoryBot.create(:dialog_with_tab_and_group_and_field) }
+        let(:cat) { FactoryBot.create(:classification, :description => "Auto Approve - Max CPU", :name => "prov_max_cpu", :single_value => 1) }
+        let(:dialog_tag_control) do
+          FactoryBot.create(:dialog_field_tag_control,
+                            :label   => 'test tag category',
+                            :name    => 'test tag category',
+                            :options => {:category_id          => cat.id,
+                                         :category_name        => 'category',
+                                         :category_description => 'description'})
+        end
+
+        before do
+          expect(parent_svc).to receive(:add_resource!).once
+        end
+
+        it "without tags" do
+          template.create_service(sub_svc, parent_svc)
+          expect(template.services.first.tags).to be_empty
+        end
+
+        it "tags service with dialog field tags" do
+          dialog.dialog_tabs.first.dialog_groups.first.dialog_fields << dialog_tag_control
+          template.dialogs << dialog
+          template.create_service(sub_svc, parent_svc)
+          expect(template.services.first.tags).not_to be_empty
+        end
+      end
+
       it "should add_resource! only if a parent_svc exists" do
-        sub_svc = instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user)
-        parent_svc = instance_double("service_task", :options => {:dialog => {}}, :service_resources => instance_double('service_resource'))
         expect(parent_svc).to receive(:add_resource!).once
 
         @svc_a.create_service(sub_svc, parent_svc)
       end
 
       it "should not call add_resource! if no parent_svc exists" do
-        sub_svc = instance_double("service_task", :options => {:dialog => {}}, :get_user => service_user)
         expect(sub_svc).to receive(:add_resource!).never
 
         @svc_a.create_service(sub_svc)

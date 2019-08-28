@@ -223,6 +223,8 @@ class ServiceTemplate < ApplicationRecord
       svc.service_template = self
       set_ownership(svc, service_task.get_user)
 
+      tag_service(svc)
+
       service_resources.each do |sr|
         nh = sr.attributes.dup
         %w(id created_at updated_at service_template_id).each { |key| nh.delete(key) }
@@ -544,6 +546,12 @@ class ServiceTemplate < ApplicationRecord
       resource_options[:fqname] = resource_action.fqname
       config_info[resource_action.action.downcase.to_sym] = resource_options.symbolize_keys
     end
+  end
+
+  def tag_service(service)
+    tag_controls = dialogs.flat_map { |d| d.dialog_fields.select { |df| df.kind_of?(DialogFieldTagControl) } }
+    categories = Category.find(tag_controls.map(&:category))
+    categories.each { |cat| service.tags << cat.tag }
   end
 
   def generic_custom_buttons
