@@ -54,8 +54,17 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
     update_with_provider_object(self)
   end
 
+  # Bit of a HACK, but provides a similar interface that existed previously
+  # when using AnsibleTower for EmbeddedAnsiblewhen using AnsibleTower for
+  # EmbeddedAnsible.
+  #
+  # We never execute more than one play, but the UI currently expects an array
+  # for it's ServiceHelper::TextualSummary, so this sticks with that interface.
+  #
+  # TODO:  Create a OrchestrationStackResource for this instead on create?
+  JobPlayStruct = Struct.new(:name, :start_time, :finish_time)
   def job_plays
-    []
+    [JobPlayStruct.new(job_template.parent.name, start_time, finish_time)]
   end
 
   # Intend to be called by UI to display stdout. The stdout is stored in MiqTask#task_results or #message if error
