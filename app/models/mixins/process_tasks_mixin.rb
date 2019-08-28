@@ -201,8 +201,13 @@ module ProcessTasksMixin
       return instances, tasks
     end
 
-    # default: validate retirement, can be overridden
+    # default: validate retirement and maintenance zone, can be overridden
     def validate_task(task, instance, options)
+      if instance.try(:ext_management_system)&.zone == Zone.maintenance_zone
+        task.error("#{instance.ext_management_system.name} is paused")
+        return false
+      end
+
       return true unless options[:task] == "retire_now" && instance.retired?
       task.error("#{instance.name} is already retired")
       false

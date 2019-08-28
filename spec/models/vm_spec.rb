@@ -114,7 +114,9 @@ describe Vm do
 
   context "#invoke_tasks_local" do
     before do
+      Zone.seed
       EvmSpecHelper.create_guid_miq_server_zone
+
       @host = FactoryBot.create(:host)
       @vm = FactoryBot.create(:vm_vmware, :host => @host)
     end

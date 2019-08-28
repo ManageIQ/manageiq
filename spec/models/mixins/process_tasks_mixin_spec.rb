@@ -341,4 +341,31 @@ describe ProcessTasksMixin do
       end
     end
   end
+
+  describe '.validate_task' do
+    let(:ext_management_system) { double("ExtManagementSystem") }
+    let(:instance) { double("Target") }
+    let(:task) { double("Task") }
+    before do
+      Zone.seed
+
+      allow(instance).to receive(:ext_management_system).and_return(ext_management_system)
+    end
+
+    it 'validates task when EMS not paused' do
+      allow(ext_management_system).to receive_messages(:name => 'My provider',
+                                                       :zone => Zone.default_zone)
+
+      expect(task).not_to receive(:error).with("#{ext_management_system.name} is paused")
+      test_class.send(:validate_task, task, instance, {})
+    end
+
+    it 'marks task as invalid when EMS paused' do
+      allow(ext_management_system).to receive_messages(:name => 'My provider',
+                                                       :zone => Zone.maintenance_zone)
+
+      expect(task).to receive(:error).with("#{ext_management_system.name} is paused")
+      test_class.send(:validate_task, task, instance, {})
+    end
+  end
 end
