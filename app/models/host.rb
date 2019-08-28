@@ -1276,6 +1276,8 @@ class Host < ApplicationRecord
     _log.info("Queuing scan of #{log_target}")
 
     task = MiqTask.create(:name => "SmartState Analysis for '#{name}' ", :userid => userid)
+    return unless validate_task(task)
+
     timeout = ::Settings.host_scan.queue_timeout.to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
@@ -1398,6 +1400,14 @@ class Host < ApplicationRecord
 
     task.update_status("Finished", "Ok", "Scanning Complete") if task
     _log.info("Scanning #{log_target}...Complete - Timings: #{t.inspect}")
+  end
+
+  def validate_task(task)
+    if ext_management_system&.zone == Zone.maintenance_zone
+      task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_ERROR, "#{ext_management_system.name} is paused")
+      return false
+    end
+    true
   end
 
   def ssh_run_script(script)
