@@ -31,7 +31,7 @@ class TransformationMappingItem < ApplicationRecord
   def validate_source_datastore
     tm                   = transformation_mapping
     tmis                 = tm.transformation_mapping_items.where(:source_type => "EmsCluster")
-    src_cluster_storages = tmis.collect(&:source).collect(&:storages).flatten
+    src_cluster_storages = tmis.collect(&:source).flat_map(&:storages)
     source_storage       = source
 
     unless src_cluster_storages.include?(source_storage)
@@ -45,10 +45,10 @@ class TransformationMappingItem < ApplicationRecord
 
     if destination.kind_of?(Storage) # red hat
       tmis                 = tm.transformation_mapping_items.where(:destination_type=> "EmsCluster")
-      dst_cluster_storages = tmis.collect(&:destination).collect(&:storages).flatten
+      dst_cluster_storages = tmis.collect(&:destination).flat_map(&:storages)
     elsif destination.kind_of?(CloudVolume) # Openstack
       tmis                 = tm.transformation_mapping_items.where(:destination_type => "CloudTenant")
-      dst_cluster_storages = tmis.collect(&:destination).collect(&:cloud_volumes).flatten
+      dst_cluster_storages = tmis.collect(&:destination).flat_map(&:cloud_volumes)
     end
 
     unless dst_cluster_storages.include?(destination_storage)

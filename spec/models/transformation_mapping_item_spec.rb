@@ -68,9 +68,13 @@ RSpec.describe TransformationMappingItem, :v2v do
         let(:ops_mapping) { FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [tmi_ops_cluster]) }
 
         let(:valid_source) { FactoryBot.create(:transformation_mapping_item, :source => src_storage, :destination => cloud_volume_openstack, :transformation_mapping_id => ops_mapping.id) }
+        let(:invalid_source) { FactoryBot.build(:transformation_mapping_item, :source => cloud_volume_openstack, :destination => src_storage, :transformation_mapping_id => ops_mapping.id) }
 
         it "valid source" do
           expect(valid_source.valid?).to be(true)
+        end
+        it "invalid source" do
+          expect(invalid_source.valid?).to be(false)
         end
       end
 
@@ -84,10 +88,13 @@ RSpec.describe TransformationMappingItem, :v2v do
 
         context "source validation" do
           let(:valid_storage) { FactoryBot.create(:transformation_mapping_item, :source => src_storage, :destination => dst_storage, :transformation_mapping_id => rh_mapping.id) }
-          let(:invalid_storage) { FactoryBot.create(:transformation_mapping_item, :source => src_storage, :destination => dst_storage, :transformation_mapping_id => rh_mapping.id) }
+          let(:invalid_storage) { FactoryBot.build(:transformation_mapping_item, :source => dst_storage, :destination => src_storage, :transformation_mapping_id => rh_mapping.id) }
 
           it "validate rhev destination" do
             expect(valid_storage.valid?).to be(true)
+          end
+          it "invalidate badrhev destination" do
+            expect(invalid_storage.valid?).to be(false)
           end
         end
       end
