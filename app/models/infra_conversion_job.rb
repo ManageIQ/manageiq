@@ -30,19 +30,21 @@ class InfraConversionJob < Job
     self.state ||= 'initialize'
 
     {
-      :initializing                         => { 'initialize'         => 'waiting_to_start' },
-      :start                                => { 'waiting_to_start'   => 'started' },
-      :remove_snapshots                     => { 'started'            => 'removing_snapshots' },
-      :poll_remove_snapshots_complete       => { 'removing_snapshots' => 'removing_snapshots' },
+      :initializing                         => {'initialize'         => 'waiting_to_start'},
+      :start                                => {'waiting_to_start'   => 'started'},
+      :remove_snapshots                     => {'started'            => 'removing_snapshots'},
+      :poll_remove_snapshots_complete       => {'removing_snapshots' => 'removing_snapshots'},
       :wait_for_ip_address                  => {
         'removing_snapshots'     => 'waiting_for_ip_address',
         'waiting_for_ip_address' => 'waiting_for_ip_address'
       },
-      :run_migration_playbook               => { 'waiting_for_ip_address' => 'running_migration_playbook' },
-      :poll_run_migration_playbook_complete => { 'running_migration_playbook' => 'running_migration_playbook' },
+      :run_migration_playbook               => {'waiting_for_ip_address' => 'running_migration_playbook'},
+      :poll_run_migration_playbook_complete => {'running_migration_playbook' => 'running_migration_playbook'},
+      :shutdown_vm                          => {'running_migration_playbook' => 'shutting_down_vm' },
+      :poll_shutdown_vm_complete            => {'shutting_down_vm' => 'shutting_down_vm'},
       :poll_automate_state_machine          => {
-        'running_migration_playbook' => 'running_in_automate',
-        'running_in_automate'        => 'running_in_automate'
+        'shutting_down_vm'     => 'running_in_automate',
+        'running_in_automate'  => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},
@@ -73,6 +75,11 @@ class InfraConversionJob < Job
         :description => "Running #{migration_phase}-migration playbook",
         :weight      => 10,
         :max_retries => 6.hours / state_retry_interval
+      },
+      :shutting_down_vm           => {
+        :description => "Shutting down virtual machine",
+        :weight      => 1,
+        :max_retries => 15.minutes / state_retry_interval
       },
       :running_in_automate        => {
         :max_retries => 36.hours / state_retry_interval
@@ -227,7 +234,7 @@ class InfraConversionJob < Job
 
   def poll_remove_snapshots_complete
     update_migration_task_progress(:on_entry)
-    raise 'Collapsing snapshots timed out' if polling_timeout
+    raise 'Removing snapshots timed out' if polling_timeout
 
     async_task = MiqTask.find(context[:async_task_id_removing_snapshots])
 
@@ -279,8 +286,7 @@ class InfraConversionJob < Job
     end
 
     update_migration_task_progress(:on_exit)
-    handover_to_automate
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:shutdown_vm)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
@@ -302,12 +308,48 @@ class InfraConversionJob < Job
       raise "Ansible playbook has failed (migration_phase=#{migration_phase})" if service_request.status == 'Error' && migration_phase == 'pre'
 
       update_migration_task_progress(:on_exit)
+      return queue_signal(:shutdown_vm)
+    end
+
+    update_migration_task_progress(:on_retry)
+    queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
+  def shutdown_vm
+    update_migration_task_progress(:on_entry)
+    unless target_vm.power_state == 'off'
+      if target_vm.supports_shutdown_guest?
+        target_vm.shutdown_guest
+      else
+        target_vm.stop
+      end
+      update_migration_task_progress(:on_exit)
+      return queue_signal(:poll_shutdown_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
+    end
+
+    update_migration_task_progress(:on_exit)
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
+  def poll_shutdown_vm_complete
+    update_migration_task_progress(:on_entry)
+    return abort_conversion('Shutting down VM timed out', 'error') if polling_timeout
+
+    if target_vm.power_state == 'off'
+      update_migration_task_progress(:on_exit)
       handover_to_automate
       return queue_signal(:poll_automate_state_machine)
     end
 
     update_migration_task_progress(:on_retry)
-    queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
+    queue_signal(:poll_shutdown_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
