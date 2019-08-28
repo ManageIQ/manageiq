@@ -43,8 +43,8 @@ class InfraConversionJob < Job
       :shutdown_vm                          => {'running_migration_playbook' => 'shutting_down_vm' },
       :poll_shutdown_vm_complete            => {'shutting_down_vm' => 'shutting_down_vm'},
       :poll_automate_state_machine          => {
-        'shutting_down_vm'     => 'running_in_automate',
-        'running_in_automate'  => 'running_in_automate'
+        'shutting_down_vm'    => 'running_in_automate',
+        'running_in_automate' => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},
