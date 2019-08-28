@@ -642,9 +642,12 @@ class MiqExpression
 
   def self.quote(val, typ)
     if Field.is_field?(val)
-      ref, value = value2tag(val)
-      col_type = get_col_type(val) || "string"
-      return ref ? "<value ref=#{ref}, type=#{col_type}>#{value}</value>" : "<value type=#{col_type}>#{value}</value>"
+      target = parse_field_or_tag(val)
+      value = target.tag_path_with
+      col_type = target.try(:column_type) || "string"
+
+      reference_attribute = target ? "ref=#{target.model.to_s.downcase}, " : " "
+      return "<value #{reference_attribute}type=#{col_type}>#{value}</value>"
     end
     case typ.to_s
     when "string", "text", "boolean", nil
