@@ -869,19 +869,17 @@ RSpec.describe InfraConversionJob, :v2v do
         end
 
         it 'returns a message stating conversion has not started' do
-          job.migration_task.update_options(:virtv2v_status => 'active', :virtv2v_disks => virtv2v_disks)
-          job.migration_task.reload
-#          Timecop.freeze(2019, 2, 6) do
-            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry, :message => 'Disk transformation is initializing.', :percent => 1)
-#            expect(job).to receive(:queue_signal).with(:poll_transform_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
+          task.update_options(:virtv2v_status => 'active', :virtv2v_disks => virtv2v_disks)
+          Timecop.freeze(2019, 2, 6) do
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry, :message => 'Disk transformation is initializing.', :percent => 1).and_call_original
+            expect(job).to receive(:queue_signal).with(:poll_transform_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
             job.signal(:poll_transform_vm_complete)
-#            require 'byebug' ; byebug
-            expect(job.migration_task.options[:progress][:states][job.state.to_sym]).to include(
+            expect(task.reload.options[:progress][:states][job.state.to_sym]).to include(
               :message => 'Disk transformation is initializing.',
               :percent => 1
             )
-#          end
+          end
         end
       end
 
@@ -894,13 +892,13 @@ RSpec.describe InfraConversionJob, :v2v do
         end
 
         it "updates message and percentage, and retries if conversion is not finished" do
-          job.migration_task.update_options(:virtv2v_status => 'active', :virtv2v_disks => virtv2v_disks)
+          task.update_options(:virtv2v_status => 'active', :virtv2v_disks => virtv2v_disks)
           Timecop.freeze(2019, 2, 6) do
-            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry, :message => 'Converting disk 2 / 2 [43.75%].', :percent => 43.75)
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
+            expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry, :message => 'Converting disk 2 / 2 [43.75%].', :percent => 43.75).and_call_original
             expect(job).to receive(:queue_signal).with(:poll_transform_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
             job.signal(:poll_transform_vm_complete)
-            expect(job.migration_task.reload.options[:progress]).to have_attributes(
+            expect(task.reload.options[:progress][:states][job.state.to_sym]).to include(
               :message => 'Converting disk 2 / 2 [43.75%].',
               :percent => 43.75
             )
@@ -908,23 +906,19 @@ RSpec.describe InfraConversionJob, :v2v do
         end
 
         it "aborts if conversion failed" do
-          job.migration_task.update_options(:virtv2v_status => 'failed')
-          task.reload
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(job).to receive(:abort_conversion).with('Converting disks timed out', 'error')
+          task.update_options(:virtv2v_status => 'failed', :virtv2v_message => 'virt-v2v failed for some reason')
+          expect(job).to receive(:abort_conversion).with('virt-v2v failed for some reason', 'error').and_call_original
           job.signal(:poll_transform_vm_complete)
         end
 
         it "exits if conversion succeeded" do
-          job.migration_task.update_options(:virtv2v_status => 'succeeded')
-#          task.reload
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
-          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+          task.update_options(:virtv2v_status => 'succeeded')
+          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
+          expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit).and_call_original
           expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
           job.signal(:poll_transform_vm_complete)
-          job.migration_task.reload
-          expect(job.migration_task.options[:progress]).to have_attributes(:percent => 100.0)
-          expect(job.migration_task.options[:workflow_runner]).to eq('automate')
+          expect(task.reload.options[:progress][:states][job.state.to_sym]).to include(:percent => 100.0)
+          expect(task.options[:workflow_runner]).to eq('automate')
         end
       end
     end

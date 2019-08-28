@@ -134,8 +134,8 @@ class InfraConversionJob < Job
     }.compact
   end
 
-  def on_retry(state_hash, state_progress = {})
-    if state_progress.empty?
+  def on_retry(state_hash, state_progress = nil)
+    if state_progress.nil?
       state_hash[:percent] = context["retries_#{state}".to_sym].to_f / state_settings[state.to_sym][:max_retries].to_f * 100.0
     else
       state_hash.merge!(state_progress)
@@ -158,7 +158,7 @@ class InfraConversionJob < Job
     state_hash
   end
 
-  def update_migration_task_progress(state_phase, state_progress = {})
+  def update_migration_task_progress(state_phase, state_progress = nil)
     progress = migration_task.options[:progress] || { :current_state => state, :percent => 0.0, :states => {} }
     state_hash = send(state_phase, progress[:states][state.to_sym], state_progress)
     progress[:states][state.to_sym] = state_hash
@@ -386,7 +386,7 @@ class InfraConversionJob < Job
       else
         percent = 0
         converted_disks.each { |disk| percent += (disk[:percent].to_f * disk[:weight].to_f / 100.0) }
-        message = "Converting disks #{converted_disks.length} / #{virtv2v_disks.length} [#{percent.round(2)}%]."
+        message = "Converting disk #{converted_disks.length} / #{virtv2v_disks.length} [#{percent.round(2)}%]."
       end
       update_migration_task_progress(:on_retry, :message => message, :percent => percent)
       queue_signal(:poll_transform_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
