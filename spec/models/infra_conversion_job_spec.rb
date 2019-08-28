@@ -12,10 +12,10 @@ RSpec.describe InfraConversionJob, :v2v do
   let(:vm_vmware) do
     FactoryBot.create(:vm_vmware,
                       :ext_management_system => ems_vmware,
-                      :ems_cluster => ems_cluster_vmware,
-                      :host => host_vmware,
-                      :hardware => hardware_vmware,
-                      :evm_owner => user)
+                      :ems_cluster           => ems_cluster_vmware,
+                      :host                  => host_vmware,
+                      :hardware              => hardware_vmware,
+                      :evm_owner             => user)
   end
 
   let(:ems_redhat)            { FactoryBot.create(:ems_redhat, :zone => zone) }
@@ -26,18 +26,18 @@ RSpec.describe InfraConversionJob, :v2v do
   let(:embedded_ansible_auth) { FactoryBot.create(:embedded_ansible_credential) }
   let(:embedded_ansible_catalog_item_options) do
     {
-      :name                        => 'Test Migration Playbook',
-      :description                 => 'Migration Playbook for testing purpose',
-      :config_info                 => {
+      :name        => 'Test Migration Playbook',
+      :description => 'Migration Playbook for testing purpose',
+      :config_info => {
         :provision => {
-          :credential_id         => embedded_ansible_auth.id,
-          :hosts                 => 'localhost',
+          :credential_id => embedded_ansible_auth.id,
+          :hosts         => 'localhost',
         },
       }
     }
   end
-  let(:embedded_ansible_service_template)     { ServiceTemplateAnsiblePlaybook.create_catalog_item(embedded_ansible_catalog_item_options, nil) }
-  let(:embedded_ansible_service_request)      { FactoryBot.create(:service_template_provision_request, :source => embedded_ansible_service_template, :approval_state => 'approved', :requester => user) }
+  let(:embedded_ansible_service_template) { ServiceTemplateAnsiblePlaybook.create_catalog_item(embedded_ansible_catalog_item_options, nil) }
+  let(:embedded_ansible_service_request)  { FactoryBot.create(:service_template_provision_request, :source => embedded_ansible_service_template, :approval_state => 'approved', :requester => user) }
 
   let(:transformation_mapping) do
     FactoryBot.create(:transformation_mapping).tap do |tm|
@@ -645,10 +645,9 @@ RSpec.describe InfraConversionJob, :v2v do
         task.update_options(:migration_phase => 'pre')
         job.state = 'running_migration_playbook'
         job.context[:pre_migration_playbook_service_request_id] = embedded_ansible_service_request.id
-        embedded_ansible_job = FactoryBot.create(:embedded_ansible_job)
         embedded_ansible_service = FactoryBot.create(:service_ansible_playbook)
-        embedded_ansible_service_request_task = FactoryBot.create(:service_template_provision_task, :miq_request => embedded_ansible_service_request, :destination => embedded_ansible_service, :userid => user.id)
-        embedded_ansible_service_resource = FactoryBot.create(:service_resource, :resource => embedded_ansible_job, :service => embedded_ansible_service)
+        FactoryBot.create(:service_template_provision_task, :miq_request => embedded_ansible_service_request, :destination => embedded_ansible_service, :userid => user.id)
+        FactoryBot.create(:service_resource, :resource => FactoryBot.create(:embedded_ansible_job), :service => embedded_ansible_service)
       end
 
       it 'abort_conversion when running_migration_playbook times out' do

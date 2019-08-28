@@ -59,12 +59,12 @@ class InfraConversionJob < Job
   #   }
   def state_settings
     @state_settings ||= {
-      :removing_snapshots  => {
+      :removing_snapshots         => {
         :description => 'Remove snapshosts',
         :weight      => 5,
         :max_retries => 4.hours / state_retry_interval
       },
-      :waiting_for_ip_address   => {
+      :waiting_for_ip_address     => {
         :description => 'Waiting for VM IP address',
         :weight      => 1,
         :max_retries => 1.hour / state_retry_interval
@@ -74,7 +74,7 @@ class InfraConversionJob < Job
         :weight      => 10,
         :max_retries => 6.hours / state_retry_interval
       },
-      :running_in_automate      => {
+      :running_in_automate        => {
         :max_retries => 36.hours / state_retry_interval
       }
     }
