@@ -118,6 +118,37 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
       :start_time  => miq_task.started_on,
       :finish_time => raw_status.completed? ? miq_task.updated_on : nil
     )
+    update_plays(raw_job)
+  end
+
+  def update_plays(raw_job)
+    last_play_hash = nil
+    plays = raw_stdout_json.select do |playbook_event|
+      playbook_event["event"] == "playbook_on_play_start"
+    end.collect do |play|
+      {
+        :name              => play["event_data"]["play"],
+        :resource_status   => play["failed"] ? 'failed' : 'successful',
+        :start_time        => play["created"],
+        :ems_ref           => play["uuid"],
+        :resource_category => 'job_play'
+      }.tap do |h|
+        last_play_hash[:finish_time] = play["created"] if last_play_hash
+        last_play_hash = h
+      end
+    end
+    last_play_hash[:finish_time] = finish_time if last_play_hash
+
+    old_resources = resources
+    self.resources = plays.collect do |play_hash|
+      old_resource = old_resources.find { |o| o.ems_ref == play_hash[:ems_ref].to_s }
+      if old_resource
+        old_resource.update_attributes(play_hash)
+        old_resource
+      else
+        OrchestrationStackResource.new(play_hash)
+      end
+    end
   end
 
   def raw_stdout_json
