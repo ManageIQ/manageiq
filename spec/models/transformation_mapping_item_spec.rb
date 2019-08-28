@@ -8,6 +8,9 @@ RSpec.describe TransformationMappingItem, :v2v do
   let(:ems_openstack) { FactoryBot.create(:ems_openstack) }
   let(:openstack_cluster) { FactoryBot.create(:ems_cluster_openstack, :ext_management_system => ems_openstack) }
 
+  # ---------------------------------------------------------------------------
+  # Cluster Validation
+  # ---------------------------------------------------------------------------
   context "source cluster validation" do
     let(:valid_mapping_item) do
       FactoryBot.build(:transformation_mapping_item, :source => vmware_cluster, :destination => openstack_cluster)
@@ -46,6 +49,9 @@ RSpec.describe TransformationMappingItem, :v2v do
     end
   end
 
+  # ---------------------------------------------------------------------------
+  # Datastore Validation
+  # ---------------------------------------------------------------------------
   context "datastore validation" do
     let(:ems_vmware) { FactoryBot.create(:ems_vmware) }
     let(:vmware_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
@@ -95,6 +101,84 @@ RSpec.describe TransformationMappingItem, :v2v do
           end
           it "invalidate badrhev destination" do
             expect(invalid_storage.valid?).to be(false)
+          end
+        end
+      end
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # Network Validation
+  # ---------------------------------------------------------------------------
+  context "Network validation" do
+    let(:ems_vmware) { FactoryBot.create(:ems_vmware) }
+    let(:vmware_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_vmware) }
+
+    let(:ems_redhat) { FactoryBot.create(:ems_redhat) }
+    let(:redhat_cluster) { FactoryBot.create(:ems_cluster, :ext_management_system => ems_redhat) }
+
+    let(:ems_ops) { FactoryBot.create(:ems_openstack) }
+    let(:cloud_tenant) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_ops) }
+
+    # source network
+    context "source vmware network" do
+      let(:src_vmware_host) { FactoryBot.create(:host_vmware, :ems_cluster => vmware_cluster) }
+      let(:src_switch) { FactoryBot.create(:switch, :host => src_vmware_host) }
+      let(:src_lan) { FactoryBot.create(:lan, :switch => src_switch) }
+
+      context "destination openstack" do
+        let(:dst_cloud_network) { FactoryBot.create(:cloud_network, :cloud_tenant => cloud_tenant) }
+
+        let(:tmi_ops_cluster) { FactoryBot.create(:transformation_mapping_item, :source => vmware_cluster, :destination => cloud_tenant) }
+        let(:ops_mapping) { FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [tmi_ops_cluster]) }
+
+        let(:valid_source) { FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => dst_cloud_network, :transformation_mapping_id => ops_mapping.id) }
+        let(:invalid_source) { FactoryBot.build(:transformation_mapping_item, :source => dst_cloud_network, :destination => src_lan, :transformation_mapping_id => ops_mapping.id) }
+
+          before do
+            src_switch.lans << [src_lan]
+            src_vmware_host.switches << [src_switch]
+            vmware_cluster.hosts << [src_vmware_host]
+
+            cloud_tenant.cloud_networks << [dst_cloud_network]
+          end
+
+        it "valid source" do
+          expect(valid_source.valid?).to be(true)
+        end
+        it "invalid source" do
+          expect(invalid_source.valid?).to be(false)
+        end
+      end
+
+      context "destination red hat" do
+        let(:dst_rh_host) { FactoryBot.create(:host_redhat, :ems_cluster => redhat_cluster) }
+        let(:dst_rh_switch) { FactoryBot.create(:switch, :host => dst_rh_host) }
+        let(:dst_rh_lan) { FactoryBot.create(:lan, :switch=> dst_rh_switch) }
+
+        let(:tmi_cluster) { FactoryBot.create(:transformation_mapping_item, :source => vmware_cluster, :destination => redhat_cluster) }
+
+        let(:rh_mapping) { FactoryBot.create(:transformation_mapping, :transformation_mapping_items => [tmi_cluster]) }
+
+        context "source validation" do
+          let(:valid_lan) { FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => dst_rh_lan, :transformation_mapping_id => rh_mapping.id) }
+          let(:invalid_lan) { FactoryBot.build(:transformation_mapping_item, :source => dst_rh_lan, :destination => src_lan, :transformation_mapping_id => rh_mapping.id) }
+
+          before do
+            src_switch.lans << [src_lan]
+            src_vmware_host.switches << [src_switch]
+            vmware_cluster.hosts << [src_vmware_host]
+
+            dst_rh_switch.lans << [dst_rh_lan]
+            dst_rh_host.switches << [dst_rh_switch]
+            redhat_cluster.hosts << [dst_rh_host]
+          end
+
+          it "valid rhev lan" do
+            expect(valid_lan.valid?).to be(true)
+          end
+          it "invalid rhev lan" do
+            expect(invalid_lan.valid?).to be(false)
           end
         end
       end
