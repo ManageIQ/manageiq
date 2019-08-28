@@ -18,6 +18,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
     template_ref = template.new_record? ? nil : template
     new(:name                  => template.name,
         :ext_management_system => template.manager,
+        :verbosity             => template.variables["verbosity"].to_i,
         :job_template          => template_ref).tap do |stack|
       stack.send(:update_with_provider_object, raw_create_stack(template, options))
     end
