@@ -69,7 +69,7 @@ class InfraConversionJob < Job
         :weight      => 1,
         :max_retries => 1.hour / state_retry_interval
       },
-      :running_ansible_playbook => {
+      :running_migration_playbook => {
         :description => "Running #{migration_phase}-migration playbook",
         :weight      => 10,
         :max_retries => 6.hours / state_retry_interval
@@ -252,7 +252,7 @@ class InfraConversionJob < Job
     # If the target VM is powered off, we won't get an IP address, so no need to wait.
     # We don't block powered off VMs, because the playbook could still be relevant.
     if target_vm.power_state == 'on'
-      if target_vm.ipaddress.empty?
+      if target_vm.ipaddresses.empty?
         update_migration_task_progress(:on_retry)
         return queue_signal(:wait_for_ip_address)
       end
@@ -273,7 +273,8 @@ class InfraConversionJob < Job
         :credentials => service_template.config_info[:provision][:credential_id],
         :hosts       => target_vm.ipaddresses.first || service_template.config_info[:provision][:hosts]
       }
-      context["#{migration_phase}_migration_playbook_service_request_id"] = service_template.provision_request(migration_task.userid.to_i, service_dialog_options).id
+      context["#{migration_phase}_migration_playbook_service_request_id".to_sym] = service_template.provision_request(migration_task.userid.to_i, service_dialog_options).id
+      update_migration_task_progress(:on_exit)
       return queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
     end
 
@@ -289,24 +290,24 @@ class InfraConversionJob < Job
     update_migration_task_progress(:on_entry)
     return abort_conversion('Running migration playbook timed out', 'error') if polling_timeout
 
-    service_request = ServiceTemplateProvisionRequest.find(context["#{migration_phase}_migration_playbook_service_request_id"])
-    playbooks_status = task.get_option(:playbooks) || {}
+    service_request = ServiceTemplateProvisionRequest.find(context["#{migration_phase}_migration_playbook_service_request_id".to_sym])
+    playbooks_status = migration_task.get_option(:playbooks) || {}
     playbooks_status[migration_phase] = { :job_state => service_request.request_state }
-    migration_task.update_options(:playbooks, playbooks_status)
+    migration_task.update_options(:playbooks => playbooks_status)
 
     if service_request.request_state == 'finished'
-      playbooks_status[transformation_hook][:job_status] = service_request.status
-      playbooks_status[transformation_hook][:job_id] = service_request.miq_request_tasks.first.destination.service_resources.first.resource.id
-      migration_task.update_options(:playbooks, playbooks_status)
-      raise "Ansible playbook has failed (hook=#{transformation_hook})" if service_request.status == 'Error' && migration_phase == 'pre'
+      playbooks_status[migration_phase][:job_status] = service_request.status
+      playbooks_status[migration_phase][:job_id] = service_request.miq_request_tasks.first.destination.service_resources.first.resource.id
+      migration_task.update_options(:playbooks => playbooks_status)
+      raise "Ansible playbook has failed (migration_phase=#{migration_phase})" if service_request.status == 'Error' && migration_phase == 'pre'
 
       update_migration_task_progress(:on_exit)
       handover_to_automate
-      queue_signal(:poll_automate_state_machine)
+      return queue_signal(:poll_automate_state_machine)
     end
 
     update_migration_task_progress(:on_retry)
-    queue_signal(:poll_run_migration_playbook_complete)
+    queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
