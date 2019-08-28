@@ -19,6 +19,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
     new(:name                  => template.name,
         :ext_management_system => template.manager,
         :verbosity             => template.variables["verbosity"].to_i,
+        :authentications       => collect_authentications(template.manager, options),
         :job_template          => template_ref).tap do |stack|
       stack.send(:update_with_provider_object, raw_create_stack(template, options))
     end
@@ -97,6 +98,17 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
     options
   end
   private_class_method :reconcile_extra_vars_keys
+
+  def self.collect_authentications(manager, options)
+    credential_ids = options.values_at(
+      :credential,
+      :cloud_credential,
+      :network_credential,
+      :vault_credential
+    ).compact
+    manager.credentials.where(:id => credential_ids)
+  end
+  private_class_method :collect_authentications
 
   def update_with_provider_object(raw_job)
     self.miq_task ||= raw_job.miq_task
