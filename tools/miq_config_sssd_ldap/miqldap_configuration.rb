@@ -1,4 +1,4 @@
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class MiqLdapConfigurationArgumentError < StandardError; end
 
   class MiqLdapConfiguration

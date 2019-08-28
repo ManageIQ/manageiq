@@ -1,7 +1,7 @@
 require 'optimist'
-require 'miqldap_to_sssd/cli'
+require 'miq_config_sssd_ldap/cli'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class CliConvert < Cli
     def parse(args)
       args.shift if args.first == "--" # Handle when called through script/runner

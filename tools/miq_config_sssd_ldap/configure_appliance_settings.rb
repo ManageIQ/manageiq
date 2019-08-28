@@ -1,6 +1,6 @@
 require 'fileutils'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class ConfigureApplianceSettingsError < StandardError; end
 
   class ConfigureApplianceSettings

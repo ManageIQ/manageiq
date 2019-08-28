@@ -1,4 +1,4 @@
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   SSSD_CONF_FILE = "/etc/sssd/sssd.conf".freeze
   SSSD_ALREADY_CONFIGURED = "ERROR: #{SSSD_CONF_FILE} already exists. No changes will be made. Exiting".freeze
 

@@ -1,6 +1,6 @@
 require 'linux_admin'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class Services
     def self.restart
       LOGGER.debug("Invoked #{self.class}\##{__method__}")

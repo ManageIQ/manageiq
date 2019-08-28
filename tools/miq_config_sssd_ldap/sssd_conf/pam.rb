@@ -1,9 +1,9 @@
 require 'sssd_conf/common'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class Pam < Common
     def initialize(initial_settings)
-      super(%w(pam_app_services), initial_settings)
+      super(%w[pam_app_services], initial_settings)
     end
 
     def pam_app_services

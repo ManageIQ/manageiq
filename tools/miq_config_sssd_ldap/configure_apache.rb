@@ -1,11 +1,10 @@
 require 'fileutils'
 require 'auth_template_files'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class ConfigureApacheError < StandardError; end
 
   class ConfigureApache < AuthTemplateFiles
-
     def configure
       LOGGER.debug("Invoked #{self.class}\##{__method__} template_dir #{template_dir}")
       create_files

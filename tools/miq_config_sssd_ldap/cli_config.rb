@@ -1,7 +1,7 @@
 require 'optimist'
-require 'miqldap_to_sssd/cli'
+require 'miq_config_sssd_ldap/cli'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   VALID_USER_TYPES = %w[dn-cn dn-uid userprincipalname mail samaccountname].freeze
 
   class CliConfig < Cli
@@ -79,7 +79,7 @@ module MiqLdapToSssd
             :required => false
 
         opt :skip_post_conversion_userid_change,
-            "Do the MiqLdap to SSSD conversion but skip the normalizing of the userids",
+            "Do the SSSD configuration but skip the normalizing of the userids",
             :short    => "s",
             :default  => false,
             :type     => :flag,

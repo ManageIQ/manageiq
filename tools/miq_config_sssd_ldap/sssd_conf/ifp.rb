@@ -1,9 +1,9 @@
 require 'sssd_conf/common'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class Ifp < Common
     def initialize(initial_settings)
-      super(%w(allowed_uids user_attributes), initial_settings)
+      super(%w[allowed_uids user_attributes], initial_settings)
     end
 
     def allowed_uids

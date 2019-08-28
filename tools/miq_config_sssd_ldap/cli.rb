@@ -1,6 +1,6 @@
 require 'optimist'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class CliError < StandardError; end
 
   class Cli

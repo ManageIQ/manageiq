@@ -1,6 +1,6 @@
 require 'awesome_spawn'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class ConfigureSELinuxError < StandardError; end
 
   class ConfigureSELinux
@@ -21,7 +21,7 @@ module MiqLdapToSssd
 
     def enable_non_standard_ldap_port(port_number)
       LOGGER.debug("Invoked #{self.class}\##{__method__}(#{port_number})")
-      return if %w(389 636).include?(port_number)
+      return if %w[389 636].include?(port_number)
 
       params = {
         nil => "port",

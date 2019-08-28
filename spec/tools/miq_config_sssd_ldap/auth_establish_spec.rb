@@ -1,8 +1,8 @@
 $LOAD_PATH << Rails.root.join("tools").to_s
 
-require "miqldap_to_sssd"
+require "miq_config_sssd_ldap"
 
-describe MiqLdapToSssd::AuthEstablish do
+describe MiqConfigSssdLdap::AuthEstablish do
   describe '#run_auth_establish' do
     before do
       @initial_settings = {:mode => "bob", :ldaphost => ["hostname"], :ldapport => 22}
@@ -22,10 +22,10 @@ describe MiqLdapToSssd::AuthEstablish do
       end
 
       it 'handles authconfig failures' do
-        expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
+        expect(MiqConfigSssdLdap::LOGGER).to receive(:fatal)
         expect(AwesomeSpawn).to receive(:run)
           .and_return(double(:command_line => "authselect", :failure? => true, :error => "malfunction"))
-        expect { @auth_establish.run_auth_establish }.to raise_error(MiqLdapToSssd::AuthEstablishError)
+        expect { @auth_establish.run_auth_establish }.to raise_error(MiqConfigSssdLdap::AuthEstablishError)
       end
     end
 
@@ -53,10 +53,10 @@ describe MiqLdapToSssd::AuthEstablish do
       end
 
       it 'handles authconfig failures' do
-        expect(MiqLdapToSssd::LOGGER).to receive(:fatal)
+        expect(MiqConfigSssdLdap::LOGGER).to receive(:fatal)
         expect(AwesomeSpawn).to receive(:run)
           .and_return(double(:command_line => "authconfig", :failure? => true, :error => "malfunction"))
-        expect { @auth_establish.run_auth_establish }.to raise_error(MiqLdapToSssd::AuthEstablishError)
+        expect { @auth_establish.run_auth_establish }.to raise_error(MiqConfigSssdLdap::AuthEstablishError)
       end
     end
   end

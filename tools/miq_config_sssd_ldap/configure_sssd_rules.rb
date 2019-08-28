@@ -1,6 +1,6 @@
 require 'fileutils'
 
-module MiqLdapToSssd
+module MiqConfigSssdLdap
   class ConfigureSssdRulesError < StandardError; end
 
   class ConfigureSssdRules
