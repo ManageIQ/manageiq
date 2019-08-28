@@ -82,7 +82,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
             :status      => subject.miq_task.state,
             :start_time  => subject.miq_task.started_on,
             :finish_time => nil,
-            :verbosity   => nil # TODO:  Implement this as an job options, right?
+            :verbosity   => 0
           )
           subject.reload
           expect(subject.ems_ref).to eq(subject.miq_task.id.to_s)
