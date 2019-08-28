@@ -55,7 +55,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
   end
 
   def job_plays
-    []
+    resources.where(:resource_category => 'job_play').order(:start_time)
   end
 
   # Intend to be called by UI to display stdout. The stdout is stored in MiqTask#task_results or #message if error
