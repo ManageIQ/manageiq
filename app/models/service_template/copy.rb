@@ -26,7 +26,8 @@ module ServiceTemplate::Copy
   end
 
   def custom_button_copy(custom_button, template)
-    custom_button.copy(:applies_to => template)
+    copy = custom_button.copy(:applies_to => template)
+    copy.options.merge!(:display=>true)
   end
 
   def custom_button_set_copy(custom_button_set, template)
