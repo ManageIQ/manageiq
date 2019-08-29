@@ -6,9 +6,9 @@ module LifecycleMixin
   STATE_PROVISIONING = 'provisioning'.freeze
 
   def update_lifecycle_state
-    case miq_request.request_state
+    case miq_request_task.state
     when "finished"
-      lifecycle_state = miq_request.status == 'Ok' ? STATE_PROVISIONED : STATE_ERROR_PROVISIONING
+      lifecycle_state = miq_request_task.status == 'Ok' ? STATE_PROVISIONED : STATE_ERROR_PROVISIONING
       update(:lifecycle_state => lifecycle_state)
     else
       update(:lifecycle_state => STATE_PROVISIONING)
