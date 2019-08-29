@@ -214,10 +214,14 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     return if service.nil?
 
     service.raise_provisioned_event
-    service.update_lifecycle_state if miq_request_task.nil?
+    service.update_lifecycle_state if service_template_source?
   end
 
   private
+
+  def service_template_source?
+    source_type == "ServiceTemplate"
+  end
 
   def valid_states
     super + ["provisioned"]
