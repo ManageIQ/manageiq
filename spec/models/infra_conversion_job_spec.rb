@@ -503,7 +503,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
-     context 'transforming_vm' do
+    context 'transforming_vm' do
       before do
         job.state = 'transforming_vm'
       end
