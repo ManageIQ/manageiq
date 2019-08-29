@@ -230,6 +230,13 @@ module ManageIQ::Providers
           add_common_default_values
         end
 
+        def storage_profile_storages
+          add_properties(
+            :manager_ref                  => %i[storage_profile storage],
+            :parent_inventory_collections => %i[storage_profiles]
+          )
+        end
+
         def ems_extensions
           add_common_default_values
         end
