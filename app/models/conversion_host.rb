@@ -8,7 +8,7 @@ class ConversionHost < ApplicationRecord
 
   belongs_to :resource, :polymorphic => true
   has_many :service_template_transformation_plan_tasks, :dependent => :nullify
-  has_many :active_tasks, -> { where(:state => ['active', 'migrate']) },
+  has_many :active_tasks, -> { where(:state => ['active', 'migrate', 'pending']) },
     :class_name => "ServiceTemplateTransformationPlanTask",
     :inverse_of => :conversion_host
 
