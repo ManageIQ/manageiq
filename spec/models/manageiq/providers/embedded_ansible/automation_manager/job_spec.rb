@@ -83,6 +83,9 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
           }
         end
 
+        before { Timecop.freeze }
+        after  { Timecop.return }
+
         let(:the_raw_plays) do
           [
             {
@@ -94,16 +97,23 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
             },
             {
               "id"         => 2,
+              "event"      => "some_other_event",
+              "failed"     => false,
+              "created"    => Time.current + 5,
+              "event_data" => {"stdout" => "foo"}
+            },
+            {
+              "id"         => 3,
               "event"      => "playbook_on_play_start",
               "failed"     => true,
-              "created"    => Time.current + 1,
+              "created"    => Time.current + 10,
               "event_data" => {"play" => "play2"}
             }
           ]
         end
 
         it "syncs the job with the provider" do
-          fake_finish_time = the_raw_plays.last["created"] + 1
+          fake_finish_time = the_raw_plays.last["created"] + 15
           allow(subject).to receive(:finish_time).and_return(fake_finish_time)
           expect(subject).to receive(:raw_stdout_json).and_return(the_raw_plays)
           subject.refresh_ems
