@@ -982,8 +982,9 @@ RSpec.describe InfraConversionJob, :v2v do
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit).and_call_original
           expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
           job.signal(:poll_inventory_refresh_complete)
-          expect(job.migration_task.destination.id).to eq(vm_redhat.id)
-          expect(task.reload.options[:workflow_runner]).to eq('automate')
+          expect(task.reload.destination.id).to eq(vm_redhat.id)
+          expect(task.options[:migration_phase]).to eq('post')
+          expect(task.options[:workflow_runner]).to eq('automate')
         end
       end
     end

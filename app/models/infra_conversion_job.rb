@@ -420,8 +420,9 @@ class InfraConversionJob < Job
     end
 
     migration_task.update!(:destination => destination_vm)
-    update_migration_task_progress(:on_exit)
+    migration_task.update_options(:migration_phase => 'post')
     handover_to_automate
+    update_migration_task_progress(:on_exit)
     queue_signal(:poll_automate_state_machine)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
