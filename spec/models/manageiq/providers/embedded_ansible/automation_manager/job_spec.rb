@@ -72,7 +72,16 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
       end
 
       context "#refresh_ems" do
-        subject { described_class.create_job(template, {}) }
+        subject { described_class.create_job(template, job_options) }
+
+        let(:job_options) do
+          {
+            :credential         => machine_credential.id,
+            :cloud_credential   => cloud_credential.id,
+            :network_credential => network_credential.id,
+            :vault_credential   => vault_credential.id
+          }
+        end
 
         it "syncs the job with the provider" do
           subject.refresh_ems
@@ -82,22 +91,22 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
             :status      => subject.miq_task.state,
             :start_time  => subject.miq_task.started_on,
             :finish_time => nil,
-            :verbosity   => nil # TODO:  Implement this as an job options, right?
+            :verbosity   => 0
           )
           subject.reload
           expect(subject.ems_ref).to eq(subject.miq_task.id.to_s)
           expect(subject.status).to  eq(subject.miq_task.state)
+
+          expect(subject.authentications).to match_array([machine_credential, vault_credential, cloud_credential, network_credential])
 
           # TODO/FIXME:  This needs to be implemented.
           #
           # The following are implemented in AnsibleTower::Job but not here:
           #
           #   - update_parameters
-          #   - update_credentials
           #   - update_plays
           #
           # expect(subject.parameters.first).to have_attributes(:name => "param1", :value => "val1")
-          # expect(subject.authentications).to match_array([machine_credential, vault_credential, cloud_credential, network_credential])
           # expect(subject.job_plays.first).to have_attributes(
           #   :start_time        => a_value_within(1.second).of(the_raw_plays.first.created),
           #   :finish_time       => a_value_within(1.second).of(the_raw_plays.last.created),
