@@ -36,7 +36,7 @@ module MiqConfigSssdLdap
     end
 
     def ldap_auth_disable_tls_never_use_in_production
-      initial_settings[:mode] == "ldaps" ? false : true
+      initial_settings[:mode] != "ldaps"
     end
 
     def ldap_default_bind_dn
