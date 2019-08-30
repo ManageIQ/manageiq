@@ -33,6 +33,7 @@ describe MiqSchedule do
         expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
         expect(miq_schedule_array['sched_action'][:options]).to eq(options.merge(:miq_group_description => miq_group.description))
         expect(miq_schedule_array['filter_resource_name']).to eq(miq_report.name)
+        expect(miq_schedule_array['resource_type']).to eq("MiqReport")
       end
 
       context "filter resource doesn't exists" do
@@ -50,19 +51,97 @@ describe MiqSchedule do
     end
 
     context "SmartState" do
+      let(:sched_action) { { :method => "vm_scan", :options => options } }
 
+      it "exports to array" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+        expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
+        expect(miq_schedule_array['sched_action'][:method]).to eq("vm_scan")
+        expect(miq_schedule_array['filter_resource_name']).to eq(miq_report.name)
+        expect(miq_schedule_array['resource_type']).to eq("MiqReport")
+      end
+    end
+
+    context "MiqSearch" do
+      let(:miq_search) { FactoryBot.create(:miq_search) }
+      let(:miq_schedule) do
+        FactoryBot.create(:miq_schedule, :updated_at => 1.year.ago, :filter => miq_expression, :sched_action => sched_action, :userid => user.userid, :last_run_on => Time.zone.now, :miq_search => miq_search)
+      end
+
+      it "exports to array" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+        expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
+        expect(miq_schedule_array['sched_action'][:method]).to eq("run_report")
+        expect(miq_schedule_array['filter_resource_name']).to eq(miq_report.name)
+        expect(miq_schedule_array['miq_search_id']).to eq(miq_search.id)
+        expect(miq_schedule_array['MiqSearchContent']).not_to be(nil)
+        expect(miq_schedule_array['resource_type']).to eq("MiqReport")
+      end
     end
 
     context "DatabaseBackup" do
+      let(:miq_schedule) do
+        FactoryBot.create(:miq_schedule, :updated_at => 1.year.ago, :filter => miq_expression, :sched_action => sched_action, :userid => user.userid, :last_run_on => Time.zone.now, :file_depot => file_depot)
+      end
 
+      let(:file_depot) { FactoryBot.create(:file_depot_ftp_with_authentication) }
+
+      before do
+        @valid_run_ats = [{:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "daily", :value => "1"}},
+                          {:start_time => "2010-07-08 04:10:00 Z", :interval => {:unit => "once"}}]
+        @valid_schedules = []
+        @valid_run_ats.each do |run_at|
+          @valid_schedules << FactoryBot.create(:miq_schedule_validation, :run_at => run_at, :file_depot => file_depot, :sched_action => {:method => "db_backup"}, :resource_type => "DatabaseBackup")
+        end
+        @schedule = @valid_schedules.first
+      end
+
+      it "exports to array" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_schedule.id], MiqSchedule).first["MiqSchedule"]
+        expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
+        expect(miq_schedule_array['sched_action'][:options].keys).to include(:miq_group_description)
+        expect(miq_schedule_array['file_depot_id']).to eq(file_depot.id)
+        expect(miq_schedule_array['FileDepotContent']).not_to be(nil)
+        expect(miq_schedule_array['filter']).to be_kind_of(MiqExpression)
+        expect(miq_schedule_array['resource_type']).to eq("MiqReport")
+      end
     end
 
     context "AutomationTask" do
+      let(:miq_automate_schedule) do
+        FactoryBot.create(:miq_automate_schedule, :updated_at => 1.year.ago, :filter => miq_expression, :sched_action => sched_action, :userid => user.userid, :last_run_on => Time.zone.now)
+      end
 
+      it "exports to array" do
+        miq_schedule_array = MiqSchedule.export_to_array([miq_automate_schedule.id], MiqSchedule).first["MiqSchedule"]
+        expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
+        expect(miq_schedule_array['sched_action'][:options].keys).not_to include(:miq_group_description)
+        expect(miq_schedule_array['filter']).to be_kind_of(MiqExpression)
+        expect(miq_schedule_array['resource_type']).to eq("AutomationRequest")
+      end
     end
 
     context "with resource (ServiceTemplate)" do
+      let(:sched_action) { { :method => "vm_scan", :options => options } }
+      let(:template) { FactoryBot.create(:service_template) }
+      let(:schedule_with_template) do
+        FactoryBot.create(:miq_schedule,
+                          :updated_at   => 1.year.ago,
+                          :filter       => miq_expression,
+                          :sched_action => sched_action,
+                          :userid       => user.userid,
+                          :last_run_on  => Time.zone.now,
+                          :resource     => template)
+      end
 
+      it "exports to array" do
+        miq_schedule_array = MiqSchedule.export_to_array([schedule_with_template.id], MiqSchedule).first["MiqSchedule"]
+        expect(miq_schedule_array.slice(*MiqSchedule::ImportExport::SKIPPED_ATTRIBUTES)).to be_empty
+        expect(miq_schedule_array['sched_action'][:options].keys).not_to include(:miq_group_description)
+        expect(miq_schedule_array['resource_type']).to eq("ServiceTemplate")
+        expect(miq_schedule_array['sched_action'][:method]).to eq("vm_scan")
+        expect(miq_schedule_array['filter']).to be_kind_of(MiqExpression)
+      end
     end
   end
 
