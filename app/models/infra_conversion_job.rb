@@ -48,9 +48,10 @@ class InfraConversionJob < Job
         'transforming_vm'               => 'waiting_for_inventory_refresh',
         'waiting_for_inventory_refresh' => 'waiting_for_inventory_refresh'
       },
+      :apply_right_sizing                   => {'waiting_for_inventory_refresh' => 'applying_right_sizing'},
       :poll_automate_state_machine          => {
-        'waiting_for_inventory_refresh' => 'running_in_automate',
-        'running_in_automate'           => 'running_in_automate'
+        'applying_right_sizing' => 'running_in_automate',
+        'running_in_automate'   => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},
@@ -96,6 +97,10 @@ class InfraConversionJob < Job
         :description => "Identify destination VM",
         :weight      => 4,
         :max_retries => 1.hour / state_retry_interval
+      },
+      :applying_right_sizing         => {
+        :description => "Apply Right-Sizing Recommendation",
+        :weight      => 1
       },
       :running_in_automate           => {
         :max_retries => 36.hours / state_retry_interval
@@ -217,6 +222,14 @@ class InfraConversionJob < Job
       :hosts       => target_vm.ipaddresses.first || service_template.config_info[:provision][:hosts]
     }
     service_template.provision_request(migration_task.userid.to_i, service_dialog_options)
+  end
+
+  def apply_right_sizing_cpu(mode)
+    destination_vm.set_number_of_cpus(source_vm.send("#{mode}_recommended_vcpus"))
+  end
+
+  def apply_right_sizing_memory(mode)
+    destination_vm.set_memory(source_vm.send("#{mode}_recommended_mem"))
   end
 
   # --- Methods that implement the state machine transitions --- #
@@ -420,12 +433,28 @@ class InfraConversionJob < Job
     end
 
     migration_task.update!(:destination => destination_vm)
+    migration_task.update_options(:migration_phase => 'post')
+    update_migration_task_progress(:on_exit)
+    queue_signal(:apply_right_sizing)
+  rescue StandardError => error
+    update_migration_task_progress(:on_error)
+    abort_conversion(error.message, 'error')
+  end
+
+  def apply_right_sizing
+    update_migration_task_progress(:on_entry)
+
+    %i(cpu memory).each do |item|
+      right_sizing_mode = migration_task.send("#{item}_right_sizing_mode")
+      send("apply_right_sizing_#{item}", right_sizing_mode) if right_sizing_mode.present?
+    end
+    
     update_migration_task_progress(:on_exit)
     handover_to_automate
     queue_signal(:poll_automate_state_machine)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
-    abort_conversion(error.message, 'error')
+    queue_signal(:poll_automate_state_machine)
   end
 
   def poll_automate_state_machine
