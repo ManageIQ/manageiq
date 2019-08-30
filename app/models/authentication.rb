@@ -1,9 +1,12 @@
 class Authentication < ApplicationRecord
   acts_as_miq_taggable
   include_concern 'ImportExport'
-  include YAMLImportExportMixin
 
+  include YAMLImportExportMixin
   include NewWithTypeStiMixin
+
+  attr_accessor :auth_changed
+
   def self.new(*args, &block)
     if self == Authentication
       AuthUseridPassword.new(*args, &block)
@@ -32,10 +35,6 @@ class Authentication < ApplicationRecord
            :through => :authentication_orchestration_stacks
 
   has_many :configuration_script_sources
-
-  after_initialize do
-    @auth_changed = false
-  end
 
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
