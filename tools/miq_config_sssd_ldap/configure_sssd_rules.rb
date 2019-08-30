@@ -14,7 +14,7 @@ module MiqConfigSssdLdap
       LOGGER.warn(message)
 
       begin
-        open(CFG_RULES_FILE, 'a') do |f|
+        File.open(CFG_RULES_FILE, 'a') do |f|
           f << "option = ldap_auth_disable_tls_never_use_in_production\n"
         end
       rescue Errno::ENOENT => err
