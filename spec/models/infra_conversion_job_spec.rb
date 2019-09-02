@@ -1201,7 +1201,7 @@ RSpec.describe InfraConversionJob, :v2v do
     end
   end
 
-  context '#shutdown_vm' do
+  context '#power_on_vm' do
     before do
       job.state = 'restoring_vm_attributes'
       task.update_options(:migration_phase => 'post')
@@ -1229,7 +1229,7 @@ RSpec.describe InfraConversionJob, :v2v do
     end
   end
 
-  context '#poll_shutdown_vm_complete' do
+  context '#poll_power_on_vm_complete' do
     before do
       job.state = 'powering_on_vm'
       task.update_options(:migration_phase => 'post')
