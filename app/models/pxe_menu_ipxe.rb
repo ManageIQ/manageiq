@@ -1,4 +1,10 @@
 class PxeMenuIpxe < PxeMenu
+  has_many :pxe_images,
+           :class_name  => "PxeImageIpxe",
+           :foreign_key => :pxe_menu_id,
+           :dependent   => :destroy,
+           :inverse_of  => :pxe_menu
+
   def self.parse_contents(contents)
     menu_items = parse_menu(contents)
     entries = parse_labels(contents, menu_items.keys)
