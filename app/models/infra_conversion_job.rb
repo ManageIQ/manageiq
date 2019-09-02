@@ -444,15 +444,15 @@ class InfraConversionJob < Job
   def apply_right_sizing
     update_migration_task_progress(:on_entry)
 
-    %i(cpu memory).each do |item|
+    %i[cpu memory].each do |item|
       right_sizing_mode = migration_task.send("#{item}_right_sizing_mode")
       send("apply_right_sizing_#{item}", right_sizing_mode) if right_sizing_mode.present?
     end
-    
+
     update_migration_task_progress(:on_exit)
     handover_to_automate
     queue_signal(:poll_automate_state_machine)
-  rescue StandardError => error
+  rescue StandardError
     update_migration_task_progress(:on_error)
     queue_signal(:poll_automate_state_machine)
   end
