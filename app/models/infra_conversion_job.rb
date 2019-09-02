@@ -454,6 +454,7 @@ class InfraConversionJob < Job
     queue_signal(:poll_automate_state_machine)
   rescue StandardError
     update_migration_task_progress(:on_error)
+    handover_to_automate
     queue_signal(:poll_automate_state_machine)
   end
 

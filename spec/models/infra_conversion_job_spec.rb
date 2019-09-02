@@ -1020,6 +1020,15 @@ RSpec.describe InfraConversionJob, :v2v do
       task.update!(:destination => vm_redhat)
     end
 
+    it "exits to next state in case of failed" do
+      allow(job.migration_task).to receive(:cpu_right_sizing_mode).and_raise('Fake error message')
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
+      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      job.signal(:apply_right_sizing)
+      expect(task.reload.options[:workflow_runner]).to eq('automate')
+    end
+
     context 'without right_sizing mode' do
       before do
         allow(job.migration_task).to receive(:cpu_right_sizing_mode).and_return(nil)
