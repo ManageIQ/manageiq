@@ -132,34 +132,52 @@ PXEMENU
   context "#synchronize" do
     before do
       @pxe_server = FactoryBot.create(:pxe_server)
-      allow(@pxe_server).to receive_messages(:read_file => @contents_ipxe)
     end
 
-    it "on typed menu" do
-      pxe_menu = FactoryBot.create(:pxe_menu_ipxe, :pxe_server => @pxe_server)
-      pxe_menu.synchronize
+    context "ipxe" do
+      before { allow(@pxe_server).to receive_messages(:read_file => @contents_ipxe) }
 
-      new_pxe_menu = PxeMenu.find(pxe_menu.id)
-      expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
-      expect(new_pxe_menu.pxe_images.length).to eq(3)
+      it "on typed menu" do
+        pxe_menu = FactoryBot.create(:pxe_menu_ipxe, :pxe_server => @pxe_server)
+        pxe_menu.synchronize
+
+        new_pxe_menu = PxeMenu.find(pxe_menu.id)
+        expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
+        expect(new_pxe_menu.pxe_images.length).to eq(3)
+        expect(new_pxe_menu.pxe_images.first.type).to eq('PxeImageIpxe')
+      end
+
+      it "on untyped menu" do
+        pxe_menu = FactoryBot.create(:pxe_menu, :pxe_server => @pxe_server)
+        pxe_menu.synchronize
+
+        new_pxe_menu = PxeMenu.find(pxe_menu.id)
+        expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
+        expect(new_pxe_menu.pxe_images.length).to eq(3)
+      end
+
+      it "on typed menu switching to a different type" do
+        pxe_menu = FactoryBot.create(:pxe_menu_pxelinux, :contents => @contents_pxelinux, :pxe_server => @pxe_server)
+        pxe_menu.synchronize
+
+        new_pxe_menu = PxeMenu.find(pxe_menu.id)
+        expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
+        expect(new_pxe_menu.pxe_images.length).to eq(3)
+      end
     end
 
-    it "on untyped menu" do
-      pxe_menu = FactoryBot.create(:pxe_menu, :pxe_server => @pxe_server)
-      pxe_menu.synchronize
+    context "pxelinux" do
+      before { allow(@pxe_server).to receive_messages(:read_file => @contents_pxelinux) }
 
-      new_pxe_menu = PxeMenu.find(pxe_menu.id)
-      expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
-      expect(new_pxe_menu.pxe_images.length).to eq(3)
-    end
+      it "on typed menu" do
+        pxe_menu = FactoryBot.create(:pxe_menu_pxelinux, :pxe_server => @pxe_server)
+        pxe_menu.synchronize
 
-    it "on typed menu switching to a different type" do
-      pxe_menu = FactoryBot.create(:pxe_menu_pxelinux, :contents => @contents_pxelinux, :pxe_server => @pxe_server)
-      pxe_menu.synchronize
-
-      new_pxe_menu = PxeMenu.find(pxe_menu.id)
-      expect(new_pxe_menu).to be_kind_of(PxeMenuIpxe)
-      expect(new_pxe_menu.pxe_images.length).to eq(3)
+        new_pxe_menu = PxeMenu.find(pxe_menu.id)
+        expect(new_pxe_menu).to be_kind_of(PxeMenuPxelinux)
+        expect(new_pxe_menu.pxe_images.length).to eq(10)
+        expect(new_pxe_menu.pxe_images.first.type).to eq('PxeImagePxelinux')
+      end
     end
   end
 
