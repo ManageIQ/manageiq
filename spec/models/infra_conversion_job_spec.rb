@@ -352,7 +352,7 @@ RSpec.describe InfraConversionJob, :v2v do
   end
 
   context 'state transitions' do
-    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes poll_automate_state_machine finish abort_job cancel error].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete poll_automate_state_machine finish abort_job cancel error].each do |signal|
       shared_examples_for "allows #{signal} signal" do
         it signal.to_s do
           expect(job).to receive(signal.to_sym)
@@ -361,7 +361,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
     end
 
-    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes poll_automate_state_machine].each do |signal|
+    %w[start remove_snapshots poll_remove_snapshots_complete wait_for_ip_address run_migration_playbook poll_run_migration_playbook_complete shutdown_vm poll_shutdown_vm_complete transform_vm poll_transform_vm_complete poll_inventory_refresh_complete apply_right_sizing restore_vm_attributes power_on_vm poll_power_on_vm_complete poll_automate_state_machine].each do |signal|
       shared_examples_for "doesn't allow #{signal} signal" do
         it signal.to_s do
           expect { job.signal(signal.to_sym) }.to raise_error(RuntimeError, /#{signal} is not permitted at state #{job.state}/)
@@ -392,6 +392,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -418,6 +420,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -444,6 +448,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -470,6 +476,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -496,6 +504,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -522,6 +532,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -548,6 +560,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
@@ -574,6 +588,9 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow transform_vm signal'
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
     context 'applying_right_sizing' do
@@ -599,6 +616,9 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
     context 'restoring_vm_attributes' do
@@ -606,6 +626,35 @@ RSpec.describe InfraConversionJob, :v2v do
         job.state = 'restoring_vm_attributes'
       end
 
+      it_behaves_like 'allows power_on_vm signal'
+      it_behaves_like 'allows finish signal'
+      it_behaves_like 'allows abort_job signal'
+      it_behaves_like 'allows cancel signal'
+      it_behaves_like 'allows error signal'
+
+      it_behaves_like 'doesn\'t allow start signal'
+      it_behaves_like 'doesn\'t allow remove_snapshots signal'
+      it_behaves_like 'doesn\'t allow poll_remove_snapshots_complete signal'
+      it_behaves_like 'doesn\'t allow wait_for_ip_address signal'
+      it_behaves_like 'doesn\'t allow run_migration_playbook signal'
+      it_behaves_like 'doesn\'t allow poll_run_migration_playbook_complete signal'
+      it_behaves_like 'doesn\'t allow shutdown_vm signal'
+      it_behaves_like 'doesn\'t allow poll_shutdown_vm_complete signal'
+      it_behaves_like 'doesn\'t allow transform_vm signal'
+      it_behaves_like 'doesn\'t allow poll_transform_vm_complete signal'
+      it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
+      it_behaves_like 'doesn\'t allow apply_right_sizing signal'
+      it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
+      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
+    end
+
+    context 'powering_on_vm' do
+      before do
+        job.state = 'powering_on_vm'
+      end
+
+      it_behaves_like 'allows poll_power_on_vm_complete signal'
       it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
@@ -625,6 +674,7 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
     end
 
     context 'running_in_automate' do
@@ -651,6 +701,8 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow poll_inventory_refresh_complete signal'
       it_behaves_like 'doesn\'t allow apply_right_sizing signal'
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
+      it_behaves_like 'doesn\'t allow power_on_vm signal'
+      it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
     end
   end
 
@@ -1122,7 +1174,6 @@ RSpec.describe InfraConversionJob, :v2v do
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
       expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
       job.signal(:restore_vm_attributes)
-      expect(task.reload.options[:workflow_runner]).to eq('automate')
     end
 
     it 'restore VM attributes' do
@@ -1146,8 +1197,68 @@ RSpec.describe InfraConversionJob, :v2v do
         expect(vm_redhat.miq_group.id).to eq(group.id)
         expect(vm_redhat.retires_on).to eq(Time.now.utc + 1.day)
         expect(vm_redhat.retirement_warn).to eq(7)
-        expect(task.reload.options[:workflow_runner]).to eq('automate')
       end
+    end
+  end
+
+  context '#shutdown_vm' do
+    before do
+      job.state = 'restoring_vm_attributes'
+      task.update_options(:migration_phase => 'post')
+      task.update!(:destination => vm_redhat)
+    end
+
+    it 'exits if VM is already on' do
+      vm_redhat.update!(:raw_power_state => 'poweredOn')
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      job.signal(:power_on_vm)
+      expect(task.reload.options[:workflow_runner]).to eq('automate')
+    end
+
+    it 'sends start request to VM if VM is off' do
+      vm_redhat.update!(:raw_power_state => 'poweredOff')
+      Timecop.freeze(2019, 2, 6) do
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+        expect(job.migration_task.destination).to receive(:start)
+        expect(job).to receive(:queue_signal).with(:poll_power_on_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
+        job.signal(:power_on_vm)
+      end
+    end
+  end
+
+  context '#poll_shutdown_vm_complete' do
+    before do
+      job.state = 'powering_on_vm'
+      task.update_options(:migration_phase => 'post')
+      task.update!(:destination => vm_redhat)
+    end
+
+    it 'abort_conversion when powering_on_vm times out' do
+      job.context[:retries_powering_on_vm] = 60
+      expect(job).to receive(:abort_conversion).with('Powering on VM timed out', 'error')
+      job.signal(:poll_power_on_vm_complete)
+    end
+
+    it 'retries if VM is not on' do
+      vm_redhat.update!(:raw_power_state => 'poweredOff')
+      Timecop.freeze(2019, 2, 6) do
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_retry)
+        expect(job).to receive(:queue_signal).with(:poll_power_on_vm_complete, :deliver_on => Time.now.utc + job.state_retry_interval)
+        job.signal(:poll_power_on_vm_complete)
+      end
+    end
+
+    it 'exits if VM is on' do
+      vm_redhat.update!(:raw_power_state => 'poweredOn')
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      job.signal(:poll_power_on_vm_complete)
+      expect(task.reload.options[:workflow_runner]).to eq('automate')
     end
   end
 
