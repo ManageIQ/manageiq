@@ -1,4 +1,10 @@
 class PxeMenuPxelinux < PxeMenu
+  has_many :pxe_images,
+           :class_name  => "PxeImagePxelinux",
+           :foreign_key => :pxe_menu_id,
+           :dependent   => :destroy,
+           :inverse_of  => :pxe_menu
+
   def self.parse_contents(contents)
     items = []
     current_item = nil
