@@ -469,6 +469,7 @@ class InfraConversionJob < Job
     # Copy tags and custom attributes from source VM
     source_vm.tags.each do |tag|
       next if tag.name =~ /^\/managed\/folder_path_/
+
       tag_as_array = tag.name.split('/')
       namespace = tag_as_array.shift
       value = tag_as_array.pop
