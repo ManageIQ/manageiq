@@ -1210,6 +1210,17 @@ RSpec.describe InfraConversionJob, :v2v do
 
     it 'exits if VM is already on' do
       vm_redhat.update!(:raw_power_state => 'poweredOn')
+      task.update_options(:source_vm_power_state => 'on')
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      job.signal(:power_on_vm)
+      expect(task.reload.options[:workflow_runner]).to eq('automate')
+    end
+
+    it "exits if source VM power state was not 'on'" do
+      vm_redhat.update!(:raw_power_state => 'poweredOff')
+      task.update_options(:source_vm_power_state => 'off')
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
       expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
@@ -1219,6 +1230,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
     it 'sends start request to VM if VM is off' do
       vm_redhat.update!(:raw_power_state => 'poweredOff')
+      task.update_options(:source_vm_power_state => 'on')
       Timecop.freeze(2019, 2, 6) do
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)

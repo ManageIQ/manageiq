@@ -138,7 +138,7 @@ class InfraConversionJob < Job
   end
 
   def target_vm
-    return @target_vm = source_vm if migration_phase == 'pre'
+    return @target_vm = source_vm if migration_phase == 'pre' || migration_task.canceling?
     return @target_vm = destination_vm if migration_phase == 'post'
   end
 
@@ -505,7 +505,8 @@ class InfraConversionJob < Job
 
   def power_on_vm
     update_migration_task_progress(:on_entry)
-    unless target_vm.power_state == 'on'
+
+    unless target_vm.power_state == 'on' || migration_task.options[:source_vm_power_state] != 'on'
       target_vm.start
       update_migration_task_progress(:on_exit)
       return queue_signal(:poll_power_on_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
