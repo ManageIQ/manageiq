@@ -327,12 +327,10 @@ class InfraConversionJob < Job
     queue_signal(:poll_automate_state_machine)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
-    if migration_phase == 'pre'
-      abort_conversion(error.message, 'error')
-    else
-      handover_to_automate
-      queue_signal(:poll_automate_state_machine)
-    end
+    return abort_conversion(error.message, 'error') if migration_phase == 'pre'
+
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
   end
 
   def poll_run_migration_playbook_complete
@@ -361,12 +359,10 @@ class InfraConversionJob < Job
     queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
-    if migration_phase == 'pre'
-      abort_conversion(error.message, 'error')
-    else
-      handover_to_automate
-      return queue_signal(:poll_automate_state_machine)
-    end
+    return abort_conversion(error.message, 'error') if migration_phase == 'pre'
+
+    handover_to_automate
+    return queue_signal(:poll_automate_state_machine)
   end
 
   def shutdown_vm
