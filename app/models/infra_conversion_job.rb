@@ -497,10 +497,10 @@ class InfraConversionJob < Job
     destination_vm.save
 
     update_migration_task_progress(:on_exit)
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:power_on_vm)
   rescue StandardError
     update_migration_task_progress(:on_error)
-    queue_signal(:poll_automate_state_machine)
+    queue_signal(:power_on_vm)
   end
 
   def power_on_vm

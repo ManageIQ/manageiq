@@ -1172,7 +1172,7 @@ RSpec.describe InfraConversionJob, :v2v do
       allow(job.migration_task.source).to receive(:service).and_raise('Fake error message')
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
-      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      expect(job).to receive(:queue_signal).with(:power_on_vm)
       job.signal(:restore_vm_attributes)
     end
 
@@ -1186,7 +1186,7 @@ RSpec.describe InfraConversionJob, :v2v do
         vm_vmware.update!(:retirement_warn => 7)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+        expect(job).to receive(:queue_signal).with(:power_on_vm)
         job.signal(:restore_vm_attributes)
         vm_redhat.reload
         expect(vm_vmware.service).to be_nil
