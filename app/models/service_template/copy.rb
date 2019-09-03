@@ -1,7 +1,7 @@
 module ServiceTemplate::Copy
   extend ActiveSupport::Concern
 
-  def template_copy(new_name = "Copy of " + name + Time.zone.now.to_s)
+  def template_copy(new_name = "Copy of " + name + Time.zone.now.to_s, copy_tags: false)
     if template_valid? && type != 'ServiceTemplateAnsiblePlaybook'
       ActiveRecord::Base.transaction do
         dup.tap do |template|
@@ -10,7 +10,7 @@ module ServiceTemplate::Copy
           resource_action_copy(template)
           additional_tenant_copy(template)
           picture_copy(template) if picture
-
+          tags_copy(template) if copy_tags
           direct_custom_buttons.each { |custom_button| custom_button_copy(custom_button, template) }
           custom_button_sets.each { |custom_button_set| custom_button_set_copy(custom_button_set, template) }
           template.save!
@@ -46,5 +46,9 @@ module ServiceTemplate::Copy
 
   def resource_action_copy(template)
     template.resource_actions << resource_actions.collect(&:dup)
+  end
+
+  def tags_copy(template)
+    template.tags << tags.dup
   end
 end

@@ -215,5 +215,28 @@ describe ServiceTemplate do
         expect(new_template.additional_tenants.count).to eq(2)
       end
     end
+
+    context "tags" do
+      it "does not duplicate tags by default" do
+        service_template.tags << FactoryBot.create(:tag)
+        expect(service_template.tags.count).to eq(1)
+
+        new_template = service_template.template_copy
+
+        expect(new_template.tags.count).to be_zero
+      end
+
+      it "duplicates tags" do
+        service_template.tags << [
+          FactoryBot.create(:tag),
+          FactoryBot.create(:tag)
+        ]
+        expect(service_template.tags.count).to eq(2)
+
+        new_template = service_template.template_copy(:copy_tags => true)
+
+        expect(new_template.tags).to match_array(service_template.tags)
+      end
+    end
   end
 end
