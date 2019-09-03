@@ -51,7 +51,7 @@ shared_examples :placeholders do |dir|
     errors = []
     Pathname.glob(File.join(dir, "**", "*.pot")).each do |pot_file|
       File.open(pot_file).each do |line|
-        next unless line =~ /^.*(".*\#\{[.\w]+\}.*")$/
+        next unless line =~ /^.+"(.*\#\{.+\})/
 
         errors.push($1)
       end
