@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Ivanchuk RC1
+## Unreleased as of Sprint 119 - 2019-09-02
+
+### Added
+- Add Settings attribute for displaying the ops/database screen [(#19208)](https://github.com/ManageIQ/manageiq/pull/19208)
+
+### Fixed
+- Show saved currency value consistently [(#19207)](https://github.com/ManageIQ/manageiq/pull/19207)
+- Set service's lifecycle_state based on miq_request_task's state. [(#19205)](https://github.com/ManageIQ/manageiq/pull/19205)
+- Set result_format to ignore for enabled open_url. [(#19195)](https://github.com/ManageIQ/manageiq/pull/19195)
+- Fix: Vm#ems_created_on  field is empty for vm (VMware provider) [(#19185)](https://github.com/ManageIQ/manageiq/pull/19185)
+- Service retirement request should be per region. [(#19143)](https://github.com/ManageIQ/manageiq/pull/19143)
+
+## Ivanchuk RC1 - Released 2019-08-27
 
 ### Added
 - Allow MiqSchedule to accept nil and skip scheduling [(#19105)](https://github.com/ManageIQ/manageiq/pull/19105)
