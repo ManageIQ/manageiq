@@ -340,7 +340,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     # Only select the colums we need
-    vms = vms.select(:id, :name, :guid, :uid_ems, :ems_id, :cloud_tenant_id)
+    vms = vms.select(:id, :type, :name, :guid, :uid_ems, :ems_id, :cloud_tenant_id)
 
     allowed_templates_list = source_vm_rbac_filter(vms, condition, VM_OR_TEMPLATE_EXTRA_COLS).to_a
     @allowed_templates_filter = filter_id
