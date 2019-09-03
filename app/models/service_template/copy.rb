@@ -5,7 +5,7 @@ module ServiceTemplate::Copy
     if template_valid? && type != 'ServiceTemplateAnsiblePlaybook'
       ActiveRecord::Base.transaction do
         dup.tap do |template|
-          template.update_attributes(:name => new_name, :display => false)
+          template.update!(:name => new_name, :display => false, :options => {:button_order => []})
           service_resources.each { |service_resource| resource_copy(service_resource, template) }
           resource_action_copy(template)
           additional_tenant_copy(template)
@@ -26,11 +26,13 @@ module ServiceTemplate::Copy
   end
 
   def custom_button_copy(custom_button, template)
-    custom_button.copy(:applies_to => template)
+    new_cb = custom_button.copy(:applies_to => template)
+    template[:options][:button_order] << "cb-#{new_cb.id}"
   end
 
   def custom_button_set_copy(custom_button_set, template)
-    custom_button_set.deep_copy(:owner => template)
+    new_cbs = custom_button_set.deep_copy(:owner => template)
+    template[:options][:button_order] << "cbg-#{new_cbs.id}"
   end
 
   def picture_copy(template)
