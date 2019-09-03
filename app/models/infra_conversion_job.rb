@@ -399,7 +399,7 @@ class InfraConversionJob < Job
       raise migration_task.options[:virtv2v_message]
     when 'succeeded'
       update_migration_task_progress(:on_exit)
-      queue_signal(:poll_automate_state_machine)
+      queue_signal(:poll_inventory_refresh_complete)
     end
   rescue StandardError => error
     update_migration_task_progress(:on_error)

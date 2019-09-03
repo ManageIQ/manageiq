@@ -948,7 +948,7 @@ RSpec.describe InfraConversionJob, :v2v do
           task.update_options(:virtv2v_status => 'succeeded')
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry).and_call_original
           expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit).and_call_original
-          expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+          expect(job).to receive(:queue_signal).with(:poll_inventory_refresh_complete)
           job.signal(:poll_transform_vm_complete)
           expect(task.reload.options[:progress][:states][job.state.to_sym]).to include(:percent => 100.0)
         end
