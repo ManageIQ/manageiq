@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
+## Hammer-11
+
+### Added
+- Add Auth KeyPair Ownership feature [(#19124)](https://github.com/ManageIQ/manageiq/pull/19124)
+
+### Fixed
+- Don't load BinaryBlobParts when determining if MiqReportResult is blank [(#19082)](https://github.com/ManageIQ/manageiq/pull/19082)
+- Fix: do not raise error if schedule for widget exists but not linked [(#19037)](https://github.com/ManageIQ/manageiq/pull/19037)
+ 
 ## Unreleased as of Sprint 119 - 2019-09-02
 
 ### Added
@@ -25,10 +34,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Add support to Embedded Ansible for ssh user@host:path urls [(#19129)](https://github.com/ManageIQ/manageiq/pull/19129)
 - Allow move_into_folder to optionally take string arg for automate engine exposure [(#19086)](https://github.com/ManageIQ/manageiq/pull/19086)
 - Add product feature for VMRC consoles in the SUI [(#19097)](https://github.com/ManageIQ/manageiq/pull/19097)
-- Add Auth KeyPair Ownership feature [(#19124)](https://github.com/ManageIQ/manageiq/pull/19124)
 
 ### Fixed
-- Fix: do not raise error if schedule for widget exists but not linked [(#19037)](https://github.com/ManageIQ/manageiq/pull/19037) 
 - Fix: make chargeback generation for service to be region aware and do not generate for retired service [(#19101)](https://github.com/ManageIQ/manageiq/pull/19101)
 - [EmbeddedAnsible] Handle nested playbooks [(#19089)](https://github.com/ManageIQ/manageiq/pull/19089)
 - Run ansible-runner with PYTHONPATH set to access additional modules [(#19118)](https://github.com/ManageIQ/manageiq/pull/19118)
@@ -65,7 +72,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Queue ServiceAnsiblePlaybook#execute for the embedded_ansible role [(#19055)](https://github.com/ManageIQ/manageiq/pull/19055)
 - Fixed seeding failure if yaml file containing report was renamed [(#19080)](https://github.com/ManageIQ/manageiq/pull/19080)
 - Refactor Overview Utilization menu text [(#19062)](https://github.com/ManageIQ/manageiq/pull/19062)
-- Don't load BinaryBlobParts when determining if MiqReportResult is blank [(#19082)](https://github.com/ManageIQ/manageiq/pull/19082)
 
 ## Ivanchuk Beta1 - Released 2019-07-29
 
