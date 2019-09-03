@@ -1,8 +1,6 @@
 class AuthToken < Authentication
-  def auth_key=(val)
-    auth_changed = true if auth_key && (val != auth_key)
-    super(val)
-  end
+  after_update :after_authentication_changed,
+    :if => Proc.new{ |auth| auth.saved_change_to_auth_key? }
 
   def self.display_name(number = 1)
     n_('Authentication Token', 'Authentication Tokens', number)

@@ -5,8 +5,6 @@ class Authentication < ApplicationRecord
   include YAMLImportExportMixin
   include NewWithTypeStiMixin
 
-  attr_accessor :auth_changed
-
   def self.new(*args, &block)
     if self == Authentication
       AuthUseridPassword.new(*args, &block)
@@ -36,8 +34,7 @@ class Authentication < ApplicationRecord
 
   has_many :configuration_script_sources
 
-  before_save :set_credentials_changed_on
-  after_save :after_authentication_changed
+  after_update :after_authentication_changed
 
   serialize :options
 
@@ -155,20 +152,18 @@ class Authentication < ApplicationRecord
 
   private
 
-  def set_credentials_changed_on
-    return unless auth_changed
-    self.credentials_changed_on = Time.now.utc
+  def set_tenant_from_group
+    self.tenant_id = miq_group.tenant_id if miq_group
   end
 
   def after_authentication_changed
-    return unless auth_changed
     _log.info("[#{resource_type}] [#{resource_id}], previously valid on: [#{last_valid_on}]")
 
     raise_event(:changed)
+    self.credentials_changed_on = Time.now.utc
 
     # Async validate the credentials
     resource.authentication_check_types_queue(authentication_type) if resource
-    auth_changed = false
   end
 
   def event_prefix
