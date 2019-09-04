@@ -11,6 +11,7 @@ class InfraConversionThrottler
       slots = (ems.miq_custom_get('MaxTransformationRunners') || Settings.transformation.limits.max_concurrent_tasks_per_ems).to_i - running
 
       jobs.each do |job|
+        next if job.state == 'running'
         vm_name = job.migration_task.source.name
 
         preflight_check = job.migration_task.preflight_check
