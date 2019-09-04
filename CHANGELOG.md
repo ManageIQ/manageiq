@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-10
+## Hammer-11
+
+### Added
+- Add Auth KeyPair Ownership feature [(#19124)](https://github.com/ManageIQ/manageiq/pull/19124)
+
+### Fixed
+- Don't load BinaryBlobParts when determining if MiqReportResult is blank [(#19082)](https://github.com/ManageIQ/manageiq/pull/19082)
+- Fix: do not raise error if schedule for widget exists but not linked [(#19037)](https://github.com/ManageIQ/manageiq/pull/19037)
+ 
+## Hammer-10 - Released 2019-08-15
 
 ### Fixed
 - Don't create retirement tasks for things that are already retired [(#18895)](https://github.com/ManageIQ/manageiq/pull/18895)
