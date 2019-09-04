@@ -100,10 +100,16 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def backlog
-    connection.xlog_location_diff(remote_region_lsn, subscription_attributes["remote_replication_lsn"])
-  rescue PG::Error => e
-    _log.error(e.message)
-    nil
+    if status != "replicating"
+      _log.error("Is `#{dbname}` running on host `#{host}` and accepting TCP/IP connections on port #{port} ?")
+      return nil
+    end
+    begin
+      connection.xlog_location_diff(remote_region_lsn, subscription_attributes["remote_replication_lsn"])
+    rescue PG::Error => e
+      _log.error(e.message)
+      nil
+    end
   end
 
   def sync_tables
