@@ -152,6 +152,10 @@ class LogFile < ApplicationRecord
     file_depot.upload_file(self)
   end
 
+  def upload_log_file_support
+    file_depot.upload_file(self)
+  end
+
   def upload_log_file_nfs
     uri_to_add = build_log_uri(file_depot.uri, local_file)
     uri        = MiqNfsSession.new(legacy_depot_hash).add(local_file, uri_to_add)

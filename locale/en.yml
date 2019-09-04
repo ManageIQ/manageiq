@@ -735,6 +735,7 @@ en:
       FileDepotS3:              AWS S3
       FileDepotSwift:           OpenStack Swift
       FileDepotSmb:             Samba
+      FileDepotSupport:         Support
       Filesystem:               File
       Flavor:                   Flavor
       FloatingIp:               Floating IP
