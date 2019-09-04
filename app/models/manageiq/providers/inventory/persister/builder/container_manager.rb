@@ -248,6 +248,9 @@ module ManageIQ::Providers
                 inventory_object = inventory_objects_index.delete(index)
                 hash             = attributes_index.delete(index)
 
+                # Skip if hash is blank, which can happen when having several archived entities with the same ref
+                next unless hash
+
                 # Make the entity active again, otherwise we would be duplicating nested entities
                 hash[:deleted_on] = nil
 
