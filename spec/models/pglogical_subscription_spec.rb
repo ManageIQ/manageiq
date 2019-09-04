@@ -468,6 +468,13 @@ describe PglogicalSubscription do
 
       expect(described_class.first.backlog).to be nil
     end
+
+    it 'does not attempt to calculate backlog and returns nil unless subscription status is "replicating"' do
+      allow(described_class).to receive(:subscription_status).and_return("down")
+
+      expect(remote_connection).not_to receive(:xlog_location)
+      expect(described_class.first.backlog).to be nil
+    end
   end
 
   private
