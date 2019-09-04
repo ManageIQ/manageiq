@@ -35,6 +35,7 @@ class VmReconfigureTask < MiqRequestTask
     new_settings << "Resize Disks: #{req_obj.options[:disk_resize].length}" if req_obj.options[:disk_resize].present?
     new_settings << "Add Network Adapters: #{req_obj.options[:network_adapter_add].length}" if req_obj.options[:network_adapter_add].present?
     new_settings << "Remove Network Adapters: #{req_obj.options[:network_adapter_remove].length}" if req_obj.options[:network_adapter_remove].present?
+    new_settings << "Edit Network Adapters: #{req_obj.options[:network_adapter_edit].length}" if req_obj.options[:network_adapter_edit].present?
     new_settings << "Attach CD/DVDs: #{req_obj.options[:cdrom_connect].length}" if req_obj.options[:cdrom_connect].present?
     new_settings << "Detach CD/DVDs: #{req_obj.options[:cdrom_disconnect].length}" if req_obj.options[:cdrom_disconnect].present?
     "#{request_class::TASK_DESCRIPTION} for: #{name} - #{new_settings.join(", ")}"
