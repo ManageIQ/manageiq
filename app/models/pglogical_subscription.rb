@@ -108,10 +108,16 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def backlog
-    connection.xlog_location_diff(remote_node_lsn, remote_replication_lsn)
-  rescue PG::Error => e
-    _log.error(e.message)
-    nil
+    if status != "replicating"
+      _log.error("Please check that database `#{dbname}` is running on host `#{host}` and accepting TCP/IP connections on port #{port}")
+      return nil
+    end
+    begin
+      connection.xlog_location_diff(remote_node_lsn, remote_replication_lsn)
+    rescue PG::Error => e
+      _log.error(e.message)
+      nil
+    end
   end
 
   # translate the output from the pglogical stored proc to our object columns
