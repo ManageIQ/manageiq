@@ -135,13 +135,13 @@ RSpec.describe TransformationMappingItem, :v2v do
         let(:valid_source) { FactoryBot.create(:transformation_mapping_item, :source => src_lan, :destination => dst_cloud_network, :transformation_mapping_id => ops_mapping.id) }
         let(:invalid_source) { FactoryBot.build(:transformation_mapping_item, :source => dst_cloud_network, :destination => src_lan, :transformation_mapping_id => ops_mapping.id) }
 
-          before do
-            src_switch.lans << [src_lan]
-            src_vmware_host.switches << [src_switch]
-            vmware_cluster.hosts << [src_vmware_host]
+        before do
+          src_switch.lans << [src_lan]
+          src_vmware_host.switches << [src_switch]
+          vmware_cluster.hosts << [src_vmware_host]
 
-            cloud_tenant.cloud_networks << [dst_cloud_network]
-          end
+          cloud_tenant.cloud_networks << [dst_cloud_network]
+        end
 
         it "valid source" do
           expect(valid_source.valid?).to be(true)
