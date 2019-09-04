@@ -33,7 +33,7 @@ module Job::StateMachine
       save
       send(signal, *args) if respond_to?(signal)
     else
-      raise _("%{signal} is not permitted at state %{state}") % {:signal => signal, :state => state}
+      raise _("%{signal} is not permitted at state %{state} for job ID %{id}") % {:signal => signal, :state => state, :id => id}
     end
   end
 end
