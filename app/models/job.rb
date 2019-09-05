@@ -16,10 +16,9 @@ class Job < ApplicationRecord
   DEFAULT_TIMEOUT = 300
   DEFAULT_USERID  = 'system'.freeze
 
-  def self.create_job(process_type, options = {})
-    klass = Object.const_get(process_type)
+  def self.create_job(options = {})
     ar_options = options.dup.delete_if { |k, _v| !Job.column_names.include?(k.to_s) }
-    job = klass.new(ar_options)
+    job = new(ar_options)
     job.options = options
     job.initialize_attributes
     job.save

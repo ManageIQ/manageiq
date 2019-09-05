@@ -273,7 +273,7 @@ describe Job do
         end
 
         it "returns the correct adjusment 1 if target class was not defined" do
-          job_without_target = Job.create_job("VmScan", :target_class => nil)
+          job_without_target = VmScan.create_job(:target_class => nil)
           expect(job_without_target.timeout_adjustment).to eq(1)
         end
       end
@@ -329,7 +329,7 @@ describe Job do
 
   context "before_destroy callback" do
     before do
-      @job = Job.create_job("VmScan", :name => "Hello, World!")
+      @job = VmScan.create_job(:name => "Hello, World!")
     end
 
     it "allows to delete not active job" do
@@ -348,7 +348,7 @@ describe Job do
 
   describe "#attributes_log" do
     it "returns attributes for logging" do
-      job = Job.create_job("VmScan", :name => "Hello, World!")
+      job = VmScan.create_job(:name => "Hello, World!")
       expect(job.attributes_log).to include("VmScan", "Hello, World!", job.guid)
     end
   end
@@ -356,7 +356,7 @@ describe Job do
   context "belongs_to task" do
     let(:job_name) { "Hello, World!" }
     before do
-      @job = Job.create_job("VmScan", :name => job_name)
+      @job = VmScan.create_job(:name => job_name)
       @task = MiqTask.find_by(:name => job_name)
     end
 
@@ -428,7 +428,7 @@ describe Job do
     let(:message) { "Very Interesting Message" }
 
     it "updates 'jobs.message' column" do
-      Job.create_job("VmScan").update_message(message)
+      VmScan.create_job.update_message(message)
       expect(Job.first.message).to eq message
     end
   end
@@ -438,7 +438,7 @@ describe Job do
     let(:guid) { "qwerty" }
 
     it "finds job by passed guid and updates 'message' column for found record" do
-      Job.create_job("VmScan", :guid => guid)
+      VmScan.create_job(:guid => guid)
       Job.update_message(guid, message)
       expect(Job.find_by(:guid => guid).message).to eq message
     end

@@ -265,11 +265,11 @@ describe JobProxyDispatcher do
   end
 
   context "limiting number of smart state analysis running on one server" do
-    let(:job) { Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 1") }
+    let(:job) { VmScan.create_job(:miq_server_id => @server.id, :name => "Hello - 1") }
     before do
-      Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 2")
+      VmScan.create_job(:miq_server_id => @server.id, :name => "Hello - 2")
          .update_attributes(:dispatch_status => "active")
-      Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello - 3")
+      VmScan.create_job(:miq_server_id => @server.id, :name => "Hello - 3")
          .update_attributes(:dispatch_status => "active")
     end
 
@@ -302,7 +302,7 @@ describe JobProxyDispatcher do
 
   describe "#start_job_on_proxy" do
     it "creates job options and passing it to `queue_signal'" do
-      job = Job.create_job("VmScan", :miq_server_id => @server.id, :name => "Hello, World")
+      job = VmScan.create_job(:miq_server_id => @server.id, :name => "Hello, World")
       dispatcher.instance_variable_set(:@active_vm_scans_by_zone, @server.my_zone => 0)
 
       job_options = {:args => ["start"], :zone => @server.my_zone, :server_guid => @server.guid, :role => "smartproxy"}
@@ -315,7 +315,7 @@ describe JobProxyDispatcher do
 
   describe "#do_dispatch" do
     let(:ems_id) { 1 }
-    let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
+    let(:job) { VmScan.create_job(:name => "Hello, World") }
 
     before do
       dispatcher.instance_variable_set(:@active_container_scans_by_zone_and_ems, @server.my_zone => {ems_id => 0})
@@ -358,7 +358,7 @@ describe JobProxyDispatcher do
   end
 
   describe "#queue_signal" do
-    let(:job) { Job.create_job("VmScan", :name => "Hello, World") }
+    let(:job) { VmScan.create_job(:name => "Hello, World") }
 
     it "queues call to Job::StateMachine#signal_abort if signal is 'abort'" do
       options = {:args => [:abort]}
@@ -385,7 +385,7 @@ describe JobProxyDispatcher do
   describe "#dispatch_to_ems" do
     let(:ems_id) { 1 }
     let(:jobs) do
-      [Job.create_job("VmScan", :name => "Hello, World 1"), Job.create_job("VmScan", :name => "Hello, World 2")]
+      [VmScan.create_job(:name => "Hello, World 1"), VmScan.create_job(:name => "Hello, World 2")]
     end
 
     it "dispatches all supplied jobs if supplied concurency limit is 0" do
