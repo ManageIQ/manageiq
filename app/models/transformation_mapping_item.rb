@@ -11,6 +11,9 @@ class TransformationMappingItem < ApplicationRecord
   validate :validate_source_datastore,      :if => -> { source.kind_of?(Storage) }
   validate :validate_destination_datastore, :if => -> { destination.kind_of?(Storage) || destination.kind_of?(CloudVolume) }
 
+  validate :validate_source_network,      :if => -> { source.kind_of?(Lan) }
+  validate :validate_destination_network, :if => -> { destination.kind_of?(Lan) || destination.kind_of?(CloudNetwork) }
+
   VALID_SOURCE_CLUSTER_PROVIDERS = %w[vmwarews].freeze
   VALID_DESTINATION_CLUSTER_PROVIDERS = %w[rhevm openstack].freeze
 
@@ -53,6 +56,34 @@ class TransformationMappingItem < ApplicationRecord
 
     unless dst_cluster_storages.include?(destination_storage)
       errors.add(:destination, "Destination cluster storages must include destination storage: #{destination_storage}")
+    end
+  end
+
+  def validate_source_network
+    tm               = transformation_mapping
+    tmin             = tm.transformation_mapping_items.where(:source_type => "EmsCluster")
+    src_cluster_lans = tmin.collect(&:source).flat_map(&:lans)
+    source_lan       = source
+
+    unless src_cluster_lans.include?(source_lan)
+      errors.add(:source, "Source cluster lans must include source lan: #{source_lan}")
+    end
+  end
+
+  def validate_destination_network
+    tm              = transformation_mapping
+    destination_lan = destination
+
+    if destination.kind_of?(Lan) # red hat
+      tmin             = tm.transformation_mapping_items.where(:destination_type=> "EmsCluster")
+      dst_cluster_lans = tmin.collect(&:destination).flat_map(&:lans)
+    elsif destination.kind_of?(CloudNetwork) # Openstack, lans are of 'CloudNetwork' type
+      tmin             = tm.transformation_mapping_items.where(:destination_type => "CloudTenant")
+      dst_cluster_lans = tmin.collect(&:destination).flat_map(&:cloud_networks)
+    end
+
+    unless dst_cluster_lans.include?(destination_lan)
+      errors.add(:destination, "Destination cluster lans must include destination lan: #{destination_lan}")
     end
   end
 end
