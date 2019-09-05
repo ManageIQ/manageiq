@@ -2307,7 +2307,7 @@ describe Rbac::Filterer do
                                   :order            => :updated_on)
 
         expect(attrs[:auth_count]).to eq(3)
-        expect(recs.map(&:id)).to eq(vms.sort_by(&:updated_on).reverse.map(&:id))
+        expect(recs.map(&:id)).to eq(vms.map(&:id))
       end
     end
   end
