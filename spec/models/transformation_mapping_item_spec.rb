@@ -53,7 +53,6 @@ RSpec.describe TransformationMappingItem, :v2v do
   # Datastore Validation
   # ---------------------------------------------------------------------------
   context "datastore validation" do
-    # let(:ems_ops) { FactoryBot.create(:ems_openstack) }
     let(:cloud_tenant) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_openstack) }
 
     context "source vmware datastore" do
@@ -105,7 +104,6 @@ RSpec.describe TransformationMappingItem, :v2v do
   # Network Validation
   # ---------------------------------------------------------------------------
   context "Network validation" do
-    # let(:ems_ops) { FactoryBot.create(:ems_openstack) }
     let(:cloud_tenant) { FactoryBot.create(:cloud_tenant_openstack, :ext_management_system => ems_openstack) }
 
     # source network
