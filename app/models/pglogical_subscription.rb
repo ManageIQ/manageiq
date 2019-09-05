@@ -109,7 +109,7 @@ class PglogicalSubscription < ActsAsArModel
 
   def backlog
     if status != "replicating"
-      _log.error("Please check that database `#{dbname}` is running on host `#{host}` and accepting TCP/IP connections on port #{port}")
+      _log.error("Is `#{dbname}` running on host `#{host}` and accepting TCP/IP connections on port #{port} ?")
       return nil
     end
     begin
