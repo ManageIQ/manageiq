@@ -12,8 +12,11 @@ RSpec.describe TransformationMapping, :v2v do
   let(:src_storages_vmware) { FactoryBot.create_list(:storage, 1, :hosts => src_hosts_vmware) }
   let(:dst_storages_redhat) { FactoryBot.create_list(:storage, 1, :hosts => dst_hosts_redhat) }
 
-  let(:src_lan_vmware) { FactoryBot.create(:lan) }
-  let(:dst_lan_redhat) { FactoryBot.create(:lan) }
+  let(:src_switches_vmware) { FactoryBot.create_list(:switch, 1, :hosts => src_hosts_vmware) }
+  let(:dst_switches_redhat) { FactoryBot.create_list(:switch, 1, :hosts => dst_hosts_redhat) }
+
+  let(:src_lans_vmware) { FactoryBot.create_list(:lan, 1, :switch => src_switches_vmware.first) }
+  let(:dst_lans_redhat) { FactoryBot.create_list(:lan, 1, :switch => dst_switches_redhat.first) }
 
   let(:dst_cloud_tenant_openstack) { FactoryBot.create(:cloud_tenant, :ext_management_system => dst_ems_openstack) }
 
@@ -30,8 +33,8 @@ RSpec.describe TransformationMapping, :v2v do
         :transformation_mapping => tm
       )
       FactoryBot.create(:transformation_mapping_item,
-        :source                 => src_lan_vmware,
-        :destination            => dst_lan_redhat,
+        :source                 => src_lans_vmware.first,
+        :destination            => dst_lans_redhat.first,
         :transformation_mapping => tm
       )
     end
@@ -69,7 +72,7 @@ RSpec.describe TransformationMapping, :v2v do
   end
 
   context '#search_vms_and_validate' do
-    let(:nics) { FactoryBot.create_list(:guest_device_nic, 1, :lan => src_lan_vmware) }
+    let(:nics) { FactoryBot.create_list(:guest_device_nic, 1, :lan => src_lans_vmware.first) }
     let(:hardware) { FactoryBot.create(:hardware, :guest_devices => nics) }
 
     let!(:vm) do
