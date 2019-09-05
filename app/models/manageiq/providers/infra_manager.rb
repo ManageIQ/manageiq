@@ -24,6 +24,8 @@ module ManageIQ::Providers
     has_many :guest_devices,              :through => :hardwares
     has_many :ems_custom_attributes,      :through => :vms_and_templates
 
+    include HasManyOrchestrationStackMixin
+
     class << model_name
       define_method(:route_key) { "ems_infras" }
       define_method(:singular_route_key) { "ems_infra" }
