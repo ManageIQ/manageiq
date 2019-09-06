@@ -2,7 +2,7 @@ class ManageIQ::Providers::AnsibleRunnerWorkflow < Job
   def self.create_job(env_vars, extra_vars, role_or_playbook_options,
                       hosts = ["localhost"], credentials = [],
                       timeout: 1.hour, poll_interval: 1.second, verbosity: 0, become_enabled: false)
-    super(name, role_or_playbook_options.merge(
+    super(role_or_playbook_options.merge(
       :become_enabled => become_enabled,
       :credentials    => credentials,
       :env_vars       => env_vars,

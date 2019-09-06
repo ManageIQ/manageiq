@@ -1,8 +1,4 @@
 class ManageIQ::Providers::EmsRefreshWorkflow < Job
-  def self.create_job(options)
-    super(name, options)
-  end
-
   #
   # State-transition diagram:
   #                              :poll_native_task

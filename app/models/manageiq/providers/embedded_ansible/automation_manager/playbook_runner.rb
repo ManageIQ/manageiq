@@ -3,7 +3,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
 
   # options are job table columns, including options column which is the playbook context info
   def self.create_job(options)
-    super(name, options.with_indifferent_access)
+    super(options.with_indifferent_access)
   end
 
   def minimize_indirect
