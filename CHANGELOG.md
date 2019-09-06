@@ -5,28 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Hammer-11
-
-### Added
-- Add Auth KeyPair Ownership feature [(#19124)](https://github.com/ManageIQ/manageiq/pull/19124)
-
-### Fixed
-- Don't load BinaryBlobParts when determining if MiqReportResult is blank [(#19082)](https://github.com/ManageIQ/manageiq/pull/19082)
-- Fix: do not raise error if schedule for widget exists but not linked [(#19037)](https://github.com/ManageIQ/manageiq/pull/19037)
- 
-## Unreleased as of Sprint 119 - 2019-09-02
-
-### Added
-- Add Settings attribute for displaying the ops/database screen [(#19208)](https://github.com/ManageIQ/manageiq/pull/19208)
-
-### Fixed
-- Show saved currency value consistently [(#19207)](https://github.com/ManageIQ/manageiq/pull/19207)
-- Set service's lifecycle_state based on miq_request_task's state. [(#19205)](https://github.com/ManageIQ/manageiq/pull/19205)
-- Set result_format to ignore for enabled open_url. [(#19195)](https://github.com/ManageIQ/manageiq/pull/19195)
-- Fix: Vm#ems_created_on  field is empty for vm (VMware provider) [(#19185)](https://github.com/ManageIQ/manageiq/pull/19185)
-- Service retirement request should be per region. [(#19143)](https://github.com/ManageIQ/manageiq/pull/19143)
-
-## Ivanchuk RC1 - Released 2019-08-27
+## Ivanchuk-1
 
 ### Added
 - Allow MiqSchedule to accept nil and skip scheduling [(#19105)](https://github.com/ManageIQ/manageiq/pull/19105)
@@ -34,48 +13,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Add support to Embedded Ansible for ssh user@host:path urls [(#19129)](https://github.com/ManageIQ/manageiq/pull/19129)
 - Allow move_into_folder to optionally take string arg for automate engine exposure [(#19086)](https://github.com/ManageIQ/manageiq/pull/19086)
 - Add product feature for VMRC consoles in the SUI [(#19097)](https://github.com/ManageIQ/manageiq/pull/19097)
-
-### Fixed
-- Fix: make chargeback generation for service to be region aware and do not generate for retired service [(#19101)](https://github.com/ManageIQ/manageiq/pull/19101)
-- [EmbeddedAnsible] Handle nested playbooks [(#19089)](https://github.com/ManageIQ/manageiq/pull/19089)
-- Run ansible-runner with PYTHONPATH set to access additional modules [(#19118)](https://github.com/ManageIQ/manageiq/pull/19118)
-- Allow users to specify a proxy for git repositories [(#19132)](https://github.com/ManageIQ/manageiq/pull/19132)
-
-## Unreleased as of Sprint 118 - 2019-08-19
-
-### Added
-- Add initiated_by to miq_requests [(#19073)](https://github.com/ManageIQ/manageiq/pull/19073)
-- Support EmbeddedAnsible SCM credentials [(#19027)](https://github.com/ManageIQ/manageiq/pull/19027)
-
-### Fixed
-- Remove user roles for Host Discover and Add [(#19116)](https://github.com/ManageIQ/manageiq/pull/19116)
-
-### Removed
-- Remove deprecated VMWare Hosts [(#19159)](https://github.com/ManageIQ/manageiq/pull/19159)
-
-## Hammer-10 - Released 2019-08-15
-
-### Fixed
-- Don't create retirement tasks for things that are already retired [(#18895)](https://github.com/ManageIQ/manageiq/pull/18895)
-- Allow modification of "Create new Picture" product feature on a role. [(#18982)](https://github.com/ManageIQ/manageiq/pull/18982)
-- set vm name on reconnect [(#19031)](https://github.com/ManageIQ/manageiq/pull/19031)
-
-## Ivanchuk-Beta2 - Released 2019-08-14
-
-### Added
 - [EmbeddedAnsible] Better handle ConfigurationScriptSource status/last_updated_on/last_update_error [(#19061)](https://github.com/ManageIQ/manageiq/pull/19061)
 - Pull roles from ansible galaxy before running a playbook [(#19079)](https://github.com/ManageIQ/manageiq/pull/19079)
 - Update to PG10 package name/path for Docker image [(#19096)](https://github.com/ManageIQ/manageiq/pull/19096)
 - Don't create the embedded ansible default project [(#19056)](https://github.com/ManageIQ/manageiq/pull/19056)
-
-### Fixed
-- Queue ServiceAnsiblePlaybook#execute for the embedded_ansible role [(#19055)](https://github.com/ManageIQ/manageiq/pull/19055)
-- Fixed seeding failure if yaml file containing report was renamed [(#19080)](https://github.com/ManageIQ/manageiq/pull/19080)
-- Refactor Overview Utilization menu text [(#19062)](https://github.com/ManageIQ/manageiq/pull/19062)
-
-## Ivanchuk Beta1 - Released 2019-07-29
-
-### Added
 - Use escalate privilege setting in ansible services and automate methods [(#19012)](https://github.com/ManageIQ/manageiq/pull/19012)
 - [ansible_runner] Add NetworkCredential for Ansible::Runner lib [(#19007)](https://github.com/ManageIQ/manageiq/pull/19007)
 - [ansible_runner] Add VaultCredential [(#19002)](https://github.com/ManageIQ/manageiq/pull/19002)
@@ -135,6 +76,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 - Rename WebSocketWorker to RemoteConsoleWorker [(#18337)](https://github.com/ManageIQ/manageiq/pull/18337)
 
 ### Fixed
+- Set service's lifecycle_state based on miq_request_task's state. [(#19205)](https://github.com/ManageIQ/manageiq/pull/19205)
+- Do not attempt to calculate backlog unless subscription status is "replicating" [(#19234)](https://github.com/ManageIQ/manageiq/pull/19234)
+- Update the button order on copy [(#19227)](https://github.com/ManageIQ/manageiq/pull/19227)
+- Successive automation task runs shouldn't change the original params [(#19158)](https://github.com/ManageIQ/manageiq/pull/19158)
+- Fix: make chargeback generation for service to be region aware and do not generate for retired service [(#19101)](https://github.com/ManageIQ/manageiq/pull/19101)
+- [EmbeddedAnsible] Handle nested playbooks [(#19089)](https://github.com/ManageIQ/manageiq/pull/19089)
+- Run ansible-runner with PYTHONPATH set to access additional modules [(#19118)](https://github.com/ManageIQ/manageiq/pull/19118)
+- Allow users to specify a proxy for git repositories [(#19132)](https://github.com/ManageIQ/manageiq/pull/19132)
+- Queue ServiceAnsiblePlaybook#execute for the embedded_ansible role [(#19055)](https://github.com/ManageIQ/manageiq/pull/19055)
+- Fixed seeding failure if yaml file containing report was renamed [(#19080)](https://github.com/ManageIQ/manageiq/pull/19080)
+- Refactor Overview Utilization menu text [(#19062)](https://github.com/ManageIQ/manageiq/pull/19062)
 - Fix Embedded Ansible Respository refresh [(#19024)](https://github.com/ManageIQ/manageiq/pull/19024)
 - When copying ServiceTemplate copy only direct_custom_buttons [(#18960)](https://github.com/ManageIQ/manageiq/pull/18960)
 - Validate bools with inclusion [(#18914)](https://github.com/ManageIQ/manageiq/pull/18914)
@@ -182,6 +134,45 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 - Remove deprecated Optimize Planning - shortcuts and user roles [(#18624)](https://github.com/ManageIQ/manageiq/pull/18624)
+
+## Hammer-11
+
+### Added
+- Add Auth KeyPair Ownership feature [(#19124)](https://github.com/ManageIQ/manageiq/pull/19124)
+
+### Fixed
+- Don't load BinaryBlobParts when determining if MiqReportResult is blank [(#19082)](https://github.com/ManageIQ/manageiq/pull/19082)
+- Fix: do not raise error if schedule for widget exists but not linked [(#19037)](https://github.com/ManageIQ/manageiq/pull/19037)
+ 
+## Unreleased as of Sprint 119 - 2019-09-02
+
+### Added
+- Add Settings attribute for displaying the ops/database screen [(#19208)](https://github.com/ManageIQ/manageiq/pull/19208)
+
+### Fixed
+- Show saved currency value consistently [(#19207)](https://github.com/ManageIQ/manageiq/pull/19207)
+- Set result_format to ignore for enabled open_url. [(#19195)](https://github.com/ManageIQ/manageiq/pull/19195)
+- Fix: Vm#ems_created_on  field is empty for vm (VMware provider) [(#19185)](https://github.com/ManageIQ/manageiq/pull/19185)
+- Service retirement request should be per region. [(#19143)](https://github.com/ManageIQ/manageiq/pull/19143)
+
+## Unreleased as of Sprint 118 - 2019-08-19
+
+### Added
+- Add initiated_by to miq_requests [(#19073)](https://github.com/ManageIQ/manageiq/pull/19073)
+- Support EmbeddedAnsible SCM credentials [(#19027)](https://github.com/ManageIQ/manageiq/pull/19027)
+
+### Fixed
+- Remove user roles for Host Discover and Add [(#19116)](https://github.com/ManageIQ/manageiq/pull/19116)
+
+### Removed
+- Remove deprecated VMWare Hosts [(#19159)](https://github.com/ManageIQ/manageiq/pull/19159)
+
+## Hammer-10 - Released 2019-08-15
+
+### Fixed
+- Don't create retirement tasks for things that are already retired [(#18895)](https://github.com/ManageIQ/manageiq/pull/18895)
+- Allow modification of "Create new Picture" product feature on a role. [(#18982)](https://github.com/ManageIQ/manageiq/pull/18982)
+- set vm name on reconnect [(#19031)](https://github.com/ManageIQ/manageiq/pull/19031)
 
 ## Hammer-9 - Released 2019-07-23
 
