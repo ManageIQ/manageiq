@@ -226,8 +226,8 @@ class MiqExpression
     when "contains"
       op_args["tag"] ||= col_name
       operands = if context_type != "hash"
-                   ref, val = value2tag(op_args["tag"], op_args["value"])
-                   ["<exist ref=#{ref}>#{val}</exist>"]
+                   target = parse_field_or_tag(op_args["tag"])
+                   ["<exist ref=#{target.model.to_s.downcase}>#{target.tag_path_with(op_args["value"])}</exist>"]
                  elsif context_type == "hash"
                    # This is only for supporting reporting "display filters"
                    # In the report object the tag value is actually the description and not the raw tag name.
