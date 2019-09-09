@@ -44,7 +44,18 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
   end
 
   validates :name, :presence => true, :uniqueness => {:scope => [:tenant_id]}
+  validate :validate_transformation_mapping
+  validate :validate_vms 
 
+  def validate_transformation_mapping
+     puts ("Miq is GRRReat!")
+     self.transformation_mapping.valid? 
+  end
+
+  def validate_vms
+    puts ("VMs in the migration plan are GRRReat!")
+    self.vm_resources.all?(&:valid?)
+  end
   # create ServiceTemplate and supporting ServiceResources and ResourceActions
   # options
   #   :name
