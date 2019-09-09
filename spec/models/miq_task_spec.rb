@@ -312,7 +312,7 @@ describe MiqTask do
 
     it "doesn't destroy miq_task and associated job if job is active" do
       expect(MiqTask.count).to eq 0
-      job = Job.create_job("VmScan")
+      job = VmScan.create_job
       job.update_attributes!(:state => "active")
       expect(MiqTask.count).to eq 1
       MiqTask.first.destroy
@@ -331,7 +331,7 @@ describe MiqTask do
 
     it "destroys miq_task record and job record if job associated with it 'finished'" do
       expect(MiqTask.count).to eq 0
-      job = Job.create_job("VmScan")
+      job = VmScan.create_job
       job.update_attributes!(:state => "finished")
       expect(MiqTask.count).to eq 1
       MiqTask.first.destroy
@@ -341,7 +341,7 @@ describe MiqTask do
 
     it "destroys miq_task record and job record if job associated with it not started yet" do
       expect(MiqTask.count).to eq 0
-      job = Job.create_job("VmScan")
+      job = VmScan.create_job
       job.update_attributes!(:state => "waiting_to_start")
       expect(MiqTask.count).to eq 1
       MiqTask.first.destroy
@@ -472,7 +472,7 @@ describe MiqTask do
 
     context "task linked to job" do
       let(:miq_task) do
-        job = Job.create_job("VmScan")
+        job = VmScan.create_job
         job.miq_task
       end
 

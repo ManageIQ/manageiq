@@ -1,11 +1,6 @@
 class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
   DEFAULT_EXECUTION_TTL = 10 # minutes
 
-  # options are job table columns, including options column which is the playbook context info
-  def self.create_job(options)
-    super(name, options)
-  end
-
   def minimize_indirect
     @minimize_indirect = true if @minimize_indirect.nil?
     @minimize_indirect

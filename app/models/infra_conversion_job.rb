@@ -1,8 +1,4 @@
 class InfraConversionJob < Job
-  def self.create_job(options)
-    super(name, options)
-  end
-
   #
   # State-transition diagram:
   #                              :poll_conversion                         :poll_post_stage

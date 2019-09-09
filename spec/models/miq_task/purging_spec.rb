@@ -3,13 +3,13 @@ describe MiqTask do
     describe ".purge_by_date" do
       before do
         Timecop.freeze(8.days.ago) do
-          @old_task = Job.create_job("VmScan", :guid => "old").miq_task
+          @old_task = VmScan.create_job(:guid => "old").miq_task
           FactoryBot.create(:binary_blob, :name => "old", :resource_type => 'MiqTask', :resource_id => @old_task.id)
           FactoryBot.create(:log_file, :name => "old", :miq_task_id => @old_task.id)
         end
 
         Timecop.freeze(6.days.ago) do
-          @new_task = Job.create_job("VmScan", :guid => "recent").miq_task
+          @new_task = VmScan.create_job(:guid => "recent").miq_task
           @new_task.state_finished
           FactoryBot.create(:binary_blob, :name => "recent", :resource_type => 'MiqTask', :resource_id => @new_task.id)
           FactoryBot.create(:log_file, :name => "recent", :miq_task_id => @new_task.id)
