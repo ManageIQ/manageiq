@@ -79,7 +79,8 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
             :credential         => machine_credential.id,
             :cloud_credential   => cloud_credential.id,
             :network_credential => network_credential.id,
-            :vault_credential   => vault_credential.id
+            :vault_credential   => vault_credential.id,
+            :extra_vars         => { "param1" => "val1", "param2" => "val2" }
           }
         end
 
@@ -146,14 +147,9 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
             :name              => "play2"
           )
 
-          # TODO/FIXME:  This needs to be implemented.
-          #
-          # The following are implemented in AnsibleTower::Job but not here:
-          #
-          #   - update_parameters
-          #
-          # expect(subject.parameters.first).to have_attributes(:name => "param1", :value => "val1")
-          #
+          expect(subject.parameters[0]).to have_attributes(:name => "instance_ids", :value => '["i-3434"]')
+          expect(subject.parameters[1]).to have_attributes(:name => "param1", :value => "val1")
+          expect(subject.parameters[2]).to have_attributes(:name => "param2", :value => "val2")
         end
 
         # TODO:  This is should be irrelevant now, right?

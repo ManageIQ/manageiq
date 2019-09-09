@@ -22,6 +22,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
         :authentications       => collect_authentications(template.manager, options),
         :job_template          => template_ref).tap do |stack|
       stack.send(:update_with_provider_object, raw_create_stack(template, options))
+      stack.create_parameters(template, options)
     end
   end
 
@@ -87,6 +88,16 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
 
   def retireable?
     false
+  end
+
+  def create_parameters(template, options)
+    external = options[:extra_vars]
+
+    self.parameters = template.variables.merge(external || {}).collect do |key, val|
+      OrchestrationStackParameter.new(:name => key, :value => val, :ems_ref => "#{template.id}_#{key}")
+    end
+
+    save!
   end
 
   private
