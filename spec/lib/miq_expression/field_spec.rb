@@ -1,4 +1,16 @@
 RSpec.describe MiqExpression::Field do
+  describe ".tag_path_with" do
+    it "returns correct path with slash in value" do
+      target = described_class.parse('Vm.host-name')
+      expect(target.tag_path_with('thing1/thing2')).to eq("/virtual/host/name/thing1%2fthing2")
+    end
+
+    it "returns correct path with false in value" do
+      target = described_class.parse('MiqGroup.vms-disconnected')
+      expect(target.tag_path_with(false)).to eq("/virtual/vms/disconnected/false")
+    end
+  end
+
   describe ".parse" do
     it "can parse the model name" do
       field = "Vm-name"

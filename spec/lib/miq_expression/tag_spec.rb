@@ -1,4 +1,11 @@
 RSpec.describe MiqExpression::Tag do
+  describe ".tag_path_with" do
+    it "returns correct path" do
+      target = described_class.parse('Vm.managed-amazon:vm:name')
+      expect(target.tag_path_with('mapped:smartstate')).to eq("/managed/amazon:vm:name/mapped:smartstate")
+    end
+  end
+
   describe ".parse" do
     it "with model.managed-amazon" do
       tag = "Vm.managed-amazon:vm:name"
