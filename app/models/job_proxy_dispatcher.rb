@@ -202,7 +202,7 @@ class JobProxyDispatcher
   end
 
   def self.waiting?
-    Job.where(:state => 'waiting_to_start').exists?
+    Job.where(:state => 'waiting_to_start').exists? || InfraConversionJob.where.not(:state => ['finished', 'waiting_to_start']).exists?
   end
 
   def pending_jobs(job_class = VmScan)
