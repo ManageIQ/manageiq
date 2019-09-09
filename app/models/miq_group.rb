@@ -234,7 +234,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.create_tenant_group(tenant)
-    tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
+    tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name] + [tenant.id.to_s]).join("/")
 
     create_with(
       :description => "Tenant #{tenant_full_name} access"
