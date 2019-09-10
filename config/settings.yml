@@ -74,6 +74,10 @@
       :memory_method_description: High Normal Range of Allocated Memory
   :failover:
     :rule: discovered
+:compliances:
+  :history:
+    :keep_compliances: 6.months
+    :purge_window_size: 10000
 :coresident_miqproxy:
   :concurrent_per_ems: 1
   :concurrent_per_host: 1
@@ -1216,6 +1220,7 @@
       :authentication_check_interval: 1.hour
       :chargeback_generation_interval: 1.day
       :chargeback_generation_time_utc: 01:00:00
+      :compliance_purge_interval: 1.day
       :db_diagnostics_interval: 30.minutes
       :drift_state_purge_interval: 1.day
       :event_streams_purge_interval: 1.day
