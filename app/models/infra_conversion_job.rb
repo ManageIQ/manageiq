@@ -50,9 +50,11 @@ class InfraConversionJob < Job
       },
       :apply_right_sizing                   => {'waiting_for_inventory_refresh' => 'applying_right_sizing'},
       :restore_vm_attributes                => {'applying_right_sizing' => 'restoring_vm_attributes'},
+      :power_on_vm                          => {'restoring_vm_attributes' => 'powering_on_vm' },
+      :poll_power_on_vm_complete            => {'powering_on_vm' => 'powering_on_vm'},
       :poll_automate_state_machine          => {
-        'restoring_vm_attributes' => 'running_in_automate',
-        'running_in_automate'     => 'running_in_automate'
+        'powering_on_vm'      => 'running_in_automate',
+        'running_in_automate' => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},
@@ -107,6 +109,11 @@ class InfraConversionJob < Job
         :description => "Restore VM Attributes",
         :weight      => 1
       },
+      :powering_on_vm                => {
+        :description => "Power on virtual machine",
+        :weight      => 1,
+        :max_retries => 15.minutes / state_retry_interval
+      },
       :running_in_automate           => {
         :max_retries => 36.hours / state_retry_interval
       }
@@ -135,7 +142,7 @@ class InfraConversionJob < Job
   end
 
   def target_vm
-    return @target_vm = source_vm if migration_phase == 'pre'
+    return @target_vm = source_vm if migration_phase == 'pre' || migration_task.canceling?
     return @target_vm = destination_vm if migration_phase == 'post'
   end
 
@@ -494,8 +501,42 @@ class InfraConversionJob < Job
     destination_vm.save
 
     update_migration_task_progress(:on_exit)
+    queue_signal(:power_on_vm)
+  rescue StandardError
+    update_migration_task_progress(:on_error)
+    queue_signal(:power_on_vm)
+  end
+
+  def power_on_vm
+    update_migration_task_progress(:on_entry)
+
+    if migration_task.options[:source_vm_power_state] == 'on' && target_vm.power_state != 'on'
+      target_vm.start
+      update_migration_task_progress(:on_exit)
+      return queue_signal(:poll_power_on_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
+    end
+
+    update_migration_task_progress(:on_exit)
     handover_to_automate
     queue_signal(:poll_automate_state_machine)
+  rescue StandardError
+    update_migration_task_progress(:on_error)
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
+  end
+
+  def poll_power_on_vm_complete
+    update_migration_task_progress(:on_entry)
+    raise 'Powering on VM timed out' if polling_timeout
+
+    if target_vm.power_state == 'on'
+      update_migration_task_progress(:on_exit)
+      handover_to_automate
+      return queue_signal(:poll_automate_state_machine)
+    end
+
+    update_migration_task_progress(:on_retry)
+    queue_signal(:poll_power_on_vm_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError
     update_migration_task_progress(:on_error)
     handover_to_automate
