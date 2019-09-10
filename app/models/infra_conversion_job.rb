@@ -523,7 +523,7 @@ class InfraConversionJob < Job
 
   def poll_power_on_vm_complete
     update_migration_task_progress(:on_entry)
-    return abort_conversion('Powering on VM timed out', 'error') if polling_timeout
+    raise 'Powering on VM timed out' if polling_timeout
 
     if target_vm.power_state == 'on'
       update_migration_task_progress(:on_exit)
