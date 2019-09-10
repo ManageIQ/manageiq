@@ -362,7 +362,7 @@ class InfraConversionJob < Job
     return abort_conversion(error.message, 'error') if migration_phase == 'pre'
 
     handover_to_automate
-    return queue_signal(:poll_automate_state_machine)
+    queue_signal(:poll_automate_state_machine)
   end
 
   def shutdown_vm
