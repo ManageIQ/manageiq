@@ -487,6 +487,7 @@ RSpec.describe InfraConversionJob, :v2v do
       end
 
       it_behaves_like 'allows poll_run_migration_playbook_complete signal'
+      it_behaves_like 'allows poll_automate_state_machine signal'
       it_behaves_like 'allows shutdown_vm signal'
       it_behaves_like 'allows finish signal'
       it_behaves_like 'allows abort_job signal'
@@ -506,7 +507,6 @@ RSpec.describe InfraConversionJob, :v2v do
       it_behaves_like 'doesn\'t allow restore_vm_attributes signal'
       it_behaves_like 'doesn\'t allow power_on_vm signal'
       it_behaves_like 'doesn\'t allow poll_power_on_vm_complete signal'
-      it_behaves_like 'doesn\'t allow poll_automate_state_machine signal'
     end
 
     context 'shutting_down_vm' do
@@ -913,7 +913,7 @@ RSpec.describe InfraConversionJob, :v2v do
         embedded_ansible_service_request.update!(:state => 'finished', :status => 'Error', :message => 'Fake error message')
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
         expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-        expect(job).to receive(:queue_signal).with(:shutdown_vm)
+        expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
         job.signal(:poll_run_migration_playbook_complete)
       end
     end
@@ -1201,6 +1201,49 @@ RSpec.describe InfraConversionJob, :v2v do
     end
   end
 
+  context '#restore_vm_attributes' do
+    let(:service)               { FactoryBot.create(:service) }
+    let(:parent_classification) { FactoryBot.create(:classification, :name => 'environment', :description => 'Environment') }
+    let(:classification)        { FactoryBot.create(:classification, :name => 'prod', :description => 'Production', :parent => parent_classication) }
+
+    before do
+      job.state = 'applying_right_sizing'
+      task.update!(:destination => vm_redhat)
+    end
+
+    it "exits to next state in case of failure" do
+      allow(job.migration_task.source).to receive(:service).and_raise('Fake error message')
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+      expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_error)
+      expect(job).to receive(:queue_signal).with(:power_on_vm)
+      job.signal(:restore_vm_attributes)
+    end
+
+    it 'restore VM attributes' do
+      Timecop.freeze(2019, 2, 6) do
+        vm_vmware.add_to_service(service)
+        vm_vmware.tag_with('test', :ns => '/managed', :cat => 'folder_path_spec')
+        vm_vmware.tag_with('prod', :ns => '/managed', :cat => 'environment')
+        vm_vmware.miq_custom_set('attr', 'value')
+        vm_vmware.update!(:retires_on => Time.now.utc + 1.day)
+        vm_vmware.update!(:retirement_warn => 7)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
+        expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
+        expect(job).to receive(:queue_signal).with(:power_on_vm)
+        job.signal(:restore_vm_attributes)
+        vm_redhat.reload
+        expect(vm_vmware.service).to be_nil
+        expect(vm_redhat.service.id).to eq(service.id)
+        expect(vm_redhat.tags).to eq(['/managed/environment/prod'])
+        expect(vm_redhat.miq_custom_get('attr')).to eq('value')
+        expect(vm_redhat.evm_owner.id).to eq(user.id)
+        expect(vm_redhat.miq_group.id).to eq(group.id)
+        expect(vm_redhat.retires_on).to eq(Time.now.utc + 1.day)
+        expect(vm_redhat.retirement_warn).to eq(7)
+      end
+    end
+  end
+
   context '#power_on_vm' do
     before do
       job.state = 'restoring_vm_attributes'
@@ -1213,9 +1256,8 @@ RSpec.describe InfraConversionJob, :v2v do
       task.update_options(:source_vm_power_state => 'on')
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      expect(job).to receive(:queue_signal).with(:wait_for_ip_address)
       job.signal(:power_on_vm)
-      expect(task.reload.options[:workflow_runner]).to eq('automate')
     end
 
     it "exits if source VM power state was not 'on'" do
@@ -1271,9 +1313,8 @@ RSpec.describe InfraConversionJob, :v2v do
       vm_redhat.update!(:raw_power_state => 'poweredOn')
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_entry)
       expect(job).to receive(:update_migration_task_progress).once.ordered.with(:on_exit)
-      expect(job).to receive(:queue_signal).with(:poll_automate_state_machine)
+      expect(job).to receive(:queue_signal).with(:wait_for_ip_address)
       job.signal(:poll_power_on_vm_complete)
-      expect(task.reload.options[:workflow_runner]).to eq('automate')
     end
   end
 

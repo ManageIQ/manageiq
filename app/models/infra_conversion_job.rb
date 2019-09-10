@@ -49,8 +49,9 @@ class InfraConversionJob < Job
       :power_on_vm                          => {'restoring_vm_attributes' => 'powering_on_vm' },
       :poll_power_on_vm_complete            => {'powering_on_vm' => 'powering_on_vm'},
       :poll_automate_state_machine          => {
-        'powering_on_vm'      => 'running_in_automate',
-        'running_in_automate' => 'running_in_automate'
+        'powering_on_vm'             => 'running_in_automate',
+        'running_migration_playbook' => 'running_in_automate',
+        'running_in_automate'        => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},
@@ -319,7 +320,10 @@ class InfraConversionJob < Job
     end
 
     update_migration_task_progress(:on_exit)
-    queue_signal(:shutdown_vm)
+    return queue_signal(:shutdown_vm) if migration_phase == 'pre'
+
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
     abort_conversion(error.message, 'error')
@@ -341,7 +345,10 @@ class InfraConversionJob < Job
       raise "Ansible playbook has failed (migration_phase=#{migration_phase})" if service_request.status == 'Error' && migration_phase == 'pre'
 
       update_migration_task_progress(:on_exit)
-      return queue_signal(:shutdown_vm)
+      return queue_signal(:shutdown_vm) if migration_phase == 'pre'
+
+      handover_to_automate
+      return queue_signal(:poll_automate_state_machine)
     end
 
     update_migration_task_progress(:on_retry)
@@ -513,6 +520,8 @@ class InfraConversionJob < Job
     end
 
     update_migration_task_progress(:on_exit)
+    return queue_signal(:wait_for_ip_address) if target_vm.power_state == 'on'
+
     handover_to_automate
     queue_signal(:poll_automate_state_machine)
   rescue StandardError
@@ -527,8 +536,7 @@ class InfraConversionJob < Job
 
     if target_vm.power_state == 'on'
       update_migration_task_progress(:on_exit)
-      handover_to_automate
-      return queue_signal(:poll_automate_state_machine)
+      return queue_signal(:wait_for_ip_address)
     end
 
     update_migration_task_progress(:on_retry)
