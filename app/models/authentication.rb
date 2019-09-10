@@ -80,7 +80,7 @@ class Authentication < ApplicationRecord
   RETRYABLE_STATUS = %w(error unreachable).freeze
 
   CREDENTIAL_TYPES = {
-    :external_credential_types         => 'ManageIQ::Providers::ExternalAutomationManager::Authentication',
+    :external_credential_types         => 'ManageIQ::Providers::AutomationManager::Authentication',
     :embedded_ansible_credential_types => 'ManageIQ::Providers::EmbeddedAutomationManager::Authentication'
   }.freeze
 
