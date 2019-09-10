@@ -226,8 +226,8 @@ class MiqExpression
     when "contains"
       op_args["tag"] ||= col_name
       operands = if context_type != "hash"
-                   ref, val = value2tag(op_args["tag"], op_args["value"])
-                   ["<exist ref=#{ref}>#{val}</exist>"]
+                   target = parse_field_or_tag(op_args["tag"])
+                   ["<exist ref=#{target.model.to_s.downcase}>#{target.tag_path_with(op_args["value"])}</exist>"]
                  elsif context_type == "hash"
                    # This is only for supporting reporting "display filters"
                    # In the report object the tag value is actually the description and not the raw tag name.
@@ -611,8 +611,8 @@ class MiqExpression
           val = ops["field"].split(".").last.split("-").join(".")
           fld = "<value type=#{col_type}>#{val}</value>"
         else
-          ref, val = value2tag(ops["field"])
-          fld = "<value ref=#{ref}, type=#{col_type}>#{val}</value>"
+          target = parse_field_or_tag(ops["field"])
+          fld = "<value ref=#{target.model.to_s.downcase}, type=#{col_type}>#{target.tag_path_with}</value>"
         end
         if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
           [fld, ops["value"]]
@@ -733,11 +733,6 @@ class MiqExpression
     else
       [attribute, false]
     end
-  end
-
-  def self.value2tag(tag, val = nil)
-    target = parse_field_or_tag(tag)
-    [target.model.to_s.downcase, target.tag_path_with(val)]
   end
 
   def self.normalize_ruby_operator(str)

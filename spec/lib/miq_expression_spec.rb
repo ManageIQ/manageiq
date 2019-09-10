@@ -2088,48 +2088,6 @@ describe MiqExpression do
     end
   end
 
-  context 'value2tag' do
-    it 'dotted notation with Taq' do
-      expect(described_class.value2tag('Vm.managed-amazon:vm:name', "mapped:smartstate")).to eq ["vm", "/managed/amazon:vm:name/mapped:smartstate"]
-    end
-
-    it 'dotted notation with CountField' do
-      expect(described_class.value2tag('Vm.disks')).to eq ['vm', '/virtual/disks']
-    end
-
-    it 'dotted notation with CountField' do
-      expect(described_class.value2tag('Vm.host.policy_events')).to eq ['vm', '/virtual/host/policy_events']
-    end
-
-    it "dotted notation with value" do
-      expect(described_class.value2tag("Vm.host-name", "thing1")).to eq ["vm", "/virtual/host/name/thing1"]
-    end
-
-    it "value with escaped slash" do
-      expect(described_class.value2tag("Vm.host-name", "thing1/thing2")).to eq ["vm", "/virtual/host/name/thing1%2fthing2"]
-    end
-
-    it "user_tag" do
-      expect(described_class.value2tag("Vm.user_tag-name", "thing1")).to eq ["vm", "/user/name/thing1"]
-    end
-
-    it "model and column" do
-      expect(described_class.value2tag("Vm-name", "thing1")).to eq ["vm", "/virtual/name/thing1"]
-    end
-
-    it "managed" do
-      expect(described_class.value2tag("Vm.managed-host", "thing1")).to eq ["vm", "/managed/host/thing1"]
-    end
-
-    it "managed" do
-      expect(described_class.value2tag("Vm.managed-host")).to eq ["vm", "/managed/host"]
-    end
-
-    it "false value" do
-      expect(described_class.value2tag("MiqGroup.vms-disconnected", false)).to eq ["miqgroup", "/virtual/vms/disconnected/false"]
-    end
-  end
-
   describe ".numeric?" do
     it "should return true if digits separated by comma and false if another separator used" do
       expect(MiqExpression.numeric?('10000.55')).to be_truthy
