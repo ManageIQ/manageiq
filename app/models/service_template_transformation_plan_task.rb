@@ -31,6 +31,14 @@ class ServiceTemplateTransformationPlanTask < ServiceTemplateProvisionTask
     ServiceTemplate.find_by(:id => vm_resource.options["post_ansible_playbook_service_template_id"])
   end
 
+  def cpu_right_sizing_mode
+    vm_resource.options["cpu_right_sizing_mode"]
+  end
+
+  def memory_right_sizing_mode
+    vm_resource.options["memory_right_sizing_mode"]
+  end
+
   def update_transformation_progress(progress)
     update_options(:progress => (options[:progress] || {}).merge(progress))
   end
