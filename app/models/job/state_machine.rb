@@ -36,4 +36,19 @@ module Job::StateMachine
       raise _("%{signal} is not permitted at state %{state}") % {:signal => signal, :state => state}
     end
   end
+
+  def queue_signal(*args, priority: MiqQueue::NORMAL_PRIORITY, role: nil, deliver_on: nil, server_guid: nil)
+    MiqQueue.put(
+      :class_name  => self.class.name,
+      :method_name => "signal",
+      :instance_id => id,
+      :priority    => priority,
+      :role        => role,
+      :zone        => zone,
+      :task_id     => guid,
+      :args        => args,
+      :deliver_on  => deliver_on,
+      :server_guid => server_guid
+    )
+  end
 end

@@ -239,17 +239,7 @@ class InfraConversionJob < Job
   end
 
   def queue_signal(*args, deliver_on: nil)
-    MiqQueue.put(
-      :class_name  => self.class.name,
-      :method_name => "signal",
-      :instance_id => id,
-      :role        => "ems_operations",
-      :zone        => zone,
-      :task_id     => guid,
-      :args        => args,
-      :deliver_on  => deliver_on,
-      :server_guid => MiqServer.my_server.guid
-    )
+    super(*args, :role => "ems_operations", :deliver_on => deliver_on, :server_guid => MiqServer.my_server.guid)
   end
 
   def prep_message(contents)
