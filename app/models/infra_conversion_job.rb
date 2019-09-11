@@ -142,7 +142,6 @@ class InfraConversionJob < Job
     set_status(message, status)
 
     migration_task.canceling
-    require 'byebug' ; byebug
     queue_signal(:abort_virtv2v)
   end
 
