@@ -46,7 +46,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationS
       expect(job.options[:extra_vars]).to eq(:instance_ids => ["i-3434"])
       expect(job.options[:configuration_script_source_id]).to eq(ansible_script_source.id)
       expect(job.options[:playbook_relative_path]).to eq(playbook.name)
-      expect(job.options[:timeout]).to eq(1.hour)
+      expect(job.options[:timeout]).to eq(100.minutes)
       expect(job.options[:verbosity]).to eq(0)
     end
 
