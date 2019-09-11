@@ -1,5 +1,6 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScript < ManageIQ::Providers::EmbeddedAutomationManager::ConfigurationScript
   FRIENDLY_NAME = "Embedded Ansible Job Template".freeze
+  DEFAULT_EXECUTION_TTL = 100.minutes # automate state machine aborts after 100 retries at a minite interval
 
   include ManageIQ::Providers::EmbeddedAnsible::CrudCommon
 
@@ -41,8 +42,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
     credentials = collect_credentials(vars)
 
     kwargs = {:become_enabled => vars[:become_enabled]}
-    kwargs[:timeout]   = vars[:execution_ttl].to_i.minutes if vars[:execution_ttl].present?
-    kwargs[:verbosity] = vars[:verbosity].to_i             if vars[:verbosity].present?
+    kwargs[:timeout]   = vars[:execution_ttl].present? ? vars[:execution_ttl].to_i.minutes : DEFAULT_EXECUTION_TTL
+    kwargs[:verbosity] = vars[:verbosity].to_i if vars[:verbosity].present?
 
     workflow.create_job({}, extra_vars, playbook_vars, vars[:hosts], credentials, kwargs).tap do |job|
       job.signal(:start)

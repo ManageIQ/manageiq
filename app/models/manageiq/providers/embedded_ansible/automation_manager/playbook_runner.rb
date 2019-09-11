@@ -1,5 +1,5 @@
 class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < ::Job
-  DEFAULT_EXECUTION_TTL = 10 # minutes
+  DEFAULT_EXECUTION_TTL = 100 # minutes
 
   # options are job table columns, including options column which is the playbook context info
   def self.create_job(options)
