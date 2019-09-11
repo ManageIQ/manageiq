@@ -5357,6 +5357,11 @@
         :description: Show Chargeback Preview for a VM
         :feature_type: view
         :identifier: vm_chargeback
+      - :name: VM Parent Choices
+        :description: Show Parent Choices for a VM
+        :feature_type: view
+        :hidden: true
+        :identifier: vm_parent_choices
     - :name: Operate
       :description: Perform Operations on VMs
       :feature_type: control
