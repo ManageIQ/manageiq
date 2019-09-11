@@ -32,6 +32,7 @@ class InfraConversionJob < Job
       :poll_remove_snapshots_complete       => {'removing_snapshots' => 'removing_snapshots'},
       :wait_for_ip_address                  => {
         'removing_snapshots'     => 'waiting_for_ip_address',
+        'powering_on_vm'         => 'waiting_for_ip_address',
         'waiting_for_ip_address' => 'waiting_for_ip_address'
       },
       :run_migration_playbook               => {'waiting_for_ip_address' => 'running_migration_playbook'},
@@ -49,8 +50,9 @@ class InfraConversionJob < Job
       :power_on_vm                          => {'restoring_vm_attributes' => 'powering_on_vm' },
       :poll_power_on_vm_complete            => {'powering_on_vm' => 'powering_on_vm'},
       :poll_automate_state_machine          => {
-        'powering_on_vm'      => 'running_in_automate',
-        'running_in_automate' => 'running_in_automate'
+        'powering_on_vm'             => 'running_in_automate',
+        'running_migration_playbook' => 'running_in_automate',
+        'running_in_automate'        => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},
@@ -319,10 +321,16 @@ class InfraConversionJob < Job
     end
 
     update_migration_task_progress(:on_exit)
-    queue_signal(:shutdown_vm)
+    return queue_signal(:shutdown_vm) if migration_phase == 'pre'
+
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
-    abort_conversion(error.message, 'error')
+    return abort_conversion(error.message, 'error') if migration_phase == 'pre'
+
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
   end
 
   def poll_run_migration_playbook_complete
@@ -341,14 +349,20 @@ class InfraConversionJob < Job
       raise "Ansible playbook has failed (migration_phase=#{migration_phase})" if service_request.status == 'Error' && migration_phase == 'pre'
 
       update_migration_task_progress(:on_exit)
-      return queue_signal(:shutdown_vm)
+      return queue_signal(:shutdown_vm) if migration_phase == 'pre'
+
+      handover_to_automate
+      return queue_signal(:poll_automate_state_machine)
     end
 
     update_migration_task_progress(:on_retry)
     queue_signal(:poll_run_migration_playbook_complete, :deliver_on => Time.now.utc + state_retry_interval)
   rescue StandardError => error
     update_migration_task_progress(:on_error)
-    abort_conversion(error.message, 'error')
+    return abort_conversion(error.message, 'error') if migration_phase == 'pre'
+
+    handover_to_automate
+    queue_signal(:poll_automate_state_machine)
   end
 
   def shutdown_vm
@@ -513,6 +527,8 @@ class InfraConversionJob < Job
     end
 
     update_migration_task_progress(:on_exit)
+    return queue_signal(:wait_for_ip_address) if target_vm.power_state == 'on'
+
     handover_to_automate
     queue_signal(:poll_automate_state_machine)
   rescue StandardError
@@ -527,8 +543,7 @@ class InfraConversionJob < Job
 
     if target_vm.power_state == 'on'
       update_migration_task_progress(:on_exit)
-      handover_to_automate
-      return queue_signal(:poll_automate_state_machine)
+      return queue_signal(:wait_for_ip_address)
     end
 
     update_migration_task_progress(:on_retry)
