@@ -194,17 +194,18 @@ class VmOrTemplate < ApplicationRecord
   before_validation :set_tenant_from_group
   after_save :save_genealogy_information
 
-  scope :active,       ->       { where.not(:ems_id => nil) }
-  scope :with_type,    ->(type) { where(:type => type) }
-  scope :archived,     ->       { where(:ems_id => nil, :storage_id => nil) }
-  scope :orphaned,     ->       { where(:ems_id => nil).where.not(:storage_id => nil) }
-  scope :retired,      ->       { where(:retired => true) }
-  scope :with_ems,     ->       { where.not(:ems_id => nil) }
-  scope :not_archived, ->       { where.not(:ems_id => nil).or(where.not(:storage_id => nil)) }
-  scope :not_orphaned, ->       { where.not(:ems_id => nil).or(where(:storage_id => nil)) }
-  scope :not_retired,  ->       { where(:retired => false).or(where(:retired => nil)) }
+  scope :active,       ->         { where.not(:ems_id => nil) }
+  scope :with_type,    ->(type)   { where(:type => type) }
+  scope :archived,     ->         { where(:ems_id => nil, :storage_id => nil) }
+  scope :orphaned,     ->         { where(:ems_id => nil).where.not(:storage_id => nil) }
+  scope :retired,      ->         { where(:retired => true) }
+  scope :with_ems,     ->         { where.not(:ems_id => nil) }
+  scope :not_archived, ->         { where.not(:ems_id => nil).or(where.not(:storage_id => nil)) }
+  scope :not_orphaned, ->         { where.not(:ems_id => nil).or(where(:storage_id => nil)) }
+  scope :not_retired,  ->         { where(:retired => false).or(where(:retired => nil)) }
+  scope :group_by_ems, ->(ems_id) { where(:ems_id => ems_id) }
 
-  # The SQL form of `#registered?`, with it's inverse as well.
+  # The SQL form of `#registered?`, with its inverse as well.
   # TODO: Vmware Specific (copied (old) TODO from #registered?)
   scope :registered, (lambda do
     where(arel_table[:template].eq(false).or(arel_table[:ems_id].not_eq(nil)).and(arel_table[:host_id].not_eq(nil)))
