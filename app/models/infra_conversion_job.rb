@@ -54,9 +54,9 @@ class InfraConversionJob < Job
       :poll_power_on_vm_complete            => {'powering_on_vm' => 'powering_on_vm'},
       :mark_vm_migrated                     => {'running_migration_playbook' => 'marking_vm_migrated'},
       :poll_automate_state_machine          => {
-        'powering_on_vm'             => 'running_in_automate',
-        'marking_vm_migrated'        => 'running_in_automate',
-        'running_in_automate'        => 'running_in_automate'
+        'powering_on_vm'      => 'running_in_automate',
+        'marking_vm_migrated' => 'running_in_automate',
+        'running_in_automate' => 'running_in_automate'
       },
       :finish                               => {'*'                => 'finished'},
       :abort_job                            => {'*'                => 'aborting'},

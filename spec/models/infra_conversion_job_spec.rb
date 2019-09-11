@@ -1475,7 +1475,7 @@ RSpec.describe InfraConversionJob, :v2v do
 
       it 'exits to next state' do
         expect(job).to receive(:queue_signal).with(:power_on_vm)
-        job.abort_virtv2v      
+        job.abort_virtv2v
       end
     end
 
