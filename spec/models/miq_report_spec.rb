@@ -850,9 +850,9 @@ describe MiqReport do
   context "support for saving attributes which are not present in the model" do
     let(:report) { FactoryBot.create(:miq_report) }
 
-    it "does not raise error when result of #export_to_array used for mass update" do
-      report_hash = report.export_to_array[0].values.first
-      expect { MiqReport.new.update_attributes(report_hash) }.not_to raise_error
+    it "does not raise error when result of #export_to_array (with report's menu_name removed) used for updating another report" do
+      report_hash = report.export_to_array[0].values.first.except("menu_name")
+      expect { FactoryBot.create(:miq_report).update!(report_hash) }.not_to raise_error
     end
 
     describe "#userid=" do
