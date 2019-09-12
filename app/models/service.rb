@@ -43,6 +43,7 @@ class Service < ApplicationRecord
   virtual_has_many   :orchestration_stacks
   virtual_has_many   :power_states, :uses => :all_vms
   virtual_has_many   :vms
+  virtual_has_many   :direct_vms
 
   virtual_has_one    :chargeback_report
   virtual_has_one    :configuration_script
