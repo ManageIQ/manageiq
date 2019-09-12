@@ -35,7 +35,7 @@ module MiqServer::AtStartup
         if message.method_name == "shutdown_and_exit"
           message.delete
         else
-          message.update_attributes(:state => MiqQueue::STATE_ERROR) rescue nil
+          message.update(:state => MiqQueue::STATE_ERROR) rescue nil
         end
       end
       _log.info("Cleaning up dequeued messages...Complete")

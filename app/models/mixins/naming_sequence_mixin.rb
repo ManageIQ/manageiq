@@ -9,7 +9,7 @@ module NamingSequenceMixin
   def next_naming_sequence(name, source)
     lock do
       record = naming_sequences.where(:name => name, :source => source).first_or_initialize
-      record.update_attributes!(:value => record.value.to_i + 1)
+      record.update!(:value => record.value.to_i + 1)
 
       record.value.to_i
     end

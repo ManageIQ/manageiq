@@ -5,7 +5,7 @@ describe VmMigrateTask do
     before do
       subject.vm = vm
       host = FactoryBot.create(:host, :name => "test")
-      subject.update_attributes(:options => {:placement_host_name => [host.id, host.name]})
+      subject.update(:options => {:placement_host_name => [host.id, host.name]})
     end
 
     it 'migrates the vm and updates the status' do

@@ -65,8 +65,8 @@ describe ServiceAnsibleTower do
     before do
       FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
       miq_request_task = FactoryBot.create(:miq_request_task, :miq_request => FactoryBot.create(:service_template_provision_request))
-      miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
-      service.update_attributes(:evm_owner        => FactoryBot.create(:user_with_group),
+      miq_request_task.update(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
+      service.update(:evm_owner        => FactoryBot.create(:user_with_group),
                                 :miq_group        => FactoryBot.create(:miq_group),
                                 :miq_request_task => miq_request_task)
     end

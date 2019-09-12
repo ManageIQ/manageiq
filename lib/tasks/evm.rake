@@ -12,7 +12,7 @@ namespace :evm do
       server.activate_roles(server.server_role_names)
 
       # Mark the server as started
-      server.update_attributes(:status => "started")
+      server.update(:status => "started")
 
       # start the workers using foreman
       exec("foreman start --port=3000")

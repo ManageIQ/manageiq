@@ -55,14 +55,14 @@ describe Job do
       end
 
       it "should queue a timeout job if one is there, but it is failed" do
-        MiqQueue.first.update_attributes(:state => MiqQueue::STATE_ERROR)
+        MiqQueue.first.update(:state => MiqQueue::STATE_ERROR)
         expect { @job.timeout! }.to change { MiqQueue.count }.by(1)
       end
     end
 
     context "where job is for a repository VM (no zone)" do
       before do
-        @job.update_attributes(:state => "scanning", :dispatch_status => "active", :zone => nil)
+        @job.update(:state => "scanning", :dispatch_status => "active", :zone => nil)
 
         Timecop.travel 5.minutes
 
@@ -89,7 +89,7 @@ describe Job do
 
     context "where job is for a VM that disappeared" do
       before do
-        @job.update_attributes(:state => "scanning", :dispatch_status => "active", :zone => nil)
+        @job.update(:state => "scanning", :dispatch_status => "active", :zone => nil)
 
         @vm.destroy
 
@@ -288,7 +288,7 @@ describe Job do
 
     describe ".check_jobs_for_timeout" do
       before do
-        @job.update_attributes(:state => "active")
+        @job.update(:state => "active")
         @queue_item = MiqQueue.put(:task_id => @job.guid)
       end
 
@@ -302,16 +302,16 @@ describe Job do
         end
 
         it "calls 'job#timeout!' if server was assigned to job but queue item not in 'ready' or 'dequeue' state" do
-          @queue_item.update_attributes(:state => MiqQueue::STATE_WARN, :class_name => "MiqServer")
-          @job.update_attributes(:miq_server_id => @server1.id)
+          @queue_item.update(:state => MiqQueue::STATE_WARN, :class_name => "MiqServer")
+          @job.update(:miq_server_id => @server1.id)
           Timecop.travel 5.minutes
           Job.check_jobs_for_timeout
           expect_signal_abort_and_timeout_message
         end
 
         it "does not call 'job#timeout!' if queue state is 'ready' and server was assigned to job" do
-          @queue_item.update_attributes(:state => MiqQueue::STATE_READY, :class_name => "MiqServer")
-          @job.update_attributes(:miq_server_id => @server1.id)
+          @queue_item.update(:state => MiqQueue::STATE_READY, :class_name => "MiqServer")
+          @job.update(:miq_server_id => @server1.id)
           Timecop.travel 5.minutes
           Job.check_jobs_for_timeout
           expect_no_signal_abort
@@ -339,7 +339,7 @@ describe Job do
     end
 
     it "doesn't allows to delete active job" do
-      @job.update_attributes!(:state => "Scanning")
+      @job.update!(:state => "Scanning")
       expect(Job.count).to eq 1
       @job.destroy
       expect(Job.count).to eq 1
@@ -390,34 +390,34 @@ describe Job do
         end
 
         it "updates 'context_data' attribute of miq_task if job's 'context' attribute was updated" do
-          @job.update_attributes(:context => "some new context")
+          @job.update(:context => "some new context")
           expect(@task.reload.context_data).to eq "some new context"
         end
 
         it "updates 'started_on' attribute of miq_task if job's 'started_on' attribute was updated" do
           expect(@task.started_on).to be nil
           time = Time.new.utc.change(:usec => 0)
-          @job.update_attributes(:started_on => time)
+          @job.update(:started_on => time)
           expect(@task.reload.started_on).to eq time
         end
 
         it "updates 'zone' attribute of miq_task if job's 'zone' attribute updated" do
-          @job.update_attributes(:zone => "Some Special Zone")
+          @job.update(:zone => "Some Special Zone")
           expect(@task.reload.zone).to eq "Some Special Zone"
         end
 
         it "updates 'message' attribute of miq_task if job's 'message' attribute was updated" do
-          @job.update_attributes(:message => "Some custom message for job")
+          @job.update(:message => "Some custom message for job")
           expect(@task.reload.message).to eq "Some custom message for job"
         end
 
         it "updates 'status' attribute of miq_task if job's 'status' attribute was updated" do
-          @job.update_attributes(:status => "Custom status for job")
+          @job.update(:status => "Custom status for job")
           expect(@task.reload.status).to eq "Custom status for job"
         end
 
         it "updates 'state' attribute of miq_task if job's 'state' attribute was updated" do
-          @job.update_attributes(:state => "any status to trigger state update")
+          @job.update(:state => "any status to trigger state update")
           expect(@task.reload.state).to eq "Any status to trigger state update"
         end
       end

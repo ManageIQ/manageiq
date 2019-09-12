@@ -27,14 +27,14 @@ describe CustomButtonEvent do
     it "returns button's current name" do
       expect(cb_event.button_name).to eq("Test Button")
 
-      custom_button.update_attributes(:name => "New Button Name")
+      custom_button.update(:name => "New Button Name")
       expect(cb_event.button_name).to eq("New Button Name")
     end
 
     it 'returns button name from event data' do
       cb_event.full_data[:button_id] = custom_button.id - 1
       cb_event.save!
-      custom_button.update_attributes(:name => "New Button Name")
+      custom_button.update(:name => "New Button Name")
 
       expect(cb_event.button_name).to eq("Test Button")
     end

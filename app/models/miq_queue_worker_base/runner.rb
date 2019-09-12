@@ -57,7 +57,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       next if msg.task_id && MiqQueue.exists?(:state => MiqQueue::STATE_DEQUEUE, :zone => [nil, MiqServer.my_zone], :task_id => msg.task_id)
 
       begin
-        msg.update_attributes!(:state => MiqQueue::STATE_DEQUEUE, :handler => @worker)
+        msg.update!(:state => MiqQueue::STATE_DEQUEUE, :handler => @worker)
         _log.info("#{MiqQueue.format_full_log_msg(msg)}, Dequeued in: [#{Time.now - msg.created_on}] seconds")
         return msg
       rescue ActiveRecord::StaleObjectError

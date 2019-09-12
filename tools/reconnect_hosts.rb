@@ -56,7 +56,7 @@ activated_hosts = duplicate_hosts.map do |_by, hosts|
   active_host.disconnect_inv unless opts[:dry_run]
 
   puts "Activating Host    [#{inactive_host.name}] id [#{inactive_host.id}] uid_ems [#{inactive_host.uid_ems}] ems_ref [#{inactive_host.ems_ref}]"
-  inactive_host.update_attributes!(:ems_id => ems_id, :uid_ems => active_host.uid_ems, :ems_ref => active_host.ems_ref) unless opts[:dry_run]
+  inactive_host.update!(:ems_id => ems_id, :uid_ems => active_host.uid_ems, :ems_ref => active_host.ems_ref) unless opts[:dry_run]
 
   inactive_host
 end.compact

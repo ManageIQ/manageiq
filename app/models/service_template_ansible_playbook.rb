@@ -193,7 +193,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     auth_user = User.current_userid || 'system'
     job_templates.each do |job_template|
       job_template.delete_in_provider_queue(auth_user)
-      resource_actions.find_by(:action => action.capitalize).update_attributes(:configuration_template => nil) if action
+      resource_actions.find_by(:action => action.capitalize).update(:configuration_template => nil) if action
     end
   end
 
@@ -237,6 +237,6 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   # override
   def update_from_options(params)
     options[:config_info] = Hash[params[:config_info].collect { |k, v| [k, v.except(:configuration_template)] }]
-    update_attributes!(params.except(:config_info))
+    update!(params.except(:config_info))
   end
 end

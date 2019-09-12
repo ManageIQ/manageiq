@@ -16,7 +16,7 @@ describe "MiqWorker Monitor" do
       it "MiqServer#clean_worker_records" do
         FactoryBot.create(:miq_worker, :miq_server_id => @miq_server.id)
         allow(@miq_server).to receive(:worker_delete)
-        @worker.update_attributes(:status => MiqWorker::STATUS_STOPPED)
+        @worker.update(:status => MiqWorker::STATUS_STOPPED)
 
         expect(@miq_server.miq_workers.length).to eq(2)
         ids = @miq_server.clean_worker_records
@@ -32,7 +32,7 @@ describe "MiqWorker Monitor" do
         allow(@miq_server).to receive(:worker_get_monitor_status).with(w2.pid).and_return(nil)
         allow(@miq_server).to receive(:worker_get_monitor_reason).with(w2.pid).and_return(nil)
         allow_any_instance_of(MiqWorker).to receive(:kill)
-        @worker.update_attributes(:status => MiqWorker::STATUS_STOPPING)
+        @worker.update(:status => MiqWorker::STATUS_STOPPING)
 
         expect(@miq_server.miq_workers.length).to eq(2)
         ids = @miq_server.check_not_responding
@@ -58,7 +58,7 @@ describe "MiqWorker Monitor" do
         end
 
         it "will handle workers with nil memory_usage" do
-          @worker_to_keep.update_attributes!(:memory_usage => nil)
+          @worker_to_keep.update!(:memory_usage => nil)
 
           expect(@miq_server).to receive(:restart_worker).with(@worker_to_kill, :memory_exceeded)
           @miq_server.do_system_limit_exceeded
@@ -213,7 +213,7 @@ describe "MiqWorker Monitor" do
         context "when worker exits" do
           context "because it exited" do
             before do
-              @worker1.update_attributes(:status => MiqWorker::STATUS_STOPPED)
+              @worker1.update(:status => MiqWorker::STATUS_STOPPED)
             end
 
             it "should delete worker row after clean_worker_records" do
@@ -225,7 +225,7 @@ describe "MiqWorker Monitor" do
 
           context "because it aborted" do
             before do
-              @worker1.update_attributes(:status => MiqWorker::STATUS_ABORTED)
+              @worker1.update(:status => MiqWorker::STATUS_ABORTED)
             end
 
             it "should delete worker row after clean_worker_records" do
@@ -237,7 +237,7 @@ describe "MiqWorker Monitor" do
 
           context "because it was killed" do
             before do
-              @worker1.update_attributes(:status => MiqWorker::STATUS_KILLED)
+              @worker1.update(:status => MiqWorker::STATUS_KILLED)
             end
 
             it "should delete worker row after clean_worker_records" do

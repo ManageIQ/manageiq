@@ -86,7 +86,7 @@ describe(ServiceAnsiblePlaybook) do
       service_options = service.options
       service_options[:config_info][:retirement] = service_options[:config_info][:provision]
       service_options[:config_info][:retirement][:remove_resources] = remove_resources
-      service.update_attributes(:options => service_options)
+      service.update(:options => service_options)
       expect(service.retain_resources_on_retirement?).to eq(!can_children_be_retired?)
     end
   end
@@ -159,7 +159,7 @@ describe(ServiceAnsiblePlaybook) do
         before do
           service_options = service.options
           service_options[:config_info][:retirement] = service_options[:config_info][:provision]
-          service.update_attributes(:options => service_options)
+          service.update(:options => service_options)
         end
 
         it 'ignores dialog options' do
@@ -200,8 +200,8 @@ describe(ServiceAnsiblePlaybook) do
     before do
       FactoryBot.create(:miq_region, :region => ApplicationRecord.my_region_number)
       miq_request_task = FactoryBot.create(:miq_request_task, :miq_request => FactoryBot.create(:service_template_provision_request))
-      miq_request_task.update_attributes(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
-      loaded_service.update_attributes(:evm_owner        => FactoryBot.create(:user_with_group),
+      miq_request_task.update(:options => {:request_options => {:manageiq_extra_vars => control_extras}})
+      loaded_service.update(:evm_owner        => FactoryBot.create(:user_with_group),
                                        :miq_group        => FactoryBot.create(:miq_group),
                                        :miq_request_task => miq_request_task)
     end
@@ -264,7 +264,7 @@ describe(ServiceAnsiblePlaybook) do
 
   describe '#on_error' do
     it 'handles retirement error' do
-      executed_service.update_attributes(:retirement_state => 'Retiring')
+      executed_service.update(:retirement_state => 'Retiring')
       expect(runner_job).to receive(:refresh_ems)
       executed_service.on_error(ResourceAction::RETIREMENT)
       expect(executed_service.retirement_state).to eq('error')

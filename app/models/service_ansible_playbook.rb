@@ -82,7 +82,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   def on_error(action)
     _log.info("on_error called for service action: #{action}")
-    update_attributes(:retirement_state => 'error') if action == "Retirement"
+    update(:retirement_state => 'error') if action == "Retirement"
     job(action).try(:refresh_ems)
     postprocess(action)
   end

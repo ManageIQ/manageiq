@@ -89,17 +89,17 @@ describe MiqProvisionRequestTemplate do
 
     describe "scaling_min" do
       it "runs once with scaling min nil" do
-        service_resource.update_attributes(:scaling_min => nil)
+        service_resource.update(:scaling_min => nil)
         expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(1)
       end
 
       it "runs never with scaling min 0" do
-        service_resource.update_attributes(:scaling_min => 0)
+        service_resource.update(:scaling_min => 0)
         expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(0)
       end
 
       it "runs twice with scaling min 2" do
-        service_resource.update_attributes(:scaling_min => 2)
+        service_resource.update(:scaling_min => 2)
         expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(2)
       end
 
@@ -145,7 +145,7 @@ describe MiqProvisionRequestTemplate do
       let(:user) { FactoryBot.create(:user_with_email) }
 
       it "sets owner in options" do
-        service_task.update_attributes(:userid => user.userid)
+        service_task.update(:userid => user.userid)
         task = provision_request_template.create_tasks_for_service(service_task, parent_svc).first
 
         expect(task.options[:owner_email]).to eq(user.email)

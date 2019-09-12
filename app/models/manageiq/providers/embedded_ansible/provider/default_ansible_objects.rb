@@ -58,6 +58,6 @@ module ManageIQ::Providers::EmbeddedAnsible::Provider::DefaultAnsibleObjects
   end
 
   def set_default_ansible_object(name, value)
-    default_ansible_objects.find_or_initialize_by(:name => name).update_attributes(:value => value)
+    default_ansible_objects.find_or_initialize_by(:name => name).update(:value => value)
   end
 end

@@ -304,7 +304,7 @@ describe ServiceTemplateAnsiblePlaybook do
     end
 
     it '#retirement_potential?' do
-      service.update_attributes(:retired => false)
+      service.update(:retired => false)
       service_template = prebuild_service_template(:job_template => false)
       adjust_resource_actions(service_template, job_template.id, :last)
       service_template.services << service

@@ -201,7 +201,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
 
     #     allow(MiqTask).to receive(:wait_for_taskid) do
     #       request = MiqQueue.find_by(:class_name => described_class.name)
-    #       request.update_attributes(:state => MiqQueue::STATE_DEQUEUE)
+    #       request.update(:state => MiqQueue::STATE_DEQUEUE)
     #       request.delivered(*request.deliver)
     #     end
     #   end

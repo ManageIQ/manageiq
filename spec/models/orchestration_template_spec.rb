@@ -151,7 +151,7 @@ describe OrchestrationTemplate do
 
       it "allows duplicated draft record to be added" do
         dup_template = existing_template.dup
-        dup_template.update_attributes!(:draft => true)
+        dup_template.update!(:draft => true)
       end
 
       it "forbids duplicated final record from being added" do
@@ -166,12 +166,12 @@ describe OrchestrationTemplate do
 
       it "allows duplicated draft record to be added" do
         dup_template = existing_template.dup
-        dup_template.update_attributes!(:draft => true)
+        dup_template.update!(:draft => true)
       end
 
       it "allows duplicated final record to be added" do
         dup_template = existing_template.dup
-        dup_template.update_attributes!(:draft => false)
+        dup_template.update!(:draft => false)
       end
     end
   end

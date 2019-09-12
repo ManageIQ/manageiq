@@ -265,7 +265,7 @@ describe ChargebackVm do
         before do
           options[:tag] = nil
           options[:entity_id] = @vm1.id
-          @vm1.metric_rollups.first.update_attributes(:tag_names => nil)
+          @vm1.metric_rollups.first.update(:tag_names => nil)
         end
 
         it "cpu" do
@@ -429,7 +429,7 @@ describe ChargebackVm do
 
         before do
           Timecop.travel(report_start)
-          @vm1.update_attributes(:retires_on => finish_time)
+          @vm1.update(:retires_on => finish_time)
           add_metric_rollups_for(@vm1, month_beginning...finish_time, 8.hours, metric_rollup_params)
         end
 
@@ -1162,7 +1162,7 @@ describe ChargebackVm do
 
       it "return only one chargeback rate according to tag name of Vm" do
         [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
-          metric_rollup.update_attributes!(:tag_names => rate_assignment[:tag].first.tag.send(:name_path))
+          metric_rollup.update!(:tag_names => rate_assignment[:tag].first.tag.send(:name_path))
           @vm.tag_with(["/managed/#{metric_rollup.tag_names}"], :ns => '*')
           @vm.reload
           consumption = Chargeback::ConsumptionWithRollups.new(pluck_rollup([metric_rollup]), nil, nil)

@@ -79,7 +79,7 @@ describe ChargebackContainerImage do
 
     context 'when first metric rollup has tag_names=nil' do
       before do
-        @container.metric_rollups.first.update_attributes(:tag_names => nil)
+        @container.metric_rollups.first.update(:tag_names => nil)
       end
 
       it "fixed_compute" do

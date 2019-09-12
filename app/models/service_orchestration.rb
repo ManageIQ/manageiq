@@ -37,7 +37,7 @@ class ServiceOrchestration < Service
     }
 
     @deploy_stack_job = ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner.create_job(job_options)
-    update_attributes(:options => options.merge(:deploy_stack_job_id => @deploy_stack_job.id))
+    update(:options => options.merge(:deploy_stack_job_id => @deploy_stack_job.id))
     @deploy_stack_job.signal(:start)
 
     wait_on_orchestration_stack
@@ -56,7 +56,7 @@ class ServiceOrchestration < Service
       :zone                      => my_zone
     }
     @update_stack_job = ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner.create_job(job_options)
-    update_attributes(:options => options.merge(:update_stack_job_id => @update_stack_job.id))
+    update(:options => options.merge(:update_stack_job_id => @update_stack_job.id))
     @update_stack_job.signal(:update)
   end
 
@@ -129,12 +129,12 @@ class ServiceOrchestration < Service
   def link_orchestration_template
     # some orchestration stacks do not have associations with their templates in their provider, we can link them here
     return if orchestration_stack.nil? || orchestration_stack.orchestration_template
-    orchestration_stack.update_attributes(:orchestration_template => orchestration_template)
+    orchestration_stack.update(:orchestration_template => orchestration_template)
   end
 
   def assign_vms_owner
     all_vms.each do |vm|
-      vm.update_attributes(:evm_owner_id => evm_owner_id, :miq_group_id => miq_group_id)
+      vm.update(:evm_owner_id => evm_owner_id, :miq_group_id => miq_group_id)
     end
   end
 

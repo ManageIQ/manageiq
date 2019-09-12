@@ -81,6 +81,6 @@ class ServiceTemplateContainerTemplate < ServiceTemplateGeneric
 
   def update_from_options(params)
     options[:config_info] = Hash[params[:config_info].collect { |k, v| [k, v.except(:configuration_template)] }]
-    update_attributes!(params.except(:config_info))
+    update!(params.except(:config_info))
   end
 end

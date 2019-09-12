@@ -69,7 +69,7 @@ describe ChargebackContainerProject do
 
     context 'when first metric rollup has tag_names=nil' do
       before do
-        @project.metric_rollups.first.update_attributes(:tag_names => nil)
+        @project.metric_rollups.first.update(:tag_names => nil)
       end
 
       it "cpu" do

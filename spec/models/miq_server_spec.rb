@@ -116,21 +116,21 @@ describe MiqServer do
     end
 
     it "sync stop will do nothing if stopped" do
-      @miq_server.update_attributes(:status => 'stopped')
+      @miq_server.update(:status => 'stopped')
       expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(true)
       expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).not_to be_truthy
     end
 
     it "async stop will do nothing if stopped" do
-      @miq_server.update_attributes(:status => 'stopped')
+      @miq_server.update(:status => 'stopped')
       expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(false)
       expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).not_to be_truthy
     end
 
     it "sync stop will do nothing if killed" do
-      @miq_server.update_attributes(:status => 'killed')
+      @miq_server.update(:status => 'killed')
       @miq_server.reload
       expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(true)
@@ -138,21 +138,21 @@ describe MiqServer do
     end
 
     it "sync stop will queue shutdown_and_exit and wait_for_stopped" do
-      @miq_server.update_attributes(:status => 'started')
+      @miq_server.update(:status => 'started')
       expect(@miq_server).to receive(:wait_for_stopped)
       @miq_server.stop(true)
       expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).to be_truthy
     end
 
     it "async stop will queue shutdown_and_exit and return" do
-      @miq_server.update_attributes(:status => 'started')
+      @miq_server.update(:status => 'started')
       expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(false)
       expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).to be_truthy
     end
 
     it "async stop will not update existing exit message and return" do
-      @miq_server.update_attributes(:status => 'started')
+      @miq_server.update(:status => 'started')
       expect(@miq_server).to receive(:wait_for_stopped).never
       @miq_server.stop(false)
     end

@@ -392,18 +392,18 @@ describe User do
     end
 
     it "self service user" do
-      @user.update_attributes(:miq_groups => [@self_service_group])
-      @vm[1].update_attributes(:evm_owner => @user)
-      @vm[2].update_attributes(:miq_group => @self_service_group)
+      @user.update(:miq_groups => [@self_service_group])
+      @vm[1].update(:evm_owner => @user)
+      @vm[2].update(:miq_group => @self_service_group)
 
       expect(accessible_vms.size).to eq(2)
     end
 
     it "limited self service user" do
-      @user.update_attributes(:miq_groups => [@limited_self_service_group])
-      @vm[1].update_attributes(:evm_owner => @user)
-      @vm[2].update_attributes(:miq_group => @self_service_group)
-      @vm[3].update_attributes(:miq_group => @limited_self_service_group)
+      @user.update(:miq_groups => [@limited_self_service_group])
+      @vm[1].update(:evm_owner => @user)
+      @vm[2].update(:miq_group => @self_service_group)
+      @vm[3].update(:miq_group => @limited_self_service_group)
 
       expect(accessible_vms.size).to eq(1)
     end

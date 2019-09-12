@@ -147,7 +147,7 @@ class DialogImportService
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
       dialog['id'] = new_or_existing_dialog.id
       new_associations = build_association_list(dialog)
-      new_or_existing_dialog.update_attributes(
+      new_or_existing_dialog.update(
         dialog.except('export_version').merge(
           "dialog_tabs"      => build_dialog_tabs(dialog, dialog['export_version'] || DEFAULT_DIALOG_VERSION),
           "resource_actions" => build_resource_actions(dialog)

@@ -40,7 +40,7 @@ describe ServiceOrder do
   end
 
   it "should raise an error on checkout for ordered service order" do
-    service_order.update_attributes(:miq_requests => [request], :state => ServiceOrder::STATE_ORDERED)
+    service_order.update(:miq_requests => [request], :state => ServiceOrder::STATE_ORDERED)
     error_message = "Invalid operation [checkout] for Service Order in state [ordered]"
     expect { service_order.checkout }.to raise_error(RuntimeError, error_message)
   end
@@ -66,7 +66,7 @@ describe ServiceOrder do
   end
 
   it "should raise an error while trying to clear the cart on an ordered service order" do
-    service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)
+    service_order.update(:state => ServiceOrder::STATE_ORDERED)
     service_order.miq_requests << request
     error_message = "Invalid operation [clear] for Service Order in state [ordered]"
     expect { service_order.clear }.to raise_error(RuntimeError, error_message)
@@ -92,7 +92,7 @@ describe ServiceOrder do
   end
 
   it "should raise an error while trying to remove from cart on ordered service order" do
-    service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)
+    service_order.update(:state => ServiceOrder::STATE_ORDERED)
     service_order.miq_requests << [request, request2]
     error_message = "Invalid operation [remove_from_cart] for Service Order in state [ordered]"
     expect { ServiceOrder.remove_from_cart(request, user) }.to raise_error(RuntimeError, error_message)
@@ -107,7 +107,7 @@ describe ServiceOrder do
 
   context '#deep_copy' do
     before do
-      service_order.update_attributes(:state => ServiceOrder::STATE_ORDERED)
+      service_order.update(:state => ServiceOrder::STATE_ORDERED)
     end
 
     it 'should copy the miq_requests' do
@@ -138,7 +138,7 @@ describe ServiceOrder do
     end
 
     it 'does not allow copying of a service order in the cart state' do
-      service_order.update_attributes(:state => ServiceOrder::STATE_CART)
+      service_order.update(:state => ServiceOrder::STATE_CART)
       expect do
         service_order.deep_copy
       end.to raise_error(RuntimeError, 'Cannot copy a service order in the cart state')

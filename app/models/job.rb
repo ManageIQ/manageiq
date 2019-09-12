@@ -35,7 +35,7 @@ class Job < ApplicationRecord
   delegate :current_job_timeout, :to => :class
 
   def update_linked_task
-    miq_task.update_attributes!(attributes_for_task) unless miq_task.nil?
+    miq_task&.update!(attributes_for_task)
   end
 
   def initialize_attributes

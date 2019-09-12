@@ -23,7 +23,7 @@ class Account < ApplicationRecord
       member_map[nh[:name]] = nh.delete(:members)
 
       found = parent.accounts.find_by(:name => nh[:name], :accttype => typeName)
-      found.nil? ? new_accts << nh : found.update_attributes(nh)
+      found.nil? ? new_accts << nh : found.update(nh)
       deletes.delete_if { |ele| ele[1] == nh[:name] }
     end
 

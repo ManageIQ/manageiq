@@ -137,7 +137,7 @@ class GitRepository < ApplicationRecord
                  :commit_message => info[:message]}
 
         stored_branch = current_branches.delete(branch)
-        stored_branch ? stored_branch.update_attributes!(attrs) : git_branches.create!(attrs)
+        stored_branch ? stored_branch.update!(attrs) : git_branches.create!(attrs)
       end
       git_branches.delete(current_branches.values)
     end
@@ -154,7 +154,7 @@ class GitRepository < ApplicationRecord
                  :commit_message => info[:message]}
 
         stored_tag = current_tags.delete(tag)
-        stored_tag ? stored_tag.update_attributes(attrs) : git_tags.create!(attrs)
+        stored_tag ? stored_tag.update(attrs) : git_tags.create!(attrs)
       end
       git_tags.delete(current_tags.values)
     end

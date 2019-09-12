@@ -297,9 +297,9 @@ describe JobProxyDispatcher do
     let(:job) { VmScan.create_job(:miq_server_id => @server.id, :name => "Hello - 1") }
     before do
       VmScan.create_job(:miq_server_id => @server.id, :name => "Hello - 2")
-         .update_attributes(:dispatch_status => "active")
+            .update(:dispatch_status => "active")
       VmScan.create_job(:miq_server_id => @server.id, :name => "Hello - 3")
-         .update_attributes(:dispatch_status => "active")
+            .update(:dispatch_status => "active")
     end
 
     describe "#busy_proxies" do

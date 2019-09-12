@@ -32,7 +32,7 @@ class ServiceOrder < ApplicationRecord
   end
 
   def create_order_name
-    update_attributes(:name => "Order # #{id}") if name.blank?
+    update(:name => "Order # #{id}") if name.blank?
   end
 
   def ordered?
@@ -47,20 +47,20 @@ class ServiceOrder < ApplicationRecord
     raise "Invalid operation [checkout] for Service Order in state [#{state}]" if ordered?
     _log.info("Service Order checkout for service: #{name}")
     process_checkout(miq_requests)
-    update_attributes(:state     => STATE_ORDERED,
+    update(:state     => STATE_ORDERED,
                       :placed_at => Time.zone.now)
   end
 
   def checkout_immediately
     _log.info("Service Order checkout immediately for service: #{name}")
     process_checkout(miq_requests)
-    update_attributes(:state     => STATE_ORDERED,
+    update(:state     => STATE_ORDERED,
                       :placed_at => Time.zone.now)
   end
 
   def process_checkout(miq_requests)
     miq_requests.each do |request|
-      request.update_attributes(:process => true)
+      request.update(:process => true)
       request.call_automate_event_queue("request_created")
     end
   end

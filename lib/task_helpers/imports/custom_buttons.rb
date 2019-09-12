@@ -70,7 +70,7 @@ module TaskHelpers
 
         def check_user(new_obj)
           existing_user = User.find_by(:name => new_obj[:userid])
-          new_obj.update_attributes(:userid => existing_user.nil? ? "admin" : existing_user)
+          new_obj.update(:userid => existing_user.nil? ? "admin" : existing_user)
         end
       end
 

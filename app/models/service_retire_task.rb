@@ -17,16 +17,16 @@ class ServiceRetireTask < MiqRetireTask
 
   def task_finished
     if status != 'Ok'
-      update_attributes(:status => 'Error')
+      update(:status => 'Error')
     end
   end
 
   def task_active
-    update_attributes(:status => 'Active')
+    update(:status => 'Active')
   end
 
   def after_request_task_create
-    update_attributes(:description => get_description)
+    update(:description => get_description)
     Service.where(:id => options[:src_ids]).each do |parent_svc|
       if create_subtasks?(parent_svc)
         _log.info("- creating service subtasks for service task <#{self.class.name}:#{id}>, service <#{parent_svc.id}>")

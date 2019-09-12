@@ -15,7 +15,7 @@ describe "Service Retirement Management" do
       context "with user" do
         it "uses user as requester" do
           expect(MiqEvent).to receive(:raise_evm_event)
-          stack_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+          stack_with_owner.update(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
           expect(stack_with_owner.retirement_last_warn).to be_nil
           stack_with_owner.retirement_check
           stack_with_owner.reload
@@ -34,7 +34,7 @@ describe "Service Retirement Management" do
 
         it "uses admin as requester" do
           expect(MiqEvent).to receive(:raise_evm_event)
-          stack_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+          stack_with_owner.update(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
           expect(stack_with_owner.retirement_last_warn).to be_nil
           stack_with_owner.retirement_check
           stack_with_owner.reload
@@ -116,7 +116,7 @@ describe "Service Retirement Management" do
     end
 
     it "#retiring - true" do
-      @stack.update_attributes(:retirement_state => 'retiring')
+      @stack.update(:retirement_state => 'retiring')
       expect(@stack.retiring?).to be_truthy
     end
 
@@ -126,7 +126,7 @@ describe "Service Retirement Management" do
     end
 
     it "#error_retiring - true" do
-      @stack.update_attributes(:retirement_state => 'error')
+      @stack.update(:retirement_state => 'error')
       expect(@stack.error_retiring?).to be_truthy
     end
 
@@ -145,13 +145,13 @@ describe "Service Retirement Management" do
     it "#retirement_due?" do
       expect(@stack.retirement_due?).to be_falsey
 
-      @stack.update_attributes(:retires_on => Time.zone.today + 1.day)
+      @stack.update(:retires_on => Time.zone.today + 1.day)
       expect(@stack.retirement_due?).to be_falsey
 
-      @stack.update_attributes(:retires_on => Time.zone.today)
+      @stack.update(:retires_on => Time.zone.today)
       expect(@stack.retirement_due?).to be_truthy
 
-      @stack.update_attributes(:retires_on => Time.zone.today - 1.day)
+      @stack.update(:retires_on => Time.zone.today - 1.day)
       expect(@stack.retirement_due?).to be_truthy
     end
 

@@ -140,7 +140,7 @@ class ServiceTemplate < ApplicationRecord
   def update_catalog_item(options, auth_user = nil)
     config_info = validate_update_config_info(options)
     unless config_info
-      update_attributes!(options)
+      update!(options)
       return reload
     end
     transaction do
@@ -370,7 +370,7 @@ class ServiceTemplate < ApplicationRecord
       if resource_params
         # And the resource action exists on the template already, update it
         if resource_action
-          resource_action.update_attributes!(resource_params.slice(*RESOURCE_ACTION_UPDATE_ATTRS))
+          resource_action.update!(resource_params.slice(*RESOURCE_ACTION_UPDATE_ATTRS))
         # If the resource action does not exist, create it
         else
           build_resource_action(resource_params, action)
@@ -526,7 +526,7 @@ class ServiceTemplate < ApplicationRecord
 
   def update_from_options(params)
     options[:config_info] = params[:config_info]
-    update_attributes!(params.except(:config_info))
+    update!(params.except(:config_info))
   end
 
   def construct_config_info

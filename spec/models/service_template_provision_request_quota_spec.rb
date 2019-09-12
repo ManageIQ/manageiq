@@ -60,7 +60,7 @@ describe ServiceTemplateProvisionRequest do
 
           requests << create_service_bundle(@user, [@vmware_template], @vmware_prov_options)
 
-          requests.each { |r| r.update_attributes(:tenant_id => @user.current_tenant.id) }
+          requests.each { |r| r.update(:tenant_id => @user.current_tenant.id) }
           requests
         end
 
@@ -76,7 +76,7 @@ describe ServiceTemplateProvisionRequest do
 
           it "invalid service_template does not raise error" do
             requests = load_requests
-            requests.first.update_attributes(:service_template => nil)
+            requests.first.update(:service_template => nil)
             expect { request.check_quota(quota_method) }.not_to raise_error
           end
         end
@@ -95,7 +95,7 @@ describe ServiceTemplateProvisionRequest do
 
           it "fails without requester.email" do
             load_requests
-            @vmware_user1.update_attributes(:email => nil)
+            @vmware_user1.update(:email => nil)
             expect { request.check_quota(quota_method) }.to raise_error(NoMethodError)
           end
         end
@@ -137,7 +137,7 @@ describe ServiceTemplateProvisionRequest do
 
           requests << create_service_bundle(@user, [@google_template], @google_prov_options)
 
-          requests.each { |r| r.update_attributes(:tenant_id => @user.current_tenant.id) }
+          requests.each { |r| r.update(:tenant_id => @user.current_tenant.id) }
           requests
         end
 

@@ -613,7 +613,7 @@ describe VmOrTemplate do
 
     it "changes the tenant after changing the group" do
       vm = FactoryBot.create(:vm_vmware, :miq_group => group1)
-      vm.update_attributes(:miq_group_id => group2.id)
+      vm.update(:miq_group_id => group2.id)
       expect(vm.tenant).to eq(tenant2)
     end
   end
@@ -941,13 +941,13 @@ describe VmOrTemplate do
 
   describe ".active" do
     it "detects active" do
-      vm.update_attributes(:ext_management_system => ems)
+      vm.update(:ext_management_system => ems)
       expect(vm).to be_active
       expect(virtual_column_sql_value(VmOrTemplate, "active")).to be true
     end
 
     it "detects non-active" do
-      vm.update_attributes(:ext_management_system => nil)
+      vm.update(:ext_management_system => nil)
       expect(vm).not_to be_active
       expect(virtual_column_sql_value(VmOrTemplate, "active")).to be false
     end
@@ -955,25 +955,25 @@ describe VmOrTemplate do
 
   describe ".archived" do
     it "detects archived" do
-      vm.update_attributes(:ext_management_system => nil, :storage => nil)
+      vm.update(:ext_management_system => nil, :storage => nil)
       expect(vm).to be_archived
       expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be true
     end
 
     it "detects non-archived (has ems and storage)" do
-      vm.update_attributes(:ext_management_system => ems, :storage => storage)
+      vm.update(:ext_management_system => ems, :storage => storage)
       expect(vm).not_to be_archived
       expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
     end
 
     it "detects non-archived (has ems)" do
-      vm.update_attributes(:ext_management_system => ems, :storage => nil)
+      vm.update(:ext_management_system => ems, :storage => nil)
       expect(vm).not_to be_archived
       expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
     end
 
     it "detects non-archived (has storage)" do
-      vm.update_attributes(:ext_management_system => nil, :storage => storage)
+      vm.update(:ext_management_system => nil, :storage => storage)
       expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
       expect(vm).not_to be_archived
       vm.ext_management_system = nil
@@ -982,25 +982,25 @@ describe VmOrTemplate do
 
   describe ".orphaned" do
     it "detects orphaned" do
-      vm.update_attributes(:ext_management_system => nil, :storage => storage)
+      vm.update(:ext_management_system => nil, :storage => storage)
       expect(vm).to be_orphaned
       expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be true
     end
 
     it "detects non-orphaned (ems and no storage)" do
-      vm.update_attributes(:ext_management_system => ems, :storage => nil)
+      vm.update(:ext_management_system => ems, :storage => nil)
       expect(vm).not_to be_orphaned
       expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
     end
 
     it "detects non-orphaned (no storage)" do
-      vm.update_attributes(:ext_management_system => nil, :storage => nil)
+      vm.update(:ext_management_system => nil, :storage => nil)
       expect(vm).not_to be_orphaned
       expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
     end
 
     it "detects non-orphaned (has ems)" do
-      vm.update_attributes(:ext_management_system => ems, :storage => storage)
+      vm.update(:ext_management_system => ems, :storage => storage)
       expect(vm).not_to be_orphaned
       expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
     end
@@ -1053,13 +1053,13 @@ describe VmOrTemplate do
     end
 
     it "detects false" do
-      vm.update_attributes(:template => false)
+      vm.update(:template => false)
       expect(vm.v_is_a_template).to eq("False")
       expect(virtual_column_sql_value(VmOrTemplate, "v_is_a_template")).to eq(false)
     end
 
     it "detects true" do
-      vm.update_attributes(:template => true)
+      vm.update(:template => true)
       expect(vm.v_is_a_template).to eq("True")
       expect(virtual_column_sql_value(VmOrTemplate, "v_is_a_template")).to eq(true)
     end
@@ -1191,7 +1191,7 @@ describe VmOrTemplate do
     end
 
     it "when a folder is renamed" do
-      folder_blue1.update_attributes(:name => "new blue1")
+      folder_blue1.update(:name => "new blue1")
 
       described_class.post_refresh_ems(ems.id, start_time)
 
@@ -1259,7 +1259,7 @@ describe VmOrTemplate do
     end
 
     it "when a folder is renamed and a folder is moved under it simultaneously" do
-      folder_blue1.update_attributes(:name => "new blue1")
+      folder_blue1.update(:name => "new blue1")
       folder_blue2.parent = folder_blue1
 
       described_class.post_refresh_ems(ems.id, start_time)
@@ -1294,7 +1294,7 @@ describe VmOrTemplate do
     end
 
     it "when a folder is renamed and a VM is moved under it simultaneously" do
-      folder_blue2.update_attributes(:name => "new blue2")
+      folder_blue2.update(:name => "new blue2")
       vm_blue1.with_relationship_type("ems_metadata") { |v| v.parent = folder_blue2 }
 
       described_class.post_refresh_ems(ems.id, start_time)

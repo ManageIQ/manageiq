@@ -36,7 +36,7 @@ describe ManageIQ::Providers::CloudManager::OrchestrationStack do
 
     it "changes the tenant after changing the group" do
       stack = FactoryBot.create(:orchestration_stack, :miq_group => group1)
-      stack.update_attributes(:miq_group_id => group2.id)
+      stack.update(:miq_group_id => group2.id)
       expect(stack.tenant).to eq(tenant2)
     end
   end

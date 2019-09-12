@@ -12,7 +12,7 @@ describe "Service Retirement Management" do
     context "with user" do
       it "#retirement_check" do
         expect(MiqEvent).to receive(:raise_evm_event)
-        service_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        service_with_owner.update(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
         expect(service_with_owner.retirement_last_warn).to be_nil
         service_with_owner.retirement_check
         service_with_owner.reload
@@ -29,7 +29,7 @@ describe "Service Retirement Management" do
       it "#retirement_check" do
         expect(MiqEvent).to receive(:raise_evm_event)
 
-        @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        @service.update(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
         expect(@service.retirement_last_warn).to be_nil
         @service.retirement_check
         @service.reload
@@ -61,13 +61,13 @@ describe "Service Retirement Management" do
   end
 
   it "#retire_now not called when already retiring" do
-    @service.update_attributes(:retirement_state => 'retiring')
+    @service.update(:retirement_state => 'retiring')
     expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
     @service.retire_now
   end
 
   it "#retire_now not called when already retired" do
-    @service.update_attributes(:retirement_state => 'retired')
+    @service.update(:retirement_state => 'retired')
     expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
     @service.retire_now
   end
@@ -136,7 +136,7 @@ describe "Service Retirement Management" do
     ems = FactoryBot.create(:ems_vmware, :zone => @server.zone)
     vm  = FactoryBot.create(:vm_vmware, :ems_id => ems.id)
     userid = 'freddy'
-    @service.update_attributes(:retirement_requester => userid)
+    @service.update(:retirement_requester => userid)
     @service << vm
     expect(@service.service_resources.size).to eq(1)
     expect(@service.service_resources.first.resource).to_not receive(:retire_now).with(userid)
@@ -176,7 +176,7 @@ describe "Service Retirement Management" do
   end
 
   it "#retiring - true" do
-    @service.update_attributes(:retirement_state => 'retiring')
+    @service.update(:retirement_state => 'retiring')
     expect(@service.retiring?).to be_truthy
   end
 
@@ -186,7 +186,7 @@ describe "Service Retirement Management" do
   end
 
   it "#error_retiring - true" do
-    @service.update_attributes(:retirement_state => 'error')
+    @service.update(:retirement_state => 'error')
     expect(@service.error_retiring?).to be_truthy
   end
 
@@ -205,13 +205,13 @@ describe "Service Retirement Management" do
   it "#retirement_due?" do
     expect(@service.retirement_due?).to be_falsey
 
-    @service.update_attributes(:retires_on => Time.zone.today + 1.day)
+    @service.update(:retires_on => Time.zone.today + 1.day)
     expect(@service.retirement_due?).to be_falsey
 
-    @service.update_attributes(:retires_on => Time.zone.today)
+    @service.update(:retires_on => Time.zone.today)
     expect(@service.retirement_due?).to be_truthy
 
-    @service.update_attributes(:retires_on => Time.zone.today - 1.day)
+    @service.update(:retires_on => Time.zone.today - 1.day)
     expect(@service.retirement_due?).to be_truthy
   end
 

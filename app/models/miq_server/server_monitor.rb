@@ -4,7 +4,7 @@ module MiqServer::ServerMonitor
   def mark_as_not_responding(seconds = miq_server_time_threshold)
     msg = "#{format_full_log_msg} has not responded in #{seconds} seconds."
     _log.info(msg)
-    update_attributes(:status => "not responding")
+    update(:status => "not responding")
     deactivate_all_roles
 
     # TODO: need to add event for this
@@ -77,7 +77,7 @@ module MiqServer::ServerMonitor
 
         if s.is_master?
           _log.info("#{s.format_short_log_msg} has been detected as a second master and is being demoted.")
-          update_attributes(:is_master => false)
+          update(:is_master => false)
         end
 
       else # unchanged

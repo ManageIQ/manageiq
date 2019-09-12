@@ -47,7 +47,7 @@ module VmdbTableEvm::MetricCapture
     # Exlude these columns from delta calculations...
     exclude_from_prior.each { |k| attrs.delete(k.to_sym) }
 
-    update_attributes(:prior_raw_metrics => attrs)
+    update(:prior_raw_metrics => attrs)
 
     capture_index_metrics(timestamp)
   end

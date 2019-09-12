@@ -156,7 +156,7 @@ class MiqServer < ApplicationRecord
     sync_workers
     wait_for_started_workers
 
-    update_attributes(:status => "started")
+    update(:status => "started")
     _log.info("Server starting complete")
   end
 
@@ -223,7 +223,7 @@ class MiqServer < ApplicationRecord
       ].each { |k| server_hash[k] = nil }
     end
 
-    server.update_attributes(server_hash)
+    server.update(server_hash)
 
     _log.info("Server IP Address: #{server.ipaddress}")    unless server.ipaddress.blank?
     _log.info("Server Hostname: #{server.hostname}")       unless server.hostname.blank?
@@ -424,7 +424,7 @@ class MiqServer < ApplicationRecord
 
     # Then kill this server
     _log.info("initiated for #{format_full_log_msg}")
-    update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
+    update(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
     (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
   end
 
@@ -450,7 +450,7 @@ class MiqServer < ApplicationRecord
     update_attribute(:status, 'quiesce')
     deactivate_all_roles
     quiesce_all_workers
-    update_attributes(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
+    update(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
   end
 
   # Restart the local server

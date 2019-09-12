@@ -24,14 +24,14 @@ class MiqAlertStatusAction < ApplicationRecord
 
   def update_status_acknowledgement
     if %w(assign unassign unacknowledge).include?(action_type)
-      miq_alert_status.update_attributes!(:acknowledged => false)
+      miq_alert_status.update!(:acknowledged => false)
     elsif "acknowledge" == action_type
-      miq_alert_status.update_attributes!(:acknowledged => true)
+      miq_alert_status.update!(:acknowledged => true)
     end
   end
 
   def update_status_assignee
-    miq_alert_status.update_attributes!(:assignee => assignee) if %w(assign unassign).include?(action_type)
+    miq_alert_status.update!(:assignee => assignee) if %w[assign unassign].include?(action_type)
   end
 
   def self.display_name(number = 1)

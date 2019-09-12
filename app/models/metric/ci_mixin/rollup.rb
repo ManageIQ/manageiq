@@ -96,7 +96,7 @@ module Metric::CiMixin::Rollup
         new_perf = Metric::Rollup.send("rollup_#{interval_name}", self, time, interval_name, time_profile, new_perf, perf.attributes.symbolize_keys)
       end
 
-      Benchmark.realtime_block(:db_update_perf) { perf.update_attributes(new_perf) }
+      Benchmark.realtime_block(:db_update_perf) { perf.update(new_perf) }
 
       case interval_name
       when "hourly"

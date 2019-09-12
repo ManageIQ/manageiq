@@ -30,7 +30,7 @@ describe Tenant do
     end
 
     it "can update the root_tenant" do
-      root_tenant.update_attributes!(:name => 'newname', :use_config_for_attributes => false)
+      root_tenant.update!(:name => 'newname', :use_config_for_attributes => false)
       expect(root_tenant.reload.name).to eq('newname')
     end
   end
@@ -215,14 +215,14 @@ describe Tenant do
       tenant1 = FactoryBot.create(:tenant)
       tenant2 = FactoryBot.create(:tenant)
       g = FactoryBot.create(:miq_group, :tenant => tenant1)
-      expect { tenant2.update_attributes!(:default_miq_group => g) }
+      expect { tenant2.update!(:default_miq_group => g) }
         .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
     end
 
     # we may want to change this in the future
     it "prevents changing default_miq_group" do
       g = FactoryBot.create(:miq_group, :tenant => tenant)
-      expect { tenant.update_attributes!(:default_miq_group => g) }
+      expect { tenant.update!(:default_miq_group => g) }
         .to raise_error(ActiveRecord::RecordInvalid, /default group must be a default group for this tenant/)
     end
   end
@@ -255,7 +255,7 @@ describe Tenant do
 
   describe "#description" do
     it "has description" do
-      tenant.update_attributes(:description => 'very important vm')
+      tenant.update(:description => 'very important vm')
       expect(tenant.description).not_to be_nil
     end
   end

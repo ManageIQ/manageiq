@@ -17,7 +17,7 @@ module MiqRequestMixin
     msg = msg.truncate(255)
     options[:user_message] = msg
     update_attribute(:options, options)
-    update_attributes(:message => msg) unless msg.blank?
+    update(:message => msg) if msg.present?
   end
 
   def self.get_option_last(key, from)
@@ -189,6 +189,6 @@ module MiqRequestMixin
     options[:executed_on_servers] ||= []
     # remove duplicates and ensure that last element of array is the last server
     (options[:executed_on_servers] -= [MiqServer.my_server.id]) << MiqServer.my_server.id
-    update_attributes(:options => options)
+    update(:options => options)
   end
 end

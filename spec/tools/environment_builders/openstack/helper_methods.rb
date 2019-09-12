@@ -35,7 +35,7 @@ module Openstack
                                                                                     :hostname => hostname}).first
       puts "Creating EMS for environment #{hostname}" unless @ems
       @ems ||= ManageIQ::Providers::Openstack::CloudManager.new
-      @ems.update_attributes(attributes)
+      @ems.update(attributes)
       @ems.save
 
       @ems.update_authentication(:default => {:userid => userid, :password => password})

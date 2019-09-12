@@ -275,7 +275,7 @@ class MiqQueue < ApplicationRecord
       begin
         _log.info("#{MiqQueue.format_short_log_msg(msg)} previously timed out, retrying...") if msg.state == STATE_TIMEOUT
         handler = MiqWorker.my_worker || MiqServer.my_server
-        msg.update_attributes!(:state => STATE_DEQUEUE, :handler => handler)
+        msg.update!(:state => STATE_DEQUEUE, :handler => handler)
         _log.info("#{MiqQueue.format_full_log_msg(msg)}, Dequeued in: [#{Time.now.utc - msg.created_on}] seconds")
         return msg
       rescue ActiveRecord::StaleObjectError
@@ -295,7 +295,7 @@ class MiqQueue < ApplicationRecord
   end
 
   def unget(options = {})
-    update_attributes!(options.merge(:state => STATE_READY, :handler => nil))
+    update!(options.merge(:state => STATE_READY, :handler => nil))
     @delivered_on = nil
     _log.info("#{MiqQueue.format_full_log_msg(self)}, Requeued")
   end
@@ -385,7 +385,7 @@ class MiqQueue < ApplicationRecord
             save_options = save_options.except(:msg_timeout)
           end
 
-          msg.update_attributes!(save_options)
+          msg.update!(save_options)
           _log.info("#{MiqQueue.format_short_log_msg(msg)} updated with following: #{save_options.except(:data, :msg_data).inspect}")
           _log.info("#{MiqQueue.format_full_log_msg(msg)}, Requeued")
         end

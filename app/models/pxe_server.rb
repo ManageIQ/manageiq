@@ -31,7 +31,7 @@ class PxeServer < ApplicationRecord
   end
 
   def default_pxe_image_for_windows=(image)
-    image.update_attributes(:default_for_windows => true)
+    image.update(:default_for_windows => true)
     clear_association_cache
   end
 
@@ -142,7 +142,7 @@ class PxeServer < ApplicationRecord
             image   = current.delete([path, index]) || windows_images.build
             stats[image.new_record? ? :adds : :updates] += 1
 
-            image.update_attributes(
+            image.update(
               :name        => image_hash["name"],
               :description => image_hash["description"].blank? ? nil : image_hash["description"],
               :path        => path,

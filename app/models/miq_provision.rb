@@ -67,7 +67,7 @@ class MiqProvision < MiqProvisionTask
     options[:vm_target_name]     = new_name
     options[:vm_target_hostname] = get_hostname(new_name)
 
-    update_attributes(:description => self.class.get_description(self, new_name), :options => options)
+    update(:description => self.class.get_description(self, new_name), :options => options)
     miq_request.try(:update_description_from_tasks) if update_request
   end
 

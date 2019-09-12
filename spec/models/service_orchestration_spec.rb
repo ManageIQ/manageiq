@@ -298,7 +298,7 @@ describe ServiceOrchestration do
       @resulting_stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(
         service.orchestration_manager, service.stack_name, service.orchestration_template, service.stack_options
       )
-      service.update_attributes(:options => service.options.merge!(:orchestration_stack => @resulting_stack.attributes.compact.except(:id)))
+      service.update(:options => service.options.merge!(:orchestration_stack => @resulting_stack.attributes.compact.except(:id)))
       allow(service).to receive(:orchestration_stack).and_return(@resulting_stack)
       service.miq_request_task = FactoryBot.create(:service_template_provision_task)
     end
@@ -322,7 +322,7 @@ describe ServiceOrchestration do
 
     it 'reconnects cataloged stack with the orchestration template' do
       # purposely disconnect the template
-      @resulting_stack.update_attributes!(:orchestration_template => nil)
+      @resulting_stack.update!(:orchestration_template => nil)
 
       service.post_provision_configure
       @resulting_stack.reload

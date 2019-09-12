@@ -78,7 +78,7 @@ class ServiceTemplateTransformationPlan < ServiceTemplate
     raise _("Editing a plan in progress is prohibited") if %w(active pending).include?(miq_requests.sort_by(&:created_on).last.try(:request_state))
 
     if miq_requests.any? || options[:config_info].nil?
-      update_attributes(:name => options[:name], :description => options[:description])
+      update(:name => options[:name], :description => options[:description])
       return reload
     end
 

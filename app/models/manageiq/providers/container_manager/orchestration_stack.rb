@@ -23,25 +23,25 @@ class ManageIQ::Providers::ContainerManager::OrchestrationStack < ::Orchestratio
   end
 
   def retire_now(requester = nil)
-    update_attributes(:retirement_requester => requester)
+    update(:retirement_requester => requester)
     finish_retirement
   end
 
   def raw_status
     failed = resources.any? { |obj| obj.resource_status == 'failed' }
     if failed
-      update_attributes(:status => 'failed')
+      update(:status => 'failed')
       return self.class.status_class.new('failed', nil)
     end
 
     done = resources.all? do |obj|
       miq_class = obj.resource_category
       miq_obj = miq_class.constantize.find_by(:ems_ref => obj.ems_ref) if miq_class
-      obj.update_attributes(:resource_status => 'succeeded') if miq_obj
+      obj.update(:resource_status => 'succeeded') if miq_obj
       miq_class.nil? || miq_obj
     end
 
-    update_attributes(:status => 'succeeded') if done
+    update(:status => 'succeeded') if done
     message = done ? "completed" : "in progress"
 
     self.class.status_class.new(message, nil)

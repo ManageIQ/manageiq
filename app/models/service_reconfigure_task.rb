@@ -12,7 +12,7 @@ class ServiceReconfigureTask < MiqRequestTask
   end
 
   def after_request_task_create
-    update_attributes(:description => get_description)
+    update(:description => get_description)
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)

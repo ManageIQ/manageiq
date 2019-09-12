@@ -29,7 +29,7 @@ class VmdbMetric < ApplicationRecord
     percent_bloat /= 24.0
 
     # Create new daily record...
-    metric.update_attributes(:rows => rows, :size => size, :wasted_bytes => wasted_bytes, :percent_bloat => percent_bloat)
+    metric.update(:rows => rows, :size => size, :wasted_bytes => wasted_bytes, :percent_bloat => percent_bloat)
   end
 
   def self.display_name(number = 1)

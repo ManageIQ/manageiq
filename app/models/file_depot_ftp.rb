@@ -25,7 +25,7 @@ class FileDepotFtp < FileDepot
                                                                                       :uri     => uri,
                                                                                       :id      => authentication_userid}
       else
-        file.update_attributes(
+        file.update(
           :state   => "available",
           :log_uri => destination_file
         )

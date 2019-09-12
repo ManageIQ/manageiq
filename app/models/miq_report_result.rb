@@ -139,7 +139,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def save_for_user(userid)
-    update_attributes(:userid => userid, :report_source => "Saved by user")
+    update(:userid => userid, :report_source => "Saved by user")
   end
 
   def report

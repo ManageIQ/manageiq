@@ -46,7 +46,7 @@ class MiqDialog
           attrs[:file_mtime] = mtime
           attrs[:default]    = true
 
-          dialog.update_attributes!(attrs)
+          dialog.update!(attrs)
         end
       end
 

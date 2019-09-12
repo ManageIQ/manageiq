@@ -15,8 +15,8 @@ describe VmReconfigureRequest do
 
   context '#my_zone' do
     it "with valid source should have the VM's zone, not the requests zone" do
-      vm_vmware.update_attributes(:ems_id => ems_vmware.id)
-      request.update_attributes(:options => {:src_ids => [vm_vmware.id]})
+      vm_vmware.update(:ems_id => ems_vmware.id)
+      request.update(:options => {:src_ids => [vm_vmware.id]})
 
       expect(request.my_zone).to     eq(vm_vmware.my_zone)
       expect(request.my_zone).not_to eq(@zone1.name)

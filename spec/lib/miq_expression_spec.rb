@@ -49,7 +49,7 @@ describe MiqExpression do
           expect(report_fields).to include(volume_2_type_field_cost)
 
           # case: change name
-          volume_2.update_attributes!(:volume_type => 'NEW_TYPE_2')
+          volume_2.update!(:volume_type => 'NEW_TYPE_2')
           ChargebackVm.current_volume_types_clear_cache
           report_fields = described_class.reporting_available_fields(model).map(&:second)
           expect(report_fields).to include(volume_1_type_field_cost)

@@ -446,7 +446,7 @@ describe Classification do
         # then seeding still doesn't fail.
         cat = Classification.is_category.find_by!(:description => "Cost Center")
         allow(YAML).to receive(:load_file).and_call_original
-        cat.update_attributes!(:name => "new_name")
+        cat.update!(:name => "new_name")
         expect {
           2.times.each { Classification.seed }
         }.to_not raise_error
@@ -578,7 +578,7 @@ describe Classification do
       let(:classification) { FactoryBot.create(:classification_tag, :parent => category, :name => "some_tag_name") }
       it "doesn't assign new tag " do
         tag = classification.tag
-        classification.update_attributes!(:name => new_name)
+        classification.update!(:name => new_name)
         classification.reload
         expect(tag.id).to eq classification.tag.id
         expect(classification.name).to eq(new_name)

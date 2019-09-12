@@ -159,7 +159,7 @@ describe MiqServer do
     end
 
     it "with proxy server but no credentials" do
-      database.update_attributes(:registration_http_proxy_server => "http://my_proxy:port")
+      database.update(:registration_http_proxy_server => "http://my_proxy:port")
 
       Tempfile.open do |tempfile|
         stub_inifile = IniFile.new(:filename => tempfile.path)
@@ -173,7 +173,7 @@ describe MiqServer do
 
     it "with proxy server and credentials" do
       database.update_authentication(:registration_http_proxy => {:userid => "user", :password => "pass"})
-      database.update_attributes(:registration_http_proxy_server => "http://my_proxy:port")
+      database.update(:registration_http_proxy_server => "http://my_proxy:port")
 
       Tempfile.open do |tempfile|
         stub_inifile = IniFile.new(:filename => tempfile.path)
@@ -314,7 +314,7 @@ describe MiqServer do
     it "#assemble_registration_options" do
       database.update_authentication(:registration => {:userid => "registration_user", :password => "registration_password"})
       database.update_authentication(:registration_http_proxy => {:userid => "proxy_user", :password => "proxy_password"})
-      database.update_attributes(
+      database.update(
         :registration_organization      => "my_org",
         :registration_http_proxy_server => "my_proxy:port",
         :registration_server            => "subscription.example.com",

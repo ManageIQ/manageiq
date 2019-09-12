@@ -31,28 +31,28 @@ describe "Widget Chart Content" do
   end
 
   it "#generate_content for self_service user" do
-    @role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
+    @role.update(:settings => {:restrictions => {:vms => :user_or_group}})
     content = widget.generate_one_content_for_user(@group, @user)
     expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(3)
     expect(widget.contents_for_user(@user)).to eq(content)
   end
 
   it "#generate_content for limited_self_service user" do
-    @role.update_attributes(:settings => {:restrictions => {:vms => :user}})
+    @role.update(:settings => {:restrictions => {:vms => :user}})
     content = widget.generate_one_content_for_user(@group, @user)
     expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(2)
     expect(widget.contents_for_user(@user)).to eq(content)
   end
 
   it "#generate_content for self_service_group" do
-    @role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
+    @role.update(:settings => {:restrictions => {:vms => :user_or_group}})
     content = widget.generate_one_content_for_group(@user.current_group, @user.get_timezone)
     expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(3)
     expect(widget.contents_for_user(@user)).to eq(content)
   end
 
   it "#generate_content for limited_self_service_group" do
-    @role.update_attributes(:settings => {:restrictions => {:vms => :user}})
+    @role.update(:settings => {:restrictions => {:vms => :user}})
     content = widget.generate_one_content_for_group(@user.current_group, @user.get_timezone)
     expect(content.miq_report_result.html_rows.count { |c| c.match("<td>VMware</td>") }).to eq(3)
     expect(widget.contents_for_user(@user)).to eq(content)

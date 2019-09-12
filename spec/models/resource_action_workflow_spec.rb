@@ -108,7 +108,7 @@ describe ResourceActionWorkflow do
           let(:options) { {} }
           let(:resource_action) do
             @resource_action.tap do |ra|
-              ra.update_attributes(:resource => FactoryBot.create(:custom_button, :applies_to_class => target.class.name, :options => options))
+              ra.update(:resource => FactoryBot.create(:custom_button, :applies_to_class => target.class.name, :options => options))
             end
           end
 
@@ -178,7 +178,7 @@ describe ResourceActionWorkflow do
           let(:options) { {} }
           let(:resource_action) do
             @resource_action.tap do |ra|
-              ra.update_attributes(:resource => FactoryBot.create(:custom_button, :applies_to_class => target.class.name, :options => options))
+              ra.update(:resource => FactoryBot.create(:custom_button, :applies_to_class => target.class.name, :options => options))
             end
           end
 

@@ -50,11 +50,11 @@ describe "LogCollection" do
 
     context "with a nil region column" do
       before do
-        @region.update_attributes(:region => nil)
+        @region.update(:region => nil)
       end
 
       it "using a historical log file should raise no errors with a nil region column" do
-        @log_file.update_attributes(:historical => true)
+        @log_file.update(:historical => true)
         expect { @log_file.relative_path_for_upload("/test.zip") }.to_not raise_error
       end
     end
@@ -65,7 +65,7 @@ describe "LogCollection" do
       end
 
       it "using a historical log file should raise no errors with a nil region association" do
-        @log_file.update_attributes(:historical => true)
+        @log_file.update(:historical => true)
         expect { @log_file.relative_path_for_upload("/test.zip") }.to_not raise_error
       end
     end
@@ -75,7 +75,7 @@ describe "LogCollection" do
         before do
           @fname = "#{log_type}.zip"
           allow(MiqRegion).to receive(:my_region).and_return(@region)
-          @log_file.update_attributes(:historical => log_type != "current")
+          @log_file.update(:historical => log_type != "current")
         end
 
         it "should build a destination directory path based on zone and server" do
@@ -118,7 +118,7 @@ describe "LogCollection" do
   context "Log Collection #synchronize_logs" do
     before do
       depot = FactoryBot.create(:file_depot)
-      @zone.update_attributes(:log_file_depot_id => depot.id)
+      @zone.update(:log_file_depot_id => depot.id)
     end
 
     include_examples("Log Collection #synchronize_logs", "miq_server")

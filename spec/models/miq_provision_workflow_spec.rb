@@ -110,7 +110,7 @@ describe MiqProvisionWorkflow do
     let(:workflow_class) { provider.class.provision_workflow_class }
 
     it 'with valid source' do
-      template.update_attributes(:ext_management_system => provider)
+      template.update(:ext_management_system => provider)
       expect(described_class.class_for_source(template.id)).to eq(workflow_class)
     end
 

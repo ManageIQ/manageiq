@@ -45,10 +45,10 @@ describe Provider do
       end
     end
 
-    it "works with #update_attributes" do
+    it "works with #update" do
       p = FactoryBot.build(:provider_ansible_tower)
-      p.update_attributes(:verify_ssl => 0)
-      p.update_attributes(:verify_ssl => 1)
+      p.update(:verify_ssl => 0)
+      p.update(:verify_ssl => 1)
 
       expect(Endpoint.find(p.default_endpoint.id).verify_ssl).to eq(1)
     end

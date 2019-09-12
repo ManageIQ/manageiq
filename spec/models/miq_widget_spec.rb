@@ -253,13 +253,13 @@ describe MiqWidget do
       subject { MiqWidget.available_for_user(@user) }
 
       it "by role" do
-        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:roles => @group2.miq_user_role.name})
+        @widget_report_vendor_and_guest_os.update(:visibility => {:roles => @group2.miq_user_role.name})
         expect(MiqWidget.available_for_user(@user1).count).to eq(1)
         expect(MiqWidget.available_for_user(@user2).count).to eq(2)
       end
 
       it "by group" do
-        @widget_report_vendor_and_guest_os.update_attributes(:visibility => {:groups => @group2.description})
+        @widget_report_vendor_and_guest_os.update(:visibility => {:groups => @group2.description})
         expect(MiqWidget.available_for_user(@user1).count).to eq(1)
         expect(MiqWidget.available_for_user(@user2).count).to eq(2)
       end
@@ -345,7 +345,7 @@ describe MiqWidget do
     end
 
     it "does not generate content if content_type of widget is 'menu'" do
-      @widget.update_attributes(:content_type => "menu")
+      @widget.update(:content_type => "menu")
       expect(@widget).not_to receive(:queue_generate_content_for_users_or_group)
       @widget.queue_generate_content
     end
@@ -551,7 +551,7 @@ describe MiqWidget do
   end
 
   context "#generate_content" do
-    let(:widget) { described_class.new(:miq_task => miq_task, :content_type => "report") }
+    let(:widget) { described_class.new(:miq_task => miq_task, :content_type => "report", :title => "title", :description => "foo") }
     let(:content_generator) { double("MiqWidget::ContentGenerator") }
     let(:klass) { "klass" }
     let(:userids) { "userids" }
@@ -590,7 +590,7 @@ describe MiqWidget do
       end
 
       it "does not generate content if content_type of widget is 'menu'" do
-        widget.update_attributes(:content_type => "menu")
+        widget.update(:content_type => "menu")
         expect(content_generator).not_to receive(:generate)
         widget.generate_content(klass, group_description, nil, timezones)
       end
@@ -697,7 +697,7 @@ describe MiqWidget do
         end
         MiqQueue.destroy_all
 
-        @role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
+        @role.update(:settings => {:restrictions => {:vms => :user_or_group}})
         widget.queue_generate_content
         MiqQueue.first.deliver
 
@@ -710,7 +710,7 @@ describe MiqWidget do
 
     context "for self service user" do
       before do
-        @role.update_attributes(:settings => {:restrictions => {:vms => :user}})
+        @role.update(:settings => {:restrictions => {:vms => :user}})
         widget.make_memberof(@ws1)
         widget.make_memberof(@ws2)
         widget.queue_generate_content
@@ -733,7 +733,7 @@ describe MiqWidget do
 
     context "for non-current self service group" do
       before do
-        @role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
+        @role.update(:settings => {:restrictions => {:vms => :user_or_group}})
         @group2 = FactoryBot.create(:miq_group, :miq_user_role => @role)
         @ws3    = FactoryBot.create(:miq_widget_set,
                                      :name     => "HOME",

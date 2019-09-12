@@ -113,7 +113,7 @@ class MiqGroup < ApplicationRecord
         if group.entitlement.present? # Relation is read-only if present
           Entitlement.update(group.entitlement.id, :miq_user_role => tenant_role)
         else
-          group.update_attributes(:miq_user_role => tenant_role)
+          group.update(:miq_user_role => tenant_role)
         end
       end
     else

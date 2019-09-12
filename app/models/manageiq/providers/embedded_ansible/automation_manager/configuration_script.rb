@@ -22,7 +22,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def raw_update_in_provider(params)
-    update_attributes!(self.class.params_to_attributes(manager, params.except(:task_id, :miq_task_id)))
+    update!(self.class.params_to_attributes(manager, params.except(:task_id, :miq_task_id)))
   end
 
   def raw_delete_in_provider
