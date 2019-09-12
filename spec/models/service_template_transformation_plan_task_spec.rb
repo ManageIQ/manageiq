@@ -19,7 +19,7 @@ RSpec.describe ServiceTemplateTransformationPlanTask, :v2v do
     it 'does not create child tasks' do
       allow(subject).to receive(:source).and_return(double('vm', :name => 'any'))
       expect(subject).not_to receive(:create_child_tasks)
-      expect(subject).to receive(:update_attributes).with(hash_including(:description))
+      expect(subject).to receive(:update!).with(hash_including(:description))
       subject.after_request_task_create
     end
   end
