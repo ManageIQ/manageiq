@@ -79,7 +79,7 @@ describe MiqAeClass do
   context "cross domain instances" do
     def set_priority(name, value)
       ns = MiqAeNamespace.find_by_fqname(name)
-      ns.update_attributes!(:priority => value)
+      ns.update!(:priority => value)
     end
 
     before do
@@ -313,7 +313,7 @@ describe MiqAeClass do
       field1 = @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'attribute')
       @c1.reload
       expect(@c1.state_machine?).to be_falsey
-      field1.update_attributes(:aetype => 'state')
+      field1.update(:aetype => 'state')
       @c1.reload
       expect(@c1.state_machine?).to be_truthy
     end

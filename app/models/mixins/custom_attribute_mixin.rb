@@ -115,7 +115,7 @@ module CustomAttributeMixin
     if record.nil?
       miq_custom_attributes.create(:name => key.to_s, :value => value)
     else
-      record.update_attributes(:value => value)
+      record.update(:value => value)
     end
   end
 

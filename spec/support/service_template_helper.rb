@@ -17,7 +17,7 @@ module Spec
           item = FactoryBot.create(:service_template, :name         => name,
                                                        :options      => {:dialog => {}},
                                                        :service_type => 'atomic')
-          item.update_attributes(:prov_type => value[:prov_type]) if value[:prov_type].present?
+          item.update(:prov_type => value[:prov_type]) if value[:prov_type].present?
           next if value[:prov_type] && value[:prov_type].starts_with?("generic")
           options = value[:request]
           options ||= {}

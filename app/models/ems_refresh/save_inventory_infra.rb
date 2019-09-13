@@ -113,7 +113,7 @@ module EmsRefresh::SaveInventoryInfra
         found = Storage.create(h)
       else
         _log.info("#{log_header} Updating Storage [#{found.name}] id: [#{found.id}] location: [#{found.location}]")
-        found.update_attributes!(h)
+        found.update!(h)
       end
 
       h[:id] = found.id
@@ -185,7 +185,7 @@ module EmsRefresh::SaveInventoryInfra
 
           h.delete(:type)
 
-          found.update_attributes(h)
+          found.update(h)
         end
 
         found.save!

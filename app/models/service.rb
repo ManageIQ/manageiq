@@ -273,11 +273,11 @@ class Service < ApplicationRecord
     expected_status = "#{action}_complete"
     return true if options[:power_status] == expected_status
     options[:power_status] = expected_status
-    update_attributes(:options => options)
+    update(:options => options)
   end
 
   private def update_progress(hash)
-    update_attributes(:options => options.merge(hash))
+    update(:options => options.merge(hash))
   end
 
   def process_group_action(action, group_idx, direction)
@@ -472,7 +472,7 @@ class Service < ApplicationRecord
 
       # Create ancestry link between services
       resource = service_resource.resource
-      resource.update_attributes(:parent => self) if resource.kind_of?(Service)
+      resource.update(:parent => self) if resource.kind_of?(Service)
     end
   end
 

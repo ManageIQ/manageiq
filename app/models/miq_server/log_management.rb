@@ -54,7 +54,7 @@ module MiqServer::LogManagement
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
     raise _("Log depot settings not configured") unless context_log_depot
-    context_log_depot.update_attributes(:support_case => options[:support_case].presence)
+    context_log_depot.update(:support_case => options[:support_case].presence)
 
     if include_automate_models_and_dialogs?(options[:include_automate_models_and_dialogs])
       post_automate_models(taskid, context_log_depot)
@@ -120,7 +120,7 @@ module MiqServer::LogManagement
       local_file = VMDB::Util.zip_logs(log_type.to_s.downcase.concat(".zip"), log_patterns(log_type, pattern), "system")
       self.log_files << logfile
 
-      logfile.update_attributes(
+      logfile.update(
         :local_file         => local_file,
         :logging_started_on => log_start,
         :logging_ended_on   => log_end,
@@ -131,7 +131,7 @@ module MiqServer::LogManagement
       logfile.upload
     rescue StandardError, Timeout::Error => err
       _log.error("#{log_prefix} Posting of #{log_type.downcase} logs failed for #{who_am_i} due to error: [#{err.class.name}] [#{err}]")
-      logfile.update_attributes(:state => "error")
+      logfile.update(:state => "error")
       raise
     ensure
       FileUtils.rm_f(local_file) if local_file && File.exist?(local_file)
@@ -230,14 +230,14 @@ module MiqServer::LogManagement
     log_files.each do |lf|
       if lf.state == 'collecting'
         _log.info("Deleting #{lf.description}")
-        lf.miq_task.update_attributes(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup') unless lf.miq_task.nil?
+        lf.miq_task&.(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
         lf.destroy
       end
     end
 
     # Since a task is created before a logfile, there's a chance we have a task without a logfile
     MiqTask.where(:miq_server_id => id).where("name like ?", "Zipped log retrieval for %").where("state != ?", "Finished").each do |task|
-      task.update_attributes(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
+      task.update(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
     end
   end
 

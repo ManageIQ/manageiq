@@ -19,7 +19,7 @@ describe VmdbDatabase do
             :used_inodes_percent => 8
           }]
 
-          db.update_attributes(:data_directory => "stubbed")
+          db.update(:data_directory => "stubbed")
           expect(EvmDatabase).to receive(:local?).and_return(true)
           expect(MiqSystem).to receive(:disk_usage).and_return(pg_disk_usage)
 

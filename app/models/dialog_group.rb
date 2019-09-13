@@ -22,7 +22,7 @@ class DialogGroup < ApplicationRecord
         DialogField.find(field['id']).tap do |dialog_field|
           resource_action_fields = field.delete('resource_action') || {}
           update_resource_fields(resource_action_fields, dialog_field)
-          dialog_field.update_attributes(field.except('id', 'href', 'dialog_group_id', 'dialog_field_responders'))
+          dialog_field.update(field.except('id', 'href', 'dialog_group_id', 'dialog_field_responders'))
           updated_fields << dialog_field
         end
       else
@@ -55,7 +55,7 @@ class DialogGroup < ApplicationRecord
 
   def update_resource_fields(resource_action_fields, dialog_field)
     if resource_action_fields.key?('id')
-      dialog_field.resource_action.update_attributes(resource_action_fields.except('id'))
+      dialog_field.resource_action.update(resource_action_fields.except('id'))
     elsif resource_action_fields.present?
       dialog_field.resource_action = ResourceAction.create(resource_action_fields)
     end

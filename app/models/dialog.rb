@@ -158,7 +158,7 @@ class Dialog < ApplicationRecord
       tabs.each do |dialog_tab|
         if dialog_tab.key?('id')
           DialogTab.find(dialog_tab['id']).tap do |tab|
-            tab.update_attributes(dialog_tab.except('id', 'href', 'dialog_id', 'dialog_groups'))
+            tab.update(dialog_tab.except('id', 'href', 'dialog_id', 'dialog_groups'))
             tab.update_dialog_groups(dialog_tab['dialog_groups'])
             updated_tabs << tab
           end

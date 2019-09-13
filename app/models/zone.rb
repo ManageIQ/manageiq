@@ -62,7 +62,7 @@ class Zone < ApplicationRecord
                      :visible     => false)
 
       # 2) Assign to MiqRegion
-      MiqRegion.my_region.update_attributes(:maintenance_zone => zone)
+      MiqRegion.my_region.update(:maintenance_zone => zone)
     rescue ActiveRecord::RecordInvalid
       raise if zone.errors[:name].blank?
       retry

@@ -21,7 +21,7 @@ describe Metric do
     it "updates an existing object correctly" do
       metric = described_class.create!(:timestamp => Time.now.utc)
       old_id = metric.id
-      metric.update_attributes!(:timestamp => Time.now.utc - 1.day)
+      metric.update!(:timestamp => Time.now.utc - 1.day)
       expect(metric.id).to eq(old_id)
     end
   end

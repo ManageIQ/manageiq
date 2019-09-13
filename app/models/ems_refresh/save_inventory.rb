@@ -13,7 +13,7 @@ module EmsRefresh::SaveInventory
     end
 
     # Handle updates to the ext_management_system
-    update_attributes!(ems, hashes[:ems], [:type]) unless hashes[:ems].nil?
+    update!(ems, hashes[:ems], [:type]) unless hashes[:ems].nil?
   end
 
   def save_ems_inventory_no_disconnect(ems, hashes, target = nil)
@@ -119,7 +119,7 @@ module EmsRefresh::SaveInventory
             h.delete(:type)
 
             _log.info("#{log_header} Updating #{type} [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
-            found.update_attributes!(h)
+            found.update!(h)
             disconnects_index.delete(found)
           end
 

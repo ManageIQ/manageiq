@@ -109,7 +109,7 @@ describe MiqReport::ImportExport do
     end
 
     context "existing report" do
-      before { @old_report.update_attributes(:tz => "UTC") }
+      before { @old_report.update(:tz => "UTC") }
 
       context "overwrite" do
         it "preview" do
@@ -163,12 +163,12 @@ describe MiqReport::ImportExport do
     end
 
     it "should return restricted view yaml for restricted user" do
-      user.current_group.miq_user_role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
+      user.current_group.miq_user_role.update(:settings => {:restrictions => {:vms => :user_or_group}})
       expect(MiqReport.view_yaml_filename(VmCloud.name, user, {})).to include("Vm__restricted.yaml")
     end
 
     it "should return VmCloud view yaml for non-restricted user" do
-      user.current_group.miq_user_role.update_attributes(:settings => {})
+      user.current_group.miq_user_role.update(:settings => {})
       expect(MiqReport.view_yaml_filename(VmCloud.name, user, {})).to include("ManageIQ_Providers_CloudManager_Vm.yaml")
     end
   end

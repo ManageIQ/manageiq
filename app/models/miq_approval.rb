@@ -12,7 +12,7 @@ class MiqApproval < ApplicationRecord
 
   def approve(userid, reason)
     user = user_validate(userid)
-    update_attributes(
+    update(
       :state        => "approved",
       :reason       => reason,
       :stamper      => user,
@@ -26,7 +26,7 @@ class MiqApproval < ApplicationRecord
 
   def deny(userid, reason)
     user = user_validate(userid)
-    update_attributes(
+    update(
       :state        => "denied",
       :reason       => reason,
       :stamper      => user,

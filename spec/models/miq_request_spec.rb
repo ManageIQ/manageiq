@@ -43,7 +43,7 @@ describe MiqRequest do
     context "#set_description" do
       it "should set a description when nil" do
         expect(miq_request.description).to be_nil
-        expect(miq_request).to receive(:update_attributes).with(:description => "Automation Task")
+        expect(miq_request).to receive(:update).with(:description => "Automation Task")
 
         miq_request.set_description
       end
@@ -57,7 +57,7 @@ describe MiqRequest do
 
       it "should set description when :force => true" do
         miq_request.description = "test description"
-        expect(miq_request).to receive(:update_attributes).with(:description => "Automation Task")
+        expect(miq_request).to receive(:update).with(:description => "Automation Task")
 
         miq_request.set_description(true)
       end
@@ -405,7 +405,7 @@ describe MiqRequest do
       end
 
       it '#clean_up_keys_for_request_task removes options user_message' do
-        request.update_attributes!(:options => {:user_message => 'doesntmatter'})
+        request.update!(:options => {:user_message => 'doesntmatter'})
         cleaned_attribs = request.send(:clean_up_keys_for_request_task)
         expect(cleaned_attribs["options"]).to_not include(:user_message)
       end

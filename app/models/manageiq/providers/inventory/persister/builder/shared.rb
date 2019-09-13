@@ -42,7 +42,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
         :manager_ref       => %i(guid),
         :custom_save_block => lambda do |ems, inventory_collection|
           ems_attrs = inventory_collection.data.first&.attributes
-          ems.update_attributes!(ems_attrs) if ems_attrs
+          ems.update!(ems_attrs) if ems_attrs
         end
       )
     end
@@ -99,7 +99,7 @@ module ManageIQ::Providers::Inventory::Persister::Builder::Shared
                       vm_or_template.operating_system.product_name.blank?
 
           operating_system = vm_or_template.operating_system || inventory_object.model_class.new
-          operating_system.update_attributes!(inventory_object.attributes)
+          operating_system.update!(inventory_object.attributes)
         end
       end
 

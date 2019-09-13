@@ -46,7 +46,7 @@ describe MiqWidget do
       end
 
       context "with existing report" do
-        before { @old_report.update_attributes(:tz => "UTC") }
+        before { @old_report.update(:tz => "UTC") }
 
         it "init status" do
           expect(MiqWidget.count).to eq(0)
@@ -66,8 +66,8 @@ describe MiqWidget do
 
     context "existing widget" do
       before do
-        @old_widget.update_attributes(:visibility => {:roles => ["EvmRole-support"]})
-        @old_report.update_attributes(:tz => "UTC")
+        @old_widget.update(:visibility => {:roles => ["EvmRole-support"]})
+        @old_report.update(:tz => "UTC")
       end
 
       context "with new report" do

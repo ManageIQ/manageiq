@@ -155,7 +155,7 @@ class LogFile < ApplicationRecord
   def upload_log_file_nfs
     uri_to_add = build_log_uri(file_depot.uri, local_file)
     uri        = MiqNfsSession.new(legacy_depot_hash).add(local_file, uri_to_add)
-    update_attributes(
+    update(
       :state   => "available",
       :log_uri => uri
     )
@@ -165,7 +165,7 @@ class LogFile < ApplicationRecord
   def upload_log_file_smb
     uri_to_add = build_log_uri(file_depot.uri, local_file)
     uri        = MiqSmbSession.new(legacy_depot_hash).add(local_file, uri_to_add)
-    update_attributes(
+    update(
       :state   => "available",
       :log_uri => uri
     )

@@ -69,7 +69,7 @@ module MiqReport::Seeding
         attrs[:template_type] = path.start_with?(REPORT_DIR.to_s) ? "report" : "compare"
 
         begin
-          report.update_attributes!(attrs)
+          report.update!(attrs)
         rescue ActiveRecord::RecordInvalid
           duplicate = find_by(:name => name)
           if duplicate&.rpt_type == "Custom"

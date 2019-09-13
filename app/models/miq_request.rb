@@ -254,7 +254,7 @@ class MiqRequest < ApplicationRecord
       return false
     end
 
-    update_attributes(:approval_state => "approved")
+    update(:approval_state => "approved")
     call_automate_event_queue("request_approved")
 
     # execute parent now that request is approved
@@ -270,7 +270,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def approval_denied
-    update_attributes(:approval_state => "denied", :request_state => "finished", :status => "Denied")
+    update(:approval_state => "denied", :request_state => "finished", :status => "Denied")
     call_automate_event_queue("request_denied")
   end
 
@@ -365,7 +365,7 @@ class MiqRequest < ApplicationRecord
   def set_description(force = false)
     if description.nil? || force == true
       description = default_description || request_task_class.get_description(self)
-      update_attributes(:description => description)
+      update(:description => description)
     end
   end
 
@@ -396,7 +396,7 @@ class MiqRequest < ApplicationRecord
       msg = child.message unless child.nil?
     end
 
-    update_attributes(:request_state => req_state, :status => req_status, :message => display_message(msg))
+    update(:request_state => req_state, :status => req_status, :message => display_message(msg))
   end
 
   def post_create_request_tasks
@@ -469,7 +469,7 @@ class MiqRequest < ApplicationRecord
     rescue
       _log.log_backtrace($ERROR_INFO)
       request_state, status = request_task_created.zero? ? %w(finished Error) : %w(active Warn)
-      update_attributes(:request_state => request_state, :status => status, :message => "Error: #{$ERROR_INFO}")
+      update(:request_state => request_state, :status => status, :message => "Error: #{$ERROR_INFO}")
     end
   end
 
@@ -548,7 +548,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def update_request(values, requester)
-    update_attributes(:options => options.merge(values))
+    update(:options => options.merge(values))
     self.user_message = values[:user_message] if values[:user_message].present?
     after_update_options(requester) unless values.keys == [:user_message]
     self
@@ -620,9 +620,9 @@ class MiqRequest < ApplicationRecord
   private
 
   def do_cancel
-    update_attributes(:cancelation_status => CANCEL_STATUS_PROCESSING)
+    update(:cancelation_status => CANCEL_STATUS_PROCESSING)
     cancel_cleanup
-    update_attributes(:cancelation_status => CANCEL_STATUS_FINISHED, :request_state => "finished", :status => "Error", :message => "Request is canceled by user.")
+    update(:cancelation_status => CANCEL_STATUS_FINISHED, :request_state => "finished", :status => "Error", :message => "Request is canceled by user.")
     _log.info("Request #{description} is canceled by user.")
   end
 

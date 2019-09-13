@@ -28,7 +28,7 @@ module TaskHelpers
             feature.id if role['feature_identifiers']&.include?(feature.identifier)
           end.compact
           found_role = MiqUserRole.find_or_create_by(:name => role['name'])
-          found_role.update_attributes!(role.reject { |key| key == 'feature_identifiers' })
+          found_role.update!(role.reject { |key| key == 'feature_identifiers' })
         end
       end
     end

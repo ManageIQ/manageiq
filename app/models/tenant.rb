@@ -148,7 +148,7 @@ class Tenant < ApplicationRecord
 
         name = name.to_s
         q = tenant_quotas.detect { |tq| tq.name == name } || tenant_quotas.build(:name => name)
-        q.update_attributes!(values)
+        q.update!(values)
         updated_keys << name
       end
       # Delete any quotas that were not passed in
@@ -349,7 +349,7 @@ class Tenant < ApplicationRecord
   end
 
   def create_tenant_group
-    update_attributes!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
+    update!(:default_miq_group => MiqGroup.create_tenant_group(self)) unless default_miq_group_id
     self
   end
 

@@ -44,7 +44,7 @@ module MiqServer::WorkerManagement::Monitor::Stop
     elsif w.respond_to?(:terminate)
       w.terminate
     else
-      w.update_attributes(:status => MiqWorker::STATUS_STOPPING)
+      w.update(:status => MiqWorker::STATUS_STOPPING)
       worker_set_message(w, 'exit')
     end
   end

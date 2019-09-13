@@ -20,7 +20,7 @@ describe "VM Retirement Management" do
 
     context "with user" do
       it "uses user as requester" do
-        vm_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        vm_with_owner.update(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
         expect(vm_with_owner.retirement_last_warn).to be_nil
 
         allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', MiqAeEngine::MiqAeWorkspaceRuntime.new])
@@ -41,7 +41,7 @@ describe "VM Retirement Management" do
       end
 
       it "uses admin as requester" do
-        vm_with_owner.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
+        vm_with_owner.update(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
         expect(vm_with_owner.retirement_last_warn).to be_nil
 
         allow(MiqAeEngine).to receive_messages(:deliver => ['ok', 'success', MiqAeEngine::MiqAeWorkspaceRuntime.new])
@@ -77,13 +77,13 @@ describe "VM Retirement Management" do
   end
 
   it "#retire_now not called when already retiring" do
-    @vm.update_attributes(:retirement_state => 'retiring')
+    @vm.update(:retirement_state => 'retiring')
     expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
     @vm.retire_now
   end
 
   it "#retire_now not called when already retired" do
-    @vm.update_attributes(:retirement_state => 'retired')
+    @vm.update(:retirement_state => 'retired')
     expect(MiqEvent).to receive(:raise_evm_event).exactly(0).times
     @vm.retire_now
   end
@@ -206,7 +206,7 @@ describe "VM Retirement Management" do
   end
 
   it "#retiring - true" do
-    @vm.update_attributes(:retirement_state => 'retiring')
+    @vm.update(:retirement_state => 'retiring')
 
     expect(@vm.retiring?).to be_truthy
   end
@@ -217,7 +217,7 @@ describe "VM Retirement Management" do
   end
 
   it "#error_retiring - true" do
-    @vm.update_attributes(:retirement_state => 'error')
+    @vm.update(:retirement_state => 'error')
 
     expect(@vm.error_retiring?).to be_truthy
   end
@@ -239,15 +239,15 @@ describe "VM Retirement Management" do
   it "#retirement_due?" do
     vm = FactoryBot.create(:vm_vmware, :ems_id => @ems.id)
     expect(vm.retirement_due?).to be_falsey
-    vm.update_attributes(:retires_on => Time.zone.today + 1.day)
+    vm.update(:retires_on => Time.zone.today + 1.day)
     expect(vm.retirement_due?).to be_falsey
 
     vm.retires_on = Time.zone.today
 
-    vm.update_attributes(:retires_on => Time.zone.today)
+    vm.update(:retires_on => Time.zone.today)
     expect(vm.retirement_due?).to be_truthy
 
-    vm.update_attributes(:retires_on => Time.zone.today - 1.day)
+    vm.update(:retires_on => Time.zone.today - 1.day)
     expect(vm.retirement_due?).to be_truthy
   end
 
@@ -280,14 +280,14 @@ describe "VM Retirement Management" do
   end
 
   it "reset retirement state in future" do
-    @vm.update_attributes(:retirement_state => 'retiring')
+    @vm.update(:retirement_state => 'retiring')
     @vm.retire(:date => Time.zone.today + 1.day)
 
     expect(@vm.reload.retirement_state).to be_nil
   end
 
   it "reset retirement state in past" do
-    @vm.update_attributes(:retirement_state => 'retiring')
+    @vm.update(:retirement_state => 'retiring')
     @vm.retire(:date => Time.zone.today - 1.day)
 
     expect(@vm.reload.retirement_state).to eq('retiring')

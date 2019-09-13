@@ -300,7 +300,7 @@ describe MiqQueue do
         :no_such_key => 'Does not exist'
       }
 
-      @msg.update_attributes!(:state => 'error')
+      @msg.update!(:state => 'error')
       @old_msg_id = @msg.id
 
       @new_msg = @msg.requeue(options)
@@ -861,7 +861,7 @@ describe MiqQueue do
         :queue_name  => 'other_queue',
         :zone        => nil,
       )
-      msg.update_attributes(:state => MiqQueue::STATE_DEQUEUE)
+      msg.update(:state => MiqQueue::STATE_DEQUEUE)
 
       expect(MiqQueue.unqueue(
                :class_name  => 'MyClass',
@@ -936,7 +936,7 @@ describe MiqQueue do
   context "#delivered" do
     it "destroys a stale object" do
       q = MiqQueue.create!(:state => 'ready')
-      MiqQueue.find(q.id).tap { |q2| q2.state = 'dequeue' }.save # update_attributes doesn't expose the issue
+      MiqQueue.find(q.id).tap { |q2| q2.state = 'dequeue' }.save # update doesn't expose the issue
 
       q.delivered('warn', nil, nil)
 

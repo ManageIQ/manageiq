@@ -18,8 +18,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
 
   def start
     time = Time.zone.now
-    update_attributes(:started_on => time)
-    miq_task.update_attributes(:started_on => time)
+    update(:started_on => time)
+    miq_task.update(:started_on => time)
     my_signal(false, :create_job_template)
   end
 
@@ -64,7 +64,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::PlaybookRunner < 
     tower_job = ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job.create_job(temp_configuration_script, launch_options)
     options[:tower_job_id] = tower_job.id
     self.name = "#{name}, Job ID: #{tower_job.id}"
-    miq_task.update_attributes(:name => name)
+    miq_task.update(:name => name)
     save!
 
     my_signal(false, :poll_ansible_tower_job_status, 10)

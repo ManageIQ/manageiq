@@ -63,7 +63,7 @@ module MiqServer::UpdateManagement
     configure_yum_proxy
     # HACK: #enable_repos is not always successful immediately after #attach_products, retry to ensure they are enabled.
     5.times { repos_enabled? ? break : enable_repos }
-    update_attributes(:upgrade_message => "Registration process completed successfully")
+    update(:upgrade_message => "Registration process completed successfully")
     _log.info("Registration process completed successfully")
   rescue LinuxAdmin::SubscriptionManagerError => e
     _log.error("Registration Failed: #{e.message}")
@@ -72,10 +72,10 @@ module MiqServer::UpdateManagement
   end
 
   def register
-    update_attributes(:upgrade_message => "registering")
+    update(:upgrade_message => "registering")
     if LinuxAdmin::SubscriptionManager.registered?(assemble_registration_options)
       _log.info("Appliance already registered")
-      update_attributes(:rh_registered => true)
+      update(:rh_registered => true)
     else
       _log.info("Registering appliance...")
       registration_type = MiqDatabase.first.registration_type
@@ -89,14 +89,14 @@ module MiqServer::UpdateManagement
       # Reload the registration_type
       LinuxAdmin::SubscriptionManager.registration_type(true)
 
-      update_attributes(:rh_registered => LinuxAdmin::SubscriptionManager.registered?(assemble_registration_options))
+      update(:rh_registered => LinuxAdmin::SubscriptionManager.registered?(assemble_registration_options))
     end
 
     if rh_registered?
-      update_attributes(:upgrade_message => "registration successful")
+      update(:upgrade_message => "registration successful")
       _log.info("Registration Successful")
     else
-      update_attributes(:upgrade_message => "registration failed")
+      update(:upgrade_message => "registration failed")
       _log.error("Registration Failed")
     end
 
@@ -104,7 +104,7 @@ module MiqServer::UpdateManagement
   end
 
   def attach_products
-    update_attributes(:upgrade_message => "attaching products")
+    update(:upgrade_message => "attaching products")
     _log.info("Attaching products based on installed certificates")
     LinuxAdmin::SubscriptionManager.subscribe(assemble_registration_options)
   end
@@ -123,7 +123,7 @@ module MiqServer::UpdateManagement
     enabled = LinuxAdmin::SubscriptionManager.enabled_repos
     if MiqDatabase.first.update_repo_names.all? { |desired| enabled.include?(desired) }
       _log.info("Desired update repository is enabled")
-      update_attributes(:rh_subscribed => true, :upgrade_message => "registered")
+      update(:rh_subscribed => true, :upgrade_message => "registered")
       return true
     end
     false
@@ -131,11 +131,11 @@ module MiqServer::UpdateManagement
 
   def enable_repos
     MiqDatabase.first.update_repo_names.each do |repo|
-      update_attributes(:upgrade_message => "enabling #{repo}")
+      update(:upgrade_message => "enabling #{repo}")
       begin
         LinuxAdmin::SubscriptionManager.enable_repo(repo, assemble_registration_options)
       rescue AwesomeSpawn::CommandResultError
-        update_attributes(:upgrade_message => "failed to enable #{repo}")
+        update(:upgrade_message => "failed to enable #{repo}")
         Notification.create(:type => "enable_update_repo_failed", :options => {:repo_name => repo})
       end
     end
@@ -184,16 +184,16 @@ module MiqServer::UpdateManagement
   private
 
   def check_platform_updates
-    update_attributes(:updates_available => LinuxAdmin::Yum.updates_available?, :last_update_check => Time.now.utc)
+    update(:updates_available => LinuxAdmin::Yum.updates_available?, :last_update_check => Time.now.utc)
   end
 
   def check_postgres_updates
-    MiqDatabase.first.update_attributes(:postgres_update_available => LinuxAdmin::Yum.updates_available?(MiqDatabase.postgres_package_name))
+    MiqDatabase.first.update(:postgres_update_available => LinuxAdmin::Yum.updates_available?(MiqDatabase.postgres_package_name))
   end
 
   def check_cfme_version_available
     cfme = MiqDatabase.cfme_package_name
-    MiqDatabase.first.update_attributes(:cfme_version_available => LinuxAdmin::Yum.version_available(cfme)[cfme])
+    MiqDatabase.first.update(:cfme_version_available => LinuxAdmin::Yum.version_available(cfme)[cfme])
   end
 
   def assemble_registration_options

@@ -84,7 +84,7 @@ module EmsRefresh::SaveInventoryHelper
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys + [:id]
     if child
-      update_attributes!(child, hash, [:type, *remove_keys])
+      update!(child, hash, [:type, *remove_keys])
     else
       child = parent.send("create_#{type}!", hash.except(*remove_keys))
     end
@@ -98,13 +98,13 @@ module EmsRefresh::SaveInventoryHelper
       found = association.build(hash.except(:id))
       new_records << found
     else
-      update_attributes!(found, hash, [:id, :type])
+      update!(found, hash, [:id, :type])
       deletes.delete(found) unless deletes.blank?
     end
     found
   end
 
-  def update_attributes!(ar_model, attributes, remove_keys)
+  def update!(ar_model, attributes, remove_keys)
     ar_model.assign_attributes(attributes.except(*remove_keys))
     # HACK: Avoid empty BEGIN/COMMIT pair until fix is made for https://github.com/rails/rails/issues/17937
     ar_model.save! if ar_model.changed?
@@ -147,7 +147,7 @@ module EmsRefresh::SaveInventoryHelper
   def link_children_references(records)
     records.each do |rec|
       parent = records.detect { |r| r.manager_ref == rec.parent_ref } if rec.parent_ref.present?
-      rec.update_attributes(:parent_id => parent.try(:id))
+      rec.update(:parent_id => parent.try(:id))
     end
   end
 

@@ -67,7 +67,7 @@ module ActiveMetrics
           end
 
           # TODO: Should we change this into a single metrics.push like we do in ems_refresh?
-          Benchmark.realtime_block(:process_perfs_db) { perf.update_attributes(v) }
+          Benchmark.realtime_block(:process_perfs_db) { perf.update(v) }
         end
 
         if interval_name == 'hourly'

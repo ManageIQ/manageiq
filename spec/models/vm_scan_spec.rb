@@ -63,7 +63,7 @@ describe VmScan do
 
       context "in status of 'starting'," do
         before do
-          @vim_broker_worker.update_attributes(:status => 'starting')
+          @vim_broker_worker.update(:status => 'starting')
         end
 
         it "should not be dispatched" do
@@ -76,7 +76,7 @@ describe VmScan do
 
       context "in status of 'stopped'," do
         before do
-          @vim_broker_worker.update_attributes(:status => 'stopped')
+          @vim_broker_worker.update(:status => 'stopped')
         end
 
         it "should not be dispatched" do
@@ -89,7 +89,7 @@ describe VmScan do
 
       context "in status of 'killed'," do
         before do
-          @vim_broker_worker.update_attributes(:status => 'killed')
+          @vim_broker_worker.update(:status => 'killed')
         end
 
         it "should not be dispatched" do
@@ -102,7 +102,7 @@ describe VmScan do
 
       context "in status of 'started'," do
         before do
-          @vim_broker_worker.update_attributes(:status => 'started')
+          @vim_broker_worker.update(:status => 'started')
           JobProxyDispatcher.dispatch
           @job.reload
         end
@@ -349,7 +349,7 @@ describe VmScan do
       let(:snapshot_description) { "Snapshot description" }
       before do
         allow(VmOrTemplate).to receive(:find).with(@vm.id).and_return(@vm)
-        @job.update_attributes(:state => 'snapshot_delete')
+        @job.update(:state => 'snapshot_delete')
         @job.context[:snapshot_mor] = snapshot_description
         # always sent 'snapshot_complete'
         expect(@job).to receive(:signal).with(:snapshot_complete)

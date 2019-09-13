@@ -210,7 +210,7 @@ class Hardware < ApplicationRecord
         target.create(da)
       else
         da.delete('device_name') if target_type == :disk
-        found.update_attributes(da)
+        found.update(da)
       end
 
       # Remove the devices from the delete list if it matches on device_type and either location or address

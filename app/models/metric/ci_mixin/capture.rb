@@ -211,7 +211,7 @@ module Metric::CiMixin::Capture
     if start_range.nil?
       _log.info("#{log_header} Skipping processing for #{log_target}#{log_time} as no metrics were captured.")
       # Set the last capture on to end_time to prevent forever queueing up the same collection range
-      update_attributes(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
+      update(:last_perf_capture_on => end_time || Time.now.utc) if interval_name == 'realtime'
     else
       expected_start_range = calculate_gap(interval_name, start_time)
       if expected_start_range && start_range > expected_start_range

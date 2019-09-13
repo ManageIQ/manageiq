@@ -17,10 +17,10 @@ module ArchivedMixin
   alias_method :active, :active?
 
   def archive!
-    update_attributes!(:deleted_on => Time.now.utc)
+    update!(:deleted_on => Time.now.utc)
   end
 
   def unarchive!
-    update_attributes!(:deleted_on => nil)
+    update!(:deleted_on => nil)
   end
 end

@@ -57,7 +57,7 @@ class MiqProvisionRequest < MiqRequest
     # Capture self.options after running 'get_next_vm_name' method since automate may update the object
     attrs = {:options => options.merge(:delivered_on => nil)}
     attrs[:description] = prov_description unless prov_description.nil?
-    update_attributes(attrs)
+    update(attrs)
   end
 
   def post_create_request_tasks
@@ -66,7 +66,7 @@ class MiqProvisionRequest < MiqRequest
 
   def update_description_from_tasks
     return unless requested_task_idx.length == 1
-    update_attributes(:description => miq_request_tasks.reload.first.description)
+    update(:description => miq_request_tasks.reload.first.description)
   end
 
   def my_role(_action = nil)

@@ -222,7 +222,7 @@ describe MiqUserRole do
     end
 
     it "does not destroy if 'read only' attribute for this role is true" do
-      role.update_attributes(:read_only => true)
+      role.update(:read_only => true)
       expect { expect { role.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed) }.to_not(change { MiqUserRole.count })
       expect(role.errors.full_messages[0]).to eq("Read only roles cannot be deleted.")
     end

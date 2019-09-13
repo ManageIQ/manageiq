@@ -45,7 +45,7 @@ module VmdbIndex::MetricCapture
     # Exlude these columns from delta calculations...
     exclude_from_prior.each { |k| attrs.delete(k.to_sym) }
 
-    update_attributes(:prior_raw_metrics => attrs)
+    update(:prior_raw_metrics => attrs)
   end
 
   def rollup_metrics(interval_name, rollup_date)

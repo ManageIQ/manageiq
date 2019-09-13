@@ -545,7 +545,7 @@ class Storage < ApplicationRecord
       ems = emss.random_element
     end
 
-    $_miq_worker_current_msg.update_attributes!(:target_id => ems.id) if qmessage?(method_name)
+    $_miq_worker_current_msg.update!(:target_id => ems.id) if qmessage?(method_name)
 
     st = Time.now
     message = "Storage [#{name}] via EMS [#{ems.name}]"
@@ -807,7 +807,7 @@ class Storage < ApplicationRecord
         perf   = obj_perfs.fetch_path(self.class.name, id, interval_name, hour)
         perf ||= obj_perfs.store_path(self.class.name, id, interval_name, hour, send(meth).build(:timestamp => hour, :capture_interval_name => interval_name))
 
-        perf.update_attributes(attrs)
+        perf.update(attrs)
       end
 
       update_attribute(:last_perf_capture_on, hour)
@@ -826,7 +826,7 @@ class Storage < ApplicationRecord
   def update_vm_perf(vm, vm_perf, vm_attrs)
     vm_attrs.reverse_merge!(vm_perf.attributes.symbolize_keys)
     vm_attrs.merge!(Metric::Processing.process_derived_columns(vm, vm_attrs))
-    vm_perf.update_attributes(vm_attrs)
+    vm_perf.update(vm_attrs)
   end
 
   def vm_scan_affinity

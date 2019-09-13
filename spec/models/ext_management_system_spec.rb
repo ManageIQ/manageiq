@@ -351,28 +351,28 @@ describe ExtManagementSystem do
     it "#total_vms_off" do
       expect(@ems.total_vms_off).to eq(0)
 
-      @ems.vms.each { |v| v.update_attributes(:raw_power_state => "poweredOff") }
+      @ems.vms.each { |v| v.update(:raw_power_state => "poweredOff") }
       expect(@ems.total_vms_off).to eq(2)
     end
 
     it "#total_vms_unknown" do
       expect(@ems.total_vms_unknown).to eq(0)
 
-      @ems.vms.each { |v| v.update_attributes(:raw_power_state => "unknown") }
+      @ems.vms.each { |v| v.update(:raw_power_state => "unknown") }
       expect(@ems.total_vms_unknown).to eq(2)
     end
 
     it "#total_vms_never" do
       expect(@ems.total_vms_never).to eq(0)
 
-      @ems.vms.each { |v| v.update_attributes(:raw_power_state => "never") }
+      @ems.vms.each { |v| v.update(:raw_power_state => "never") }
       expect(@ems.total_vms_never).to eq(2)
     end
 
     it "#total_vms_suspended" do
       expect(@ems.total_vms_suspended).to eq(0)
 
-      @ems.vms.each { |v| v.update_attributes(:raw_power_state => "suspended") }
+      @ems.vms.each { |v| v.update(:raw_power_state => "suspended") }
       expect(@ems.total_vms_suspended).to eq(2)
     end
 

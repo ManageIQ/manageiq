@@ -320,7 +320,7 @@ describe MiqGroup do
       ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
       FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
-      group.update_attributes(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
+      group.update(:settings => {:dashboard_order => [ws3.id.to_s, ws1.id.to_s]})
 
       expect(group.ordered_widget_sets).to eq([ws3, ws1])
     end
@@ -336,7 +336,7 @@ describe MiqGroup do
       ws1 = FactoryBot.create(:miq_widget_set, :name => 'A1', :owner => group)
       _ws2 = FactoryBot.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryBot.create(:miq_widget_set, :name => 'B2', :owner => group)
-      group.update_attributes(:settings => {"dashboard_order" => [ws3.id.to_s, ws1.id.to_s]})
+      group.update(:settings => {"dashboard_order" => [ws3.id.to_s, ws1.id.to_s]})
 
       expect(group.ordered_widget_sets).to eq([ws3, ws1])
     end
@@ -411,14 +411,14 @@ describe MiqGroup do
     it "changes for non default groups" do
       tenant = FactoryBot.create(:tenant)
       g = FactoryBot.create(:miq_group)
-      g.update_attributes(:tenant => tenant)
+      g.update(:tenant => tenant)
       expect(g.tenant).to eq(tenant)
     end
 
     it "fails for default groups" do
       tenant = FactoryBot.create(:tenant)
       g = FactoryBot.create(:tenant).default_miq_group
-      expect { g.update_attributes!(:tenant => tenant) }
+      expect { g.update!(:tenant => tenant) }
         .to raise_error(ActiveRecord::RecordInvalid, /Tenant cant change the tenant of a default group/)
     end
   end

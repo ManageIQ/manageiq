@@ -56,7 +56,7 @@ activated_vms = duplicate_vms.map do |_by, vms|
   active_vm.disconnect_inv unless opts[:dry_run]
 
   puts "Activating Vm    [#{inactive_vm.name}] id [#{inactive_vm.id}] uid_ems [#{inactive_vm.uid_ems}] ems_ref [#{inactive_vm.ems_ref}]"
-  inactive_vm.update_attributes!(:ems_id => ems_id, :uid_ems => active_vm.uid_ems, :ems_ref => active_vm.ems_ref) unless opts[:dry_run]
+  inactive_vm.update!(:ems_id => ems_id, :uid_ems => active_vm.uid_ems, :ems_ref => active_vm.ems_ref) unless opts[:dry_run]
 
   inactive_vm
 end.compact

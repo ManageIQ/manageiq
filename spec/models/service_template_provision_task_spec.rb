@@ -116,7 +116,7 @@ describe ServiceTemplateProvisionTask do
 
         it "sets queue item to zone specified in dialog" do
           zone = FactoryBot.create(:zone, :name => 'dialog_zone')
-          @task_0.update_attributes(:options => {:dialog => {"dialog_zone" => zone.name}})
+          @task_0.update(:options => {:dialog => {"dialog_zone" => zone.name}})
           expect(MiqQueue).to receive(:put).with(hash_including(:zone => zone.name))
           @task_0.deliver_to_automate
         end
@@ -127,7 +127,7 @@ describe ServiceTemplateProvisionTask do
         end
 
         it "sets queue item to server's zone if not specified in dialog and service template" do
-          @task_0.source.update_attributes(:zone => nil)
+          @task_0.source.update(:zone => nil)
           expect(MiqQueue).to receive(:put).with(hash_including(:zone => 'a_server_zone'))
           @task_0.deliver_to_automate
         end
@@ -218,21 +218,21 @@ describe ServiceTemplateProvisionTask do
     end
 
     it "update_and_notify_parent all tasks finished sets bundle task finished" do
-      @request.miq_request_tasks.each { |t| t.update_attributes(:state => "finished") }
+      @request.miq_request_tasks.each { |t| t.update(:state => "finished") }
       expect(@task_0.state).to eq("finished")
     end
 
     it "update_and_notify_parent all service children and parents finished sets bundle task provisioned" do
-      @request.miq_request_tasks.each { |t| t.update_attributes(:state => "finished") }
-      @task_0.update_attributes(:state => "active")
+      @request.miq_request_tasks.each { |t| t.update(:state => "finished") }
+      @task_0.update(:state => "active")
       @task_1.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       @task_0.reload
       expect(@task_0.state).to eq("provisioned")
     end
 
     it "update_and_notify_parent one service children finished, parent not finished sets parent task provisioned" do
-      @task_1_1.update_attributes(:state => "finished")
-      @task_1_2.update_attributes(:state => "finished")
+      @task_1_1.update(:state => "finished")
+      @task_1_2.update(:state => "finished")
       @task_1_2.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       @task_1.reload
       expect(@task_1.state).to eq("provisioned")
@@ -240,8 +240,8 @@ describe ServiceTemplateProvisionTask do
     end
 
     it "update_and_notify_parent one service children and parent finished, sets parent task finished" do
-      @task_2_1.update_attributes(:state => "finished")
-      @task_2.update_attributes(:state => "finished")
+      @task_2_1.update(:state => "finished")
+      @task_2.update(:state => "finished")
       @task_2_1.update_and_notify_parent(:state => "finished", :status => "Ok", :message => "Test Message")
       expect(@task_2.state).to eq("finished")
       expect(@task_0.state).not_to eq("finished")

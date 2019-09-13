@@ -39,7 +39,7 @@ describe MiqProvision do
 
       it "merges :clone_options from automate" do
         options[:clone_options] = {:security_groups => ["test_sg"], :test_key => "test_value"}
-        task.update_attributes(:options => options)
+        task.update(:options => options)
 
         expect(task).to receive(:signal).with(:prepare_provision).and_call_original
         expect(task).to receive(:signal).with(:start_clone_task)
@@ -57,7 +57,7 @@ describe MiqProvision do
 
       it "handles deleting nils when merging :clone_options from automate" do
         options[:clone_options] = {:image_ref => nil, :test_key => "test_value"}
-        task.update_attributes(:options => options)
+        task.update(:options => options)
 
         expect(task).to receive(:signal).with(:prepare_provision).and_call_original
         expect(task).to receive(:signal).with(:start_clone_task)
@@ -78,7 +78,7 @@ describe MiqProvision do
 
       it "sets description" do
         options[:vm_description] = description = "foo bar"
-        task.update_attributes(:options => options)
+        task.update(:options => options)
 
         expect(task).to receive(:mark_as_completed)
 
@@ -91,10 +91,10 @@ describe MiqProvision do
       it "sets ownership" do
         group_owner = FactoryBot.create(:miq_group, :description => "desired")
         group_current = FactoryBot.create(:miq_group, :description => "current")
-        user.update_attributes!(:miq_groups => [group_owner, group_current], :current_group => group_current)
+        user.update!(:miq_groups => [group_owner, group_current], :current_group => group_current)
         options[:owner_email] = user.email
         options[:owner_group] = group_owner.description
-        task.update_attributes(:options => options)
+        task.update(:options => options)
 
         expect(task).to receive(:mark_as_completed)
 
@@ -110,7 +110,7 @@ describe MiqProvision do
         it "with :retirement option" do
           options[:retirement] = retirement = 2.days.to_i
           retires_on           = Time.now.utc + retirement
-          task.update_attributes(:options => options)
+          task.update(:options => options)
 
           expect(task).to receive(:mark_as_completed)
 
@@ -128,7 +128,7 @@ describe MiqProvision do
           options[:retirement_time] = retirement_time = Time.now.utc + 3.days  # This setting overrides the :retirement setting
           options[:retirement_warn] = retirement_warn_days.days.to_i
           retires_on                = retirement_time
-          task.update_attributes(:options => options)
+          task.update(:options => options)
 
           expect(task).to receive(:mark_as_completed)
 

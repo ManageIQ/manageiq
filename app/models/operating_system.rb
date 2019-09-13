@@ -44,7 +44,7 @@ class OperatingSystem < ApplicationRecord
     if vm.operating_system.nil?
       vm.operating_system = OperatingSystem.new(nh)
     else
-      vm.operating_system.update_attributes(nh)
+      vm.operating_system.update(nh)
     end
   end
 

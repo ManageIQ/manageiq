@@ -467,7 +467,7 @@ class Host < ApplicationRecord
 
   def resolve_hostname!
     addr = MiqSockUtil.resolve_hostname(hostname)
-    update_attributes!(:ipaddress => addr) unless addr.nil?
+    update!(:ipaddress => addr) unless addr.nil?
   end
 
   # Scan for VMs in a path defined in a repository
@@ -1202,7 +1202,7 @@ class Host < ApplicationRecord
           if hardware.nil?
             EmsRefresh.save_hardware_inventory(self, hw_info)
           else
-            hardware.update_attributes(hw_info)
+            hardware.update(hw_info)
           end
         else
           _log.warn("IPMI Login failed due to a bad username or password.")

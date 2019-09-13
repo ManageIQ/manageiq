@@ -122,7 +122,7 @@ module MiqProvisionMixin
 
     options[key] = items.flatten
     _log.info("option <#{key}> being set to <#{items.inspect}>")
-    update_attributes(:options => options)
+    update(:options => options)
   end
 
   def post_customization_templates(template_id)

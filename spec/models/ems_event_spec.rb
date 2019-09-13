@@ -234,7 +234,7 @@ describe EmsEvent do
       end
 
       context "with a connected VM" do
-        before { vm.update_attributes(:ems_id => ems.id) }
+        before { vm.update(:ems_id => ems.id) }
 
         it "should link the event to the vm" do
           ems_event = EmsEvent.add(ems.id, event)

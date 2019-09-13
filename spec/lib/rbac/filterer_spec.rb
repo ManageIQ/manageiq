@@ -673,7 +673,7 @@ describe Rbac::Filterer do
       end
 
       it "leaving tenant doesnt find Vm" do
-        owner_user.update_attributes(:miq_groups => [other_user.current_group])
+        owner_user.update(:miq_groups => [other_user.current_group])
         User.with_user(owner_user) do
           results = described_class.search(:class => "Vm").first
           expect(results).to match_array [other_vm]
@@ -843,13 +843,13 @@ describe Rbac::Filterer do
 
         context "searching MiqTemplate" do
           it "can't see descendant tenant's templates" do
-            owned_template.update_attributes!(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)
+            owned_template.update!(:tenant_id => child_tenant.id, :miq_group_id => child_group.id)
             results, = described_class.search(:class => "MiqTemplate", :miq_group_id => owner_group.id)
             expect(results).to match_array []
           end
 
           it "can see ancestor tenant's templates" do
-            owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_tenant.id)
+            owned_template.update!(:tenant_id => owner_tenant.id, :miq_group_id => owner_tenant.id)
             results, = described_class.search(:class => "MiqTemplate", :miq_group_id => child_group.id)
             expect(results).to match_array [owned_template]
           end
@@ -860,28 +860,28 @@ describe Rbac::Filterer do
           let(:child_child_group)  { FactoryBot.create(:miq_group, :tenant => child_child_tenant) }
 
           it "can't see descendant tenant's templates but can see descendant tenant's VMs" do
-            owned_template.update_attributes!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
-            owned_vm.update_attributes(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
+            owned_template.update!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
+            owned_vm.update(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
             results, = described_class.search(:class => "VmOrTemplate", :miq_group_id => child_group.id)
             expect(results).to match_array [owned_vm]
           end
 
           it "can see ancestor tenant's templates but can't see ancestor tenant's VMs" do
-            owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
+            owned_template.update!(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
             results, = described_class.search(:class => "VmOrTemplate", :miq_group_id => child_group.id)
             expect(results).to match_array [owned_template]
           end
 
           it "can see ancestor tenant's templates and descendant tenant's VMs" do
-            owned_template.update_attributes!(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
-            owned_vm.update_attributes(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
+            owned_template.update!(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
+            owned_vm.update(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
             results, = described_class.search(:class => "VmOrTemplate", :miq_group_id => child_group.id)
             expect(results).to match_array [owned_template, owned_vm]
           end
 
           it "can't see descendant tenant's templates nor ancestor tenant's VMs" do
-            owned_template.update_attributes!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
-            owned_vm.update_attributes(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
+            owned_template.update!(:tenant_id => child_child_tenant.id, :miq_group_id => child_child_group.id)
+            owned_vm.update(:tenant_id => owner_tenant.id, :miq_group_id => owner_group.id)
             results, = described_class.search(:class => "VmOrTemplate", :miq_group_id => child_group.id)
             expect(results).to match_array []
           end
@@ -1303,8 +1303,8 @@ describe Rbac::Filterer do
             group.save!
 
             ems1 = FactoryBot.create(:ems_vmware, :name => 'ems1')
-            @host1.update_attributes(:ext_management_system => ems1)
-            @host2.update_attributes(:ext_management_system => ems1)
+            @host1.update(:ext_management_system => ems1)
+            @host2.update(:ext_management_system => ems1)
 
             root = FactoryBot.create(:ems_folder, :name => "Datacenters")
             root.parent = ems1
@@ -1342,8 +1342,8 @@ describe Rbac::Filterer do
 
         before do
           @ems = FactoryBot.create(:ems_vmware, :name => 'ems1')
-          @host1.update_attributes(:ext_management_system => @ems)
-          @host2.update_attributes(:ext_management_system => @ems)
+          @host1.update(:ext_management_system => @ems)
+          @host2.update(:ext_management_system => @ems)
 
           @vfolder        = FactoryBot.create(:ems_folder, :name => "vm")
           @vfolder.parent = dc
@@ -1359,7 +1359,7 @@ describe Rbac::Filterer do
           objects = results.first
           expect(objects).to eq([])
 
-          @template.update_attributes(:ext_management_system => nil)
+          @template.update(:ext_management_system => nil)
           results = described_class.search(:class => "ManageIQ::Providers::Vmware::InfraManager::Template", :conditions => ["ems_id IS NULL"])
           objects = results.first
           expect(objects).to eq([@template])
@@ -2223,7 +2223,7 @@ describe Rbac::Filterer do
         service1, service2, _service3 = FactoryBot.create_list(:service, 3, :service_template => st)
         service1.tag_with("/managed/environment/prod", :ns => "*")
         service2.tag_with("/managed/environment/prod", :ns => "*")
-        service2.update_attributes(:service_template => nil)
+        service2.update(:service_template => nil)
 
         # exclude service2 (no service template)
         exp = YAML.safe_load("--- !ruby/object:MiqExpression

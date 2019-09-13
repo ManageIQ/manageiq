@@ -175,7 +175,7 @@ describe Notification, :type => :model do
     end
 
     it "is true when all recipients have seen the notification" do
-      notification.notification_recipients.each { |r| r.update_attributes(:seen => true) }
+      notification.notification_recipients.each { |r| r.update(:seen => true) }
       expect(notification.seen_by_all_recipients?).to be_truthy
     end
 

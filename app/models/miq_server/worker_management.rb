@@ -37,7 +37,7 @@ module MiqServer::WorkerManagement
     Dir::Tmpname.create("worker_monitor", nil) do |path|
       drb = DRb.start_service("drbunix://#{path}", self)
       FileUtils.chmod(0o750, path)
-      update_attributes(:drb_uri => drb.uri)
+      update(:drb_uri => drb.uri)
     end
   end
 

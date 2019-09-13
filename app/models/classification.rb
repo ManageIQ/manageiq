@@ -488,7 +488,7 @@ class Classification < ApplicationRecord
   def self.add_entries_from_hash(cat, entries)
     entries.each do |entry|
       ent = cat.find_entry_by_name(entry[:name])
-      ent ? ent.update_attributes!(entry) : cat.add_entry(entry)
+      ent ? ent.update!(entry) : cat.add_entry(entry)
     end
   end
 
@@ -534,7 +534,7 @@ class Classification < ApplicationRecord
   def save_tag
     tag_name = Classification.name2tag(name, parent, ns)
     if tag_id.present? || tag.present?
-      tag.update_attributes(:name => tag_name) unless tag.name == tag_name
+      tag.update(:name => tag_name) unless tag.name == tag_name
     else
       self.tag = Tag.in_region(region_id).find_or_create_by(:name => tag_name)
     end

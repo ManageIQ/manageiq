@@ -13,15 +13,15 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
 
   def start
     time = Time.zone.now
-    update_attributes(:started_on => time)
-    miq_task.update_attributes(:started_on => time)
+    update(:started_on => time)
+    miq_task.update(:started_on => time)
     my_signal(false, :deploy_orchestration_stack, :priority => MiqQueue::HIGH_PRIORITY)
   end
 
   def update
     time = Time.zone.now
-    update_attributes(:started_on => time)
-    miq_task.update_attributes(:started_on => time)
+    update(:started_on => time)
+    miq_task.update(:started_on => time)
     my_signal(false, :update_orchestration_stack)
   end
 
@@ -33,7 +33,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
     )
     options[:orchestration_stack_id] = @orchestration_stack.id
     self.name = "#{name}, Orchestration Stack ID: #{@orchestration_stack.id}"
-    miq_task.update_attributes(:name => name)
+    miq_task.update(:name => name)
     save!
     my_signal(false, :poll_stack_status, 10)
   rescue StandardError => err
@@ -46,7 +46,7 @@ class ManageIQ::Providers::CloudManager::OrchestrationTemplateRunner < ::Job
 
     orchestration_stack.raw_update_stack(orchestration_template, options[:update_options])
     self.name = "#{name}, update Orchestration Stack ID: #{orchestration_stack.id}"
-    miq_task.update_attributes(:name => name)
+    miq_task.update(:name => name)
     save!
     my_signal(false, :poll_stack_status, 10)
   rescue StandardError => err

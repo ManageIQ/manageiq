@@ -25,7 +25,7 @@ module EvmSpecHelper
     MiqRegion.seed
     miq_server ||= local_miq_server
     ServerRole.find_by(:name => "embedded_ansible") || FactoryBot.create(:server_role, :name => 'embedded_ansible', :max_concurrent => 0)
-    miq_server.assign_role('embedded_ansible').update_attributes(:active => true)
+    miq_server.assign_role('embedded_ansible').update(:active => true)
   end
 
   # Clear all EVM caches
@@ -148,6 +148,6 @@ module EvmSpecHelper
     Tenant.seed
     MiqAeImport.new(domain, options.merge('tenant' => Tenant.root_tenant)).import
     dom = MiqAeNamespace.find_by_fqname(domain)
-    dom.update_attributes!(attrs.reverse_merge(:enabled => true)) if dom
+    dom&.update(attrs.reverse_merge(:enabled => true))
   end
 end

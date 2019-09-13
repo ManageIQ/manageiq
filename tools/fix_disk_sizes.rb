@@ -54,7 +54,7 @@ ExtManagementSystem.all.each do |e|
       # Only nil out 'size_on_disk' if the provision size does not match
       data[:new][:size_on_disk] = nil if data[:new][:size] != data[:old][:size]
       changed_disks[d.id] = data
-      d.update_attributes(data[:new])
+      d.update(data[:new])
     end
   end
 

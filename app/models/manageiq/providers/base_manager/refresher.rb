@@ -52,14 +52,14 @@ module ManageIQ
             end
 
             # record the failed status and skip post-processing
-            ems.update_attributes(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
+            ems.update(:last_refresh_error => e.to_s, :last_refresh_date => Time.now.utc)
             partial_refresh_errors << e.to_s
             next
           ensure
             post_refresh_ems_cleanup(ems, targets)
           end
 
-          ems.update_attributes(:last_refresh_error => nil, :last_refresh_date => Time.now.utc)
+          ems.update(:last_refresh_error => nil, :last_refresh_date => Time.now.utc)
           post_refresh(ems, ems_refresh_start_time)
         end
 

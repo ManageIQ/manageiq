@@ -460,7 +460,7 @@ describe MiqAlert do
     end
 
     it "evaluates for ext_management_system" do
-      @alert.update_attributes(:db => "ExtManagementSystem")
+      @alert.update(:db => "ExtManagementSystem")
       @alert_prof.mode = @ems.class.base_model.name
       @alert_prof.assign_to_objects(@ems.id, "ExtManagementSystem")
 
@@ -473,7 +473,7 @@ describe MiqAlert do
       vm_in_zone = FactoryBot.create(:vm_vmware, :ext_management_system => @ems)
       vm_in_other = FactoryBot.create(:vm_vmware, :ext_management_system => @ems_other)
       vm_no_ems = FactoryBot.create(:vm_vmware)
-      @alert.update_attributes(:db => "Vm")
+      @alert.update(:db => "Vm")
       @alert_prof.mode = vm_in_zone.class.base_model.name
       @alert_prof.assign_to_objects(vm_in_zone.id, "Vm")
 
@@ -495,7 +495,7 @@ describe MiqAlert do
 
       storage_no_ems = FactoryBot.create(:storage_vmware)
 
-      @alert.update_attributes(:db => "Storage")
+      @alert.update(:db => "Storage")
       @alert_prof.mode = storage_in_zone.class.base_model.name
       @alert_prof.assign_to_objects(storage_in_zone.id, "Storage")
 
@@ -509,7 +509,7 @@ describe MiqAlert do
     it "evaluates for container entities" do
       [:container_node, :container_group, :container_replicator, :container].each do |entity|
         container_entity_in_zone = FactoryBot.create(entity, :ext_management_system => @ems_kub)
-        @alert.update_attributes(:db => entity.to_s.camelize)
+        @alert.update(:db => entity.to_s.camelize)
         @alert_prof.mode = container_entity_in_zone.class.base_model.name
         @alert_prof.assign_to_objects(container_entity_in_zone.id, entity.to_s.camelize)
         expect(MiqAlert).to receive(:evaluate_alerts).once.with(container_entity_in_zone, "_hourly_timer_")

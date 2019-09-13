@@ -29,11 +29,11 @@ class ServiceTemplateTransformationPlanRequest < ServiceTemplateProvisionRequest
   end
 
   def approve_vm(vm_id)
-    vm_resources.find_by(:resource_id => vm_id).update_attributes!(:status => ServiceResource::STATUS_APPROVED)
+    vm_resources.find_by(:resource_id => vm_id).update!(:status => ServiceResource::STATUS_APPROVED)
   end
 
   def cancel
-    update_attributes(:cancelation_status => MiqRequest::CANCEL_STATUS_REQUESTED)
+    update(:cancelation_status => MiqRequest::CANCEL_STATUS_REQUESTED)
     miq_request_tasks.each(&:cancel)
   end
 

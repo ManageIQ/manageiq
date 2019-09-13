@@ -48,7 +48,7 @@ class MiqRetireTask < MiqRequestTask
   end
 
   def after_request_task_create
-    update_attributes(:description => get_description)
+    update(:description => get_description)
   end
 
   def after_ae_delivery(ae_result)

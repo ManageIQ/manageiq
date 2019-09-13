@@ -839,7 +839,7 @@ module MiqReport::Generator
     res = task.miq_report_result
     nh = {:miq_task_id => taskid, :scheduled_on => at}
     _log.info("Updating report results with hash: [#{nh.inspect}]")
-    res.update_attributes(nh)
+    res.update(nh)
     _log.info("Finished creating report result with id [#{res.id}] for report id: [#{id}], name: [#{name}]")
 
     notify_user_of_report(res_last_run_on, res, options) if options[:send_email]

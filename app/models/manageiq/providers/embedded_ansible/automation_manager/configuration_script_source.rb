@@ -34,7 +34,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
 
   def raw_update_in_provider(params)
     transaction do
-      update_attributes!(params.except(:task_id, :miq_task_id))
+      update!(params.except(:task_id, :miq_task_id))
     end
   end
 
@@ -79,24 +79,24 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::ConfigurationScri
   end
 
   def sync
-    update_attributes!(:status => "running")
+    update!(:status => "running")
     transaction do
       current = configuration_script_payloads.index_by(&:name)
 
       playbooks_in_git_repository.each do |f|
         found = current.delete(f) || self.class.parent::Playbook.new(:configuration_script_source_id => id)
-        found.update_attributes!(:name => f, :manager_id => manager_id)
+        found.update!(:name => f, :manager_id => manager_id)
       end
 
       current.values.each(&:destroy)
 
       configuration_script_payloads.reload
     end
-    update_attributes!(:status            => "successful",
+    update!(:status            => "successful",
                        :last_updated_on   => Time.zone.now,
                        :last_update_error => nil)
   rescue => error
-    update_attributes!(:status            => "error",
+    update!(:status            => "error",
                        :last_updated_on   => Time.zone.now,
                        :last_update_error => format_sync_error(error))
     raise error

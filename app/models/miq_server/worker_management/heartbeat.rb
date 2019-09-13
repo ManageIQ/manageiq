@@ -70,9 +70,9 @@ module MiqServer::WorkerManagement::Heartbeat
 
     if w.last_heartbeat.nil?
       last_heartbeat ||= Time.now.utc
-      w.update_attributes(:last_heartbeat => last_heartbeat)
+      w.update(:last_heartbeat => last_heartbeat)
     elsif !last_heartbeat.nil? && last_heartbeat > w.last_heartbeat
-      w.update_attributes(:last_heartbeat => last_heartbeat)
+      w.update(:last_heartbeat => last_heartbeat)
     end
   end
 

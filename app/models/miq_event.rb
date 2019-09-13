@@ -45,7 +45,7 @@ class MiqEvent < EventStream
     inputs.merge!('EventStream::event_stream' => event_obj.id, :event_stream_id => event_obj.id)
 
     # save the EmsEvent that are required by some actions later in policy resolution
-    event_obj.update_attributes(:full_data => {:source_event_id => inputs[:ems_event].id}) if inputs[:ems_event]
+    event_obj.update(:full_data => {:source_event_id => inputs[:ems_event].id}) if inputs[:ems_event]
 
     MiqAeEvent.raise_evm_event(raw_event, target, inputs, options)
     event_obj
@@ -68,9 +68,9 @@ class MiqEvent < EventStream
     begin
       results[:policy] = MiqPolicy.enforce_policy(target, event_type, inputs)
       update_with_policy_result(results)
-      update_attributes(:message => 'Policy resolved successfully!')
+      update(:message => 'Policy resolved successfully!')
     rescue MiqException::PolicyPreventAction => err
-      update_attributes(:full_data => {:policy => {:prevented => true}}, :message => err.message)
+      update(:full_data => {:policy => {:prevented => true}}, :message => err.message)
     end
 
     _log.info("Alert for Event [#{event_type}]")
@@ -95,15 +95,17 @@ class MiqEvent < EventStream
   end
 
   def update_with_policy_result(result = {})
-    update_attributes(
-      :full_data => {
-        :policy => {
-          :actions => {
-            :assign_scan_profile => result.fetch_path(:policy, :actions, :assign_scan_profile)
+    if result.fetch_path(:policy, :actions, :assign_scan_profile)
+      update(
+        :full_data => {
+          :policy => {
+            :actions => {
+              :assign_scan_profile => result.fetch_path(:policy, :actions, :assign_scan_profile)
+            }
           }
         }
-      }
-    ) if result.fetch_path(:policy, :actions, :assign_scan_profile)
+      )
+    end
   end
 
   def self.normalize_event(event)

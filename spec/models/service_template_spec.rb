@@ -228,22 +228,22 @@ describe ServiceTemplate do
     end
 
     it "with service_type of atomic" do
-      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_ATOMIC)
+      @st1.update(:service_type => described_class::SERVICE_TYPE_ATOMIC)
       expect(@st1.type_display).to eq('Item')
     end
 
     it "with service_type of composite" do
-      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
+      @st1.update(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
       expect(@st1.type_display).to eq('Bundle')
     end
 
     it "with user service_type" do
-      @st1.update_attributes(:service_type => 'user')
+      @st1.update(:service_type => 'user')
       expect(@st1.type_display).to eq('User')
     end
 
     it "with no service_type" do
-      @st1.update_attributes(:service_type => nil)
+      @st1.update(:service_type => nil)
       expect(@st1.type_display).to eq('Unknown')
     end
   end
@@ -254,17 +254,17 @@ describe ServiceTemplate do
     end
 
     it "with service_type of unknown" do
-      @st1.update_attributes(:service_type => 'user')
+      @st1.update(:service_type => 'user')
       expect(@st1.atomic?).to be_falsey
     end
 
     it "with service_type of atomic" do
-      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_ATOMIC)
+      @st1.update(:service_type => described_class::SERVICE_TYPE_ATOMIC)
       expect(@st1.atomic?).to be_truthy
     end
 
     it "with service_type of composite" do
-      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
+      @st1.update(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
       expect(@st1.atomic?).to be_falsey
     end
   end
@@ -275,17 +275,17 @@ describe ServiceTemplate do
     end
 
     it "with service_type of unknown" do
-      @st1.update_attributes(:service_type => 'user')
+      @st1.update(:service_type => 'user')
       expect(@st1.composite?).to be_falsey
     end
 
     it "with service_type of atomic" do
-      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_ATOMIC)
+      @st1.update(:service_type => described_class::SERVICE_TYPE_ATOMIC)
       expect(@st1.composite?).to be_falsey
     end
 
     it "with service_type of composite" do
-      @st1.update_attributes(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
+      @st1.update(:service_type => described_class::SERVICE_TYPE_COMPOSITE)
       expect(@st1.composite?).to be_truthy
     end
   end
@@ -578,7 +578,7 @@ describe ServiceTemplate do
       end
 
       it 'not existing template' do
-        @ptr.update_attributes(:src_vm_id => 999)
+        @ptr.update(:src_vm_id => 999)
         expect(@st1.template_valid?).to be_falsey
         expect(@st1.template_valid_error_message).to include("Unable to find VM with Id [999]")
       end
@@ -623,7 +623,7 @@ describe ServiceTemplate do
       end
 
       it 'not existing template' do
-        @ptr.update_attributes(:src_vm_id => 999)
+        @ptr.update(:src_vm_id => 999)
         expect(@st2.template_valid?).to be_falsey
         expect(@st2.template_valid_error_message).to include("Unable to find VM with Id [999]")
       end
@@ -838,7 +838,7 @@ describe ServiceTemplate do
 
     before do
       @catalog_item = ServiceTemplate.create_catalog_item(catalog_item_options, user)
-      @catalog_item.update_attributes!(:options => @catalog_item.options.merge(:foo => 'bar'))
+      @catalog_item.update!(:options => @catalog_item.options.merge(:foo => 'bar'))
     end
 
     context "without config info" do
@@ -861,7 +861,7 @@ describe ServiceTemplate do
 
     context "with config info" do
       it 'updates the catalog item' do
-        @catalog_item.update_attributes!(:options => @catalog_item.options.merge(:config_info => 'bar'))
+        @catalog_item.update!(:options => @catalog_item.options.merge(:config_info => 'bar'))
         updated = @catalog_item.update_catalog_item(updated_catalog_item_options, user)
 
         expect(updated.resource_actions.pluck(:action)).to match_array(%w[Provision Reconfigure])

@@ -82,7 +82,7 @@ unless options[:dry_run]
 
   worker = if options[:guid]
              worker_class.find_by!(:guid => options[:guid]).tap do |wrkr|
-               wrkr.update_attributes(:pid => Process.pid)
+               wrkr.update(:pid => Process.pid)
              end
            else
              worker_class.create_worker_record(create_options)

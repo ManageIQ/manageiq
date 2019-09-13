@@ -4,14 +4,14 @@ describe FirewallRule do
   context "#operating_system" do
     it "with an OperatingSystem" do
       os = FactoryBot.create(:operating_system)
-      firewall_rule.update_attributes(:resource_type => "OperatingSystem", :resource_id => os.id)
+      firewall_rule.update(:resource_type => "OperatingSystem", :resource_id => os.id)
 
       expect(firewall_rule.operating_system).to eq(os)
     end
 
     it "with a non-OperatingSystem" do
       sg = FactoryBot.create(:security_group)
-      firewall_rule.update_attributes(:resource_type => "SecurityGroup", :resource_id => sg.id)
+      firewall_rule.update(:resource_type => "SecurityGroup", :resource_id => sg.id)
 
       expect(firewall_rule.operating_system).to be_nil
     end

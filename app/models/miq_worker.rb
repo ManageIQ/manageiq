@@ -515,7 +515,7 @@ class MiqWorker < ApplicationRecord
   def log_destroy_of_worker_messages
     ready_messages.each do |m|
       _log.warn("Nullifying: #{MiqQueue.format_full_log_msg(m)}") rescue nil
-      m.update_attributes(:handler_id => nil, :handler_type => nil) rescue nil
+      m.update(:handler_id => nil, :handler_type => nil) rescue nil
     end
 
     processed_messages.each do |m|
@@ -535,7 +535,7 @@ class MiqWorker < ApplicationRecord
       # Ensure the hash only contains the values we want to store in the table
       pinfo.slice!(*PROCESS_INFO_FIELDS)
       pinfo[:os_priority] = pinfo.delete(:priority)
-      update_attributes!(pinfo)
+      update!(pinfo)
     end
   end
 

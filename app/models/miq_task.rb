@@ -143,11 +143,11 @@ class MiqTask < ApplicationRecord
 
   def update_message(message)
     _log.info("Task: [#{id}] [#{message}]")
-    update_attributes!(:message => message)
+    update!(:message => message)
   end
 
   def update_context(context)
-    update_attributes!(:context_data => context)
+    update!(:context_data => context)
   end
 
   def message=(message)
@@ -160,11 +160,11 @@ class MiqTask < ApplicationRecord
   end
 
   def info(message, pct_complete)
-    update_attributes(:message => message, :pct_complete => pct_complete, :status => STATUS_OK)
+    update(:message => message, :pct_complete => pct_complete, :status => STATUS_OK)
   end
 
   def warn(message)
-    update_attributes(:message => message, :status => STATUS_WARNING)
+    update(:message => message, :status => STATUS_WARNING)
   end
 
   def self.warn(taskid, message)
@@ -173,7 +173,7 @@ class MiqTask < ApplicationRecord
   end
 
   def error(message)
-    update_attributes(:message => message, :status => STATUS_ERROR)
+    update(:message => message, :status => STATUS_ERROR)
   end
 
   def self.error(taskid, message)
@@ -187,7 +187,7 @@ class MiqTask < ApplicationRecord
   end
 
   def state_initialized
-    update_attributes(:state => STATE_INITIALIZED)
+    update(:state => STATE_INITIALIZED)
   end
 
   def self.state_queued(taskid)
@@ -196,7 +196,7 @@ class MiqTask < ApplicationRecord
   end
 
   def state_queued
-    update_attributes(:state => STATE_QUEUED)
+    update(:state => STATE_QUEUED)
   end
 
   def self.state_active(taskid)
@@ -217,7 +217,7 @@ class MiqTask < ApplicationRecord
   end
 
   def state_finished
-    update_attributes(:state => STATE_FINISHED)
+    update(:state => STATE_FINISHED)
   end
 
   def state_or_status

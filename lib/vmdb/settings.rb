@@ -206,7 +206,7 @@ module Vmdb
         deltas.each do |delta|
           record = index.delete(delta[:key])
           if record
-            record.update_attributes!(delta)
+            record.update!(delta)
           else
             resource.settings_changes.create!(delta)
           end
