@@ -875,7 +875,7 @@ module MiqReport::Generator
   end
 
   def get_time_zone(default_tz = nil)
-    time_profile ? time_profile.tz || tz || default_tz : tz || default_tz
+    time_profile&.tz || tz || default_tz
   end
 
   private
