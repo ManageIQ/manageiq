@@ -900,7 +900,9 @@ describe MiqReport do
         )
       end
 
-      let(:test_controller) do
+      let(:test_controller) { TestController.new }
+
+      before do
         class TestController
           # when this method returns true it means
           # that column is displayed
@@ -912,9 +914,9 @@ describe MiqReport do
             User.current_user.super_admin_user?
           end
         end
-
-        TestController.new
       end
+
+      after { Object.send(:remove_const, :TestController) }
 
       let(:user) { FactoryBot.create(:user) }
 
