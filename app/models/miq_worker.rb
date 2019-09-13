@@ -451,6 +451,11 @@ class MiqWorker < ApplicationRecord
   alias_method :restart, :stop
 
   def kill
+    kill_process
+    destroy
+  end
+
+  def kill_process
     unless pid.nil?
       begin
         _log.info("Killing worker: ID [#{id}], PID [#{pid}], GUID [#{guid}], status [#{status}]")
@@ -465,8 +470,6 @@ class MiqWorker < ApplicationRecord
         _log.warn("Worker ID [#{id}] PID [#{pid}] GUID [#{guid}] has been killed, but with the following error: #{err}")
       end
     end
-
-    destroy
   end
 
   def is_current?
