@@ -284,10 +284,10 @@ class MiqReport < ApplicationRecord
   end
 
   def format_row(row, allowed_columns = nil, expand_value_format = nil)
-    @tz ||= get_time_zone(Time.zone)
+    tz = get_time_zone(User.current_user.settings.fetch_path(:display, :timezone).presence || Time.zone)
     row.map do |key, _|
-      value = allowed_columns.nil? || allowed_columns&.include?(key) ? format_column(key, row, @tz, col_format_hash[key]) : row[key]
-      [key, expand_value_format.present? ? { :value => value, :style_class => get_style_class(key, row, @tz) } : value]
+      value = allowed_columns.nil? || allowed_columns&.include?(key) ? format_column(key, row, tz, col_format_hash[key]) : row[key]
+      [key, expand_value_format.present? ? { :value => value, :style_class => get_style_class(key, row, tz) } : value]
     end.to_h
   end
 
