@@ -27,7 +27,7 @@ describe CustomButtonSet do
     let(:miq_expression)    { MiqExpression.new('EQUAL' => {'field' => 'Vm-name', 'value' => "vm_1"}) }
     let(:custom_button_2)   { FactoryBot.create(:custom_button, :applies_to => vm_1, :visibility_expression => miq_expression) }
     let(:set_data)          { {:applies_to_class => "Vm", :button_order => [custom_button_1.id, custom_button_2.id]} }
-    let(:custom_button_set) { FactoryBot.create(:custom_button_set, :name => "set_1", :set_data => set_data) }
+    let(:custom_button_set) { FactoryBot.create(:custom_button_set, :name => "set_1", :set_data => set_data, :owner => vm_1) }
 
     before do
       [custom_button_1, custom_button_2].each { |x| custom_button_set.add_member(x) }
@@ -47,7 +47,7 @@ describe CustomButtonSet do
       let(:custom_button_3)        { FactoryBot.create(:custom_button, :applies_to => vm_1, :visibility_expression => miq_expression) }
       let(:custom_button_4)        { FactoryBot.create(:custom_button, :applies_to => vm_1, :visibility_expression => miq_expression) }
       let(:set_data)               { {:applies_to_class => "Vm", :button_order => [custom_button_4.id, custom_button_2.id, custom_button_1.id, custom_button_3.id]} }
-      let(:custom_button_set)      { FactoryBot.create(:custom_button_set, :name => "set_1", :set_data => set_data) }
+      let(:custom_button_set)      { FactoryBot.create(:custom_button_set, :name => "set_1", :set_data => set_data, :owner => vm_1) }
 
       before do
         [custom_button_3, custom_button_4].each { |x| custom_button_set.add_member(x) }
@@ -72,10 +72,10 @@ describe CustomButtonSet do
     service_template2 = FactoryBot.create(:service_template)
     custom_button     = FactoryBot.create(:custom_button, :applies_to => service_template1)
     set_data          = {:applies_to_class => "ServiceTemplate", :button_order => [custom_button.id]}
-    custom_button_set = FactoryBot.create(:custom_button_set, :set_data => set_data)
+    custom_button_set = FactoryBot.create(:custom_button_set, :set_data => set_data, :owner => service_template2)
 
     custom_button_set.add_member(custom_button)
-    custom_button_set.deep_copy(:owner => service_template2)
+    custom_button_set.deep_copy
 
     expect(CustomButton.count).to eq(2)
     expect(CustomButtonSet.count).to eq(2)

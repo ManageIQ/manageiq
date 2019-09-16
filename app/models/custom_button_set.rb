@@ -86,25 +86,20 @@ class CustomButtonSet < ApplicationRecord
     end
   end
 
-  def deep_copy(options)
-    raise ArgumentError, "options[:owner] is required" if options[:owner].blank?
+  def add_member(cb)
+    cb_copy = cb.copy(:applies_to => owner)
+    set_data[:button_order].compact << cb_copy.id
+    owner.set_button_order(cb_copy) if owner.kind_of?(ServiceTemplate)
+  end
 
-    options.each_with_object(dup) { |(k, v), button_set| button_set.send("#{k}=", v) }.tap do |cbs|
-      cbs.guid = SecureRandom.uuid
-      cbs.name = "#{name}-#{cbs.guid}"
-      cbs.set_data[:button_order] = []
-      cbs.set_data[:applies_to_id] = options[:owner].id
-      cbs.save!
-      custom_buttons.each do |cb|
-        cb_copy = cb.copy(:applies_to => options[:owner])
-        cbs.add_member(cb_copy)
-        options[:owner][:options][:button_order] ||= []
-        options[:owner][:options][:button_order] << "cb-#{cb_copy.id}"
-        cbs.set_data[:button_order] << cb_copy.id
-        options[:owner].save!
-        cbs.save!
-      end
-    end
+  def deep_copy
+    cbs = self.dup
+    cbs.guid = SecureRandom.uuid
+    cbs.owner = owner
+    cbs.name = "#{name}-#{cbs.guid}"
+    cbs.set_data[:button_order] = []
+    cbs.set_data[:applies_to_id] = owner.id
+    custom_buttons.each { |cb| cbs.add_member(cb) }
   end
 
   def self.display_name(number = 1)

@@ -474,6 +474,13 @@ class ServiceTemplate < ApplicationRecord
     zone&.name if atomic?
   end
 
+  def set_button_order(custom_button)
+    options[:button_order] ||= []
+    options[:button_order] << "cb-#{custom_button.id}"
+    save!
+  end
+
+
   private
 
   def update_service_resources(config_info, auth_user = nil)

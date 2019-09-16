@@ -31,7 +31,7 @@ module ServiceTemplate::Copy
   end
 
   def custom_button_set_copy(custom_button_set, template)
-    new_cbs = custom_button_set.deep_copy(:owner => template)
+    new_cbs = custom_button_set.deep_copy
     template[:options][:button_order] << "cbg-#{new_cbs.id}"
   end
 
