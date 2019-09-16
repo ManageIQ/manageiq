@@ -57,6 +57,34 @@ describe MiqReport do
     end
   end
 
+  context "#format_row" do
+    let(:row) { {"boot_time" => Time.now.in_time_zone('Moscow'), "name" => "v2v-ubuntu-kk"} }
+    let(:report) do
+      MiqReport.new(:name => "Timezone test", :title => "tz test", :rpt_group => "Custom",
+                    :rpt_type => "Custom", :db => "Vm", :cols => %w[name boot_time],
+                    :col_order => %w[boot_time name],
+                    :col_formats => [nil, nil],
+                    :col_options => {},
+                    :headers   => ["Boot Time", "Name"],
+                    :order     => "Ascending")
+    end
+
+    it "uses row timezone if no setting exists" do
+      User.current_user = FactoryBot.create(:user)
+      formatted_rpt = report.format_row(row, [], "true")
+      expect(formatted_rpt["boot_time"][:value].zone).to eq("MSK")
+    end
+
+    it "uses user setting" do
+      User.current_user = FactoryBot.create(:user)
+      User.current_user.settings.store_path(:display, :timezone, "Hawaii")
+      User.current_user.with_my_timezone do
+        formatted_rpt = report.format_row(row, ["boot_time", "name"], "true")
+        expect(formatted_rpt["boot_time"][:value].include?("HST")).to eq(true)
+      end
+    end
+  end
+
   context "report with filtering in Registry" do
     let(:options)  { {:targets_hash => true, :userid => "admin"} }
     let(:miq_task) { FactoryBot.create(:miq_task) }
