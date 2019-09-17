@@ -1,6 +1,4 @@
 describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager do
-  it_behaves_like 'ansible automation_manager'
-
   context 'catalog types' do
     let(:ems) { FactoryBot.create(:embedded_automation_manager) }
 
