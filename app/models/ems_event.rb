@@ -132,6 +132,20 @@ class EmsEvent < EventStream
     EmsEvent.where(:ems_id => ems_id, :chain_id => chain_id).order(:id).first
   end
 
+  def self.filter_args_for_add(args)
+    return args unless args.last.kind_of?(Hash)
+
+    if %w[EMBEDDEDANSIBLE ANSIBLETOWER].include?(args.last[:source])
+      args.dup.tap do |new_args|
+        if new_args[:full_data] && (changes_hash = new_args[:full_data]["changes"])
+          changes_hash["extra_vars"] = "[FILTERED]" if changes_hash["extra_vars"].present?
+        end
+      end
+    else
+      args
+    end
+  end
+
   def parse_event_metadata
     data = full_data || {}
     [
@@ -294,3 +308,5 @@ class EmsEvent < EventStream
     ext_management_system
   end
 end
+
+MiqQueueLogFilterer.register_filter("EmsEvent", "add", "filter_args_for_add")

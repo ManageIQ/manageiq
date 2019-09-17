@@ -570,11 +570,15 @@ class MiqQueue < ApplicationRecord
     "State: [#{msg.state}], "                                       \
     "Deliver On: [#{msg.deliver_on}], "                             \
     "Data: [#{msg.data.nil? ? "" : "#{msg.data.length} bytes"}], "  \
-    "Args: #{ManageIQ::Password.sanitize_string(msg.args.inspect)}"
+    "Args: #{ManageIQ::Password.sanitize_string(inspectable_args(msg))}"
   end
 
   def self.format_short_log_msg(msg)
     "Message id: [#{msg.id}]"
+  end
+
+  def self.inspectable_args(msg)
+    MiqQueueLogFilterer.inspect_args_for(msg)
   end
 
   def get_worker
