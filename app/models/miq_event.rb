@@ -52,7 +52,6 @@ class MiqEvent < EventStream
   end
 
   def process_evm_event(inputs = {})
-    _log.info("target = [#{target.inspect}]")
     return if target.nil?
 
     return unless target.class.base_class.in?(SUPPORTED_POLICY_AND_ALERT_CLASSES)
