@@ -199,6 +199,13 @@ module ManageIQ::Providers
           )
         end
 
+        def distributed_virtual_lans
+          add_properties(
+            :manager_ref                  => %i(switch uid_ems),
+            :parent_inventory_collections => %i(distributed_virtual_switches),
+          )
+        end
+
         def subnets
           add_properties(
             :manager_ref                  => %i(lan ems_ref),
