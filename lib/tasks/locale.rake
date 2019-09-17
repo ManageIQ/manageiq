@@ -141,12 +141,18 @@ namespace :locale do
     system({"RAILS_ENV" => "i18n"}, "bundle exec rake locale:store_model_attributes")
   end
 
+  task "delete_pot_file", :root do |_, args|
+    pot_file = Dir.glob(Pathname(args[:root]).join("locale/*.pot")).first
+    FileUtils.rm_f(pot_file) if pot_file
+  end
+
   desc "Update ManageIQ gettext catalogs"
   task "update" do
     Rake::Task['locale:store_dictionary_strings'].invoke
     Rake::Task['locale:run_store_model_attributes'].invoke
     Rake::Task['locale:extract_yaml_strings'].invoke(Rails.root)
     Rake::Task['locale:model_display_names'].invoke
+    Rake::Task['locale:delete_pot_file'].invoke(Rails.root)
     Rake::Task['gettext:find'].invoke
 
     Dir["config/dictionary_strings.rb", "config/model_attributes.rb", "config/model_display_names.rb", "config/yaml_strings.rb", "locale/**/*.edit.po", "locale/**/*.po.time_stamp"].each do |file|
@@ -160,7 +166,7 @@ namespace :locale do
 
     pot_files = []
     Vmdb::Plugins.each do |plugin|
-      system('rm', '-vf', "#{plugin.root.join('/locale')}/*.pot")
+      system('bundle', 'exec', 'rake', "locale:delete_pot_file[#{plugin.root}]") # Delete plugin's pot file if it exists to avoid weird file timestamp issues
       raise unless system('bundle', 'exec', 'rake', "locale:plugin:find[#{plugin.to_s.sub('::Engine', '')}]")
       pot_file = Dir.glob("#{plugin.root.join('locale')}/*.pot")[0]
       pot_files << pot_file if pot_file.present?
