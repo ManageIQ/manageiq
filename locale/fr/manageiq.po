@@ -6,6 +6,7 @@
 # Translators:
 # Milan Zázrivec <mzazrivec@redhat.com>, 2019
 # aurore jarry <aurore.jarry@stoquart.com>, 2019
+# Corina Roe <croe@redhat.com>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-07 15:50+0200\n"
 "PO-Revision-Date: 2019-07-24 11:01+0000\n"
-"Last-Translator: aurore jarry <aurore.jarry@stoquart.com>, 2019\n"
+"Last-Translator: Corina Roe <croe@redhat.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/manageiq/teams/35937/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -907,7 +908,7 @@ msgstr "Ajouter un profil d'analyse de VM"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1039
 msgid "Add a Chargeback Rate"
-msgstr "Ajouter un taux de rejet de débit"
+msgstr "Ajouter un taux de rétrofacturation"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:342
@@ -4434,53 +4435,53 @@ msgstr "Source"
 #: ../app/helpers/application_helper/title.rb:42
 #: ../app/controllers/chargeback_controller.rb:307
 msgid "Chargeback"
-msgstr "Rejet de débit"
+msgstr "Rétrofacturation"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackRate
 #: ../config/model_display_names.rb:18 ../config/dictionary_strings.rb:1286
 msgid "Chargeback Rate"
 msgid_plural "Chargeback Rates"
-msgstr[0] "Taux de rejet de débit"
-msgstr[1] "Taux de rejet de débit"
+msgstr[0] "Taux de rétrofacturation"
+msgstr[1] "Taux de rétrofacturation"
 
 #: ../config/model_display_names.rb:19
 msgid "Chargeback Rate Detail"
 msgid_plural "Chargeback Rate Details"
 msgstr[0] "Détail sur le taux de rejet de débit"
-msgstr[1] "Détails sur le taux de rejet de débit"
+msgstr[1] "Détails sur le taux de rétrofacturation"
 
 #: ../config/model_display_names.rb:20
 msgid "Chargeback Rate Detail Currency"
 msgid_plural "Chargeback Rate Detail Currencies"
-msgstr[0] "Devise des détails sur le taux de rejet de débit"
-msgstr[1] "Devises des détails sur le taux de rejet de débit"
+msgstr[0] "Devise des détails sur le taux de rétrofacturation"
+msgstr[1] "Devises des détails sur le taux de rétrofacturation"
 
 #: ../config/model_display_names.rb:21
 msgid "Chargeback Rate Detail Measure"
 msgid_plural "Chargeback Rate Detail Measures"
-msgstr[0] "Mesure relative aux détails sur le taux de rejet de débit"
-msgstr[1] "Mesures relatives aux détails sur le taux de rejet de débit"
+msgstr[0] "Mesure relative aux détails sur le taux de rétrofacturation"
+msgstr[1] "Mesures relatives aux détails sur le taux de rétrofacturation"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1053
 msgid "Chargeback Rate currencies Accordion"
-msgstr "Accordéon - devise de rejet de débit"
+msgstr "Accordéon - devise de rétrofacturation"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1057
 msgid "Chargeback Rate measures Accordion"
-msgstr "Accordéon - taux de rejet de débit"
+msgstr "Accordéon - taux de rétrofacturation"
 
 #. TRANSLATORS: file: product/views/ChargebackRate.yaml
 #: ../config/yaml_strings.rb:1160
 msgid "Chargeback Rates"
-msgstr "Taux de rejet de débit"
+msgstr "Taux de rétrofacturation"
 
 #: ../config/model_display_names.rb:22
 msgid "Chargeback Tier"
 msgid_plural "Chargeback Tiers"
-msgstr[0] "Niveau de rejet de débit"
-msgstr[1] "Niveaux de rejet de débit"
+msgstr[0] "Niveau de rétrofacturation"
+msgstr[1] "Niveaux de rétrofacturation"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage
 #: ../app/models/chargeback_container_image.rb:115
@@ -4488,13 +4489,13 @@ msgstr[1] "Niveaux de rejet de débit"
 msgid "Chargeback for Image"
 msgid_plural "Chargebacks for Image"
 msgstr[0] "Rejet de débit pour l'image"
-msgstr[1] "Rejets de débit pour l'image"
+msgstr[1] "Rétrofacturation pour l'image"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerImage (plural
 #. form)
 #: ../config/dictionary_strings.rb:1282
 msgid "Chargeback for Images"
-msgstr "Taux de rejet d'images"
+msgstr "Taux de rétrofacturation d'images"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerProject
 #: ../app/models/chargeback_container_project.rb:74
@@ -4502,38 +4503,38 @@ msgstr "Taux de rejet d'images"
 msgid "Chargeback for Projects"
 msgid_plural "Chargebacks for Projects"
 msgstr[0] "Rejet de débit  pour les projets"
-msgstr[1] "Rejets de débit  pour les projets"
+msgstr[1] "Rétrofacturation pour les projets"
 
 #: ../app/models/chargeback_vm.rb:205
 msgid "Chargeback for VMs"
 msgid_plural "Chargebacks for VMs"
 msgstr[0] "Rejet de débit pour les machines virtuelles"
-msgstr[1] "Rejets de débit pour les machines virtuelles"
+msgstr[1] "Rétrofacturation pour les machines virtuelles"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackVm
 #: ../config/dictionary_strings.rb:1278
 msgid "Chargeback for Vms"
-msgstr "Taux de rejet de débit pour les machines virtuelles"
+msgstr "Taux de rétrofacturation pour les machines virtuelles"
 
 #: ../config/model_attributes.rb:237
 msgid "Chargeback rate"
-msgstr "Taux de rejet de débit"
+msgstr "Taux de rétrofacturation"
 
 #: ../config/model_attributes.rb:247
 msgid "Chargeback rate detail"
-msgstr "Détails sur le taux de rejet de débit"
+msgstr "Détails sur le taux de rétrofacturation"
 
 #: ../config/model_attributes.rb:262
 msgid "Chargeback rate detail currency"
-msgstr "Devise sur le taux de rétrofacturation"
+msgstr "Devise du taux de rétrofacturation"
 
 #: ../config/model_attributes.rb:271
 msgid "Chargeback rate detail measure"
-msgstr "Détails sur le taux de rejet de débit"
+msgstr "Détails sur le taux de refacturation"
 
 #: ../config/model_attributes.rb:279
 msgid "Chargeback tier"
-msgstr "Niveau de rejet de débit"
+msgstr "Niveau de refacturation"
 
 #: ../config/model_attributes.rb:263
 msgid "ChargebackRateDetailCurrency|Code"
@@ -10626,7 +10627,7 @@ msgstr "Copier les Profils temporels"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1041
 msgid "Copy a Chargeback Rate"
-msgstr "Copier un taux de rejet de débit"
+msgstr "Copier un taux de rétrofacturation"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1129
@@ -12227,7 +12228,7 @@ msgstr "Supprimer le mappage de transformation"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1043
 msgid "Delete a Chargeback Rate"
-msgstr "Supprimer le taux de rejet de débit"
+msgstr "Supprimer le taux de rétrofacturation"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1137
@@ -15549,7 +15550,7 @@ msgstr "Modifier un catalogue"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1045
 msgid "Edit a Chargeback Rate"
-msgstr "Modifier un taux de rejet de débit"
+msgstr "Modifier un taux de rétrofacturation"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:330
@@ -38724,7 +38725,7 @@ msgstr "Afficher les données de capacité et d'utilisation des VM"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2702
 msgid "Show Chargeback Preview for a VM"
-msgstr "Afficher un aperçu du taux de rejet de débit pour une VM"
+msgstr "Afficher un aperçu du taux de rétrofacturation pour une VM"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1033
@@ -43263,7 +43264,7 @@ msgstr "VM ou modèles"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2700
 msgid "VM's Chargeback"
-msgstr "Taux de rejet de débit de la VM"
+msgstr "Taux de rétrofacturation de la VM"
 
 #: ../app/models/vm_or_template.rb:347
 msgid ""
@@ -48702,7 +48703,7 @@ msgstr "% Sauvergardes"
 
 #: ../app/controllers/chargeback_controller.rb:222
 msgid "%<typ>s Chargeback Rates"
-msgstr "%<typ>s de taux de rejet de débit"
+msgstr "%<typ>s de taux de rétrofacturation"
 
 #: ../app/assets/javascripts/controllers/report_data_controller.js:397
 msgid "%d - %d of %d"
@@ -51169,7 +51170,7 @@ msgstr "Ajouter un nouveau groupe de boutons"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:12
 msgid "Add a new Chargeback Rate"
-msgstr "Ajouter un nouveau taux de rejet de débit"
+msgstr "Ajouter un nouveau taux de rétrofacturation"
 
 #: ../app/helpers/application_helper/toolbar/cloud_networks_center.rb:14
 msgid "Add a new Cloud Network"
@@ -52059,7 +52060,7 @@ msgstr "Tous les catalogues"
 #: ../app/controllers/chargeback_controller.rb:53
 #: ../app/controllers/chargeback_controller.rb:391
 msgid "All Chargeback Rates"
-msgstr "Tous les taux de rejet de débit"
+msgstr "Tous les taux de rétrofacturation"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:669
 msgid "All Clusters"
@@ -56081,11 +56082,11 @@ msgstr "Compute"
 
 #: ../app/controllers/chargeback_controller.rb:403
 msgid "Compute Chargeback Rate \"%{name}\""
-msgstr "Taux de rejet de débit \"%{name}\" - Compute"
+msgstr "Taux de rétrofacturation \"%{name}\" - Compute"
 
 #: ../app/controllers/chargeback_controller.rb:395
 msgid "Compute Chargeback Rates"
-msgstr "Taux de rejet de débit - Compute"
+msgstr "Taux de rétrofacturation - Compute"
 
 #: ../app/helpers/provider_foreman_helper.rb:84
 #: ../app/helpers/provider_foreman_helper.rb:166
@@ -56674,8 +56675,8 @@ msgstr "Copier les profils d'analyse sélectionnés"
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:28
 msgid "Copy the selected Chargeback Rate to a new Chargeback Rate"
 msgstr ""
-"Copier le taux de rejet de débit sélectionné dans un nouveau taux de rejet "
-"de débit"
+"Copier le taux de rétrofacturation sélectionné dans un nouveau taux de "
+"rétrofacturation"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:28
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:28
@@ -56701,7 +56702,7 @@ msgstr "Copier cette alerte"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:62
 msgid "Copy this Chargeback Rate"
-msgstr "Copier ce taux de rejet de débit"
+msgstr "Copier ce taux de rétrofacturation"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:18
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:18
@@ -57621,15 +57622,16 @@ msgstr "Authentication par défaut"
 
 #: ../app/controllers/chargeback_controller.rb:167
 msgid "Default Chargeback Rate \"%{name}\" cannot be edited."
-msgstr "Impossible de modifier le taux de rejet de débit \"%{name}\" par défaut."
+msgstr ""
+"Impossible de modifier le taux de rétrofacturation \"%{name}\" par défaut."
 
 #: ../app/helpers/application_helper/button/chargeback_rate_edit.rb:5
 msgid "Default Chargeback Rate cannot be edited."
-msgstr "Impossible de modifier le taux de rejet de débit par défaut."
+msgstr "Impossible de modifier le taux de rétrofacturation par défaut."
 
 #: ../app/helpers/application_helper/button/chargeback_rate_remove.rb:5
 msgid "Default Chargeback Rate cannot be removed."
-msgstr "Impossible de supprimer le taux de rejet de débit par défaut."
+msgstr "Impossible de supprimer le taux de rétrofacturation par défaut."
 
 #: ../app/helpers/application_helper/button/dashboard_delete.rb:5
 msgid "Default Dashboard cannot be deleted"
@@ -60119,7 +60121,7 @@ msgstr "Modifier les profils d'analyse sélectionnés"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:18
 msgid "Edit the selected Chargeback Rate"
-msgstr "Modifier le taux de rejet de débit sélectionné"
+msgstr "Modifier le taux de rétrofacturation sélectionné"
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:18
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:18
@@ -60181,7 +60183,7 @@ msgstr "Modifier ce groupe de boutons"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:54
 msgid "Edit this Chargeback Rate"
-msgstr "Modifier ce taux de rejet de débit"
+msgstr "Modifier ce taux de rétrofacturation"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:12
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:12
@@ -65422,7 +65424,8 @@ msgstr "Aucun catalogue n'a été sélectionné pour la suppression"
 
 #: ../app/controllers/chargeback_controller.rb:208
 msgid "No Chargeback Rates were selected for deletion"
-msgstr "Aucun taux de rejet de débit n'a été sélectionné pour la suppression"
+msgstr ""
+"Aucun taux de rétrofacturation n'a été sélectionné pour la suppression"
 
 #: ../app/views/miq_request/_prov_field.html.haml:173
 #: ../app/views/miq_request/_prov_field.html.haml:207
@@ -70091,7 +70094,7 @@ msgstr "Supprimer les catalogues sélectionnés"
 
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:38
 msgid "Remove selected Chargeback Rates from the VMDB"
-msgstr "Supprimer les taux de rejet de débit sélectionnés du VMDB"
+msgstr "Supprimer les taux de rétrofacturation sélectionnés du VMDB"
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:60
 msgid "Remove selected Cloud Providers from Inventory"
@@ -70290,7 +70293,7 @@ msgstr "Supprimer ce catalogue"
 
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:70
 msgid "Remove this Chargeback Rate from the VMDB"
-msgstr "Supprimer ce taux de rejet de débit du VMDB"
+msgstr "Supprimer ce taux de rétrofacturation du VMDB"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_fields_center.rb:24
 #: ../app/helpers/application_helper/toolbar/miq_ae_instances_center.rb:24
@@ -74882,11 +74885,11 @@ msgstr "Adaptateurs de stockage"
 
 #: ../app/controllers/chargeback_controller.rb:404
 msgid "Storage Chargeback Rate \"%{name}\""
-msgstr "Taux de rejet de débit de stockage \"%{name}\""
+msgstr "Taux de rétrofacturation de stockage \"%{name}\""
 
 #: ../app/controllers/chargeback_controller.rb:396
 msgid "Storage Chargeback Rates"
-msgstr "Taux de rejet de débit de stockage - Stockage"
+msgstr "Taux de rétrofacturation de stockage - Stockage"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:377
 msgid "Storage Clusters"
@@ -78429,7 +78432,7 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/chargebacks_center.rb:42
 msgid "Warning: The selected Chargeback Rate will be permanently removed!"
 msgstr ""
-"Avertissement : le taux de rejet de débit sélectionné sera définitivement "
+"Avertissement : le taux de rétrofacturation sélectionné sera définitivement "
 "supprimé."
 
 #: ../app/helpers/application_helper/toolbar/ems_clouds_center.rb:64
@@ -78792,7 +78795,7 @@ msgstr "Avertissement : ce catalogue sera définitivement supprimé"
 #: ../app/helpers/application_helper/toolbar/chargeback_center.rb:74
 msgid "Warning: This Chargeback Rate will be permanently removed!"
 msgstr ""
-"Avertissement : ce taux de rejet de débit sera définitivement supprimé"
+"Avertissement : ce taux de rétrofacturation sera définitivement supprimé"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:28
 msgid "Warning: This Cloud Network and ALL of its components will be removed!"

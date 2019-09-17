@@ -6,6 +6,7 @@
 # Translators:
 # Milan Zázrivec <mzazrivec@redhat.com>, 2019
 # Joy Sh <joy.sh@linguitronics.com>, 2019
+# Tony Fu <tfu@redhat.com>, 2019
 # 
 #, fuzzy
 msgid ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-07 15:50+0200\n"
 "PO-Revision-Date: 2019-07-24 11:01+0000\n"
-"Last-Translator: Joy Sh <joy.sh@linguitronics.com>, 2019\n"
+"Last-Translator: Tony Fu <tfu@redhat.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/manageiq/teams/35937/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -728,7 +729,7 @@ msgstr "添加"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:188
 msgid "Add Atomic Catalog Item"
-msgstr "添加 Atomic Catalog Item"
+msgstr "添加 Atomic 目录项"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1301
@@ -4130,7 +4131,7 @@ msgstr "目录"
 #. TRANSLATORS: en.yml key: dictionary.table.service_template
 #: ../config/dictionary_strings.rb:2742
 msgid "Catalog Item"
-msgstr "Catalog 项"
+msgstr "目录项"
 
 #. TRANSLATORS: file: product/views/ServiceCatalog.yaml
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
@@ -4159,7 +4160,7 @@ msgstr "目录"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:156
 msgid "Catalogs Explorer"
-msgstr "Catalogs Explorer"
+msgstr "目录浏览器"
 
 #: ../app/views/miq_policy/_action_options.html.haml:289
 #: ../app/views/miq_policy/_action_options.html.haml:305
@@ -5322,7 +5323,7 @@ msgstr "Shared"
 
 #: ../config/model_attributes.rb:343
 msgid "CloudNetwork|Status"
-msgstr "Status"
+msgstr "状态"
 
 #: ../config/model_attributes.rb:344
 msgid "CloudNetwork|Total vms"
@@ -12110,7 +12111,7 @@ msgstr "设备"
 #: ../app/helpers/textual_mixins/vm_common.rb:3
 #: ../app/controllers/ops_controller.rb:276
 msgid "Diagnostics"
-msgstr "对话框"
+msgstr "诊断"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1663
@@ -21447,7 +21448,7 @@ msgstr "最后的分析尝试在"
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #: ../config/yaml_strings.rb:215
 msgid "Last Analysis Time"
-msgstr "最后的分析时间"
+msgstr "最后分析的时间"
 
 #: ../app/helpers/textual_mixins/vm_common.rb:246
 msgid "Last Boot Time"
@@ -31366,7 +31367,7 @@ msgstr "对块存储管理者执行操作"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:190
 msgid "Perform Operations on Catalog Items"
-msgstr "执行 Catalog 项操作"
+msgstr "执行目录项操作"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2000
@@ -40217,7 +40218,7 @@ msgstr "总大小"
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #: ../config/yaml_strings.rb:179
 msgid "Total Snapshots"
-msgstr "总共的快照"
+msgstr "快照总数"
 
 #. TRANSLATORS: file: product/views/Storage.yaml
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
@@ -42760,7 +42761,7 @@ msgstr "查看目录项"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:216
 msgid "View Catalogs"
-msgstr "查看 Catalogs"
+msgstr "查看目录"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1994
@@ -46120,7 +46121,7 @@ msgstr "vCPUs 分配率"
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_allocated_metric
 #: ../config/dictionary_strings.rb:1146
 msgid "vCPUs Allocated over Time Period"
-msgstr "时间段中分配的 vCPUs Allocated"
+msgstr "时间段中分配的 vCPU"
 
 #: ../app/models/manageiq/providers/ansible_tower/shared/automation_manager/vmware_credential.rb:19
 msgid "vCenter Host"
@@ -47842,7 +47843,7 @@ msgstr[0] "%{number} (%{percentage} 已使用空间， %{amount} 个文件)"
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:119
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:126
 msgid "%{number} (Virtual to Real Ratio: %{ratio})"
-msgstr "%{number}（虚拟对真实的比例：%{ratio}）"
+msgstr "%{number}（虚拟对实际的比例：%{ratio}）"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:225
 msgid "%{number} Day"
@@ -48449,7 +48450,7 @@ msgstr "* 指定的 NTP 设置只适用于这个区而不是全局。"
 
 #: ../app/views/report/_form_styling.html.haml:104
 msgid "* Style \"If\" conditions are evaluated top to bottom for each column"
-msgstr "* 对于每列，风格 \"If\" 条件都是从上至下进行评估的。"
+msgstr "* 条件列中的每个条件都是从上至下进行判断的。"
 
 #: ../app/views/layouts/_container_template_note.html.haml:1
 msgid ""
@@ -50735,7 +50736,7 @@ msgstr "所有策略"
 #: ../app/presenters/tree_builder_policy_profile.rb:15
 #: ../app/controllers/miq_policy_controller/policy_profiles.rb:145
 msgid "All Policy Profiles"
-msgstr "所有 Policy 配置集"
+msgstr "所有策略配置集"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:121
 msgid "All Providers"
@@ -52844,11 +52845,11 @@ msgstr "获取与这个容器供应商有关的指标？"
 
 #: ../app/controllers/catalog_controller.rb:387
 msgid "Catalog Bundle \"%{name}\" was added"
-msgstr "Catalog Bundle \"%{name}\" 被添加"
+msgstr "目录组合 \"%{name}\" 被添加"
 
 #: ../app/controllers/catalog_controller.rb:385
 msgid "Catalog Bundle \"%{name}\" was saved"
-msgstr "Catalog Bundle \"%{name}\" 被保存"
+msgstr "目录组合 \"%{name}\" 被保存"
 
 #: ../app/assets/javascripts/controllers/catalog/catalog_item_form_controller.js:231
 msgid "Catalog Item %s was added"
@@ -59813,7 +59814,7 @@ msgstr "指纹"
 #: ../app/views/chargeback/_cb_rate_show.html.haml:28
 #: ../app/views/chargeback/_cb_rate_edit_table.html.haml:20
 msgid "Finish"
-msgstr "完成"
+msgstr "结束"
 
 #. TRANSLATORS: file: product/views/ScanHistory.yaml
 #: ../app/helpers/service_helper/textual_summary.rb:225
@@ -59975,7 +59976,7 @@ msgstr "总结行的格式"
 
 #: src/report-editor/report-editor.jsx:51
 msgid "Formatting"
-msgstr "格式化"
+msgstr "格式"
 
 #: ../app/controllers/report_controller/reports/editor.rb:1725
 msgid ""
@@ -60730,7 +60731,7 @@ msgstr "识别 LED 状态"
 
 #: ../app/views/report/_form_styling.html.haml:16
 msgid "If"
-msgstr "如果"
+msgstr "条件"
 
 #: ../app/javascript/angular/dashboard/widget-empty.js:11
 msgid ""
@@ -60895,7 +60896,7 @@ msgstr "信息计数"
 
 #: ../app/helpers/storage_helper/textual_summary.rb:11
 msgid "Information for Registered VMs"
-msgstr "已注册的虚拟机的信息"
+msgstr "注册虚拟机的信息"
 
 #: ../app/presenters/menu/default_menu.rb:75
 #: ../app/controllers/ems_infra_controller.rb:337
@@ -61412,7 +61413,7 @@ msgstr "标签为必填项"
 
 #: ../app/helpers/term_of_service_helper.rb:49
 msgid "Labeled Container Images"
-msgstr "已标记容器镜像"
+msgstr "已加标记(label)的容器镜像"
 
 #: ../app/helpers/container_summary_helper.rb:73
 #: ../app/helpers/vm_helper/textual_summary.rb:97
@@ -61664,7 +61665,7 @@ msgstr "最后选择的快照已不存在"
 
 #: ../app/views/layouts/_empty.html.haml:9
 msgid "Learn more about this"
-msgstr "进一步了解此"
+msgstr "更多信息"
 
 #: ../app/views/report/_form_consolidate.html.haml:78
 msgid ""
@@ -64693,7 +64694,7 @@ msgstr "Openstack Nova 调度器"
 #: ../app/helpers/container_image_helper/textual_summary.rb:58
 #: ../app/helpers/container_node_helper/textual_summary.rb:121
 msgid "Operating System Distribution"
-msgstr "操作系统分发"
+msgstr "操作系统"
 
 #: ../app/services/hawkular_proxy_service.rb:5
 msgid "Operations"
@@ -65036,7 +65037,7 @@ msgstr "父 '%{title}'"
 
 #: ../app/helpers/service_helper/textual_summary.rb:151
 msgid "Parent Catalog Item"
-msgstr "父 Catalog 项"
+msgstr "父目录项"
 
 #: ../app/helpers/ems_network_helper/textual_summary.rb:68
 #: ../app/helpers/cloud_volume_helper/textual_summary.rb:34
@@ -65959,7 +65960,7 @@ msgstr "以 PDF 格式打印或导出比较报告"
 #: ../app/helpers/application_helper/toolbar/summary_view.rb:6
 #: ../app/helpers/application_helper/toolbar/x_summary_view.rb:6
 msgid "Print or export summary"
-msgstr "打印或导出总结"
+msgstr "打印或导出"
 
 #: ../app/helpers/application_helper/toolbar/x_gtl_view.rb:52
 msgid "Print or export these items in PDF format"
@@ -70576,7 +70577,7 @@ msgstr "快捷键"
 #: ../app/views/static/auth-credentials.html.haml:28
 #: ../app/views/layouts/angular-bootstrap/_auth_credentials_angular_bootstrap.html.haml:50
 msgid "Should have privileged access, such as root or administrator."
-msgstr "您应该具有特权访问权限，如根用户或管理员。"
+msgstr "需要特权访问权限，如根用户或管理员。"
 
 #: ../app/views/layouts/listnav/_ems_cluster.html.haml:65
 msgid "Show %{cluster_title} drift history"
@@ -72388,7 +72389,7 @@ msgstr "风格"
 
 #: ../app/controllers/report_controller/reports/editor.rb:335
 msgid "Styling"
-msgstr "风格化"
+msgstr "风格"
 
 #: ../app/controllers/report_controller/reports/editor.rb:1667
 msgid "Styling for '%{item}', first value is in error: %{message}"
@@ -72812,7 +72813,7 @@ msgstr "已标记集群/部署角色"
 
 #: ../app/helpers/term_of_service_helper.rb:48
 msgid "Tagged Container Images"
-msgstr "已标记容器镜像"
+msgstr "已加标签(tag)的容器镜像"
 
 #: ../app/helpers/term_of_service_helper.rb:26
 msgid "Tagged Datastores"
@@ -75280,7 +75281,7 @@ msgstr "确认新密码"
 #: ../app/views/miq_ae_tools/_import_export.html.haml:50
 #: ../app/javascript/components/automate-import-export-form/datastore-via-git.schema.js:28
 msgid "Verify Peer Certificate"
-msgstr "检验对等证书"
+msgstr "检验对等系统的证书"
 
 #: ../app/views/layouts/angular-bootstrap/_endpoints_angular.html.haml:292
 msgid "Verify TLS Certificates"
@@ -76524,7 +76525,7 @@ msgstr "http"
 
 #: ../app/views/layouts/_empty.html.haml:12
 msgid "in the documentation."
-msgstr "在文档中。"
+msgstr "参阅文档"
 
 #: ../app/views/ops/_settings_server_tab.html.haml:279
 msgid "info"
