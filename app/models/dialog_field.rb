@@ -57,7 +57,6 @@ class DialogField < ApplicationRecord
     :dialog_field_button,
     :dialog_field_tag_control,
     :dialog_field_radio_button,
-    :dialog_field_dynamic_list,
     # Enable when UI support is available
     # #:dialog_field_list_view      # Future
   ]
