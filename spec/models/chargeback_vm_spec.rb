@@ -1264,19 +1264,32 @@ describe ChargebackVm do
             let(:options_with_tenant_only_in_default_region) { base_options.merge(:interval => 'monthly', :tenant_id => tenant_default_region.id).tap { |t| t.delete(:tag) } }
             let!(:tenant_default_region) { FactoryBot.create(:tenant, :parent => Tenant.root_tenant) }
 
-            it "raises error" do
-              skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
-              exception_message = "Unable to find tenant '#{tenant_default_region.name}' (based on tenant id '#{tenant_default_region.id}' from default region) in region #{region_1.region}"
-              expect { ChargebackVm.build_results_for_report_ChargebackVm(options_with_tenant_only_in_default_region) }.to raise_error(MiqException::Error, exception_message)
+            it "generates empty result and doesn't raise error" do
+              exception_message = "Unable to find tenant '#{tenant_default_region.name}' (based on tenant id '#{tenant_default_region.id}' from default region) in region #{region_1.region}."
+
+              log_stub = instance_double("_log")
+              expect(described_class).to receive(:_log).and_return(log_stub).at_least(:once)
+
+              expect(log_stub).to receive(:debug).with(any_args).at_least(:once)
+              expect(log_stub).to receive(:info).with(exception_message + " Calculating chargeback costs skipped for #{tenant_default_region.id} in region #{region_1.region}.").at_least(:once)
+              expect(log_stub).to receive(:info).with(any_args).at_least(:once)
+              expect(ChargebackVm.build_results_for_report_ChargebackVm(options_with_tenant_only_in_default_region).flatten).to be_empty
             end
 
             context "tenant in default region doesn't exists" do
               let(:options_with_missing_tenant) { base_options.merge(:interval => 'monthly', :tenant_id => unknown_number).tap { |t| t.delete(:tag) } }
 
-              it "raises error" do
-                skip('this feature needs to be added to new chargeback rating') if Settings.new_chargeback
-                exception_message = "Unable to find tenant '#{unknown_number}'"
-                expect { ChargebackVm.build_results_for_report_ChargebackVm(options_with_missing_tenant) }.to raise_error(exception_message)
+              it "generates empty result and doesn't raise error" do
+                exception_message = "Unable to find tenant '#{unknown_number}'."
+
+                log_stub = instance_double("_log")
+                expect(described_class).to receive(:_log).and_return(log_stub).at_least(:once)
+
+                expect(log_stub).to receive(:debug).with(any_args).at_least(:once)
+                expect(log_stub).to receive(:info).with(exception_message + " Calculating chargeback costs skipped for #{unknown_number} in region #{region_1.region}.").at_least(:once)
+                expect(log_stub).to receive(:info).with(any_args).at_least(:once)
+
+                expect(ChargebackVm.build_results_for_report_ChargebackVm(options_with_missing_tenant).flatten).to be_empty
               end
             end
           end
