@@ -161,7 +161,7 @@ namespace :locale do
     pot_files = []
     Vmdb::Plugins.each do |plugin|
       system('rm', '-vf', "#{plugin.root.join('/locale')}/*.pot")
-      system('bundle', 'exec', 'rake', "locale:plugin:find[#{plugin.to_s.sub('::Engine', '')}]")
+      raise unless system('bundle', 'exec', 'rake', "locale:plugin:find[#{plugin.to_s.sub('::Engine', '')}]")
       pot_file = Dir.glob("#{plugin.root.join('locale')}/*.pot")[0]
       pot_files << pot_file if pot_file.present?
     end
