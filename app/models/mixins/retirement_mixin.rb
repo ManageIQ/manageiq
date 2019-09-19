@@ -257,6 +257,10 @@ module RetirementMixin
       $log.info("System context defaulting to admin user because owner of #{name} (#{self.class}) not set or owner no longer found in database.")
       return User.super_admin
     end
+    if evm_owner.current_group.nil?
+      $log.info("System context defaulting to admin user because owner of #{name} (#{self.class}) was found but lacks a group.")
+      return User.super_admin
+    end
     $log.info("Setting retirement requester of #{name} to #{evm_owner_id}.")
     evm_owner
   end
