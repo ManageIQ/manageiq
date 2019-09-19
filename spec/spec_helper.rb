@@ -22,7 +22,6 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f }
 # include the manageiq-gems-pending matchers
 Dir[ManageIQ::Gems::Pending.root.join("spec/support/custom_matchers/*.rb")].each { |f| require f }
-Dir[ManageIQ::Providers::AnsibleTower::Engine.root.join("spec/support/ansible_shared/**/*.rb")].each { |f| require f }
 # include the manageiq-password matchers
 require "manageiq/password/rspec_matchers"
 

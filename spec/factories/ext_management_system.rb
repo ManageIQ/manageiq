@@ -358,11 +358,6 @@ FactoryBot.define do
 
   # Leaf classes for automation_manager
 
-  factory :automation_manager_ansible_tower,
-          :aliases => ["manageiq/providers/ansible_tower/automation_manager"],
-          :class   => "ManageIQ::Providers::AnsibleTower::AutomationManager",
-          :parent  => :external_automation_manager
-
   factory :embedded_automation_manager_ansible,
           :aliases => ["manageiq/providers/embedded_ansible/automation_manager"],
           :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
