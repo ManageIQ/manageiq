@@ -418,7 +418,7 @@ class MiqQueue < ApplicationRecord
     find_by(optional_values(default_get_options(options))).try(:destroy)
   end
 
-  def deliver(requester = nil)
+  def deliver(requester = nil, &block)
     result = nil
     delivered_on
     _log.info("#{MiqQueue.format_short_log_msg(self)}, Delivering...")
@@ -451,7 +451,7 @@ class MiqQueue < ApplicationRecord
       begin
         status = STATUS_OK
         message = "Message delivered successfully"
-        result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args) }
+        result = User.with_user_group(user_id, group_id) { dispatch_method(obj, args, &block) }
       rescue MiqException::MiqQueueRetryLater => err
         unget(err.options)
         message = "Message not processed.  Retrying #{err.options[:deliver_on] ? "at #{err.options[:deliver_on]}" : 'immediately'}"
@@ -476,7 +476,7 @@ class MiqQueue < ApplicationRecord
   def dispatch_method(obj, args)
     Timeout.timeout(msg_timeout) do
       args = activate_miq_task(args)
-      obj.send(method_name, *args)
+      block_given? ? yield : obj.send(method_name, *args)
     end
   end
 
