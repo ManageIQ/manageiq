@@ -253,15 +253,18 @@ module RetirementMixin
   end
 
   def system_context_requester
-    if try(:evm_owner_id).present?
-      if User.find_by(:id => evm_owner_id).present?
-        return evm_owner
-      else
-        $log.info("#{name} has evm_owner_id present but no user with that id found so defaulting to admin.")
-        return User.super_admin
-      end
+    user = User.find_by(:id => evm_owner_id) if try(:evm_owner_id)
+    if user.present? && user.current_group.present?
+      $log.info("Setting retirement requester of #{name} to #{evm_owner_id}.")
+      return evm_owner
     end
-    $log.info("System context defaulting to admin user because owner of #{name} not set.")
+
+    msg = if user.present?
+            "#{name} has evm_owner present but user has no group so defaulting to admin."
+          else
+            "System context defaulting to admin user because owner of #{name} not set."
+          end
+    $log.info(msg)
     User.super_admin
   end
 
