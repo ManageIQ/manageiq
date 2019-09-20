@@ -38,7 +38,7 @@ module MiqWebServerWorkerMixin
     end
 
     def rails_server
-      ::Settings.server.rails_server
+      "puma"
     end
 
     def all_ports_in_use

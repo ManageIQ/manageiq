@@ -1014,7 +1014,6 @@
   :prefetch_max_per_worker_dequeue: 100
   :prefetch_min_per_worker_dequeue: 10
   :prefetch_stale_threshold: 30.seconds
-  :rails_server: puma
   :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,remote_console,web_services,automate
   :server_dequeue_frequency: 5.seconds
   :server_log_frequency: 5.minutes
