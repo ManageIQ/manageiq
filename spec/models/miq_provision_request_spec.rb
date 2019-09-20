@@ -200,12 +200,6 @@ RSpec.describe MiqProvisionRequest do
               {:count => 12, :memory => 8_589_938_688, :cpu => 32, :storage => 44.gigabytes}
             end
             it_behaves_like "check_quota"
-
-            it "invalid vm_template does not raise error" do
-              create_requests
-              MiqRequest.first.update(:vm_template => nil)
-              expect { request.check_quota(quota_method) }.not_to raise_error
-            end
           end
 
           context "infra," do
