@@ -32,7 +32,7 @@ class MiqReportResult < ApplicationRecord
   before_save do
     user_info = userid.to_s.split("|")
     if user_info.length == 1
-      user = User.find_by_userid(user_info.first)
+      user = User.lookup_by_userid(user_info.first)
       self.miq_group_id ||= user.current_group_id unless user.nil?
     end
   end
@@ -276,7 +276,7 @@ class MiqReportResult < ApplicationRecord
     task = MiqTask.find_by(:id => taskid)
     task.update_status("Active", "Ok", "Generating report result [#{result_type}]") if task
 
-    user = options[:user] || User.find_by_userid(options[:userid])
+    user = options[:user] || User.lookup_by_userid(options[:userid])
     raise _("Unable to find user with userid 'options[:userid]'") if user.nil?
 
     rpt = report_results
@@ -401,7 +401,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def user_timezone
-    user = userid.include?("|") ? nil : User.find_by_userid(userid)
+    user = userid.include?("|") ? nil : User.lookup_by_userid(userid)
     user ? user.get_timezone : MiqServer.my_server.server_timezone
   end
 end

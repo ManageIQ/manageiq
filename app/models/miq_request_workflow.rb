@@ -752,7 +752,7 @@ class MiqRequestWorkflow
     values[:requester_group] ||= @requester.current_group.description
     email = values[:owner_email]
     if email.present? && values[:owner_group].blank?
-      values[:owner_group] = User.find_by_lower_email(email, @requester).try(:miq_group_description)
+      values[:owner_group] = User.lookup_by_lower_email(email, @requester).try(:miq_group_description)
     end
   end
 

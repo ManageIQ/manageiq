@@ -275,7 +275,7 @@ describe Authenticator::Ldap do
         it "immediately completes the task" do
           task_id = authenticate
           task = MiqTask.find(task_id)
-          expect(User.find_by_userid(task.userid)).to eq(alice)
+          expect(User.lookup_by_userid(task.userid)).to eq(alice)
         end
 
         context "new user creation" do
@@ -446,7 +446,7 @@ describe Authenticator::Ldap do
         it "immediately completes the task" do
           task_id = authenticate
           task = MiqTask.find(task_id)
-          user = User.find_by_userid(task.userid)
+          user = User.lookup_by_userid(task.userid)
           expect(user.name).to eq('Bob Builderson')
           expect(user.email).to eq('bob@example.com')
         end

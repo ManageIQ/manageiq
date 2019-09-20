@@ -19,6 +19,12 @@ describe Authenticator::Database do
     end
   end
 
+  describe '#lookup_by_principalname' do
+    it "finds existing users" do
+      expect(subject.lookup_by_principalname('alice').first).to eq(alice)
+    end
+  end
+
   describe '#authenticate' do
     def authenticate
       subject.authenticate(username, password)

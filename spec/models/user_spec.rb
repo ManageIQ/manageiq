@@ -459,15 +459,32 @@ describe User do
     end
   end
 
-  describe ".find_by_lower_email" do
+  describe ".lookup_by_lower_email" do
     it "uses cache" do
       u = FactoryBot.build(:user_with_email)
-      expect(User.find_by_lower_email(u.email.upcase, u)).to eq(u)
+      expect(User.lookup_by_lower_email(u.email.upcase, u)).to eq(u)
     end
 
     it "finds in the table" do
       u = FactoryBot.create(:user_with_email)
-      expect(User.find_by_lower_email(u.email.upcase)).to eq(u)
+      expect(User.lookup_by_lower_email(u.email.upcase)).to eq(u)
+    end
+  end
+
+  describe ".lookup_by_email" do
+    it "looks up user by email" do
+      u = FactoryBot.create(:user_with_email)
+
+      expect(User.lookup_by_email(u.email)).to eq(u)
+    end
+  end
+
+  describe ".lookup_by_userid" do
+    it "looks up user by email" do
+      u = FactoryBot.create(:user)
+
+      expect(User.lookup_by_userid(u.userid)).to eq(u)
+      expect(User.lookup_by_userid!(u.userid)).to eq(u)
     end
   end
 

@@ -73,7 +73,7 @@ module MiqLdapToSssd
     end
 
     def find_user(userid)
-      user = User.find_by_userid(userid)
+      user = User.lookup_by_userid(userid)
       user || User.in_my_region.where('lower(userid) = ?', userid).order(:lastlogon).last
     end
   end

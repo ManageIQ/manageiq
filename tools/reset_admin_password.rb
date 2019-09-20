@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require File.expand_path("../config/environment", __dir__)
 
-user = User.find_by_userid("admin")
+user = User.lookup_by_userid("admin")
 if ARGV[0].nil?
   print "Password: "
   user.password = STDIN.noecho(&:gets).chomp

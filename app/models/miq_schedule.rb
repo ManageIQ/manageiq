@@ -232,7 +232,7 @@ class MiqSchedule < ApplicationRecord
 
   def action_automation_request(_klass, _at)
     parameters = filter[:parameters]
-    user = User.find_by_userid(userid)
+    user = User.lookup_by_userid(userid)
     AutomationRequest.create_from_scheduled_task(user, filter[:uri_parts], parameters)
   end
 

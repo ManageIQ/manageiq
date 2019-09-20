@@ -3,7 +3,7 @@ module MiqReport::Notification
     userid = options[:userid]
     url = options[:email_url_prefix]
 
-    user = User.find_by_userid(userid)
+    user = User.lookup_by_userid(userid)
     from = options[:email] && !options[:email][:from].blank? ? options[:email][:from] : ::Settings.smtp.from
     to   = options[:email] ? options[:email][:to] : user.try(:email)
 
