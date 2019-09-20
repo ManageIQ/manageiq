@@ -9,6 +9,8 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job < ManageIQ::P
 
   belongs_to :miq_task, :foreign_key => :ems_ref, :inverse_of => false
 
+  virtual_has_many :job_plays
+
   #
   # Allowed options are
   #   :limit      => String
