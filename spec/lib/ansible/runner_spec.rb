@@ -5,6 +5,11 @@ describe Ansible::Runner do
   let(:tags)       { "tag" }
   let(:result)     { AwesomeSpawn::CommandResult.new("ansible-runner", "output", "", "0") }
 
+  after do
+    Ansible::Runner.instance_variable_set(:@python2_modules_path, nil)
+    Ansible::Runner.instance_variable_set(:@python3_modules_path, nil)
+  end
+
   describe ".run" do
     let(:playbook) { "/path/to/my/playbook" }
     before do
@@ -88,8 +93,8 @@ describe Ansible::Runner do
     end
 
     it "sets PYTHONPATH correctly with python3 modules installed " do
-      python2_modules_path = "/var/lib/manageiq/venv/lib/python2.7/site-packages/"
-      python3_modules_path = "/var/lib/awx/venv/ansible/lib/python3.6/site-packages/"
+      python2_modules_path = "/var/lib/manageiq/venv/lib/python2.7/site-packages"
+      python3_modules_path = "/var/lib/awx/venv/ansible/lib/python3.6/site-packages"
 
       allow(File).to receive(:exist?).with(python2_modules_path).and_return(false)
       allow(File).to receive(:exist?).with(python3_modules_path).and_return(true)
@@ -104,8 +109,8 @@ describe Ansible::Runner do
     end
 
     it "sets PYTHONPATH correctly with python2 modules installed " do
-      python2_modules_path = "/var/lib/manageiq/venv/lib/python2.7/site-packages/"
-      python3_modules_path = "/var/lib/awx/venv/ansible/lib/python3.6/site-packages/"
+      python2_modules_path = "/var/lib/manageiq/venv/lib/python2.7/site-packages"
+      python3_modules_path = "/var/lib/awx/venv/ansible/lib/python3.6/site-packages"
 
       allow(File).to receive(:exist?).with(python2_modules_path).and_return(true)
       allow(File).to receive(:exist?).with(python3_modules_path).and_return(false)
