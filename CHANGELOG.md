@@ -5,7 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 
 
-## Ivanchuk-1
+## Unreleased as of Sprint 120 ending 2019-09-16
+
+### Added
+- Add copying tag as optional choice [(#19206)](https://github.com/ManageIQ/manageiq/pull/19206)
+- Make direct_vms a relation [(#19201)](https://github.com/ManageIQ/manageiq/pull/19201)
+
+### Fixed
+- [MiqQueue] Format .format_full_log_msg [(#19296)](https://github.com/ManageIQ/manageiq/pull/19296)
+- Set default playbook service timeout to 100 minutes [(#19279)](https://github.com/ManageIQ/manageiq/pull/19279)
+- Remove value2tag [(#19275)](https://github.com/ManageIQ/manageiq/pull/19275)
+- Make description unique for tenant groups in MiqGroup [(#19272)](https://github.com/ManageIQ/manageiq/pull/19272)
+- Schedule compliance purging [(#19264)](https://github.com/ManageIQ/manageiq/pull/19264)
+- Do not calculate backlog when subscription not active [(#19254)](https://github.com/ManageIQ/manageiq/pull/19254)
+- Fixed 'TypeError'  in ApplicationCable::Connection#connect [(#19248)](https://github.com/ManageIQ/manageiq/pull/19248)
+- Fix Embedded Ansible Plays in the Job UI (v2/rebased with master) [(#19247)](https://github.com/ManageIQ/manageiq/pull/19247)
+- Workflow cloud_tenant fix [(#19237)](https://github.com/ManageIQ/manageiq/pull/19237)
+- Do not  attempt to calculate backlog unless subscription status is "replicating" [(#19234)](https://github.com/ManageIQ/manageiq/pull/19234)
+- Update the button order on copy [(#19227)](https://github.com/ManageIQ/manageiq/pull/19227)
+
+## Ivanchuk-1 - Released 2019-09-18
 
 ### Added
 - Allow MiqSchedule to accept nil and skip scheduling [(#19105)](https://github.com/ManageIQ/manageiq/pull/19105)
