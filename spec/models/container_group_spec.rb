@@ -49,7 +49,7 @@ describe ContainerGroup do
     it "preloads the conditions" do
       condition_other
       cr = condition_ready
-      cg = ContainerGroup.includes(:ready_condition_status).references(:ready_condition_status => {}).find_by(:id => container_group.id)
+      cg = ContainerGroup.includes(:ready_condition_status).references(:ready_condition_status).find_by(:id => container_group.id)
 
       expect { expect(cg.ready_condition).to eq(cr) }.to match_query_limit_of(0)
     end
