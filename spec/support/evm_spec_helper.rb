@@ -147,7 +147,7 @@ module EvmSpecHelper
   def self.yaml_import(domain, options, attrs = {})
     Tenant.seed
     MiqAeImport.new(domain, options.merge('tenant' => Tenant.root_tenant)).import
-    dom = MiqAeNamespace.find_by_fqname(domain)
+    dom = MiqAeNamespace.lookup_by_fqname(domain)
     dom&.update(attrs.reverse_merge(:enabled => true))
   end
 end

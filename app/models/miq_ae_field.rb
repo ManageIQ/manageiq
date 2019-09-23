@@ -56,9 +56,12 @@ class MiqAeField < ApplicationRecord
     DEFAULTS[key.to_sym]
   end
 
-  def self.find_by_name(name)
+  def self.lookup_by_name(name)
     where("lower(name) = ?", name.downcase).first
   end
+
+  singleton_class.send(:alias_method, :find_by_name, :lookup_by_name)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_name => :lookup_by_name)
 
   def default_value=(value)
     set_default_value(value)

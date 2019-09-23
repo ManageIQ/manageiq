@@ -27,7 +27,7 @@ module EvmAutomate
     if ns.nil?
       MiqAeClass.all.sort_by(&:fqname).each { |c| puts "#{c.fqname}," }
     else
-      class_list = MiqAeNamespace.find_by_fqname(ns).ae_classes.collect(&:fqname).join(", ")
+      class_list = MiqAeNamespace.lookup_by_fqname(ns).ae_classes.collect(&:fqname).join(", ")
       puts class_list
     end
   end

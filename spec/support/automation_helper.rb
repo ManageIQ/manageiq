@@ -76,7 +76,7 @@ module Spec
       end
 
       def add_call_method
-        aec = MiqAeClass.find_by_fqname('/ManageIQ/System/Request')
+        aec = MiqAeClass.lookup_by_fqname('/ManageIQ/System/Request')
         aei = aec.ae_instances.detect { |ins| ins.name == 'Call_Method' } if aec
         return if aei
         aef = aec.ae_fields.detect { |fld| fld.name == 'meth1' }

@@ -45,6 +45,13 @@ describe MiqAeField do
       @user = FactoryBot.create(:user_with_group)
     end
 
+    it "looks up by name" do
+      field_name = "TEST"
+      field = @c1.ae_fields.create(:name => field_name)
+
+      expect(MiqAeField.lookup_by_name(field_name)).to eq(field)
+    end
+
     it "should enforce necessary parameters upon create" do
       expect { @c1.ae_fields.new.save! }.to raise_error(ActiveRecord::RecordInvalid)
       # remove the invalid unsaved record in the association by clearing it
