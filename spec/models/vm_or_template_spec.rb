@@ -82,6 +82,26 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".lookup_by_full_location" do
+    it "should lookup vm by full location" do
+      storage = Storage.new(:name => "//test/storage")
+      vm = FactoryBot.create(:vm_vmware, :name => 'vm', :vendor => 'vmware', :storage => storage, :location => 'test_location')
+
+      expect(storage.save!).to be_truthy
+      expect(VmOrTemplate.lookup_by_full_location("#{storage.name}/#{vm.location}")).to eq(vm)
+    end
+  end
+
+  describe ".lookup_by_path" do
+    it "should lookup vm by path" do
+      storage = Storage.new(:name => "//test/storage")
+      vm = FactoryBot.create(:vm_vmware, :name => 'vm', :vendor => 'vmware', :storage => storage, :location => 'test_location')
+
+      expect(storage.save!).to be_truthy
+      expect(VmOrTemplate.lookup_by_path("#{storage.name}/#{vm.location}")).to eq(vm)
+    end
+  end
+
   describe ".miq_expression_includes_any_ipaddresses_arel" do
     subject              { FactoryBot.create(:vm) }
     let(:no_hardware_vm) { FactoryBot.create(:vm) }

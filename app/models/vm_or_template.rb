@@ -634,7 +634,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   # TODO: Vmware specific
-  def self.find_by_full_location(path)
+  def self.lookup_by_full_location(path)
     return nil if path.blank?
     vm_hash = {}
     begin
@@ -648,6 +648,9 @@ class VmOrTemplate < ApplicationRecord
     return nil unless store
     VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
   end
+
+  singleton_class.send(:alias_method, :find_by_full_location, :lookup_by_full_location)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_full_location => :lookup_by_full_location)
 
   def self.repository_parse_path(path)
     path.gsub!(/\\/, "/")
@@ -1286,7 +1289,7 @@ class VmOrTemplate < ApplicationRecord
 
   # TODO: Vmware specific
   # Finds a Vm by a full path of the Storage and location
-  def self.find_by_path(path)
+  def self.lookup_by_path(path)
     begin
       storage_id, location = parse_path(path)
     rescue
@@ -1295,6 +1298,9 @@ class VmOrTemplate < ApplicationRecord
     end
     VmOrTemplate.find_by(:storage_id => storage_id, :location => location)
   end
+
+  singleton_class.send(:alias_method, :find_by_path, :lookup_by_path)
+  Vmdb::Deprecation.deprecate_methods(singleton_class, :find_by_path => :lookup_by_path)
 
   def state
     (power_state || "unknown").downcase
