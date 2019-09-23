@@ -3,7 +3,7 @@ require File.expand_path('../config/environment', __dir__)
 require 'optimist'
 
 options = Optimist.options do
-  opt :user, "userid", :short => "u", :default => "admin"
+  opt :userid, "userid for imported schedule(this option overwrites schedule's userid)", :short => "u", :type => :string
   opt :output_dir, "Output directory", :short => "d", :default => "./"
   opt :schedule, "Schedule name or id", :short => "s", :type => :string
   opt :operation, "export or import", :short => "o", :default => "export"
@@ -31,6 +31,6 @@ when 'export'
   puts "Schedule #{schedule.name} exported to #{output_path}"
   File.write(output_path, exported_yaml)
 when 'import'
-  result = MiqSchedule.import(options[:import_yaml])
+  result = MiqSchedule.import(options[:import_yaml], options)
   puts result.second[0][:message]
 end

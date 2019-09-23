@@ -57,11 +57,13 @@ module MiqSchedule::ImportExport
       miq_schedule
     end
 
-    def import_from_hash(miq_schedule, _options = nil)
+    def import_from_hash(miq_schedule, options = nil)
       miq_schedule = handle_miq_report_attributes_for_import(miq_schedule) if miq_schedule["resource_type"] == "MiqReport"
 
-      unless miq_schedule['userid'] == 'admin' || miq_schedule['userid'] == 'system'
-        miq_schedule['userid'] = User.find_by(:id => miq_schedule['userid'])
+      input_userid = options&.dig(:userid) || miq_schedule&.dig('userid')
+      if input_userid && input_userid != 'system'
+        miq_schedule['userid'] = User.find_by(:userid => input_userid)&.userid
+        raise _("User #{input_userid} not found") unless miq_schedule['userid']
       end
 
       new_or_existing_schedule = MiqSchedule.where(:name => miq_schedule["name"], :resource_type => miq_schedule["resource_type"]).first_or_initialize
