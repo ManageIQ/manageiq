@@ -26,8 +26,7 @@ class AutomationRequest < MiqRequest
     options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, "")  # Strip blanks and slashes from beginning and end of string
     options[:class_name]    = (options.delete(:class) || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
     options[:instance_name] = (options.delete(:instance) || DEFAULT_INSTANCE).strip
-    options[:schedule_type] = parameters['schedule_time'].present? ? "schedule" : "immediately"
-    options[:schedule_time] = parameters['schedule_time'].to_i.days.from_now if parameters['schedule_time']
+    options.merge!(parse_schedule_options(parameters.select { |key, _v| key.to_s.include?('schedule') }))
 
     options[:user_id]  = user.id
     options[:attrs]    = build_attrs(parameters, user)
@@ -75,4 +74,15 @@ class AutomationRequest < MiqRequest
     end
   end
   private_class_method :build_attrs
+
+  def self.parse_schedule_options(parameters)
+    {:schedule_type => "schedule"}.tap do |hash|
+      if parameters['schedule_time']
+        hash[:schedule_time] = Time.zone.parse(parameters['schedule_time'])
+      else
+        hash[:schedule_type] = "immediately"
+      end
+    end
+  end
+  private_class_method :parse_schedule_options
 end
