@@ -339,7 +339,15 @@ FactoryBot.define do
     end
   end
 
+  trait(:configuration_workflow) do
+    after(:create) do |x|
+      type = (x.type.split("::")[0..2] + %w(AutomationManager ConfigurationWorkflow)).join("::")
+      x.configuration_scripts << FactoryBot.create(:configuration_workflow, :type => type)
+    end
+  end
+
   # Leaf classes for automation_manager
+
   factory :embedded_automation_manager_ansible,
           :aliases => ["manageiq/providers/embedded_ansible/automation_manager"],
           :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
