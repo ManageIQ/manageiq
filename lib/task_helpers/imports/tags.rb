@@ -59,7 +59,7 @@ module TaskHelpers
         tag_category["name"] = tag_category["name"].to_s
         tag_category.delete("parent_id")
 
-        classification = Classification.find_by_name(tag_category['name'], REGION_NUMBER, ns)
+        classification = Classification.lookup_by_name(tag_category['name'], REGION_NUMBER, ns)
 
         entries = tag_category.delete('entries')
 

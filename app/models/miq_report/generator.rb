@@ -517,7 +517,7 @@ module MiqReport::Generator
             if tag == "_none_"
               tags2desc[tag] = "[None]"
             else
-              entry = Classification.find_by_name([performance[:group_by_category], tag].join("/"))
+              entry = Classification.lookup_by_name([performance[:group_by_category], tag].join("/"))
               tags2desc[tag] = entry.nil? ? tag.titleize : entry.description
             end
           end

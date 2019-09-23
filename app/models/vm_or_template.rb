@@ -1406,7 +1406,7 @@ class VmOrTemplate < ApplicationRecord
 
   def self.folder_category(folder_type)
     cat_name = "folder_path_#{folder_type}"
-    cat = Classification.find_by_name(cat_name)
+    cat = Classification.lookup_by_name(cat_name)
     unless cat
       cat = Classification.is_category.new(
         :name         => cat_name,
